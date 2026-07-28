@@ -1,0 +1,49 @@
+# Dependências
+node_modules/
+
+# Builds e testes
+dist/
+coverage/
+.vite/
+*.tsbuildinfo
+*.apk
+*.aab
+
+# Variáveis de ambiente e segredos
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editores e sistema operacional
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Android / Capacitor: arquivos locais e gerados
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/captures/
+android/.cxx/
+android/app/.cxx/
+
+# Chaves de assinatura — nunca enviar ao Git
+*.jks
+*.keystore
+keystore.properties
+
+# Arquivos temporários
+*.tmp
+*.temp

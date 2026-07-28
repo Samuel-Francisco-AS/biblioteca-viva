@@ -1,0 +1,28 @@
+# Glossário
+
+- **Biblioteca Viva:** produto completo e também metáfora do ambiente persistente.
+- **Biblioteca visual:** rota/cena Phaser que representa os dados.
+- **Coleção:** interface React para listar e organizar registros.
+- **LibraryEntry:** entidade base discriminada para algo registrado.
+- **BookEntry:** variante de livro implementada no protótipo.
+- **Anotação:** nota ou citação associada a um registro.
+- **Atividade:** histórico mínimo de ação relevante; não é event sourcing.
+- **Evento de domínio:** fato ocorrido usado para desacoplar reações.
+- **Marco:** condição declarativa alcançada uma vez ou repetidamente.
+- **Recompensa:** consequência de marco, como decoração ou diálogo.
+- **LibraryViewModel:** projeção imutável consumida pelo Phaser.
+- **LibraryInteraction:** evento emitido pelo Phaser para a aplicação.
+- **Porta:** interface definida pela aplicação para serviço externo.
+- **Adaptador:** implementação concreta de uma porta, como Dexie.
+- **Local-first:** funções essenciais e dados funcionam localmente e offline.
+- **Modular monolith:** uma aplicação implantável com módulos e limites internos claros.
+- **Gate:** condição verificável que encerra um bloco.
+- **Prompt:** porção coesa de trabalho entregue ao Codex.
+- **Fallback geométrico:** representação simples usada quando asset falha ou não existe.
+- **Modo reduzido:** preferência que limita movimento e efeitos para conforto e desempenho.
+- **Schema:** contrato validável de dados.
+- **Migração:** transformação versionada entre schemas persistentes.
+- **Backup envelope:** arquivo versionado que contém dados exportados e metadados.
+- **APK debug:** pacote Android para testes, não distribuição final.
+- **APK release:** pacote otimizado e assinado.
+- **AAB:** formato de publicação em lojas Android, quando necessário.
