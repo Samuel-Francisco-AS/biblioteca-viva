@@ -84,6 +84,18 @@ O agente pode inspecionar `git status`, `git diff` e histórico.
 
 ## 8. Validação obrigatória
 
+### Comandos disponíveis
+
+- `npm run dev` — inicia o servidor de desenvolvimento;
+- `npm run build` — verifica TypeScript e gera o build web;
+- `npm run preview` — serve localmente o build gerado;
+- `npm run lint` — executa ESLint;
+- `npm run typecheck` — verifica os projetos TypeScript;
+- `npm run test` — executa Vitest em modo interativo;
+- `npm run test:run` — executa Vitest uma vez;
+- `npm run format` — formata apenas código e arquivos técnicos listados no script;
+- `npm run format:check` — verifica a formatação desse mesmo conjunto.
+
 Ao final de uma tarefa de código, execute os scripts disponíveis equivalentes a:
 
 - formatação ou `format:check`;

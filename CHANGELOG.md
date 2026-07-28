@@ -11,10 +11,12 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 - conjunto inicial de documentação do projeto;
 - decisões de arquitetura, produto, segurança, acessibilidade, conteúdo e execução;
 - plano de 11 blocos e 19 prompts principais.
+- fundação React e TypeScript estrito com Vite;
+- ferramentas de lint, formatação, testes de interface e build web.
 
 ### Alterado
 
-- nenhuma alteração de código: implementação ainda não iniciada.
+- Prompt 1 implementado e aguardando validação humana; funcionalidades do produto ainda não iniciadas.
 
 ### Corrigido
 

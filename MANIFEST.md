@@ -48,6 +48,6 @@ Este manifesto indexa a documentação inicial do repositório Biblioteca Viva, 
 - `docs/templates/MANUAL_TEST_REPORT_TEMPLATE.md`;
 - `docs/templates/RELEASE_CHECKLIST.md`.
 
-## Próxima etapa
+## Estado técnico
 
-Executar o Prompt 1 do Bloco 1 para criar o scaffold real. Depois disso, revisar `README.md`, `AGENTS.md` e `STATUS.md` para registrar os comandos, a versão e os caminhos reais.
+O scaffold do Prompt 1 existe na raiz do repositório e aguarda validação humana. Os comandos e caminhos reais estão registrados em `README.md`, `AGENTS.md` e `docs/STATUS.md`.

@@ -7,16 +7,17 @@
 
 - **Fase:** fundação web;
 - **bloco ativo:** Bloco 1 — Fundação web;
-- **próximo trabalho:** Prompt 1 — Scaffold, ferramentas e documentação-base, aguardando execução;
-- **gate atual:** G1 — Fundação navegável;
-- **versão executável:** inexistente;
+- **prompt atual:** Prompt 1 — implementação e validações automáticas concluídas, aguardando validação humana;
+- **próximo trabalho:** validar a fundação no navegador; Prompt 2 permanece não iniciado;
+- **gate atual:** G1 — Fundação navegável, ainda não aprovado;
+- **versão executável:** fundação web local `0.0.0`, ainda não lançada;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
 - **APK:** inexistente;
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
 - **compatibilidade:** diferentes celulares Android, proporções de tela, densidades e áreas seguras;
-- **estado geral:** G0 aprovado, arquitetura aprovada e implementação ainda não iniciada.
+- **estado geral:** G0 aprovado e fundação técnica executável; funcionalidades reais do produto ainda não iniciadas.
 
 ## Decisões já aprovadas
 
@@ -47,9 +48,9 @@
 - [x] decidir orientação principal do APK como retrato;
 - [x] aprovar o conjunto documental inicial.
 
-## Próximo trabalho
+## Trabalho atual
 
-Executar o Prompt 1 de `EXECUTION_PLAN.md`: scaffold React + TypeScript estrito, scripts de qualidade e documentação-base. O trabalho aguarda execução.
+Validar no navegador a tela “Biblioteca Viva — Fundação pronta”. Depois da revisão humana do diff e da fundação, o Prompt 2 poderá iniciar; o Bloco 1 e o Gate G1 permanecem abertos.
 
 ## Bloqueios
 
@@ -57,4 +58,4 @@ Nenhum bloqueio técnico identificado.
 
 ## Última evidência de validação
 
-Não há build ou teste de código. A validação atual é documental e arquitetural.
+Em 2026-07-28, `format:check`, lint, typecheck, teste unitário e build passaram. O teste automatizado confirma o título principal observável. A abertura no navegador ainda depende de validação humana.

@@ -88,6 +88,15 @@ git status --short
 
 Os nomes reais prevalecem e devem ser registrados no README e `AGENTS.md`.
 
+### Fundação disponível após o Prompt 1
+
+- Vitest 4 executa testes em jsdom;
+- React Testing Library verifica conteúdo observável da interface;
+- `src/App.test.tsx` confirma que o título principal “Biblioteca Viva — Fundação pronta” é renderizado e visível;
+- `npm run test` mantém o runner interativo;
+- `npm run test:run` executa a suíte uma vez para gates e automação local;
+- testes E2E e Android ainda não existem e permanecem fora do Prompt 1.
+
 ## 4. Gates mínimos
 
 - **G1:** rotas e navegação no navegador mobile;

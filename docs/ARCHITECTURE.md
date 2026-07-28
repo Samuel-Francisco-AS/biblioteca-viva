@@ -340,6 +340,25 @@ biblioteca-viva/
 
 Pastas só devem ser criadas quando tiverem conteúdo real. A árvore é direção, não licença para produzir quarenta diretórios vazios.
 
+### 7.1 Estrutura efetiva após o Prompt 1
+
+A fundação inicial mantém somente os arquivos necessários:
+
+```text
+src/
+├── test/
+│   └── setup.ts
+├── App.test.tsx
+├── App.tsx
+├── main.tsx
+├── styles.css
+└── vite-env.d.ts
+```
+
+Na raiz, `vite.config.ts`, `vitest.config.ts`, `eslint.config.js` e os projetos `tsconfig.app.json`, `tsconfig.node.json` e `tsconfig.test.json` configuram build, testes, lint e TypeScript estrito. As camadas de domínio, aplicação e infraestrutura ainda não foram criadas porque não possuem implementação no Prompt 1. Nenhum alias foi adicionado: os poucos imports relativos atuais são diretos e não justificam configuração adicional.
+
+Stack efetivamente instalada nesta etapa: React 19, Vite 8, TypeScript 6, ESLint 10, Prettier 3, Vitest 4, Testing Library e jsdom. Phaser, Capacitor, Dexie, Zod, roteamento e estado global permanecem não instalados.
+
 ---
 
 ## 8. Modelo de domínio inicial

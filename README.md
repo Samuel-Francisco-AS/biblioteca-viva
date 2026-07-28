@@ -6,7 +6,7 @@ Biblioteca Viva é um aplicativo local-first de registro pessoal em que livros, 
 
 ## Estado atual
 
-O Gate G0 foi aprovado e o projeto está no `BLOCO 1` — Fundação web. O próximo trabalho é o Prompt 1 de `docs/EXECUTION_PLAN.md`, ainda aguardando execução; não existe código executável, build ou APK.
+O Gate G0 foi aprovado e o projeto está no `BLOCO 1` — Fundação web. O Prompt 1 possui implementação e validações automáticas concluídas, mas aguarda validação humana no navegador. O Gate G1 ainda não foi aprovado e não existe APK.
 
 Consulte `docs/STATUS.md` antes de qualquer tarefa. Esse arquivo é a fonte rápida para versão, bloco, prompt, gate, branch e pendências atuais.
 
@@ -34,7 +34,24 @@ A decisão completa está em `docs/ARCHITECTURE.md`.
 
 ## Comandos
 
-Os comandos reais serão registrados aqui após o scaffold. Até lá, não invente scripts nem assuma nomes além dos previstos no plano de execução.
+Requisito: Node.js `^20.19.0` ou `>=22.12.0`.
+
+```bash
+npm install
+npm run dev
+```
+
+Validação completa da fundação:
+
+```bash
+npm run format:check
+npm run lint
+npm run typecheck
+npm run test:run
+npm run build
+```
+
+Também estão disponíveis `npm run preview`, `npm run test` e `npm run format`. O formatador limita-se ao código e aos arquivos técnicos explicitamente listados no script; a documentação Markdown não é reformatada em massa.
 
 ## Distribuição
 

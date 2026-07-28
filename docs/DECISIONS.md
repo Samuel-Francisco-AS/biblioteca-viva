@@ -125,4 +125,15 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 
 **Consequências:** o Gate G0 está aprovado e o Bloco 1 pode começar pelo Prompt 1. A interface deve usar layout responsivo, respeitar safe areas e ser testada em diferentes dimensões, proporções e densidades de tela. O aplicativo deve permanecer compatível com diferentes celulares Android; o Moto G06 é um dispositivo principal de validação, não uma restrição de compatibilidade.
 
+## D-013 — Fundação técnica mínima na raiz
+
+- **Data:** 2026-07-28
+- **Status:** aceita
+
+**Contexto:** o Prompt 1 precisa tornar o repositório executável sem antecipar a arquitetura ou reformatar a documentação existente.
+
+**Decisão:** manter um único pacote npm privado na raiz, com React 19, Vite 8 e TypeScript 6 estrito; separar as configurações TypeScript de aplicação, ferramentas Node e testes; usar ESLint 10 com configuração flat, Prettier limitado a código e arquivos técnicos, e Vitest 4 com Testing Library e jsdom. Não criar alias enquanto os imports relativos permanecerem simples.
+
+**Consequências:** a fundação pode ser executada, testada e gerada como build web; a documentação Markdown fica fora do formatador automático; camadas e aliases serão adicionados somente quando houver uso concreto. A versão `0.0.0` identifica o pacote privado ainda não lançado e não representa uma release do produto.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

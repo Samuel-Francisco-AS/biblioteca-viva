@@ -1,0 +1,17 @@
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+
+import { App } from "./App";
+
+describe("App", () => {
+  it("apresenta a fundação da Biblioteca Viva como título principal", () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Biblioteca Viva — Fundação pronta",
+      }),
+    ).toBeVisible();
+  });
+});

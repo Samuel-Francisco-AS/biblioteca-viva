@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> Estado atual: Gate G0 aprovado e fundação web aguardando execução, 28 de julho de 2026.
+> Estado atual: Gate G0 aprovado e fundação web implementada, aguardando validação humana, 28 de julho de 2026.
 
 ## 1. Função desta documentação
 
@@ -82,8 +82,8 @@ Ela está dividida por frequência de mudança:
 
 ## 5. Estado inicial
 
-- código ainda não iniciado;
-- versão executável inexistente;
+- fundação React e TypeScript executável criada pelo Prompt 1;
+- Prompt 1 aguardando validação humana no navegador;
 - Gate G0 aprovado e Gate G1 atual;
 - repositório Git inicializado na branch `main`;
 - stack e arquitetura aprovadas;

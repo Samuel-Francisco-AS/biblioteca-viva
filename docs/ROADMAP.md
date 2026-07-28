@@ -16,9 +16,10 @@
 - **versão:** fundação pré-v0.1.0;
 - **bloco:** 1 — Fundação web, em andamento;
 - **gate:** G1 atual; G0 aprovado;
-- **próximo prompt:** Prompt 1 — Scaffold, ferramentas e documentação-base;
+- **prompt atual:** Prompt 1 — implementação concluída, aguardando validação humana;
+- **próximo prompt:** Prompt 2 — somente após validação e aprovação do Prompt 1;
 - **APK:** não iniciado;
-- **código:** não iniciado.
+- **código:** fundação React executável; funcionalidades do produto não iniciadas.
 
 ## Blocos e gates
 
