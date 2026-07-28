@@ -97,9 +97,32 @@ Os nomes reais prevalecem e devem ser registrados no README e `AGENTS.md`.
 - `npm run test:run` executa a suíte uma vez para gates e automação local;
 - testes E2E e Android ainda não existem e permanecem fora do Prompt 1.
 
+### Shell disponível após o Prompt 2
+
+`src/App.test.tsx` cobre:
+
+- abertura da Biblioteca na rota inicial;
+- regiões semânticas principais;
+- presença das cinco opções de navegação;
+- navegação para cada área e título correspondente;
+- `aria-current="page"` somente na rota ativa;
+- caminho desconhecido e retorno à Biblioteca.
+
+Validação manual do Prompt 2, realizada por Sam em 2026-07-28:
+
+- [x] abrir e navegar pelas cinco rotas;
+- [x] testar dimensões móveis pelo modo responsivo do navegador;
+- [x] confirmar a navegação inferior em dimensões móveis e a lateral em desktop;
+- [x] navegar com Tab e Enter;
+- [x] confirmar foco visível e funcionamento do link de salto;
+- [x] confirmar ausência de overflow horizontal;
+- [x] confirmar que “Ajustes” leva deliberadamente à rota `/configuracoes`, cujo título completo é “Configurações”.
+
+A validação física do shell não foi realizada e foi transferida para o G2. O acesso ao servidor de desenvolvimento pelo smartphone exigiria um túnel HTTPS Cloudflare devido ao isolamento entre dispositivos imposto pelo roteador; não há evidência de teste do aplicativo no Moto G06 neste gate.
+
 ## 4. Gates mínimos
 
-- **G1:** rotas e navegação no navegador mobile;
+- **G1:** rotas, dimensões móveis no navegador responsivo e navegação por teclado;
 - **G2:** APK debug instalado e ciclo de vida básico;
 - **G3:** domínio, persistência e migração;
 - **G4:** ciclo CRUD real;
@@ -119,8 +142,16 @@ Os nomes reais prevalecem e devem ser registrados no README e `AGENTS.md`.
 | navegador desktop | desenvolvimento e teclado | toda tarefa de UI |
 | viewport mobile | responsividade | toda tarefa de UI |
 | Playwright | fluxos críticos web | gates relevantes |
-| Android real principal | verdade da plataforma | todo gate Android |
+| Android real principal | verdade da plataforma | principalmente G2, G3, G6, G9 e G11 |
 | Android secundário | compatibilidade | antes do G11, se disponível |
+
+Os principais pontos de teste físico em smartphone são:
+
+- **G2:** instalação e ciclo de vida do primeiro APK Android;
+- **G3:** persistência após reinício e atualização do APK;
+- **G6:** toque e desempenho da biblioteca visual;
+- **G9:** acessibilidade, desempenho e uso mobile prolongado;
+- **G11:** instalação e atualização do APK release assinado.
 
 ## 6. Dados de teste
 

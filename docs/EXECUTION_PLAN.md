@@ -18,7 +18,8 @@ Cada bloco termina com um **gate**. O bloco seguinte só começa quando o gate a
 
 - Um prompt por vez.
 - Revisar relatório, `git diff` e aplicação antes do próximo prompt.
-- Testar no celular quando o gate indicar Android.
+- Validar no navegador responsivo e por teclado em todo gate de interface web.
+- Concentrar testes físicos nos gates que envolvam Android, persistência nativa, toque, desempenho ou release.
 - Fazer commit apenas depois de aprovação humana.
 - Não acumular três prompts sem commit quando eles alterarem código de produção.
 - Não permitir que o Codex antecipe funções de blocos futuros.
@@ -220,9 +221,12 @@ Critério de conclusão:
 
 - aplicação web abre sem erros;
 - cinco áreas existem;
-- navegação funciona no celular via navegador;
+- navegação funciona nas dimensões móveis pelo modo responsivo do navegador;
+- navegação por teclado e foco visível funcionam;
 - estrutura e documentação estão compreensíveis;
 - nenhum código de negócio foi enterrado em componentes.
+
+O G1 não exige acesso físico pelo navegador em um smartphone.
 
 Marco sugerido: `v0.1.0-alpha.1`.
 
@@ -284,7 +288,7 @@ Critério de conclusão:
 
 ## Gate G2 — Android existe
 
-O bloco termina somente quando um APK real estiver instalado e utilizável no aparelho.
+O bloco termina somente quando um APK real estiver instalado e utilizável no smartphone. Esta é a primeira validação física obrigatória do projeto.
 
 ---
 

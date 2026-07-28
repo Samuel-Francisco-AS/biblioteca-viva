@@ -13,10 +13,12 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 - plano de 11 blocos e 19 prompts principais.
 - fundação React e TypeScript estrito com Vite;
 - ferramentas de lint, formatação, testes de interface e build web.
+- shell responsivo com cinco áreas navegáveis e tratamento de caminho desconhecido;
+- design tokens, navegação acessível e testes automatizados das rotas.
 
 ### Alterado
 
-- Prompt 1 implementado e aguardando validação humana; funcionalidades do produto ainda não iniciadas.
+- Prompts 1 e 2 concluídos; o shell navegável foi validado e o Gate G1 foi aprovado. As funcionalidades do produto ainda não foram iniciadas.
 
 ### Corrigido
 

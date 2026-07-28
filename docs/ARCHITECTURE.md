@@ -357,7 +357,22 @@ src/
 
 Na raiz, `vite.config.ts`, `vitest.config.ts`, `eslint.config.js` e os projetos `tsconfig.app.json`, `tsconfig.node.json` e `tsconfig.test.json` configuram build, testes, lint e TypeScript estrito. As camadas de domínio, aplicação e infraestrutura ainda não foram criadas porque não possuem implementação no Prompt 1. Nenhum alias foi adicionado: os poucos imports relativos atuais são diretos e não justificam configuração adicional.
 
-Stack efetivamente instalada nesta etapa: React 19, Vite 8, TypeScript 6, ESLint 10, Prettier 3, Vitest 4, Testing Library e jsdom. Phaser, Capacitor, Dexie, Zod, roteamento e estado global permanecem não instalados.
+Stack efetivamente instalada ao fim do Prompt 1: React 19, Vite 8, TypeScript 6, ESLint 10, Prettier 3, Vitest 4, Testing Library e jsdom. Naquele ponto, Phaser, Capacitor, Dexie, Zod, roteamento e estado global ainda não estavam instalados.
+
+### 7.2 Estrutura de apresentação após o Prompt 2
+
+React Router DOM 7 foi adicionado para o roteamento declarativo do shell. `BrowserRouter` é composto em `main.tsx`; `App.tsx` contém o shell sem regras de negócio; `routes.ts` mantém uma única tabela tipada para rotas e navegação; e `pages.tsx` contém apenas os cinco placeholders de apresentação.
+
+```text
+src/
+├── App.tsx
+├── main.tsx
+├── pages.tsx
+├── routes.ts
+└── styles.css
+```
+
+Os caminhos são `/`, `/colecao`, `/novo-livro`, `/arquivo` e `/configuracoes`. Uma rota curinga apresenta erro simples e retorno à Biblioteca. A navegação usa a mesma lista e o mesmo HTML no mobile e no desktop: CSS a posiciona embaixo em telas estreitas e como barra lateral a partir de 768 px. Os estilos globais permanecem em um único arquivo porque o shell ainda é pequeno; design tokens cobrem cores, superfícies, texto, foco, espaçamento, tipografia, bordas, raios, sombra, toque, camadas e largura de conteúdo.
 
 ---
 

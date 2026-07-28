@@ -136,4 +136,26 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 
 **Consequências:** a fundação pode ser executada, testada e gerada como build web; a documentação Markdown fica fora do formatador automático; camadas e aliases serão adicionados somente quando houver uso concreto. A versão `0.0.0` identifica o pacote privado ainda não lançado e não representa uma release do produto.
 
+## D-014 — Roteamento e navegação responsiva do shell
+
+- **Data:** 2026-07-28
+- **Status:** aceita
+
+**Contexto:** o Prompt 2 requer cinco áreas navegáveis e uma adaptação responsiva sem duplicar sistemas de navegação nem antecipar funcionalidades.
+
+**Decisão:** usar React Router DOM `7.18.1` em modo declarativo SPA, com uma única tabela tipada de rotas; usar o mesmo elemento `nav` como barra inferior no mobile e barra lateral a partir de 768 px; e manter design tokens e estilos do shell em CSS simples global enquanto a apresentação ainda é pequena.
+
+**Consequências:** caminhos, títulos e links são definidos em um só lugar; a rota ativa recebe `aria-current`, contraste e sublinhado; safe areas e altura dinâmica são tratadas por CSS; e componentes ou CSS Modules só serão separados quando responsabilidades reais justificarem. O `npm audit` atual informa um advisory alto do React Router ligado ao modo RSC, não usado por este SPA; a dependência deve ser atualizada assim que existir uma versão corrigida compatível, sem habilitar RSC ou ações de servidor antes disso.
+
+## D-015 — Testes físicos concentrados em gates decisivos
+
+- **Data:** 2026-07-28
+- **Status:** aceita
+
+**Contexto:** o isolamento entre dispositivos imposto pelo roteador exige um túnel HTTPS Cloudflare para acessar pelo smartphone o servidor web de desenvolvimento. O shell já pode ser validado com dimensões móveis no modo responsivo do navegador e por teclado.
+
+**Decisão:** concentrar testes físicos nos gates de maior valor, especialmente quando envolverem Android, persistência nativa, toque, desempenho ou release. No shell, usar “Ajustes” como rótulo compacto deliberado da seção cuja rota é `/configuracoes` e cujo título completo é “Configurações”.
+
+**Consequências:** o Gate G1 pode ser aprovado sem teste físico pelo navegador; o Gate G2, por meio do APK Android, será a primeira validação física obrigatória. G2, G3, G6, G9 e G11 são os principais pontos de teste em smartphone.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

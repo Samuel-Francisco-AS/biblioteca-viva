@@ -14,20 +14,20 @@
 ## Estado atual
 
 - **versão:** fundação pré-v0.1.0;
-- **bloco:** 1 — Fundação web, em andamento;
-- **gate:** G1 atual; G0 aprovado;
-- **prompt atual:** Prompt 1 — implementação concluída, aguardando validação humana;
-- **próximo prompt:** Prompt 2 — somente após validação e aprovação do Prompt 1;
+- **bloco:** 2 — Prova Android antecipada, próximo;
+- **gate:** G1 aprovado; G2 é o próximo gate;
+- **prompt atual:** Prompt 2 — concluído e validado;
+- **próximo prompt:** Prompt 3 — Capacitor e primeiro APK de depuração;
 - **APK:** não iniciado;
-- **código:** fundação React executável; funcionalidades do produto não iniciadas.
+- **código:** shell React responsivo e navegável; funcionalidades do produto não iniciadas.
 
 ## Blocos e gates
 
 | Estado | Bloco | Prompts | Resultado observável | Gate |
 |---|---:|---:|---|---|
 | `[x]` | 0 | — | contrato aprovado | G0 aprovado |
-| `[~]` | 1 | 1–2 | fundação web navegável | G1 atual |
-| `[ ]` | 2 | 3 | APK debug instalado | G2 |
+| `[x]` | 1 | 1–2 | fundação web navegável | G1 aprovado |
+| `[ ]` | 2 | 3 | APK debug instalado | G2 próximo |
 | `[ ]` | 3 | 4–6 | domínio e persistência isolados | G3 |
 | `[ ]` | 4 | 7–9 | app pessoal utilizável | G4 |
 | `[ ]` | 5 | 10 | dados exportáveis e recuperáveis | G5 |
@@ -57,8 +57,9 @@ Um bloco só muda para concluído quando:
 - testes automáticos passaram;
 - testes manuais requeridos foram registrados;
 - documentos estão atualizados;
-- gate foi aprovado por Sam;
-- commit foi feito depois da aprovação humana.
+- gate foi aprovado por Sam.
+
+O commit, quando autorizado, ocorre somente depois da aprovação humana e não é pré-condição para registrar o estado aprovado.
 
 ## Expansões pós-protótipo
 

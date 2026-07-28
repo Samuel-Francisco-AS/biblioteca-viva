@@ -5,19 +5,19 @@
 
 ## Estado executivo
 
-- **Fase:** fundação web;
-- **bloco ativo:** Bloco 1 — Fundação web;
-- **prompt atual:** Prompt 1 — implementação e validações automáticas concluídas, aguardando validação humana;
-- **próximo trabalho:** validar a fundação no navegador; Prompt 2 permanece não iniciado;
-- **gate atual:** G1 — Fundação navegável, ainda não aprovado;
+- **Fase:** prova Android antecipada;
+- **bloco ativo:** Bloco 2 — Prova Android antecipada, próximo;
+- **prompt atual:** Prompt 2 — concluído e validado;
+- **próximo trabalho:** Prompt 3 — Capacitor e primeiro APK de depuração;
+- **gate atual:** G1 — Fundação navegável, aprovado; G2 é o próximo gate;
 - **versão executável:** fundação web local `0.0.0`, ainda não lançada;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
-- **APK:** inexistente;
+- **APK:** inexistente; o primeiro APK será criado no Prompt 3;
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
 - **compatibilidade:** diferentes celulares Android, proporções de tela, densidades e áreas seguras;
-- **estado geral:** G0 aprovado e fundação técnica executável; funcionalidades reais do produto ainda não iniciadas.
+- **estado geral:** G0 e G1 aprovados, Bloco 1 concluído e shell web navegável; funcionalidades reais do produto ainda não iniciadas.
 
 ## Decisões já aprovadas
 
@@ -36,6 +36,8 @@
 - Moto G06 como aparelho principal de testes, não como alvo exclusivo;
 - critérios de sucesso do protótipo e conjunto documental inicial aprovados;
 - música ambiente discreta, som de interface, confirmação de cadastro, reação da estante e conclusão ou desbloqueio, com controles separados para música e efeitos.
+- testes físicos concentrados em gates que envolvam Android, persistência nativa, toque, desempenho ou release; G2 será a primeira validação física obrigatória;
+- “Ajustes” mantido como rótulo compacto deliberado para a seção e rota `/configuracoes`, cujo título completo é “Configurações”.
 
 ## Encerramento do G0
 
@@ -50,7 +52,7 @@
 
 ## Trabalho atual
 
-Validar no navegador a tela “Biblioteca Viva — Fundação pronta”. Depois da revisão humana do diff e da fundação, o Prompt 2 poderá iniciar; o Bloco 1 e o Gate G1 permanecem abertos.
+Iniciar o Bloco 2 pelo Prompt 3, integrar Capacitor e produzir o primeiro APK de depuração. A instalação e a validação física do shell no smartphone são obrigatórias no Gate G2.
 
 ## Bloqueios
 
@@ -58,4 +60,4 @@ Nenhum bloqueio técnico identificado.
 
 ## Última evidência de validação
 
-Em 2026-07-28, `format:check`, lint, typecheck, teste unitário e build passaram. O teste automatizado confirma o título principal observável. A abertura no navegador ainda depende de validação humana.
+Em 2026-07-28, o Prompt 2 foi concluído e validado: os oito testes automatizados, lint, typecheck, formatação e build passaram; Sam navegou manualmente pelas cinco rotas, testou dimensões móveis no modo responsivo, confirmou as navegações inferior e lateral, Tab, Enter, foco visível, link de salto e ausência de overflow horizontal. O G1 foi aprovado. A validação física não ocorreu e foi transferida para o G2, quando deverá ser feita com o primeiro APK Android.

@@ -50,4 +50,4 @@ Este manifesto indexa a documentação inicial do repositório Biblioteca Viva, 
 
 ## Estado técnico
 
-O scaffold do Prompt 1 existe na raiz do repositório e aguarda validação humana. Os comandos e caminhos reais estão registrados em `README.md`, `AGENTS.md` e `docs/STATUS.md`.
+O scaffold do Prompt 1 e o shell navegável do Prompt 2 existem na raiz do repositório. O Prompt 2 aguarda validação humana e o Gate G1 permanece aberto. Os comandos, rotas e caminhos reais estão registrados em `README.md`, `AGENTS.md` e `docs/STATUS.md`.

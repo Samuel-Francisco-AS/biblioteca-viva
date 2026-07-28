@@ -6,7 +6,19 @@ Biblioteca Viva é um aplicativo local-first de registro pessoal em que livros, 
 
 ## Estado atual
 
-O Gate G0 foi aprovado e o projeto está no `BLOCO 1` — Fundação web. O Prompt 1 possui implementação e validações automáticas concluídas, mas aguarda validação humana no navegador. O Gate G1 ainda não foi aprovado e não existe APK.
+O Gate G0 foi aprovado e o projeto está no `BLOCO 1` — Fundação web. Os Prompts 1 e 2 estão implementados; o shell navegável do Prompt 2 aguarda validação humana. O Gate G1 ainda não foi aprovado e não existe APK.
+
+## Navegação atual
+
+O shell React possui cinco rotas sem funcionalidades de produto:
+
+- `/` — Biblioteca;
+- `/colecao` — Coleção;
+- `/novo-livro` — Novo livro;
+- `/arquivo` — Arquivo;
+- `/configuracoes` — Configurações.
+
+No mobile, a navegação fica na parte inferior. A partir de 768 px, a mesma lista passa para uma barra lateral.
 
 Consulte `docs/STATUS.md` antes de qualquer tarefa. Esse arquivo é a fonte rápida para versão, bloco, prompt, gate, branch e pendências atuais.
 
