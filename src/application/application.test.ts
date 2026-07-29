@@ -16,6 +16,7 @@ import {
   type ActivityRepository,
   type ApplicationDependencies,
   type ApplicationEventBus,
+  type ApplicationTransactionRunner,
   type Clock,
   type IdGenerator,
   type LibraryEntryRepository,
@@ -145,6 +146,20 @@ class FakeClock implements Clock {
   }
 }
 
+class FakeTransactionRunner implements ApplicationTransactionRunner {
+  constructor(private readonly createRollback: () => () => void) {}
+
+  async run<T>(operation: () => Promise<T>): Promise<T> {
+    const rollback = this.createRollback();
+    try {
+      return await operation();
+    } catch (error: unknown) {
+      rollback();
+      throw error;
+    }
+  }
+}
+
 interface TestState {
   readonly failures: Set<FailureTarget>;
   readonly timeline: string[];
@@ -177,6 +192,25 @@ function setup(entries: readonly BookEntry[] = []): TestContext {
     "extra-2",
   ]);
   const clock = new FakeClock(T1);
+  const transaction = new FakeTransactionRunner(() => {
+    const entries = new Map(library.entries);
+    const savedNotes = new Map(notes.notes);
+    const savedQuotes = new Map(quotes.quotes);
+    const savedActivities = [...activities.activities];
+    return () => {
+      library.entries.clear();
+      entries.forEach((entry, id) => library.entries.set(id, entry));
+      notes.notes.clear();
+      savedNotes.forEach((note, id) => notes.notes.set(id, note));
+      quotes.quotes.clear();
+      savedQuotes.forEach((quote, id) => quotes.quotes.set(id, quote));
+      activities.activities.splice(
+        0,
+        activities.activities.length,
+        ...savedActivities,
+      );
+    };
+  });
   return {
     activities,
     clock,
@@ -188,6 +222,7 @@ function setup(entries: readonly BookEntry[] = []): TestContext {
       libraryEntries: library,
       notes,
       quotes,
+      transaction,
     },
     events,
     ids,
@@ -289,7 +324,7 @@ describe("CreateBookEntry", () => {
       new CreateBookEntry(context.dependencies).execute({ title: "Livro" }),
       "ACTIVITY_PERSISTENCE_FAILED",
     );
-    expect(context.library.entries.has("entity-1")).toBe(true);
+    expect(context.library.entries.has("entity-1")).toBe(false);
     expect(context.events.events).toHaveLength(0);
   });
 

@@ -13,14 +13,19 @@
 
 ## Estado atual
 
-- **versão:** `v0.1.0`, marco atual;
-- **bloco concluído:** 2 — Prova Android antecipada;
-- **gate:** G2 aprovado;
-- **próximo bloco:** 3 — Domínio, casos de uso e persistência;
-- **prompt atual:** Prompt 5 — tecnicamente concluído, aguardando revisão humana;
-- **próximo prompt após aprovação:** Prompt 6 — Dexie, migrações e composição;
-- **APK:** debug validado no Moto G06 com Android 15; release assinado ainda não existe;
-- **código:** shell React responsivo e navegável; funcionalidades do produto não iniciadas.
+- **versão:** `v0.2.0-alpha.1`, marco atual;
+- **bloco concluído:** 3 — Domínio, casos de uso e persistência;
+- **gate:** G3 aprovado por Sam em 2026-07-29;
+- **próximo bloco:** 4 — Aplicativo pessoal utilizável;
+- **prompts concluídos:** Prompts 4, 5 e 6;
+- **próximo prompt:** Prompt 7 — Cadastro e edição de livro;
+- **APK:** diagnóstico interno validado no Moto G06 com Android 15; release assinado ainda não existe;
+- **código:** domínio, aplicação, Dexie, migrações e composição validados; formulários não iniciados.
+
+- [x] Prompt 4 — Modelo de domínio de livros;
+- [x] Prompt 5 — Portas e casos de uso;
+- [x] Prompt 6 — Dexie, migrações e composição;
+- [ ] Prompt 7 — Cadastro e edição de livro, próximo trabalho.
 
 ## Blocos e gates
 
@@ -29,8 +34,8 @@
 | `[x]` | 0 | — | contrato aprovado | G0 aprovado |
 | `[x]` | 1 | 1–2 | fundação web navegável | G1 aprovado |
 | `[x]` | 2 | 3 | APK debug instalado e validado no Android real | G2 aprovado |
-| `[~]` | 3 | 4–6 | Prompts 4–5 técnicos concluídos; persistência pendente | G3 aberto |
-| `[ ]` | 4 | 7–9 | app pessoal utilizável | G4 |
+| `[x]` | 3 | 4–6 | domínio, aplicação e persistência validados | G3 aprovado |
+| `[ ]` | 4 | 7–9 | próximo: Prompt 7 — cadastro e edição | G4 aberto |
 | `[ ]` | 5 | 10 | dados exportáveis e recuperáveis | G5 |
 | `[ ]` | 6 | 11–13 | biblioteca visual conectada | G6 |
 | `[ ]` | 7 | 14–15 | identidade sonora e contextual | G7 |
@@ -41,8 +46,9 @@
 
 ## Marcos sugeridos
 
-- `v0.1.0` (atual): fundação, navegação e prova Android;
-- `v0.2.0`: domínio, persistência e CRUD;
+- `v0.1.0`: fundação, navegação e prova Android;
+- `v0.2.0-alpha.1` (atual): domínio, aplicação e persistência validados;
+- `v0.2.0`: CRUD de livros e ferramenta pessoal utilizável;
 - `v0.3.0`: progresso, notas, busca e backup;
 - `v0.4.0`: biblioteca visual conectada;
 - `v0.5.0`: áudio e primeiro ciclo emocional;

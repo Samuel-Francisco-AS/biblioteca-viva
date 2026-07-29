@@ -46,6 +46,8 @@ O protótipo é local-first, sem conta e sem backend. O principal risco não é 
 
 IndexedDB/Dexie é persistência inicial, não criptografia. O sandbox do Android reduz exposição, mas não autoriza a mensagem “dados criptografados”.
 
+O banco `biblioteca-viva` valida registros na leitura e usa transações para entidade/anotação e atividade, mas isso não protege contra acesso a um aparelho comprometido. `navigator.storage.persist()` é apenas uma solicitação: mesmo concedida, não substitui backup e não garante preservação absoluta pelo sistema. O diagnóstico restrito ao desenvolvimento e a builds internos expõe somente versão, estado, contagens e falha sanitizada e permanece fora da produção normal.
+
 Avaliar SQLite e armazenamento seguro quando:
 
 - houver perda reproduzível;

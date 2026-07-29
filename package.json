@@ -1,7 +1,7 @@
 {
   "name": "biblioteca-viva",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0-alpha.1",
   "type": "module",
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:diagnostics": "tsc -b && vite build --mode diagnostics",
     "preview": "vite preview",
     "lint": "eslint .",
     "typecheck": "tsc -b --pretty false",
@@ -17,14 +18,17 @@
     "format": "prettier --write src index.html package.json capacitor.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json tsconfig.test.json vite.config.ts vitest.config.ts eslint.config.js",
     "format:check": "prettier --check src index.html package.json capacitor.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json tsconfig.test.json vite.config.ts vitest.config.ts eslint.config.js",
     "android:sync": "npm run build && cap sync android",
+    "android:sync:diagnostics": "npm run build:diagnostics && cap sync android",
     "android:open": "cap open android",
     "android:run": "npm run android:sync && cap run android",
-    "android:build:debug": "npm run android:sync && cd android && ./gradlew assembleDebug"
+    "android:build:debug": "npm run android:sync && cd android && ./gradlew assembleDebug",
+    "android:build:diagnostics": "npm run android:sync:diagnostics && cd android && ./gradlew assembleDebug"
   },
   "dependencies": {
     "@capacitor/android": "8.4.2",
     "@capacitor/app": "8.1.1",
     "@capacitor/core": "8.4.2",
+    "dexie": "4.4.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "7.18.1",
@@ -43,6 +47,7 @@
     "eslint": "^10.8.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
+    "fake-indexeddb": "6.2.5",
     "globals": "^17.8.0",
     "jsdom": "^30.0.0",
     "prettier": "^3.9.6",

@@ -16,6 +16,8 @@ Registros pessoais são privados por padrão. Na fase de protótipo, o aplicativ
 
 Esses dados podem revelar interesses, rotina, estudo e opiniões. Devem ser tratados como conteúdo pessoal mesmo sem nome ou e-mail.
 
+No Prompt 6, livros, notas, citações e atividades passam a ser armazenados localmente em IndexedDB/Dexie. O aplicativo não adiciona criptografia própria. O sistema operacional ou navegador pode remover armazenamento local, especialmente sem persistência concedida; mesmo com a concessão, preservação absoluta não é prometida e backup ainda não existe.
+
 ## 3. Coleta e transmissão
 
 No protótipo:
@@ -56,6 +58,8 @@ Logs técnicos podem conter IDs e códigos de erro, mas não:
 - conteúdo de backup;
 - caminhos com dados sensíveis;
 - tokens futuros.
+
+O painel disponível apenas em desenvolvimento e em builds diagnósticos internos mostra nome/versão do banco, abertura, suporte à persistência, contagens e falha sanitizada. Ele nunca lista títulos, autores, notas, citações, payloads ou stack traces e não integra o build normal de produção.
 
 ## 7. Portfólio e demonstração
 

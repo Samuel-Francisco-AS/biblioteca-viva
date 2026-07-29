@@ -3,6 +3,9 @@ import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
 
 import { appRoutes } from "./routes";
 import { useAndroidBackButton } from "./useAndroidBackButton";
+import { DevelopmentDiagnostics } from "./app/DevelopmentDiagnostics";
+import type { ApplicationDiagnostics } from "./app/createApplication";
+import { isDiagnosticsEnabled } from "./app/diagnosticsAvailability";
 import "./styles.css";
 
 function NotFoundPage() {
@@ -18,7 +21,14 @@ function NotFoundPage() {
   );
 }
 
-export function App() {
+interface AppProps {
+  readonly diagnostics?: ApplicationDiagnostics;
+}
+
+const diagnosticsBuildEnabled =
+  import.meta.env.DEV || import.meta.env.VITE_ENABLE_DIAGNOSTICS === "true";
+
+export function App({ diagnostics }: AppProps) {
   const location = useLocation();
   const mainRef = useRef<HTMLElement>(null);
   const previousPathRef = useRef(location.pathname);
@@ -82,6 +92,13 @@ export function App() {
           ))}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        {diagnosticsBuildEnabled &&
+          isDiagnosticsEnabled(
+            import.meta.env.DEV,
+            import.meta.env.VITE_ENABLE_DIAGNOSTICS,
+          ) &&
+          location.pathname === "/configuracoes" &&
+          diagnostics && <DevelopmentDiagnostics diagnostics={diagnostics} />}
       </main>
     </div>
   );

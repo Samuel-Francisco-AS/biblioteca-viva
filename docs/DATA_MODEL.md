@@ -1,13 +1,13 @@
 # Modelo de dados
 
-> Contrato do domínio implementado no Prompt 4 em 2026-07-29. Persistência continua fora deste documento até os Prompts 5 e 6.
+> Contrato do domínio e da persistência local implementados no Bloco 3 em 2026-07-29.
 
 ## 1. Limites e camadas
 
 - **domínio:** entidades imutáveis, invariantes, transições, erros e eventos puros em `src/domain/`;
 - **fronteira:** schemas Zod recebem `unknown`, validam estrutura e tipos e fazem normalização textual segura antes das factories;
 - **aplicação:** existe em `src/application/`; orquestra IDs, relógio, repositórios, atividades e publicação dos eventos por portas;
-- **persistência:** ainda não existe; Dexie, schemas de banco e migrações pertencem ao Prompt 6.
+- **persistência:** `src/infrastructure/database/` implementa portas com Dexie/IndexedDB, tipos persistidos explícitos e validação Zod na leitura.
 
 O domínio não confia nos schemas: toda factory e operação protege novamente as invariantes relacionais. Ele não importa React, DOM, Phaser, Capacitor ou Dexie.
 
@@ -148,7 +148,7 @@ Todo evento contém `type` estável, `eventId`, `aggregateId`, `occurredAt` em I
 | `NoteCreated` | ID da nota |
 | `QuoteCreated` | ID da citação e página opcional |
 
-Conteúdo, título, autor, texto de nota e texto de citação não são copiados para eventos. A aplicação agora possui a porta `ApplicationEventBus`, mas não existe implementação concreta, armazenamento ou processamento de eventos.
+Conteúdo, título, autor, texto de nota e texto de citação não são copiados para eventos. `LocalEventBus` é uma implementação em memória, pós-commit e sem persistência; não existe broker ou processamento remoto.
 
 ## 10.1 Atividades da aplicação
 
@@ -160,10 +160,23 @@ Os metadados guardam somente status, campos alterados, progresso, transição ou
 
 - política e representação de arquivamento serão decididas quando o fluxo entrar no escopo;
 - atualização e exclusão de notas/citações ainda não possuem operações;
-- IDs são strings estáveis fornecidas por `IdGenerator`; formato e implementação concreta entram no Prompt 6;
-- atividades possuem contrato na aplicação; persistência e schema do banco entram no Prompt 6;
+- IDs persistidos novos são UUIDs produzidos por `crypto.randomUUID` atrás de `IdGenerator`;
+- atividades são persistidas, mas retenção e limpeza ainda não foram decididas;
 - tags só serão consideradas quando busca/filtros aprovados demonstrarem necessidade.
 
-## 12. Persistência e migrações futuras
+## 12. Persistência e migrações
 
-O banco conceitual continua previsto com entradas, anotações, atividades, preferências e metadados. O schema real, índices, exclusão e migrações não existem ainda e não devem ser inferidos destes tipos. Mudanças futuras de schema exigirão versão, migração determinística, fixture e teste de upgrade.
+O banco estável chama-se `biblioteca-viva`. Os adapters persistem somente dados serializáveis e validam registros lidos antes de devolvê-los à aplicação.
+
+| Tabela | Chave/índices atuais | Finalidade |
+|---|---|---|
+| `libraryEntries` | `&id`, `createdAt` | livros; listagem técnica por `createdAt` e desempate por `id` |
+| `notes` | `&id`, `entryId` | notas vinculadas ao livro |
+| `quotes` | `&id`, `entryId` | citações próprias, inclusive página opcional |
+| `activities` | `&id`, `aggregateId`, `occurredAt`, `[aggregateId+occurredAt]` | histórico mínimo sem conteúdo pessoal |
+| `settings` | `&key` | preferências futuras, sem contrato de produto antecipado |
+| `metadata` | `&key` | marcadores técnicos do schema |
+
+A versão 1 contém as quatro tabelas de dados suficientes para gravar livros e seus efeitos. A versão 2 acrescenta `settings` e `metadata` e grava uma única marca `schema-version = 2`, preservando integralmente registros v1. A migração é idempotente na reabertura e possui teste real com `fake-indexeddb`.
+
+Entidade/anotação e atividade são confirmadas na mesma transação. Eventos são publicados somente após o commit. Exclusão, arquivamento, outbox e política de retenção permanecem abertos e exigirão migrações próprias quando aprovados.

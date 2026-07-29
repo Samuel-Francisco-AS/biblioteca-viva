@@ -45,6 +45,42 @@ Não há teste físico necessário no Prompt 5: não existe adapter ou alteraç�
 - índices e consultas reais;
 - reabertura do banco.
 
+### Infraestrutura disponível após o Prompt 6
+
+Os testes Node usam `fake-indexeddb` para abrir bancos isolados e cobrem schema v2, criação v1, migração v1 → v2 com preservação, reabertura, repositórios e rejeição de dado externo inválido. Também verificam ordenação técnica, imutabilidade observável, tabelas próprias de notas/citações, atividades mínimas e falhas sanitizadas.
+
+Transações são exercitadas com commit e aborto reais: livro/anotação e atividade permanecem juntos, e eventos só são observados após o commit. Falha de publicação preserva o estado já confirmado e chega como `EVENT_PUBLICATION_FAILED`. Clock, UUID criptográfico, armazenamento persistente nos quatro resultados, event bus, composition root e painel possuem testes próprios. A disponibilidade do painel é testada para DEV, modo `diagnostics` e produção normal desabilitada. O build normal deve excluir seus textos, enquanto `build:diagnostics` deve incluí-los. Com 31 novos cenários e os 109 anteriores preservados, a suíte totaliza 140 testes automatizados.
+
+### Gate G3 — execução manual aprovada
+
+Sam executou e aprovou o Gate G3 em 2026-07-29. O artefato Android foi o APK diagnóstico interno em `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `dec455d72ccba0eaf0b652d9c388097d53678da069bf3f78af73c3c90843c210`. Ele não constitui release pública.
+
+#### Evidências no navegador
+
+- [x] criar um livro diagnóstico pelo caso de uso real;
+- [x] confirmar que a contagem permaneceu após recarregar a página;
+- [x] encerrar e reabrir o servidor e confirmar a mesma contagem;
+- [x] abrir duas abas da mesma origem e confirmar que ambas acessaram a mesma base e exibiram a mesma contagem;
+- [x] realizar novas atualizações e confirmar que as contagens continuaram corretas.
+
+#### Evidências no Android
+
+- aparelho: Moto G06;
+- sistema: Android 15;
+- banco: `biblioteca-viva`, aberto na versão 2;
+- [x] criar um livro diagnóstico pelo caso de uso real;
+- [x] confirmar `libraryEntries` de 0 para 1 e `activities` de 0 para 1;
+- [x] confirmar `metadata` em 1 e `notes`, `quotes` e `settings` em 0;
+- [x] fechar e reabrir o aplicativo e confirmar todas as contagens;
+- [x] reiniciar o aparelho e confirmar todas as contagens;
+- [x] instalar outro APK diagnóstico por cima e confirmar preservação das contagens;
+- [x] validar navegação e botão Voltar sem regressão;
+- [x] solicitar armazenamento persistente e obter `denied`;
+- [x] confirmar que `denied` foi tratado como resultado válido e não bloqueou o uso;
+- [x] registrar ausência de defeito bloqueador.
+
+Resultado: **G3 aprovado**. Não foram realizados testes de backup, criptografia, exclusão, APK release assinado ou AAB neste gate.
+
 ### React
 
 - navegação;
@@ -164,7 +200,7 @@ Não foram registrados teste de rotação, reinício do aparelho, teclado virtua
 
 - **G1:** rotas, dimensões móveis no navegador responsivo e navegação por teclado;
 - **G2:** APK debug instalado e ciclo de vida básico;
-- **G3:** domínio, persistência e migração;
+- **G3:** domínio, persistência e migração — aprovado em 2026-07-29;
 - **G4:** ciclo CRUD real;
 - **G5:** restauração em instalação limpa;
 - **G6:** dado altera a cena e cena abre React;

@@ -31,6 +31,10 @@ export interface ApplicationEventBus {
   publish(event: DomainEvent): Promise<void>;
 }
 
+export interface ApplicationTransactionRunner {
+  run<T>(operation: () => Promise<T>): Promise<T>;
+}
+
 export interface ApplicationDependencies {
   readonly activities: ActivityRepository;
   readonly clock: Clock;
@@ -39,4 +43,5 @@ export interface ApplicationDependencies {
   readonly libraryEntries: LibraryEntryRepository;
   readonly notes: NoteRepository;
   readonly quotes: QuoteRepository;
+  readonly transaction: ApplicationTransactionRunner;
 }

@@ -431,7 +431,24 @@ entrada unknown
 
 Todos os comandos seguem `validar → carregar quando necessário → aplicar domínio → persistir entidade/anotação → persistir atividade → publicar evento → retornar`. Eventos nunca são publicados antes das gravações obrigatórias. IDs de evento e atividade são gerados somente quando o efeito correspondente será executado.
 
-Até o Prompt 6, essas portas não formam uma transação. Se a atividade falhar, a entidade anterior já pode estar salva; se o evento falhar, entidade e atividade já podem estar salvas. A aplicação retorna códigos distintos e não informa sucesso, mas não promete rollback inexistente. O adapter Dexie deverá agrupar as gravações persistentes em transação e definir com precisão a relação da publicação com o commit.
+Após o Prompt 6, `ApplicationTransactionRunner` agrupa a gravação da entidade/anotação e da atividade. O adapter Dexie aborta ambas se uma delas falhar. O evento permanece fora da transação e só é publicado depois do commit; se um assinante falhar, a aplicação retorna `EVENT_PUBLICATION_FAILED`, mas os dados já confirmados não são desfeitos. Uma outbox durável não pertence a esta etapa.
+
+### 7.6 Infraestrutura e composição após o Prompt 6
+
+```text
+src/infrastructure/
+├── database/       # schema, Dexie, repositórios, transação, diagnóstico e testes
+├── events/         # event bus local tipado
+├── platform/       # Clock, UUID seguro e persistência do navegador
+└── index.ts        # API pública pequena
+src/app/
+├── createApplication.ts          # composition root e fechamento controlado
+└── DevelopmentDiagnostics.tsx    # painel condicionado a DEV
+```
+
+`infrastructure` implementa portas de `application` e usa tipos públicos de `domain`; nenhuma dependência aponta de volta. A composição abre uma única conexão, instancia repositórios, runner, adapters, bus, comandos e consultas, e oferece `close`. React recebe apenas a fachada de diagnóstico e não importa Dexie.
+
+O fluxo concreto de `CreateBookEntry` é `unknown → schema → ID/Clock → domínio → transação Dexie (livro + atividade) → commit → evento local → resultado`. A mesma fronteira transacional vale para os demais comandos. A solicitação de armazenamento persistente é apenas uma tentativa da plataforma e sua recusa não bloqueia o uso.
 
 ---
 

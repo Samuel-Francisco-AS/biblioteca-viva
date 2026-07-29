@@ -191,4 +191,17 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 
 **Consequências:** adapters, UUID real, relógio real, Dexie e composition root ficam para o Prompt 6. Antes dele, escrita da entidade e atividade não é atômica: falha posterior é reportada por código específico, mas não desfaz gravação anterior. Os futuros adapters Dexie deverão fornecer transação para dados persistentes. Atividades e eventos guardam IDs e metadados mínimos, nunca título, autor ou conteúdo de anotação.
 
+## D-019 — Persistência Dexie, transações e adapters de plataforma
+
+- **Data:** 2026-07-29
+- **Status:** aceita
+
+**Contexto:** o Prompt 6 precisa materializar as portas sem vazar IndexedDB para aplicação, domínio ou React e provar migrações e rollback em Node.
+
+**Decisão:** usar Dexie `4.4.4` sobre o banco estável `biblioteca-viva` e `fake-indexeddb` `6.2.5` somente em desenvolvimento/testes. O schema possui tabelas próprias para `libraryEntries`, `notes`, `quotes`, `activities`, `settings` e `metadata`; Quote permanece própria por corresponder à porta já aprovada. A listagem de livros usa a ordem técnica determinística `createdAt` crescente e `id` como desempate, sem definir a ordenação futura da interface. Registros externos são validados ao ler.
+
+`ApplicationTransactionRunner` delimita uma unidade que confirma entidade/anotação e atividade juntas. O `LocalEventBus` publica somente após o commit; sua falha é reportada sem alegar rollback dos dados confirmados e sem outbox nesta etapa. Clock usa `Date` apenas no adapter, IDs usam `crypto.randomUUID`, e `navigator.storage.persist` fica atrás de uma abstração que retorna `unsupported`, `granted`, `denied` ou `error` sem bloquear o aplicativo.
+
+**Consequências:** a versão 1 do banco contém as quatro tabelas operacionais e a versão 2 acrescenta configurações/metadados com marcador técnico idempotente. Dexie não vaza pelas portas. Armazenamento persistente é uma solicitação, não garantia; IndexedDB não é criptografado pelo app. Exclusão, arquivamento, outbox e backup continuam adiados.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

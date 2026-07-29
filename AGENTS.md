@@ -46,6 +46,8 @@ Havendo contradição, pare a alteração conflitante, relate o ponto e preserve
 - React e Phaser não acessam Dexie diretamente.
 - Phaser recebe uma projeção pronta e emite interações tipadas; não decide regras de negócio.
 - Dados persistentes são fonte de verdade; stores de UI não substituem o banco.
+- Gravações de entidade/anotação e atividade pertencem à mesma transação Dexie; eventos são publicados somente após o commit.
+- Objetos lidos do IndexedDB devem ser validados antes de cruzar a fronteira da infraestrutura.
 - Conteúdo deve ser orientado a dados quando a adição frequente for requisito.
 
 ## 5. Qualidade de código
@@ -88,6 +90,7 @@ O agente pode inspecionar `git status`, `git diff` e histórico.
 
 - `npm run dev` — inicia o servidor de desenvolvimento;
 - `npm run build` — verifica TypeScript e gera o build web;
+- `npm run build:diagnostics` — gera build interno com o painel técnico habilitado;
 - `npm run preview` — serve localmente o build gerado;
 - `npm run lint` — executa ESLint;
 - `npm run typecheck` — verifica os projetos TypeScript;
@@ -96,9 +99,11 @@ O agente pode inspecionar `git status`, `git diff` e histórico.
 - `npm run format` — formata apenas código e arquivos técnicos listados no script;
 - `npm run format:check` — verifica a formatação desse mesmo conjunto.
 - `npm run android:sync` — compila a aplicação web e sincroniza os arquivos e plugins com Android;
+- `npm run android:sync:diagnostics` — sincroniza o build diagnóstico para Android;
 - `npm run android:open` — abre `android/` no Android Studio;
 - `npm run android:run` — sincroniza e executa no aparelho Android conectado;
 - `npm run android:build:debug` — sincroniza e gera o APK debug com `android/gradlew`.
+- `npm run android:build:diagnostics` — gera APK debug interno com diagnóstico para gates.
 
 Ao final de uma tarefa de código, execute os scripts disponíveis equivalentes a:
 

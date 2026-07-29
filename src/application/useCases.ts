@@ -24,6 +24,7 @@ import {
   generatedId,
   parseInput,
   publishEvent,
+  runTransaction,
   saveActivity,
   saveEntity,
 } from "./internal";
@@ -39,7 +40,7 @@ import {
 
 type WriteDependencies = Pick<
   ApplicationDependencies,
-  "activities" | "clock" | "events" | "ids"
+  "activities" | "clock" | "events" | "ids" | "transaction"
 >;
 type BookWriteDependencies = WriteDependencies &
   Pick<ApplicationDependencies, "libraryEntries">;
@@ -77,25 +78,25 @@ export class CreateBookEntry {
       createBook({ ...parsed, id, createdAt: occurredAt }),
     );
 
-    await saveEntity(
-      () => this.dependencies.libraryEntries.save(book),
-      "save_book",
-    );
     const activityId = await generatedId(
       this.dependencies,
       "generate_activity_id",
     );
-    await saveActivity(
-      this.dependencies,
-      createActivity({
-        id: activityId,
-        type: "book_created",
-        aggregateId: book.id,
-        occurredAt,
-        revision: book.revision,
-        metadata: { status: book.status },
-      }),
-    );
+    const activity = createActivity({
+      id: activityId,
+      type: "book_created",
+      aggregateId: book.id,
+      occurredAt,
+      revision: book.revision,
+      metadata: { status: book.status },
+    });
+    await runTransaction(this.dependencies, async () => {
+      await saveEntity(
+        () => this.dependencies.libraryEntries.save(book),
+        "save_book",
+      );
+      await saveActivity(this.dependencies, activity);
+    });
     const eventId = await generatedId(this.dependencies, "generate_event_id");
     await publishEvent(
       this.dependencies,
@@ -131,25 +132,25 @@ export class UpdateBookEntry {
       .filter(([, value]) => value !== undefined)
       .map(([field]) => field);
 
-    await saveEntity(
-      () => this.dependencies.libraryEntries.save(updated),
-      "save_book",
-    );
     const activityId = await generatedId(
       this.dependencies,
       "generate_activity_id",
     );
-    await saveActivity(
-      this.dependencies,
-      createActivity({
-        id: activityId,
-        type: "book_updated",
-        aggregateId: updated.id,
-        occurredAt,
-        revision: updated.revision,
-        metadata: { changedFields: Object.freeze(changedFields) },
-      }),
-    );
+    const activity = createActivity({
+      id: activityId,
+      type: "book_updated",
+      aggregateId: updated.id,
+      occurredAt,
+      revision: updated.revision,
+      metadata: { changedFields: Object.freeze(changedFields) },
+    });
+    await runTransaction(this.dependencies, async () => {
+      await saveEntity(
+        () => this.dependencies.libraryEntries.save(updated),
+        "save_book",
+      );
+      await saveActivity(this.dependencies, activity);
+    });
     const eventId = await generatedId(this.dependencies, "generate_event_id");
     await publishEvent(
       this.dependencies,
@@ -176,30 +177,30 @@ export class UpdateBookProgress {
       updateProgress(existing, parsed.currentPage, occurredAt),
     );
 
-    await saveEntity(
-      () => this.dependencies.libraryEntries.save(updated),
-      "save_book",
-    );
     const activityId = await generatedId(
       this.dependencies,
       "generate_activity_id",
     );
-    await saveActivity(
-      this.dependencies,
-      createActivity({
-        id: activityId,
-        type: "progress_updated",
-        aggregateId: updated.id,
-        occurredAt,
-        revision: updated.revision,
-        metadata: {
-          currentPage: updated.currentPage,
-          ...(updated.totalPages !== undefined && {
-            totalPages: updated.totalPages,
-          }),
-        },
-      }),
-    );
+    const activity = createActivity({
+      id: activityId,
+      type: "progress_updated",
+      aggregateId: updated.id,
+      occurredAt,
+      revision: updated.revision,
+      metadata: {
+        currentPage: updated.currentPage,
+        ...(updated.totalPages !== undefined && {
+          totalPages: updated.totalPages,
+        }),
+      },
+    });
+    await runTransaction(this.dependencies, async () => {
+      await saveEntity(
+        () => this.dependencies.libraryEntries.save(updated),
+        "save_book",
+      );
+      await saveActivity(this.dependencies, activity);
+    });
     const eventId = await generatedId(this.dependencies, "generate_event_id");
     await publishEvent(
       this.dependencies,
@@ -234,25 +235,25 @@ export class ChangeBookStatus {
     );
     if (updated === existing) return existing;
 
-    await saveEntity(
-      () => this.dependencies.libraryEntries.save(updated),
-      "save_book",
-    );
     const activityId = await generatedId(
       this.dependencies,
       "generate_activity_id",
     );
-    await saveActivity(
-      this.dependencies,
-      createActivity({
-        id: activityId,
-        type: "status_changed",
-        aggregateId: updated.id,
-        occurredAt,
-        revision: updated.revision,
-        metadata: { from: existing.status, to: updated.status },
-      }),
-    );
+    const activity = createActivity({
+      id: activityId,
+      type: "status_changed",
+      aggregateId: updated.id,
+      occurredAt,
+      revision: updated.revision,
+      metadata: { from: existing.status, to: updated.status },
+    });
+    await runTransaction(this.dependencies, async () => {
+      await saveEntity(
+        () => this.dependencies.libraryEntries.save(updated),
+        "save_book",
+      );
+      await saveActivity(this.dependencies, activity);
+    });
     const eventId = await generatedId(this.dependencies, "generate_event_id");
     const event =
       updated.status === "completed"
@@ -287,22 +288,22 @@ export class AddNote {
       createNote({ ...parsed, id, createdAt: occurredAt }),
     );
 
-    await saveEntity(() => this.dependencies.notes.save(note), "save_note");
     const activityId = await generatedId(
       this.dependencies,
       "generate_activity_id",
     );
-    await saveActivity(
-      this.dependencies,
-      createActivity({
-        id: activityId,
-        type: "note_added",
-        aggregateId: book.id,
-        occurredAt,
-        revision: note.revision,
-        metadata: { noteId: note.id },
-      }),
-    );
+    const activity = createActivity({
+      id: activityId,
+      type: "note_added",
+      aggregateId: book.id,
+      occurredAt,
+      revision: note.revision,
+      metadata: { noteId: note.id },
+    });
+    await runTransaction(this.dependencies, async () => {
+      await saveEntity(() => this.dependencies.notes.save(note), "save_note");
+      await saveActivity(this.dependencies, activity);
+    });
     const eventId = await generatedId(this.dependencies, "generate_event_id");
     await publishEvent(
       this.dependencies,
@@ -330,25 +331,28 @@ export class AddQuote {
       createQuote({ ...parsed, id, createdAt: occurredAt }, book),
     );
 
-    await saveEntity(() => this.dependencies.quotes.save(quote), "save_quote");
     const activityId = await generatedId(
       this.dependencies,
       "generate_activity_id",
     );
-    await saveActivity(
-      this.dependencies,
-      createActivity({
-        id: activityId,
-        type: "quote_added",
-        aggregateId: book.id,
-        occurredAt,
-        revision: quote.revision,
-        metadata: {
-          quoteId: quote.id,
-          ...(quote.page !== undefined && { page: quote.page }),
-        },
-      }),
-    );
+    const activity = createActivity({
+      id: activityId,
+      type: "quote_added",
+      aggregateId: book.id,
+      occurredAt,
+      revision: quote.revision,
+      metadata: {
+        quoteId: quote.id,
+        ...(quote.page !== undefined && { page: quote.page }),
+      },
+    });
+    await runTransaction(this.dependencies, async () => {
+      await saveEntity(
+        () => this.dependencies.quotes.save(quote),
+        "save_quote",
+      );
+      await saveActivity(this.dependencies, activity);
+    });
     const eventId = await generatedId(this.dependencies, "generate_event_id");
     await publishEvent(
       this.dependencies,

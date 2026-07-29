@@ -40,6 +40,30 @@ npm run android:build:debug
 
 Também existem `npm run android:open` para abrir o projeto no Android Studio e `npm run android:run` para sincronizar e executar quando houver aparelho conectado.
 
+### Diagnóstico interno
+
+O modo Vite `diagnostics` usa `.env.diagnostics` e habilita o painel técnico necessário a gates internos:
+
+```bash
+npm run build:diagnostics
+npm run android:sync:diagnostics
+npm run android:build:diagnostics
+```
+
+O último comando gera um APK debug no caminho habitual. Ele é exclusivamente um artefato interno de teste, não uma release pública. Os comandos `build`, `android:sync` e `android:build:debug` continuam sem o painel; builds normais de produção não leem esse modo.
+
+APK diagnóstico validado no G3 em 2026-07-29:
+
+- aparelho: Moto G06;
+- sistema: Android 15;
+- caminho: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- SHA-256: `dec455d72ccba0eaf0b652d9c388097d53678da069bf3f78af73c3c90843c210`;
+- resultado: banco `biblioteca-viva` versão 2 aberto, escrita pelo caso de uso real e contagens preservadas após reabertura, reinício do aparelho e instalação de outro APK diagnóstico por cima;
+- armazenamento persistente: `denied`, tratado corretamente como não bloqueador;
+- regressão: navegação e botão Voltar aprovados, sem defeito bloqueador.
+
+Esse APK é exclusivamente interno para diagnóstico e gates. Não é release pública, não foi assinado para release e não é AAB.
+
 Primeiro APK debug validado em 2026-07-28:
 
 - aparelho: Moto G06;
@@ -61,6 +85,8 @@ Objetivos:
 - AAB apenas quando houver distribuição por loja.
 
 Comandos reais devem ser registrados após o scaffold. Não inventar script não existente.
+
+APK release assinado, AAB, keystore e configuração de assinatura continuam pendentes para o Gate G11.
 
 ## 4. Keystore
 

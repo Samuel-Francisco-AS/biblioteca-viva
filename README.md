@@ -6,15 +6,15 @@ Biblioteca Viva é um aplicativo local-first de registro pessoal em que livros, 
 
 ## Estado atual
 
-Os Gates G0, G1 e G2 foram aprovados. O Prompt 5 implementou a camada de aplicação e aguarda revisão humana. O Gate G3 permanece aberto; persistência Dexie e composição do Prompt 6 ainda não foram iniciadas.
+Os Gates G0 a G3 estão aprovados e o Bloco 3 foi concluído na versão `0.2.0-alpha.1`. Domínio, casos de uso, Dexie, migrações e persistência web/Android foram validados. O próximo trabalho é o Prompt 7 — Cadastro e edição de livro, no Bloco 4.
 
 ## Domínio atual
 
-`src/domain/` expõe uma API pequena para livros, progresso, status, notas, citações, erros, eventos e schemas Zod de fronteira. Os testes dessa camada rodam em Node, sem DOM. Ainda não existem formulário, adapters concretos, Dexie ou persistência.
+`src/domain/` expõe uma API pequena para livros, progresso, status, notas, citações, erros, eventos e schemas Zod de fronteira. Os testes dessa camada rodam em Node, sem DOM. Não existem formulários ou acesso de interface ao banco.
 
 ## Aplicação atual
 
-`src/application/` coordena o domínio por portas assíncronas para repositórios, relógio, IDs, atividades e eventos. Os oito casos de uso funcionam em Node com dependências injetadas. Ainda não existem implementações concretas dessas portas, composition root ou persistência.
+`src/application/` coordena o domínio por portas assíncronas para repositórios, transação, relógio, IDs, atividades e eventos. `src/infrastructure/` implementa essas portas com Dexie/IndexedDB e adapters de plataforma; `src/app/createApplication.ts` faz a composição explícita. Configurações mostra um diagnóstico técnico sem conteúdo pessoal no servidor de desenvolvimento e no modo explícito `diagnostics`. O build normal de produção não oferece esse painel.
 
 ## Navegação atual
 
@@ -73,6 +73,8 @@ npm run build
 
 Também estão disponíveis `npm run preview`, `npm run test` e `npm run format`. O formatador limita-se ao código e aos arquivos técnicos explicitamente listados no script; a documentação Markdown não é reformatada em massa.
 
+Para gates internos que exigem o painel técnico, use `npm run build:diagnostics`. Esse modo lê `.env.diagnostics`; não é um build normal de produção nem um artefato público.
+
 ## Android
 
 Requisitos locais: Node.js 22 ou superior, Android Studio 2025.2.1 ou superior, Android SDK e o JDK fornecido pelo Android Studio. Com `JAVA_HOME` e `ANDROID_HOME` configurados:
@@ -85,9 +87,11 @@ npm run android:build:debug
 
 O build debug usa o Gradle Wrapper versionado em `android/gradlew`; não exige Gradle global. `npm run android:open` abre o projeto no Android Studio e `npm run android:run` sincroniza e executa quando houver aparelho conectado. O APK gerado fica em `android/app/build/outputs/apk/debug/app-debug.apk` e é ignorado pelo Git.
 
+`npm run android:build:diagnostics` gera no mesmo caminho um APK debug com o painel habilitado exclusivamente para gates internos. `npm run android:build:debug` continua usando o build normal, sem diagnóstico.
+
 ## Distribuição
 
-A primeira distribuição alvo é Android. O APK de depuração já é gerado e foi validado fisicamente no Gate G2, mas não é um artefato público. O APK release assinado permanece pendente para o Gate G11.
+A primeira distribuição alvo é Android. O APK de depuração foi validado no Gate G2 e o APK diagnóstico interno foi validado no Gate G3; nenhum deles é artefato público. O APK release assinado permanece pendente para o Gate G11.
 
 ## Licença
 

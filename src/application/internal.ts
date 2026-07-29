@@ -63,6 +63,18 @@ export async function publishEvent(
   }
 }
 
+export async function runTransaction<T>(
+  dependencies: Pick<ApplicationDependencies, "transaction">,
+  operation: () => Promise<T>,
+): Promise<T> {
+  try {
+    return await dependencies.transaction.run(operation);
+  } catch (error: unknown) {
+    if (error instanceof ApplicationError) throw error;
+    throw persistenceFailed("transaction");
+  }
+}
+
 export async function generatedId(
   dependencies: Pick<ApplicationDependencies, "ids">,
   operation: string,
