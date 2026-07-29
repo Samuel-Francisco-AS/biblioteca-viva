@@ -6,7 +6,11 @@ Biblioteca Viva é um aplicativo local-first de registro pessoal em que livros, 
 
 ## Estado atual
 
-Os Gates G0, G1 e G2 foram aprovados. O Prompt 3 do Bloco 2 integrou Capacitor 8 e gerou o primeiro APK debug real, validado no Moto G06 com Android 15. O próximo trabalho é o Prompt 4 do Bloco 3.
+Os Gates G0, G1 e G2 foram aprovados. O Prompt 4 implementou o domínio puro inicial de livros e aguarda revisão humana; o Gate G3 permanece aberto e os casos de uso do Prompt 5 ainda não foram iniciados.
+
+## Domínio atual
+
+`src/domain/` expõe uma API pequena para livros, progresso, status, notas, citações, erros, eventos e schemas Zod de fronteira. Os testes dessa camada rodam em Node, sem DOM. Ainda não existem formulário, casos de uso, repositório, Dexie ou persistência.
 
 ## Navegação atual
 

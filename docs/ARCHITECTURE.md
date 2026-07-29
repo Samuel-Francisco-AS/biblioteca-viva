@@ -380,6 +380,25 @@ Capacitor `8.4.2` empacota o mesmo build Vite de `dist/` no projeto `android/`. 
 
 O plugin oficial `@capacitor/app` `8.1.1` é a única extensão nativa instalada. A apresentação registra um listener somente em plataforma nativa: rotas internas usam o histórico existente, uma entrada interna sem histórico retorna à Biblioteca e Voltar na raiz encerra sem confirmação. O listener é removido no desmontar; a navegação do navegador não é substituída. Safe areas continuam resolvidas por CSS nos quatro lados, sem dimensões específicas do aparelho.
 
+### 7.4 Domínio efetivo após o Prompt 4
+
+O domínio inicial existe em `src/domain/` e não importa apresentação, navegador ou infraestrutura:
+
+```text
+src/domain/
+├── annotations.ts  # factories de Note e Quote
+├── book.ts         # criação e operações de BookEntry
+├── errors.ts       # erros tipados
+├── events.ts       # contratos e factories dos seis eventos iniciais
+├── schemas.ts      # Zod somente nas fronteiras
+├── types.ts        # entidades, entradas e EntryStatus
+├── validation.ts   # invariantes compartilhadas internas
+├── index.ts        # API pública pequena
+└── domain.test.ts  # suíte Node, sem DOM
+```
+
+Essa estrutura é deliberadamente local: aplicação, portas, repositórios, Dexie e composition root continuam ausentes até os Prompts 5 e 6. A API pública evita imports futuros de detalhes internos, sem barrels entre submódulos nem ciclos.
+
 ---
 
 ## 8. Modelo de domínio inicial

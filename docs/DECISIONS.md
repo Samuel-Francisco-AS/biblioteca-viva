@@ -169,4 +169,15 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 
 **Consequências:** Node 24.18.0 atende ao requisito oficial Node 22+, Android Studio 2026.1.2 supera o mínimo 2025.2.1 e o scaffold usa JDK 21, SDK 36 e API mínima 24. O mesmo build Vite serve web e Android; `android/` e seu Gradle Wrapper são versionados, enquanto builds, APKs, propriedades locais e chaves permanecem ignorados. A orientação principal aprovada continua retrato, mas o manifesto gerado permite rotação até decisão posterior.
 
+## D-017 — Domínio inicial de livros e Zod nas fronteiras
+
+- **Data:** 2026-07-29
+- **Status:** aceita
+
+**Contexto:** o Prompt 4 exige regras puras antes de formulários, casos de uso ou banco. O modelo conceitual anterior listava estados e campos sem fluxo atual equivalente.
+
+**Decisão:** instalar Zod `4.4.3` como dependência exata para validar dados `unknown` nas fronteiras e produzir entradas tipadas. Zod valida estrutura, tipos e normalização textual segura; factories e operações continuam responsáveis por invariantes do domínio, inclusive relações entre progresso, total, status, datas e revisão. O domínio usa somente `planned`, `in_progress`, `paused`, `completed` e `abandoned`; `not_started` é absorvido por `planned`, e `archived` aguarda uma política própria. Avaliações são inteiros de 1 a 5. Chegar à última página não conclui automaticamente; conclusão é explícita e idempotente quando repetida.
+
+**Consequências:** `LibraryEntry` aceita somente `BookEntry` no protótipo; tags, favorite, location e exclusão lógica ficam fora do contrato atual. Reabrir um concluído exige transição para `in_progress` antes de reduzir progresso. Eventos omitem conteúdo pessoal e ainda não possuem bus ou persistência. Zod não torna entidades válidas por si só nem passa a ser dependência das regras internas.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

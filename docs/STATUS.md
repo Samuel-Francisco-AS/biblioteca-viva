@@ -1,16 +1,16 @@
 # STATUS — Biblioteca Viva
 
-> Última atualização: 2026-07-28  
+> Última atualização: 2026-07-29
 > Atualizar este arquivo ao começar e ao encerrar cada bloco relevante.
 
 ## Estado executivo
 
 - **Fase:** domínio, casos de uso e persistência;
 - **bloco concluído:** Bloco 2 — Prova Android antecipada;
-- **prompt concluído:** Prompt 3 — concluído e validado fisicamente;
+- **prompt concluído:** Prompt 4 — tecnicamente concluído, aguardando revisão humana;
 - **próximo bloco:** Bloco 3 — Domínio, casos de uso e persistência;
-- **próximo trabalho:** Prompt 4 — Modelo de domínio de livros;
-- **gate:** G2 aprovado por Sam;
+- **próximo trabalho:** revisão humana do Prompt 4; Prompt 5 somente após aprovação;
+- **gate:** G3 aberto; G2 aprovado por Sam;
 - **versão:** `0.1.0`, marco documental e de pacote após a prova Android;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
@@ -19,7 +19,7 @@
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
 - **compatibilidade:** diferentes celulares Android, proporções de tela, densidades e áreas seguras;
-- **estado geral:** G0, G1 e G2 aprovados; Bloco 2 concluído com APK debug validado fisicamente; funcionalidades reais do produto ainda não iniciadas, e o Bloco 3 é o próximo.
+- **estado geral:** G0, G1 e G2 aprovados; Prompt 4 do Bloco 3 tecnicamente concluído com domínio puro e testes, sem aplicação ou persistência; G3 permanece aberto.
 
 ## Decisões já aprovadas
 
@@ -54,13 +54,15 @@
 
 ## Trabalho atual
 
-Iniciar o Bloco 3 pelo Prompt 4 — Modelo de domínio de livros. Não antecipar os Prompts 5 e 6.
+Revisar o Prompt 4 — Modelo de domínio de livros. O Prompt 5 — Portas e casos de uso — é o próximo somente após validação humana. O Prompt 6 e o Gate G3 continuam pendentes.
 
 ## Bloqueios
 
 Nenhum bloqueio técnico identificado.
 
 ## Última evidência de validação
+
+Em 2026-07-29, o Prompt 4 implementou `LibraryEntry`/`BookEntry`, status e transições, progresso, notas, citações, erros tipados, schemas Zod e seis eventos sem persistência. Os 61 testes do domínio rodaram em Node sem DOM; junto aos oito testes React, os 69 testes passaram. Formatação, lint, typecheck, build web, sincronização Android e verificações Git também foram executados. O resultado aguarda revisão humana e não aprova o Gate G3, que depende dos Prompts 5 e 6 e dos testes de persistência.
 
 Em 2026-07-28, o Prompt 2 foi concluído e validado: os oito testes automatizados, lint, typecheck, formatação e build passaram; Sam navegou manualmente pelas cinco rotas, testou dimensões móveis no modo responsivo, confirmou as navegações inferior e lateral, Tab, Enter, foco visível, link de salto e ausência de overflow horizontal. O G1 foi aprovado. A validação física não ocorreu e foi transferida para o G2, quando deverá ser feita com o primeiro APK Android.
 

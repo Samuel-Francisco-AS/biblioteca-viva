@@ -1,229 +1,163 @@
 # Modelo de dados
 
-> Documento conceitual. Tipos reais devem permanecer alinhados a ele e qualquer divergência precisa ser registrada.
+> Contrato do domínio implementado no Prompt 4 em 2026-07-29. Persistência continua fora deste documento até os Prompts 5 e 6.
 
-## 1. Princípios
+## 1. Limites e camadas
 
-- o domínio usa `LibraryEntry`, nunca `Record` como entidade central;
-- o protótipo implementa somente `BookEntry`;
-- tipos futuros usam união discriminada, não uma entidade com dezenas de opcionais;
-- datas persistentes usam ISO 8601 em UTC;
-- IDs são estáveis e gerados por uma porta;
-- validação em runtime acontece nas fronteiras;
-- banco, backup e eventos possuem versões explícitas;
-- migrações preservam dados e são testadas.
+- **domínio:** entidades imutáveis, invariantes, transições, erros e eventos puros em `src/domain/`;
+- **fronteira:** schemas Zod recebem `unknown`, validam estrutura e tipos e fazem normalização textual segura antes das factories;
+- **aplicação:** ainda não existe; no Prompt 5 orquestrará IDs, relógio, repositórios e publicação dos eventos;
+- **persistência:** ainda não existe; Dexie, schemas de banco e migrações pertencem ao Prompt 6.
+
+O domínio não confia nos schemas: toda factory e operação protege novamente as invariantes relacionais. Ele não importa React, DOM, Phaser, Capacitor ou Dexie.
 
 ## 2. Metadados comuns
 
-```ts
-interface EntityMetadata {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  revision: number;
-  deletedAt?: string;
-}
-```
+`EntityMetadata` é uma interface simples, sem classe-base:
 
-Regras:
+| Campo | Tipo | Regra |
+|---|---|---|
+| `id` | `string` | estável, normalizado e não vazio |
+| `createdAt` | `string` | ISO 8601 UTC canônico |
+| `updatedAt` | `string` | ISO 8601 UTC; nunca anterior a `createdAt` nem à atualização anterior |
+| `revision` | `number` | inteiro positivo; começa em 1 e cresce uma unidade por alteração |
 
-- `revision` começa em 1 e aumenta em cada atualização persistida;
-- `updatedAt` não pode ser anterior a `createdAt`;
-- exclusão lógica só será usada quando houver necessidade real de histórico ou sincronização;
-- `schemaVersion` pertence ao envelope de backup e ao schema do banco, não a todo objeto por hábito.
+Operações recebem IDs e datas explicitamente. Elas não usam relógio ou gerador oculto. `id` e `createdAt` não fazem parte das entradas de atualização e são preservados.
 
-## 3. Livro
+## 3. LibraryEntry e BookEntry
 
-```ts
-type EntryStatus =
-  | 'planned'
-  | 'not_started'
-  | 'in_progress'
-  | 'paused'
-  | 'completed'
-  | 'abandoned'
-  | 'archived';
+`LibraryEntry` é uma união discriminada cujo único membro atual é `BookEntry`. Apenas `type: "book"` é aceito; filmes, séries e estudos permanecem fora do protótipo.
 
-interface BookEntry extends EntityMetadata {
-  type: 'book';
-  title: string;
-  author?: string;
-  status: EntryStatus;
-  totalPages?: number;
-  currentPage: number;
-  rating?: number;
-  startedAt?: string;
-  completedAt?: string;
-  tags: string[];
-}
-```
+| Campo | Tipo | Obrigatório | Regra |
+|---|---|---:|---|
+| metadados comuns | `EntityMetadata` | sim | conforme seção 2 |
+| `type` | `"book"` | sim | discriminante imutável |
+| `title` | `string` | sim | texto normalizado e não vazio |
+| `author` | `string` | não | texto normalizado; vazio vira ausente |
+| `status` | `EntryStatus` | sim | padrão `planned` |
+| `totalPages` | `number` | não | inteiro positivo |
+| `currentPage` | `number` | sim | inteiro não negativo; padrão 0 |
+| `rating` | `number` | não | inteiro de 1 a 5, inclusive |
+| `startedAt` | `string` | não | ISO UTC, não anterior à criação |
+| `completedAt` | `string` | não | obrigatório somente em `completed`; não anterior à criação nem ao início |
 
-### Invariantes
+O modelo mínimo não inclui `tags`, `favorite`, `location`, `deletedAt` ou campos de capa. Eles não são necessários ao Prompt 4 e só poderão entrar quando um fluxo aprovado justificar seu contrato.
 
-- título normalizado e não vazio;
-- total de páginas, quando presente, é inteiro positivo;
-- página atual é inteiro maior ou igual a zero;
-- página atual não excede total conhecido;
-- avaliação, quando presente, usa a faixa aprovada pela interface e pelo domínio;
-- `completedAt` só existe em estado concluído;
-- concluir com total conhecido ajusta progresso de maneira coerente;
-- abandonar ou pausar não apaga progresso;
-- reabrir conclusão preserva histórico por atividade.
+## 4. EntryStatus e transições
 
-## 4. Progresso
+Estados implementados:
 
-O progresso é calculado pelo domínio:
+- `planned`: leitura planejada, ainda não iniciada;
+- `in_progress`: leitura em andamento;
+- `paused`: leitura iniciada e temporariamente pausada;
+- `completed`: leitura concluída de forma explícita;
+- `abandoned`: leitura interrompida sem apagar o progresso alcançado.
 
-- total conhecido: `currentPage / totalPages` limitado entre 0 e 1;
-- total desconhecido: sem porcentagem fabricada;
-- conclusão manual é possível quando o total é desconhecido;
-- zero páginas não significa necessariamente “não iniciado” se o status foi definido explicitamente.
+`not_started` foi consolidado em `planned`, evitando dois estados com a mesma semântica atual. `archived` não é status de leitura e será decidido junto ao fluxo de arquivamento.
 
-## 5. Nota e citação
+Transições permitidas:
 
-```ts
-type AnnotationKind = 'note' | 'quote';
+| Origem | Destinos |
+|---|---|
+| `planned` | `in_progress`, `abandoned` |
+| `in_progress` | `paused`, `completed`, `abandoned` |
+| `paused` | `in_progress`, `completed`, `abandoned` |
+| `completed` | `in_progress` |
+| `abandoned` | `in_progress` |
 
-interface Annotation extends EntityMetadata {
-  entryId: string;
-  kind: AnnotationKind;
-  content: string;
-  location?: string;
-  page?: number;
-  favorite: boolean;
-  tags: string[];
-}
-```
+Aplicar novamente o mesmo status por `changeBookStatus` é inválido. `completeBook` é a exceção idempotente: se o livro já estiver concluído, retorna o mesmo valor e não aumenta a revisão.
 
-Regras:
+Chegar a `currentPage === totalPages` **não conclui automaticamente**. A conclusão é uma intenção explícita. Com total conhecido, `completeBook` ajusta `currentPage` ao total; sem total, preserva a página atual e permite conclusão manual. Para reduzir o progresso de um concluído, primeiro é necessário reabri-lo como `in_progress`. Pausar ou abandonar preserva progresso.
 
-- conteúdo não vazio após normalização;
-- `entryId` precisa existir;
-- página, quando presente, é positiva e não excede total conhecido;
-- citações e notas são texto simples no protótipo;
-- renderização HTML não recebe conteúdo cru.
+## 5. Invariantes do livro
 
-## 6. Atividade
+- textos são aparados e sequências de whitespace viram um espaço;
+- IDs e título não podem ficar vazios após normalização;
+- `totalPages`, quando presente, é inteiro maior que zero;
+- `currentPage` é inteiro, nunca negativo e não excede o total conhecido;
+- avaliação opcional é inteira entre 1 e 5;
+- livro concluído com total conhecido está exatamente na última página;
+- `completedAt` existe somente em livro concluído;
+- todas as datas usam ISO 8601 UTC canônico, por exemplo `2026-07-29T10:00:00.000Z`;
+- revisões são inteiras positivas e crescentes;
+- operações retornam novos objetos congelados, sem alterar a entrada; conclusão repetida retorna a mesma referência;
+- `type`, `id` e `createdAt` não podem ser trocados por operações de atualização.
 
-Atividade preserva histórico útil sem event sourcing completo.
+## 6. Note e Quote
 
-```ts
-type ActivityType =
-  | 'entry_created'
-  | 'entry_updated'
-  | 'progress_updated'
-  | 'entry_completed'
-  | 'annotation_created'
-  | 'milestone_reached';
-```
+As duas entidades são pequenas e distintas, em texto simples:
 
-Cada atividade contém ID, tipo, referência da entidade, horário e payload mínimo validado. Não duplicar conteúdo pessoal inteiro no payload.
+| Entidade | Campos próprios | Regras adicionais |
+|---|---|---|
+| `Note` | `entryId`, `content` | conteúdo normalizado e não vazio |
+| `Quote` | `entryId`, `content`, `page?` | página inteira positiva e, quando o livro é fornecido à operação, não superior a `totalPages` |
 
-## 7. Marcos e recompensas
+Ambas possuem os metadados comuns, começam em revisão 1 e referenciam uma entrada por ID não vazio. A existência efetiva do livro será verificada pela aplicação/repositório no Prompt 5; `createQuote` já aceita o livro como contexto para validar referência e limite de página. Não há Markdown avançado, anexos ou formatação rica.
+
+## 7. Factories e operações
+
+- `createBook`;
+- `updateBibliographicData`;
+- `updateProgress`;
+- `changeBookStatus`;
+- `completeBook`;
+- `createNote`;
+- `createQuote`.
+
+As operações bibliográficas permitem remover `totalPages` e `rating` por `null` explícito. Datas e IDs são fornecidos pelo chamador; relógio e geração de IDs serão portas de aplicação futuras.
+
+Exemplo mínimo:
 
 ```ts
-interface MilestoneDefinition {
-  id: string;
-  event: string;
-  conditions: MilestoneCondition[];
-  rewards: RewardDefinition[];
-  once: boolean;
-  contentVersion: number;
-}
+const book = createBook({
+  id: "book-1",
+  title: "  A   ilha  ",
+  createdAt: "2026-07-29T10:00:00.000Z",
+});
+// title: "A ilha", status: "planned", currentPage: 0, revision: 1
 ```
 
-O estado alcançado guarda:
+## 8. Erros de domínio
 
-- ID da definição;
-- data;
-- versão da definição;
-- recompensas aplicadas;
-- identificador do evento causador quando necessário.
+`DomainError` possui `code`, `field` opcional e mensagem específica. Especializações atuais:
 
-Reaplicar o mesmo evento não pode duplicar recompensa única.
+- `InvalidFieldError` / `INVALID_FIELD`;
+- `InvalidProgressError` / `INVALID_PROGRESS`;
+- `InvalidStatusTransitionError` / `INVALID_STATUS_TRANSITION`;
+- `InvalidDateError` / `INVALID_DATE`;
+- `InvalidRevisionError` / `INVALID_REVISION`.
 
-## 8. Preferências
+Isso permite que a futura aplicação traduza falhas sem comparar mensagens genéricas.
 
-Preferências iniciais:
+## 9. Schemas de fronteira
 
-- volume geral;
-- volume de música;
-- volume de efeitos;
-- mute;
-- redução de movimento;
-- efeitos reduzidos;
-- modo de contraste, se implementado;
-- orientação ou comportamento visual aprovado;
-- versão das preferências.
+Os schemas públicos cobrem criação de livro, atualização bibliográfica, progresso, status, nota e citação. Eles usam objetos estritos, recusam campos inesperados, recebem valores desconhecidos e produzem entradas tipadas. Normalizam somente strings seguras. Relações como página versus total, coerência de conclusão e crescimento de revisão continuam no domínio.
 
-Preferências não são segredos.
+Zod não é usado para modelar entidades internas nem substitui factories.
 
-## 9. Projeção da biblioteca
+## 10. Eventos iniciais
 
-`LibraryViewModel` é derivado, não fonte de verdade. Campos iniciais:
+Todo evento contém `type` estável, `eventId`, `aggregateId`, `occurredAt` em ISO UTC, `revision` da entidade e payload mínimo:
 
-- total de livros;
-- em andamento;
-- concluídos;
-- estado de lotação da estante;
-- livro recentemente atualizado;
-- primeiro marco alcançado;
-- estado visual da sala;
-- conteúdo textual equivalente.
+| Evento | Payload |
+|---|---|
+| `LibraryEntryCreated` | tipo da entrada e status |
+| `LibraryEntryUpdated` | nomes dos campos alterados |
+| `ProgressUpdated` | página atual e total opcional |
+| `LibraryEntryCompleted` | data de conclusão |
+| `NoteCreated` | ID da nota |
+| `QuoteCreated` | ID da citação e página opcional |
 
-Não persistir a projeção se ela puder ser recalculada de forma barata e determinística.
+Conteúdo, título, autor, texto de nota e texto de citação não são copiados para eventos. Não existe event bus, armazenamento ou processamento no Prompt 4.
 
-## 10. Banco conceitual
+## 11. Decisões abertas
 
-Tabelas iniciais esperadas:
+- política e representação de arquivamento serão decididas quando o fluxo entrar no escopo;
+- atualização e exclusão de notas/citações ainda não possuem operações;
+- IDs serão strings estáveis; o formato e a porta geradora entram no Prompt 5;
+- atividades persistidas e schema do banco entram no Prompt 6;
+- tags só serão consideradas quando busca/filtros aprovados demonstrarem necessidade.
 
-- `libraryEntries`;
-- `annotations`;
-- `activities`;
-- `milestoneStates`;
-- `preferences`;
-- `metadata` para versão e migração quando necessário.
+## 12. Persistência e migrações futuras
 
-Índices devem surgir de consultas reais: status, tipo, atualizado em, título normalizado, `entryId` e tipo de anotação. Não criar índice sem consulta correspondente.
-
-## 11. Backup
-
-```ts
-interface BackupEnvelope {
-  format: 'biblioteca-viva-backup';
-  schemaVersion: number;
-  appVersion: string;
-  exportedAt: string;
-  checksum?: string;
-  data: {
-    libraryEntries: unknown[];
-    annotations: unknown[];
-    activities: unknown[];
-    milestoneStates: unknown[];
-    preferences: unknown[];
-  };
-}
-```
-
-A restauração deve:
-
-1. validar envelope e versão;
-2. migrar quando suportado;
-3. apresentar resumo antes de substituir dados;
-4. executar de modo transacional;
-5. preservar backup anterior quando possível;
-6. rejeitar conteúdo inválido sem corromper estado existente.
-
-## 12. Migrações
-
-Toda mudança de schema exige:
-
-- versão nova;
-- função de migração determinística;
-- fixture da versão anterior;
-- teste de upgrade;
-- teste de falha e rollback quando aplicável;
-- registro em `DECISIONS.md` quando alterar contrato relevante;
-- atualização do formato de backup, se necessário.
-
-Migrações não devem depender de React ou Phaser.
+O banco conceitual continua previsto com entradas, anotações, atividades, preferências e metadados. O schema real, índices, exclusão e migrações não existem ainda e não devem ser inferidos destes tipos. Mudanças futuras de schema exigirão versão, migração determinística, fixture e teste de upgrade.

@@ -15,6 +15,12 @@ Garantir que a Biblioteca Viva preserve dados, funcione no Android real, mantenh
 - marcos idempotentes;
 - projeções da biblioteca.
 
+### Domínio disponível após o Prompt 4
+
+`src/domain/domain.test.ts` usa a diretiva `@vitest-environment node`, preservando os testes React existentes em jsdom. A suíte cobre criação mínima e completa, normalização, IDs e títulos vazios, páginas e avaliações nos limites, total conhecido e desconhecido, datas UTC, revisão, imutabilidade, preservação de identidade, matriz completa de status, conclusão explícita e repetida, notas, citações, schemas Zod com `unknown`, erros tipados, seis eventos e ausência de `window`/`document`.
+
+No encerramento técnico do Prompt 4, a suíte possui 69 testes: 61 do domínio em Node e 8 do shell React em jsdom. Não há teste manual necessário para regras puras; a revisão humana do diff ainda decide o avanço ao Prompt 5, e os testes físicos de persistência continuam pertencendo ao Gate G3 após o Prompt 6.
+
 ### Aplicação
 
 - casos de uso com repositórios falsos;

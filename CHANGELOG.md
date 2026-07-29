@@ -8,11 +8,12 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 ### Adicionado
 
-- nada registrado.
+- domínio puro de livros, progresso, status, notas e citações, com operações imutáveis e erros tipados;
+- schemas Zod de fronteira, eventos mínimos sem conteúdo pessoal e suíte de domínio em ambiente Node.
 
 ### Alterado
 
-- nada registrado.
+- documentação do modelo de dados, arquitetura e testes alinhada ao contrato implementado no Prompt 4.
 
 ### Corrigido
 
