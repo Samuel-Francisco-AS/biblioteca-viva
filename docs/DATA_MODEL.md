@@ -6,7 +6,7 @@
 
 - **domínio:** entidades imutáveis, invariantes, transições, erros e eventos puros em `src/domain/`;
 - **fronteira:** schemas Zod recebem `unknown`, validam estrutura e tipos e fazem normalização textual segura antes das factories;
-- **aplicação:** ainda não existe; no Prompt 5 orquestrará IDs, relógio, repositórios e publicação dos eventos;
+- **aplicação:** existe em `src/application/`; orquestra IDs, relógio, repositórios, atividades e publicação dos eventos por portas;
 - **persistência:** ainda não existe; Dexie, schemas de banco e migrações pertencem ao Prompt 6.
 
 O domínio não confia nos schemas: toda factory e operação protege novamente as invariantes relacionais. Ele não importa React, DOM, Phaser, Capacitor ou Dexie.
@@ -148,14 +148,20 @@ Todo evento contém `type` estável, `eventId`, `aggregateId`, `occurredAt` em I
 | `NoteCreated` | ID da nota |
 | `QuoteCreated` | ID da citação e página opcional |
 
-Conteúdo, título, autor, texto de nota e texto de citação não são copiados para eventos. Não existe event bus, armazenamento ou processamento no Prompt 4.
+Conteúdo, título, autor, texto de nota e texto de citação não são copiados para eventos. A aplicação agora possui a porta `ApplicationEventBus`, mas não existe implementação concreta, armazenamento ou processamento de eventos.
+
+## 10.1 Atividades da aplicação
+
+Atividades possuem `id`, `type`, `aggregateId`, `occurredAt`, `revision` relacionada e metadados mínimos. Os tipos atuais são `book_created`, `book_updated`, `progress_updated`, `status_changed`, `note_added` e `quote_added`.
+
+Os metadados guardam somente status, campos alterados, progresso, transição ou ID da anotação e página opcional. Título, autor, conteúdo de nota e texto de citação são proibidos. Atividade é histórico útil, não event sourcing nem cópia da entidade.
 
 ## 11. Decisões abertas
 
 - política e representação de arquivamento serão decididas quando o fluxo entrar no escopo;
 - atualização e exclusão de notas/citações ainda não possuem operações;
-- IDs serão strings estáveis; o formato e a porta geradora entram no Prompt 5;
-- atividades persistidas e schema do banco entram no Prompt 6;
+- IDs são strings estáveis fornecidas por `IdGenerator`; formato e implementação concreta entram no Prompt 6;
+- atividades possuem contrato na aplicação; persistência e schema do banco entram no Prompt 6;
 - tags só serão consideradas quando busca/filtros aprovados demonstrarem necessidade.
 
 ## 12. Persistência e migrações futuras

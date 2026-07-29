@@ -10,10 +10,13 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 - domínio puro de livros, progresso, status, notas e citações, com operações imutáveis e erros tipados;
 - schemas Zod de fronteira, eventos mínimos sem conteúdo pessoal e suíte de domínio em ambiente Node.
+- camada de aplicação com portas assíncronas, oito casos de uso, atividades mínimas e erros públicos estáveis;
+- testes Node de orquestração, ordem dos efeitos e falhas de repositórios, atividades e eventos.
 
 ### Alterado
 
 - documentação do modelo de dados, arquitetura e testes alinhada ao contrato implementado no Prompt 4.
+- documentação da arquitetura e do histórico alinhada aos contratos do Prompt 5 e ao limite transacional anterior ao Dexie.
 
 ### Corrigido
 

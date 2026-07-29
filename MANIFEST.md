@@ -12,6 +12,7 @@ Este manifesto indexa a documentação inicial do repositório Biblioteca Viva, 
 - `capacitor.config.ts` — identidade do aplicativo e diretório do build web usado pelo Capacitor;
 - `android/` — projeto Android nativo versionado, incluindo Gradle Wrapper e módulo `app`.
 - `src/domain/` — domínio puro de livros, anotações, eventos, erros e schemas de fronteira, com API pública em `index.ts` e testes Node.
+- `src/application/` — portas, atividades, erros, DTOs, consultas e comandos que coordenam o domínio, com fakes apenas nos testes Node.
 
 ## Documentos canônicos
 
@@ -53,4 +54,4 @@ Este manifesto indexa a documentação inicial do repositório Biblioteca Viva, 
 
 ## Estado técnico
 
-O scaffold web, o shell navegável e a plataforma Android do Capacitor existem na raiz. O Prompt 4 adicionou o domínio inicial de livros e aguarda revisão humana; o Gate G3 segue aberto, sem aplicação ou persistência. Os comandos, rotas e caminhos reais estão registrados em `README.md`, `AGENTS.md` e `docs/STATUS.md`.
+O scaffold web, o shell navegável e a plataforma Android do Capacitor existem na raiz. O Prompt 5 adicionou a aplicação sobre o domínio e aguarda revisão humana; o Gate G3 segue aberto, sem adapters concretos ou persistência. Os comandos, rotas e caminhos reais estão registrados em `README.md`, `AGENTS.md` e `docs/STATUS.md`.

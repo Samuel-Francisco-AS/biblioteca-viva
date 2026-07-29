@@ -399,6 +399,40 @@ src/domain/
 
 Essa estrutura é deliberadamente local: aplicação, portas, repositórios, Dexie e composition root continuam ausentes até os Prompts 5 e 6. A API pública evita imports futuros de detalhes internos, sem barrels entre submódulos nem ciclos.
 
+### 7.5 Aplicação efetiva após o Prompt 5
+
+```text
+src/application/
+├── ports.ts             # sete portas assíncronas e dependências explícitas
+├── activities.ts        # histórico mínimo sem conteúdo pessoal
+├── errors.ts            # códigos públicos e tradução segura de falhas
+├── schemas.ts           # DTOs de entrada da aplicação
+├── internal.ts          # coordenação interna de validação e efeitos
+├── useCases.ts          # seis comandos de escrita
+├── queries.ts           # GetBookEntry e ListBookEntries
+├── index.ts             # API pública deliberada
+└── application.test.ts  # fakes e testes em Node
+```
+
+As dependências continuam apontando para dentro: `application` importa somente a API pública de `domain` e suas próprias portas; `domain` não conhece `application`. Não há implementação concreta, repositório em memória de produção, Dexie, navegador ou composition root.
+
+Fluxo de `CreateBookEntry`:
+
+```text
+entrada unknown
+→ schema da aplicação
+→ IdGenerator + Clock
+→ createBook do domínio
+→ LibraryEntryRepository.save
+→ ActivityRepository.save
+→ ApplicationEventBus.publish
+→ BookEntry
+```
+
+Todos os comandos seguem `validar → carregar quando necessário → aplicar domínio → persistir entidade/anotação → persistir atividade → publicar evento → retornar`. Eventos nunca são publicados antes das gravações obrigatórias. IDs de evento e atividade são gerados somente quando o efeito correspondente será executado.
+
+Até o Prompt 6, essas portas não formam uma transação. Se a atividade falhar, a entidade anterior já pode estar salva; se o evento falhar, entidade e atividade já podem estar salvas. A aplicação retorna códigos distintos e não informa sucesso, mas não promete rollback inexistente. O adapter Dexie deverá agrupar as gravações persistentes em transação e definir com precisão a relação da publicação com o commit.
+
 ---
 
 ## 8. Modelo de domínio inicial

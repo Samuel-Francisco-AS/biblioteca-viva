@@ -17,8 +17,8 @@
 - **bloco concluído:** 2 — Prova Android antecipada;
 - **gate:** G2 aprovado;
 - **próximo bloco:** 3 — Domínio, casos de uso e persistência;
-- **prompt atual:** Prompt 4 — tecnicamente concluído, aguardando revisão humana;
-- **próximo prompt após aprovação:** Prompt 5 — Portas e casos de uso;
+- **prompt atual:** Prompt 5 — tecnicamente concluído, aguardando revisão humana;
+- **próximo prompt após aprovação:** Prompt 6 — Dexie, migrações e composição;
 - **APK:** debug validado no Moto G06 com Android 15; release assinado ainda não existe;
 - **código:** shell React responsivo e navegável; funcionalidades do produto não iniciadas.
 
@@ -29,7 +29,7 @@
 | `[x]` | 0 | — | contrato aprovado | G0 aprovado |
 | `[x]` | 1 | 1–2 | fundação web navegável | G1 aprovado |
 | `[x]` | 2 | 3 | APK debug instalado e validado no Android real | G2 aprovado |
-| `[~]` | 3 | 4–6 | Prompt 4 técnico concluído; aplicação e persistência pendentes | G3 aberto |
+| `[~]` | 3 | 4–6 | Prompts 4–5 técnicos concluídos; persistência pendente | G3 aberto |
 | `[ ]` | 4 | 7–9 | app pessoal utilizável | G4 |
 | `[ ]` | 5 | 10 | dados exportáveis e recuperáveis | G5 |
 | `[ ]` | 6 | 11–13 | biblioteca visual conectada | G6 |

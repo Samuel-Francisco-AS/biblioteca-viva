@@ -6,11 +6,15 @@ Biblioteca Viva é um aplicativo local-first de registro pessoal em que livros, 
 
 ## Estado atual
 
-Os Gates G0, G1 e G2 foram aprovados. O Prompt 4 implementou o domínio puro inicial de livros e aguarda revisão humana; o Gate G3 permanece aberto e os casos de uso do Prompt 5 ainda não foram iniciados.
+Os Gates G0, G1 e G2 foram aprovados. O Prompt 5 implementou a camada de aplicação e aguarda revisão humana. O Gate G3 permanece aberto; persistência Dexie e composição do Prompt 6 ainda não foram iniciadas.
 
 ## Domínio atual
 
-`src/domain/` expõe uma API pequena para livros, progresso, status, notas, citações, erros, eventos e schemas Zod de fronteira. Os testes dessa camada rodam em Node, sem DOM. Ainda não existem formulário, casos de uso, repositório, Dexie ou persistência.
+`src/domain/` expõe uma API pequena para livros, progresso, status, notas, citações, erros, eventos e schemas Zod de fronteira. Os testes dessa camada rodam em Node, sem DOM. Ainda não existem formulário, adapters concretos, Dexie ou persistência.
+
+## Aplicação atual
+
+`src/application/` coordena o domínio por portas assíncronas para repositórios, relógio, IDs, atividades e eventos. Os oito casos de uso funcionam em Node com dependências injetadas. Ainda não existem implementações concretas dessas portas, composition root ou persistência.
 
 ## Navegação atual
 

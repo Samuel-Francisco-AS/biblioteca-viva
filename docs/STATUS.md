@@ -7,9 +7,9 @@
 
 - **Fase:** domínio, casos de uso e persistência;
 - **bloco concluído:** Bloco 2 — Prova Android antecipada;
-- **prompt concluído:** Prompt 4 — tecnicamente concluído, aguardando revisão humana;
+- **prompt concluído:** Prompt 5 — tecnicamente concluído, aguardando revisão humana;
 - **próximo bloco:** Bloco 3 — Domínio, casos de uso e persistência;
-- **próximo trabalho:** revisão humana do Prompt 4; Prompt 5 somente após aprovação;
+- **próximo trabalho:** revisão humana do Prompt 5; Prompt 6 somente após aprovação;
 - **gate:** G3 aberto; G2 aprovado por Sam;
 - **versão:** `0.1.0`, marco documental e de pacote após a prova Android;
 - **repositório:** Git inicializado;
@@ -19,7 +19,7 @@
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
 - **compatibilidade:** diferentes celulares Android, proporções de tela, densidades e áreas seguras;
-- **estado geral:** G0, G1 e G2 aprovados; Prompt 4 do Bloco 3 tecnicamente concluído com domínio puro e testes, sem aplicação ou persistência; G3 permanece aberto.
+- **estado geral:** G0, G1 e G2 aprovados; Prompts 4 e 5 do Bloco 3 tecnicamente concluídos com domínio e aplicação testados, sem adapters concretos ou persistência; G3 permanece aberto.
 
 ## Decisões já aprovadas
 
@@ -54,13 +54,15 @@
 
 ## Trabalho atual
 
-Revisar o Prompt 4 — Modelo de domínio de livros. O Prompt 5 — Portas e casos de uso — é o próximo somente após validação humana. O Prompt 6 e o Gate G3 continuam pendentes.
+Revisar o Prompt 5 — Portas e casos de uso. O Prompt 6 — Dexie, migrações e composição — é o próximo somente após validação humana. O Gate G3 continua pendente.
 
 ## Bloqueios
 
 Nenhum bloqueio técnico identificado.
 
 ## Última evidência de validação
+
+Em 2026-07-29, o Prompt 5 implementou sete portas, seis comandos de escrita, duas consultas, atividades mínimas e erros públicos sem adapters concretos. Os 40 novos testes da aplicação rodaram em Node; junto aos 61 testes do domínio e oito React, os 109 testes passaram. A ordem de persistência e publicação e os cenários de falha foram validados com fakes exclusivos dos testes. O resultado aguarda revisão humana e não aprova G3, que depende do Prompt 6 e das provas de persistência.
 
 Em 2026-07-29, o Prompt 4 implementou `LibraryEntry`/`BookEntry`, status e transições, progresso, notas, citações, erros tipados, schemas Zod e seis eventos sem persistência. Os 61 testes do domínio rodaram em Node sem DOM; junto aos oito testes React, os 69 testes passaram. Formatação, lint, typecheck, build web, sincronização Android e verificações Git também foram executados. O resultado aguarda revisão humana e não aprova o Gate G3, que depende dos Prompts 5 e 6 e dos testes de persistência.
 

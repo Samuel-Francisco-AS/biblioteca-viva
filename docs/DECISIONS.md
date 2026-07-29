@@ -180,4 +180,15 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 
 **Consequências:** `LibraryEntry` aceita somente `BookEntry` no protótipo; tags, favorite, location e exclusão lógica ficam fora do contrato atual. Reabrir um concluído exige transição para `in_progress` antes de reduzir progresso. Eventos omitem conteúdo pessoal e ainda não possuem bus ou persistência. Zod não torna entidades válidas por si só nem passa a ser dependência das regras internas.
 
+## D-018 — Portas e ordem dos efeitos da aplicação
+
+- **Data:** 2026-07-29
+- **Status:** aceita
+
+**Contexto:** o Prompt 5 precisa coordenar o domínio sem escolher armazenamento. `AddQuote` exige persistência própria, embora o plano original cite apenas `NoteRepository`.
+
+**Decisão:** definir portas assíncronas pequenas para `LibraryEntryRepository`, `NoteRepository`, `QuoteRepository`, `ActivityRepository`, `IdGenerator`, `Clock` e `ApplicationEventBus`. `QuoteRepository` permanece separado porque `Quote` é entidade explícita e escondê-la em `NoteRepository` criaria um contrato falso; não haverá superporta genérica de anotações. Casos de escrita seguem validação, carga, domínio, persistência da entidade, atividade e evento. A publicação ocorre somente depois das gravações obrigatórias. Nenhuma implementação concreta ou regra de ordenação de lista é escolhida; `ListBookEntries` preserva a ordem fornecida pelo repositório.
+
+**Consequências:** adapters, UUID real, relógio real, Dexie e composition root ficam para o Prompt 6. Antes dele, escrita da entidade e atividade não é atômica: falha posterior é reportada por código específico, mas não desfaz gravação anterior. Os futuros adapters Dexie deverão fornecer transação para dados persistentes. Atividades e eventos guardam IDs e metadados mínimos, nunca título, autor ou conteúdo de anotação.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

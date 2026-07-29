@@ -28,6 +28,14 @@ No encerramento técnico do Prompt 4, a suíte possui 69 testes: 61 do domínio 
 - falhas de persistência propagadas de modo compreensível;
 - relógio e IDs controláveis em testes.
 
+### Aplicação disponível após o Prompt 5
+
+`src/application/application.test.ts` usa ambiente Node e mantém todos os fakes dentro do teste. Os 40 cenários cobrem os oito casos de uso, validação de DTOs, carga e listagem, transições permitidas e proibidas, conclusão idempotente, preservação de identidade, atividades sem conteúdo pessoal, eventos corretos e ordem `entidade → atividade → evento`.
+
+Falhas simuladas cobrem consulta e gravação de livros, notas, citações, atividades e publicação. Os testes verificam códigos públicos, ausência de vazamento das mensagens internas, nenhuma publicação após gravação anterior falhar e a limitação honesta de não haver rollback entre portas. Também confirmam ausência de `window`, `document` e `indexedDB`. Com os 61 testes de domínio e oito React existentes, a suíte totaliza 109 testes.
+
+Não há teste físico necessário no Prompt 5: não existe adapter ou alteração de interface/Android. Persistência em navegador e aparelho continua como evidência obrigatória do Gate G3 após o Prompt 6.
+
 ### Persistência
 
 - CRUD Dexie;
