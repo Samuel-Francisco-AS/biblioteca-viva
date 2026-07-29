@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
 
 import { appRoutes } from "./routes";
+import { useAndroidBackButton } from "./useAndroidBackButton";
 import "./styles.css";
 
 function NotFoundPage() {
@@ -25,6 +26,8 @@ export function App() {
     (route) => route.path === location.pathname,
   );
   const sectionTitle = activeRoute?.title ?? "Página não encontrada";
+
+  useAndroidBackButton();
 
   useEffect(() => {
     if (previousPathRef.current !== location.pathname) {

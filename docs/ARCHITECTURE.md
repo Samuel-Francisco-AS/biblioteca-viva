@@ -374,6 +374,12 @@ src/
 
 Os caminhos são `/`, `/colecao`, `/novo-livro`, `/arquivo` e `/configuracoes`. Uma rota curinga apresenta erro simples e retorno à Biblioteca. A navegação usa a mesma lista e o mesmo HTML no mobile e no desktop: CSS a posiciona embaixo em telas estreitas e como barra lateral a partir de 768 px. Os estilos globais permanecem em um único arquivo porque o shell ainda é pequeno; design tokens cobrem cores, superfícies, texto, foco, espaçamento, tipografia, bordas, raios, sombra, toque, camadas e largura de conteúdo.
 
+### 7.3 Integração Android após o Prompt 3
+
+Capacitor `8.4.2` empacota o mesmo build Vite de `dist/` no projeto `android/`. A configuração TypeScript em `capacitor.config.ts` preserva `appId` `com.samuelfrancisco.bibliotecaviva` e `appName` “Biblioteca Viva”. O projeto nativo gerado usa API mínima 24, compile/target SDK 36 e Gradle Wrapper 8.14.3.
+
+O plugin oficial `@capacitor/app` `8.1.1` é a única extensão nativa instalada. A apresentação registra um listener somente em plataforma nativa: rotas internas usam o histórico existente, uma entrada interna sem histórico retorna à Biblioteca e Voltar na raiz encerra sem confirmação. O listener é removido no desmontar; a navegação do navegador não é substituída. Safe areas continuam resolvidas por CSS nos quatro lados, sem dimensões específicas do aparelho.
+
 ---
 
 ## 8. Modelo de domínio inicial

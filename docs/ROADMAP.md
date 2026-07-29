@@ -13,12 +13,12 @@
 
 ## Estado atual
 
-- **versão:** fundação pré-v0.1.0;
-- **bloco:** 2 — Prova Android antecipada, próximo;
-- **gate:** G1 aprovado; G2 é o próximo gate;
-- **prompt atual:** Prompt 2 — concluído e validado;
-- **próximo prompt:** Prompt 3 — Capacitor e primeiro APK de depuração;
-- **APK:** não iniciado;
+- **versão:** `v0.1.0`, marco atual;
+- **bloco concluído:** 2 — Prova Android antecipada;
+- **gate:** G2 aprovado;
+- **próximo bloco:** 3 — Domínio, casos de uso e persistência;
+- **próximo prompt:** Prompt 4 — Modelo de domínio de livros;
+- **APK:** debug validado no Moto G06 com Android 15; release assinado ainda não existe;
 - **código:** shell React responsivo e navegável; funcionalidades do produto não iniciadas.
 
 ## Blocos e gates
@@ -27,8 +27,8 @@
 |---|---:|---:|---|---|
 | `[x]` | 0 | — | contrato aprovado | G0 aprovado |
 | `[x]` | 1 | 1–2 | fundação web navegável | G1 aprovado |
-| `[ ]` | 2 | 3 | APK debug instalado | G2 próximo |
-| `[ ]` | 3 | 4–6 | domínio e persistência isolados | G3 |
+| `[x]` | 2 | 3 | APK debug instalado e validado no Android real | G2 aprovado |
+| `[ ]` | 3 | 4–6 | próximo: domínio e persistência isolados | G3 |
 | `[ ]` | 4 | 7–9 | app pessoal utilizável | G4 |
 | `[ ]` | 5 | 10 | dados exportáveis e recuperáveis | G5 |
 | `[ ]` | 6 | 11–13 | biblioteca visual conectada | G6 |
@@ -40,7 +40,7 @@
 
 ## Marcos sugeridos
 
-- `v0.1.0`: fundação, navegação e prova Android;
+- `v0.1.0` (atual): fundação, navegação e prova Android;
 - `v0.2.0`: domínio, persistência e CRUD;
 - `v0.3.0`: progresso, notas, busca e backup;
 - `v0.4.0`: biblioteca visual conectada;

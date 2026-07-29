@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> Estado atual: Gates G0 e G1 aprovados; Bloco 2 e Prompt 3 são os próximos trabalhos, 28 de julho de 2026.
+> Estado atual: Gates G0, G1 e G2 aprovados; Bloco 3 e Prompt 4 são os próximos trabalhos, 28 de julho de 2026.
 
 ## 1. Função desta documentação
 
@@ -86,8 +86,8 @@ Ela está dividida por frequência de mudança:
 - Prompt 1 validado manualmente em desktop e três dimensões móveis;
 - shell responsivo e cinco rotas criados pelo Prompt 2;
 - Prompt 2 concluído e validado no navegador;
-- Gates G0 e G1 aprovados; Gate G2 é o próximo;
+- Gates G0, G1 e G2 aprovados; Gate G3 é o próximo;
 - repositório Git inicializado na branch `main`;
 - stack e arquitetura aprovadas;
-- APK de depuração previsto no Gate G2;
+- APK de depuração validado no Gate G2; APK release assinado permanece pendente;
 - tipos além de livro permanecem fora do protótipo.

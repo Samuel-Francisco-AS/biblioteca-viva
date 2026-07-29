@@ -9,6 +9,8 @@ Este manifesto indexa a documentação inicial do repositório Biblioteca Viva, 
 - `CONTRIBUTING.md` — fluxo humano de contribuição;
 - `CHANGELOG.md` — histórico de versões;
 - `MANIFEST.md` — este índice.
+- `capacitor.config.ts` — identidade do aplicativo e diretório do build web usado pelo Capacitor;
+- `android/` — projeto Android nativo versionado, incluindo Gradle Wrapper e módulo `app`.
 
 ## Documentos canônicos
 
@@ -50,4 +52,4 @@ Este manifesto indexa a documentação inicial do repositório Biblioteca Viva, 
 
 ## Estado técnico
 
-O scaffold do Prompt 1 e o shell navegável do Prompt 2 existem na raiz do repositório. O Prompt 2 aguarda validação humana e o Gate G1 permanece aberto. Os comandos, rotas e caminhos reais estão registrados em `README.md`, `AGENTS.md` e `docs/STATUS.md`.
+O scaffold web, o shell navegável e a plataforma Android do Capacitor existem na raiz. O Prompt 3 e o Gate G2 foram concluídos com um APK debug validado fisicamente; o Prompt 4 do Bloco 3 é o próximo trabalho. Os comandos, rotas e caminhos reais estão registrados em `README.md`, `AGENTS.md` e `docs/STATUS.md`.

@@ -5,19 +5,21 @@
 
 ## Estado executivo
 
-- **Fase:** prova Android antecipada;
-- **bloco ativo:** Bloco 2 — Prova Android antecipada, próximo;
-- **prompt atual:** Prompt 2 — concluído e validado;
-- **próximo trabalho:** Prompt 3 — Capacitor e primeiro APK de depuração;
-- **gate atual:** G1 — Fundação navegável, aprovado; G2 é o próximo gate;
-- **versão executável:** fundação web local `0.0.0`, ainda não lançada;
+- **Fase:** domínio, casos de uso e persistência;
+- **bloco concluído:** Bloco 2 — Prova Android antecipada;
+- **prompt concluído:** Prompt 3 — concluído e validado fisicamente;
+- **próximo bloco:** Bloco 3 — Domínio, casos de uso e persistência;
+- **próximo trabalho:** Prompt 4 — Modelo de domínio de livros;
+- **gate:** G2 aprovado por Sam;
+- **versão:** `0.1.0`, marco documental e de pacote após a prova Android;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
-- **APK:** inexistente; o primeiro APK será criado no Prompt 3;
+- **APK:** debug validado no Moto G06 com Android 15, em `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `af45ac6ca5641b634560cf54bef60459b27fab0f367cd3d171e6c0a2fe2497fe`;
+- **release Android:** ainda não existe APK release assinado nem artefato Android público;
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
 - **compatibilidade:** diferentes celulares Android, proporções de tela, densidades e áreas seguras;
-- **estado geral:** G0 e G1 aprovados, Bloco 1 concluído e shell web navegável; funcionalidades reais do produto ainda não iniciadas.
+- **estado geral:** G0, G1 e G2 aprovados; Bloco 2 concluído com APK debug validado fisicamente; funcionalidades reais do produto ainda não iniciadas, e o Bloco 3 é o próximo.
 
 ## Decisões já aprovadas
 
@@ -52,7 +54,7 @@
 
 ## Trabalho atual
 
-Iniciar o Bloco 2 pelo Prompt 3, integrar Capacitor e produzir o primeiro APK de depuração. A instalação e a validação física do shell no smartphone são obrigatórias no Gate G2.
+Iniciar o Bloco 3 pelo Prompt 4 — Modelo de domínio de livros. Não antecipar os Prompts 5 e 6.
 
 ## Bloqueios
 
@@ -61,3 +63,5 @@ Nenhum bloqueio técnico identificado.
 ## Última evidência de validação
 
 Em 2026-07-28, o Prompt 2 foi concluído e validado: os oito testes automatizados, lint, typecheck, formatação e build passaram; Sam navegou manualmente pelas cinco rotas, testou dimensões móveis no modo responsivo, confirmou as navegações inferior e lateral, Tab, Enter, foco visível, link de salto e ausência de overflow horizontal. O G1 foi aprovado. A validação física não ocorreu e foi transferida para o G2, quando deverá ser feita com o primeiro APK Android.
+
+Em 2026-07-28, o Prompt 3 integrou Capacitor 8.4.2, gerou e sincronizou `android/` e produziu um APK debug real com o Gradle Wrapper (`BUILD SUCCESSFUL`). Sam instalou o APK em um Moto G06 com Android 15 e validou primeira abertura sem tela branca, toque e navegação nas cinco áreas, indicação da opção ativa, histórico e encerramento pelo botão Voltar, minimizar/restaurar, remoção pelos recentes e reabertura, safe areas e ausência de overflow horizontal. Nenhum defeito bloqueador foi encontrado; Sam aprovou o G2 e concluiu o Bloco 2. Ainda não existe APK release assinado.

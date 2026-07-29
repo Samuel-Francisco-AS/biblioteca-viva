@@ -29,6 +29,27 @@ Objetivos:
 - testar navegação, ciclo de vida e persistência;
 - permitir iteração.
 
+O processo implementado no Prompt 3 é:
+
+```bash
+npm run android:sync
+npm run android:build:debug
+```
+
+`android:sync` executa o build Vite e `cap sync android`. `android:build:debug` repete essa sincronização e executa `android/gradlew assembleDebug`, sem Gradle global. O artefato local confirmado é `android/app/build/outputs/apk/debug/app-debug.apk` e permanece ignorado pelo Git.
+
+Também existem `npm run android:open` para abrir o projeto no Android Studio e `npm run android:run` para sincronizar e executar quando houver aparelho conectado.
+
+Primeiro APK debug validado em 2026-07-28:
+
+- aparelho: Moto G06;
+- sistema: Android 15;
+- caminho relativo: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- SHA-256: `af45ac6ca5641b634560cf54bef60459b27fab0f367cd3d171e6c0a2fe2497fe`;
+- resultado: instalação, abertura, navegação, botão Voltar, ciclo de vida básico e safe areas aprovados, sem defeitos bloqueadores observados.
+
+Este arquivo é um APK de depuração validado localmente, não um artefato público ou uma release Android. A assinatura de release permanece pendente para o Gate G11.
+
 ### Release
 
 Objetivos:
@@ -54,18 +75,18 @@ Adicionar padrões correspondentes ao `.gitignore`.
 
 ## 5. Checklist do APK debug — G2
 
-- [ ] build web concluído;
-- [ ] sincronização Capacitor concluída;
-- [ ] projeto abre no Android Studio;
-- [ ] APK gerado;
-- [ ] instalação limpa;
-- [ ] abertura;
-- [ ] cinco rotas;
-- [ ] botão voltar;
-- [ ] segundo plano e retorno;
-- [ ] fechamento e reabertura;
-- [ ] safe areas;
-- [ ] resultado registrado em `TEST_PLAN.md`.
+- [x] build web concluído;
+- [x] sincronização Capacitor concluída;
+- [ ] projeto abre no Android Studio (não verificado nesta execução física);
+- [x] APK gerado;
+- [x] instalação física;
+- [x] abertura;
+- [x] cinco rotas;
+- [x] botão voltar;
+- [x] segundo plano e retorno;
+- [x] remoção pelos recentes e reabertura;
+- [x] safe areas;
+- [x] resultado registrado em `TEST_PLAN.md`.
 
 ## 6. Checklist de release — G11
 

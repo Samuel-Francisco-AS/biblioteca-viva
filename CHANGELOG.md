@@ -8,17 +8,11 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 ### Adicionado
 
-- conjunto inicial de documentação do projeto;
-- decisões de arquitetura, produto, segurança, acessibilidade, conteúdo e execução;
-- plano de 11 blocos e 19 prompts principais.
-- fundação React e TypeScript estrito com Vite;
-- ferramentas de lint, formatação, testes de interface e build web.
-- shell responsivo com cinco áreas navegáveis e tratamento de caminho desconhecido;
-- design tokens, navegação acessível e testes automatizados das rotas.
+- nada registrado.
 
 ### Alterado
 
-- Prompts 1 e 2 concluídos; o shell navegável foi validado e o Gate G1 foi aprovado. As funcionalidades do produto ainda não foram iniciadas.
+- nada registrado.
 
 ### Corrigido
 
@@ -27,6 +21,20 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 ### Removido
 
 - nada registrado.
+
+## [0.1.0] — 2026-07-28
+
+### Adicionado
+
+- fundação React, Vite e TypeScript estrito, com lint, formatação, testes e build web;
+- shell responsivo e navegável com Biblioteca, Coleção, Novo livro, Arquivo e Configurações;
+- integração Capacitor 8.4.2, plataforma Android e geração do primeiro APK debug;
+- tratamento do botão Voltar nativo e das safe areas no shell Android;
+- prova física no Moto G06 com Android 15, aprovando instalação, abertura, navegação, ciclo de vida e encerramento pela raiz.
+
+### Alterado
+
+- Gates G0, G1 e G2 aprovados; Blocos 0, 1 e 2 concluídos.
 
 ## Como atualizar
 

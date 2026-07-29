@@ -120,6 +120,32 @@ Validação manual do Prompt 2, realizada por Sam em 2026-07-28:
 
 A validação física do shell não foi realizada e foi transferida para o G2. O acesso ao servidor de desenvolvimento pelo smartphone exigiria um túnel HTTPS Cloudflare devido ao isolamento entre dispositivos imposto pelo roteador; não há evidência de teste do aplicativo no Moto G06 neste gate.
 
+### APK debug disponível após o Prompt 3
+
+Validação automatizada e de build concluída em 2026-07-28:
+
+- build Vite e sincronização Capacitor concluídos;
+- Gradle Wrapper 8.14.3 executou `assembleDebug` com sucesso;
+- APK confirmado em `android/app/build/outputs/apk/debug/app-debug.apk`;
+- testes automatizados cobrem navegação web, retorno nativo, registro único e remoção do listener;
+- orientação não foi bloqueada; o comportamento de rotação deve ser observado no aparelho.
+
+Checklist física executada por Sam em 2026-07-28 no Moto G06 com Android 15, usando o APK debug em `android/app/build/outputs/apk/debug/app-debug.apk` (SHA-256 `af45ac6ca5641b634560cf54bef60459b27fab0f367cd3d171e6c0a2fe2497fe`):
+
+- [x] instalar fisicamente o APK debug;
+- [x] abrir pela primeira vez sem tela branca ou erro bloqueador;
+- [x] abrir Biblioteca, Coleção, Novo livro, Arquivo e Configurações e confirmar resposta ao toque;
+- [x] confirmar a indicação correta da opção ativa;
+- [x] usar Voltar em rotas internas e percorrer o histórico das rotas;
+- [x] usar Voltar na Biblioteca e confirmar o encerramento sem diálogo;
+- [x] minimizar e restaurar o aplicativo;
+- [x] remover o aplicativo pelo seletor de recentes e reabri-lo;
+- [x] confirmar que barras do sistema e safe areas não cobrem o conteúdo;
+- [x] confirmar ausência de overflow horizontal;
+- [x] registrar que nenhum defeito bloqueador foi encontrado.
+
+Não foram registrados teste de rotação, reinício do aparelho, teclado virtual ou identificador de commit. As evidências visuais foram fornecidas por Sam e não foram copiadas para o repositório. Resultado: **aprovado**; Sam aprovou o Gate G2.
+
 ## 4. Gates mínimos
 
 - **G1:** rotas, dimensões móveis no navegador responsivo e navegação por teclado;

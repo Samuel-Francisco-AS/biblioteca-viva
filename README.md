@@ -6,7 +6,7 @@ Biblioteca Viva é um aplicativo local-first de registro pessoal em que livros, 
 
 ## Estado atual
 
-O Gate G0 foi aprovado e o projeto está no `BLOCO 1` — Fundação web. Os Prompts 1 e 2 estão implementados; o shell navegável do Prompt 2 aguarda validação humana. O Gate G1 ainda não foi aprovado e não existe APK.
+Os Gates G0, G1 e G2 foram aprovados. O Prompt 3 do Bloco 2 integrou Capacitor 8 e gerou o primeiro APK debug real, validado no Moto G06 com Android 15. O próximo trabalho é o Prompt 4 do Bloco 3.
 
 ## Navegação atual
 
@@ -65,9 +65,21 @@ npm run build
 
 Também estão disponíveis `npm run preview`, `npm run test` e `npm run format`. O formatador limita-se ao código e aos arquivos técnicos explicitamente listados no script; a documentação Markdown não é reformatada em massa.
 
+## Android
+
+Requisitos locais: Node.js 22 ou superior, Android Studio 2025.2.1 ou superior, Android SDK e o JDK fornecido pelo Android Studio. Com `JAVA_HOME` e `ANDROID_HOME` configurados:
+
+```bash
+npm install
+npm run android:sync
+npm run android:build:debug
+```
+
+O build debug usa o Gradle Wrapper versionado em `android/gradlew`; não exige Gradle global. `npm run android:open` abre o projeto no Android Studio e `npm run android:run` sincroniza e executa quando houver aparelho conectado. O APK gerado fica em `android/app/build/outputs/apk/debug/app-debug.apk` e é ignorado pelo Git.
+
 ## Distribuição
 
-A primeira distribuição alvo é Android. Um APK de depuração deve existir cedo, no Gate G2. O protótipo termina com APK release assinado e testado no Gate G11.
+A primeira distribuição alvo é Android. O APK de depuração já é gerado e foi validado fisicamente no Gate G2, mas não é um artefato público. O APK release assinado permanece pendente para o Gate G11.
 
 ## Licença
 

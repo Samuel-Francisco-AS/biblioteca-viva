@@ -158,4 +158,15 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 
 **Consequências:** o Gate G1 pode ser aprovado sem teste físico pelo navegador; o Gate G2, por meio do APK Android, será a primeira validação física obrigatória. G2, G3, G6, G9 e G11 são os principais pontos de teste em smartphone.
 
+## D-016 — Capacitor 8 e identidade Android provisória estável
+
+- **Data:** 2026-07-28
+- **Status:** aceita
+
+**Contexto:** o Prompt 3 exige uma versão estável compatível com Node 24, Vite, React, JDK 21 e o ambiente Android instalado, além de comportamento explícito para o botão Voltar.
+
+**Decisão:** instalar versões estáveis exatas `@capacitor/core`, `@capacitor/cli` e `@capacitor/android` `8.4.2`, com o plugin oficial `@capacitor/app` `8.1.1`; usar configuração TypeScript, `appId` provisório estável `com.samuelfrancisco.bibliotecaviva`, `appName` “Biblioteca Viva” e `webDir` `dist`. O plugin App existe somente para o botão Voltar e o ciclo básico futuro: em rota interna usa o histórico ou retorna à Biblioteca quando não houver entrada anterior; na raiz encerra sem confirmação. Não bloquear orientação neste prompt.
+
+**Consequências:** Node 24.18.0 atende ao requisito oficial Node 22+, Android Studio 2026.1.2 supera o mínimo 2025.2.1 e o scaffold usa JDK 21, SDK 36 e API mínima 24. O mesmo build Vite serve web e Android; `android/` e seu Gradle Wrapper são versionados, enquanto builds, APKs, propriedades locais e chaves permanecem ignorados. A orientação principal aprovada continua retrato, mas o manifesto gerado permite rotação até decisão posterior.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

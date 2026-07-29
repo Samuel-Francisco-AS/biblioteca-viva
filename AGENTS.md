@@ -95,6 +95,10 @@ O agente pode inspecionar `git status`, `git diff` e histórico.
 - `npm run test:run` — executa Vitest uma vez;
 - `npm run format` — formata apenas código e arquivos técnicos listados no script;
 - `npm run format:check` — verifica a formatação desse mesmo conjunto.
+- `npm run android:sync` — compila a aplicação web e sincroniza os arquivos e plugins com Android;
+- `npm run android:open` — abre `android/` no Android Studio;
+- `npm run android:run` — sincroniza e executa no aparelho Android conectado;
+- `npm run android:build:debug` — sincroniza e gera o APK debug com `android/gradlew`.
 
 Ao final de uma tarefa de código, execute os scripts disponíveis equivalentes a:
 

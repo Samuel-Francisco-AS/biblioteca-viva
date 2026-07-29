@@ -1,9 +1,38 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App } from "./App";
+
+const capacitorMocks = vi.hoisted(() => ({
+  backButtonListener: undefined as
+    ((event: { canGoBack: boolean }) => void) | undefined,
+  exitApp: vi.fn(() => Promise.resolve()),
+  isNativePlatform: vi.fn(() => false),
+  remove: vi.fn(() => Promise.resolve()),
+}));
+
+vi.mock("@capacitor/core", () => ({
+  Capacitor: {
+    isNativePlatform: capacitorMocks.isNativePlatform,
+  },
+}));
+
+vi.mock("@capacitor/app", () => ({
+  App: {
+    addListener: vi.fn(
+      (
+        _eventName: string,
+        listener: (event: { canGoBack: boolean }) => void,
+      ) => {
+        capacitorMocks.backButtonListener = listener;
+        return Promise.resolve({ remove: capacitorMocks.remove });
+      },
+    ),
+    exitApp: capacitorMocks.exitApp,
+  },
+}));
 
 function renderApp(initialPath = "/") {
   return render(
@@ -14,6 +43,13 @@ function renderApp(initialPath = "/") {
 }
 
 describe("App", () => {
+  beforeEach(() => {
+    capacitorMocks.backButtonListener = undefined;
+    capacitorMocks.exitApp.mockClear();
+    capacitorMocks.isNativePlatform.mockReturnValue(false);
+    capacitorMocks.remove.mockClear();
+  });
+
   it("abre a Biblioteca na rota inicial e apresenta as regiões principais", () => {
     renderApp();
 
@@ -85,5 +121,46 @@ describe("App", () => {
     expect(screen.getByRole("banner").querySelector("h1")).toHaveTextContent(
       "Biblioteca",
     );
+  });
+
+  it("registra uma única vez o botão Voltar nativo, navega e remove o listener", async () => {
+    capacitorMocks.isNativePlatform.mockReturnValue(true);
+    const renderedApp = render(
+      <MemoryRouter initialEntries={["/", "/colecao"]} initialIndex={1}>
+        <App />
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => {
+      expect(capacitorMocks.backButtonListener).toBeDefined();
+    });
+
+    capacitorMocks.backButtonListener?.({ canGoBack: true });
+
+    await waitFor(() => {
+      expect(screen.getByRole("banner").querySelector("h1")).toHaveTextContent(
+        "Biblioteca",
+      );
+    });
+    expect(capacitorMocks.remove).not.toHaveBeenCalled();
+
+    renderedApp.unmount();
+
+    await waitFor(() => {
+      expect(capacitorMocks.remove).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("encerra sem confirmação ao usar Voltar na raiz nativa", async () => {
+    capacitorMocks.isNativePlatform.mockReturnValue(true);
+    renderApp();
+
+    await waitFor(() => {
+      expect(capacitorMocks.backButtonListener).toBeDefined();
+    });
+
+    capacitorMocks.backButtonListener?.({ canGoBack: false });
+
+    expect(capacitorMocks.exitApp).toHaveBeenCalledTimes(1);
   });
 });
