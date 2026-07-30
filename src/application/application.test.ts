@@ -10,6 +10,8 @@ import {
   CreateBookEntry,
   GetBookEntry,
   ListBookEntries,
+  ListNotesByBook,
+  ListQuotesByBook,
   UpdateBookEntry,
   UpdateBookProgress,
   type Activity,
@@ -42,7 +44,9 @@ type FailureTarget =
   | "book_list"
   | "book_save"
   | "note_save"
+  | "note_list"
   | "quote_save"
+  | "quote_list"
   | "activity_save"
   | "event_publish";
 
@@ -80,6 +84,13 @@ class FakeLibraryEntryRepository implements LibraryEntryRepository {
 class FakeNoteRepository implements NoteRepository {
   readonly notes = new Map<string, Note>();
   constructor(private readonly state: TestState) {}
+  listByEntryId(entryId: string): Promise<readonly Note[]> {
+    if (this.state.failures.has("note_list"))
+      return Promise.reject(new Error("note table leaked"));
+    return Promise.resolve(
+      [...this.notes.values()].filter((note) => note.entryId === entryId),
+    );
+  }
   save(note: Note): Promise<void> {
     this.state.timeline.push("entity");
     if (this.state.failures.has("note_save"))
@@ -92,6 +103,13 @@ class FakeNoteRepository implements NoteRepository {
 class FakeQuoteRepository implements QuoteRepository {
   readonly quotes = new Map<string, Quote>();
   constructor(private readonly state: TestState) {}
+  listByEntryId(entryId: string): Promise<readonly Quote[]> {
+    if (this.state.failures.has("quote_list"))
+      return Promise.reject(new Error("quote table leaked"));
+    return Promise.resolve(
+      [...this.quotes.values()].filter((quote) => quote.entryId === entryId),
+    );
+  }
   save(quote: Quote): Promise<void> {
     this.state.timeline.push("entity");
     if (this.state.failures.has("quote_save"))
@@ -465,6 +483,70 @@ describe("GetBookEntry e ListBookEntries", () => {
       expect(error.message).not.toMatch(/SQL|database/i);
     },
   );
+});
+
+describe("ListNotesByBook e ListQuotesByBook", () => {
+  it("lista somente anotações do livro solicitado e preserva a ordem", async () => {
+    const context = setup();
+    const note1 = Object.freeze({
+      id: "note-1",
+      entryId: "book-1",
+      content: "Primeira",
+      createdAt: T0,
+      updatedAt: T0,
+      revision: 1,
+    });
+    const note2 = Object.freeze({ ...note1, id: "note-2", content: "Segunda" });
+    const otherNote = Object.freeze({
+      ...note1,
+      id: "note-3",
+      entryId: "book-2",
+    });
+    context.notes.notes.set(note1.id, note1);
+    context.notes.notes.set(note2.id, note2);
+    context.notes.notes.set(otherNote.id, otherNote);
+    const quote = Object.freeze({
+      id: "quote-1",
+      entryId: "book-1",
+      content: "Trecho",
+      page: 8,
+      createdAt: T0,
+      updatedAt: T0,
+      revision: 1,
+    });
+    context.quotes.quotes.set(quote.id, quote);
+
+    const notes = await new ListNotesByBook(context.notes).execute({
+      id: "book-1",
+    });
+    const quotes = await new ListQuotesByBook(context.quotes).execute({
+      id: "book-1",
+    });
+
+    expect(notes).toEqual([note1, note2]);
+    expect(quotes).toEqual([quote]);
+    expect(Object.isFrozen(notes)).toBe(true);
+    expect(Object.isFrozen(quotes)).toBe(true);
+  });
+
+  it("valida o ID e sanitiza falhas de cada repositório", async () => {
+    const invalidContext = setup();
+    await expectApplicationError(
+      new ListNotesByBook(invalidContext.notes).execute({ id: " " }),
+      "VALIDATION_FAILED",
+    );
+
+    for (const failure of ["note_list", "quote_list"] as const) {
+      const context = setup();
+      context.state.failures.add(failure);
+      const promise =
+        failure === "note_list"
+          ? new ListNotesByBook(context.notes).execute({ id: "book-1" })
+          : new ListQuotesByBook(context.quotes).execute({ id: "book-1" });
+      const error = await expectApplicationError(promise, "PERSISTENCE_FAILED");
+      expect(error.message).not.toContain("table");
+    }
+  });
 });
 
 describe("UpdateBookProgress", () => {

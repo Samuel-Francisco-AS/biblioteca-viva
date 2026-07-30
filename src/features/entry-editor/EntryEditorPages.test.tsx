@@ -5,7 +5,6 @@ import { describe, expect, it, vi } from "vitest";
 
 import { ApplicationError } from "../../application";
 import type { BookEntry } from "../../domain";
-import { BookDetailPlaceholder } from "./BookDetailPlaceholder";
 import {
   EditBookPage,
   NewBookPage,
@@ -280,29 +279,5 @@ describe("edição de livro", () => {
       await screen.findByText(/mudou desde que foi aberto/i),
     ).toBeVisible();
     expect(title).toHaveValue("Minha alteração");
-  });
-});
-
-describe("destino mínimo", () => {
-  it("carrega o livro pelo caso de uso e oferece editar ou voltar", async () => {
-    const { facade, get } = application();
-    render(
-      <MemoryRouter initialEntries={["/livros/book-1"]}>
-        <Routes>
-          <Route
-            path="/livros/:id"
-            element={<BookDetailPlaceholder application={facade} />}
-          />
-        </Routes>
-      </MemoryRouter>,
-    );
-    expect(
-      await screen.findByRole("heading", { name: "Livro de teste" }),
-    ).toBeVisible();
-    expect(get).toHaveBeenCalledWith({ id: "book-1" });
-    expect(screen.getByRole("link", { name: "Editar livro" })).toHaveAttribute(
-      "href",
-      "/livros/book-1/editar",
-    );
   });
 });

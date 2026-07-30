@@ -5,6 +5,8 @@ import {
   CreateBookEntry,
   GetBookEntry,
   ListBookEntries,
+  ListNotesByBook,
+  ListQuotesByBook,
   UpdateBookEntry,
   UpdateBookProgress,
 } from "../application";
@@ -46,6 +48,8 @@ export interface ApplicationRuntime {
   readonly queries: {
     readonly getBookEntry: GetBookEntry;
     readonly listBookEntries: ListBookEntries;
+    readonly listNotesByBook: ListNotesByBook;
+    readonly listQuotesByBook: ListQuotesByBook;
   };
   readonly diagnostics: ApplicationDiagnostics;
   readonly events: LocalEventBus;
@@ -103,6 +107,8 @@ export async function createApplication(
     queries: {
       getBookEntry: new GetBookEntry(libraryEntries),
       listBookEntries: new ListBookEntries(libraryEntries),
+      listNotesByBook: new ListNotesByBook(notes),
+      listQuotesByBook: new ListQuotesByBook(quotes),
     },
     diagnostics: {
       inspect: () => diagnosticsService.inspect(),

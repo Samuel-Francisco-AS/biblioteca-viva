@@ -1,6 +1,10 @@
-import type { BookEntry } from "../domain";
+import type { BookEntry, Note, Quote } from "../domain";
 import { ApplicationError, notFound, toValidationError } from "./errors";
-import type { LibraryEntryRepository } from "./ports";
+import type {
+  LibraryEntryRepository,
+  NoteRepository,
+  QuoteRepository,
+} from "./ports";
 import { bookIdSchema } from "./schemas";
 
 export class GetBookEntry {
@@ -42,5 +46,47 @@ export class ListBookEntries {
         { operation: "list_books" },
       );
     }
+  }
+}
+
+async function listAnnotations<T>(
+  input: unknown,
+  operation: string,
+  list: (entryId: string) => Promise<readonly T[]>,
+): Promise<readonly T[]> {
+  let entryId: string;
+  try {
+    entryId = bookIdSchema.parse(input).id;
+  } catch (error: unknown) {
+    throw toValidationError(error);
+  }
+  try {
+    return Object.freeze([...(await list(entryId))]);
+  } catch {
+    throw new ApplicationError(
+      "PERSISTENCE_FAILED",
+      "Não foi possível consultar os dados.",
+      { operation },
+    );
+  }
+}
+
+export class ListNotesByBook {
+  constructor(private readonly repository: NoteRepository) {}
+
+  execute(input: unknown): Promise<readonly Note[]> {
+    return listAnnotations(input, "list_notes_by_book", (entryId) =>
+      this.repository.listByEntryId(entryId),
+    );
+  }
+}
+
+export class ListQuotesByBook {
+  constructor(private readonly repository: QuoteRepository) {}
+
+  execute(input: unknown): Promise<readonly Quote[]> {
+    return listAnnotations(input, "list_quotes_by_book", (entryId) =>
+      this.repository.listByEntryId(entryId),
+    );
   }
 }

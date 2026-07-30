@@ -454,7 +454,13 @@ O fluxo concreto de `CreateBookEntry` é `unknown → schema → ID/Clock → do
 
 `src/features/entry-editor/` contém um formulário React compartilhado, containers de cadastro e edição, conversão dos valores HTML, mensagens públicas de erro e o destino mínimo de detalhe. O runtime criado em `src/app/createApplication.ts` é entregue pelo bootstrap ao shell; os componentes recebem somente os métodos `execute` necessários e não importam Dexie, banco ou adapters.
 
-As rotas internas são `/livros/:id` e `/livros/:id/editar`. O destino de detalhe usa `GetBookEntry` e permanece mínimo até o Prompt 8. A edição usa `GetBookEntry` e `UpdateBookEntry`; como o contrato vigente de atualização é somente bibliográfico, status, progresso e data de início são exibidos e preservados, mas ficam indisponíveis para edição até os fluxos próprios do Prompt 8.
+As rotas internas são `/livros/:id` e `/livros/:id/editar`. A edição usa `GetBookEntry` e `UpdateBookEntry`; como o contrato vigente de atualização é somente bibliográfico, status, progresso e data de início são exibidos e preservados, mas ficam indisponíveis nessa rota.
+
+### 7.8 Coleção e detalhe após o Prompt 8
+
+A Coleção recebe `ListBookEntries` pelo composition root. O detalhe recebe `GetBookEntry`, `UpdateBookProgress`, `ChangeBookStatus`, `AddNote`, `AddQuote` e as consultas `ListNotesByBook` e `ListQuotesByBook`. Estas duas consultas usam métodos explícitos das portas e índices `entryId` já existentes nos adapters; a apresentação nunca consulta ou filtra tabelas Dexie.
+
+Após uma escrita, o detalhe usa o retorno do caso de uso para substituir o livro ou acrescentar a anotação ao estado local. A Coleção refaz sua consulta ao ser montada novamente. Essa reatividade é deliberadamente local, não cria store global e não muda o formato persistente.
 
 ---
 

@@ -25,15 +25,6 @@ export function LibraryPage() {
   );
 }
 
-export function CollectionPage() {
-  return (
-    <PlaceholderPage
-      description="Aqui será possível listar, buscar e organizar os livros da coleção pessoal."
-      title="Coleção"
-    />
-  );
-}
-
 export function ArchivePage() {
   return (
     <PlaceholderPage

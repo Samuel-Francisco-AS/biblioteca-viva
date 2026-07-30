@@ -216,6 +216,47 @@ describe("repositórios Dexie", () => {
     database.close();
   });
 
+  it("lista notas e citações somente do livro solicitado em ordem estável", async () => {
+    const database = new BibliotecaDatabase(databaseName("annotation-list"));
+    await database.open();
+    const notes = new DexieNoteRepository(database);
+    const quotes = new DexieQuoteRepository(database);
+    const laterNote = createNote({
+      id: "note-b",
+      entryId: "book-1",
+      content: "Depois",
+      createdAt: T1,
+    });
+    const firstNote = createNote({
+      id: "note-a",
+      entryId: "book-1",
+      content: "Antes",
+      createdAt: T0,
+    });
+    const otherNote = createNote({
+      id: "note-other",
+      entryId: "book-2",
+      content: "Outro",
+      createdAt: T0,
+    });
+    const quote = createQuote({
+      id: "quote-1",
+      entryId: "book-1",
+      content: "Trecho",
+      page: 5,
+      createdAt: T0,
+    });
+    await notes.save(laterNote);
+    await notes.save(otherNote);
+    await notes.save(firstNote);
+    await quotes.save(quote);
+
+    expect(await notes.listByEntryId("book-1")).toEqual([firstNote, laterNote]);
+    expect(await quotes.listByEntryId("book-1")).toEqual([quote]);
+    expect(await notes.listByEntryId("missing")).toEqual([]);
+    database.close();
+  });
+
   it("sanitiza falhas de escrita após fechamento", async () => {
     const database = new BibliotecaDatabase(databaseName("failure"));
     await database.open();

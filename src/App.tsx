@@ -7,7 +7,8 @@ import { DevelopmentDiagnostics } from "./app/DevelopmentDiagnostics";
 import type { ApplicationDiagnostics } from "./app/createApplication";
 import type { ApplicationRuntime } from "./app/createApplication";
 import { isDiagnosticsEnabled } from "./app/diagnosticsAvailability";
-import { BookDetailPlaceholder } from "./features/entry-editor/BookDetailPlaceholder";
+import { CollectionPage } from "./features/collection/CollectionPage";
+import { BookDetailPage } from "./features/entry-detail/BookDetailPage";
 import {
   EditBookPage,
   NewBookPage,
@@ -106,6 +107,10 @@ export function App({ application, diagnostics }: AppProps) {
               />
             ))}
           <Route
+            path="/colecao"
+            element={<CollectionPage application={application} />}
+          />
+          <Route
             path="/novo-livro"
             element={<NewBookPage application={application} />}
           />
@@ -115,7 +120,7 @@ export function App({ application, diagnostics }: AppProps) {
           />
           <Route
             path="/livros/:id"
-            element={<BookDetailPlaceholder application={application} />}
+            element={<BookDetailPage application={application} />}
           />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

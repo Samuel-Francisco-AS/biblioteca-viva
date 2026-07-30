@@ -196,7 +196,8 @@ a {
 }
 
 .form-field input,
-.form-field select {
+.form-field select,
+.form-field textarea {
   width: 100%;
   min-width: 0;
   min-height: var(--touch-target);
@@ -205,6 +206,11 @@ a {
   border-radius: var(--radius-small);
   background: var(--color-surface);
   color: var(--color-text);
+}
+
+.form-field textarea {
+  min-height: 8rem;
+  resize: vertical;
 }
 
 .form-field [aria-invalid="true"] {
@@ -320,6 +326,115 @@ a {
   font-weight: 700;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  margin: -1px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.book-grid,
+.annotation-list {
+  display: grid;
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  gap: var(--space-4);
+  list-style: none;
+}
+
+.book-card,
+.annotation-list article {
+  min-width: 0;
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  overflow-wrap: anywhere;
+}
+
+.book-card h3,
+.annotation-list h4 {
+  margin: 0;
+}
+
+.book-card progress {
+  width: 100%;
+  max-width: 100%;
+  accent-color: var(--color-accent);
+}
+
+.status-badge {
+  display: inline-block;
+  margin: 0 0 var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-small);
+  background: var(--color-accent-surface);
+  color: var(--color-accent);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+}
+
+.section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.detail-layout,
+.compact-form,
+.history-grid {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.book-facts {
+  display: grid;
+  margin: var(--space-5) 0 0;
+  gap: var(--space-3);
+}
+
+.book-facts div {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.book-facts dt {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+}
+
+.book-facts dd {
+  margin: 0;
+}
+
+.annotation-list p,
+.annotation-list blockquote {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.annotation-list blockquote {
+  margin: var(--space-3) 0;
+  padding-left: var(--space-3);
+  border-left: 0.2rem solid var(--color-accent);
+}
+
+.annotation-date,
+.updated-at,
+.progress-unknown {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+}
+
 .primary-navigation {
   position: fixed;
   z-index: var(--layer-navigation);
@@ -418,6 +533,11 @@ a {
 
 @media (min-width: 36rem) {
   .book-form__numbers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .book-grid,
+  .history-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

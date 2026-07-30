@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> Estado atual: Gates G0 a G3 e Prompt 7 concluídos; versão `0.2.0-alpha.1`; Bloco 4 em andamento e Prompt 8 como próximo trabalho, 30 de julho de 2026.
+> Estado atual: Gates G0 a G3 e Prompts 7 e 8 concluídos; versão `0.2.0-alpha.1`; Bloco 4 em andamento e Prompt 9 como próximo trabalho, 30 de julho de 2026.
 
 ## 1. Função desta documentação
 
@@ -86,7 +86,7 @@ Ela está dividida por frequência de mudança:
 - Prompt 1 validado manualmente em desktop e três dimensões móveis;
 - shell responsivo e cinco rotas criados pelo Prompt 2;
 - Prompt 2 concluído e validado no navegador;
-- Gates G0 a G3 aprovados; Prompt 7 concluído e Gate G4 permanece aberto;
+- Gates G0 a G3 aprovados; Prompts 7 e 8 concluídos e Gate G4 permanece aberto;
 - repositório Git inicializado na branch `main`;
 - stack e arquitetura aprovadas;
 - APK diagnóstico interno validado no Gate G3; APK release assinado permanece pendente;

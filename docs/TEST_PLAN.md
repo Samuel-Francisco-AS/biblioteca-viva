@@ -125,6 +125,47 @@ Números totais exatos das tabelas não foram registrados; os limites acima expr
 
 Essa checklist não foi executada no Prompt 7. A validação física foi deliberadamente agrupada em um checkpoint posterior do Bloco 4 para evitar instalações repetidas de APK; o adiamento não representa defeito ou falha. O Prompt 7 está concluído pela validação no navegador, mas esta evidência não aprova o Gate G4.
 
+### Prompt 8 — validação no navegador concluída
+
+Em 2026-07-30, a suíte completa passou com 186 testes em 14 arquivos. Os novos cenários cobrem Coleção carregando, vazia, listada e com falha; detalhe, progresso, transições de status, conclusão e retomada; formulários e históricos de notas e citações; proteção contra envio duplicado; consultas de aplicação; filtragem e ordenação no Dexie; e limites arquiteturais da apresentação. Também passaram formatação, lint, typecheck, build web, sincronização Android e build do APK debug.
+
+#### Navegador — evidências observadas em 2026-07-30
+
+- [x] abrir Coleção e confirmar os registros já existentes no IndexedDB;
+- [x] abrir os detalhes dos livros;
+- [x] editar dados bibliográficos;
+- [x] atualizar progresso com zero, valor intermediário e valor no limite total;
+- [x] rejeitar progresso negativo e acima do total;
+- [x] concluir um livro e bloquear alteração de progresso enquanto concluído;
+- [x] retomar, pausar e abandonar leituras;
+- [x] adicionar nota e confirmar sua persistência;
+- [x] adicionar citação com página válida e sem página;
+- [x] rejeitar página de citação acima do total;
+- [x] atualizar o histórico de notas e citações sem reload global;
+- [x] atualizar a página e confirmar a persistência das alterações;
+- [x] testar o layout em 320 × 915;
+- [x] confirmar ausência de overflow horizontal aparente;
+- [x] confirmar cartões, textos longos, formulários e botões utilizáveis;
+- [x] confirmar que a navegação inferior fixa permite rolar o conteúdo para uma área visível.
+
+Não foram registrados nesta validação manual: submissões repetidas para verificar duplicação, encerramento e reabertura do servidor, navegação completa por Tab e Enter, comportamento de foco após erro ou uma segunda largura mobile maior. Esses pontos possuem cobertura automatizada quando aplicável ou permanecem para uma revisão manual posterior; não foram marcados como executados.
+
+#### Android — adiado para checkpoint posterior do Bloco 4
+
+- [ ] instalar o APK por cima da versão anterior;
+- [ ] confirmar preservação dos dados existentes;
+- [ ] testar Coleção e detalhe;
+- [ ] testar teclado virtual e confirmar que o campo focado não fica oculto;
+- [ ] atualizar progresso;
+- [ ] concluir e retomar;
+- [ ] adicionar nota e citação;
+- [ ] fechar e reabrir o aplicativo;
+- [ ] testar botão Voltar;
+- [ ] confirmar safe areas;
+- [ ] confirmar ausência de tela branca ou travamento.
+
+Nenhum item Android acima foi executado no Prompt 8. O adiamento continua sendo uma decisão operacional, não representa defeito e não aprova nem reprova G4.
+
 ### Ponte e Phaser
 
 - contrato de `LibraryViewModel`;

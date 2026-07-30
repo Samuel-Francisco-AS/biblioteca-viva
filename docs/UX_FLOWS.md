@@ -51,7 +51,7 @@ Coleção ou Biblioteca
 
 Erros aparecem próximos ao campo, preservam os dados digitados e levam foco ao primeiro problema.
 
-Após o Prompt 7, o cadastro navega para `/livros/:id`, um detalhe mínimo com título, autor e ações de editar ou voltar à Coleção. A edição ocorre em `/livros/:id/editar`, carrega pelo ID e reutiliza o mesmo formulário. Status, progresso e data de início ficam somente para leitura na edição porque seus fluxos próprios pertencem ao Prompt 8; título, autor, total de páginas e avaliação usam a atualização bibliográfica vigente.
+O cadastro navega para `/livros/:id`, agora um detalhe completo com dados bibliográficos, progresso, transições válidas de status, notas e citações. A edição continua em `/livros/:id/editar` e reutiliza o formulário bibliográfico. Status, progresso e data de início ficam somente para leitura nessa rota porque suas ações próprias estão no detalhe.
 
 ## 5. Atualizar progresso
 
@@ -65,7 +65,7 @@ Detalhe do livro
 → projeção da biblioteca recebe novo estado
 ```
 
-Não recriar o jogo inteiro. A atualização visual pode ocorrer ao voltar à Biblioteca ou em tempo real quando a rota estiver aberta.
+No Prompt 8, o retorno do caso de uso atualiza o estado local do detalhe. Ao voltar à Coleção, a consulta é refeita pela montagem da rota; não há reload global nem acesso ao Dexie pela apresentação.
 
 ## 6. Concluir livro
 

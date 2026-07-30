@@ -7,9 +7,9 @@
 
 - **Fase:** aplicativo pessoal utilizável;
 - **bloco concluído:** Bloco 3 — Domínio, casos de uso e persistência;
-- **prompt concluído:** Prompt 7 — cadastro e edição validados no navegador em 2026-07-30;
+- **prompt concluído:** Prompt 8 — Coleção, detalhes, progresso, notas e citações validados no navegador em 2026-07-30;
 - **bloco atual:** Bloco 4 — Aplicativo pessoal utilizável;
-- **próximo trabalho:** Prompt 8 — Coleção, detalhes, progresso, notas e citações;
+- **próximo trabalho:** Prompt 9 — busca, filtros e arquivo;
 - **gate:** G3 aprovado por Sam em 2026-07-29; G4 permanece aberto;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
 - **repositório:** Git inicializado;
@@ -19,7 +19,7 @@
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
 - **compatibilidade:** diferentes celulares Android, proporções de tela, densidades e áreas seguras;
-- **estado geral:** G0 a G3 aprovados; Prompt 7 concluído após 160 testes automatizados e validação humana no navegador; Bloco 4 continua em andamento e G4 permanece aberto.
+- **estado geral:** G0 a G3 aprovados; Prompt 8 concluído após 186 testes automatizados e validação humana no navegador, inclusive em 320 × 915; Bloco 4 continua em andamento e G4 permanece aberto.
 
 ## Decisões já aprovadas
 
@@ -54,13 +54,17 @@
 
 ## Trabalho atual
 
-Executar o Prompt 8 — Coleção, detalhes, progresso, notas e citações, sem antecipar busca, filtros ou Phaser. O Gate G4 permanece aberto.
+Executar o Prompt 9 — busca, filtros e arquivo. A validação Android dos Prompts 7 e 8 continua agrupada no checkpoint posterior do Bloco 4 e o Gate G4 permanece aberto.
 
 ## Bloqueios
 
 Nenhum bloqueio técnico identificado.
 
 ## Última evidência de validação
+
+Em 2026-07-30, Sam validou o Prompt 8 no navegador com registros reais já existentes no IndexedDB. Coleção, detalhes e edição bibliográfica funcionaram; progresso zero, intermediário e no limite foi aceito, enquanto valores negativos ou acima do total foram rejeitados. Conclusão, bloqueio de progresso no livro concluído, retomada, pausa e abandono funcionaram. Notas e citações com página válida ou sem página persistiram e atualizaram o histórico sem reload global; página de citação acima do total foi rejeitada. As alterações sobreviveram à atualização da página. O layout foi validado em 320 × 915 sem overflow horizontal aparente, inclusive com cartões, textos longos, formulários, rolagem e navegação inferior fixa utilizáveis. O teste físico no Moto G06 foi adiado por decisão operacional para o checkpoint posterior do Bloco 4; isso não representa falha. O Prompt 8 está concluído, a versão continua `0.2.0-alpha.1` e G4 permanece aberto.
+
+No encerramento técnico do mesmo dia, o Prompt 8 substituiu os placeholders por uma Coleção real e um detalhe completo, ambos conectados à camada de aplicação. Progresso, transições de status, conclusão, retomada, notas e citações atualizam a interface local sem recarga global. Foram acrescentadas consultas por livro para notas e citações, com filtragem e ordenação no adapter Dexie, sem mudança de schema ou migração. Não foi implementado arquivamento porque o domínio ainda não possui política, campo persistente ou caso de uso aprovado. As 186 verificações automatizadas, formatação, lint, typecheck, build web, sincronização Android e APK debug passaram antes da validação humana.
 
 Em 2026-07-30, Sam validou o Prompt 7 no navegador. O cadastro aceitou uma data histórica de início, salvou e redirecionou para um detalhe válido; a recarga do detalhe recuperou o registro persistido; e a edição carregou os dados salvos. Progresso, status e data de início permaneceram desabilitados na edição com explicação textual, conforme o contrato bibliográfico vigente. O diagnóstico do IndexedDB confirmou ao menos um registro em `libraryEntries` e sua atividade em `activities`. A Coleção ainda não lista livros porque essa implementação pertence ao Prompt 8. A instalação e validação deste APK no Moto G06 foram deliberadamente transferidas para um checkpoint posterior do Bloco 4 para evitar instalações repetidas; isso é uma decisão operacional, não defeito ou falha. O Prompt 7 está concluído, a versão permanece `0.2.0-alpha.1` e o Gate G4 continua aberto.
 

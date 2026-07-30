@@ -33,6 +33,30 @@ function immutableBook(value: unknown): BookEntry {
   return Object.freeze({ ...parsed.data });
 }
 
+function immutableNote(value: unknown): Note {
+  const parsed = persistedNoteSchema.safeParse(value);
+  if (!parsed.success) throw readFailure("read_note");
+  return Object.freeze({ ...parsed.data });
+}
+
+function immutableQuote(value: unknown): Quote {
+  const parsed = persistedQuoteSchema.safeParse(value);
+  if (!parsed.success) throw readFailure("read_quote");
+  return Object.freeze({ ...parsed.data });
+}
+
+function chronological<
+  T extends { readonly createdAt: string; readonly id: string },
+>(values: readonly T[]): readonly T[] {
+  return Object.freeze(
+    [...values].sort(
+      (left, right) =>
+        left.createdAt.localeCompare(right.createdAt) ||
+        left.id.localeCompare(right.id),
+    ),
+  );
+}
+
 export class DexieLibraryEntryRepository implements LibraryEntryRepository {
   constructor(private readonly database: BibliotecaDatabase) {}
 
@@ -79,6 +103,19 @@ export class DexieLibraryEntryRepository implements LibraryEntryRepository {
 export class DexieNoteRepository implements NoteRepository {
   constructor(private readonly database: BibliotecaDatabase) {}
 
+  async listByEntryId(entryId: string): Promise<readonly Note[]> {
+    try {
+      const stored: unknown[] = await this.database.notes
+        .where("entryId")
+        .equals(entryId)
+        .toArray();
+      return chronological(stored.map(immutableNote));
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("list_notes_by_book");
+    }
+  }
+
   async save(note: Note): Promise<void> {
     const parsed = persistedNoteSchema.safeParse(note);
     if (!parsed.success) throw writeFailure("save_note");
@@ -92,6 +129,19 @@ export class DexieNoteRepository implements NoteRepository {
 
 export class DexieQuoteRepository implements QuoteRepository {
   constructor(private readonly database: BibliotecaDatabase) {}
+
+  async listByEntryId(entryId: string): Promise<readonly Quote[]> {
+    try {
+      const stored: unknown[] = await this.database.quotes
+        .where("entryId")
+        .equals(entryId)
+        .toArray();
+      return chronological(stored.map(immutableQuote));
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("list_quotes_by_book");
+    }
+  }
 
   async save(quote: Quote): Promise<void> {
     const parsed = persistedQuoteSchema.safeParse(quote);
