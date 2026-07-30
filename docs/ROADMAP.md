@@ -16,16 +16,17 @@
 - **versão:** `v0.2.0-alpha.1`, marco atual;
 - **bloco concluído:** 3 — Domínio, casos de uso e persistência;
 - **gate:** G3 aprovado por Sam em 2026-07-29;
-- **próximo bloco:** 4 — Aplicativo pessoal utilizável;
-- **prompts concluídos:** Prompts 4, 5 e 6;
-- **próximo prompt:** Prompt 7 — Cadastro e edição de livro;
+- **bloco atual:** 4 — Aplicativo pessoal utilizável;
+- **prompts concluídos:** Prompts 4, 5, 6 e 7;
+- **próximo prompt:** Prompt 8 — Coleção, detalhes, progresso, notas e citações;
 - **APK:** diagnóstico interno validado no Moto G06 com Android 15; release assinado ainda não existe;
-- **código:** domínio, aplicação, Dexie, migrações e composição validados; formulários não iniciados.
+- **código:** cadastro e edição bibliográfica validados no navegador; Coleção e detalhe completo permanecem no Prompt 8.
 
 - [x] Prompt 4 — Modelo de domínio de livros;
 - [x] Prompt 5 — Portas e casos de uso;
 - [x] Prompt 6 — Dexie, migrações e composição;
-- [ ] Prompt 7 — Cadastro e edição de livro, próximo trabalho.
+- [x] Prompt 7 — Cadastro e edição de livro, concluído e validado no navegador.
+- [ ] Prompt 8 — Coleção, detalhes, progresso, notas e citações, próximo trabalho.
 
 ## Blocos e gates
 
@@ -35,7 +36,7 @@
 | `[x]` | 1 | 1–2 | fundação web navegável | G1 aprovado |
 | `[x]` | 2 | 3 | APK debug instalado e validado no Android real | G2 aprovado |
 | `[x]` | 3 | 4–6 | domínio, aplicação e persistência validados | G3 aprovado |
-| `[ ]` | 4 | 7–9 | próximo: Prompt 7 — cadastro e edição | G4 aberto |
+| `[~]` | 4 | 7–9 | Prompt 7 concluído; próximo: Prompt 8 | G4 aberto |
 | `[ ]` | 5 | 10 | dados exportáveis e recuperáveis | G5 |
 | `[ ]` | 6 | 11–13 | biblioteca visual conectada | G6 |
 | `[ ]` | 7 | 14–15 | identidade sonora e contextual | G7 |

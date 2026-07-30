@@ -90,6 +90,41 @@ Resultado: **G3 aprovado**. Não foram realizados testes de backup, criptografia
 - coleção, detalhe, arquivo e configurações;
 - alternativa textual da biblioteca.
 
+### Prompt 7 — validação no navegador concluída
+
+Em 2026-07-29, foram adicionados 20 testes para cadastro, edição, destino mínimo, fronteira arquitetural e datas históricas de leitura. A suíte completa passou com 160 testes em 11 arquivos. A revisão temporal cobre início e conclusão anteriores a `createdAt`, aceita `completedAt` igual ou posterior a `startedAt`, rejeita a ordem inversa, valida o round-trip pela infraestrutura e confirma que o formulário mantém o dia histórico escolhido. Também passaram `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run build`, `npm run android:sync` e `npm run android:build:debug`. O APK debug foi gerado em `android/app/build/outputs/apk/debug/app-debug.apk`; ele ainda não foi instalado nem validado fisicamente para este prompt.
+
+#### Evidências observadas no navegador em 2026-07-30
+
+- [x] abrir Novo livro e cadastrar um livro;
+- [x] aceitar uma data de início histórica;
+- [x] salvar e confirmar redirecionamento para um detalhe válido;
+- [x] recarregar a página de detalhe e recuperar o registro persistido;
+- [x] abrir a edição e carregar corretamente os dados salvos;
+- [x] confirmar progresso, status e data de início desabilitados na edição com explicação textual;
+- [x] confirmar pelo diagnóstico do IndexedDB `libraryEntries >= 1` e `activities >= 1` após o cadastro;
+- [x] confirmar que a Coleção ainda não lista livros, comportamento esperado antes do Prompt 8.
+
+Números totais exatos das tabelas não foram registrados; os limites acima expressam apenas a evidência mínima confirmada, sem presumir a ausência de dados anteriores.
+
+#### Checkpoint posterior do Bloco 4 no Moto G06 — pendente por decisão operacional
+
+- [ ] instalar o novo APK debug por cima do anterior;
+- [ ] confirmar preservação dos dados existentes;
+- [ ] abrir o formulário;
+- [ ] testar teclado virtual em todos os campos;
+- [ ] confirmar que o campo focado não fica oculto;
+- [ ] cadastrar um livro;
+- [ ] editar o livro;
+- [ ] fechar e reabrir o aplicativo;
+- [ ] confirmar persistência;
+- [ ] testar toques repetidos no botão Salvar;
+- [ ] testar botão Voltar do Android;
+- [ ] confirmar safe areas;
+- [ ] confirmar ausência de travamento ou tela branca.
+
+Essa checklist não foi executada no Prompt 7. A validação física foi deliberadamente agrupada em um checkpoint posterior do Bloco 4 para evitar instalações repetidas de APK; o adiamento não representa defeito ou falha. O Prompt 7 está concluído pela validação no navegador, mas esta evidência não aprova o Gate G4.
+
 ### Ponte e Phaser
 
 - contrato de `LibraryViewModel`;

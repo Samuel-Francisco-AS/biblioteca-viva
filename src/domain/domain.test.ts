@@ -34,6 +34,8 @@ import {
 } from "./index";
 
 const T0 = "2026-07-29T10:00:00.000Z";
+const HISTORICAL_START = "2020-01-15T10:00:00.000Z";
+const HISTORICAL_COMPLETION = "2020-02-15T10:00:00.000Z";
 const T1 = "2026-07-29T11:00:00.000Z";
 const T2 = "2026-07-29T12:00:00.000Z";
 
@@ -96,6 +98,44 @@ describe("BookEntry", () => {
     });
   });
 
+  it("aceita início da leitura anterior à criação do registro", () => {
+    expect(minimalBook({ startedAt: HISTORICAL_START }).startedAt).toBe(
+      HISTORICAL_START,
+    );
+  });
+
+  it("aceita conclusão da leitura anterior à criação do registro", () => {
+    const completed = minimalBook({
+      status: "completed",
+      startedAt: HISTORICAL_START,
+      completedAt: HISTORICAL_COMPLETION,
+    });
+    expect(completed.completedAt).toBe(HISTORICAL_COMPLETION);
+  });
+
+  it.each([HISTORICAL_START, HISTORICAL_COMPLETION])(
+    "aceita conclusão igual ou posterior ao início: %s",
+    (completedAt) => {
+      expect(
+        minimalBook({
+          status: "completed",
+          startedAt: HISTORICAL_START,
+          completedAt,
+        }).completedAt,
+      ).toBe(completedAt);
+    },
+  );
+
+  it("preserva a ordem entre início e conclusão", () => {
+    expect(() =>
+      minimalBook({
+        status: "completed",
+        startedAt: HISTORICAL_COMPLETION,
+        completedAt: HISTORICAL_START,
+      }),
+    ).toThrow(InvalidDateError);
+  });
+
   it("normaliza espaços externos, internos, quebras e tabs no título", () => {
     expect(minimalBook({ title: "  A\n\t longa   viagem  " }).title).toBe(
       "A longa viagem",
@@ -144,7 +184,7 @@ describe("BookEntry", () => {
     expect(() => minimalBook({ rating })).toThrow(InvalidFieldError);
   });
 
-  it("rejeita datas não UTC, impossíveis ou posteriores regressivas", () => {
+  it("rejeita datas não UTC, impossíveis ou atualizações regressivas", () => {
     expect(() => minimalBook({ createdAt: "2026-07-29" })).toThrow(
       InvalidDateError,
     );

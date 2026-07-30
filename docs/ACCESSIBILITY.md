@@ -102,3 +102,16 @@ Problemas que bloqueiam acesso ao CRUD são S1 e bloqueiam gate.
 - estrutura única de navegação adaptada por CSS entre mobile e desktop.
 
 No G1, Sam validou manualmente Tab, Enter, foco visível, link de salto, dimensões móveis no modo responsivo do navegador e ausência de overflow horizontal. A validação física do shell foi transferida para o G2, por meio do primeiro APK Android.
+
+## 10. Implementado no formulário do Prompt 7
+
+- formulário semântico compartilhado entre cadastro e edição;
+- labels reais, indicação textual de obrigatoriedade e instruções antes dos campos com limites;
+- ajuda e erro associados por `aria-describedby` e campos inválidos marcados com `aria-invalid`;
+- erros próximos aos controles e resumo com `role="alert"` que recebe foco após falha;
+- valores preservados após falha, envio por teclado e Cancelar com `type="button"`;
+- estado “Salvando…” e controles bloqueados durante a operação;
+- inputs numéricos com teclado apropriado, ordem natural e alvos mínimos baseados no token de 44 CSS px;
+- layout fluido a partir de 320 px e safe areas herdadas do shell.
+
+A validação manual com teclado, leitor de estrutura, zoom, larguras móveis e teclado virtual Android permanece pendente.

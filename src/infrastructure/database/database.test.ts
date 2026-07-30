@@ -126,6 +126,25 @@ describe("repositórios Dexie", () => {
     database.close();
   });
 
+  it("grava e lê início e conclusão anteriores à criação do registro", async () => {
+    const database = new BibliotecaDatabase(databaseName("historical-start"));
+    await database.open();
+    const repository = new DexieLibraryEntryRepository(database);
+    const historical = createBook({
+      id: "book-historical",
+      title: "Livro histórico",
+      status: "completed",
+      startedAt: "2020-01-15T23:59:59.999Z",
+      completedAt: "2020-02-15T23:59:59.999Z",
+      createdAt: T0,
+    });
+    await repository.save(historical);
+    await expect(repository.getById(historical.id)).resolves.toEqual(
+      historical,
+    );
+    database.close();
+  });
+
   it("lista vazio e ordena tecnicamente por createdAt e id", async () => {
     const database = new BibliotecaDatabase(databaseName("list"));
     await database.open();

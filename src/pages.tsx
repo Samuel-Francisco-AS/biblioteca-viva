@@ -34,15 +34,6 @@ export function CollectionPage() {
   );
 }
 
-export function NewBookPage() {
-  return (
-    <PlaceholderPage
-      description="Aqui ficará o cadastro de livros. Nenhum formulário foi criado nesta etapa."
-      title="Novo livro"
-    />
-  );
-}
-
 export function ArchivePage() {
   return (
     <PlaceholderPage

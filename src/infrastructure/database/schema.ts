@@ -47,17 +47,10 @@ export const persistedBookSchema = z
         message: "invalid chronology",
       });
     }
-    if (book.startedAt !== undefined && book.startedAt < book.createdAt) {
-      context.addIssue({
-        code: "custom",
-        path: ["startedAt"],
-        message: "invalid chronology",
-      });
-    }
     if (
       book.completedAt !== undefined &&
-      (book.completedAt < book.createdAt ||
-        (book.startedAt !== undefined && book.completedAt < book.startedAt))
+      book.startedAt !== undefined &&
+      book.completedAt < book.startedAt
     ) {
       context.addIssue({
         code: "custom",

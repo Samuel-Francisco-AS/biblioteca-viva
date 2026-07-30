@@ -51,6 +51,8 @@ Coleção ou Biblioteca
 
 Erros aparecem próximos ao campo, preservam os dados digitados e levam foco ao primeiro problema.
 
+Após o Prompt 7, o cadastro navega para `/livros/:id`, um detalhe mínimo com título, autor e ações de editar ou voltar à Coleção. A edição ocorre em `/livros/:id/editar`, carrega pelo ID e reutiliza o mesmo formulário. Status, progresso e data de início ficam somente para leitura na edição porque seus fluxos próprios pertencem ao Prompt 8; título, autor, total de páginas e avaliação usam a atualização bibliográfica vigente.
+
 ## 5. Atualizar progresso
 
 ```text

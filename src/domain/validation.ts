@@ -122,16 +122,10 @@ export function validateBook(book: BookEntry): void {
     throw new InvalidProgressError("currentPage não pode exceder totalPages");
   }
   if (book.startedAt !== undefined) {
-    const startedAt = requireIsoUtc(book.startedAt, "startedAt");
-    if (startedAt < book.createdAt) {
-      throw new InvalidDateError("startedAt", "não pode anteceder createdAt");
-    }
+    requireIsoUtc(book.startedAt, "startedAt");
   }
   if (book.completedAt !== undefined) {
     const completedAt = requireIsoUtc(book.completedAt, "completedAt");
-    if (completedAt < book.createdAt) {
-      throw new InvalidDateError("completedAt", "não pode anteceder createdAt");
-    }
     if (book.startedAt !== undefined && completedAt < book.startedAt) {
       throw new InvalidDateError("completedAt", "não pode anteceder startedAt");
     }

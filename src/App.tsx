@@ -5,7 +5,13 @@ import { appRoutes } from "./routes";
 import { useAndroidBackButton } from "./useAndroidBackButton";
 import { DevelopmentDiagnostics } from "./app/DevelopmentDiagnostics";
 import type { ApplicationDiagnostics } from "./app/createApplication";
+import type { ApplicationRuntime } from "./app/createApplication";
 import { isDiagnosticsEnabled } from "./app/diagnosticsAvailability";
+import { BookDetailPlaceholder } from "./features/entry-editor/BookDetailPlaceholder";
+import {
+  EditBookPage,
+  NewBookPage,
+} from "./features/entry-editor/EntryEditorPages";
 import "./styles.css";
 
 function NotFoundPage() {
@@ -22,20 +28,27 @@ function NotFoundPage() {
 }
 
 interface AppProps {
+  readonly application?: ApplicationRuntime;
   readonly diagnostics?: ApplicationDiagnostics;
 }
 
 const diagnosticsBuildEnabled =
   import.meta.env.DEV || import.meta.env.VITE_ENABLE_DIAGNOSTICS === "true";
 
-export function App({ diagnostics }: AppProps) {
+export function App({ application, diagnostics }: AppProps) {
   const location = useLocation();
   const mainRef = useRef<HTMLElement>(null);
   const previousPathRef = useRef(location.pathname);
   const activeRoute = appRoutes.find(
     (route) => route.path === location.pathname,
   );
-  const sectionTitle = activeRoute?.title ?? "Página não encontrada";
+  const sectionTitle =
+    activeRoute?.title ??
+    (location.pathname.endsWith("/editar")
+      ? "Editar livro"
+      : location.pathname.startsWith("/livros/")
+        ? "Detalhes do livro"
+        : "Página não encontrada");
 
   useAndroidBackButton();
 
@@ -83,13 +96,27 @@ export function App({ diagnostics }: AppProps) {
         tabIndex={-1}
       >
         <Routes>
-          {appRoutes.map((route) => (
-            <Route
-              element={<route.Component />}
-              key={route.path}
-              path={route.path}
-            />
-          ))}
+          {appRoutes
+            .filter((route) => route.Component)
+            .map((route) => (
+              <Route
+                element={route.Component ? <route.Component /> : undefined}
+                key={route.path}
+                path={route.path}
+              />
+            ))}
+          <Route
+            path="/novo-livro"
+            element={<NewBookPage application={application} />}
+          />
+          <Route
+            path="/livros/:id/editar"
+            element={<EditBookPage application={application} />}
+          />
+          <Route
+            path="/livros/:id"
+            element={<BookDetailPlaceholder application={application} />}
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         {diagnosticsBuildEnabled &&

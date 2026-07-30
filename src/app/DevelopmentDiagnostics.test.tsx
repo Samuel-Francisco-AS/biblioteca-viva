@@ -5,7 +5,6 @@ import type { ApplicationDiagnostics } from "./createApplication";
 import { DevelopmentDiagnostics } from "./DevelopmentDiagnostics";
 
 function diagnostics() {
-  const createDiagnosticBook = vi.fn(() => Promise.resolve());
   const inspect = vi.fn(() =>
     Promise.resolve({
       databaseName: "biblioteca-viva-test",
@@ -24,11 +23,10 @@ function diagnostics() {
   );
   const requestPersistence = vi.fn(() => Promise.resolve("denied" as const));
   const facade: ApplicationDiagnostics = {
-    createDiagnosticBook,
     inspect,
     requestPersistence,
   };
-  return { createDiagnosticBook, facade, inspect, requestPersistence };
+  return { facade, inspect, requestPersistence };
 }
 
 describe("DevelopmentDiagnostics", () => {
@@ -45,17 +43,12 @@ describe("DevelopmentDiagnostics", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("creates diagnostic data through the supplied application use case facade", async () => {
-    const { createDiagnosticBook, facade, inspect } = diagnostics();
+  it("does not offer the temporary diagnostic write action", () => {
+    const { facade } = diagnostics();
     render(<DevelopmentDiagnostics diagnostics={facade} />);
-    fireEvent.click(
-      screen.getByRole("button", { name: "Criar livro de diagnóstico" }),
-    );
-    await waitFor(() => expect(createDiagnosticBook).toHaveBeenCalledOnce());
-    expect(inspect).toHaveBeenCalledOnce();
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "Livro de diagnóstico criado.",
-    );
+    expect(
+      screen.queryByRole("button", { name: /criar livro de diagnóstico/i }),
+    ).not.toBeInTheDocument();
   });
 
   it("requests persistence without blocking normal diagnostics", async () => {

@@ -4,12 +4,11 @@ import {
   ArchivePage,
   CollectionPage,
   LibraryPage,
-  NewBookPage,
   SettingsPage,
 } from "./pages";
 
 interface AppRoute {
-  Component: ComponentType;
+  Component?: ComponentType;
   navigationLabel: string;
   path: string;
   title: string;
@@ -29,7 +28,6 @@ export const appRoutes: readonly AppRoute[] = [
     title: "Coleção",
   },
   {
-    Component: NewBookPage,
     navigationLabel: "Novo",
     path: "/novo-livro",
     title: "Novo livro",

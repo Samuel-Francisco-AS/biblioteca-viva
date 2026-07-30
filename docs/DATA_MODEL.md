@@ -38,8 +38,8 @@ Operações recebem IDs e datas explicitamente. Elas não usam relógio ou gerad
 | `totalPages` | `number` | não | inteiro positivo |
 | `currentPage` | `number` | sim | inteiro não negativo; padrão 0 |
 | `rating` | `number` | não | inteiro de 1 a 5, inclusive |
-| `startedAt` | `string` | não | ISO UTC, não anterior à criação |
-| `completedAt` | `string` | não | obrigatório somente em `completed`; não anterior à criação nem ao início |
+| `startedAt` | `string` | não | ISO UTC; pode anteceder a criação do registro |
+| `completedAt` | `string` | não | obrigatório somente em `completed`; pode anteceder a criação do registro, mas não o início |
 
 O modelo mínimo não inclui `tags`, `favorite`, `location`, `deletedAt` ou campos de capa. Eles não são necessários ao Prompt 4 e só poderão entrar quando um fluxo aprovado justificar seu contrato.
 
@@ -76,6 +76,9 @@ Chegar a `currentPage === totalPages` **não conclui automaticamente**. A conclu
 - `totalPages`, quando presente, é inteiro maior que zero;
 - `currentPage` é inteiro, nunca negativo e não excede o total conhecido;
 - avaliação opcional é inteira entre 1 e 5;
+- início da leitura pode anteceder a criação do registro no aplicativo;
+- conclusão da leitura pode anteceder a criação do registro no aplicativo;
+- conclusão não pode anteceder o início da leitura quando ambos existem;
 - livro concluído com total conhecido está exatamente na última página;
 - `completedAt` existe somente em livro concluído;
 - todas as datas usam ISO 8601 UTC canônico, por exemplo `2026-07-29T10:00:00.000Z`;

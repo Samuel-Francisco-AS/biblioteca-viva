@@ -450,6 +450,12 @@ src/app/
 
 O fluxo concreto de `CreateBookEntry` é `unknown → schema → ID/Clock → domínio → transação Dexie (livro + atividade) → commit → evento local → resultado`. A mesma fronteira transacional vale para os demais comandos. A solicitação de armazenamento persistente é apenas uma tentativa da plataforma e sua recusa não bloqueia o uso.
 
+### 7.7 Apresentação do cadastro e edição após o Prompt 7
+
+`src/features/entry-editor/` contém um formulário React compartilhado, containers de cadastro e edição, conversão dos valores HTML, mensagens públicas de erro e o destino mínimo de detalhe. O runtime criado em `src/app/createApplication.ts` é entregue pelo bootstrap ao shell; os componentes recebem somente os métodos `execute` necessários e não importam Dexie, banco ou adapters.
+
+As rotas internas são `/livros/:id` e `/livros/:id/editar`. O destino de detalhe usa `GetBookEntry` e permanece mínimo até o Prompt 8. A edição usa `GetBookEntry` e `UpdateBookEntry`; como o contrato vigente de atualização é somente bibliográfico, status, progresso e data de início são exibidos e preservados, mas ficam indisponíveis para edição até os fluxos próprios do Prompt 8.
+
 ---
 
 ## 8. Modelo de domínio inicial

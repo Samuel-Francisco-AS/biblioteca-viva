@@ -28,7 +28,6 @@ import {
 } from "../infrastructure";
 
 export interface ApplicationDiagnostics {
-  createDiagnosticBook(): Promise<void>;
   inspect(): Promise<DatabaseDiagnostics>;
   requestPersistence(): Promise<StoragePersistenceStatus>;
 }
@@ -92,13 +91,12 @@ export async function createApplication(
     transaction,
   };
 
-  const createBookEntry = new CreateBookEntry(dependencies);
   return {
     commands: {
       addNote: new AddNote(dependencies),
       addQuote: new AddQuote(dependencies),
       changeBookStatus: new ChangeBookStatus(dependencies),
-      createBookEntry,
+      createBookEntry: new CreateBookEntry(dependencies),
       updateBookEntry: new UpdateBookEntry(dependencies),
       updateBookProgress: new UpdateBookProgress(dependencies),
     },
@@ -107,9 +105,6 @@ export async function createApplication(
       listBookEntries: new ListBookEntries(libraryEntries),
     },
     diagnostics: {
-      async createDiagnosticBook(): Promise<void> {
-        await createBookEntry.execute({ title: "Livro de diagnóstico" });
-      },
       inspect: () => diagnosticsService.inspect(),
       requestPersistence: () => diagnosticsService.requestPersistence(),
     },

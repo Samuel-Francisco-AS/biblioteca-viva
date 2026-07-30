@@ -13,20 +13,18 @@ if (!rootElement) {
 
 const root = createRoot(rootElement);
 
-function render(
-  diagnostics?: Awaited<ReturnType<typeof createApplication>>["diagnostics"],
-) {
+function render(application?: Awaited<ReturnType<typeof createApplication>>) {
   root.render(
     <StrictMode>
       <BrowserRouter>
-        <App diagnostics={diagnostics} />
+        <App application={application} diagnostics={application?.diagnostics} />
       </BrowserRouter>
     </StrictMode>,
   );
 }
 
 void createApplication()
-  .then((application) => render(application.diagnostics))
+  .then((application) => render(application))
   .catch(() => {
     console.error("Falha controlada ao inicializar a persistência local.");
     render();

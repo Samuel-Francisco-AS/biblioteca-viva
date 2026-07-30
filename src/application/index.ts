@@ -11,4 +11,5 @@ export type {
   UpdateBookEntryInput,
   UpdateBookProgressInput,
 } from "./schemas";
+export { createBookEntrySchema, updateBookEntrySchema } from "./schemas";
 export * from "./useCases";

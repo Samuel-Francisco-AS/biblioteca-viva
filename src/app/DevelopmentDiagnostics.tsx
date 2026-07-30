@@ -20,16 +20,6 @@ export function DevelopmentDiagnostics({
     setActionStatus("Contagens atualizadas.");
   }
 
-  async function createDiagnosticBook() {
-    try {
-      await diagnostics.createDiagnosticBook();
-      setActionStatus("Livro de diagnóstico criado.");
-      setSnapshot(await diagnostics.inspect());
-    } catch {
-      setActionStatus("Falha controlada ao criar dado de diagnóstico.");
-    }
-  }
-
   async function requestPersistence() {
     const status = await diagnostics.requestPersistence();
     setActionStatus(`Armazenamento persistente: ${status}.`);
@@ -43,9 +33,6 @@ export function DevelopmentDiagnostics({
       <div>
         <button type="button" onClick={() => void refresh()}>
           Consultar contagens
-        </button>
-        <button type="button" onClick={() => void createDiagnosticBook()}>
-          Criar livro de diagnóstico
         </button>
         <button type="button" onClick={() => void requestPersistence()}>
           Solicitar armazenamento persistente
