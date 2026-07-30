@@ -90,3 +90,34 @@ export class ListQuotesByBook {
     );
   }
 }
+
+async function listAllAnnotations<T>(
+  operation: string,
+  list: () => Promise<readonly T[]>,
+): Promise<readonly T[]> {
+  try {
+    return Object.freeze([...(await list())]);
+  } catch {
+    throw new ApplicationError(
+      "PERSISTENCE_FAILED",
+      "Não foi possível consultar os dados.",
+      { operation },
+    );
+  }
+}
+
+export class ListAllNotes {
+  constructor(private readonly repository: NoteRepository) {}
+
+  execute(): Promise<readonly Note[]> {
+    return listAllAnnotations("list_all_notes", () => this.repository.list());
+  }
+}
+
+export class ListAllQuotes {
+  constructor(private readonly repository: QuoteRepository) {}
+
+  execute(): Promise<readonly Quote[]> {
+    return listAllAnnotations("list_all_quotes", () => this.repository.list());
+  }
+}

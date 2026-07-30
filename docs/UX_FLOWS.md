@@ -97,11 +97,15 @@ Rascunho automático pode ser considerado depois; no protótipo, evitar prometer
 
 ## 8. Busca e filtros
 
-- busca por título e autor;
-- filtro por status;
-- ordenação por atualizado, título e criação;
-- estado vazio explica como remover filtros;
-- busca não bloqueia digitação nem consulta a cada tecla de modo caro sem necessidade.
+- a Coleção busca parcialmente por título e autor, sem diferença de caixa ou acento;
+- o filtro possui todos os cinco status reais e combina com a busca;
+- a ordenação oferece atualização recente, título e progresso;
+- livros com porcentagem conhecida vêm antes dos sem total na ordem por progresso; estes usam página atual decrescente;
+- busca, status e ordem ficam na URL e retornam intactos após abrir o detalhe;
+- Coleção vazia e nenhum resultado possuem mensagens e ações distintas;
+- o Arquivo pesquisa conteúdo de notas e citações, título e autor relacionados;
+- abrir um livro pelo Arquivo preserva a busca para a ação de retorno;
+- os dados são carregados uma vez por rota e nenhuma consulta ocorre por tecla.
 
 ## 9. Biblioteca visual
 

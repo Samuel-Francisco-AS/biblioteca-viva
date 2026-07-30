@@ -103,6 +103,18 @@ export class DexieLibraryEntryRepository implements LibraryEntryRepository {
 export class DexieNoteRepository implements NoteRepository {
   constructor(private readonly database: BibliotecaDatabase) {}
 
+  async list(): Promise<readonly Note[]> {
+    try {
+      const stored: unknown[] = await this.database.notes.toArray();
+      return Object.freeze(
+        [...chronological(stored.map(immutableNote))].reverse(),
+      );
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("list_all_notes");
+    }
+  }
+
   async listByEntryId(entryId: string): Promise<readonly Note[]> {
     try {
       const stored: unknown[] = await this.database.notes
@@ -129,6 +141,18 @@ export class DexieNoteRepository implements NoteRepository {
 
 export class DexieQuoteRepository implements QuoteRepository {
   constructor(private readonly database: BibliotecaDatabase) {}
+
+  async list(): Promise<readonly Quote[]> {
+    try {
+      const stored: unknown[] = await this.database.quotes.toArray();
+      return Object.freeze(
+        [...chronological(stored.map(immutableQuote))].reverse(),
+      );
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("list_all_quotes");
+    }
+  }
 
   async listByEntryId(entryId: string): Promise<readonly Quote[]> {
     try {

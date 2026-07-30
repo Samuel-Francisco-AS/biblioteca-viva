@@ -257,6 +257,61 @@ describe("repositórios Dexie", () => {
     database.close();
   });
 
+  it("lista globalmente anotações validadas da mais recente para a mais antiga", async () => {
+    const database = new BibliotecaDatabase(databaseName("annotation-global"));
+    await database.open();
+    const notes = new DexieNoteRepository(database);
+    const quotes = new DexieQuoteRepository(database);
+    const firstNote = createNote({
+      id: "note-a",
+      entryId: "book-1",
+      content: "Antes",
+      createdAt: T0,
+    });
+    const laterNote = createNote({
+      id: "note-b",
+      entryId: "book-2",
+      content: "Depois",
+      createdAt: T1,
+    });
+    const firstQuote = createQuote({
+      id: "quote-a",
+      entryId: "book-1",
+      content: "Antes",
+      createdAt: T0,
+    });
+    const laterQuote = createQuote({
+      id: "quote-b",
+      entryId: "book-2",
+      content: "Depois",
+      createdAt: T1,
+    });
+    await notes.save(firstNote);
+    await notes.save(laterNote);
+    await quotes.save(firstQuote);
+    await quotes.save(laterQuote);
+
+    const allNotes = await notes.list();
+    const allQuotes = await quotes.list();
+    expect(allNotes).toEqual([laterNote, firstNote]);
+    expect(allQuotes).toEqual([laterQuote, firstQuote]);
+    expect(Object.isFrozen(allNotes)).toBe(true);
+    expect(Object.isFrozen(allQuotes)).toBe(true);
+    database.close();
+  });
+
+  it("rejeita anotação global inválida na fronteira", async () => {
+    const database = new BibliotecaDatabase(databaseName("annotation-invalid"));
+    await database.open();
+    await database
+      .table<unknown, string>("notes")
+      .put({ id: "invalid", entryId: "book-1" });
+    await expect(
+      new DexieNoteRepository(database).list(),
+    ).rejects.toBeInstanceOf(InfrastructureError);
+    database.close();
+  });
+
   it("sanitiza falhas de escrita após fechamento", async () => {
     const database = new BibliotecaDatabase(databaseName("failure"));
     await database.open();

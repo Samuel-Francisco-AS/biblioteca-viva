@@ -107,7 +107,7 @@ Em 2026-07-29, foram adicionados 20 testes para cadastro, edição, destino mín
 
 Números totais exatos das tabelas não foram registrados; os limites acima expressam apenas a evidência mínima confirmada, sem presumir a ausência de dados anteriores.
 
-#### Checkpoint posterior do Bloco 4 no Moto G06 — pendente por decisão operacional
+#### Checkpoint transferido para o encerramento do Bloco 5 no Moto G06 — pendente
 
 - [ ] instalar o novo APK debug por cima do anterior;
 - [ ] confirmar preservação dos dados existentes;
@@ -123,7 +123,7 @@ Números totais exatos das tabelas não foram registrados; os limites acima expr
 - [ ] confirmar safe areas;
 - [ ] confirmar ausência de travamento ou tela branca.
 
-Essa checklist não foi executada no Prompt 7. A validação física foi deliberadamente agrupada em um checkpoint posterior do Bloco 4 para evitar instalações repetidas de APK; o adiamento não representa defeito ou falha. O Prompt 7 está concluído pela validação no navegador, mas esta evidência não aprova o Gate G4.
+Essa checklist não foi executada no Prompt 7. A validação física foi adiada para evitar instalações repetidas de APK e posteriormente transferida para o checkpoint do encerramento do Bloco 5; isso não representa defeito ou falha. O Prompt 7 está concluído pela validação no navegador, mas esta evidência não aprova o Gate G4.
 
 ### Prompt 8 — validação no navegador concluída
 
@@ -150,7 +150,7 @@ Em 2026-07-30, a suíte completa passou com 186 testes em 14 arquivos. Os novos 
 
 Não foram registrados nesta validação manual: submissões repetidas para verificar duplicação, encerramento e reabertura do servidor, navegação completa por Tab e Enter, comportamento de foco após erro ou uma segunda largura mobile maior. Esses pontos possuem cobertura automatizada quando aplicável ou permanecem para uma revisão manual posterior; não foram marcados como executados.
 
-#### Android — adiado para checkpoint posterior do Bloco 4
+#### Android — transferido para o encerramento do Bloco 5
 
 - [ ] instalar o APK por cima da versão anterior;
 - [ ] confirmar preservação dos dados existentes;
@@ -164,7 +164,55 @@ Não foram registrados nesta validação manual: submissões repetidas para veri
 - [ ] confirmar safe areas;
 - [ ] confirmar ausência de tela branca ou travamento.
 
-Nenhum item Android acima foi executado no Prompt 8. O adiamento continua sendo uma decisão operacional, não representa defeito e não aprova nem reprova G4.
+Nenhum item Android acima foi executado no Prompt 8. A validação foi transferida para o checkpoint do encerramento do Bloco 5; isso continua sendo uma decisão operacional, não representa defeito e não aprova nem reprova G4.
+
+### Prompt 9 — validação no navegador concluída
+
+Em 2026-07-30, a suíte completa passou com 223 testes em 17 arquivos. Os novos cenários cobrem normalização, combinações de busca/status/ordem, parâmetros inválidos, preservação em URL, estados vazios e sem resultado, Arquivo global, busca por conteúdo e livro, vínculo ausente, consultas globais, fronteira Dexie, ausência de N+1 e uma fixture determinística com 100 livros. Formatação, lint, typecheck, build web, sincronização Android e APK debug também passaram.
+
+#### Navegador — evidências aprovadas em 2026-07-30
+
+- [x] abrir Coleção com registros existentes;
+- [x] buscar por título e por autor;
+- [x] normalizar maiúsculas, espaços externos e acentos;
+- [x] filtrar pelos status reais;
+- [x] combinar busca, filtro e ordenação;
+- [x] ordenar por atualização recente, título e progresso;
+- [x] confirmar a política para total de páginas desconhecido;
+- [x] apresentar e limpar o estado sem resultado;
+- [x] preservar parâmetros na URL ao recarregar;
+- [x] navegar Coleção → livro → Coleção preservando controles;
+- [x] abrir o Arquivo global de notas e citações;
+- [x] pesquisar por conteúdo, título do livro e autor;
+- [x] navegar Arquivo → livro → Arquivo preservando a busca;
+- [x] validar responsividade a partir de 320 px;
+- [x] confirmar ausência aparente de overflow horizontal.
+
+#### Gate G4 — uso real prolongado pendente e não bloqueador
+
+- [ ] cadastrar e manter pelo menos dez livros reais;
+- [ ] utilizar o aplicativo durante alguns dias;
+- [ ] confirmar que o uso normal não exige console ou ferramentas de desenvolvimento.
+
+Esses itens mantêm G4 aberto, mas não bloqueiam o início do Bloco 5.
+
+#### Android — transferido para o encerramento do Bloco 5
+
+- [ ] instalar o APK por cima da versão anterior;
+- [ ] confirmar preservação dos dados existentes;
+- [ ] testar Coleção, busca, filtros e ordenação;
+- [ ] testar Arquivo;
+- [ ] abrir livros a partir dos resultados;
+- [ ] testar botão Voltar;
+- [ ] testar teclado virtual;
+- [ ] testar safe areas;
+- [ ] minimizar e restaurar;
+- [ ] fechar e reabrir;
+- [ ] confirmar persistência;
+- [ ] confirmar ausência de tela branca ou travamento.
+- [ ] validar exportação, importação e restauração após sua implementação no Prompt 10.
+
+Nenhum item Android desta seção foi executado. Instalação sobre a versão anterior, preservação dos dados, teclado virtual, botão Voltar, safe areas, minimizar/restaurar, fechar/reabrir e estabilidade geral serão verificados no encerramento do Bloco 5, junto a backup, importação e restauração. O adiamento é operacional e não representa defeito.
 
 ### Ponte e Phaser
 

@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 
-import { ArchivePage, LibraryPage, SettingsPage } from "./pages";
+import { LibraryPage, SettingsPage } from "./pages";
 
 interface AppRoute {
   Component?: ComponentType;
@@ -27,7 +27,6 @@ export const appRoutes: readonly AppRoute[] = [
     title: "Novo livro",
   },
   {
-    Component: ArchivePage,
     navigationLabel: "Arquivo",
     path: "/arquivo",
     title: "Arquivo",

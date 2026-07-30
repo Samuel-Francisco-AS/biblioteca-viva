@@ -25,15 +25,6 @@ export function LibraryPage() {
   );
 }
 
-export function ArchivePage() {
-  return (
-    <PlaceholderPage
-      description="Aqui serão reunidas as notas e citações salvas durante as leituras."
-      title="Arquivo"
-    />
-  );
-}
-
 export function SettingsPage() {
   return (
     <PlaceholderPage

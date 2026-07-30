@@ -348,6 +348,45 @@ a {
   list-style: none;
 }
 
+.collection-controls {
+  display: grid;
+  margin-top: var(--space-5);
+  padding: 0;
+  border: 0;
+  gap: var(--space-4);
+}
+
+.result-summary {
+  display: flex;
+  margin-top: var(--space-4);
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.result-summary p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.no-results,
+.archive-search {
+  margin-top: var(--space-5);
+}
+
+.archive-groups {
+  margin-top: var(--space-5);
+}
+
+.archive-groups > section {
+  min-width: 0;
+}
+
+.annotation-list time {
+  display: block;
+}
+
 .book-card,
 .annotation-list article {
   min-width: 0;
@@ -539,6 +578,11 @@ a {
   .book-grid,
   .history-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .collection-controls {
+    grid-template-columns: minmax(12rem, 2fr) repeat(2, minmax(9rem, 1fr));
+    align-items: end;
   }
 }
 

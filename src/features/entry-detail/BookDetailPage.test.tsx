@@ -149,11 +149,30 @@ describe("detalhe do livro", () => {
     expect(screen.getByText("4 de 5")).toBeVisible();
     expect(screen.getByRole("link", { name: "Editar dados" })).toHaveAttribute(
       "href",
-      "/livros/book-1/editar",
+      "/livros/book-1/editar?from=%2Fcolecao",
     );
     expect(
       screen.getByRole("link", { name: "Voltar à Coleção" }),
     ).toHaveAttribute("href", "/colecao");
+  });
+
+  it("preserva a origem do Arquivo e usa Coleção como fallback seguro", async () => {
+    const { facade } = application();
+    render(
+      <MemoryRouter
+        initialEntries={["/livros/book-1?from=%2Farquivo%3Fq%3Doceano"]}
+      >
+        <Routes>
+          <Route
+            path="/livros/:id"
+            element={<BookDetailPage application={facade} />}
+          />
+        </Routes>
+      </MemoryRouter>,
+    );
+    expect(
+      await screen.findByRole("link", { name: "Voltar ao Arquivo" }),
+    ).toHaveAttribute("href", "/arquivo?q=oceano");
   });
 
   it("diferencia livro inexistente de falha de consulta", async () => {

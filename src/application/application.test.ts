@@ -9,6 +9,8 @@ import {
   ChangeBookStatus,
   CreateBookEntry,
   GetBookEntry,
+  ListAllNotes,
+  ListAllQuotes,
   ListBookEntries,
   ListNotesByBook,
   ListQuotesByBook,
@@ -84,6 +86,11 @@ class FakeLibraryEntryRepository implements LibraryEntryRepository {
 class FakeNoteRepository implements NoteRepository {
   readonly notes = new Map<string, Note>();
   constructor(private readonly state: TestState) {}
+  list(): Promise<readonly Note[]> {
+    if (this.state.failures.has("note_list"))
+      return Promise.reject(new Error("note table leaked"));
+    return Promise.resolve([...this.notes.values()]);
+  }
   listByEntryId(entryId: string): Promise<readonly Note[]> {
     if (this.state.failures.has("note_list"))
       return Promise.reject(new Error("note table leaked"));
@@ -103,6 +110,11 @@ class FakeNoteRepository implements NoteRepository {
 class FakeQuoteRepository implements QuoteRepository {
   readonly quotes = new Map<string, Quote>();
   constructor(private readonly state: TestState) {}
+  list(): Promise<readonly Quote[]> {
+    if (this.state.failures.has("quote_list"))
+      return Promise.reject(new Error("quote table leaked"));
+    return Promise.resolve([...this.quotes.values()]);
+  }
   listByEntryId(entryId: string): Promise<readonly Quote[]> {
     if (this.state.failures.has("quote_list"))
       return Promise.reject(new Error("quote table leaked"));
@@ -543,6 +555,51 @@ describe("ListNotesByBook e ListQuotesByBook", () => {
         failure === "note_list"
           ? new ListNotesByBook(context.notes).execute({ id: "book-1" })
           : new ListQuotesByBook(context.quotes).execute({ id: "book-1" });
+      const error = await expectApplicationError(promise, "PERSISTENCE_FAILED");
+      expect(error.message).not.toContain("table");
+    }
+  });
+});
+
+describe("ListAllNotes e ListAllQuotes", () => {
+  it("lista globalmente em uma única chamada e devolve arrays congelados", async () => {
+    const context = setup();
+    const note = Object.freeze({
+      id: "note-global",
+      entryId: "book-1",
+      content: "Nota global",
+      createdAt: T0,
+      updatedAt: T0,
+      revision: 1,
+    });
+    const quote = Object.freeze({
+      id: "quote-global",
+      entryId: "book-2",
+      content: "Citação global",
+      createdAt: T1,
+      updatedAt: T1,
+      revision: 1,
+    });
+    context.notes.notes.set(note.id, note);
+    context.quotes.quotes.set(quote.id, quote);
+
+    const notes = await new ListAllNotes(context.notes).execute();
+    const quotes = await new ListAllQuotes(context.quotes).execute();
+
+    expect(notes).toEqual([note]);
+    expect(quotes).toEqual([quote]);
+    expect(Object.isFrozen(notes)).toBe(true);
+    expect(Object.isFrozen(quotes)).toBe(true);
+  });
+
+  it("encapsula falhas globais sem expor infraestrutura", async () => {
+    for (const failure of ["note_list", "quote_list"] as const) {
+      const context = setup();
+      context.state.failures.add(failure);
+      const promise =
+        failure === "note_list"
+          ? new ListAllNotes(context.notes).execute()
+          : new ListAllQuotes(context.quotes).execute();
       const error = await expectApplicationError(promise, "PERSISTENCE_FAILED");
       expect(error.message).not.toContain("table");
     }

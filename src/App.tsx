@@ -8,6 +8,7 @@ import type { ApplicationDiagnostics } from "./app/createApplication";
 import type { ApplicationRuntime } from "./app/createApplication";
 import { isDiagnosticsEnabled } from "./app/diagnosticsAvailability";
 import { CollectionPage } from "./features/collection/CollectionPage";
+import { ArchivePage } from "./features/archive/ArchivePage";
 import { BookDetailPage } from "./features/entry-detail/BookDetailPage";
 import {
   EditBookPage,
@@ -109,6 +110,10 @@ export function App({ application, diagnostics }: AppProps) {
           <Route
             path="/colecao"
             element={<CollectionPage application={application} />}
+          />
+          <Route
+            path="/arquivo"
+            element={<ArchivePage application={application} />}
           />
           <Route
             path="/novo-livro"

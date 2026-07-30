@@ -462,6 +462,12 @@ A Coleção recebe `ListBookEntries` pelo composition root. O detalhe recebe `Ge
 
 Após uma escrita, o detalhe usa o retorno do caso de uso para substituir o livro ou acrescentar a anotação ao estado local. A Coleção refaz sua consulta ao ser montada novamente. Essa reatividade é deliberadamente local, não cria store global e não muda o formato persistente.
 
+### 7.9 Busca e Arquivo após o Prompt 9
+
+A Coleção carrega `ListBookEntries` uma vez por montagem e deriva em memória busca normalizada, filtro e ordenação sobre uma cópia. `q`, `status` e `sort` ficam em parâmetros de URL; os links para o detalhe levam uma origem validada, permitindo retornar à Coleção ou ao Arquivo com os controles da sessão. Valores inválidos usam fallbacks seguros e não entram no domínio nem no IndexedDB.
+
+`ListAllNotes` e `ListAllQuotes` usam métodos globais mínimos das portas. O Arquivo executa essas duas consultas e `ListBookEntries` em paralelo, monta um único mapa `entryId → BookEntry` e associa todas as anotações sem consultas individuais. Os adapters validam cada registro e retornam arrays congelados em ordem recente determinística. Para aproximadamente 100 livros e algumas centenas de anotações, filtragem e ordenação em memória evitam consultas por tecla e complexidade prematura. Essa política deve ser revista se medições reais mostrarem degradação ou se o volume exigir busca textual avançada.
+
 ---
 
 ## 8. Modelo de domínio inicial

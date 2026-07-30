@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 
 import type { BookEntry, Note, Quote } from "../../domain";
 import { presentApplicationError } from "../entry-editor/errorMessages";
@@ -9,6 +9,7 @@ import {
   progressText,
   statusLabels,
 } from "../books/bookPresentation";
+import { safeReturnPath } from "../books/navigationOrigin";
 import { NoteForm, QuoteForm } from "./AnnotationForms";
 import { ProgressForm } from "./ProgressForm";
 import { StatusActions } from "./StatusActions";
@@ -93,6 +94,8 @@ export function BookDetailPage({
   readonly application?: BookDetailApplication;
 }) {
   const { id = "" } = useParams();
+  const [searchParams] = useSearchParams();
+  const returnPath = safeReturnPath(searchParams.get("from"));
   const [book, setBook] = useState<BookEntry>();
   const [notes, setNotes] = useState<readonly Note[]>();
   const [quotes, setQuotes] = useState<readonly Quote[]>();
@@ -141,8 +144,10 @@ export function BookDetailPage({
           {notFound ? "Livro não encontrado" : "Não foi possível abrir o livro"}
         </h2>
         <p>{loadError}</p>
-        <Link className="text-link" to="/colecao">
-          Voltar à Coleção
+        <Link className="text-link" to={returnPath}>
+          {returnPath.startsWith("/arquivo")
+            ? "Voltar ao Arquivo"
+            : "Voltar à Coleção"}
         </Link>
       </section>
     );
@@ -168,7 +173,10 @@ export function BookDetailPage({
           </div>
           <Link
             className="button button--secondary"
-            to={`/livros/${encodeURIComponent(book.id)}/editar`}
+            to={{
+              pathname: `/livros/${encodeURIComponent(book.id)}/editar`,
+              search: `?from=${encodeURIComponent(returnPath)}`,
+            }}
           >
             Editar dados
           </Link>
@@ -207,8 +215,10 @@ export function BookDetailPage({
             <dd>{formatDateTime(book.updatedAt)}</dd>
           </div>
         </dl>
-        <Link className="text-link" to="/colecao">
-          Voltar à Coleção
+        <Link className="text-link" to={returnPath}>
+          {returnPath.startsWith("/arquivo")
+            ? "Voltar ao Arquivo"
+            : "Voltar à Coleção"}
         </Link>
       </section>
 

@@ -115,3 +115,14 @@ No G1, Sam validou manualmente Tab, Enter, foco visível, link de salto, dimens�
 - layout fluido a partir de 320 px e safe areas herdadas do shell.
 
 A validação manual com teclado, leitor de estrutura, zoom, larguras móveis e teclado virtual Android permanece pendente.
+
+## 11. Implementado na consulta do Prompt 9
+
+- busca, status e ordenação possuem labels reais e instrução textual;
+- os controles da Coleção estão agrupados semanticamente e permanecem na ordem natural de teclado;
+- contagens de resultados usam região `aria-live="polite"` e não dependem de cor;
+- Coleção vazia e nenhum resultado possuem headings e ações diferentes;
+- limpar busca devolve foco ao campo correspondente;
+- o Arquivo usa headings, listas, artigos e `time` com `dateTime` para notas e citações;
+- links do Arquivo nomeiam o livro de destino e registros sem livro relacionado recebem texto seguro;
+- campos e cartões continuam fluidos, com quebra de conteúdo longo e espaço inferior do shell.

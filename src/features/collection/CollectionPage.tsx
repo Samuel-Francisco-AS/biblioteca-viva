@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 
-import type { BookEntry } from "../../domain";
+import { ENTRY_STATUSES, type BookEntry } from "../../domain";
 import { presentApplicationError } from "../entry-editor/errorMessages";
 import {
   formatDateTime,
@@ -9,12 +9,15 @@ import {
   progressText,
   statusLabels,
 } from "../books/bookPresentation";
+import {
+  deriveCollection,
+  parseCollectionSort,
+  parseStatusFilter,
+} from "./collectionControls";
 
 export interface CollectionApplication {
   readonly queries: {
-    readonly listBookEntries: {
-      execute(): Promise<readonly BookEntry[]>;
-    };
+    readonly listBookEntries: { execute(): Promise<readonly BookEntry[]> };
   };
 }
 
@@ -25,6 +28,16 @@ export function CollectionPage({
 }) {
   const [books, setBooks] = useState<readonly BookEntry[]>();
   const [error, setError] = useState<string>();
+  const [params, setParams] = useSearchParams();
+  const location = useLocation();
+  const searchRef = useRef<HTMLInputElement>(null);
+  const query = params.get("q") ?? "";
+  const status = parseStatusFilter(params.get("status"));
+  const sort = parseCollectionSort(params.get("sort"));
+  const visibleBooks = useMemo(
+    () => deriveCollection(books ?? [], query, status, sort),
+    [books, query, sort, status],
+  );
 
   useEffect(() => {
     if (!application) return;
@@ -42,24 +55,44 @@ export function CollectionPage({
     };
   }, [application]);
 
-  if (!application) {
+  function updateParam(name: "q" | "sort" | "status", value: string) {
+    setParams(
+      (current) => {
+        const next = new URLSearchParams(current);
+        if (
+          value === "" ||
+          value === "all" ||
+          (name === "sort" && value === "recent")
+        ) {
+          next.delete(name);
+        } else next.set(name, value);
+        return next;
+      },
+      { replace: true },
+    );
+  }
+
+  function clearControls() {
+    setParams({}, { replace: true });
+    requestAnimationFrame(() => searchRef.current?.focus());
+  }
+
+  if (!application)
     return (
       <section className="content-card" role="alert">
         <h2>Coleção indisponível</h2>
         <p>Não foi possível iniciar o armazenamento local.</p>
       </section>
     );
-  }
-  if (error) {
+  if (error)
     return (
       <section className="content-card" role="alert">
         <h2>Não foi possível abrir a Coleção</h2>
         <p>{error}</p>
       </section>
     );
-  }
   if (!books) return <p role="status">Carregando Coleção…</p>;
-  if (books.length === 0) {
+  if (books.length === 0)
     return (
       <section
         className="content-card"
@@ -73,7 +106,10 @@ export function CollectionPage({
         </Link>
       </section>
     );
-  }
+
+  const controlsActive =
+    query.trim() !== "" || status !== "all" || sort !== "recent";
+  const returnPath = `${location.pathname}${location.search}`;
 
   return (
     <section aria-labelledby="collection-title">
@@ -86,42 +122,129 @@ export function CollectionPage({
           Adicionar livro
         </Link>
       </div>
-      <ul className="book-grid">
-        {books.map((book) => {
-          const percentage = progressPercentage(book);
-          return (
-            <li className="book-card" key={book.id}>
-              <article aria-labelledby={`book-${book.id}-title`}>
-                <p className="status-badge">{statusLabels[book.status]}</p>
-                <h3 id={`book-${book.id}-title`}>{book.title}</h3>
-                <p>{book.author ?? "Autor não informado"}</p>
-                <p id={`book-${book.id}-progress`}>{progressText(book)}</p>
-                {book.totalPages !== undefined && percentage !== undefined ? (
-                  <progress
-                    aria-label={`Progresso de ${book.title}`}
-                    aria-describedby={`book-${book.id}-progress`}
-                    max={book.totalPages}
-                    value={Math.min(book.currentPage, book.totalPages)}
-                  />
-                ) : (
-                  <p className="progress-unknown">
-                    Porcentagem indisponível sem total de páginas.
+      <fieldset className="collection-controls">
+        <legend className="visually-hidden">Controles da Coleção</legend>
+        <div className="form-field">
+          <label htmlFor="collection-search">Buscar livros</label>
+          <p className="field-help" id="collection-search-help">
+            Busca por título ou autor, sem diferenciar maiúsculas e acentos.
+          </p>
+          <input
+            id="collection-search"
+            ref={searchRef}
+            type="search"
+            value={query}
+            aria-describedby="collection-search-help"
+            onChange={(event) => updateParam("q", event.target.value)}
+          />
+        </div>
+        <div className="form-field">
+          <label htmlFor="collection-status">Status</label>
+          <select
+            id="collection-status"
+            value={status}
+            onChange={(event) => updateParam("status", event.target.value)}
+          >
+            <option value="all">Todos os status</option>
+            {ENTRY_STATUSES.map((entryStatus) => (
+              <option key={entryStatus} value={entryStatus}>
+                {statusLabels[entryStatus]}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="form-field">
+          <label htmlFor="collection-sort">Ordenar por</label>
+          <select
+            id="collection-sort"
+            value={sort}
+            onChange={(event) => updateParam("sort", event.target.value)}
+          >
+            <option value="recent">Atualização recente</option>
+            <option value="title">Título</option>
+            <option value="progress">Progresso</option>
+          </select>
+        </div>
+      </fieldset>
+      <div className="result-summary" aria-live="polite">
+        <p>
+          {visibleBooks.length}{" "}
+          {visibleBooks.length === 1
+            ? "livro encontrado"
+            : "livros encontrados"}
+          {controlsActive ? ` de ${books.length}` : ""}.
+        </p>
+        {query !== "" && (
+          <button
+            className="button button--secondary"
+            type="button"
+            onClick={() => {
+              updateParam("q", "");
+              requestAnimationFrame(() => searchRef.current?.focus());
+            }}
+          >
+            Limpar busca
+          </button>
+        )}
+      </div>
+      {visibleBooks.length === 0 ? (
+        <section
+          className="content-card no-results"
+          aria-labelledby="collection-no-results"
+        >
+          <h3 id="collection-no-results">
+            Nenhum livro corresponde aos controles
+          </h3>
+          <p>Altere a busca ou o status para ver outros livros.</p>
+          <button
+            className="button button--secondary"
+            type="button"
+            onClick={clearControls}
+          >
+            Limpar busca e filtros
+          </button>
+        </section>
+      ) : (
+        <ul className="book-grid">
+          {visibleBooks.map((book) => {
+            const percentage = progressPercentage(book);
+            return (
+              <li className="book-card" key={book.id}>
+                <article aria-labelledby={`book-${book.id}-title`}>
+                  <p className="status-badge">{statusLabels[book.status]}</p>
+                  <h3 id={`book-${book.id}-title`}>{book.title}</h3>
+                  <p>{book.author ?? "Autor não informado"}</p>
+                  <p id={`book-${book.id}-progress`}>{progressText(book)}</p>
+                  {book.totalPages !== undefined && percentage !== undefined ? (
+                    <progress
+                      aria-label={`Progresso de ${book.title}`}
+                      aria-describedby={`book-${book.id}-progress`}
+                      max={book.totalPages}
+                      value={Math.min(book.currentPage, book.totalPages)}
+                    />
+                  ) : (
+                    <p className="progress-unknown">
+                      Porcentagem indisponível sem total de páginas.
+                    </p>
+                  )}
+                  <p className="book-card__updated">
+                    Última atualização: {formatDateTime(book.updatedAt)}
                   </p>
-                )}
-                <p className="book-card__updated">
-                  Última atualização: {formatDateTime(book.updatedAt)}
-                </p>
-                <Link
-                  className="text-link"
-                  to={`/livros/${encodeURIComponent(book.id)}`}
-                >
-                  Abrir detalhes de {book.title}
-                </Link>
-              </article>
-            </li>
-          );
-        })}
-      </ul>
+                  <Link
+                    className="text-link"
+                    to={{
+                      pathname: `/livros/${encodeURIComponent(book.id)}`,
+                      search: `?from=${encodeURIComponent(returnPath)}`,
+                    }}
+                  >
+                    Abrir detalhes de {book.title}
+                  </Link>
+                </article>
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </section>
   );
 }

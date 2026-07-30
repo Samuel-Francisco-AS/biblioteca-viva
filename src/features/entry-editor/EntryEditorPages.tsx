@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 
 import type { BookEntry } from "../../domain";
+import { safeReturnPath } from "../books/navigationOrigin";
 import { BookForm } from "./BookForm";
 import { createInputFromValues, updateInputFromValues } from "./formConversion";
 import { presentApplicationError } from "./errorMessages";
@@ -88,6 +94,8 @@ export function EditBookPage({
 }) {
   const { id = "" } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const returnPath = safeReturnPath(searchParams.get("from"));
   const [book, setBook] = useState<BookEntry>();
   const [loadError, setLoadError] = useState<string>();
   const [notFound, setNotFound] = useState(false);
@@ -121,8 +129,10 @@ export function EditBookPage({
           {notFound ? "Livro não encontrado" : "Não foi possível abrir o livro"}
         </h2>
         <p>{loadError}</p>
-        <Link className="text-link" to="/colecao">
-          Voltar à Coleção
+        <Link className="text-link" to={returnPath}>
+          {returnPath.startsWith("/arquivo")
+            ? "Voltar ao Arquivo"
+            : "Voltar à Coleção"}
         </Link>
       </section>
     );
@@ -148,7 +158,10 @@ export function EditBookPage({
         await availableApplication.commands.updateBookEntry.execute(
           converted.data,
         );
-      void navigate(`/livros/${encodeURIComponent(updated.id)}`);
+      void navigate({
+        pathname: `/livros/${encodeURIComponent(updated.id)}`,
+        search: `?from=${encodeURIComponent(returnPath)}`,
+      });
     } catch (error: unknown) {
       const presented = presentApplicationError(error);
       setErrors(presented.fieldErrors);
@@ -166,7 +179,12 @@ export function EditBookPage({
         errors={errors}
         generalError={generalError}
         onSubmit={save}
-        onCancel={() => void navigate(`/livros/${encodeURIComponent(book.id)}`)}
+        onCancel={() =>
+          void navigate({
+            pathname: `/livros/${encodeURIComponent(book.id)}`,
+            search: `?from=${encodeURIComponent(returnPath)}`,
+          })
+        }
       />
     </section>
   );

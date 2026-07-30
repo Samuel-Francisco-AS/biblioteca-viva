@@ -16,18 +16,20 @@
 - **versão:** `v0.2.0-alpha.1`, marco atual;
 - **bloco concluído:** 3 — Domínio, casos de uso e persistência;
 - **gate:** G3 aprovado por Sam em 2026-07-29;
-- **bloco atual:** 4 — Aplicativo pessoal utilizável;
-- **prompts concluídos:** Prompts 4, 5, 6, 7 e 8;
-- **próximo prompt:** Prompt 9 — busca, filtros e arquivo;
+- **implementação concluída:** 4 — Aplicativo pessoal utilizável;
+- **prompts concluídos:** Prompts 4, 5, 6, 7, 8 e 9;
+- **próximo prompt:** Prompt 10 — backup, restauração, recuperação e endurecimento;
+- **próximo bloco:** 5 — ainda não iniciado;
 - **APK:** diagnóstico interno validado no Moto G06 com Android 15; release assinado ainda não existe;
-- **código:** Coleção, detalhe, progresso, status, notas e citações validados no navegador, inclusive em 320 × 915.
+- **código:** implementação do Bloco 4 validada no navegador; G4 aguarda uso real prolongado.
 
 - [x] Prompt 4 — Modelo de domínio de livros;
 - [x] Prompt 5 — Portas e casos de uso;
 - [x] Prompt 6 — Dexie, migrações e composição;
 - [x] Prompt 7 — Cadastro e edição de livro, concluído e validado no navegador.
 - [x] Prompt 8 — Coleção, detalhes, progresso, notas e citações, concluído e validado no navegador.
-- [ ] Prompt 9 — Busca, filtros e arquivo, próximo trabalho.
+- [x] Prompt 9 — Busca, filtros e arquivo, concluído e validado no navegador.
+- [ ] Prompt 10 — Backup, restauração, recuperação e endurecimento, próximo trabalho ainda não iniciado.
 
 ## Blocos e gates
 
@@ -37,8 +39,8 @@
 | `[x]` | 1 | 1–2 | fundação web navegável | G1 aprovado |
 | `[x]` | 2 | 3 | APK debug instalado e validado no Android real | G2 aprovado |
 | `[x]` | 3 | 4–6 | domínio, aplicação e persistência validados | G3 aprovado |
-| `[~]` | 4 | 7–9 | Prompts 7 e 8 concluídos; próximo: Prompt 9 | G4 aberto |
-| `[ ]` | 5 | 10 | dados exportáveis e recuperáveis | G5 |
+| `[~]` | 4 | 7–9 | implementação concluída; uso real prolongado pendente | G4 aberto |
+| `[ ]` | 5 | 10 | avanço autorizado com pendência não bloqueadora de G4 | G5 não iniciado |
 | `[ ]` | 6 | 11–13 | biblioteca visual conectada | G6 |
 | `[ ]` | 7 | 14–15 | identidade sonora e contextual | G7 |
 | `[ ]` | 8 | 16 | primeiro ciclo emocional completo | G8 |
@@ -69,6 +71,8 @@ Um bloco só muda para concluído quando:
 - gate foi aprovado por Sam.
 
 O commit, quando autorizado, ocorre somente depois da aprovação humana e não é pré-condição para registrar o estado aprovado.
+
+Excepcionalmente, o Bloco 5 pode iniciar com G4 aberto: a implementação e a validação funcional web do Bloco 4 foram concluídas, enquanto o uso real prolongado continua como pendência explícita e não bloqueadora. Isso não equivale a aprovar G4.
 
 ## Expansões pós-protótipo
 

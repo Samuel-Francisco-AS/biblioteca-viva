@@ -8,11 +8,13 @@ export interface LibraryEntryRepository {
 }
 
 export interface NoteRepository {
+  list(): Promise<readonly Note[]>;
   listByEntryId(entryId: string): Promise<readonly Note[]>;
   save(note: Note): Promise<void>;
 }
 
 export interface QuoteRepository {
+  list(): Promise<readonly Quote[]>;
   listByEntryId(entryId: string): Promise<readonly Quote[]>;
   save(quote: Quote): Promise<void>;
 }

@@ -1,5 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
 import { ApplicationError } from "../../application";
@@ -19,14 +20,25 @@ const book: BookEntry = {
   revision: 2,
 };
 
-function renderCollection(result: Promise<readonly BookEntry[]>) {
+function LocationProbe() {
+  const location = useLocation();
+  return (
+    <output aria-label="URL atual">{`${location.pathname}${location.search}`}</output>
+  );
+}
+
+function renderCollection(
+  result: Promise<readonly BookEntry[]>,
+  entry = "/colecao",
+) {
   const execute = vi.fn(() => result);
   const application: CollectionApplication = {
     queries: { listBookEntries: { execute } },
   };
   render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[entry]}>
       <CollectionPage application={application} />
+      <LocationProbe />
     </MemoryRouter>,
   );
   return execute;
@@ -35,7 +47,7 @@ function renderCollection(result: Promise<readonly BookEntry[]>) {
 describe("Coleção", () => {
   it("mostra carregamento enquanto a consulta está pendente", () => {
     renderCollection(new Promise(() => undefined));
-    expect(screen.getByRole("status")).toHaveTextContent("Carregando Coleção");
+    expect(screen.getByText("Carregando Coleção…")).toBeVisible();
   });
 
   it("mostra estado vazio com ação para cadastrar", async () => {
@@ -54,7 +66,7 @@ describe("Coleção", () => {
       await screen.findByRole("heading", { name: book.title }),
     ).toBeVisible();
     expect(screen.getByText(book.author ?? "")).toBeVisible();
-    expect(screen.getByText("Em andamento")).toBeVisible();
+    expect(screen.getAllByText("Em andamento")).toHaveLength(2);
     expect(screen.getByText("50 de 200 páginas (25%)")).toBeVisible();
     expect(
       screen.getByRole("progressbar", { name: `Progresso de ${book.title}` }),
@@ -62,7 +74,7 @@ describe("Coleção", () => {
     expect(screen.getByText(/Última atualização:/)).toBeVisible();
     expect(
       screen.getByRole("link", { name: `Abrir detalhes de ${book.title}` }),
-    ).toHaveAttribute("href", "/livros/book-1");
+    ).toHaveAttribute("href", "/livros/book-1?from=%2Fcolecao");
     expect(execute).toHaveBeenCalledOnce();
   });
 
@@ -95,5 +107,55 @@ describe("Coleção", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Não foi possível acessar o armazenamento",
     );
+  });
+
+  it("reflete controles válidos na URL e preserva a origem no detalhe", async () => {
+    const user = userEvent.setup();
+    const execute = renderCollection(
+      Promise.resolve([book]),
+      "/colecao?q=cidade&status=in_progress&sort=title",
+    );
+    expect(await screen.findByLabelText("Buscar livros")).toHaveValue("cidade");
+    expect(screen.getByLabelText("Status")).toHaveValue("in_progress");
+    expect(screen.getByLabelText("Ordenar por")).toHaveValue("title");
+    await user.clear(screen.getByLabelText("Buscar livros"));
+    await user.type(screen.getByLabelText("Buscar livros"), "serras");
+    await waitFor(() =>
+      expect(screen.getByLabelText("URL atual")).toHaveTextContent("q=serras"),
+    );
+    expect(
+      screen.getByRole("link", { name: /Abrir detalhes/ }),
+    ).toHaveAttribute(
+      "href",
+      "/livros/book-1?from=%2Fcolecao%3Fstatus%3Din_progress%26sort%3Dtitle%26q%3Dserras",
+    );
+    expect(execute).toHaveBeenCalledOnce();
+  });
+
+  it("diferencia nenhum resultado e limpa os controles", async () => {
+    const user = userEvent.setup();
+    renderCollection(
+      Promise.resolve([book]),
+      "/colecao?q=ausente&status=paused",
+    );
+    expect(
+      await screen.findByRole("heading", {
+        name: "Nenhum livro corresponde aos controles",
+      }),
+    ).toBeVisible();
+    await user.click(
+      screen.getByRole("button", { name: "Limpar busca e filtros" }),
+    );
+    expect(screen.getByRole("heading", { name: book.title })).toBeVisible();
+    expect(screen.getByLabelText("URL atual")).toHaveTextContent("/colecao");
+  });
+
+  it("aplica fallback seguro para parâmetros inválidos", async () => {
+    renderCollection(
+      Promise.resolve([book]),
+      "/colecao?status=unknown&sort=wrong",
+    );
+    expect(await screen.findByLabelText("Status")).toHaveValue("all");
+    expect(screen.getByLabelText("Ordenar por")).toHaveValue("recent");
   });
 });

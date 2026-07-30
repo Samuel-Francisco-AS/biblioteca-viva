@@ -91,4 +91,28 @@ describe("createApplication", () => {
       second.queries.getBookEntry.execute({ id: book.id }),
     ).resolves.toEqual(book);
   });
+
+  it("composes global annotation queries without changing the database schema", async () => {
+    const runtime = await createApplication({
+      databaseName: databaseName("global-annotations"),
+    });
+    runtimes.push(runtime);
+    const book = await runtime.commands.createBookEntry.execute({
+      title: "Livro",
+    });
+    const note = await runtime.commands.addNote.execute({
+      entryId: book.id,
+      content: "Nota",
+    });
+    const quote = await runtime.commands.addQuote.execute({
+      entryId: book.id,
+      content: "Citação",
+    });
+    await expect(runtime.queries.listAllNotes.execute()).resolves.toEqual([
+      note,
+    ]);
+    await expect(runtime.queries.listAllQuotes.execute()).resolves.toEqual([
+      quote,
+    ]);
+  });
 });

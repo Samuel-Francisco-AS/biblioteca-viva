@@ -4,6 +4,8 @@ import {
   ChangeBookStatus,
   CreateBookEntry,
   GetBookEntry,
+  ListAllNotes,
+  ListAllQuotes,
   ListBookEntries,
   ListNotesByBook,
   ListQuotesByBook,
@@ -47,6 +49,8 @@ export interface ApplicationRuntime {
   };
   readonly queries: {
     readonly getBookEntry: GetBookEntry;
+    readonly listAllNotes: ListAllNotes;
+    readonly listAllQuotes: ListAllQuotes;
     readonly listBookEntries: ListBookEntries;
     readonly listNotesByBook: ListNotesByBook;
     readonly listQuotesByBook: ListQuotesByBook;
@@ -106,6 +110,8 @@ export async function createApplication(
     },
     queries: {
       getBookEntry: new GetBookEntry(libraryEntries),
+      listAllNotes: new ListAllNotes(notes),
+      listAllQuotes: new ListAllQuotes(quotes),
       listBookEntries: new ListBookEntries(libraryEntries),
       listNotesByBook: new ListNotesByBook(notes),
       listQuotesByBook: new ListQuotesByBook(quotes),

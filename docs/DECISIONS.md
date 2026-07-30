@@ -204,4 +204,15 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 
 **Consequências:** a versão 1 do banco contém as quatro tabelas operacionais e a versão 2 acrescenta configurações/metadados com marcador técnico idempotente. Dexie não vaza pelas portas. Armazenamento persistente é uma solicitação, não garantia; IndexedDB não é criptografado pelo app. Exclusão, arquivamento, outbox e backup continuam adiados.
 
+## D-020 — Consulta em memória e Arquivo de anotações
+
+- **Data:** 2026-07-30
+- **Status:** aceita
+
+**Contexto:** o Prompt 9 precisa consultar aproximadamente 100 livros e algumas centenas de anotações sem introduzir busca full-text, paginação, cache global ou N+1.
+
+**Decisão:** carregar cada conjunto uma vez por montagem e derivar busca, filtro e ordenação em memória; guardar controles consultáveis em parâmetros de URL; definir Arquivo como consulta global de notas e citações, não como arquivamento de livros; e compor anotações com um mapa dos livros carregados em lote.
+
+**Consequências:** digitação não consulta IndexedDB, escolhas visuais não alteram domínio ou ordem persistida, a sessão pode ser restaurada pelos links e não há mudança de schema. A estratégia será reavaliada somente com medição de degradação ou volume que justifique busca textual avançada.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.
