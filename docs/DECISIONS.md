@@ -249,3 +249,14 @@ Use `templates/ADR_TEMPLATE.md` para novas decisões.
 **Decisão:** configurar a API oficial `config({ jitless: true })` no entrypoint antes da composição. Manter `script-src 'self'` e não adicionar `unsafe-eval`. Alinhar o fundo CSS do host/canvas a `#d8c5a3`, igual ao `backgroundColor` do Phaser, para evitar a piscada preta trivial durante resize.
 
 **Consequências:** a sonda continua presente no bundle transitivo, mas seu caminho é desativado antes de qualquer parse; não há patch em `node_modules`, alias, troca de versão ou custo de segurança. A validação de schemas perde somente a otimização JIT opcional.
+
+## D-024 — Projeção resumida e determinística da Biblioteca
+
+- **Data:** 2026-07-31
+- **Status:** aceita
+
+**Contexto:** o Prompt 12 precisa conectar a coleção persistida à cena sem transferir regras, banco ou conteúdo pessoal para Phaser.
+
+**Decisão:** `LibraryProjectionService` recebe um input serializável mínimo e produz um `LibraryViewModel` imutável. A lotação usa `empty` para 0 livros, `initial` para 1–4, `growing` para 5–14 e `full` para 15 ou mais. Esses estados renderizam, respectivamente, 0, 2, 5 e no máximo 8 grupos de lombadas, inclusive para coleções grandes. O livro recente é o maior `updatedAt`, com ID lexicograficamente crescente como desempate; o marco existe quando há ao menos um status `completed` atual.
+
+**Consequências:** React consulta e possui painel/navegação; Phaser recebe atualizações do modelo na mesma instância e emite uma união de interações mínima. Somente `ShelfSelected` é conectado funcionalmente agora. `LibrarianSelected`, `CreatureSelected` e `HighlightedBookSelected` permanecem contratos sem fluxo de produto até o Prompt 13. Não há plugin ou permissão Android adicional.

@@ -1,15 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 
 import type {
+  LibraryInteraction,
   LibraryVisualFactoryModule,
   LibraryVisualGame,
   LibraryVisualSize,
+  LibraryViewModel,
 } from "./contracts";
 import type { LibraryVisualDiagnostics } from "./diagnostics";
 
 interface LibraryVisualHostProps {
   readonly diagnostics?: LibraryVisualDiagnostics;
   readonly loadFactory?: () => Promise<LibraryVisualFactoryModule>;
+  readonly onInteraction?: (interaction: LibraryInteraction) => void;
+  readonly projection: LibraryViewModel;
 }
 
 const loadPhaserFactory = () => import("./phaser/createPhaserGame");
@@ -29,10 +33,22 @@ function isDocumentHidden(): boolean {
 export function LibraryVisualHost({
   diagnostics,
   loadFactory = loadPhaserFactory,
+  onInteraction,
+  projection,
 }: LibraryVisualHostProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const generationRef = useRef(0);
+  const gameRef = useRef<LibraryVisualGame | undefined>(undefined);
+  const latestInteractionRef = useRef(onInteraction);
+  const latestProjectionRef = useRef(projection);
   const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    latestInteractionRef.current = onInteraction;
+    latestProjectionRef.current = projection;
+    gameRef.current?.setInteractionHandler(onInteraction);
+    gameRef.current?.updateProjection(projection);
+  }, [onInteraction, projection]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -77,6 +93,7 @@ export function LibraryVisualHost({
         game.destroy();
         game = undefined;
       }
+      gameRef.current = undefined;
       return didDestroyInstance;
     };
 
@@ -93,9 +110,12 @@ export function LibraryVisualHost({
         if (destroyed) return undefined;
         return createLibraryVisualGame({
           container,
+          onInteraction: (interaction) =>
+            latestInteractionRef.current?.(interaction),
           onSceneEvent: (event) => {
             if (!destroyed && event.type === "scene-failed") setFailed(true);
           },
+          projection: latestProjectionRef.current,
           size: sizeFromContainer(container),
         });
       })
@@ -106,6 +126,9 @@ export function LibraryVisualHost({
           return;
         }
         game = createdGame;
+        gameRef.current = createdGame;
+        createdGame.setInteractionHandler(latestInteractionRef.current);
+        createdGame.updateProjection(latestProjectionRef.current);
         diagnostics?.transition("ready", generation, 1, true);
         resize();
         pauseOrResume();

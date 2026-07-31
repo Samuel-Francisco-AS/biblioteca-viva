@@ -67,7 +67,7 @@ describe("App", () => {
     ).toBeVisible();
     expect(screen.getByRole("main")).toBeVisible();
     expect(
-      screen.getByText(/estrutura visual inicial da biblioteca/i),
+      screen.getByRole("heading", { name: "Biblioteca inicial" }),
     ).toBeVisible();
     expect(screen.getByRole("link", { name: "Abrir Coleção" })).toHaveAttribute(
       "href",

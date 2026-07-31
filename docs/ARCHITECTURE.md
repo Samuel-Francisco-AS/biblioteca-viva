@@ -885,3 +885,11 @@ O resultado esperado não é uma demonstração descartável. É uma primeira bi
 `ExportBackup`, `InspectBackup` e `ImportBackup` dependem de `BackupSnapshotPort`, `BackupCodecPort` e `FileDeliveryPort`. A infraestrutura implementa snapshot/replace com Dexie, codec JSON v1 com Zod/Web Crypto e entrega por Web Share de arquivos quando disponível, com fallback Blob/download. A apresentação recebe somente a fachada composta e não importa Dexie, Capacitor ou adapters.
 
 Importação é `replace` apenas: valida, exige a entrega de cópia de segurança quando a base tem dados, revalida e substitui as cinco coleções em uma transação. Metadados técnicos permanecem no destino. Não há eventos históricos, mescla ou recriação por casos de uso individuais. Um Error Boundary acima do roteador oferece nova montagem e recarga explícita sem apagar IndexedDB.
+
+## 23. Projeção visual e ponte React–Phaser após o Prompt 12
+
+O fluxo de entrada é `ListBookEntries` → adaptação React mínima → `LibraryProjectionService` puro → `LibraryViewModel` serializável → host React → cena Phaser. O modelo contém somente contagens, estado resumido da estante, livro recente reduzido (ID, título, status e progresso) e marco derivado; notas, citações, entidades persistidas completas e adapters não cruzam a fronteira visual.
+
+O host React continua dono da consulta, loading, falha recuperável, retry, painel, foco e navegação. Ele atualiza a projeção na mesma instância Phaser, sem criar canvas ou cena novos. O fluxo de saída é cena → `LibraryInteraction` tipada → host/rota React. Neste estágio, apenas `ShelfSelected` abre o painel textual e navega para a Coleção quando solicitado; Phaser não acessa banco, React Router, DOM, repositories ou casos de uso.
+
+A apresentação estrutural da cena seleciona um dos dois layouts puros pelo tamanho lógico do host. A largura de até `520` px usa o modo compacto: cabeçalho de três linhas para os contadores, estante horizontal tocável, título recente truncado, marco como marcador discreto no balcão e personagens sem rótulos redundantes. Acima desse limite, mantém o arranjo regular. O resize apenas redesenha a cena existente e atualiza sua área interativa; não cria canvas, jogo, objetos persistentes ou listeners adicionais.

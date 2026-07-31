@@ -109,7 +109,15 @@ Rascunho automático pode ser considerado depois; no protótipo, evitar prometer
 
 ## 9. Biblioteca visual
 
-Phaser recebe `LibraryViewModel` e exibe:
+Abrir Biblioteca
+→ carregar dados
+→ projetar estado
+→ renderizar cena
+→ selecionar estante
+→ abrir painel React
+→ abrir Coleção ou fechar painel.
+
+Phaser recebe `LibraryViewModel` resumido e exibe:
 
 - estante vazia, inicial, ocupada ou com concluído;
 - bibliotecária em idle;
@@ -119,9 +127,7 @@ Phaser recebe `LibraryViewModel` e exibe:
 Interações:
 
 - estante: abre painel React com resumo e acesso à Coleção;
-- bibliotecária: abre fala React acessível;
-- criatura: abre descrição React;
-- livro em destaque: abre detalhe correspondente.
+- bibliotecária, criatura e livro em destaque: contratos reservados para etapa posterior.
 
 A rota oferece uma alternativa textual com os mesmos dados essenciais.
 

@@ -20,16 +20,18 @@ const domainFiles = import.meta.glob<string>("../../domain/**/*.ts", {
   query: "?raw",
   import: "default",
 });
-const entrypointFiles = import.meta.glob<string>(
-  "../../{main,App,routes}.tsx",
-  {
-    eager: true,
-    query: "?raw",
-    import: "default",
-  },
-);
+const entrypointFiles = import.meta.glob<string>("../../{main,App}.tsx", {
+  eager: true,
+  query: "?raw",
+  import: "default",
+});
+const routeFiles = import.meta.glob<string>("../../routes.ts", {
+  eager: true,
+  query: "?raw",
+  import: "default",
+});
 
-describe("limites arquiteturais do Prompt 11", () => {
+describe("limites arquiteturais dos Prompts 11 e 12", () => {
   it("mantém Phaser fora de domínio, aplicação e entrypoint eager", () => {
     [
       ...Object.entries(domainFiles),
@@ -37,16 +39,23 @@ describe("limites arquiteturais do Prompt 11", () => {
     ].forEach(([path, source]) =>
       expect(source, path).not.toMatch(/from\s+["']phaser["']/u),
     );
-    Object.entries(entrypointFiles).forEach(([path, source]) => {
-      expect(source, path).not.toMatch(/from\s+["']phaser["']/u);
-      expect(source, path).not.toMatch(/import\(\s*["']phaser["']\s*\)/u);
-    });
+    [...Object.entries(entrypointFiles), ...Object.entries(routeFiles)].forEach(
+      ([path, source]) => {
+        expect(source, path).not.toMatch(/from\s+["']phaser["']/u);
+        expect(source, path).not.toMatch(/import\(\s*["']phaser["']\s*\)/u);
+      },
+    );
   });
 
-  it("mantém a cena sem Dexie, repositórios, casos de uso ou navegação React", () => {
+  it("mantém a cena sem persistência, consultas, navegador ou navegação React", () => {
     Object.entries(sceneFiles).forEach(([path, source]) => {
-      expect(source, path).not.toMatch(/dexie|repository|useCase/iu);
-      expect(source, path).not.toMatch(/react-router|navigate\(/iu);
+      expect(source, path).not.toMatch(
+        /dexie|indexedDB|repository|useCase|queries|BookEntry/iu,
+      );
+      expect(source, path).not.toMatch(
+        /react-router|navigate\(|window\.|document\./iu,
+      );
+      expect(source, path).not.toMatch(/note|quote/iu);
     });
   });
 
@@ -60,5 +69,25 @@ describe("limites arquiteturais do Prompt 11", () => {
     const host = sourceFiles["./LibraryVisualHost.tsx"];
     expect(host).toMatch(/import\("\.\/phaser\/createPhaserGame"\)/u);
     expect(host).not.toMatch(/from\s+["']phaser["']/u);
+  });
+
+  it("mantém a projeção pura fora de React, Phaser, Dexie e APIs do navegador", () => {
+    const projection = sourceFiles["./LibraryProjectionService.ts"];
+    expect(projection).toBeDefined();
+    expect(projection).not.toMatch(
+      /from\s+["'](?:react|phaser|dexie)["']|window\.|document\.|indexedDB|Date\.now|Math\.random/iu,
+    );
+  });
+
+  it("mantém as regras de lotação fora da cena e os contratos sem conteúdo persistido", () => {
+    const projection = sourceFiles["./LibraryProjectionService.ts"];
+    const contracts = sourceFiles["./contracts.ts"];
+    Object.entries(sceneFiles).forEach(([path, source]) => {
+      expect(source, path).not.toMatch(
+        /SHELF_OCCUPANCY_RANGES|fullFrom|growingFrom/,
+      );
+    });
+    expect(projection).toMatch(/SHELF_OCCUPANCY_RANGES/u);
+    expect(contracts).not.toMatch(/Note|Quote|author|content|revision/iu);
   });
 });

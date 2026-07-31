@@ -1,113 +1,228 @@
 import Phaser from "phaser";
 
+import type { LibraryInteraction, LibraryViewModel } from "../contracts";
+import { librarySceneLayout, type SceneTextPlacement } from "./sceneLayout";
+import { librarySceneRenderState } from "./sceneProjection";
+
 const COLORS = {
+  completed: 0xd6b74c,
   counter: 0x9a6741,
   creature: 0x799b66,
   floor: 0xd8c5a3,
+  inProgress: 0x466f99,
   librarian: 0x80649c,
   shelf: 0x67452f,
+  spine: 0xc69b67,
   wall: 0x4c6378,
 };
 
 export class InitialLibraryScene extends Phaser.Scene {
   private graphics?: Phaser.GameObjects.Graphics;
+  private interactionHandler?: (interaction: LibraryInteraction) => void;
   private labels?: Phaser.GameObjects.Container;
+  private projection: LibraryViewModel;
+  private shelfZone?: Phaser.GameObjects.Zone;
 
-  constructor() {
+  constructor(
+    projection: LibraryViewModel,
+    interactionHandler?: (interaction: LibraryInteraction) => void,
+  ) {
     super("initial-library");
+    this.projection = projection;
+    this.interactionHandler = interactionHandler;
   }
 
   create(): void {
     this.graphics = this.add.graphics();
+    this.shelfZone = this.add.zone(0, 0, 1, 1).setOrigin(0).setInteractive({
+      useHandCursor: true,
+    });
+    this.shelfZone.on("pointerup", this.selectShelf, this);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.draw, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.scale.off(Phaser.Scale.Events.RESIZE, this.draw, this);
+      this.shelfZone?.off("pointerup", this.selectShelf, this);
+      this.shelfZone?.destroy();
       this.labels?.destroy();
     });
     this.draw(this.scale.gameSize);
   }
 
+  setInteractionHandler(
+    interactionHandler: ((interaction: LibraryInteraction) => void) | undefined,
+  ): void {
+    this.interactionHandler = interactionHandler;
+  }
+
+  updateProjection(projection: LibraryViewModel): void {
+    this.projection = projection;
+    if (this.graphics) this.draw(this.scale.gameSize);
+  }
+
+  private selectShelf = (): void => {
+    this.interactionHandler?.({ type: "ShelfSelected" });
+  };
+
   private draw = (size: Phaser.Structs.Size): void => {
     const graphics = this.graphics;
     if (!graphics) return;
     const { height, width } = size;
-    const margin = Math.max(20, Math.round(width * 0.04));
-    const wallHeight = Math.round(height * 0.16);
-    const shelfWidth = Math.round(width * 0.26);
-    const shelfHeight = Math.round(height * 0.42);
-    const counterWidth = Math.round(width * 0.32);
-    const counterHeight = Math.round(height * 0.12);
-    const labelStyle: Phaser.Types.GameObjects.Text.TextStyle = {
-      color: "#28343d",
-      fontFamily: "system-ui, sans-serif",
-      fontSize: Math.max(12, Math.round(width / 55)),
-    };
+    const layout = librarySceneLayout({ height, width });
+    const state = librarySceneRenderState(
+      this.projection,
+      layout.highlightedBookMaximumLength,
+    );
 
     graphics.clear();
     this.labels?.destroy();
     this.labels = this.add.container();
     graphics.fillStyle(COLORS.floor).fillRect(0, 0, width, height);
-    graphics.fillStyle(COLORS.wall).fillRect(0, 0, width, wallHeight);
+    graphics.fillStyle(COLORS.wall).fillRect(0, 0, width, layout.wallHeight);
     graphics
       .fillStyle(COLORS.shelf)
-      .fillRect(margin, wallHeight + margin, shelfWidth, shelfHeight);
-    graphics.lineStyle(3, 0xc69b67);
+      .fillRect(
+        layout.shelf.x,
+        layout.shelf.y,
+        layout.shelf.width,
+        layout.shelf.height,
+      );
+    graphics.lineStyle(3, COLORS.spine);
     for (let row = 1; row < 4; row += 1) {
       graphics.lineBetween(
-        margin,
-        wallHeight + margin + (shelfHeight * row) / 4,
-        margin + shelfWidth,
-        wallHeight + margin + (shelfHeight * row) / 4,
+        layout.shelf.x,
+        layout.shelf.y + (layout.shelf.height * row) / 4,
+        layout.shelf.x + layout.shelf.width,
+        layout.shelf.y + (layout.shelf.height * row) / 4,
+      );
+    }
+    this.drawBookGroups(
+      graphics,
+      layout.shelf.x,
+      layout.shelf.y,
+      layout.shelf.width,
+      layout.shelf.height,
+      state.shelfVisualGroupCount,
+    );
+    this.shelfZone
+      ?.setPosition(layout.shelf.x, layout.shelf.y)
+      .setSize(layout.shelf.width, layout.shelf.height);
+    if (this.shelfZone?.input?.hitArea instanceof Phaser.Geom.Rectangle) {
+      this.shelfZone.input.hitArea.setSize(
+        layout.shelf.width,
+        layout.shelf.height,
       );
     }
     graphics
       .fillStyle(COLORS.counter)
       .fillRect(
-        width - margin - counterWidth,
-        height - margin - counterHeight,
-        counterWidth,
-        counterHeight,
+        layout.counter.x,
+        layout.counter.y,
+        layout.counter.width,
+        layout.counter.height,
       );
     graphics
       .fillStyle(COLORS.librarian)
       .fillCircle(
-        width - margin - counterWidth * 0.72,
-        height - margin - counterHeight - Math.max(18, height * 0.05),
-        Math.max(12, width * 0.025),
+        layout.librarian.x,
+        layout.librarian.y,
+        layout.librarian.radius,
       );
     graphics
       .fillStyle(COLORS.creature)
-      .fillCircle(width * 0.55, height * 0.62, Math.max(14, width * 0.03));
+      .fillCircle(layout.creature.x, layout.creature.y, layout.creature.radius);
 
-    this.labels.add(
-      this.add.text(margin, wallHeight + margin - 24, "Estante", labelStyle),
+    if (state.hasFirstCompletionMilestone) {
+      graphics
+        .fillStyle(COLORS.completed)
+        .fillRect(
+          layout.milestoneMarker.x,
+          layout.milestoneMarker.y,
+          layout.milestoneMarker.width,
+          layout.milestoneMarker.height,
+        );
+    }
+
+    this.addLabel(layout.header.title, "Biblioteca", "#ffffff");
+    this.addLabel(
+      layout.header.totalAndInProgress,
+      `Total: ${state.totalBooks} · Lendo: ${state.inProgressBooks}`,
+      "#ffffff",
     );
-    this.labels.add(
-      this.add.text(
-        width - margin - counterWidth,
-        height - margin - counterHeight - 24,
-        "Balcão",
-        labelStyle,
-      ),
+    this.addLabel(
+      layout.header.completed,
+      `Concluídos: ${state.completedBooks}`,
+      "#ffffff",
     );
-    this.labels.add(
-      this.add.text(
-        width - margin - counterWidth * 0.92,
-        height - margin - counterHeight - Math.max(55, height * 0.12),
-        "Bibliotecária",
-        labelStyle,
-      ),
+    this.addLabel(
+      layout.shelfLabel,
+      layout.mode === "compact"
+        ? "Estante (toque)"
+        : "Estante — toque para ver resumo",
     );
-    this.labels.add(
-      this.add.text(width * 0.49, height * 0.7, "Criatura", labelStyle),
-    );
-    this.labels.add(
-      this.add.text(
-        margin,
-        Math.max(8, wallHeight * 0.18),
-        "Biblioteca — estrutura inicial",
-        { ...labelStyle, color: "#ffffff" },
-      ),
-    );
+    this.addOptionalLabel(layout.compactCounterLabel, "Balcão");
+    this.addOptionalLabel(layout.librarianLabel, "Bibliotecária");
+    this.addOptionalLabel(layout.creatureLabel, "Criatura");
+    if (state.highlightedBookLabel) {
+      this.addLabel(
+        layout.highlightedBook,
+        `${layout.mode === "compact" ? "Recente" : "Atualizado"}: ${state.highlightedBookLabel}`,
+      );
+      const highlightedBookDetail = [
+        state.highlightedBookStatusLabel,
+        state.highlightedBookProgressLabel,
+      ]
+        .filter((part): part is string => part !== null)
+        .join(" · ");
+      if (highlightedBookDetail && layout.highlightedBookDetail) {
+        this.addLabel(layout.highlightedBookDetail, highlightedBookDetail);
+      }
+    }
   };
+
+  private addLabel(
+    placement: SceneTextPlacement,
+    text: string,
+    color = "#28343d",
+  ): void {
+    const label = this.add.text(placement.x, placement.y, text, {
+      color,
+      fontFamily: "system-ui, sans-serif",
+      fontSize: placement.fontSize,
+    });
+    label.setCrop(0, 0, placement.maxWidth, placement.fontSize * 1.4);
+    this.labels?.add(label);
+  }
+
+  private addOptionalLabel(
+    placement: SceneTextPlacement | null,
+    text: string,
+  ): void {
+    if (placement) this.addLabel(placement, text);
+  }
+
+  private drawBookGroups(
+    graphics: Phaser.GameObjects.Graphics,
+    shelfLeft: number,
+    shelfTop: number,
+    shelfWidth: number,
+    shelfHeight: number,
+    groupCount: number,
+  ): void {
+    const maxGroups = Math.max(1, groupCount);
+    const spineWidth = Math.max(8, Math.round(shelfWidth / 18));
+    const availableWidth = shelfWidth - spineWidth * groupCount;
+    for (let index = 0; index < groupCount; index += 1) {
+      const row = index % 3;
+      const x =
+        shelfLeft + 8 + index * (spineWidth + availableWidth / maxGroups);
+      const y = shelfTop + shelfHeight * (0.13 + row * 0.27);
+      const color =
+        index === 0 && this.projection.inProgressBooks > 0
+          ? COLORS.inProgress
+          : index === 1 && this.projection.completedBooks > 0
+            ? COLORS.completed
+            : COLORS.spine;
+      graphics.fillStyle(color).fillRect(x, y, spineWidth, shelfHeight * 0.18);
+    }
+  }
 }

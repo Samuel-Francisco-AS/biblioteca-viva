@@ -154,7 +154,8 @@ a {
 
 .library-page__introduction,
 .library-visual-fallback,
-.library-visual-diagnostics {
+.library-visual-diagnostics,
+.library-shelf-panel {
   padding: clamp(var(--space-4), 5vw, var(--space-5));
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-medium);
@@ -164,7 +165,8 @@ a {
 
 .library-page__introduction h2,
 .library-visual-fallback h3,
-.library-visual-diagnostics h3 {
+.library-visual-diagnostics h3,
+.library-shelf-panel h3 {
   margin: 0;
 }
 
@@ -208,6 +210,49 @@ a {
 .library-visual-diagnostics dd {
   margin: 0;
   font-weight: 700;
+}
+
+.library-shelf-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.library-shelf-panel p {
+  max-width: 60ch;
+  margin: 0;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.library-shelf-panel__counts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.library-shelf-panel__counts div {
+  min-width: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--color-surface-muted);
+}
+
+.library-shelf-panel__counts dt {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+}
+
+.library-shelf-panel__counts dd {
+  margin: var(--space-1) 0 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+@media (max-width: 30rem) {
+  .library-shelf-panel__counts {
+    grid-template-columns: 1fr;
+  }
 }
 
 .content-card {

@@ -1,9 +1,9 @@
 import type { ComponentType } from "react";
 
-import { LibraryPage } from "./pages";
+import { LibraryPage, type LibraryPageApplication } from "./pages";
 
 interface AppRoute {
-  Component?: ComponentType;
+  Component?: ComponentType<{ readonly application?: LibraryPageApplication }>;
   navigationLabel: string;
   path: string;
   title: string;

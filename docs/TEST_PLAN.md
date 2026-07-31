@@ -478,3 +478,28 @@ Após a violação CSP manual, dois testes adicionais configuram Zod no entrypoi
 - [ ] executar a restauração física em instalação limpa já pendente de G5.
 
 G4, G5 e G6 permanecem abertos; esta seção não aprova gate algum.
+
+## 12. Prompt 12 — Projeção visual e ponte bidirecional
+
+Os testes automatizados exercitam projeção pura, fronteiras de lotação, desempate do livro recente, privacidade dos contratos, atualização sem recriar a instância e abertura do painel React por `ShelfSelected`, sem WebGL real.
+
+O ajuste responsivo acrescenta testes do layout puro para a escolha regular/compacta e sua fronteira de `520` px, separação das áreas principais, truncamento do recente, contadores, área mínima tocável da estante e marcador de conclusão. Os testes do host cobrem os dois cruzamentos de modo por `ResizeObserver`, na mesma instância, sem observer ou listener de visibilidade adicional.
+
+### Navegador — aprovado em 2026-07-31
+
+- [x] abrir Biblioteca com coleção preenchida e confirmar contagens, lotação, destaque recente e primeiro marco de conclusão;
+- [x] alterar dados e confirmar atualização da projeção, do painel React e da mesma instância Phaser;
+- [x] abrir e fechar o painel por `ShelfSelected`, sem abertura duplicada, e abrir Coleção pelo painel;
+- [x] restaurar backup em outra origem e confirmar a cadeia IndexedDB → consultas → projeção → Phaser → painel React;
+- [x] abrir Biblioteca vazia e confirmar valores zerados, estante vazia, ausência de destaque/marco, painel e acesso à Coleção;
+- [x] confirmar um único canvas em entrada, atualização e troca entre layouts regular e compacto;
+- [x] validar layout desktop, 320 × 915 e 360 × 640, sem sobreposição ou overflow horizontal;
+- [x] confirmar CSP estrita sem `unsafe-eval`.
+
+Avisos de AudioContext e WebGL observados no navegador são não bloqueantes.
+
+### Android — pendente ao fim do Bloco 6
+
+- [ ] executar o teste físico conjunto G5/G6 no Moto G06, incluindo toque, safe areas, segundo plano, retorno e restauração em instalação limpa.
+
+G4, G5 e G6 permanecem abertos; esta seção não aprova gate algum.

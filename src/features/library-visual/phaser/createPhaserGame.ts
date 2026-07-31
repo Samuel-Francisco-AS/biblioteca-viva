@@ -1,18 +1,23 @@
 import Phaser from "phaser";
 
-import type { LibraryVisualGameFactory, LibraryVisualSize } from "../contracts";
+import type {
+  LibraryInteraction,
+  LibraryVisualGameFactory,
+  LibraryVisualSize,
+} from "../contracts";
 import { InitialLibraryScene } from "./InitialLibraryScene";
 
 function gameConfig(
   container: HTMLElement,
   size: LibraryVisualSize,
+  scene: InitialLibraryScene,
 ): Phaser.Types.Core.GameConfig {
   return {
     banner: false,
     backgroundColor: "#d8c5a3",
     height: size.height,
     parent: container,
-    scene: [InitialLibraryScene],
+    scene: [scene],
     scale: {
       autoCenter: Phaser.Scale.CENTER_BOTH,
       mode: Phaser.Scale.RESIZE,
@@ -24,20 +29,44 @@ function gameConfig(
 
 export const createLibraryVisualGame: LibraryVisualGameFactory = ({
   container,
+  onInteraction,
   onSceneEvent,
+  projection,
   size,
 }) => {
   let game: Phaser.Game | undefined;
+  let destroyed = false;
+  const scene = new InitialLibraryScene(projection, onInteraction);
   try {
-    game = new Phaser.Game(gameConfig(container, size));
+    game = new Phaser.Game(gameConfig(container, size, scene));
     onSceneEvent({ type: "scene-ready" });
     return Promise.resolve({
-      destroy: () => game?.destroy(true),
-      pause: () => game?.loop.sleep(),
-      resize: (nextSize) => game?.scale.resize(nextSize.width, nextSize.height),
-      resume: () => game?.loop.wake(),
+      destroy: () => {
+        if (destroyed) return;
+        destroyed = true;
+        game?.destroy(true);
+        game = undefined;
+      },
+      pause: () => {
+        if (!destroyed) game?.loop.sleep();
+      },
+      resize: (nextSize) => {
+        if (!destroyed) game?.scale.resize(nextSize.width, nextSize.height);
+      },
+      resume: () => {
+        if (!destroyed) game?.loop.wake();
+      },
+      setInteractionHandler: (
+        nextHandler: ((interaction: LibraryInteraction) => void) | undefined,
+      ) => {
+        if (!destroyed) scene.setInteractionHandler(nextHandler);
+      },
+      updateProjection: (nextProjection) => {
+        if (!destroyed) scene.updateProjection(nextProjection);
+      },
     });
   } catch (error: unknown) {
+    destroyed = true;
     game?.destroy(true);
     onSceneEvent({ type: "scene-failed" });
     return Promise.reject(

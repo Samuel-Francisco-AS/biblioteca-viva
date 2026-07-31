@@ -17,8 +17,8 @@
 - **bloco concluído:** 5 — Integridade, backup e segurança inicial (checkpoint físico pendente);
 - **gate:** G3 aprovado por Sam em 2026-07-29;
 - **implementação concluída:** 4 — Aplicativo pessoal utilizável;
-- **prompts concluídos:** Prompts 4 a 11;
-- **prompt atual:** próximo passo: Prompt 12 — Projeção visual e ponte de eventos, ainda não iniciado;
+- **prompts concluídos:** Prompts 4 a 12;
+- **prompt atual:** próximo passo: Prompt 13 — Cena visual e interação inicial, ainda não iniciado;
 - **bloco atual:** 6 — integração da biblioteca visual em andamento; G5 permanece pendente por autorização explícita;
 - **APK:** diagnóstico interno validado no Moto G06 com Android 15; release assinado ainda não existe;
 - **código:** implementação do Bloco 4 validada no navegador; G4 aguarda uso real prolongado.
@@ -31,7 +31,7 @@
 - [x] Prompt 9 — Busca, filtros e arquivo, concluído e validado no navegador.
 - [x] Prompt 10 — Backup, restauração, recuperação e endurecimento, concluído e validado no navegador.
 - [x] Prompt 11 — Host Phaser e ciclo de vida, concluído e validado no navegador.
-- [ ] Prompt 12 — Projeção visual e ponte de eventos, não iniciado.
+- [x] Prompt 12 — Projeção visual e ponte de eventos, concluído e validado no navegador.
 - [ ] Prompt 13 — Cena visual e interação inicial, não iniciado.
 
 ## Blocos e gates
@@ -44,7 +44,7 @@
 | `[x]` | 3 | 4–6 | domínio, aplicação e persistência validados | G3 aprovado |
 | `[~]` | 4 | 7–9 | implementação concluída; uso real prolongado pendente | G4 aberto |
 | `[x]` | 5 | 10 | implementação e validação web concluídas; restauração física em instalação limpa pendente | G5 aberto |
-| `[~]` | 6 | 11–13 | Prompt 11 concluído; Prompts 12 e 13 não iniciados | G6 aberto |
+| `[~]` | 6 | 11–13 | Prompts 11 e 12 concluídos; Prompt 13 não iniciado | G6 aberto |
 | `[ ]` | 7 | 14–15 | identidade sonora e contextual | G7 |
 | `[ ]` | 8 | 16 | primeiro ciclo emocional completo | G8 |
 | `[ ]` | 9 | 17–18 | acessibilidade e desempenho mobile | G9 |

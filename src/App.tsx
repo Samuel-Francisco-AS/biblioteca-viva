@@ -111,7 +111,11 @@ export function App({ application, diagnostics }: AppProps) {
             .filter((route) => route.Component)
             .map((route) => (
               <Route
-                element={route.Component ? <route.Component /> : undefined}
+                element={
+                  route.Component ? (
+                    <route.Component application={application} />
+                  ) : undefined
+                }
                 key={route.path}
                 path={route.path}
               />
