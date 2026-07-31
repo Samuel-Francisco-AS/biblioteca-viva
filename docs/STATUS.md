@@ -7,10 +7,10 @@
 
 - **Fase:** aplicativo pessoal utilizável;
 - **bloco concluído:** Bloco 5 — Integridade, backup e segurança inicial (checkpoint físico pendente);
-- **prompt concluído:** Prompt 10 — backup, restauração, recuperação e endurecimento, validado no navegador em 2026-07-31;
-- **implementação concluída:** Blocos 4 e 5;
-- **trabalho atual:** checkpoint físico do G5 no Moto G06;
-- **gate:** G3 aprovado por Sam em 2026-07-29; G4 permanece aberto por uso real prolongado e G5 permanece aberto pelo checkpoint físico;
+- **prompt concluído:** Prompt 11 — Host Phaser e ciclo de vida, validado no navegador em 2026-07-31;
+- **implementação concluída:** Blocos 4 e 5; Bloco 6 iniciado;
+- **trabalho atual:** próximo passo: Prompt 12 — Projeção visual e ponte de eventos, ainda não iniciado;
+- **gate:** G3 aprovado por Sam em 2026-07-29; G4 e G5 permanecem abertos; G6 está aberto e não aprovado;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
@@ -19,7 +19,7 @@
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
 - **compatibilidade:** diferentes celulares Android, proporções de tela, densidades e áreas seguras;
-- **estado geral:** G0 a G3 aprovados; Prompts 7 a 10 e as implementações dos Blocos 4 e 5 concluídos; G4 e G5 permanecem abertos.
+- **estado geral:** G0 a G3 aprovados; Prompts 7 a 10 concluídos; Bloco 5 concluído com G5 pendente; Bloco 6 iniciado pelo Prompt 11; G4, G5 e G6 permanecem abertos.
 
 ## Decisões já aprovadas
 
@@ -54,13 +54,15 @@
 
 ## Trabalho atual
 
-Executar o checkpoint físico do G5 no Moto G06. Depois dele, o próximo trabalho será o Prompt 11; ele ainda não foi iniciado.
+O próximo passo é o Prompt 12, ainda não iniciado. G5 permanece pendente por autorização explícita e o teste físico conjunto de G5 e G6 foi adiado para o encerramento do Bloco 6. Prompt 13 também não foi iniciado.
 
 ## Bloqueios
 
 Nenhum bloqueio técnico identificado.
 
 ## Última evidência de validação
+
+Em 2026-07-31, o Prompt 11 iniciou o Bloco 6 sem aprovar G5: Phaser `3.90.0` foi adicionado exclusivamente como view visual sob importação dinâmica da rota Biblioteca. O host React controla instância única, `ResizeObserver` com fallback de janela, pausa/retomada por visibilidade, destruição, cancelamento lógico e fallback textual com acesso contínuo à Coleção. A cena contém somente formas e textos estruturais. No navegador, a Biblioteca exibiu corretamente a cena, manteve um único canvas em entradas, saídas e resize, destruiu a instância ao abrir Coleção e preservou Coleção, navegação Voltar/Avançar e recarga. O diagnóstico confirmou pausa e retomada com 1 instância criada e ativa, 0 destruições e estado `ready` após retorno. A violação CSP do probe JIT opcional de Zod foi corrigida com `jitless: true`, sem `unsafe-eval`; desenvolvimento e preview não voltaram a registrar `eval`, e o fundo alinhado eliminou a piscada preta no resize. A suíte automatizada passou com 270 testes em 25 arquivos. G4, G5 e G6 não foram aprovados; o teste físico conjunto de G5 e G6 ocorrerá no fim do Bloco 6. A versão permanece `0.2.0-alpha.1`; Prompts 12 e 13 não foram iniciados.
 
 Em 2026-07-31, o Prompt 10 foi concluído e validado no navegador. Backup JSON v1, SHA-256 canônico, limite de 10 MiB, inspeção sem escrita, `replace` exclusivo, backup de segurança e substituição transacional foram verificados. A restauração em origem isolada recuperou 4 livros, 1 nota, 2 citações e 21 atividades; Coleção e Arquivo consultaram os dados restaurados e a persistência sobreviveu à recarga e reabertura. Arquivo adulterado foi rejeitado sem alteração e a origem HTTP insegura recebeu orientação sem alegação de perda. A suíte automatizada passou com 256 testes em 22 arquivos. A implementação do Bloco 5 está concluída, mas G5 permanece aberto até a restauração física em instalação limpa no Moto G06; G4 segue aberto por uso real prolongado. A versão permanece `0.2.0-alpha.1` e o Prompt 11 não foi iniciado.
 

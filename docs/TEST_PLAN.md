@@ -450,3 +450,31 @@ Comandos técnicos concluídos: `npm run format`, `format:check`, `lint`, `typec
 - [ ] confirmar estabilidade geral, ausência de tela branca/travamento e registrar no template manual.
 
 G5 permanece aberto; nenhum item humano acima foi marcado como executado.
+
+## 11. Prompt 11 — Host Phaser e ciclo de vida
+
+Em 2026-07-31, 12 cenários novos de host e quatro testes arquiteturais elevaram a suíte a 268 testes em 24 arquivos. Eles usam factory injetável sem WebGL real e cobrem criação, destruição, entradas repetidas, Strict Mode, importação tardia, resize sem recriação, listener/observer, pausa e retomada idempotentes, fallback sanitizado, cleanup de criação parcial, diagnóstico e acesso contínuo à Coleção. Também impedem Phaser em domínio, aplicação e entrypoint eager, e impedem Dexie, repositórios, casos de uso e navegação direta na cena.
+
+Após a violação CSP manual, dois testes adicionais configuram Zod no entrypoint com `jitless: true` e substituem `Function` por uma falha controlada durante um parse real: a validação continua sem executar a construção dinâmica. A suíte passou com 270 testes em 25 arquivos. O build final mantém `script-src 'self'`, sem `unsafe-eval`; a sonda permanece no pacote transitivo, mas não no caminho executado.
+
+### Navegador — aprovado em 2026-07-31
+
+- [x] abrir Biblioteca e visualizar a cena estrutural;
+- [x] confirmar canvas único;
+- [x] entrar e sair repetidamente, inclusive saída rápida durante importação, sem instância órfã;
+- [x] redimensionar em desktop e viewport estreito sem duplicar canvas;
+- [x] sair para Coleção e confirmar destruição da instância e remoção do canvas;
+- [x] ocultar e restaurar a aba, confirmando pause e resume pelo diagnóstico;
+- [x] navegar por Voltar, Avançar e recarga direta;
+- [x] confirmar Coleção convencional e demais funções sem Phaser;
+- [x] confirmar CSP sem `unsafe-eval` e ausência da violação `eval` após `jitless`;
+- [x] confirmar fallback por teste automatizado;
+
+### Android — pendente ao fim do Bloco 6
+
+- [ ] registrar o teste conjunto de G5 e G6 no Moto G06;
+- [ ] abrir Biblioteca, testar toque/viewport/safe areas, segundo plano e retorno;
+- [ ] confirmar ausência de tela branca ou animação em segundo plano;
+- [ ] executar a restauração física em instalação limpa já pendente de G5.
+
+G4, G5 e G6 permanecem abertos; esta seção não aprova gate algum.

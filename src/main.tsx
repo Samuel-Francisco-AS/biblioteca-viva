@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
+import "./app/configureZodRuntime";
 import { App } from "./App";
 import { createApplication } from "./app/createApplication";
 import { AppErrorBoundary } from "./app/AppErrorBoundary";

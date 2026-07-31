@@ -1,26 +1,35 @@
-interface PlaceholderPageProps {
-  description: string;
-  title: string;
-}
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
 
-function PlaceholderPage({ description, title }: PlaceholderPageProps) {
-  return (
-    <section className="placeholder" aria-labelledby="placeholder-title">
-      <p className="placeholder__status">Funcionalidade planejada</p>
-      <h2 id="placeholder-title">{title}</h2>
-      <p>{description}</p>
-      <p className="placeholder__notice">
-        Esta área ainda não possui funcionalidades implementadas.
-      </p>
-    </section>
-  );
-}
+import { LibraryVisualDiagnosticsPanel } from "./features/library-visual/LibraryVisualDiagnostics";
+import { LibraryVisualHost } from "./features/library-visual/LibraryVisualHost";
+import { createLibraryVisualDiagnostics } from "./features/library-visual/diagnostics";
 
 export function LibraryPage() {
+  const diagnosticsEnabled =
+    import.meta.env.DEV || import.meta.env.VITE_ENABLE_DIAGNOSTICS === "true";
+  const diagnostics = useMemo(
+    () => (diagnosticsEnabled ? createLibraryVisualDiagnostics() : undefined),
+    [diagnosticsEnabled],
+  );
+
   return (
-    <PlaceholderPage
-      description="Aqui ficará a representação visual viva da biblioteca, conectada às ações registradas no aplicativo."
-      title="Biblioteca"
-    />
+    <section className="library-page" aria-labelledby="library-visual-title">
+      <div className="library-page__introduction">
+        <p className="placeholder__status">Visualização estrutural</p>
+        <h2 id="library-visual-title">Biblioteca inicial</h2>
+        <p>
+          Esta é uma estrutura visual inicial da biblioteca. Seus livros,
+          anotações e leituras continuam acessíveis na área convencional.
+        </p>
+        <Link className="text-link" to="/colecao">
+          Abrir Coleção
+        </Link>
+      </div>
+      <LibraryVisualHost diagnostics={diagnostics} />
+      {diagnostics && (
+        <LibraryVisualDiagnosticsPanel diagnostics={diagnostics} />
+      )}
+    </section>
   );
 }

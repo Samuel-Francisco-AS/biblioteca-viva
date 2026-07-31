@@ -227,3 +227,25 @@ Use `templates/ADR_TEMPLATE.md` para novas decisões.
 **Decisão:** exportar `libraryEntries`, `notes`, `quotes`, `activities` e `settings` em JSON v1 estrito; excluir `metadata` técnico; usar SHA-256 sobre JSON canônico como detector não criptográfico; aceitar somente `replace`, precedido por backup de segurança em base não vazia; entregar por Web Share quando suportado e Blob/download como fallback, sem plugin Capacitor novo. Adotar CSP por meta tag e Error Boundary sem limpeza automática.
 
 **Consequências:** mescla fica fora por não haver política segura para IDs, revisões, remoções, atividades e preferências. O arquivo é legível e sua guarda é externa. Não há mudança do banco v2, dependência ou permissão Android; o WebView permanece para validação humana do G5.
+
+## D-022 — Phaser 3 lazy e host React proprietário
+
+- **Data:** 2026-07-31
+- **Status:** aceita
+
+**Contexto:** o Prompt 11 introduz a estrutura visual sem permitir que um motor de cena se torne dono da aplicação de dados ou do carregamento inicial.
+
+**Decisão:** instalar `phaser` `3.90.0`, a última versão publicada da linha 3, como única dependência nova. Carregar o módulo apenas por `import()` ao montar a área Biblioteca. Um host React isolado possui o container, a instância, observação de tamanho, pausa/retomada por visibilidade, destruição e fallback; contratos mínimos permanecem livres de Phaser, Dexie e entidades persistidas. O diagnóstico é injetável e renderizado somente em desenvolvimento. Não adicionar plugin Capacitor nem permissão Android neste prompt.
+
+**Consequências:** a Coleção segue como acesso convencional aos dados pessoais mesmo em falha de Canvas/WebGL. A cena inicial contém apenas geometria/texto estrutural e não recebe projeção de livros nem emite interação de produto; essa ponte continua reservada ao Prompt 12.
+
+## D-023 — Zod sem JIT sob CSP estrita
+
+- **Data:** 2026-07-31
+- **Status:** aceita
+
+**Contexto:** a validação manual do Prompt 11 identificou uma violação CSP no chunk principal. Source map temporário localizou `zod@4.4.3`, `v4/core/util.js`, cuja sonda opcional de JIT executa `const F = Function; new F("")`; Zod captura a exceção e usa parser interpretado, mas Firefox ainda registra a tentativa.
+
+**Decisão:** configurar a API oficial `config({ jitless: true })` no entrypoint antes da composição. Manter `script-src 'self'` e não adicionar `unsafe-eval`. Alinhar o fundo CSS do host/canvas a `#d8c5a3`, igual ao `backgroundColor` do Phaser, para evitar a piscada preta trivial durante resize.
+
+**Consequências:** a sonda continua presente no bundle transitivo, mas seu caminho é desativado antes de qualquer parse; não há patch em `node_modules`, alias, troca de versão ou custo de segurança. A validação de schemas perde somente a otimização JIT opcional.

@@ -574,6 +574,14 @@ Exemplos de `LibraryInteraction`:
 
 Phaser nunca recebe o banco inteiro e nunca executa regra de negócio.
 
+### 9.4 Host visual inicial — Prompt 11
+
+`phaser@3.90.0` é carregado somente por `import()` dentro do host da rota Biblioteca; o entrypoint, layout e composition root não o importam. O host React é o proprietário do canvas e da instância: mede o container com `ResizeObserver` (ou `window.resize` como fallback), redimensiona a instância existente, pausa/retoma o loop por `visibilitychange` e a destrói ao desmontar. Um token de geração impede uma importação tardia de montar em host descartado.
+
+A cena usa resolução responsiva baseada no tamanho real do container, com referência visual 16:9 e câmera fixa; Phaser recebe somente contratos visuais mínimos e não conhece Dexie, repositórios, casos de uso, navegação ou modais React. Falha de Canvas/WebGL é recuperável na própria feature e mantém a Coleção convencional disponível. Nenhum plugin Capacitor ou permissão nativa é necessário neste estágio.
+
+O runtime configura Zod com `jitless: true` antes da composição. Isso desativa seu fast path opcional compilado por `new Function`, que é incompatível com a CSP `script-src 'self'`; a validação interpretada continua sendo suportada e não exige `unsafe-eval`.
+
 ---
 
 ## 10. Estado

@@ -34,6 +34,12 @@ vi.mock("@capacitor/app", () => ({
   },
 }));
 
+vi.mock("./features/library-visual/LibraryVisualHost", () => ({
+  LibraryVisualHost: () => (
+    <div aria-label="Estrutura visual inicial da biblioteca" role="img" />
+  ),
+}));
+
 function renderApp(initialPath = "/") {
   return render(
     <MemoryRouter initialEntries={[initialPath]}>
@@ -61,8 +67,12 @@ describe("App", () => {
     ).toBeVisible();
     expect(screen.getByRole("main")).toBeVisible();
     expect(
-      screen.getByText(/representação visual viva da biblioteca/i),
+      screen.getByText(/estrutura visual inicial da biblioteca/i),
     ).toBeVisible();
+    expect(screen.getByRole("link", { name: "Abrir Coleção" })).toHaveAttribute(
+      "href",
+      "/colecao",
+    );
   });
 
   it("oferece as cinco opções de navegação e identifica a rota ativa", () => {
