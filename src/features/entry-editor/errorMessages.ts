@@ -34,6 +34,8 @@ export function presentApplicationError(error: unknown): PresentedError {
     NOT_FOUND: "Este livro não foi encontrado.",
     PERSISTENCE_FAILED:
       "Não foi possível acessar o armazenamento. Tente novamente.",
+    UNSAFE_CONTEXT:
+      "Este ambiente não oferece todas as APIs necessárias para salvar e exportar com segurança. Abra a aplicação por localhost, HTTPS ou pelo APK Android. Os dados de outras origens do navegador não foram apagados.",
     VALIDATION_FAILED: "Revise os dados informados e tente novamente.",
   } satisfies Record<ApplicationError["code"], string>;
   const field = error.context.field;

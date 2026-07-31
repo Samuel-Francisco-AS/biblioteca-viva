@@ -116,3 +116,13 @@ Não usar em README, interface ou portfólio sem implementação verificável:
 - “impossível perder dados”;
 - “100% privado” quando houver integrações;
 - “conforme LGPD” sem avaliação real do tratamento de dados.
+
+## 11. Controles implementados no Prompt 10
+
+O arquivo externo é não confiável. O fluxo rejeita antes do parse conteúdo acima de 10 MiB, JSON malformado, raiz ou entidades fora dos schemas Zod estritos, formato desconhecido, versões não suportadas ou futuras, IDs duplicados e SHA-256 ausente ou divergente. O digest usa serialização canônica recursiva e exclui `integrity`; detecta corrupção ou alteração acidental, mas não é assinatura, autenticação ou criptografia.
+
+A inspeção não escreve. A restauração valida novamente antes de uma única transação Dexie que substitui `libraryEntries`, `notes`, `quotes`, `activities` e `settings`; `metadata` técnico do destino não é apagado. Base não vazia exige antes a entrega de um backup de segurança. Não há mescla, eventos históricos, atividades extras, rede, HTML executável ou logs de conteúdo.
+
+A CSP inicial é entregue por meta tag com origem própria por padrão, scripts locais sem `unsafe-eval`, objetos bloqueados e HMR limitado às origens locais padrão. `unsafe-inline` permanece apenas em estilos por compatibilidade atual. Meta CSP não equivale a cabeçalho HTTP. Riscos residuais: JSON e IndexedDB são legíveis a quem obtiver acesso; alguém pode recalcular o digest; o destino externo fica sob guarda do usuário; Android ainda requer validação física.
+
+Em uma origem HTTP insegura, o navegador pode indisponibilizar UUID e integridade criptográfica necessários para criar registros e conferir backups. A interface informa a limitação e orienta abrir por `localhost`, HTTPS ou APK Android; não reduz validações, não migra dados entre origens e não limpa IndexedDB. IndexedDB é isolado por origem: a ausência de livros em outro endereço não significa perda dos dados existentes.

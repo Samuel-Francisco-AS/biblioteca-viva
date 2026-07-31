@@ -9,6 +9,7 @@ import type { ApplicationRuntime } from "./app/createApplication";
 import { isDiagnosticsEnabled } from "./app/diagnosticsAvailability";
 import { CollectionPage } from "./features/collection/CollectionPage";
 import { ArchivePage } from "./features/archive/ArchivePage";
+import { SettingsPage } from "./features/settings/SettingsPage";
 import { BookDetailPage } from "./features/entry-detail/BookDetailPage";
 import {
   EditBookPage,
@@ -36,6 +37,9 @@ interface AppProps {
 
 const diagnosticsBuildEnabled =
   import.meta.env.DEV || import.meta.env.VITE_ENABLE_DIAGNOSTICS === "true";
+
+const unsafeContextGuidance =
+  "Este ambiente não oferece todas as APIs necessárias para salvar e exportar com segurança. Abra a aplicação por localhost, HTTPS ou pelo APK Android. Os dados de outras origens do navegador não foram apagados.";
 
 export function App({ application, diagnostics }: AppProps) {
   const location = useLocation();
@@ -97,6 +101,11 @@ export function App({ application, diagnostics }: AppProps) {
         ref={mainRef}
         tabIndex={-1}
       >
+        {application?.platform.supported === false && (
+          <p className="context-guidance" role="alert">
+            {unsafeContextGuidance}
+          </p>
+        )}
         <Routes>
           {appRoutes
             .filter((route) => route.Component)
@@ -114,6 +123,15 @@ export function App({ application, diagnostics }: AppProps) {
           <Route
             path="/arquivo"
             element={<ArchivePage application={application} />}
+          />
+          <Route
+            path="/configuracoes"
+            element={
+              <SettingsPage
+                application={application}
+                diagnostics={diagnostics}
+              />
+            }
           />
           <Route
             path="/novo-livro"

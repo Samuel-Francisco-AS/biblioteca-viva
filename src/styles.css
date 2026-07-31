@@ -230,6 +230,13 @@ a {
   font-weight: 650;
 }
 
+.context-guidance {
+  margin: 0 0 1rem;
+  border-inline-start: 0.25rem solid var(--color-warning, #8a5a00);
+  padding: 0.75rem 1rem;
+  background: color-mix(in srgb, var(--color-surface, #fff) 90%, #f2c66d);
+}
+
 .error-summary {
   padding: var(--space-4);
   border: 0.125rem solid var(--color-error);
@@ -263,6 +270,54 @@ a {
   justify-content: center;
   font-weight: 700;
   text-decoration: none;
+}
+
+.settings-stack {
+  display: grid;
+  gap: var(--space-5);
+}
+.backup-counts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--space-3);
+}
+.backup-counts div {
+  min-width: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--color-surface-muted);
+}
+.backup-counts dt {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+}
+.backup-counts dd {
+  margin: var(--space-1) 0 0;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.restore-confirmation,
+.success-summary {
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  border: 0.125rem solid var(--color-border);
+  border-radius: var(--radius-small);
+}
+.restore-confirmation h3,
+.success-summary h3 {
+  margin-top: 0;
+}
+.button--danger {
+  border-color: var(--color-error);
+  background: var(--color-error);
+  color: white;
+}
+.recovery-page {
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  padding: var(--space-4);
+  background: var(--color-background);
 }
 
 .button--primary {

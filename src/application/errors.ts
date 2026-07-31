@@ -7,7 +7,8 @@ export type ApplicationErrorCode =
   | "CONFLICT"
   | "PERSISTENCE_FAILED"
   | "ACTIVITY_PERSISTENCE_FAILED"
-  | "EVENT_PUBLICATION_FAILED";
+  | "EVENT_PUBLICATION_FAILED"
+  | "UNSAFE_CONTEXT";
 
 export interface ApplicationErrorContext {
   readonly field?: string;
@@ -82,5 +83,12 @@ export function eventPublicationFailed(): ApplicationError {
     "EVENT_PUBLICATION_FAILED",
     "Os dados foram salvos, mas não foi possível publicar o evento.",
     { operation: "publish_event" },
+  );
+}
+
+export function platformCapabilityUnavailable(): ApplicationError {
+  return new ApplicationError(
+    "UNSAFE_CONTEXT",
+    "Este ambiente não oferece todas as APIs necessárias para salvar e exportar com segurança. Abra a aplicação por localhost, HTTPS ou pelo APK Android. Os dados de outras origens do navegador não foram apagados.",
   );
 }

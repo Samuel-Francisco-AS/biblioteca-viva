@@ -11,6 +11,15 @@ import {
   ListQuotesByBook,
   UpdateBookEntry,
   UpdateBookProgress,
+  ExportBackup,
+  ImportBackup,
+  InspectBackup,
+  type BackupArtifact,
+  type BackupCounts,
+  type BackupSummary,
+  type FileDeliveryResult,
+  type FileDeliveryPort,
+  BackupError,
 } from "../application";
 import {
   BibliotecaDatabase,
@@ -26,10 +35,18 @@ import {
   LocalEventBus,
   SCHEMA_MARKER_KEY,
   SystemClock,
+  BrowserFileDelivery,
+  DexieBackupSnapshotStore,
+  JsonBackupCodec,
+  DATABASE_VERSION,
   type DatabaseDiagnostics,
   type StoragePersistencePort,
   type StoragePersistenceStatus,
+  BrowserPlatformCapabilities,
+  type PlatformCapabilitiesPort,
+  type PlatformCapabilitySnapshot,
 } from "../infrastructure";
+import packageMetadata from "../../package.json";
 
 export interface ApplicationDiagnostics {
   inspect(): Promise<DatabaseDiagnostics>;
@@ -39,6 +56,14 @@ export interface ApplicationDiagnostics {
 export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 
 export interface ApplicationRuntime {
+  readonly appVersion: string;
+  readonly platform: PlatformCapabilitySnapshot;
+  readonly backup: {
+    readonly export: () => Promise<BackupArtifact>;
+    readonly deliver: (artifact: BackupArtifact) => Promise<FileDeliveryResult>;
+    readonly inspect: (content: string) => Promise<BackupSummary>;
+    readonly import: (content: string) => Promise<BackupCounts>;
+  };
   readonly commands: {
     readonly addNote: AddNote;
     readonly addQuote: AddQuote;
@@ -62,12 +87,24 @@ export interface ApplicationRuntime {
 
 export interface CreateApplicationOptions {
   readonly databaseName?: string;
+  readonly fileDelivery?: FileDeliveryPort;
+  readonly platformCapabilities?: PlatformCapabilitiesPort;
   readonly storage?: StoragePersistencePort;
+}
+
+function unsafeContextError(): BackupError {
+  return new BackupError(
+    "PLATFORM_CAPABILITY_UNAVAILABLE",
+    "Este ambiente não oferece todas as APIs necessárias para salvar e exportar com segurança. Abra a aplicação por localhost, HTTPS ou pelo APK Android. Os dados de outras origens do navegador não foram apagados.",
+  );
 }
 
 export async function createApplication(
   options: CreateApplicationOptions = {},
 ): Promise<ApplicationRuntime> {
+  const platformCapabilities =
+    options.platformCapabilities ?? new BrowserPlatformCapabilities();
+  const platform = platformCapabilities.inspect();
   const database = new BibliotecaDatabase(
     options.databaseName ?? DATABASE_NAME,
   );
@@ -84,9 +121,21 @@ export async function createApplication(
   const activities = new DexieActivityRepository(database);
   const transaction = new DexieTransactionRunner(database);
   const clock = new SystemClock();
-  const ids = new CryptoIdGenerator();
+  const ids = new CryptoIdGenerator(platform);
   const events = new LocalEventBus();
   const storage = options.storage ?? new BrowserStoragePersistence();
+  const snapshots = new DexieBackupSnapshotStore(database);
+  const codec = new JsonBackupCodec();
+  const files = options.fileDelivery ?? new BrowserFileDelivery();
+  const exportBackup = new ExportBackup(
+    snapshots,
+    codec,
+    clock,
+    packageMetadata.version,
+    DATABASE_VERSION,
+  );
+  const inspectBackup = new InspectBackup(codec);
+  const importBackup = new ImportBackup(snapshots, codec, exportBackup, files);
   const diagnosticsService = new DiagnosticsService(database, storage);
   const dependencies = {
     activities,
@@ -100,6 +149,35 @@ export async function createApplication(
   };
 
   return {
+    appVersion: packageMetadata.version,
+    platform,
+    backup: {
+      export: async () => {
+        if (!platform.backupIntegrity) throw unsafeContextError();
+        return exportBackup.execute();
+      },
+      deliver: async (artifact) => {
+        try {
+          return await files.deliver({
+            name: artifact.fileName,
+            content: artifact.content,
+          });
+        } catch {
+          throw new BackupError(
+            "BACKUP_DELIVERY_FAILED",
+            "Não foi possível entregar o arquivo de backup.",
+          );
+        }
+      },
+      inspect: async (content) => {
+        if (!platform.backupIntegrity) throw unsafeContextError();
+        return (await inspectBackup.execute(content)).summary;
+      },
+      import: async (content) => {
+        if (!platform.backupIntegrity) throw unsafeContextError();
+        return importBackup.execute(content);
+      },
+    },
     commands: {
       addNote: new AddNote(dependencies),
       addQuote: new AddQuote(dependencies),

@@ -1,16 +1,16 @@
 # STATUS — Biblioteca Viva
 
-> Última atualização: 2026-07-30
+> Última atualização: 2026-07-31
 > Atualizar este arquivo ao começar e ao encerrar cada bloco relevante.
 
 ## Estado executivo
 
 - **Fase:** aplicativo pessoal utilizável;
-- **bloco concluído:** Bloco 3 — Domínio, casos de uso e persistência;
-- **prompt concluído:** Prompt 9 — busca, filtros e Arquivo validados no navegador em 2026-07-30;
-- **implementação concluída:** Bloco 4 — Aplicativo pessoal utilizável;
-- **próximo trabalho:** Prompt 10 — backup, restauração, recuperação e endurecimento;
-- **gate:** G3 aprovado por Sam em 2026-07-29; G4 permanece aberto, aguardando uso real prolongado;
+- **bloco concluído:** Bloco 5 — Integridade, backup e segurança inicial (checkpoint físico pendente);
+- **prompt concluído:** Prompt 10 — backup, restauração, recuperação e endurecimento, validado no navegador em 2026-07-31;
+- **implementação concluída:** Blocos 4 e 5;
+- **trabalho atual:** checkpoint físico do G5 no Moto G06;
+- **gate:** G3 aprovado por Sam em 2026-07-29; G4 permanece aberto por uso real prolongado e G5 permanece aberto pelo checkpoint físico;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
@@ -19,7 +19,7 @@
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
 - **compatibilidade:** diferentes celulares Android, proporções de tela, densidades e áreas seguras;
-- **estado geral:** G0 a G3 aprovados; Prompts 7, 8 e 9 e a implementação prevista do Bloco 4 concluídos; G4 permanece aberto por uso real prolongado, pendência não bloqueadora para iniciar o Bloco 5.
+- **estado geral:** G0 a G3 aprovados; Prompts 7 a 10 e as implementações dos Blocos 4 e 5 concluídos; G4 e G5 permanecem abertos.
 
 ## Decisões já aprovadas
 
@@ -54,7 +54,7 @@
 
 ## Trabalho atual
 
-Iniciar o Prompt 10 — backup, restauração, recuperação e endurecimento. O Bloco 5 ainda não foi iniciado. O Prompt 10 também não foi iniciado neste encerramento documental.
+Executar o checkpoint físico do G5 no Moto G06. Depois dele, o próximo trabalho será o Prompt 11; ele ainda não foi iniciado.
 
 ## Bloqueios
 
@@ -62,9 +62,11 @@ Nenhum bloqueio técnico identificado.
 
 ## Última evidência de validação
 
+Em 2026-07-31, o Prompt 10 foi concluído e validado no navegador. Backup JSON v1, SHA-256 canônico, limite de 10 MiB, inspeção sem escrita, `replace` exclusivo, backup de segurança e substituição transacional foram verificados. A restauração em origem isolada recuperou 4 livros, 1 nota, 2 citações e 21 atividades; Coleção e Arquivo consultaram os dados restaurados e a persistência sobreviveu à recarga e reabertura. Arquivo adulterado foi rejeitado sem alteração e a origem HTTP insegura recebeu orientação sem alegação de perda. A suíte automatizada passou com 256 testes em 22 arquivos. A implementação do Bloco 5 está concluída, mas G5 permanece aberto até a restauração física em instalação limpa no Moto G06; G4 segue aberto por uso real prolongado. A versão permanece `0.2.0-alpha.1` e o Prompt 11 não foi iniciado.
+
 Em 2026-07-30, Sam validou o Prompt 9 no navegador. Busca por título e autor, normalização de caixa, espaços e acentos, filtros e combinações, as três ordenações, total desconhecido, estado sem resultado e limpeza dos controles funcionaram. A URL preservou os controles ao abrir livro, retornar e recarregar. O Arquivo global, pesquisas por conteúdo, livro e autor e o retorno Arquivo → livro → Arquivo preservaram a busca. O layout funcionou a partir de 320 px sem overflow horizontal aparente. Com 223 testes automatizados aprovados, o Prompt 9 e a implementação prevista do Bloco 4 estão concluídos.
 
-O Gate G4 permanece aberto até cadastrar e manter ao menos dez livros reais, usar o aplicativo por alguns dias e confirmar que o uso normal dispensa console ou ferramentas de desenvolvimento. Essas pendências são não bloqueadoras para iniciar o Bloco 5. O checkpoint físico no Moto G06 foi transferido por decisão operacional para o encerramento do Bloco 5, junto à validação de backup, restauração e fluxos de arquivo; isso não representa defeito. A versão continua `0.2.0-alpha.1` e o Prompt 10 ainda não foi iniciado.
+O Gate G4 permanece aberto até cadastrar e manter ao menos dez livros reais, usar o aplicativo por alguns dias e confirmar que o uso normal dispensa console ou ferramentas de desenvolvimento. Essas pendências são não bloqueadoras para validar o Bloco 5. O checkpoint físico no Moto G06 foi transferido por decisão operacional para o encerramento do Bloco 5, junto à validação de backup, restauração e fluxos de arquivo; isso não representa defeito. A versão continua `0.2.0-alpha.1` e o Prompt 10 aguarda validação humana.
 
 No encerramento técnico anterior, o Prompt 9 implementou busca normalizada por título e autor, filtro pelos cinco status reais e ordenação visual por atualização, título ou progresso. Os controles vivem na URL e são preservados ao abrir um livro e retornar. A rota Arquivo reúne notas e citações, pesquisa conteúdo e livro relacionado e preserva sua busca na navegação. Coleção e Arquivo carregam seus conjuntos uma vez e derivam resultados em memória; o Arquivo usa três consultas globais paralelas e um mapa por ID, sem N+1. A prova automatizada inclui 100 livros e a suíte completa passou com 223 testes. Não houve alteração de schema, migração, dependência ou versão.
 

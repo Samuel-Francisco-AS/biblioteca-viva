@@ -188,6 +188,23 @@ describe("cadastro de livro", () => {
     expect(screen.queryByText("interno")).not.toBeInTheDocument();
   });
 
+  it("explica a indisponibilidade de contexto seguro sem alegar perda de dados", async () => {
+    const user = userEvent.setup();
+    const { facade } = application({
+      create: () =>
+        Promise.reject(new ApplicationError("UNSAFE_CONTEXT", "interno")),
+    });
+    renderCreate(facade);
+    await user.type(screen.getByLabelText(/título/i), "Permanece aqui");
+    await user.click(screen.getByRole("button", { name: "Salvar livro" }));
+
+    expect(
+      await screen.findByText(/localhost, HTTPS ou pelo APK Android/i),
+    ).toBeVisible();
+    expect(screen.getByLabelText(/título/i)).toHaveValue("Permanece aqui");
+    expect(screen.queryByText("interno")).not.toBeInTheDocument();
+  });
+
   it("bloqueia envios duplicados e navega somente após sucesso", async () => {
     const user = userEvent.setup();
     let resolveSave: ((value: BookEntry) => void) | undefined;

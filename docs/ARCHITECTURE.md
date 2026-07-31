@@ -871,3 +871,9 @@ O resultado esperado não é uma demonstração descartável. É uma primeira bi
 - documentação oficial do Playwright para Android WebView;
 - Android Developers sobre APK/AAB e assinatura;
 - OWASP Mobile Application Security Verification Standard, especialmente armazenamento e autenticação.
+
+## 22. Backup e recuperação após o Prompt 10
+
+`ExportBackup`, `InspectBackup` e `ImportBackup` dependem de `BackupSnapshotPort`, `BackupCodecPort` e `FileDeliveryPort`. A infraestrutura implementa snapshot/replace com Dexie, codec JSON v1 com Zod/Web Crypto e entrega por Web Share de arquivos quando disponível, com fallback Blob/download. A apresentação recebe somente a fachada composta e não importa Dexie, Capacitor ou adapters.
+
+Importação é `replace` apenas: valida, exige a entrega de cópia de segurança quando a base tem dados, revalida e substitui as cinco coleções em uma transação. Metadados técnicos permanecem no destino. Não há eventos históricos, mescla ou recriação por casos de uso individuais. Um Error Boundary acima do roteador oferece nova montagem e recarga explícita sem apagar IndexedDB.

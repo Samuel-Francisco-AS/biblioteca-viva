@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import { App } from "./App";
 import { createApplication } from "./app/createApplication";
+import { AppErrorBoundary } from "./app/AppErrorBoundary";
 
 const rootElement = document.querySelector("#root");
 
@@ -16,9 +17,14 @@ const root = createRoot(rootElement);
 function render(application?: Awaited<ReturnType<typeof createApplication>>) {
   root.render(
     <StrictMode>
-      <BrowserRouter>
-        <App application={application} diagnostics={application?.diagnostics} />
-      </BrowserRouter>
+      <AppErrorBoundary>
+        <BrowserRouter>
+          <App
+            application={application}
+            diagnostics={application?.diagnostics}
+          />
+        </BrowserRouter>
+      </AppErrorBoundary>
     </StrictMode>,
   );
 }

@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> Estado atual: Gates G0 a G3 aprovados; implementação do Bloco 4 e Prompts 7–9 concluídos; G4 aguarda uso real prolongado; versão `0.2.0-alpha.1`; Prompt 10 é o próximo trabalho e o Android será validado no encerramento do Bloco 5, 30 de julho de 2026.
+> Estado atual: Gates G0 a G3 aprovados; Prompts 7–10 e implementações dos Blocos 4 e 5 concluídos; G4 aguarda uso real prolongado e G5 aguarda checkpoint Android; versão `0.2.0-alpha.1`; Prompt 11 ainda não foi iniciado, 31 de julho de 2026.
 
 ## 1. Função desta documentação
 
@@ -87,8 +87,8 @@ Ela está dividida por frequência de mudança:
 - shell responsivo e cinco rotas criados pelo Prompt 2;
 - Prompt 2 concluído e validado no navegador;
 - Gates G0 a G3 aprovados; implementação do Bloco 4 e Prompts 7–9 concluídos; G4 permanece aberto por uso real prolongado;
-- Prompt 10 é o próximo trabalho, com Bloco 5 ainda não iniciado;
-- checkpoint Android dos fluxos dos Blocos 4 e 5 planejado para o encerramento do Bloco 5;
+- Prompt 10 foi concluído e validado no navegador;
+- checkpoint Android do G5 permanece pendente antes do Prompt 11;
 - repositório Git inicializado na branch `main`;
 - stack e arquitetura aprovadas;
 - APK diagnóstico interno validado no Gate G3; APK release assinado permanece pendente;

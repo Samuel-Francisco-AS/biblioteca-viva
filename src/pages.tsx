@@ -24,12 +24,3 @@ export function LibraryPage() {
     />
   );
 }
-
-export function SettingsPage() {
-  return (
-    <PlaceholderPage
-      description="Aqui ficarão as preferências da experiência e as futuras ferramentas de dados."
-      title="Configurações"
-    />
-  );
-}

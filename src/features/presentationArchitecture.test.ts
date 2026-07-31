@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 const presentationSources = import.meta.glob<string>(
-  ["./archive/*.tsx", "./collection/*.tsx", "./entry-detail/*.tsx"],
+  [
+    "./archive/*.tsx",
+    "./collection/*.tsx",
+    "./entry-detail/*.tsx",
+    "./settings/*.tsx",
+  ],
   { eager: true, query: "?raw", import: "default" },
 );
 

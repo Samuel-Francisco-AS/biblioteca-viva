@@ -157,3 +157,7 @@ No protótipo, priorizar:
 - ausência de promessa de suporte comercial.
 
 Publicação em loja exige política de privacidade, materiais, classificação, revisão de permissões e processo próprio.
+
+## 9. Transferência de backup no Prompt 10
+
+Nenhum plugin ou permissão Android foi adicionado. A fachada de arquivos tenta Web Share com `File` quando o WebView oferecer suporte e usa Blob/download como fallback; importação usa o seletor HTML. O APK debug foi gerado, mas usabilidade física de exportação, seleção e restauração permanece obrigatoriamente pendente para o Moto G06/G5. Se o WebView não entregar um fluxo utilizável, a necessidade de plugins oficiais Filesystem/Share será reavaliada com evidência, sem acesso amplo ao armazenamento.

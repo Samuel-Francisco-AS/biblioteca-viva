@@ -126,3 +126,12 @@ A validação manual com teclado, leitor de estrutura, zoom, larguras móveis e 
 - o Arquivo usa headings, listas, artigos e `time` com `dateTime` para notas e citações;
 - links do Arquivo nomeiam o livro de destino e registros sem livro relacionado recebem texto seguro;
 - campos e cartões continuam fluidos, com quebra de conteúdo longo e espaço inferior do shell.
+
+## 12. Backup e recuperação
+
+- seletor com label, ajuda, erro associado e estados anunciados;
+- confirmação inline com heading, resumo e consequência textual;
+- foco movido à confirmação e devolvido ao seletor ao cancelar ou falhar;
+- ações inequívocas, teclado nativo, alvo mínimo e bloqueio durante operação;
+- valores preservados após falha e layout fluido a partir de 320 px;
+- Error Boundary com heading e ações explícitas, sem detalhes internos.

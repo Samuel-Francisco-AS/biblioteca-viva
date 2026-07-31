@@ -77,3 +77,7 @@ Criar política de privacidade formal antes de:
 - permitir compartilhamento;
 - monetizar;
 - tratar dados de crianças ou grupos sensíveis.
+
+## 9. Backup implementado
+
+O backup v1 inclui livros, progresso, notas, citações, atividades e configurações aplicáveis. É JSON UTF-8 em texto legível, não criptografado. O aplicativo não envia o arquivo automaticamente: exportação, compartilhamento e destino dependem de ação explícita. Depois da entrega, guardar e excluir manualmente a cópia externa é responsabilidade do usuário. Nomes de arquivo não incluem dados pessoais.

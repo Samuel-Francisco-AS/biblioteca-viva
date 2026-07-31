@@ -4,12 +4,36 @@ import { describe, expect, it } from "vitest";
 import { z } from "zod";
 
 import {
+  BrowserPlatformCapabilities,
   BrowserStoragePersistence,
   CryptoIdGenerator,
   SystemClock,
 } from "../index";
 
 describe("platform adapters", () => {
+  it("identifica contexto inseguro e APIs necessárias indisponíveis", () => {
+    const capabilities = new BrowserPlatformCapabilities({
+      isSecureContext: false,
+      crypto: {},
+    }).inspect();
+
+    expect(capabilities).toEqual({
+      secureContext: false,
+      secureUuid: false,
+      backupIntegrity: false,
+      supported: false,
+    });
+  });
+
+  it("aceita contexto seguro com UUID e integridade disponíveis", () => {
+    const capabilities = new BrowserPlatformCapabilities({
+      isSecureContext: true,
+      crypto: { randomUUID: () => "id", subtle: { digest: () => undefined } },
+    }).inspect();
+
+    expect(capabilities.supported).toBe(true);
+  });
+
   it("returns canonical UTC instants", async () => {
     const instant = await new SystemClock().now();
     expect(z.iso.datetime({ offset: false }).parse(instant)).toBe(instant);

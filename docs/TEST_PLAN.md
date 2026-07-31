@@ -405,3 +405,48 @@ Cada teste em aparelho deve registrar:
 - decisão de gate.
 
 Use `templates/MANUAL_TEST_REPORT_TEMPLATE.md`.
+
+## 10. Prompt 10 — evidência automática e validação no navegador
+
+Em 2026-07-30, 256 testes em 22 arquivos passaram após o endurecimento final. A cobertura nova inclui envelope v1, identificador/versões/data, coleções e metadados, ordenação e canonicalização, SHA-256 e adulteração, Unicode e conteúdo longo, limite de 10 MiB, JSON/versões/IDs/checksum inválidos sem replace, inspeção sem escrita, round-trip do texto final por JSON, Blob e File com campos opcionais ausentes, snapshot consistente, substituição das cinco coleções, preservação de metadata técnico, rollback Dexie em `libraryEntries`, `notes`, `activities` e `settings`, reabertura e consultas reais, ausência de eventos/atividades artificiais, backup de segurança/cancelamento, base vazia, Web Share e fallback Blob, interface, foco, Error Boundary, CSP, limites arquiteturais e indisponibilidade de contexto seguro. Os testes Dexie usam bancos `fake-indexeddb` isolados e dados fictícios.
+
+Comandos técnicos concluídos: `npm run format`, `format:check`, `lint`, `typecheck`, `test:run`, `build`, smoke de `npm run dev`, `android:sync`, `android:build:debug` e `git diff --check`. Todos passaram. O APK debug final foi verificado como ZIP íntegro em `android/app/build/outputs/apk/debug/app-debug.apk`, com 4.389.778 bytes e SHA-256 `3bc09b29e87a59b192c4e2049e012ed16d62d268e7a292182f4fc1e199366f57`. Não foi instalado nem testado fisicamente.
+
+### Navegador — aprovado em 2026-07-31
+
+- [x] exportar backup e conferir aviso de privacidade;
+- [x] selecionar e inspecionar sem escrita;
+- [x] cancelar sem alteração na base vazia;
+- [x] restaurar em origem isolada;
+- [x] comparar livros, progresso, status, notas, citações e atividades (4 livros, 1 nota, 2 citações e 21 atividades);
+- [x] recarregar e reabrir, confirmando persistência e consultas de Coleção e Arquivo;
+- [x] criar backup de segurança antes de substituir base preenchida, sem duplicatas;
+- [x] rejeitar arquivo adulterado sem alterar dados;
+- [x] abrir em origem HTTP insegura e confirmar orientação sem alegação de perda entre origens.
+
+### Navegador — pendente
+
+- [ ] conferir visualmente 320 px, texto longo e ausência de overflow;
+- [ ] provocar Error Boundary somente por teste controlado e confirmar que não apaga dados.
+
+### Destrutiva controlada — pendente
+
+- [ ] preencher base fictícia isolada, exportar e guardar evidência;
+- [ ] limpar somente a origem de teste pelo mecanismo humano apropriado;
+- [ ] importar em base vazia;
+- [ ] comparar snapshot, contagens e amostras após reabertura;
+- [ ] registrar resultado sem usar ou apagar dados pessoais reais.
+
+### Moto G06 e G5 — pendente, não executado
+
+- [ ] carregar o Moto G06 e registrar commit, hash do APK, modelo e Android;
+- [ ] instalar APK novo sobre a versão anterior e confirmar preservação dos dados Android existentes;
+- [ ] abrir Configurações, exportar e compartilhar ou salvar o arquivo fora do aplicativo;
+- [ ] confirmar que o arquivo existe e pode ser selecionado;
+- [ ] limpar dados ou desinstalar de forma controlada somente após backup confirmado;
+- [ ] reinstalar e confirmar base vazia;
+- [ ] importar em instalação limpa e comparar livros, progresso, status, notas, citações e atividades;
+- [ ] testar teclado virtual, botão Voltar, safe areas, minimizar/restaurar, reabertura e reinício;
+- [ ] confirmar estabilidade geral, ausência de tela branca/travamento e registrar no template manual.
+
+G5 permanece aberto; nenhum item humano acima foi marcado como executado.

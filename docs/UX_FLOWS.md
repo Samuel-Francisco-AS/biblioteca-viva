@@ -170,3 +170,9 @@ Uma falha do Phaser mostra alternativa textual e opção de tentar novamente; n�
 - safe areas respeitadas;
 - áreas de toque adequadas;
 - nenhuma interação depende de hover.
+
+## 13. Backup e recuperação implementados
+
+Somente substituição está disponível. Selecionar valida sem escrita e move o foco ao resumo. Cancelar limpa a seleção e preserva o banco. Confirmar cria/entrega primeiro um backup de segurança quando necessário, revalida, substitui atomicamente e anuncia contagens. Falha permite nova tentativa. A entrega usa compartilhamento de arquivo quando suportado e download Blob como fallback.
+
+Falha de renderização apresenta “Tentar novamente” e “Recarregar aplicativo”; nenhuma opção apaga ou restaura dados automaticamente.

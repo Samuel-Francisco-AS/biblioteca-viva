@@ -216,3 +216,14 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 **Consequências:** digitação não consulta IndexedDB, escolhas visuais não alteram domínio ou ordem persistida, a sessão pode ser restaurada pelos links e não há mudança de schema. A estratégia será reavaliada somente com medição de degradação ou volume que justifique busca textual avançada.
 
 Use `templates/ADR_TEMPLATE.md` para novas decisões.
+
+## D-021 — Backup v1, replace-only e endurecimento inicial
+
+- **Data:** 2026-07-30
+- **Status:** aceita
+
+**Contexto:** o Prompt 10 precisa recuperar dados pessoais sem conta, nuvem, migração de schema ou falsa promessa de segurança.
+
+**Decisão:** exportar `libraryEntries`, `notes`, `quotes`, `activities` e `settings` em JSON v1 estrito; excluir `metadata` técnico; usar SHA-256 sobre JSON canônico como detector não criptográfico; aceitar somente `replace`, precedido por backup de segurança em base não vazia; entregar por Web Share quando suportado e Blob/download como fallback, sem plugin Capacitor novo. Adotar CSP por meta tag e Error Boundary sem limpeza automática.
+
+**Consequências:** mescla fica fora por não haver política segura para IDs, revisões, remoções, atividades e preferências. O arquivo é legível e sua guarda é externa. Não há mudança do banco v2, dependência ou permissão Android; o WebView permanece para validação humana do G5.

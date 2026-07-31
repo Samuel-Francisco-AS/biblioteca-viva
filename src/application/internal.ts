@@ -81,7 +81,8 @@ export async function generatedId(
 ): Promise<string> {
   try {
     return generatedIdSchema.parse(await dependencies.ids.generate());
-  } catch {
+  } catch (error: unknown) {
+    if (error instanceof ApplicationError) throw error;
     throw persistenceFailed(operation);
   }
 }

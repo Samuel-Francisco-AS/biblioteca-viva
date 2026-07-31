@@ -183,3 +183,9 @@ O banco estável chama-se `biblioteca-viva`. Os adapters persistem somente dados
 A versão 1 contém as quatro tabelas de dados suficientes para gravar livros e seus efeitos. A versão 2 acrescenta `settings` e `metadata` e grava uma única marca `schema-version = 2`, preservando integralmente registros v1. A migração é idempotente na reabertura e possui teste real com `fake-indexeddb`.
 
 Entidade/anotação e atividade são confirmadas na mesma transação. Eventos são publicados somente após o commit. Exclusão, arquivamento, outbox e política de retenção permanecem abertos e exigirão migrações próprias quando aprovados.
+
+## 13. Backup v1
+
+O envelope estrito usa `kind: biblioteca-viva-backup`, `formatVersion: 1`, `createdAt`, `appVersion`, `databaseVersion`, `data`, `metadata.policy: replace` e `integrity` SHA-256. Compatibilidade é governada por `formatVersion`, não por `appVersion`.
+
+`data` contém `libraryEntries`, `notes`, `quotes`, `activities` e `settings`, ordenados por ID ou chave. `metadata` do IndexedDB, inclusive `schema-version`, é técnico e não entra: o destino o preserva/recria. O checksum cobre o envelope canônico sem `integrity`, após a normalização pela mesma representação JSON que é gravada no arquivo; assim propriedades opcionais ausentes não divergem entre exportação e importação. O schema persistente continua v2, sem migração.

@@ -48,3 +48,5 @@ keystore.properties
 # Arquivos temporários
 *.tmp
 *.temp
+biblioteca-viva-backup-*.json
+biblioteca-viva-seguranca-antes-da-restauracao-*.json
