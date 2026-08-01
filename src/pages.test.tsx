@@ -1,24 +1,22 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
 import { ApplicationError } from "./application";
 import type { BookEntry } from "./domain";
+import type { LibraryInteraction } from "./features/library-visual/contracts";
 import { LibraryPage, type LibraryPageApplication } from "./pages";
 
 const visualHostMock = vi.hoisted(() => ({
-  interaction: undefined as
-    ((event: { readonly type: "ShelfSelected" }) => void) | undefined,
+  interaction: undefined as ((event: LibraryInteraction) => void) | undefined,
 }));
 
 vi.mock("./features/library-visual/LibraryVisualHost", () => ({
   LibraryVisualHost: ({
     onInteraction,
   }: {
-    readonly onInteraction?: (event: {
-      readonly type: "ShelfSelected";
-    }) => void;
+    readonly onInteraction?: (event: LibraryInteraction) => void;
   }) => {
     visualHostMock.interaction = onInteraction;
     return <div aria-label="Visualização da Biblioteca" role="img" />;
@@ -110,7 +108,7 @@ describe("Página Biblioteca", () => {
     const user = userEvent.setup();
     renderLibrary(Promise.resolve([{ ...book, status: "completed" }]));
     await screen.findByRole("img", { name: "Visualização da Biblioteca" });
-    visualHostMock.interaction?.({ type: "ShelfSelected" });
+    act(() => visualHostMock.interaction?.({ type: "ShelfSelected" }));
 
     expect(
       await screen.findByRole("heading", { name: "Resumo da sua coleção" }),
@@ -128,9 +126,58 @@ describe("Página Biblioteca", () => {
       screen.queryByRole("heading", { name: "Resumo da sua coleção" }),
     ).not.toBeInTheDocument();
 
-    visualHostMock.interaction?.({ type: "ShelfSelected" });
+    act(() => visualHostMock.interaction?.({ type: "ShelfSelected" }));
     await screen.findByRole("heading", { name: "Resumo da sua coleção" });
     await user.click(screen.getByRole("button", { name: "Abrir Coleção" }));
     expect(screen.getByLabelText("URL atual")).toHaveTextContent("/colecao");
+  });
+
+  it("abre o painel acessível da bibliotecária e move foco para fechar", async () => {
+    renderLibrary(Promise.resolve([book]));
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    act(() => visualHostMock.interaction?.({ type: "LibrarianSelected" }));
+
+    expect(
+      screen.getByRole("heading", { name: "Uma acolhida tranquila" }),
+    ).toBeVisible();
+    expect(
+      screen.getByText(/sempre espaço para mais uma história/iu),
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "Fechar painel" })).toHaveFocus();
+    expect(screen.queryByText("book-1")).not.toBeInTheDocument();
+  });
+
+  it("abre o painel da criatura, substitui o anterior e fecha sem duplicação", async () => {
+    const user = userEvent.setup();
+    renderLibrary(Promise.resolve([book]));
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    act(() => visualHostMock.interaction?.({ type: "LibrarianSelected" }));
+    act(() => visualHostMock.interaction?.({ type: "CreatureSelected" }));
+    act(() => visualHostMock.interaction?.({ type: "CreatureSelected" }));
+
+    expect(
+      screen.queryByRole("heading", { name: "Uma acolhida tranquila" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getAllByRole("heading", { name: "Uma presença curiosa" }),
+    ).toHaveLength(1);
+    expect(screen.getByText(/percorre devagar/iu)).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Fechar painel" }));
+    expect(
+      screen.queryByRole("heading", { name: "Uma presença curiosa" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("cada nova interação substitui o painel atual", async () => {
+    renderLibrary(Promise.resolve([book]));
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    act(() => visualHostMock.interaction?.({ type: "CreatureSelected" }));
+    act(() => visualHostMock.interaction?.({ type: "ShelfSelected" }));
+    expect(
+      screen.getByRole("heading", { name: "Resumo da sua coleção" }),
+    ).toBeVisible();
+    expect(
+      screen.queryByRole("heading", { name: "Uma presença curiosa" }),
+    ).not.toBeInTheDocument();
   });
 });

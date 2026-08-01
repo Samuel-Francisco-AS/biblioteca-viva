@@ -1,4 +1,8 @@
-import type { LibraryProgressSummary, LibraryViewModel } from "../contracts";
+import type {
+  LibraryProgressSummary,
+  LibraryViewModel,
+  ShelfOccupancy,
+} from "../contracts";
 
 export interface LibrarySceneRenderState {
   readonly completedBooks: number;
@@ -7,6 +11,7 @@ export interface LibrarySceneRenderState {
   readonly highlightedBookProgressLabel: string | null;
   readonly highlightedBookStatusLabel: string | null;
   readonly inProgressBooks: number;
+  readonly shelfOccupancy: ShelfOccupancy;
   readonly shelfVisualGroupCount: number;
   readonly totalBooks: number;
 }
@@ -36,6 +41,7 @@ export function librarySceneRenderState(
       ? sceneStatusLabel(viewModel.highlightedBook.status)
       : null,
     inProgressBooks: viewModel.inProgressBooks,
+    shelfOccupancy: viewModel.shelfOccupancy,
     shelfVisualGroupCount: viewModel.shelfVisualGroupCount,
     totalBooks: viewModel.totalBooks,
   };

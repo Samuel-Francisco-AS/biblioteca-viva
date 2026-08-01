@@ -1,15 +1,15 @@
 # STATUS — Biblioteca Viva
 
-> Última atualização: 2026-07-31
+> Última atualização: 2026-08-01
 > Atualizar este arquivo ao começar e ao encerrar cada bloco relevante.
 
 ## Estado executivo
 
 - **Fase:** aplicativo pessoal utilizável;
-- **bloco concluído:** Bloco 5 — Integridade, backup e segurança inicial (checkpoint físico pendente);
-- **prompt concluído:** Prompt 12 — Projeção visual e ponte bidirecional, validado no navegador em 2026-07-31;
-- **implementação concluída:** Blocos 4 e 5; Bloco 6 iniciado;
-- **trabalho atual:** próximo passo: Prompt 13 — Cena visual e interação inicial, ainda não iniciado;
+- **bloco concluído:** Bloco 6 — Biblioteca visual conectada (checkpoint físico conjunto pendente);
+- **prompt concluído:** Prompt 13 — primeira sala reativa, validado no navegador;
+- **implementação concluída:** Blocos 4, 5 e 6;
+- **trabalho atual:** executar o checkpoint físico conjunto de G5 e G6 no Moto G06; Bloco 7 e Prompt 14 não iniciados;
 - **gate:** G3 aprovado por Sam em 2026-07-29; G4 e G5 permanecem abertos; G6 está aberto e não aprovado;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
 - **repositório:** Git inicializado;
@@ -19,7 +19,7 @@
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
 - **compatibilidade:** diferentes celulares Android, proporções de tela, densidades e áreas seguras;
-- **estado geral:** G0 a G3 aprovados; Prompts 7 a 10 concluídos; Bloco 5 concluído com G5 pendente; Bloco 6 iniciado pelo Prompt 11; G4, G5 e G6 permanecem abertos.
+- **estado geral:** G0 a G3 aprovados; Prompts 11, 12 e 13 concluídos; G4, G5 e G6 permanecem abertos; Bloco 7 e Prompt 14 não foram iniciados.
 
 ## Decisões já aprovadas
 
@@ -54,13 +54,15 @@
 
 ## Trabalho atual
 
-O Prompt 12 foi concluído e validado no navegador. O Bloco 6 permanece em andamento; o próximo passo é o Prompt 13, ainda não iniciado. G4, G5 e G6 seguem abertos, e o teste físico conjunto de G5 e G6 permanece adiado para o encerramento do Bloco 6. A versão continua `0.2.0-alpha.1`.
+O Prompt 13 foi concluído e validado no navegador; a implementação do Bloco 6 está concluída. G4 continua aberto por uso real prolongado, G5 por backup e restauração física em instalação limpa e G6 até o teste físico no Moto G06. O próximo passo é o checkpoint físico conjunto de G5/G6. A versão continua `0.2.0-alpha.1`; Bloco 7 e Prompt 14 não foram iniciados.
 
 ## Bloqueios
 
 Nenhum bloqueio técnico identificado.
 
 ## Última evidência de validação
+
+Em 2026-08-01, o Prompt 13 foi validado no navegador. A estante reagiu aos dados, incluindo conclusão e livro recente; iluminação, bibliotecária e criatura permaneceram distinguíveis em desktop, 320 × 915 e 360 × 640. Após a correção de lifecycle, a bibliotecária manteve idle contínuo e a criatura completou múltiplos ciclos delimitados sem salto, parada ou aceleração; destaque pulsou discretamente e houve exatamente um canvas durante a rota, zero fora dela e instância limpa no retorno. Estante, bibliotecária e criatura abriram painéis React exclusivos e acessíveis; pausa/retomada, saída/retorno e CSP estrita foram aprovados. A piscada breve do canvas durante resize contínuo de janela é limitação visual não bloqueadora e deve ser reavaliada em lifecycle real no Android. A suíte passou com 349 testes em 31 arquivos. G4, G5 e G6 seguem abertos; a versão permanece `0.2.0-alpha.1`, Bloco 7 e Prompt 14 não foram iniciados.
 
 Em 2026-07-31, o Prompt 12 foi validado no navegador com biblioteca preenchida, vazia e restaurada em outra origem. A cadeia `backup → IndexedDB → consultas → LibraryProjectionService → Phaser → painel React` representou corretamente os dados restaurados. Contadores, lotação, destaque recente, primeiro marco, painel da estante e acesso à Coleção responderam a atualizações sem duplicar a instância ou o canvas. O layout compacto até `520` px lógicos foi validado em 320 × 915 e 360 × 640, além do desktop, sem sobreposição ou overflow horizontal; a troca de modo preservou um único canvas e a CSP continuou estrita, sem `unsafe-eval`. A suíte passou com 299 testes em 29 arquivos. Avisos de AudioContext e WebGL permanecem não bloqueantes. G4, G5 e G6 não foram aprovados; o teste físico conjunto segue para o fim do Bloco 6 e o Prompt 13 não foi iniciado.
 

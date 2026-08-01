@@ -147,19 +147,27 @@ describe("LibraryVisualHost", () => {
   });
 
   it("redimensiona a instância existente sem recriá-la e ignora resize após desmontar", async () => {
+    let hostSize = { height: 180, width: 320 };
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(
+      () => boundsFor(hostSize),
+    );
     const instance = game();
     const { createLibraryVisualGame, loadFactory } = factoryFor(instance);
     const rendered = renderHost({ loadFactory });
     await waitFor(() => expect(createLibraryVisualGame).toHaveBeenCalledOnce());
-    const resizesBeforeObserver = vi.mocked(instance.resize).mock.calls.length;
+    expect(instance.resize).not.toHaveBeenCalled();
 
     resizeCallback?.([], {} as ResizeObserver);
-    expect(instance.resize).toHaveBeenCalledTimes(resizesBeforeObserver + 1);
+    expect(instance.resize).not.toHaveBeenCalled();
+    hostSize = { height: 203, width: 360 };
+    resizeCallback?.([], {} as ResizeObserver);
+    expect(instance.resize).toHaveBeenCalledOnce();
+    expect(instance.resize).toHaveBeenLastCalledWith(hostSize);
     expect(createLibraryVisualGame).toHaveBeenCalledOnce();
 
     rendered.unmount();
     resizeCallback?.([], {} as ResizeObserver);
-    expect(instance.resize).toHaveBeenCalledTimes(resizesBeforeObserver + 1);
+    expect(instance.resize).toHaveBeenCalledOnce();
   });
 
   it("atualiza da largura regular para a compacta na mesma instância", async () => {
@@ -199,6 +207,7 @@ describe("LibraryVisualHost", () => {
     resizeCallback?.([], {} as ResizeObserver);
 
     expect(instance.resize).toHaveBeenLastCalledWith(hostSize);
+    expect(instance.resize).toHaveBeenCalledOnce();
     expect(createLibraryVisualGame).toHaveBeenCalledOnce();
     expect(observeResize).toHaveBeenCalledOnce();
     expect(
@@ -230,6 +239,21 @@ describe("LibraryVisualHost", () => {
     document.dispatchEvent(new Event("visibilitychange"));
     document.dispatchEvent(new Event("visibilitychange"));
     expect(instance.resume).toHaveBeenCalledOnce();
+  });
+
+  it("ignora scroll e callbacks de resize sem mudança de tamanho", async () => {
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(
+      () => boundsFor({ height: 180, width: 320 }),
+    );
+    const instance = game();
+    const { createLibraryVisualGame, loadFactory } = factoryFor(instance);
+    renderHost({ loadFactory });
+    await waitFor(() => expect(createLibraryVisualGame).toHaveBeenCalledOnce());
+
+    window.dispatchEvent(new Event("scroll"));
+    resizeCallback?.([], {} as ResizeObserver);
+    resizeCallback?.([], {} as ResizeObserver);
+    expect(instance.resize).not.toHaveBeenCalled();
   });
 
   it("apresenta fallback React e limpa criação parcial quando a factory falha", async () => {
@@ -339,6 +363,34 @@ describe("LibraryVisualHost", () => {
     options?.onInteraction(interaction);
     expect(onInteraction).toHaveBeenCalledOnce();
     expect(onInteraction).toHaveBeenCalledWith(interaction);
+  });
+
+  it("ignora interações recebidas depois do destroy", async () => {
+    const instance = game();
+    const { createLibraryVisualGame, loadFactory } = factoryFor(instance);
+    const onInteraction = vi.fn();
+    const rendered = renderHost({ loadFactory, onInteraction });
+    await waitFor(() => expect(createLibraryVisualGame).toHaveBeenCalledOnce());
+    const options = createLibraryVisualGame.mock.calls[0]?.[0];
+
+    rendered.unmount();
+    options?.onInteraction({ type: "CreatureSelected" });
+    expect(onInteraction).not.toHaveBeenCalled();
+  });
+
+  it("entrega preferência local de movimento reduzido à mesma factory lazy", async () => {
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({ matches: true })),
+    );
+    const instance = game();
+    const { createLibraryVisualGame, loadFactory } = factoryFor(instance);
+    renderHost({ loadFactory });
+    await waitFor(() => expect(createLibraryVisualGame).toHaveBeenCalledOnce());
+    expect(createLibraryVisualGame.mock.calls[0]?.[0]?.reducedMotion).toBe(
+      true,
+    );
+    expect(loadFactory).toHaveBeenCalledOnce();
   });
 });
 

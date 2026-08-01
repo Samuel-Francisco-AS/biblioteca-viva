@@ -260,3 +260,14 @@ Use `templates/ADR_TEMPLATE.md` para novas decisões.
 **Decisão:** `LibraryProjectionService` recebe um input serializável mínimo e produz um `LibraryViewModel` imutável. A lotação usa `empty` para 0 livros, `initial` para 1–4, `growing` para 5–14 e `full` para 15 ou mais. Esses estados renderizam, respectivamente, 0, 2, 5 e no máximo 8 grupos de lombadas, inclusive para coleções grandes. O livro recente é o maior `updatedAt`, com ID lexicograficamente crescente como desempate; o marco existe quando há ao menos um status `completed` atual.
 
 **Consequências:** React consulta e possui painel/navegação; Phaser recebe atualizações do modelo na mesma instância e emite uma união de interações mínima. Somente `ShelfSelected` é conectado funcionalmente agora. `LibrarianSelected`, `CreatureSelected` e `HighlightedBookSelected` permanecem contratos sem fluxo de produto até o Prompt 13. Não há plugin ou permissão Android adicional.
+
+## D-025 — Sala procedural pequena e movimento determinístico
+
+- **Data:** 2026-07-31
+- **Status:** aceita
+
+**Contexto:** o Prompt 13 precisa tornar a primeira sala reconhecível sem assets próprios licenciados disponíveis e sem antecipar produção artística final.
+
+**Decisão:** usar gráficos procedurais internos com fallback independente para todos os elementos essenciais. A bibliotecária usa deslocamento vertical de quatro unidades lógicas em tween lento; a criatura percorre horizontalmente uma área explícita. Ambos usam fase normalizada, easing senoidal, `yoyo` e repetição infinita. Resize idêntico não reconcilia movimento, resize no mesmo modo apenas remapeia a fase e a troca regular/compacto substitui um único conjunto. O livro recente pode receber uma pulsação discreta; e a iluminação usa círculos translúcidos estáticos. A câmera permanece fixa. React possui e coordena os painéis; Phaser somente desenha, anima estado transitório e emite interações.
+
+**Consequências:** a sala limita-se a aproximadamente 32 display objects, três tweens, sete texturas próprias opcionais e oito grupos de lombadas, inclusive com cem livros. Não há partículas, shader, pós-processamento, física complexa, pathfinding, joystick, áudio, diálogo ramificado ou acesso ao banco. Movimento reduzido conserva a composição estática sem tweens repetitivos.

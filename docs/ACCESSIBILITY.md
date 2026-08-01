@@ -135,3 +135,13 @@ A validação manual com teclado, leitor de estrutura, zoom, larguras móveis e 
 - ações inequívocas, teclado nativo, alvo mínimo e bloqueio durante operação;
 - valores preservados após falha e layout fluido a partir de 320 px;
 - Error Boundary com heading e ações explícitas, sem detalhes internos.
+
+## 13. Sala reativa do Prompt 13
+
+- estante, bibliotecária e criatura abrem painéis React semânticos, nunca texto dentro do canvas como única representação;
+- somente um painel existe por vez, cada painel possui heading e botão de fechar focado ao abrir;
+- a Coleção convencional permanece disponível antes, durante e depois da cena;
+- painéis usam largura fluida, quebra de texto, alvos mínimos e ordem natural de teclado a partir de 320 px;
+- `prefers-reduced-motion` elimina os tweens repetitivos e preserva a sala estática completa;
+- conclusão combina lombada/marcador dourado com contagem e descrição textual, sem depender somente de cor;
+- o canvas não é declarado operável por teclado; ações essenciais e conteúdo textual pertencem ao React.

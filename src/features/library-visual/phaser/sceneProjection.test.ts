@@ -20,6 +20,21 @@ const viewModel: LibraryViewModel = {
 };
 
 describe("projeção renderizável da cena", () => {
+  it.each([
+    ["empty", 0],
+    ["initial", 2],
+    ["growing", 5],
+    ["full", 8],
+  ] as const)("preserva a escolha visual %s", (shelfOccupancy, groups) => {
+    expect(
+      librarySceneRenderState({
+        ...viewModel,
+        shelfOccupancy,
+        shelfVisualGroupCount: groups,
+      }),
+    ).toMatchObject({ shelfOccupancy, shelfVisualGroupCount: groups });
+  });
+
   it("mantém a quantidade visual limitada, inclusive para cem livros", () => {
     expect(librarySceneRenderState(viewModel)).toMatchObject({
       completedBooks: 1,
@@ -41,5 +56,32 @@ describe("projeção renderizável da cena", () => {
       highlightedBookProgressLabel: null,
       highlightedBookStatusLabel: null,
     });
+  });
+
+  it("representa conclusão como complemento sem alterar a ocupação", () => {
+    const withoutCompletion = librarySceneRenderState({
+      ...viewModel,
+      completedBooks: 0,
+      hasFirstCompletionMilestone: false,
+    });
+    const withCompletion = librarySceneRenderState(viewModel);
+    expect(withoutCompletion.shelfOccupancy).toBe("full");
+    expect(withCompletion.shelfOccupancy).toBe("full");
+    expect(withoutCompletion.hasFirstCompletionMilestone).toBe(false);
+    expect(withCompletion.hasFirstCompletionMilestone).toBe(true);
+  });
+
+  it("substitui o destaque sem manter o título anterior ou expor ID", () => {
+    const next = librarySceneRenderState({
+      ...viewModel,
+      highlightedBook: {
+        entryId: "private-id",
+        progress: { kind: "none" },
+        status: "planned",
+        title: "Novo destaque",
+      },
+    });
+    expect(next.highlightedBookLabel).toBe("Novo destaque");
+    expect(JSON.stringify(next)).not.toMatch(/private-id|note|quote/iu);
   });
 });

@@ -73,7 +73,9 @@ Usar faixas de ocupação e grupos de lombadas, não um sprite completo para cad
 - iluminação comunica atmosfera, não progresso obrigatório;
 - estados concluídos podem acrescentar calor ou brilho sem transformar a tela em carnaval arcano de shopping.
 
-Valores hexadecimais serão definidos após moodboard e teste no aparelho.
+Para a arte procedural do Prompt 13, a paleta provisória combina madeira escura e média, papel creme, piso ocre, parede azul acinzentada, verde suave para a criatura, violeta discreto para a bibliotecária e dourado para conclusão. Esses valores vivem no manifesto técnico e continuam sujeitos a moodboard e teste no aparelho; não constituem paleta final.
+
+A bibliotecária é uma figura geométrica com cabelo, rosto, corpo e avental; a criatura usa corpo oval, orelhas triangulares e olhos claros. A iluminação é composta por áreas circulares quentes e translúcidas. A estante vazia preserva prateleiras claramente visíveis; os estados preenchidos acrescentam grupos limitados de lombadas, e conclusão acrescenta um selo dourado sem substituir a faixa de ocupação.
 
 ## 7. Assets e nomes
 

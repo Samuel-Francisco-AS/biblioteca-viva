@@ -5,11 +5,22 @@ const sourceFiles = import.meta.glob<string>("./**/*.{ts,tsx}", {
   query: "?raw",
   import: "default",
 });
-const sceneFiles = import.meta.glob<string>("./phaser/*.ts", {
-  eager: true,
-  query: "?raw",
-  import: "default",
-});
+const sceneFiles = import.meta.glob<string>(
+  ["./phaser/*.ts", "!./phaser/*.test.ts"],
+  {
+    eager: true,
+    query: "?raw",
+    import: "default",
+  },
+);
+const manifestFiles = import.meta.glob<string>(
+  "./phaser/{roomManifest,roomConfig}.ts",
+  {
+    eager: true,
+    query: "?raw",
+    import: "default",
+  },
+);
 const applicationFiles = import.meta.glob<string>("../../application/**/*.ts", {
   eager: true,
   query: "?raw",
@@ -31,7 +42,7 @@ const routeFiles = import.meta.glob<string>("../../routes.ts", {
   import: "default",
 });
 
-describe("limites arquiteturais dos Prompts 11 e 12", () => {
+describe("limites arquiteturais dos Prompts 11 a 13", () => {
   it("mantém Phaser fora de domínio, aplicação e entrypoint eager", () => {
     [
       ...Object.entries(domainFiles),
@@ -89,5 +100,47 @@ describe("limites arquiteturais dos Prompts 11 e 12", () => {
     });
     expect(projection).toMatch(/SHELF_OCCUPANCY_RANGES/u);
     expect(contracts).not.toMatch(/Note|Quote|author|content|revision/iu);
+  });
+
+  it("mantém manifestos livres de React, Dexie e serviços de aplicação", () => {
+    Object.entries(manifestFiles).forEach(([path, source]) => {
+      expect(source, path).not.toMatch(
+        /from\s+["'](?:react|dexie|react-router-dom)["']|application|repository|useCase/iu,
+      );
+      expect(source, path).not.toMatch(/Math\.random|window\.|document\./u);
+    });
+  });
+
+  it("não antecipa navegação, áudio, física, pathfinding, polling ou ponte global", () => {
+    const scene = sourceFiles["./phaser/InitialLibraryScene.ts"];
+    const factory = sourceFiles["./phaser/createPhaserGame.ts"];
+    expect(scene).toBeDefined();
+    expect(factory).toBeDefined();
+    expect(scene).not.toMatch(
+      /react-router|navigate\(|this\.physics|pathfind|setInterval|Audio|localStorage|globalThis|window\.|document\./iu,
+    );
+    expect(factory).not.toMatch(/react-router|navigate\(|dexie|repository/iu);
+  });
+
+  it("mantém Phaser lazy e sem caminho externo ou objeto por livro", () => {
+    const host = sourceFiles["./LibraryVisualHost.tsx"];
+    const scene = sourceFiles["./phaser/InitialLibraryScene.ts"];
+    const manifest = sourceFiles["./phaser/roomManifest.ts"];
+    expect(host).toMatch(/import\("\.\/phaser\/createPhaserGame"\)/u);
+    expect(manifest).not.toMatch(/assetPath:\s*["'](?:https?:\/\/|data:)/u);
+    expect(scene).not.toMatch(
+      /projection\.(?:books|entries)|forEachBook|mapBook/iu,
+    );
+  });
+
+  it("mantém tweens locais infinitos, em fase e sem killAll", () => {
+    const scene = sourceFiles["./phaser/InitialLibraryScene.ts"];
+    expect(scene).toMatch(/targets: this\.librarianPhase/u);
+    expect(scene).toMatch(/targets: this\.creaturePhase/u);
+    expect(scene).toMatch(/LIBRARY_ROOM_ANIMATIONS\.librarian\.repeat/u);
+    expect(scene).toMatch(/LIBRARY_ROOM_ANIMATIONS\.creature\.repeat/u);
+    expect(scene).toMatch(/onComplete: onUnexpectedEnd/u);
+    expect(scene).toMatch(/onStop: onUnexpectedEnd/u);
+    expect(scene).not.toMatch(/killAll/u);
   });
 });

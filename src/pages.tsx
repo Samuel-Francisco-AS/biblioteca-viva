@@ -3,6 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 
 import type { BookEntry } from "./domain";
 import { presentApplicationError } from "./features/entry-editor/errorMessages";
+import {
+  LibraryCharacterPanel,
+  type LibraryCharacterPanelKind,
+} from "./features/library-visual/LibraryCharacterPanel";
 import { LibraryVisualDiagnosticsPanel } from "./features/library-visual/LibraryVisualDiagnostics";
 import { LibraryVisualHost } from "./features/library-visual/LibraryVisualHost";
 import { LibraryProjectionService } from "./features/library-visual/LibraryProjectionService";
@@ -23,6 +27,8 @@ type LibraryPageState =
   | { readonly kind: "loading" }
   | { readonly kind: "error"; readonly message: string }
   | { readonly kind: "ready"; readonly viewModel: LibraryViewModel };
+
+type OpenLibraryPanel = LibraryCharacterPanelKind | "shelf" | null;
 
 function projectionInput(books: readonly BookEntry[]) {
   return {
@@ -53,7 +59,7 @@ export function LibraryPage({
   const projectionService = useMemo(() => new LibraryProjectionService(), []);
   const navigate = useNavigate();
   const [attempt, setAttempt] = useState(0);
-  const [isShelfPanelOpen, setShelfPanelOpen] = useState(false);
+  const [openPanel, setOpenPanel] = useState<OpenLibraryPanel>(null);
   const [state, setState] = useState<LibraryPageState>(() =>
     application
       ? { kind: "loading" }
@@ -88,14 +94,16 @@ export function LibraryPage({
   }, [application, attempt, projectionService]);
 
   function handleInteraction(interaction: LibraryInteraction) {
-    if (interaction.type === "ShelfSelected") setShelfPanelOpen(true);
+    if (interaction.type === "ShelfSelected") setOpenPanel("shelf");
+    if (interaction.type === "LibrarianSelected") setOpenPanel("librarian");
+    if (interaction.type === "CreatureSelected") setOpenPanel("creature");
   }
 
   return (
     <section className="library-page" aria-labelledby="library-visual-title">
       <div className="library-page__introduction">
-        <p className="placeholder__status">Visualização estrutural</p>
-        <h2 id="library-visual-title">Biblioteca inicial</h2>
+        <p className="placeholder__status">Sala reativa</p>
+        <h2 id="library-visual-title">Sua Biblioteca Viva</h2>
         <p>
           A visualização resume sua coleção. Seus livros, anotações e leituras
           continuam acessíveis na área convencional.
@@ -115,7 +123,7 @@ export function LibraryPage({
             <button
               className="button button--secondary"
               onClick={() => {
-                setShelfPanelOpen(false);
+                setOpenPanel(null);
                 setState({ kind: "loading" });
                 setAttempt((current) => current + 1);
               }}
@@ -133,11 +141,17 @@ export function LibraryPage({
             onInteraction={handleInteraction}
             projection={state.viewModel}
           />
-          {isShelfPanelOpen && (
+          {openPanel === "shelf" && (
             <LibraryShelfPanel
-              onClose={() => setShelfPanelOpen(false)}
+              onClose={() => setOpenPanel(null)}
               onOpenCollection={() => void navigate("/colecao")}
               viewModel={state.viewModel}
+            />
+          )}
+          {(openPanel === "librarian" || openPanel === "creature") && (
+            <LibraryCharacterPanel
+              kind={openPanel}
+              onClose={() => setOpenPanel(null)}
             />
           )}
         </>

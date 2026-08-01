@@ -112,9 +112,10 @@ Rascunho automático pode ser considerado depois; no protótipo, evitar prometer
 Abrir Biblioteca
 → carregar dados
 → projetar estado
-→ renderizar cena
-→ selecionar estante
-→ abrir painel React
+→ observar sala reativa
+→ tocar estante, bibliotecária ou criatura
+→ Phaser emitir interação tipada
+→ React substituir o painel atual pelo painel correspondente
 → abrir Coleção ou fechar painel.
 
 Phaser recebe `LibraryViewModel` resumido e exibe:
@@ -127,7 +128,11 @@ Phaser recebe `LibraryViewModel` resumido e exibe:
 Interações:
 
 - estante: abre painel React com resumo e acesso à Coleção;
-- bibliotecária, criatura e livro em destaque: contratos reservados para etapa posterior.
+- bibliotecária: abre painel React com uma fala provisória curta;
+- criatura: abre painel React com uma descrição provisória curta;
+- livro em destaque: mantém contrato tipado, sem fluxo funcional adicional nesta etapa.
+
+Somente um painel fica aberto. Abrir outro substitui o anterior; fechar remove o painel; sair da rota desmonta painel, canvas, listeners e animações. Coleção permanece permanentemente disponível por link React.
 
 A rota oferece uma alternativa textual com os mesmos dados essenciais.
 

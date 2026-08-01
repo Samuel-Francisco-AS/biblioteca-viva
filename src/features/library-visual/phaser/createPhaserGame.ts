@@ -32,11 +32,16 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
   onInteraction,
   onSceneEvent,
   projection,
+  reducedMotion,
   size,
 }) => {
   let game: Phaser.Game | undefined;
   let destroyed = false;
-  const scene = new InitialLibraryScene(projection, onInteraction);
+  const scene = new InitialLibraryScene(
+    projection,
+    reducedMotion,
+    onInteraction,
+  );
   try {
     game = new Phaser.Game(gameConfig(container, size, scene));
     onSceneEvent({ type: "scene-ready" });
@@ -48,13 +53,19 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
         game = undefined;
       },
       pause: () => {
-        if (!destroyed) game?.loop.sleep();
+        if (!destroyed) {
+          scene.pauseMotion();
+          game?.loop.sleep();
+        }
       },
       resize: (nextSize) => {
         if (!destroyed) game?.scale.resize(nextSize.width, nextSize.height);
       },
       resume: () => {
-        if (!destroyed) game?.loop.wake();
+        if (!destroyed) {
+          game?.loop.wake();
+          scene.resumeMotion();
+        }
       },
       setInteractionHandler: (
         nextHandler: ((interaction: LibraryInteraction) => void) | undefined,

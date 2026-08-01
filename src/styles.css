@@ -155,7 +155,8 @@ a {
 .library-page__introduction,
 .library-visual-fallback,
 .library-visual-diagnostics,
-.library-shelf-panel {
+.library-shelf-panel,
+.library-character-panel {
   padding: clamp(var(--space-4), 5vw, var(--space-5));
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-medium);
@@ -166,7 +167,8 @@ a {
 .library-page__introduction h2,
 .library-visual-fallback h3,
 .library-visual-diagnostics h3,
-.library-shelf-panel h3 {
+.library-shelf-panel h3,
+.library-character-panel h3 {
   margin: 0;
 }
 
@@ -217,7 +219,13 @@ a {
   gap: var(--space-3);
 }
 
-.library-shelf-panel p {
+.library-character-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.library-shelf-panel p,
+.library-character-panel > p {
   max-width: 60ch;
   margin: 0;
   line-height: 1.6;

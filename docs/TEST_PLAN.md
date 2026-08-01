@@ -503,3 +503,72 @@ Avisos de AudioContext e WebGL observados no navegador são não bloqueantes.
 - [ ] executar o teste físico conjunto G5/G6 no Moto G06, incluindo toque, safe areas, segundo plano, retorno e restauração em instalação limpa.
 
 G4, G5 e G6 permanecem abertos; esta seção não aprova gate algum.
+
+## 13. Prompt 13 — Primeira sala reativa
+
+Os testes automatizados usam manifestos, projeções, layout e adapters de lifecycle sem WebGL real. Cobrem IDs/fallbacks/caminhos/profundidades/orçamento; estados vazio, inicial, crescente e cheio; conclusão como complemento; destaque ausente, presente e substituído; limite de oito grupos para cem livros; fallback de asset ausente ou com falha; alvos e relações de layout; movimento determinístico; reduced motion; pausa, retomada, resize, destroy e remontagem; eventos tardios ignorados; painéis React, foco, fechamento e substituição; e barreiras contra imports, conteúdo e recursos antecipados.
+
+Após o defeito observado na validação manual, a regressão usa fase e relógio puros para percorrer vários ciclos sem espera real. Ela exige repetição infinita e `yoyo` senoidal para os dois personagens, continuidade nas extremidades, amplitude segura, permanência nos limites, conservação dos handles em projeção, resize idêntico/no mesmo modo e pausa/retomada, substituição única entre modos, limpeza de término inesperado, destroy e remontagem, zero tween em reduced motion e orçamento máximo de três tweens.
+
+A suíte corrigida passou com 349 testes em 31 arquivos. Build web, `android:sync` e `android:build:debug` passaram; o APK não foi instalado.
+
+### Web — validado no navegador em 2026-08-01
+
+- [x] abrir biblioteca vazia e preenchida;
+- [x] confirmar estante reativa e estado com livro concluído;
+- [x] observar livro recente e iluminação;
+- [x] observar idle contínuo da bibliotecária;
+- [x] observar criatura delimitada em múltiplos ciclos, sem parada ou salto;
+- [x] confirmar ausência de aceleração ou acúmulo visual;
+- [x] clicar e tocar estante, bibliotecária e criatura;
+- [x] confirmar painel correspondente, painel único e fechamento;
+- [x] abrir a Coleção convencional;
+- [x] ocultar e restaurar a aba;
+- [x] sair da rota e retornar, com canvas único dentro e zero fora;
+- [x] validar layout desktop, 320 × 915 e 360 × 640, sem overflow horizontal;
+- [x] confirmar CSP sem `unsafe-eval`;
+- [x] cobrir `prefers-reduced-motion` por teste automatizado;
+- [x] cobrir fallbacks por teste automatizado.
+
+Limitação não bloqueadora: durante resize contínuo por arraste da janela no navegador, o canvas pode piscar brevemente. Reavaliar no Android durante abertura da Biblioteca, minimizar/restaurar, botão Voltar, mudança de orientação caso testada e retorno do segundo plano.
+
+### Android — checkpoint físico conjunto de G5 e G6, pendente
+
+#### G5 — pendente no Moto G06
+
+- [ ] instalar APK por cima da versão anterior;
+- [ ] confirmar preservação dos dados;
+- [ ] exportar backup;
+- [ ] confirmar entrega do arquivo;
+- [ ] preservar uma cópia fora do app;
+- [ ] limpar dados ou reinstalar de forma controlada;
+- [ ] importar backup em instalação limpa;
+- [ ] comparar livros;
+- [ ] comparar progresso e status;
+- [ ] comparar notas e citações;
+- [ ] fechar e reabrir;
+- [ ] confirmar persistência.
+
+#### G6 — pendente no Moto G06
+
+- [ ] abrir biblioteca vazia;
+- [ ] restaurar ou cadastrar livros;
+- [ ] observar reação da estante;
+- [ ] concluir livro;
+- [ ] observar estado concluído;
+- [ ] tocar estante;
+- [ ] tocar bibliotecária;
+- [ ] tocar criatura;
+- [ ] trocar e fechar painéis;
+- [ ] testar botão Voltar;
+- [ ] minimizar e restaurar;
+- [ ] verificar safe areas;
+- [ ] verificar navegação inferior;
+- [ ] verificar teclado virtual nas telas convencionais;
+- [ ] observar estabilidade;
+- [ ] observar fluidez;
+- [ ] confirmar ausência de tela preta persistente;
+- [ ] observar a piscada durante lifecycle real;
+- [ ] confirmar que as telas convencionais continuam funcionando.
+
+A validação manual web foi concluída após a correção de lifecycle. O checkpoint Android não foi executado e permanece integralmente pendente. G4, G5 e G6 permanecem abertos.

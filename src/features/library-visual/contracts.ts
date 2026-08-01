@@ -63,6 +63,7 @@ export interface CreateLibraryVisualGameOptions {
   readonly onInteraction: (interaction: LibraryInteraction) => void;
   readonly onSceneEvent: (event: LibrarySceneEvent) => void;
   readonly projection: LibraryViewModel;
+  readonly reducedMotion: boolean;
   readonly size: LibraryVisualSize;
 }
 

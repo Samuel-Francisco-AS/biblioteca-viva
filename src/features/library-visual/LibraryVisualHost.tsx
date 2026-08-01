@@ -30,6 +30,12 @@ function isDocumentHidden(): boolean {
   return document.visibilityState === "hidden";
 }
 
+function prefersReducedMotion(): boolean {
+  return (
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false
+  );
+}
+
 export function LibraryVisualHost({
   diagnostics,
   loadFactory = loadPhaserFactory,
@@ -59,12 +65,23 @@ export function LibraryVisualHost({
     let destroyed = false;
     let paused = false;
     let game: LibraryVisualGame | undefined;
+    let lastAppliedSize: LibraryVisualSize | undefined;
+    let requestedCreationSize: LibraryVisualSize | undefined;
     let resizeObserver: ResizeObserver | undefined;
 
     diagnostics?.transition("creating", generation, 0);
 
     const resize = () => {
-      if (!destroyed && game) game.resize(sizeFromContainer(container));
+      if (destroyed || !game) return;
+      const nextSize = sizeFromContainer(container);
+      if (
+        lastAppliedSize?.height === nextSize.height &&
+        lastAppliedSize.width === nextSize.width
+      ) {
+        return;
+      }
+      game.resize(nextSize);
+      lastAppliedSize = nextSize;
     };
     const pauseOrResume = () => {
       if (destroyed || !game) return;
@@ -108,15 +125,18 @@ export function LibraryVisualHost({
     void loadFactory()
       .then(({ createLibraryVisualGame }) => {
         if (destroyed) return undefined;
+        requestedCreationSize = sizeFromContainer(container);
         return createLibraryVisualGame({
           container,
-          onInteraction: (interaction) =>
-            latestInteractionRef.current?.(interaction),
+          onInteraction: (interaction) => {
+            if (!destroyed) latestInteractionRef.current?.(interaction);
+          },
           onSceneEvent: (event) => {
             if (!destroyed && event.type === "scene-failed") setFailed(true);
           },
           projection: latestProjectionRef.current,
-          size: sizeFromContainer(container),
+          reducedMotion: prefersReducedMotion(),
+          size: requestedCreationSize,
         });
       })
       .then((createdGame) => {
@@ -127,6 +147,7 @@ export function LibraryVisualHost({
         }
         game = createdGame;
         gameRef.current = createdGame;
+        lastAppliedSize = requestedCreationSize;
         createdGame.setInteractionHandler(latestInteractionRef.current);
         createdGame.updateProjection(latestProjectionRef.current);
         diagnostics?.transition("ready", generation, 1, true);
@@ -166,7 +187,7 @@ export function LibraryVisualHost({
 
   return (
     <div
-      aria-label="Estrutura visual inicial da biblioteca"
+      aria-label="Sala visual da biblioteca"
       className="library-visual-host"
       ref={containerRef}
       role="img"

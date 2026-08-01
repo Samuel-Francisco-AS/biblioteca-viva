@@ -17,7 +17,9 @@ Todo asset visual, sonoro, fonte ou ícone incluído no projeto deve aparecer ne
 
 | ID | Tipo | Arquivo/manifesto | Origem/autoria | Licença | Modificado | Uso | Estado |
 |---|---|---|---|---|---|---|---|
-| — | — | — | — | — | — | — | nenhum asset registrado |
+| `room-procedural-v1` | gráficos procedurais | `src/features/library-visual/phaser/roomManifest.ts` | autoria interna do projeto, 2026-07-31 | código do repositório; licença final acompanha o projeto | formas e paleta configuráveis | primeira sala, estante, balcão, personagens, livro e luz | provisório |
+
+A primeira sala não usa asset externo, arquivo binário, fonte ou conteúdo baixado. Phaser Graphics gera todos os elementos em runtime e `roomManifest.ts` registra fallbacks internos independentes. Os caminhos opcionais permanecem nulos; qualquer arte futura deverá ser registrada aqui antes de substituir um fallback.
 
 ## Estados
 
