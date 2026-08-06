@@ -29,6 +29,9 @@ export function presentApplicationError(error: unknown): PresentedError {
       "O livro foi salvo, mas o histórico não pôde ser atualizado.",
     CONFLICT:
       "O livro mudou desde que foi aberto. Recarregue e tente novamente.",
+    BOOK_NOT_FOUND: "Este livro não foi encontrado.",
+    DELETE_BOOK_FAILED:
+      "Não foi possível excluir o livro. Nada foi removido; tente novamente.",
     EVENT_PUBLICATION_FAILED:
       "O livro foi salvo, mas a atualização não pôde ser anunciada.",
     NOT_FOUND: "Este livro não foi encontrado.",

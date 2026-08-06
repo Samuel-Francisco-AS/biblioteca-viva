@@ -1,6 +1,7 @@
 export * from "./activities";
 export * from "./backup";
 export * from "./errors";
+export * from "./deleteBookEntry";
 export * from "./ports";
 export * from "./queries";
 export type {

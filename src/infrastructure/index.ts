@@ -1,4 +1,5 @@
 export * from "./database/database";
+export * from "./database/bookDeletionStore";
 export * from "./database/diagnostics";
 export * from "./database/errors";
 export * from "./database/repositories";
@@ -6,6 +7,9 @@ export * from "./database/schema";
 export * from "./database/transactionRunner";
 export * from "./events/localEventBus";
 export * from "./files/browserFileDelivery";
+export * from "./files/androidFileDelivery";
+export * from "./files/androidBackupFileSave";
+export * from "./files/platformFileDelivery";
 export * from "./platform/adapters";
 export * from "./platform/capabilities";
 export * from "./platform/storagePersistence";

@@ -136,14 +136,31 @@ Somente um painel fica aberto. Abrir outro substitui o anterior; fechar remove o
 
 A rota oferece uma alternativa textual com os mesmos dados essenciais.
 
+O cartão atual é o protótipo estrutural validado. Em uma revisão futura de UX e direção visual, a sala poderá ocupar a maior parte da tela inicial ou uma área quase inteira, com painéis sobrepostos semelhantes a bottom sheets. Essa intenção deve preservar a navegação inferior e a Coleção convencional e não faz parte desta correção, do Bloco 7 ou do Prompt 14.
+
 ## 10. Backup
 
 ```text
 Configurações
-→ Exportar backup
+→ Salvar backup no dispositivo
 → aviso de conteúdo pessoal
-→ escolher destino pelo sistema
-→ confirmação com data e versão
+→ preparar e validar o JSON
+→ abrir seletor de documentos Android
+→ usuário escolher nome e local
+→ escrever em UTF-8 pela URI via ContentResolver
+→ confirmar sucesso após concluir a escrita
+→ usuário verificar o arquivo externo
+```
+
+```text
+Configurações
+→ Compartilhar backup
+→ preparar e validar o JSON
+→ criar arquivo temporário em Cache
+→ abrir folha Android
+→ usuário escolher Drive, computador ou outro aplicativo
+→ encerrar fluxo sem afirmar salvamento permanente
+→ usuário confirmar o destino
 ```
 
 ```text
@@ -187,3 +204,17 @@ Uma falha do Phaser mostra alternativa textual e opção de tentar novamente; n�
 Somente substituição está disponível. Selecionar valida sem escrita e move o foco ao resumo. Cancelar limpa a seleção e preserva o banco. Confirmar cria/entrega primeiro um backup de segurança quando necessário, revalida, substitui atomicamente e anuncia contagens. Falha permite nova tentativa. A entrega usa compartilhamento de arquivo quando suportado e download Blob como fallback.
 
 Falha de renderização apresenta “Tentar novamente” e “Recarregar aplicativo”; nenhuma opção apaga ou restaura dados automaticamente.
+
+## 14. Excluir livro
+
+```text
+Detalhe do livro
+→ seção destrutiva “Excluir livro”
+→ abrir confirmação inline
+→ conferir título e aviso sobre notas e citações
+→ cancelar e preservar tudo, ou confirmar “Excluir permanentemente”
+→ remover livro, notas, citações e atividades na mesma transação
+→ após commit, voltar à Coleção
+```
+
+Falha mantém o detalhe e a confirmação utilizáveis, sem remover o livro visualmente. A exclusão não existe na listagem, na cena Phaser, por gesto ou sem confirmação.

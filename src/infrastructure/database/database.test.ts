@@ -3,11 +3,12 @@
 import "fake-indexeddb/auto";
 
 import Dexie from "dexie";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { createActivity } from "../../application";
 import { createBook, createNote, createQuote } from "../../domain";
 import { BibliotecaDatabase } from "./database";
+import { DexieBookDeletionStore } from "./bookDeletionStore";
 import { InfrastructureError } from "./errors";
 import {
   DexieActivityRepository,
@@ -40,8 +41,169 @@ function book(id = "book-1", createdAt = T0) {
 }
 
 afterEach(async () => {
+  vi.restoreAllMocks();
   await Promise.all([...databases].map((name) => Dexie.delete(name)));
   databases.clear();
+});
+
+async function seedDeletionGraph(database: BibliotecaDatabase) {
+  const firstBook = book("book-1");
+  const otherBook = book("book-2", T1);
+  await database.libraryEntries.bulkPut([firstBook, otherBook]);
+  await database.notes.bulkPut([
+    createNote({
+      id: "note-1",
+      entryId: firstBook.id,
+      content: "Nota fictícia",
+      createdAt: T0,
+    }),
+    createNote({
+      id: "note-2",
+      entryId: otherBook.id,
+      content: "Outra nota fictícia",
+      createdAt: T1,
+    }),
+  ]);
+  await database.quotes.bulkPut([
+    createQuote({
+      id: "quote-1",
+      entryId: firstBook.id,
+      content: "Citação fictícia",
+      createdAt: T0,
+    }),
+    createQuote({
+      id: "quote-2",
+      entryId: otherBook.id,
+      content: "Outra citação fictícia",
+      createdAt: T1,
+    }),
+  ]);
+  await database.activities.bulkPut([
+    createActivity({
+      id: "activity-1",
+      type: "book_created",
+      aggregateId: firstBook.id,
+      occurredAt: T0,
+      revision: 1,
+      metadata: { status: "planned" },
+    }),
+    createActivity({
+      id: "activity-2",
+      type: "book_created",
+      aggregateId: otherBook.id,
+      occurredAt: T1,
+      revision: 1,
+      metadata: { status: "planned" },
+    }),
+  ]);
+  await database.settings.put({ key: "motion", value: false, updatedAt: T0 });
+  await database.metadata.put({
+    key: "technical",
+    value: "kept",
+    updatedAt: T0,
+  });
+}
+
+describe("exclusão transacional de livro", () => {
+  it("remove o agregado e preserva todos os dados não associados", async () => {
+    const name = databaseName("delete-book");
+    const database = new BibliotecaDatabase(name);
+    await database.open();
+    await seedDeletionGraph(database);
+
+    await expect(
+      new DexieBookDeletionStore(database).deleteBookEntry("book-1"),
+    ).resolves.toBe("deleted");
+    expect(await database.libraryEntries.toCollection().primaryKeys()).toEqual([
+      "book-2",
+    ]);
+    expect(await database.notes.toCollection().primaryKeys()).toEqual([
+      "note-2",
+    ]);
+    expect(await database.quotes.toCollection().primaryKeys()).toEqual([
+      "quote-2",
+    ]);
+    expect(await database.activities.toCollection().primaryKeys()).toEqual([
+      "activity-2",
+    ]);
+    expect(await database.settings.get("motion")).toBeDefined();
+    expect(await database.metadata.get("technical")).toBeDefined();
+    database.close();
+
+    const reopened = new BibliotecaDatabase(name);
+    await reopened.open();
+    expect(await reopened.libraryEntries.get("book-1")).toBeUndefined();
+    expect(await reopened.notes.where("entryId").equals("book-1").count()).toBe(
+      0,
+    );
+    reopened.close();
+  });
+
+  it("não altera nada quando o livro não existe", async () => {
+    const database = new BibliotecaDatabase(databaseName("delete-missing"));
+    await database.open();
+    await seedDeletionGraph(database);
+    const before = await Promise.all(
+      database.tables.map((table) => table.count()),
+    );
+    await expect(
+      new DexieBookDeletionStore(database).deleteBookEntry("missing"),
+    ).resolves.toBe("not-found");
+    const after = await Promise.all(
+      database.tables.map((table) => table.count()),
+    );
+    expect(after).toEqual(before);
+    database.close();
+  });
+
+  it("preserva tudo quando a transação não consegue iniciar", async () => {
+    const name = databaseName("transaction-start-failure");
+    const database = new BibliotecaDatabase(name);
+    await database.open();
+    await seedDeletionGraph(database);
+    database.close({ disableAutoOpen: true });
+
+    await expect(
+      new DexieBookDeletionStore(database).deleteBookEntry("book-1"),
+    ).rejects.toMatchObject({ name: "InfrastructureError" });
+
+    const reopened = new BibliotecaDatabase(name);
+    await reopened.open();
+    expect(await reopened.libraryEntries.count()).toBe(2);
+    expect(await reopened.notes.count()).toBe(2);
+    expect(await reopened.quotes.count()).toBe(2);
+    expect(await reopened.activities.count()).toBe(2);
+    reopened.close();
+  });
+
+  it.each(["notes", "quotes", "activities"] as const)(
+    "faz rollback quando a remoção falha em %s",
+    async (tableName) => {
+      const database = new BibliotecaDatabase(
+        databaseName(`rollback-${tableName}`),
+      );
+      await database.open();
+      await seedDeletionGraph(database);
+      vi.spyOn(database[tableName], "where").mockImplementationOnce(() => {
+        throw new Error("falha injetada");
+      });
+
+      await expect(
+        new DexieBookDeletionStore(database).deleteBookEntry("book-1"),
+      ).rejects.toMatchObject({ name: "InfrastructureError" });
+      expect(await database.libraryEntries.get("book-1")).toBeDefined();
+      expect(
+        await database.notes.where("entryId").equals("book-1").count(),
+      ).toBe(1);
+      expect(
+        await database.quotes.where("entryId").equals("book-1").count(),
+      ).toBe(1);
+      expect(
+        await database.activities.where("aggregateId").equals("book-1").count(),
+      ).toBe(1);
+      database.close();
+    },
+  );
 });
 
 describe("BibliotecaDatabase e migrações", () => {

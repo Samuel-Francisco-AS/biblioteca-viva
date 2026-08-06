@@ -14,7 +14,7 @@ import {
   ListNotesByBook,
   ListQuotesByBook,
   type BackupData,
-  type FileDeliveryPort,
+  type BackupFileSharePort,
 } from "../../application";
 import { BibliotecaDatabase } from "../database/database";
 import {
@@ -358,7 +358,7 @@ describe("backup JSON v1", () => {
     const destinationStore = new DexieBackupSnapshotStore(destination);
     await expect(
       new ImportBackup(destinationStore, codec, exporter, {
-        deliver: () => Promise.resolve("delivered"),
+        shareBackupFile: () => Promise.resolve("flow-finished"),
       }).execute(fileText),
     ).resolves.toEqual({
       libraryEntries: 2,
@@ -425,7 +425,7 @@ describe("snapshot Dexie e restauração", () => {
     for (const [content, code] of cases) {
       await expect(
         new ImportBackup(store, codec, exporter, {
-          deliver: () => Promise.resolve("delivered"),
+          shareBackupFile: () => Promise.resolve("flow-finished"),
         }).execute(content),
       ).rejects.toMatchObject({ code });
     }
@@ -480,7 +480,7 @@ describe("snapshot Dexie e restauração", () => {
     await destination.open();
     const destinationStore = new DexieBackupSnapshotStore(destination);
     await new ImportBackup(destinationStore, codec, exporter, {
-      deliver: () => Promise.resolve("delivered"),
+      shareBackupFile: () => Promise.resolve("flow-finished"),
     }).execute(artifact.content);
     destination.close();
 
@@ -580,7 +580,7 @@ describe("snapshot Dexie e restauração", () => {
         .mockRejectedValueOnce(new Error("private transaction detail"));
       await expect(
         new ImportBackup(store, codec, exporter, {
-          deliver: () => Promise.resolve("delivered"),
+          shareBackupFile: () => Promise.resolve("flow-finished"),
         }).execute(incoming),
       ).rejects.toMatchObject({
         code: "RESTORE_FAILED",
@@ -625,8 +625,8 @@ describe("snapshot Dexie e restauração", () => {
       "x",
       2,
     );
-    const files: FileDeliveryPort = {
-      deliver: ({ name }) => {
+    const files: BackupFileSharePort = {
+      shareBackupFile: ({ name }) => {
         order.push(name);
         return Promise.resolve("cancelled");
       },
@@ -665,7 +665,7 @@ describe("snapshot Dexie e restauração", () => {
     );
     await expect(
       new ImportBackup(snapshots, codec, exporter, {
-        deliver: () => Promise.resolve("delivered"),
+        shareBackupFile: () => Promise.resolve("flow-finished"),
       }).execute("{}"),
     ).rejects.toMatchObject({ code: "UNRECOGNIZED_FORMAT" });
     expect(writes).toBe(0);
@@ -698,9 +698,9 @@ describe("snapshot Dexie e restauração", () => {
         2,
       );
       const result = await new ImportBackup(snapshots, codec, exporter, {
-        deliver: () => {
+        shareBackupFile: () => {
           order.push("deliver");
-          return Promise.resolve("delivered");
+          return Promise.resolve("flow-finished");
         },
       }).execute(content);
       expect(result).toEqual({

@@ -55,8 +55,12 @@ export function pingPongPositionAt(
 
 export const LIBRARY_ROOM_INTERACTION = {
   minimumTargetSize: 44,
-  pointerEvent: "pointerup",
+  movementThreshold: 12,
+  selectionEvent: "pointerup",
+  startEvent: "pointerdown",
 } as const;
+
+export const LIBRARY_CANVAS_TOUCH_ACTION = "pan-y" as const;
 
 export const LIBRARY_ROOM_PALETTE = {
   bookCompleted: 0xd8b84b,

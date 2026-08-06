@@ -6,6 +6,7 @@ import type {
   LibraryVisualSize,
 } from "../contracts";
 import { InitialLibraryScene } from "./InitialLibraryScene";
+import { LIBRARY_CANVAS_TOUCH_ACTION } from "./roomConfig";
 
 function gameConfig(
   container: HTMLElement,
@@ -16,6 +17,10 @@ function gameConfig(
     banner: false,
     backgroundColor: "#d8c5a3",
     height: size.height,
+    input: {
+      mouse: { preventDefaultWheel: false },
+      touch: { capture: false },
+    },
     parent: container,
     scene: [scene],
     scale: {
@@ -44,6 +49,7 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
   );
   try {
     game = new Phaser.Game(gameConfig(container, size, scene));
+    game.canvas.style.touchAction = LIBRARY_CANVAS_TOUCH_ACTION;
     onSceneEvent({ type: "scene-ready" });
     return Promise.resolve({
       destroy: () => {

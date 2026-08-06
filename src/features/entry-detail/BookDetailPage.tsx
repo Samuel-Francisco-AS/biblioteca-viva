@@ -1,5 +1,10 @@
-import { useEffect, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 
 import type { BookEntry, Note, Quote } from "../../domain";
 import { presentApplicationError } from "../entry-editor/errorMessages";
@@ -19,6 +24,9 @@ export interface BookDetailApplication {
     readonly addNote: { execute(input: unknown): Promise<Note> };
     readonly addQuote: { execute(input: unknown): Promise<Quote> };
     readonly changeBookStatus: { execute(input: unknown): Promise<BookEntry> };
+    readonly deleteBookEntry: {
+      execute(input: unknown): Promise<{ readonly deleted: true }>;
+    };
     readonly updateBookProgress: {
       execute(input: unknown): Promise<BookEntry>;
     };
@@ -94,6 +102,7 @@ export function BookDetailPage({
   readonly application?: BookDetailApplication;
 }) {
   const { id = "" } = useParams();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const returnPath = safeReturnPath(searchParams.get("from"));
   const [book, setBook] = useState<BookEntry>();
@@ -102,6 +111,12 @@ export function BookDetailPage({
   const [loadError, setLoadError] = useState<string>();
   const [notFound, setNotFound] = useState(false);
   const [announcement, setAnnouncement] = useState("");
+  const [confirmingDeletion, setConfirmingDeletion] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+  const deletionInProgressRef = useRef(false);
+  const deleteButtonRef = useRef<HTMLButtonElement>(null);
+  const deletionConfirmationRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!application) return;
@@ -154,9 +169,44 @@ export function BookDetailPage({
   }
   if (!book || !notes || !quotes) return <p role="status">Carregando livro…</p>;
 
+  const loadedApplication = application;
+  const loadedBook = book;
+
   function updateBook(updated: BookEntry, message: string) {
     setBook(updated);
     setAnnouncement(message);
+  }
+
+  function openDeletionConfirmation() {
+    setDeleteError("");
+    setConfirmingDeletion(true);
+    requestAnimationFrame(() => deletionConfirmationRef.current?.focus());
+  }
+
+  function cancelDeletion() {
+    if (deletionInProgressRef.current) return;
+    setDeleteError("");
+    setConfirmingDeletion(false);
+    requestAnimationFrame(() => deleteButtonRef.current?.focus());
+  }
+
+  async function deleteBook() {
+    if (deletionInProgressRef.current) return;
+    deletionInProgressRef.current = true;
+    setDeleting(true);
+    setDeleteError("");
+    try {
+      await loadedApplication.commands.deleteBookEntry.execute({
+        id: loadedBook.id,
+      });
+      void navigate("/colecao", { replace: true });
+    } catch (error: unknown) {
+      setDeleteError(presentApplicationError(error).message);
+      requestAnimationFrame(() => deletionConfirmationRef.current?.focus());
+    } finally {
+      deletionInProgressRef.current = false;
+      setDeleting(false);
+    }
   }
 
   return (
@@ -274,6 +324,62 @@ export function BookDetailPage({
       <section className="content-card" aria-labelledby="history-title">
         <h2 id="history-title">Histórico de leitura</h2>
         <History notes={notes} quotes={quotes} />
+      </section>
+
+      <section
+        className="content-card destructive-section"
+        aria-labelledby="delete-book-title"
+      >
+        <p className="eyebrow">Ação permanente</p>
+        <h2 id="delete-book-title">Excluir livro</h2>
+        <p>
+          Esta ação é permanente. O livro, suas notas, suas citações e o
+          histórico de atividades relacionado serão removidos.
+        </p>
+        {!confirmingDeletion ? (
+          <button
+            className="button button--danger-outline"
+            onClick={openDeletionConfirmation}
+            ref={deleteButtonRef}
+            type="button"
+          >
+            Excluir livro
+          </button>
+        ) : (
+          <section
+            aria-labelledby="delete-confirmation-title"
+            className="delete-confirmation"
+            ref={deletionConfirmationRef}
+            tabIndex={-1}
+          >
+            <h3 id="delete-confirmation-title">
+              Excluir permanentemente “{book.title}”?
+            </h3>
+            <p>
+              As notas e citações vinculadas também serão excluídas. Esta ação
+              não pode ser desfeita.
+            </p>
+            {deleteError && <p role="alert">{deleteError}</p>}
+            <div className="inline-actions">
+              <button
+                className="button button--secondary"
+                disabled={deleting}
+                onClick={cancelDeletion}
+                type="button"
+              >
+                Cancelar
+              </button>
+              <button
+                className="button button--danger"
+                disabled={deleting}
+                onClick={() => void deleteBook()}
+                type="button"
+              >
+                {deleting ? "Excluindo…" : "Excluir permanentemente"}
+              </button>
+            </div>
+          </section>
+        )}
       </section>
     </article>
   );

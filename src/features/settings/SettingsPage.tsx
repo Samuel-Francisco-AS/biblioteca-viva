@@ -46,6 +46,14 @@ const errorMessages: Record<string, string> = {
     "Não foi possível entregar o backup de segurança. Nenhum dado foi alterado.",
   RESTORE_FAILED:
     "A restauração falhou. Os dados anteriores foram preservados.",
+  BACKUP_TEMPORARY_WRITE_FAILED:
+    "Não foi possível preparar o arquivo temporário. Nenhum dado foi alterado.",
+  BACKUP_SHARE_FAILED:
+    "Não foi possível abrir as opções de compartilhamento. Nenhum dado foi alterado.",
+  BACKUP_DOCUMENT_PICKER_FAILED:
+    "Não foi possível abrir o seletor de arquivos. Tente novamente.",
+  BACKUP_DOCUMENT_WRITE_FAILED:
+    "Não foi possível salvar o backup. Tente novamente.",
   PLATFORM_CAPABILITY_UNAVAILABLE: unsafeContextGuidance,
 };
 
@@ -91,7 +99,10 @@ export function SettingsPage({ application, diagnostics }: Props) {
   const platformUnavailable = application?.platform?.supported === false;
   const [snapshot, setSnapshot] = useState<ApplicationDiagnosticsSnapshot>();
   const [persistenceStatus, setPersistenceStatus] = useState("");
-  const [exporting, setExporting] = useState(false);
+  const [exportPhase, setExportPhase] = useState<
+    "idle" | "preparing-save" | "saving" | "preparing-share" | "sharing"
+  >("idle");
+  const exporting = exportPhase !== "idle";
   const [exportStatus, setExportStatus] = useState("");
   const [content, setContent] = useState<string>();
   const [summary, setSummary] = useState<BackupSummary>();
@@ -101,6 +112,15 @@ export function SettingsPage({ application, diagnostics }: Props) {
   const [restored, setRestored] = useState<BackupCounts>();
   const fileRef = useRef<HTMLInputElement>(null);
   const confirmationRef = useRef<HTMLElement>(null);
+  const exportInProgressRef = useRef(false);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   async function refreshDiagnostics() {
     if (diagnostics) setSnapshot(await diagnostics.inspect());
@@ -128,22 +148,53 @@ export function SettingsPage({ application, diagnostics }: Props) {
     await refreshDiagnostics();
   }
 
-  async function exportData() {
-    if (!application || exporting) return;
-    setExporting(true);
+  async function saveBackup() {
+    if (!application || exportInProgressRef.current) return;
+    exportInProgressRef.current = true;
+    setExportPhase("preparing-save");
     setExportStatus("");
     try {
       const artifact = await application.backup.export();
-      const result = await application.backup.deliver(artifact);
+      if (!mountedRef.current) return;
+      setExportPhase("saving");
+      const result = await application.backup.saveBackupFile(artifact);
+      if (!mountedRef.current) return;
       setExportStatus(
         result === "cancelled"
-          ? "Exportação cancelada; nenhum dado foi alterado."
-          : "Backup preparado e entregue ao fluxo de arquivos do dispositivo.",
+          ? "O salvamento foi cancelado. Seus dados não foram alterados."
+          : "Backup salvo no local escolhido.",
       );
     } catch (error) {
-      setExportStatus(publicError(error));
+      if (mountedRef.current) setExportStatus(publicError(error));
     } finally {
-      setExporting(false);
+      exportInProgressRef.current = false;
+      if (mountedRef.current) setExportPhase("idle");
+    }
+  }
+
+  async function shareBackup() {
+    if (!application || exportInProgressRef.current) return;
+    exportInProgressRef.current = true;
+    setExportPhase("preparing-share");
+    setExportStatus("");
+    try {
+      const artifact = await application.backup.export();
+      if (!mountedRef.current) return;
+      setExportPhase("sharing");
+      const result = await application.backup.shareBackupFile(artifact);
+      if (!mountedRef.current) return;
+      setExportStatus(
+        result === "cancelled"
+          ? "O compartilhamento foi cancelado. Seus dados não foram alterados."
+          : application.backup.nativeSaveAvailable
+            ? "O menu de compartilhamento foi encerrado. Confirme que o arquivo está disponível no destino escolhido."
+            : "A exportação foi encerrada. Confirme que o arquivo está disponível no destino escolhido.",
+      );
+    } catch (error) {
+      if (mountedRef.current) setExportStatus(publicError(error));
+    } finally {
+      exportInProgressRef.current = false;
+      if (mountedRef.current) setExportPhase("idle");
     }
   }
 
@@ -245,14 +296,65 @@ export function SettingsPage({ application, diagnostics }: Props) {
           Guarde-o em um local seguro; ele não é criptografado nem enviado
           automaticamente.
         </p>
-        <button
-          className="button"
-          type="button"
-          disabled={!application || exporting || platformUnavailable}
-          onClick={() => void exportData()}
-        >
-          {exporting ? "Preparando…" : "Exportar backup"}
-        </button>
+        {application?.backup.nativeSaveAvailable ? (
+          <div className="backup-export-actions">
+            <div>
+              <p>
+                O Android abrirá o seletor de arquivos para você escolher onde
+                guardar o backup.
+              </p>
+              <button
+                className="button"
+                type="button"
+                disabled={exporting || platformUnavailable}
+                onClick={() => void saveBackup()}
+              >
+                {exportPhase === "preparing-save"
+                  ? "Preparando…"
+                  : exportPhase === "saving"
+                    ? "Abrindo seletor…"
+                    : "Salvar backup no dispositivo"}
+              </button>
+            </div>
+            <div>
+              <p>
+                Use o menu de compartilhamento para enviar o arquivo ao Drive,
+                computador ou outro aplicativo.
+              </p>
+              <button
+                className="button button--secondary"
+                type="button"
+                disabled={exporting || platformUnavailable}
+                onClick={() => void shareBackup()}
+              >
+                {exportPhase === "preparing-share"
+                  ? "Preparando…"
+                  : exportPhase === "sharing"
+                    ? "Abrindo opções…"
+                    : "Compartilhar backup"}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            className="button"
+            type="button"
+            disabled={!application || exporting || platformUnavailable}
+            onClick={() => void shareBackup()}
+          >
+            {exportPhase === "preparing-share"
+              ? "Preparando…"
+              : exportPhase === "sharing"
+                ? "Abrindo opções…"
+                : "Exportar backup"}
+          </button>
+        )}
+        {exportPhase === "sharing" && (
+          <p role="status">
+            O menu de compartilhamento está sendo aberto. Escolha Drive,
+            computador ou outro aplicativo e depois confirme o destino.
+          </p>
+        )}
         {exportStatus && <p role="status">{exportStatus}</p>}
       </section>
 

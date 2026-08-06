@@ -9,6 +9,8 @@ import type {
 } from "./contracts";
 import type { LibraryVisualDiagnostics } from "./diagnostics";
 
+const verticalPanStyle = { touchAction: "pan-y" } as const;
+
 interface LibraryVisualHostProps {
   readonly diagnostics?: LibraryVisualDiagnostics;
   readonly loadFactory?: () => Promise<LibraryVisualFactoryModule>;
@@ -191,6 +193,7 @@ export function LibraryVisualHost({
       className="library-visual-host"
       ref={containerRef}
       role="img"
+      style={verticalPanStyle}
     />
   );
 }

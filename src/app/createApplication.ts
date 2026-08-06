@@ -1,6 +1,7 @@
 import {
   AddNote,
   AddQuote,
+  DeleteBookEntry,
   ChangeBookStatus,
   CreateBookEntry,
   GetBookEntry,
@@ -17,8 +18,11 @@ import {
   type BackupArtifact,
   type BackupCounts,
   type BackupSummary,
-  type FileDeliveryResult,
-  type FileDeliveryPort,
+  type BackupFileSavePort,
+  type BackupFileSharePort,
+  type SaveBackupResult,
+  type ShareBackupResult,
+  BackupFileError,
   BackupError,
 } from "../application";
 import {
@@ -27,6 +31,7 @@ import {
   CryptoIdGenerator,
   DATABASE_NAME,
   DexieActivityRepository,
+  DexieBookDeletionStore,
   DexieLibraryEntryRepository,
   DexieNoteRepository,
   DexieQuoteRepository,
@@ -35,7 +40,7 @@ import {
   LocalEventBus,
   SCHEMA_MARKER_KEY,
   SystemClock,
-  BrowserFileDelivery,
+  createPlatformBackupFiles,
   DexieBackupSnapshotStore,
   JsonBackupCodec,
   DATABASE_VERSION,
@@ -59,8 +64,14 @@ export interface ApplicationRuntime {
   readonly appVersion: string;
   readonly platform: PlatformCapabilitySnapshot;
   readonly backup: {
+    readonly nativeSaveAvailable: boolean;
     readonly export: () => Promise<BackupArtifact>;
-    readonly deliver: (artifact: BackupArtifact) => Promise<FileDeliveryResult>;
+    readonly saveBackupFile: (
+      artifact: BackupArtifact,
+    ) => Promise<SaveBackupResult>;
+    readonly shareBackupFile: (
+      artifact: BackupArtifact,
+    ) => Promise<ShareBackupResult>;
     readonly inspect: (content: string) => Promise<BackupSummary>;
     readonly import: (content: string) => Promise<BackupCounts>;
   };
@@ -69,6 +80,7 @@ export interface ApplicationRuntime {
     readonly addQuote: AddQuote;
     readonly changeBookStatus: ChangeBookStatus;
     readonly createBookEntry: CreateBookEntry;
+    readonly deleteBookEntry: DeleteBookEntry;
     readonly updateBookEntry: UpdateBookEntry;
     readonly updateBookProgress: UpdateBookProgress;
   };
@@ -87,7 +99,9 @@ export interface ApplicationRuntime {
 
 export interface CreateApplicationOptions {
   readonly databaseName?: string;
-  readonly fileDelivery?: FileDeliveryPort;
+  readonly backupFileSave?: BackupFileSavePort;
+  readonly backupFileShare?: BackupFileSharePort;
+  readonly nativeSaveAvailable?: boolean;
   readonly platformCapabilities?: PlatformCapabilitiesPort;
   readonly storage?: StoragePersistencePort;
 }
@@ -119,6 +133,7 @@ export async function createApplication(
   const notes = new DexieNoteRepository(database);
   const quotes = new DexieQuoteRepository(database);
   const activities = new DexieActivityRepository(database);
+  const bookDeletion = new DexieBookDeletionStore(database);
   const transaction = new DexieTransactionRunner(database);
   const clock = new SystemClock();
   const ids = new CryptoIdGenerator(platform);
@@ -126,7 +141,11 @@ export async function createApplication(
   const storage = options.storage ?? new BrowserStoragePersistence();
   const snapshots = new DexieBackupSnapshotStore(database);
   const codec = new JsonBackupCodec();
-  const files = options.fileDelivery ?? new BrowserFileDelivery();
+  const platformFiles = createPlatformBackupFiles();
+  const fileSave = options.backupFileSave ?? platformFiles.save;
+  const fileShare = options.backupFileShare ?? platformFiles.share;
+  const nativeSaveAvailable =
+    options.nativeSaveAvailable ?? platformFiles.isNativeAndroid;
   const exportBackup = new ExportBackup(
     snapshots,
     codec,
@@ -135,7 +154,12 @@ export async function createApplication(
     DATABASE_VERSION,
   );
   const inspectBackup = new InspectBackup(codec);
-  const importBackup = new ImportBackup(snapshots, codec, exportBackup, files);
+  const importBackup = new ImportBackup(
+    snapshots,
+    codec,
+    exportBackup,
+    fileShare,
+  );
   const diagnosticsService = new DiagnosticsService(database, storage);
   const dependencies = {
     activities,
@@ -152,17 +176,55 @@ export async function createApplication(
     appVersion: packageMetadata.version,
     platform,
     backup: {
+      nativeSaveAvailable,
       export: async () => {
         if (!platform.backupIntegrity) throw unsafeContextError();
         return exportBackup.execute();
       },
-      deliver: async (artifact) => {
+      saveBackupFile: async (artifact) => {
+        if (!fileSave) {
+          throw new BackupError(
+            "PLATFORM_CAPABILITY_UNAVAILABLE",
+            "O salvamento direto não está disponível nesta plataforma.",
+          );
+        }
         try {
-          return await files.deliver({
+          return await fileSave.saveBackupFile({
             name: artifact.fileName,
             content: artifact.content,
           });
-        } catch {
+        } catch (error: unknown) {
+          if (error instanceof BackupFileError) {
+            throw new BackupError(
+              error.code === "DOCUMENT_PICKER_FAILED"
+                ? "BACKUP_DOCUMENT_PICKER_FAILED"
+                : "BACKUP_DOCUMENT_WRITE_FAILED",
+              "Não foi possível salvar o arquivo de backup.",
+            );
+          }
+          throw new BackupError(
+            "BACKUP_DOCUMENT_WRITE_FAILED",
+            "Não foi possível salvar o arquivo de backup.",
+          );
+        }
+      },
+      shareBackupFile: async (artifact) => {
+        try {
+          return await fileShare.shareBackupFile({
+            name: artifact.fileName,
+            content: artifact.content,
+          });
+        } catch (error: unknown) {
+          if (error instanceof BackupFileError) {
+            throw new BackupError(
+              error.code === "TEMPORARY_WRITE_FAILED"
+                ? "BACKUP_TEMPORARY_WRITE_FAILED"
+                : "BACKUP_SHARE_FAILED",
+              error.code === "TEMPORARY_WRITE_FAILED"
+                ? "Não foi possível preparar o arquivo temporário de backup."
+                : "Não foi possível abrir o compartilhamento do backup.",
+            );
+          }
           throw new BackupError(
             "BACKUP_DELIVERY_FAILED",
             "Não foi possível entregar o arquivo de backup.",
@@ -183,6 +245,7 @@ export async function createApplication(
       addQuote: new AddQuote(dependencies),
       changeBookStatus: new ChangeBookStatus(dependencies),
       createBookEntry: new CreateBookEntry(dependencies),
+      deleteBookEntry: new DeleteBookEntry(bookDeletion),
       updateBookEntry: new UpdateBookEntry(dependencies),
       updateBookProgress: new UpdateBookProgress(dependencies),
     },

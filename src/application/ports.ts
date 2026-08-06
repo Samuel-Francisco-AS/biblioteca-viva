@@ -23,6 +23,10 @@ export interface ActivityRepository {
   save(activity: Activity): Promise<void>;
 }
 
+export interface BookDeletionStore {
+  deleteBookEntry(id: string): Promise<"deleted" | "not-found">;
+}
+
 export interface IdGenerator {
   generate(): Promise<string>;
 }

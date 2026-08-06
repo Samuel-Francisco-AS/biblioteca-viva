@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
@@ -33,8 +39,10 @@ function application(
   return {
     appVersion: "0.2.0-alpha.1",
     backup: {
+      nativeSaveAvailable: false,
       export: vi.fn(() => Promise.resolve(artifact)),
-      deliver: vi.fn(() => Promise.resolve("delivered" as const)),
+      saveBackupFile: vi.fn(() => Promise.resolve("saved" as const)),
+      shareBackupFile: vi.fn(() => Promise.resolve("flow-finished" as const)),
       inspect: vi.fn(() => Promise.resolve(summary)),
       import: vi.fn(() => Promise.resolve(counts)),
       ...overrides,
@@ -86,7 +94,127 @@ describe("Configurações e backup", () => {
     expect(exportMock).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("button", { name: "Preparando…" })).toBeDisabled();
     resolveExport(artifact);
-    await screen.findByText(/Backup preparado/u);
+    await screen.findByText(/exportação foi encerrada/u);
+  });
+
+  it("orienta sobre o destino externo enquanto abre o fluxo", async () => {
+    const app = application({
+      shareBackupFile: vi.fn(
+        () => new Promise<"flow-finished">(() => undefined),
+      ),
+    });
+    const user = userEvent.setup();
+    render(<SettingsPage application={app} />);
+    await user.click(screen.getByRole("button", { name: "Exportar backup" }));
+    expect(
+      await screen.findByText(/Escolha Drive, computador ou outro aplicativo/u),
+    ).toBeVisible();
+  });
+
+  it("distingue cancelamento sem afirmar que o arquivo foi salvo", async () => {
+    const app = application({
+      shareBackupFile: vi.fn(() => Promise.resolve("cancelled" as const)),
+    });
+    const user = userEvent.setup();
+    render(<SettingsPage application={app} />);
+    await user.click(screen.getByRole("button", { name: "Exportar backup" }));
+    const status = await screen.findByText(/compartilhamento foi cancelado/u);
+    expect(status).not.toHaveTextContent(/salvo|entregue/iu);
+  });
+
+  it("separa salvar e compartilhar no Android e só confirma após a escrita", async () => {
+    let finishSave: (() => void) | undefined;
+    const saveBackupFile = vi.fn(
+      () =>
+        new Promise<"saved">((resolve) => {
+          finishSave = () => resolve("saved");
+        }),
+    );
+    const app = application({ nativeSaveAvailable: true, saveBackupFile });
+    const user = userEvent.setup();
+    render(<SettingsPage application={app} />);
+
+    const saveButton = screen.getByRole("button", {
+      name: "Salvar backup no dispositivo",
+    });
+    const shareButton = screen.getByRole("button", {
+      name: "Compartilhar backup",
+    });
+    await user.click(saveButton);
+
+    expect(
+      await screen.findByRole("button", { name: "Abrindo seletor…" }),
+    ).toBeDisabled();
+    expect(shareButton).toBeDisabled();
+    expect(app.backup.shareBackupFile).not.toHaveBeenCalled();
+    expect(screen.queryByText("Backup salvo no local escolhido.")).toBeNull();
+
+    finishSave?.();
+    expect(
+      await screen.findByText("Backup salvo no local escolhido."),
+    ).toBeVisible();
+    expect(saveBackupFile).toHaveBeenCalledWith(artifact);
+  });
+
+  it("trata cancelamento do seletor como estado normal", async () => {
+    const app = application({
+      nativeSaveAvailable: true,
+      saveBackupFile: vi.fn(() => Promise.resolve("cancelled" as const)),
+    });
+    const user = userEvent.setup();
+    render(<SettingsPage application={app} />);
+    await user.click(
+      screen.getByRole("button", { name: "Salvar backup no dispositivo" }),
+    );
+    expect(
+      await screen.findByText(
+        "O salvamento foi cancelado. Seus dados não foram alterados.",
+      ),
+    ).toBeVisible();
+  });
+
+  it("impede concorrência entre salvar e compartilhar", async () => {
+    const app = application({
+      nativeSaveAvailable: true,
+      saveBackupFile: vi.fn(() => new Promise<"saved">(() => undefined)),
+    });
+    render(<SettingsPage application={app} />);
+    const saveButton = screen.getByRole("button", {
+      name: "Salvar backup no dispositivo",
+    });
+    const shareButton = screen.getByRole("button", {
+      name: "Compartilhar backup",
+    });
+    fireEvent.click(saveButton);
+    fireEvent.click(saveButton);
+    fireEvent.click(shareButton);
+    await waitFor(() => expect(app.backup.export).toHaveBeenCalledTimes(1));
+    expect(app.backup.saveBackupFile).toHaveBeenCalledTimes(1);
+    expect(app.backup.shareBackupFile).not.toHaveBeenCalled();
+  });
+
+  it("ignora retorno tardio depois da desmontagem", async () => {
+    let finishSave: (() => void) | undefined;
+    const app = application({
+      nativeSaveAvailable: true,
+      saveBackupFile: vi.fn(
+        () =>
+          new Promise<"saved">((resolve) => {
+            finishSave = () => resolve("saved");
+          }),
+      ),
+    });
+    const view = render(<SettingsPage application={app} />);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Salvar backup no dispositivo" }),
+    );
+    await waitFor(() => expect(app.backup.saveBackupFile).toHaveBeenCalled());
+    view.unmount();
+    await act(async () => {
+      finishSave?.();
+      await Promise.resolve();
+    });
+    expect(app.backup.saveBackupFile).toHaveBeenCalledTimes(1);
   });
 
   it("valida sem escrever, mostra resumo, move foco e permite cancelar", async () => {

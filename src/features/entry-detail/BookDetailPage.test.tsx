@@ -74,6 +74,7 @@ function application(
     status: (input: unknown) => Promise<BookEntry>;
     addNote: (input: unknown) => Promise<Note>;
     addQuote: (input: unknown) => Promise<Quote>;
+    deleteBook: (input: unknown) => Promise<{ readonly deleted: true }>;
   }> = {},
 ) {
   const calls = {
@@ -100,12 +101,17 @@ function application(
     ),
     addNote: vi.fn(overrides.addNote ?? (() => Promise.resolve(note))),
     addQuote: vi.fn(overrides.addQuote ?? (() => Promise.resolve(quote))),
+    deleteBook: vi.fn(
+      overrides.deleteBook ??
+        (() => Promise.resolve({ deleted: true as const })),
+    ),
   };
   const facade: BookDetailApplication = {
     commands: {
       addNote: { execute: calls.addNote },
       addQuote: { execute: calls.addQuote },
       changeBookStatus: { execute: calls.status },
+      deleteBookEntry: { execute: calls.deleteBook },
       updateBookProgress: { execute: calls.progress },
     },
     queries: {
@@ -125,6 +131,7 @@ function renderDetail(facade: BookDetailApplication) {
           path="/livros/:id"
           element={<BookDetailPage application={facade} />}
         />
+        <Route path="/colecao" element={<h2>Coleção após exclusão</h2>} />
       </Routes>
     </MemoryRouter>,
   );
@@ -217,6 +224,69 @@ describe("detalhe do livro", () => {
     await loaded(facade);
     expect(screen.getByText("Nenhuma nota adicionada.")).toBeVisible();
     expect(screen.getByText("Nenhuma citação adicionada.")).toBeVisible();
+  });
+});
+
+describe("exclusão permanente", () => {
+  it("abre confirmação inline com título e aviso explícito, e cancelar preserva o detalhe", async () => {
+    const user = userEvent.setup();
+    const { calls, facade } = application();
+    await loaded(facade);
+    expect(screen.getByText(/notas, suas citações/u)).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Excluir livro" }));
+    expect(
+      screen.getByRole("heading", {
+        name: `Excluir permanentemente “${book.title}”?`,
+      }),
+    ).toBeVisible();
+    expect(screen.getByText(/notas e citações vinculadas/u)).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Cancelar" }));
+    expect(calls.deleteBook).not.toHaveBeenCalled();
+    expect(screen.getByRole("heading", { name: book.title })).toBeVisible();
+  });
+
+  it("executa uma vez, aguarda o banco e navega para Coleção após sucesso", async () => {
+    let complete: ((result: { readonly deleted: true }) => void) | undefined;
+    const pending = application({
+      deleteBook: () =>
+        new Promise((resolve) => {
+          complete = resolve;
+        }),
+    });
+    const user = userEvent.setup();
+    await loaded(pending.facade);
+    await user.click(screen.getByRole("button", { name: "Excluir livro" }));
+    const confirm = screen.getByRole("button", {
+      name: "Excluir permanentemente",
+    });
+    await user.dblClick(confirm);
+    expect(pending.calls.deleteBook).toHaveBeenCalledOnce();
+    expect(pending.calls.deleteBook).toHaveBeenCalledWith({ id: book.id });
+    expect(screen.getByRole("button", { name: "Excluindo…" })).toBeDisabled();
+    expect(screen.queryByText("Coleção após exclusão")).not.toBeInTheDocument();
+    complete?.({ deleted: true });
+    expect(
+      await screen.findByRole("heading", { name: "Coleção após exclusão" }),
+    ).toBeVisible();
+  });
+
+  it("mantém a página utilizável quando a exclusão falha", async () => {
+    const failed = application({
+      deleteBook: () =>
+        Promise.reject(new ApplicationError("DELETE_BOOK_FAILED", "Dexie")),
+    });
+    const user = userEvent.setup();
+    await loaded(failed.facade);
+    await user.click(screen.getByRole("button", { name: "Excluir livro" }));
+    await user.click(
+      screen.getByRole("button", { name: "Excluir permanentemente" }),
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      /Nada foi removido/u,
+    );
+    expect(screen.getByRole("heading", { name: book.title })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Cancelar" })).toBeEnabled();
+    expect(screen.getByRole("alert")).not.toHaveTextContent("Dexie");
   });
 });
 

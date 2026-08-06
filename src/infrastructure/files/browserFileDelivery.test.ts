@@ -6,17 +6,27 @@ afterEach(() => vi.restoreAllMocks());
 
 describe("BrowserFileDelivery", () => {
   it("compartilha File quando a plataforma oferece Web Share", async () => {
-    const share = vi.fn(() => Promise.resolve());
+    const share = vi.fn((input: ShareData) => {
+      expect(input).toBeDefined();
+      return Promise.resolve();
+    });
     Object.defineProperties(navigator, {
       canShare: { configurable: true, value: () => true },
       share: { configurable: true, value: share },
     });
     await expect(
-      new BrowserFileDelivery().deliver({ name: "backup.json", content: "{}" }),
-    ).resolves.toBe("delivered");
+      new BrowserFileDelivery().shareBackupFile({
+        name: "backup.json",
+        content: "{}",
+      }),
+    ).resolves.toBe("flow-finished");
     expect(share).toHaveBeenCalledWith(
       expect.objectContaining({ files: [expect.any(File)] }),
     );
+    const sharedFile = share.mock.calls[0]?.[0]?.files?.[0];
+    expect(sharedFile?.name).toBe("backup.json");
+    expect(sharedFile?.type).toBe("application/json;charset=utf-8");
+    await expect(sharedFile?.text()).resolves.toBe("{}");
   });
 
   it("trata cancelamento do compartilhamento sem iniciar fallback", async () => {
@@ -28,7 +38,10 @@ describe("BrowserFileDelivery", () => {
       },
     });
     await expect(
-      new BrowserFileDelivery().deliver({ name: "backup.json", content: "{}" }),
+      new BrowserFileDelivery().shareBackupFile({
+        name: "backup.json",
+        content: "{}",
+      }),
     ).resolves.toBe("cancelled");
   });
 
@@ -47,8 +60,11 @@ describe("BrowserFileDelivery", () => {
       .spyOn(HTMLAnchorElement.prototype, "click")
       .mockImplementation(() => undefined);
     await expect(
-      new BrowserFileDelivery().deliver({ name: "backup.json", content: "{}" }),
-    ).resolves.toBe("delivered");
+      new BrowserFileDelivery().shareBackupFile({
+        name: "backup.json",
+        content: "{}",
+      }),
+    ).resolves.toBe("flow-finished");
     expect(create).toHaveBeenCalledOnce();
     expect(click).toHaveBeenCalledOnce();
     expect(revoke).toHaveBeenCalledWith("blob:test");

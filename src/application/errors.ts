@@ -8,7 +8,9 @@ export type ApplicationErrorCode =
   | "PERSISTENCE_FAILED"
   | "ACTIVITY_PERSISTENCE_FAILED"
   | "EVENT_PUBLICATION_FAILED"
-  | "UNSAFE_CONTEXT";
+  | "UNSAFE_CONTEXT"
+  | "BOOK_NOT_FOUND"
+  | "DELETE_BOOK_FAILED";
 
 export interface ApplicationErrorContext {
   readonly field?: string;

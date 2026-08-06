@@ -161,3 +161,45 @@ Publicação em loja exige política de privacidade, materiais, classificação,
 ## 9. Transferência de backup no Prompt 10
 
 Nenhum plugin ou permissão Android foi adicionado. A fachada de arquivos tenta Web Share com `File` quando o WebView oferecer suporte e usa Blob/download como fallback; importação usa o seletor HTML. O APK debug foi gerado, mas usabilidade física de exportação, seleção e restauração permanece obrigatoriamente pendente para o Moto G06/G5. Se o WebView não entregar um fluxo utilizável, a necessidade de plugins oficiais Filesystem/Share será reavaliada com evidência, sem acesso amplo ao armazenamento.
+
+## 10. Correção da exportação após o checkpoint físico
+
+O checkpoint no Moto G06 confirmou que o fluxo web dentro da WebView não produzia uma cópia externa verificável. A correção adiciona os plugins oficiais `@capacitor/filesystem` `8.1.2` e `@capacitor/share` `8.0.1`; `cap sync android` deve registrar ambos no projeto nativo. O teste seguinte validou a folha e o JSON, mas confirmou que seus destinos não equivalem a uma ação explícita de salvar em pasta.
+
+No APK, “Exportar backup” escreve temporariamente o JSON em UTF-8 no cache privado recriável e abre a folha Android com a URI do arquivo `.json`. Os destinos oferecidos dependem dos aplicativos instalados e podem incluir Arquivos, Drive, mensageria ou outros receptores compatíveis. Encerrar a folha não prova que um destino persistente foi concluído: antes de limpar dados ou desinstalar, o usuário deve localizar o arquivo fora do aplicativo, idealmente copiá-lo para outro dispositivo e selecioná-lo novamente para inspeção.
+
+“Salvar backup no dispositivo” usa o plugin local `BackupDocument`, registrado na `MainActivity`. Ele abre `ACTION_CREATE_DOCUMENT`; o usuário escolhe pasta e nome, e o aplicativo escreve apenas na URI concedida por `ContentResolver`. “Compartilhar backup” permanece separado e conserva o fluxo Cache + Share. O temporário de compartilhamento é removido somente depois do encerramento da folha.
+
+Não foi adicionada permissão manual, acesso amplo ao armazenamento, `MANAGE_EXTERNAL_STORAGE`, mudança de `applicationId`, assinatura ou versão. O checklist físico obrigatório é: instalar por cima, confirmar dados, tocar “Salvar backup no dispositivo”, verificar o seletor, escolher a pasta, confirmar nome, localizar o arquivo, copiá-lo para outro local e validar sua importação. Somente depois disso pode ocorrer limpeza controlada. “Compartilhar backup” continua disponível separadamente. Nenhuma limpeza destrutiva deve ser feita enquanto a cópia externa não estiver confirmada.
+
+A ordem segura confirmada no Moto G06 é:
+
+1. instalar o APK por cima da versão anterior;
+2. confirmar que os dados existentes permanecem;
+3. salvar um backup externo pelo seletor de documentos;
+4. localizar e confirmar o arquivo fora do aplicativo;
+5. compartilhar o backup de segurança quando a restauração em banco preenchido o exigir;
+6. confirmar esse arquivo no destino escolhido, como o Drive;
+7. somente então limpar ou reinstalar de forma controlada;
+8. restaurar o backup externo em banco vazio;
+9. comparar livros, progresso, status, notas e citações após reabrir.
+
+Os passos 1 a 6 foram validados. Fechar a folha sem compartilhar cancelou a restauração; compartilhar e confirmar a segurança no Drive permitiu prosseguir. Os passos destrutivos 7 a 9 continuam pendentes de G5.
+
+APK debug corretivo gerado, mas não instalado, em 2026-08-03:
+
+- caminho: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- tamanho: 7.525.449 bytes;
+- SHA-256: `c92068db7ccbeffbe892a9acb5fc0050f8ffecd6f7c536259e44d5edc465ef28`;
+- integridade ZIP: aprovada;
+- plugins empacotados: App, Filesystem e Share;
+- permissões de armazenamento amplo: ausentes.
+
+APK debug da continuação corretiva gerado, mas não instalado, em 2026-08-05:
+
+- caminho: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- tamanho: 7.525.555 bytes, aproximadamente 7,18 MiB;
+- SHA-256: `1eec4278a332a3e883cc1f8c03e92efb2b19743edded752ccbb235426a8e68fb`;
+- integridade ZIP: aprovada;
+- bridge local `BackupDocument`: compilada e registrada;
+- permissões de armazenamento amplo: ausentes.

@@ -5,7 +5,7 @@ import "fake-indexeddb/auto";
 import Dexie from "dexie";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { ApplicationError, BackupError } from "../application";
+import { ApplicationError, BackupError, BackupFileError } from "../application";
 import {
   createApplication,
   type ApplicationRuntime,
@@ -143,18 +143,102 @@ describe("createApplication", () => {
   it("encapsula falha da entrega do arquivo sem expor infraestrutura", async () => {
     const runtime = await createApplication({
       databaseName: databaseName("file-delivery-failure"),
-      fileDelivery: {
-        deliver: () => Promise.reject(new Error("private file path")),
+      backupFileShare: {
+        shareBackupFile: () => Promise.reject(new Error("private file path")),
       },
     });
     runtimes.push(runtime);
     const artifact = await runtime.backup.export();
     const failure = await runtime.backup
-      .deliver(artifact)
+      .shareBackupFile(artifact)
       .catch((error: unknown) => error);
     expect(failure).toBeInstanceOf(BackupError);
     expect(failure).toMatchObject({ code: "BACKUP_DELIVERY_FAILED" });
     expect((failure as Error).message).not.toContain("private file path");
+  });
+
+  it.each([
+    ["TEMPORARY_WRITE_FAILED", "BACKUP_TEMPORARY_WRITE_FAILED"],
+    ["SHARE_FAILED", "BACKUP_SHARE_FAILED"],
+  ] as const)(
+    "mapeia %s para erro público específico",
+    async (code, expected) => {
+      const runtime = await createApplication({
+        databaseName: databaseName(`delivery-${code}`),
+        backupFileShare: {
+          shareBackupFile: () => Promise.reject(new BackupFileError(code)),
+        },
+      });
+      runtimes.push(runtime);
+      const artifact = await runtime.backup.export();
+      await expect(
+        runtime.backup.shareBackupFile(artifact),
+      ).rejects.toMatchObject({
+        code: expected,
+      });
+    },
+  );
+
+  it("exportar e encerrar a entrega não altera tabela alguma", async () => {
+    const runtime = await createApplication({
+      databaseName: databaseName("delivery-read-only"),
+      backupFileShare: {
+        shareBackupFile: () => Promise.resolve("flow-finished"),
+      },
+    });
+    runtimes.push(runtime);
+    await runtime.commands.createBookEntry.execute({ title: "Livro fictício" });
+    const before = await runtime.diagnostics.inspect();
+    const artifact = await runtime.backup.export();
+    await runtime.backup.shareBackupFile(artifact);
+    const after = await runtime.diagnostics.inspect();
+    expect(after.counts).toEqual(before.counts);
+  });
+
+  it("salva exatamente o artefato e não altera tabela alguma", async () => {
+    const saveBackupFile = vi.fn(() => Promise.resolve("saved" as const));
+    const runtime = await createApplication({
+      databaseName: databaseName("save-read-only"),
+      backupFileSave: { saveBackupFile },
+      nativeSaveAvailable: true,
+    });
+    runtimes.push(runtime);
+    await runtime.commands.createBookEntry.execute({ title: "Livro fictício" });
+    const before = await runtime.diagnostics.inspect();
+    const artifact = await runtime.backup.export();
+
+    await expect(runtime.backup.saveBackupFile(artifact)).resolves.toBe(
+      "saved",
+    );
+    expect(saveBackupFile).toHaveBeenCalledWith({
+      content: artifact.content,
+      name: artifact.fileName,
+    });
+    await expect(runtime.backup.inspect(artifact.content)).resolves.toEqual(
+      artifact.summary,
+    );
+    expect((await runtime.diagnostics.inspect()).counts).toEqual(before.counts);
+  });
+
+  it.each([
+    ["DOCUMENT_PICKER_FAILED", "BACKUP_DOCUMENT_PICKER_FAILED"],
+    ["DOCUMENT_WRITE_FAILED", "BACKUP_DOCUMENT_WRITE_FAILED"],
+  ] as const)("sanitiza falha nativa %s", async (code, expected) => {
+    const runtime = await createApplication({
+      databaseName: databaseName(`save-${code}`),
+      backupFileSave: {
+        saveBackupFile: () => Promise.reject(new BackupFileError(code)),
+      },
+      nativeSaveAvailable: true,
+    });
+    runtimes.push(runtime);
+    const artifact = await runtime.backup.export();
+    const failure = await runtime.backup
+      .saveBackupFile(artifact)
+      .catch((error: unknown) => error);
+    expect(failure).toBeInstanceOf(BackupError);
+    expect(failure).toMatchObject({ code: expected });
+    expect((failure as Error).message).not.toContain("content://");
   });
 
   it("restaura snapshot sem eventos, atividades ou casos de escrita artificiais", async () => {
@@ -177,7 +261,9 @@ describe("createApplication", () => {
 
     const destination = await createApplication({
       databaseName: databaseName("restore-destination"),
-      fileDelivery: { deliver: () => Promise.resolve("delivered") },
+      backupFileShare: {
+        shareBackupFile: () => Promise.resolve("flow-finished"),
+      },
     });
     runtimes.push(destination);
     await destination.commands.createBookEntry.execute({
@@ -218,5 +304,48 @@ describe("createApplication", () => {
     await expect(
       destination.queries.listBookEntries.execute(),
     ).resolves.toEqual([sourceBook]);
+  });
+
+  it("exclui o livro agregado e o backup/projeção consultável refletem a ausência", async () => {
+    const runtime = await createApplication({
+      databaseName: databaseName("delete-and-export"),
+    });
+    runtimes.push(runtime);
+    const deletedBook = await runtime.commands.createBookEntry.execute({
+      title: "Livro descartável fictício",
+    });
+    const keptBook = await runtime.commands.createBookEntry.execute({
+      title: "Livro preservado fictício",
+    });
+    await runtime.commands.addNote.execute({
+      entryId: deletedBook.id,
+      content: "Nota fictícia descartável",
+    });
+    await runtime.commands.addQuote.execute({
+      entryId: deletedBook.id,
+      content: "Citação fictícia descartável",
+    });
+
+    await expect(
+      runtime.commands.deleteBookEntry.execute({ id: deletedBook.id }),
+    ).resolves.toEqual({ deleted: true });
+    await expect(runtime.queries.listBookEntries.execute()).resolves.toEqual([
+      keptBook,
+    ]);
+    await expect(runtime.queries.listAllNotes.execute()).resolves.toEqual([]);
+    await expect(runtime.queries.listAllQuotes.execute()).resolves.toEqual([]);
+
+    const artifact = await runtime.backup.export();
+    expect(artifact.content).not.toContain(deletedBook.id);
+    await expect(
+      runtime.backup.inspect(artifact.content),
+    ).resolves.toMatchObject({
+      counts: {
+        activities: 1,
+        libraryEntries: 1,
+        notes: 0,
+        quotes: 0,
+      },
+    });
   });
 });

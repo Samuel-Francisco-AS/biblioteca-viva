@@ -215,8 +215,6 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 
 **Consequências:** digitação não consulta IndexedDB, escolhas visuais não alteram domínio ou ordem persistida, a sessão pode ser restaurada pelos links e não há mudança de schema. A estratégia será reavaliada somente com medição de degradação ou volume que justifique busca textual avançada.
 
-Use `templates/ADR_TEMPLATE.md` para novas decisões.
-
 ## D-021 — Backup v1, replace-only e endurecimento inicial
 
 - **Data:** 2026-07-30
@@ -271,3 +269,73 @@ Use `templates/ADR_TEMPLATE.md` para novas decisões.
 **Decisão:** usar gráficos procedurais internos com fallback independente para todos os elementos essenciais. A bibliotecária usa deslocamento vertical de quatro unidades lógicas em tween lento; a criatura percorre horizontalmente uma área explícita. Ambos usam fase normalizada, easing senoidal, `yoyo` e repetição infinita. Resize idêntico não reconcilia movimento, resize no mesmo modo apenas remapeia a fase e a troca regular/compacto substitui um único conjunto. O livro recente pode receber uma pulsação discreta; e a iluminação usa círculos translúcidos estáticos. A câmera permanece fixa. React possui e coordena os painéis; Phaser somente desenha, anima estado transitório e emite interações.
 
 **Consequências:** a sala limita-se a aproximadamente 32 display objects, três tweens, sete texturas próprias opcionais e oito grupos de lombadas, inclusive com cem livros. Não há partículas, shader, pós-processamento, física complexa, pathfinding, joystick, áudio, diálogo ramificado ou acesso ao banco. Movimento reduzido conserva a composição estática sem tweens repetitivos.
+
+## D-026 — Entrega nativa explícita de backup no Android
+
+- **Data:** 2026-08-03
+- **Status:** aceita
+
+**Contexto:** no Moto G06, Web Share/fallback de download dentro da WebView não abriu uma interface nativa nem produziu arquivo externo localizável, embora a aplicação anunciasse entrega.
+
+**Decisão:** adicionar somente `@capacitor/filesystem` `8.1.2` e `@capacitor/share` `8.0.1`, da mesma versão principal do Capacitor. No Android, escrever o JSON final em UTF-8 em `Directory.Cache`, compartilhar a URI retornada, aguardar o encerramento do fluxo e então remover o temporário. Manter o adapter web independente e não afirmar destino ou salvamento permanente que a API não comprova.
+
+**Consequências:** não há permissão ampla de armazenamento nem pasta privada apresentada como Downloads. Cancelamento é distinguido quando o plugin informa; fechamento da folha exige confirmação manual do arquivo externo. Falha de limpeza posterior é secundária e sanitizada.
+
+## D-027 — Rolagem vertical e seleção curta no canvas
+
+- **Data:** 2026-08-03
+- **Status:** aceita
+
+**Contexto:** Phaser 3.90.0 capturava toque por padrão e chamava `preventDefault()`, prendendo o gesto vertical sobre uma área extensa da tela.
+
+**Decisão:** configurar `input.touch.capture: false`, aplicar `touch-action: pan-y` ao host e canvas e reconhecer seleção somente entre `pointerdown` e `pointerup` com deslocamento máximo de 12 px. Arraste, `pointercancel`, saída e destroy cancelam a seleção.
+
+**Consequências:** rolagem vertical volta a pertencer ao navegador; mouse e toques curtos preservam as áreas interativas; um gesto válido emite uma única interação sem delay perceptível.
+
+## D-028 — Exclusão permanente transacional com confirmação inline
+
+- **Data:** 2026-08-03
+- **Status:** aceita
+
+**Contexto:** o detalhe não oferecia exclusão, e chamadas independentes poderiam deixar anotações ou atividades órfãs.
+
+**Decisão:** expor `DeleteBookEntry` pela aplicação e uma única operação de `BookDeletionStore`. O adapter Dexie remove livro, notas, citações e atividades relacionadas na mesma transação. A interface apresenta seção destrutiva separada, título, perdas associadas, cancelamento e confirmação inline acessível.
+
+**Consequências:** React não acessa Dexie, Phaser não recebe exclusão, falhas fazem rollback e mantêm a tela utilizável. Não há evento artificial, migração ou alteração de schema.
+
+## D-029 — Salvar e compartilhar backup são operações distintas
+
+- **Data:** 2026-08-05
+- **Status:** aceita
+
+**Contexto:** a folha Share foi validada no Moto G06 e exibiu o JSON, mas não ofereceu gerenciador de arquivos nem escolha explícita de Downloads ou Documentos. Compartilhar não comprova salvamento permanente.
+
+**Decisão:** preservar Cache + Share para “Compartilhar backup” e criar “Salvar backup no dispositivo” com um plugin Capacitor Android local mínimo. O salvamento usa Storage Access Framework com `ACTION_CREATE_DOCUMENT`, `CATEGORY_OPENABLE`, MIME `application/json`, nome sugerido e escrita UTF-8 por `ContentResolver` somente na URI escolhida pelo usuário. Não solicitar permissão ampla nem prometer localização não confirmada.
+
+**Consequências:** save e share têm portas, resultados e mensagens próprios; cancelamento do seletor é normal; o plugin não lê, lista ou apaga arquivos e não expõe URI ao TypeScript. O navegador permanece em Web Share ou Blob/download.
+
+**Evidência posterior:** o fluxo atual de segurança pré-restauração por Share foi validado no Moto G06: cancelar a folha bloqueia a restauração, enquanto compartilhar e confirmar a cópia no Drive permite continuar. Oferecer também “Salvar no dispositivo” para esse backup de segurança pode tornar a experiência mais uniforme no futuro, mas não é falha aberta nem bloqueador do fluxo atual.
+
+## D-030 — Rodinha do mouse pertence à página sobre o canvas
+
+- **Data:** 2026-08-05
+- **Status:** aceita
+
+**Contexto:** `touch.capture: false` e `pan-y` resolveram o Android, mas a roda continuava bloqueada quando o cursor estava sobre o canvas porque o Config do Phaser 3.90.0 usa `preventDefaultWheel: true` por padrão.
+
+**Decisão:** configurar `input.mouse.preventDefaultWheel: false`, mantendo mouse habilitado, toque sem captura, `pan-y` e a política de 12 px. Não adicionar listener manual, rolagem simulada ou `preventDefault` na aplicação.
+
+**Consequências:** o navegador processa a roda, enquanto clique, toque, lifecycle, layouts e canvas único continuam no mesmo caminho.
+
+## D-031 — Sala visual dominante é intenção futura
+
+- **Data:** 2026-08-05
+- **Status:** registrada para revisão futura
+
+**Contexto:** o cartão atual cumpriu a validação estrutural, mas a intenção do produto é dar à sala visual a maior parte da tela inicial.
+
+**Decisão:** avaliar em etapa futura de UX e direção visual uma área principal ou quase inteira para o canvas e painéis sobrepostos semelhantes a bottom sheets, preservando navegação inferior e Coleção convencional.
+
+**Consequências:** esta rodada não implementa fullscreen, bottom sheet, câmera, navegação ou reorganização geral e não antecipa Bloco 7 ou Prompt 14.
+
+Use `templates/ADR_TEMPLATE.md` para novas decisões.

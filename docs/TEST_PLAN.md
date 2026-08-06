@@ -536,8 +536,8 @@ Limitação não bloqueadora: durante resize contínuo por arraste da janela no 
 
 #### G5 — pendente no Moto G06
 
-- [ ] instalar APK por cima da versão anterior;
-- [ ] confirmar preservação dos dados;
+- [x] instalar APK por cima da versão anterior;
+- [x] confirmar preservação dos dados;
 - [ ] exportar backup;
 - [ ] confirmar entrega do arquivo;
 - [ ] preservar uma cópia fora do app;
@@ -571,4 +571,129 @@ Limitação não bloqueadora: durante resize contínuo por arraste da janela no 
 - [ ] observar a piscada durante lifecycle real;
 - [ ] confirmar que as telas convencionais continuam funcionando.
 
-A validação manual web foi concluída após a correção de lifecycle. O checkpoint Android não foi executado e permanece integralmente pendente. G4, G5 e G6 permanecem abertos.
+A validação manual web foi concluída após a correção de lifecycle. O primeiro checkpoint Android foi iniciado: atualização por cima e preservação do livro existente passaram; exportação externa e rolagem sobre o canvas falharam antes da rodada corretiva. Os demais itens continuam pendentes. G4, G5 e G6 permanecem abertos.
+
+## 14. Rodada corretiva após o primeiro checkpoint físico — 2026-08-03
+
+### Evidência física já aprovada
+
+- [x] instalar o APK mais recente por cima da versão anterior no Moto G06;
+- [x] confirmar que o livro existente permaneceu após a atualização.
+
+Essa evidência aprova somente a preservação de dados na atualização do APK. Não aprova G4, G5 ou G6.
+
+### Falhas confirmadas antes da correção
+
+- [x] “Exportar backup” não abriu folha nativa nem seletor de destino;
+- [x] nenhum arquivo `biblioteca-viva-backup` foi localizado em Downloads, Documentos, Recentes ou pesquisa;
+- [x] gesto vertical iniciado sobre o canvas não rolava a página no navegador nem no Android;
+- [x] não existia ação de exclusão permanente de livro.
+
+### Nova rodada física — exportação
+
+- [ ] tocar “Exportar backup”;
+- [ ] confirmar que a folha nativa aparece;
+- [ ] escolher Arquivos ou Drive;
+- [ ] confirmar nome terminado em `.json`;
+- [ ] localizar o arquivo fora do aplicativo;
+- [ ] copiar o arquivo para o computador;
+- [ ] selecionar o mesmo arquivo para inspeção;
+- [ ] confirmar que exportar e compartilhar não alteraram o banco.
+
+### Nova rodada física — rolagem e toque
+
+- [ ] rolar começando sobre área vazia da sala;
+- [ ] rolar começando sobre a estante;
+- [ ] rolar começando sobre a bibliotecária;
+- [ ] rolar começando sobre a criatura;
+- [ ] confirmar que arraste não abre painel;
+- [ ] confirmar que toque curto abre o painel correto;
+- [ ] confirmar que a navegação inferior continua acessível.
+
+### Nova rodada manual — exclusão
+
+- [ ] criar um livro descartável;
+- [ ] adicionar uma nota e uma citação;
+- [ ] abrir a confirmação e cancelar;
+- [ ] confirmar preservação do livro e das anotações;
+- [ ] excluir permanentemente;
+- [ ] confirmar ausência na Coleção;
+- [ ] confirmar ausência no Arquivo;
+- [ ] fechar e reabrir o aplicativo;
+- [ ] confirmar que a exclusão persistiu;
+- [ ] confirmar que outros livros não foram afetados.
+
+Limpeza de dados, reinstalação destrutiva e restauração física permanecem pendentes e suspensas até que o backup externo seja localizado e verificado fora da Biblioteca Viva.
+
+### Evidência automática da correção
+
+Em 2026-08-03, 385 testes em 36 arquivos passaram. A cobertura inclui adapters web/Android injetáveis, texto e URI exatos, MIME/extensão, ordem da limpeza, escrita/compartilhamento/cancelamento/limpeza falhos, operação sem alteração do banco, inspeção posterior, bloqueio de concorrência, configuração `pan-y`/captura, política de toque e arraste, lifecycle, interface destrutiva, exclusão associada, preservações, reabertura e rollback no início da transação, em notas, citações e atividades. Build web, sync Capacitor e build Android passaram. O APK debug não foi instalado; possui 7.525.449 bytes, SHA-256 `c92068db7ccbeffbe892a9acb5fc0050f8ffecd6f7c536259e44d5edc465ef28` e integridade ZIP confirmada.
+
+## 15. Continuação da rodada corretiva — 2026-08-05
+
+### Evidência aprovada no Moto G06
+
+- [x] atualização do APK por cima preservou os dados;
+- [x] folha nativa de compartilhamento abriu;
+- [x] arquivo JSON apareceu na folha;
+- [x] rolagem por toque sobre o canvas funcionou;
+- [x] arraste sobre o canvas não abriu painel;
+- [x] toque curto abriu os painéis corretos;
+- [x] estante, bibliotecária e criatura responderam;
+- [x] exclusão permanente respondeu corretamente;
+- [x] demais funções convencionais permaneceram operacionais;
+- [x] nenhuma permissão ampla foi solicitada.
+
+A ausência de uma ação explícita para escolher pasta foi confirmada. A folha de compartilhamento permanece válida como compartilhamento, não como prova de salvamento.
+
+### Salvamento Android — aprovado em 2026-08-06
+
+- [x] tocar “Salvar backup no dispositivo”;
+- [x] confirmar que o seletor de documentos aparece;
+- [x] escolher um local externo;
+- [x] confirmar nome terminado em `.json`;
+- [x] concluir o salvamento, localizar o arquivo e confirmar que permaneceu acessível;
+- [x] confirmar banco inalterado.
+
+### Compartilhamento — aprovado em 2026-08-06
+
+- [x] confirmar que a ação separada abre Share;
+- [x] confirmar JSON na folha e destinos como Drive, Gmail, WhatsApp e Quick Share;
+- [x] confirmar backup de segurança compartilhado e localizado no Drive;
+- [x] confirmar que fechar a folha sem compartilhar cancela a restauração;
+- [x] confirmar que compartilhar a segurança permite continuar a importação em banco preenchido;
+- [x] confirmar ausência de bypass do requisito de segurança.
+
+### Navegador — rodinha aprovada em 2026-08-06
+
+- [x] usar a rodinha sobre o canvas;
+- [x] confirmar que os cliques continuam abrindo os painéis;
+- [x] confirmar canvas único.
+
+### Android — interação e exclusão aprovadas
+
+- [x] arrastar sobre o canvas e rolar a página;
+- [x] confirmar que arraste não abre painel;
+- [x] tocar brevemente estante, bibliotecária e criatura;
+- [x] abrir, cancelar e confirmar a exclusão permanente;
+- [x] confirmar preservação dos dados não relacionados.
+
+### G5 — permanece pendente
+
+- [x] obter cópia externa verificável;
+- [ ] executar limpeza controlada somente depois;
+- [ ] abrir o aplicativo em banco vazio;
+- [ ] restaurar em instalação limpa;
+- [ ] comparar livros, progresso, status, notas e citações;
+- [ ] fechar e reabrir e confirmar persistência.
+
+### G6 — permanece pendente
+
+- [ ] testar botão Voltar;
+- [ ] minimizar e restaurar;
+- [ ] verificar safe areas e navegação inferior;
+- [ ] verificar teclado virtual;
+- [ ] verificar fluidez e estabilidade;
+- [ ] confirmar ausência de tela preta persistente.
+
+Em 2026-08-05, a suíte passou com 406 testes em 38 arquivos. A continuação cobre seletor injetável, nome/MIME/texto exatos, UTF-8 sem BOM ou quebra adicional, saved/cancelled/falhas sanitizadas, espera pela escrita, concorrência, desmontagem, separação save/share, contrato nativo, permissões e `preventDefaultWheel: false`. O APK debug possui 7.525.555 bytes, SHA-256 `1eec4278a332a3e883cc1f8c03e92efb2b19743edded752ccbb235426a8e68fb` e ZIP íntegro. Em 2026-08-06, os fluxos de salvamento, compartilhamento, segurança pré-restauração, interação, rodinha e exclusão foram aprovados manualmente. G4, G5 e G6 continuam abertos nas pendências acima.

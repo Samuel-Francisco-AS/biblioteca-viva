@@ -67,13 +67,35 @@ export interface BackupCodecPort {
   inspect(content: string): Promise<ValidatedBackup>;
 }
 
-export type FileDeliveryResult = "delivered" | "cancelled";
+export type SaveBackupResult = "saved" | "cancelled";
 
-export interface FileDeliveryPort {
-  deliver(file: {
+export type ShareBackupResult = "flow-finished" | "cancelled";
+
+export type BackupFileErrorCode =
+  | "DOCUMENT_PICKER_FAILED"
+  | "DOCUMENT_WRITE_FAILED"
+  | "TEMPORARY_WRITE_FAILED"
+  | "SHARE_FAILED";
+
+export class BackupFileError extends Error {
+  constructor(public readonly code: BackupFileErrorCode) {
+    super("A entrega do arquivo não pôde ser concluída.");
+    this.name = "BackupFileError";
+  }
+}
+
+export interface BackupFileSavePort {
+  saveBackupFile(file: {
     readonly name: string;
     readonly content: string;
-  }): Promise<FileDeliveryResult>;
+  }): Promise<SaveBackupResult>;
+}
+
+export interface BackupFileSharePort {
+  shareBackupFile(file: {
+    readonly name: string;
+    readonly content: string;
+  }): Promise<ShareBackupResult>;
 }
 
 export type BackupErrorCode =
@@ -89,6 +111,10 @@ export type BackupErrorCode =
   | "BACKUP_READ_FAILED"
   | "BACKUP_EXPORT_FAILED"
   | "BACKUP_DELIVERY_FAILED"
+  | "BACKUP_DOCUMENT_PICKER_FAILED"
+  | "BACKUP_DOCUMENT_WRITE_FAILED"
+  | "BACKUP_TEMPORARY_WRITE_FAILED"
+  | "BACKUP_SHARE_FAILED"
   | "BACKUP_DELIVERY_CANCELLED"
   | "PLATFORM_CAPABILITY_UNAVAILABLE"
   | "SAFETY_BACKUP_FAILED"
@@ -152,7 +178,7 @@ export class ImportBackup {
     private readonly snapshots: BackupSnapshotPort,
     private readonly codec: BackupCodecPort,
     private readonly exportBackup: ExportBackup,
-    private readonly files: FileDeliveryPort,
+    private readonly files: BackupFileSharePort,
   ) {}
 
   async execute(content: string): Promise<BackupCounts> {
@@ -164,7 +190,7 @@ export class ImportBackup {
         safety = await this.exportBackup.execute(
           "biblioteca-viva-seguranca-antes-da-restauracao",
         );
-        const result = await this.files.deliver({
+        const result = await this.files.shareBackupFile({
           name: safety.fileName,
           content: safety.content,
         });

@@ -29,6 +29,10 @@ import {
   highlightMotionNeedsReplacement,
   resizeMotionAction,
 } from "./motionPolicy";
+import {
+  TapSelectionPolicy,
+  type LibraryTapTarget,
+} from "./tapSelectionPolicy";
 
 function rectangleContains(
   hitArea: Phaser.Geom.Rectangle,
@@ -64,6 +68,7 @@ export class InitialLibraryScene extends Phaser.Scene {
   private renderedSize?: { readonly height: number; readonly width: number };
   private shelf?: Phaser.GameObjects.Graphics;
   private shelfZone?: Phaser.GameObjects.Zone;
+  private readonly tapSelection = new TapSelectionPolicy();
 
   constructor(
     projection: LibraryViewModel,
@@ -115,11 +120,21 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.lighting = this.add.graphics().setDepth(60);
     this.labels = this.add.container().setDepth(70);
 
-    this.shelfZone = this.createInteractiveZone(this.selectShelf);
-    this.librarianZone = this.createInteractiveZone(this.selectLibrarian);
-    this.creatureZone = this.createInteractiveZone(this.selectCreature);
+    this.shelfZone = this.createInteractiveZone(this.beginShelfSelection);
+    this.librarianZone = this.createInteractiveZone(
+      this.beginLibrarianSelection,
+    );
+    this.creatureZone = this.createInteractiveZone(this.beginCreatureSelection);
     this.highlightedBookZone = this.createInteractiveZone(
-      this.selectHighlightedBook,
+      this.beginHighlightedBookSelection,
+    );
+
+    this.input.on(Phaser.Input.Events.POINTER_MOVE, this.trackSelection, this);
+    this.input.on(Phaser.Input.Events.POINTER_UP, this.finishSelection, this);
+    this.input.on(
+      Phaser.Input.Events.POINTER_UP_OUTSIDE,
+      this.cancelSelection,
+      this,
     );
 
     this.scale.on(Phaser.Scale.Events.RESIZE, this.handleResize, this);
@@ -173,13 +188,15 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.motion.resume();
   }
 
-  private createInteractiveZone(callback: () => void): Phaser.GameObjects.Zone {
+  private createInteractiveZone(
+    callback: (pointer: Phaser.Input.Pointer) => void,
+  ): Phaser.GameObjects.Zone {
     const zone = this.add.zone(0, 0, 1, 1).setOrigin(0).setDepth(90);
     zone.setInteractive(
       new Phaser.Geom.Rectangle(0, 0, 1, 1),
       rectangleContains,
     );
-    zone.on("pointerup", callback, this);
+    zone.on("pointerdown", callback, this);
     return zone;
   }
 
@@ -642,25 +659,56 @@ export class InitialLibraryScene extends Phaser.Scene {
     );
   };
 
-  private selectShelf = (): void => {
-    this.interactionHandler?.({ type: "ShelfSelected" });
+  private beginSelection(
+    target: LibraryTapTarget,
+    pointer: Phaser.Input.Pointer,
+  ): void {
+    this.tapSelection.begin(target, pointer.id, pointer.x, pointer.y);
+  }
+
+  private beginShelfSelection = (pointer: Phaser.Input.Pointer): void => {
+    this.beginSelection("shelf", pointer);
   };
 
-  private selectLibrarian = (): void => {
-    this.interactionHandler?.({ type: "LibrarianSelected" });
+  private beginLibrarianSelection = (pointer: Phaser.Input.Pointer): void => {
+    this.beginSelection("librarian", pointer);
   };
 
-  private selectCreature = (): void => {
-    this.interactionHandler?.({ type: "CreatureSelected" });
+  private beginCreatureSelection = (pointer: Phaser.Input.Pointer): void => {
+    this.beginSelection("creature", pointer);
   };
 
-  private selectHighlightedBook = (): void => {
-    const entryId = this.projection.highlightedBook?.entryId;
-    if (entryId)
-      this.interactionHandler?.({ entryId, type: "HighlightedBookSelected" });
+  private beginHighlightedBookSelection = (
+    pointer: Phaser.Input.Pointer,
+  ): void => {
+    this.beginSelection("highlighted-book", pointer);
+  };
+
+  private trackSelection = (pointer: Phaser.Input.Pointer): void => {
+    this.tapSelection.move(pointer.id, pointer.x, pointer.y);
+  };
+
+  private finishSelection = (pointer: Phaser.Input.Pointer): void => {
+    const target = this.tapSelection.end(pointer.id, pointer.wasCanceled);
+    if (target === "shelf")
+      this.interactionHandler?.({ type: "ShelfSelected" });
+    if (target === "librarian")
+      this.interactionHandler?.({ type: "LibrarianSelected" });
+    if (target === "creature")
+      this.interactionHandler?.({ type: "CreatureSelected" });
+    if (target === "highlighted-book") {
+      const entryId = this.projection.highlightedBook?.entryId;
+      if (entryId)
+        this.interactionHandler?.({ entryId, type: "HighlightedBookSelected" });
+    }
+  };
+
+  private cancelSelection = (): void => {
+    this.tapSelection.cancel();
   };
 
   private shutdown = (): void => {
+    this.tapSelection.cancel();
     this.motion.destroy();
     this.scale.off(Phaser.Scale.Events.RESIZE, this.handleResize, this);
     this.load.off(
@@ -669,19 +717,26 @@ export class InitialLibraryScene extends Phaser.Scene {
       this,
     );
     [
-      [this.shelfZone, this.selectShelf],
-      [this.librarianZone, this.selectLibrarian],
-      [this.creatureZone, this.selectCreature],
-      [this.highlightedBookZone, this.selectHighlightedBook],
+      [this.shelfZone, this.beginShelfSelection],
+      [this.librarianZone, this.beginLibrarianSelection],
+      [this.creatureZone, this.beginCreatureSelection],
+      [this.highlightedBookZone, this.beginHighlightedBookSelection],
     ].forEach(([zone, handler]) => {
       if (
         zone instanceof Phaser.GameObjects.Zone &&
         typeof handler === "function"
       ) {
-        zone.off("pointerup", handler, this);
+        zone.off("pointerdown", handler, this);
         zone.destroy();
       }
     });
+    this.input.off(Phaser.Input.Events.POINTER_MOVE, this.trackSelection, this);
+    this.input.off(Phaser.Input.Events.POINTER_UP, this.finishSelection, this);
+    this.input.off(
+      Phaser.Input.Events.POINTER_UP_OUTSIDE,
+      this.cancelSelection,
+      this,
+    );
     this.interactionHandler = undefined;
     this.labels?.removeAll(true);
   };

@@ -1,20 +1,20 @@
 # STATUS — Biblioteca Viva
 
-> Última atualização: 2026-08-01
+> Última atualização: 2026-08-06
 > Atualizar este arquivo ao começar e ao encerrar cada bloco relevante.
 
 ## Estado executivo
 
 - **Fase:** aplicativo pessoal utilizável;
-- **bloco concluído:** Bloco 6 — Biblioteca visual conectada (checkpoint físico conjunto pendente);
+- **bloco concluído:** Bloco 6 — Biblioteca visual conectada (rodada corretiva validada; pendências finais de G5/G6 registradas);
 - **prompt concluído:** Prompt 13 — primeira sala reativa, validado no navegador;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **trabalho atual:** executar o checkpoint físico conjunto de G5 e G6 no Moto G06; Bloco 7 e Prompt 14 não iniciados;
+- **trabalho atual:** concluir a restauração de G5 em instalação limpa e os testes físicos restantes de lifecycle de G6; Bloco 7 e Prompt 14 não iniciados;
 - **gate:** G3 aprovado por Sam em 2026-07-29; G4 e G5 permanecem abertos; G6 está aberto e não aprovado;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
-- **APK:** APK diagnóstico interno do Prompt 6 validado no Moto G06 com Android 15, em `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `dec455d72ccba0eaf0b652d9c388097d53678da069bf3f78af73c3c90843c210`;
+- **APK:** APK debug da continuação corretiva validado no Moto G06, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.525.555 bytes e SHA-256 `1eec4278a332a3e883cc1f8c03e92efb2b19743edded752ccbb235426a8e68fb`; o APK diagnóstico anterior do Prompt 6 permanece como evidência física histórica;
 - **release Android:** ainda não existe APK release assinado nem artefato Android público;
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
@@ -54,13 +54,19 @@
 
 ## Trabalho atual
 
-O Prompt 13 foi concluído e validado no navegador; a implementação do Bloco 6 está concluída. G4 continua aberto por uso real prolongado, G5 por backup e restauração física em instalação limpa e G6 até o teste físico no Moto G06. O próximo passo é o checkpoint físico conjunto de G5/G6. A versão continua `0.2.0-alpha.1`; Bloco 7 e Prompt 14 não foram iniciados.
+A rodada corretiva posterior ao Prompt 13 foi concluída e validada no navegador e no Moto G06. A atualização preservou os dados; salvar pelo seletor de documentos produziu arquivo externo localizável sem alterar o banco; compartilhar abriu a folha com o JSON e os destinos esperados. Em banco preenchido, fechar a folha do backup de segurança cancelou a restauração; compartilhar com o Drive, confirmar o arquivo e prosseguir permitiu importar e restaurar sem bypass do requisito. Rolagem por toque e rodinha sobre o canvas, toque curto, cliques, canvas único e exclusão permanente foram aprovados. G5 continua aberto somente até a restauração em instalação limpa e comparação final. G6 continua aberto até concluir Voltar, minimizar/restaurar, safe areas, navegação inferior, teclado virtual, fluidez, estabilidade e ausência de tela preta persistente. G4 permanece aberto. A versão continua `0.2.0-alpha.1`; Bloco 7 e Prompt 14 não foram iniciados.
 
 ## Bloqueios
 
-Nenhum bloqueio técnico identificado.
+Nenhum bloqueio técnico identificado. G5 e G6 mantêm pendências humanas explícitas antes de aprovação.
 
 ## Última evidência de validação
+
+Em 2026-08-06, Sam aprovou no Moto G06 a atualização preservando dados, o salvamento por `ACTION_CREATE_DOCUMENT`, a localização e permanência do JSON externo, o compartilhamento nativo e o banco inalterado. O backup de segurança pré-restauração foi confirmado no Drive: cancelar a folha bloqueou a restauração, enquanto compartilhar e confirmar a cópia permitiu importar em banco preenchido; não houve bypass. No Android, arraste rolou sem abrir painel e toque curto continuou abrindo estante, bibliotecária e criatura. No navegador, a rodinha sobre o canvas e os cliques funcionaram com canvas único. Confirmação, cancelamento e exclusão permanente também foram aprovados, preservando dados não relacionados. A rodada corretiva está concluída, mas G4, G5 e G6 permanecem abertos nas pendências registradas; Prompt 14 não foi iniciado e a versão segue `0.2.0-alpha.1`.
+
+Em 2026-08-05, o segundo checkpoint confirmou no Moto G06 a folha Android, o JSON presente nela, toque/arraste, áreas interativas, exclusão permanente e preservação das demais funções. A ausência de “Salvar como” motivou um plugin Capacitor local mínimo baseado em `ACTION_CREATE_DOCUMENT`, sem permissão ampla: o usuário escolhe a URI e o conteúdo final é escrito em UTF-8 por `ContentResolver`. Salvar e compartilhar agora são ações distintas. No navegador, a causa da rodinha foi isolada na captura do wheel pelo MouseManager; `preventDefaultWheel: false` entrega a roda ao navegador sem alterar `touch.capture: false`, `touch-action: pan-y` ou o limiar de 12 px. A suíte passou com 406 testes em 38 arquivos. O APK debug possui 7.525.555 bytes, SHA-256 `1eec4278a332a3e883cc1f8c03e92efb2b19743edded752ccbb235426a8e68fb` e ZIP íntegro; não foi instalado. Seletor e wheel aguardam validação humana. G4, G5 e G6 permanecem abertos; limpeza/restauração seguem suspensas, Prompt 14 não foi iniciado e a versão permanece `0.2.0-alpha.1`.
+
+Em 2026-08-03, a rodada corretiva posterior ao primeiro checkpoint físico adicionou os plugins oficiais `@capacitor/filesystem` `8.1.2` e `@capacitor/share` `8.0.1`, compatíveis com Capacitor 8. No Android, o JSON validado é escrito em UTF-8 no cache, compartilhado pela URI nativa e removido somente após o encerramento do fluxo; a interface não afirma destino final. Na sala, a captura impeditiva de toque foi desativada, o canvas passou a permitir `pan-y` e seleções exigem `pointerup` dentro do limiar de 12 px, com cancelamento em arraste, `pointercancel`, saída ou destroy. A exclusão permanente remove livro, notas, citações e atividades relacionadas na mesma transação Dexie, sem alterar schema, e usa confirmação inline no detalhe. A suíte passou com 385 testes em 36 arquivos. O APK debug foi gerado em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.525.449 bytes, SHA-256 `c92068db7ccbeffbe892a9acb5fc0050f8ffecd6f7c536259e44d5edc465ef28` e ZIP íntegro; não foi instalado. Atualização do APK anterior por cima preservando o livro existente foi aprovada; exportação externa, rolagem, toque e exclusão aguardam novo teste físico/manual. G4, G5 e G6 permanecem abertos; Prompt 14 não foi iniciado e a versão segue `0.2.0-alpha.1`.
 
 Em 2026-08-01, o Prompt 13 foi validado no navegador. A estante reagiu aos dados, incluindo conclusão e livro recente; iluminação, bibliotecária e criatura permaneceram distinguíveis em desktop, 320 × 915 e 360 × 640. Após a correção de lifecycle, a bibliotecária manteve idle contínuo e a criatura completou múltiplos ciclos delimitados sem salto, parada ou aceleração; destaque pulsou discretamente e houve exatamente um canvas durante a rota, zero fora dela e instância limpa no retorno. Estante, bibliotecária e criatura abriram painéis React exclusivos e acessíveis; pausa/retomada, saída/retorno e CSP estrita foram aprovados. A piscada breve do canvas durante resize contínuo de janela é limitação visual não bloqueadora e deve ser reavaliada em lifecycle real no Android. A suíte passou com 349 testes em 31 arquivos. G4, G5 e G6 seguem abertos; a versão permanece `0.2.0-alpha.1`, Bloco 7 e Prompt 14 não foram iniciados.
 

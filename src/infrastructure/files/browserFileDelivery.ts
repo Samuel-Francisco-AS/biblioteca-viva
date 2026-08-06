@@ -1,10 +1,10 @@
-import type { FileDeliveryPort, FileDeliveryResult } from "../../application";
+import type { BackupFileSharePort, ShareBackupResult } from "../../application";
 
-export class BrowserFileDelivery implements FileDeliveryPort {
-  async deliver(file: {
+export class BrowserFileDelivery implements BackupFileSharePort {
+  async shareBackupFile(file: {
     readonly name: string;
     readonly content: string;
-  }): Promise<FileDeliveryResult> {
+  }): Promise<ShareBackupResult> {
     const blob = new Blob([file.content], {
       type: "application/json;charset=utf-8",
     });
@@ -15,7 +15,7 @@ export class BrowserFileDelivery implements FileDeliveryPort {
           files: [nativeFile],
           title: "Backup da Biblioteca Viva",
         });
-        return "delivered";
+        return "flow-finished";
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError")
           return "cancelled";
@@ -29,7 +29,7 @@ export class BrowserFileDelivery implements FileDeliveryPort {
       anchor.download = file.name;
       anchor.rel = "noopener";
       anchor.click();
-      return "delivered";
+      return "flow-finished";
     } finally {
       URL.revokeObjectURL(url);
     }
