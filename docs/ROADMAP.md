@@ -14,12 +14,12 @@
 ## Estado atual
 
 - **versão:** `v0.2.0-alpha.1`, marco atual;
-- **bloco concluído:** 6 — Biblioteca visual conectada (checkpoint físico conjunto pendente);
-- **gate:** G3 aprovado por Sam em 2026-07-29;
+- **blocos concluídos:** 5 — Backup, restauração e recuperação; 6 — Biblioteca visual conectada;
+- **gates:** G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto em paralelo;
 - **implementação concluída:** Blocos 4, 5 e 6;
 - **prompts concluídos:** Prompts 4 a 13;
-- **prompt atual:** checkpoint físico conjunto de G5/G6 no Moto G06;
-- **bloco atual:** Bloco 6 concluído; G5 aguarda backup e restauração em instalação limpa, G6 aguarda teste no Moto G06; Bloco 7 e Prompt 14 não iniciados;
+- **próximo prompt planejado:** Prompt 14 — Arquitetura de áudio e primeira paisagem sonora, ainda não iniciado;
+- **próximo bloco:** Bloco 7 — identidade sonora e contextual, ainda não iniciado;
 - **APK:** diagnóstico interno validado no Moto G06 com Android 15; release assinado ainda não existe;
 - **código:** implementação do Bloco 4 validada no navegador; G4 aguarda uso real prolongado.
 
@@ -43,9 +43,9 @@
 | `[x]` | 2 | 3 | APK debug instalado e validado no Android real | G2 aprovado |
 | `[x]` | 3 | 4–6 | domínio, aplicação e persistência validados | G3 aprovado |
 | `[~]` | 4 | 7–9 | implementação concluída; uso real prolongado pendente | G4 aberto |
-| `[x]` | 5 | 10 | implementação e validação web concluídas; restauração física em instalação limpa pendente | G5 aberto |
-| `[x]` | 6 | 11–13 | implementação e validação web concluídas; teste físico no Moto G06 pendente | G6 aberto |
-| `[ ]` | 7 | 14–15 | identidade sonora e contextual | G7 |
+| `[x]` | 5 | 10 | backup externo e restauração física em armazenamento limpo validados | G5 aprovado em 2026-08-06 |
+| `[x]` | 6 | 11–13 | biblioteca visual e experiência física Android validadas | G6 aprovado em 2026-08-06 |
+| `[ ]` | 7 | 14–15 | próximo bloco: identidade sonora e contextual; Prompt 14 não iniciado | G7 |
 | `[ ]` | 8 | 16 | primeiro ciclo emocional completo | G8 |
 | `[ ]` | 9 | 17–18 | acessibilidade e desempenho mobile | G9 |
 | `[ ]` | 10 | 19 | regressão, CI e manutenção | G10 |
@@ -77,7 +77,7 @@ O commit, quando autorizado, ocorre somente depois da aprovação humana e não 
 
 Excepcionalmente, o Bloco 5 pode iniciar com G4 aberto: a implementação e a validação funcional web do Bloco 4 foram concluídas, enquanto o uso real prolongado continua como pendência explícita e não bloqueadora. Isso não equivale a aprovar G4.
 
-Excepcionalmente, Sam autorizou iniciar o Bloco 6 com G5 aberto. A restauração física de G5 e a prova física de G6 serão executadas juntas ao final do Bloco 6; isso não aprova nenhum dos dois gates.
+Excepcionalmente, Sam autorizou iniciar o Bloco 6 com G5 aberto. A restauração física de G5 e a prova física de G6 foram então planejadas para o mesmo checkpoint ao final do Bloco 6, sem aprovação antecipada; ambas foram concluídas e seus gates aprovados em 2026-08-06.
 
 ## Expansões pós-protótipo
 

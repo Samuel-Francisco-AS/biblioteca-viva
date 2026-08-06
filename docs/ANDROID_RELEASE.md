@@ -184,7 +184,19 @@ A ordem segura confirmada no Moto G06 é:
 8. restaurar o backup externo em banco vazio;
 9. comparar livros, progresso, status, notas e citações após reabrir.
 
-Os passos 1 a 6 foram validados. Fechar a folha sem compartilhar cancelou a restauração; compartilhar e confirmar a segurança no Drive permitiu prosseguir. Os passos destrutivos 7 a 9 continuam pendentes de G5.
+Os nove passos foram validados no Moto G06 em 2026-08-06. Fechar a folha sem compartilhar cancelou a restauração; compartilhar e confirmar a segurança no Drive permitiu prosseguir. Depois da cópia externa confirmada, a limpeza de cache e armazenamento produziu o estado inicial esperado: banco vazio, Coleção vazia e sala visual com total zero. A restauração recuperou os dois livros e a sala passou para total dois; títulos, autores, status e progresso corresponderam ao estado anterior e permaneceram após fechar e reabrir. Essa evidência aprovou G5 no checkpoint físico do protótipo.
+
+## 11. Checkpoint físico do protótipo — G5 e G6
+
+Em 2026-08-06, o APK debug interno foi usado repetidamente no Moto G06. A instalação por cima preservou os dados; a limpeza controlada produziu o estado vazio; a restauração do backup externo recuperou os dados e persistiu após reabertura. Navegação, botão Voltar, teclado, safe areas, rolagem, toque versus arraste, interações e painéis, saída e retorno, retomada da sala Phaser, canvas único, fluidez e estabilidade foram considerados adequados, sem tela preta persistente. Sam aprovou G5 e G6 com essas evidências.
+
+Esse checkpoint valida o protótipo e não substitui o checklist futuro de release. Continuam pendentes para G11:
+
+- assinatura de produção;
+- APK release público e AAB;
+- atualização entre builds assinados de produção;
+- publicação em loja;
+- execução integral do checklist de release final.
 
 APK debug corretivo gerado, mas não instalado, em 2026-08-03:
 

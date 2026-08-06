@@ -56,4 +56,4 @@ Este manifesto indexa a documentação inicial do repositório Biblioteca Viva, 
 
 ## Estado técnico
 
-O scaffold web, o shell navegável e a plataforma Android do Capacitor existem na raiz. Os Prompts 4–6, o Bloco 3 e o Gate G3 estão concluídos e aprovados na versão `0.2.0-alpha.1`, com domínio, aplicação e persistência isolados e validados em web e Android. O próximo trabalho é o Prompt 7, no Bloco 4. Os comandos, rotas e caminhos reais estão registrados em `README.md`, `AGENTS.md` e `docs/STATUS.md`.
+O scaffold web, o shell navegável e a plataforma Android do Capacitor existem na raiz. A aplicação convencional está utilizável; backup e restauração foram validados; e a biblioteca visual está conectada aos dados e validada no Android. G5 e G6 foram aprovados em 2026-08-06, enquanto G4 permanece aberto por uso real prolongado. A versão continua `0.2.0-alpha.1`; o próximo trabalho de implementação é o Prompt 14, no Bloco 7, ainda não iniciado. Os comandos, rotas e caminhos reais estão registrados em `README.md`, `AGENTS.md` e `docs/STATUS.md`.

@@ -678,22 +678,40 @@ A ausência de uma ação explícita para escolher pasta foi confirmada. A folha
 - [x] abrir, cancelar e confirmar a exclusão permanente;
 - [x] confirmar preservação dos dados não relacionados.
 
-### G5 — permanece pendente
+### Evidência final de G5 — aprovado em 2026-08-06
 
-- [x] obter cópia externa verificável;
-- [ ] executar limpeza controlada somente depois;
-- [ ] abrir o aplicativo em banco vazio;
-- [ ] restaurar em instalação limpa;
-- [ ] comparar livros, progresso, status, notas e citações;
-- [ ] fechar e reabrir e confirmar persistência.
+- [x] instalar APK novo por cima e confirmar preservação dos dados;
+- [x] salvar o backup em arquivo externo e localizá-lo fora do armazenamento privado do aplicativo;
+- [x] compartilhar o backup de segurança com o Drive e confirmar o arquivo no destino;
+- [x] fechar a folha sem compartilhar e confirmar que a restauração foi bloqueada;
+- [x] limpar cache e armazenamento de forma controlada somente após confirmar a cópia externa;
+- [x] abrir o aplicativo com banco vazio, Coleção vazia e sala visual com total zero;
+- [x] selecionar e importar o backup externo em armazenamento limpo;
+- [x] recuperar os dois livros existentes;
+- [x] comparar títulos, autores, status e progresso com o estado anterior;
+- [x] confirmar que a sala visual reagiu do total zero para total dois;
+- [x] fechar e reabrir o aplicativo e confirmar persistência dos dados restaurados.
 
-### G6 — permanece pendente
+Resultado: **G5 aprovado por Sam em 2026-08-06**. A exportação produz uma cópia recuperável, a restauração em armazenamento limpo funciona e os dados permanecem após reabertura. Oferecer “Salvar no dispositivo” também no backup de segurança pré-restauração continua apenas como melhoria futura de uniformidade; o Share atual foi validado com cancelamento bloqueando a restauração e cópia comprovada no Drive.
 
-- [ ] testar botão Voltar;
-- [ ] minimizar e restaurar;
-- [ ] verificar safe areas e navegação inferior;
-- [ ] verificar teclado virtual;
-- [ ] verificar fluidez e estabilidade;
-- [ ] confirmar ausência de tela preta persistente.
+### Evidência final de G6 — aprovado em 2026-08-06
 
-Em 2026-08-05, a suíte passou com 406 testes em 38 arquivos. A continuação cobre seletor injetável, nome/MIME/texto exatos, UTF-8 sem BOM ou quebra adicional, saved/cancelled/falhas sanitizadas, espera pela escrita, concorrência, desmontagem, separação save/share, contrato nativo, permissões e `preventDefaultWheel: false`. O APK debug possui 7.525.555 bytes, SHA-256 `1eec4278a332a3e883cc1f8c03e92efb2b19743edded752ccbb235426a8e68fb` e ZIP íntegro. Em 2026-08-06, os fluxos de salvamento, compartilhamento, segurança pré-restauração, interação, rodinha e exclusão foram aprovados manualmente. G4, G5 e G6 continuam abertos nas pendências acima.
+A aprovação considera o uso físico repetido no Moto G06 e a adequação funcional ao estágio atual do protótipo.
+
+- [x] validar navegação inferior e navegação convencional entre áreas;
+- [x] testar o botão Voltar;
+- [x] minimizar, retornar e retomar a sala Phaser;
+- [x] verificar safe areas;
+- [x] verificar formulários e teclado virtual;
+- [x] rolar verticalmente e distinguir toque curto de arraste;
+- [x] interagir com estante, bibliotecária e criatura e abrir os painéis React;
+- [x] confirmar atualização da cena conforme os dados;
+- [x] confirmar canvas único;
+- [x] observar fluidez e estabilidade geral;
+- [x] confirmar ausência de tela preta persistente e de perda de dados durante o uso testado.
+
+Resultado: **G6 aprovado por Sam em 2026-08-06**. Refinamento artístico, sala visual dominante, composição futura e possíveis painéis sobrepostos não integram o critério funcional deste gate e permanecem no backlog de UX, arte e polimento.
+
+Em 2026-08-05, a suíte passou com 406 testes em 38 arquivos. A continuação cobre seletor injetável, nome/MIME/texto exatos, UTF-8 sem BOM ou quebra adicional, saved/cancelled/falhas sanitizadas, espera pela escrita, concorrência, desmontagem, separação save/share, contrato nativo, permissões e `preventDefaultWheel: false`. O APK debug possui 7.525.555 bytes, SHA-256 `1eec4278a332a3e883cc1f8c03e92efb2b19743edded752ccbb235426a8e68fb` e ZIP íntegro.
+
+G4 permanece pendente por exigir uso pessoal prolongado com ao menos dez livros reais. G9 ainda concentrará acessibilidade, desempenho e uso mobile mais rigoroso; G11 ainda tratará APK release assinado, atualização final entre builds de produção e demais requisitos de distribuição.

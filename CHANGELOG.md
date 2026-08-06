@@ -8,15 +8,16 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 ### Adicionado
 
-- nada registrado.
+- backup Android com salvamento em local escolhido, compartilhamento nativo e restauração recuperável;
+- exclusão transacional de livros, notas, citações e atividades relacionadas.
 
 ### Alterado
 
-- nada registrado.
+- validação física de atualização, limpeza de armazenamento e restauração no Moto G06, com aprovação dos Gates G5 e G6.
 
 ### Corrigido
 
-- nada registrado.
+- interação da sala Phaser para permitir rolagem por toque e rodinha sem perder cliques ou toques curtos.
 
 ### Removido
 

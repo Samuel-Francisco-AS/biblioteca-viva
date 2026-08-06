@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> Estado atual: Gates G0 a G3 aprovados; Prompts 7–10 e implementações dos Blocos 4 e 5 concluídos; G4 aguarda uso real prolongado e G5 aguarda checkpoint Android; versão `0.2.0-alpha.1`; Prompt 11 ainda não foi iniciado, 31 de julho de 2026.
+> Estado atual em 2026-08-06: Gates G0 a G3, G5 e G6 aprovados; G4 permanece aberto por uso real prolongado; Blocos 5 e 6 concluídos; Bloco 7 e Prompt 14 são os próximos trabalhos de implementação, ainda não iniciados; versão `0.2.0-alpha.1`.
 
 ## 1. Função desta documentação
 
@@ -86,9 +86,10 @@ Ela está dividida por frequência de mudança:
 - Prompt 1 validado manualmente em desktop e três dimensões móveis;
 - shell responsivo e cinco rotas criados pelo Prompt 2;
 - Prompt 2 concluído e validado no navegador;
-- Gates G0 a G3 aprovados; implementação do Bloco 4 e Prompts 7–9 concluídos; G4 permanece aberto por uso real prolongado;
-- Prompt 10 foi concluído e validado no navegador;
-- checkpoint Android do G5 permanece pendente antes do Prompt 11;
+- Gates G0 a G3, G5 e G6 aprovados; implementação do Bloco 4 e Prompts 7–13 concluídos;
+- G4 permanece aberto por uso pessoal prolongado;
+- Blocos 5 e 6 concluídos após validação de backup, restauração e biblioteca visual no Moto G06;
+- Bloco 7 é o próximo bloco e o Prompt 14 ainda não foi iniciado;
 - repositório Git inicializado na branch `main`;
 - stack e arquitetura aprovadas;
 - APK diagnóstico interno validado no Gate G3; APK release assinado permanece pendente;
