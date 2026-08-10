@@ -128,8 +128,8 @@ Phaser recebe `LibraryViewModel` resumido e exibe:
 Interações:
 
 - estante: abre painel React com resumo e acesso à Coleção;
-- bibliotecária: abre painel React com uma fala provisória curta;
-- criatura: abre painel React com uma descrição provisória curta;
+- bibliotecária: solicita ao `DialoguePort` uma fala contextual localizada e abre o painel React;
+- criatura: solicita uma resposta curta localizada e abre o mesmo painel React;
 - livro em destaque: mantém contrato tipado, sem fluxo funcional adicional nesta etapa.
 
 Somente um painel fica aberto. Abrir outro substitui o anterior; fechar remove o painel; sair da rota desmonta painel, canvas, listeners e animações. Coleção permanece permanentemente disponível por link React.
@@ -239,3 +239,18 @@ Configurações
 ```
 
 Ao perder visibilidade ou receber `appStateChange` inativo, o serviço interrompe música e efeitos. Ao retornar, retoma somente a música desejada e nunca reproduz efeitos acumulados. Sair da Biblioteca interrompe sua música; retornar solicita uma única instância. Falha de backend, arquivo ou persistência sonora degrada para silêncio e não bloqueia os demais fluxos.
+
+## 16. Diálogos contextuais
+
+```text
+carregar Biblioteca
+→ React envia somente contagens agregadas ao DialogueService
+→ registrar instante mínimo da visita em settings
+→ tocar bibliotecária ou criatura
+→ Phaser emitir interação tipada
+→ áudio receber sua intenção independente
+→ DialogueSelector aplicar contexto, once, cooldown e fallback
+→ painel React atual apresentar LocalizedDialogue em pt-BR
+```
+
+Biblioteca vazia, primeiro livro, leitura em andamento, primeira conclusão e retorno após três dias são contextos da bibliotecária. Toques gerais e criatura possuem pequenas sequências previsíveis. Fala especial em cooldown não se repete incessantemente; `once` não retorna após persistido. Falha do histórico usa estado seguro e não bloqueia a sala, Coleção ou dados pessoais.

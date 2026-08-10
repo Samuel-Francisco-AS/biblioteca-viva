@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> Estado atual em 2026-08-10: Gates G0 a G3, G5 e G6 aprovados; G4 permanece aberto por uso real prolongado; Blocos 5 e 6 concluídos; Prompt 14 está tecnicamente implementado após uma correção, com validação humana acumulada para checkpoint integrado; G7 permanece aberto; versão `0.2.0-alpha.1`.
+> Estado atual em 2026-08-10: Gates G0 a G3, G5 e G6 aprovados; G4 permanece aberto por uso real prolongado; Blocos 5 e 6 concluídos; Prompts 14 e 15 estão tecnicamente implementados, com validações humanas acumuladas para checkpoint integrado; G7 permanece aberto; versão `0.2.0-alpha.1`.
 
 ## 1. Função desta documentação
 
@@ -89,7 +89,7 @@ Ela está dividida por frequência de mudança:
 - Gates G0 a G3, G5 e G6 aprovados; implementação do Bloco 4 e Prompts 7–13 concluídos;
 - G4 permanece aberto por uso pessoal prolongado;
 - Blocos 5 e 6 concluídos após validação de backup, restauração e biblioteca visual no Moto G06;
-- Bloco 7 está em andamento; a primeira validação humana do Prompt 14 foi reprovada, a rodada corretiva está tecnicamente implementada e sua revalidação foi acumulada; o Prompt 15 está autorizado em modo acelerado sem aprovar G7;
+- Bloco 7 possui Prompts 14 e 15 tecnicamente implementados; a primeira validação humana do Prompt 14 foi reprovada e a revalidação, junto à validação do Prompt 15, foi acumulada sem aprovar G7;
 - validações manuais repetitivas de G7, G8 e G9 serão agrupadas em checkpoint integrado próximo ao final do protótipo, sem marcar itens não executados como aprovados;
 - repositório Git inicializado na branch `main`;
 - stack e arquitetura aprovadas;

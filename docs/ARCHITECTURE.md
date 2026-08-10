@@ -919,3 +919,20 @@ O Phaser 3.90.0 resolve `input.mouse.preventDefaultWheel` como `true` por padrã
 A fronteira de entrada é `React/DomainEvent → AudioIntent → AudioPort`. O hook `useAudioExperience` centraliza rota, `visibilitychange`, `App.appStateChange`, descarte e um listener único de primeiro gesto em captura no `document`, removido antes de inicializar. Phaser continua emitindo apenas `LibraryInteraction`; o host React traduz as três seleções uma vez. `LibraryEntryCompleted` chega pelo `LocalEventBus` somente depois do commit e o assinante do composition root emite a intenção sem tornar falha sonora uma falha do comando persistido.
 
 Preferências são validadas e persistidas sob `audio.preferences.v1` na tabela `settings` existente. Não há schema novo, store React como fonte de verdade, acesso Dexie pela apresentação ou alteração do backup: settings já integra o snapshot v1. O manifesto contém os cinco grupos e caminhos intercambiáveis. WAVs provisórios são gerados deterministicamente por script Node; arquivo ausente e backend ausente terminam em silêncio sanitizado, nunca em oscilador contínuo, sem bloquear dados, navegação ou cena.
+
+## 27. Conteúdo e diálogos após o Prompt 15
+
+`src/content/` contém catálogo, schemas e locale, mas não é motor. O composition root valida/importa `PROTOTYPE_CONTENT` e injeta catálogo e `ContentLocalizer` no `DialogueService`. A aplicação possui contratos, `DialogueSelector` puro e orquestração; infraestrutura implementa somente a porta de histórico. Fluxo:
+
+```text
+LibraryViewModel agregado → DialogueService.enterLibrary
+Phaser LibraryInteraction → host React → DialoguePort.select(event)
+                                      ↓
+              DialogueSelector(catalog, fatos, histórico, instante)
+                                      ↓
+             LocalizedDialogue pt-BR → painel React existente
+```
+
+O selector não importa React, Phaser, Dexie, Capacitor, DOM, Web Audio ou relógio concreto. Ele filtra condições/`once`/cooldown, ordena prioridade, uso menos recente e ID e resolve fallback explícito. Phaser não conhece conteúdo ou histórico. React não escolhe frases nem acessa persistência; fornece apenas as contagens já projetadas e apresenta o resultado localizado.
+
+`dialogue.history.v1` vive na tabela `settings` v2 existente, validado ao ler/escrever. Armazena IDs `once`, último instante por fala e última entrada na Biblioteca; não armazena textos, títulos, autores, notas, citações ou fatos da coleção. Não houve migração. O backup existente já inclui settings. `book.first-completed` é um evento de diálogo disponível para composição futura, sem implementar o motor de marcos do Prompt 16.

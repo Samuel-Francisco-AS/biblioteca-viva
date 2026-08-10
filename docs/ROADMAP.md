@@ -17,8 +17,8 @@
 - **blocos concluídos:** 5 — Backup, restauração e recuperação; 6 — Biblioteca visual conectada;
 - **gates:** G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto em paralelo;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **prompts tecnicamente implementados:** Prompts 4 a 14; Prompt 14 mantém validação humana acumulada e não está aprovado;
-- **próximo prompt técnico autorizado:** Prompt 15 — conteúdo externo, localização e diálogos básicos;
+- **prompts tecnicamente implementados:** Prompts 4 a 15; Prompts 14 e 15 mantêm validações humanas acumuladas e não estão aprovados;
+- **próximo prompt técnico possível:** Prompt 16, somente após revisão automática/documental do checkpoint do Prompt 15;
 - **bloco atual:** Bloco 7 — identidade sonora e contextual, em andamento;
 - **APK:** diagnóstico interno validado no Moto G06 com Android 15; release assinado ainda não existe;
 - **código:** implementação do Bloco 4 validada no navegador; G4 aguarda uso real prolongado.
@@ -34,7 +34,7 @@
 - [x] Prompt 12 — Projeção visual e ponte de eventos, concluído e validado no navegador.
 - [x] Prompt 13 — Cena visual e interação inicial, concluído e validado no navegador.
 - [~] Prompt 14 — Arquitetura de áudio e primeira paisagem sonora; tecnicamente implementado após correção, validação humana acumulada.
-- [ ] Prompt 15 — Conteúdo externo, localização e diálogos básicos; autorizado em modo acelerado.
+- [~] Prompt 15 — Conteúdo externo, localização e diálogos básicos; tecnicamente implementado, validação humana acumulada.
 
 ## Blocos e gates
 
@@ -47,7 +47,7 @@
 | `[~]` | 4 | 7–9 | implementação concluída; uso real prolongado pendente | G4 aberto |
 | `[x]` | 5 | 10 | backup externo e restauração física em armazenamento limpo validados | G5 aprovado em 2026-08-06 |
 | `[x]` | 6 | 11–13 | biblioteca visual e experiência física Android validadas | G6 aprovado em 2026-08-06 |
-| `[~]` | 7 | 14–15 | Prompt 14 implementado tecnicamente; Prompt 15 autorizado; validação integrada acumulada | G7 aberto |
+| `[~]` | 7 | 14–15 | áudio e diálogos implementados tecnicamente; validação integrada acumulada | G7 aberto |
 | `[ ]` | 8 | 16 | primeiro ciclo emocional completo | G8 |
 | `[ ]` | 9 | 17–18 | acessibilidade e desempenho mobile | G9 |
 | `[ ]` | 10 | 19 | regressão, CI e manutenção | G10 |

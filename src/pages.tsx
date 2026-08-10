@@ -1,13 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import type { BookEntry } from "./domain";
-import type { AudioPort } from "./application";
+import type { AudioPort, DialoguePort, LocalizedDialogue } from "./application";
 import { presentApplicationError } from "./features/entry-editor/errorMessages";
-import {
-  LibraryCharacterPanel,
-  type LibraryCharacterPanelKind,
-} from "./features/library-visual/LibraryCharacterPanel";
+import { LibraryCharacterPanel } from "./features/library-visual/LibraryCharacterPanel";
 import { LibraryVisualDiagnosticsPanel } from "./features/library-visual/LibraryVisualDiagnostics";
 import { LibraryVisualHost } from "./features/library-visual/LibraryVisualHost";
 import { LibraryProjectionService } from "./features/library-visual/LibraryProjectionService";
@@ -20,6 +17,7 @@ import { createLibraryVisualDiagnostics } from "./features/library-visual/diagno
 
 export interface LibraryPageApplication {
   readonly audio?: Pick<AudioPort, "emit">;
+  readonly dialogue: Pick<DialoguePort, "enterLibrary" | "select">;
   readonly queries: {
     readonly listBookEntries: { execute(): Promise<readonly BookEntry[]> };
   };
@@ -30,7 +28,10 @@ type LibraryPageState =
   | { readonly kind: "error"; readonly message: string }
   | { readonly kind: "ready"; readonly viewModel: LibraryViewModel };
 
-type OpenLibraryPanel = LibraryCharacterPanelKind | "shelf" | null;
+type OpenLibraryPanel =
+  | { readonly kind: "shelf" }
+  | { readonly dialogue: LocalizedDialogue; readonly kind: "character" }
+  | null;
 
 function projectionInput(books: readonly BookEntry[]) {
   return {
@@ -60,6 +61,7 @@ export function LibraryPage({
   );
   const projectionService = useMemo(() => new LibraryProjectionService(), []);
   const navigate = useNavigate();
+  const dialogueRequest = useRef(0);
   const [attempt, setAttempt] = useState(0);
   const [openPanel, setOpenPanel] = useState<OpenLibraryPanel>(null);
   const [state, setState] = useState<LibraryPageState>(() =>
@@ -95,18 +97,46 @@ export function LibraryPage({
     };
   }, [application, attempt, projectionService]);
 
+  useEffect(() => {
+    if (!application || state.kind !== "ready") return;
+    void application.dialogue.enterLibrary({
+      completedBooks: state.viewModel.completedBooks,
+      inProgressBooks: state.viewModel.inProgressBooks,
+      totalBooks: state.viewModel.totalBooks,
+    });
+  }, [application, state]);
+
+  useEffect(
+    () => () => {
+      dialogueRequest.current += 1;
+    },
+    [],
+  );
+
+  async function openCharacterDialogue(
+    event: "creature.interaction" | "librarian.interaction",
+  ) {
+    if (!application) return;
+    const request = dialogueRequest.current + 1;
+    dialogueRequest.current = request;
+    const dialogue = await application.dialogue.select(event);
+    if (request !== dialogueRequest.current) return;
+    setOpenPanel({ dialogue, kind: "character" });
+  }
+
   function handleInteraction(interaction: LibraryInteraction) {
     if (interaction.type === "ShelfSelected") {
+      dialogueRequest.current += 1;
       application?.audio?.emit({ type: "ShelfSelected" });
-      setOpenPanel("shelf");
+      setOpenPanel({ kind: "shelf" });
     }
     if (interaction.type === "LibrarianSelected") {
       application?.audio?.emit({ type: "LibrarianSelected" });
-      setOpenPanel("librarian");
+      void openCharacterDialogue("librarian.interaction");
     }
     if (interaction.type === "CreatureSelected") {
       application?.audio?.emit({ type: "CreatureSelected" });
-      setOpenPanel("creature");
+      void openCharacterDialogue("creature.interaction");
     }
   }
 
@@ -152,16 +182,16 @@ export function LibraryPage({
             onInteraction={handleInteraction}
             projection={state.viewModel}
           />
-          {openPanel === "shelf" && (
+          {openPanel?.kind === "shelf" && (
             <LibraryShelfPanel
               onClose={() => setOpenPanel(null)}
               onOpenCollection={() => void navigate("/colecao")}
               viewModel={state.viewModel}
             />
           )}
-          {(openPanel === "librarian" || openPanel === "creature") && (
+          {openPanel?.kind === "character" && (
             <LibraryCharacterPanel
-              kind={openPanel}
+              dialogue={openPanel.dialogue}
               onClose={() => setOpenPanel(null)}
             />
           )}

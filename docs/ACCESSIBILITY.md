@@ -158,3 +158,13 @@ A validação manual com teclado, leitor de estrutura, zoom, larguras móveis e 
 - asset ausente degrada para silêncio sem bloquear controles, navegação ou feedback textual;
 - pause descarta efeitos em curso e não acumula respostas para o retorno;
 - validação manual com leitor de tela, zoom, fone e aparelho físico permanece pendente.
+
+## 15. Conteúdo contextual do Prompt 15
+
+- falas permanecem em painel React semântico com heading, texto localizado e botão de fechar focado;
+- atributo `lang="pt-BR"` acompanha a fala;
+- áudio dos personagens não é necessário para compreender a resposta;
+- Phaser somente emite interação e nunca renderiza o diálogo como única alternativa;
+- textos são curtos, sem culpa, cobrança, streak ou interpretação de livro;
+- fallback textual explícito mantém painel utilizável quando não há candidato específico;
+- validação manual de leitor de tela, ampliação e conforto de repetição foi acumulada para o checkpoint integrado.

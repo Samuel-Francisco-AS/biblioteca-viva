@@ -25,7 +25,13 @@ import {
   BackupFileError,
   BackupError,
   type AudioPort,
+  type DialogueErrorReporter,
+  type DialogueHistoryPort,
+  type DialoguePort,
+  DialogueSelector,
+  DialogueService,
 } from "../application";
+import { ContentLocalizer, PROTOTYPE_CONTENT } from "../content";
 import {
   BibliotecaDatabase,
   BrowserStoragePersistence,
@@ -55,6 +61,8 @@ import {
   consoleAudioErrorReporter,
   type AudioBackend,
   type AudioErrorReporter,
+  consoleDialogueErrorReporter,
+  DexieDialogueHistoryRepository,
   type PlatformCapabilitiesPort,
   type PlatformCapabilitySnapshot,
 } from "../infrastructure";
@@ -70,6 +78,7 @@ export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 export interface ApplicationRuntime {
   readonly appVersion: string;
   readonly audio: AudioPort;
+  readonly dialogue: DialoguePort;
   readonly platform: PlatformCapabilitySnapshot;
   readonly backup: {
     readonly nativeSaveAvailable: boolean;
@@ -108,6 +117,8 @@ export interface ApplicationRuntime {
 export interface CreateApplicationOptions {
   readonly audioBackend?: AudioBackend;
   readonly audioReporter?: AudioErrorReporter;
+  readonly dialogueHistory?: DialogueHistoryPort;
+  readonly dialogueReporter?: DialogueErrorReporter;
   readonly databaseName?: string;
   readonly backupFileSave?: BackupFileSavePort;
   readonly backupFileShare?: BackupFileSharePort;
@@ -155,6 +166,18 @@ export async function createApplication(
     audioReporter,
   );
   await audio.loadPreferences();
+  const dialogueReporter =
+    options.dialogueReporter ?? consoleDialogueErrorReporter;
+  const dialogue = new DialogueService(
+    PROTOTYPE_CONTENT,
+    new DialogueSelector(),
+    new ContentLocalizer(PROTOTYPE_CONTENT),
+    options.dialogueHistory ??
+      new DexieDialogueHistoryRepository(database, clock),
+    clock,
+    dialogueReporter,
+  );
+  await dialogue.loadHistory();
   events.subscribe("LibraryEntryCompleted", () => {
     audio.emit({ type: "BookCompleted" });
   });
@@ -195,6 +218,7 @@ export async function createApplication(
   return {
     appVersion: packageMetadata.version,
     audio,
+    dialogue,
     platform,
     backup: {
       nativeSaveAvailable,

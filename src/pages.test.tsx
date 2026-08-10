@@ -3,7 +3,13 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
-import { ApplicationError, type AudioPort } from "./application";
+import {
+  ApplicationError,
+  type AudioPort,
+  type DialogueEvent,
+  type DialoguePort,
+  type LocalizedDialogue,
+} from "./application";
 import type { BookEntry } from "./domain";
 import type { LibraryInteraction } from "./features/library-visual/contracts";
 import { LibraryPage, type LibraryPageApplication } from "./pages";
@@ -41,13 +47,38 @@ function LocationProbe() {
   return <output aria-label="URL atual">{location.pathname}</output>;
 }
 
+function dialogue(): Pick<DialoguePort, "enterLibrary" | "select"> {
+  return {
+    enterLibrary: vi.fn(() => Promise.resolve()),
+    select: vi.fn((event: DialogueEvent) => {
+      const creature = event === "creature.interaction";
+      const result: LocalizedDialogue = {
+        characterId: creature ? "character.creature" : "character.librarian",
+        closeLabel: "Fechar painel",
+        eyebrow: creature ? "Criatura" : "Bibliotecária",
+        id: creature
+          ? "dialogue.creature.observes"
+          : "dialogue.librarian.in-progress",
+        locale: "pt-BR",
+        text: creature
+          ? "A criatura inclina a cabeça e observa você em silêncio."
+          : "Há uma leitura em curso. Ela pode seguir no ritmo que couber.",
+        title: creature ? "Uma presença curiosa" : "Uma observação tranquila",
+      };
+      return Promise.resolve(result);
+    }),
+  };
+}
+
 function renderLibrary(
   result: Promise<readonly BookEntry[]>,
   audio?: Pick<AudioPort, "emit">,
+  dialoguePort = dialogue(),
 ) {
   const execute = vi.fn(() => result);
   const application: LibraryPageApplication = {
     audio,
+    dialogue: dialoguePort,
     queries: { listBookEntries: { execute } },
   };
   render(
@@ -60,6 +91,22 @@ function renderLibrary(
 }
 
 describe("Página Biblioteca", () => {
+  it("prepara o contexto agregado sem enviar conteúdo pessoal", async () => {
+    const dialoguePort = dialogue();
+    renderLibrary(Promise.resolve([book]), undefined, dialoguePort);
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    await waitFor(() =>
+      expect(dialoguePort.enterLibrary).toHaveBeenCalledWith({
+        completedBooks: 0,
+        inProgressBooks: 1,
+        totalBooks: 1,
+      }),
+    );
+    expect(
+      JSON.stringify(vi.mocked(dialoguePort.enterLibrary).mock.calls),
+    ).not.toContain(book.title);
+  });
+
   it("emite intenções distintas para os três objetos interativos", async () => {
     const emit = vi.fn();
     const audio: Pick<AudioPort, "emit"> = { emit };
@@ -102,6 +149,7 @@ describe("Página Biblioteca", () => {
       )
       .mockResolvedValueOnce([]);
     const application: LibraryPageApplication = {
+      dialogue: dialogue(),
       queries: { listBookEntries: { execute } },
     };
     render(
@@ -158,11 +206,9 @@ describe("Página Biblioteca", () => {
     act(() => visualHostMock.interaction?.({ type: "LibrarianSelected" }));
 
     expect(
-      screen.getByRole("heading", { name: "Uma acolhida tranquila" }),
+      await screen.findByRole("heading", { name: "Uma observação tranquila" }),
     ).toBeVisible();
-    expect(
-      screen.getByText(/sempre espaço para mais uma história/iu),
-    ).toBeVisible();
+    expect(screen.getByText(/leitura em curso/iu)).toBeVisible();
     expect(screen.getByRole("button", { name: "Fechar painel" })).toHaveFocus();
     expect(screen.queryByText("book-1")).not.toBeInTheDocument();
   });
@@ -176,12 +222,12 @@ describe("Página Biblioteca", () => {
     act(() => visualHostMock.interaction?.({ type: "CreatureSelected" }));
 
     expect(
-      screen.queryByRole("heading", { name: "Uma acolhida tranquila" }),
+      screen.queryByRole("heading", { name: "Uma observação tranquila" }),
     ).not.toBeInTheDocument();
     expect(
-      screen.getAllByRole("heading", { name: "Uma presença curiosa" }),
+      await screen.findAllByRole("heading", { name: "Uma presença curiosa" }),
     ).toHaveLength(1);
-    expect(screen.getByText(/percorre devagar/iu)).toBeVisible();
+    expect(screen.getByText(/inclina a cabeça/iu)).toBeVisible();
     await user.click(screen.getByRole("button", { name: "Fechar painel" }));
     expect(
       screen.queryByRole("heading", { name: "Uma presença curiosa" }),
@@ -192,6 +238,7 @@ describe("Página Biblioteca", () => {
     renderLibrary(Promise.resolve([book]));
     await screen.findByRole("img", { name: "Visualização da Biblioteca" });
     act(() => visualHostMock.interaction?.({ type: "CreatureSelected" }));
+    await screen.findByRole("heading", { name: "Uma presença curiosa" });
     act(() => visualHostMock.interaction?.({ type: "ShelfSelected" }));
     expect(
       screen.getByRole("heading", { name: "Resumo da sua coleção" }),

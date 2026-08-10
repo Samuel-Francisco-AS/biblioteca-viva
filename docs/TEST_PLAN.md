@@ -774,3 +774,36 @@ No Moto G06, repetir com alto-falante e fone em volume confortável, observar in
 ### Evidência automática da rodada corretiva
 
 Em 2026-08-07, formatação, `format:check`, lint, typecheck, geração/verificação determinística dos seis WAVs, suíte completa, build web, `android:sync` e `android:build:debug` passaram. Foram 442 testes em 44 arquivos. O APK debug contém os seis assets, possui 7.526.051 bytes, SHA-256 `9d3b71db91ab58e210f482d6721f27e117f09b0b7e38fa7bf0d270b431f7f614` e ZIP íntegro. O artefato não foi instalado nem testado fisicamente nesta rodada; a correção, Prompt 14 e G7 continuam sem aprovação.
+
+## 17. Prompt 15 — Conteúdo externo, localização e diálogos
+
+Em 2026-08-10, formatação, `format:check`, lint, typecheck, a suíte completa, build web, `android:sync`, `android:build:debug` e `git diff --check` passaram. Foram 473 testes em 49 arquivos. O APK debug não instalado possui 7.526.051 bytes, SHA-256 `c59b76f9b8d1065426e870b6d77dd7f474924a78327bd393129ff10492963296` e integridade ZIP confirmada. Nenhum teste manual foi executado nesta etapa, e essa evidência não aprova Prompt 15 nem G7.
+
+Os testes automáticos do Prompt 15 cobrem:
+
+- catálogo válido e falha cedo para ID ausente/duplicado, locale inválido, chave ou referência inexistente;
+- personagens, sala, decoração reservada e textos contextuais declarativos;
+- `pt-BR`, fallback de locale e fallback de chave ausente;
+- seleção básica, prioridade, desempate determinístico, condições satisfeitas/não satisfeitas, histórico vazio/existente, `once`, cooldown, repetição posterior e fallback explícito;
+- Biblioteca vazia, primeiro livro, leitura em andamento, primeira conclusão e retorno após alguns dias;
+- rotação de falas gerais da bibliotecária e respostas da criatura;
+- contrato `book.first-completed` reutilizável sem `MilestoneEngine`;
+- gravação/carregamento em `dialogue.history.v1`, deduplicação de `once`, validação externa e ausência de conteúdo pessoal;
+- falhas de leitura/gravação sanitizadas e degradáveis;
+- composition root, recarga do histórico, contexto agregado, painel React e coexistência com intents de áudio;
+- barreiras que impedem Phaser de importar conteúdo, selector, histórico ou Dexie e impedem aplicação/conteúdo de depender de plataforma/apresentação.
+
+### Checklist acumulada para checkpoint integrado
+
+- [ ] conferir o tom de vazio, primeiro livro, andamento, conclusão e retorno;
+- [ ] tocar repetidamente a bibliotecária e confirmar variedade sem insistência da fala especial;
+- [ ] tocar repetidamente a criatura e confirmar respostas curtas e coerentes;
+- [ ] fechar/reabrir e confirmar que falas `once` não retornam;
+- [ ] simular retorno após três ou mais dias sem culpa ou cobrança;
+- [ ] confirmar que nenhum diálogo interpreta título, autor ou conteúdo da obra;
+- [ ] validar painel, foco, leitor de tela, zoom e largura mobile;
+- [ ] confirmar som e texto coexistindo com mute ligado/desligado;
+- [ ] confirmar Coleção, formulários, backup e sala sem regressão;
+- [ ] repetir no Moto G06 durante o checkpoint integrado de G7/G8/G9.
+
+Nenhum item desta checklist foi executado nesta etapa. Prompt 15 e G7 permanecem abertos; avanço técnico posterior não equivale a aprovação humana.

@@ -1,54 +1,29 @@
 import { useEffect, useRef } from "react";
 
-export type LibraryCharacterPanelKind = "creature" | "librarian";
+import type { LocalizedDialogue } from "../../application";
 
 interface LibraryCharacterPanelProps {
-  readonly kind: LibraryCharacterPanelKind;
+  readonly dialogue: LocalizedDialogue;
   readonly onClose: () => void;
 }
 
-const CHARACTER_PANEL_CONTENT: Readonly<
-  Record<
-    LibraryCharacterPanelKind,
-    {
-      readonly description: string;
-      readonly eyebrow: string;
-      readonly title: string;
-    }
-  >
-> = {
-  creature: {
-    description:
-      "Uma pequena criatura percorre devagar o espaço entre a estante e o balcão, curiosa com as histórias ao redor.",
-    eyebrow: "Criatura",
-    title: "Uma presença curiosa",
-  },
-  librarian: {
-    description:
-      "Há sempre espaço para mais uma história. Posso guardar silêncio enquanto você escolhe a próxima.",
-    eyebrow: "Bibliotecária",
-    title: "Uma acolhida tranquila",
-  },
-};
-
 export function LibraryCharacterPanel({
-  kind,
+  dialogue,
   onClose,
 }: LibraryCharacterPanelProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const content = CHARACTER_PANEL_CONTENT[kind];
-  const titleId = `library-${kind}-panel-title`;
+  const titleId = `library-${dialogue.characterId}-panel-title`;
 
   useEffect(() => {
     closeButtonRef.current?.focus();
-  }, [kind]);
+  }, [dialogue.id]);
 
   return (
     <section className="library-character-panel" aria-labelledby={titleId}>
       <div className="section-heading">
         <div>
-          <p className="eyebrow">{content.eyebrow}</p>
-          <h3 id={titleId}>{content.title}</h3>
+          <p className="eyebrow">{dialogue.eyebrow}</p>
+          <h3 id={titleId}>{dialogue.title}</h3>
         </div>
         <button
           className="button button--secondary"
@@ -56,10 +31,10 @@ export function LibraryCharacterPanel({
           ref={closeButtonRef}
           type="button"
         >
-          Fechar painel
+          {dialogue.closeLabel}
         </button>
       </div>
-      <p>{content.description}</p>
+      <p lang={dialogue.locale}>{dialogue.text}</p>
     </section>
   );
 }

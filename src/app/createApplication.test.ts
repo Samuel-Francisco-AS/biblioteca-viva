@@ -44,6 +44,32 @@ afterEach(async () => {
 });
 
 describe("createApplication", () => {
+  it("compõe diálogo, persiste once em settings e o recarrega", async () => {
+    const name = databaseName("dialogue-composition");
+    const first = await createApplication({ databaseName: name });
+    await first.dialogue.enterLibrary({
+      completedBooks: 0,
+      inProgressBooks: 0,
+      totalBooks: 1,
+    });
+    await expect(
+      first.dialogue.select("librarian.interaction"),
+    ).resolves.toMatchObject({ id: "dialogue.librarian.first-book" });
+    expect((await first.diagnostics.inspect()).counts.settings).toBe(1);
+    first.close();
+
+    const second = await createApplication({ databaseName: name });
+    runtimes.push(second);
+    await second.dialogue.enterLibrary({
+      completedBooks: 0,
+      inProgressBooks: 0,
+      totalBooks: 1,
+    });
+    await expect(
+      second.dialogue.select("librarian.interaction"),
+    ).resolves.not.toMatchObject({ id: "dialogue.librarian.first-book" });
+  });
+
   it("conecta conclusão pós-commit ao efeito e recarrega preferências", async () => {
     const name = databaseName("audio-composition");
     const play = vi.fn();

@@ -16,6 +16,8 @@ Cada bloco termina com um **gate**. O bloco seguinte só começa quando o gate a
 
 ### Regras operacionais
 
+> Atualização operacional: D-034, de 2026-08-10, substitui somente a cadência de aprovação/commit abaixo durante o modo acelerado. Checkpoints técnicos podem ser commitados após validação automática e documentação; validações manuais de G7–G9 podem ser acumuladas sem aprovar gates. As exceções de risco de dados e código nativo permanecem imediatas.
+
 - Um prompt por vez.
 - Revisar relatório, `git diff` e aplicação antes do próximo prompt.
 - Validar no navegador responsivo e por teclado em todo gate de interface web.

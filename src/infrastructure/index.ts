@@ -17,5 +17,7 @@ export * from "./audio/audioBackend";
 export * from "./audio/audioManifest";
 export * from "./audio/audioService";
 export * from "./audio/audioSettingsRepository";
+export * from "./dialogue/dialogueHistoryRepository";
+export * from "./dialogue/dialogueReporter";
 export * from "./backup/backupCodec";
 export * from "./backup/dexieBackupStore";

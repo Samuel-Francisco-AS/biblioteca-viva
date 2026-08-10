@@ -371,4 +371,15 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 
 **Consequências:** Prompt 14 pode receber checkpoint técnico e o Prompt 15 pode começar, enquanto Prompt 14 e G7 permanecem abertos. O mesmo vale para avanço técnico posterior rumo ao Prompt 16 após revisão automática/documental. Itens manuais não executados continuam pendentes. A política não adia validação em mudanças com risco de perda/corrupção, migração destrutiva, backup/restauração, exclusão de dados ou alteração nativa capaz de impedir a abertura.
 
+## D-035 — Conteúdo local validado e histórico mínimo em settings
+
+- **Data:** 2026-08-10
+- **Status:** aceita
+
+**Contexto:** o Prompt 15 precisa retirar falas contextuais do React/Phaser, selecionar conteúdo sem repetição irritante e preparar localização/primeira conclusão sem criar CMS, IA, motor de marcos ou nova versão do banco.
+
+**Decisão:** manter catálogo declarativo validado por Zod em `src/content/`, com `pt-BR` inicial e fallback determinístico próprio, sem biblioteca de internacionalização. `DialogueSelector` permanece puro na aplicação e recebe evento, fatos agregados, histórico e instante. A política usa condições, prioridade, `once`, cooldown, uso menos recente e desempate lexicográfico. `DialogueService` orquestra seleção/localização e `DexieDialogueHistoryRepository` persiste `dialogue.history.v1` na tabela `settings` v2 existente.
+
+**Consequências:** não há schema, migração, dependência, serviço remoto ou acesso Dexie por React/Phaser. O histórico guarda apenas IDs e instantes mínimos, entra no backup por meio de settings e falha de forma degradável. O evento `book.first-completed` e a fala correspondente ficam reutilizáveis pelo Prompt 16, mas nenhum marco, recompensa ou desbloqueio é executado agora. Adicionar fala exige principalmente editar catálogo e locale. Prompt 15 e G7 continuam sem aprovação humana.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.
