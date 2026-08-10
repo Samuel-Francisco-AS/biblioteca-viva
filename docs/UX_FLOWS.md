@@ -268,3 +268,18 @@ concluir o primeiro livro
 ```
 
 A notificação informa “Primeiro livro concluído” e “Luminária de leitura desbloqueada”, não toma foco e pode ser dispensada. A luminária sobrevive a recarga, retomada e exclusão posterior do livro. Reconstruir a sala só lê o desbloqueio; nunca concede recompensa. Eventos repetidos, restauração e subscribers duplicados não repetem a reação.
+
+## 18. Preferências de experiência e alternativa textual
+
+```text
+Configurações
+→ escolher seguir sistema/reduzir/movimento normal
+→ ativar/desativar alto contraste
+→ escolher texto padrão/grande/maior
+→ aplicar imediatamente
+→ persistir em settings e preservar no backup
+```
+
+Seguir sistema é o padrão. Preferência inválida volta a defaults sem impedir abertura. Volumes e mute continuam no grupo de áudio e em sua fonte de verdade existente.
+
+Na Biblioteca, o resumo React precede o canvas e apresenta contagens, estado da estante, livro recente e primeira conclusão/luminária. Botões React abrem detalhes da estante e diálogos de bibliotecária/criatura; link convencional abre a Coleção. Fechar painel devolve foco ao botão textual correspondente. A mesma camada permanece funcional se o canvas falhar ou não puder ser usado por tecnologia assistiva.

@@ -2,11 +2,14 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 
 import {
   AUDIO_PREFERENCE_DEFAULTS,
+  EXPERIENCE_PREFERENCE_DEFAULTS,
   ApplicationError,
   BackupError,
   MAX_BACKUP_BYTES,
   type BackupCounts,
   type BackupSummary,
+  type MotionPreference,
+  type TextSizePreference,
 } from "../../application";
 import type {
   ApplicationDiagnostics,
@@ -21,6 +24,7 @@ interface Props {
 
 export interface SettingsApplication {
   readonly audio?: ApplicationRuntime["audio"];
+  readonly experience?: ApplicationRuntime["experience"];
   readonly appVersion: string;
   readonly platform?: ApplicationRuntime["platform"];
   readonly backup: ApplicationRuntime["backup"];
@@ -28,6 +32,11 @@ export interface SettingsApplication {
 
 const unsafeContextGuidance =
   "Este ambiente não oferece todas as APIs necessárias para salvar e exportar com segurança. Abra a aplicação por localhost, HTTPS ou pelo APK Android. Os dados de outras origens do navegador não foram apagados.";
+
+function textSizePreference(value: string): TextSizePreference {
+  if (value === "large" || value === "larger") return value;
+  return "default";
+}
 
 const errorMessages: Record<string, string> = {
   BACKUP_TOO_LARGE: "O arquivo excede o limite de 10 MiB.",
@@ -120,6 +129,12 @@ export function SettingsPage({ application, diagnostics }: Props) {
     () => application?.audio?.preferences() ?? AUDIO_PREFERENCE_DEFAULTS,
   );
   const [audioPreferenceError, setAudioPreferenceError] = useState("");
+  const [experiencePreferences, setExperiencePreferences] = useState(
+    () =>
+      application?.experience?.preferences() ?? EXPERIENCE_PREFERENCE_DEFAULTS,
+  );
+  const [experiencePreferenceError, setExperiencePreferenceError] =
+    useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const confirmationRef = useRef<HTMLElement>(null);
   const exportInProgressRef = useRef(false);
@@ -146,6 +161,11 @@ export function SettingsPage({ application, diagnostics }: Props) {
       active = false;
     };
   }, [diagnostics]);
+
+  useEffect(() => {
+    if (!application?.experience) return;
+    return application.experience.subscribe(setExperiencePreferences);
+  }, [application]);
 
   async function requestPersistence() {
     if (!diagnostics) return;
@@ -295,8 +315,113 @@ export function SettingsPage({ application, diagnostics }: Props) {
     }
   }
 
+  async function updateMotion(preference: MotionPreference) {
+    setExperiencePreferenceError("");
+    try {
+      await application?.experience?.setMotion(preference);
+    } catch {
+      setExperiencePreferenceError(
+        "A preferência foi aplicada nesta sessão, mas não pôde ser persistida.",
+      );
+    }
+  }
+
+  async function updateHighContrast(enabled: boolean) {
+    setExperiencePreferenceError("");
+    try {
+      await application?.experience?.setHighContrast(enabled);
+    } catch {
+      setExperiencePreferenceError(
+        "A preferência foi aplicada nesta sessão, mas não pôde ser persistida.",
+      );
+    }
+  }
+
+  async function updateTextSize(preference: TextSizePreference) {
+    setExperiencePreferenceError("");
+    try {
+      await application?.experience?.setTextSize(preference);
+    } catch {
+      setExperiencePreferenceError(
+        "A preferência foi aplicada nesta sessão, mas não pôde ser persistida.",
+      );
+    }
+  }
+
   return (
     <div className="settings-stack">
+      <section
+        className="content-card"
+        aria-labelledby="experience-settings-title"
+      >
+        <p className="eyebrow">Conforto visual</p>
+        <h2 id="experience-settings-title">Experiência</h2>
+        <p>
+          Ajuste a interface sem alterar seus livros. As opções são salvas neste
+          dispositivo e incluídas no backup.
+        </p>
+        <div className="experience-settings-controls">
+          <fieldset className="settings-choice-group">
+            <legend>Movimento</legend>
+            <p className="field-help" id="motion-preference-help">
+              “Seguir o sistema” respeita a configuração de movimento reduzido
+              do aparelho ou navegador.
+            </p>
+            {(
+              [
+                ["system", "Seguir o sistema"],
+                ["reduce", "Reduzir movimento"],
+                ["normal", "Movimento normal"],
+              ] as const
+            ).map(([value, label]) => (
+              <label className="settings-check-control" key={value}>
+                <input
+                  aria-describedby="motion-preference-help"
+                  checked={experiencePreferences.motion === value}
+                  disabled={!application?.experience}
+                  name="motion-preference"
+                  onChange={() => void updateMotion(value)}
+                  type="radio"
+                  value={value}
+                />
+                {label}
+              </label>
+            ))}
+          </fieldset>
+          <label className="settings-check-control" htmlFor="high-contrast">
+            <input
+              checked={experiencePreferences.highContrast}
+              disabled={!application?.experience}
+              id="high-contrast"
+              onChange={(event) =>
+                void updateHighContrast(event.target.checked)
+              }
+              type="checkbox"
+            />
+            Usar alto contraste
+          </label>
+          <div className="form-field">
+            <label htmlFor="text-size">Tamanho do texto</label>
+            <select
+              disabled={!application?.experience}
+              id="text-size"
+              onChange={(event) =>
+                void updateTextSize(textSizePreference(event.target.value))
+              }
+              value={experiencePreferences.textSize}
+            >
+              <option value="default">Padrão</option>
+              <option value="large">Grande</option>
+              <option value="larger">Maior</option>
+            </select>
+          </div>
+        </div>
+        {experiencePreferenceError && (
+          <p className="field-error" role="alert">
+            {experiencePreferenceError}
+          </p>
+        )}
+      </section>
       <section className="content-card" aria-labelledby="audio-settings-title">
         <p className="eyebrow">Experiência sonora</p>
         <h2 id="audio-settings-title">Áudio</h2>
@@ -484,7 +609,8 @@ export function SettingsPage({ application, diagnostics }: Props) {
             type="file"
             accept="application/json,.json"
             disabled={!application || reading || importing}
-            aria-describedby="backup-file-help backup-file-error"
+            aria-describedby={`backup-file-help${importError ? " backup-file-error" : ""}`}
+            aria-invalid={importError ? "true" : undefined}
             onChange={(event) => void selectFile(event)}
           />
           <p className="field-help" id="backup-file-help">

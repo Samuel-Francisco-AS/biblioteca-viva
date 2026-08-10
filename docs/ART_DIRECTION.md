@@ -79,6 +79,8 @@ A bibliotecária é uma figura geométrica com cabelo, rosto, corpo e avental; a
 
 O primeiro desbloqueio usa uma pequena luminária de leitura procedural sobre o balcão. Ela reaproveita formas e paleta do manifesto, sem asset binário novo. Ao ser concedida, surge com uma animação discreta de até 650 ms; com movimento reduzido, aparece diretamente no estado final. O objeto permanece parte da sala após o marco histórico, mesmo que o livro de origem seja retomado ou excluído.
 
+O modo de alto contraste do Prompt 17 preserva a identidade quente da sala, mas prioriza a camada funcional React por tokens de superfícies, texto, bordas, foco, links, controles e erros. Não constitui novo tema artístico e não recolore o canvas. As escalas grande/maior aplicam-se ao shell sem zoom da cena. Movimento reduzido mantém personagens, destaque e luminária reconhecíveis em poses estáticas, sem remover informação.
+
 ## 7. Assets e nomes
 
 Organização sugerida:

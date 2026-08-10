@@ -35,6 +35,7 @@ export function NoteForm({
       onAdded(note, "Nota adicionada.");
     } catch (failure: unknown) {
       setError(presentApplicationError(failure).message);
+      requestAnimationFrame(() => fieldRef.current?.focus());
     } finally {
       savingRef.current = false;
       setIsSaving(false);
@@ -138,6 +139,7 @@ export function QuoteForm({
       onAdded(quote, "Citação adicionada.");
     } catch (failure: unknown) {
       setErrors({ content: presentApplicationError(failure).message });
+      requestAnimationFrame(() => contentRef.current?.focus());
     } finally {
       savingRef.current = false;
       setIsSaving(false);

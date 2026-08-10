@@ -62,6 +62,7 @@ export interface LibraryVisualGame {
   pause(this: void): void;
   resize(this: void, size: LibraryVisualSize): void;
   resume(this: void): void;
+  setReducedMotion(this: void, reducedMotion: boolean): void;
   setInteractionHandler(
     this: void,
     onInteraction: ((interaction: LibraryInteraction) => void) | undefined,

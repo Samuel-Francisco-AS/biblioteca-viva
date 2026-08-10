@@ -9,6 +9,7 @@ import { LibraryVisualDiagnosticsPanel } from "./features/library-visual/Library
 import { LibraryVisualHost } from "./features/library-visual/LibraryVisualHost";
 import { LibraryProjectionService } from "./features/library-visual/LibraryProjectionService";
 import { LibraryShelfPanel } from "./features/library-visual/LibraryShelfPanel";
+import { LibraryTextAlternative } from "./features/library-visual/LibraryTextAlternative";
 import type {
   LibraryInteraction,
   LibraryViewModel,
@@ -59,10 +60,12 @@ export function LibraryPage({
   application,
   onDecorationUnlockPresented,
   pendingDecorationUnlock,
+  reducedMotion = false,
 }: {
   readonly application?: LibraryPageApplication;
   readonly onDecorationUnlockPresented?: (eventId: string) => void;
   readonly pendingDecorationUnlock?: { readonly eventId: string };
+  readonly reducedMotion?: boolean;
 }) {
   const diagnosticsEnabled =
     import.meta.env.DEV || import.meta.env.VITE_ENABLE_DIAGNOSTICS === "true";
@@ -73,6 +76,9 @@ export function LibraryPage({
   const projectionService = useMemo(() => new LibraryProjectionService(), []);
   const navigate = useNavigate();
   const dialogueRequest = useRef(0);
+  const shelfButtonRef = useRef<HTMLButtonElement>(null);
+  const librarianButtonRef = useRef<HTMLButtonElement>(null);
+  const creatureButtonRef = useRef<HTMLButtonElement>(null);
   const [attempt, setAttempt] = useState(0);
   const [openPanel, setOpenPanel] = useState<OpenLibraryPanel>(null);
   const [state, setState] = useState<LibraryPageState>(() =>
@@ -160,6 +166,20 @@ export function LibraryPage({
     }
   }
 
+  function closePanel() {
+    const panel = openPanel;
+    setOpenPanel(null);
+    requestAnimationFrame(() => {
+      if (panel?.kind === "shelf") shelfButtonRef.current?.focus();
+      if (panel?.kind === "character") {
+        if (panel.dialogue.characterId === "character.librarian")
+          librarianButtonRef.current?.focus();
+        if (panel.dialogue.characterId === "character.creature")
+          creatureButtonRef.current?.focus();
+      }
+    });
+  }
+
   return (
     <section className="library-page" aria-labelledby="library-visual-title">
       <div className="library-page__introduction">
@@ -197,14 +217,22 @@ export function LibraryPage({
       )}
       {state.kind === "ready" && (
         <>
+          <LibraryTextAlternative
+            creatureButtonRef={creatureButtonRef}
+            librarianButtonRef={librarianButtonRef}
+            onInteraction={handleInteraction}
+            shelfButtonRef={shelfButtonRef}
+            viewModel={state.viewModel}
+          />
           <LibraryVisualHost
             diagnostics={diagnostics}
             onInteraction={handleInteraction}
             projection={state.viewModel}
+            reducedMotion={reducedMotion}
           />
           {openPanel?.kind === "shelf" && (
             <LibraryShelfPanel
-              onClose={() => setOpenPanel(null)}
+              onClose={closePanel}
               onOpenCollection={() => void navigate("/colecao")}
               viewModel={state.viewModel}
             />
@@ -212,7 +240,7 @@ export function LibraryPage({
           {openPanel?.kind === "character" && (
             <LibraryCharacterPanel
               dialogue={openPanel.dialogue}
-              onClose={() => setOpenPanel(null)}
+              onClose={closePanel}
             />
           )}
         </>

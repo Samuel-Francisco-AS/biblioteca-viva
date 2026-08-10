@@ -19,6 +19,7 @@ import "./styles.css";
 import { useAudioExperience } from "./useAudioExperience";
 import { MILESTONE_ID, type MilestoneReached } from "./domain";
 import { LibraryPage } from "./pages";
+import { useExperiencePreferences } from "./useExperiencePreferences";
 
 function NotFoundPage() {
   return (
@@ -69,6 +70,7 @@ export function App({ application, diagnostics }: AppProps) {
 
   useAndroidBackButton();
   useAudioExperience(application?.audio);
+  const effectiveExperience = useExperiencePreferences(application?.experience);
 
   useEffect(() => {
     if (previousPathRef.current !== location.pathname) {
@@ -128,7 +130,12 @@ export function App({ application, diagnostics }: AppProps) {
   }, [application]);
 
   return (
-    <div className="app-shell">
+    <div
+      className="app-shell"
+      data-high-contrast={effectiveExperience.highContrast}
+      data-reduced-motion={effectiveExperience.reducedMotion}
+      data-text-size={effectiveExperience.textSize}
+    >
       <a className="skip-link" href="#main-content">
         Ir para o conteúdo principal
       </a>
@@ -205,6 +212,7 @@ export function App({ application, diagnostics }: AppProps) {
                   );
                 }}
                 pendingDecorationUnlock={pendingDecorationUnlock ?? undefined}
+                reducedMotion={effectiveExperience.reducedMotion}
               />
             }
           />

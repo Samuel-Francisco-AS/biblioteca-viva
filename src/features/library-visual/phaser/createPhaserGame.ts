@@ -78,6 +78,9 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
       ) => {
         if (!destroyed) scene.setInteractionHandler(nextHandler);
       },
+      setReducedMotion: (nextReducedMotion) => {
+        if (!destroyed) scene.setReducedMotion(nextReducedMotion);
+      },
       updateProjection: (nextProjection) => {
         if (!destroyed) scene.updateProjection(nextProjection);
       },

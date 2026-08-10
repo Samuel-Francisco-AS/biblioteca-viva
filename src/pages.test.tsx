@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
@@ -99,6 +99,43 @@ function renderLibrary(
 }
 
 describe("Página Biblioteca", () => {
+  it("oferece resumo e equivalentes React sem depender das interações do canvas", async () => {
+    const user = userEvent.setup();
+    const dialoguePort = dialogue();
+    renderLibrary(Promise.resolve([book]), undefined, dialoguePort);
+
+    expect(
+      await screen.findByRole("heading", { name: "Estado da Biblioteca" }),
+    ).toBeVisible();
+    expect(screen.queryByText("A estante está vazia.")).not.toBeInTheDocument();
+    expect(
+      screen.getByText("Os primeiros livros já estão organizados na estante."),
+    ).toBeVisible();
+    expect(screen.getByText(/Título de teste/u)).toBeVisible();
+    expect(
+      screen.getByRole("link", { name: "Consultar Coleção" }),
+    ).toHaveAttribute("href", "/colecao");
+
+    const librarian = screen.getByRole("button", {
+      name: "Conversar com a bibliotecária",
+    });
+    await user.click(librarian);
+    expect(
+      await screen.findByRole("heading", { name: "Uma observação tranquila" }),
+    ).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Fechar painel" }));
+    await waitFor(() => expect(librarian).toHaveFocus());
+
+    const creature = screen.getByRole("button", {
+      name: "Interagir com a criatura",
+    });
+    await user.click(creature);
+    expect(
+      await screen.findByRole("heading", { name: "Uma presença curiosa" }),
+    ).toBeVisible();
+    expect(dialoguePort.select).toHaveBeenCalledWith("creature.interaction");
+  });
+
   it("projeta a decoração e encaminha a confirmação visual sem conceder regra", async () => {
     const milestone: ReachedMilestone = {
       id: "milestone.first-completed-book",
@@ -242,16 +279,25 @@ describe("Página Biblioteca", () => {
     await screen.findByRole("img", { name: "Visualização da Biblioteca" });
     act(() => visualHostMock.interaction?.({ type: "ShelfSelected" }));
 
-    expect(
-      await screen.findByRole("heading", { name: "Resumo da sua coleção" }),
-    ).toBeVisible();
-    expect(screen.getAllByText("1")).toHaveLength(2);
-    expect(
-      screen.getByText("Os primeiros livros já estão organizados na estante."),
-    ).toBeVisible();
-    expect(
-      screen.getByText(/Livro atualizado mais recentemente: Título de teste/u),
-    ).toBeVisible();
+    const panelHeading = await screen.findByRole("heading", {
+      name: "Resumo da sua coleção",
+    });
+    expect(panelHeading).toBeVisible();
+    const panel = panelHeading.closest("section");
+    expect(panel).not.toBeNull();
+    if (panel) expect(within(panel).getAllByText("1")).toHaveLength(2);
+    if (panel) {
+      expect(
+        within(panel).getByText(
+          "Os primeiros livros já estão organizados na estante.",
+        ),
+      ).toBeVisible();
+      expect(
+        within(panel).getByText(
+          /Livro atualizado mais recentemente: Título de teste/u,
+        ),
+      ).toBeVisible();
+    }
     expect(screen.queryByText("book-1")).not.toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Fechar painel" }));
     expect(

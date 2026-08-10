@@ -7,6 +7,7 @@ export * from "./database/repositories";
 export * from "./database/schema";
 export * from "./database/transactionRunner";
 export * from "./events/localEventBus";
+export * from "./experience/experienceSettingsRepository";
 export * from "./files/browserFileDelivery";
 export * from "./files/androidFileDelivery";
 export * from "./files/androidBackupFileSave";

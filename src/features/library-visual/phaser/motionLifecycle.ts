@@ -12,7 +12,10 @@ export interface SceneMotionDefinition {
 }
 
 export type MotionReconciliationReason =
-  "initial" | "layout-mode-change" | "highlight-presence-change";
+  | "initial"
+  | "layout-mode-change"
+  | "highlight-presence-change"
+  | "preference-change";
 
 export interface SceneMotionSnapshot {
   readonly activeIds: readonly SceneMotionId[];

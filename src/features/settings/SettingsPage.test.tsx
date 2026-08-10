@@ -12,6 +12,8 @@ import type {
   AudioPort,
   BackupArtifact,
   BackupSummary,
+  ExperiencePreferences,
+  ExperiencePreferencesPort,
 } from "../../application";
 import { SettingsPage, type SettingsApplication } from "./SettingsPage";
 
@@ -84,7 +86,79 @@ function audio(): AudioPort {
   };
 }
 
+function experience(
+  initial: ExperiencePreferences = {
+    highContrast: false,
+    motion: "system",
+    textSize: "default",
+  },
+): ExperiencePreferencesPort {
+  let preferences = initial;
+  const listeners = new Set<(value: ExperiencePreferences) => void>();
+  const update = (value: ExperiencePreferences) => {
+    preferences = value;
+    listeners.forEach((listener) => listener(preferences));
+    return Promise.resolve();
+  };
+  return {
+    preferences: () => preferences,
+    resolve: (systemReducedMotion) => ({
+      highContrast: preferences.highContrast,
+      reducedMotion:
+        preferences.motion === "reduce" ||
+        (preferences.motion === "system" && systemReducedMotion),
+      textSize: preferences.textSize,
+    }),
+    setHighContrast: vi.fn((highContrast: boolean) =>
+      update({ ...preferences, highContrast }),
+    ),
+    setMotion: vi.fn((motion: ExperiencePreferences["motion"]) =>
+      update({ ...preferences, motion }),
+    ),
+    setTextSize: vi.fn((textSize: ExperiencePreferences["textSize"]) =>
+      update({ ...preferences, textSize }),
+    ),
+    subscribe: (listener) => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+  };
+}
+
 describe("Configurações e backup", () => {
+  it("oferece preferências visuais agrupadas, rotuladas e aplicadas imediatamente", async () => {
+    const experiencePort = experience();
+    const user = userEvent.setup();
+    render(
+      <SettingsPage
+        application={{ ...application(), experience: experiencePort }}
+      />,
+    );
+
+    expect(screen.getByRole("group", { name: "Movimento" })).toBeVisible();
+    expect(
+      screen.getByRole("radio", { name: "Seguir o sistema" }),
+    ).toBeChecked();
+    await user.click(screen.getByRole("radio", { name: "Reduzir movimento" }));
+    await user.click(
+      screen.getByRole("checkbox", { name: "Usar alto contraste" }),
+    );
+    await user.selectOptions(
+      screen.getByRole("combobox", { name: "Tamanho do texto" }),
+      "larger",
+    );
+
+    expect(experiencePort.setMotion).toHaveBeenCalledWith("reduce");
+    expect(experiencePort.setHighContrast).toHaveBeenCalledWith(true);
+    expect(experiencePort.setTextSize).toHaveBeenCalledWith("larger");
+    expect(
+      screen.getByRole("radio", { name: "Reduzir movimento" }),
+    ).toBeChecked();
+    expect(
+      screen.getByRole("checkbox", { name: "Usar alto contraste" }),
+    ).toBeChecked();
+  });
+
   it("oferece volumes rotulados, teclado nativo e mute com aplicação imediata", async () => {
     const audioPort = audio();
     const app = { ...application(), audio: audioPort };

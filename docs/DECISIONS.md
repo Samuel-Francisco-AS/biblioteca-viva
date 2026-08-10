@@ -395,4 +395,15 @@ Evoluir o backup para formato v2 incluindo `milestones`, aceitando v1 com seu ch
 
 **Consequências:** bancos v1/v2 migram de forma aditiva para v3 e reabrem preservados; falha de marco aborta a ação antes de qualquer anúncio; eventos equivalentes/concorrentes não duplicam recompensa; recarga e reconstrução apenas leem estado; exclusão/retomada pode zerar o fato atual `hasCompletedBook` sem remover `hasFirstCompletionMilestone` ou a luminária. Há mudança de schema e formato de backup, mas nenhuma dependência, permissão, asset binário ou versão de produto. G7 e G8 continuam abertos até validação humana integrada.
 
+## D-037 — Preferência de experiência única e canvas complementar
+
+- **Data:** 2026-08-10
+- **Status:** aceita
+
+**Contexto:** o Prompt 17 precisa combinar `prefers-reduced-motion`, escolha explícita, contraste e escala textual sem duplicar áudio, persistência ou regras dentro de React/Phaser. O canvas já lia media query diretamente apenas na criação, e bibliotecária/criatura não possuíam acionadores React permanentes fora dele.
+
+**Decisão:** persistir `experience.preferences.v1` em `settings` v3, separado de `audio.preferences.v1`, com movimento `system | reduce | normal`, alto contraste booleano e texto `default | large | larger`. `system` é o default. `ExperiencePreferencesService` mantém estado de sessão, persistência e subscribers; a aplicação resolve o valor efetivo com a media query e entrega booleano mínimo ao host. Phaser troca seu plano de movimento na instância existente, sem consultar browser/settings. A Biblioteca mantém uma alternativa React permanente com resumo e equivalentes para estante, bibliotecária, criatura e Coleção.
+
+**Consequências:** não há schema, migração, formato novo de backup, dependência ou plugin. Settings entra automaticamente no backup v2 e validação estrita faz valores inválidos/futuros degradarem para defaults. Alto contraste reutiliza tokens e texto usa escalas controladas; não há tema arbitrário nem zoom do canvas. Leitores de tela operam sobre React, não sobre objetos Phaser. A automação não equivale a conformidade WCAG nem aprovação de G9; G7–G9 continuam abertos.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

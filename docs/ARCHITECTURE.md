@@ -963,3 +963,20 @@ O schema Dexie v3 adiciona `milestones` sem alterar as tabelas existentes. O reg
 O App escuta `MilestoneReached` após o commit, mantém uma região `role=status`/`aria-live=polite` sem mover foco, atualiza fatos agregados do `DialogueService` e solicita `book.first-completed`. O áudio escuta o mesmo marco confirmado e reutiliza `milestone.book-completed`; mute e lifecycle permanecem no serviço existente.
 
 Backup v2 inclui `milestones` e continua aceitando envelopes v1 estritos com checksum original. Dados pessoais seguem `replace`; marcos históricos usam união monotônica por ID. Assim, v1 em instalação limpa cria zero marcos, v1 sobre um destino com marco legítimo não o apaga e v2 restaura a luminária sem republicar reações.
+
+## 29. Preferências de experiência após o Prompt 17
+
+`ExperiencePreferencesService`, na aplicação, mantém a preferência atual, subscribers e fila de persistência pela porta `ExperienceSettingsPort`. O adapter `DexieExperienceSettingsRepository` valida estritamente `experience.preferences.v1` e usa a tabela `settings` do schema v3. Áudio permanece proprietário de `audio.preferences.v1`; nenhum volume ou mute foi duplicado.
+
+```text
+settings Dexie → ExperiencePreferencesService → subscriber React
+prefers-reduced-motion ────────────────────────→ resolução efetiva única
+                                                   ├→ atributos/tokens React
+                                                   └→ booleano LibraryVisualHost → Phaser
+```
+
+`system` segue a media query; `reduce` e `normal` são overrides. Phaser não conhece a preferência persistida, media query ou browser: `setReducedMotion(boolean)` reconcilia os tweens da cena existente. A redução zera movimentos repetitivos e finaliza desbloqueio em estado estático; reativar movimento reconstrói somente os tweens locais, sem regra de negócio ou novo canvas.
+
+`LibraryTextAlternative` consome o mesmo `LibraryViewModel` mínimo e expõe estado essencial e ações React. Ela não serializa o view model cru, não consulta banco e permanece fora do canvas. A cena continua lazy e complementar; leitores de tela e teclado usam React.
+
+Não houve mudança de schema ou codec: settings já entra integralmente no backup v2. Valor inválido ou futuro falha na fronteira do adapter, é reportado por código sanitizado e faz o serviço carregar defaults seguros.

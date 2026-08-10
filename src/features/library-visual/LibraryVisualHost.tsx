@@ -16,6 +16,7 @@ interface LibraryVisualHostProps {
   readonly loadFactory?: () => Promise<LibraryVisualFactoryModule>;
   readonly onInteraction?: (interaction: LibraryInteraction) => void;
   readonly projection: LibraryViewModel;
+  readonly reducedMotion?: boolean;
 }
 
 const loadPhaserFactory = () => import("./phaser/createPhaserGame");
@@ -32,31 +33,29 @@ function isDocumentHidden(): boolean {
   return document.visibilityState === "hidden";
 }
 
-function prefersReducedMotion(): boolean {
-  return (
-    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false
-  );
-}
-
 export function LibraryVisualHost({
   diagnostics,
   loadFactory = loadPhaserFactory,
   onInteraction,
   projection,
+  reducedMotion = false,
 }: LibraryVisualHostProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const generationRef = useRef(0);
   const gameRef = useRef<LibraryVisualGame | undefined>(undefined);
   const latestInteractionRef = useRef(onInteraction);
   const latestProjectionRef = useRef(projection);
+  const latestReducedMotionRef = useRef(reducedMotion);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     latestInteractionRef.current = onInteraction;
     latestProjectionRef.current = projection;
+    latestReducedMotionRef.current = reducedMotion;
     gameRef.current?.setInteractionHandler(onInteraction);
     gameRef.current?.updateProjection(projection);
-  }, [onInteraction, projection]);
+    gameRef.current?.setReducedMotion(reducedMotion);
+  }, [onInteraction, projection, reducedMotion]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -137,7 +136,7 @@ export function LibraryVisualHost({
             if (!destroyed && event.type === "scene-failed") setFailed(true);
           },
           projection: latestProjectionRef.current,
-          reducedMotion: prefersReducedMotion(),
+          reducedMotion: latestReducedMotionRef.current,
           size: requestedCreationSize,
         });
       })
@@ -190,6 +189,7 @@ export function LibraryVisualHost({
   return (
     <div
       aria-label="Sala visual da biblioteca"
+      aria-describedby="library-text-summary"
       className="library-visual-host"
       ref={containerRef}
       role="img"

@@ -17,9 +17,9 @@
 - **blocos concluídos:** 5 — Backup, restauração e recuperação; 6 — Biblioteca visual conectada;
 - **gates:** G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto em paralelo;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **prompts tecnicamente implementados:** Prompts 4 a 16; Prompts 14 a 16 mantêm validações humanas acumuladas e não estão aprovados;
-- **próximo prompt técnico possível:** Prompt 17, somente após revisão automática/documental do checkpoint do Prompt 16;
-- **bloco atual:** Bloco 8 — marco, desbloqueio e primeiro ciclo completo, tecnicamente implementado com G8 aberto;
+- **prompts tecnicamente implementados:** Prompts 4 a 17; Prompts 14 a 17 mantêm validações humanas acumuladas e não estão aprovados;
+- **próximo prompt técnico possível:** Prompt 18, somente após revisão automática/documental do checkpoint do Prompt 17;
+- **bloco atual:** Bloco 9 — acessibilidade tecnicamente consolidada; desempenho do Prompt 18 ainda não iniciado e G9 aberto;
 - **APK:** diagnóstico interno validado no Moto G06 com Android 15; release assinado ainda não existe;
 - **código:** implementação do Bloco 4 validada no navegador; G4 aguarda uso real prolongado.
 
@@ -36,6 +36,7 @@
 - [~] Prompt 14 — Arquitetura de áudio e primeira paisagem sonora; tecnicamente implementado após correção, validação humana acumulada.
 - [~] Prompt 15 — Conteúdo externo, localização e diálogos básicos; tecnicamente implementado, validação humana acumulada.
 - [~] Prompt 16 — Motor de marcos e primeiro desbloqueio; tecnicamente implementado, validação humana acumulada.
+- [~] Prompt 17 — Acessibilidade e preferências de experiência; tecnicamente implementado, validação humana acumulada.
 
 ## Blocos e gates
 
@@ -50,7 +51,7 @@
 | `[x]` | 6 | 11–13 | biblioteca visual e experiência física Android validadas | G6 aprovado em 2026-08-06 |
 | `[~]` | 7 | 14–15 | áudio e diálogos implementados tecnicamente; validação integrada acumulada | G7 aberto |
 | `[~]` | 8 | 16 | implementação técnica do primeiro ciclo concluída; validação integrada pendente | G8 aberto |
-| `[ ]` | 9 | 17–18 | acessibilidade e desempenho mobile | G9 |
+| `[~]` | 9 | 17–18 | acessibilidade implementada; desempenho e validação integrada pendentes | G9 aberto |
 | `[ ]` | 10 | 19 | regressão, CI e manutenção | G10 |
 | `[ ]` | 11 | — | APK release e portfólio | G11 |
 

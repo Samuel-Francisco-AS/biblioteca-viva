@@ -90,7 +90,17 @@ const data: BackupData = Object.freeze({
   notes: [note],
   quotes: [quote],
   activities: [activity],
-  settings: [{ key: "motion", value: false, updatedAt: book.updatedAt }],
+  settings: [
+    {
+      key: "experience.preferences.v1",
+      value: {
+        highContrast: true,
+        motion: "reduce",
+        textSize: "larger",
+      },
+      updatedAt: book.updatedAt,
+    },
+  ],
 });
 
 const laterBook = Object.freeze({
@@ -133,7 +143,17 @@ const replacementData: BackupData = Object.freeze({
       revision: 1,
     },
   ],
-  settings: [{ key: "motion", value: true, updatedAt: laterBook.updatedAt }],
+  settings: [
+    {
+      key: "experience.preferences.v1",
+      value: {
+        highContrast: false,
+        motion: "normal",
+        textSize: "large",
+      },
+      updatedAt: laterBook.updatedAt,
+    },
+  ],
 });
 
 describe("backup JSON v2", () => {

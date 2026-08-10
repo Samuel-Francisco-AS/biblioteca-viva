@@ -32,6 +32,8 @@ A preferência de redução de movimento deve:
 
 Não desligar toda a biblioteca sem oferecer uma versão estática coerente.
 
+A política efetiva do Prompt 17 possui três escolhas persistidas: `system` (padrão), `reduce` e `normal`. `system` acompanha `prefers-reduced-motion`; as outras duas são overrides explícitos do usuário. A resolução acontece uma vez na aplicação e o booleano efetivo é entregue a React e Phaser. Alterar a preferência atualiza a mesma instância/canvas: com redução ativa, bibliotecária, criatura, livro recente e luminária permanecem visíveis, mas a cena cria zero tween repetitivo e conclui desbloqueio no estado estático.
+
 ## 4. Áudio
 
 - volumes separados para música e efeitos;
@@ -177,3 +179,43 @@ A validação manual com teclado, leitor de estrutura, zoom, larguras móveis e 
 - a animação normal é curta, não bloqueia interação e não contém flash ou partículas;
 - o diálogo contextual mantém seu painel React acessível, e mute não remove nenhum feedback textual;
 - leitor de tela, reduced motion e conforto visual em aparelho real permanecem na checklist integrada de G8.
+
+## 17. Consolidação do Prompt 17
+
+### Preferências
+
+`experience.preferences.v1` armazena na tabela `settings` somente:
+
+- movimento: seguir sistema, reduzir ou normal;
+- alto contraste: ligado/desligado;
+- texto: padrão, grande ou maior.
+
+Valores externos são validados estritamente. Ausência, corrupção ou opção futura desconhecida usa defaults seguros e não impede a abertura. Áudio continua em `audio.preferences.v1`; não existe segunda fonte para volume ou mute. Como settings já participa do backup v2, ambas as preferências seguem no snapshot sem mudar formato ou schema.
+
+Alto contraste troca os tokens semânticos de fundo, superfície, texto, borda, foco, link, controle e erro, aumenta bordas e remove sombra dispensável; não cria tema paralelo. Tamanho de texto altera tokens e herança tipográfica em três escalas controladas, sem aplicar zoom ao canvas.
+
+### Camada React equivalente
+
+A Biblioteca expõe fora do canvas uma seção semanticamente nomeada com total, andamento, conclusões atuais, estado da estante, livro recente quando houver e marco/luminária histórica. A mesma seção oferece links/botões nativos para Coleção, estante, bibliotecária e criatura. Fechar um painel devolve foco ao equivalente React que o abriu; interações originadas no canvas também têm esse destino seguro.
+
+Phaser permanece imagem/atmosfera complementar e não é declarado acessível ou operável por leitor de tela. Falha, ausência ou inutilidade do canvas não remove o resumo nem os caminhos React. Áudio, cor e movimento nunca são a única confirmação do marco, status, progresso, erro ou navegação.
+
+### Auditoria React
+
+Foram preservados por já estarem corretos: `header`/`nav`/`main`, skip link, hierarquia por rota, links e botões nativos, `aria-current`, labels, fieldsets da Coleção, erros associados por `aria-describedby`/`aria-invalid`, foco após validação, confirmação destrutiva, backup/restauração, regiões de status e alvo mínimo de 44 px. Foram corrigidos o `aria-describedby` condicional do arquivo de backup, foco após erros assíncronos de progresso/nota/citação e retorno de foco dos painéis da Biblioteca. Nenhuma ARIA redundante foi adicionada.
+
+### Checklist manual acumulada para G9
+
+- [ ] TalkBack no Moto G06: landmarks, títulos, navegação e alternativa da Biblioteca;
+- [ ] leitor de tela desktop quando disponível: formulários, Configurações, painéis e marco;
+- [ ] Tab e Shift+Tab; Enter e Space nos controles nativos; retorno de foco ao fechar painéis;
+- [ ] foco no primeiro erro/resumo, conteúdo preservado e ações destrutivas;
+- [ ] alto contraste em todas as rotas, estados ativos, links, foco, erro e controles;
+- [ ] texto grande/maior em 320 px, sem corte, sobreposição ou overflow horizontal desnecessário;
+- [ ] seguir o sistema, reduzir e movimento normal no navegador e Android;
+- [ ] sala estática completa, luminária e livro recente perceptíveis com redução ativa;
+- [ ] mute e volumes zero mantendo conclusão, marco, diálogo, navegação e erros compreensíveis;
+- [ ] backup/restauração controlados preservando preferências;
+- [ ] toque com uma mão e teclado virtual no Moto G06.
+
+Nenhum item desta checklist foi executado no Prompt 17. Não há alegação de conformidade total WCAG. Prompt 17 e G9 permanecem abertos até validação humana integrada; G7 e G8 também permanecem abertos.

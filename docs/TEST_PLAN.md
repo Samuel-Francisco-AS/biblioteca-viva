@@ -833,3 +833,37 @@ Em 2026-08-10, formatação, `format:check`, lint, typecheck, verificação dete
 - [ ] confirmar Coleção, Arquivo, formulários, áudio, diálogos e sala sem regressão.
 
 Nenhum item manual desta checklist foi executado. Não houve limpeza, instalação de APK nem restauração destrutiva real. Prompt 16, G7 e G8 permanecem abertos até o checkpoint humano integrado.
+
+## 19. Prompt 17 — Acessibilidade e preferências
+
+Em 2026-08-10, a suíte completa passou com **519 testes em 57 arquivos**. A cobertura nova verifica:
+
+- defaults e resolução `system | reduce | normal`, incluindo mudança da media query e overrides;
+- alto contraste, três tamanhos de texto, subscribers, aplicação imediata, persistência ordenada, retry e fallback após dado inválido/futuro;
+- gravação, leitura e reabertura de `experience.preferences.v1` no schema v3;
+- Configurações com fieldset, legend, radios, checkbox, select, labels e feedback de falha;
+- atributos efetivos no shell para contraste, texto e movimento;
+- resumo React da Biblioteca e equivalentes para estante, bibliotecária, criatura e Coleção;
+- retorno de foco ao acionador React após fechar painel;
+- atualização da preferência na mesma instância Phaser, sem segundo canvas;
+- movimento normal, zero tween repetitivo com redução e decoração estática preservada pela cobertura existente da sala;
+- fronteiras sem React/persistência no Phaser, browser no domínio ou Dexie no React;
+- backup v2 round-trip de settings usando a chave real de experiência;
+- associação condicional de erro do seletor de backup e foco após erros assíncronos dos formulários.
+
+`format`, `format:check`, lint, typecheck, `audio:check`, build web, `android:sync`, `android:build:debug` e `git diff --check` passaram. O APK debug não instalado possui 7.526.051 bytes, SHA-256 `dc293fd389b580a0e110857edf4ce21978bec57dd4150286b26923d8d7e0aa65` e integridade ZIP confirmada.
+
+### Checklist manual acumulada para G9
+
+- [ ] TalkBack no Moto G06 e leitor de tela desktop quando disponível;
+- [ ] landmarks, headings, navegação, formulários, Configurações e backup/restauração;
+- [ ] Tab/Shift+Tab, Enter, Space, retorno de foco e foco após erro;
+- [ ] alternativa textual, estante, bibliotecária, criatura e anúncio de marco;
+- [ ] texto grande/maior em 320 px e zoom do navegador sem corte/overflow desnecessário;
+- [ ] alto contraste em foco, links, controles, estados e erros;
+- [ ] movimento seguindo sistema e overrides reduzir/normal no navegador e Android;
+- [ ] mute/volumes zero sem perda de feedback;
+- [ ] alvos de toque, teclado virtual e uso com uma mão;
+- [ ] reabertura e restauração controlada preservando preferências.
+
+Nenhum item manual foi executado ou aprovado. Não há automação de TalkBack, alegação WCAG ou validação física de G9. Prompt 14–17 e G7–G9 permanecem abertos.

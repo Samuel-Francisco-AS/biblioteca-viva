@@ -31,6 +31,10 @@ import {
   type DialoguePort,
   DialogueSelector,
   DialogueService,
+  ExperiencePreferencesService,
+  type ExperienceErrorReporter,
+  type ExperiencePreferencesPort,
+  type ExperienceSettingsPort,
 } from "../application";
 import { MILESTONE_ID, MilestoneEngine } from "../domain";
 import { ContentLocalizer, PROTOTYPE_CONTENT } from "../content";
@@ -68,6 +72,8 @@ import {
   DexieDialogueHistoryRepository,
   type PlatformCapabilitiesPort,
   type PlatformCapabilitySnapshot,
+  consoleExperienceErrorReporter,
+  DexieExperienceSettingsRepository,
 } from "../infrastructure";
 import packageMetadata from "../../package.json";
 
@@ -82,6 +88,7 @@ export interface ApplicationRuntime {
   readonly appVersion: string;
   readonly audio: AudioPort;
   readonly dialogue: DialoguePort;
+  readonly experience: ExperiencePreferencesPort;
   readonly platform: PlatformCapabilitySnapshot;
   readonly backup: {
     readonly nativeSaveAvailable: boolean;
@@ -123,6 +130,8 @@ export interface CreateApplicationOptions {
   readonly audioReporter?: AudioErrorReporter;
   readonly dialogueHistory?: DialogueHistoryPort;
   readonly dialogueReporter?: DialogueErrorReporter;
+  readonly experienceReporter?: ExperienceErrorReporter;
+  readonly experienceSettings?: ExperienceSettingsPort;
   readonly databaseName?: string;
   readonly backupFileSave?: BackupFileSavePort;
   readonly backupFileShare?: BackupFileSharePort;
@@ -188,6 +197,12 @@ export async function createApplication(
     dialogueReporter,
   );
   await dialogue.loadHistory();
+  const experience = new ExperiencePreferencesService(
+    options.experienceSettings ??
+      new DexieExperienceSettingsRepository(database, clock),
+    options.experienceReporter ?? consoleExperienceErrorReporter,
+  );
+  await experience.loadPreferences();
   events.subscribe("MilestoneReached", (event) => {
     if (event.type !== "MilestoneReached") return;
     if (event.payload.milestoneId === MILESTONE_ID.firstCompletedBook)
@@ -232,6 +247,7 @@ export async function createApplication(
     appVersion: packageMetadata.version,
     audio,
     dialogue,
+    experience,
     platform,
     backup: {
       nativeSaveAvailable,

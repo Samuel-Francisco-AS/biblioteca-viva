@@ -41,6 +41,7 @@ function game(): LibraryVisualGame {
     resize: vi.fn(),
     resume: vi.fn(),
     setInteractionHandler: vi.fn(),
+    setReducedMotion: vi.fn(),
     updateProjection: vi.fn(),
   };
 }
@@ -328,6 +329,24 @@ describe("LibraryVisualHost", () => {
     expect(instance.updateProjection).toHaveBeenCalledWith(nextProjection);
   });
 
+  it("atualiza movimento efetivo sem recriar o canvas", async () => {
+    const instance = game();
+    const { createLibraryVisualGame, loadFactory } = factoryFor(instance);
+    const rendered = renderHost({ loadFactory, reducedMotion: false });
+    await waitFor(() => expect(createLibraryVisualGame).toHaveBeenCalledOnce());
+
+    rendered.rerender(
+      <LibraryVisualHost
+        loadFactory={loadFactory}
+        projection={projection}
+        reducedMotion
+      />,
+    );
+
+    expect(createLibraryVisualGame).toHaveBeenCalledOnce();
+    expect(instance.setReducedMotion).toHaveBeenLastCalledWith(true);
+  });
+
   it("usa a projeção mais recente se a factory resolver depois de um rerender", async () => {
     const pending = deferred<LibraryVisualFactoryModule>();
     const instance = game();
@@ -381,14 +400,10 @@ describe("LibraryVisualHost", () => {
     expect(onInteraction).not.toHaveBeenCalled();
   });
 
-  it("entrega preferência local de movimento reduzido à mesma factory lazy", async () => {
-    vi.stubGlobal(
-      "matchMedia",
-      vi.fn(() => ({ matches: true })),
-    );
+  it("entrega preferência efetiva de movimento reduzido à mesma factory lazy", async () => {
     const instance = game();
     const { createLibraryVisualGame, loadFactory } = factoryFor(instance);
-    renderHost({ loadFactory });
+    renderHost({ loadFactory, reducedMotion: true });
     await waitFor(() => expect(createLibraryVisualGame).toHaveBeenCalledOnce());
     expect(createLibraryVisualGame.mock.calls[0]?.[0]?.reducedMotion).toBe(
       true,

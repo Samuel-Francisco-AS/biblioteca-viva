@@ -200,3 +200,7 @@ O envelope estrito atual usa `kind: biblioteca-viva-backup`, `formatVersion: 2`,
 `data` contém `libraryEntries`, `notes`, `quotes`, `activities`, `settings` e `milestones`, ordenados por ID ou chave. `metadata` do IndexedDB, inclusive `schema-version`, é técnico e não entra. O checksum cobre o envelope canônico sem `integrity`, após a normalização pela mesma representação JSON gravada no arquivo.
 
 Backups v1 íntegros continuam aceitos e são normalizados com zero marcos: uma instalação limpa não inventa recompensa. Na restauração, as cinco coleções anteriores mantêm política `replace`; marcos usam união monotônica por ID entre destino e arquivo. Essa exceção estreita impede que backup antigo ou incompleto apague desbloqueio legítimo e continua idempotente em restaurações repetidas. Importação não publica `MilestoneReached` e, portanto, não repete áudio, diálogo, notificação ou concessão.
+
+### Preferências de experiência
+
+`experience.preferences.v1` usa a tabela `settings` existente, sem schema v4. O valor estrito contém `motion: system | reduce | normal`, `highContrast: boolean` e `textSize: default | large | larger`. Não contém conteúdo pessoal. Valor ausente ou inválido produz defaults em memória; gravações válidas entram automaticamente no backup v2 e seguem a política `replace` de settings.

@@ -42,6 +42,7 @@ export function ProgressForm({
       onUpdated(updated, "Progresso atualizado.");
     } catch (failure: unknown) {
       setError(presentApplicationError(failure).message);
+      requestAnimationFrame(() => fieldRef.current?.focus());
     } finally {
       savingRef.current = false;
       setIsSaving(false);

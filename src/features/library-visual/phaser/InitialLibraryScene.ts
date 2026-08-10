@@ -69,7 +69,7 @@ export class InitialLibraryScene extends Phaser.Scene {
   private projection: LibraryViewModel;
   private readingLamp?: Phaser.GameObjects.Container;
   private readingLampFigure?: Phaser.GameObjects.Graphics;
-  private readonly reducedMotion: boolean;
+  private reducedMotion: boolean;
   private renderedSize?: { readonly height: number; readonly width: number };
   private shelf?: Phaser.GameObjects.Graphics;
   private shelfZone?: Phaser.GameObjects.Zone;
@@ -156,6 +156,28 @@ export class InitialLibraryScene extends Phaser.Scene {
     interactionHandler: ((interaction: LibraryInteraction) => void) | undefined,
   ): void {
     this.interactionHandler = interactionHandler;
+  }
+
+  setReducedMotion(reducedMotion: boolean): void {
+    if (this.reducedMotion === reducedMotion) return;
+    this.reducedMotion = reducedMotion;
+    if (!this.currentLayout) return;
+    if (reducedMotion && this.unlockTween) {
+      this.unlockTween.remove();
+      this.unlockTween = undefined;
+      this.readingLamp?.setAlpha(1).setScale(1);
+      const animation = this.projection.decorationUnlockAnimation;
+      if (animation)
+        this.interactionHandler?.({
+          decorationId: animation.decorationId,
+          eventId: animation.eventId,
+          type: "DecorationUnlockPresented",
+        });
+    }
+    this.resetMotionPhases();
+    this.startMotion("preference-change");
+    this.applyMotionFrame();
+    this.presentPendingUnlock();
   }
 
   updateProjection(projection: LibraryViewModel): void {

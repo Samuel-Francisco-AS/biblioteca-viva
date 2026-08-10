@@ -62,7 +62,7 @@ describe("App", () => {
   });
 
   it("abre a Biblioteca na rota inicial e apresenta as regiões principais", () => {
-    renderApp();
+    const { container } = renderApp();
 
     expect(screen.getByRole("banner").querySelector("h1")).toHaveTextContent(
       "Biblioteca",
@@ -77,6 +77,14 @@ describe("App", () => {
     expect(screen.getByRole("link", { name: "Abrir Coleção" })).toHaveAttribute(
       "href",
       "/colecao",
+    );
+    expect(container.querySelector(".app-shell")).toHaveAttribute(
+      "data-high-contrast",
+      "false",
+    );
+    expect(container.querySelector(".app-shell")).toHaveAttribute(
+      "data-text-size",
+      "default",
     );
   });
 
@@ -98,12 +106,27 @@ describe("App", () => {
       audioBackend: backend,
       databaseName,
     });
+    await application.experience.setHighContrast(true);
+    await application.experience.setTextSize("larger");
+    await application.experience.setMotion("reduce");
     const rendered = render(
       <MemoryRouter initialEntries={["/novo-livro"]}>
         <App application={application} />
       </MemoryRouter>,
     );
     const focusBefore = document.activeElement;
+    expect(rendered.container.querySelector(".app-shell")).toHaveAttribute(
+      "data-high-contrast",
+      "true",
+    );
+    expect(rendered.container.querySelector(".app-shell")).toHaveAttribute(
+      "data-text-size",
+      "larger",
+    );
+    expect(rendered.container.querySelector(".app-shell")).toHaveAttribute(
+      "data-reduced-motion",
+      "true",
+    );
     const book = await application.commands.createBookEntry.execute({
       status: "in_progress",
       title: "Livro fictício acessível",
