@@ -1,6 +1,7 @@
 import type { Activity } from "./activities";
 import type { ApplicationDependencies } from "./ports";
 import type { DomainEvent } from "../domain";
+import { milestoneReachedEvents } from "./milestones";
 import {
   ApplicationError,
   activityPersistenceFailed,
@@ -61,6 +62,25 @@ export async function publishEvent(
   } catch {
     throw eventPublicationFailed();
   }
+}
+
+export async function processMilestones(
+  dependencies: Pick<ApplicationDependencies, "milestones">,
+  event: DomainEvent,
+): Promise<readonly DomainEvent[]> {
+  if (!dependencies.milestones) return Object.freeze([]);
+  try {
+    return milestoneReachedEvents(await dependencies.milestones.process(event));
+  } catch {
+    throw persistenceFailed("save_milestone");
+  }
+}
+
+export async function publishEvents(
+  dependencies: Pick<ApplicationDependencies, "events">,
+  events: readonly DomainEvent[],
+): Promise<void> {
+  for (const event of events) await publishEvent(dependencies, event);
 }
 
 export async function runTransaction<T>(

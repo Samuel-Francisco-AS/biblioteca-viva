@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
 
 import { appRoutes } from "./routes";
@@ -17,6 +17,8 @@ import {
 } from "./features/entry-editor/EntryEditorPages";
 import "./styles.css";
 import { useAudioExperience } from "./useAudioExperience";
+import { MILESTONE_ID, type MilestoneReached } from "./domain";
+import { LibraryPage } from "./pages";
 
 function NotFoundPage() {
   return (
@@ -46,6 +48,14 @@ export function App({ application, diagnostics }: AppProps) {
   const location = useLocation();
   const mainRef = useRef<HTMLElement>(null);
   const previousPathRef = useRef(location.pathname);
+  const [milestoneReaction, setMilestoneReaction] = useState<{
+    readonly dialogue?: string;
+    readonly dialogueUnavailable?: boolean;
+    readonly eventId: string;
+  } | null>(null);
+  const [pendingDecorationUnlock, setPendingDecorationUnlock] = useState<{
+    readonly eventId: string;
+  } | null>(null);
   const activeRoute = appRoutes.find(
     (route) => route.path === location.pathname,
   );
@@ -66,6 +76,56 @@ export function App({ application, diagnostics }: AppProps) {
       previousPathRef.current = location.pathname;
     }
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!application) return;
+    let active = true;
+    const reactToFirstCompletion = async (event: MilestoneReached) => {
+      setMilestoneReaction({ eventId: event.eventId });
+      setPendingDecorationUnlock({ eventId: event.eventId });
+      try {
+        const books = await application.queries.listBookEntries.execute();
+        if (!active) return;
+        application.dialogue.updateLibraryFacts({
+          completedBooks: books.filter(({ status }) => status === "completed")
+            .length,
+          inProgressBooks: books.filter(
+            ({ status }) => status === "in_progress",
+          ).length,
+          totalBooks: books.length,
+        });
+        const dialogue = await application.dialogue.select(
+          "book.first-completed",
+        );
+        if (active)
+          setMilestoneReaction({
+            dialogue: dialogue.text,
+            eventId: event.eventId,
+          });
+      } catch {
+        if (active)
+          setMilestoneReaction({
+            dialogueUnavailable: true,
+            eventId: event.eventId,
+          });
+      }
+    };
+    const unsubscribe = application.events.subscribe(
+      "MilestoneReached",
+      (event) => {
+        if (
+          event.type === "MilestoneReached" &&
+          event.payload.milestoneId === MILESTONE_ID.firstCompletedBook
+        ) {
+          void reactToFirstCompletion(event);
+        }
+      },
+    );
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, [application]);
 
   return (
     <div className="app-shell">
@@ -108,20 +168,46 @@ export function App({ application, diagnostics }: AppProps) {
             {unsafeContextGuidance}
           </p>
         )}
+        {milestoneReaction && (
+          <section
+            aria-atomic="true"
+            aria-live="polite"
+            className="milestone-notification"
+            role="status"
+          >
+            <p>
+              Primeiro livro concluído. A luminária de leitura foi desbloqueada.
+            </p>
+            {milestoneReaction.dialogue && (
+              <p lang="pt-BR">{milestoneReaction.dialogue}</p>
+            )}
+            {milestoneReaction.dialogueUnavailable && (
+              <p>O diálogo contextual não pôde ser carregado agora.</p>
+            )}
+            <button
+              className="button button--secondary"
+              onClick={() => setMilestoneReaction(null)}
+              type="button"
+            >
+              Fechar aviso
+            </button>
+          </section>
+        )}
         <Routes>
-          {appRoutes
-            .filter((route) => route.Component)
-            .map((route) => (
-              <Route
-                element={
-                  route.Component ? (
-                    <route.Component application={application} />
-                  ) : undefined
-                }
-                key={route.path}
-                path={route.path}
+          <Route
+            path="/"
+            element={
+              <LibraryPage
+                application={application}
+                onDecorationUnlockPresented={(eventId) => {
+                  setPendingDecorationUnlock((pending) =>
+                    pending?.eventId === eventId ? null : pending,
+                  );
+                }}
+                pendingDecorationUnlock={pendingDecorationUnlock ?? undefined}
               />
-            ))}
+            }
+          />
           <Route
             path="/colecao"
             element={<CollectionPage application={application} />}

@@ -1,5 +1,6 @@
 import { parseContentCatalog } from "./schemas";
 import { PT_BR_MESSAGES } from "./locales/pt-BR";
+import { DECORATION_ID, MILESTONE_ID, REWARD_ID } from "../domain";
 
 const rawPrototypeContent = {
   version: 1,
@@ -25,15 +26,15 @@ const rawPrototypeContent = {
       id: "room.main",
       nameKey: "room.main.name",
       characterIds: ["character.librarian", "character.creature"],
-      decorationIds: [],
+      decorationIds: [DECORATION_ID.readingLamp],
     },
   ],
   decorations: [
     {
-      id: "decoration.reading-lamp",
+      id: DECORATION_ID.readingLamp,
       nameKey: "decoration.reading-lamp.name",
       descriptionKey: "decoration.reading-lamp.description",
-      state: "reserved",
+      state: "unlockable",
     },
   ],
   interfaceTexts: [
@@ -41,6 +42,43 @@ const rawPrototypeContent = {
     {
       id: "interface.content.missing",
       textKey: "interface.content.missing",
+    },
+  ],
+  rewards: [
+    {
+      id: REWARD_ID.firstCompletionReadingLamp,
+      type: "decoration",
+      decorationId: DECORATION_ID.readingLamp,
+    },
+  ],
+  milestones: [
+    {
+      id: MILESTONE_ID.firstBook,
+      eventType: "LibraryEntryCreated",
+      conditions: [{ fact: "totalBooks", operator: "gte", value: 1 }],
+      rewardIds: [],
+      ruleVersion: 1,
+    },
+    {
+      id: MILESTONE_ID.firstNote,
+      eventType: "NoteCreated",
+      conditions: [{ fact: "totalNotes", operator: "gte", value: 1 }],
+      rewardIds: [],
+      ruleVersion: 1,
+    },
+    {
+      id: MILESTONE_ID.firstQuote,
+      eventType: "QuoteCreated",
+      conditions: [{ fact: "totalQuotes", operator: "gte", value: 1 }],
+      rewardIds: [],
+      ruleVersion: 1,
+    },
+    {
+      id: MILESTONE_ID.firstCompletedBook,
+      eventType: "LibraryEntryCompleted",
+      conditions: [{ fact: "completedBooks", operator: "gte", value: 1 }],
+      rewardIds: [REWARD_ID.firstCompletionReadingLamp],
+      ruleVersion: 1,
     },
   ],
   fallbacks: {

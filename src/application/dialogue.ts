@@ -101,6 +101,7 @@ export interface LibraryDialogueFacts {
 export interface DialoguePort {
   enterLibrary(facts: LibraryDialogueFacts): Promise<void>;
   select(event: DialogueEvent): Promise<LocalizedDialogue>;
+  updateLibraryFacts(facts: LibraryDialogueFacts): void;
 }
 
 export interface DialogueErrorReporter {
@@ -248,6 +249,13 @@ export class DialogueService implements DialoguePort {
         this.reporter.warn("DIALOGUE_SESSION_PREPARATION_FAILED");
       });
     return this.sessionPreparation;
+  }
+
+  updateLibraryFacts(facts: LibraryDialogueFacts): void {
+    this.facts = Object.freeze({
+      ...facts,
+      daysSinceLastVisit: this.daysSinceLastVisit,
+    });
   }
 
   select(event: DialogueEvent): Promise<LocalizedDialogue> {

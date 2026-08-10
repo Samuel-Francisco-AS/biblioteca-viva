@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { DIALOGUE_EVENTS, DIALOGUE_FACTS } from "../application";
+import { DECORATION_IDS, MILESTONE_IDS } from "../domain";
 
 const stableIdSchema = z
   .string()
@@ -47,7 +48,32 @@ export const decorationDefinitionSchema = z.strictObject({
   descriptionKey: textKeySchema,
   id: stableIdSchema,
   nameKey: textKeySchema,
-  state: z.enum(["available", "reserved"]),
+  state: z.enum(["available", "reserved", "unlockable"]),
+});
+
+export const milestoneRewardDefinitionSchema = z.strictObject({
+  decorationId: z.enum(DECORATION_IDS),
+  id: stableIdSchema,
+  type: z.literal("decoration"),
+});
+
+export const milestoneConditionSchema = z.strictObject({
+  fact: z.enum(["totalBooks", "totalNotes", "totalQuotes", "completedBooks"]),
+  operator: z.literal("gte"),
+  value: z.int().positive(),
+});
+
+export const milestoneDefinitionSchema = z.strictObject({
+  conditions: z.array(milestoneConditionSchema).min(1),
+  eventType: z.enum([
+    "LibraryEntryCreated",
+    "NoteCreated",
+    "QuoteCreated",
+    "LibraryEntryCompleted",
+  ]),
+  id: z.enum(MILESTONE_IDS),
+  rewardIds: z.array(stableIdSchema),
+  ruleVersion: z.int().positive(),
 });
 
 export const interfaceTextDefinitionSchema = z.strictObject({
@@ -72,6 +98,8 @@ export const contentCatalogSchema = z.strictObject({
   }),
   interfaceTexts: z.array(interfaceTextDefinitionSchema),
   locales: z.array(localizedContentSchema).min(1),
+  milestones: z.array(milestoneDefinitionSchema).min(1),
+  rewards: z.array(milestoneRewardDefinitionSchema),
   rooms: z.array(roomDefinitionSchema).min(1),
   version: z.int().positive(),
 });
@@ -106,6 +134,8 @@ export function validateContentReferences(catalog: ContentCatalog): string[] {
     ...duplicateIds("rooms", catalog.rooms),
     ...duplicateIds("decorations", catalog.decorations),
     ...duplicateIds("interfaceTexts", catalog.interfaceTexts),
+    ...duplicateIds("milestones", catalog.milestones),
+    ...duplicateIds("rewards", catalog.rewards),
   ];
   const localeIds = catalog.locales.map(({ locale }) => ({ id: locale }));
   issues.push(...duplicateIds("locales", localeIds));
@@ -113,6 +143,7 @@ export function validateContentReferences(catalog: ContentCatalog): string[] {
   const dialogues = new Map(catalog.dialogues.map((item) => [item.id, item]));
   const characters = new Set(catalog.characters.map(({ id }) => id));
   const decorations = new Set(catalog.decorations.map(({ id }) => id));
+  const rewards = new Map(catalog.rewards.map((reward) => [reward.id, reward]));
   const defaultMessages = catalog.locales.find(
     ({ locale }) => locale === catalog.defaultLocale,
   )?.messages;
@@ -133,6 +164,16 @@ export function validateContentReferences(catalog: ContentCatalog): string[] {
       if (!characters.has(id)) issues.push(`Personagem inexistente: ${id}`);
     for (const id of room.decorationIds)
       if (!decorations.has(id)) issues.push(`Decoração inexistente: ${id}`);
+  }
+  for (const milestone of catalog.milestones) {
+    for (const rewardId of milestone.rewardIds) {
+      if (!rewards.has(rewardId))
+        issues.push(`Recompensa inexistente: ${rewardId}`);
+    }
+  }
+  for (const reward of catalog.rewards) {
+    if (reward.decorationId && !decorations.has(reward.decorationId))
+      issues.push(`Decoração inexistente: ${reward.decorationId}`);
   }
 
   const referencedTextKeys = [

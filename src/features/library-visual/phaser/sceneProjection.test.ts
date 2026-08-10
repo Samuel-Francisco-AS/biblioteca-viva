@@ -5,6 +5,8 @@ import { librarySceneRenderState, truncateSceneLabel } from "./sceneProjection";
 
 const viewModel: LibraryViewModel = {
   completedBooks: 1,
+  decorationUnlockAnimation: null,
+  hasCompletedBook: true,
   hasFirstCompletionMilestone: true,
   highlightedBook: {
     entryId: "book-1",
@@ -17,6 +19,7 @@ const viewModel: LibraryViewModel = {
   shelfOccupancy: "full",
   shelfVisualGroupCount: 8,
   totalBooks: 100,
+  unlockedDecorationIds: ["decoration.reading-lamp"],
 };
 
 describe("projeção renderizável da cena", () => {
@@ -62,6 +65,7 @@ describe("projeção renderizável da cena", () => {
     const withoutCompletion = librarySceneRenderState({
       ...viewModel,
       completedBooks: 0,
+      hasCompletedBook: false,
       hasFirstCompletionMilestone: false,
     });
     const withCompletion = librarySceneRenderState(viewModel);

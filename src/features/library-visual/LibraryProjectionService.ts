@@ -1,4 +1,9 @@
 import type { EntryStatus } from "../../domain";
+import {
+  DECORATION_ID,
+  MILESTONE_ID,
+  type ReachedMilestone,
+} from "../../domain";
 import type {
   HighlightedLibraryBook,
   LibraryProgressSummary,
@@ -17,6 +22,8 @@ export interface LibraryProjectionBook {
 
 export interface LibraryProjectionInput {
   readonly books: readonly LibraryProjectionBook[];
+  readonly milestones?: readonly ReachedMilestone[];
+  readonly pendingDecorationUnlock?: { readonly eventId: string };
 }
 
 export const SHELF_OCCUPANCY_RANGES = {
@@ -83,16 +90,37 @@ export class LibraryProjectionService {
       (book) => book.status === "completed",
     ).length;
     const shelfOccupancy = shelfOccupancyFor(totalBooks);
+    const milestones = input.milestones ?? Object.freeze([]);
+    const unlockedDecorationIds = Object.freeze(
+      milestones.some((milestone) =>
+        milestone.rewards.some(
+          (reward) => reward.decorationId === DECORATION_ID.readingLamp,
+        ),
+      )
+        ? [DECORATION_ID.readingLamp]
+        : [],
+    );
 
     return {
       completedBooks,
-      hasFirstCompletionMilestone: completedBooks > 0,
+      decorationUnlockAnimation:
+        input.pendingDecorationUnlock && unlockedDecorationIds.length > 0
+          ? {
+              decorationId: DECORATION_ID.readingLamp,
+              eventId: input.pendingDecorationUnlock.eventId,
+            }
+          : null,
+      hasCompletedBook: completedBooks > 0,
+      hasFirstCompletionMilestone: milestones.some(
+        ({ id }) => id === MILESTONE_ID.firstCompletedBook,
+      ),
       highlightedBook: highlightedBookFor(input.books),
       inProgressBooks,
       roomState: "default",
       shelfOccupancy,
       shelfVisualGroupCount: SHELF_VISUAL_GROUP_COUNTS[shelfOccupancy],
       totalBooks,
+      unlockedDecorationIds,
     };
   }
 }

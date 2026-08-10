@@ -90,6 +90,10 @@ function Counts({ counts }: { readonly counts: BackupCounts }) {
         <dd>{counts.activities}</dd>
       </div>
       <div>
+        <dt>Marcos históricos</dt>
+        <dd>{counts.milestones}</dd>
+      </div>
+      <div>
         <dt>Configurações</dt>
         <dd>{counts.settings}</dd>
       </div>

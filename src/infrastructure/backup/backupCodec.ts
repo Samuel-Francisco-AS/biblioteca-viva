@@ -13,6 +13,7 @@ import { z } from "zod";
 import {
   persistedActivitySchema,
   persistedBookSchema,
+  persistedMilestoneSchema,
   persistedNoteSchema,
   persistedQuoteSchema,
   persistedSettingSchema,
@@ -20,12 +21,25 @@ import {
 
 const digestSchema = z.string().regex(/^[a-f0-9]{64}$/u);
 const backupSettingSchema = persistedSettingSchema.extend({ value: z.json() });
-const dataSchema = z.strictObject({
+const legacyDataSchema = z.strictObject({
   libraryEntries: z.array(persistedBookSchema),
   notes: z.array(persistedNoteSchema),
   quotes: z.array(persistedQuoteSchema),
   activities: z.array(persistedActivitySchema),
   settings: z.array(backupSettingSchema),
+});
+const dataSchema = legacyDataSchema.extend({
+  milestones: z.array(persistedMilestoneSchema),
+});
+const envelopeMetadataSchema = z.strictObject({ policy: z.literal("replace") });
+const legacyUnsignedSchema = z.strictObject({
+  kind: z.literal(BACKUP_KIND),
+  formatVersion: z.literal(1),
+  createdAt: z.iso.datetime({ offset: false }),
+  appVersion: z.string().trim().min(1),
+  databaseVersion: z.int().positive(),
+  data: legacyDataSchema,
+  metadata: envelopeMetadataSchema,
 });
 const unsignedSchema = z.strictObject({
   kind: z.literal(BACKUP_KIND),
@@ -34,14 +48,16 @@ const unsignedSchema = z.strictObject({
   appVersion: z.string().trim().min(1),
   databaseVersion: z.int().positive(),
   data: dataSchema,
-  metadata: z.strictObject({ policy: z.literal("replace") }),
+  metadata: envelopeMetadataSchema,
 });
-const envelopeSchema = unsignedSchema.extend({
-  integrity: z.strictObject({
-    algorithm: z.literal("SHA-256"),
-    digest: digestSchema,
-  }),
+const integritySchema = z.strictObject({
+  algorithm: z.literal("SHA-256"),
+  digest: digestSchema,
 });
+const envelopeSchema = z.discriminatedUnion("formatVersion", [
+  legacyUnsignedSchema.extend({ integrity: integritySchema }),
+  unsignedSchema.extend({ integrity: integritySchema }),
+]);
 
 type JsonValue =
   | null
@@ -103,6 +119,7 @@ async function sha256(value: JsonValue): Promise<string> {
 function counts(data: BackupData): BackupCounts {
   return Object.freeze({
     libraryEntries: data.libraryEntries.length,
+    milestones: data.milestones.length,
     notes: data.notes.length,
     quotes: data.quotes.length,
     activities: data.activities.length,
@@ -115,6 +132,7 @@ function sortData(data: BackupData): BackupData {
     [...values].sort((a, b) => a.id.localeCompare(b.id));
   return Object.freeze({
     libraryEntries: Object.freeze(byId(data.libraryEntries)),
+    milestones: Object.freeze(byId(data.milestones)),
     notes: Object.freeze(byId(data.notes)),
     quotes: Object.freeze(byId(data.quotes)),
     activities: Object.freeze(byId(data.activities)),
@@ -127,6 +145,7 @@ function sortData(data: BackupData): BackupData {
 function rejectDuplicates(data: BackupData): void {
   const collections: readonly [string, readonly string[]][] = [
     ["libraryEntries", data.libraryEntries.map((item) => item.id)],
+    ["milestones", data.milestones.map((item) => item.id)],
     ["notes", data.notes.map((item) => item.id)],
     ["quotes", data.quotes.map((item) => item.id)],
     ["activities", data.activities.map((item) => item.id)],
@@ -224,7 +243,10 @@ export class JsonBackupCodec implements BackupCodecPort {
         "FUTURE_FORMAT_VERSION",
         "Este backup usa uma versão futura ainda não suportada.",
       );
-    if (root.formatVersion !== BACKUP_FORMAT_VERSION)
+    if (
+      root.formatVersion !== 1 &&
+      root.formatVersion !== BACKUP_FORMAT_VERSION
+    )
       throw new BackupError(
         "UNSUPPORTED_FORMAT_VERSION",
         "A versão do formato de backup não é suportada.",
@@ -244,30 +266,42 @@ export class JsonBackupCodec implements BackupCodecPort {
         "INVALID_BACKUP_DATA",
         "O backup contém dados inválidos ou incompatíveis.",
       );
-    rejectDuplicates(parsed.data.data);
+    const sourceFormatVersion = parsed.data.formatVersion;
+    const data = sortData({
+      ...parsed.data.data,
+      milestones:
+        sourceFormatVersion === 1
+          ? Object.freeze([])
+          : parsed.data.data.milestones,
+    });
+    rejectDuplicates(data);
     const { integrity, ...unsigned } = parsed.data;
     if ((await sha256(checksumMaterial(unsigned))) !== integrity.digest)
       throw new BackupError(
         "CHECKSUM_MISMATCH",
         "A integridade do backup não pôde ser confirmada.",
       );
-    const data = sortData(parsed.data.data);
     return Object.freeze({
       data,
       summary: Object.freeze({
         createdAt: parsed.data.createdAt,
         appVersion: parsed.data.appVersion,
         databaseVersion: parsed.data.databaseVersion,
-        formatVersion: BACKUP_FORMAT_VERSION,
+        formatVersion: sourceFormatVersion,
         policy: "replace",
         counts: counts(data),
-        warnings: Object.freeze(
-          parsed.data.databaseVersion > 2
+        warnings: Object.freeze([
+          ...(sourceFormatVersion === 1
+            ? [
+                "Este backup é anterior aos marcos; nenhum marco será inventado e marcos legítimos existentes serão preservados.",
+              ]
+            : []),
+          ...(parsed.data.databaseVersion > 3
             ? [
                 "O backup foi criado por um schema de banco mais recente, mas o formato é compatível.",
               ]
-            : [],
-        ),
+            : []),
+        ]),
       }),
     });
   }

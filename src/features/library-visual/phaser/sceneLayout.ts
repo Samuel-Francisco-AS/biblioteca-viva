@@ -47,6 +47,7 @@ export interface LibrarySceneLayout {
   readonly librarianHitArea: SceneRectangle;
   readonly lightAreas: readonly SceneCircle[];
   readonly milestoneMarker: SceneRectangle;
+  readonly readingLamp: SceneRectangle;
   readonly mode: LibrarySceneLayoutMode;
   readonly shelf: SceneRectangle;
   readonly shelfHitArea: SceneRectangle;
@@ -155,6 +156,12 @@ function compactLayout({ height, width }: SceneLayoutSize): LibrarySceneLayout {
       x: shelf.x + shelf.width - 16,
       y: shelf.y + 6,
     },
+    readingLamp: {
+      height: 20,
+      width: 14,
+      x: counter.x + counter.width - 20,
+      y: counter.y - 17,
+    },
     mode: "compact",
     shelf,
     shelfHitArea: shelf,
@@ -255,6 +262,12 @@ function regularLayout({ height, width }: SceneLayoutSize): LibrarySceneLayout {
       width: Math.max(12, fontSize),
       x: shelf.x + shelf.width - fontSize * 1.5,
       y: shelf.y + fontSize,
+    },
+    readingLamp: {
+      height: Math.max(24, height * 0.065),
+      width: Math.max(16, width * 0.026),
+      x: counter.x + counter.width * 0.82,
+      y: counter.y - Math.max(20, height * 0.05),
     },
     mode: "regular",
     shelf,

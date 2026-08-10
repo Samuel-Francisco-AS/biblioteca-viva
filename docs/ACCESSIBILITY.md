@@ -168,3 +168,12 @@ A validação manual com teclado, leitor de estrutura, zoom, larguras móveis e 
 - textos são curtos, sem culpa, cobrança, streak ou interpretação de livro;
 - fallback textual explícito mantém painel utilizável quando não há candidato específico;
 - validação manual de leitor de tela, ampliação e conforto de repetição foi acumulada para o checkpoint integrado.
+
+## 16. Primeiro desbloqueio do Prompt 16
+
+- a notificação React usa região `status` com `aria-live="polite"` e `aria-atomic="true"`, sem mover foco;
+- título do marco e nome da decoração tornam a mudança compreensível sem canvas, áudio ou cor;
+- a luminária permanece no estado visual estático quando `prefers-reduced-motion: reduce` está ativo;
+- a animação normal é curta, não bloqueia interação e não contém flash ou partículas;
+- o diálogo contextual mantém seu painel React acessível, e mute não remove nenhum feedback textual;
+- leitor de tela, reduced motion e conforto visual em aparelho real permanecem na checklist integrada de G8.

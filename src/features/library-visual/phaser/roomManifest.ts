@@ -5,7 +5,8 @@ export type EssentialVisualId =
   | "librarian"
   | "creature"
   | "highlighted-book"
-  | "ambient-light";
+  | "ambient-light"
+  | "reading-lamp";
 
 export type VisualFallbackKind =
   | "floorboards"
@@ -14,7 +15,8 @@ export type VisualFallbackKind =
   | "librarian-figure"
   | "round-creature"
   | "open-book"
-  | "warm-overlay";
+  | "warm-overlay"
+  | "reading-lamp";
 
 export type SemanticPositionId =
   | "room-floor"
@@ -23,7 +25,8 @@ export type SemanticPositionId =
   | "librarian-post"
   | "creature-path"
   | "recent-book-stand"
-  | "ambient-light-area";
+  | "ambient-light-area"
+  | "reading-counter-lamp";
 
 export interface VisualElementManifestEntry {
   readonly assetPath: string | null;
@@ -39,6 +42,14 @@ export interface VisualElementManifestEntry {
  * null and every essential element has an independent procedural fallback.
  */
 export const LIBRARY_VISUAL_MANIFEST: readonly VisualElementManifestEntry[] = [
+  {
+    assetPath: null,
+    depth: 55,
+    fallback: "reading-lamp",
+    id: "reading-lamp",
+    interactive: false,
+    position: "reading-counter-lamp",
+  },
   {
     assetPath: null,
     depth: 0,
@@ -104,6 +115,7 @@ export const ESSENTIAL_VISUAL_IDS: readonly EssentialVisualId[] = [
   "librarian",
   "creature",
   "highlighted-book",
+  "reading-lamp",
   "ambient-light",
 ] as const;
 

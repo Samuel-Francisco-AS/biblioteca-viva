@@ -884,7 +884,7 @@ O resultado esperado não é uma demonstração descartável. É uma primeira bi
 
 `ExportBackup`, `InspectBackup` e `ImportBackup` dependem de `BackupSnapshotPort`, `BackupCodecPort` e `FileDeliveryPort`. A infraestrutura implementa snapshot/replace com Dexie, codec JSON v1 com Zod/Web Crypto e entrega por Web Share de arquivos quando disponível, com fallback Blob/download. A apresentação recebe somente a fachada composta e não importa Dexie, Capacitor ou adapters.
 
-Importação é `replace` apenas: valida, exige a entrega de cópia de segurança quando a base tem dados, revalida e substitui as cinco coleções em uma transação. Metadados técnicos permanecem no destino. Não há eventos históricos, mescla ou recriação por casos de uso individuais. Um Error Boundary acima do roteador oferece nova montagem e recarga explícita sem apagar IndexedDB.
+Importação nasceu `replace` para as cinco coleções do formato v1: valida, exige a entrega de cópia de segurança quando a base tem dados, revalida e substitui essas coleções em uma transação. Desde o Prompt 16, o formato v2 acrescenta `milestones` e aplica a exceção monotônica descrita na seção 28. Metadados técnicos permanecem no destino. Um Error Boundary acima do roteador oferece nova montagem e recarga explícita sem apagar IndexedDB.
 
 ## 23. Projeção visual e ponte React–Phaser após o Prompt 12
 
@@ -936,3 +936,30 @@ Phaser LibraryInteraction → host React → DialoguePort.select(event)
 O selector não importa React, Phaser, Dexie, Capacitor, DOM, Web Audio ou relógio concreto. Ele filtra condições/`once`/cooldown, ordena prioridade, uso menos recente e ID e resolve fallback explícito. Phaser não conhece conteúdo ou histórico. React não escolhe frases nem acessa persistência; fornece apenas as contagens já projetadas e apresenta o resultado localizado.
 
 `dialogue.history.v1` vive na tabela `settings` v2 existente, validado ao ler/escrever. Armazena IDs `once`, último instante por fala e última entrada na Biblioteca; não armazena textos, títulos, autores, notas, citações ou fatos da coleção. Não houve migração. O backup existente já inclui settings. `book.first-completed` é um evento de diálogo disponível para composição futura, sem implementar o motor de marcos do Prompt 16.
+
+## 28. Marcos e primeiro desbloqueio após o Prompt 16
+
+`src/domain/milestones.ts` contém IDs estáveis, contratos e `MilestoneEngine` puro. As definições e referências cruzadas vivem no catálogo validado de `src/content/`: quatro regras, uma recompensa e uma decoração. O engine recebe evento, fatos agregados e marcos já alcançados; retorna candidatos ordenados sem importar React, Phaser, Dexie, Capacitor, DOM, áudio ou filesystem.
+
+O fluxo concreto é:
+
+```text
+caso de uso prepara evento mínimo
+→ transação Dexie grava ação + atividade
+→ DexieMilestoneStore consulta fatos e executa MilestoneEngine
+→ add por ID grava marco + recompensa na mesma transação
+→ commit
+→ publica evento original e MilestoneReached
+→ áudio + diálogo + anúncio React + token visual efêmero
+→ projeção persistente mostra a luminária
+```
+
+Falha do marco aborta ação e atividade; nenhum evento ou reação afirma sucesso. Reprocessamento e concorrência terminam na chave única `&id`; apenas o `add` vencedor produz `MilestoneReached`. Reconstruir a projeção chama somente consultas e nunca processa regras.
+
+O schema Dexie v3 adiciona `milestones` sem alterar as tabelas existentes. O registro guarda ID, instante, versão da regra, recompensas e origem técnica mínima sem título, autor, nota, citação ou texto. Exclusão/retomada de livro não apaga histórico. `hasCompletedBook` representa o fato atual; `hasFirstCompletionMilestone` e `unlockedDecorationIds` representam o histórico.
+
+`LibraryViewModel` leva apenas IDs de decoração desbloqueada e, durante a sessão que recebeu o evento, um token efêmero de animação. Phaser desenha a luminária procedural e executa um tween de 650 ms; com `prefers-reduced-motion`, mostra o mesmo estado estático sem tween. A cena confirma a apresentação por interação tipada, mas não importa engine, não persiste e não concede recompensa.
+
+O App escuta `MilestoneReached` após o commit, mantém uma região `role=status`/`aria-live=polite` sem mover foco, atualiza fatos agregados do `DialogueService` e solicita `book.first-completed`. O áudio escuta o mesmo marco confirmado e reutiliza `milestone.book-completed`; mute e lifecycle permanecem no serviço existente.
+
+Backup v2 inclui `milestones` e continua aceitando envelopes v1 estritos com checksum original. Dados pessoais seguem `replace`; marcos históricos usam união monotônica por ID. Assim, v1 em instalação limpa cria zero marcos, v1 sobre um destino com marco legítimo não o apaga e v2 restaura a luminária sem republicar reações.

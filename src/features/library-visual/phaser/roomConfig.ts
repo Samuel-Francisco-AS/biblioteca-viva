@@ -2,6 +2,7 @@ export const LIBRARY_ROOM_BUDGET = {
   maximumApproximateDisplayObjects: 32,
   maximumCustomTextures: 7,
   maximumSimultaneousTweens: 3,
+  maximumTransientUnlockTweens: 1,
   particles: "none",
   physics: "none",
   shaders: "none",
@@ -29,6 +30,10 @@ export const LIBRARY_ROOM_ANIMATIONS = {
     idleAmplitude: 4,
     repeat: -1,
     yoyo: true,
+  },
+  unlock: {
+    durationMs: 650,
+    ease: "Sine.easeOut",
   },
   reducedMotion: {
     durationMultiplier: 1,
@@ -92,6 +97,13 @@ export interface RoomMotionPlan {
   readonly librarianDurationMs: number;
   readonly librarianMoves: boolean;
   readonly simultaneousTweens: number;
+}
+
+export function decorationUnlockMotion(reducedMotion: boolean) {
+  return Object.freeze({
+    animated: !reducedMotion,
+    durationMs: reducedMotion ? 0 : LIBRARY_ROOM_ANIMATIONS.unlock.durationMs,
+  });
 }
 
 export function libraryRoomMotionPlan(reducedMotion: boolean): RoomMotionPlan {

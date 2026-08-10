@@ -26,8 +26,8 @@ export function progressDescription(
 export function libraryPanelSummary(viewModel: LibraryViewModel) {
   return {
     milestone: viewModel.hasFirstCompletionMilestone
-      ? "Já há ao menos uma leitura concluída."
-      : "Ainda não há leituras concluídas.",
+      ? "A primeira conclusão já foi registrada; a luminária de leitura permanece na sala."
+      : "A primeira conclusão ainda não foi registrada.",
     shelf: shelfDescription(viewModel.shelfOccupancy),
   };
 }

@@ -14,6 +14,8 @@ import { librarySceneRenderState } from "./sceneProjection";
 
 const viewModel: LibraryViewModel = {
   completedBooks: 1,
+  decorationUnlockAnimation: null,
+  hasCompletedBook: true,
   hasFirstCompletionMilestone: true,
   highlightedBook: {
     entryId: "recent-book",
@@ -26,6 +28,7 @@ const viewModel: LibraryViewModel = {
   shelfOccupancy: "full",
   shelfVisualGroupCount: 8,
   totalBooks: 100,
+  unlockedDecorationIds: ["decoration.reading-lamp"],
 };
 
 describe("layout responsivo da cena", () => {

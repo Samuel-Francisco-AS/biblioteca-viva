@@ -82,7 +82,7 @@ describe("conteúdo contextual", () => {
     expect(PROTOTYPE_CONTENT.rooms[0]?.id).toBe("room.main");
     expect(PROTOTYPE_CONTENT.decorations[0]).toMatchObject({
       id: "decoration.reading-lamp",
-      state: "reserved",
+      state: "unlockable",
     });
     expect(PROTOTYPE_CONTENT.interfaceTexts).toHaveLength(2);
   });

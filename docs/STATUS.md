@@ -7,20 +7,20 @@
 
 - **Fase:** aplicativo pessoal utilizável;
 - **blocos concluídos:** Bloco 5 — Backup, restauração e recuperação, com G5 aprovado; Bloco 6 — Biblioteca visual conectada, com G6 aprovado;
-- **prompts tecnicamente implementados:** Prompts 10 a 15; Prompts 14 e 15 mantêm validações humanas acumuladas e não estão aprovados;
+- **prompts tecnicamente implementados:** Prompts 10 a 16; Prompts 14, 15 e 16 mantêm validações humanas acumuladas e não estão aprovados;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **trabalho atual:** G4 permanece aberto em paralelo; Bloco 7 possui implementação técnica de áudio e diálogos, com revisão automática/documental do Prompt 15 antes de eventual avanço técnico ao Prompt 16;
+- **trabalho atual:** G4 permanece aberto em paralelo; Blocos 7 e 8 possuem implementação técnica, com validação sensorial e do primeiro ciclo emocional acumulada;
 - **gate:** G0 a G3 aprovados; G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
-- **último checkpoint versionado:** `01ba848` (`feat: implement audio foundation and provisional soundscape`), exclusivamente técnico e sem aprovação de Prompt 14 ou G7;
+- **checkpoint técnico anterior:** `bb819a7` (`feat: add data-driven contextual dialogues`), sem aprovação humana do Prompt 15 ou G7;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
-- **APK:** APK debug com a implementação técnica dos Prompts 14 e 15 gerado, mas não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `c59b76f9b8d1065426e870b6d77dd7f474924a78327bd393129ff10492963296`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
+- **APK:** APK debug com a implementação técnica dos Prompts 14–16 gerado, mas não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `1481cb7933b1769c17f0e319a2f00ceac64852235aace5b41637f83e85e6c3b2`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
 - **release Android:** ainda não existe APK release assinado nem artefato Android público;
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
 - **compatibilidade:** diferentes celulares Android, proporções de tela, densidades e áreas seguras;
-- **estado geral:** G0 a G3, G5 e G6 aprovados; G4 permanece aberto; Prompts 14 e 15 não estão aprovados e suas validações foram acumuladas; G7 permanece aberto.
+- **estado geral:** G0 a G3, G5 e G6 aprovados; G4, G7 e G8 permanecem abertos; Prompts 14, 15 e 16 não estão aprovados e suas validações foram acumuladas.
 
 ## Decisões já aprovadas
 
@@ -55,13 +55,15 @@
 
 ## Trabalho atual
 
-O checkpoint técnico do Prompt 14 é `01ba848` e não representa aprovação humana. O Prompt 15 implementa catálogo local validado, localização `pt-BR` com fallback, `DialogueSelector` puro, histórico mínimo em `settings` e painéis React orientados a dados para bibliotecária/criatura. Não há IA, interpretação de obras, schema novo, marco ou recompensa. As validações humanas de ambos estão acumuladas; Prompt 14, Prompt 15 e G7 não estão aprovados. G4 continua aberto e a versão permanece `0.2.0-alpha.1`.
+O Prompt 16 está tecnicamente implementado. Quatro marcos declarativos passam por `MilestoneEngine` puro; a persistência usa a tabela `milestones` do schema Dexie v3 e chave única por marco; ação, atividade, marco e recompensa são atômicos, enquanto eventos e reações ocorrem somente depois do commit. A primeira conclusão desbloqueia a luminária de leitura procedural, atualiza projeção/Phaser, emite o cue existente, solicita `book.first-completed` e anuncia texto React em região `polite`. Backup v2 inclui marcos e aceita v1 sem inventar conquistas; a restauração preserva marcos históricos por união monotônica. G7 e G8 continuam abertos, todas as validações humanas estão acumuladas, G4 segue aberto e a versão permanece `0.2.0-alpha.1`.
 
 ## Bloqueios
 
-Nenhum bloqueio técnico identificado. G4 mantém a pendência humana de uso real prolongado. A validação sonora corretiva e a avaliação de tom/repetição dos diálogos foram acumuladas. Testes automáticos não comprovam qualidade artística, conforto, naturalidade do texto ou comportamento físico. Validações repetitivas de G7, G8 e G9 serão agrupadas, com as exceções de risco registradas em D-034.
+Nenhum bloqueio técnico identificado. G4 mantém a pendência humana de uso real prolongado. A validação sonora corretiva, a avaliação de tom/repetição dos diálogos e o ciclo físico completo do desbloqueio foram acumulados. Testes automáticos não comprovam qualidade artística, conforto, naturalidade do texto ou comportamento físico. G7 e G8 não foram aprovados; validações repetitivas de G7, G8 e G9 serão agrupadas, com as exceções de risco registradas em D-034.
 
 ## Última evidência de validação
+
+Em 2026-08-10, o Prompt 16 foi concluído tecnicamente com schema Dexie v3 aditivo, backup v2 retrocompatível, quatro marcos idempotentes e luminária procedural como primeiro desbloqueio. A automação cobre migração v1/v2 → v3 e reabertura, concorrência, rollback/retry, exclusão, projeção, reduced motion, áudio/mute, diálogo, anúncio acessível, backup v1/v2, adulteração e restauração monotônica. Formatação, lint, typecheck, 505 testes em 53 arquivos, verificação dos áudios, build web, `android:sync`, `android:build:debug`, integridade ZIP e verificações Git passaram. O APK debug não instalado possui 7.526.051 bytes e SHA-256 `1481cb7933b1769c17f0e319a2f00ceac64852235aace5b41637f83e85e6c3b2`. Nenhuma dependência, permissão, plugin, asset binário ou versão de produto foi alterado. A validação humana permaneceu acumulada; G7 e G8 continuam abertos.
 
 Em 2026-08-10, o Prompt 15 foi concluído tecnicamente com catálogo local validado, localização `pt-BR` com fallback determinístico, `DialogueSelector` puro, histórico mínimo em `settings` e integração React–Phaser por interações tipadas. Formatação, lint, typecheck, 473 testes em 49 arquivos, build web, `android:sync`, `android:build:debug` e integridade ZIP passaram. O APK não instalado possui 7.526.051 bytes e SHA-256 `c59b76f9b8d1065426e870b6d77dd7f474924a78327bd393129ff10492963296`. Não houve schema, migração, dependência, plugin, alteração de áudio ou versão. A validação humana foi acumulada conforme D-034; Prompt 14, Prompt 15 e G7 continuam sem aprovação.
 

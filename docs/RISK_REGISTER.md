@@ -6,7 +6,7 @@ Escala: probabilidade e impacto `baixo`, `médio` ou `alto`.
 |---|---|---|---|---|---|---|
 | R-01 | escopo crescer antes do ciclo principal | alta | alto | gates, fora de escopo e um prompt por vez | novo tipo/sala proposto antes de G11 | ativo |
 | R-02 | app bonito, mas cadastro ruim | média | alto | G4 antes da sala completa; uso pessoal real | cadastro demorado ou abandono de uso | ativo |
-| R-03 | perda ou evicção de dados | média | alto | backup v1 e restauração transacional implementados; validação Android pendente | dado some após reinício/atualização | mitigado parcialmente |
+| R-03 | perda ou evicção de dados | média | alto | backup v2 retrocompatível, restauração transacional e marcos monotônicos implementados; nova validação Android pendente | dado some após reinício/atualização | mitigado parcialmente |
 | R-04 | Phaser assumir regras de negócio | média | alto | projeção e ponte tipada; testes de dependência | cena importa repositório ou domínio mutável | ativo |
 | R-05 | desempenho ruim em aparelho modesto | média | alto | lazy load, sala pequena, modo reduzido e perfil | FPS instável ou memória crescente | ativo |
 | R-06 | produção de arte e áudio atrasar | alta | médio | fallback geométrico, assets mínimos e manifests | código pronto sem conteúdo disponível | ativo |

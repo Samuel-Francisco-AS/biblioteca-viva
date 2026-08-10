@@ -28,6 +28,11 @@ export interface HighlightedLibraryBook {
 /** A serializable, read-only summary consumed by the specialized visual view. */
 export interface LibraryViewModel {
   readonly completedBooks: number;
+  readonly decorationUnlockAnimation: {
+    readonly decorationId: DecorationId;
+    readonly eventId: string;
+  } | null;
+  readonly hasCompletedBook: boolean;
   readonly hasFirstCompletionMilestone: boolean;
   readonly highlightedBook: HighlightedLibraryBook | null;
   readonly inProgressBooks: number;
@@ -35,6 +40,7 @@ export interface LibraryViewModel {
   readonly shelfOccupancy: ShelfOccupancy;
   readonly shelfVisualGroupCount: number;
   readonly totalBooks: number;
+  readonly unlockedDecorationIds: readonly DecorationId[];
 }
 
 export type LibrarySceneEvent =
@@ -44,7 +50,12 @@ export type LibraryInteraction =
   | { readonly type: "ShelfSelected" }
   | { readonly type: "LibrarianSelected" }
   | { readonly type: "CreatureSelected" }
-  | { readonly entryId: string; readonly type: "HighlightedBookSelected" };
+  | { readonly entryId: string; readonly type: "HighlightedBookSelected" }
+  | {
+      readonly decorationId: DecorationId;
+      readonly eventId: string;
+      readonly type: "DecorationUnlockPresented";
+    };
 
 export interface LibraryVisualGame {
   destroy(this: void): void;
@@ -74,3 +85,4 @@ export type LibraryVisualGameFactory = (
 export interface LibraryVisualFactoryModule {
   readonly createLibraryVisualGame: LibraryVisualGameFactory;
 }
+import type { DecorationId } from "../../domain";

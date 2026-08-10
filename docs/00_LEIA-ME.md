@@ -90,6 +90,7 @@ Ela está dividida por frequência de mudança:
 - G4 permanece aberto por uso pessoal prolongado;
 - Blocos 5 e 6 concluídos após validação de backup, restauração e biblioteca visual no Moto G06;
 - Bloco 7 possui Prompts 14 e 15 tecnicamente implementados; a primeira validação humana do Prompt 14 foi reprovada e a revalidação, junto à validação do Prompt 15, foi acumulada sem aprovar G7;
+- Bloco 8 possui o Prompt 16 tecnicamente implementado com quatro marcos idempotentes e o primeiro desbloqueio; G8 permanece aberto;
 - validações manuais repetitivas de G7, G8 e G9 serão agrupadas em checkpoint integrado próximo ao final do protótipo, sem marcar itens não executados como aprovados;
 - repositório Git inicializado na branch `main`;
 - stack e arquitetura aprovadas;

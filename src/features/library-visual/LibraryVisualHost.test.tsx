@@ -47,6 +47,8 @@ function game(): LibraryVisualGame {
 
 const projection: LibraryViewModel = {
   completedBooks: 0,
+  decorationUnlockAnimation: null,
+  hasCompletedBook: false,
   hasFirstCompletionMilestone: false,
   highlightedBook: null,
   inProgressBooks: 0,
@@ -54,6 +56,7 @@ const projection: LibraryViewModel = {
   shelfOccupancy: "empty",
   shelfVisualGroupCount: 0,
   totalBooks: 0,
+  unlockedDecorationIds: [],
 };
 
 function renderHost(

@@ -80,4 +80,4 @@ Criar política de privacidade formal antes de:
 
 ## 9. Backup implementado
 
-O backup v1 inclui livros, progresso, notas, citações, atividades e configurações aplicáveis. É JSON UTF-8 em texto legível, não criptografado. O aplicativo não envia o arquivo automaticamente: exportação, compartilhamento e destino dependem de ação explícita. Depois da entrega, guardar e excluir manualmente a cópia externa é responsabilidade do usuário. Nomes de arquivo não incluem dados pessoais.
+O backup v2 inclui livros, progresso, notas, citações, atividades, configurações aplicáveis e estado técnico de marcos/recompensas. Marcos guardam apenas ID, instante, versão, origem técnica e IDs de recompensa: nunca título, autor, nota, citação ou fala. Backups v1 continuam aceitos e não inventam marcos. O JSON UTF-8 é legível e não criptografado. O aplicativo não envia o arquivo automaticamente: exportação, compartilhamento e destino dependem de ação explícita. Depois da entrega, guardar e excluir manualmente a cópia externa é responsabilidade do usuário. Nomes de arquivo não incluem dados pessoais.

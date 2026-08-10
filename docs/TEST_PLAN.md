@@ -807,3 +807,29 @@ Os testes automáticos do Prompt 15 cobrem:
 - [ ] repetir no Moto G06 durante o checkpoint integrado de G7/G8/G9.
 
 Nenhum item desta checklist foi executado nesta etapa. Prompt 15 e G7 permanecem abertos; avanço técnico posterior não equivale a aprovação humana.
+
+## 18. Prompt 16 — Marcos e primeiro desbloqueio
+
+Em 2026-08-10, formatação, `format:check`, lint, typecheck, verificação determinística dos áudios, build web, `android:sync`, `android:build:debug` e `git diff --check` passaram. A suíte completa passou com **505 testes em 53 arquivos**. A rodada específica de maior risco passou com 49 testes de banco, migração, reabertura e backup/restauração. O APK debug não instalado possui 7.526.051 bytes, SHA-256 `1481cb7933b1769c17f0e319a2f00ceac64852235aace5b41637f83e85e6c3b2` e integridade ZIP confirmada. A automação cobre:
+
+- catálogo válido e rejeição de ID duplicado, recompensa/decoração inexistente, condição inválida e versão inválida;
+- `MilestoneEngine` puro em Node para primeiro livro, nota, citação e conclusão, não atendimento, múltiplas regras, ordem determinística, estado alcançado, reprocessamento e avaliações concorrentes;
+- transação única para ação, atividade, marco e recompensa; chave única, subscriber duplicado, reload/recomposição, retry após falha e rollback;
+- persistência mínima, validação na leitura, erro sanitizado, reabertura e ausência de título, autor, nota, citação ou fala no marco;
+- schema v3 aditivo, migração automatizada v1 → v3 e v2 → v3, preservação de registros e reabertura;
+- luminária concedida uma vez, projeção reconstruída, contrato mínimo React–Phaser, animação sem regra, reduced motion estático, áudio pós-commit, mute, diálogo existente e notificação `status` polite;
+- exclusão/retomada preservando o marco histórico, distinta do fato atual de existir livro concluído;
+- backup v2 novo, round-trip, aceite estrito do v1, checksum/adulteração, união monotônica, restauração repetida e preservação do desbloqueio;
+- fronteiras contra engine/persistência no Phaser, regra de progressão em React e dependência de plataforma no domínio.
+
+### Checklist acumulada para G8
+
+- [ ] concluir o primeiro livro no navegador e no Moto G06 e observar luminária, aviso, diálogo e efeito uma única vez;
+- [ ] repetir conclusão, sair/voltar e fechar/reabrir sem nova concessão ou áudio indevido;
+- [ ] ativar mute e reduced motion e confirmar equivalentes estáticos/textuais;
+- [ ] retomar e excluir o livro concluído e confirmar que a luminária histórica permanece;
+- [ ] validar anúncio com leitor de tela, foco preservado, zoom e larguras móveis;
+- [ ] exportar backup v2 real, restaurar de forma controlada e confirmar marco/decoração sem duplicação;
+- [ ] confirmar Coleção, Arquivo, formulários, áudio, diálogos e sala sem regressão.
+
+Nenhum item manual desta checklist foi executado. Não houve limpeza, instalação de APK nem restauração destrutiva real. Prompt 16, G7 e G8 permanecem abertos até o checkpoint humano integrado.

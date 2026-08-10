@@ -3,10 +3,13 @@ import type {
   LibraryViewModel,
   ShelfOccupancy,
 } from "../contracts";
+import { DECORATION_ID } from "../../../domain";
 
 export interface LibrarySceneRenderState {
   readonly completedBooks: number;
+  readonly hasCompletedBook: boolean;
   readonly hasFirstCompletionMilestone: boolean;
+  readonly hasReadingLamp: boolean;
   readonly highlightedBookLabel: string | null;
   readonly highlightedBookProgressLabel: string | null;
   readonly highlightedBookStatusLabel: string | null;
@@ -27,7 +30,11 @@ export function librarySceneRenderState(
 ): LibrarySceneRenderState {
   return {
     completedBooks: viewModel.completedBooks,
+    hasCompletedBook: viewModel.hasCompletedBook,
     hasFirstCompletionMilestone: viewModel.hasFirstCompletionMilestone,
+    hasReadingLamp: viewModel.unlockedDecorationIds.includes(
+      DECORATION_ID.readingLamp,
+    ),
     highlightedBookLabel: viewModel.highlightedBook
       ? truncateSceneLabel(
           viewModel.highlightedBook.title,

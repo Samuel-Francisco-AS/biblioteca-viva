@@ -15,7 +15,7 @@ O sistema usa Web Audio nativo atrás de `AudioPort`. React emite somente inten�
 ```text
 gesto/lifecycle/navegação React ─┐
 interações tipadas da sala ──────┼→ AudioIntent → AudioPort → AudioService → AudioBackend
-LibraryEntryCompleted pós-commit ┘                            ↓
+MilestoneReached da primeira conclusão ┘                     ↓
                                               manifesto + settings Dexie
 ```
 
@@ -103,6 +103,7 @@ Defaults atuais: música 35%, efeitos 60%, mute desligado.
 ## 10. Feedback equivalente
 
 - conclusão mantém status, progresso, mensagem textual e projeção visual;
+- o efeito de conclusão é solicitado somente pelo `MilestoneReached` pós-commit da primeira conclusão, não por conclusões repetidas;
 - estante, bibliotecária e criatura mantêm seus painéis React;
 - mudança de rota mantém título, foco e indicação ativa;
 - música é somente atmosfera.

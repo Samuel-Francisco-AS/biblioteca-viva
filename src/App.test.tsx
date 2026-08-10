@@ -1,9 +1,14 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import "fake-indexeddb/auto";
+
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import Dexie from "dexie";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App } from "./App";
+import { createApplication } from "./app/createApplication";
+import type { AudioBackend, AudioPlayback } from "./infrastructure";
 
 const capacitorMocks = vi.hoisted(() => ({
   backButtonListener: undefined as
@@ -73,6 +78,59 @@ describe("App", () => {
       "href",
       "/colecao",
     );
+  });
+
+  it("anuncia marco, decoração e diálogo sem roubar foco", async () => {
+    const databaseName = `app-milestone-${crypto.randomUUID()}`;
+    const backend: AudioBackend = {
+      dispose: vi.fn(),
+      initialize: vi.fn(() => Promise.resolve(true)),
+      play: () => {
+        const playback: AudioPlayback = {
+          completed: Promise.resolve(),
+          setVolume: vi.fn(),
+          stop: vi.fn(),
+        };
+        return Promise.resolve(playback);
+      },
+    };
+    const application = await createApplication({
+      audioBackend: backend,
+      databaseName,
+    });
+    const rendered = render(
+      <MemoryRouter initialEntries={["/novo-livro"]}>
+        <App application={application} />
+      </MemoryRouter>,
+    );
+    const focusBefore = document.activeElement;
+    const book = await application.commands.createBookEntry.execute({
+      status: "in_progress",
+      title: "Livro fictício acessível",
+    });
+    await act(() =>
+      application.commands.changeBookStatus.execute({
+        id: book.id,
+        status: "completed",
+      }),
+    );
+
+    const announcement = await screen.findByRole("status");
+    expect(announcement).toHaveAttribute("aria-live", "polite");
+    expect(announcement).toHaveAttribute("aria-atomic", "true");
+    expect(announcement).toHaveTextContent(
+      "Primeiro livro concluído. A luminária de leitura foi desbloqueada.",
+    );
+    await waitFor(() =>
+      expect(announcement).toHaveTextContent(
+        "Uma leitura chegou ao fim. A estante guarda esse instante com cuidado.",
+      ),
+    );
+    expect(document.activeElement).toBe(focusBefore);
+
+    rendered.unmount();
+    application.close();
+    await Dexie.delete(databaseName);
   });
 
   it("oferece as cinco opções de navegação e identifica a rota ativa", () => {

@@ -8,6 +8,7 @@ import {
   type VisualElementManifestEntry,
 } from "./roomManifest";
 import {
+  decorationUnlockMotion,
   LIBRARY_ROOM_ANIMATIONS,
   LIBRARY_ROOM_BUDGET,
   LIBRARY_ROOM_INTERACTION,
@@ -78,6 +79,17 @@ describe("manifestos visuais da primeira sala", () => {
       particles: "none",
       physics: "none",
       shaders: "none",
+    });
+  });
+
+  it("mantém a decoração estática e informativa com movimento reduzido", () => {
+    expect(decorationUnlockMotion(true)).toEqual({
+      animated: false,
+      durationMs: 0,
+    });
+    expect(decorationUnlockMotion(false)).toMatchObject({
+      animated: true,
+      durationMs: 650,
     });
   });
 

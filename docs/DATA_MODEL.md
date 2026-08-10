@@ -179,13 +179,24 @@ O banco estável chama-se `biblioteca-viva`. Os adapters persistem somente dados
 | `activities` | `&id`, `aggregateId`, `occurredAt`, `[aggregateId+occurredAt]` | histórico mínimo sem conteúdo pessoal |
 | `settings` | `&key` | preferências futuras, sem contrato de produto antecipado |
 | `metadata` | `&key` | marcadores técnicos do schema |
+| `milestones` | `&id`, `reachedAt` | marcos históricos e recompensas mínimas, monotônicos por ID |
 
-A versão 1 contém as quatro tabelas de dados suficientes para gravar livros e seus efeitos. A versão 2 acrescenta `settings` e `metadata` e grava uma única marca `schema-version = 2`, preservando integralmente registros v1. A migração é idempotente na reabertura e possui teste real com `fake-indexeddb`.
+A versão 1 contém as quatro tabelas de dados suficientes para gravar livros e seus efeitos. A versão 2 acrescenta `settings` e `metadata`. A versão 3 acrescenta somente `milestones` e atualiza a marca técnica para `schema-version = 3`, preservando integralmente bancos v1 e v2. As migrações são aditivas, idempotentes na reabertura e possuem testes reais com `fake-indexeddb` para v1 → v3 e v2 → v3.
 
-Entidade/anotação e atividade são confirmadas na mesma transação. Eventos são publicados somente após o commit. Exclusão, arquivamento, outbox e política de retenção permanecem abertos e exigirão migrações próprias quando aprovados.
+Entidade/anotação, atividade e eventual marco/recompensa são confirmados na mesma transação. Eventos são publicados somente após o commit. Exclusão de livro não inclui `milestones`: um marco histórico legítimo e sua decoração sobrevivem à remoção posterior do registro de origem. Arquivamento, outbox e política de retenção permanecem abertos e exigirão migrações próprias quando aprovados.
 
-## 13. Backup v1
+## 13. Marcos históricos
 
-O envelope estrito usa `kind: biblioteca-viva-backup`, `formatVersion: 1`, `createdAt`, `appVersion`, `databaseVersion`, `data`, `metadata.policy: replace` e `integrity` SHA-256. Compatibilidade é governada por `formatVersion`, não por `appVersion`.
+Cada registro preserva `id`, `reachedAt`, `ruleVersion`, `rewards` e `source` com apenas `eventId` e tipo técnico do evento. Não guarda ID obrigatório do livro, título, autor, nota, citação, fala ou outro conteúdo pessoal. A chave primária é o ID estável do marco; `add`, e não `put`, torna a concessão única mesmo sob eventos equivalentes ou concorrentes.
 
-`data` contém `libraryEntries`, `notes`, `quotes`, `activities` e `settings`, ordenados por ID ou chave. `metadata` do IndexedDB, inclusive `schema-version`, é técnico e não entra: o destino o preserva/recria. O checksum cobre o envelope canônico sem `integrity`, após a normalização pela mesma representação JSON que é gravada no arquivo; assim propriedades opcionais ausentes não divergem entre exportação e importação. O schema persistente continua v2, sem migração.
+Os quatro IDs atuais são `milestone.first-book`, `milestone.first-note`, `milestone.first-quote` e `milestone.first-completed-book`. Somente a primeira conclusão concede `reward.first-completion-reading-lamp`, que referencia `decoration.reading-lamp`.
+
+“Há atualmente um livro concluído” continua sendo um fato calculado a partir dos livros. “A primeira conclusão já foi alcançada” é histórico persistido. Retomar ou excluir o livro pode tornar o primeiro fato falso sem remover o segundo nem a luminária.
+
+## 14. Backup v2
+
+O envelope estrito atual usa `kind: biblioteca-viva-backup`, `formatVersion: 2`, `createdAt`, `appVersion`, `databaseVersion`, `data`, `metadata.policy: replace` e `integrity` SHA-256. Compatibilidade é governada por `formatVersion`, não por `appVersion`.
+
+`data` contém `libraryEntries`, `notes`, `quotes`, `activities`, `settings` e `milestones`, ordenados por ID ou chave. `metadata` do IndexedDB, inclusive `schema-version`, é técnico e não entra. O checksum cobre o envelope canônico sem `integrity`, após a normalização pela mesma representação JSON gravada no arquivo.
+
+Backups v1 íntegros continuam aceitos e são normalizados com zero marcos: uma instalação limpa não inventa recompensa. Na restauração, as cinco coleções anteriores mantêm política `replace`; marcos usam união monotônica por ID entre destino e arquivo. Essa exceção estreita impede que backup antigo ou incompleto apague desbloqueio legítimo e continua idempotente em restaurações repetidas. Importação não publica `MilestoneReached` e, portanto, não repete áudio, diálogo, notificação ou concessão.

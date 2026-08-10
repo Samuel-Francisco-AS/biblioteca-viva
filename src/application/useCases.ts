@@ -13,6 +13,7 @@ import {
   updateBibliographicData,
   updateProgress,
   type BookEntry,
+  type DomainEvent,
   type Note,
   type Quote,
 } from "../domain";
@@ -23,7 +24,9 @@ import {
   currentTime,
   generatedId,
   parseInput,
+  processMilestones,
   publishEvent,
+  publishEvents,
   runTransaction,
   saveActivity,
   saveEntity,
@@ -40,7 +43,7 @@ import {
 
 type WriteDependencies = Pick<
   ApplicationDependencies,
-  "activities" | "clock" | "events" | "ids" | "transaction"
+  "activities" | "clock" | "events" | "ids" | "milestones" | "transaction"
 >;
 type BookWriteDependencies = WriteDependencies &
   Pick<ApplicationDependencies, "libraryEntries">;
@@ -90,24 +93,24 @@ export class CreateBookEntry {
       revision: book.revision,
       metadata: { status: book.status },
     });
+    const eventId = await generatedId(this.dependencies, "generate_event_id");
+    const event = createLibraryEntryCreatedEvent({
+      eventId,
+      aggregateId: book.id,
+      occurredAt,
+      revision: book.revision,
+      payload: { entryType: "book", status: book.status },
+    });
+    let milestoneEvents = Object.freeze([]) as readonly DomainEvent[];
     await runTransaction(this.dependencies, async () => {
       await saveEntity(
         () => this.dependencies.libraryEntries.save(book),
         "save_book",
       );
       await saveActivity(this.dependencies, activity);
+      milestoneEvents = await processMilestones(this.dependencies, event);
     });
-    const eventId = await generatedId(this.dependencies, "generate_event_id");
-    await publishEvent(
-      this.dependencies,
-      createLibraryEntryCreatedEvent({
-        eventId,
-        aggregateId: book.id,
-        occurredAt,
-        revision: book.revision,
-        payload: { entryType: "book", status: book.status },
-      }),
-    );
+    await publishEvents(this.dependencies, [event, ...milestoneEvents]);
     return book;
   }
 }
@@ -247,13 +250,6 @@ export class ChangeBookStatus {
       revision: updated.revision,
       metadata: { from: existing.status, to: updated.status },
     });
-    await runTransaction(this.dependencies, async () => {
-      await saveEntity(
-        () => this.dependencies.libraryEntries.save(updated),
-        "save_book",
-      );
-      await saveActivity(this.dependencies, activity);
-    });
     const eventId = await generatedId(this.dependencies, "generate_event_id");
     const event =
       updated.status === "completed"
@@ -271,7 +267,16 @@ export class ChangeBookStatus {
             revision: updated.revision,
             payload: { changedFields: ["status"] },
           });
-    await publishEvent(this.dependencies, event);
+    let milestoneEvents = Object.freeze([]) as readonly DomainEvent[];
+    await runTransaction(this.dependencies, async () => {
+      await saveEntity(
+        () => this.dependencies.libraryEntries.save(updated),
+        "save_book",
+      );
+      await saveActivity(this.dependencies, activity);
+      milestoneEvents = await processMilestones(this.dependencies, event);
+    });
+    await publishEvents(this.dependencies, [event, ...milestoneEvents]);
     return updated;
   }
 }
@@ -300,21 +305,21 @@ export class AddNote {
       revision: note.revision,
       metadata: { noteId: note.id },
     });
+    const eventId = await generatedId(this.dependencies, "generate_event_id");
+    const event = createNoteCreatedEvent({
+      eventId,
+      aggregateId: book.id,
+      occurredAt,
+      revision: note.revision,
+      payload: { noteId: note.id },
+    });
+    let milestoneEvents = Object.freeze([]) as readonly DomainEvent[];
     await runTransaction(this.dependencies, async () => {
       await saveEntity(() => this.dependencies.notes.save(note), "save_note");
       await saveActivity(this.dependencies, activity);
+      milestoneEvents = await processMilestones(this.dependencies, event);
     });
-    const eventId = await generatedId(this.dependencies, "generate_event_id");
-    await publishEvent(
-      this.dependencies,
-      createNoteCreatedEvent({
-        eventId,
-        aggregateId: book.id,
-        occurredAt,
-        revision: note.revision,
-        payload: { noteId: note.id },
-      }),
-    );
+    await publishEvents(this.dependencies, [event, ...milestoneEvents]);
     return note;
   }
 }
@@ -346,27 +351,27 @@ export class AddQuote {
         ...(quote.page !== undefined && { page: quote.page }),
       },
     });
+    const eventId = await generatedId(this.dependencies, "generate_event_id");
+    const event = createQuoteCreatedEvent({
+      eventId,
+      aggregateId: book.id,
+      occurredAt,
+      revision: quote.revision,
+      payload: {
+        quoteId: quote.id,
+        ...(quote.page !== undefined && { page: quote.page }),
+      },
+    });
+    let milestoneEvents = Object.freeze([]) as readonly DomainEvent[];
     await runTransaction(this.dependencies, async () => {
       await saveEntity(
         () => this.dependencies.quotes.save(quote),
         "save_quote",
       );
       await saveActivity(this.dependencies, activity);
+      milestoneEvents = await processMilestones(this.dependencies, event);
     });
-    const eventId = await generatedId(this.dependencies, "generate_event_id");
-    await publishEvent(
-      this.dependencies,
-      createQuoteCreatedEvent({
-        eventId,
-        aggregateId: book.id,
-        occurredAt,
-        revision: quote.revision,
-        payload: {
-          quoteId: quote.id,
-          ...(quote.page !== undefined && { page: quote.page }),
-        },
-      }),
-    );
+    await publishEvents(this.dependencies, [event, ...milestoneEvents]);
     return quote;
   }
 }

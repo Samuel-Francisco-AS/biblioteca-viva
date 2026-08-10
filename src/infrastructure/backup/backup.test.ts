@@ -68,8 +68,25 @@ const activity = Object.freeze({
   revision: 2,
   metadata: Object.freeze({ currentPage: 12, totalPages: 300 }),
 });
+const completionMilestone = Object.freeze({
+  id: "milestone.first-completed-book" as const,
+  reachedAt: "2026-07-30T11:30:00.000Z",
+  rewards: Object.freeze([
+    Object.freeze({
+      decorationId: "decoration.reading-lamp" as const,
+      id: "reward.first-completion-reading-lamp",
+      type: "decoration" as const,
+    }),
+  ]),
+  ruleVersion: 1,
+  source: Object.freeze({
+    eventId: "event-first-completion",
+    eventType: "LibraryEntryCompleted" as const,
+  }),
+});
 const data: BackupData = Object.freeze({
   libraryEntries: [book],
+  milestones: [],
   notes: [note],
   quotes: [quote],
   activities: [activity],
@@ -86,6 +103,7 @@ const laterBook = Object.freeze({
 });
 const replacementData: BackupData = Object.freeze({
   libraryEntries: [laterBook],
+  milestones: [],
   notes: [
     {
       ...note,
@@ -118,7 +136,7 @@ const replacementData: BackupData = Object.freeze({
   settings: [{ key: "motion", value: true, updatedAt: laterBook.updatedAt }],
 });
 
-describe("backup JSON v1", () => {
+describe("backup JSON v2", () => {
   it("cria envelope versionado, legível, determinístico e íntegro", async () => {
     const codec = new JsonBackupCodec();
     const artifact = await codec.encode({
@@ -130,7 +148,7 @@ describe("backup JSON v1", () => {
     const raw = JSON.parse(artifact.content) as Record<string, unknown>;
     expect(raw).toMatchObject({
       kind: BACKUP_KIND,
-      formatVersion: 1,
+      formatVersion: 2,
       appVersion: "0.2.0-alpha.1",
       databaseVersion: 2,
     });
@@ -160,6 +178,68 @@ describe("backup JSON v1", () => {
     );
   });
 
+  it("aceita backup v1 íntegro sem inventar marcos", async () => {
+    const codec = new JsonBackupCodec();
+    const current = await codec.encode({
+      appVersion: "0.2.0-alpha.1",
+      createdAt: book.createdAt,
+      databaseVersion: 2,
+      data,
+    });
+    const raw = JSON.parse(current.content) as {
+      data: Record<string, unknown>;
+      formatVersion: number;
+      integrity?: { algorithm: "SHA-256"; digest: string };
+      [key: string]: unknown;
+    };
+    raw.formatVersion = 1;
+    delete raw.data.milestones;
+    const unsigned = structuredClone(raw);
+    delete unsigned.integrity;
+    const bytes = new TextEncoder().encode(
+      canonicalize(checksumMaterial(unsigned)),
+    );
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+    raw.integrity = {
+      algorithm: "SHA-256",
+      digest: [...new Uint8Array(digest)]
+        .map((value) => value.toString(16).padStart(2, "0"))
+        .join(""),
+    };
+
+    const inspected = await codec.inspect(JSON.stringify(raw));
+    expect(inspected.summary.formatVersion).toBe(1);
+    expect(inspected.data.milestones).toEqual([]);
+    expect(inspected.summary.warnings.join(" ")).toMatch(/nenhum marco/u);
+  });
+
+  it("exporta marco/recompensa e rejeita adulteração", async () => {
+    const codec = new JsonBackupCodec();
+    const artifact = await codec.encode({
+      appVersion: "0.2.0-alpha.1",
+      createdAt: book.createdAt,
+      databaseVersion: 3,
+      data: { ...data, milestones: [completionMilestone] },
+    });
+    await expect(codec.inspect(artifact.content)).resolves.toMatchObject({
+      data: {
+        milestones: [
+          {
+            id: "milestone.first-completed-book",
+            rewards: [{ decorationId: "decoration.reading-lamp" }],
+          },
+        ],
+      },
+    });
+    const tampered = JSON.parse(artifact.content) as {
+      data: { milestones: Array<{ ruleVersion: number }> };
+    };
+    tampered.data.milestones[0].ruleVersion = 2;
+    await expect(codec.inspect(JSON.stringify(tampered))).rejects.toMatchObject(
+      { code: "CHECKSUM_MISMATCH" },
+    );
+  });
+
   it.each([
     ["JSON inválido", "{", "INVALID_JSON"],
     ["formato desconhecido", "{}", "UNRECOGNIZED_FORMAT"],
@@ -179,7 +259,7 @@ describe("backup JSON v1", () => {
     });
     const raw = JSON.parse(artifact.content) as Record<string, unknown>;
     await expect(
-      codec.inspect(JSON.stringify({ ...raw, formatVersion: 2 })),
+      codec.inspect(JSON.stringify({ ...raw, formatVersion: 3 })),
     ).rejects.toMatchObject({ code: "FUTURE_FORMAT_VERSION" });
     const withoutIntegrity = { ...raw };
     delete withoutIntegrity.integrity;
@@ -289,6 +369,7 @@ describe("backup JSON v1", () => {
     );
     const roundTripData: BackupData = Object.freeze({
       libraryEntries: [optionalBook, book],
+      milestones: [],
       notes: [note],
       quotes: [quoteWithoutPage, quote],
       activities: manyActivities,
@@ -348,6 +429,7 @@ describe("backup JSON v1", () => {
     expect(inspected.summary.counts).toEqual({
       activities: manyActivities.length,
       libraryEntries: 2,
+      milestones: 0,
       notes: 1,
       quotes: 2,
       settings: 0,
@@ -362,6 +444,7 @@ describe("backup JSON v1", () => {
       }).execute(fileText),
     ).resolves.toEqual({
       libraryEntries: 2,
+      milestones: 0,
       notes: 1,
       quotes: 2,
       activities: 8,
@@ -376,6 +459,39 @@ describe("backup JSON v1", () => {
 });
 
 describe("snapshot Dexie e restauração", () => {
+  it("restaura marcos por união monotônica e preserva desbloqueio legítimo", async () => {
+    const name = `milestone-restore-${crypto.randomUUID()}`;
+    databases.add(name);
+    const database = new BibliotecaDatabase(name);
+    await database.open();
+    const store = new DexieBackupSnapshotStore(database);
+    const existingFirstBook = {
+      id: "milestone.first-book" as const,
+      reachedAt: book.createdAt,
+      rewards: [],
+      ruleVersion: 1,
+      source: {
+        eventId: "event-first-book",
+        eventType: "LibraryEntryCreated" as const,
+      },
+    };
+    await store.replace({ ...data, milestones: [existingFirstBook] });
+    await store.replace({
+      ...replacementData,
+      milestones: [completionMilestone],
+    });
+    await store.replace({
+      ...replacementData,
+      milestones: [completionMilestone],
+    });
+
+    expect((await store.read()).milestones.map(({ id }) => id)).toEqual([
+      "milestone.first-book",
+      "milestone.first-completed-book",
+    ]);
+    database.close();
+  });
+
   it("não inicia replace nem altera tabelas para cinco classes de backup inválido", async () => {
     const name = `invalid-no-write-${crypto.randomUUID()}`;
     databases.add(name);
@@ -400,7 +516,7 @@ describe("snapshot Dexie e restauração", () => {
       integrity: { digest: string };
     };
     const future = structuredClone(raw);
-    future.formatVersion = 2;
+    future.formatVersion = 3;
     const badChecksum = structuredClone(raw);
     badChecksum.integrity.digest = "0".repeat(64);
     const invalidEntity = structuredClone(raw);
@@ -705,6 +821,7 @@ describe("snapshot Dexie e restauração", () => {
       }).execute(content);
       expect(result).toEqual({
         libraryEntries: 1,
+        milestones: 0,
         notes: 1,
         quotes: 1,
         activities: 1,

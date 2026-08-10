@@ -77,6 +77,8 @@ Para a arte procedural do Prompt 13, a paleta provisória combina madeira escura
 
 A bibliotecária é uma figura geométrica com cabelo, rosto, corpo e avental; a criatura usa corpo oval, orelhas triangulares e olhos claros. A iluminação é composta por áreas circulares quentes e translúcidas. A estante vazia preserva prateleiras claramente visíveis; os estados preenchidos acrescentam grupos limitados de lombadas, e conclusão acrescenta um selo dourado sem substituir a faixa de ocupação.
 
+O primeiro desbloqueio usa uma pequena luminária de leitura procedural sobre o balcão. Ela reaproveita formas e paleta do manifesto, sem asset binário novo. Ao ser concedida, surge com uma animação discreta de até 650 ms; com movimento reduzido, aparece diretamente no estado final. O objeto permanece parte da sala após o marco histórico, mesmo que o livro de origem seja retomado ou excluído.
+
 ## 7. Assets e nomes
 
 Organização sugerida:

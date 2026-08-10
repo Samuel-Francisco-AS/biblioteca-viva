@@ -3,6 +3,7 @@ export * from "./audio";
 export * from "./backup";
 export * from "./dialogue";
 export * from "./errors";
+export * from "./milestones";
 export * from "./deleteBookEntry";
 export * from "./ports";
 export * from "./queries";

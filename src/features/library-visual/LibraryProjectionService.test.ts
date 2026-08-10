@@ -4,6 +4,7 @@ import {
   LibraryProjectionService,
   SHELF_VISUAL_GROUP_COUNTS,
 } from "./LibraryProjectionService";
+import type { ReachedMilestone } from "../../domain";
 import type { LibraryProjectionBook } from "./LibraryProjectionService";
 
 const service = new LibraryProjectionService();
@@ -21,15 +22,37 @@ function book(
   };
 }
 
-function project(books: readonly LibraryProjectionBook[]) {
-  return service.project({ books });
+function project(
+  books: readonly LibraryProjectionBook[],
+  milestones: readonly ReachedMilestone[] = [],
+) {
+  return service.project({ books, milestones });
 }
+
+const firstCompletion: ReachedMilestone = Object.freeze({
+  id: "milestone.first-completed-book",
+  reachedAt: "2026-07-30T12:00:00.000Z",
+  rewards: Object.freeze([
+    Object.freeze({
+      decorationId: "decoration.reading-lamp",
+      id: "reward.first-completion-reading-lamp",
+      type: "decoration",
+    }),
+  ]),
+  ruleVersion: 1,
+  source: Object.freeze({
+    eventId: "event-completion",
+    eventType: "LibraryEntryCompleted",
+  }),
+});
 
 describe("LibraryProjectionService", () => {
   it("projeta uma biblioteca vazia serializável e estável", () => {
     const viewModel = project([]);
     expect(viewModel).toEqual({
       completedBooks: 0,
+      decorationUnlockAnimation: null,
+      hasCompletedBook: false,
       hasFirstCompletionMilestone: false,
       highlightedBook: null,
       inProgressBooks: 0,
@@ -37,6 +60,7 @@ describe("LibraryProjectionService", () => {
       shelfOccupancy: "empty",
       shelfVisualGroupCount: 0,
       totalBooks: 0,
+      unlockedDecorationIds: [],
     });
     expect(JSON.parse(JSON.stringify(viewModel))).toEqual(viewModel);
     expect(project([])).toEqual(viewModel);
@@ -74,9 +98,23 @@ describe("LibraryProjectionService", () => {
     ]);
     expect(viewModel).toMatchObject({
       completedBooks: 1,
-      hasFirstCompletionMilestone: true,
+      hasCompletedBook: true,
+      hasFirstCompletionMilestone: false,
       inProgressBooks: 1,
       totalBooks: 5,
+    });
+  });
+
+  it("mantém o marco histórico e a decoração sem depender de conclusão atual", () => {
+    const viewModel = project(
+      [book({ status: "in_progress" })],
+      [firstCompletion],
+    );
+    expect(viewModel).toMatchObject({
+      completedBooks: 0,
+      hasCompletedBook: false,
+      hasFirstCompletionMilestone: true,
+      unlockedDecorationIds: ["decoration.reading-lamp"],
     });
   });
 

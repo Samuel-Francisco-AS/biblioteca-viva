@@ -254,3 +254,17 @@ carregar Biblioteca
 ```
 
 Biblioteca vazia, primeiro livro, leitura em andamento, primeira conclusão e retorno após três dias são contextos da bibliotecária. Toques gerais e criatura possuem pequenas sequências previsíveis. Fala especial em cooldown não se repete incessantemente; `once` não retorna após persistido. Falha do histórico usa estado seguro e não bloqueia a sala, Coleção ou dados pessoais.
+
+## 17. Primeiro desbloqueio
+
+```text
+concluir o primeiro livro
+→ persistir livro, atividade, marco e recompensa na mesma transação
+→ publicar sucesso somente após commit
+→ atualizar projeção com a luminária de leitura
+→ exibir anúncio React polite e diálogo book.first-completed
+→ emitir efeito sonoro, se áudio estiver habilitado
+→ animar brevemente a luminária, ou mostrá-la estática com reduced motion
+```
+
+A notificação informa “Primeiro livro concluído” e “Luminária de leitura desbloqueada”, não toma foco e pode ser dispensada. A luminária sobrevive a recarga, retomada e exclusão posterior do livro. Reconstruir a sala só lê o desbloqueio; nunca concede recompensa. Eventos repetidos, restauração e subscribers duplicados não repetem a reação.

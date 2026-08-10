@@ -1,4 +1,5 @@
 export * from "./database/database";
+export * from "./database/milestoneStore";
 export * from "./database/bookDeletionStore";
 export * from "./database/diagnostics";
 export * from "./database/errors";

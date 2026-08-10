@@ -44,6 +44,71 @@ afterEach(async () => {
 });
 
 describe("createApplication", () => {
+  it("completa os quatro marcos uma vez e os recarrega sem nova concessão", async () => {
+    const name = databaseName("milestone-composition");
+    const first = await createApplication({ databaseName: name });
+    const observedByFirstSubscriber: string[] = [];
+    const observedBySecondSubscriber: string[] = [];
+    first.events.subscribe("MilestoneReached", (event) => {
+      if (event.type === "MilestoneReached")
+        observedByFirstSubscriber.push(event.payload.milestoneId);
+    });
+    first.events.subscribe("MilestoneReached", (event) => {
+      if (event.type === "MilestoneReached")
+        observedBySecondSubscriber.push(event.payload.milestoneId);
+    });
+
+    const book = await first.commands.createBookEntry.execute({
+      status: "in_progress",
+      title: "Livro fictício do ciclo",
+      totalPages: 10,
+    });
+    await first.commands.addNote.execute({
+      content: "Nota fictícia",
+      entryId: book.id,
+    });
+    await first.commands.addQuote.execute({
+      content: "Citação fictícia",
+      entryId: book.id,
+      page: 1,
+    });
+    await first.commands.changeBookStatus.execute({
+      id: book.id,
+      status: "completed",
+    });
+    await first.commands.changeBookStatus.execute({
+      id: book.id,
+      status: "completed",
+    });
+
+    expect(
+      (await first.queries.listMilestones.list()).map(({ id }) => id),
+    ).toEqual([
+      "milestone.first-book",
+      "milestone.first-note",
+      "milestone.first-quote",
+      "milestone.first-completed-book",
+    ]);
+    expect(observedByFirstSubscriber).toHaveLength(4);
+    expect(observedBySecondSubscriber).toEqual(observedByFirstSubscriber);
+    first.close();
+
+    const second = await createApplication({ databaseName: name });
+    runtimes.push(second);
+    expect(await second.queries.listMilestones.list()).toHaveLength(4);
+    expect(
+      (await second.queries.listMilestones.list()).flatMap(
+        ({ rewards }) => rewards,
+      ),
+    ).toEqual([
+      {
+        decorationId: "decoration.reading-lamp",
+        id: "reward.first-completion-reading-lamp",
+        type: "decoration",
+      },
+    ]);
+  });
+
   it("compõe diálogo, persiste once em settings e o recarrega", async () => {
     const name = databaseName("dialogue-composition");
     const first = await createApplication({ databaseName: name });
@@ -93,6 +158,13 @@ describe("createApplication", () => {
     expect(play.mock.calls.at(-1)?.[0]).toMatchObject({
       id: "milestone.book-completed",
     });
+    const playCountAfterUnlock = play.mock.calls.length;
+    await first.commands.changeBookStatus.execute({
+      id: book.id,
+      status: "completed",
+    });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(play).toHaveBeenCalledTimes(playCountAfterUnlock);
     first.close();
 
     const second = await createApplication({

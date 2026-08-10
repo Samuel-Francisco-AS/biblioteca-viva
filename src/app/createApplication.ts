@@ -10,6 +10,7 @@ import {
   ListBookEntries,
   ListNotesByBook,
   ListQuotesByBook,
+  ListMilestones,
   UpdateBookEntry,
   UpdateBookProgress,
   ExportBackup,
@@ -31,6 +32,7 @@ import {
   DialogueSelector,
   DialogueService,
 } from "../application";
+import { MILESTONE_ID, MilestoneEngine } from "../domain";
 import { ContentLocalizer, PROTOTYPE_CONTENT } from "../content";
 import {
   BibliotecaDatabase,
@@ -43,6 +45,7 @@ import {
   DexieNoteRepository,
   DexieQuoteRepository,
   DexieTransactionRunner,
+  DexieMilestoneStore,
   DiagnosticsService,
   LocalEventBus,
   SCHEMA_MARKER_KEY,
@@ -108,6 +111,7 @@ export interface ApplicationRuntime {
     readonly listBookEntries: ListBookEntries;
     readonly listNotesByBook: ListNotesByBook;
     readonly listQuotesByBook: ListQuotesByBook;
+    readonly listMilestones: ListMilestones;
   };
   readonly diagnostics: ApplicationDiagnostics;
   readonly events: LocalEventBus;
@@ -146,7 +150,7 @@ export async function createApplication(
   await database.open();
   await database.metadata.put({
     key: SCHEMA_MARKER_KEY,
-    value: "2",
+    value: "3",
     updatedAt: "1970-01-01T00:00:00.000Z",
   });
 
@@ -156,6 +160,12 @@ export async function createApplication(
   const activities = new DexieActivityRepository(database);
   const bookDeletion = new DexieBookDeletionStore(database);
   const transaction = new DexieTransactionRunner(database);
+  const milestoneStore = new DexieMilestoneStore(
+    database,
+    new MilestoneEngine(),
+    PROTOTYPE_CONTENT.milestones,
+    PROTOTYPE_CONTENT.rewards,
+  );
   const clock = new SystemClock();
   const ids = new CryptoIdGenerator(platform);
   const events = new LocalEventBus();
@@ -178,8 +188,10 @@ export async function createApplication(
     dialogueReporter,
   );
   await dialogue.loadHistory();
-  events.subscribe("LibraryEntryCompleted", () => {
-    audio.emit({ type: "BookCompleted" });
+  events.subscribe("MilestoneReached", (event) => {
+    if (event.type !== "MilestoneReached") return;
+    if (event.payload.milestoneId === MILESTONE_ID.firstCompletedBook)
+      audio.emit({ type: "BookCompleted" });
   });
   const storage = options.storage ?? new BrowserStoragePersistence();
   const snapshots = new DexieBackupSnapshotStore(database);
@@ -210,6 +222,7 @@ export async function createApplication(
     events,
     ids,
     libraryEntries,
+    milestones: milestoneStore,
     notes,
     quotes,
     transaction,
@@ -301,6 +314,7 @@ export async function createApplication(
       listBookEntries: new ListBookEntries(libraryEntries),
       listNotesByBook: new ListNotesByBook(notes),
       listQuotesByBook: new ListQuotesByBook(quotes),
+      listMilestones: new ListMilestones(milestoneStore),
     },
     diagnostics: {
       inspect: () => diagnosticsService.inspect(),

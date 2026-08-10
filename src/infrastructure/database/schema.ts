@@ -1,8 +1,8 @@
-import { ENTRY_STATUSES } from "../../domain";
+import { DECORATION_IDS, ENTRY_STATUSES, MILESTONE_IDS } from "../../domain";
 import { z } from "zod";
 
 export const DATABASE_NAME = "biblioteca-viva";
-export const DATABASE_VERSION = 2;
+export const DATABASE_VERSION = 3;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
 export const DATABASE_SCHEMA_V1 = {
@@ -16,6 +16,11 @@ export const DATABASE_SCHEMA_V2 = {
   ...DATABASE_SCHEMA_V1,
   settings: "&key",
   metadata: "&key",
+} as const;
+
+export const DATABASE_SCHEMA_V3 = {
+  ...DATABASE_SCHEMA_V2,
+  milestones: "&id, reachedAt",
 } as const;
 
 const isoUtc = z.iso.datetime({ offset: false });
@@ -165,9 +170,32 @@ export const persistedSettingSchema = z.strictObject({
   updatedAt: isoUtc,
 });
 
+export const persistedMilestoneSchema = z.strictObject({
+  id: z.enum(MILESTONE_IDS),
+  reachedAt: isoUtc,
+  rewards: z.array(
+    z.strictObject({
+      decorationId: z.enum(DECORATION_IDS).optional(),
+      id: z.string().trim().min(1),
+      type: z.literal("decoration"),
+    }),
+  ),
+  ruleVersion: z.int().positive(),
+  source: z.strictObject({
+    eventId: z.string().trim().min(1),
+    eventType: z.enum([
+      "LibraryEntryCreated",
+      "NoteCreated",
+      "QuoteCreated",
+      "LibraryEntryCompleted",
+    ]),
+  }),
+});
+
 export type PersistedBook = z.infer<typeof persistedBookSchema>;
 export type PersistedNote = z.infer<typeof persistedNoteSchema>;
 export type PersistedQuote = z.infer<typeof persistedQuoteSchema>;
 export type PersistedActivity = z.infer<typeof persistedActivitySchema>;
 export type PersistedMetadata = z.infer<typeof persistedMetadataSchema>;
 export type PersistedSetting = z.infer<typeof persistedSettingSchema>;
+export type PersistedMilestone = z.infer<typeof persistedMilestoneSchema>;

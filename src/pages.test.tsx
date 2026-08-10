@@ -10,21 +10,26 @@ import {
   type DialoguePort,
   type LocalizedDialogue,
 } from "./application";
-import type { BookEntry } from "./domain";
+import type { BookEntry, ReachedMilestone } from "./domain";
 import type { LibraryInteraction } from "./features/library-visual/contracts";
 import { LibraryPage, type LibraryPageApplication } from "./pages";
 
 const visualHostMock = vi.hoisted(() => ({
   interaction: undefined as ((event: LibraryInteraction) => void) | undefined,
+  projection: undefined as
+    import("./features/library-visual/contracts").LibraryViewModel | undefined,
 }));
 
 vi.mock("./features/library-visual/LibraryVisualHost", () => ({
   LibraryVisualHost: ({
     onInteraction,
+    projection,
   }: {
     readonly onInteraction?: (event: LibraryInteraction) => void;
+    readonly projection: import("./features/library-visual/contracts").LibraryViewModel;
   }) => {
     visualHostMock.interaction = onInteraction;
+    visualHostMock.projection = projection;
     return <div aria-label="Visualização da Biblioteca" role="img" />;
   },
 }));
@@ -79,7 +84,10 @@ function renderLibrary(
   const application: LibraryPageApplication = {
     audio,
     dialogue: dialoguePort,
-    queries: { listBookEntries: { execute } },
+    queries: {
+      listBookEntries: { execute },
+      listMilestones: { list: () => Promise.resolve([]) },
+    },
   };
   render(
     <MemoryRouter>
@@ -91,6 +99,59 @@ function renderLibrary(
 }
 
 describe("Página Biblioteca", () => {
+  it("projeta a decoração e encaminha a confirmação visual sem conceder regra", async () => {
+    const milestone: ReachedMilestone = {
+      id: "milestone.first-completed-book",
+      reachedAt: "2026-08-10T12:00:00.000Z",
+      rewards: [
+        {
+          decorationId: "decoration.reading-lamp",
+          id: "reward.first-completion-reading-lamp",
+          type: "decoration",
+        },
+      ],
+      ruleVersion: 1,
+      source: {
+        eventId: "source-event",
+        eventType: "LibraryEntryCompleted",
+      },
+    };
+    const onPresented = vi.fn();
+    const application: LibraryPageApplication = {
+      dialogue: dialogue(),
+      queries: {
+        listBookEntries: { execute: () => Promise.resolve([book]) },
+        listMilestones: { list: () => Promise.resolve([milestone]) },
+      },
+    };
+    render(
+      <MemoryRouter>
+        <LibraryPage
+          application={application}
+          onDecorationUnlockPresented={onPresented}
+          pendingDecorationUnlock={{ eventId: "reaction-event" }}
+        />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    expect(visualHostMock.projection).toMatchObject({
+      decorationUnlockAnimation: {
+        decorationId: "decoration.reading-lamp",
+        eventId: "reaction-event",
+      },
+      unlockedDecorationIds: ["decoration.reading-lamp"],
+    });
+    act(() =>
+      visualHostMock.interaction?.({
+        decorationId: "decoration.reading-lamp",
+        eventId: "reaction-event",
+        type: "DecorationUnlockPresented",
+      }),
+    );
+    expect(onPresented).toHaveBeenCalledOnce();
+    expect(await application.queries.listMilestones.list()).toHaveLength(1);
+  });
+
   it("prepara o contexto agregado sem enviar conteúdo pessoal", async () => {
     const dialoguePort = dialogue();
     renderLibrary(Promise.resolve([book]), undefined, dialoguePort);
@@ -150,7 +211,10 @@ describe("Página Biblioteca", () => {
       .mockResolvedValueOnce([]);
     const application: LibraryPageApplication = {
       dialogue: dialogue(),
-      queries: { listBookEntries: { execute } },
+      queries: {
+        listBookEntries: { execute },
+        listMilestones: { list: () => Promise.resolve([]) },
+      },
     };
     render(
       <MemoryRouter>
@@ -209,7 +273,11 @@ describe("Página Biblioteca", () => {
       await screen.findByRole("heading", { name: "Uma observação tranquila" }),
     ).toBeVisible();
     expect(screen.getByText(/leitura em curso/iu)).toBeVisible();
-    expect(screen.getByRole("button", { name: "Fechar painel" })).toHaveFocus();
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Fechar painel" }),
+      ).toHaveFocus(),
+    );
     expect(screen.queryByText("book-1")).not.toBeInTheDocument();
   });
 

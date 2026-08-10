@@ -1,5 +1,6 @@
 import type { BookEntry, DomainEvent, Note, Quote } from "../domain";
 import type { Activity } from "./activities";
+import type { MilestoneProcessor } from "./milestones";
 export type { AudioPort, AudioSettingsPort } from "./audio";
 export type { DialogueHistoryPort, DialoguePort } from "./dialogue";
 
@@ -51,6 +52,7 @@ export interface ApplicationDependencies {
   readonly events: ApplicationEventBus;
   readonly ids: IdGenerator;
   readonly libraryEntries: LibraryEntryRepository;
+  readonly milestones?: MilestoneProcessor;
   readonly notes: NoteRepository;
   readonly quotes: QuoteRepository;
   readonly transaction: ApplicationTransactionRunner;

@@ -1,5 +1,10 @@
 import { InvalidProgressError, InvalidRevisionError } from "./errors";
 import type { EntryStatus } from "./types";
+import type {
+  DecorationId,
+  MilestoneId,
+  MilestoneSourceEventType,
+} from "./milestones";
 import {
   requireId,
   requireIsoUtc,
@@ -46,13 +51,24 @@ export interface QuoteCreated extends EventMetadata {
   readonly payload: { readonly quoteId: string; readonly page?: number };
 }
 
+export interface MilestoneReached extends EventMetadata {
+  readonly type: "MilestoneReached";
+  readonly payload: {
+    readonly decorationIds: readonly DecorationId[];
+    readonly milestoneId: MilestoneId;
+    readonly rewardIds: readonly string[];
+    readonly sourceEventType: MilestoneSourceEventType;
+  };
+}
+
 export type DomainEvent =
   | LibraryEntryCreated
   | LibraryEntryUpdated
   | ProgressUpdated
   | LibraryEntryCompleted
   | NoteCreated
-  | QuoteCreated;
+  | QuoteCreated
+  | MilestoneReached;
 
 type EventInput<TPayload> = EventMetadata & { readonly payload: TPayload };
 
@@ -126,4 +142,21 @@ export function createQuoteCreatedEvent(
       throw new InvalidProgressError("page deve ser positiva", "page");
   }
   return event({ type: "QuoteCreated", ...input });
+}
+
+export function createMilestoneReachedEvent(
+  input: EventInput<MilestoneReached["payload"]>,
+): MilestoneReached {
+  requireId(input.payload.milestoneId, "milestoneId");
+  input.payload.rewardIds.forEach((id) => requireId(id, "rewardId"));
+  input.payload.decorationIds.forEach((id) => requireId(id, "decorationId"));
+  return event({
+    type: "MilestoneReached",
+    ...input,
+    payload: {
+      ...input.payload,
+      decorationIds: Object.freeze([...input.payload.decorationIds]),
+      rewardIds: Object.freeze([...input.payload.rewardIds]),
+    },
+  });
 }

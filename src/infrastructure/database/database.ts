@@ -4,10 +4,12 @@ import {
   DATABASE_NAME,
   DATABASE_SCHEMA_V1,
   DATABASE_SCHEMA_V2,
+  DATABASE_SCHEMA_V3,
   SCHEMA_MARKER_KEY,
   type PersistedActivity,
   type PersistedBook,
   type PersistedMetadata,
+  type PersistedMilestone,
   type PersistedNote,
   type PersistedQuote,
   type PersistedSetting,
@@ -22,6 +24,7 @@ export class BibliotecaDatabase extends Dexie {
   activities!: EntityTable<PersistedActivity, "id">;
   settings!: EntityTable<PersistedSetting, "key">;
   metadata!: EntityTable<PersistedMetadata, "key">;
+  milestones!: EntityTable<PersistedMilestone, "id">;
 
   constructor(name = DATABASE_NAME) {
     super(name);
@@ -32,6 +35,15 @@ export class BibliotecaDatabase extends Dexie {
         await transaction.table<PersistedMetadata>("metadata").put({
           key: SCHEMA_MARKER_KEY,
           value: "2",
+          updatedAt: MIGRATION_TIMESTAMP,
+        });
+      });
+    this.version(3)
+      .stores(DATABASE_SCHEMA_V3)
+      .upgrade(async (transaction) => {
+        await transaction.table<PersistedMetadata>("metadata").put({
+          key: SCHEMA_MARKER_KEY,
+          value: "3",
           updatedAt: MIGRATION_TIMESTAMP,
         });
       });

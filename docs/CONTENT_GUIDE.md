@@ -91,7 +91,7 @@ Título, autor, nota e citação não cruzam a seleção nem entram no históric
 | Toque na bibliotecária | três falas gerais | rotação por uso mais antigo e cooldown curto |
 | Toque na criatura | três respostas curtas | rotação por uso mais antigo e cooldown curto |
 
-`dialogue.librarian.first-completion` aceita também o evento explícito `book.first-completed`. Esse contrato pode ser usado pelo Prompt 16, sem existir agora `MilestoneEngine`, recompensa ou desbloqueio.
+`dialogue.librarian.first-completion` aceita também o evento explícito `book.first-completed`. O Prompt 16 usa esse contrato após o commit do primeiro marco de conclusão; a fala continua selecionada pelo serviço de diálogos, sem texto especial no componente.
 
 ## 8. DialogueSelector
 
@@ -160,3 +160,9 @@ Adicionar um bundle com locale BCP 47 válido. Chaves ausentes continuarão usan
 - ausência de conteúdo pessoal no histórico/log;
 - painel e alternativa textual acessíveis;
 - licença registrada se algum conteúdo deixar de ser autoria interna.
+
+## 13. Marcos e recompensa do protótipo
+
+Marcos, recompensas e decorações são conteúdo declarativo validado cedo em `prototypeContent.ts`. Os IDs estáveis são `milestone.first-book`, `milestone.first-note`, `milestone.first-quote`, `milestone.first-completed-book`, `reward.first-completion-reading-lamp` e `decoration.reading-lamp`. Condições referenciam somente eventos e fatos estruturados; versões de regra são inteiros positivos. Referências duplicadas, inexistentes ou incompatíveis falham claramente no carregamento de desenvolvimento.
+
+Somente a primeira conclusão concede uma recompensa: a luminária de leitura procedural. Os demais marcos registram história mínima, sem XP, moeda, ranking, badge ou texto pessoal. React e Phaser consomem resultados prontos e não repetem essas regras.

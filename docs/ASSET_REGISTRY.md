@@ -17,7 +17,7 @@ Todo asset visual, sonoro, fonte ou ícone incluído no projeto deve aparecer ne
 
 | ID | Tipo | Arquivo/manifesto | Origem/autoria | Licença | Modificado | Uso | Estado |
 |---|---|---|---|---|---|---|---|
-| `room-procedural-v1` | gráficos procedurais | `src/features/library-visual/phaser/roomManifest.ts` | autoria interna do projeto, 2026-07-31 | código do repositório; licença final acompanha o projeto | formas e paleta configuráveis | primeira sala, estante, balcão, personagens, livro e luz | provisório |
+| `room-procedural-v1` | gráficos procedurais | `src/features/library-visual/phaser/roomManifest.ts` | autoria interna do projeto, 2026-07-31; ampliado em 2026-08-10 | código do repositório; licença final acompanha o projeto | formas e paleta configuráveis | primeira sala, estante, balcão, personagens, livro, luz e luminária de leitura desbloqueável | provisório |
 | `audio-procedural-v1` | áudio sintetizado em runtime | removido do `audioBackend.ts` | autoria interna do projeto, 2026-08-06 | código do repositório; licença final acompanha o projeto | fallback reprovado na validação física | não usado | remover |
 | `music-library-provisional-v1` | áudio WAV | `public/audio/library-ambient.wav` | autoria interna; gerado por `scripts/generate-audio-assets.mjs` em 2026-08-07 | criação própria; licença final acompanha o projeto | PCM mono 22.050 Hz/16-bit, progressão harmônica e melodia determinísticas | música em loop da Biblioteca | gerado |
 | `ui-page-provisional-v1` | áudio WAV | `public/audio/ui-page.wav` | autoria interna; gerado por `scripts/generate-audio-assets.mjs` em 2026-08-07 | criação própria; licença final acompanha o projeto | PCM mono 22.050 Hz/16-bit, ruído determinístico envelopado | interface/navegação | gerado |

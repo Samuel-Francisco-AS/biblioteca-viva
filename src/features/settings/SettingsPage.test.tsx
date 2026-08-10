@@ -17,6 +17,7 @@ import { SettingsPage, type SettingsApplication } from "./SettingsPage";
 
 const counts = {
   libraryEntries: 2,
+  milestones: 0,
   notes: 1,
   quotes: 1,
   activities: 4,
@@ -25,8 +26,8 @@ const counts = {
 const summary: BackupSummary = {
   createdAt: "2026-07-30T12:00:00.000Z",
   appVersion: "0.2.0-alpha.1",
-  databaseVersion: 2,
-  formatVersion: 1,
+  databaseVersion: 3,
+  formatVersion: 2,
   policy: "replace",
   counts,
   warnings: [],

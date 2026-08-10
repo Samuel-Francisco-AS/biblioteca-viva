@@ -1,7 +1,7 @@
 import type { Activity } from "./activities";
-import type { BookEntry, Note, Quote } from "../domain";
+import type { BookEntry, Note, Quote, ReachedMilestone } from "../domain";
 
-export const BACKUP_FORMAT_VERSION = 1;
+export const BACKUP_FORMAT_VERSION = 2;
 export const BACKUP_KIND = "biblioteca-viva-backup";
 export const MAX_BACKUP_BYTES = 10 * 1024 * 1024;
 
@@ -13,6 +13,7 @@ export interface BackupSetting {
 
 export interface BackupData {
   readonly libraryEntries: readonly BookEntry[];
+  readonly milestones: readonly ReachedMilestone[];
   readonly notes: readonly Note[];
   readonly quotes: readonly Quote[];
   readonly activities: readonly Activity[];
@@ -25,6 +26,7 @@ export interface BackupSnapshot extends BackupData {
 
 export interface BackupCounts {
   readonly libraryEntries: number;
+  readonly milestones: number;
   readonly notes: number;
   readonly quotes: number;
   readonly activities: number;
@@ -35,7 +37,7 @@ export interface BackupSummary {
   readonly createdAt: string;
   readonly appVersion: string;
   readonly databaseVersion: number;
-  readonly formatVersion: 1;
+  readonly formatVersion: 1 | 2;
   readonly policy: "replace";
   readonly counts: BackupCounts;
   readonly warnings: readonly string[];

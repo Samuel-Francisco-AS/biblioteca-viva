@@ -1,10 +1,12 @@
 import Phaser from "phaser";
+import { DECORATION_ID } from "../../../domain";
 
 import type { LibraryInteraction, LibraryViewModel } from "../contracts";
 import {
   LIBRARY_ROOM_ANIMATIONS,
   LIBRARY_ROOM_INTERACTION,
   LIBRARY_ROOM_PALETTE as COLOR,
+  decorationUnlockMotion,
   libraryRoomMotionPlan,
 } from "./roomConfig";
 import {
@@ -63,12 +65,16 @@ export class InitialLibraryScene extends Phaser.Scene {
   private librarianZone?: Phaser.GameObjects.Zone;
   private lighting?: Phaser.GameObjects.Graphics;
   private readonly motion = new SceneMotionLifecycle();
+  private readonly presentedUnlockEventIds = new Set<string>();
   private projection: LibraryViewModel;
+  private readingLamp?: Phaser.GameObjects.Container;
+  private readingLampFigure?: Phaser.GameObjects.Graphics;
   private readonly reducedMotion: boolean;
   private renderedSize?: { readonly height: number; readonly width: number };
   private shelf?: Phaser.GameObjects.Graphics;
   private shelfZone?: Phaser.GameObjects.Zone;
   private readonly tapSelection = new TapSelectionPolicy();
+  private unlockTween?: Phaser.Tweens.Tween;
 
   constructor(
     projection: LibraryViewModel,
@@ -117,6 +123,10 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.highlightedBook = this.add
       .container(0, 0, [this.highlightedBookFigure])
       .setDepth(50);
+    this.readingLampFigure = this.add.graphics();
+    this.readingLamp = this.add
+      .container(0, 0, [this.readingLampFigure])
+      .setDepth(55);
     this.lighting = this.add.graphics().setDepth(60);
     this.labels = this.add.container().setDepth(70);
 
@@ -158,6 +168,7 @@ export class InitialLibraryScene extends Phaser.Scene {
     if (!this.background || !layout) return;
     this.drawShelf(layout);
     this.drawHighlightedBook(layout, projection.highlightedBook !== null);
+    this.drawReadingLamp(layout);
     this.drawLabels(layout);
     this.updateZone(
       this.highlightedBookZone,
@@ -178,6 +189,7 @@ export class InitialLibraryScene extends Phaser.Scene {
       );
     }
     this.applyMotionFrame();
+    this.presentPendingUnlock();
   }
 
   pauseMotion(): void {
@@ -241,7 +253,7 @@ export class InitialLibraryScene extends Phaser.Scene {
       );
     }
     this.drawBookGroups(graphics, layout);
-    if (this.projection.hasFirstCompletionMilestone) {
+    if (this.projection.hasCompletedBook) {
       const marker = layout.milestoneMarker;
       graphics
         .fillStyle(COLOR.bookCompleted)
@@ -392,6 +404,80 @@ export class InitialLibraryScene extends Phaser.Scene {
       .lineBetween(0, -height / 2 + 2, 0, height / 2 - 2);
   }
 
+  private drawReadingLamp(layout: LibrarySceneLayout): void {
+    const graphics = this.readingLampFigure;
+    const container = this.readingLamp;
+    if (!graphics || !container) return;
+    const visible = this.projection.unlockedDecorationIds.includes(
+      DECORATION_ID.readingLamp,
+    );
+    container
+      .setPosition(
+        layout.readingLamp.x + layout.readingLamp.width / 2,
+        layout.readingLamp.y + layout.readingLamp.height / 2,
+      )
+      .setVisible(visible);
+    graphics.clear();
+    if (!visible) return;
+    const { height, width } = layout.readingLamp;
+    graphics
+      .fillStyle(COLOR.counterDark)
+      .fillRect(-1.5, -height * 0.08, 3, height * 0.55);
+    graphics
+      .fillStyle(COLOR.bookCompleted)
+      .fillTriangle(
+        -width / 2,
+        -height * 0.12,
+        width / 2,
+        -height * 0.12,
+        0,
+        -height / 2,
+      );
+    graphics
+      .fillStyle(COLOR.warmLight, 0.22)
+      .fillCircle(0, -height * 0.18, width * 0.75);
+    graphics
+      .fillStyle(COLOR.counterDark)
+      .fillRoundedRect(-width * 0.35, height * 0.42, width * 0.7, 3, 1);
+  }
+
+  private presentPendingUnlock(): void {
+    const animation = this.projection.decorationUnlockAnimation;
+    const lamp = this.readingLamp;
+    if (
+      !animation ||
+      !lamp?.visible ||
+      this.presentedUnlockEventIds.has(animation.eventId)
+    )
+      return;
+    this.presentedUnlockEventIds.add(animation.eventId);
+    const notify = () =>
+      this.interactionHandler?.({
+        decorationId: animation.decorationId,
+        eventId: animation.eventId,
+        type: "DecorationUnlockPresented",
+      });
+    const motion = decorationUnlockMotion(this.reducedMotion);
+    if (!motion.animated) {
+      lamp.setAlpha(1).setScale(1);
+      notify();
+      return;
+    }
+    lamp.setAlpha(0.35).setScale(0.78);
+    this.unlockTween?.remove();
+    this.unlockTween = this.tweens.add({
+      alpha: 1,
+      duration: motion.durationMs,
+      ease: LIBRARY_ROOM_ANIMATIONS.unlock.ease,
+      onComplete: () => {
+        this.unlockTween = undefined;
+        notify();
+      },
+      scale: 1,
+      targets: lamp,
+    });
+  }
+
   private drawLighting(layout: LibrarySceneLayout): void {
     const graphics = this.lighting;
     if (!graphics) return;
@@ -490,6 +576,7 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.drawCreature(layout);
     const hasHighlight = this.projection.highlightedBook !== null;
     this.drawHighlightedBook(layout, hasHighlight);
+    this.drawReadingLamp(layout);
     this.drawLighting(layout);
     this.drawLabels(layout);
     this.updateZone(this.shelfZone, layout.shelfHitArea);
@@ -502,6 +589,7 @@ export class InitialLibraryScene extends Phaser.Scene {
     );
     this.applyMotionFrame();
     if (reconciliationReason) this.startMotion(reconciliationReason);
+    this.presentPendingUnlock();
   }
 
   private recordFallbackChoices(): void {
@@ -710,6 +798,8 @@ export class InitialLibraryScene extends Phaser.Scene {
   private shutdown = (): void => {
     this.tapSelection.cancel();
     this.motion.destroy();
+    this.unlockTween?.remove();
+    this.unlockTween = undefined;
     this.scale.off(Phaser.Scale.Events.RESIZE, this.handleResize, this);
     this.load.off(
       Phaser.Loader.Events.FILE_LOAD_ERROR,

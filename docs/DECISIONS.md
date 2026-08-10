@@ -382,4 +382,17 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 
 **Consequências:** não há schema, migração, dependência, serviço remoto ou acesso Dexie por React/Phaser. O histórico guarda apenas IDs e instantes mínimos, entra no backup por meio de settings e falha de forma degradável. O evento `book.first-completed` e a fala correspondente ficam reutilizáveis pelo Prompt 16, mas nenhum marco, recompensa ou desbloqueio é executado agora. Adicionar fala exige principalmente editar catálogo e locale. Prompt 15 e G7 continuam sem aprovação humana.
 
+## D-036 — Marcos transacionais, schema v3 e backup v2 monotônico
+
+- **Data:** 2026-08-10
+- **Status:** aceita
+
+**Contexto:** o Prompt 16 exige histórico auditável, recompensa idempotente, concorrência segura, exclusão sem perda de desbloqueio e restauração compatível. Um único valor em `settings` exigiria read-modify-write concorrente e esconderia registros históricos/recompensas em uma tabela de preferências. Derivar para sempre a primeira conclusão dos livros atuais apagaria o marco ao retomar ou excluir o livro.
+
+**Decisão:** adicionar a tabela `milestones` no schema Dexie v3, com chave primária pelo ID estável e índice `reachedAt`. O `MilestoneEngine` puro avalia definições declarativas; `DexieMilestoneStore` executa dentro da mesma transação da ação/atividade e usa `add` para conceder uma vez. Somente depois do commit são publicados o evento original e `MilestoneReached`. Persistir origem técnica mínima, versão da regra e recompensas, sem FK obrigatória ao livro nem conteúdo pessoal. Usar a luminária de leitura procedural `decoration.reading-lamp` como única recompensa visual.
+
+Evoluir o backup para formato v2 incluindo `milestones`, aceitando v1 com seu checksum/estrutura originais. Manter `replace` para livros, notas, citações, atividades e settings, mas aplicar união monotônica por ID aos marcos. Essa exceção estreita refina D-021: uma restauração nunca apaga marco legítimo já presente, restauração repetida é idempotente e v1 em base limpa não inventa recompensa. Importação não publica eventos de conquista.
+
+**Consequências:** bancos v1/v2 migram de forma aditiva para v3 e reabrem preservados; falha de marco aborta a ação antes de qualquer anúncio; eventos equivalentes/concorrentes não duplicam recompensa; recarga e reconstrução apenas leem estado; exclusão/retomada pode zerar o fato atual `hasCompletedBook` sem remover `hasFirstCompletionMilestone` ou a luminária. Há mudança de schema e formato de backup, mas nenhuma dependência, permissão, asset binário ou versão de produto. G7 e G8 continuam abertos até validação humana integrada.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

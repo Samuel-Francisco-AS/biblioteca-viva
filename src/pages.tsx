@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import type { BookEntry } from "./domain";
+import type { BookEntry, ReachedMilestone } from "./domain";
 import type { AudioPort, DialoguePort, LocalizedDialogue } from "./application";
 import { presentApplicationError } from "./features/entry-editor/errorMessages";
 import { LibraryCharacterPanel } from "./features/library-visual/LibraryCharacterPanel";
@@ -20,6 +20,7 @@ export interface LibraryPageApplication {
   readonly dialogue: Pick<DialoguePort, "enterLibrary" | "select">;
   readonly queries: {
     readonly listBookEntries: { execute(): Promise<readonly BookEntry[]> };
+    readonly listMilestones: { list(): Promise<readonly ReachedMilestone[]> };
   };
 }
 
@@ -33,7 +34,11 @@ type OpenLibraryPanel =
   | { readonly dialogue: LocalizedDialogue; readonly kind: "character" }
   | null;
 
-function projectionInput(books: readonly BookEntry[]) {
+function projectionInput(
+  books: readonly BookEntry[],
+  milestones: readonly ReachedMilestone[],
+  pendingDecorationUnlock?: { readonly eventId: string },
+) {
   return {
     books: books.map(
       ({ currentPage, id, status, title, totalPages, updatedAt }) => ({
@@ -45,13 +50,19 @@ function projectionInput(books: readonly BookEntry[]) {
         updatedAt,
       }),
     ),
+    milestones,
+    ...(pendingDecorationUnlock && { pendingDecorationUnlock }),
   };
 }
 
 export function LibraryPage({
   application,
+  onDecorationUnlockPresented,
+  pendingDecorationUnlock,
 }: {
   readonly application?: LibraryPageApplication;
+  readonly onDecorationUnlockPresented?: (eventId: string) => void;
+  readonly pendingDecorationUnlock?: { readonly eventId: string };
 }) {
   const diagnosticsEnabled =
     import.meta.env.DEV || import.meta.env.VITE_ENABLE_DIAGNOSTICS === "true";
@@ -76,12 +87,17 @@ export function LibraryPage({
   useEffect(() => {
     if (!application) return;
     let active = true;
-    void application.queries.listBookEntries.execute().then(
-      (books) => {
+    void Promise.all([
+      application.queries.listBookEntries.execute(),
+      application.queries.listMilestones.list(),
+    ]).then(
+      ([books, milestones]) => {
         if (!active) return;
         setState({
           kind: "ready",
-          viewModel: projectionService.project(projectionInput(books)),
+          viewModel: projectionService.project(
+            projectionInput(books, milestones, pendingDecorationUnlock),
+          ),
         });
       },
       (failure: unknown) => {
@@ -95,7 +111,7 @@ export function LibraryPage({
     return () => {
       active = false;
     };
-  }, [application, attempt, projectionService]);
+  }, [application, attempt, pendingDecorationUnlock, projectionService]);
 
   useEffect(() => {
     if (!application || state.kind !== "ready") return;
@@ -125,6 +141,10 @@ export function LibraryPage({
   }
 
   function handleInteraction(interaction: LibraryInteraction) {
+    if (interaction.type === "DecorationUnlockPresented") {
+      onDecorationUnlockPresented?.(interaction.eventId);
+      return;
+    }
     if (interaction.type === "ShelfSelected") {
       dialogueRequest.current += 1;
       application?.audio?.emit({ type: "ShelfSelected" });
