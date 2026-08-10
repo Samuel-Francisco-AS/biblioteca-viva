@@ -396,6 +396,29 @@ a {
   gap: var(--space-5);
 }
 
+.audio-settings-controls {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.audio-settings-controls input[type="range"] {
+  width: 100%;
+  min-height: var(--touch-target);
+}
+
+.audio-mute-control {
+  display: inline-flex;
+  min-height: var(--touch-target);
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: 700;
+}
+
+.audio-mute-control input {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
 .backup-export-actions {
   display: grid;
   gap: 1rem;

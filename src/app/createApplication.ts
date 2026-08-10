@@ -24,6 +24,7 @@ import {
   type ShareBackupResult,
   BackupFileError,
   BackupError,
+  type AudioPort,
 } from "../application";
 import {
   BibliotecaDatabase,
@@ -48,6 +49,12 @@ import {
   type StoragePersistencePort,
   type StoragePersistenceStatus,
   BrowserPlatformCapabilities,
+  AudioService,
+  BrowserAudioBackend,
+  DexieAudioSettingsRepository,
+  consoleAudioErrorReporter,
+  type AudioBackend,
+  type AudioErrorReporter,
   type PlatformCapabilitiesPort,
   type PlatformCapabilitySnapshot,
 } from "../infrastructure";
@@ -62,6 +69,7 @@ export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 
 export interface ApplicationRuntime {
   readonly appVersion: string;
+  readonly audio: AudioPort;
   readonly platform: PlatformCapabilitySnapshot;
   readonly backup: {
     readonly nativeSaveAvailable: boolean;
@@ -98,6 +106,8 @@ export interface ApplicationRuntime {
 }
 
 export interface CreateApplicationOptions {
+  readonly audioBackend?: AudioBackend;
+  readonly audioReporter?: AudioErrorReporter;
   readonly databaseName?: string;
   readonly backupFileSave?: BackupFileSavePort;
   readonly backupFileShare?: BackupFileSharePort;
@@ -138,6 +148,16 @@ export async function createApplication(
   const clock = new SystemClock();
   const ids = new CryptoIdGenerator(platform);
   const events = new LocalEventBus();
+  const audioReporter = options.audioReporter ?? consoleAudioErrorReporter;
+  const audio = new AudioService(
+    options.audioBackend ?? new BrowserAudioBackend(audioReporter),
+    new DexieAudioSettingsRepository(database, clock),
+    audioReporter,
+  );
+  await audio.loadPreferences();
+  events.subscribe("LibraryEntryCompleted", () => {
+    audio.emit({ type: "BookCompleted" });
+  });
   const storage = options.storage ?? new BrowserStoragePersistence();
   const snapshots = new DexieBackupSnapshotStore(database);
   const codec = new JsonBackupCodec();
@@ -174,6 +194,7 @@ export async function createApplication(
 
   return {
     appVersion: packageMetadata.version,
+    audio,
     platform,
     backup: {
       nativeSaveAvailable,
@@ -262,6 +283,9 @@ export async function createApplication(
       requestPersistence: () => diagnosticsService.requestPersistence(),
     },
     events,
-    close: () => database.close(),
+    close: () => {
+      audio.dispose();
+      database.close();
+    },
   };
 }

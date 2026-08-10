@@ -8,7 +8,11 @@ import {
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
-import type { BackupArtifact, BackupSummary } from "../../application";
+import type {
+  AudioPort,
+  BackupArtifact,
+  BackupSummary,
+} from "../../application";
 import { SettingsPage, type SettingsApplication } from "./SettingsPage";
 
 const counts = {
@@ -50,7 +54,62 @@ function application(
   };
 }
 
+function audio(): AudioPort {
+  let preferences = {
+    effectsVolume: 0.6,
+    musicVolume: 0.35,
+    muted: false,
+  };
+  return {
+    availability: () => "not-initialized",
+    dispose: vi.fn(),
+    emit: vi.fn(),
+    initialize: vi.fn(() => Promise.resolve("ready" as const)),
+    pause: vi.fn(),
+    preferences: () => preferences,
+    resume: vi.fn(),
+    setEffectsVolume: vi.fn((effectsVolume: number) => {
+      preferences = { ...preferences, effectsVolume };
+      return Promise.resolve();
+    }),
+    setMusicVolume: vi.fn((musicVolume: number) => {
+      preferences = { ...preferences, musicVolume };
+      return Promise.resolve();
+    }),
+    setMuted: vi.fn((muted: boolean) => {
+      preferences = { ...preferences, muted };
+      return Promise.resolve();
+    }),
+  };
+}
+
 describe("Configurações e backup", () => {
+  it("oferece volumes rotulados, teclado nativo e mute com aplicação imediata", async () => {
+    const audioPort = audio();
+    const app = { ...application(), audio: audioPort };
+    const user = userEvent.setup();
+    render(<SettingsPage application={app} />);
+
+    const music = screen.getByRole("slider", { name: /Volume da música/u });
+    const effects = screen.getByRole("slider", { name: /Volume dos efeitos/u });
+    const mute = screen.getByRole("checkbox", {
+      name: "Silenciar música e efeitos",
+    });
+    expect(music).toHaveValue("35");
+    expect(effects).toHaveValue("60");
+
+    fireEvent.change(music, { target: { value: "24" } });
+    effects.focus();
+    expect(effects).toHaveFocus();
+    fireEvent.change(effects, { target: { value: "61" } });
+    await user.click(mute);
+
+    expect(vi.mocked(audioPort.setMusicVolume)).toHaveBeenCalledWith(0.24);
+    expect(vi.mocked(audioPort.setEffectsVolume)).toHaveBeenCalledWith(0.61);
+    expect(vi.mocked(audioPort.setMuted)).toHaveBeenCalledWith(true);
+    expect(mute).toBeChecked();
+  });
+
   it("orienta e desabilita exportação quando a origem não oferece capacidades seguras", () => {
     const app: SettingsApplication = {
       ...application(),

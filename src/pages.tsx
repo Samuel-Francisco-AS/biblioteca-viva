@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import type { BookEntry } from "./domain";
+import type { AudioPort } from "./application";
 import { presentApplicationError } from "./features/entry-editor/errorMessages";
 import {
   LibraryCharacterPanel,
@@ -18,6 +19,7 @@ import type {
 import { createLibraryVisualDiagnostics } from "./features/library-visual/diagnostics";
 
 export interface LibraryPageApplication {
+  readonly audio?: Pick<AudioPort, "emit">;
   readonly queries: {
     readonly listBookEntries: { execute(): Promise<readonly BookEntry[]> };
   };
@@ -94,9 +96,18 @@ export function LibraryPage({
   }, [application, attempt, projectionService]);
 
   function handleInteraction(interaction: LibraryInteraction) {
-    if (interaction.type === "ShelfSelected") setOpenPanel("shelf");
-    if (interaction.type === "LibrarianSelected") setOpenPanel("librarian");
-    if (interaction.type === "CreatureSelected") setOpenPanel("creature");
+    if (interaction.type === "ShelfSelected") {
+      application?.audio?.emit({ type: "ShelfSelected" });
+      setOpenPanel("shelf");
+    }
+    if (interaction.type === "LibrarianSelected") {
+      application?.audio?.emit({ type: "LibrarianSelected" });
+      setOpenPanel("librarian");
+    }
+    if (interaction.type === "CreatureSelected") {
+      application?.audio?.emit({ type: "CreatureSelected" });
+      setOpenPanel("creature");
+    }
   }
 
   return (

@@ -262,6 +262,12 @@ git status --short
 
 Os nomes reais prevalecem e devem ser registrados no README e `AGENTS.md`.
 
+### Política acelerada a partir de 2026-08-10
+
+Testes automatizados relevantes, formatação, lint, typecheck, build web, barreiras arquiteturais, `git diff --check` e build/sync Android quando adequado continuam obrigatórios em cada prompt. Validações manuais repetitivas no navegador, instalação frequente de APK e testes físicos individuais de G7, G8 e G9 ficam acumulados para um checkpoint integrado próximo ao final do protótipo. Itens não executados permanecem desmarcados e os gates continuam abertos.
+
+O agrupamento não se aplica quando houver risco de perda ou corrupção de dados, migração destrutiva, backup/restauração, exclusão de dados ou alteração nativa capaz de impedir a abertura. Prompt 14 está tecnicamente implementado após correção, mas sua primeira validação humana continua registrada como reprovada e a revalidação está acumulada; isso não aprova Prompt 14 nem G7.
+
 ### Fundação disponível após o Prompt 1
 
 - Vitest 4 executa testes em jsdom;
@@ -715,3 +721,56 @@ Resultado: **G6 aprovado por Sam em 2026-08-06**. Refinamento artístico, sala v
 Em 2026-08-05, a suíte passou com 406 testes em 38 arquivos. A continuação cobre seletor injetável, nome/MIME/texto exatos, UTF-8 sem BOM ou quebra adicional, saved/cancelled/falhas sanitizadas, espera pela escrita, concorrência, desmontagem, separação save/share, contrato nativo, permissões e `preventDefaultWheel: false`. O APK debug possui 7.525.555 bytes, SHA-256 `1eec4278a332a3e883cc1f8c03e92efb2b19743edded752ccbb235426a8e68fb` e ZIP íntegro.
 
 G4 permanece pendente por exigir uso pessoal prolongado com ao menos dez livros reais. G9 ainda concentrará acessibilidade, desempenho e uso mobile mais rigoroso; G11 ainda tratará APK release assinado, atualização final entre builds de produção e demais requisitos de distribuição.
+
+## 16. Prompt 14 — Áudio desacoplado e primeira paisagem sonora
+
+### Primeira validação humana — reprovada
+
+Em 2026-08-07, a validação no APK Android foi **reprovada**. O áudio só começou após interação com o canvas, a música procedural foi percebida como zumbido grave contínuo e desagradável, os efeitos de interface tinham timbre desagradável e bibliotecária e criatura não responderam com som. A estante, os efeitos de ações, os volumes e as intents existentes funcionaram. O resultado mantém Prompt 14 e G7 abertos e bloqueia o avanço para Prompt 15.
+
+A rodada corretiva usa desbloqueio global por primeiro gesto, seis WAVs próprios determinísticos, efeitos distintos para estante, bibliotecária e criatura e silêncio quando a música estiver ausente. Testes automáticos verificam contratos e regressões, mas não avaliam qualidade artística. Toda a checklist abaixo deve ser repetida no navegador e no Moto G06 antes de qualquer aprovação.
+
+### Evidência automática da implementação inicial
+
+Em 2026-08-06, a suíte completa passou com 436 testes em 44 arquivos. Os testes novos usam backend, playback, settings e lifecycle controláveis, sem alto-falante ou Web Audio real, e cobrem:
+
+- integridade do manifesto, cinco categorias, IDs, ganhos, loops e fontes intercambiáveis;
+- inicialização idempotente e nenhuma reprodução antes do gesto/inicialização;
+- intenção ocorrida durante o desbloqueio tocando somente depois da inicialização;
+- música da Biblioteca, saída/retorno, remontagem e ausência de segunda instância;
+- efeitos de interface, estante e conclusão pós-commit;
+- volumes independentes, mute global, persistência, reabertura e valor externo inválido;
+- pause, resume, ciclos repetidos, descarte de efeitos pendentes e dispose idempotente;
+- arquivo ausente com fallback procedural na implementação inicial, backend indisponível e reprodução falha degradável;
+- primeiro gesto, `visibilitychange`, `App.appStateChange` e remoção de listeners;
+- controles de Configurações rotulados, focáveis, atualizados imediatamente e persistíveis;
+- fronteiras que impedem React e Phaser de importar backend, manifesto, Web Audio ou Howler.
+
+`format:check`, lint, typecheck, suíte, build web, `android:sync` e `android:build:debug` passaram. O Gradle concluiu `BUILD SUCCESSFUL`; o APK debug possui 7.525.555 bytes, SHA-256 `9e64d4afa80ab8aac0f223f2c2e9dcdffac1305cf09264d0551ff4250a1b8981` e ZIP íntegro. Ele foi gerado, mas não instalado nem testado fisicamente. Nenhuma biblioteca, plugin, permissão, mídia externa, migração ou versão foi adicionada/alterada.
+
+### Checklist manual pendente para Sam — navegador e Moto G06
+
+1. [ ] abrir o app inicialmente sem áudio tocando sozinho;
+2. [ ] usar um botão ou navegação React como primeiro gesto e confirmar música sem tocar o canvas;
+3. [ ] recarregar e usar o canvas Phaser como primeiro gesto permitido;
+4. [ ] entrar na Biblioteca e ouvir apenas uma música ambiente reconhecível e discreta;
+5. [ ] sair e voltar à Biblioteca sem duplicação;
+6. [ ] tocar a estante e ouvir a resposta correspondente;
+7. [ ] tocar a bibliotecária e ouvir uma resposta distinta;
+8. [ ] tocar a criatura e ouvir uma resposta distinta;
+9. [ ] executar uma ação de interface coberta pelo efeito previsto;
+10. [ ] concluir um livro e confirmar resposta sonora + feedback visual/textual;
+11. [ ] alterar volume da música;
+12. [ ] alterar volume dos efeitos;
+13. [ ] ativar mute e confirmar silêncio total;
+14. [ ] desativar mute;
+15. [ ] fechar e reabrir e confirmar preferências persistidas;
+16. [ ] minimizar e restaurar repetidamente;
+17. [ ] confirmar que não aparecem duas músicas simultâneas nem áudio indevido em segundo plano;
+18. [ ] confirmar que Coleção, formulários, backup e sala continuam utilizáveis.
+
+No Moto G06, repetir com alto-falante e fone em volume confortável, observar interrupção do sistema/bloqueio de tela quando aplicável e registrar commit/hash do APK usado. Esta seção não afirma execução manual e não aprova G7.
+
+### Evidência automática da rodada corretiva
+
+Em 2026-08-07, formatação, `format:check`, lint, typecheck, geração/verificação determinística dos seis WAVs, suíte completa, build web, `android:sync` e `android:build:debug` passaram. Foram 442 testes em 44 arquivos. O APK debug contém os seis assets, possui 7.526.051 bytes, SHA-256 `9d3b71db91ab58e210f482d6721f27e117f09b0b7e38fa7bf0d270b431f7f614` e ZIP íntegro. O artefato não foi instalado nem testado fisicamente nesta rodada; a correção, Prompt 14 e G7 continuam sem aprovação.

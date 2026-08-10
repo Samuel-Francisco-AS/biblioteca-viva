@@ -17,9 +17,9 @@
 - **blocos concluídos:** 5 — Backup, restauração e recuperação; 6 — Biblioteca visual conectada;
 - **gates:** G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto em paralelo;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **prompts concluídos:** Prompts 4 a 13;
-- **próximo prompt planejado:** Prompt 14 — Arquitetura de áudio e primeira paisagem sonora, ainda não iniciado;
-- **próximo bloco:** Bloco 7 — identidade sonora e contextual, ainda não iniciado;
+- **prompts tecnicamente implementados:** Prompts 4 a 14; Prompt 14 mantém validação humana acumulada e não está aprovado;
+- **próximo prompt técnico autorizado:** Prompt 15 — conteúdo externo, localização e diálogos básicos;
+- **bloco atual:** Bloco 7 — identidade sonora e contextual, em andamento;
 - **APK:** diagnóstico interno validado no Moto G06 com Android 15; release assinado ainda não existe;
 - **código:** implementação do Bloco 4 validada no navegador; G4 aguarda uso real prolongado.
 
@@ -33,6 +33,8 @@
 - [x] Prompt 11 — Host Phaser e ciclo de vida, concluído e validado no navegador.
 - [x] Prompt 12 — Projeção visual e ponte de eventos, concluído e validado no navegador.
 - [x] Prompt 13 — Cena visual e interação inicial, concluído e validado no navegador.
+- [~] Prompt 14 — Arquitetura de áudio e primeira paisagem sonora; tecnicamente implementado após correção, validação humana acumulada.
+- [ ] Prompt 15 — Conteúdo externo, localização e diálogos básicos; autorizado em modo acelerado.
 
 ## Blocos e gates
 
@@ -45,7 +47,7 @@
 | `[~]` | 4 | 7–9 | implementação concluída; uso real prolongado pendente | G4 aberto |
 | `[x]` | 5 | 10 | backup externo e restauração física em armazenamento limpo validados | G5 aprovado em 2026-08-06 |
 | `[x]` | 6 | 11–13 | biblioteca visual e experiência física Android validadas | G6 aprovado em 2026-08-06 |
-| `[ ]` | 7 | 14–15 | próximo bloco: identidade sonora e contextual; Prompt 14 não iniciado | G7 |
+| `[~]` | 7 | 14–15 | Prompt 14 implementado tecnicamente; Prompt 15 autorizado; validação integrada acumulada | G7 aberto |
 | `[ ]` | 8 | 16 | primeiro ciclo emocional completo | G8 |
 | `[ ]` | 9 | 17–18 | acessibilidade e desempenho mobile | G9 |
 | `[ ]` | 10 | 19 | regressão, CI e manutenção | G10 |
@@ -73,7 +75,7 @@ Um bloco só muda para concluído quando:
 - documentos estão atualizados;
 - gate foi aprovado por Sam.
 
-O commit, quando autorizado, ocorre somente depois da aprovação humana e não é pré-condição para registrar o estado aprovado.
+No modo acelerado aprovado em 2026-08-10, cada prompt pode receber um commit de checkpoint técnico após verificações automáticas e documentação, sem representar aprovação humana ou de gate. Validações repetitivas de G7, G8 e G9 ficam acumuladas para checkpoint integrado; riscos de dados, migração destrutiva, backup/restauração, exclusão ou abertura nativa continuam exigindo validação própria.
 
 Excepcionalmente, o Bloco 5 pode iniciar com G4 aberto: a implementação e a validação funcional web do Bloco 4 foram concluídas, enquanto o uso real prolongado continua como pendência explícita e não bloqueadora. Isso não equivale a aprovar G4.
 

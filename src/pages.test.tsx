@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
-import { ApplicationError } from "./application";
+import { ApplicationError, type AudioPort } from "./application";
 import type { BookEntry } from "./domain";
 import type { LibraryInteraction } from "./features/library-visual/contracts";
 import { LibraryPage, type LibraryPageApplication } from "./pages";
@@ -41,9 +41,13 @@ function LocationProbe() {
   return <output aria-label="URL atual">{location.pathname}</output>;
 }
 
-function renderLibrary(result: Promise<readonly BookEntry[]>) {
+function renderLibrary(
+  result: Promise<readonly BookEntry[]>,
+  audio?: Pick<AudioPort, "emit">,
+) {
   const execute = vi.fn(() => result);
   const application: LibraryPageApplication = {
+    audio,
     queries: { listBookEntries: { execute } },
   };
   render(
@@ -56,6 +60,22 @@ function renderLibrary(result: Promise<readonly BookEntry[]>) {
 }
 
 describe("Página Biblioteca", () => {
+  it("emite intenções distintas para os três objetos interativos", async () => {
+    const emit = vi.fn();
+    const audio: Pick<AudioPort, "emit"> = { emit };
+    renderLibrary(Promise.resolve([book]), audio);
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+
+    act(() => visualHostMock.interaction?.({ type: "ShelfSelected" }));
+    act(() => visualHostMock.interaction?.({ type: "LibrarianSelected" }));
+    act(() => visualHostMock.interaction?.({ type: "CreatureSelected" }));
+
+    expect(emit).toHaveBeenCalledTimes(3);
+    expect(emit).toHaveBeenNthCalledWith(1, { type: "ShelfSelected" });
+    expect(emit).toHaveBeenNthCalledWith(2, { type: "LibrarianSelected" });
+    expect(emit).toHaveBeenNthCalledWith(3, { type: "CreatureSelected" });
+  });
+
   it("mostra loading antes da consulta e abre a visualização com biblioteca vazia", async () => {
     let resolve: (books: readonly BookEntry[]) => void = () => undefined;
     const execute = renderLibrary(

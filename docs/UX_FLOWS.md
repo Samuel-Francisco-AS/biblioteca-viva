@@ -27,7 +27,7 @@ No mobile, usar navegação inferior. Em telas maiores, adaptar sem alterar a hi
 Abrir app
 → mensagem curta de proposta
 → explicar que dados ficam no aparelho
-→ solicitar primeiro gesto para habilitar áudio, sem obrigar
+→ o primeiro gesto válido em React ou Phaser pode habilitar áudio, sem autoplay
 → apresentar biblioteca quase vazia
 → oferecer ação “Cadastrar primeiro livro”
 ```
@@ -218,3 +218,24 @@ Detalhe do livro
 ```
 
 Falha mantém o detalhe e a confirmação utilizáveis, sem remover o livro visualmente. A exclusão não existe na listagem, na cena Phaser, por gesto ou sem confirmação.
+
+## 15. Áudio e preferências
+
+```text
+abrir aplicativo sem autoplay
+→ primeiro pointerdown global ou keydown válido, em React ou Phaser
+→ inicializar AudioPort uma única vez
+→ se Biblioteca estiver ativa, iniciar uma música
+→ navegar, tocar estante/bibliotecária/criatura ou concluir e emitir intenções discretas
+→ receber sempre feedback React/visual equivalente
+```
+
+```text
+Configurações
+→ alterar volume da música, volume dos efeitos ou mute
+→ aplicar imediatamente à sessão
+→ persistir na tabela settings
+→ recarregar/reabrir com a mesma preferência
+```
+
+Ao perder visibilidade ou receber `appStateChange` inativo, o serviço interrompe música e efeitos. Ao retornar, retoma somente a música desejada e nunca reproduz efeitos acumulados. Sair da Biblioteca interrompe sua música; retornar solicita uma única instância. Falha de backend, arquivo ou persistência sonora degrada para silêncio e não bloqueia os demais fluxos.

@@ -10,6 +10,23 @@ import {
   createApplication,
   type ApplicationRuntime,
 } from "./createApplication";
+import type { AudioBackend, AudioPlayback } from "../infrastructure";
+
+function fakeAudioBackend(play = vi.fn()): AudioBackend {
+  return {
+    dispose: vi.fn(),
+    initialize: vi.fn(() => Promise.resolve(true)),
+    play: (cue, volume) => {
+      play(cue, volume);
+      const playback: AudioPlayback = {
+        completed: new Promise<void>(() => undefined),
+        setVolume: vi.fn(),
+        stop: vi.fn(),
+      };
+      return Promise.resolve(playback);
+    },
+  };
+}
 
 const databases = new Set<string>();
 const runtimes: ApplicationRuntime[] = [];
@@ -27,6 +44,43 @@ afterEach(async () => {
 });
 
 describe("createApplication", () => {
+  it("conecta conclusão pós-commit ao efeito e recarrega preferências", async () => {
+    const name = databaseName("audio-composition");
+    const play = vi.fn();
+    const first = await createApplication({
+      audioBackend: fakeAudioBackend(play),
+      databaseName: name,
+    });
+    await first.audio.initialize();
+    await first.audio.setMusicVolume(0.22);
+    await first.audio.setEffectsVolume(0.73);
+    await first.audio.setMuted(false);
+    const book = await first.commands.createBookEntry.execute({
+      title: "Conclusão fictícia",
+      status: "in_progress",
+    });
+    await first.commands.changeBookStatus.execute({
+      id: book.id,
+      status: "completed",
+    });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(play.mock.calls.at(-1)?.[0]).toMatchObject({
+      id: "milestone.book-completed",
+    });
+    first.close();
+
+    const second = await createApplication({
+      audioBackend: fakeAudioBackend(),
+      databaseName: name,
+    });
+    runtimes.push(second);
+    expect(second.audio.preferences()).toEqual({
+      effectsVolume: 0.73,
+      musicVolume: 0.22,
+      muted: false,
+    });
+  });
+
   it("recusa criação e backup em contexto inseguro sem gravar livros", async () => {
     const runtime = await createApplication({
       databaseName: databaseName("unsafe-context"),

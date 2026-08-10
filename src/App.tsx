@@ -16,6 +16,7 @@ import {
   NewBookPage,
 } from "./features/entry-editor/EntryEditorPages";
 import "./styles.css";
+import { useAudioExperience } from "./useAudioExperience";
 
 function NotFoundPage() {
   return (
@@ -57,6 +58,7 @@ export function App({ application, diagnostics }: AppProps) {
         : "Página não encontrada");
 
   useAndroidBackButton();
+  useAudioExperience(application?.audio);
 
   useEffect(() => {
     if (previousPathRef.current !== location.pathname) {

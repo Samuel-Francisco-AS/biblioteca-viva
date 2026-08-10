@@ -1,5 +1,6 @@
 import type { BookEntry, DomainEvent, Note, Quote } from "../domain";
 import type { Activity } from "./activities";
+export type { AudioPort, AudioSettingsPort } from "./audio";
 
 export interface LibraryEntryRepository {
   getById(id: string): Promise<BookEntry | undefined>;

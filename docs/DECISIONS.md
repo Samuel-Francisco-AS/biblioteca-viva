@@ -338,4 +338,37 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 
 **Consequências:** esta rodada não implementa fullscreen, bottom sheet, câmera, navegação ou reorganização geral e não antecipa Bloco 7 ou Prompt 14.
 
+## D-032 — Web Audio nativo atrás de AudioPort
+
+- **Data:** 2026-08-06
+- **Status:** aceita; fallback procedural sonoro substituído por D-033
+
+**Contexto:** o Prompt 14 precisa de um loop musical, três efeitos curtos, volumes independentes, mute, desbloqueio por gesto e lifecycle web + Capacitor. O repositório não possui assets sonoros finais licenciados. Howler.js ofereceria uma API conveniente e compatibilidade adicional, mas acrescentaria dependência e outro lifecycle sobre capacidades já presentes no Chromium/WebView Android.
+
+**Decisão:** usar Web Audio nativo atrás de `AudioPort`, com um `AudioService` proprietário da intenção musical, handles e preferências, e um `BrowserAudioBackend` substituível. Manter cues em manifesto com IDs/categorias estáveis, lista de fontes intercambiável e fallback procedural interno enquanto não houver arquivos licenciados. Persistir `audio.preferences.v1` na tabela `settings` v2 existente, sem migração. Centralizar gesto, navegação e lifecycle em um hook React; transformar a interação Phaser em intenção somente no host React; e ligar `LibraryEntryCompleted` ao áudio no composition root depois do commit.
+
+**Consequências:** nenhuma dependência, plugin, permissão ou arquivo de mídia foi adicionado. O contexto só nasce após gesto; falhas degradam para síntese ou silêncio; mute e pause interrompem canais; e a música não duplica em retomada/remontagem. Os fallbacks procedurais são provisórios, o loop reinicia após resume e os testes físicos no Moto G06 continuam obrigatórios. Howler.js permanece alternativa futura somente se testes reais demonstrarem lacuna concreta; a troca fica contida no backend atrás da porta.
+
+## D-033 — WAVs próprios e silêncio como fallback sonoro
+
+- **Data:** 2026-08-07
+- **Status:** aceita
+
+**Contexto:** a primeira validação física do Prompt 14 reprovou o drone procedural como música, o timbre dos efeitos, o unlock percebido como dependente do canvas e a ausência de sons na bibliotecária/criatura. A cadeia `AudioPort → AudioService → manifesto → WebAudioBackend` e volumes/lifecycle funcionaram e não devem ser substituídos.
+
+**Decisão:** gerar local e deterministicamente seis WAVs PCM mono com Node padrão: uma progressão harmônica curta e cinco efeitos suaves. O manifesto passa a possuir caminhos reais para música, interface, estante, bibliotecária, criatura e conclusão. Toda falha de arquivo degrada para playback silencioso; remover osciladores audíveis do backend. Capturar o primeiro `pointerdown` em `document` ou `keydown` não modificador, remover os listeners antes de chamar a inicialização idempotente e manter Phaser restrito a interações tipadas.
+
+**Consequências:** o APK cresce aproximadamente 0,8 MiB antes de compressão ZIP, sem dependência, plugin, permissão ou licença externa. WAV favorece geração auditável e substituição simples, mas poderá ser comprimido após aprovação artística. Música ausente nunca volta ao drone. A limitação de reiniciar o loop após resume permanece. Prompt 14 e G7 continuam abertos até nova validação humana.
+
+## D-034 — Checkpoints técnicos e validação humana integrada
+
+- **Data:** 2026-08-10
+- **Status:** aceita
+
+**Contexto:** o protótipo já possui ampla cobertura automática e builds Android frequentes. Repetir validações manuais completas a cada prompt tornou-se custo operacional sem benefício proporcional para mudanças locais e reversíveis. A primeira validação humana do Prompt 14 permanece reprovada; sua correção passou tecnicamente, mas ainda não recebeu aprovação humana.
+
+**Decisão:** adotar modo acelerado. Cada prompt continua exigindo testes relevantes, formatação, lint, typecheck, build web, barreiras arquiteturais, verificação Git e Android quando o código for empacotado. Após esses checks e documentação honesta, um commit pode registrar checkpoint técnico sem aprovar prompt ou gate. Validações manuais repetitivas de navegador e Android para G7, G8 e G9 serão acumuladas em checkpoint integrado próximo ao final do protótipo.
+
+**Consequências:** Prompt 14 pode receber checkpoint técnico e o Prompt 15 pode começar, enquanto Prompt 14 e G7 permanecem abertos. O mesmo vale para avanço técnico posterior rumo ao Prompt 16 após revisão automática/documental. Itens manuais não executados continuam pendentes. A política não adia validação em mudanças com risco de perda/corrupção, migração destrutiva, backup/restauração, exclusão de dados ou alteração nativa capaz de impedir a abertura.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

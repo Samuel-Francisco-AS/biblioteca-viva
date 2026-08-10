@@ -1,4 +1,5 @@
 export * from "./activities";
+export * from "./audio";
 export * from "./backup";
 export * from "./errors";
 export * from "./deleteBookEntry";

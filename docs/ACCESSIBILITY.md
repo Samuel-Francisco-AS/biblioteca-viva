@@ -145,3 +145,16 @@ A validação manual com teclado, leitor de estrutura, zoom, larguras móveis e 
 - `prefers-reduced-motion` elimina os tweens repetitivos e preserva a sala estática completa;
 - conclusão combina lombada/marcador dourado com contagem e descrição textual, sem depender somente de cor;
 - o canvas não é declarado operável por teclado; ações essenciais e conteúdo textual pertencem ao React.
+
+## 14. Controles sonoros do Prompt 14
+
+- sliders HTML nativos com labels que anunciam nome e porcentagem atual;
+- mute como checkbox rotulado, sem depender de ícone ou cor;
+- ordem natural de teclado, foco visível e alvo mínimo preservados pelo shell;
+- alteração imediata em memória e persistência assíncrona com erro textual;
+- controles continuam operáveis quando backend ou asset está indisponível;
+- nenhum autoplay: o primeiro `pointerdown` em qualquer parte do documento ou `keydown` válido inicializa o backend, seja a origem React ou Phaser;
+- mudança de rota mantém título, foco e estado ativo; estante, bibliotecária e criatura mantêm seus painéis React como equivalentes visuais; conclusão mantém mensagem e projeção visual;
+- asset ausente degrada para silêncio sem bloquear controles, navegação ou feedback textual;
+- pause descarta efeitos em curso e não acumula respostas para o retorno;
+- validação manual com leitor de tela, zoom, fone e aparelho físico permanece pendente.

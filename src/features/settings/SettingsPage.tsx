@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 
 import {
+  AUDIO_PREFERENCE_DEFAULTS,
   ApplicationError,
   BackupError,
   MAX_BACKUP_BYTES,
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export interface SettingsApplication {
+  readonly audio?: ApplicationRuntime["audio"];
   readonly appVersion: string;
   readonly platform?: ApplicationRuntime["platform"];
   readonly backup: ApplicationRuntime["backup"];
@@ -110,6 +112,10 @@ export function SettingsPage({ application, diagnostics }: Props) {
   const [reading, setReading] = useState(false);
   const [importing, setImporting] = useState(false);
   const [restored, setRestored] = useState<BackupCounts>();
+  const [audioPreferences, setAudioPreferences] = useState(
+    () => application?.audio?.preferences() ?? AUDIO_PREFERENCE_DEFAULTS,
+  );
+  const [audioPreferenceError, setAudioPreferenceError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const confirmationRef = useRef<HTMLElement>(null);
   const exportInProgressRef = useRef(false);
@@ -249,8 +255,109 @@ export function SettingsPage({ application, diagnostics }: Props) {
     }
   }
 
+  async function updateMusicVolume(value: number) {
+    setAudioPreferences((current) => ({ ...current, musicVolume: value }));
+    setAudioPreferenceError("");
+    try {
+      await application?.audio?.setMusicVolume(value);
+    } catch {
+      setAudioPreferenceError(
+        "O volume foi aplicado nesta sessão, mas não pôde ser persistido.",
+      );
+    }
+  }
+
+  async function updateEffectsVolume(value: number) {
+    setAudioPreferences((current) => ({ ...current, effectsVolume: value }));
+    setAudioPreferenceError("");
+    try {
+      await application?.audio?.setEffectsVolume(value);
+    } catch {
+      setAudioPreferenceError(
+        "O volume foi aplicado nesta sessão, mas não pôde ser persistido.",
+      );
+    }
+  }
+
+  async function updateMuted(muted: boolean) {
+    setAudioPreferences((current) => ({ ...current, muted }));
+    setAudioPreferenceError("");
+    try {
+      await application?.audio?.setMuted(muted);
+    } catch {
+      setAudioPreferenceError(
+        "A preferência foi aplicada nesta sessão, mas não pôde ser persistida.",
+      );
+    }
+  }
+
   return (
     <div className="settings-stack">
+      <section className="content-card" aria-labelledby="audio-settings-title">
+        <p className="eyebrow">Experiência sonora</p>
+        <h2 id="audio-settings-title">Áudio</h2>
+        <p>
+          O som só começa depois de uma interação permitida. Música e efeitos
+          pausam quando o aplicativo fica em segundo plano.
+        </p>
+        <div className="audio-settings-controls">
+          <div className="form-field">
+            <label htmlFor="music-volume">
+              Volume da música: {Math.round(audioPreferences.musicVolume * 100)}
+              %
+            </label>
+            <input
+              id="music-volume"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value={Math.round(audioPreferences.musicVolume * 100)}
+              disabled={!application?.audio}
+              onChange={(event) =>
+                void updateMusicVolume(Number(event.target.value) / 100)
+              }
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="effects-volume">
+              Volume dos efeitos:{" "}
+              {Math.round(audioPreferences.effectsVolume * 100)}%
+            </label>
+            <input
+              id="effects-volume"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value={Math.round(audioPreferences.effectsVolume * 100)}
+              disabled={!application?.audio}
+              onChange={(event) =>
+                void updateEffectsVolume(Number(event.target.value) / 100)
+              }
+            />
+          </div>
+          <label className="audio-mute-control" htmlFor="audio-muted">
+            <input
+              id="audio-muted"
+              type="checkbox"
+              checked={audioPreferences.muted}
+              disabled={!application?.audio}
+              onChange={(event) => void updateMuted(event.target.checked)}
+            />
+            Silenciar música e efeitos
+          </label>
+        </div>
+        <p className="field-help">
+          A Biblioteca continua totalmente utilizável sem áudio ou caso algum
+          som esteja indisponível.
+        </p>
+        {audioPreferenceError && (
+          <p className="field-error" role="alert">
+            {audioPreferenceError}
+          </p>
+        )}
+      </section>
       <section className="content-card" aria-labelledby="local-info-title">
         <p className="eyebrow">Dados neste dispositivo</p>
         <h2 id="local-info-title">Informações locais</h2>
