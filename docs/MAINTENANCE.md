@@ -1,104 +1,72 @@
 # Manutenção e evolução
 
-## 1. Objetivo
+## 1. Rotina base
 
-Evitar que o protótipo funcional se torne uma base rígida ou uma coleção de remendos produzidos por prompts sucessivos.
+Leia `STATUS`, `AGENTS`, o documento da área e `DECISIONS`. Instale com `npm ci`, mantenha o lockfile e faça mudanças verticais pequenas. Não atualize React, Vite, Phaser, Capacitor, Dexie e o banco no mesmo lote.
 
-## 2. Regra de mudança vertical
+## 2. Conteúdo e diálogos
 
-Uma expansão entra como fatia completa:
+Nova fala no contexto existente:
 
-- domínio;
-- caso de uso;
-- persistência;
-- interface React;
-- projeção visual quando aplicável;
-- conteúdo;
-- testes;
-- migração;
-- documentação.
+1. crie a chave em `src/content/locales/pt-BR.ts`;
+2. adicione a definição em `src/content/prototypeContent.ts` com ID estável, personagem, evento, prioridade, `once` e cooldown;
+3. valide referências em `src/content/schemas.ts` e execute `src/content/content.test.ts` e `src/application/dialogue.test.ts`.
 
-Não adicionar campo no banco e “resolver o resto depois” sem registrar dívida e prazo.
+Novo contexto exige primeiro um fato estruturado realmente conhecido. Amplie os contratos em `src/application/dialogue.ts`, forneça fallback, integre pela aplicação/React e teste cooldown/once. Não envie título, autor ou anotações ao selector; Phaser continua emitindo somente interação tipada.
 
-## 3. Dependências
+## 3. Áudio
 
-- atualizar em lotes pequenos;
-- ler notas de versão;
-- executar suíte e APK;
-- evitar salto simultâneo de React, Phaser, Capacitor e banco;
-- registrar mudança estrutural;
-- manter lockfile;
-- remover dependência não usada.
+Adicione ou substitua arquivos em `public/audio/`, atualize `src/infrastructure/audio/audioManifest.ts`, o gerador determinístico quando aplicável e `docs/ASSET_REGISTRY.md`. Execute `npm run audio:check` e testes de backend/serviço. Ausência de asset degrada para silêncio. Para duplicação, confira `AudioService.diagnostics()`, `useAudioExperience.ts`, música desejada, players ativos e eventos visibility/Capacitor; reproduza ciclos de entrada, pause, resume, saída e dispose antes de mudar a arquitetura.
 
-## 4. Banco e migrações
+## 4. Decorações e marcos
 
-- nunca editar migração publicada para fingir que sempre esteve correta;
-- adicionar nova versão;
-- manter fixtures antigas;
-- testar atualização e restauração;
-- garantir que versão anterior de backup tenha política clara;
-- preservar exportação antes de migração arriscada.
+Decoração: registre ID e recompensa em `src/content/prototypeContent.ts`, valide referências, projete somente o ID em `LibraryViewModel` e desenhe fallback procedural na cena. Registre asset/licença.
 
-## 5. Conteúdo
+Marco: acrescente definição declarativa ao conteúdo, condição suportada pelo `MilestoneEngine` e teste domínio, transação, concorrência e idempotência. `DexieMilestoneStore` usa chave estável e `add`; evento/reação somente após commit. Se a forma persistida mudar, siga também migração e backup.
 
-- IDs permanecem estáveis;
-- texto pode mudar sem alterar lógica;
-- remoção de decoração ou marco precisa de fallback;
-- manifests possuem schema e teste;
-- assets ausentes não quebram cena.
+## 5. Dexie e backup
 
-## 6. Refatoração
+Migração:
 
-Refatorar quando houver evidência:
+1. não edite versões publicadas em `src/infrastructure/database/database.ts`/`schema.ts`;
+2. adicione nova versão e migração aditiva;
+3. valide toda leitura;
+4. crie fixtures de versão anterior e testes de upgrade/reabertura/rollback;
+5. atualize `DATA_MODEL`, `DECISIONS`, backup e checklist Android.
 
-- mesma regra duplicada;
-- camada violada;
-- teste difícil por acoplamento;
-- mudança recorrente exige editar muitos lugares;
-- arquivo não pode ser explicado;
-- desempenho medido exige mudança.
+Formato de backup: altere contratos em `src/application/backup.ts`, codec em `src/infrastructure/backup/backupCodec.ts` e store em `dexieBackupStore.ts`. Preserve versões anteriores quando houver política segura, checksum canônico, inspeção sem escrita, limite de 10 MiB e restauração transacional. Atualize fixtures/testes v1/v2 e documentação.
 
-Não refatorar para seguir moda, criar “clean architecture” cerimonial ou satisfazer um agente inquieto.
+Para restaurar, use Configurações → Arquivo de backup → inspecionar → criar backup de segurança → substituir. Nunca limpe dados físicos antes de confirmar cópia externa. Em erro de persistência, registre apenas código sanitizado; verifique suporte/origem, schema, validação na leitura, transação e `navigator.storage.persist()`, sem copiar conteúdo pessoal.
 
-## 7. Documentação
+## 6. Phaser e performance
 
-Ao concluir um prompt:
+Confirme primeiro `npm run performance:report`. Para regressão visual, verifique import lazy em `LibraryVisualHost.tsx`, uma instância/canvas, observer/listener, `InitialLibraryScene.shutdown`, zonas, tweens e resize. Use o build diagnóstico e os testes de 20 ciclos. Não force context loss ou split manual sem evidência. Phaser nunca recebe entidades completas.
 
-- atualizar `STATUS.md`;
-- atualizar `ROADMAP.md` se estado mudou;
-- registrar decisão relevante;
-- atualizar modelo/UX/testes afetados;
-- adicionar changelog quando comportamento observável mudou;
-- não duplicar a mesma informação em três documentos.
+## 7. E2E e CI
 
-## 8. Débito técnico
+```bash
+npx playwright install chromium
+npm run build
+npm run test:e2e
+```
 
-Todo débito aceito precisa de:
+`playwright.config.ts` inicia `vite preview` em `127.0.0.1:4173`. `e2e/fixtures.ts` limpa apenas IndexedDB dessa origem via CDP. Fixtures são pequenas e fictícias. Falha gera trace em `test-results/`; reproduza pelo nome do teste e use `npx playwright show-trace <arquivo>`.
 
-- descrição;
-- motivo;
-- impacto;
-- gatilho para resolver;
-- gate máximo até o qual pode permanecer;
-- responsável, normalmente Sam.
+`.github/workflows/ci.yml` usa Node 22, `npm ci`, Chromium, formatação, lint, tipos, Vitest, áudio, build, relatório de performance e E2E. Workflow hospedado só é comprovado após push. Falha de CI deve ser reproduzida no mesmo comando, sem relaxar check. Android permanece local para evitar SDK/Gradle na CI inicial.
 
-Débito sem gatilho é só abandono com roupa social.
+## 8. APK e release futura
 
-## 9. Backup do projeto
+```bash
+npm run android:sync
+npm run android:build:debug
+```
 
-- repositório remoto;
-- tags de gates relevantes;
-- keystore em local separado;
-- assets-fonte protegidos;
-- documentos no Git;
-- backups pessoais nunca no repositório.
+O APK fica em `android/app/build/outputs/apk/debug/app-debug.apk`. Registre tamanho, SHA-256 e integridade ZIP; não instale ou assine sem escopo. Release futura exige `docs/ANDROID_RELEASE.md`, checklist G11, keystore fora do Git, versão/changelog, atualização sobre build assinado anterior e testes físicos completos.
 
-## 10. Continuidade
+## 9. Débitos classificados
 
-O projeto é considerado manutenível quando uma nova sessão consegue:
+Antes de G11: checkpoint humano G4/G7–G10, nova restauração física, identidade/ícone/splash, revisão de assets/licenças, assinatura e checklist release.
 
-1. ler `STATUS.md`;
-2. localizar a decisão e o prompt;
-3. executar testes;
-4. entender o diff;
-5. continuar sem depender da conversa anterior.
+Pós-protótipo: política de edição/exclusão de notas/citações, retenção de atividades, SQLite somente se gatilhos documentados ocorrerem, outros tipos/salas/conta.
+
+Opcionais condicionados a evidência: preservar offset da música, comprimir WAVs, dividir o chunk lazy do Phaser, segunda configuração Android. Visual procedural e fallback local são decisões deliberadas até revisão artística, não defeitos automáticos.

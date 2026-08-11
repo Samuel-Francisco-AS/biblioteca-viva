@@ -901,3 +901,49 @@ O tempo de criação e FPS exibidos no painel são observacionais; milissegundos
 - [ ] segunda configuração Android, se disponível.
 
 Prompt 18 é checkpoint técnico, não aprovação. Prompt 14–18 e G7–G9 permanecem abertos.
+
+## 21. Prompt 19 — suíte crítica, E2E e CI
+
+### Auditoria
+
+Os 521 testes Vitest existentes cobrem criação/edição/detalhe, progresso/status/conclusão, notas/citações/exclusão, busca/filtros/ordenação/Arquivo, transações, schema v1→v3 e v2→v3, backup v1/v2/restauração/adulteração, preferências, projeção/bridge/lifecycle, áudio, diálogo/cooldown/once, marcos/decoração, acessibilidade e performance estrutural. Não foram adicionados unitários duplicados.
+
+A lacuna real era o atravessamento da aplicação em navegador com IndexedDB, download/upload e recarga. Quatro testes Playwright Chromium cobrem:
+
+1. cadastro → detalhe → progresso → nota → citação → conclusão → reação textual/marco → recarga;
+2. múltiplos livros → busca por autor/título → filtro/status → ordenação → detalhe/retorno → Arquivo/retorno;
+3. backup web real → download v2 → arquivo inválido → inspeção → backup de segurança → replace → preferências/marco/dados após recarga;
+4. rota desconhecida e ID inexistente mantendo caminhos convencionais.
+
+Cada teste limpa somente o IndexedDB da origem `127.0.0.1:4173` via CDP antes do cenário. Não há endpoint de reset no produto. Fixtures contêm apenas nomes/textos fictícios; v1/v2 continuam cobertos de forma mais adequada pelo codec e banco em Vitest.
+
+CI em `.github/workflows/ci.yml` usa Ubuntu 24.04, Node 22, `npm ci`, Chromium e permissões somente de leitura. Executa format check, lint, typecheck, 521 testes, áudio, build, relatório do manifesto e quatro E2E. Android permanece local: configurar SDK/JDK/Gradle na CI inicial aumentaria custo e fragilidade sem cobrir comportamento físico. Workflow configurado; execução hospedada depende de push posterior.
+
+Em 2026-08-11, a cadeia local completa passou: formatação, `format:check`, lint, typecheck, 521 testes em 57 arquivos, `audio:check`, `performance:report`, build web, quatro E2E Chromium, ausência do painel diagnóstico no build normal, `android:sync`, `android:build:debug` e `git diff --check`. Uma cópia temporária formada somente pelos arquivos do repositório reproduziu `npm ci` (332 pacotes), formatação, lint, typecheck, os 521 testes, build e relatório sem reutilizar `node_modules`. O APK debug não instalado tem 7.526.051 bytes, SHA-256 `318a5cc16226e8f493b5cadc15c69e872aa50ea013a345fcbb81553ce36dbe38` e integridade ZIP confirmada.
+
+### Checklist humana integrada — única sequência operacional
+
+As checklists de prompts anteriores permanecem como histórico de origem. A sequência abaixo as consolida e evita repetir a mesma ação; nenhum item está aprovado.
+
+1. **Preparação e G4**
+   - [ ] instalar o APK técnico atual por cima, confirmar dados e criar backup externo verificável;
+   - [ ] manter ao menos dez livros reais e usar CRUD, busca, Arquivo e Configurações por alguns dias sem ferramentas de desenvolvimento;
+2. **G7 — som e conteúdo**
+   - [ ] avaliar música e efeitos em alto-falante/fone, volumes e mute;
+   - [ ] interagir com estante, bibliotecária e criatura; avaliar falas, repetição, cooldown e naturalidade;
+   - [ ] alternar rotas/background repetidamente sem áudio duplicado ou explosão sonora;
+3. **G8 — ciclo emocional e recuperação**
+   - [ ] cadastrar livro, observar estante, atualizar progresso e concluir;
+   - [ ] confirmar som, fala, aviso e luminária uma única vez, inclusive com mute/reduced motion;
+   - [ ] fechar/reabrir e confirmar persistência; exportar e restaurar backup físico novamente sem duplicar marco;
+4. **G9 — qualidade mobile**
+   - [ ] usar 30 minutos offline no Moto G06, alternando rotas, áudio e background;
+   - [ ] observar FPS/frame pacing, memória/estabilidade perceptível, temperatura e pressão de outros apps;
+   - [ ] testar toque, scroll, rotação quando aplicável, retorno, tela preta/context loss e segunda configuração Android se disponível;
+   - [ ] testar texto maior, alto contraste, reduced motion, teclado/foco, alternativa textual e TalkBack quando possível;
+5. **G10 — revisão final do checkpoint**
+   - [ ] confirmar toda automação e E2E verdes, APK debug e documentação;
+   - [ ] revisar débitos, CI configurada, README/AGENTS/MAINTENANCE e ausência de dados pessoais;
+   - [ ] confirmar restauração física, uso real sem perda e decidir explicitamente cada gate.
+
+Prompt 19 tecnicamente concluído não aprova G10. G4 e G7–G10 permanecem abertos.

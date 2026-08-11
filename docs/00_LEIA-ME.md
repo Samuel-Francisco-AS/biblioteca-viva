@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> Estado atual em 2026-08-10: Gates G0 a G3, G5 e G6 aprovados; G4 e G7–G9 permanecem abertos; Prompts 14–17 estão tecnicamente implementados, com validações humanas acumuladas para checkpoint integrado; versão `0.2.0-alpha.1`.
+> Estado atual em 2026-08-11: Gates G0 a G3, G5 e G6 aprovados; G4 e G7–G10 permanecem abertos; Prompts 14–19 estão tecnicamente implementados, com validações humanas acumuladas para checkpoint integrado; versão `0.2.0-alpha.1`.
 
 ## 1. Função desta documentação
 
@@ -91,8 +91,9 @@ Ela está dividida por frequência de mudança:
 - Blocos 5 e 6 concluídos após validação de backup, restauração e biblioteca visual no Moto G06;
 - Bloco 7 possui Prompts 14 e 15 tecnicamente implementados; a primeira validação humana do Prompt 14 foi reprovada e a revalidação, junto à validação do Prompt 15, foi acumulada sem aprovar G7;
 - Bloco 8 possui o Prompt 16 tecnicamente implementado com quatro marcos idempotentes e o primeiro desbloqueio; G8 permanece aberto;
-- Bloco 9 possui o Prompt 17 tecnicamente implementado com preferências e equivalentes React; Prompt 18 não foi iniciado e G9 permanece aberto;
-- validações manuais repetitivas de G7, G8 e G9 serão agrupadas em checkpoint integrado próximo ao final do protótipo, sem marcar itens não executados como aprovados;
+- Bloco 9 possui Prompts 17 e 18 tecnicamente implementados com acessibilidade, preferências e perfil estrutural; G9 permanece aberto;
+- Bloco 10 possui Prompt 19 tecnicamente implementado com E2E web, CI e manutenção; G10 permanece aberto;
+- validações humanas de G4 e G7–G10 serão agrupadas em checkpoint integrado próximo ao final do protótipo, sem marcar itens não executados como aprovados;
 - repositório Git inicializado na branch `main`;
 - stack e arquitetura aprovadas;
 - APK diagnóstico interno validado no Gate G3; APK release assinado permanece pendente;

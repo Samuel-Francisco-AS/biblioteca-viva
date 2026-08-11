@@ -9,10 +9,10 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked.map((config) => ({
     ...config,
-    files: ["src/**/*.{ts,tsx}", "*.config.ts"],
+    files: ["src/**/*.{ts,tsx}", "e2e/**/*.ts", "*.config.ts"],
   })),
   {
-    files: ["src/**/*.{ts,tsx}", "*.config.ts"],
+    files: ["src/**/*.{ts,tsx}", "e2e/**/*.ts", "*.config.ts"],
     languageOptions: {
       ecmaVersion: "latest",
       globals: globals.browser,
@@ -34,9 +34,15 @@ export default tseslint.config(
     },
   },
   {
-    files: ["*.config.{js,ts}"],
+    files: ["e2e/**/*.ts", "*.config.{js,ts}"],
     languageOptions: {
       globals: globals.node,
+    },
+  },
+  {
+    files: ["e2e/**/*.ts"],
+    rules: {
+      "react-hooks/rules-of-hooks": "off",
     },
   },
 );

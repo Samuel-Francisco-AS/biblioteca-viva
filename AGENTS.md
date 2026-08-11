@@ -1,149 +1,75 @@
-# AGENTS.md — Regras para agentes e Codex
+# AGENTS.md — Regras de contribuição automatizada
 
-Este arquivo governa qualquer tarefa automatizada no repositório Biblioteca Viva.
+## Antes de alterar
 
-## 1. Antes de alterar qualquer arquivo
+1. Leia `docs/STATUS.md` e `docs/00_LEIA-ME.md`.
+2. Leia o documento da área e a decisão mais recente em `docs/DECISIONS.md`.
+3. Confira `docs/ROADMAP.md` e o prompt ativo em `docs/EXECUTION_PLAN.md`.
+4. Inspecione código, testes e scripts reais; documentação não substitui evidência.
+5. Se houver contradição, preserve a decisão mais recente e pare a parte conflitante.
 
-1. Leia `docs/STATUS.md`.
-2. Leia `docs/00_LEIA-ME.md`.
-3. Leia o documento específico da área alterada.
-4. Inspecione o código e os scripts reais; não presuma APIs, pastas ou comandos.
-5. Confirme que a tarefa corresponde ao bloco e prompt ativos.
+## Arquitetura
 
-## 2. Fonte de verdade por assunto
+- dependências apontam para dentro;
+- `domain` não importa React, Phaser, Dexie, Capacitor, DOM ou browser;
+- `application` orquestra domínio e portas;
+- `infrastructure` implementa portas e valida dados externos antes de devolvê-los;
+- React e Phaser não acessam Dexie;
+- Phaser recebe `LibraryViewModel`, emite interações tipadas e não decide negócio;
+- dados persistidos são a fonte de verdade;
+- entidade/anotação, atividade e marco aplicável pertencem à mesma transação; eventos saem somente após commit;
+- conteúdo recorrente usa catálogos/manifests validados.
 
-- estado atual: `docs/STATUS.md`;
-- visão: `docs/VISION.md`;
-- escopo vigente: `docs/PRODUCT.md`;
-- arquitetura e dependências: `docs/ARCHITECTURE.md`;
-- modelo de dados: `docs/DATA_MODEL.md`;
-- UX: `docs/UX_FLOWS.md`;
-- execução: `docs/ROADMAP.md` e `docs/EXECUTION_PLAN.md`;
-- testes: `docs/TEST_PLAN.md`;
-- segurança e privacidade: `docs/SECURITY.md` e `docs/PRIVACY.md`;
-- acessibilidade: `docs/ACCESSIBILITY.md`;
-- arte, áudio e conteúdo: `docs/ART_DIRECTION.md`, `docs/ASSET_REGISTRY.md`, `docs/AUDIO.md` e `docs/CONTENT_GUIDE.md`;
-- decisões: `docs/DECISIONS.md`.
+## Escopo e qualidade
 
-Havendo contradição, pare a alteração conflitante, relate o ponto e preserve a decisão mais recente registrada em `docs/DECISIONS.md`.
+- implemente apenas o pedido e não antecipe blocos;
+- não crie conta, backend, sincronização, outros tipos de mídia ou múltiplas salas no protótipo;
+- não faça refatoração global, abstração sem uso, diretório vazio ou dependência preventiva;
+- preserve TypeScript estrito; não use `any`, `@ts-ignore`, casts cegos ou lint desativado para ocultar erro;
+- erros não são ignorados silenciosamente;
+- mudança de schema exige migração e teste; mudança de comportamento exige regressão e documentação.
 
-## 3. Limites de escopo
+## Dados, segurança e privacidade
 
-- Faça apenas o trabalho solicitado.
-- Não antecipe blocos futuros.
-- Não reestruture o projeto inteiro para resolver uma tarefa local.
-- Não crie abstrações sem uso atual ou próximo já aprovado.
-- Não adicione dependências “por precaução”.
-- Não crie diretórios vazios para simular arquitetura.
-- Não implemente conta, backend, sincronização, filmes, séries, estudos, IA ou múltiplas salas no protótipo.
+- nunca versione segredo, keystore, senha, token, backup pessoal ou exportação real;
+- `VITE_*` não é segredo;
+- fixtures e E2E usam conteúdo claramente fictício;
+- logs não contêm títulos, autores, notas, citações, diálogos, backup ou caminho sensível;
+- valide todo arquivo externo e mantenha permissões Android mínimas;
+- diagnósticos permanecem restritos a DEV/build interno e sem conteúdo pessoal.
 
-## 4. Regras de arquitetura
+## Testes e comandos
 
-- Dependências apontam para dentro.
-- `domain` não importa React, Phaser, Dexie, Capacitor, DOM ou APIs do navegador.
-- `application` orquestra casos de uso e depende de domínio e portas.
-- `infrastructure` implementa portas.
-- React e Phaser não acessam Dexie diretamente.
-- Phaser recebe uma projeção pronta e emite interações tipadas; não decide regras de negócio.
-- Dados persistentes são fonte de verdade; stores de UI não substituem o banco.
-- Gravações de entidade/anotação e atividade pertencem à mesma transação Dexie; eventos são publicados somente após o commit.
-- Objetos lidos do IndexedDB devem ser validados antes de cruzar a fronteira da infraestrutura.
-- Conteúdo deve ser orientado a dados quando a adição frequente for requisito.
+Use `npm ci` para instalação reproduzível. Para E2E local, instale uma vez `npx playwright install chromium`.
 
-## 5. Qualidade de código
+Ao final de código, execute conforme o escopo:
 
-- TypeScript em modo estrito.
-- Não use `any`, `@ts-ignore`, desativação global de lint ou casts cegos para silenciar erros.
-- Erros não podem ser capturados e ignorados silenciosamente.
-- Nomes devem expressar o domínio.
-- Funções e componentes devem ter responsabilidade compreensível.
-- Comentários explicam motivo, risco ou contrato; não narram sintaxe óbvia.
-- Mudanças de schema exigem migração e teste.
-- Mudanças em comportamento exigem testes e atualização documental correspondente.
+```text
+npm run format
+npm run format:check
+npm run lint
+npm run typecheck
+npm run test:run
+npm run audio:check
+npm run build
+npm run performance:report
+npm run test:e2e
+npm run android:sync
+npm run android:build:debug
+git diff --check
+git status --short
+```
 
-## 6. Segurança e privacidade
+Playwright é web/Chromium; não substitui Android real. Não alegue teste manual, aparelho, TalkBack, áudio percebido ou performance física sem execução humana registrada.
 
-- Nunca grave segredos em `VITE_*`, código, documentação ou fixtures.
-- Nunca adicione keystore, senha, token, backup pessoal ou arquivo exportado ao Git.
-- Valide dados externos e arquivos importados.
-- Não registre títulos, notas, citações ou conteúdo pessoal em logs.
-- Mantenha permissões Android mínimas.
+## Android e Git
 
-## 7. Operações Git proibidas ao agente
+Não configure assinatura, keystore ou release sem escopo explícito. Nunca execute sem pedido do usuário: `git commit`, push, tag, rebase, force push, exclusão de branch, `reset --hard` ou mudança de versão. Status, diff e histórico são permitidos.
 
-Não execute sem pedido explícito do usuário:
+Checkpoints técnicos podem ser commitados quando explicitamente autorizados após automação e documentação. Um checkpoint não aprova prompt ou gate humano. G4 e G7–G10 permanecem abertos até evidência humana; não marque checklist pendente como executada.
 
-- `git commit`;
-- `git push`;
-- criação de tag;
-- rebase;
-- `reset --hard`;
-- force push;
-- exclusão de branch;
-- alteração de versão de release.
+## Documentação e parada
 
-O agente pode inspecionar `git status`, `git diff` e histórico.
+Atualize `STATUS`, `ROADMAP`, `TEST_PLAN` e os documentos afetados. Preserve história verdadeira. Use `docs/templates/GATE_REPORT_TEMPLATE.md` no relatório final.
 
-## 8. Validação obrigatória
-
-### Comandos disponíveis
-
-- `npm run dev` — inicia o servidor de desenvolvimento;
-- `npm run build` — verifica TypeScript e gera o build web;
-- `npm run build:diagnostics` — gera build interno com o painel técnico habilitado;
-- `npm run preview` — serve localmente o build gerado;
-- `npm run lint` — executa ESLint;
-- `npm run typecheck` — verifica os projetos TypeScript;
-- `npm run test` — executa Vitest em modo interativo;
-- `npm run test:run` — executa Vitest uma vez;
-- `npm run format` — formata apenas código e arquivos técnicos listados no script;
-- `npm run format:check` — verifica a formatação desse mesmo conjunto.
-- `npm run android:sync` — compila a aplicação web e sincroniza os arquivos e plugins com Android;
-- `npm run android:sync:diagnostics` — sincroniza o build diagnóstico para Android;
-- `npm run android:open` — abre `android/` no Android Studio;
-- `npm run android:run` — sincroniza e executa no aparelho Android conectado;
-- `npm run android:build:debug` — sincroniza e gera o APK debug com `android/gradlew`.
-- `npm run android:build:diagnostics` — gera APK debug interno com diagnóstico para gates.
-
-Ao final de uma tarefa de código, execute os scripts disponíveis equivalentes a:
-
-- formatação ou `format:check`;
-- lint;
-- typecheck;
-- testes;
-- build;
-- `git diff --check`;
-- `git status --short`.
-
-Não afirme que um teste manual foi realizado quando ele depende do usuário, Android Studio ou aparelho físico.
-
-## 9. Relatório final obrigatório
-
-Informe:
-
-1. arquivos criados e modificados;
-2. comportamento implementado;
-3. decisões tomadas e justificativas;
-4. dependências adicionadas;
-5. comandos e testes executados, com resultados;
-6. testes manuais pendentes;
-7. riscos, limitações e débitos conhecidos;
-8. documentação atualizada;
-9. estado de `git status --short`;
-10. confirmação de que não fez commit, tag ou push.
-
-Use `docs/templates/GATE_REPORT_TEMPLATE.md` como referência.
-
-## 10. Critério de parada
-
-Pare e relate em vez de improvisar quando:
-
-- o pedido contradizer uma decisão aprovada;
-- for necessária migração destrutiva não prevista;
-- houver risco de perda de dados;
-- credenciais forem necessárias;
-- a tarefa exigir mais de um subsistema central novo;
-- o diff deixar de ser razoavelmente revisável;
-- o build ou testes revelarem falha anterior fora do escopo.
-
-Parar não significa abandonar: entregue o que foi possível validar e descreva o bloqueio com precisão.
+Pare a alteração conflitante e relate quando houver risco de perda, migração destrutiva não prevista, credencial necessária, mais de um subsistema central novo, diff não revisável ou falha anterior fora do escopo. Não improvise em dados pessoais ou release.

@@ -4,6 +4,8 @@ node_modules/
 # Builds e testes
 dist/
 coverage/
+playwright-report/
+test-results/
 .vite/
 *.tsbuildinfo
 *.apk

@@ -14,5 +14,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["capacitor.config.ts", "vite.config.ts", "vitest.config.ts"]
+  "include": [
+    "capacitor.config.ts",
+    "e2e/**/*.ts",
+    "playwright.config.ts",
+    "vite.config.ts",
+    "vitest.config.ts"
+  ]
 }

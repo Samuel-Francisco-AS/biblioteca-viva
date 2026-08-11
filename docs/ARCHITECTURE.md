@@ -984,3 +984,13 @@ Não houve mudança de schema ou codec: settings já entra integralmente no back
 ## 30. Perfil técnico do runtime visual
 
 O diagnóstico do host continua injetável e existe apenas em desenvolvimento/build interno. Ele contabiliza exclusivamente recursos possuídos pelo módulo: instância, canvas no container, listener de visibilidade, observer/fallback de resize e timer diagnóstico. A factory Phaser oferece um snapshot técnico de FPS aproximado, display list raiz, zonas e tweens; o timer de um segundo só nasce quando a fachada diagnóstica foi injetada e é removido antes de destruir o jogo. O manifesto Vite comprova que a factory permanece dynamic entry. Produção normal não cria painel nem sampling.
+
+## 31. E2E e integração contínua
+
+Playwright `1.62.1` testa somente a aplicação web em Chromium contra o build servido por `vite preview`. O isolamento pertence à suíte: CDP limpa IndexedDB da origem local antes de cada cenário; não existe API ou flag destrutiva no produto. Download, upload, checksum e transação usam o fluxo visível real.
+
+```text
+npm run build → vite preview :4173 → Chromium → React → application → Dexie
+```
+
+GitHub Actions reproduz os checks web com Node 22 e `npm ci`. Performance roda depois do build porque lê `dist/.vite/manifest.json`. Android continua uma barreira local e física; a CI não contém keystore, secrets, SDK Android ou publicação.

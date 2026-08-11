@@ -7,20 +7,20 @@
 
 - **Fase:** aplicativo pessoal utilizável;
 - **blocos concluídos:** Bloco 5 — Backup, restauração e recuperação, com G5 aprovado; Bloco 6 — Biblioteca visual conectada, com G6 aprovado;
-- **prompts tecnicamente implementados:** Prompts 10 a 18; Prompts 14–18 mantêm validações humanas acumuladas e não estão aprovados;
+- **prompts tecnicamente implementados:** Prompts 10 a 19; Prompts 14–19 mantêm validações humanas acumuladas e não estão aprovados;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **trabalho atual:** G4 permanece aberto em paralelo; Blocos 7 e 8 e Prompts 17–18 possuem implementação técnica, com validações acumuladas;
+- **trabalho atual:** Prompt 19 e Bloco 10 tecnicamente implementados; checkpoint humano integrado de G4 e G7–G10 pendente;
 - **gate:** G0 a G3 aprovados; G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
-- **checkpoint técnico anterior:** `2066a9f` (`feat: add milestone engine and first unlock`), sem aprovação humana do Prompt 16 ou G8;
+- **checkpoint técnico anterior:** `64d65e0` (`perf: profile and harden mobile runtime`), sem aprovação humana do Prompt 18 ou G9;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
-- **APK:** APK debug com a implementação técnica dos Prompts 14–18 gerado, mas não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `268a77facb0432985c94bf2185d671553d721123c889f167f0d3aaeba89b667d`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
+- **APK:** APK debug com a implementação técnica dos Prompts 14–19 gerado, mas não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `318a5cc16226e8f493b5cadc15c69e872aa50ea013a345fcbb81553ce36dbe38`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
 - **release Android:** ainda não existe APK release assinado nem artefato Android público;
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
 - **compatibilidade:** diferentes celulares Android, proporções de tela, densidades e áreas seguras;
-- **estado geral:** G0 a G3, G5 e G6 aprovados; G4 e G7–G9 permanecem abertos; Prompts 14–17 não estão aprovados e suas validações foram acumuladas.
+- **estado geral:** G0 a G3, G5 e G6 aprovados; G4 e G7–G10 permanecem abertos; Prompts 14–19 não estão aprovados e suas validações foram acumuladas.
 
 ## Decisões já aprovadas
 
@@ -55,13 +55,15 @@
 
 ## Trabalho atual
 
-O Prompt 18 está tecnicamente implementado. O diagnóstico interno contabiliza recursos próprios do host, cena e áudio; uma prova determinística cobre 20 montagens/desmontagens; e o manifesto do Vite verifica que Phaser permanece lazy. Não houve split artificial, compressão dos WAVs ou novo modo gráfico porque as medições não justificaram essas mudanças. G7, G8 e G9 continuam abertos, todas as validações humanas estão acumuladas, G4 segue aberto e a versão permanece `0.2.0-alpha.1`.
+O Prompt 19 está tecnicamente implementado. Playwright Chromium cobre quatro fluxos web reais e isolados; GitHub Actions executa a cadeia web reproduzível; README, AGENTS e manutenção refletem o protótipo atual. O workflow hospedado ainda depende de push posterior. G4 e G7–G10 continuam abertos, todas as validações humanas estão acumuladas e a versão permanece `0.2.0-alpha.1`.
 
 ## Bloqueios
 
 Nenhum bloqueio técnico identificado. G4 mantém a pendência humana de uso real prolongado. Áudio, diálogos, primeiro desbloqueio, TalkBack, teclado, contraste, texto ampliado e movimento efetivo aguardam o checkpoint integrado. Testes automáticos não comprovam qualidade artística, conforto, leitor de tela real ou comportamento físico. G7–G9 não foram aprovados; o agrupamento e suas exceções seguem D-034.
 
 ## Última evidência de validação
+
+Em 2026-08-11, o Prompt 19 consolidou a suíte crítica sem duplicar unitários: Playwright `1.62.1` adicionou quatro E2E Chromium para ciclo principal, busca/Arquivo, backup/restauração e falhas críticas. A CI web usa Node 22, `npm ci`, permissões somente de leitura e checks completos. Formatação, lint, typecheck, 521 testes em 57 arquivos, áudio, relatório de performance, build web, quatro E2E, `android:sync`, `android:build:debug` e `git diff --check` passaram. Uma cópia temporária sem `node_modules` reproduziu `npm ci`, checks, suíte, build e relatório. O APK não instalado tem 7.526.051 bytes, SHA-256 `318a5cc16226e8f493b5cadc15c69e872aa50ea013a345fcbb81553ce36dbe38` e ZIP íntegro. Nenhuma execução hospedada ou aprovação humana foi presumida. G4 e G7–G10 permanecem abertos.
 
 Em 2026-08-11, o Prompt 18 recebeu instrumentação técnica de runtime restrita a desenvolvimento/build diagnóstico, prova de 20 ciclos, contagem do áudio e relatório determinístico do manifesto Vite. O baseline web registrou chunk inicial de 552.482 bytes (164.680 gzip), Phaser lazy de 1.221.123 bytes (325.960 gzip) e WAVs locais com 791.418 bytes. Formatação, lint, typecheck, 521 testes em 57 arquivos, áudio, build web, relatório, `android:sync`, APK debug e integridade ZIP passaram. O APK não instalado possui 7.526.051 bytes e SHA-256 `268a77facb0432985c94bf2185d671553d721123c889f167f0d3aaeba89b667d`. Nenhuma medição física foi inventada e G9 permanece aberto.
 

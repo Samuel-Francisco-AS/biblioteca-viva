@@ -126,3 +126,11 @@ A inspeção não escreve. A restauração valida novamente antes de uma única 
 A CSP inicial é entregue por meta tag com origem própria por padrão, scripts locais sem `unsafe-eval`, objetos bloqueados e HMR limitado às origens locais padrão. `unsafe-inline` permanece apenas em estilos por compatibilidade atual. Meta CSP não equivale a cabeçalho HTTP. Riscos residuais: JSON e IndexedDB são legíveis a quem obtiver acesso; alguém pode recalcular o digest; o destino externo fica sob guarda do usuário; Android ainda requer validação física.
 
 Em uma origem HTTP insegura, o navegador pode indisponibilizar UUID e integridade criptográfica necessários para criar registros e conferir backups. A interface informa a limitação e orienta abrir por `localhost`, HTTPS ou APK Android; não reduz validações, não migra dados entre origens e não limpa IndexedDB. IndexedDB é isolado por origem: a ausência de livros em outro endereço não significa perda dos dados existentes.
+
+## 12. CI e E2E
+
+O workflow usa somente actions oficiais de checkout/setup Node, `permissions: contents: read`, `npm ci` e lockfile. Não recebe secrets, não assina Android e não publica artefatos. Fixtures E2E são fictícias; o reset usa CDP somente contra a origem local controlada do preview e não adiciona endpoint ao build. Resultados e traces ficam ignorados pelo Git. A execução hospedada depende de push posterior.
+
+### Auditoria npm em 2026-08-11
+
+`npm audit` reportou quatro ocorrências high, sem critical: `brace-expansion@5.0.8` via ESLint/minimatch, `nanoid@3.3.16` via Vite/PostCSS e React Router `7.18.1`. As duas primeiras pertencem ao toolchain com entradas controladas; o caso do nanoid exige custom generator de tamanho zero, não usado pelo produto. O advisory do Router afeta actions em RSC mode; esta aplicação é SPA estática, sem RSC, servidor ou actions remotas. Não houve upgrade fora de escopo apenas para zerar o contador. Reavaliar versões patch antes de G11 e imediatamente se algum desses caminhos passar a receber entrada não confiável.

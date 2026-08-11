@@ -417,4 +417,15 @@ Evoluir o backup para formato v2 incluindo `milestones`, aceitando v1 com seu ch
 
 **Consequências:** produção normal não cria painel nem polling; cleanup zera contadores próprios; a prova de 20 ciclos e o manifesto substituem alegações subjetivas. O aviso de 1,22 MB do Phaser permanece visível e documentado, pois split manual não reduziria bytes ou trabalho total ao entrar na Biblioteca. Não há dependência, schema, backup, permissão, asset ou versão nova. G9 permanece aberto.
 
+## D-039 — Playwright Chromium e CI web mínima
+
+- **Data:** 2026-08-11
+- **Status:** aceita
+
+**Contexto:** a cobertura unitária/integrada é ampla, mas não provava IndexedDB, navegação, download/upload e recarga no navegador real. G10 também exige instalação reproduzível e CI sem antecipar release Android.
+
+**Decisão:** adicionar `@playwright/test` `1.62.1` fixado, Chromium único, `vite preview` controlado em 4173 e quatro E2E críticos. Isolar cada cenário limpando IndexedDB apenas da origem de teste via CDP, sem endpoint no produto. Configurar GitHub Actions em Ubuntu 24.04/Node 22 com actions oficiais, permissões `contents: read`, `npm ci` e checks web completos. Manter Android debug como barreira local.
+
+**Consequências:** o navegador é instalado explicitamente; traces/resultados são ignorados; fixtures não contêm dados pessoais. CI não possui secrets, keystore, assinatura ou publicação. Android CI poderá ser revista se regressões nativas justificarem o custo. Workflow hospedado depende de push. Prompt 19 e G10 não são aprovados por esta decisão.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

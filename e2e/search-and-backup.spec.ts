@@ -1,0 +1,106 @@
+import { expect, test } from "./fixtures";
+
+test("busca, filtro, ordenação e Arquivo preservam navegação", async ({
+  createBook,
+  page,
+}) => {
+  await createBook({ author: "Lia Ômega", title: "Árvore Azul" });
+  await page
+    .getByLabel("Nota (obrigatório)")
+    .fill("Mapa fictício do capítulo.");
+  await page.getByRole("button", { name: "Adicionar nota" }).click();
+  await createBook({ author: "Bruno Exemplo", title: "Brasa Serena" });
+  await createBook({
+    author: "Carla Teste",
+    currentPage: 30,
+    status: "in_progress",
+    title: "Caderno Unicode",
+    totalPages: 100,
+  });
+
+  await page.goto("/colecao");
+  await page.getByLabel("Buscar livros").fill("lia omega");
+  await expect(
+    page.getByRole("heading", { name: "Árvore Azul" }),
+  ).toBeVisible();
+  await page.getByLabel("Buscar livros").fill("Caderno");
+  await page.getByLabel("Status").selectOption("in_progress");
+  await page.getByLabel("Ordenar por").selectOption("title");
+  await page
+    .getByRole("link", { name: "Abrir detalhes de Caderno Unicode" })
+    .click();
+  await page.getByRole("link", { name: "Voltar à Coleção" }).click();
+  await expect(page).toHaveURL(/q=Caderno.*status=in_progress.*sort=title/u);
+
+  await page.getByRole("link", { name: "Arquivo" }).click();
+  await page.getByLabel("Buscar no Arquivo").fill("Mapa fictício");
+  await page.getByRole("link", { name: "Abrir livro Árvore Azul" }).click();
+  await page.getByRole("link", { name: "Voltar ao Arquivo" }).click();
+  await expect(page).toHaveURL(/\/arquivo\?q=Mapa\+fict%C3%ADcio/u);
+});
+
+test("backup web real é baixado, validado, restaurado e persiste", async ({
+  createBook,
+  page,
+}) => {
+  await createBook({
+    author: "Pessoa Fictícia",
+    currentPage: 80,
+    status: "in_progress",
+    title: "Backup de Ensaio",
+    totalPages: 80,
+  });
+  await page.getByRole("button", { name: "Concluir leitura" }).click();
+  await page.getByRole("link", { name: "Configurações" }).click();
+  await page.getByLabel("Usar alto contraste").check();
+  await page.getByLabel("Tamanho do texto").selectOption("larger");
+
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Exportar backup" }).click();
+  const download = await downloadPromise;
+  const backupPath = await download.path();
+  expect(backupPath).not.toBeNull();
+  if (!backupPath)
+    throw new Error("O download do backup não produziu arquivo.");
+
+  const invalidPath = "e2e/fixtures/invalid-backup.txt";
+  await page.getByLabel("Arquivo de backup").setInputFiles(invalidPath);
+  await expect(
+    page.getByText("O arquivo selecionado não contém JSON válido."),
+  ).toBeVisible();
+
+  await createBook({ title: "Registro removido pela restauração" });
+  await page.getByRole("link", { name: "Configurações" }).click();
+  await page.getByLabel("Arquivo de backup").setInputFiles(backupPath);
+  await expect(
+    page.getByRole("heading", {
+      name: "Confirmar substituição de todos os dados",
+    }),
+  ).toBeVisible();
+  const safetyDownloadPromise = page.waitForEvent("download");
+  await page
+    .getByRole("button", {
+      name: "Criar backup de segurança e substituir dados",
+    })
+    .click();
+  const safetyDownload = await safetyDownloadPromise;
+  expect(await safetyDownload.path()).not.toBeNull();
+  await expect(
+    page.getByRole("heading", { name: "Restauração concluída" }),
+  ).toBeVisible();
+
+  await page.reload();
+  await expect(page.getByLabel("Usar alto contraste")).toBeChecked();
+  await expect(page.getByLabel("Tamanho do texto")).toHaveValue("larger");
+  await page.getByRole("link", { name: "Biblioteca" }).click();
+  await expect(
+    page.getByText(/a luminária de leitura permanece na sala/u),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "Coleção", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Backup de Ensaio" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Registro removido pela restauração" }),
+  ).toHaveCount(0);
+});

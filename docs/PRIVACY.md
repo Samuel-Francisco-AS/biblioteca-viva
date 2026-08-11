@@ -81,3 +81,7 @@ Criar política de privacidade formal antes de:
 ## 9. Backup implementado
 
 O backup v2 inclui livros, progresso, notas, citações, atividades, configurações aplicáveis e estado técnico de marcos/recompensas. Marcos guardam apenas ID, instante, versão, origem técnica e IDs de recompensa: nunca título, autor, nota, citação ou fala. Backups v1 continuam aceitos e não inventam marcos. O JSON UTF-8 é legível e não criptografado. O aplicativo não envia o arquivo automaticamente: exportação, compartilhamento e destino dependem de ação explícita. Depois da entrega, guardar e excluir manualmente a cópia externa é responsabilidade do usuário. Nomes de arquivo não incluem dados pessoais.
+
+## 10. Testes públicos
+
+Fixtures Vitest e Playwright usam apenas nomes e textos explicitamente fictícios. CI não recebe banco, backup pessoal, screenshot do usuário ou telemetria. Traces de falha podem conter somente os dados fictícios do cenário automatizado e não são versionados.

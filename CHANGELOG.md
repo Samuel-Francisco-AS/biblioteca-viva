@@ -10,10 +10,13 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 - backup Android com salvamento em local escolhido, compartilhamento nativo e restauração recuperável;
 - exclusão transacional de livros, notas, citações e atividades relacionadas.
+- preferências de experiência, conteúdo contextual, marcos e luminária de leitura;
+- perfil estrutural do runtime, Playwright Chromium e GitHub Actions para checks web.
 
 ### Alterado
 
 - validação física de atualização, limpeza de armazenamento e restauração no Moto G06, com aprovação dos Gates G5 e G6.
+- documentação pública e operacional alinhada ao protótipo tecnicamente implementado até o Prompt 19.
 
 ### Corrigido
 

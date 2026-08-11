@@ -226,3 +226,7 @@ Em 2026-08-11, `android:sync` e `android:build:debug` passaram sem plugin, permi
 - integridade ZIP: aprovada;
 - plugins: App, Filesystem e Share;
 - G9 e o perfil físico no Moto G06: pendentes.
+
+## 13. CI inicial do Prompt 19
+
+A CI valida somente o produto web. `android:sync` e `android:build:debug` continuam obrigatórios localmente: incluir SDK, JDK e Gradle em todo pull request teria custo desproporcional e ainda não provaria lifecycle, áudio, toque ou persistência física. Não há keystore, assinatura, secret, upload de APK ou Play Store no workflow.

@@ -10,14 +10,15 @@ Escala: probabilidade e impacto `baixo`, `médio` ou `alto`.
 | R-04 | Phaser assumir regras de negócio | média | alto | projeção e ponte tipada; testes de dependência | cena importa repositório ou domínio mutável | ativo |
 | R-05 | desempenho ruim em aparelho modesto | média | alto | lazy load, sala pequena, modo reduzido e perfil | FPS instável ou memória crescente | ativo |
 | R-06 | produção de arte e áudio atrasar | alta | médio | fallback geométrico, assets mínimos e manifests | código pronto sem conteúdo disponível | ativo |
-| R-07 | dependência excessiva do Codex | alta | alto | diffs pequenos, relatório, documentação e revisão | usuário não consegue explicar alteração | ativo |
-| R-08 | documentação divergir do código | média | alto | docs no mesmo commit e STATUS volátil | comportamento contradiz documento | ativo |
+| R-07 | dependência excessiva do Codex | média | alto | README, AGENTS, manutenção, E2E e relatórios reproduzíveis | usuário não consegue explicar alteração | mitigado parcialmente |
+| R-08 | documentação divergir do código | baixa | alto | auditoria do Prompt 19, docs no mesmo commit e STATUS volátil | comportamento contradiz documento | mitigado parcialmente |
 | R-09 | segurança exagerada ou falsa | média | médio | afirmações honestas e ameaça local | promessa de criptografia sem implementação | ativo |
 | R-10 | plugin/dependência quebrar Android | média | alto | APK cedo, plugins mínimos, lockfile | sync/build nativo falha | ativo |
 | R-11 | backup importar conteúdo malicioso | baixa | alto | Zod estrito, 10 MiB, checksum e transação replace testados | arquivo externo aceito sem validação | mitigado parcialmente |
 | R-12 | chave de assinatura perdida | baixa | alto | backup seguro e fora do Git | release sem cópia verificada | ativo |
 | R-13 | gamificação virar culpa | média | alto | guia de conteúdo e revisão ética | streak, punição ou degradação sugerida | ativo |
 | R-14 | arquitetura inchada antes do uso | média | médio | modular monolith e pastas sob demanda | abstração sem implementação real | ativo |
+| R-15 | advisories transitivos do toolchain/Router | baixa no uso atual | médio | lockfile, contexto registrado e revisão patch antes de G11 | entrada não confiável atingir toolchain ou adoção de RSC/actions | monitorado |
 
 ## Revisão
 
