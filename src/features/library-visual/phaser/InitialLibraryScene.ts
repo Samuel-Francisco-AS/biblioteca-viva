@@ -1,7 +1,11 @@
 import Phaser from "phaser";
 import { DECORATION_ID } from "../../../domain";
 
-import type { LibraryInteraction, LibraryViewModel } from "../contracts";
+import type {
+  LibraryInteraction,
+  LibraryVisualRuntimeSnapshot,
+  LibraryViewModel,
+} from "../contracts";
 import {
   LIBRARY_ROOM_ANIMATIONS,
   LIBRARY_ROOM_INTERACTION,
@@ -220,6 +224,24 @@ export class InitialLibraryScene extends Phaser.Scene {
 
   resumeMotion(): void {
     this.motion.resume();
+  }
+
+  runtimeSnapshot(): LibraryVisualRuntimeSnapshot {
+    return Object.freeze({
+      activeTweens: this.tweens.getTweens().length,
+      displayObjects: this.children.length,
+      fps:
+        Number.isFinite(this.game.loop.actualFps) &&
+        this.game.loop.actualFps > 0
+          ? this.game.loop.actualFps
+          : null,
+      interactiveZones: [
+        this.shelfZone,
+        this.librarianZone,
+        this.creatureZone,
+        this.highlightedBookZone,
+      ].filter((zone) => zone?.active).length,
+    });
   }
 
   private createInteractiveZone(

@@ -215,3 +215,14 @@ APK debug da continuação corretiva gerado, mas não instalado, em 2026-08-05:
 - integridade ZIP: aprovada;
 - bridge local `BackupDocument`: compilada e registrada;
 - permissões de armazenamento amplo: ausentes.
+
+## 12. Checkpoint técnico do Prompt 18
+
+Em 2026-08-11, `android:sync` e `android:build:debug` passaram sem plugin, permissão ou código nativo novo. O APK debug não foi instalado:
+
+- caminho: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- tamanho: 7.526.051 bytes;
+- SHA-256: `268a77facb0432985c94bf2185d671553d721123c889f167f0d3aaeba89b667d`;
+- integridade ZIP: aprovada;
+- plugins: App, Filesystem e Share;
+- G9 e o perfil físico no Moto G06: pendentes.

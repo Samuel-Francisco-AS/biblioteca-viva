@@ -980,3 +980,7 @@ prefers-reduced-motion ───────────────────
 `LibraryTextAlternative` consome o mesmo `LibraryViewModel` mínimo e expõe estado essencial e ações React. Ela não serializa o view model cru, não consulta banco e permanece fora do canvas. A cena continua lazy e complementar; leitores de tela e teclado usam React.
 
 Não houve mudança de schema ou codec: settings já entra integralmente no backup v2. Valor inválido ou futuro falha na fronteira do adapter, é reportado por código sanitizado e faz o serviço carregar defaults seguros.
+
+## 30. Perfil técnico do runtime visual
+
+O diagnóstico do host continua injetável e existe apenas em desenvolvimento/build interno. Ele contabiliza exclusivamente recursos possuídos pelo módulo: instância, canvas no container, listener de visibilidade, observer/fallback de resize e timer diagnóstico. A factory Phaser oferece um snapshot técnico de FPS aproximado, display list raiz, zonas e tweens; o timer de um segundo só nasce quando a fachada diagnóstica foi injetada e é removido antes de destruir o jogo. O manifesto Vite comprova que a factory permanece dynamic entry. Produção normal não cria painel nem sampling.

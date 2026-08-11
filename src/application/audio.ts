@@ -22,9 +22,19 @@ export type AudioIntent =
   | { readonly type: "CreatureSelected" }
   | { readonly type: "BookCompleted" };
 
+export interface AudioDiagnosticsSnapshot {
+  readonly activeEffects: number;
+  readonly activeMusicPlayers: number;
+  readonly desiredMusic: boolean;
+  readonly pendingEffects: number;
+  readonly state: AudioAvailability;
+  readonly suspended: boolean;
+}
+
 /** Application-facing audio contract. Presentation emits intentions only. */
 export interface AudioPort {
   availability(this: void): AudioAvailability;
+  diagnostics?(this: void): AudioDiagnosticsSnapshot;
   dispose(this: void): void;
   emit(this: void, intent: AudioIntent): void;
   initialize(this: void): Promise<AudioAvailability>;

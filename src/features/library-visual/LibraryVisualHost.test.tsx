@@ -303,6 +303,70 @@ describe("LibraryVisualHost", () => {
     });
   });
 
+  it("monta e desmonta 20 vezes sem acumular instância, canvas, observer ou listener próprio", async () => {
+    const diagnostics = createLibraryVisualDiagnostics();
+    const addEventListener = vi.spyOn(document, "addEventListener");
+    const removeEventListener = vi.spyOn(document, "removeEventListener");
+
+    for (let cycle = 0; cycle < 20; cycle += 1) {
+      let canvas: HTMLCanvasElement | undefined;
+      const instance = game();
+      const createLibraryVisualGame = vi.fn(
+        ({ container }: CreateLibraryVisualGameOptions) => {
+          canvas = document.createElement("canvas");
+          container.append(canvas);
+          vi.mocked(instance.destroy).mockImplementation(() =>
+            canvas?.remove(),
+          );
+          return Promise.resolve(instance);
+        },
+      );
+      const rendered = renderHost({
+        diagnostics,
+        loadFactory: () => Promise.resolve({ createLibraryVisualGame }),
+      });
+
+      await waitFor(() =>
+        expect(createLibraryVisualGame).toHaveBeenCalledOnce(),
+      );
+      expect(
+        document.querySelectorAll(".library-visual-host canvas"),
+      ).toHaveLength(1);
+      expect(diagnostics.snapshot()).toMatchObject({
+        activeInstances: 1,
+        activeLifecycleListeners: 1,
+        activeObservers: 1,
+        canvasCount: 1,
+      });
+
+      rendered.unmount();
+      expect(instance.destroy).toHaveBeenCalledOnce();
+      expect(
+        document.querySelectorAll(".library-visual-host canvas"),
+      ).toHaveLength(0);
+      expect(diagnostics.snapshot()).toMatchObject({
+        activeInstances: 0,
+        activeLifecycleListeners: 0,
+        activeObservers: 0,
+        canvasCount: 0,
+      });
+    }
+
+    const lifecycleAdds = addEventListener.mock.calls.filter(
+      ([eventName]) => eventName === "visibilitychange",
+    );
+    const lifecycleRemovals = removeEventListener.mock.calls.filter(
+      ([eventName]) => eventName === "visibilitychange",
+    );
+    expect(lifecycleAdds).toHaveLength(20);
+    expect(lifecycleRemovals).toHaveLength(20);
+    expect(disconnect).toHaveBeenCalledTimes(20);
+    expect(diagnostics.snapshot()).toMatchObject({
+      createdInstances: 20,
+      destroyedInstances: 20,
+    });
+  });
+
   it("entrega a projeção inicial e atualiza a mesma instância sem outro canvas", async () => {
     const instance = game();
     const { createLibraryVisualGame, loadFactory } = factoryFor(instance);

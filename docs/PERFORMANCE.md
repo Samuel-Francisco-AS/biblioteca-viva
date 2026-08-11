@@ -1,84 +1,89 @@
 # Desempenho e estabilidade
 
-## 1. Princípio
+> Baseline técnico do Prompt 18: 2026-08-11. Este documento não aprova G9.
 
-Medir no aparelho alvo antes de otimizar. O objetivo é uma experiência estável em hardware modesto, não pontuação abstrata de benchmark.
+## 1. Política
 
-## 2. Metas iniciais
+Medir antes de otimizar. Alterações são justificadas apenas por gargalo real ou risco estrutural demonstrável; avisos isolados não motivam split, cache, pool ou modo gráfico ornamental. Nenhuma métrica inclui títulos, autores, notas ou citações.
 
-- navegação React sem travamentos perceptíveis;
-- resposta comum ao toque em até aproximadamente 100 ms;
-- biblioteca próxima de 60 FPS no aparelho alvo;
-- piso estável de 30 FPS em modo reduzido;
-- abertura offline funcional;
-- ausência de crescimento contínuo de memória ao entrar e sair da Biblioteca;
-- retorno do segundo plano sem recriar serviços ou áudio em duplicidade.
+## 2. Orçamento atual da sala
 
-Essas metas são guardrails. Registrar medições reais e ajustar apenas com justificativa.
+- uma instância Phaser e um canvas durante a montagem; zero após desmontagem;
+- cena procedural fixa, aproximadamente 32 objetos relevantes no pior caso documentado, com 13 objetos no display list raiz atual e elementos filhos agrupados;
+- quatro zonas interativas fixas;
+- até três tweens contínuos (bibliotecária, criatura e destaque) e um tween transitório de desbloqueio;
+- zero tween repetitivo com movimento reduzido;
+- até oito grupos visuais de lombadas, inclusive com 100 livros ou mais;
+- zero partículas, shaders próprios, pós-processamento, física, câmera móvel ou atlas/textura própria carregada atualmente.
 
-## 3. Estratégia de carregamento
+O Phaser recebe somente `LibraryViewModel`, nunca entidades completas. A projeção faz duas consultas em paralelo na rota (livros e marcos), sem N+1, e resume 0, 1, 10, 100 ou volumes maiores nos mesmos limites visuais.
 
-- carregar Phaser apenas na rota Biblioteca;
-- separar bundle da cena quando possível;
-- carregar assets por manifesto;
-- manter shell React utilizável durante falha ou atraso do Phaser;
-- não carregar assets de expansões inexistentes;
-- carregar sala única no protótipo;
-- suspender ou destruir corretamente ao sair.
+## 3. Métricas automáticas
 
-## 4. Cena
+O painel já existente de diagnóstico, disponível em desenvolvimento ou em build interno com `VITE_ENABLE_DIAGNOSTICS=true`, agora mostra estado e gerações do host, instâncias criadas/ativas/destruídas, canvas no host, listeners de visibilidade e observers pertencentes ao host, tempo entre início da importação e instância pronta, FPS aproximado reportado pelo loop Phaser, objetos do display list raiz, zonas interativas e tweens ativos. O sampling do runtime ocorre uma vez por segundo somente enquanto esse diagnóstico está habilitado e é cancelado no cleanup.
 
-- câmera fixa;
-- poucos objetos ativos;
-- atlas de texturas quando útil;
-- partículas discretas e limitadas;
-- sem filtro caro em tela inteira sem medição;
-- movimentação da criatura simples;
-- estante por estado, não um objeto complexo por livro;
-- atualização incremental do view model;
-- fallback geométrico leve.
+`AudioService.diagnostics()` expõe apenas estado técnico: música desejada, suspensão, efeitos pendentes e quantidades de música/efeitos conhecidas pelo serviço. Dispose zera os registros. Não há tentativa de enumerar listeners privados globais ou memória não padronizada do navegador.
 
-## 5. React e dados
+A prova determinística monta e desmonta o host 20 vezes com factory fake. Em cada ciclo há uma instância e um canvas; após unmount há zero, o observer é desconectado, o listener próprio é removido e a instância é destruída. Testes adicionais cobrem import tardio, desmontagem durante import/criação, falha parcial, visibility repetida, resize repetido/idêntico, troca de proporção, projeção, reduced motion, tweens próprios e lifecycle de áudio idempotente.
 
-- consultas orientadas por índices reais;
-- paginação ou virtualização somente quando volume justificar;
-- evitar armazenar coleção inteira duplicada em store;
-- memoização apenas após identificar custo;
-- busca com estratégia que não bloqueie digitação;
-- formulários não rerenderizam a cena a cada tecla.
+Tempos em jsdom e FPS fora do aparelho são diagnósticos, não metas de regressão: não há asserção frágil de milissegundos.
 
-## 6. Áudio
+## 4. Bundle baseline
 
-- preload apenas do necessário;
-- liberar recursos;
-- evitar múltiplas instâncias do mesmo loop;
-- pausar no ciclo de vida;
-- verificar suporte e formato na WebView.
+Build normal Vite de 2026-08-11:
 
-## 7. Perfil obrigatório no G9
+| Chunk | Papel | Bytes | Gzip | Inicial |
+| --- | --- | ---: | ---: | --- |
+| `index-DiMT4q6b.js` | React, aplicação e infraestrutura web | 552.482 | 164.680 | sim |
+| `createPhaserGame-CIO4E9qb.js` | Phaser 3.90 e sala | 1.221.123 | 325.960 | não, dynamic entry |
+| `web-DwIi11bH.js` | adapter web Filesystem | 8.488 | 2.840 | não |
+| demais chunks Capacitor | adapters carregados sob demanda | até 1.322 cada | até 690 | não |
+| `index-D2dX1HQk.css` | estilos | 16.629 | 3.600 | sim |
 
-Testar:
+O manifesto de build é gerado em `dist/.vite/manifest.json`. `npm run performance:report` falha se `createPhaserGame` deixar de ser dynamic entry e registra os tamanhos reais sem depender de hashes fixos.
 
-1. abrir e fechar Biblioteca repetidamente;
-2. alternar rotas por alguns minutos;
-3. segundo plano e retorno;
-4. coleção com volume de fixture;
-5. busca e filtros;
-6. áudio ligado e desligado;
-7. movimento normal e reduzido;
-8. atualização de projeção durante a cena;
-9. uso de memória antes e depois;
-10. FPS e quedas perceptíveis.
+O aviso >500 kB é aceitável para o chunk lazy do Phaser: o motor responde pela maior parte dos 1,22 MB, não participa do startup inicial e só é importado quando a Biblioteca pronta monta o host. Split manual ocultaria o aviso sem reduzir bytes ou parse total ao entrar na sala. O chunk inicial também excede 500 kB bruto, porém possui 164,68 kB gzip; nenhum gargalo físico de startup foi medido. Medido/inspecionado; nenhuma divisão adicional justificada.
 
-Registrar ferramenta, aparelho, build, cenário e resultado. Não afirmar “otimizado” sem evidência.
+Plugins Android de arquivos continuam em imports dinâmicos. O áudio usa Web Audio nativo, sem biblioteca externa.
 
-## 8. Regressões bloqueadoras
+## 5. Assets e offline
 
-- memória cresce a cada visita;
-- áudio duplica;
-- toque fica atrasado;
-- teclado ou scroll travam;
-- cena preta sem fallback;
-- shell React depende do carregamento do Phaser;
-- queda sustentada abaixo de 30 FPS no modo reduzido;
-- persistência bloqueia interface de forma prolongada.
+Os seis WAVs locais somam 791.418 bytes: música 705.644; os cinco efeitos 85.774. São provisórios, auditáveis e menos de 1 MiB. Como o ganho no APK é pequeno nesta etapa, não houve conversão para OGG nem aumento de complexidade de manifesto/fallback. O backend busca/decode o cue somente após gesto e intenção; não há autoplay ou preload remoto.
+
+A sala visual atual é procedural e seu manifesto não carrega imagens. Conteúdo, áudio e persistência são locais. Não existe fetch remoto obrigatório, CDN ou serviço de rede essencial. Offline significa ausência de dependência externa, não instalação de PWA/service worker.
+
+## 6. Lifecycle, memória estrutural e interação
+
+O host possui exatamente um listener `visibilitychange` e um `ResizeObserver` (ou listener de resize como fallback), ambos removidos antes de destruir a instância. Eventos equivalentes são idempotentes. Resize idêntico é ignorado; mudança de proporção redimensiona a mesma instância, reconcilia movimento e preserva projeção/preferências. A cena remove listeners Phaser, zonas, labels, seleção, tweens próprios e handler React no shutdown.
+
+O áudio mantém no máximo uma música conhecida, interrompe efeitos no pause/mute/dispose e não cria segunda música em resume ou entrada repetida. A música reinicia após pause/resume conforme limitação aceita; não houve refatoração do Prompt 14.
+
+Não foram encontrados registries crescentes, URLs Blob da sala, caches próprios sem liberação ou players registrados após dispose. `performance.memory` e memória real da WebView não são portáveis/confiáveis e não são reportadas. Context loss WebGL não recebeu simulação destrutiva; tela preta persistente continua falha crítica do checkpoint físico.
+
+Clique/toque válido emite a interação diretamente no `pointerup`, sem timer artificial. O limite arquitetural de resposta comum próxima de 100 ms permanece para medição física; testes estruturais não alegam latência real Android.
+
+## 7. Achados e alterações do Prompt 18
+
+| Classificação | Evidência | Ação |
+| --- | --- | --- |
+| risco estrutural | contabilidade anterior via painel cobria apenas instâncias | adicionadas métricas próprias de canvas, lifecycle, observer, criação, cena e áudio, com cleanup |
+| risco estrutural | não existia prova única de 20 ciclos | adicionada prova determinística de 20 montagens/desmontagens |
+| aviso aceitável | Phaser 1.221.123 bytes, mas lazy | documentado; sem split artificial |
+| não aplicável | partículas, shaders, física, atlas, context loss automatizável | nenhuma infraestrutura criada |
+| sem gargalo comprovado | WAVs <1 MiB, projeção limitada, resize e reduced motion já controlados | mantidos deliberadamente |
+
+Antes: painel contava instâncias, geração e estado; o lazy boundary era testado por fonte. Depois: recursos possuídos são observáveis e zerados, áudio expõe contagens técnicas, 20 ciclos provam ausência de crescimento e o manifesto comprova o chunk lazy/tamanhos. Não houve mudança de regra de negócio, persistência, schema, backup, asset, dependência, permissão ou versão.
+
+## 8. Perfil físico futuro — G9
+
+No Moto G06 e, se disponível, em uma segunda configuração Android:
+
+1. usar APK diagnóstico e registrar versão/hash, Android e condições iniciais;
+2. abrir/fechar a Biblioteca 20 vezes e confirmar canvas/instância/recursos zerados;
+3. usar por 30 minutos alternando rotas, diálogo, áudio, progresso e background;
+4. registrar FPS e frame pacing reais, memória da WebView pelo Android Studio Profiler, temperatura e eventual pressão com outros apps;
+5. avaliar abertura e toque percebidos, scroll, texto ampliado, alto contraste, reduced motion e TalkBack;
+6. alternar offline, pause/resume, retorno do background e rotação física;
+7. observar tela preta/context loss real e degradação após pressão de memória.
+
+Continuam pendentes: FPS real, frame pacing, memória, temperatura, toque e abertura percebidos, outros apps, background real, rotação física, context loss e estabilidade de 30 minutos. G9 permanece aberto.

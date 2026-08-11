@@ -69,8 +69,16 @@ export function LibraryVisualHost({
     let lastAppliedSize: LibraryVisualSize | undefined;
     let requestedCreationSize: LibraryVisualSize | undefined;
     let resizeObserver: ResizeObserver | undefined;
+    let diagnosticTimer: number | undefined;
+    const creationStartedAt = performance.now();
 
     diagnostics?.transition("creating", generation, 0);
+    diagnostics?.resources({
+      activeLifecycleListeners: 1,
+      activeObservers: 0,
+      canvasCount: 0,
+      creationDurationMs: null,
+    });
 
     const resize = () => {
       if (destroyed || !game) return;
@@ -104,6 +112,7 @@ export function LibraryVisualHost({
       if (destroyed) return false;
       destroyed = true;
       resizeObserver?.disconnect();
+      if (diagnosticTimer !== undefined) window.clearInterval(diagnosticTimer);
       window.removeEventListener("resize", resize);
       document.removeEventListener("visibilitychange", pauseOrResume);
       const didDestroyInstance = Boolean(game);
@@ -112,6 +121,15 @@ export function LibraryVisualHost({
         game = undefined;
       }
       gameRef.current = undefined;
+      diagnostics?.resources({
+        activeTweens: null,
+        activeLifecycleListeners: 0,
+        activeObservers: 0,
+        canvasCount: 0,
+        displayObjects: null,
+        fps: null,
+        interactiveZones: null,
+      });
       return didDestroyInstance;
     };
 
@@ -121,6 +139,7 @@ export function LibraryVisualHost({
     } else {
       resizeObserver = new ResizeObserver(resize);
       resizeObserver.observe(container);
+      diagnostics?.resources({ activeObservers: 1 });
     }
 
     void loadFactory()
@@ -152,6 +171,19 @@ export function LibraryVisualHost({
         createdGame.setInteractionHandler(latestInteractionRef.current);
         createdGame.updateProjection(latestProjectionRef.current);
         diagnostics?.transition("ready", generation, 1, true);
+        diagnostics?.resources({
+          canvasCount: container.querySelectorAll("canvas").length,
+          creationDurationMs: Math.max(
+            0,
+            performance.now() - creationStartedAt,
+          ),
+        });
+        if (diagnostics && createdGame.runtimeSnapshot) {
+          const updateRuntimeDiagnostics = () =>
+            diagnostics.resources(createdGame.runtimeSnapshot?.() ?? {});
+          updateRuntimeDiagnostics();
+          diagnosticTimer = window.setInterval(updateRuntimeDiagnostics, 1_000);
+        }
         resize();
         pauseOrResume();
       })

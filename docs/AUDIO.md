@@ -139,3 +139,7 @@ Nenhuma ação ou informação depende de ouvir.
 - [ ] minimizar/restaurar repetidamente e confirmar silêncio no segundo plano;
 - [ ] confirmar uma única música e preferências após reabrir;
 - [ ] confirmar Coleção, formulários, backup e sala utilizáveis.
+
+## 13. Diagnóstico técnico do Prompt 18
+
+`AudioService.diagnostics()` informa somente disponibilidade, suspensão, música desejada, efeitos pendentes e contagens de players conhecidos pelo próprio serviço. Os testes confirmam no máximo uma música ativa, pause/resume idempotente e zero players após dispose. Não há enumeração de AudioNodes privados, conteúdo pessoal, polling ou mudança na arquitetura do Prompt 14. A música ainda reinicia após pause/resume conforme limitação aceita; validação sonora física permanece pendente.

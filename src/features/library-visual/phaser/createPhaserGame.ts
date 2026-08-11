@@ -73,6 +73,7 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
           scene.resumeMotion();
         }
       },
+      runtimeSnapshot: () => scene.runtimeSnapshot(),
       setInteractionHandler: (
         nextHandler: ((interaction: LibraryInteraction) => void) | undefined,
       ) => {

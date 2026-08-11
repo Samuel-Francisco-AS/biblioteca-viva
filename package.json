@@ -17,6 +17,7 @@
     "test:run": "vitest run",
     "audio:generate": "node scripts/generate-audio-assets.mjs",
     "audio:check": "node scripts/generate-audio-assets.mjs --check",
+    "performance:report": "node scripts/report-build-performance.mjs",
     "format": "prettier --write src scripts index.html package.json capacitor.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json tsconfig.test.json vite.config.ts vitest.config.ts eslint.config.js",
     "format:check": "prettier --check src scripts index.html package.json capacitor.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json tsconfig.test.json vite.config.ts vitest.config.ts eslint.config.js",
     "android:sync": "npm run build && cap sync android",

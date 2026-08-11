@@ -406,4 +406,15 @@ Evoluir o backup para formato v2 incluindo `milestones`, aceitando v1 com seu ch
 
 **Consequências:** não há schema, migração, formato novo de backup, dependência ou plugin. Settings entra automaticamente no backup v2 e validação estrita faz valores inválidos/futuros degradarem para defaults. Alto contraste reutiliza tokens e texto usa escalas controladas; não há tema arbitrário nem zoom do canvas. Leitores de tela operam sobre React, não sobre objetos Phaser. A automação não equivale a conformidade WCAG nem aprovação de G9; G7–G9 continuam abertos.
 
+## D-038 — Diagnóstico próprio e Phaser lazy sem split artificial
+
+- **Data:** 2026-08-11
+- **Status:** aceita
+
+**Contexto:** o Prompt 18 precisa provar estabilidade repetida e explicar o aviso de chunk acima de 500 kB sem enumerar internals do navegador ou otimizar por intuição.
+
+**Decisão:** ampliar a central de diagnóstico existente somente em desenvolvimento/build interno para contar recursos que o host, a cena e o `AudioService` possuem; amostrar a cena uma vez por segundo apenas nesse modo; gerar o manifesto Vite; e validar por script que `createPhaserGame` continua dynamic entry. Manter Phaser em um único chunk lazy e os WAVs locais atuais enquanto não houver evidência física de gargalo.
+
+**Consequências:** produção normal não cria painel nem polling; cleanup zera contadores próprios; a prova de 20 ciclos e o manifesto substituem alegações subjetivas. O aviso de 1,22 MB do Phaser permanece visível e documentado, pois split manual não reduziria bytes ou trabalho total ao entrar na Biblioteca. Não há dependência, schema, backup, permissão, asset ou versão nova. G9 permanece aberto.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

@@ -867,3 +867,37 @@ Em 2026-08-10, a suíte completa passou com **519 testes em 57 arquivos**. A cob
 - [ ] reabertura e restauração controlada preservando preferências.
 
 Nenhum item manual foi executado ou aprovado. Não há automação de TalkBack, alegação WCAG ou validação física de G9. Prompt 14–17 e G7–G9 permanecem abertos.
+
+## Prompt 18 — perfil técnico e estabilidade mobile
+
+### Medido automaticamente
+
+- [x] Phaser preservado como dynamic entry e ausente do chunk inicial pelo manifesto Vite;
+- [x] tamanhos reais dos chunks registrados por `npm run performance:report`;
+- [x] 20 montagens/desmontagens com uma instância e um canvas durante cada montagem e zero depois;
+- [x] 20 observers desconectados e listeners próprios de visibility removidos, sem crescimento;
+- [x] desmontagem durante import tardio, criação tardia e falha parcial com cleanup;
+- [x] visible → hidden → visible repetido, pause/resume idempotente e retorno sem segunda instância;
+- [x] resize repetido/idêntico, mudança de proporção e retorno sem reconstrução;
+- [x] máximo de três tweens repetitivos e zero com reduced motion;
+- [x] áudio com no máximo uma música ativa conhecida, mute global, pause/resume e dispose zerando players;
+- [x] projeção limitada para 0, 1, 10, 100 e volume maior razoável, sem objeto por livro;
+- [x] diagnóstico restrito a desenvolvimento ou build interno explícito;
+- [x] assets, imports Android e ausência de dependência remota essencial auditados.
+
+O tempo de criação e FPS exibidos no painel são observacionais; milissegundos de jsdom não são usados como gate. Memória real da WebView não é inferida de APIs não padronizadas.
+
+### Ainda pendente no Moto G06 — G9
+
+- [ ] FPS real e frame pacing;
+- [ ] memória real da WebView e estabilidade estrutural após 30 minutos;
+- [ ] temperatura e comportamento sob pressão de outros apps;
+- [ ] toque e abertura percebidos;
+- [ ] retorno real do background e múltiplos eventos equivalentes;
+- [ ] rotação física e retorno ao retrato;
+- [ ] context loss/tela preta em condições reais;
+- [ ] offline físico;
+- [ ] acessibilidade essencial, áudio, texto ampliado, alto contraste, reduced motion e TalkBack quando possível;
+- [ ] segunda configuração Android, se disponível.
+
+Prompt 18 é checkpoint técnico, não aprovação. Prompt 14–18 e G7–G9 permanecem abertos.

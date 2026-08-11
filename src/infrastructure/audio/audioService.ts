@@ -52,6 +52,17 @@ export class AudioService implements AudioPort {
     return this.state;
   }
 
+  diagnostics() {
+    return Object.freeze({
+      activeEffects: this.effects.size,
+      activeMusicPlayers: this.music ? 1 : 0,
+      desiredMusic: this.desiredMusic !== undefined,
+      pendingEffects: this.pendingEffects.length,
+      state: this.state,
+      suspended: this.paused,
+    });
+  }
+
   preferences(): AudioPreferences {
     return Object.freeze({ ...this.currentPreferences });
   }

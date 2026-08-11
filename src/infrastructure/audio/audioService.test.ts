@@ -225,6 +225,35 @@ describe("AudioService", () => {
     expect(
       backend.plays.filter(({ playback }) => !playback.stopped),
     ).toHaveLength(1);
+    expect(service.diagnostics()).toMatchObject({
+      activeMusicPlayers: 1,
+      suspended: false,
+    });
+  });
+
+  it("expõe somente contagens técnicas e zera players conhecidos no dispose", async () => {
+    await service.initialize();
+    service.emit({ type: "LibraryEntered" });
+    service.emit({ type: "ShelfSelected" });
+    await flush();
+    expect(service.diagnostics()).toEqual({
+      activeEffects: 1,
+      activeMusicPlayers: 1,
+      desiredMusic: true,
+      pendingEffects: 0,
+      state: "ready",
+      suspended: false,
+    });
+
+    service.dispose();
+    expect(service.diagnostics()).toEqual({
+      activeEffects: 0,
+      activeMusicPlayers: 0,
+      desiredMusic: false,
+      pendingEffects: 0,
+      state: "disposed",
+      suspended: false,
+    });
   });
 
   it("sair da Biblioteca e remontar mantém uma única música", async () => {

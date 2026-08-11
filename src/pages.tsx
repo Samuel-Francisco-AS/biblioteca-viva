@@ -93,12 +93,19 @@ export function LibraryPage({
   useEffect(() => {
     if (!application) return;
     let active = true;
+    const preparationStartedAt = performance.now();
     void Promise.all([
       application.queries.listBookEntries.execute(),
       application.queries.listMilestones.list(),
     ]).then(
       ([books, milestones]) => {
         if (!active) return;
+        diagnostics?.resources({
+          libraryPreparationDurationMs: Math.max(
+            0,
+            performance.now() - preparationStartedAt,
+          ),
+        });
         setState({
           kind: "ready",
           viewModel: projectionService.project(
@@ -117,7 +124,13 @@ export function LibraryPage({
     return () => {
       active = false;
     };
-  }, [application, attempt, pendingDecorationUnlock, projectionService]);
+  }, [
+    application,
+    attempt,
+    diagnostics,
+    pendingDecorationUnlock,
+    projectionService,
+  ]);
 
   useEffect(() => {
     if (!application || state.kind !== "ready") return;

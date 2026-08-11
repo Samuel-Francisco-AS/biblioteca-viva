@@ -62,12 +62,20 @@ export interface LibraryVisualGame {
   pause(this: void): void;
   resize(this: void, size: LibraryVisualSize): void;
   resume(this: void): void;
+  runtimeSnapshot?(this: void): LibraryVisualRuntimeSnapshot;
   setReducedMotion(this: void, reducedMotion: boolean): void;
   setInteractionHandler(
     this: void,
     onInteraction: ((interaction: LibraryInteraction) => void) | undefined,
   ): void;
   updateProjection(this: void, projection: LibraryViewModel): void;
+}
+
+export interface LibraryVisualRuntimeSnapshot {
+  readonly activeTweens: number;
+  readonly displayObjects: number;
+  readonly fps: number | null;
+  readonly interactiveZones: number;
 }
 
 export interface CreateLibraryVisualGameOptions {
