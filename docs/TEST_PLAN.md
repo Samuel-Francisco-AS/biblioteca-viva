@@ -947,3 +947,50 @@ As checklists de prompts anteriores permanecem como histórico de origem. A sequ
    - [ ] confirmar restauração física, uso real sem perda e decidir explicitamente cada gate.
 
 Prompt 19 tecnicamente concluído não aprova G10. G4 e G7–G10 permanecem abertos.
+
+## 22. Primeira rodada integrada pós-protótipo — Moto G06
+
+Sessão realizada por Sam em **2026-08-13**. Este registro separa observação funcional de aprovação formal: G4 e G7–G10 continuam abertos.
+
+### Comportamentos aprovados na observação
+
+- [x] cadastrar, modificar e excluir livros;
+- [x] criar notas e citações;
+- [x] observar a estante reagir à coleção;
+- [x] ouvir efeito sonoro e música ambiente;
+- [x] ajustar volume e usar mute;
+- [x] exportar backup para o local escolhido;
+- [x] desinstalar e confirmar remoção dos dados locais;
+- [x] reinstalar e iniciar sem dados anteriores;
+- [x] importar/restaurar backup e conferir os dados restaurados;
+- [x] concluir o primeiro livro e ouvir o efeito;
+- [x] conferir registro do primeiro marco e exibição da luminária.
+
+### Defeitos encontrados
+
+- [ ] investigar pequeno delay no efeito sonoro ao navegar de outra aba para `Biblioteca`;
+- [ ] rever a sensação de cena congelada quando movimento reduzido deixa personagens completamente estáticos.
+
+### Melhorias desejadas
+
+- início e conclusão dirigidos automaticamente pelo progresso;
+- barra horizontal com porcentagem, páginas lidas, total e restantes;
+- correspondência mais direta da estante para pequenas coleções;
+- edição, exclusão e compartilhamento de notas e citações;
+- backup de segurança opcional conforme banco vazio ou preenchido;
+- playlist sequencial declarativa e áudio modular;
+- redesign extenso com menor densidade, tema escuro coerente e Biblioteca protagonista.
+
+### Itens ainda não testados ou não aprovados
+
+- uso real por vários dias com ao menos dez livros e sem ferramentas de desenvolvimento;
+- edição, exclusão e compartilhamento futuros de notas/citações;
+- progresso e conclusão automáticos, barra e nova projeção da estante;
+- nova política de restauração e playlist, ainda não implementadas;
+- TalkBack, teclado completo, alto contraste e escalas de texto;
+- reduced motion revisado, lifecycle extensivo, fone e ausência de duplicação em ciclos repetidos;
+- 30 minutos de estabilidade, FPS, memória, temperatura, pressão de outros apps e segunda configuração Android;
+- redesign, tema escuro e responsividade posterior;
+- revisão formal e decisão explícita de G4 e G7–G10.
+
+Resultado: evidência física parcial registrada; nenhum gate adicional aprovado.

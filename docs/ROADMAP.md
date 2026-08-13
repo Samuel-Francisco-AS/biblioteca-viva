@@ -18,7 +18,8 @@
 - **gates:** G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto em paralelo;
 - **implementação concluída:** Blocos 4, 5 e 6;
 - **prompts tecnicamente implementados:** Prompts 4 a 19; Prompts 14 a 19 mantêm validações humanas acumuladas e não estão aprovados;
-- **próximo trabalho:** checkpoint humano integrado de G4 e G7–G10; depois, Bloco 11 somente conforme resultado;
+- **fase atual:** refinamento pós-protótipo orientado pela primeira rodada integrada no Moto G06;
+- **próximo trabalho:** R1 — Coerência funcional; G4 e G7–G10 continuam abertos e G11 não foi iniciado;
 - **bloco atual:** Bloco 10 tecnicamente implementado; G10 e gates humanos anteriores permanecem abertos;
 - **APK:** diagnóstico interno validado no Moto G06 com Android 15; release assinado ainda não existe;
 - **código:** implementação do Bloco 4 validada no navegador; G4 aguarda uso real prolongado.
@@ -97,3 +98,13 @@ Excepcionalmente, Sam autorizou iniciar o Bloco 6 com G5 aberto. A restauração
 8. recursos públicos ou sociais por último.
 
 Não colocar expansões dentro dos blocos atuais apenas porque parecem fáceis.
+
+## Fase de refinamento pós-protótipo
+
+Esta fase é posterior e separada dos Blocos 0–11 e dos Prompts 1–19 históricos. O plano operacional completo está em `REFINEMENT_PLAN.md`; não existe “Prompt 20” definido.
+
+- `[ ]` **R1 — Coerência funcional:** automatizar início/conclusão pelo progresso, apresentar barra e páginas restantes, rever estante pequena, tornar backup de segurança opcional conforme o banco e investigar o delay sonoro;
+- `[ ]` **R2 — Utilidade de notas/citações e áudio:** editar, excluir e compartilhar anotações; adicionar playlist declarativa e substituição modular de áudio;
+- `[ ]` **R3 — UX/Layout v2:** redesign extenso, tema escuro coerente e Biblioteca visual protagonista, preservando acessibilidade;
+- `[ ]` **checkpoint integrado Android:** validar regressões, novas regras, conteúdo, áudio, backup, marco, layout, acessibilidade, lifecycle e desempenho;
+- `[ ]` **preparação posterior para G11:** somente após avaliar explicitamente os gates ainda abertos.

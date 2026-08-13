@@ -1,18 +1,18 @@
 # STATUS — Biblioteca Viva
 
-> Última atualização: 2026-08-11
+> Última atualização: 2026-08-13
 > Atualizar este arquivo ao começar e ao encerrar cada bloco relevante.
 
 ## Estado executivo
 
-- **Fase:** aplicativo pessoal utilizável;
+- **Fase:** refinamento pós-protótipo baseado em uso real;
 - **blocos concluídos:** Bloco 5 — Backup, restauração e recuperação, com G5 aprovado; Bloco 6 — Biblioteca visual conectada, com G6 aprovado;
-- **prompts tecnicamente implementados:** Prompts 10 a 19; Prompts 14–19 mantêm validações humanas acumuladas e não estão aprovados;
+- **prompts tecnicamente implementados:** Prompts 1 a 19; sua conclusão técnica não aprova os gates humanos pendentes;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **trabalho atual:** Prompt 19 e Bloco 10 tecnicamente implementados; checkpoint humano integrado de G4 e G7–G10 pendente;
+- **trabalho atual:** planejamento pós-protótipo registrado; próximo trabalho é R1 — Coerência funcional;
 - **gate:** G0 a G3 aprovados; G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
-- **checkpoint técnico anterior:** `64d65e0` (`perf: profile and harden mobile runtime`), sem aprovação humana do Prompt 18 ou G9;
+- **último checkpoint técnico anterior:** `be50d593d0befe733b3993804da5ed9181551bd3` (`test: consolidate regression ci and maintenance`), sem aprovação humana de G10;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
 - **APK:** APK debug com a implementação técnica dos Prompts 14–19 gerado, mas não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `318a5cc16226e8f493b5cadc15c69e872aa50ea013a345fcbb81553ce36dbe38`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
@@ -20,7 +20,7 @@
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
 - **compatibilidade:** diferentes celulares Android, proporções de tela, densidades e áreas seguras;
-- **estado geral:** G0 a G3, G5 e G6 aprovados; G4 e G7–G10 permanecem abertos; Prompts 14–19 não estão aprovados e suas validações foram acumuladas.
+- **estado geral:** primeira rodada integrada no Moto G06 executada em 2026-08-13; G0–G3, G5 e G6 permanecem aprovados; G4 e G7–G10 permanecem abertos; G11 não foi iniciado.
 
 ## Decisões já aprovadas
 
@@ -55,13 +55,15 @@
 
 ## Trabalho atual
 
-O Prompt 19 está tecnicamente implementado. Playwright Chromium cobre quatro fluxos web reais e isolados; GitHub Actions executa a cadeia web reproduzível; README, AGENTS e manutenção refletem o protótipo atual. O workflow hospedado ainda depende de push posterior. G4 e G7–G10 continuam abertos, todas as validações humanas estão acumuladas e a versão permanece `0.2.0-alpha.1`.
+Os Prompts 1–19 estão tecnicamente implementados e `EXECUTION_PLAN.md` permanece seu registro histórico. A fase atual é guiada por `REFINEMENT_PLAN.md`. A rodada física de 2026-08-13 confirmou CRUD, criação de notas/citações, estante, áudio e controles, exportação, desinstalação/reinstalação, restauração, primeira conclusão, marco e luminária. Também revelou atritos de progresso, restauração, estante, gerenciamento de anotações, delay sonoro e uma necessidade de redesign amplo. O próximo trabalho é R1 — Coerência funcional. A versão permanece `0.2.0-alpha.1`.
 
 ## Bloqueios
 
-Nenhum bloqueio técnico identificado. G4 mantém a pendência humana de uso real prolongado. Áudio, diálogos, primeiro desbloqueio, TalkBack, teclado, contraste, texto ampliado e movimento efetivo aguardam o checkpoint integrado. Testes automáticos não comprovam qualidade artística, conforto, leitor de tela real ou comportamento físico. G7–G9 não foram aprovados; o agrupamento e suas exceções seguem D-034.
+Nenhum bloqueio técnico identificado. As evidências físicas são parciais: não cobrem uso prolongado, TalkBack, teclado, contraste, texto ampliado, lifecycle, desempenho nem toda a checklist integrada. Movimento reduzido pareceu congelar a cena e há pequeno delay sonoro ao entrar na Biblioteca. G4 e G7–G10 não foram aprovados; G11 não foi iniciado.
 
 ## Última evidência de validação
+
+Em 2026-08-13, Sam realizou a primeira rodada integrada no Moto G06. Funcionaram cadastro, modificação e exclusão de livros; criação de notas e citações; reação da estante; efeito sonoro, música, volume e mute; exportação para local escolhido; remoção dos dados na desinstalação; reinstalação limpa; importação/restauração com os dados restaurados corretamente; primeira conclusão, efeito, marco e luminária. Foram observados densidade e hierarquia inadequadas, Biblioteca visual secundária, estante pouco intuitiva em coleção pequena, falta de gerenciamento posterior de notas/citações, sensação de cena congelada com movimento reduzido, backup de segurança obrigatório excessivo em alguns contextos e pequeno delay sonoro ao entrar na Biblioteca. Esta rodada não aprova G4, G7, G8, G9 ou G10.
 
 Em 2026-08-11, o Prompt 19 consolidou a suíte crítica sem duplicar unitários: Playwright `1.62.1` adicionou quatro E2E Chromium para ciclo principal, busca/Arquivo, backup/restauração e falhas críticas. A CI web usa Node 22, `npm ci`, permissões somente de leitura e checks completos. Formatação, lint, typecheck, 521 testes em 57 arquivos, áudio, relatório de performance, build web, quatro E2E, `android:sync`, `android:build:debug` e `git diff --check` passaram. Uma cópia temporária sem `node_modules` reproduziu `npm ci`, checks, suíte, build e relatório. O APK não instalado tem 7.526.051 bytes, SHA-256 `318a5cc16226e8f493b5cadc15c69e872aa50ea013a345fcbb81553ce36dbe38` e ZIP íntegro. Nenhuma execução hospedada ou aprovação humana foi presumida. G4 e G7–G10 permanecem abertos.
 

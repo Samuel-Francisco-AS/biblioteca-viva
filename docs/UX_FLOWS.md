@@ -55,25 +55,31 @@ O cadastro navega para `/livros/:id`, agora um detalhe completo com dados biblio
 
 ## 5. Atualizar progresso
 
+> **Comportamento futuro aprovado para R1; ainda não implementado.**
+
 ```text
 Detalhe do livro
 → ação de atualizar progresso
 → informar página atual
 → domínio valida
+→ se planned e página > 0, mudar para in_progress e registrar início quando ausente
+→ se total conhecido e página == total, usar a conclusão existente
 → salvar atividade
 → atualizar detalhe
 → projeção da biblioteca recebe novo estado
 ```
 
-No Prompt 8, o retorno do caso de uso atualiza o estado local do detalhe. Ao voltar à Coleção, a consulta é refeita pela montagem da rota; não há reload global nem acesso ao Dexie pela apresentação.
+Sem total conhecido, progresso pode iniciar a leitura, mas não calcula porcentagem nem conclui automaticamente. Não inventar total nem ampliar `paused` ou `abandoned`. No estado implementado pelo Prompt 8, o retorno do caso de uso atualiza o estado local do detalhe; R1 deve preservar a ausência de acesso Dexie pela apresentação.
 
 ## 6. Concluir livro
 
+> **Comportamento futuro aprovado para R1; ainda não implementado.**
+
 ```text
 Detalhe
-→ marcar como concluído
-→ confirmar apenas se houver consequência relevante
-→ aplicar regra de progresso
+→ atualizar progresso até o total conhecido
+→ domínio mudar automaticamente para completed
+→ reutilizar a regra e a cadeia de conclusão existentes
 → registrar evento
 → avaliar marco
 → exibir feedback textual
@@ -81,6 +87,8 @@ Detalhe
 ```
 
 A conclusão pode ser desfeita sem apagar histórico.
+
+No detalhe com total conhecido, R1 deve mostrar porcentagem derivada, páginas lidas, total, páginas restantes e barra horizontal com texto equivalente. Tratar zero e 100%, limitar a 100%, não depender só de cor e respeitar contraste e escala de texto. Sem total, mostrar página atual e informar que o total não foi definido, sem porcentagem.
 
 ## 7. Notas e citações
 
@@ -136,7 +144,7 @@ Somente um painel fica aberto. Abrir outro substitui o anterior; fechar remove o
 
 A rota oferece uma alternativa textual com os mesmos dados essenciais.
 
-O cartão atual é o protótipo estrutural validado. Em uma revisão futura de UX e direção visual, a sala poderá ocupar a maior parte da tela inicial ou uma área quase inteira, com painéis sobrepostos semelhantes a bottom sheets. Essa intenção deve preservar a navegação inferior e a Coleção convencional e não faz parte desta correção, do Bloco 7 ou do Prompt 14.
+O cartão atual é o protótipo estrutural. Em R3, a sala deverá ocupar a maior parte da tela inicial ou área quase inteira, com informação secundária progressiva e painéis semelhantes a bottom sheets. O tema escuro será um sistema coerente, não uma simples inversão de cores. A direção preserva navegação inferior, Coleção convencional e alternativa React acessível sem fazê-la dominar visualmente. Trata-se de redesign extenso ainda não implementado.
 
 ## 10. Backup
 
@@ -169,7 +177,9 @@ Configurações
 → selecionar arquivo
 → validar sem modificar dados
 → mostrar resumo
-→ confirmar substituição ou mesclagem, conforme política aprovada
+→ se banco vazio, confirmar e restaurar sem backup de segurança obrigatório
+→ se banco preenchido, escolher criar backup, continuar sem backup ou cancelar
+→ ao continuar sem backup, confirmar aviso claro de substituição
 → restaurar transacionalmente
 → reiniciar projeções
 ```
@@ -201,7 +211,7 @@ Uma falha do Phaser mostra alternativa textual e opção de tentar novamente; n�
 
 ## 13. Backup e recuperação implementados
 
-Somente substituição está disponível. Selecionar valida sem escrita e move o foco ao resumo. Cancelar limpa a seleção e preserva o banco. Confirmar cria/entrega primeiro um backup de segurança quando necessário, revalida, substitui atomicamente e anuncia contagens. Falha permite nova tentativa. A entrega usa compartilhamento de arquivo quando suportado e download Blob como fallback.
+Somente substituição está disponível. No comportamento atual, confirmar exige criar/entregar primeiro um backup de segurança. A política futura aprovada para R1 torna essa cópia dispensável em banco vazio e uma escolha explícita em banco preenchido; cancelar e as proteções contra restauração acidental permanecem. Selecionar continua validando sem escrita, e restaurar continua revalidando e substituindo atomicamente. Falha permite nova tentativa.
 
 Falha de renderização apresenta “Tentar novamente” e “Recarregar aplicativo”; nenhuma opção apaga ou restaura dados automaticamente.
 

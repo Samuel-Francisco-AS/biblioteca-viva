@@ -21,6 +21,7 @@ Este manifesto indexa a documentação inicial do repositório Biblioteca Viva, 
 - `docs/PLANO_MESTRE.md` — visão longa original;
 - `docs/ARCHITECTURE.md` — análise completa de stack e arquitetura;
 - `docs/EXECUTION_PLAN.md` — 11 blocos e 19 prompts completos.
+- `docs/REFINEMENT_PLAN.md` — plano operacional das rodadas de refinamento pós-protótipo.
 
 ## Documentos operacionais
 
@@ -56,4 +57,4 @@ Este manifesto indexa a documentação inicial do repositório Biblioteca Viva, 
 
 ## Estado técnico
 
-O scaffold web, o shell navegável e a plataforma Android do Capacitor existem na raiz. A aplicação convencional está utilizável; backup e restauração foram validados; e a biblioteca visual está conectada aos dados e validada no Android. G5 e G6 foram aprovados em 2026-08-06, enquanto G4 permanece aberto por uso real prolongado. A versão continua `0.2.0-alpha.1`; o próximo trabalho de implementação é o Prompt 14, no Bloco 7, ainda não iniciado. Os comandos, rotas e caminhos reais estão registrados em `README.md`, `AGENTS.md` e `docs/STATUS.md`.
+Os Prompts 1–19 estão tecnicamente implementados. A primeira rodada integrada no Moto G06 confirmou partes do ciclo e originou a fase descrita em `docs/REFINEMENT_PLAN.md`; ela não aprovou G4 ou G7–G10. G5 e G6 permanecem aprovados, G11 não foi iniciado e a versão continua `0.2.0-alpha.1`. Os comandos, rotas e caminhos reais estão registrados em `README.md`, `AGENTS.md` e `docs/STATUS.md`.

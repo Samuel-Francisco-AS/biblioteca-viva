@@ -172,7 +172,7 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 ## D-017 — Domínio inicial de livros e Zod nas fronteiras
 
 - **Data:** 2026-07-29
-- **Status:** aceita
+- **Status:** aceita; política de início/conclusão exclusivamente explícita substituída por D-040
 
 **Contexto:** o Prompt 4 exige regras puras antes de formulários, casos de uso ou banco. O modelo conceitual anterior listava estados e campos sem fluxo atual equivalente.
 
@@ -330,7 +330,7 @@ Decisões não são apagadas quando substituídas. Altere o status para `substit
 ## D-031 — Sala visual dominante é intenção futura
 
 - **Data:** 2026-08-05
-- **Status:** registrada para revisão futura
+- **Status:** aceita como base da revisão R3; ampliada por D-042
 
 **Contexto:** o cartão atual cumpriu a validação estrutural, mas a intenção do produto é dar à sala visual a maior parte da tela inicial.
 
@@ -427,5 +427,38 @@ Evoluir o backup para formato v2 incluindo `milestones`, aceitando v1 com seu ch
 **Decisão:** adicionar `@playwright/test` `1.62.1` fixado, Chromium único, `vite preview` controlado em 4173 e quatro E2E críticos. Isolar cada cenário limpando IndexedDB apenas da origem de teste via CDP, sem endpoint no produto. Configurar GitHub Actions em Ubuntu 24.04/Node 22 com actions oficiais, permissões `contents: read`, `npm ci` e checks web completos. Manter Android debug como barreira local.
 
 **Consequências:** o navegador é instalado explicitamente; traces/resultados são ignorados; fixtures não contêm dados pessoais. CI não possui secrets, keystore, assinatura ou publicação. Android CI poderá ser revista se regressões nativas justificarem o custo. Workflow hospedado depende de push. Prompt 19 e G10 não são aprovados por esta decisão.
+
+## D-040 — Progresso dirige início e conclusão
+
+- **Data:** 2026-08-13
+- **Status:** aceita; substitui D-017 somente quanto ao início/conclusão exclusivamente explícitos
+
+**Contexto:** o uso físico no Moto G06 mostrou que exigir ações separadas para iniciar ou concluir uma leitura repete informação já expressa pelo progresso.
+
+**Decisão:** ao atualizar um livro `planned` para `currentPage > 0`, mudar automaticamente para `in_progress` e registrar início pela política temporal do domínio quando ausente. Com `totalPages` conhecido e `currentPage == totalPages`, mudar automaticamente para `completed` reutilizando a cadeia existente de domínio, transação, evento, marco idempotente, áudio, diálogo, projeção e feedback React. Sem total, permitir início por progresso, mas não calcular porcentagem nem concluir automaticamente. Não ampliar `paused` ou `abandoned`.
+
+**Consequências:** a implementação futura não criará um segundo caminho de conclusão nem persistirá porcentagem. A barra e páginas restantes serão derivadas. Regras e testes atuais permanecem verdade histórica até R1 implementar e documentar a mudança.
+
+## D-041 — Refinamento separado do plano original
+
+- **Data:** 2026-08-13
+- **Status:** aceita
+
+**Contexto:** os Prompts 1–19 foram tecnicamente implementados, e o primeiro uso integrado revelou trabalho posterior que não fazia parte do plano original.
+
+**Decisão:** preservar `EXECUTION_PLAN.md` como histórico dos 11 blocos e 19 prompts e usar `REFINEMENT_PLAN.md` como documento operacional de R1, R2, R3 e do checkpoint posterior. Não criar retroativamente “Prompt 20”.
+
+**Consequências:** roadmap e status distinguem implementação técnica, refinamento e aprovação de gate. A observação de 2026-08-13 não aprova G4 ou G7–G10, e G11 continua não iniciado.
+
+## D-042 — UX/Layout v2 e tema escuro coerente
+
+- **Data:** 2026-08-13
+- **Status:** aceita; amplia D-031
+
+**Contexto:** no Moto G06, excesso de superfícies e texto, hierarquia fraca e canvas secundário confirmaram que a apresentação estrutural não atende ao produto final. Movimento reduzido totalmente estático também pareceu congelamento.
+
+**Decisão:** realizar em R3 um redesign amplo com redução agressiva de densidade, Biblioteca visual protagonista e tema escuro baseado em sistema coerente de superfícies, iluminação, texto, foco, estados e contraste. Evoluir a sala dominante prevista em D-031 com informação progressiva e painéis contextuais, preservando navegação inferior e alternativa React acessível sem dominância visual.
+
+**Consequências:** não é troca cosmética de cores nem autorização para remover semântica, teclado, leitor de tela, alto contraste, escala textual, touch targets ou redução de movimento. Paleta final e solução de painéis dependem da rodada visual e de validação posterior.
 
 Use `templates/ADR_TEMPLATE.md` para novas decisões.
