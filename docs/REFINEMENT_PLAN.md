@@ -134,23 +134,45 @@ Em 2026-08-16, os seis itens foram concluídos tecnicamente. `updateNote`/`updat
 
 ## 6. Rodada R3 — UX/Layout v2 — Glow-up geral
 
-Esta é uma revisão extensa da apresentação, não pequeno polimento. Seus objetivos são redesign completo, redução agressiva da densidade, hierarquia clara, identidade consistente e tema escuro como direção principal.
+Esta é uma revisão extensa da apresentação, não pequeno polimento. A auditoria de 2026-08-16 confirma que o shell é mobile-first e semanticamente sólido, mas a linguagem visual ainda é estrutural: `styles.css` concentra tokens claros e regras de todas as rotas; `content-card` envolve quase todo bloco; o detalhe empilha resumo, progresso, status, dois formulários, histórico e exclusão em sete superfícies; Configurações empilha experiência, áudio, dados, exportação e restauração. A navegação inferior usa cinco colunas estáveis e vira lateral em `48rem`, enquanto grades/controles mudam em `36rem`.
 
-Revisar paleta, tipografia, espaçamento, superfícies/cartões, formulários, navegação inferior, Coleção, detalhe do livro, Novo livro, Arquivo, Configurações, estados vazios, mensagens e feedbacks de sucesso/erro. A Biblioteca visual deve ser protagonista.
+Na Biblioteca, `pages.tsx` renderiza introdução e `LibraryTextAlternative` antes de `LibraryVisualHost`; o host fica em `16:9`, mínimo de `12rem`, portanto o texto domina em retrato. `LibraryShelfPanel` e `LibraryCharacterPanel` entram no fluxo como novos cartões, não como camada contextual. A cena possui layouts puros compacto/regular em `sceneLayout.ts`, paleta procedural própria em `roomConfig.ts`, quatro zonas interativas e budget/lifecycle já testados. Reduced motion atualmente zera os três tweens contínuos, deixando a composição inteiramente estática. Esses fatos explicam a densidade, a desconexão React–Phaser e a sensação de congelamento; não autorizam alterar comportamento nesta auditoria.
 
-### Biblioteca
+R3 terá somente as duas entregas futuras abaixo.
 
-- canvas ocupando a maior parte da tela inicial, sem grande bloco textual acima;
-- informações secundárias progressivas e ações contextuais em bottom sheets ou solução equivalente;
-- navegação inferior preservada;
-- alternativa React acessível preservada sem dominar visualmente a interface;
-- estante, bibliotecária, criatura, luminária e futuras decorações integradas e legíveis.
+### R3-A — Sistema visual + aplicativo convencional
 
-### Tema e acessibilidade
+**Arquivos/componentes principais:** `src/styles.css`; shell, header, navegação, avisos e rotas em `src/App.tsx`/`src/routes.ts`; `CollectionPage`, `BookDetailPage`, `BookForm`/`EntryEditorPages`, `AnnotationForms`/`AnnotationActions`, `ArchivePage`, `SettingsPage`, Error Boundary e estados convencionais associados.
 
-O tema escuro não será mera troca para fundo `#111` e texto branco. Deve formar um sistema coerente de superfícies, fundo, texto, madeira, iluminação, destaque, foco, estados e contraste. A direção inicial pode explorar madeira escura, verdes profundos, âmbar/dourado, luz aconchegante e ambiente noturno, sem fixar uma paleta final.
+**Responsabilidades:** introduzir tokens v2 sem fixar hexadecimais como aprovação visual; formar tema escuro coerente com famílias de fundo noturno, madeira, verdes profundos, âmbar/dourado, texto, foco, erro e alto contraste; reduzir caixas/bordas e usar tipografia, ritmo e agrupamento para hierarquia; revisar shell/navegação/safe areas; transformar Coleção, detalhe, formulários, Arquivo e Configurações sem mudar seus casos de uso. Loading, vazio, erro, sucesso e confirmação devem compartilhar padrões visuais reais, sem abstração sem consumidor.
 
-O redesign deve preservar e revisar alto contraste, redução de movimento, escala de texto, semântica, teclado, leitor de tela e touch targets. A política de movimento reduzido deve evitar a sensação de cena congelada sem reintroduzir desconforto ou remover informação. Acessibilidade existente não pode ser removida.
+**Dependências e ordem:** começar pelos tokens e primitivas já consumidas (`button`, campos, headings, feedback, superfícies), depois shell/navegação, páginas de consulta, detalhe/anotações, editores e Configurações. Preservar os contratos e o estado local/URL atuais; R3-A não depende de mudar domínio, aplicação, Dexie, backup, Phaser ou assets.
+
+**Riscos:** contraste insuficiente no tema escuro; excesso de redução de bordas apagar agrupamentos; cinco destinos apertados em 320 px/texto ampliado; regressão de foco em confirmações; formulários e restauração perderem clareza; CSS global gerar efeito cruzado; desktop lateral divergir do mobile principal.
+
+**Testes provavelmente afetados:** `App.test.tsx`, `pages.test.tsx`, testes de Collection/BookDetail/EntryEditor/Archive/Settings/AnnotationActions, `accessibilityArchitecture.test.ts`, `presentationArchitecture.test.ts` e E2E críticos. Acrescentar verificações estruturais de estados, navegação, foco e atributos de experiência; validar visualmente 320 × 915, 360 × 640 e desktop sem substituir prova humana.
+
+**Preservações obrigatórias:** rotas e Voltar; parâmetros de busca/filtro; CRUD e compartilhamento; progressão/marcos; backup/restauração; labels, headings, `aria-live`, erros associados, teclado, foco, touch target de 44 px; alto contraste, três escalas de texto, reduced motion, safe areas e conteúdo utilizável sem áudio/canvas.
+
+**Critérios técnicos de conclusão:** todas as rotas convencionais usam o sistema v2 de forma coerente; densidade e superfícies redundantes são reduzidas sem perda semântica; nenhum overflow em larguras-alvo e texto ampliado; estados/confirmações distinguíveis sem depender de cor; automação integral verde e documentação atualizada. Aprovação estética, contraste humano e TalkBack continuam gates humanos.
+
+### R3-B — Biblioteca protagonista + acabamento integrado
+
+**Arquivos/componentes principais:** `src/pages.tsx`; `LibraryVisualHost`, `LibraryTextAlternative`, `LibraryShelfPanel`, `LibraryCharacterPanel`, `libraryPresentation` e contracts; `InitialLibraryScene`, `sceneLayout`, `roomConfig`, `motionLifecycle`/`motionPolicy`, projeção/manifests; estilos da Biblioteca em `styles.css`; integração do shell em `App.tsx`.
+
+**Responsabilidades:** colocar sala/canvas como primeiro plano e reservar no retrato uma altura útil entre header e navegação; transformar introdução em informação curta/overlay contextual; manter resumo e ações React equivalentes em uma alternativa recolhível ou secundária semanticamente presente; apresentar estante/personagens em painel inferior ou camada equivalente com foco/fechamento corretos; alinhar superfícies e iluminação React à sala; tratar vazio, loading e falha do canvas sem bloquear Coleção.
+
+**Dependências e ordem:** parte do sistema visual de R3-A e preserva `LibraryViewModel`, as interações tipadas e a instância lazy única. Primeiro definir layout responsivo do host e ordem DOM; depois camada contextual e retorno de foco; em seguida ajustar os layouts procedurais/paleta da cena; por fim reconciliar motion, fallback e acabamento. Não levar entidades, títulos privados desnecessários ou regras de negócio ao Phaser.
+
+**Reduced motion futuro:** manter zero loops contínuos quando reduzido, mas usar estados visuais estáticos intencionais e feedback discreto disparado somente por interação/mudança: poses alternativas, iluminação/ênfase imediata e transições finitas quando aceitáveis. Nada depende de animação; nenhuma pulsação, caminhada ou idle contínuo volta no modo reduzido. A solução deve parecer responsiva sem simular atividade permanente.
+
+**Riscos:** canvas dominante competir com navegação/safe area/teclado; overlay esconder alternativa ou quebrar ordem de foco; bottom sheet sem contenção/restauração adequadas; recriar Phaser em resize/layout; aumentar display objects/tweens ou bundle; contraste divergente entre CSS e WebGL; texto ampliado encobrir a sala; reduced motion voltar a parecer congelado ou reintroduzir movimento contínuo.
+
+**Testes provavelmente afetados:** `pages.test.tsx`, `LibraryVisualHost.test.tsx`, arquitetura/projeção/layout/manifest/tap/motion da Biblioteca, App/accessibility, prova de 20 ciclos, performance report e E2E principal. Manter testes de uma instância/canvas, import tardio, resize, pause/resume, cleanup, interação por toque/arraste, foco após painel, alternativa operável e falha do canvas; acrescentar matriz de host retrato/desktop e estados reduzidos discretos sem WebGL real quando possível.
+
+**Preservações obrigatórias:** React continua estrutura acessível e fonte das ações; Phaser continua view lazy especializada; alternativa convencional permanece completa; Coleção acessível sem jogar; estante, bibliotecária, criatura, luminária, projeção limitada, privacidade, áudio independente da cena, touch/scroll, lifecycle, offline e budget visual permanecem válidos.
+
+**Critérios técnicos de conclusão:** canvas é protagonista em retrato sem remover header/navegação/alternativa; painéis contextuais têm semântica, fechamento e retorno de foco previsíveis; loading/vazio/falha mantêm ações equivalentes; layout compacto/regular e texto ampliado não sobrepõem conteúdo; reduced motion comunica estado/resposta sem loops; Phaser segue lazy, com uma instância/canvas e budget coerente; suíte, E2E, build/performance e Android debug verdes. Aparência, conforto de movimento e uso físico ainda exigem validação humana.
 
 ## 7. Checkpoint integrado posterior
 
