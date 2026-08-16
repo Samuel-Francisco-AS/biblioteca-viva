@@ -3,8 +3,14 @@
 - **Biblioteca Viva:** produto completo e também metáfora do ambiente persistente.
 - **Biblioteca visual:** rota/cena Phaser que representa os dados.
 - **Coleção:** interface React para listar e organizar registros.
-- **LibraryEntry:** entidade base discriminada para algo registrado.
+- **LibraryEntry:** união discriminada de um registro pessoal; em P1 abrange livro, filme, série, estudo, atividade física e trabalho.
 - **BookEntry:** variante de livro implementada no protótipo.
+- **MovieEntry / SeriesEntry / StudyEntry:** variantes históricas aprovadas para P1.
+- **PhysicalActivityEntry:** prática acompanhada sem finalidade médica ou prescritiva, aprovada em D-049.
+- **WorkEntry:** projeto ou atividade produtiva pessoal/profissional leve, sem gestão empresarial, aprovada em D-049.
+- **P1 — Vida Registrada:** fase de registros, etiquetas, favoritos, sessões, histórico e estatísticas.
+- **P2 — Biblioteca Evolutiva:** fase futura de salas, reputação, desbloqueios, personagens e rotinas.
+- **P3 — Memória Conectada:** fase futura de calendário avançado, ritmos, conexões, revisão e coleções.
 - **Anotação:** nota ou citação associada a um registro.
 - **Atividade:** histórico mínimo de ação relevante; não é event sourcing.
 - **Evento de domínio:** fato ocorrido usado para desacoplar reações.

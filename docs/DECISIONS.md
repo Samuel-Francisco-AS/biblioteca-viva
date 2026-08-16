@@ -527,4 +527,15 @@ Evoluir o backup para formato v2 incluindo `milestones`, aceitando v1 com seu ch
 
 **Consequências:** WebView, HTML e sala compartilham fundo escuro; conteúdo visual pode ocupar as bordas, enquanto controles respeitam insets. Build automático comprova compilação, não aparência real, navegação gestual, rotação ou legibilidade no Moto G06; esses itens permanecem no checkpoint humano.
 
+## D-049 — Início da fase de produto e registros múltiplos
+
+- **Data:** 2026-08-16
+- **Status:** aceita; supera D-009 somente quanto ao bloqueio da expansão após o protótipo
+
+**Contexto:** Sam considera o protótipo funcionalmente suficiente para iniciar a expansão do produto. R1–R3 formam o baseline técnico, embora G4 e G7–G10 continuem abertos e G11 não tenha sido iniciado. A visão histórica já previa livros, filmes, séries e estudos; atividade física e trabalho são expansões novas, aprovadas nesta decisão.
+
+**Decisão:** iniciar `P1 — Vida Registrada` e implementar `LibraryEntry` como união discriminada de `BookEntry`, `MovieEntry`, `SeriesEntry`, `StudyEntry`, `PhysicalActivityEntry` e `WorkEntry`. A Biblioteca passa a representar o espaço pessoal em que aquilo que a pessoa lê, assiste, aprende, pratica e constrói deixa memória. P1 abrange registros, etiquetas, favoritos, sessões, histórico e estatísticas. `P2 — Biblioteca Evolutiva` fica reservado a salas, reputação, desbloqueios, personagens e rotinas; `P3 — Memória Conectada`, a calendário avançado, metas opcionais, ritmos, conexões, revisão e coleções.
+
+**Consequências:** D-009 permanece como registro verdadeiro da restrição do protótipo, mas deixa de bloquear a expansão em P1. Esta decisão não aprova retroativamente gate algum: G4 e G7–G10 permanecem abertos e G11 permanece não iniciado enquanto esse for o estado real. A sala Phaser principal continua representando livros em P1; nenhuma sala de P2 é antecipada. Conta, backend, sincronização, nuvem e recursos sociais continuam fora. Atividade física registra prática sem aconselhamento médico; Trabalho registra projetos, notas e sessões sem virar gestão empresarial.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

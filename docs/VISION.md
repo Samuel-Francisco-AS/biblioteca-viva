@@ -2,11 +2,11 @@
 
 ## Frase de produto
 
-> Tudo o que você lê, assiste e aprende passa a habitar a sua biblioteca.
+> Aquilo que você lê, assiste, aprende, pratica e constrói pode deixar memória na sua biblioteca.
 
 ## Propósito
 
-Transformar registros culturais e de aprendizado em um espaço pessoal, visível, afetivo e persistente. O aplicativo deve ajudar a preservar experiências e tornar natural o reencontro com livros, anotações, citações e aprendizados.
+Transformar registros culturais, de aprendizado, prática e trabalho em um espaço pessoal, visível, afetivo e persistente. O aplicativo deve ajudar a preservar experiências e tornar natural o reencontro com registros, anotações, citações e aprendizados, sem pretender controlar toda a vida.
 
 ## Promessa central
 
@@ -60,4 +60,4 @@ Biblioteca Viva não deve se tornar:
 
 ## Horizonte
 
-A longo prazo, livros, filmes, séries e estudos poderão formar salas, personagens, ecossistemas e conexões. Essa visão é direção, não compromisso de escopo imediato. O protótipo existe para provar que uma ferramenta real e uma biblioteca viva podem funcionar como um único produto.
+A fase de produto começa com livros, filmes, séries, estudos, atividade física e trabalho como vida registrada. Em P2, esses fatos poderão formar salas, personagens, ecossistemas e rotinas; em P3, conexões e revisitas. Essa visão é direção modular, não licença para transformar a Biblioteca Viva em um super app que controla tudo.

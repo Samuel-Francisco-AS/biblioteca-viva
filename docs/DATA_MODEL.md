@@ -26,7 +26,9 @@ Operações recebem IDs e datas explicitamente. Elas não usam relógio ou gerad
 
 ## 3. LibraryEntry e BookEntry
 
-`LibraryEntry` é uma união discriminada cujo único membro atual é `BookEntry`. Apenas `type: "book"` é aceito; filmes, séries e estudos permanecem fora do protótipo.
+No baseline do protótipo, `LibraryEntry` ainda possui somente `BookEntry`. D-049 aprova para P1 a evolução aditiva para uma união discriminada com `BookEntry`, `MovieEntry`, `SeriesEntry`, `StudyEntry`, `PhysicalActivityEntry` e `WorkEntry`. A implementação e o schema continuam em v3 até P1-A concluir sua migração; esta seção não antecipa estado técnico.
+
+Campos comuns aprovados para P1: `id`, `type`, `title`, `status`, `createdAt`, `updatedAt`, `revision`, `startedAt?`, `completedAt?`, `favorite` e `tagIds`. Cada variante mantém campos e progresso próprios; é proibido concentrar páginas, episódios, disciplina, distância e cliente em uma entidade amorfa de opcionais.
 
 | Campo | Tipo | Obrigatório | Regra |
 |---|---|---:|---|

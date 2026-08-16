@@ -359,6 +359,14 @@ Permite cadastrar algo que não se encaixe nos tipos existentes.
 
 Deve ser introduzido apenas depois de estabilizar os modelos principais.
 
+### 9.9 Atividade física
+
+Tipo oficial aprovado para P1 por D-049. Representa práticas como musculação, caminhada, corrida, bicicleta, mobilidade ou esporte, com categoria pequena e modalidade opcional. Registra sessões, duração, distância explicitamente informada e notas. Não calcula calorias, não oferece diagnóstico, dieta, metas clínicas ou prescrição.
+
+### 9.10 Trabalho
+
+Tipo oficial aprovado para P1 por D-049. Representa projetos, portfólio, freelance, busca estruturada ou atividade produtiva pessoal/profissional. O núcleo é projeto, notas, sessões, histórico e próxima ação. Não implementa equipes, Jira, Kanban completo, Gantt, faturamento ou timesheet empresarial.
+
 ---
 
 ## 10. Status de registros
@@ -1667,7 +1675,7 @@ Modelo recomendado:
 
 ### Fase 1 — MVP
 
-- livros, filmes, séries e estudos;
+- livros, filmes, séries, estudos, atividade física e trabalho;
 - coleção;
 - busca;
 - filtros;
@@ -1755,6 +1763,8 @@ Modelo recomendado:
 - filmes;
 - séries;
 - estudos;
+- atividade física;
+- trabalho;
 - modelos de progresso.
 
 ### M4 — Coleção e arquivo
@@ -1782,6 +1792,12 @@ Modelo recomendado:
 - gráficos;
 - hábitos;
 - sessões.
+
+### Fases atuais de produto
+
+- **P1 — Vida Registrada:** registros, etiquetas, favoritos, sessões, histórico e estatísticas;
+- **P2 — Biblioteca Evolutiva:** salas de Estudos, Projeção, Treino e Escritório, reputação, desbloqueios, personagens e rotinas;
+- **P3 — Memória Conectada:** calendário avançado, metas opcionais, ritmos, conexões, revisão e coleções.
 
 ### M7 — Android público
 

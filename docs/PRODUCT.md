@@ -1,6 +1,14 @@
-# Produto e contrato do protótipo
+# Produto — contrato histórico do protótipo e fase atual
 
 > Escopo vigente até o Gate G11. Alterações exigem decisão registrada.
+
+O contrato abaixo permanece como história verdadeira do protótipo. D-049 autorizou uma fase de produto paralela aos gates humanos ainda abertos; isso não reescreve nem aprova retroativamente o protótipo.
+
+## Contrato atual — P1
+
+A Biblioteca Viva é um espaço pessoal em que aquilo que a pessoa lê, assiste, aprende, pratica e constrói deixa memória. Continua local-first, privada, acolhedora, sem coerção e sem gamificação punitiva.
+
+Os tipos oficiais de P1 são `Book`, `Movie`, `Series`, `Study`, `PhysicalActivity` e `Work`. Filmes, séries e estudos realizam a direção histórica; atividade física e trabalho são expansões novas aprovadas em D-049. P1 adiciona infraestrutura comum de etiquetas, favoritos, sessões, busca, Arquivo, histórico, timeline e estatísticas. Conta, backend, sincronização, social, múltiplas salas e recursos médicos ou empresariais continuam fora.
 
 ## 1. Objetivo do protótipo
 

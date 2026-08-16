@@ -8,6 +8,8 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 ### Adicionado
 
+- início documental de `P1 — Vida Registrada`, com seis tipos oficiais e estrutura futura P1/P2/P3;
+
 - sistema visual escuro semântico e drawer lateral acessível para as cinco áreas do aplicativo;
 - Biblioteca com canvas protagonista, bottom sheet compartilhado, balões React e alternativa acessível compacta;
 - atmosferas procedurais de manhã, tarde, noite e madrugada pela hora local, com preview somente diagnóstico;

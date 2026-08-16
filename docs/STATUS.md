@@ -5,14 +5,14 @@
 
 ## Estado executivo
 
-- **Fase:** refinamento pós-protótipo baseado em uso real;
+- **Fase:** produto — `P1 — Vida Registrada`;
 - **blocos concluídos:** Bloco 5 — Backup, restauração e recuperação, com G5 aprovado; Bloco 6 — Biblioteca visual conectada, com G6 aprovado;
 - **prompts tecnicamente implementados:** Prompts 1 a 19; sua conclusão técnica não aprova os gates humanos pendentes;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **trabalho atual:** R1, R2 e R3 tecnicamente concluídos; próximo trabalho é o checkpoint integrado Android pós-R1–R3;
+- **trabalho atual:** decisão de produto formalizada; P1-A é o próximo checkpoint técnico;
 - **gate:** G0 a G3 aprovados; G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
-- **último checkpoint técnico:** R3-B selado em `3ae0ad9`; auditoria corretiva final validada integralmente;
+- **último checkpoint técnico:** R3-B selado em `3ae0ad9`; P1 iniciado documentalmente, ainda sem implementação técnica;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
 - **APK:** APK debug com R3 completo gerado, ZIP íntegro e não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `d4acb5060b03b1a8996d72f7d9302d377566f7e6ab15d08a886d6983aecac79d`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
@@ -55,7 +55,7 @@
 
 ## Trabalho atual
 
-Os Prompts 1–19 e R1–R3 estão tecnicamente implementados. R3 consolidou tema escuro semântico, drawer modal, superfícies integrais, sala protagonista, bottom sheet, balões React, quatro períodos locais e edge-to-edge Android mínimo. O próximo trabalho é o checkpoint integrado Android pós-R1–R3. A versão permanece `0.2.0-alpha.1`; nenhum gate humano foi aprovado por esta entrega.
+Os Prompts 1–19 e R1–R3 estão tecnicamente implementados e formam o baseline. Por D-049, Sam autorizou iniciar `P1 — Vida Registrada` sem aprovar retroativamente os gates antigos. P1-A implementará os seis tipos de `LibraryEntry` e a migração aditiva; P1-B acrescentará etiquetas, favoritos, sessões e backup v3; P1-C acrescentará histórico, timeline e estatísticas. A versão permanece `0.2.0-alpha.1`; G4 e G7–G10 continuam abertos e G11 não foi iniciado.
 
 ## Bloqueios
 

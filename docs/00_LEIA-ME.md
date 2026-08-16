@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> Estado atual em 2026-08-13: Prompts 1–19 tecnicamente implementados; fase de refinamento pós-protótipo iniciada após uso real no Moto G06; G4 e G7–G10 permanecem abertos; versão `0.2.0-alpha.1`.
+> Estado atual em 2026-08-16: protótipo e R1–R3 preservados como baseline técnico; `P1 — Vida Registrada` iniciado por decisão explícita de Sam; G4 e G7–G10 permanecem abertos; versão `0.2.0-alpha.1`.
 
 ## 1. Função desta documentação
 
@@ -31,6 +31,8 @@ Ela está dividida por frequência de mudança:
 
 Para refinamentos posteriores ao protótipo técnico, leia `REFINEMENT_PLAN.md` depois de `ROADMAP.md`; `EXECUTION_PLAN.md` permanece como histórico dos Prompts 1–19.
 
+Para a fase de produto, leia `PRODUCT_PHASE_PLAN.md` depois de `ROADMAP.md`. P1 não é Prompt 20 nem uma nova rodada R.
+
 ### Avaliar uma mudança arquitetural
 
 1. `ARCHITECTURE.md`;
@@ -59,6 +61,7 @@ Para refinamentos posteriores ao protótipo técnico, leia `REFINEMENT_PLAN.md` 
 | `ROADMAP.md` | marcos, gates e progresso | prompt ou gate mudar de estado |
 | `EXECUTION_PLAN.md` | prompts completos do Codex | estratégia de execução mudar |
 | `REFINEMENT_PLAN.md` | rodadas operacionais posteriores ao protótipo | achado real, prioridade ou rodada mudar |
+| `PRODUCT_PHASE_PLAN.md` | plano operacional P1–P3 da fase de produto | fase, checkpoint ou limite macro mudar |
 | `TEST_PLAN.md` | estratégia e evidências | cobertura ou plataforma mudar |
 | `SECURITY.md` | controles e ameaças | superfície de ataque mudar |
 | `PRIVACY.md` | tratamento de dados pessoais | coleta, conta ou integração mudar |
