@@ -494,4 +494,37 @@ Evoluir o backup para formato v2 incluindo `milestones`, aceitando v1 com seu ch
 
 **Consequências:** a barra inferior deixa de existir e a área de conteúdo ganha altura útil. O mesmo contrato de rotas continua centralizado e não surge uma segunda arquitetura para desktop. Testes de comportamento cobrem abertura, fechamento, foco, rota ativa e clique fora do título do livro. D-014 permanece histórica para roteamento/rotas; D-042 permanece vigente para tema e Biblioteca protagonista, exceto pela navegação inferior explicitamente substituída aqui.
 
+## D-046 — Canvas como página e contexto React sobreposto
+
+- **Data:** 2026-08-16
+- **Status:** aceita; implementa e amplia D-031/D-042
+
+**Contexto:** a ordem textual anterior tornava a sala um conteúdo secundário. Os mockups de R3 pedem que menu, resumo e falas apareçam sob demanda sem transferir texto pessoal ou semântica ao Phaser.
+
+**Decisão:** a rota `/` usa o host retrato em toda a área útil, com header discreto sobreposto. Um bottom sheet React único atende resumo e estante; falas curtas usam balões DOM ancorados aproximadamente às personagens; a alternativa React fica em disclosure compacto e abre automaticamente quando o canvas falha. Drawer, sheet ou período não recriam a instância. Títulos recentes podem aparecer no sheet React, mas não entram em `LibraryViewModel` nem no Phaser.
+
+**Consequências:** a sala passa a ser a primeira impressão sem ser declarada acessível por si. Sheet recebe foco e devolve ao acionador conhecido; balão não rouba foco e expõe uma única frase localizada. O fallback preserva estado, Coleção, estante e diálogos. Não há N+1, schema, asset ou regra de negócio nova.
+
+## D-047 — Atmosfera por quatro períodos locais
+
+- **Data:** 2026-08-16
+- **Status:** aceita
+
+**Contexto:** R3 precisa variar iluminação durante um app aberto sem rede, geolocalização, persistência ou polling frequente.
+
+**Decisão:** derivar `lateNight` (00:00–05:59), `morning` (06:00–11:59), `afternoon` (12:00–17:59) e `night` (18:00–23:59) de uma fonte única de hora local. Agendar somente a próxima fronteira, recalcular após disparo e em `visibilitychange`, e limpar timer/listener no dispose. Entregar o ID ao Phaser como contrato visual. Em movimento normal, usar transição finita de 500 ms; em reduced motion, aplicar estado imediato. Diagnóstico DEV/interno permite override não persistido e retorno a automático.
+
+**Consequências:** o período não pertence ao domínio de livros, não entra em Dexie/backup/settings e não altera áudio ou catálogo de diálogos. Produção mantém no máximo um timer de atmosfera; mudança preserva a instância e o canvas.
+
+## D-048 — Edge-to-edge nativo mínimo em R3
+
+- **Data:** 2026-08-16
+- **Status:** aceita; validação física pendente
+
+**Contexto:** Android 15 e a direção da sala pedem fundo escuro sob status/navigation bars, mantendo controles fora de áreas inseguras e evitando flash claro.
+
+**Decisão:** usar APIs AndroidX já disponíveis em `MainActivity`: desativar o ajuste automático de decor, tornar as duas system bars transparentes e manter ícones claros. O tema nativo e splash usam fundo escuro e cutout `shortEdges`; o viewport usa `viewport-fit=cover`; CSS aplica safe areas aos controles e sheets. Não adicionar plugin.
+
+**Consequências:** WebView, HTML e sala compartilham fundo escuro; conteúdo visual pode ocupar as bordas, enquanto controles respeitam insets. Build automático comprova compilação, não aparência real, navegação gestual, rotação ou legibilidade no Moto G06; esses itens permanecem no checkpoint humano.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

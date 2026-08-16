@@ -1,7 +1,7 @@
 # Plano de refinamento pós-protótipo
 
 > Início da fase: 2026-08-13
-> Estado: R1, R2 e R3-A tecnicamente concluídos; R3-B é o trabalho atual e R3 permanece em andamento
+> Estado: R1, R2 e R3 tecnicamente concluídos; próximo trabalho é o checkpoint integrado Android pós-R1–R3
 > Base: primeira rodada integrada de uso físico realizada por Sam no Moto G06
 
 ## 1. Função e limites
@@ -160,7 +160,9 @@ Em 2026-08-16, R3-A foi concluído tecnicamente. O shell passou a usar drawer mo
 
 ### R3-B — Biblioteca protagonista + acabamento integrado
 
-**Arquivos/componentes principais:** `src/pages.tsx`; `LibraryVisualHost`, `LibraryTextAlternative`, `LibraryShelfPanel`, `LibraryCharacterPanel`, `libraryPresentation` e contracts; `InitialLibraryScene`, `sceneLayout`, `roomConfig`, `motionLifecycle`/`motionPolicy`, projeção/manifests; estilos da Biblioteca em `styles.css`; integração do shell em `App.tsx`.
+Em 2026-08-16, R3-B foi concluído tecnicamente. A sala ocupa a área útil da rota, o drawer entra sobre ela, resumo/estante compartilham bottom sheet, falas curtas permanecem em balões React e a alternativa acessível ficou compacta com expansão automática no fallback. Quatro períodos derivados da hora local atualizam uma única instância por timer de próxima fronteira, com override somente diagnóstico. O Android recebeu edge-to-edge nativo mínimo e fundo escuro coerente. Automação e build não aprovam aparência, TalkBack, system bars ou performance física.
+
+**Arquivos/componentes principais:** `src/pages.tsx`; `LibraryVisualHost`, `LibraryTextAlternative`, `LibraryBottomSheet`, `LibrarySpeechBubble`, `libraryAtmosphere`, `libraryPresentation` e contracts; `InitialLibraryScene`, `sceneLayout`, `roomConfig`, `motionLifecycle`/`motionPolicy`, projeção/manifests; estilos da Biblioteca em `styles.css`; integração do shell em `App.tsx`.
 
 **Responsabilidades:** colocar sala/canvas como primeiro plano e reservar no retrato uma altura útil entre header e navegação; transformar introdução em informação curta/overlay contextual; manter resumo e ações React equivalentes em uma alternativa recolhível ou secundária semanticamente presente; apresentar estante/personagens em painel inferior ou camada equivalente com foco/fechamento corretos; alinhar superfícies e iluminação React à sala; tratar vazio, loading e falha do canvas sem bloquear Coleção.
 

@@ -1008,3 +1008,11 @@ O áudio usa a cadeia `source local → manifesto validado → cue ID estável �
 O CSS global permanece pequeno e concreto, mas seus componentes consomem tokens semânticos escuros de canvas, superfícies, texto, borda, foco, madeira, iluminação, estados, controles e scrim. Alto contraste redefine o mesmo contrato, sem tema persistido adicional. O shell mantém uma tabela de rotas e um único drawer modal; não há navegação duplicada para desktop. O drawer pertence à apresentação e não toca aplicação, banco ou Phaser.
 
 Coleção preserva a consulta única e o estado de URL, mas cada livro é um link integral com conteúdo semântico não interativo. Detalhe e Configurações usam seções contínuas por CSS, preservando componentes/casos de uso e separando confirmações e destruição. R3-A não mudou domínio, portas, Dexie, schema, backup, assets, áudio, dependências ou versão. A Biblioteca ainda usa seus contratos anteriores até R3-B.
+
+## 34. Biblioteca e atmosfera após R3-B
+
+`LibraryPage` compõe o host dominante e as camadas DOM. `LibraryBottomSheet` é a infraestrutura compartilhada de resumo/estante; `LibrarySpeechBubble` mantém falas localizadas fora do Phaser; `LibraryTextAlternative` permanece o fallback convencional. Somente React conhece o título recente. `LibraryViewModel` continua agregado, genérico e sem título, autor ou anotação.
+
+`libraryAtmosphere.ts` deriva quatro períodos da hora local e possui um monitor testável que mantém somente o timer até a próxima fronteira e um listener de visibilidade. O ID visual chega por contrato a `LibraryVisualHost`, que chama `setAtmosphere` na instância existente. Phaser desenha um único overlay procedural adicional e no máximo um tween finito de 500 ms; reduced motion aplica diretamente. Não há acesso a domínio, Dexie, áudio, rede, geolocalização ou persistência.
+
+No Android, `MainActivity` usa AndroidX já transitivo para edge-to-edge e ícones claros; temas nativos/splash e a raiz web compartilham fundo profundo. `viewport-fit=cover` e tokens de safe area mantêm controles fora das barras. Nenhum plugin, permissão ou dependência foi adicionado.

@@ -40,6 +40,7 @@ function game(): LibraryVisualGame {
     pause: vi.fn(),
     resize: vi.fn(),
     resume: vi.fn(),
+    setAtmosphere: vi.fn(),
     setInteractionHandler: vi.fn(),
     setReducedMotion: vi.fn(),
     updateProjection: vi.fn(),
@@ -409,6 +410,36 @@ describe("LibraryVisualHost", () => {
 
     expect(createLibraryVisualGame).toHaveBeenCalledOnce();
     expect(instance.setReducedMotion).toHaveBeenLastCalledWith(true);
+  });
+
+  it("troca o período na mesma instância e respeita movimento reduzido", async () => {
+    const instance = game();
+    const { createLibraryVisualGame, loadFactory } = factoryFor(instance);
+    const rendered = renderHost({ loadFactory, period: "afternoon" });
+    await waitFor(() => expect(createLibraryVisualGame).toHaveBeenCalledOnce());
+    expect(createLibraryVisualGame.mock.calls[0]?.[0]?.period).toBe(
+      "afternoon",
+    );
+
+    rendered.rerender(
+      <LibraryVisualHost
+        loadFactory={loadFactory}
+        period="night"
+        projection={projection}
+      />,
+    );
+    expect(instance.setAtmosphere).toHaveBeenLastCalledWith("night", true);
+
+    rendered.rerender(
+      <LibraryVisualHost
+        loadFactory={loadFactory}
+        period="lateNight"
+        projection={projection}
+        reducedMotion
+      />,
+    );
+    expect(instance.setAtmosphere).toHaveBeenLastCalledWith("lateNight", false);
+    expect(createLibraryVisualGame).toHaveBeenCalledOnce();
   });
 
   it("usa a projeção mais recente se a factory resolver depois de um rerender", async () => {

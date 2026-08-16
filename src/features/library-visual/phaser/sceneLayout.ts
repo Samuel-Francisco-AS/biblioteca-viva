@@ -50,6 +50,7 @@ export interface LibrarySceneLayout {
   readonly readingLamp: SceneRectangle;
   readonly mode: LibrarySceneLayoutMode;
   readonly shelf: SceneRectangle;
+  readonly sideShelf: SceneRectangle;
   readonly shelfHitArea: SceneRectangle;
   readonly shelfLabel: SceneTextPlacement;
   readonly wallHeight: number;
@@ -90,6 +91,99 @@ export function sceneRectangleContains(
 }
 
 function compactLayout({ height, width }: SceneLayoutSize): LibrarySceneLayout {
+  if (height < 320) return compactLandscapeLayout({ height, width });
+
+  const margin = 12;
+  const wallHeight = Math.max(42, Math.round(height * 0.08));
+  const shelf: SceneRectangle = {
+    height: Math.max(58, Math.min(88, height * 0.14)),
+    width: width - margin * 2,
+    x: margin,
+    y: wallHeight + 8,
+  };
+  const sideShelf: SceneRectangle = {
+    height: Math.max(90, Math.min(180, height * 0.28)),
+    width: Math.max(54, width * 0.2),
+    x: margin,
+    y: shelf.y + shelf.height + 10,
+  };
+  const counter: SceneRectangle = {
+    height: 34,
+    width: Math.max(72, Math.round(width * 0.28)),
+    x: width - margin - Math.max(72, Math.round(width * 0.28)),
+    y: height - 64,
+  };
+  const librarian = {
+    radius: 10,
+    x: counter.x - 26,
+    y: Math.max(82, counter.y - 28),
+  };
+  const creatureMovementBounds: SceneRectangle = {
+    height: 20,
+    width: Math.max(54, counter.x - sideShelf.x - sideShelf.width - 16),
+    x: sideShelf.x + sideShelf.width + 8,
+    y: height * 0.7,
+  };
+  const creatureRadius = 9;
+  const creature = {
+    radius: creatureRadius,
+    x: creatureMovementBounds.x + creatureRadius,
+    y: creatureMovementBounds.y + creatureMovementBounds.height / 2,
+  };
+  const highlightedBook: SceneRectangle = {
+    height: 15,
+    width: 26,
+    x: counter.x + counter.width * 0.5 - 13,
+    y: counter.y - 13,
+  };
+
+  return {
+    counter,
+    creature,
+    creatureHitArea: centeredHitArea(creature.x, creature.y),
+    creatureMovementBounds,
+    header: {
+      completed: textPlacement(margin, 39, 11, width - margin * 2),
+      title: textPlacement(margin, 4, 14, width - margin * 2),
+      totalAndInProgress: textPlacement(margin, 22, 11, width - margin * 2),
+    },
+    highlightedBook,
+    highlightedBookHitArea: centeredHitArea(
+      highlightedBook.x + highlightedBook.width / 2,
+      highlightedBook.y + highlightedBook.height / 2,
+    ),
+    highlightedBookLabel: null,
+    highlightedBookMaximumLength: 16,
+    librarian,
+    librarianHitArea: centeredHitArea(librarian.x, librarian.y),
+    lightAreas: [
+      { radius: Math.max(44, width * 0.18), x: width * 0.72, y: height * 0.55 },
+    ],
+    milestoneMarker: {
+      height: 10,
+      width: 10,
+      x: shelf.x + shelf.width - 16,
+      y: shelf.y + 6,
+    },
+    readingLamp: {
+      height: 20,
+      width: 14,
+      x: counter.x + counter.width - 20,
+      y: counter.y - 17,
+    },
+    mode: "compact",
+    shelf,
+    shelfHitArea: shelf,
+    shelfLabel: textPlacement(margin + 5, shelf.y + 4, 11, shelf.width - 10),
+    sideShelf,
+    wallHeight,
+  };
+}
+
+function compactLandscapeLayout({
+  height,
+  width,
+}: SceneLayoutSize): LibrarySceneLayout {
   const margin = 12;
   const wallHeight = 56;
   const shelf: SceneRectangle = {
@@ -98,10 +192,17 @@ function compactLayout({ height, width }: SceneLayoutSize): LibrarySceneLayout {
     x: margin,
     y: 64,
   };
+  const sideShelf: SceneRectangle = {
+    height: Math.max(20, height - shelf.y - shelf.height - margin),
+    width: 44,
+    x: margin,
+    y: shelf.y + shelf.height,
+  };
+  const counterWidth = Math.max(72, Math.round(width * 0.28));
   const counter: SceneRectangle = {
     height: 34,
-    width: Math.max(72, Math.round(width * 0.28)),
-    x: width - margin - Math.max(72, Math.round(width * 0.28)),
+    width: counterWidth,
+    x: width - margin - counterWidth,
     y: height - 42,
   };
   const librarian = {
@@ -166,6 +267,7 @@ function compactLayout({ height, width }: SceneLayoutSize): LibrarySceneLayout {
     shelf,
     shelfHitArea: shelf,
     shelfLabel: textPlacement(margin + 5, shelf.y + 4, 11, shelf.width - 10),
+    sideShelf,
     wallHeight,
   };
 }
@@ -178,6 +280,15 @@ function regularLayout({ height, width }: SceneLayoutSize): LibrarySceneLayout {
     width: Math.round(width * 0.27),
     x: margin,
     y: wallHeight + margin,
+  };
+  const sideShelf: SceneRectangle = {
+    height: Math.max(
+      24,
+      height - (shelf.y + shelf.height + margin * 0.5) - margin,
+    ),
+    width: Math.round(width * 0.12),
+    x: margin,
+    y: shelf.y + shelf.height + margin * 0.5,
   };
   const counter: SceneRectangle = {
     height: Math.round(height * 0.16),
@@ -278,6 +389,7 @@ function regularLayout({ height, width }: SceneLayoutSize): LibrarySceneLayout {
       fontSize,
       shelf.width,
     ),
+    sideShelf,
     wallHeight,
   };
 }

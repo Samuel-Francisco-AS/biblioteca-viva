@@ -1,20 +1,29 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 import type { BookEntry, ReachedMilestone } from "./domain";
 import type { AudioPort, DialoguePort, LocalizedDialogue } from "./application";
 import { presentApplicationError } from "./features/entry-editor/errorMessages";
-import { LibraryCharacterPanel } from "./features/library-visual/LibraryCharacterPanel";
+import {
+  LibraryBottomSheet,
+  type LibrarySheetMode,
+} from "./features/library-visual/LibraryBottomSheet";
+import { LibrarySpeechBubble } from "./features/library-visual/LibrarySpeechBubble";
 import { LibraryVisualDiagnosticsPanel } from "./features/library-visual/LibraryVisualDiagnostics";
 import { LibraryVisualHost } from "./features/library-visual/LibraryVisualHost";
 import { LibraryProjectionService } from "./features/library-visual/LibraryProjectionService";
-import { LibraryShelfPanel } from "./features/library-visual/LibraryShelfPanel";
 import { LibraryTextAlternative } from "./features/library-visual/LibraryTextAlternative";
 import type {
   LibraryInteraction,
   LibraryViewModel,
 } from "./features/library-visual/contracts";
 import { createLibraryVisualDiagnostics } from "./features/library-visual/diagnostics";
+import {
+  createLibraryPeriodMonitor,
+  deriveLibraryPeriod,
+  LIBRARY_PERIOD_LABELS,
+  type LibraryPeriod,
+} from "./features/library-visual/libraryAtmosphere";
 
 export interface LibraryPageApplication {
   readonly audio?: Pick<AudioPort, "emit">;
@@ -28,12 +37,27 @@ export interface LibraryPageApplication {
 type LibraryPageState =
   | { readonly kind: "loading" }
   | { readonly kind: "error"; readonly message: string }
-  | { readonly kind: "ready"; readonly viewModel: LibraryViewModel };
+  | {
+      readonly kind: "ready";
+      readonly recentBookTitle?: string;
+      readonly viewModel: LibraryViewModel;
+    };
 
-type OpenLibraryPanel =
-  | { readonly kind: "shelf" }
-  | { readonly dialogue: LocalizedDialogue; readonly kind: "character" }
-  | null;
+type AtmosphereOverride = LibraryPeriod | "automatic";
+
+function useAutomaticLibraryPeriod(): LibraryPeriod {
+  const [period, setPeriod] = useState(() => deriveLibraryPeriod(new Date()));
+  useEffect(() => {
+    const monitor = createLibraryPeriodMonitor(setPeriod, {
+      clearTimer: (timer) => window.clearTimeout(timer),
+      now: () => new Date(),
+      setTimer: (callback, delay) => window.setTimeout(callback, delay),
+      visibilitySource: document,
+    });
+    return () => monitor.dispose();
+  }, []);
+  return period;
+}
 
 function projectionInput(
   books: readonly BookEntry[],
@@ -74,13 +98,25 @@ export function LibraryPage({
     [diagnosticsEnabled],
   );
   const projectionService = useMemo(() => new LibraryProjectionService(), []);
-  const navigate = useNavigate();
+  const automaticPeriod = useAutomaticLibraryPeriod();
   const dialogueRequest = useRef(0);
+  const summaryButtonRef = useRef<HTMLButtonElement>(null);
   const shelfButtonRef = useRef<HTMLButtonElement>(null);
   const librarianButtonRef = useRef<HTMLButtonElement>(null);
   const creatureButtonRef = useRef<HTMLButtonElement>(null);
   const [attempt, setAttempt] = useState(0);
-  const [openPanel, setOpenPanel] = useState<OpenLibraryPanel>(null);
+  const [sheetMode, setSheetMode] = useState<LibrarySheetMode | null>(null);
+  const [speechBubble, setSpeechBubble] = useState<LocalizedDialogue | null>(
+    null,
+  );
+  const [canvasFailed, setCanvasFailed] = useState(false);
+  const [atmosphereOverride, setAtmosphereOverride] =
+    useState<AtmosphereOverride>("automatic");
+  const period =
+    atmosphereOverride === "automatic" ? automaticPeriod : atmosphereOverride;
+  const handleAvailabilityChange = useCallback((available: boolean) => {
+    setCanvasFailed(!available);
+  }, []);
   const [state, setState] = useState<LibraryPageState>(() =>
     application
       ? { kind: "loading" }
@@ -106,8 +142,12 @@ export function LibraryPage({
             performance.now() - preparationStartedAt,
           ),
         });
+        const recent = [...books].sort((first, second) =>
+          second.updatedAt.localeCompare(first.updatedAt),
+        )[0];
         setState({
           kind: "ready",
+          ...(recent && { recentBookTitle: recent.title }),
           viewModel: projectionService.project(
             projectionInput(books, milestones, pendingDecorationUnlock),
           ),
@@ -156,7 +196,7 @@ export function LibraryPage({
     dialogueRequest.current = request;
     const dialogue = await application.dialogue.select(event);
     if (request !== dialogueRequest.current) return;
-    setOpenPanel({ dialogue, kind: "character" });
+    setSpeechBubble(dialogue);
   }
 
   function handleInteraction(interaction: LibraryInteraction) {
@@ -167,7 +207,8 @@ export function LibraryPage({
     if (interaction.type === "ShelfSelected") {
       dialogueRequest.current += 1;
       application?.audio?.emit({ type: "ShelfSelected" });
-      setOpenPanel({ kind: "shelf" });
+      setSpeechBubble(null);
+      setSheetMode("shelf");
     }
     if (interaction.type === "LibrarianSelected") {
       application?.audio?.emit({ type: "LibrarianSelected" });
@@ -179,33 +220,31 @@ export function LibraryPage({
     }
   }
 
-  function closePanel() {
-    const panel = openPanel;
-    setOpenPanel(null);
+  function closeSheet() {
+    const mode = sheetMode;
+    setSheetMode(null);
     requestAnimationFrame(() => {
-      if (panel?.kind === "shelf") shelfButtonRef.current?.focus();
-      if (panel?.kind === "character") {
-        if (panel.dialogue.characterId === "character.librarian")
-          librarianButtonRef.current?.focus();
-        if (panel.dialogue.characterId === "character.creature")
-          creatureButtonRef.current?.focus();
-      }
+      if (mode === "summary") summaryButtonRef.current?.focus();
+      if (mode === "shelf") shelfButtonRef.current?.focus();
+    });
+  }
+
+  function closeSpeechBubble() {
+    const dialogue = speechBubble;
+    setSpeechBubble(null);
+    requestAnimationFrame(() => {
+      if (dialogue?.characterId === "character.librarian")
+        librarianButtonRef.current?.focus();
+      if (dialogue?.characterId === "character.creature")
+        creatureButtonRef.current?.focus();
     });
   }
 
   return (
     <section className="library-page" aria-labelledby="library-visual-title">
-      <div className="library-page__introduction">
-        <p className="placeholder__status">Sala reativa</p>
-        <h2 id="library-visual-title">Sua Biblioteca Viva</h2>
-        <p>
-          A visualização resume sua coleção. Seus livros, anotações e leituras
-          continuam acessíveis na área convencional.
-        </p>
-        <Link className="text-link" to="/colecao">
-          Abrir Coleção
-        </Link>
-      </div>
+      <h2 className="visually-hidden" id="library-visual-title">
+        Sua Biblioteca Viva
+      </h2>
       {state.kind === "loading" && (
         <p role="status">Carregando visualização da Biblioteca…</p>
       )}
@@ -213,11 +252,14 @@ export function LibraryPage({
         <section className="library-visual-fallback" role="alert">
           <h3>Não foi possível preparar a visualização da biblioteca</h3>
           <p>{state.message}</p>
+          <Link className="button button--secondary" to="/colecao">
+            Abrir Coleção
+          </Link>
           {application && (
             <button
               className="button button--secondary"
               onClick={() => {
-                setOpenPanel(null);
+                setSheetMode(null);
                 setState({ kind: "loading" });
                 setAttempt((current) => current + 1);
               }}
@@ -229,34 +271,78 @@ export function LibraryPage({
         </section>
       )}
       {state.kind === "ready" && (
-        <>
-          <LibraryTextAlternative
-            creatureButtonRef={creatureButtonRef}
-            librarianButtonRef={librarianButtonRef}
-            onInteraction={handleInteraction}
-            shelfButtonRef={shelfButtonRef}
-            viewModel={state.viewModel}
-          />
+        <div className="library-stage" data-period={period}>
           <LibraryVisualHost
             diagnostics={diagnostics}
+            onAvailabilityChange={handleAvailabilityChange}
             onInteraction={handleInteraction}
+            period={period}
             projection={state.viewModel}
             reducedMotion={reducedMotion}
           />
-          {openPanel?.kind === "shelf" && (
-            <LibraryShelfPanel
-              onClose={closePanel}
-              onOpenCollection={() => void navigate("/colecao")}
+          {speechBubble && (
+            <LibrarySpeechBubble
+              dialogue={speechBubble}
+              onClose={closeSpeechBubble}
+            />
+          )}
+          <button
+            aria-label="Abrir resumo da Biblioteca"
+            className="library-summary-trigger"
+            onClick={() => {
+              setSpeechBubble(null);
+              setSheetMode("summary");
+            }}
+            ref={summaryButtonRef}
+            type="button"
+          >
+            <span aria-hidden="true" />
+          </button>
+          {sheetMode && (
+            <LibraryBottomSheet
+              mode={sheetMode}
+              onClose={closeSheet}
+              period={period}
+              recentBookTitle={state.recentBookTitle}
               viewModel={state.viewModel}
             />
           )}
-          {openPanel?.kind === "character" && (
-            <LibraryCharacterPanel
-              dialogue={openPanel.dialogue}
-              onClose={closePanel}
+          <details className="library-accessible-summary" open={canvasFailed}>
+            <summary>Resumo acessível</summary>
+            <LibraryTextAlternative
+              creatureButtonRef={creatureButtonRef}
+              librarianButtonRef={librarianButtonRef}
+              onInteraction={handleInteraction}
+              shelfButtonRef={shelfButtonRef}
+              viewModel={state.viewModel}
             />
+          </details>
+          {diagnostics && (
+            <div className="library-atmosphere-diagnostics">
+              <label htmlFor="library-atmosphere-override">
+                Pré-visualizar período
+              </label>
+              <select
+                id="library-atmosphere-override"
+                onChange={(event) =>
+                  setAtmosphereOverride(
+                    event.target.value as AtmosphereOverride,
+                  )
+                }
+                value={atmosphereOverride}
+              >
+                <option value="automatic">Automático</option>
+                {(["morning", "afternoon", "night", "lateNight"] as const).map(
+                  (value) => (
+                    <option key={value} value={value}>
+                      {LIBRARY_PERIOD_LABELS[value]}
+                    </option>
+                  ),
+                )}
+              </select>
+            </div>
           )}
-        </>
+        </div>
       )}
       {diagnostics && (
         <LibraryVisualDiagnosticsPanel diagnostics={diagnostics} />

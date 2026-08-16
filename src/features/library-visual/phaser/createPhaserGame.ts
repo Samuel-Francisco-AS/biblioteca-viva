@@ -15,7 +15,7 @@ function gameConfig(
 ): Phaser.Types.Core.GameConfig {
   return {
     banner: false,
-    backgroundColor: "#d8c5a3",
+    backgroundColor: "#09100f",
     height: size.height,
     input: {
       mouse: { preventDefaultWheel: false },
@@ -36,6 +36,7 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
   container,
   onInteraction,
   onSceneEvent,
+  period,
   projection,
   reducedMotion,
   size,
@@ -46,6 +47,7 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
     projection,
     reducedMotion,
     onInteraction,
+    period,
   );
   try {
     game = new Phaser.Game(gameConfig(container, size, scene));
@@ -74,6 +76,9 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
         }
       },
       runtimeSnapshot: () => scene.runtimeSnapshot(),
+      setAtmosphere: (nextPeriod, animate) => {
+        if (!destroyed) scene.setAtmosphere(nextPeriod, animate);
+      },
       setInteractionHandler: (
         nextHandler: ((interaction: LibraryInteraction) => void) | undefined,
       ) => {

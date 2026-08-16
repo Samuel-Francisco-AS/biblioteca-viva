@@ -188,6 +188,72 @@ describe("App", () => {
     expect(trigger).toHaveFocus();
   });
 
+  it("repete 20 ciclos de drawer, sheet, saída e retorno sem duplicar a estrutura", async () => {
+    const user = userEvent.setup();
+    const databaseName = `app-r3-cycles-${crypto.randomUUID()}`;
+    const audioBackend: AudioBackend = {
+      dispose: vi.fn(),
+      initialize: vi.fn(() => Promise.resolve(true)),
+      play: vi.fn(() =>
+        Promise.resolve({
+          available: false,
+          completed: Promise.resolve(),
+          setVolume: vi.fn(),
+          stop: vi.fn(),
+        }),
+      ),
+      prepare: vi.fn(() => Promise.resolve()),
+    };
+    const application = await createApplication({
+      audioBackend,
+      databaseName,
+    });
+    const rendered = render(
+      <MemoryRouter>
+        <App application={application} />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("button", { name: "Abrir resumo da Biblioteca" });
+
+    for (let cycle = 0; cycle < 20; cycle += 1) {
+      await user.click(
+        screen.getByRole("button", { name: "Abrir menu principal" }),
+      );
+      await user.keyboard("{Escape}");
+      await user.click(
+        screen.getByRole("button", { name: "Abrir resumo da Biblioteca" }),
+      );
+      await user.click(
+        screen.getByRole("button", { name: "Fechar resumo da Biblioteca" }),
+      );
+      await user.click(
+        screen.getByRole("button", { name: "Abrir menu principal" }),
+      );
+      await user.click(screen.getByRole("link", { name: "Coleção" }));
+      await user.click(
+        screen.getByRole("button", { name: "Abrir menu principal" }),
+      );
+      await user.click(screen.getByRole("link", { name: "Biblioteca" }));
+      await screen.findByRole("button", {
+        name: "Abrir resumo da Biblioteca",
+      });
+    }
+
+    expect(
+      screen.getAllByRole("button", { name: "Abrir menu principal" }),
+    ).toHaveLength(1);
+    expect(
+      screen.getAllByRole("img", {
+        name: "Estrutura visual inicial da biblioteca",
+      }),
+    ).toHaveLength(1);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    rendered.unmount();
+    application.close();
+    await Dexie.delete(databaseName);
+  }, 15_000);
+
   it.each([
     ["Biblioteca", "Biblioteca"],
     ["Coleção", "Coleção"],

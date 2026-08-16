@@ -4,6 +4,7 @@ import type {
   LibraryInteraction,
   LibraryVisualFactoryModule,
   LibraryVisualGame,
+  LibraryVisualPeriod,
   LibraryVisualSize,
   LibraryViewModel,
 } from "./contracts";
@@ -15,6 +16,8 @@ interface LibraryVisualHostProps {
   readonly diagnostics?: LibraryVisualDiagnostics;
   readonly loadFactory?: () => Promise<LibraryVisualFactoryModule>;
   readonly onInteraction?: (interaction: LibraryInteraction) => void;
+  readonly onAvailabilityChange?: (available: boolean) => void;
+  readonly period?: LibraryVisualPeriod;
   readonly projection: LibraryViewModel;
   readonly reducedMotion?: boolean;
 }
@@ -36,7 +39,9 @@ function isDocumentHidden(): boolean {
 export function LibraryVisualHost({
   diagnostics,
   loadFactory = loadPhaserFactory,
+  onAvailabilityChange,
   onInteraction,
+  period = "night",
   projection,
   reducedMotion = false,
 }: LibraryVisualHostProps) {
@@ -45,17 +50,20 @@ export function LibraryVisualHost({
   const gameRef = useRef<LibraryVisualGame | undefined>(undefined);
   const latestInteractionRef = useRef(onInteraction);
   const latestProjectionRef = useRef(projection);
+  const latestPeriodRef = useRef(period);
   const latestReducedMotionRef = useRef(reducedMotion);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     latestInteractionRef.current = onInteraction;
     latestProjectionRef.current = projection;
+    latestPeriodRef.current = period;
     latestReducedMotionRef.current = reducedMotion;
     gameRef.current?.setInteractionHandler(onInteraction);
     gameRef.current?.updateProjection(projection);
+    gameRef.current?.setAtmosphere(period, !reducedMotion);
     gameRef.current?.setReducedMotion(reducedMotion);
-  }, [onInteraction, projection, reducedMotion]);
+  }, [onInteraction, period, projection, reducedMotion]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -155,6 +163,7 @@ export function LibraryVisualHost({
             if (!destroyed && event.type === "scene-failed") setFailed(true);
           },
           projection: latestProjectionRef.current,
+          period: latestPeriodRef.current,
           reducedMotion: latestReducedMotionRef.current,
           size: requestedCreationSize,
         });
@@ -167,6 +176,7 @@ export function LibraryVisualHost({
         }
         game = createdGame;
         gameRef.current = createdGame;
+        onAvailabilityChange?.(true);
         lastAppliedSize = requestedCreationSize;
         createdGame.setInteractionHandler(latestInteractionRef.current);
         createdGame.updateProjection(latestProjectionRef.current);
@@ -191,6 +201,7 @@ export function LibraryVisualHost({
         if (destroyed) return;
         cleanup();
         setFailed(true);
+        onAvailabilityChange?.(false);
         diagnostics?.transition("failed", generation, 0);
       });
 
@@ -204,7 +215,7 @@ export function LibraryVisualHost({
         didDestroyInstance,
       );
     };
-  }, [diagnostics, loadFactory]);
+  }, [diagnostics, loadFactory, onAvailabilityChange]);
 
   if (failed) {
     return (

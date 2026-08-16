@@ -1,6 +1,6 @@
 # Fluxos de UX e navegação
 
-> R3-A substituiu a navegação inferior pela navegação lateral descrita na seção 19. A Biblioteca protagonista e suas camadas contextuais serão consolidadas em R3-B.
+> R3 substituiu a navegação inferior pelo drawer e consolidou a Biblioteca protagonista e suas camadas contextuais nas seções 19–20.
 
 ## 1. Princípios
 
@@ -312,4 +312,17 @@ botão Menu
 → rota abre e o conteúdo principal recebe foco
 ```
 
-Escape, botão de fechar e backdrop fecham o drawer e devolvem foco ao acionador; navegar fecha sem disputar o foco que será levado ao `main`. Coleção preserva busca, filtro, ordenação e origem na URL, mas o card inteiro do livro abre o detalhe. Detalhe, editores, Arquivo e Configurações mantêm seus fluxos funcionais e usam agrupamentos contínuos em vez de caixas aninhadas. R3-B substituirá a ordem antiga da Biblioteca registrada na seção 18 por canvas dominante, alternativa compacta e camadas contextuais.
+Escape, botão de fechar e backdrop fecham o drawer e devolvem foco ao acionador; navegar fecha sem disputar o foco que será levado ao `main`. Coleção preserva busca, filtro, ordenação e origem na URL, mas o card inteiro do livro abre o detalhe. Detalhe, editores, Arquivo e Configurações mantêm seus fluxos funcionais e usam agrupamentos contínuos em vez de caixas aninhadas. R3-B substituiu a ordem antiga da Biblioteca registrada na seção 18 por canvas dominante, alternativa compacta e camadas contextuais.
+
+## 20. Biblioteca protagonista em R3-B
+
+```text
+abrir Biblioteca
+→ sala ocupa a área útil
+→ botão superior abre drawer sobre a sala
+→ handle inferior abre resumo em bottom sheet
+→ toque curto na estante abre o mesmo sheet em modo contextual
+→ bibliotecária/criatura mostram fala curta em balão React
+```
+
+O sheet sobrepõe sem redimensionar ou recriar Phaser; Escape/fechar devolvem foco ao acionador React quando conhecido. O balão não recebe foco automaticamente, contém uma única frase localizada e é substituído pela interação seguinte. “Resumo acessível” expande os equivalentes React para estante, personagens e Coleção; falha do canvas o abre automaticamente. O período local atualiza a atmosfera na mesma instância e, ao voltar do background, é recalculado sem rede ou persistência.

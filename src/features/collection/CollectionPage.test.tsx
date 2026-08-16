@@ -71,7 +71,6 @@ describe("Coleção", () => {
     expect(
       screen.getByRole("progressbar", { name: `Progresso de ${book.title}` }),
     ).toHaveValue(50);
-    expect(screen.getByText(/Última atualização:/)).toBeVisible();
     expect(
       screen.getByRole("link", { name: `Abrir detalhes de ${book.title}` }),
     ).toHaveAttribute("href", "/livros/book-1?from=%2Fcolecao");

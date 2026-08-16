@@ -9,13 +9,13 @@
 - **blocos concluídos:** Bloco 5 — Backup, restauração e recuperação, com G5 aprovado; Bloco 6 — Biblioteca visual conectada, com G6 aprovado;
 - **prompts tecnicamente implementados:** Prompts 1 a 19; sua conclusão técnica não aprova os gates humanos pendentes;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **trabalho atual:** R1, R2 e R3-A tecnicamente concluídos; R3-B está pendente e R3 permanece em andamento;
+- **trabalho atual:** R1, R2 e R3 tecnicamente concluídos; próximo trabalho é o checkpoint integrado Android pós-R1–R3;
 - **gate:** G0 a G3 aprovados; G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
-- **último checkpoint técnico:** R3-A validado integralmente e pronto para checkpoint; R2 foi selado em `82933fa`;
+- **último checkpoint técnico:** R3-B validado integralmente; checkpoint Git será registrado nesta execução;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
-- **APK:** APK debug com R3-A gerado, mas não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `00cdc863286cc3b9e0df2aef1af107d76d234ffc25021b2c15303267aa4a3a1e`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
+- **APK:** APK debug com R3 completo gerado, ZIP íntegro e não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `dfccbc1112858ed57b9e206684806c3351f8178ff33ef820721a8eec27da918f`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
 - **release Android:** ainda não existe APK release assinado nem artefato Android público;
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
@@ -55,13 +55,15 @@
 
 ## Trabalho atual
 
-Os Prompts 1–19 estão tecnicamente implementados e `EXECUTION_PLAN.md` permanece seu registro histórico. R1 e R2 estão tecnicamente concluídos. R3-A consolidou o tema escuro semântico, o drawer modal como navegação única, superfícies mais contínuas nas rotas convencionais e o card inteiro clicável da Coleção. R3-B ainda precisa tornar a sala protagonista, integrar sheets/balões, períodos e acabamento Android. A versão permanece `0.2.0-alpha.1`; nenhum gate humano foi aprovado por esta entrega.
+Os Prompts 1–19 e R1–R3 estão tecnicamente implementados. R3 consolidou tema escuro semântico, drawer modal, superfícies integrais, sala protagonista, bottom sheet, balões React, quatro períodos locais e edge-to-edge Android mínimo. O próximo trabalho é o checkpoint integrado Android pós-R1–R3. A versão permanece `0.2.0-alpha.1`; nenhum gate humano foi aprovado por esta entrega.
 
 ## Bloqueios
 
-Nenhum bloqueio técnico identificado. As evidências físicas são parciais: não cobrem o gerenciamento de anotações e a playlist de R2, uso prolongado, TalkBack, teclado, contraste, texto ampliado, lifecycle, desempenho nem toda a checklist integrada. Movimento reduzido pareceu congelar a cena; a latência sonora percebida e a nova restauração ainda precisam de validação no Moto G06. G4 e G7–G10 não foram aprovados; G11 não foi iniciado.
+Nenhum bloqueio técnico identificado. As evidências físicas são parciais: não cobrem o gerenciamento de anotações e a playlist de R2, o novo drawer/sheet/balões/períodos/edge-to-edge, uso prolongado, TalkBack, teclado, contraste, texto ampliado, lifecycle, desempenho nem toda a checklist integrada. R3 responde tecnicamente à sensação congelada de reduced motion por feedback causal sem loops, mas a percepção real, a latência sonora e a nova restauração ainda precisam de validação no Moto G06. G4 e G7–G10 não foram aprovados; G11 não foi iniciado.
 
 ## Última evidência de validação
+
+Em 2026-08-16, R3 foi concluído tecnicamente. A Biblioteca usa canvas dominante, drawer sobreposto, bottom sheet compartilhado, balões React e fallback compacto; quatro períodos locais atualizam uma única instância por timer da próxima fronteira; reduced motion mantém zero loops; Android edge-to-edge compila sem plugin novo. Passaram formatação/check, lint, typecheck, 589 testes em 63 arquivos, áudio, build, performance, oito E2E Chromium, Android sync/build, ZIP e diff. JS inicial mede 572.410 bytes (167.886 gzip), CSS 21.688 (4.915 gzip) e Phaser lazy 1.222.044 (323.038 gzip). O APK não instalado tem 7.526.051 bytes e SHA-256 `dfccbc1112858ed57b9e206684806c3351f8178ff33ef820721a8eec27da918f`. Nenhum gate humano foi aprovado.
 
 Em 2026-08-16, R3-A concluiu tecnicamente o tema escuro semântico, drawer modal, remoção da barra inferior, navegação em linhas integrais, card inteiro clicável da Coleção e redução de caixas nas rotas convencionais. Passaram formatação, lint, typecheck, 569 testes em 62 arquivos, áudio, build, relatório de performance, cinco E2E Chromium, Android sync/build e ZIP. O build mede 570.462 bytes iniciais (168.800 gzip), CSS 17.140 bytes (4.120 gzip) e Phaser lazy 1.220.999 bytes (325.920 gzip). O APK debug não instalado possui 7.526.051 bytes e SHA-256 `00cdc863286cc3b9e0df2aef1af107d76d234ffc25021b2c15303267aa4a3a1e`. R3-B e toda validação humana permanecem pendentes; nenhum gate foi aprovado.
 

@@ -9,9 +9,9 @@ Medir antes de otimizar. Alterações são justificadas apenas por gargalo real 
 ## 2. Orçamento atual da sala
 
 - uma instância Phaser e um canvas durante a montagem; zero após desmontagem;
-- cena procedural fixa, aproximadamente 32 objetos relevantes no pior caso documentado, com 13 objetos no display list raiz atual e elementos filhos agrupados;
+- cena procedural fixa, com 13 objetos no display list raiz atual e elementos filhos agrupados;
 - quatro zonas interativas fixas;
-- até três tweens contínuos (bibliotecária, criatura e destaque) e um tween transitório de desbloqueio;
+- até três tweens contínuos (bibliotecária, criatura e destaque), um tween transitório de desbloqueio e no máximo um tween finito de atmosfera;
 - zero tween repetitivo com movimento reduzido;
 - correspondência direta de uma representação por livro entre um e cinco livros; acima disso, compressão gradual e determinística até oito grupos visuais, inclusive com 100 livros ou mais;
 - zero partículas, shaders próprios, pós-processamento, física, câmera móvel ou atlas/textura própria carregada atualmente.
@@ -61,6 +61,12 @@ O áudio mantém no máximo uma música conhecida, interrompe efeitos no pause/m
 R2 mantém o mesmo cache e acrescenta somente índice/generation counters limitados. Término natural chega pelo callback real do backend; não há polling nem timer de duração. Player antigo não avança a playlist depois de stop, saída ou dispose, e playback silencioso indisponível não cria ciclo de tentativas. A consulta do Arquivo continua carregando livros, notas e citações uma vez e filtra o estado atualizado em memória, sem N+1.
 
 No build de R2 de 2026-08-16, o chunk inicial mede 568.210 bytes (168.170 gzip), o CSS 16.920 bytes (3.650 gzip) e o Phaser lazy 1.220.999 bytes (325.920 gzip). O manifesto confirma `createPhaserGame` como dynamic entry. O aumento do inicial em relação ao baseline documentado é compatível com os casos de uso, adapter e UI de gerenciamento; não foi observado motivo para split artificial.
+
+## R3 — medição final técnica
+
+O build R3 mede 572.410 bytes no JS inicial (167.886 gzip), 21.688 bytes de CSS (4.915 gzip) e 1.222.044 bytes no chunk Phaser lazy (323.038 gzip). `createPhaserGame` permanece dynamic entry. A cena acrescentou um `Graphics` de atmosfera e removeu o container de labels que conflitava com as camadas React: o display list raiz permanece em 13, com quatro zonas fixas e menos textos WebGL. Movimento normal mantém até três loops existentes e, somente durante troca de período, um tween finito de 500 ms; reduced motion mantém zero loops e troca imediata.
+
+Em produção, atmosfera possui um timer único até a próxima fronteira e um listener de visibilidade, ambos limpos no dispose. O intervalo de amostragem de um segundo continua exclusivo do diagnóstico DEV/interno. Drawer, sheet, período, projeção e resize atualizam a mesma instância; a prova estrutural de 20 ciclos mantém zero canvas, instância, observer e listener próprios depois de cada unmount. Não há física, tilemap, shader, partículas, polling de período ou objeto por livro. Medição física de FPS, aquecimento e uso prolongado permanece pendente no Moto G06.
 
 Não foram encontrados registries crescentes, URLs Blob da sala, caches próprios sem liberação ou players registrados após dispose. `performance.memory` e memória real da WebView não são portáveis/confiáveis e não são reportadas. Context loss WebGL não recebeu simulação destrutiva; tela preta persistente continua falha crítica do checkpoint físico.
 

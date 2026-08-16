@@ -6,6 +6,9 @@ export interface LibraryVisualSize {
   readonly width: number;
 }
 
+export type LibraryVisualPeriod =
+  "lateNight" | "morning" | "afternoon" | "night";
+
 export type ShelfOccupancy = "empty" | "initial" | "growing" | "full";
 
 export type LibraryProgressSummary =
@@ -62,6 +65,11 @@ export interface LibraryVisualGame {
   resize(this: void, size: LibraryVisualSize): void;
   resume(this: void): void;
   runtimeSnapshot?(this: void): LibraryVisualRuntimeSnapshot;
+  setAtmosphere(
+    this: void,
+    period: LibraryVisualPeriod,
+    animate: boolean,
+  ): void;
   setReducedMotion(this: void, reducedMotion: boolean): void;
   setInteractionHandler(
     this: void,
@@ -81,6 +89,7 @@ export interface CreateLibraryVisualGameOptions {
   readonly container: HTMLElement;
   readonly onInteraction: (interaction: LibraryInteraction) => void;
   readonly onSceneEvent: (event: LibrarySceneEvent) => void;
+  readonly period: LibraryVisualPeriod;
   readonly projection: LibraryViewModel;
   readonly reducedMotion: boolean;
   readonly size: LibraryVisualSize;

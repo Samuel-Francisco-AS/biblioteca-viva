@@ -73,7 +73,18 @@ describe("limites arquiteturais dos Prompts 11 a 13", () => {
   it("mantém contratos livres de Phaser, Dexie e entidades persistidas", () => {
     const contracts = sourceFiles["./contracts.ts"];
     expect(contracts).toBeDefined();
-    expect(contracts).not.toMatch(/phaser|dexie|BookEntry|LibraryEntry/iu);
+    expect(contracts).not.toMatch(
+      /phaser|dexie|BookEntry|LibraryEntry|author|title|note|quote/iu,
+    );
+  });
+
+  it("mantém atmosfera visual sem rede, persistência, áudio ou polling", () => {
+    const atmosphere = sourceFiles["./libraryAtmosphere.ts"];
+    expect(atmosphere).toBeDefined();
+    expect(atmosphere).not.toMatch(
+      /dexie|indexedDB|localStorage|repository|fetch\(|geolocation|Audio|setInterval/iu,
+    );
+    expect(atmosphere).toMatch(/millisecondsUntilNextLibraryPeriod/u);
   });
 
   it("mantém a factory Phaser em importação dinâmica no host", () => {

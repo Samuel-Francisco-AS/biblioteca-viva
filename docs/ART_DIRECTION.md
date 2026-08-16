@@ -6,6 +6,10 @@
 
 A Biblioteca Viva deve parecer um lugar íntimo, antigo, mágico e habitado, sem se tornar sombria demais ou infantil. O visual precisa apoiar leitura e registro, não competir com eles.
 
+R3 consolida essa intenção em grafite/verde-floresta profundos, madeira nogueira, texto creme confortável e âmbar/dourado de uso contido. A sala retrato usa estante superior, segmento lateral, balcão à direita, bibliotecária próxima, criatura no espaço central/baixo e luminária integrada quando desbloqueada. É composição procedural de protótipo, não arte final aprovada.
+
+Atmosfera combina base da sala, overlay barato, luz direcional e luzes locais. Manhã é relativamente neutra/dourada; tarde, mais quente; noite, azul-esverdeada profunda; madrugada, índigo/grafite mais frio. A iluminação ambiente mantém móveis e interações legíveis sem a luminária. Reduced motion remove loops contínuos; vida vem de estado causal, highlight estático, balão, sheet, projeção e troca imediata de período.
+
 Palavras-guia:
 
 - acolhedora;

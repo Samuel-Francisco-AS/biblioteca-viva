@@ -75,8 +75,8 @@ export const LIBRARY_ROOM_PALETTE = {
   counterLight: 0x9b6844,
   creatureBody: 0x6f9364,
   creatureDetail: 0xd8e5bc,
-  floor: 0xcba978,
-  floorLine: 0xb78f61,
+  floor: 0x3a2d26,
+  floorLine: 0x241c18,
   librarianApron: 0xd6c4a4,
   librarianBody: 0x765a8c,
   librarianHair: 0x4b352b,
@@ -84,10 +84,39 @@ export const LIBRARY_ROOM_PALETTE = {
   shelfLight: 0x8a5b36,
   spine: 0xc88759,
   textDark: 0x28343d,
-  wall: 0x4d6570,
-  wallTrim: 0xd8c6a3,
+  wall: 0x162725,
+  wallTrim: 0x594334,
   warmLight: 0xffd487,
 } as const;
+
+export const LIBRARY_ATMOSPHERES = {
+  afternoon: {
+    directionalAlpha: 0.1,
+    directionalColor: 0xe5a353,
+    overlayAlpha: 0.08,
+    overlayColor: 0x8a4e24,
+  },
+  lateNight: {
+    directionalAlpha: 0.07,
+    directionalColor: 0xd99a51,
+    overlayAlpha: 0.34,
+    overlayColor: 0x10152f,
+  },
+  morning: {
+    directionalAlpha: 0.12,
+    directionalColor: 0xe8c982,
+    overlayAlpha: 0.08,
+    overlayColor: 0x415f55,
+  },
+  night: {
+    directionalAlpha: 0.08,
+    directionalColor: 0xe1a052,
+    overlayAlpha: 0.27,
+    overlayColor: 0x0d2930,
+  },
+} as const;
+
+export const LIBRARY_ATMOSPHERE_TRANSITION_MS = 500;
 
 export interface RoomMotionPlan {
   readonly creatureDurationMs: number;

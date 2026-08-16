@@ -4,7 +4,6 @@ import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { ENTRY_STATUSES, type BookEntry } from "../../domain";
 import { presentApplicationError } from "../entry-editor/errorMessages";
 import {
-  formatDateTime,
   progressPercentage,
   progressText,
   statusLabels,
@@ -237,12 +236,6 @@ export function CollectionPage({
                         Porcentagem indisponível sem total de páginas.
                       </p>
                     )}
-                    <p className="book-card__updated">
-                      Última atualização: {formatDateTime(book.updatedAt)}
-                    </p>
-                    <span className="book-card__action" aria-hidden="true">
-                      Ver detalhes <span>→</span>
-                    </span>
                   </article>
                 </Link>
               </li>

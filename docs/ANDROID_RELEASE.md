@@ -64,6 +64,14 @@ APK diagnóstico validado no G3 em 2026-07-29:
 
 Esse APK é exclusivamente interno para diagnóstico e gates. Não é release pública, não foi assinado para release e não é AAB.
 
+### Edge-to-edge de R3
+
+R3 configura `MainActivity` com `WindowCompat.setDecorFitsSystemWindows(window, false)`, barras transparentes e ícones claros por `WindowInsetsControllerCompat`, usando somente AndroidX já presente. `styles.xml` alinha status/navigation bar, cutout e splash ao fundo `#09100F`; o documento web usa `viewport-fit=cover`, e controles/sheets aplicam safe areas. Nenhum plugin, permissão, assinatura ou versão foi adicionado.
+
+O build debug automatizado comprova compilação e empacotamento. Ele não foi instalado. Transparência real, contraste dos ícones, navegação por gestos/três botões, teclado, background/resume e recortes continuam pendentes no Moto G06/Android 15.
+
+Artefato R3 final: 7.526.051 bytes, SHA-256 `dfccbc1112858ed57b9e206684806c3351f8178ff33ef820721a8eec27da918f`, ZIP íntegro. Plugins empacotados: App `8.1.1`, Filesystem `8.1.2` e Share `8.0.1`, todos preexistentes. Permissões efetivas analisadas: `INTERNET` e a permissão interna `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`; nenhuma permissão sensível nova. Application ID e versão nativa permaneceram inalterados. Não houve instalação, assinatura de release, AAB ou publicação.
+
 Primeiro APK debug validado em 2026-07-28:
 
 - aparelho: Moto G06;

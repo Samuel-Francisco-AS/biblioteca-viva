@@ -46,6 +46,11 @@ describe("layout responsivo da cena", () => {
     [320, 180],
     [360, 203],
     [520, 293],
+    [320, 640],
+    [320, 915],
+    [360, 640],
+    [360, 800],
+    [412, 915],
     [800, 450],
   ])("representa a sala dentro de %i × %i", (width, height) => {
     const layout = librarySceneLayout({ height, width });
@@ -59,6 +64,7 @@ describe("layout responsivo da cena", () => {
       layout.creatureHitArea,
       layout.highlightedBookHitArea,
       layout.creatureMovementBounds,
+      layout.sideShelf,
     ].forEach((area) =>
       expect(sceneRectangleContains(canvas, area)).toBe(true),
     );

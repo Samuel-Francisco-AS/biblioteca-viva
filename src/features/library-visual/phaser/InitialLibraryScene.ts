@@ -3,11 +3,14 @@ import { DECORATION_ID } from "../../../domain";
 
 import type {
   LibraryInteraction,
+  LibraryVisualPeriod,
   LibraryVisualRuntimeSnapshot,
   LibraryViewModel,
 } from "../contracts";
 import {
   LIBRARY_ROOM_ANIMATIONS,
+  LIBRARY_ATMOSPHERES,
+  LIBRARY_ATMOSPHERE_TRANSITION_MS,
   LIBRARY_ROOM_INTERACTION,
   LIBRARY_ROOM_PALETTE as COLOR,
   decorationUnlockMotion,
@@ -18,9 +21,7 @@ import {
   type LibrarySceneLayout,
   type LibrarySceneLayoutMode,
   type SceneRectangle,
-  type SceneTextPlacement,
 } from "./sceneLayout";
-import { librarySceneRenderState } from "./sceneProjection";
 import {
   LIBRARY_VISUAL_MANIFEST,
   resolveVisualSource,
@@ -49,6 +50,8 @@ function rectangleContains(
 }
 
 export class InitialLibraryScene extends Phaser.Scene {
+  private atmosphere?: Phaser.GameObjects.Graphics;
+  private atmosphereTween?: Phaser.Tweens.Tween;
   private background?: Phaser.GameObjects.Graphics;
   private counter?: Phaser.GameObjects.Graphics;
   private creature?: Phaser.GameObjects.Container;
@@ -62,7 +65,6 @@ export class InitialLibraryScene extends Phaser.Scene {
   private readonly highlightedBookPhase = { value: 0 };
   private highlightedBookZone?: Phaser.GameObjects.Zone;
   private interactionHandler?: (interaction: LibraryInteraction) => void;
-  private labels?: Phaser.GameObjects.Container;
   private librarian?: Phaser.GameObjects.Container;
   private librarianFigure?: Phaser.GameObjects.Graphics;
   private readonly librarianPhase = { value: 0 };
@@ -71,6 +73,7 @@ export class InitialLibraryScene extends Phaser.Scene {
   private readonly motion = new SceneMotionLifecycle();
   private readonly presentedUnlockEventIds = new Set<string>();
   private projection: LibraryViewModel;
+  private period: LibraryVisualPeriod;
   private readingLamp?: Phaser.GameObjects.Container;
   private readingLampFigure?: Phaser.GameObjects.Graphics;
   private reducedMotion: boolean;
@@ -84,9 +87,11 @@ export class InitialLibraryScene extends Phaser.Scene {
     projection: LibraryViewModel,
     reducedMotion: boolean,
     interactionHandler?: (interaction: LibraryInteraction) => void,
+    period: LibraryVisualPeriod = "night",
   ) {
     super("initial-library");
     this.projection = projection;
+    this.period = period;
     this.reducedMotion = reducedMotion;
     this.interactionHandler = interactionHandler;
   }
@@ -132,7 +137,7 @@ export class InitialLibraryScene extends Phaser.Scene {
       .container(0, 0, [this.readingLampFigure])
       .setDepth(55);
     this.lighting = this.add.graphics().setDepth(60);
-    this.labels = this.add.container().setDepth(70);
+    this.atmosphere = this.add.graphics().setDepth(58);
 
     this.shelfZone = this.createInteractiveZone(this.beginShelfSelection);
     this.librarianZone = this.createInteractiveZone(
@@ -160,6 +165,34 @@ export class InitialLibraryScene extends Phaser.Scene {
     interactionHandler: ((interaction: LibraryInteraction) => void) | undefined,
   ): void {
     this.interactionHandler = interactionHandler;
+  }
+
+  setAtmosphere(period: LibraryVisualPeriod, animate: boolean): void {
+    if (this.period === period) return;
+    this.period = period;
+    const layout = this.currentLayout;
+    if (!layout || !this.renderedSize) return;
+    this.atmosphereTween?.remove();
+    this.atmosphereTween = undefined;
+    this.drawAtmosphere(
+      layout,
+      this.renderedSize.width,
+      this.renderedSize.height,
+    );
+    if (!animate || this.reducedMotion) {
+      this.atmosphere?.setAlpha(1);
+      return;
+    }
+    this.atmosphere?.setAlpha(0);
+    this.atmosphereTween = this.tweens.add({
+      alpha: 1,
+      duration: LIBRARY_ATMOSPHERE_TRANSITION_MS,
+      ease: "Sine.easeOut",
+      onComplete: () => {
+        this.atmosphereTween = undefined;
+      },
+      targets: this.atmosphere,
+    });
   }
 
   setReducedMotion(reducedMotion: boolean): void {
@@ -195,7 +228,6 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.drawShelf(layout);
     this.drawHighlightedBook(layout, projection.highlightedBook !== null);
     this.drawReadingLamp(layout);
-    this.drawLabels(layout);
     this.updateZone(
       this.highlightedBookZone,
       layout.highlightedBookHitArea,
@@ -281,21 +313,8 @@ export class InitialLibraryScene extends Phaser.Scene {
     if (!graphics) return;
     const { shelf } = layout;
     graphics.clear();
-    graphics
-      .fillStyle(COLOR.shelfDark)
-      .fillRoundedRect(shelf.x, shelf.y, shelf.width, shelf.height, 5);
-    graphics
-      .fillStyle(COLOR.shelfLight)
-      .fillRect(shelf.x + 6, shelf.y + 6, shelf.width - 12, shelf.height - 12);
-    graphics.lineStyle(4, COLOR.shelfDark);
-    for (let row = 1; row < 4; row += 1) {
-      graphics.lineBetween(
-        shelf.x + 4,
-        shelf.y + (shelf.height * row) / 4,
-        shelf.x + shelf.width - 4,
-        shelf.y + (shelf.height * row) / 4,
-      );
-    }
+    this.drawShelfFrame(graphics, shelf);
+    this.drawShelfFrame(graphics, layout.sideShelf);
     this.drawBookGroups(graphics, layout);
     if (this.projection.hasCompletedBook) {
       const marker = layout.milestoneMarker;
@@ -313,6 +332,27 @@ export class InitialLibraryScene extends Phaser.Scene {
           marker.y + marker.height / 2,
           Math.min(marker.width, marker.height) / 3,
         );
+    }
+  }
+
+  private drawShelfFrame(
+    graphics: Phaser.GameObjects.Graphics,
+    shelf: SceneRectangle,
+  ): void {
+    graphics
+      .fillStyle(COLOR.shelfDark)
+      .fillRoundedRect(shelf.x, shelf.y, shelf.width, shelf.height, 5);
+    graphics
+      .fillStyle(COLOR.shelfLight)
+      .fillRect(shelf.x + 6, shelf.y + 6, shelf.width - 12, shelf.height - 12);
+    graphics.lineStyle(4, COLOR.shelfDark);
+    for (let row = 1; row < 4; row += 1) {
+      graphics.lineBetween(
+        shelf.x + 4,
+        shelf.y + (shelf.height * row) / 4,
+        shelf.x + shelf.width - 4,
+        shelf.y + (shelf.height * row) / 4,
+      );
     }
   }
 
@@ -536,51 +576,30 @@ export class InitialLibraryScene extends Phaser.Scene {
     });
   }
 
-  private drawLabels(layout: LibrarySceneLayout): void {
-    const state = librarySceneRenderState(this.projection);
-    this.labels?.removeAll(true);
-    this.addLabel(layout.header.title, "Biblioteca", "#ffffff");
-    this.addLabel(
-      layout.header.totalAndInProgress,
-      `Total: ${state.totalBooks} · Lendo: ${state.inProgressBooks}`,
-      "#ffffff",
-    );
-    this.addLabel(
-      layout.header.completed,
-      `Concluídos: ${state.completedBooks}`,
-      "#ffffff",
-    );
-    this.addLabel(
-      layout.shelfLabel,
-      layout.mode === "compact" ? "Estante" : "Estante — toque para ver resumo",
-      "#f9ead2",
-    );
-    if (layout.highlightedBookLabel && state.highlightedBookLabel) {
-      const details = [
-        state.highlightedBookStatusLabel,
-        state.highlightedBookProgressLabel,
-      ]
-        .filter((part): part is string => part !== null)
-        .join(" · ");
-      this.addLabel(
-        layout.highlightedBookLabel,
-        `Livro recente: ${state.highlightedBookLabel}${details ? ` — ${details}` : ""}`,
-      );
-    }
-  }
-
-  private addLabel(
-    placement: SceneTextPlacement,
-    text: string,
-    color = "#28343d",
+  private drawAtmosphere(
+    layout: LibrarySceneLayout,
+    width: number,
+    height: number,
   ): void {
-    const label = this.add.text(placement.x, placement.y, text, {
-      color,
-      fontFamily: "system-ui, sans-serif",
-      fontSize: placement.fontSize,
-    });
-    label.setCrop(0, 0, placement.maxWidth, placement.fontSize * 1.4);
-    this.labels?.add(label);
+    const graphics = this.atmosphere;
+    if (!graphics) return;
+    const atmosphere = LIBRARY_ATMOSPHERES[this.period];
+    graphics.clear();
+    graphics
+      .fillStyle(atmosphere.overlayColor, atmosphere.overlayAlpha)
+      .fillRect(0, 0, width, height);
+    graphics.fillStyle(
+      atmosphere.directionalColor,
+      atmosphere.directionalAlpha,
+    );
+    graphics.fillTriangle(
+      width,
+      0,
+      width,
+      height * 0.72,
+      Math.max(layout.shelf.x + layout.shelf.width, width * 0.36),
+      0,
+    );
   }
 
   private updateZone(
@@ -619,7 +638,7 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.drawHighlightedBook(layout, hasHighlight);
     this.drawReadingLamp(layout);
     this.drawLighting(layout);
-    this.drawLabels(layout);
+    this.drawAtmosphere(layout, size.width, size.height);
     this.updateZone(this.shelfZone, layout.shelfHitArea);
     this.updateZone(this.librarianZone, layout.librarianHitArea);
     this.updateZone(this.creatureZone, layout.creatureHitArea);
@@ -841,6 +860,8 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.motion.destroy();
     this.unlockTween?.remove();
     this.unlockTween = undefined;
+    this.atmosphereTween?.remove();
+    this.atmosphereTween = undefined;
     this.scale.off(Phaser.Scale.Events.RESIZE, this.handleResize, this);
     this.load.off(
       Phaser.Loader.Events.FILE_LOAD_ERROR,
@@ -869,6 +890,5 @@ export class InitialLibraryScene extends Phaser.Scene {
       this,
     );
     this.interactionHandler = undefined;
-    this.labels?.removeAll(true);
   };
 }

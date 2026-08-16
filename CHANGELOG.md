@@ -9,6 +9,8 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 ### Adicionado
 
 - sistema visual escuro semântico e drawer lateral acessível para as cinco áreas do aplicativo;
+- Biblioteca com canvas protagonista, bottom sheet compartilhado, balões React e alternativa acessível compacta;
+- atmosferas procedurais de manhã, tarde, noite e madrugada pela hora local, com preview somente diagnóstico;
 
 - backup Android com salvamento em local escolhido, compartilhamento nativo e restauração recuperável;
 - exclusão transacional de livros, notas, citações e atividades relacionadas.
@@ -21,6 +23,7 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 ### Alterado
 
 - Coleção agora abre livros pela superfície inteira do card; detalhe, formulários, Arquivo e Configurações usam hierarquia mais contínua e menos caixas;
+- Android usa fundo escuro edge-to-edge com system bars transparentes e controles protegidos por safe areas;
 
 - validação física de atualização, limpeza de armazenamento e restauração no Moto G06, com aprovação dos Gates G5 e G6.
 - documentação pública e operacional alinhada ao protótipo tecnicamente implementado até o Prompt 19.

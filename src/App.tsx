@@ -190,7 +190,9 @@ export function App({ application, diagnostics }: AppProps) {
         Ir para o conteúdo principal
       </a>
 
-      <header className="top-bar">
+      <header
+        className={`top-bar${location.pathname === "/" ? " top-bar--library" : ""}`}
+      >
         <button
           aria-controls="primary-navigation"
           aria-expanded={navigationOpen}
@@ -265,7 +267,7 @@ export function App({ application, diagnostics }: AppProps) {
       )}
 
       <main
-        className="app-content"
+        className={`app-content${location.pathname === "/" ? " app-content--library" : ""}`}
         id="main-content"
         ref={mainRef}
         tabIndex={-1}

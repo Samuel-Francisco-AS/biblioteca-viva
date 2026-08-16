@@ -71,6 +71,7 @@ test("ciclo principal persiste livro, anotações, conclusão e marco", async ({
   ).toBeVisible();
 
   await navigateFromMenu("Biblioteca");
+  await page.getByText("Resumo acessível").click();
   await expect(
     page.getByText("Concluídos agora").locator("..").getByText("1"),
   ).toBeVisible();
@@ -79,6 +80,7 @@ test("ciclo principal persiste livro, anotações, conclusão e marco", async ({
   ).toBeVisible();
 
   await page.reload();
+  await page.getByText("Resumo acessível").click();
   await expect(page.getByText("Concluídos agora")).toBeVisible();
   await expect(
     page.getByText(/a luminária de leitura permanece na sala/u),
@@ -97,7 +99,9 @@ test("rotas inexistentes e livro ausente degradam para caminhos convencionais", 
     page.getByRole("heading", { name: "Esta página não existe" }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Voltar para a Biblioteca" }).click();
-  await expect(page.getByRole("link", { name: "Abrir Coleção" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Abrir resumo da Biblioteca" }),
+  ).toBeVisible();
 
   await page.goto("/livros/id-inexistente");
   await expect(

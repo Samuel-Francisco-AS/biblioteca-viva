@@ -19,7 +19,7 @@
 - **implementação concluída:** Blocos 4, 5 e 6;
 - **prompts tecnicamente implementados:** Prompts 4 a 19; Prompts 14 a 19 mantêm validações humanas acumuladas e não estão aprovados;
 - **fase atual:** refinamento pós-protótipo orientado pela primeira rodada integrada no Moto G06;
-- **próximo trabalho:** R3 — UX/Layout v2; R1 e R2 estão tecnicamente concluídos, G4 e G7–G10 continuam abertos e G11 não foi iniciado;
+- **próximo trabalho:** checkpoint integrado Android pós-R1–R3; as três rodadas estão tecnicamente concluídas, G4 e G7–G10 continuam abertos e G11 não foi iniciado;
 - **bloco atual:** Bloco 10 tecnicamente implementado; G10 e gates humanos anteriores permanecem abertos;
 - **APK:** diagnóstico interno validado no Moto G06 com Android 15; release assinado ainda não existe;
 - **código:** implementação do Bloco 4 validada no navegador; G4 aguarda uso real prolongado.
@@ -105,6 +105,6 @@ Esta fase é posterior e separada dos Blocos 0–11 e dos Prompts 1–19 histór
 
 - `[x]` **R1 — Coerência funcional:** R1-A e R1-B tecnicamente concluídos; restauração contextual e cache/preparação musical ainda aguardam validação humana específica;
 - `[x]` **R2 — Utilidade de notas/citações e áudio:** edição, exclusão e compartilhamento explícito implementados; playlist declarativa sequencial e substituição modular de áudio concluídas tecnicamente;
-- `[ ]` **R3 — UX/Layout v2:** R3-A tecnicamente concluído com tema escuro, drawer e rotas convencionais redesenhadas; R3-B pendente para Biblioteca protagonista e acabamento integrado;
+- `[x]` **R3 — UX/Layout v2:** tema escuro, drawer, superfícies integrais, Biblioteca protagonista, sheet/balões, quatro períodos e edge-to-edge tecnicamente concluídos; aprovação humana permanece pendente;
 - `[ ]` **checkpoint integrado Android:** validar regressões, novas regras, conteúdo, áudio, backup, marco, layout, acessibilidade, lifecycle e desempenho;
 - `[ ]` **preparação posterior para G11:** somente após avaliar explicitamente os gates ainda abertos.

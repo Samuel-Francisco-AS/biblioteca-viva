@@ -15,20 +15,30 @@ import type { LibraryInteraction } from "./features/library-visual/contracts";
 import { LibraryPage, type LibraryPageApplication } from "./pages";
 
 const visualHostMock = vi.hoisted(() => ({
+  availability: undefined as ((available: boolean) => void) | undefined,
   interaction: undefined as ((event: LibraryInteraction) => void) | undefined,
+  period: undefined as
+    | import("./features/library-visual/contracts").LibraryVisualPeriod
+    | undefined,
   projection: undefined as
     import("./features/library-visual/contracts").LibraryViewModel | undefined,
 }));
 
 vi.mock("./features/library-visual/LibraryVisualHost", () => ({
   LibraryVisualHost: ({
+    onAvailabilityChange,
     onInteraction,
+    period,
     projection,
   }: {
+    readonly onAvailabilityChange?: (available: boolean) => void;
     readonly onInteraction?: (event: LibraryInteraction) => void;
+    readonly period?: import("./features/library-visual/contracts").LibraryVisualPeriod;
     readonly projection: import("./features/library-visual/contracts").LibraryViewModel;
   }) => {
+    visualHostMock.availability = onAvailabilityChange;
     visualHostMock.interaction = onInteraction;
+    visualHostMock.period = period;
     visualHostMock.projection = projection;
     return <div aria-label="Visualização da Biblioteca" role="img" />;
   },
@@ -104,6 +114,12 @@ describe("Página Biblioteca", () => {
     const dialoguePort = dialogue();
     renderLibrary(Promise.resolve([book]), undefined, dialoguePort);
 
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    const accessibleSummary = screen
+      .getByText("Resumo acessível")
+      .closest("details");
+    expect(accessibleSummary).not.toHaveAttribute("open");
+    await user.click(screen.getByText("Resumo acessível"));
     expect(
       await screen.findByRole("heading", { name: "Estado da Biblioteca" }),
     ).toBeVisible();
@@ -123,9 +139,8 @@ describe("Página Biblioteca", () => {
       name: "Conversar com a bibliotecária",
     });
     await user.click(librarian);
-    expect(
-      await screen.findByRole("heading", { name: "Uma observação tranquila" }),
-    ).toBeVisible();
+    expect(await screen.findByText("Uma observação tranquila")).toBeVisible();
+    expect(librarian).toHaveFocus();
     await user.click(screen.getByRole("button", { name: "Fechar painel" }));
     await waitFor(() => expect(librarian).toHaveFocus());
 
@@ -133,9 +148,7 @@ describe("Página Biblioteca", () => {
       name: "Interagir com a criatura",
     });
     await user.click(creature);
-    expect(
-      await screen.findByRole("heading", { name: "Uma presença curiosa" }),
-    ).toBeVisible();
+    expect(await screen.findByText("Uma presença curiosa")).toBeVisible();
     expect(dialoguePort.select).toHaveBeenCalledWith("creature.interaction");
   });
 
@@ -283,7 +296,7 @@ describe("Página Biblioteca", () => {
     act(() => visualHostMock.interaction?.({ type: "ShelfSelected" }));
 
     const panelHeading = await screen.findByRole("heading", {
-      name: "Resumo da sua coleção",
+      name: "Resumo da estante",
     });
     expect(panelHeading).toBeVisible();
     const panel = panelHeading.closest("section");
@@ -295,36 +308,32 @@ describe("Página Biblioteca", () => {
           "Os primeiros livros já estão organizados na estante.",
         ),
       ).toBeVisible();
-      expect(
-        within(panel).getByText(/Há um livro atualizado recentemente/u),
-      ).toBeVisible();
+      expect(within(panel).getByText("Título de teste")).toBeVisible();
     }
     expect(screen.queryByText("book-1")).not.toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Fechar painel" }));
+    await user.click(
+      screen.getByRole("button", { name: "Fechar resumo da Biblioteca" }),
+    );
     expect(
-      screen.queryByRole("heading", { name: "Resumo da sua coleção" }),
+      screen.queryByRole("heading", { name: "Resumo da estante" }),
     ).not.toBeInTheDocument();
 
     act(() => visualHostMock.interaction?.({ type: "ShelfSelected" }));
-    await screen.findByRole("heading", { name: "Resumo da sua coleção" });
+    await screen.findByRole("heading", { name: "Resumo da estante" });
     await user.click(screen.getByRole("button", { name: "Abrir Coleção" }));
     expect(screen.getByLabelText("URL atual")).toHaveTextContent("/colecao");
   });
 
-  it("abre o painel acessível da bibliotecária e move foco para fechar", async () => {
+  it("abre o balão acessível da bibliotecária sem roubar foco", async () => {
     renderLibrary(Promise.resolve([book]));
     await screen.findByRole("img", { name: "Visualização da Biblioteca" });
     act(() => visualHostMock.interaction?.({ type: "LibrarianSelected" }));
 
-    expect(
-      await screen.findByRole("heading", { name: "Uma observação tranquila" }),
-    ).toBeVisible();
+    expect(await screen.findByText("Uma observação tranquila")).toBeVisible();
     expect(screen.getByText(/leitura em curso/iu)).toBeVisible();
-    await waitFor(() =>
-      expect(
-        screen.getByRole("button", { name: "Fechar painel" }),
-      ).toHaveFocus(),
-    );
+    expect(
+      screen.getByRole("button", { name: "Fechar painel" }),
+    ).not.toHaveFocus();
     expect(screen.queryByText("book-1")).not.toBeInTheDocument();
   });
 
@@ -337,29 +346,50 @@ describe("Página Biblioteca", () => {
     act(() => visualHostMock.interaction?.({ type: "CreatureSelected" }));
 
     expect(
-      screen.queryByRole("heading", { name: "Uma observação tranquila" }),
+      screen.queryByText("Uma observação tranquila"),
     ).not.toBeInTheDocument();
-    expect(
-      await screen.findAllByRole("heading", { name: "Uma presença curiosa" }),
-    ).toHaveLength(1);
+    expect(await screen.findAllByText("Uma presença curiosa")).toHaveLength(1);
     expect(screen.getByText(/inclina a cabeça/iu)).toBeVisible();
     await user.click(screen.getByRole("button", { name: "Fechar painel" }));
-    expect(
-      screen.queryByRole("heading", { name: "Uma presença curiosa" }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Uma presença curiosa")).not.toBeInTheDocument();
   });
 
   it("cada nova interação substitui o painel atual", async () => {
     renderLibrary(Promise.resolve([book]));
     await screen.findByRole("img", { name: "Visualização da Biblioteca" });
     act(() => visualHostMock.interaction?.({ type: "CreatureSelected" }));
-    await screen.findByRole("heading", { name: "Uma presença curiosa" });
+    await screen.findByText("Uma presença curiosa");
     act(() => visualHostMock.interaction?.({ type: "ShelfSelected" }));
     expect(
-      screen.getByRole("heading", { name: "Resumo da sua coleção" }),
+      screen.getByRole("heading", { name: "Resumo da estante" }),
     ).toBeVisible();
+    expect(screen.queryByText("Uma presença curiosa")).not.toBeInTheDocument();
+  });
+
+  it("expande a alternativa React quando o canvas falha", async () => {
+    renderLibrary(Promise.resolve([book]));
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    act(() => visualHostMock.availability?.(false));
+
     expect(
-      screen.queryByRole("heading", { name: "Uma presença curiosa" }),
-    ).not.toBeInTheDocument();
+      screen.getByText("Resumo acessível").closest("details"),
+    ).toHaveAttribute("open");
+    expect(
+      screen.getByRole("link", { name: "Consultar Coleção" }),
+    ).toHaveAttribute("href", "/colecao");
+  });
+
+  it("permite diagnóstico não persistido e retorna ao período automático", async () => {
+    const user = userEvent.setup();
+    renderLibrary(Promise.resolve([book]));
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    const automaticPeriod = visualHostMock.period;
+    const selector = screen.getByLabelText("Pré-visualizar período");
+
+    await user.selectOptions(selector, "lateNight");
+    expect(visualHostMock.period).toBe("lateNight");
+    await user.selectOptions(selector, "automatic");
+    expect(visualHostMock.period).toBe(automaticPeriod);
+    expect(selector).toHaveValue("automatic");
   });
 });

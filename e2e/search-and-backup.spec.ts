@@ -98,6 +98,7 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
   await expect(page.getByLabel("Usar alto contraste")).toBeChecked();
   await expect(page.getByLabel("Tamanho do texto")).toHaveValue("larger");
   await navigateFromMenu("Biblioteca");
+  await page.getByText("Resumo acessível").click();
   await expect(
     page.getByText(/a luminária de leitura permanece na sala/u),
   ).toBeVisible();
