@@ -8,11 +8,13 @@ import {
   ExportBackup,
   GetBookEntry,
   ImportBackup,
+  InspectBackup,
   ListAllNotes,
   ListAllQuotes,
   ListBookEntries,
   ListNotesByBook,
   ListQuotesByBook,
+  hasRelevantRestoreData,
   type BackupData,
   type BackupFileSharePort,
 } from "../../application";
@@ -479,6 +481,53 @@ describe("backup JSON v2", () => {
 });
 
 describe("snapshot Dexie e restauração", () => {
+  it("considera relevantes todas as coleções substituídas e ignora metadata técnica", async () => {
+    const empty: BackupData = {
+      activities: [],
+      libraryEntries: [],
+      milestones: [],
+      notes: [],
+      quotes: [],
+      settings: [],
+    };
+    expect(hasRelevantRestoreData(empty)).toBe(false);
+    expect(
+      hasRelevantRestoreData({ ...empty, libraryEntries: data.libraryEntries }),
+    ).toBe(true);
+    expect(hasRelevantRestoreData({ ...empty, notes: data.notes })).toBe(true);
+    expect(hasRelevantRestoreData({ ...empty, quotes: data.quotes })).toBe(
+      true,
+    );
+    expect(
+      hasRelevantRestoreData({ ...empty, activities: data.activities }),
+    ).toBe(true);
+    expect(hasRelevantRestoreData({ ...empty, settings: data.settings })).toBe(
+      true,
+    );
+    expect(
+      hasRelevantRestoreData({
+        ...empty,
+        milestones: [completionMilestone],
+      }),
+    ).toBe(true);
+
+    const name = `technical-metadata-${crypto.randomUUID()}`;
+    databases.add(name);
+    const database = new BibliotecaDatabase(name);
+    await database.open();
+    await database.metadata.put({
+      key: "schema-version",
+      value: "3",
+      updatedAt: book.createdAt,
+    });
+    await expect(
+      new DexieBackupSnapshotStore(database).read(),
+    ).resolves.toMatchObject({
+      isEmpty: true,
+    });
+    database.close();
+  });
+
   it("restaura marcos por união monotônica e preserva desbloqueio legítimo", async () => {
     const name = `milestone-restore-${crypto.randomUUID()}`;
     databases.add(name);
@@ -780,6 +829,87 @@ describe("snapshot Dexie e restauração", () => {
     ).rejects.toMatchObject({ code: "BACKUP_DELIVERY_CANCELLED" });
     expect(replaced).toBe(false);
     expect(order[0]).toContain("seguranca-antes-da-restauracao");
+  });
+
+  it("inspeciona o destino sem escrever e exige nova decisão se uma base vazia ganhar dados", async () => {
+    let current = { ...data, isEmpty: true };
+    let replaced = false;
+    const snapshots = {
+      read: () => Promise.resolve(current),
+      replace: () => {
+        replaced = true;
+        return Promise.resolve();
+      },
+    };
+    const codec = new JsonBackupCodec();
+    const content = (
+      await codec.encode({
+        appVersion: "x",
+        createdAt: book.createdAt,
+        databaseVersion: 3,
+        data,
+      })
+    ).content;
+    await expect(
+      new InspectBackup(codec, snapshots).execute(content),
+    ).resolves.toMatchObject({
+      currentData: "empty",
+    });
+    expect(replaced).toBe(false);
+    current = { ...data, isEmpty: false };
+    const exporter = new ExportBackup(
+      snapshots,
+      codec,
+      { now: () => Promise.resolve(book.updatedAt) },
+      "x",
+      3,
+    );
+    await expect(
+      new ImportBackup(snapshots, codec, exporter, {
+        shareBackupFile: vi.fn(() => Promise.resolve("flow-finished" as const)),
+      }).execute(content, "empty-destination"),
+    ).rejects.toMatchObject({ code: "RESTORE_DECISION_REQUIRED" });
+    expect(replaced).toBe(false);
+  });
+
+  it("permite confirmação explícita sem backup e bloqueia falha de entrega", async () => {
+    const codec = new JsonBackupCodec();
+    const content = (
+      await codec.encode({
+        appVersion: "x",
+        createdAt: book.createdAt,
+        databaseVersion: 3,
+        data: replacementData,
+      })
+    ).content;
+    const order: string[] = [];
+    const snapshots = {
+      read: () => Promise.resolve({ ...data, isEmpty: false }),
+      replace: () => {
+        order.push("replace");
+        return Promise.resolve();
+      },
+    };
+    const exporter = new ExportBackup(
+      snapshots,
+      codec,
+      { now: () => Promise.resolve(book.updatedAt) },
+      "x",
+      3,
+    );
+    const shareBackupFile = vi.fn(() => Promise.reject(new Error("private")));
+    const importer = new ImportBackup(snapshots, codec, exporter, {
+      shareBackupFile,
+    });
+    await expect(
+      importer.execute(content, "create-safety-backup"),
+    ).rejects.toMatchObject({ code: "SAFETY_BACKUP_FAILED" });
+    expect(order).toEqual([]);
+    await expect(
+      importer.execute(content, "confirmed-without-backup"),
+    ).resolves.toEqual(expect.objectContaining({ libraryEntries: 1 }));
+    expect(order).toEqual(["replace"]);
+    expect(shareBackupFile).toHaveBeenCalledTimes(1);
   });
 
   it("não abre escrita para arquivo inválido", async () => {

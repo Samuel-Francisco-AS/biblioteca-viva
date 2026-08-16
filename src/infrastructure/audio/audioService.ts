@@ -79,6 +79,10 @@ export class AudioService implements AudioPort {
           this.reporter.warn("BACKEND_UNAVAILABLE");
           this.pendingEffects.length = 0;
         } else {
+          if (!this.desiredMusic)
+            void this.backend
+              .prepare(AUDIO_MANIFEST["music.library"])
+              .catch(() => this.reporter.warn("MUSIC_PREPARATION_FAILED"));
           this.startDesiredMusic();
           for (const id of this.pendingEffects.splice(0)) this.playEffect(id);
         }

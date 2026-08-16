@@ -211,7 +211,7 @@ Uma falha do Phaser mostra alternativa textual e opção de tentar novamente; n�
 
 ## 13. Backup e recuperação implementados
 
-Somente substituição está disponível. No comportamento atual, confirmar exige criar/entregar primeiro um backup de segurança. A política futura aprovada para R1 torna essa cópia dispensável em banco vazio e uma escolha explícita em banco preenchido; cancelar e as proteções contra restauração acidental permanecem. Selecionar continua validando sem escrita, e restaurar continua revalidando e substituindo atomicamente. Falha permite nova tentativa.
+Somente substituição está disponível. Banco vazio é derivado pela aplicação como ausência de livros, notas, citações, atividades, settings e milestones; metadata técnica não muda essa classificação. Nesse caso, confirmar restaura sem criar ou compartilhar backup vazio. Em banco preenchido, a interface oferece criar backup pelo mecanismo existente, continuar sem backup com uma segunda confirmação inequívoca ou cancelar. Selecionar continua validando sem escrita, restaurar revalida imediatamente antes do replace atômico, e mudança concorrente de vazio para preenchido exige nova decisão. Falha preserva seleção e permite nova tentativa.
 
 Falha de renderização apresenta “Tentar novamente” e “Recarregar aplicativo”; nenhuma opção apaga ou restaura dados automaticamente.
 

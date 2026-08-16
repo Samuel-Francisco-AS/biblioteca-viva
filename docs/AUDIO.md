@@ -21,6 +21,8 @@ MilestoneReached da primeira conclusão ┘                     ↓
 
 O `AudioService` possui a música desejada e garante uma única reprodução ativa. Pause, saída da Biblioteca, mute e dispose interrompem handles; resume recria no máximo o loop desejado. Efeitos ocorridos antes da inicialização ou durante segundo plano não são acumulados.
 
+Em R1-B, a ordenação foi verificada: `LibraryEntered` nasce no efeito de rota React e não espera importação, montagem ou prontidão do Phaser. A causa estrutural demonstrável era o `BrowserAudioBackend` repetir `fetch` e `decodeAudioData` da música a cada entrada. Após o gesto permitido, o serviço prepara somente `music.library` quando ela ainda não é desejada; o backend compartilha a promessa de carga e reutiliza o buffer decodificado até `dispose`. Não há preload remoto, timer, autoplay ou reprodução antecipada.
+
 ## 4. Manifesto, IDs e arquivos reais
 
 `src/infrastructure/audio/audioManifest.ts` é a única fonte de caminhos. Todos os arquivos atuais são WAV PCM mono, 22.050 Hz, 16-bit, gerados deterministicamente pelo projeto.
@@ -118,6 +120,7 @@ Nenhuma ação ou informação depende de ouvir.
 - WAV foi escolhido para geração simples e determinística; uma versão final comprimida poderá reduzir o APK;
 - não há crossfade, playlist, áudio espacial, equalizador, música adaptativa ou reprodução em segundo plano;
 - fone, alto-falante, interrupções e lifecycle físico aguardam revalidação no Moto G06.
+- a primeira entrada no mesmo gesto de unlock ainda depende da inicialização e decodificação permitidas pelo navegador; a correção elimina trabalho repetido e antecipa preparação em gestos anteriores, mas não autoriza alegar latência física sem nova escuta.
 
 ## 12. Checklist da rodada corretiva
 

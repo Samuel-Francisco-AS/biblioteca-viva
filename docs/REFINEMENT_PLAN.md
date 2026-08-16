@@ -1,7 +1,7 @@
 # Plano de refinamento pós-protótipo
 
 > Início da fase: 2026-08-13
-> Estado: R1 em andamento; R1-A concluído tecnicamente e R1-B pendente
+> Estado: R1 tecnicamente concluído; R2 é o próximo trabalho
 > Base: primeira rodada integrada de uso físico realizada por Sam no Moto G06
 
 ## 1. Função e limites
@@ -115,7 +115,7 @@ O fluxo deve aceitar arquivo compatível com a política técnica, inclusive MP3
 
 R1 deve preservar arquitetura em camadas, dados existentes, milestones, backup e acessibilidade. Mudança de schema só poderá ocorrer com migração e teste; nenhuma é presumida por este plano.
 
-Em 2026-08-13, os itens 1–4 foram concluídos tecnicamente como R1-A. A projeção usa correspondência direta de um a cinco livros e, acima disso, compressão determinística gradual até o teto de oito representações. Os itens 5–6 formam R1-B e permanecem pendentes. Nenhuma validação humana ou gate foi aprovado por esta implementação.
+Em 2026-08-13, os itens 1–4 foram concluídos tecnicamente como R1-A. Em 2026-08-16, R1-B concluiu os itens 5–6: a aplicação deriva o estado vazio das seis coleções substituídas, sem contar metadata técnica; a interface oferece os três caminhos explícitos quando há dados. A investigação sonora provou que a intenção de rota já precedia e independia do Phaser, mas o backend repetia busca e decodificação do WAV em cada entrada. A música local agora é preparada após unlock e o buffer é reutilizado no lifecycle do backend. A percepção no Moto G06 e a restauração física específica continuam pendentes; nenhum gate foi aprovado.
 
 ## 5. Rodada R2 — Utilidade de conteúdo e áudio
 

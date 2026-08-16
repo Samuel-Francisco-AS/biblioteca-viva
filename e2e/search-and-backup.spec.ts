@@ -77,14 +77,17 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
       name: "Confirmar substituição de todos os dados",
     }),
   ).toBeVisible();
-  const safetyDownloadPromise = page.waitForEvent("download");
   await page
     .getByRole("button", {
-      name: "Criar backup de segurança e substituir dados",
+      name: "Continuar sem criar backup",
     })
     .click();
-  const safetyDownload = await safetyDownloadPromise;
-  expect(await safetyDownload.path()).not.toBeNull();
+  await expect(
+    page.getByText(/a Biblioteca Viva não poderá desfazer esta ação/u),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Confirmar e restaurar sem backup" })
+    .click();
   await expect(
     page.getByRole("heading", { name: "Restauração concluída" }),
   ).toBeVisible();
@@ -103,4 +106,42 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
   await expect(
     page.getByRole("heading", { name: "Registro removido pela restauração" }),
   ).toHaveCount(0);
+});
+
+test("restauração em base vazia não exige backup de segurança", async ({
+  createBook,
+  page,
+}) => {
+  await createBook({
+    author: "Autoria Fictícia",
+    currentPage: 7,
+    status: "in_progress",
+    title: "Arquivo para Base Vazia",
+    totalPages: 70,
+  });
+  await page.getByRole("link", { name: "Configurações" }).click();
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Exportar backup" }).click();
+  const backupPath = await (await downloadPromise).path();
+  if (!backupPath) throw new Error("O backup fictício não foi materializado.");
+
+  const session = await page.context().newCDPSession(page);
+  await session.send("Storage.clearDataForOrigin", {
+    origin: new URL(page.url()).origin,
+    storageTypes: "indexeddb",
+  });
+  await session.detach();
+  await page.reload();
+  await page.getByLabel("Arquivo de backup").setInputFiles(backupPath);
+  await expect(
+    page.getByText(/não possui dados atuais relevantes/u),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Restaurar backup" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Restauração concluída" }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "Coleção", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Arquivo para Base Vazia" }),
+  ).toBeVisible();
 });

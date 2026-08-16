@@ -16,6 +16,7 @@ function fakeAudioBackend(play = vi.fn()): AudioBackend {
   return {
     dispose: vi.fn(),
     initialize: vi.fn(() => Promise.resolve(true)),
+    prepare: vi.fn(() => Promise.resolve()),
     play: (cue, volume) => {
       play(cue, volume);
       const playback: AudioPlayback = {
@@ -366,9 +367,10 @@ describe("createApplication", () => {
       content: artifact.content,
       name: artifact.fileName,
     });
-    await expect(runtime.backup.inspect(artifact.content)).resolves.toEqual(
-      artifact.summary,
-    );
+    await expect(runtime.backup.inspect(artifact.content)).resolves.toEqual({
+      currentData: "present",
+      summary: artifact.summary,
+    });
     expect((await runtime.diagnostics.inspect()).counts).toEqual(before.counts);
   });
 
@@ -444,9 +446,9 @@ describe("createApplication", () => {
       vi.spyOn(destination.commands.addQuote, "execute"),
     ];
 
-    await expect(destination.backup.import(artifact.content)).resolves.toEqual(
-      artifact.summary.counts,
-    );
+    await expect(
+      destination.backup.import(artifact.content, "create-safety-backup"),
+    ).resolves.toEqual(artifact.summary.counts);
     expect(published).toEqual([]);
     commandSpies.forEach((spy) => expect(spy).not.toHaveBeenCalled());
     const diagnostics = await destination.diagnostics.inspect();
@@ -492,11 +494,14 @@ describe("createApplication", () => {
     await expect(
       runtime.backup.inspect(artifact.content),
     ).resolves.toMatchObject({
-      counts: {
-        activities: 1,
-        libraryEntries: 1,
-        notes: 0,
-        quotes: 0,
+      currentData: "present",
+      summary: {
+        counts: {
+          activities: 1,
+          libraryEntries: 1,
+          notes: 0,
+          quotes: 0,
+        },
       },
     });
   });

@@ -3,6 +3,7 @@ import type {
   BackupSnapshot,
   BackupSnapshotPort,
 } from "../../application";
+import { hasRelevantRestoreData } from "../../application";
 import type { BibliotecaDatabase } from "../database/database";
 import {
   persistedActivitySchema,
@@ -60,7 +61,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
     };
     return Object.freeze({
       ...data,
-      isEmpty: Object.values(data).every((values) => values.length === 0),
+      isEmpty: !hasRelevantRestoreData(data),
     });
   }
 

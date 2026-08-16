@@ -206,6 +206,8 @@ O detalhe do livro usa `progress` HTML nativo com label textual para o total con
 
 Foram preservados por já estarem corretos: `header`/`nav`/`main`, skip link, hierarquia por rota, links e botões nativos, `aria-current`, labels, fieldsets da Coleção, erros associados por `aria-describedby`/`aria-invalid`, foco após validação, confirmação destrutiva, backup/restauração, regiões de status e alvo mínimo de 44 px. Foram corrigidos o `aria-describedby` condicional do arquivo de backup, foco após erros assíncronos de progresso/nota/citação e retorno de foco dos painéis da Biblioteca. Nenhuma ARIA redundante foi adicionada.
 
+R1-B mantém o resumo de restauração focalizável e ações nativas. Em base preenchida, as três escolhas têm rótulos explícitos; continuar sem backup abre confirmação textual adicional, e voltar devolve foco à ação que a abriu. Cancelar preserva dados, remove somente a seleção do fluxo e devolve foco ao campo de arquivo. Esses comportamentos possuem testes automatizados, mas TalkBack e toque físico continuam pendentes.
+
 ### Checklist manual acumulada para G9
 
 - [ ] TalkBack no Moto G06: landmarks, títulos, navegação e alternativa da Biblioteca;

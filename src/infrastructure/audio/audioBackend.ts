@@ -9,6 +9,7 @@ export interface AudioPlayback {
 export interface AudioBackend {
   dispose(): void;
   initialize(): Promise<boolean>;
+  prepare(cue: AudioCueDefinition): Promise<void>;
   play(cue: AudioCueDefinition, volume: number): Promise<AudioPlayback>;
 }
 
@@ -28,6 +29,10 @@ function clamp(value: number): number {
 
 export class BrowserAudioBackend implements AudioBackend {
   private context?: AudioContext;
+  private readonly decodedSources = new Map<
+    string,
+    Promise<AudioBuffer | undefined>
+  >();
   private readonly playbacks = new Set<AudioPlayback>();
 
   constructor(
@@ -54,27 +59,25 @@ export class BrowserAudioBackend implements AudioBackend {
     const context = this.context;
     if (!context || context.state === "closed")
       throw new Error("AUDIO_BACKEND_NOT_READY");
-
-    for (const source of cue.sources) {
-      try {
-        const response = await fetch(source);
-        if (!response.ok) throw new Error("asset unavailable");
-        const buffer = await context.decodeAudioData(
-          await response.arrayBuffer(),
-        );
-        return this.track(
-          this.createBufferPlayback(context, buffer, cue, volume),
-        );
-      } catch {
-        this.reporter.warn("ASSET_UNAVAILABLE");
-      }
-    }
+    const buffer = await this.loadCueBuffer(context, cue);
+    if (buffer)
+      return this.track(
+        this.createBufferPlayback(context, buffer, cue, volume),
+      );
     return this.track(this.createSilentPlayback(cue.loop));
+  }
+
+  async prepare(cue: AudioCueDefinition): Promise<void> {
+    const context = this.context;
+    if (!context || context.state === "closed")
+      throw new Error("AUDIO_BACKEND_NOT_READY");
+    await this.loadCueBuffer(context, cue);
   }
 
   dispose(): void {
     for (const playback of [...this.playbacks]) playback.stop();
     this.playbacks.clear();
+    this.decodedSources.clear();
     const context = this.context;
     this.context = undefined;
     if (context && context.state !== "closed") {
@@ -82,6 +85,31 @@ export class BrowserAudioBackend implements AudioBackend {
         .close()
         .catch(() => this.reporter.warn("BACKEND_DISPOSE_FAILED"));
     }
+  }
+
+  private async loadCueBuffer(
+    context: AudioContext,
+    cue: AudioCueDefinition,
+  ): Promise<AudioBuffer | undefined> {
+    for (const source of cue.sources) {
+      let decoded = this.decodedSources.get(source);
+      if (!decoded) {
+        decoded = fetch(source)
+          .then((response) => {
+            if (!response.ok) throw new Error("asset unavailable");
+            return response.arrayBuffer();
+          })
+          .then((bytes) => context.decodeAudioData(bytes))
+          .catch(() => {
+            this.reporter.warn("ASSET_UNAVAILABLE");
+            return undefined;
+          });
+        this.decodedSources.set(source, decoded);
+      }
+      const buffer = await decoded;
+      if (buffer) return buffer;
+    }
+    return undefined;
   }
 
   private track(playback: AudioPlayback): AudioPlayback {

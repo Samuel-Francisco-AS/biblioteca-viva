@@ -44,6 +44,7 @@ class FakeAudioContext {
   readonly destination = new FakeAudioNode();
   readonly sources: FakeBufferSource[] = [];
   oscillatorCalls = 0;
+  decodeCalls = 0;
   state: AudioContextState = "running";
   constructor() {
     FakeAudioContext.instances.push(this);
@@ -65,6 +66,7 @@ class FakeAudioContext {
     throw new Error("drone procedural proibido");
   }
   decodeAudioData(): Promise<object> {
+    this.decodeCalls += 1;
     return Promise.resolve({ decoded: true });
   }
   resume(): Promise<void> {
@@ -102,6 +104,26 @@ describe("BrowserAudioBackend", () => {
     expect(context?.sources).toHaveLength(1);
     expect(context?.sources[0]).toMatchObject({ loop: true, started: true });
     playback.stop();
+  });
+
+  it("prepara após initialize e reutiliza o buffer decodificado em novas entradas", async () => {
+    const fetchAsset = vi.fn(() =>
+      Promise.resolve({
+        arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)),
+        ok: true,
+      }),
+    );
+    vi.stubGlobal("AudioContext", FakeAudioContext);
+    vi.stubGlobal("fetch", fetchAsset);
+    const backend = new BrowserAudioBackend({ warn: vi.fn() });
+    await backend.initialize();
+    await backend.prepare(AUDIO_MANIFEST["music.library"]);
+    const first = await backend.play(AUDIO_MANIFEST["music.library"], 0.5);
+    first.stop();
+    const second = await backend.play(AUDIO_MANIFEST["music.library"], 0.5);
+    expect(fetchAsset).toHaveBeenCalledTimes(1);
+    expect(FakeAudioContext.instances[0]?.decodeCalls).toBe(1);
+    second.stop();
   });
 
   it("asset musical ausente degrada para silêncio sem criar oscilador", async () => {

@@ -93,6 +93,7 @@ describe("App", () => {
     const backend: AudioBackend = {
       dispose: vi.fn(),
       initialize: vi.fn(() => Promise.resolve(true)),
+      prepare: vi.fn(() => Promise.resolve()),
       play: () => {
         const playback: AudioPlayback = {
           completed: Promise.resolve(),

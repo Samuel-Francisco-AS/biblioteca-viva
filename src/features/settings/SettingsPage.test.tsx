@@ -50,7 +50,9 @@ function application(
       export: vi.fn(() => Promise.resolve(artifact)),
       saveBackupFile: vi.fn(() => Promise.resolve("saved" as const)),
       shareBackupFile: vi.fn(() => Promise.resolve("flow-finished" as const)),
-      inspect: vi.fn(() => Promise.resolve(summary)),
+      inspect: vi.fn(() =>
+        Promise.resolve({ currentData: "present" as const, summary }),
+      ),
       import: vi.fn(() => Promise.resolve(counts)),
       ...overrides,
     },
@@ -366,12 +368,75 @@ describe("Configurações e backup", () => {
     const importMock = vi.mocked(app.backup.import);
     expect(importMock).not.toHaveBeenCalled();
     expect(screen.getByText("2", { selector: "dd" })).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Criar backup antes de restaurar" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Continuar sem criar backup" }),
+    ).toBeVisible();
     await user.click(screen.getByRole("button", { name: "Cancelar" }));
     expect(input).toHaveFocus();
     expect(importMock).not.toHaveBeenCalled();
   });
 
-  it("restaura somente após confirmação e anuncia contagens", async () => {
+  it("base preenchida exige confirmação adicional para continuar sem backup", async () => {
+    const app = application();
+    const user = userEvent.setup();
+    render(<SettingsPage application={app} />);
+    const file = new File(["{}"], "backup.json", { type: "application/json" });
+    Object.defineProperty(file, "text", { value: () => Promise.resolve("{}") });
+    await user.upload(screen.getByLabelText("Arquivo de backup"), file);
+    const importMock = vi.mocked(app.backup.import);
+    await user.click(
+      await screen.findByRole("button", {
+        name: "Continuar sem criar backup",
+      }),
+    );
+    expect(importMock).not.toHaveBeenCalled();
+    expect(
+      screen.getByText(/a Biblioteca Viva não poderá desfazer esta ação/u),
+    ).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Voltar" }));
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Continuar sem criar backup" }),
+      ).toHaveFocus(),
+    );
+    await user.click(
+      screen.getByRole("button", { name: "Continuar sem criar backup" }),
+    );
+    await user.click(
+      screen.getByRole("button", {
+        name: "Confirmar e restaurar sem backup",
+      }),
+    );
+    expect(importMock).toHaveBeenCalledTimes(1);
+    expect(importMock).toHaveBeenCalledWith("{}", "confirmed-without-backup");
+    expect(
+      await screen.findByRole("heading", { name: "Restauração concluída" }),
+    ).toBeVisible();
+  });
+
+  it("base vazia restaura diretamente sem acionar compartilhamento", async () => {
+    const app = application({
+      inspect: vi.fn(() =>
+        Promise.resolve({ currentData: "empty" as const, summary }),
+      ),
+    });
+    const user = userEvent.setup();
+    render(<SettingsPage application={app} />);
+    const file = new File(["{}"], "backup.json", { type: "application/json" });
+    Object.defineProperty(file, "text", { value: () => Promise.resolve("{}") });
+    await user.upload(screen.getByLabelText("Arquivo de backup"), file);
+    expect(
+      await screen.findByText(/não possui dados atuais relevantes/u),
+    ).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Restaurar backup" }));
+    expect(app.backup.import).toHaveBeenCalledWith("{}", "empty-destination");
+    expect(app.backup.shareBackupFile).not.toHaveBeenCalled();
+  });
+
+  it("base preenchida reutiliza o fluxo existente de backup de segurança", async () => {
     const app = application();
     const user = userEvent.setup();
     render(<SettingsPage application={app} />);
@@ -380,13 +445,12 @@ describe("Configurações e backup", () => {
     await user.upload(screen.getByLabelText("Arquivo de backup"), file);
     await user.click(
       await screen.findByRole("button", {
-        name: "Criar backup de segurança e substituir dados",
+        name: "Criar backup antes de restaurar",
       }),
     );
-    const importMock = vi.mocked(app.backup.import);
-    expect(importMock).toHaveBeenCalledTimes(1);
-    expect(
-      await screen.findByRole("heading", { name: "Restauração concluída" }),
-    ).toBeVisible();
+    expect(app.backup.import).toHaveBeenCalledWith(
+      "{}",
+      "create-safety-backup",
+    );
   });
 });

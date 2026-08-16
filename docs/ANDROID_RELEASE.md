@@ -230,3 +230,7 @@ Em 2026-08-11, `android:sync` e `android:build:debug` passaram sem plugin, permi
 ## 13. CI inicial do Prompt 19
 
 A CI valida somente o produto web. `android:sync` e `android:build:debug` continuam obrigatórios localmente: incluir SDK, JDK e Gradle em todo pull request teria custo desproporcional e ainda não provaria lifecycle, áudio, toque ou persistência física. Não há keystore, assinatura, secret, upload de APK ou Play Store no workflow.
+
+## 14. Checkpoint técnico R1-B
+
+Em 2026-08-16, `android:sync` e `android:build:debug` passaram com App, Filesystem e Share, além da bridge local `BackupDocument` já existente. Não houve plugin, permissão, código nativo, assinatura ou versão nova. O APK debug não foi instalado: `android/app/build/outputs/apk/debug/app-debug.apk`, 7.526.051 bytes, SHA-256 `b0a875a2aa160054fd6bc80a6818b0adfb39f0330803b3822f89e2d0c4f11016`, ZIP íntegro. A restauração contextual e a percepção de latência sonora continuam pendentes no Moto G06.

@@ -8,6 +8,7 @@ import {
   MAX_BACKUP_BYTES,
   type BackupCounts,
   type BackupSummary,
+  type RestoreProtection,
   type MotionPreference,
   type TextSizePreference,
 } from "../../application";
@@ -57,6 +58,8 @@ const errorMessages: Record<string, string> = {
     "Não foi possível entregar o backup de segurança. Nenhum dado foi alterado.",
   RESTORE_FAILED:
     "A restauração falhou. Os dados anteriores foram preservados.",
+  RESTORE_DECISION_REQUIRED:
+    "A base passou a conter dados. Escolha como proteger os dados atuais antes de restaurar.",
   BACKUP_TEMPORARY_WRITE_FAILED:
     "Não foi possível preparar o arquivo temporário. Nenhum dado foi alterado.",
   BACKUP_SHARE_FAILED:
@@ -121,6 +124,8 @@ export function SettingsPage({ application, diagnostics }: Props) {
   const [exportStatus, setExportStatus] = useState("");
   const [content, setContent] = useState<string>();
   const [summary, setSummary] = useState<BackupSummary>();
+  const [currentData, setCurrentData] = useState<"empty" | "present">();
+  const [confirmWithoutBackup, setConfirmWithoutBackup] = useState(false);
   const [importError, setImportError] = useState("");
   const [reading, setReading] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -137,7 +142,9 @@ export function SettingsPage({ application, diagnostics }: Props) {
     useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const confirmationRef = useRef<HTMLElement>(null);
+  const continueWithoutBackupRef = useRef<HTMLButtonElement>(null);
   const exportInProgressRef = useRef(false);
+  const importInProgressRef = useRef(false);
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -231,6 +238,8 @@ export function SettingsPage({ application, diagnostics }: Props) {
   function clearSelection(focus = true) {
     setContent(undefined);
     setSummary(undefined);
+    setCurrentData(undefined);
+    setConfirmWithoutBackup(false);
     setImportError("");
     setRestored(undefined);
     if (fileRef.current) fileRef.current.value = "";
@@ -250,10 +259,13 @@ export function SettingsPage({ application, diagnostics }: Props) {
       const selectedContent = await file.text();
       const inspected = await application.backup.inspect(selectedContent);
       setContent(selectedContent);
-      setSummary(inspected);
+      setSummary(inspected.summary);
+      setCurrentData(inspected.currentData);
+      setConfirmWithoutBackup(false);
       requestAnimationFrame(() => confirmationRef.current?.focus());
     } catch (error) {
       setContent(undefined);
+      setCurrentData(undefined);
       setImportError(publicError(error));
       requestAnimationFrame(() => fileRef.current?.focus());
     } finally {
@@ -261,20 +273,31 @@ export function SettingsPage({ application, diagnostics }: Props) {
     }
   }
 
-  async function restore() {
-    if (!application || !content || importing) return;
+  async function restore(protection: RestoreProtection) {
+    if (!application || !content || importInProgressRef.current) return;
+    importInProgressRef.current = true;
     setImporting(true);
     setImportError("");
     try {
-      const counts = await application.backup.import(content);
+      const counts = await application.backup.import(content, protection);
       setRestored(counts);
       setSummary(undefined);
+      setCurrentData(undefined);
+      setConfirmWithoutBackup(false);
       setContent(undefined);
       if (fileRef.current) fileRef.current.value = "";
       await refreshDiagnostics();
     } catch (error) {
       setImportError(publicError(error));
+      if (
+        error instanceof BackupError &&
+        error.code === "RESTORE_DECISION_REQUIRED"
+      ) {
+        setCurrentData("present");
+        setConfirmWithoutBackup(false);
+      }
     } finally {
+      importInProgressRef.current = false;
       setImporting(false);
     }
   }
@@ -639,31 +662,102 @@ export function SettingsPage({ application, diagnostics }: Props) {
               disponível.
             </p>
             <Counts counts={summary.counts} />
-            <p>
-              Todos os livros, notas, citações, atividades e configurações
-              locais serão substituídos. Se a base atual não estiver vazia, o
-              aplicativo exigirá primeiro a entrega de um backup de segurança.
-            </p>
-            <div className="inline-actions">
-              <button
-                className="button button--secondary"
-                type="button"
-                disabled={importing}
-                onClick={() => clearSelection()}
-              >
-                Cancelar
-              </button>
-              <button
-                className="button button--danger"
-                type="button"
-                disabled={importing}
-                onClick={() => void restore()}
-              >
-                {importing
-                  ? "Substituindo…"
-                  : "Criar backup de segurança e substituir dados"}
-              </button>
-            </div>
+            {currentData === "empty" ? (
+              <>
+                <p>
+                  Esta instalação não possui dados atuais relevantes para
+                  preservar. A restauração pode continuar sem criar ou
+                  compartilhar um backup vazio.
+                </p>
+                <div className="inline-actions">
+                  <button
+                    className="button button--secondary"
+                    type="button"
+                    disabled={importing}
+                    onClick={() => clearSelection()}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    className="button button--danger"
+                    type="button"
+                    disabled={importing}
+                    onClick={() => void restore("empty-destination")}
+                  >
+                    {importing ? "Substituindo…" : "Restaurar backup"}
+                  </button>
+                </div>
+              </>
+            ) : confirmWithoutBackup ? (
+              <>
+                <p role="alert">
+                  Os dados atuais serão substituídos. Continuar sem backup
+                  remove a proteção de recuperação desses dados, e a Biblioteca
+                  Viva não poderá desfazer esta ação.
+                </p>
+                <div className="inline-actions">
+                  <button
+                    className="button button--secondary"
+                    type="button"
+                    disabled={importing}
+                    onClick={() => {
+                      setConfirmWithoutBackup(false);
+                      requestAnimationFrame(() =>
+                        continueWithoutBackupRef.current?.focus(),
+                      );
+                    }}
+                  >
+                    Voltar
+                  </button>
+                  <button
+                    className="button button--danger"
+                    type="button"
+                    disabled={importing}
+                    onClick={() => void restore("confirmed-without-backup")}
+                  >
+                    {importing
+                      ? "Substituindo…"
+                      : "Confirmar e restaurar sem backup"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p>
+                  Há dados atuais que serão substituídos. Escolha como deseja
+                  continuar.
+                </p>
+                <div className="inline-actions">
+                  <button
+                    className="button button--secondary"
+                    type="button"
+                    disabled={importing}
+                    onClick={() => clearSelection()}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    className="button button--secondary"
+                    type="button"
+                    disabled={importing}
+                    ref={continueWithoutBackupRef}
+                    onClick={() => setConfirmWithoutBackup(true)}
+                  >
+                    Continuar sem criar backup
+                  </button>
+                  <button
+                    className="button button--danger"
+                    type="button"
+                    disabled={importing}
+                    onClick={() => void restore("create-safety-backup")}
+                  >
+                    {importing
+                      ? "Criando backup e substituindo…"
+                      : "Criar backup antes de restaurar"}
+                  </button>
+                </div>
+              </>
+            )}
           </section>
         )}
         {restored && (

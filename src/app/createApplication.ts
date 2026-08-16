@@ -18,7 +18,8 @@ import {
   InspectBackup,
   type BackupArtifact,
   type BackupCounts,
-  type BackupSummary,
+  type RestoreInspection,
+  type RestoreProtection,
   type BackupFileSavePort,
   type BackupFileSharePort,
   type SaveBackupResult,
@@ -99,8 +100,11 @@ export interface ApplicationRuntime {
     readonly shareBackupFile: (
       artifact: BackupArtifact,
     ) => Promise<ShareBackupResult>;
-    readonly inspect: (content: string) => Promise<BackupSummary>;
-    readonly import: (content: string) => Promise<BackupCounts>;
+    readonly inspect: (content: string) => Promise<RestoreInspection>;
+    readonly import: (
+      content: string,
+      protection: RestoreProtection,
+    ) => Promise<BackupCounts>;
   };
   readonly commands: {
     readonly addNote: AddNote;
@@ -223,7 +227,7 @@ export async function createApplication(
     packageMetadata.version,
     DATABASE_VERSION,
   );
-  const inspectBackup = new InspectBackup(codec);
+  const inspectBackup = new InspectBackup(codec, snapshots);
   const importBackup = new ImportBackup(
     snapshots,
     codec,
@@ -307,11 +311,11 @@ export async function createApplication(
       },
       inspect: async (content) => {
         if (!platform.backupIntegrity) throw unsafeContextError();
-        return (await inspectBackup.execute(content)).summary;
+        return inspectBackup.execute(content);
       },
-      import: async (content) => {
+      import: async (content, protection) => {
         if (!platform.backupIntegrity) throw unsafeContextError();
-        return importBackup.execute(content);
+        return importBackup.execute(content, protection);
       },
     },
     commands: {

@@ -46,6 +46,7 @@ class FakeBackend implements AudioBackend {
     playback: FakePlayback;
     volume: number;
   }> = [];
+  readonly prepared: AudioCueId[] = [];
   reject = new Set<AudioCueId>();
 
   dispose(): void {
@@ -56,6 +57,11 @@ class FakeBackend implements AudioBackend {
   initialize(): Promise<boolean> {
     this.initializeCalls += 1;
     return Promise.resolve(this.available);
+  }
+
+  prepare(cue: AudioCueDefinition): Promise<void> {
+    this.prepared.push(cue.id);
+    return Promise.resolve();
   }
 
   play(cue: AudioCueDefinition, volume: number): Promise<AudioPlayback> {
@@ -108,6 +114,16 @@ describe("AudioService", () => {
     await service.initialize();
     expect(backend.initializeCalls).toBe(1);
     expect(service.availability()).toBe("ready");
+    expect(backend.prepared).toEqual(["music.library"]);
+  });
+
+  it("prepara somente a música local após o unlock e antes de uma entrada posterior", async () => {
+    await service.initialize();
+    expect(backend.prepared).toEqual(["music.library"]);
+    expect(backend.plays).toEqual([]);
+    service.emit({ type: "LibraryEntered" });
+    await flush();
+    expect(backend.plays.map(({ cue }) => cue.id)).toEqual(["music.library"]);
   });
 
   it("não reproduz efeitos antes da inicialização permitida", async () => {

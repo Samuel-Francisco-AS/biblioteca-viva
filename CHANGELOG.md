@@ -20,6 +20,8 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 - documentação pública e operacional alinhada ao protótipo tecnicamente implementado até o Prompt 19.
 - progresso positivo inicia livros planejados e a última página conhecida reutiliza a conclusão transacional existente;
 - estantes pequenas usam uma representação por livro até cinco, com compressão gradual limitada a oito para coleções maiores.
+- restauração dispensa backup de segurança em base funcionalmente vazia e oferece escolha explícita, com confirmação adicional, quando há dados atuais;
+- música local é preparada após o primeiro gesto permitido e reutiliza a decodificação entre entradas na Biblioteca.
 
 ### Corrigido
 

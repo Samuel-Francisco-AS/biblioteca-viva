@@ -36,7 +36,7 @@ Migração:
 
 Formato de backup: altere contratos em `src/application/backup.ts`, codec em `src/infrastructure/backup/backupCodec.ts` e store em `dexieBackupStore.ts`. Preserve versões anteriores quando houver política segura, checksum canônico, inspeção sem escrita, limite de 10 MiB e restauração transacional. Atualize fixtures/testes v1/v2 e documentação.
 
-Para restaurar, use Configurações → Arquivo de backup → inspecionar → criar backup de segurança → substituir. Nunca limpe dados físicos antes de confirmar cópia externa. Em erro de persistência, registre apenas código sanitizado; verifique suporte/origem, schema, validação na leitura, transação e `navigator.storage.persist()`, sem copiar conteúdo pessoal.
+Para restaurar, use Configurações → Arquivo de backup → inspecionar → confirmar. Em base preenchida, escolha explicitamente criar backup de segurança pelo fluxo existente ou continuar sem ele após a confirmação adicional; em base vazia, não crie backup artificial. Nunca limpe dados físicos antes de confirmar cópia externa. Em erro de persistência, registre apenas código sanitizado; verifique suporte/origem, schema, validação na leitura, transação e `navigator.storage.persist()`, sem copiar conteúdo pessoal.
 
 ## 6. Phaser e performance
 

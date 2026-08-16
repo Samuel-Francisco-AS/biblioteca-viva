@@ -19,7 +19,7 @@
 - **implementação concluída:** Blocos 4, 5 e 6;
 - **prompts tecnicamente implementados:** Prompts 4 a 19; Prompts 14 a 19 mantêm validações humanas acumuladas e não estão aprovados;
 - **fase atual:** refinamento pós-protótipo orientado pela primeira rodada integrada no Moto G06;
-- **próximo trabalho:** R1-B — restauração e áudio; R1-A está tecnicamente concluído, G4 e G7–G10 continuam abertos e G11 não foi iniciado;
+- **próximo trabalho:** R2 — gerenciamento de notas/citações e playlist declarativa; R1 está tecnicamente concluído, G4 e G7–G10 continuam abertos e G11 não foi iniciado;
 - **bloco atual:** Bloco 10 tecnicamente implementado; G10 e gates humanos anteriores permanecem abertos;
 - **APK:** diagnóstico interno validado no Moto G06 com Android 15; release assinado ainda não existe;
 - **código:** implementação do Bloco 4 validada no navegador; G4 aguarda uso real prolongado.
@@ -103,7 +103,7 @@ Não colocar expansões dentro dos blocos atuais apenas porque parecem fáceis.
 
 Esta fase é posterior e separada dos Blocos 0–11 e dos Prompts 1–19 históricos. O plano operacional completo está em `REFINEMENT_PLAN.md`; não existe “Prompt 20” definido.
 
-- `[~]` **R1 — Coerência funcional:** R1-A concluiu tecnicamente início/conclusão pelo progresso, barra e páginas restantes e estante pequena; R1-B ainda deve tornar o backup de segurança opcional conforme o banco e investigar o delay sonoro;
+- `[x]` **R1 — Coerência funcional:** R1-A e R1-B tecnicamente concluídos; restauração contextual e cache/preparação musical ainda aguardam validação humana específica;
 - `[ ]` **R2 — Utilidade de notas/citações e áudio:** editar, excluir e compartilhar anotações; adicionar playlist declarativa e substituição modular de áudio;
 - `[ ]` **R3 — UX/Layout v2:** redesign extenso, tema escuro coerente e Biblioteca visual protagonista, preservando acessibilidade;
 - `[ ]` **checkpoint integrado Android:** validar regressões, novas regras, conteúdo, áudio, backup, marco, layout, acessibilidade, lifecycle e desempenho;

@@ -24,6 +24,17 @@ export interface BackupSnapshot extends BackupData {
   readonly isEmpty: boolean;
 }
 
+export function hasRelevantRestoreData(data: BackupData): boolean {
+  return (
+    data.libraryEntries.length > 0 ||
+    data.notes.length > 0 ||
+    data.quotes.length > 0 ||
+    data.activities.length > 0 ||
+    data.settings.length > 0 ||
+    data.milestones.length > 0
+  );
+}
+
 export interface BackupCounts {
   readonly libraryEntries: number;
   readonly milestones: number;
@@ -42,6 +53,14 @@ export interface BackupSummary {
   readonly counts: BackupCounts;
   readonly warnings: readonly string[];
 }
+
+export interface RestoreInspection {
+  readonly currentData: "empty" | "present";
+  readonly summary: BackupSummary;
+}
+
+export type RestoreProtection =
+  "empty-destination" | "create-safety-backup" | "confirmed-without-backup";
 
 export interface BackupArtifact {
   readonly fileName: string;
@@ -120,6 +139,7 @@ export type BackupErrorCode =
   | "BACKUP_DELIVERY_CANCELLED"
   | "PLATFORM_CAPABILITY_UNAVAILABLE"
   | "SAFETY_BACKUP_FAILED"
+  | "RESTORE_DECISION_REQUIRED"
   | "IMPORT_CANCELLED"
   | "RESTORE_FAILED";
 
@@ -169,9 +189,17 @@ export class ExportBackup {
 }
 
 export class InspectBackup {
-  constructor(private readonly codec: BackupCodecPort) {}
-  execute(content: string): Promise<ValidatedBackup> {
-    return this.codec.inspect(content);
+  constructor(
+    private readonly codec: BackupCodecPort,
+    private readonly snapshots: BackupSnapshotPort,
+  ) {}
+  async execute(content: string): Promise<RestoreInspection> {
+    const validated = await this.codec.inspect(content);
+    const current = await this.snapshots.read();
+    return Object.freeze({
+      currentData: current.isEmpty ? "empty" : "present",
+      summary: validated.summary,
+    });
   }
 }
 
@@ -183,10 +211,19 @@ export class ImportBackup {
     private readonly files: BackupFileSharePort,
   ) {}
 
-  async execute(content: string): Promise<BackupCounts> {
+  async execute(
+    content: string,
+    protection: RestoreProtection = "create-safety-backup",
+  ): Promise<BackupCounts> {
     await this.codec.inspect(content);
     const current = await this.snapshots.read();
-    if (!current.isEmpty) {
+    if (!current.isEmpty && protection === "empty-destination") {
+      throw new BackupError(
+        "RESTORE_DECISION_REQUIRED",
+        "A base passou a conter dados e exige uma decisão antes da restauração.",
+      );
+    }
+    if (!current.isEmpty && protection === "create-safety-backup") {
       let safety: BackupArtifact;
       try {
         safety = await this.exportBackup.execute(

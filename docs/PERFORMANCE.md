@@ -56,7 +56,7 @@ A sala visual atual é procedural e seu manifesto não carrega imagens. Conteúd
 
 O host possui exatamente um listener `visibilitychange` e um `ResizeObserver` (ou listener de resize como fallback), ambos removidos antes de destruir a instância. Eventos equivalentes são idempotentes. Resize idêntico é ignorado; mudança de proporção redimensiona a mesma instância, reconcilia movimento e preserva projeção/preferências. A cena remove listeners Phaser, zonas, labels, seleção, tweens próprios e handler React no shutdown.
 
-O áudio mantém no máximo uma música conhecida, interrompe efeitos no pause/mute/dispose e não cria segunda música em resume ou entrada repetida. A música reinicia após pause/resume conforme limitação aceita; não houve refatoração do Prompt 14.
+O áudio mantém no máximo uma música conhecida, interrompe efeitos no pause/mute/dispose e não cria segunda música em resume ou entrada repetida. R1-B adicionou cache limitado aos sources locais efetivamente preparados/reproduzidos: `music.library` é preparada após unlock, fetch/decode concorrentes compartilham a mesma promessa e novas entradas reutilizam o buffer; `dispose` limpa o cache. A música reinicia após pause/resume conforme limitação aceita. Não há polling, timer artificial ou preload remoto.
 
 Não foram encontrados registries crescentes, URLs Blob da sala, caches próprios sem liberação ou players registrados após dispose. `performance.memory` e memória real da WebView não são portáveis/confiáveis e não são reportadas. Context loss WebGL não recebeu simulação destrutiva; tela preta persistente continua falha crítica do checkpoint físico.
 

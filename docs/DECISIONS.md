@@ -461,4 +461,15 @@ Evoluir o backup para formato v2 incluindo `milestones`, aceitando v1 com seu ch
 
 **Consequências:** não é troca cosmética de cores nem autorização para remover semântica, teclado, leitor de tela, alto contraste, escala textual, touch targets ou redução de movimento. Paleta final e solução de painéis dependem da rodada visual e de validação posterior.
 
+## D-043 — Estado relevante da restauração e preparação musical pós-gesto
+
+- **Data:** 2026-08-16
+- **Status:** aceita
+
+**Contexto:** o fluxo antigo sabia internamente se o snapshot estava vazio, mas a UI sempre apresentava backup de segurança obrigatório. A investigação do atraso sonoro mostrou que `LibraryEntered` já era independente do Phaser, enquanto o backend repetia fetch e decode do mesmo WAV em cada retorno.
+
+**Decisão:** considerar funcionalmente vazio somente o destino sem livros, notas, citações, atividades, settings ou milestones; metadata técnica fica fora. Revalidar antes do replace e exigir estratégia explícita se dados surgirem após a inspeção. Em destino preenchido, permitir backup existente, confirmação adicional sem backup ou cancelamento. No áudio, preparar apenas a música local depois do unlock e cachear buffers por source durante o lifecycle do backend, limpando-os no dispose.
+
+**Consequências:** não há schema, flag persistida, formato de backup, dependência, plugin, permissão, asset, timer ou autoplay novo. Settings e milestones contam porque seriam substituídos/perdidos segundo suas políticas reais; milestones continuam unidos monotonicamente. A primeira decodificação permitida ainda possui custo e a latência percebida no Moto G06 permanece evidência humana pendente.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.
