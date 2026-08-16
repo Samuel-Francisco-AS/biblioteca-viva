@@ -54,7 +54,7 @@ export function LibraryTextAlternative({
       <p>{summary.shelf}</p>
       {viewModel.highlightedBook ? (
         <p>
-          Livro atualizado mais recentemente: {viewModel.highlightedBook.title}
+          Há um livro atualizado recentemente
           {highlightedProgress ? ` — ${highlightedProgress}.` : "."}
         </p>
       ) : (

@@ -111,7 +111,10 @@ describe("Página Biblioteca", () => {
     expect(
       screen.getByText("Os primeiros livros já estão organizados na estante."),
     ).toBeVisible();
-    expect(screen.getByText(/Título de teste/u)).toBeVisible();
+    expect(
+      screen.getByText(/Há um livro atualizado recentemente/u),
+    ).toBeVisible();
+    expect(screen.queryByText(/Título de teste/u)).not.toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Consultar Coleção" }),
     ).toHaveAttribute("href", "/colecao");
@@ -293,9 +296,7 @@ describe("Página Biblioteca", () => {
         ),
       ).toBeVisible();
       expect(
-        within(panel).getByText(
-          /Livro atualizado mais recentemente: Título de teste/u,
-        ),
+        within(panel).getByText(/Há um livro atualizado recentemente/u),
       ).toBeVisible();
     }
     expect(screen.queryByText("book-1")).not.toBeInTheDocument();

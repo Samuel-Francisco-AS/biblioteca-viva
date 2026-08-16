@@ -52,6 +52,43 @@ type NoteWriteDependencies = BookWriteDependencies &
 type QuoteWriteDependencies = BookWriteDependencies &
   Pick<ApplicationDependencies, "quotes">;
 
+interface PersistBookMutationInput {
+  readonly activity: ReturnType<typeof createActivity>;
+  readonly existing: BookEntry;
+  readonly fallbackEvent: DomainEvent;
+  readonly occurredAt: string;
+  readonly updated: BookEntry;
+}
+
+async function persistBookMutation(
+  dependencies: BookWriteDependencies,
+  input: PersistBookMutationInput,
+): Promise<void> {
+  const event =
+    input.existing.status !== "completed" &&
+    input.updated.status === "completed"
+      ? createLibraryEntryCompletedEvent({
+          eventId: input.fallbackEvent.eventId,
+          aggregateId: input.updated.id,
+          occurredAt: input.occurredAt,
+          revision: input.updated.revision,
+          payload: {
+            completedAt: input.updated.completedAt ?? input.occurredAt,
+          },
+        })
+      : input.fallbackEvent;
+  let milestoneEvents = Object.freeze([]) as readonly DomainEvent[];
+  await runTransaction(dependencies, async () => {
+    await saveEntity(
+      () => dependencies.libraryEntries.save(input.updated),
+      "save_book",
+    );
+    await saveActivity(dependencies, input.activity);
+    milestoneEvents = await processMilestones(dependencies, event);
+  });
+  await publishEvents(dependencies, [event, ...milestoneEvents]);
+}
+
 async function loadBook(
   dependencies: Pick<ApplicationDependencies, "libraryEntries">,
   id: string,
@@ -197,17 +234,11 @@ export class UpdateBookProgress {
         }),
       },
     });
-    await runTransaction(this.dependencies, async () => {
-      await saveEntity(
-        () => this.dependencies.libraryEntries.save(updated),
-        "save_book",
-      );
-      await saveActivity(this.dependencies, activity);
-    });
     const eventId = await generatedId(this.dependencies, "generate_event_id");
-    await publishEvent(
-      this.dependencies,
-      createProgressUpdatedEvent({
+    await persistBookMutation(this.dependencies, {
+      activity,
+      existing,
+      fallbackEvent: createProgressUpdatedEvent({
         eventId,
         aggregateId: updated.id,
         occurredAt,
@@ -219,7 +250,9 @@ export class UpdateBookProgress {
           }),
         },
       }),
-    );
+      occurredAt,
+      updated,
+    });
     return updated;
   }
 }
@@ -251,32 +284,19 @@ export class ChangeBookStatus {
       metadata: { from: existing.status, to: updated.status },
     });
     const eventId = await generatedId(this.dependencies, "generate_event_id");
-    const event =
-      updated.status === "completed"
-        ? createLibraryEntryCompletedEvent({
-            eventId,
-            aggregateId: updated.id,
-            occurredAt,
-            revision: updated.revision,
-            payload: { completedAt: updated.completedAt ?? occurredAt },
-          })
-        : createLibraryEntryUpdatedEvent({
-            eventId,
-            aggregateId: updated.id,
-            occurredAt,
-            revision: updated.revision,
-            payload: { changedFields: ["status"] },
-          });
-    let milestoneEvents = Object.freeze([]) as readonly DomainEvent[];
-    await runTransaction(this.dependencies, async () => {
-      await saveEntity(
-        () => this.dependencies.libraryEntries.save(updated),
-        "save_book",
-      );
-      await saveActivity(this.dependencies, activity);
-      milestoneEvents = await processMilestones(this.dependencies, event);
+    await persistBookMutation(this.dependencies, {
+      activity,
+      existing,
+      fallbackEvent: createLibraryEntryUpdatedEvent({
+        eventId,
+        aggregateId: updated.id,
+        occurredAt,
+        revision: updated.revision,
+        payload: { changedFields: ["status"] },
+      }),
+      occurredAt,
+      updated,
     });
-    await publishEvents(this.dependencies, [event, ...milestoneEvents]);
     return updated;
   }
 }

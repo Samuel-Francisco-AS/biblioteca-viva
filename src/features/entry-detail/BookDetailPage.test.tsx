@@ -291,6 +291,52 @@ describe("exclusão permanente", () => {
 });
 
 describe("progresso", () => {
+  it("apresenta porcentagem, barra, páginas lidas e restantes", async () => {
+    const { facade } = application();
+    await loaded(facade);
+    expect(screen.getByText("10% concluído")).toBeVisible();
+    expect(
+      screen.getByRole("progressbar", { name: "10% concluído" }),
+    ).toHaveValue(20);
+    expect(
+      screen.getByText("20 de 200 páginas", { exact: true }),
+    ).toBeVisible();
+    expect(screen.getByText("180 páginas restantes")).toBeVisible();
+  });
+
+  it.each([
+    [0, "0% concluído", "200 páginas restantes"],
+    [200, "100% concluído", "0 páginas restantes"],
+    [250, "100% concluído", "0 páginas restantes"],
+  ] as const)(
+    "limita a apresentação para a página %i",
+    async (currentPage, percentage, remaining) => {
+      const { facade } = application({
+        get: () => Promise.resolve({ ...book, currentPage }),
+      });
+      await loaded(facade);
+      expect(screen.getByText(percentage)).toBeVisible();
+      expect(screen.getByText(remaining)).toBeVisible();
+      expect(screen.getByRole("progressbar")).toHaveValue(
+        Math.min(currentPage, book.totalPages ?? currentPage),
+      );
+    },
+  );
+
+  it("mostra página atual sem porcentagem quando o total é desconhecido", async () => {
+    const { facade } = application({
+      get: () =>
+        Promise.resolve({ ...book, currentPage: 12, totalPages: undefined }),
+    });
+    await loaded(facade);
+    expect(screen.getByText(/Página atual:/)).toHaveTextContent("12");
+    expect(
+      screen.getByText("O total de páginas não foi definido."),
+    ).toBeVisible();
+    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+    expect(screen.queryByText(/% concluído/)).not.toBeInTheDocument();
+  });
+
   it("envia payload correto e atualiza a apresentação sem reload", async () => {
     const user = userEvent.setup();
     const { calls, facade } = application();

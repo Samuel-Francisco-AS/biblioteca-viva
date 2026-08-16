@@ -628,7 +628,29 @@ describe("UpdateBookProgress", () => {
     expect(context.state.timeline).toEqual(["entity", "activity", "event"]);
   });
 
-  it("não conclui automaticamente ao chegar à última página", async () => {
+  it("inicia automaticamente um planejado e registra a data do relógio", async () => {
+    const original = plannedBook();
+    const context = setup([original]);
+    const updated = await new UpdateBookProgress(context.dependencies).execute({
+      id: original.id,
+      currentPage: 1,
+    });
+    expect(updated).toMatchObject({ status: "in_progress", startedAt: T1 });
+    expect(context.events.events[0]?.type).toBe("ProgressUpdated");
+  });
+
+  it("mantém um planejado na página zero", async () => {
+    const original = plannedBook();
+    const context = setup([original]);
+    const updated = await new UpdateBookProgress(context.dependencies).execute({
+      id: original.id,
+      currentPage: 0,
+    });
+    expect(updated.status).toBe("planned");
+    expect(updated.startedAt).toBeUndefined();
+  });
+
+  it("conclui ao chegar à última página pela cadeia compartilhada", async () => {
     const reading = changeBookStatus(
       plannedBook({ totalPages: 100 }),
       "in_progress",
@@ -639,8 +661,36 @@ describe("UpdateBookProgress", () => {
       id: reading.id,
       currentPage: 100,
     });
-    expect(updated.status).toBe("in_progress");
-    expect(context.events.events[0]?.type).toBe("ProgressUpdated");
+    expect(updated).toMatchObject({
+      completedAt: T1,
+      currentPage: 100,
+      status: "completed",
+    });
+    expect(context.activities.activities[0]).toMatchObject({
+      type: "progress_updated",
+      metadata: { currentPage: 100, totalPages: 100 },
+    });
+    expect(context.events.events[0]?.type).toBe("LibraryEntryCompleted");
+    expect(context.state.timeline).toEqual(["entity", "activity", "event"]);
+  });
+
+  it("não publica conclusão quando a transação falha", async () => {
+    const reading = changeBookStatus(
+      plannedBook({ totalPages: 10 }),
+      "in_progress",
+      T0,
+    );
+    const context = setup([reading]);
+    context.state.failures.add("activity_save");
+    await expectApplicationError(
+      new UpdateBookProgress(context.dependencies).execute({
+        id: reading.id,
+        currentPage: 10,
+      }),
+      "ACTIVITY_PERSISTENCE_FAILED",
+    );
+    expect(context.library.entries.get(reading.id)).toBe(reading);
+    expect(context.events.events).toHaveLength(0);
   });
 
   it("rejeita progresso inválido e livro inexistente", async () => {

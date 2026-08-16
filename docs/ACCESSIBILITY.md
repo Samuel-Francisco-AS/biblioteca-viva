@@ -200,6 +200,8 @@ A Biblioteca expõe fora do canvas uma seção semanticamente nomeada com total,
 
 Phaser permanece imagem/atmosfera complementar e não é declarado acessível ou operável por leitor de tela. Falha, ausência ou inutilidade do canvas não remove o resumo nem os caminhos React. Áudio, cor e movimento nunca são a única confirmação do marco, status, progresso, erro ou navegação.
 
+O detalhe do livro usa `progress` HTML nativo com label textual para o total conhecido e mantém porcentagem, páginas lidas e restantes visíveis fora da barra. O estado sem total não apresenta porcentagem fictícia: informa página atual e ausência do total. A largura é fluida e os textos quebram sem depender de cor.
+
 ### Auditoria React
 
 Foram preservados por já estarem corretos: `header`/`nav`/`main`, skip link, hierarquia por rota, links e botões nativos, `aria-current`, labels, fieldsets da Coleção, erros associados por `aria-describedby`/`aria-invalid`, foco após validação, confirmação destrutiva, backup/restauração, regiões de status e alvo mínimo de 44 px. Foram corrigidos o `aria-describedby` condicional do arquivo de backup, foco após erros assíncronos de progresso/nota/citação e retorno de foco dos painéis da Biblioteca. Nenhuma ARIA redundante foi adicionada.

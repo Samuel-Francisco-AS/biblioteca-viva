@@ -55,7 +55,7 @@ O cadastro navega para `/livros/:id`, agora um detalhe completo com dados biblio
 
 ## 5. Atualizar progresso
 
-> **Comportamento futuro aprovado para R1; ainda não implementado.**
+> **Implementado tecnicamente em R1-A.**
 
 ```text
 Detalhe do livro
@@ -69,11 +69,11 @@ Detalhe do livro
 → projeção da biblioteca recebe novo estado
 ```
 
-Sem total conhecido, progresso pode iniciar a leitura, mas não calcula porcentagem nem conclui automaticamente. Não inventar total nem ampliar `paused` ou `abandoned`. No estado implementado pelo Prompt 8, o retorno do caso de uso atualiza o estado local do detalhe; R1 deve preservar a ausência de acesso Dexie pela apresentação.
+Sem total conhecido, progresso pode iniciar a leitura, mas não calcula porcentagem nem conclui automaticamente. Nenhum total é inventado e `paused` ou `abandoned` não ganharam novas transições. O retorno do caso de uso atualiza o estado local do detalhe, sem acesso Dexie pela apresentação.
 
 ## 6. Concluir livro
 
-> **Comportamento futuro aprovado para R1; ainda não implementado.**
+> **Implementado tecnicamente em R1-A; a conclusão explícita permanece disponível.**
 
 ```text
 Detalhe
@@ -88,7 +88,7 @@ Detalhe
 
 A conclusão pode ser desfeita sem apagar histórico.
 
-No detalhe com total conhecido, R1 deve mostrar porcentagem derivada, páginas lidas, total, páginas restantes e barra horizontal com texto equivalente. Tratar zero e 100%, limitar a 100%, não depender só de cor e respeitar contraste e escala de texto. Sem total, mostrar página atual e informar que o total não foi definido, sem porcentagem.
+No detalhe com total conhecido, a interface mostra porcentagem derivada, páginas lidas, total, páginas restantes e um elemento `progress` horizontal nomeado por texto equivalente. Zero e 100% são tratados e a apresentação defensiva limita valores ao intervalo. Sem total, mostra a página atual e informa que o total não foi definido, sem porcentagem ou barra.
 
 ## 7. Notas e citações
 

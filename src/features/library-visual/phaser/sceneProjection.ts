@@ -26,7 +26,6 @@ export function truncateSceneLabel(value: string, maximumLength = 28): string {
 
 export function librarySceneRenderState(
   viewModel: LibraryViewModel,
-  highlightedBookMaximumLength = 28,
 ): LibrarySceneRenderState {
   return {
     completedBooks: viewModel.completedBooks,
@@ -35,12 +34,7 @@ export function librarySceneRenderState(
     hasReadingLamp: viewModel.unlockedDecorationIds.includes(
       DECORATION_ID.readingLamp,
     ),
-    highlightedBookLabel: viewModel.highlightedBook
-      ? truncateSceneLabel(
-          viewModel.highlightedBook.title,
-          highlightedBookMaximumLength,
-        )
-      : null,
+    highlightedBookLabel: viewModel.highlightedBook ? "Livro recente" : null,
     highlightedBookProgressLabel: viewModel.highlightedBook
       ? sceneProgressLabel(viewModel.highlightedBook.progress)
       : null,

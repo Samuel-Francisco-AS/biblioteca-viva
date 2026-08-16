@@ -1,7 +1,7 @@
 # Plano de refinamento pós-protótipo
 
 > Início da fase: 2026-08-13
-> Estado: planejamento aprovado; nenhuma rodada implementada
+> Estado: R1 em andamento; R1-A concluído tecnicamente e R1-B pendente
 > Base: primeira rodada integrada de uso físico realizada por Sam no Moto G06
 
 ## 1. Função e limites
@@ -114,6 +114,8 @@ O fluxo deve aceitar arquivo compatível com a política técnica, inclusive MP3
 6. investigação e correção do delay sonoro ao entrar na Biblioteca.
 
 R1 deve preservar arquitetura em camadas, dados existentes, milestones, backup e acessibilidade. Mudança de schema só poderá ocorrer com migração e teste; nenhuma é presumida por este plano.
+
+Em 2026-08-13, os itens 1–4 foram concluídos tecnicamente como R1-A. A projeção usa correspondência direta de um a cinco livros e, acima disso, compressão determinística gradual até o teto de oito representações. Os itens 5–6 formam R1-B e permanecem pendentes. Nenhuma validação humana ou gate foi aprovado por esta implementação.
 
 ## 5. Rodada R2 — Utilidade de conteúdo e áudio
 

@@ -13,10 +13,10 @@ Medir antes de otimizar. Alterações são justificadas apenas por gargalo real 
 - quatro zonas interativas fixas;
 - até três tweens contínuos (bibliotecária, criatura e destaque) e um tween transitório de desbloqueio;
 - zero tween repetitivo com movimento reduzido;
-- até oito grupos visuais de lombadas, inclusive com 100 livros ou mais;
+- correspondência direta de uma representação por livro entre um e cinco livros; acima disso, compressão gradual e determinística até oito grupos visuais, inclusive com 100 livros ou mais;
 - zero partículas, shaders próprios, pós-processamento, física, câmera móvel ou atlas/textura própria carregada atualmente.
 
-O Phaser recebe somente `LibraryViewModel`, nunca entidades completas. A projeção faz duas consultas em paralelo na rota (livros e marcos), sem N+1, e resume 0, 1, 10, 100 ou volumes maiores nos mesmos limites visuais.
+O Phaser recebe somente `LibraryViewModel`, nunca entidades completas, títulos, autores ou anotações. O destaque visual contém apenas ID técnico, status e resumo de progresso e usa rótulo genérico na cena. A projeção faz duas consultas em paralelo na rota (livros e marcos), sem N+1, e resume coleções maiores sem crescimento linear ilimitado. A política produz 0, 1, 2, 3, 4 e 5 grupos para os primeiros livros, 6 para 10, 7 para 15 e no máximo 8 para 20, 100 ou mais.
 
 ## 3. Métricas automáticas
 

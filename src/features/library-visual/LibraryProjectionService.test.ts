@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   LibraryProjectionService,
-  SHELF_VISUAL_GROUP_COUNTS,
+  SHELF_DIRECT_REPRESENTATION_LIMIT,
+  SHELF_MAX_VISUAL_GROUPS,
 } from "./LibraryProjectionService";
 import type { ReachedMilestone } from "../../domain";
 import type { LibraryProjectionBook } from "./LibraryProjectionService";
@@ -67,11 +68,14 @@ describe("LibraryProjectionService", () => {
   });
 
   it.each([
-    [1, "initial", 2],
-    [4, "initial", 2],
+    [0, "empty", 0],
+    [1, "initial", 1],
+    [2, "initial", 2],
+    [3, "initial", 3],
+    [4, "initial", 4],
     [5, "growing", 5],
-    [14, "growing", 5],
-    [15, "full", 8],
+    [10, "growing", 6],
+    [15, "full", 7],
     [100, "full", 8],
   ] as const)(
     "centraliza a fronteira de lotação para %i livros",
@@ -82,11 +86,31 @@ describe("LibraryProjectionService", () => {
       const viewModel = project(books);
       expect(viewModel.shelfOccupancy).toBe(occupancy);
       expect(viewModel.shelfVisualGroupCount).toBe(groups);
-      expect(viewModel.shelfVisualGroupCount).toBe(
-        SHELF_VISUAL_GROUP_COUNTS[occupancy],
+      expect(viewModel.shelfVisualGroupCount).toBeLessThanOrEqual(
+        SHELF_MAX_VISUAL_GROUPS,
       );
     },
   );
+
+  it("usa correspondência direta até o limite e comprime depois dele", () => {
+    expect(SHELF_DIRECT_REPRESENTATION_LIMIT).toBe(5);
+    const smallCounts = Array.from({ length: 5 }, (_, index) => index + 1).map(
+      (total) =>
+        project(
+          Array.from({ length: total }, (_, index) =>
+            book({ id: `small-${index}` }),
+          ),
+        ).shelfVisualGroupCount,
+    );
+    expect(smallCounts).toEqual([1, 2, 3, 4, 5]);
+    expect(
+      project(
+        Array.from({ length: 100 }, (_, index) =>
+          book({ id: `large-${index}` }),
+        ),
+      ).shelfVisualGroupCount,
+    ).toBe(SHELF_MAX_VISUAL_GROUPS);
+  });
 
   it("conta somente os status em andamento e concluído nas categorias certas", () => {
     const viewModel = project([
@@ -138,7 +162,6 @@ describe("LibraryProjectionService", () => {
     ]);
     expect(viewModel.highlightedBook).toMatchObject({
       entryId: "a",
-      title: "Empate A",
     });
   });
 
@@ -156,7 +179,9 @@ describe("LibraryProjectionService", () => {
       currentPage: 12,
       kind: "open",
     });
-    expect(JSON.stringify(bounded)).not.toMatch(/note|quote|author/i);
+    expect(JSON.stringify(bounded)).not.toMatch(
+      /Livro de teste|title|note|quote|author/i,
+    );
   });
 
   it("não modifica os objetos nem a ordem recebida", () => {

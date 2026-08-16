@@ -9,13 +9,13 @@
 - **blocos concluídos:** Bloco 5 — Backup, restauração e recuperação, com G5 aprovado; Bloco 6 — Biblioteca visual conectada, com G6 aprovado;
 - **prompts tecnicamente implementados:** Prompts 1 a 19; sua conclusão técnica não aprova os gates humanos pendentes;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **trabalho atual:** planejamento pós-protótipo registrado; próximo trabalho é R1 — Coerência funcional;
+- **trabalho atual:** R1 — Coerência funcional em andamento; R1-A (leitura, progresso e estante) concluído tecnicamente, com R1-B (restauração e áudio) pendente;
 - **gate:** G0 a G3 aprovados; G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
 - **último checkpoint técnico anterior:** `be50d593d0befe733b3993804da5ed9181551bd3` (`test: consolidate regression ci and maintenance`), sem aprovação humana de G10;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
-- **APK:** APK debug com a implementação técnica dos Prompts 14–19 gerado, mas não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `318a5cc16226e8f493b5cadc15c69e872aa50ea013a345fcbb81553ce36dbe38`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
+- **APK:** APK debug com R1-A gerado, mas não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `038edc4407249228636c7fafe315bd762aeaa9df8217cfe80a4a1dcbecc669f7`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
 - **release Android:** ainda não existe APK release assinado nem artefato Android público;
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
@@ -55,13 +55,15 @@
 
 ## Trabalho atual
 
-Os Prompts 1–19 estão tecnicamente implementados e `EXECUTION_PLAN.md` permanece seu registro histórico. A fase atual é guiada por `REFINEMENT_PLAN.md`. A rodada física de 2026-08-13 confirmou CRUD, criação de notas/citações, estante, áudio e controles, exportação, desinstalação/reinstalação, restauração, primeira conclusão, marco e luminária. Também revelou atritos de progresso, restauração, estante, gerenciamento de anotações, delay sonoro e uma necessidade de redesign amplo. O próximo trabalho é R1 — Coerência funcional. A versão permanece `0.2.0-alpha.1`.
+Os Prompts 1–19 estão tecnicamente implementados e `EXECUTION_PLAN.md` permanece seu registro histórico. A fase atual é guiada por `REFINEMENT_PLAN.md`. R1-A implementa início e conclusão dirigidos pelo progresso, apresentação acessível de porcentagem/restantes e projeção direta de um a cinco livros, comprimida até o teto de oito representações. R1-B ainda deve tratar a política de backup de segurança e o delay sonoro. A versão permanece `0.2.0-alpha.1`; nenhum gate humano foi aprovado por esta entrega.
 
 ## Bloqueios
 
 Nenhum bloqueio técnico identificado. As evidências físicas são parciais: não cobrem uso prolongado, TalkBack, teclado, contraste, texto ampliado, lifecycle, desempenho nem toda a checklist integrada. Movimento reduzido pareceu congelar a cena e há pequeno delay sonoro ao entrar na Biblioteca. G4 e G7–G10 não foram aprovados; G11 não foi iniciado.
 
 ## Última evidência de validação
+
+Em 2026-08-13, R1-A concluiu tecnicamente início e conclusão dirigidos pelo progresso, resumo acessível no detalhe e projeção direta para pequenas coleções. Formatação, lint, typecheck, 537 testes em 57 arquivos, áudio, build, relatório de performance, quatro E2E Chromium, `android:sync`, `android:build:debug`, integridade ZIP e verificações Git passaram. O APK debug não instalado possui 7.526.051 bytes e SHA-256 `038edc4407249228636c7fafe315bd762aeaa9df8217cfe80a4a1dcbecc669f7`. Não houve schema, migração, backup, dependência, plugin, permissão, asset ou versão novos. R1-B e todas as validações humanas continuam pendentes; nenhum gate foi aprovado.
 
 Em 2026-08-13, Sam realizou a primeira rodada integrada no Moto G06. Funcionaram cadastro, modificação e exclusão de livros; criação de notas e citações; reação da estante; efeito sonoro, música, volume e mute; exportação para local escolhido; remoção dos dados na desinstalação; reinstalação limpa; importação/restauração com os dados restaurados corretamente; primeira conclusão, efeito, marco e luminária. Foram observados densidade e hierarquia inadequadas, Biblioteca visual secundária, estante pouco intuitiva em coleção pequena, falta de gerenciamento posterior de notas/citações, sensação de cena congelada com movimento reduzido, backup de segurança obrigatório excessivo em alguns contextos e pequeno delay sonoro ao entrar na Biblioteca. Esta rodada não aprova G4, G7, G8, G9 ou G10.
 

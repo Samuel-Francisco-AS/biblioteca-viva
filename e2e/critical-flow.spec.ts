@@ -14,7 +14,9 @@ test("ciclo principal persiste livro, anotações, conclusão e marco", async ({
 
   await page.getByLabel("Página atual (obrigatório)").fill("120");
   await page.getByRole("button", { name: "Salvar progresso" }).click();
-  await expect(page.getByText("120 de 240 páginas")).toBeVisible();
+  await expect(
+    page.getByText("120 de 240 páginas", { exact: true }),
+  ).toBeVisible();
 
   await page.getByLabel("Nota (obrigatório)").fill("Nota fictícia de leitura.");
   await page.getByRole("button", { name: "Adicionar nota" }).click();

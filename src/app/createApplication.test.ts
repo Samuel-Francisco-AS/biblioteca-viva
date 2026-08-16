@@ -72,13 +72,13 @@ describe("createApplication", () => {
       entryId: book.id,
       page: 1,
     });
-    await first.commands.changeBookStatus.execute({
+    await first.commands.updateBookProgress.execute({
       id: book.id,
-      status: "completed",
+      currentPage: 10,
     });
-    await first.commands.changeBookStatus.execute({
+    await first.commands.updateBookProgress.execute({
       id: book.id,
-      status: "completed",
+      currentPage: 10,
     });
 
     expect(

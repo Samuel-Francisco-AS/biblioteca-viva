@@ -32,14 +32,18 @@ export const SHELF_OCCUPANCY_RANGES = {
   initialFrom: 1,
 } as const;
 
-export const SHELF_VISUAL_GROUP_COUNTS: Readonly<
-  Record<ShelfOccupancy, number>
-> = {
-  empty: 0,
-  full: 8,
-  growing: 5,
-  initial: 2,
-};
+export const SHELF_DIRECT_REPRESENTATION_LIMIT = 5;
+export const SHELF_MAX_VISUAL_GROUPS = 8;
+
+function shelfVisualGroupCountFor(totalBooks: number): number {
+  if (totalBooks <= SHELF_DIRECT_REPRESENTATION_LIMIT) return totalBooks;
+  return Math.min(
+    SHELF_MAX_VISUAL_GROUPS,
+    Math.ceil(totalBooks / SHELF_DIRECT_REPRESENTATION_LIMIT) +
+      SHELF_DIRECT_REPRESENTATION_LIMIT -
+      1,
+  );
+}
 
 function shelfOccupancyFor(totalBooks: number): ShelfOccupancy {
   if (totalBooks < SHELF_OCCUPANCY_RANGES.initialFrom) return "empty";
@@ -72,7 +76,6 @@ function highlightedBookFor(
     entryId: recent.id,
     progress: progressFor(recent),
     status: recent.status,
-    title: recent.title,
   };
 }
 
@@ -118,7 +121,7 @@ export class LibraryProjectionService {
       inProgressBooks,
       roomState: "default",
       shelfOccupancy,
-      shelfVisualGroupCount: SHELF_VISUAL_GROUP_COUNTS[shelfOccupancy],
+      shelfVisualGroupCount: shelfVisualGroupCountFor(totalBooks),
       totalBooks,
       unlockedDecorationIds,
     };

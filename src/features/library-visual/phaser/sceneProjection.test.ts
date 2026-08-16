@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { LibraryViewModel } from "../contracts";
-import { librarySceneRenderState, truncateSceneLabel } from "./sceneProjection";
+import { librarySceneRenderState } from "./sceneProjection";
 
 const viewModel: LibraryViewModel = {
   completedBooks: 1,
@@ -12,7 +12,6 @@ const viewModel: LibraryViewModel = {
     entryId: "book-1",
     progress: { currentPage: 3, kind: "bounded", totalPages: 10 },
     status: "in_progress",
-    title: "Um título deliberadamente muito longo para a área visual",
   },
   inProgressBooks: 2,
   roomState: "default",
@@ -48,9 +47,9 @@ describe("projeção renderizável da cena", () => {
     });
   });
 
-  it("trunca o destaque e remove o estado de destaque ausente", () => {
-    expect(truncateSceneLabel(viewModel.highlightedBook?.title ?? "")).toMatch(
-      /…$/u,
+  it("usa rótulo genérico e remove o estado de destaque ausente", () => {
+    expect(librarySceneRenderState(viewModel).highlightedBookLabel).toBe(
+      "Livro recente",
     );
     expect(
       librarySceneRenderState({ ...viewModel, highlightedBook: null }),
@@ -82,10 +81,9 @@ describe("projeção renderizável da cena", () => {
         entryId: "private-id",
         progress: { kind: "none" },
         status: "planned",
-        title: "Novo destaque",
       },
     });
-    expect(next.highlightedBookLabel).toBe("Novo destaque");
-    expect(JSON.stringify(next)).not.toMatch(/private-id|note|quote/iu);
+    expect(next.highlightedBookLabel).toBe("Livro recente");
+    expect(JSON.stringify(next)).not.toMatch(/private-id|title|note|quote/iu);
   });
 });

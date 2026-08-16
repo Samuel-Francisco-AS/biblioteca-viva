@@ -21,7 +21,6 @@ const viewModel: LibraryViewModel = {
     entryId: "recent-book",
     progress: { currentPage: 3, kind: "bounded", totalPages: 10 },
     status: "in_progress",
-    title: "Um título deliberadamente muito longo para a área visual",
   },
   inProgressBooks: 2,
   roomState: "default",
@@ -130,19 +129,10 @@ describe("layout responsivo da cena", () => {
     expect("lightHitArea" in layout).toBe(false);
   });
 
-  it("limita título recente no compacto e preserva estado visual determinístico", () => {
-    const layout = librarySceneLayout({ height: 180, width: 320 });
-    const first = librarySceneRenderState(
-      viewModel,
-      layout.highlightedBookMaximumLength,
-    );
-    const second = librarySceneRenderState(
-      viewModel,
-      layout.highlightedBookMaximumLength,
-    );
-    expect(first.highlightedBookLabel).toHaveLength(
-      layout.highlightedBookMaximumLength,
-    );
+  it("usa destaque recente genérico e preserva estado visual determinístico", () => {
+    const first = librarySceneRenderState(viewModel);
+    const second = librarySceneRenderState(viewModel);
+    expect(first.highlightedBookLabel).toBe("Livro recente");
     expect(second).toEqual(first);
   });
 

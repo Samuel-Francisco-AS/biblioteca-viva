@@ -437,7 +437,7 @@ Evoluir o backup para formato v2 incluindo `milestones`, aceitando v1 com seu ch
 
 **Decisão:** ao atualizar um livro `planned` para `currentPage > 0`, mudar automaticamente para `in_progress` e registrar início pela política temporal do domínio quando ausente. Com `totalPages` conhecido e `currentPage == totalPages`, mudar automaticamente para `completed` reutilizando a cadeia existente de domínio, transação, evento, marco idempotente, áudio, diálogo, projeção e feedback React. Sem total, permitir início por progresso, mas não calcular porcentagem nem concluir automaticamente. Não ampliar `paused` ou `abandoned`.
 
-**Consequências:** a implementação futura não criará um segundo caminho de conclusão nem persistirá porcentagem. A barra e páginas restantes serão derivadas. Regras e testes atuais permanecem verdade histórica até R1 implementar e documentar a mudança.
+**Consequências:** R1-A implementou a decisão sem criar um segundo caminho de conclusão nem persistir porcentagem. A barra e páginas restantes são derivadas; `UpdateBookProgress` e a conclusão explícita compartilham a mesma operação de persistência, milestone e publicação pós-commit.
 
 ## D-041 — Refinamento separado do plano original
 

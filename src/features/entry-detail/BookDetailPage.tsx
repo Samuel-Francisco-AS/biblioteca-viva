@@ -12,6 +12,8 @@ import {
   formatDate,
   formatDateTime,
   progressText,
+  progressPercentage,
+  remainingPages,
   statusLabels,
 } from "../books/bookPresentation";
 import { safeReturnPath } from "../books/navigationOrigin";
@@ -92,6 +94,44 @@ function History({
           </ul>
         )}
       </section>
+    </div>
+  );
+}
+
+function ProgressSummary({ book }: { readonly book: BookEntry }) {
+  const percentage = progressPercentage(book);
+  const remaining = remainingPages(book);
+  if (
+    book.totalPages === undefined ||
+    percentage === undefined ||
+    remaining === undefined
+  ) {
+    return (
+      <div className="reading-progress">
+        <p>
+          Página atual: <strong>{book.currentPage}</strong>
+        </p>
+        <p>O total de páginas não foi definido.</p>
+      </div>
+    );
+  }
+  const currentPage = Math.min(book.currentPage, book.totalPages);
+  return (
+    <div className="reading-progress">
+      <label htmlFor={`book-${book.id}-detail-progress`}>
+        <strong>{percentage}% concluído</strong>
+      </label>
+      <progress
+        id={`book-${book.id}-detail-progress`}
+        max={book.totalPages}
+        value={currentPage}
+      />
+      <p>
+        {currentPage} de {book.totalPages} páginas
+      </p>
+      <p>
+        {remaining} {remaining === 1 ? "página restante" : "páginas restantes"}
+      </p>
     </div>
   );
 }
@@ -274,6 +314,7 @@ export function BookDetailPage({
 
       <section className="content-card" aria-labelledby="progress-title">
         <h2 id="progress-title">Progresso</h2>
+        <ProgressSummary book={book} />
         <ProgressForm
           key={`${book.id}-${book.revision}`}
           book={book}

@@ -250,13 +250,56 @@ describe("operações de livro", () => {
     expect(updated.revision).toBe(original.revision + 1);
   });
 
-  it("não conclui automaticamente ao alcançar o total", () => {
+  it("inicia automaticamente um planejado com progresso positivo", () => {
+    const planned = minimalBook();
+    const progressed = updateProgress(planned, 1, T1);
+    expect(progressed).toMatchObject({
+      currentPage: 1,
+      startedAt: T1,
+      status: "in_progress",
+    });
+  });
+
+  it("mantém planejado na página zero e preserva início existente", () => {
+    const atZero = updateProgress(minimalBook(), 0, T1);
+    const withHistoricalStart = updateProgress(
+      minimalBook({ startedAt: T0 }),
+      1,
+      T1,
+    );
+    expect(atZero.status).toBe("planned");
+    expect(atZero.startedAt).toBeUndefined();
+    expect(withHistoricalStart.startedAt).toBe(T0);
+  });
+
+  it("inicia sem total conhecido, mas não conclui automaticamente", () => {
+    const progressed = updateProgress(minimalBook(), 900, T1);
+    expect(progressed).toMatchObject({
+      currentPage: 900,
+      status: "in_progress",
+    });
+    expect(progressed.totalPages).toBeUndefined();
+    expect(progressed.completedAt).toBeUndefined();
+  });
+
+  it("conclui automaticamente ao alcançar o total", () => {
     const reading = bookInStatus("in_progress");
     const withTotal = updateBibliographicData(reading, {
       totalPages: 10,
       updatedAt: T2,
     });
     const progressed = updateProgress(withTotal, 10, T2);
+    expect(progressed.status).toBe("completed");
+    expect(progressed.completedAt).toBe(T2);
+  });
+
+  it("não conclui progresso intermediário", () => {
+    const reading = bookInStatus("in_progress");
+    const progressed = updateProgress(
+      updateBibliographicData(reading, { totalPages: 10, updatedAt: T2 }),
+      9,
+      T2,
+    );
     expect(progressed.status).toBe("in_progress");
     expect(progressed.completedAt).toBeUndefined();
   });

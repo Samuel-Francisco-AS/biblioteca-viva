@@ -67,7 +67,7 @@ Transições permitidas:
 
 Aplicar novamente o mesmo status por `changeBookStatus` é inválido. `completeBook` é a exceção idempotente: se o livro já estiver concluído, retorna o mesmo valor e não aumenta a revisão.
 
-Chegar a `currentPage === totalPages` **não conclui automaticamente**. A conclusão é uma intenção explícita. Com total conhecido, `completeBook` ajusta `currentPage` ao total; sem total, preserva a página atual e permite conclusão manual. Para reduzir o progresso de um concluído, primeiro é necessário reabri-lo como `in_progress`. Pausar ou abandonar preserva progresso.
+Atualizar um livro `planned` para `currentPage > 0` inicia a leitura e preenche `startedAt` pelo relógio da aplicação quando ausente. Com total conhecido, chegar a `currentPage === totalPages` em estado compatível reutiliza `completeBook` e conclui automaticamente; a conclusão explícita continua válida. Sem total, o progresso inicia a leitura, mas não conclui automaticamente. Para reduzir o progresso de um concluído, primeiro é necessário reabri-lo como `in_progress`. Pausar ou abandonar preserva progresso.
 
 ## 5. Invariantes do livro
 

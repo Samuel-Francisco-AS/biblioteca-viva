@@ -12,11 +12,14 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 - exclusão transacional de livros, notas, citações e atividades relacionadas.
 - preferências de experiência, conteúdo contextual, marcos e luminária de leitura;
 - perfil estrutural do runtime, Playwright Chromium e GitHub Actions para checks web.
+- barra acessível de progresso no detalhe, com porcentagem, páginas lidas e restantes, e estado textual sem total conhecido.
 
 ### Alterado
 
 - validação física de atualização, limpeza de armazenamento e restauração no Moto G06, com aprovação dos Gates G5 e G6.
 - documentação pública e operacional alinhada ao protótipo tecnicamente implementado até o Prompt 19.
+- progresso positivo inicia livros planejados e a última página conhecida reutiliza a conclusão transacional existente;
+- estantes pequenas usam uma representação por livro até cinco, com compressão gradual limitada a oito para coleções maiores.
 
 ### Corrigido
 

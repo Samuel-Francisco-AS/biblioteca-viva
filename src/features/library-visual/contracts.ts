@@ -22,7 +22,6 @@ export interface HighlightedLibraryBook {
   readonly progress: LibraryProgressSummary;
   readonly status:
     "planned" | "in_progress" | "paused" | "completed" | "abandoned";
-  readonly title: string;
 }
 
 /** A serializable, read-only summary consumed by the specialized visual view. */

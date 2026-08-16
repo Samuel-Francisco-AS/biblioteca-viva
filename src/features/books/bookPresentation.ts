@@ -36,3 +36,11 @@ export function progressText(book: BookEntry): string {
   }
   return `${book.currentPage} de ${book.totalPages} páginas (${percentage}%)`;
 }
+
+export function remainingPages(book: BookEntry): number | undefined {
+  if (book.totalPages === undefined) return undefined;
+  return Math.max(
+    0,
+    book.totalPages - Math.min(book.currentPage, book.totalPages),
+  );
+}

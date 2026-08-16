@@ -537,10 +537,7 @@ export class InitialLibraryScene extends Phaser.Scene {
   }
 
   private drawLabels(layout: LibrarySceneLayout): void {
-    const state = librarySceneRenderState(
-      this.projection,
-      layout.highlightedBookMaximumLength,
-    );
+    const state = librarySceneRenderState(this.projection);
     this.labels?.removeAll(true);
     this.addLabel(layout.header.title, "Biblioteca", "#ffffff");
     this.addLabel(

@@ -108,13 +108,30 @@ export function updateProgress(
       "altere o status antes de reduzir o progresso",
     );
   }
-  const updated: BookEntry = {
+  const validatedPage = validatePage(currentPage, "currentPage");
+  const startsReading = book.status === "planned" && validatedPage > 0;
+  const progressed: BookEntry = {
     ...book,
-    ...nextMetadata(book, updatedAt),
-    currentPage: validatePage(currentPage, "currentPage"),
+    currentPage: validatedPage,
+    ...(startsReading && {
+      status: "in_progress",
+      ...(book.startedAt === undefined && {
+        startedAt: requireIsoUtc(updatedAt, "startedAt"),
+      }),
+    }),
   };
-  validateBook(updated);
-  return immutableBook(updated);
+  validateBook(progressed);
+  if (
+    progressed.totalPages !== undefined &&
+    progressed.currentPage === progressed.totalPages &&
+    (progressed.status === "in_progress" || progressed.status === "paused")
+  ) {
+    return completeBook(progressed, updatedAt);
+  }
+  return immutableBook({
+    ...progressed,
+    ...nextMetadata(book, updatedAt),
+  });
 }
 
 export function changeBookStatus(

@@ -994,3 +994,11 @@ Sessão realizada por Sam em **2026-08-13**. Este registro separa observação f
 - revisão formal e decisão explícita de G4 e G7–G10.
 
 Resultado: evidência física parcial registrada; nenhum gate adicional aprovado.
+
+## 23. R1-A — leitura, progresso e estante
+
+Em 2026-08-13, a cobertura automatizada passou a verificar início automático na primeira página positiva, preservação de início existente, página zero, total desconhecido, rejeição de limites inválidos, conclusão automática pela cadeia compartilhada, atividade, evento pós-commit, rollback, milestone/recompensa idempotentes e manutenção da conclusão explícita/retomada. O detalhe cobre 0%, valor intermediário, 100%, clamp defensivo, restantes, texto equivalente e ausência de barra/porcentagem sem total.
+
+A projeção cobre 0, 1, 2, 3, 4, 5, 10, 15 e 100 livros. De um a cinco, a contagem visual corresponde diretamente ao total; depois cresce de forma comprimida até o máximo preservado de oito. Destaque recente, conclusão, marco, luminária, determinismo e fronteira mínima entregue ao Phaser continuam cobertos. Nenhuma validação manual foi executada nesta tarefa; R1-B, o checkpoint Android e os gates humanos permanecem pendentes.
+
+Resultado automático final: 537 testes Vitest em 57 arquivos e quatro E2E Playwright Chromium aprovados. Também passaram formatação, lint, typecheck, verificação dos áudios, build web, relatório de performance, sincronização Android, APK debug e integridade ZIP. A primeira execução E2E encontrou apenas ambiguidade de seletor causada pelos dois textos de progresso; a asserção foi tornada exata e a suíte integral passou na repetição.
