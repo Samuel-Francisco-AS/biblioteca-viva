@@ -12,10 +12,10 @@
 - **trabalho atual:** R1, R2 e R3 tecnicamente concluídos; próximo trabalho é o checkpoint integrado Android pós-R1–R3;
 - **gate:** G0 a G3 aprovados; G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
-- **último checkpoint técnico:** R3-B validado integralmente; checkpoint Git será registrado nesta execução;
+- **último checkpoint técnico:** R3-B selado em `3ae0ad9`; auditoria corretiva final validada integralmente;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
-- **APK:** APK debug com R3 completo gerado, ZIP íntegro e não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `dfccbc1112858ed57b9e206684806c3351f8178ff33ef820721a8eec27da918f`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
+- **APK:** APK debug com R3 completo gerado, ZIP íntegro e não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `d4acb5060b03b1a8996d72f7d9302d377566f7e6ab15d08a886d6983aecac79d`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
 - **release Android:** ainda não existe APK release assinado nem artefato Android público;
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
@@ -63,7 +63,7 @@ Nenhum bloqueio técnico identificado. As evidências físicas são parciais: n�
 
 ## Última evidência de validação
 
-Em 2026-08-16, R3 foi concluído tecnicamente. A Biblioteca usa canvas dominante, drawer sobreposto, bottom sheet compartilhado, balões React e fallback compacto; quatro períodos locais atualizam uma única instância por timer da próxima fronteira; reduced motion mantém zero loops; Android edge-to-edge compila sem plugin novo. Passaram formatação/check, lint, typecheck, 589 testes em 63 arquivos, áudio, build, performance, oito E2E Chromium, Android sync/build, ZIP e diff. JS inicial mede 572.410 bytes (167.886 gzip), CSS 21.688 (4.915 gzip) e Phaser lazy 1.222.044 (323.038 gzip). O APK não instalado tem 7.526.051 bytes e SHA-256 `dfccbc1112858ed57b9e206684806c3351f8178ff33ef820721a8eec27da918f`. Nenhum gate humano foi aprovado.
+Em 2026-08-16, R3 foi concluído tecnicamente. A Biblioteca usa canvas dominante, drawer sobreposto, bottom sheet compartilhado, balões React e fallback compacto; quatro períodos locais atualizam uma única instância por timer da próxima fronteira; reduced motion mantém zero loops; Android edge-to-edge compila sem plugin novo. Passaram formatação/check, lint, typecheck, 589 testes em 63 arquivos, áudio, build, performance, oito E2E Chromium, Android sync/build, ZIP e diff. JS inicial mede 572.410 bytes (167.884 gzip), CSS 21.688 (4.915 gzip) e Phaser lazy 1.221.398 (322.859 gzip). O APK não instalado tem 7.526.051 bytes e SHA-256 `d4acb5060b03b1a8996d72f7d9302d377566f7e6ab15d08a886d6983aecac79d`. Nenhum gate humano foi aprovado.
 
 Em 2026-08-16, R3-A concluiu tecnicamente o tema escuro semântico, drawer modal, remoção da barra inferior, navegação em linhas integrais, card inteiro clicável da Coleção e redução de caixas nas rotas convencionais. Passaram formatação, lint, typecheck, 569 testes em 62 arquivos, áudio, build, relatório de performance, cinco E2E Chromium, Android sync/build e ZIP. O build mede 570.462 bytes iniciais (168.800 gzip), CSS 17.140 bytes (4.120 gzip) e Phaser lazy 1.220.999 bytes (325.920 gzip). O APK debug não instalado possui 7.526.051 bytes e SHA-256 `00cdc863286cc3b9e0df2aef1af107d76d234ffc25021b2c15303267aa4a3a1e`. R3-B e toda validação humana permanecem pendentes; nenhum gate foi aprovado.
 

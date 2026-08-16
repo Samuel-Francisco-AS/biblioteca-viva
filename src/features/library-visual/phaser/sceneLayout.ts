@@ -22,27 +22,13 @@ export interface SceneRectangle {
   readonly y: number;
 }
 
-export interface SceneTextPlacement {
-  readonly fontSize: number;
-  readonly maxWidth: number;
-  readonly x: number;
-  readonly y: number;
-}
-
 export interface LibrarySceneLayout {
   readonly counter: SceneRectangle;
   readonly creature: SceneCircle;
   readonly creatureHitArea: SceneRectangle;
   readonly creatureMovementBounds: SceneRectangle;
-  readonly header: {
-    readonly completed: SceneTextPlacement;
-    readonly title: SceneTextPlacement;
-    readonly totalAndInProgress: SceneTextPlacement;
-  };
   readonly highlightedBook: SceneRectangle;
   readonly highlightedBookHitArea: SceneRectangle;
-  readonly highlightedBookLabel: SceneTextPlacement | null;
-  readonly highlightedBookMaximumLength: number;
   readonly librarian: SceneCircle;
   readonly librarianHitArea: SceneRectangle;
   readonly lightAreas: readonly SceneCircle[];
@@ -52,7 +38,6 @@ export interface LibrarySceneLayout {
   readonly shelf: SceneRectangle;
   readonly sideShelf: SceneRectangle;
   readonly shelfHitArea: SceneRectangle;
-  readonly shelfLabel: SceneTextPlacement;
   readonly wallHeight: number;
 }
 
@@ -142,18 +127,11 @@ function compactLayout({ height, width }: SceneLayoutSize): LibrarySceneLayout {
     creature,
     creatureHitArea: centeredHitArea(creature.x, creature.y),
     creatureMovementBounds,
-    header: {
-      completed: textPlacement(margin, 39, 11, width - margin * 2),
-      title: textPlacement(margin, 4, 14, width - margin * 2),
-      totalAndInProgress: textPlacement(margin, 22, 11, width - margin * 2),
-    },
     highlightedBook,
     highlightedBookHitArea: centeredHitArea(
       highlightedBook.x + highlightedBook.width / 2,
       highlightedBook.y + highlightedBook.height / 2,
     ),
-    highlightedBookLabel: null,
-    highlightedBookMaximumLength: 16,
     librarian,
     librarianHitArea: centeredHitArea(librarian.x, librarian.y),
     lightAreas: [
@@ -174,7 +152,6 @@ function compactLayout({ height, width }: SceneLayoutSize): LibrarySceneLayout {
     mode: "compact",
     shelf,
     shelfHitArea: shelf,
-    shelfLabel: textPlacement(margin + 5, shelf.y + 4, 11, shelf.width - 10),
     sideShelf,
     wallHeight,
   };
@@ -234,18 +211,11 @@ function compactLandscapeLayout({
     creature,
     creatureHitArea: centeredHitArea(creature.x, creature.y),
     creatureMovementBounds,
-    header: {
-      completed: textPlacement(margin, 39, 11, width - margin * 2),
-      title: textPlacement(margin, 4, 14, width - margin * 2),
-      totalAndInProgress: textPlacement(margin, 22, 11, width - margin * 2),
-    },
     highlightedBook,
     highlightedBookHitArea: centeredHitArea(
       highlightedBook.x + highlightedBook.width / 2,
       highlightedBook.y + highlightedBook.height / 2,
     ),
-    highlightedBookLabel: null,
-    highlightedBookMaximumLength: 16,
     librarian,
     librarianHitArea: centeredHitArea(librarian.x, librarian.y),
     lightAreas: [
@@ -266,7 +236,6 @@ function compactLandscapeLayout({
     mode: "compact",
     shelf,
     shelfHitArea: shelf,
-    shelfLabel: textPlacement(margin + 5, shelf.y + 4, 11, shelf.width - 10),
     sideShelf,
     wallHeight,
   };
@@ -326,38 +295,11 @@ function regularLayout({ height, width }: SceneLayoutSize): LibrarySceneLayout {
     creature,
     creatureHitArea: centeredHitArea(creature.x, creature.y),
     creatureMovementBounds,
-    header: {
-      completed: textPlacement(
-        margin,
-        wallHeight * 0.68,
-        fontSize,
-        width * 0.42,
-      ),
-      title: textPlacement(
-        margin,
-        wallHeight * 0.12,
-        fontSize + 2,
-        width * 0.42,
-      ),
-      totalAndInProgress: textPlacement(
-        margin,
-        wallHeight * 0.4,
-        fontSize,
-        width * 0.42,
-      ),
-    },
     highlightedBook,
     highlightedBookHitArea: centeredHitArea(
       highlightedBook.x + highlightedBook.width / 2,
       highlightedBook.y + highlightedBook.height / 2,
     ),
-    highlightedBookLabel: textPlacement(
-      width * 0.47,
-      wallHeight + margin,
-      fontSize,
-      width * 0.46,
-    ),
-    highlightedBookMaximumLength: 28,
     librarian,
     librarianHitArea: centeredHitArea(librarian.x, librarian.y),
     lightAreas: [
@@ -383,12 +325,6 @@ function regularLayout({ height, width }: SceneLayoutSize): LibrarySceneLayout {
     mode: "regular",
     shelf,
     shelfHitArea: shelf,
-    shelfLabel: textPlacement(
-      margin,
-      shelf.y - fontSize - 5,
-      fontSize,
-      shelf.width,
-    ),
     sideShelf,
     wallHeight,
   };
@@ -397,13 +333,4 @@ function regularLayout({ height, width }: SceneLayoutSize): LibrarySceneLayout {
 function centeredHitArea(x: number, y: number): SceneRectangle {
   const size = LIBRARY_ROOM_INTERACTION.minimumTargetSize;
   return { height: size, width: size, x: x - size / 2, y: y - size / 2 };
-}
-
-function textPlacement(
-  x: number,
-  y: number,
-  fontSize: number,
-  maxWidth: number,
-): SceneTextPlacement {
-  return { fontSize, maxWidth, x, y };
 }

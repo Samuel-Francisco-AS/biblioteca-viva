@@ -70,7 +70,7 @@ R3 configura `MainActivity` com `WindowCompat.setDecorFitsSystemWindows(window, 
 
 O build debug automatizado comprova compilação e empacotamento. Ele não foi instalado. Transparência real, contraste dos ícones, navegação por gestos/três botões, teclado, background/resume e recortes continuam pendentes no Moto G06/Android 15.
 
-Artefato R3 final: 7.526.051 bytes, SHA-256 `dfccbc1112858ed57b9e206684806c3351f8178ff33ef820721a8eec27da918f`, ZIP íntegro. Plugins empacotados: App `8.1.1`, Filesystem `8.1.2` e Share `8.0.1`, todos preexistentes. Permissões efetivas analisadas: `INTERNET` e a permissão interna `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`; nenhuma permissão sensível nova. Application ID e versão nativa permaneceram inalterados. Não houve instalação, assinatura de release, AAB ou publicação.
+Artefato R3 final: 7.526.051 bytes, SHA-256 `d4acb5060b03b1a8996d72f7d9302d377566f7e6ab15d08a886d6983aecac79d`, ZIP íntegro. Plugins empacotados: App `8.1.1`, Filesystem `8.1.2` e Share `8.0.1`, todos preexistentes. Permissões efetivas analisadas: `INTERNET` e a permissão interna `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`; nenhuma permissão sensível nova. Application ID e versão nativa permaneceram inalterados. Não houve instalação, assinatura de release, AAB ou publicação.
 
 Primeiro APK debug validado em 2026-07-28:
 
