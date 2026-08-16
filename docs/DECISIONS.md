@@ -472,4 +472,15 @@ Evoluir o backup para formato v2 incluindo `milestones`, aceitando v1 com seu ch
 
 **Consequências:** não há schema, flag persistida, formato de backup, dependência, plugin, permissão, asset, timer ou autoplay novo. Settings e milestones contam porque seriam substituídos/perdidos segundo suas políticas reais; milestones continuam unidos monotonicamente. A primeira decodificação permitida ainda possui custo e a latência percebida no Moto G06 permanece evidência humana pendente.
 
+## D-044 — Anotações mutáveis com histórico preservado e playlist sequencial
+
+- **Data:** 2026-08-16
+- **Status:** aceita
+
+**Contexto:** R2 precisa editar/excluir/compartilhar notas e citações sem mudar schema nem duplicar criação, e permitir múltiplas músicas sem acoplar nomes de arquivo à apresentação. As atividades existentes registram somente criação e não são chaves estrangeiras obrigatórias. O backend de áudio não informava término natural ao serviço.
+
+**Decisão:** editar preserva ID, livro e criação, incrementa revisão e não publica evento/marco de criação. Excluir remove somente a entidade após confirmação; atividades de criação e milestones permanecem como fatos históricos. Compartilhamento explícito usa uma porta da aplicação e o Share existente, com texto humano mínimo. Para áudio, validar manifesto e playlists ordenadas por cue ID; avançar pelo `completed` real do playback, proteger callbacks por geração e reiniciar no primeiro item ao sair da Biblioteca. Pause/mute preservam o índice, sem persistir offset.
+
+**Consequências:** não há schema, migração, formato de backup, dependência, plugin, permissão, asset ou versão nova. Arquivo e detalhe atualizam estado local após commit sem N+1. Um asset musical forma playlist válida de um item; múltiplos itens e MP3 são provados por configurações de teste. Não existem shuffle, crossfade, streaming, posição persistida ou timer de duração.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

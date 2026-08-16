@@ -25,9 +25,14 @@ export interface AudioCueDefinition {
   readonly category: AudioCategory;
   readonly fallback: AudioFallback;
   readonly gain: number;
-  readonly id: AudioCueId;
+  readonly id: string;
   readonly loop: boolean;
   readonly sources: readonly string[];
+}
+
+export interface AudioConfiguration {
+  readonly manifest: Readonly<Record<string, AudioCueDefinition>>;
+  readonly playlists: Readonly<Record<"library", readonly string[]>>;
 }
 
 /**
@@ -41,7 +46,7 @@ export const AUDIO_MANIFEST: Readonly<Record<AudioCueId, AudioCueDefinition>> =
       fallback: "silence",
       gain: 0.72,
       id: "music.library",
-      loop: true,
+      loop: false,
       sources: Object.freeze(["/audio/library-ambient.wav"]),
     }),
     "ambience.library-room": Object.freeze({
@@ -108,8 +113,39 @@ export function validateAudioManifest(
       issues.push(`Categoria inválida: ${cue.id}`);
     if (cue.gain < 0 || cue.gain > 1)
       issues.push(`Ganho fora do limite: ${cue.id}`);
-    if (cue.loop !== (cue.category === "music" || cue.category === "ambience"))
+    if (cue.loop !== (cue.category === "ambience"))
       issues.push(`Política de loop inválida: ${cue.id}`);
+  }
+  return Object.freeze(issues);
+}
+
+export const AUDIO_PLAYLISTS = Object.freeze({
+  library: Object.freeze(["music.library"]),
+}) satisfies AudioConfiguration["playlists"];
+
+export const AUDIO_CONFIGURATION: AudioConfiguration = Object.freeze({
+  manifest: AUDIO_MANIFEST,
+  playlists: AUDIO_PLAYLISTS,
+});
+
+export function validateAudioConfiguration(
+  configuration: AudioConfiguration,
+): readonly string[] {
+  const issues: string[] = [];
+  const seenIds = new Set<string>();
+  for (const [key, cue] of Object.entries(configuration.manifest)) {
+    if (cue.id !== key) issues.push(`ID divergente: ${key}`);
+    if (seenIds.has(cue.id)) issues.push(`ID duplicado: ${cue.id}`);
+    seenIds.add(cue.id);
+  }
+  for (const [playlistId, cueIds] of Object.entries(configuration.playlists)) {
+    if (cueIds.length === 0) issues.push(`Playlist vazia: ${playlistId}`);
+    for (const cueId of cueIds) {
+      const cue = configuration.manifest[cueId];
+      if (!cue) issues.push(`Cue inexistente em ${playlistId}: ${cueId}`);
+      else if (cue.category !== "music")
+        issues.push(`Cue não musical em ${playlistId}: ${cueId}`);
+    }
   }
   return Object.freeze(issues);
 }

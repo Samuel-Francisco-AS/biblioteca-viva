@@ -1,6 +1,7 @@
 import type { AudioCueDefinition } from "./audioManifest";
 
 export interface AudioPlayback {
+  readonly available: boolean;
   readonly completed: Promise<void>;
   setVolume(volume: number): void;
   stop(): void;
@@ -145,6 +146,7 @@ export class BrowserAudioBackend implements AudioBackend {
     source.addEventListener("ended", cleanup, { once: true });
     source.start();
     return {
+      available: true,
       completed,
       setVolume(next) {
         gain.gain.setValueAtTime(clamp(next * cue.gain), context.currentTime);
@@ -170,6 +172,7 @@ export class BrowserAudioBackend implements AudioBackend {
     };
     if (!loop) queueMicrotask(stop);
     return {
+      available: false,
       completed,
       setVolume() {},
       stop,

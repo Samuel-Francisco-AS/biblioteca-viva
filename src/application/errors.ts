@@ -10,7 +10,9 @@ export type ApplicationErrorCode =
   | "EVENT_PUBLICATION_FAILED"
   | "UNSAFE_CONTEXT"
   | "BOOK_NOT_FOUND"
-  | "DELETE_BOOK_FAILED";
+  | "DELETE_BOOK_FAILED"
+  | "SHARE_UNAVAILABLE"
+  | "SHARE_FAILED";
 
 export interface ApplicationErrorContext {
   readonly field?: string;

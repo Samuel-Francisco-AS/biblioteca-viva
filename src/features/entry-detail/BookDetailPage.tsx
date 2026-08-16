@@ -7,6 +7,8 @@ import {
 } from "react-router-dom";
 
 import type { BookEntry, Note, Quote } from "../../domain";
+import type { AnnotationShareResult } from "../../application";
+import { AnnotationActions } from "../annotations/AnnotationActions";
 import { presentApplicationError } from "../entry-editor/errorMessages";
 import {
   formatDate,
@@ -29,6 +31,20 @@ export interface BookDetailApplication {
     readonly deleteBookEntry: {
       execute(input: unknown): Promise<{ readonly deleted: true }>;
     };
+    readonly deleteNote: {
+      execute(input: unknown): Promise<{ readonly deleted: true }>;
+    };
+    readonly deleteQuote: {
+      execute(input: unknown): Promise<{ readonly deleted: true }>;
+    };
+    readonly shareNote: {
+      execute(input: unknown): Promise<AnnotationShareResult>;
+    };
+    readonly shareQuote: {
+      execute(input: unknown): Promise<AnnotationShareResult>;
+    };
+    readonly updateNote: { execute(input: unknown): Promise<Note> };
+    readonly updateQuote: { execute(input: unknown): Promise<Quote> };
     readonly updateBookProgress: {
       execute(input: unknown): Promise<BookEntry>;
     };
@@ -47,9 +63,23 @@ export interface BookDetailApplication {
 function History({
   notes,
   quotes,
+  totalPages,
+  onDeleteNote,
+  onDeleteQuote,
+  onShareNote,
+  onShareQuote,
+  onUpdateNote,
+  onUpdateQuote,
 }: {
   readonly notes: readonly Note[];
   readonly quotes: readonly Quote[];
+  readonly totalPages?: number;
+  readonly onDeleteNote: (id: string) => Promise<void>;
+  readonly onDeleteQuote: (id: string) => Promise<void>;
+  readonly onShareNote: (id: string) => Promise<AnnotationShareResult>;
+  readonly onShareQuote: (id: string) => Promise<AnnotationShareResult>;
+  readonly onUpdateNote: (input: unknown) => Promise<void>;
+  readonly onUpdateQuote: (input: unknown) => Promise<void>;
 }) {
   return (
     <div className="history-grid">
@@ -67,6 +97,13 @@ function History({
                   <p className="annotation-date">
                     Adicionada em {formatDateTime(note.createdAt)}
                   </p>
+                  <AnnotationActions
+                    annotation={note}
+                    kind="note"
+                    onDelete={onDeleteNote}
+                    onShare={onShareNote}
+                    onUpdate={onUpdateNote}
+                  />
                 </article>
               </li>
             ))}
@@ -88,6 +125,14 @@ function History({
                   <p className="annotation-date">
                     Adicionada em {formatDateTime(quote.createdAt)}
                   </p>
+                  <AnnotationActions
+                    annotation={quote}
+                    kind="quote"
+                    onDelete={onDeleteQuote}
+                    onShare={onShareQuote}
+                    onUpdate={onUpdateQuote}
+                    {...(totalPages !== undefined && { totalPages })}
+                  />
                 </article>
               </li>
             ))}
@@ -364,7 +409,45 @@ export function BookDetailPage({
 
       <section className="content-card" aria-labelledby="history-title">
         <h2 id="history-title">Histórico de leitura</h2>
-        <History notes={notes} quotes={quotes} />
+        <History
+          notes={notes}
+          quotes={quotes}
+          {...(book.totalPages !== undefined && {
+            totalPages: book.totalPages,
+          })}
+          onDeleteNote={async (noteId) => {
+            await application.commands.deleteNote.execute({ id: noteId });
+            setNotes((current) => current?.filter(({ id }) => id !== noteId));
+            setAnnouncement("Nota excluída.");
+          }}
+          onDeleteQuote={async (quoteId) => {
+            await application.commands.deleteQuote.execute({ id: quoteId });
+            setQuotes((current) => current?.filter(({ id }) => id !== quoteId));
+            setAnnouncement("Citação excluída.");
+          }}
+          onShareNote={(noteId) =>
+            application.commands.shareNote.execute({ id: noteId })
+          }
+          onShareQuote={(quoteId) =>
+            application.commands.shareQuote.execute({ id: quoteId })
+          }
+          onUpdateNote={async (input) => {
+            const updated =
+              await application.commands.updateNote.execute(input);
+            setNotes((current) =>
+              current?.map((note) => (note.id === updated.id ? updated : note)),
+            );
+          }}
+          onUpdateQuote={async (input) => {
+            const updated =
+              await application.commands.updateQuote.execute(input);
+            setQuotes((current) =>
+              current?.map((quote) =>
+                quote.id === updated.id ? updated : quote,
+              ),
+            );
+          }}
+        />
       </section>
 
       <section

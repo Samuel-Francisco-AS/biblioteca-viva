@@ -102,7 +102,7 @@ describe("BrowserAudioBackend", () => {
     const context = FakeAudioContext.instances[0];
     expect(fetchAsset).toHaveBeenCalledWith("/audio/library-ambient.wav");
     expect(context?.sources).toHaveLength(1);
-    expect(context?.sources[0]).toMatchObject({ loop: true, started: true });
+    expect(context?.sources[0]).toMatchObject({ loop: false, started: true });
     playback.stop();
   });
 
@@ -140,6 +140,32 @@ describe("BrowserAudioBackend", () => {
     expect(warn).toHaveBeenCalledWith("ASSET_UNAVAILABLE");
     expect(context?.oscillatorCalls).toBe(0);
     expect(context?.sources).toEqual([]);
+    expect(playback.available).toBe(false);
     playback.stop();
+  });
+
+  it("decode falho é cacheado como silêncio e não cria retry cego", async () => {
+    const warn = vi.fn();
+    vi.stubGlobal("AudioContext", FakeAudioContext);
+    const fetchAsset = vi.fn(() =>
+      Promise.resolve({
+        arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)),
+        ok: true,
+      }),
+    );
+    vi.stubGlobal("fetch", fetchAsset);
+    const backend = new BrowserAudioBackend({ warn });
+    await backend.initialize();
+    const context = FakeAudioContext.instances[0];
+    if (!context) throw new Error("Contexto fake ausente.");
+    vi.spyOn(context, "decodeAudioData").mockRejectedValue(new Error("decode"));
+    const first = await backend.play(AUDIO_MANIFEST["music.library"], 0.5);
+    const second = await backend.play(AUDIO_MANIFEST["music.library"], 0.5);
+    expect(first.available).toBe(false);
+    expect(second.available).toBe(false);
+    expect(fetchAsset).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith("ASSET_UNAVAILABLE");
+    first.stop();
+    second.stop();
   });
 });

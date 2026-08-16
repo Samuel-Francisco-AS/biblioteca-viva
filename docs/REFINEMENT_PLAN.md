@@ -1,7 +1,7 @@
 # Plano de refinamento pós-protótipo
 
 > Início da fase: 2026-08-13
-> Estado: R1 tecnicamente concluído; R2 é o próximo trabalho
+> Estado: R1 e R2 tecnicamente concluídos; R3 é o próximo trabalho e não foi iniciado
 > Base: primeira rodada integrada de uso físico realizada por Sam no Moto G06
 
 ## 1. Função e limites
@@ -127,6 +127,10 @@ Em 2026-08-13, os itens 1–4 foram concluídos tecnicamente como R1-A. Em 2026-
 6. substituição simples de efeitos sonoros.
 
 Excluir anotação exigirá confirmação e consistência transacional conforme a arquitetura. Compartilhamento será explícito e não cria conta ou sincronização. Evitar editor complexo, streaming, backend, biblioteca musical remota, conta, sincronização e CMS.
+
+Em 2026-08-16, os seis itens foram concluídos tecnicamente. `updateNote`/`updateQuote` preservam ID e criação e avançam revisão; `DeleteNote`/`DeleteQuote` removem somente a entidade na transação, mantendo atividades de criação e milestones como fatos históricos. Detalhe e Arquivo reutilizam as mesmas ações acessíveis e atualizam seu estado em memória sem perder a busca. O compartilhamento explícito passa por uma porta pequena e pelo Share já instalado, sem metadata interna ou logs de conteúdo.
+
+`AUDIO_CONFIGURATION` liga manifesto validado a playlists tipadas. A Biblioteca inicia no primeiro cue, avança em ordem pelo término natural real, volta ao início e reinicia no primeiro cue depois de sair da rota. Pause, mute e resume preservam o índice atual, embora a faixa reinicie do começo; callbacks de players antigos são invalidados por geração. O único WAV musical real continua sendo uma playlist válida de um item, enquanto testes com fakes provam múltiplos cues, wrap-around, MP3 no manifesto e troca de efeitos alterando apenas `sources`. Nenhum asset foi inventado.
 
 ## 6. Rodada R3 — UX/Layout v2 — Glow-up geral
 

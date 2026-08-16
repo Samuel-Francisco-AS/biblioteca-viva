@@ -4,6 +4,8 @@ import type {
   CreateQuoteInput,
   Note,
   Quote,
+  UpdateAnnotationInput,
+  UpdateQuoteInput,
 } from "./types";
 import {
   requireId,
@@ -11,6 +13,7 @@ import {
   requireText,
   validateBook,
   validatePage,
+  nextMetadata,
 } from "./validation";
 import { InvalidProgressError } from "./errors";
 
@@ -57,5 +60,35 @@ export function createQuote(input: CreateQuoteInput, book?: BookEntry): Quote {
     createdAt,
     updatedAt: createdAt,
     revision: 1,
+  });
+}
+
+export function updateNote(note: Note, input: UpdateAnnotationInput): Note {
+  const updated = {
+    ...note,
+    ...nextMetadata(note, input.updatedAt),
+    content: requireText(input.content, "content"),
+  };
+  return Object.freeze(updated);
+}
+
+export function updateQuote(
+  quote: Quote,
+  input: UpdateQuoteInput,
+  book?: BookEntry,
+): Quote {
+  const validated = createQuote(
+    {
+      id: quote.id,
+      entryId: quote.entryId,
+      content: input.content,
+      createdAt: quote.createdAt,
+      ...(input.page !== undefined && { page: input.page }),
+    },
+    book,
+  );
+  return Object.freeze({
+    ...validated,
+    ...nextMetadata(quote, input.updatedAt),
   });
 }

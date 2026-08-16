@@ -11,15 +11,29 @@ export interface LibraryEntryRepository {
 }
 
 export interface NoteRepository {
+  delete(id: string): Promise<boolean>;
+  getById(id: string): Promise<Note | undefined>;
   list(): Promise<readonly Note[]>;
   listByEntryId(entryId: string): Promise<readonly Note[]>;
   save(note: Note): Promise<void>;
 }
 
 export interface QuoteRepository {
+  delete(id: string): Promise<boolean>;
+  getById(id: string): Promise<Quote | undefined>;
   list(): Promise<readonly Quote[]>;
   listByEntryId(entryId: string): Promise<readonly Quote[]>;
   save(quote: Quote): Promise<void>;
+}
+
+export type AnnotationShareResult =
+  "flow-finished" | "cancelled" | "unavailable";
+
+export interface AnnotationSharePort {
+  share(input: {
+    readonly text: string;
+    readonly title: string;
+  }): Promise<AnnotationShareResult>;
 }
 
 export interface ActivityRepository {

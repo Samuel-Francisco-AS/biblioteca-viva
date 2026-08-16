@@ -11,7 +11,12 @@ import type {
   AudioErrorReporter,
   AudioPlayback,
 } from "./audioBackend";
-import { AUDIO_MANIFEST, type AudioCueId } from "./audioManifest";
+import {
+  AUDIO_CONFIGURATION,
+  validateAudioConfiguration,
+  type AudioConfiguration,
+  type AudioCueId,
+} from "./audioManifest";
 
 function volume(value: number): number {
   if (!Number.isFinite(value) || value < 0 || value > 1)
@@ -22,7 +27,8 @@ function volume(value: number): number {
 export class AudioService implements AudioPort {
   private state: AudioAvailability = "not-initialized";
   private currentPreferences: AudioPreferences = AUDIO_PREFERENCE_DEFAULTS;
-  private desiredMusic?: AudioCueId;
+  private desiredMusic = false;
+  private musicIndex = 0;
   private music?: AudioPlayback;
   private musicGeneration = 0;
   private musicStarting = false;
@@ -36,7 +42,12 @@ export class AudioService implements AudioPort {
     private readonly backend: AudioBackend,
     private readonly settings: AudioSettingsPort,
     private readonly reporter: AudioErrorReporter,
-  ) {}
+    private readonly configuration: AudioConfiguration = AUDIO_CONFIGURATION,
+  ) {
+    const issues = validateAudioConfiguration(configuration);
+    if (issues.length > 0)
+      throw new RangeError("Configuração de áudio inválida.");
+  }
 
   async loadPreferences(): Promise<void> {
     try {
@@ -56,7 +67,7 @@ export class AudioService implements AudioPort {
     return Object.freeze({
       activeEffects: this.effects.size,
       activeMusicPlayers: this.music ? 1 : 0,
-      desiredMusic: this.desiredMusic !== undefined,
+      desiredMusic: this.desiredMusic,
       pendingEffects: this.pendingEffects.length,
       state: this.state,
       suspended: this.paused,
@@ -81,7 +92,7 @@ export class AudioService implements AudioPort {
         } else {
           if (!this.desiredMusic)
             void this.backend
-              .prepare(AUDIO_MANIFEST["music.library"])
+              .prepare(this.libraryTrack(0))
               .catch(() => this.reporter.warn("MUSIC_PREPARATION_FAILED"));
           this.startDesiredMusic();
           for (const id of this.pendingEffects.splice(0)) this.playEffect(id);
@@ -104,11 +115,12 @@ export class AudioService implements AudioPort {
     if (this.state === "disposed") return;
     switch (intent.type) {
       case "LibraryEntered":
-        this.desiredMusic = "music.library";
+        this.desiredMusic = true;
         this.startDesiredMusic();
         return;
       case "LibraryExited":
-        this.desiredMusic = undefined;
+        this.desiredMusic = false;
+        this.musicIndex = 0;
         this.stopMusic();
         return;
       case "PageChanged":
@@ -180,7 +192,8 @@ export class AudioService implements AudioPort {
   dispose(): void {
     if (this.state === "disposed") return;
     this.state = "disposed";
-    this.desiredMusic = undefined;
+    this.desiredMusic = false;
+    this.musicIndex = 0;
     this.pendingEffects.length = 0;
     this.stopMusic();
     for (const effect of [...this.effects]) effect.stop();
@@ -198,7 +211,7 @@ export class AudioService implements AudioPort {
       this.state !== "ready"
     )
       return;
-    const cue = AUDIO_MANIFEST[this.desiredMusic];
+    const cue = this.libraryTrack(this.musicIndex);
     const generation = this.musicGeneration;
     this.musicStarting = true;
     void this.backend
@@ -210,7 +223,8 @@ export class AudioService implements AudioPort {
           this.state !== "ready" ||
           this.paused ||
           this.currentPreferences.muted ||
-          this.desiredMusic !== cue.id ||
+          !this.desiredMusic ||
+          this.libraryTrack(this.musicIndex).id !== cue.id ||
           this.music
         ) {
           playback.stop();
@@ -219,7 +233,21 @@ export class AudioService implements AudioPort {
         playback.setVolume(this.currentPreferences.musicVolume);
         this.music = playback;
         void playback.completed.finally(() => {
-          if (this.music === playback) this.music = undefined;
+          if (generation !== this.musicGeneration || this.music !== playback)
+            return;
+          this.music = undefined;
+          if (
+            playback.available &&
+            this.desiredMusic &&
+            this.state === "ready" &&
+            !this.paused &&
+            !this.currentPreferences.muted
+          ) {
+            this.musicIndex =
+              (this.musicIndex + 1) %
+              this.configuration.playlists.library.length;
+            this.startDesiredMusic();
+          }
         });
       })
       .catch(() => {
@@ -243,7 +271,10 @@ export class AudioService implements AudioPort {
     if (this.state !== "ready" || this.paused || this.currentPreferences.muted)
       return;
     void this.backend
-      .play(AUDIO_MANIFEST[id], this.currentPreferences.effectsVolume)
+      .play(
+        this.configuration.manifest[id],
+        this.currentPreferences.effectsVolume,
+      )
       .then((playback) => {
         if (
           this.state !== "ready" ||
@@ -258,6 +289,13 @@ export class AudioService implements AudioPort {
         void playback.completed.finally(() => this.effects.delete(playback));
       })
       .catch(() => this.reporter.warn("EFFECT_PLAYBACK_FAILED"));
+  }
+
+  private libraryTrack(index: number) {
+    const id = this.configuration.playlists.library[index];
+    const cue = id === undefined ? undefined : this.configuration.manifest[id];
+    if (!cue) throw new RangeError("Configuração de playlist inválida.");
+    return cue;
   }
 
   private persist(): Promise<void> {

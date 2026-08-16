@@ -9,13 +9,13 @@
 - **blocos concluídos:** Bloco 5 — Backup, restauração e recuperação, com G5 aprovado; Bloco 6 — Biblioteca visual conectada, com G6 aprovado;
 - **prompts tecnicamente implementados:** Prompts 1 a 19; sua conclusão técnica não aprova os gates humanos pendentes;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **trabalho atual:** R1 tecnicamente concluído; R1-A e R1-B implementados, com R2 como próximo lote;
+- **trabalho atual:** R1 e R2 tecnicamente concluídos; R3 é o próximo lote e ainda não foi iniciado;
 - **gate:** G0 a G3 aprovados; G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
-- **último checkpoint técnico:** `ea522eb660d86c8a6e6cbd146cc1c31c6d2a2989` (`feat: refine reading progress and shelf projection`); o checkpoint R1-B será registrado após esta validação;
+- **último checkpoint técnico:** R2 pronto para checkpoint após a validação integral desta rodada; R1-B foi selado em `a5b2d964af4e4a091b7b4e965d18d66cebdf6437`;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
-- **APK:** APK debug com R1-B gerado, mas não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `b0a875a2aa160054fd6bc80a6818b0adfb39f0330803b3822f89e2d0c4f11016`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
+- **APK:** APK debug com R2 gerado, mas não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `b494feb26b124c40f16cd596124df35fd27f82ca965d6fa4de1b0b6bb38c5d85`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
 - **release Android:** ainda não existe APK release assinado nem artefato Android público;
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
@@ -55,13 +55,15 @@
 
 ## Trabalho atual
 
-Os Prompts 1–19 estão tecnicamente implementados e `EXECUTION_PLAN.md` permanece seu registro histórico. R1 está tecnicamente concluído: R1-A cobre progresso/estante e R1-B torna a proteção de restauração contextual e elimina a repetição estrutural de fetch/decode da música entre entradas. R2 é o próximo trabalho. A versão permanece `0.2.0-alpha.1`; nenhum gate humano foi aprovado por esta entrega.
+Os Prompts 1–19 estão tecnicamente implementados e `EXECUTION_PLAN.md` permanece seu registro histórico. R1 está tecnicamente concluído. R2 também está tecnicamente concluído: notas e citações podem ser editadas, excluídas e compartilhadas por casos de uso próprios, e o áudio usa playlist declarativa sequencial com manifesto substituível. R3 é o próximo trabalho, mas não foi iniciado. A versão permanece `0.2.0-alpha.1`; nenhum gate humano foi aprovado por esta entrega.
 
 ## Bloqueios
 
-Nenhum bloqueio técnico identificado. As evidências físicas são parciais: não cobrem uso prolongado, TalkBack, teclado, contraste, texto ampliado, lifecycle, desempenho nem toda a checklist integrada. Movimento reduzido pareceu congelar a cena; a latência sonora percebida e a nova restauração ainda precisam de validação no Moto G06. G4 e G7–G10 não foram aprovados; G11 não foi iniciado.
+Nenhum bloqueio técnico identificado. As evidências físicas são parciais: não cobrem o gerenciamento de anotações e a playlist de R2, uso prolongado, TalkBack, teclado, contraste, texto ampliado, lifecycle, desempenho nem toda a checklist integrada. Movimento reduzido pareceu congelar a cena; a latência sonora percebida e a nova restauração ainda precisam de validação no Moto G06. G4 e G7–G10 não foram aprovados; G11 não foi iniciado.
 
 ## Última evidência de validação
+
+Em 2026-08-16, R2 concluiu tecnicamente edição, exclusão e compartilhamento explícito de notas/citações no detalhe e no Arquivo. Identidade e criação são preservadas, revisão avança, atividades de criação e milestones históricos não são reescritos, e a exclusão remove somente a anotação após commit. O compartilhamento usa a capacidade web/nativa existente por uma porta da aplicação e não inclui IDs, revisão ou timestamps técnicos. O áudio passou a validar manifesto e playlist ordenada, avançar pelo término natural real, proteger callbacks obsoletos e manter o único WAV musical existente como playlist válida de um item. Passaram 568 testes em 62 arquivos, cinco E2E Chromium, áudio, build, relatório de performance, Android sync/build e ZIP. O APK debug não instalado possui 7.526.051 bytes e SHA-256 `b494feb26b124c40f16cd596124df35fd27f82ca965d6fa4de1b0b6bb38c5d85`; nenhum gate humano foi aprovado.
 
 Em 2026-08-16, R1-B concluiu tecnicamente a restauração contextual e a correção estrutural de entrada sonora. Banco funcionalmente vazio significa ausência de livros, notas, citações, atividades, settings e milestones; metadata técnica não conta. Base vazia restaura após resumo/confirmação sem compartilhar backup vazio; base preenchida oferece criar backup pelo fluxo existente, continuar sem backup com confirmação adicional ou cancelar. Inspeção e revalidação não escrevem, replace permanece transacional e milestones continuam monotônicos. O áudio já era independente do Phaser lazy; o defeito demonstrado era repetir `fetch` e `decodeAudioData` a cada retorno. O backend agora prepara somente a música local após unlock e reutiliza o buffer decodificado durante seu lifecycle. Passaram 544 testes em 57 arquivos, cinco E2E Chromium, áudio, build, relatório de performance, Android sync/build e ZIP. A percepção física no Moto G06 permanece pendente; nenhum gate foi aprovado.
 

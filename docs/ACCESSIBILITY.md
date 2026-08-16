@@ -208,6 +208,8 @@ Foram preservados por já estarem corretos: `header`/`nav`/`main`, skip link, hi
 
 R1-B mantém o resumo de restauração focalizável e ações nativas. Em base preenchida, as três escolhas têm rótulos explícitos; continuar sem backup abre confirmação textual adicional, e voltar devolve foco à ação que a abriu. Cancelar preserva dados, remove somente a seleção do fluxo e devolve foco ao campo de arquivo. Esses comportamentos possuem testes automatizados, mas TalkBack e toque físico continuam pendentes.
 
+R2 usa um único padrão React para ações de nota e citação no detalhe e no Arquivo. Editar abre campos com labels reais e erro associado; cancelar ou concluir devolve foco ao botão de edição. Excluir abre um grupo de confirmação nomeado, separado visualmente da edição, e cancelar devolve foco ao botão de exclusão. Compartilhar só anuncia conclusão depois da resposta do adapter; indisponibilidade permanece recuperável. Os botões preservam o alvo mínimo global de 44 px. Teclado e foco têm cobertura automatizada, mas TalkBack e toque físico de R2 continuam pendentes.
+
 ### Checklist manual acumulada para G9
 
 - [ ] TalkBack no Moto G06: landmarks, títulos, navegação e alternativa da Biblioteca;

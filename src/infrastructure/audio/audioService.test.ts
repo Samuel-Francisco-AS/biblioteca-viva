@@ -11,10 +11,12 @@ import type {
   AudioErrorReporter,
   AudioPlayback,
 } from "./audioBackend";
-import type { AudioCueDefinition, AudioCueId } from "./audioManifest";
+import type { AudioConfiguration, AudioCueDefinition } from "./audioManifest";
+import { AUDIO_CONFIGURATION } from "./audioManifest";
 import { AudioService } from "./audioService";
 
 class FakePlayback implements AudioPlayback {
+  readonly available = true;
   readonly volumes: number[];
   stopped = false;
   private finish: () => void = () => undefined;
@@ -35,6 +37,10 @@ class FakePlayback implements AudioPlayback {
     this.stopped = true;
     this.finish();
   }
+
+  complete(): void {
+    this.finish();
+  }
 }
 
 class FakeBackend implements AudioBackend {
@@ -46,8 +52,8 @@ class FakeBackend implements AudioBackend {
     playback: FakePlayback;
     volume: number;
   }> = [];
-  readonly prepared: AudioCueId[] = [];
-  reject = new Set<AudioCueId>();
+  readonly prepared: string[] = [];
+  reject = new Set<string>();
 
   dispose(): void {
     this.disposed = true;
@@ -126,6 +132,66 @@ describe("AudioService", () => {
     expect(backend.plays.map(({ cue }) => cue.id)).toEqual(["music.library"]);
   });
 
+  it("reproduz playlist declarativa em ordem, avança no fim natural e faz wrap-around", async () => {
+    const music = (id: string): AudioCueDefinition => ({
+      category: "music",
+      fallback: "silence",
+      gain: 1,
+      id,
+      loop: false,
+      sources: [`/audio/${id}.mp3`],
+    });
+    const configuration: AudioConfiguration = {
+      manifest: {
+        "music.a": music("music.a"),
+        "music.b": music("music.b"),
+        "music.c": music("music.c"),
+      },
+      playlists: { library: ["music.b", "music.a", "music.c"] },
+    };
+    service = new AudioService(backend, settings, reporter, configuration);
+    service.emit({ type: "LibraryEntered" });
+    await service.initialize();
+    await flush();
+    backend.plays[0]?.playback.complete();
+    await flush();
+    backend.plays[1]?.playback.complete();
+    await flush();
+    backend.plays[2]?.playback.complete();
+    await flush();
+    expect(backend.plays.map(({ cue }) => cue.id)).toEqual([
+      "music.b",
+      "music.a",
+      "music.c",
+      "music.b",
+    ]);
+  });
+
+  it("playlist de um item reinicia no fim natural sem duplicar player", async () => {
+    service.emit({ type: "LibraryEntered" });
+    await service.initialize();
+    await flush();
+    backend.plays[0]?.playback.complete();
+    await flush();
+    expect(backend.plays.map(({ cue }) => cue.id)).toEqual([
+      "music.library",
+      "music.library",
+    ]);
+    expect(service.diagnostics().activeMusicPlayers).toBe(1);
+  });
+
+  it("fim tardio de player interrompido não inicia música fantasma", async () => {
+    service.emit({ type: "LibraryEntered" });
+    await service.initialize();
+    await flush();
+    const old = backend.plays[0]?.playback;
+    service.emit({ type: "LibraryExited" });
+    old?.complete();
+    await flush();
+    expect(backend.plays).toHaveLength(1);
+    expect(service.diagnostics().activeMusicPlayers).toBe(0);
+  });
+
   it("não reproduz efeitos antes da inicialização permitida", async () => {
     service.emit({ type: "PageChanged" });
     service.emit({ type: "ShelfSelected" });
@@ -141,6 +207,26 @@ describe("AudioService", () => {
     await initialization;
     await flush();
     expect(backend.plays.map(({ cue }) => cue.id)).toEqual(["ui.page-turn"]);
+  });
+
+  it("substitui source de efeito somente pela configuração declarativa", async () => {
+    const replacement = {
+      ...AUDIO_CONFIGURATION.manifest["ui.page-turn"],
+      sources: ["/audio/effect-replacement.mp3"],
+    };
+    service = new AudioService(backend, settings, reporter, {
+      ...AUDIO_CONFIGURATION,
+      manifest: {
+        ...AUDIO_CONFIGURATION.manifest,
+        "ui.page-turn": replacement,
+      },
+    });
+    await service.initialize();
+    service.emit({ type: "PageChanged" });
+    await flush();
+    expect(backend.plays.at(-1)?.cue.sources).toEqual([
+      "/audio/effect-replacement.mp3",
+    ]);
   });
 
   it("inicia a música desejada após o gesto e nunca cria uma segunda instância", async () => {

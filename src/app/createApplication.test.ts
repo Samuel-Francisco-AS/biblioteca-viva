@@ -5,7 +5,12 @@ import "fake-indexeddb/auto";
 import Dexie from "dexie";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { ApplicationError, BackupError, BackupFileError } from "../application";
+import {
+  ApplicationError,
+  BackupError,
+  BackupFileError,
+  type AnnotationSharePort,
+} from "../application";
 import {
   createApplication,
   type ApplicationRuntime,
@@ -20,6 +25,7 @@ function fakeAudioBackend(play = vi.fn()): AudioBackend {
     play: (cue, volume) => {
       play(cue, volume);
       const playback: AudioPlayback = {
+        available: true,
         completed: new Promise<void>(() => undefined),
         setVolume: vi.fn(),
         stop: vi.fn(),
@@ -504,5 +510,65 @@ describe("createApplication", () => {
         },
       },
     });
+  });
+
+  it("gerencia anotações reais sem recriar atividade, evento ou milestone", async () => {
+    const share = vi.fn<AnnotationSharePort["share"]>(() =>
+      Promise.resolve("flow-finished"),
+    );
+    const runtime = await createApplication({
+      annotationShare: { share },
+      databaseName: databaseName("manage-annotations"),
+    });
+    runtimes.push(runtime);
+    const book = await runtime.commands.createBookEntry.execute({
+      title: "Livro fictício anotado",
+      totalPages: 50,
+    });
+    const note = await runtime.commands.addNote.execute({
+      entryId: book.id,
+      content: "Nota fictícia inicial",
+    });
+    const quote = await runtime.commands.addQuote.execute({
+      entryId: book.id,
+      content: "Citação fictícia inicial",
+      page: 10,
+    });
+    const before = await runtime.diagnostics.inspect();
+    const milestonesBefore = await runtime.queries.listMilestones.list();
+    const creations: string[] = [];
+    runtime.events.subscribe("NoteCreated", (event) => {
+      creations.push(event.type);
+    });
+    runtime.events.subscribe("QuoteCreated", (event) => {
+      creations.push(event.type);
+    });
+
+    await runtime.commands.updateNote.execute({
+      id: note.id,
+      content: "Nota fictícia revisada",
+    });
+    await runtime.commands.updateQuote.execute({
+      id: quote.id,
+      content: "Citação fictícia revisada",
+      page: 11,
+    });
+    await runtime.commands.shareNote.execute({ id: note.id });
+    await runtime.commands.shareQuote.execute({ id: quote.id });
+    await runtime.commands.deleteNote.execute({ id: note.id });
+    await runtime.commands.deleteQuote.execute({ id: quote.id });
+
+    expect(creations).toEqual([]);
+    expect(share).toHaveBeenCalledTimes(2);
+    expect(
+      share.mock.calls.flatMap(([input]) => input.text).join(" "),
+    ).not.toMatch(/revision|createdAt|updatedAt|note-|quote-/u);
+    await expect(runtime.queries.listAllNotes.execute()).resolves.toEqual([]);
+    await expect(runtime.queries.listAllQuotes.execute()).resolves.toEqual([]);
+    const after = await runtime.diagnostics.inspect();
+    expect(after.counts.activities).toBe(before.counts.activities);
+    await expect(runtime.queries.listMilestones.list()).resolves.toHaveLength(
+      milestonesBefore.length,
+    );
   });
 });

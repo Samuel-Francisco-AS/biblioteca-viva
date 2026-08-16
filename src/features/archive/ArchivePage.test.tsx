@@ -45,6 +45,18 @@ function LocationProbe() {
   );
 }
 
+function contentFrom(input: unknown): string {
+  if (
+    typeof input !== "object" ||
+    input === null ||
+    !("content" in input) ||
+    typeof input.content !== "string"
+  ) {
+    throw new Error("Expected annotation content");
+  }
+  return input.content;
+}
+
 function application(
   overrides: Partial<{
     books: () => Promise<readonly BookEntry[]>;
@@ -56,8 +68,34 @@ function application(
     books: vi.fn(overrides.books ?? (() => Promise.resolve([book]))),
     notes: vi.fn(overrides.notes ?? (() => Promise.resolve([note]))),
     quotes: vi.fn(overrides.quotes ?? (() => Promise.resolve([quote]))),
+    deleteNote: vi.fn(() => Promise.resolve({ deleted: true as const })),
+    deleteQuote: vi.fn(() => Promise.resolve({ deleted: true as const })),
+    shareNote: vi.fn(() => Promise.resolve("flow-finished" as const)),
+    shareQuote: vi.fn(() => Promise.resolve("flow-finished" as const)),
+    updateNote: vi.fn((input: unknown) =>
+      Promise.resolve({
+        ...note,
+        content: contentFrom(input),
+        revision: 2,
+      }),
+    ),
+    updateQuote: vi.fn((input: unknown) =>
+      Promise.resolve({
+        ...quote,
+        content: contentFrom(input),
+        revision: 2,
+      }),
+    ),
   };
   const facade: ArchiveApplication = {
+    commands: {
+      deleteNote: { execute: calls.deleteNote },
+      deleteQuote: { execute: calls.deleteQuote },
+      shareNote: { execute: calls.shareNote },
+      shareQuote: { execute: calls.shareQuote },
+      updateNote: { execute: calls.updateNote },
+      updateQuote: { execute: calls.updateQuote },
+    },
     queries: {
       listBookEntries: { execute: calls.books },
       listAllNotes: { execute: calls.notes },
@@ -84,6 +122,32 @@ describe("Arquivo de anotações", () => {
     expect(pending.calls.books).toHaveBeenCalledOnce();
     expect(pending.calls.notes).toHaveBeenCalledOnce();
     expect(pending.calls.quotes).toHaveBeenCalledOnce();
+  });
+
+  it("edita, compartilha e exclui sem perder a busca atual", async () => {
+    const app = application();
+    const user = userEvent.setup();
+    renderArchive(app.facade, "/arquivo?q=Reflex%C3%A3o");
+    expect(await screen.findByText(note.content)).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Editar nota" }));
+    const field = screen.getByRole("textbox", {
+      name: "Editar conteúdo da nota",
+    });
+    await user.clear(field);
+    await user.type(field, "Reflexão atualizada");
+    await user.click(screen.getByRole("button", { name: "Salvar nota" }));
+    expect(await screen.findByText("Reflexão atualizada")).toBeVisible();
+    expect(screen.getByLabelText("URL atual")).toHaveTextContent(
+      "q=Reflex%C3%A3o",
+    );
+    await user.click(screen.getByRole("button", { name: "Compartilhar nota" }));
+    expect(app.calls.shareNote).toHaveBeenCalledWith({ id: note.id });
+    await user.click(screen.getByRole("button", { name: "Excluir nota" }));
+    await user.click(screen.getByRole("button", { name: "Excluir nota" }));
+    expect(
+      await screen.findByText("Nenhuma anotação encontrada"),
+    ).toBeVisible();
+    expect(app.calls.deleteNote).toHaveBeenCalledWith({ id: note.id });
   });
 
   it("diferencia Arquivo vazio", async () => {

@@ -1,6 +1,12 @@
 import {
   AddNote,
   AddQuote,
+  DeleteNote,
+  DeleteQuote,
+  ShareNote,
+  ShareQuote,
+  UpdateNote,
+  UpdateQuote,
   DeleteBookEntry,
   ChangeBookStatus,
   CreateBookEntry,
@@ -36,6 +42,7 @@ import {
   type ExperienceErrorReporter,
   type ExperiencePreferencesPort,
   type ExperienceSettingsPort,
+  type AnnotationSharePort,
 } from "../application";
 import { MILESTONE_ID, MilestoneEngine } from "../domain";
 import { ContentLocalizer, PROTOTYPE_CONTENT } from "../content";
@@ -75,6 +82,7 @@ import {
   type PlatformCapabilitySnapshot,
   consoleExperienceErrorReporter,
   DexieExperienceSettingsRepository,
+  PlatformAnnotationShare,
 } from "../infrastructure";
 import packageMetadata from "../../package.json";
 
@@ -112,6 +120,12 @@ export interface ApplicationRuntime {
     readonly changeBookStatus: ChangeBookStatus;
     readonly createBookEntry: CreateBookEntry;
     readonly deleteBookEntry: DeleteBookEntry;
+    readonly deleteNote: DeleteNote;
+    readonly deleteQuote: DeleteQuote;
+    readonly shareNote: ShareNote;
+    readonly shareQuote: ShareQuote;
+    readonly updateNote: UpdateNote;
+    readonly updateQuote: UpdateQuote;
     readonly updateBookEntry: UpdateBookEntry;
     readonly updateBookProgress: UpdateBookProgress;
   };
@@ -142,6 +156,7 @@ export interface CreateApplicationOptions {
   readonly nativeSaveAvailable?: boolean;
   readonly platformCapabilities?: PlatformCapabilitiesPort;
   readonly storage?: StoragePersistencePort;
+  readonly annotationShare?: AnnotationSharePort;
 }
 
 function unsafeContextError(): BackupError {
@@ -246,6 +261,8 @@ export async function createApplication(
     quotes,
     transaction,
   };
+  const annotationShare =
+    options.annotationShare ?? new PlatformAnnotationShare();
 
   return {
     appVersion: packageMetadata.version,
@@ -324,6 +341,12 @@ export async function createApplication(
       changeBookStatus: new ChangeBookStatus(dependencies),
       createBookEntry: new CreateBookEntry(dependencies),
       deleteBookEntry: new DeleteBookEntry(bookDeletion),
+      deleteNote: new DeleteNote(dependencies),
+      deleteQuote: new DeleteQuote(dependencies),
+      shareNote: new ShareNote(notes, libraryEntries, annotationShare),
+      shareQuote: new ShareQuote(quotes, libraryEntries, annotationShare),
+      updateNote: new UpdateNote(dependencies),
+      updateQuote: new UpdateQuote(dependencies),
       updateBookEntry: new UpdateBookEntry(dependencies),
       updateBookProgress: new UpdateBookProgress(dependencies),
     },

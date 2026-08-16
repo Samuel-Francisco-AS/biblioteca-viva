@@ -103,6 +103,26 @@ export class DexieLibraryEntryRepository implements LibraryEntryRepository {
 export class DexieNoteRepository implements NoteRepository {
   constructor(private readonly database: BibliotecaDatabase) {}
 
+  async delete(id: string): Promise<boolean> {
+    try {
+      if ((await this.database.notes.get(id)) === undefined) return false;
+      await this.database.notes.delete(id);
+      return true;
+    } catch {
+      throw writeFailure("delete_note");
+    }
+  }
+
+  async getById(id: string): Promise<Note | undefined> {
+    try {
+      const stored: unknown = await this.database.notes.get(id);
+      return stored === undefined ? undefined : immutableNote(stored);
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("get_note");
+    }
+  }
+
   async list(): Promise<readonly Note[]> {
     try {
       const stored: unknown[] = await this.database.notes.toArray();
@@ -141,6 +161,26 @@ export class DexieNoteRepository implements NoteRepository {
 
 export class DexieQuoteRepository implements QuoteRepository {
   constructor(private readonly database: BibliotecaDatabase) {}
+
+  async delete(id: string): Promise<boolean> {
+    try {
+      if ((await this.database.quotes.get(id)) === undefined) return false;
+      await this.database.quotes.delete(id);
+      return true;
+    } catch {
+      throw writeFailure("delete_quote");
+    }
+  }
+
+  async getById(id: string): Promise<Quote | undefined> {
+    try {
+      const stored: unknown = await this.database.quotes.get(id);
+      return stored === undefined ? undefined : immutableQuote(stored);
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("get_quote");
+    }
+  }
 
   async list(): Promise<readonly Quote[]> {
     try {

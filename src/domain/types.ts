@@ -71,3 +71,12 @@ export interface CreateAnnotationInput {
 export interface CreateQuoteInput extends CreateAnnotationInput {
   readonly page?: number;
 }
+
+export interface UpdateAnnotationInput {
+  readonly content: string;
+  readonly updatedAt: string;
+}
+
+export interface UpdateQuoteInput extends UpdateAnnotationInput {
+  readonly page?: number;
+}

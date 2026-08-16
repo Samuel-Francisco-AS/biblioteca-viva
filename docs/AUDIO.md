@@ -60,7 +60,13 @@ Tamanhos atuais:
 - `book-completed.wav`: 36.206 bytes;
 - total: 791.418 bytes.
 
-## 6. Substituição manual
+## 6. Playlist declarativa e substituição manual
+
+`AUDIO_CONFIGURATION` reúne o manifesto e playlists ordenadas. A playlist `library` referencia IDs estáveis de cues musicais; o único asset musical real continua em `music.library`, portanto a configuração de produção possui um item sem inventar arquivos. A validação rejeita ID divergente/duplicado, playlist vazia, referência ausente e cue não musical. Sources compatíveis com Web Audio podem incluir WAV ou MP3.
+
+Ao entrar na Biblioteca, o serviço inicia o índice atual. Término natural real avança para o próximo item e faz wrap-around. Sair interrompe e volta ao primeiro índice; pause e mute interrompem sem trocar o índice, e resume reinicia a faixa atual do começo, conforme a limitação de offset já aceita. Cada geração de player invalida callbacks anteriores, impedindo música fantasma depois de stop, saída ou dispose. Playback silencioso por asset/decode indisponível não avança em loop apertado.
+
+Para trocar um som, altere somente `sources` do cue estável no manifesto. React, Phaser, casos de uso e domínio não conhecem nomes de arquivo; um teste estrutural troca o source de `ui.page-turn` sem alterar consumidores.
 
 Assets são conteúdo. Para trocar um som:
 
@@ -118,7 +124,7 @@ Nenhuma ação ou informação depende de ouvir.
 - o loop usa fade curto nas bordas, mas ainda precisa ser avaliado fisicamente quanto à emenda;
 - a música reinicia do começo após pause/resume, sem preservar offset;
 - WAV foi escolhido para geração simples e determinística; uma versão final comprimida poderá reduzir o APK;
-- não há crossfade, playlist, áudio espacial, equalizador, música adaptativa ou reprodução em segundo plano;
+- não há crossfade, shuffle, persistência de posição, áudio espacial, equalizador, música adaptativa ou reprodução em segundo plano;
 - fone, alto-falante, interrupções e lifecycle físico aguardam revalidação no Moto G06.
 - a primeira entrada no mesmo gesto de unlock ainda depende da inicialização e decodificação permitidas pelo navegador; a correção elimina trabalho repetido e antecipa preparação em gestos anteriores, mas não autoriza alegar latência física sem nova escuta.
 

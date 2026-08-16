@@ -85,3 +85,7 @@ O backup v2 inclui livros, progresso, notas, citações, atividades, configuraç
 ## 10. Testes públicos
 
 Fixtures Vitest e Playwright usam apenas nomes e textos explicitamente fictícios. CI não recebe banco, backup pessoal, screenshot do usuário ou telemetria. Traces de falha podem conter somente os dados fictícios do cenário automatizado e não são versionados.
+
+## 11. Compartilhamento explícito de anotação
+
+R2 permite compartilhar uma nota ou citação somente após ação explícita no item. O texto humano inclui o tipo, o conteúdo escolhido, página quando existente e referência legível ao livro quando disponível. Não inclui ID interno, revisão, timestamps, schema, caminho privado ou metadata de persistência. Web Share ou a folha nativa controla o destino; o aplicativo só anuncia conclusão quando o adapter encerra o fluxo e nunca registra o conteúdo em logs ou diagnósticos. Indisponibilidade não impede editar ou excluir.

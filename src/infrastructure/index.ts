@@ -12,6 +12,7 @@ export * from "./files/browserFileDelivery";
 export * from "./files/androidFileDelivery";
 export * from "./files/androidBackupFileSave";
 export * from "./files/platformFileDelivery";
+export * from "./files/annotationShare";
 export * from "./platform/adapters";
 export * from "./platform/capabilities";
 export * from "./platform/storagePersistence";

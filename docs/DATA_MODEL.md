@@ -95,7 +95,7 @@ As duas entidades são pequenas e distintas, em texto simples:
 | `Note` | `entryId`, `content` | conteúdo normalizado e não vazio |
 | `Quote` | `entryId`, `content`, `page?` | página inteira positiva e, quando o livro é fornecido à operação, não superior a `totalPages` |
 
-Ambas possuem os metadados comuns, começam em revisão 1 e referenciam uma entrada por ID não vazio. A existência efetiva do livro será verificada pela aplicação/repositório no Prompt 5; `createQuote` já aceita o livro como contexto para validar referência e limite de página. Não há Markdown avançado, anexos ou formatação rica.
+Ambas possuem os metadados comuns, começam em revisão 1 e referenciam uma entrada por ID não vazio. A aplicação verifica a existência efetiva do livro; `createQuote` e `updateQuote` recebem o livro como contexto para validar referência e limite de página. Edição preserva `id`, `entryId` e `createdAt`, atualiza `updatedAt` e incrementa `revision`. Não há Markdown avançado, anexos ou formatação rica.
 
 ## 7. Factories e operações
 
@@ -105,7 +105,9 @@ Ambas possuem os metadados comuns, começam em revisão 1 e referenciam uma entr
 - `changeBookStatus`;
 - `completeBook`;
 - `createNote`;
-- `createQuote`.
+- `updateNote`;
+- `createQuote`;
+- `updateQuote`.
 
 As operações bibliográficas permitem remover `totalPages` e `rating` por `null` explícito. Datas e IDs são fornecidos pelo chamador; relógio e geração de IDs serão portas de aplicação futuras.
 
@@ -134,7 +136,7 @@ Isso permite que a futura aplicação traduza falhas sem comparar mensagens gen�
 
 ## 9. Schemas de fronteira
 
-Os schemas públicos cobrem criação de livro, atualização bibliográfica, progresso, status, nota e citação. Eles usam objetos estritos, recusam campos inesperados, recebem valores desconhecidos e produzem entradas tipadas. Normalizam somente strings seguras. Relações como página versus total, coerência de conclusão e crescimento de revisão continuam no domínio.
+Os schemas públicos cobrem criação de livro, atualização bibliográfica, progresso, status e criação/edição de nota e citação. Eles usam objetos estritos, recusam campos inesperados, recebem valores desconhecidos e produzem entradas tipadas. Normalizam somente strings seguras. Relações como página versus total, coerência de conclusão e crescimento de revisão continuam no domínio.
 
 Zod não é usado para modelar entidades internas nem substitui factories.
 

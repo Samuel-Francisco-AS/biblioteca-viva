@@ -96,7 +96,8 @@ describe("App", () => {
       prepare: vi.fn(() => Promise.resolve()),
       play: () => {
         const playback: AudioPlayback = {
-          completed: Promise.resolve(),
+          available: true,
+          completed: new Promise<void>(() => undefined),
           setVolume: vi.fn(),
           stop: vi.fn(),
         };

@@ -58,6 +58,10 @@ O host possui exatamente um listener `visibilitychange` e um `ResizeObserver` (o
 
 O áudio mantém no máximo uma música conhecida, interrompe efeitos no pause/mute/dispose e não cria segunda música em resume ou entrada repetida. R1-B adicionou cache limitado aos sources locais efetivamente preparados/reproduzidos: `music.library` é preparada após unlock, fetch/decode concorrentes compartilham a mesma promessa e novas entradas reutilizam o buffer; `dispose` limpa o cache. A música reinicia após pause/resume conforme limitação aceita. Não há polling, timer artificial ou preload remoto.
 
+R2 mantém o mesmo cache e acrescenta somente índice/generation counters limitados. Término natural chega pelo callback real do backend; não há polling nem timer de duração. Player antigo não avança a playlist depois de stop, saída ou dispose, e playback silencioso indisponível não cria ciclo de tentativas. A consulta do Arquivo continua carregando livros, notas e citações uma vez e filtra o estado atualizado em memória, sem N+1.
+
+No build de R2 de 2026-08-16, o chunk inicial mede 568.210 bytes (168.170 gzip), o CSS 16.920 bytes (3.650 gzip) e o Phaser lazy 1.220.999 bytes (325.920 gzip). O manifesto confirma `createPhaserGame` como dynamic entry. O aumento do inicial em relação ao baseline documentado é compatível com os casos de uso, adapter e UI de gerenciamento; não foi observado motivo para split artificial.
+
 Não foram encontrados registries crescentes, URLs Blob da sala, caches próprios sem liberação ou players registrados após dispose. `performance.memory` e memória real da WebView não são portáveis/confiáveis e não são reportadas. Context loss WebGL não recebeu simulação destrutiva; tela preta persistente continua falha crítica do checkpoint físico.
 
 Clique/toque válido emite a interação diretamente no `pointerup`, sem timer artificial. O limite arquitetural de resposta comum próxima de 100 ms permanece para medição física; testes estruturais não alegam latência real Android.

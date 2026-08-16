@@ -75,6 +75,12 @@ function application(
     addNote: (input: unknown) => Promise<Note>;
     addQuote: (input: unknown) => Promise<Quote>;
     deleteBook: (input: unknown) => Promise<{ readonly deleted: true }>;
+    deleteNote: (input: unknown) => Promise<{ readonly deleted: true }>;
+    deleteQuote: (input: unknown) => Promise<{ readonly deleted: true }>;
+    shareNote: (input: unknown) => Promise<"flow-finished">;
+    shareQuote: (input: unknown) => Promise<"flow-finished">;
+    updateNote: (input: unknown) => Promise<Note>;
+    updateQuote: (input: unknown) => Promise<Quote>;
   }> = {},
 ) {
   const calls = {
@@ -105,6 +111,22 @@ function application(
       overrides.deleteBook ??
         (() => Promise.resolve({ deleted: true as const })),
     ),
+    deleteNote: vi.fn(
+      overrides.deleteNote ??
+        (() => Promise.resolve({ deleted: true as const })),
+    ),
+    deleteQuote: vi.fn(
+      overrides.deleteQuote ??
+        (() => Promise.resolve({ deleted: true as const })),
+    ),
+    shareNote: vi.fn(
+      overrides.shareNote ?? (() => Promise.resolve("flow-finished" as const)),
+    ),
+    shareQuote: vi.fn(
+      overrides.shareQuote ?? (() => Promise.resolve("flow-finished" as const)),
+    ),
+    updateNote: vi.fn(overrides.updateNote ?? (() => Promise.resolve(note))),
+    updateQuote: vi.fn(overrides.updateQuote ?? (() => Promise.resolve(quote))),
   };
   const facade: BookDetailApplication = {
     commands: {
@@ -112,6 +134,12 @@ function application(
       addQuote: { execute: calls.addQuote },
       changeBookStatus: { execute: calls.status },
       deleteBookEntry: { execute: calls.deleteBook },
+      deleteNote: { execute: calls.deleteNote },
+      deleteQuote: { execute: calls.deleteQuote },
+      shareNote: { execute: calls.shareNote },
+      shareQuote: { execute: calls.shareQuote },
+      updateNote: { execute: calls.updateNote },
+      updateQuote: { execute: calls.updateQuote },
       updateBookProgress: { execute: calls.progress },
     },
     queries: {

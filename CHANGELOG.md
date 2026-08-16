@@ -13,6 +13,8 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 - preferências de experiência, conteúdo contextual, marcos e luminária de leitura;
 - perfil estrutural do runtime, Playwright Chromium e GitHub Actions para checks web.
 - barra acessível de progresso no detalhe, com porcentagem, páginas lidas e restantes, e estado textual sem total conhecido.
+- edição, exclusão confirmada e compartilhamento explícito de notas e citações no detalhe e no Arquivo;
+- playlist musical declarativa, sequencial e validada, preparada para múltiplos cues sem adicionar assets.
 
 ### Alterado
 
@@ -22,6 +24,7 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 - estantes pequenas usam uma representação por livro até cinco, com compressão gradual limitada a oito para coleções maiores.
 - restauração dispensa backup de segurança em base funcionalmente vazia e oferece escolha explícita, com confirmação adicional, quando há dados atuais;
 - música local é preparada após o primeiro gesto permitido e reutiliza a decodificação entre entradas na Biblioteca.
+- áudio avança pelo término natural real, protege callbacks obsoletos e mantém efeitos substituíveis somente pelo manifesto.
 
 ### Corrigido
 

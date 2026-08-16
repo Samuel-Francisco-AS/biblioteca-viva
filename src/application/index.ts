@@ -1,4 +1,5 @@
 export * from "./activities";
+export * from "./annotations";
 export * from "./audio";
 export * from "./backup";
 export * from "./dialogue";
@@ -16,6 +17,8 @@ export type {
   CreateBookEntryInput,
   UpdateBookEntryInput,
   UpdateBookProgressInput,
+  UpdateNoteInput,
+  UpdateQuoteInput,
 } from "./schemas";
 export { createBookEntrySchema, updateBookEntrySchema } from "./schemas";
 export * from "./useCases";

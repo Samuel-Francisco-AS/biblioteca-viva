@@ -99,9 +99,15 @@ Detalhe
 → localização/página opcional
 → salvar
 → aparecer no livro e no Arquivo
+
+Detalhe ou Arquivo
+→ escolher editar, compartilhar ou excluir
+→ edição preserva identidade e atualiza o item após commit
+→ compartilhamento envia texto humano somente por ação explícita
+→ exclusão pede confirmação inline e remove o item após commit
 ```
 
-Rascunho automático pode ser considerado depois; no protótipo, evitar prometer salvamento que não exista.
+Cancelar edição ou exclusão preserva o item e devolve foco à ação correspondente. Falha mantém o formulário/conteúdo visível e oferece nova tentativa. O Arquivo conserva a consulta atual e filtra sobre o estado atualizado sem recarregar a aplicação. Excluir uma anotação não apaga sua atividade histórica de criação nem o milestone histórico. Rascunho automático pode ser considerado depois; no protótipo, evitar prometer salvamento que não exista.
 
 ## 8. Busca e filtros
 

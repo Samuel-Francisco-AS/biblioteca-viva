@@ -58,4 +58,13 @@ export const createQuoteInputSchema = createNoteInputSchema.extend({
   page: z.int().positive().optional(),
 });
 
+export const updateNoteInputSchema = z.strictObject({
+  content: normalizedRequiredText,
+  updatedAt: z.iso.datetime({ offset: false }),
+});
+
+export const updateQuoteInputSchema = updateNoteInputSchema.extend({
+  page: z.int().positive().optional(),
+});
+
 export type ParsedCreateBookInput = z.output<typeof createBookInputSchema>;

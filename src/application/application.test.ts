@@ -86,6 +86,12 @@ class FakeLibraryEntryRepository implements LibraryEntryRepository {
 class FakeNoteRepository implements NoteRepository {
   readonly notes = new Map<string, Note>();
   constructor(private readonly state: TestState) {}
+  delete(id: string): Promise<boolean> {
+    return Promise.resolve(this.notes.delete(id));
+  }
+  getById(id: string): Promise<Note | undefined> {
+    return Promise.resolve(this.notes.get(id));
+  }
   list(): Promise<readonly Note[]> {
     if (this.state.failures.has("note_list"))
       return Promise.reject(new Error("note table leaked"));
@@ -110,6 +116,12 @@ class FakeNoteRepository implements NoteRepository {
 class FakeQuoteRepository implements QuoteRepository {
   readonly quotes = new Map<string, Quote>();
   constructor(private readonly state: TestState) {}
+  delete(id: string): Promise<boolean> {
+    return Promise.resolve(this.quotes.delete(id));
+  }
+  getById(id: string): Promise<Quote | undefined> {
+    return Promise.resolve(this.quotes.get(id));
+  }
   list(): Promise<readonly Quote[]> {
     if (this.state.failures.has("quote_list"))
       return Promise.reject(new Error("quote table leaked"));

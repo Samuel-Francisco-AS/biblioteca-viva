@@ -2,11 +2,29 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
 import type { BookEntry, Note, Quote } from "../../domain";
+import type { AnnotationShareResult } from "../../application";
+import { AnnotationActions } from "../annotations/AnnotationActions";
 import { formatDateTime } from "../books/bookPresentation";
 import { normalizeSearch } from "../collection/collectionControls";
 import { presentApplicationError } from "../entry-editor/errorMessages";
 
 export interface ArchiveApplication {
+  readonly commands: {
+    readonly deleteNote: {
+      execute(input: unknown): Promise<{ readonly deleted: true }>;
+    };
+    readonly deleteQuote: {
+      execute(input: unknown): Promise<{ readonly deleted: true }>;
+    };
+    readonly shareNote: {
+      execute(input: unknown): Promise<AnnotationShareResult>;
+    };
+    readonly shareQuote: {
+      execute(input: unknown): Promise<AnnotationShareResult>;
+    };
+    readonly updateNote: { execute(input: unknown): Promise<Note> };
+    readonly updateQuote: { execute(input: unknown): Promise<Quote> };
+  };
   readonly queries: {
     readonly listBookEntries: { execute(): Promise<readonly BookEntry[]> };
     readonly listAllNotes: { execute(): Promise<readonly Note[]> };
@@ -217,6 +235,30 @@ export function ArchivePage({
                           Abrir livro {book.title}
                         </Link>
                       )}
+                      <AnnotationActions
+                        annotation={annotation}
+                        kind="note"
+                        onDelete={async (id) => {
+                          await application.commands.deleteNote.execute({ id });
+                          setNotes((current) =>
+                            current?.filter((note) => note.id !== id),
+                          );
+                        }}
+                        onShare={(id) =>
+                          application.commands.shareNote.execute({ id })
+                        }
+                        onUpdate={async (input) => {
+                          const updated =
+                            await application.commands.updateNote.execute(
+                              input,
+                            );
+                          setNotes((current) =>
+                            current?.map((note) =>
+                              note.id === updated.id ? updated : note,
+                            ),
+                          );
+                        }}
+                      />
                     </article>
                   </li>
                 ))}
@@ -258,6 +300,35 @@ export function ArchivePage({
                           Abrir livro {book.title}
                         </Link>
                       )}
+                      <AnnotationActions
+                        annotation={annotation}
+                        kind="quote"
+                        onDelete={async (id) => {
+                          await application.commands.deleteQuote.execute({
+                            id,
+                          });
+                          setQuotes((current) =>
+                            current?.filter((quote) => quote.id !== id),
+                          );
+                        }}
+                        onShare={(id) =>
+                          application.commands.shareQuote.execute({ id })
+                        }
+                        onUpdate={async (input) => {
+                          const updated =
+                            await application.commands.updateQuote.execute(
+                              input,
+                            );
+                          setQuotes((current) =>
+                            current?.map((quote) =>
+                              quote.id === updated.id ? updated : quote,
+                            ),
+                          );
+                        }}
+                        {...(book?.totalPages !== undefined && {
+                          totalPages: book.totalPages,
+                        })}
+                      />
                     </article>
                   </li>
                 ))}

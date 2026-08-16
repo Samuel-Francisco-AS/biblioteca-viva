@@ -994,3 +994,11 @@ npm run build → vite preview :4173 → Chromium → React → application → 
 ```
 
 GitHub Actions reproduz os checks web com Node 22 e `npm ci`. Performance roda depois do build porque lê `dist/.vite/manifest.json`. Android continua uma barreira local e física; a CI não contém keystore, secrets, SDK Android ou publicação.
+
+## 32. Gerenciamento de anotações e playlist após R2
+
+Nota e citação preservam portas e casos de uso separados. `UpdateNote`/`UpdateQuote` carregam a entidade, validam a entrada no domínio, preservam identidade/criação e persistem pela porta dentro do transaction runner. `DeleteNote`/`DeleteQuote` confirmam existência e removem somente a entidade. Atividades `note_added`/`quote_added` permanecem como histórico da ação ocorrida; edição/exclusão não fabrica atividade, evento de criação ou novo milestone. A ausência de referência reversa obrigatória permite essa política sem schema ou migração.
+
+`AnnotationSharePort` pertence à aplicação e recebe somente título/texto já montado para a ação explícita. `PlatformAnnotationShare` implementa Web Share ou o plugin Capacitor Share existente; cancelamento, indisponibilidade e falha são resultados/erros sanitizados. React não importa Capacitor e nenhum conteúdo é registrado em log.
+
+O áudio usa a cadeia `source local → manifesto validado → cue ID estável → playlist ordenada → AudioService → AudioBackend`. O menor acréscimo ao backend é `AudioPlayback.completed`, resolvido pelo evento natural de término, e `available`, que distingue silêncio de uma faixa tocável. O serviço controla índice e geração sem expor Web Audio, polling ou timer de duração. Saída da rota reinicia a sequência; pause/mute preservam índice, mas não offset. Manifesto de produção possui uma faixa real, enquanto configurações injetadas testam múltiplas músicas e substituição de efeitos.

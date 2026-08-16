@@ -21,6 +21,18 @@ test("ciclo principal persiste livro, anotações, conclusão e marco", async ({
   await page.getByLabel("Nota (obrigatório)").fill("Nota fictícia de leitura.");
   await page.getByRole("button", { name: "Adicionar nota" }).click();
   await expect(page.getByText("Nota fictícia de leitura.")).toBeVisible();
+  await page.getByRole("button", { name: "Editar nota" }).click();
+  await page
+    .getByLabel("Editar conteúdo da nota")
+    .fill("Nota fictícia revisada.");
+  await page.getByRole("button", { name: "Salvar nota" }).click();
+  await expect(page.getByText("Nota fictícia revisada.")).toBeVisible();
+  await page.getByRole("button", { name: "Compartilhar nota" }).click();
+  await expect(
+    page
+      .getByText("O compartilhamento não está disponível nesta plataforma.")
+      .last(),
+  ).toBeVisible();
 
   await page
     .getByLabel("Citação (obrigatório)")
@@ -30,6 +42,26 @@ test("ciclo principal persiste livro, anotações, conclusão e marco", async ({
   await expect(
     page.getByText("Citação fictícia para regressão."),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Editar citação" }).click();
+  await page
+    .getByLabel("Editar conteúdo da citação")
+    .fill("Citação fictícia revisada.");
+  await page.getByLabel("Página (opcional)").last().fill("122");
+  await page.getByRole("button", { name: "Salvar citação" }).click();
+  await expect(page.getByText("Citação fictícia revisada.")).toBeVisible();
+  await page.getByRole("button", { name: "Compartilhar citação" }).click();
+  await expect(
+    page
+      .getByText("O compartilhamento não está disponível nesta plataforma.")
+      .last(),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "Excluir nota" }).click();
+  await page.getByRole("button", { name: "Excluir nota" }).click();
+  await expect(page.getByText("Nota fictícia revisada.")).toHaveCount(0);
+  await page.getByRole("button", { name: "Excluir citação" }).click();
+  await page.getByRole("button", { name: "Excluir citação" }).click();
+  await expect(page.getByText("Citação fictícia revisada.")).toHaveCount(0);
 
   await page.getByRole("button", { name: "Concluir leitura" }).click();
   await expect(page.getByText("Status atual: Concluído.")).toBeVisible();

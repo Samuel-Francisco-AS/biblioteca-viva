@@ -16,7 +16,7 @@ Novo contexto exige primeiro um fato estruturado realmente conhecido. Amplie os 
 
 ## 3. Áudio
 
-Adicione ou substitua arquivos em `public/audio/`, atualize `src/infrastructure/audio/audioManifest.ts`, o gerador determinístico quando aplicável e `docs/ASSET_REGISTRY.md`. Execute `npm run audio:check` e testes de backend/serviço. Ausência de asset degrada para silêncio. Para duplicação, confira `AudioService.diagnostics()`, `useAudioExperience.ts`, música desejada, players ativos e eventos visibility/Capacitor; reproduza ciclos de entrada, pause, resume, saída e dispose antes de mudar a arquitetura.
+Adicione ou substitua arquivos em `public/audio/`, atualize somente `sources` do cue estável em `src/infrastructure/audio/audioManifest.ts`, o gerador determinístico quando aplicável e `docs/ASSET_REGISTRY.md`. Para música adicional, acrescente cue musical e seu ID na ordem desejada de `AUDIO_PLAYLISTS`; a validação rejeita referências ausentes, duplicadas, não musicais ou playlist vazia. Execute `npm run audio:check` para os WAVs físicos atuais e testes de manifesto/backend/serviço. Ausência de asset degrada para silêncio. Para duplicação, confira `AudioService.diagnostics()`, `useAudioExperience.ts`, música desejada, índice/geração, players ativos e eventos visibility/Capacitor; reproduza término natural, wrap-around, entrada, pause, resume, saída e dispose antes de mudar a arquitetura.
 
 ## 4. Decorações e marcos
 
@@ -67,6 +67,6 @@ O APK fica em `android/app/build/outputs/apk/debug/app-debug.apk`. Registre tama
 
 Antes de G11: checkpoint humano G4/G7–G10, nova restauração física, identidade/ícone/splash, revisão de assets/licenças, assinatura e checklist release.
 
-Pós-protótipo: política de edição/exclusão de notas/citações, retenção de atividades, SQLite somente se gatilhos documentados ocorrerem, outros tipos/salas/conta.
+Pós-protótipo: avaliar retenção/apresentação de atividades históricas somente se surgir um consumidor; SQLite somente se gatilhos documentados ocorrerem; outros tipos/salas/conta.
 
 Opcionais condicionados a evidência: preservar offset da música, comprimir WAVs, dividir o chunk lazy do Phaser, segunda configuração Android. Visual procedural e fallback local são decisões deliberadas até revisão artística, não defeitos automáticos.
