@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
 
 import { appRoutes } from "./routes";
@@ -49,6 +49,10 @@ export function App({ application, diagnostics }: AppProps) {
   const location = useLocation();
   const mainRef = useRef<HTMLElement>(null);
   const previousPathRef = useRef(location.pathname);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLElement>(null);
+  const restoreMenuFocusRef = useRef(false);
+  const [navigationOpen, setNavigationOpen] = useState(false);
   const [milestoneReaction, setMilestoneReaction] = useState<{
     readonly dialogue?: string;
     readonly dialogueUnavailable?: boolean;
@@ -78,6 +82,52 @@ export function App({ application, diagnostics }: AppProps) {
       previousPathRef.current = location.pathname;
     }
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!navigationOpen) {
+      if (restoreMenuFocusRef.current) {
+        restoreMenuFocusRef.current = false;
+        menuButtonRef.current?.focus();
+      }
+      return;
+    }
+    const firstLink = drawerRef.current?.querySelector<HTMLAnchorElement>("a");
+    firstLink?.focus();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [navigationOpen]);
+
+  function closeNavigation({ restoreFocus = true } = {}) {
+    restoreMenuFocusRef.current = restoreFocus;
+    setNavigationOpen(false);
+  }
+
+  function handleDrawerKeyDown(event: KeyboardEvent<HTMLElement>) {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeNavigation();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const focusable = Array.from(
+      drawerRef.current?.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
+      ) ?? [],
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last?.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first?.focus();
+    }
+  }
 
   useEffect(() => {
     if (!application) return;
@@ -141,28 +191,78 @@ export function App({ application, diagnostics }: AppProps) {
       </a>
 
       <header className="top-bar">
-        <p className="top-bar__brand">Biblioteca Viva</p>
-        <h1>{sectionTitle}</h1>
+        <button
+          aria-controls="primary-navigation"
+          aria-expanded={navigationOpen}
+          aria-label="Abrir menu principal"
+          className="menu-button"
+          onClick={() => setNavigationOpen(true)}
+          ref={menuButtonRef}
+          type="button"
+        >
+          <span aria-hidden="true" className="menu-button__icon" />
+        </button>
+        <div>
+          <p className="top-bar__brand">Biblioteca Viva</p>
+          <h1>{sectionTitle}</h1>
+        </div>
       </header>
 
-      <nav className="primary-navigation" aria-label="Navegação principal">
-        <ul>
-          {appRoutes.map((route) => (
-            <li key={route.path}>
-              <NavLink
-                aria-label={route.title}
-                className={({ isActive }) =>
-                  `primary-navigation__link${isActive ? " primary-navigation__link--active" : ""}`
-                }
-                end={route.path === "/"}
-                to={route.path}
+      {navigationOpen && (
+        <div className="navigation-layer">
+          <button
+            aria-label="Fechar menu principal"
+            className="navigation-backdrop"
+            onClick={() => closeNavigation()}
+            tabIndex={-1}
+            type="button"
+          />
+          <aside
+            aria-label="Menu principal"
+            aria-modal="true"
+            className="primary-navigation"
+            id="primary-navigation"
+            onKeyDown={handleDrawerKeyDown}
+            ref={drawerRef}
+            role="dialog"
+          >
+            <div className="primary-navigation__heading">
+              <div>
+                <p className="eyebrow">Biblioteca Viva</p>
+                <h2>Explorar</h2>
+              </div>
+              <button
+                aria-label="Fechar menu principal"
+                className="drawer-close"
+                onClick={() => closeNavigation()}
+                type="button"
               >
-                <span aria-hidden="true">{route.navigationLabel}</span>
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </nav>
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <nav aria-label="Navegação principal">
+              <ul>
+                {appRoutes.map((route) => (
+                  <li key={route.path}>
+                    <NavLink
+                      aria-label={route.title}
+                      className={({ isActive }) =>
+                        `primary-navigation__link${isActive ? " primary-navigation__link--active" : ""}`
+                      }
+                      end={route.path === "/"}
+                      onClick={() => closeNavigation({ restoreFocus: false })}
+                      to={route.path}
+                    >
+                      <strong>{route.navigationLabel}</strong>
+                      <span>{route.description}</span>
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </aside>
+        </div>
+      )}
 
       <main
         className="app-content"

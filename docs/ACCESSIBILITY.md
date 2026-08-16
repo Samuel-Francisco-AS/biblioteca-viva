@@ -225,3 +225,9 @@ R2 usa um único padrão React para ações de nota e citação no detalhe e no 
 - [ ] toque com uma mão e teclado virtual no Moto G06.
 
 Nenhum item desta checklist foi executado no Prompt 17. Não há alegação de conformidade total WCAG. Prompt 17 e G9 permanecem abertos até validação humana integrada; G7 e G8 também permanecem abertos.
+
+## 18. Shell e rotas convencionais de R3-A
+
+O drawer é um diálogo modal React com nome acessível, navegação interna identificada, contenção de Tab/Shift+Tab, Escape, fechamento explícito, backdrop sem clique atravessando e retorno de foco ao botão de menu. Cada destino é um link nativo de área inteira e mantém `aria-current`. A Coleção usa um único link envolvendo o conteúdo não interativo do livro; não há botão ou link aninhado, e um teste clica no autor para provar que a superfície inteira navega.
+
+O tema escuro usa tokens semânticos para fundos, superfícies, texto, bordas, foco, estado e controles. Alto contraste substitui os mesmos tokens; texto grande/maior e alvo mínimo de 44 px permanecem. Detalhe e Configurações reduziram bordas sem remover headings, labels, erros associados, confirmações ou zona destrutiva. A automação cobre estrutura, foco e teclado; contraste percebido, TalkBack, teclado virtual, safe areas físicas e conforto visual continuam humanos.

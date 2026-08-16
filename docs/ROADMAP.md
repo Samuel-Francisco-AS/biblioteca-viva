@@ -105,6 +105,6 @@ Esta fase é posterior e separada dos Blocos 0–11 e dos Prompts 1–19 histór
 
 - `[x]` **R1 — Coerência funcional:** R1-A e R1-B tecnicamente concluídos; restauração contextual e cache/preparação musical ainda aguardam validação humana específica;
 - `[x]` **R2 — Utilidade de notas/citações e áudio:** edição, exclusão e compartilhamento explícito implementados; playlist declarativa sequencial e substituição modular de áudio concluídas tecnicamente;
-- `[ ]` **R3 — UX/Layout v2:** redesign extenso, tema escuro coerente e Biblioteca visual protagonista, preservando acessibilidade;
+- `[ ]` **R3 — UX/Layout v2:** R3-A tecnicamente concluído com tema escuro, drawer e rotas convencionais redesenhadas; R3-B pendente para Biblioteca protagonista e acabamento integrado;
 - `[ ]` **checkpoint integrado Android:** validar regressões, novas regras, conteúdo, áudio, backup, marco, layout, acessibilidade, lifecycle e desempenho;
 - `[ ]` **preparação posterior para G11:** somente após avaliar explicitamente os gates ainda abertos.

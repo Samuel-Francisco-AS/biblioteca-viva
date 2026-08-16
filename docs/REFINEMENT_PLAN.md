@@ -1,7 +1,7 @@
 # Plano de refinamento pós-protótipo
 
 > Início da fase: 2026-08-13
-> Estado: R1 e R2 tecnicamente concluídos; R3 é o próximo trabalho e não foi iniciado
+> Estado: R1, R2 e R3-A tecnicamente concluídos; R3-B é o trabalho atual e R3 permanece em andamento
 > Base: primeira rodada integrada de uso físico realizada por Sam no Moto G06
 
 ## 1. Função e limites
@@ -141,6 +141,8 @@ Na Biblioteca, `pages.tsx` renderiza introdução e `LibraryTextAlternative` ant
 R3 terá somente as duas entregas futuras abaixo.
 
 ### R3-A — Sistema visual + aplicativo convencional
+
+Em 2026-08-16, R3-A foi concluído tecnicamente. O shell passou a usar drawer modal com cinco linhas integralmente clicáveis, Escape, contenção e retorno de foco; a navegação inferior foi removida. Tokens semânticos consolidaram o tema escuro quente e o alto contraste continua substituindo significado. Coleção usa links que cobrem o card inteiro; detalhe e Configurações formam seções contínuas; formulários, Arquivo, anotações, estados e confirmações compartilham a nova linguagem sem alterar casos de uso. R3-B e toda aprovação humana permanecem pendentes.
 
 **Arquivos/componentes principais:** `src/styles.css`; shell, header, navegação, avisos e rotas em `src/App.tsx`/`src/routes.ts`; `CollectionPage`, `BookDetailPage`, `BookForm`/`EntryEditorPages`, `AnnotationForms`/`AnnotationActions`, `ArchivePage`, `SettingsPage`, Error Boundary e estados convencionais associados.
 

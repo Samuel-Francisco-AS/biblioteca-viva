@@ -483,4 +483,15 @@ Evoluir o backup para formato v2 incluindo `milestones`, aceitando v1 com seu ch
 
 **Consequências:** não há schema, migração, formato de backup, dependência, plugin, permissão, asset ou versão nova. Arquivo e detalhe atualizam estado local após commit sem N+1. Um asset musical forma playlist válida de um item; múltiplos itens e MP3 são provados por configurações de teste. Não existem shuffle, crossfade, streaming, posição persistida ou timer de duração.
 
+## D-045 — Navegação por drawer e superfícies integrais em R3
+
+- **Data:** 2026-08-16
+- **Status:** aceita; substitui D-014 quanto à apresentação responsiva da navegação e D-042 quanto à preservação da barra inferior
+
+**Contexto:** os mockups mais recentes de Sam colocam a sala como experiência principal e mostram a navegação somente quando solicitada. A barra inferior persistente consumia área útil no retrato, enquanto pequenos links dentro de cards contrariavam a superfície visual percebida.
+
+**Decisão:** usar um único drawer modal sobreposto como navegação primária em mobile e desktop, aberto por botão no header. O drawer contém as cinco áreas conceituais em linhas integralmente clicáveis, mantém `aria-current`, contém o foco, fecha com Escape, backdrop ou navegação e restaura foco ao acionador quando fechado sem navegar. Superfícies que representam uma única navegação, começando pelos livros da Coleção, são links integrais sem elementos interativos aninhados.
+
+**Consequências:** a barra inferior deixa de existir e a área de conteúdo ganha altura útil. O mesmo contrato de rotas continua centralizado e não surge uma segunda arquitetura para desktop. Testes de comportamento cobrem abertura, fechamento, foco, rota ativa e clique fora do título do livro. D-014 permanece histórica para roteamento/rotas; D-042 permanece vigente para tema e Biblioteca protagonista, exceto pela navegação inferior explicitamente substituída aqui.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

@@ -8,6 +8,8 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 ### Adicionado
 
+- sistema visual escuro semântico e drawer lateral acessível para as cinco áreas do aplicativo;
+
 - backup Android com salvamento em local escolhido, compartilhamento nativo e restauração recuperável;
 - exclusão transacional de livros, notas, citações e atividades relacionadas.
 - preferências de experiência, conteúdo contextual, marcos e luminária de leitura;
@@ -17,6 +19,8 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 - playlist musical declarativa, sequencial e validada, preparada para múltiplos cues sem adicionar assets.
 
 ### Alterado
+
+- Coleção agora abre livros pela superfície inteira do card; detalhe, formulários, Arquivo e Configurações usam hierarquia mais contínua e menos caixas;
 
 - validação física de atualização, limpeza de armazenamento e restauração no Moto G06, com aprovação dos Gates G5 e G6.
 - documentação pública e operacional alinhada ao protótipo tecnicamente implementado até o Prompt 19.

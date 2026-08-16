@@ -1002,3 +1002,9 @@ Nota e citação preservam portas e casos de uso separados. `UpdateNote`/`Update
 `AnnotationSharePort` pertence à aplicação e recebe somente título/texto já montado para a ação explícita. `PlatformAnnotationShare` implementa Web Share ou o plugin Capacitor Share existente; cancelamento, indisponibilidade e falha são resultados/erros sanitizados. React não importa Capacitor e nenhum conteúdo é registrado em log.
 
 O áudio usa a cadeia `source local → manifesto validado → cue ID estável → playlist ordenada → AudioService → AudioBackend`. O menor acréscimo ao backend é `AudioPlayback.completed`, resolvido pelo evento natural de término, e `available`, que distingue silêncio de uma faixa tocável. O serviço controla índice e geração sem expor Web Audio, polling ou timer de duração. Saída da rota reinicia a sequência; pause/mute preservam índice, mas não offset. Manifesto de produção possui uma faixa real, enquanto configurações injetadas testam múltiplas músicas e substituição de efeitos.
+
+## 33. Sistema visual e shell após R3-A
+
+O CSS global permanece pequeno e concreto, mas seus componentes consomem tokens semânticos escuros de canvas, superfícies, texto, borda, foco, madeira, iluminação, estados, controles e scrim. Alto contraste redefine o mesmo contrato, sem tema persistido adicional. O shell mantém uma tabela de rotas e um único drawer modal; não há navegação duplicada para desktop. O drawer pertence à apresentação e não toca aplicação, banco ou Phaser.
+
+Coleção preserva a consulta única e o estado de URL, mas cada livro é um link integral com conteúdo semântico não interativo. Detalhe e Configurações usam seções contínuas por CSS, preservando componentes/casos de uso e separando confirmações e destruição. R3-A não mudou domínio, portas, Dexie, schema, backup, assets, áudio, dependências ou versão. A Biblioteca ainda usa seus contratos anteriores até R3-B.

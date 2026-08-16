@@ -210,36 +210,41 @@ export function CollectionPage({
             const percentage = progressPercentage(book);
             return (
               <li className="book-card" key={book.id}>
-                <article aria-labelledby={`book-${book.id}-title`}>
-                  <p className="status-badge">{statusLabels[book.status]}</p>
-                  <h3 id={`book-${book.id}-title`}>{book.title}</h3>
-                  <p>{book.author ?? "Autor não informado"}</p>
-                  <p id={`book-${book.id}-progress`}>{progressText(book)}</p>
-                  {book.totalPages !== undefined && percentage !== undefined ? (
-                    <progress
-                      aria-label={`Progresso de ${book.title}`}
-                      aria-describedby={`book-${book.id}-progress`}
-                      max={book.totalPages}
-                      value={Math.min(book.currentPage, book.totalPages)}
-                    />
-                  ) : (
-                    <p className="progress-unknown">
-                      Porcentagem indisponível sem total de páginas.
+                <Link
+                  aria-label={`Abrir detalhes de ${book.title}`}
+                  aria-describedby={`book-${book.id}-progress`}
+                  className="book-card__link"
+                  to={{
+                    pathname: `/livros/${encodeURIComponent(book.id)}`,
+                    search: `?from=${encodeURIComponent(returnPath)}`,
+                  }}
+                >
+                  <article aria-labelledby={`book-${book.id}-title`}>
+                    <p className="status-badge">{statusLabels[book.status]}</p>
+                    <h3 id={`book-${book.id}-title`}>{book.title}</h3>
+                    <p>{book.author ?? "Autor não informado"}</p>
+                    <p id={`book-${book.id}-progress`}>{progressText(book)}</p>
+                    {book.totalPages !== undefined &&
+                    percentage !== undefined ? (
+                      <progress
+                        aria-label={`Progresso de ${book.title}`}
+                        aria-describedby={`book-${book.id}-progress`}
+                        max={book.totalPages}
+                        value={Math.min(book.currentPage, book.totalPages)}
+                      />
+                    ) : (
+                      <p className="progress-unknown">
+                        Porcentagem indisponível sem total de páginas.
+                      </p>
+                    )}
+                    <p className="book-card__updated">
+                      Última atualização: {formatDateTime(book.updatedAt)}
                     </p>
-                  )}
-                  <p className="book-card__updated">
-                    Última atualização: {formatDateTime(book.updatedAt)}
-                  </p>
-                  <Link
-                    className="text-link"
-                    to={{
-                      pathname: `/livros/${encodeURIComponent(book.id)}`,
-                      search: `?from=${encodeURIComponent(returnPath)}`,
-                    }}
-                  >
-                    Abrir detalhes de {book.title}
-                  </Link>
-                </article>
+                    <span className="book-card__action" aria-hidden="true">
+                      Ver detalhes <span>→</span>
+                    </span>
+                  </article>
+                </Link>
               </li>
             );
           })}

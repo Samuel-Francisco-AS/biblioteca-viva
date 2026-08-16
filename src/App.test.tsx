@@ -68,8 +68,8 @@ describe("App", () => {
       "Biblioteca",
     );
     expect(
-      screen.getByRole("navigation", { name: "Navegação principal" }),
-    ).toBeVisible();
+      screen.getByRole("button", { name: "Abrir menu principal" }),
+    ).toHaveAttribute("aria-expanded", "false");
     expect(screen.getByRole("main")).toBeVisible();
     expect(
       screen.getByRole("heading", { name: "Sua Biblioteca Viva" }),
@@ -158,12 +158,21 @@ describe("App", () => {
     await Dexie.delete(databaseName);
   });
 
-  it("oferece as cinco opções de navegação e identifica a rota ativa", () => {
+  it("oferece as cinco opções no drawer e identifica a rota ativa", async () => {
+    const user = userEvent.setup();
     renderApp();
+
+    const trigger = screen.getByRole("button", {
+      name: "Abrir menu principal",
+    });
+    await user.click(trigger);
 
     const navigation = screen.getByRole("navigation", {
       name: "Navegação principal",
     });
+    expect(
+      screen.getByRole("dialog", { name: "Menu principal" }),
+    ).toHaveAttribute("aria-modal", "true");
     const links = within(navigation).getAllByRole("link");
 
     expect(links).toHaveLength(5);
@@ -173,6 +182,10 @@ describe("App", () => {
     expect(
       within(navigation).getByRole("link", { name: "Coleção" }),
     ).not.toHaveAttribute("aria-current");
+
+    await user.keyboard("{Escape}");
+    expect(navigation).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
   });
 
   it.each([
@@ -185,15 +198,17 @@ describe("App", () => {
     const user = userEvent.setup();
     renderApp();
 
+    await user.click(
+      screen.getByRole("button", { name: "Abrir menu principal" }),
+    );
     await user.click(screen.getByRole("link", { name: linkName }));
 
     expect(screen.getByRole("banner").querySelector("h1")).toHaveTextContent(
       title,
     );
-    expect(screen.getByRole("link", { name: linkName })).toHaveAttribute(
-      "aria-current",
-      "page",
-    );
+    expect(
+      screen.queryByRole("navigation", { name: "Navegação principal" }),
+    ).not.toBeInTheDocument();
   });
 
   it("trata uma rota desconhecida e oferece retorno para a Biblioteca", async () => {

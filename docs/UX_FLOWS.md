@@ -1,5 +1,7 @@
 # Fluxos de UX e navegação
 
+> R3-A substituiu a navegação inferior pela navegação lateral descrita na seção 19. A Biblioteca protagonista e suas camadas contextuais serão consolidadas em R3-B.
+
 ## 1. Princípios
 
 - mobile first, orientação retrato recomendada até decisão contrária;
@@ -299,3 +301,15 @@ Configurações
 Seguir sistema é o padrão. Preferência inválida volta a defaults sem impedir abertura. Volumes e mute continuam no grupo de áudio e em sua fonte de verdade existente.
 
 Na Biblioteca, o resumo React precede o canvas e apresenta contagens, estado da estante, livro recente e primeira conclusão/luminária. Botões React abrem detalhes da estante e diálogos de bibliotecária/criatura; link convencional abre a Coleção. Fechar painel devolve foco ao botão textual correspondente. A mesma camada permanece funcional se o canvas falhar ou não puder ser usado por tecnologia assistiva.
+
+## 19. Navegação e rotas convencionais em R3-A
+
+```text
+botão Menu
+→ drawer sobrepõe a rota
+→ escolher uma linha integral
+→ drawer fecha
+→ rota abre e o conteúdo principal recebe foco
+```
+
+Escape, botão de fechar e backdrop fecham o drawer e devolvem foco ao acionador; navegar fecha sem disputar o foco que será levado ao `main`. Coleção preserva busca, filtro, ordenação e origem na URL, mas o card inteiro do livro abre o detalhe. Detalhe, editores, Arquivo e Configurações mantêm seus fluxos funcionais e usam agrupamentos contínuos em vez de caixas aninhadas. R3-B substituirá a ordem antiga da Biblioteca registrada na seção 18 por canvas dominante, alternativa compacta e camadas contextuais.

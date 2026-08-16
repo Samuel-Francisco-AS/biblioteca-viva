@@ -78,6 +78,17 @@ describe("Coleção", () => {
     expect(execute).toHaveBeenCalledOnce();
   });
 
+  it("abre o livro ao clicar na superfície do card fora do título", async () => {
+    const user = userEvent.setup();
+    renderCollection(Promise.resolve([book]));
+
+    await user.click(await screen.findByText(book.author ?? ""));
+
+    expect(screen.getByLabelText("URL atual")).toHaveTextContent(
+      "/livros/book-1?from=%2Fcolecao",
+    );
+  });
+
   it("trata autor e total de páginas ausentes sem fabricar porcentagem", async () => {
     renderCollection(
       Promise.resolve([
