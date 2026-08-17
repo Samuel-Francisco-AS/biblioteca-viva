@@ -27,6 +27,7 @@ import { MILESTONE_ID, type MilestoneReached } from "./domain";
 import { LibraryPage } from "./pages";
 import { useExperiencePreferences } from "./useExperiencePreferences";
 import { ActiveSessionIndicator } from "./features/sessions/ActiveSessionIndicator";
+import { StatisticsPage } from "./features/statistics/StatisticsPage";
 
 function NotFoundPage() {
   return (
@@ -344,6 +345,10 @@ export function App({ application, diagnostics }: AppProps) {
           <Route
             path="/arquivo"
             element={<ArchivePage application={application} />}
+          />
+          <Route
+            path="/estatisticas"
+            element={<StatisticsPage application={application} />}
           />
           <Route
             path="/configuracoes"

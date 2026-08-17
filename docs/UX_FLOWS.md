@@ -336,3 +336,7 @@ O sheet sobrepõe sem redimensionar ou recriar Phaser; Escape/fechar devolvem fo
 No detalhe, `Organização` permite favoritar, criar/associar, renomear e excluir etiquetas. Coleção busca nomes de tags e filtra por tag; Arquivo filtra tipo de anotação, tipo de registro, favorito e tag.
 
 `Sessões` oferece iniciar/pausar/retomar/concluir/cancelar, registro manual e edição/exclusão do histórico. Apenas uma sessão pode ficar aberta. Um indicador React global persiste entre rotas/reload e abre o registro; timestamps preservam precisão em background sem serviço Android, wake lock, som ou notificação.
+
+## 23. Estatísticas e histórico em P1-C
+
+`Drawer → Estatísticas` abre `/estatisticas`. A página oferece 7 dias, 30 dias ou todo o período, filtro por tipo e categoria do histórico. Resumo global mostra registros, andamento, conclusões, favoritos, sessões e tempo; cards por tipo mantêm páginas, episódios, unidades de estudo e distância semanticamente separados. Sessões recentes abrem o Entry. Timeline usa data, ação e título obtido por join; item sem Entry degrada para “Registro removido”. Não existem score, ranking, streak ou linguagem prescritiva.

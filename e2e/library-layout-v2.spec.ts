@@ -93,6 +93,7 @@ test("rotas principais não apresentam overflow estrutural em viewport estreita"
     "/colecao",
     "/novo-registro",
     "/arquivo",
+    "/estatisticas",
     "/configuracoes",
     detailUrl,
   ];

@@ -1235,3 +1235,34 @@ blockquote {
   position: relative;
   z-index: 5;
 }
+
+.statistics-grid,
+.statistics-types {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+}
+
+.statistics-grid > h3 {
+  grid-column: 1 / -1;
+}
+.statistics-grid > p {
+  background: var(--surface, #231f2b);
+  border: 1px solid var(--border, #51495e);
+  border-radius: 0.75rem;
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 1rem;
+}
+.statistics-grid strong {
+  font-size: 1.35rem;
+}
+.timeline {
+  display: grid;
+  gap: 1rem;
+  padding-inline-start: 1.25rem;
+}
+.timeline p {
+  margin-block: 0.25rem 0;
+}

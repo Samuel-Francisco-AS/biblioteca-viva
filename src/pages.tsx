@@ -2,7 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import type { BookEntry, ReachedMilestone } from "./domain";
-import type { AudioPort, DialoguePort, LocalizedDialogue } from "./application";
+import type {
+  AudioPort,
+  DialoguePort,
+  LocalizedDialogue,
+  StatisticsSnapshot,
+} from "./application";
 import { presentApplicationError } from "./features/entry-editor/errorMessages";
 import {
   LibraryBottomSheet,
@@ -31,6 +36,9 @@ export interface LibraryPageApplication {
   readonly queries: {
     readonly listBookEntries: { execute(): Promise<readonly BookEntry[]> };
     readonly listMilestones: { list(): Promise<readonly ReachedMilestone[]> };
+    readonly getStatistics?: {
+      execute(input?: unknown): Promise<StatisticsSnapshot>;
+    };
   };
 }
 
@@ -41,6 +49,10 @@ type LibraryPageState =
       readonly kind: "ready";
       readonly recentBookTitle?: string;
       readonly viewModel: LibraryViewModel;
+      readonly productSummary?: {
+        readonly totalEntries: number;
+        readonly activeSessionType?: string;
+      };
     };
 
 type AtmosphereOverride = LibraryPeriod | "automatic";
@@ -133,8 +145,10 @@ export function LibraryPage({
     void Promise.all([
       application.queries.listBookEntries.execute(),
       application.queries.listMilestones.list(),
+      application.queries.getStatistics?.execute({ window: "all" }) ??
+        Promise.resolve(undefined),
     ]).then(
-      ([books, milestones]) => {
+      ([books, milestones, statistics]) => {
         if (!active) return;
         diagnostics?.resources({
           libraryPreparationDurationMs: Math.max(
@@ -151,6 +165,14 @@ export function LibraryPage({
           viewModel: projectionService.project(
             projectionInput(books, milestones, pendingDecorationUnlock),
           ),
+          ...(statistics && {
+            productSummary: {
+              totalEntries: statistics.totalEntries,
+              ...(statistics.activeSession && {
+                activeSessionType: statistics.activeSession.entryType,
+              }),
+            },
+          }),
         });
       },
       (failure: unknown) => {
@@ -304,6 +326,7 @@ export function LibraryPage({
               onClose={closeSheet}
               period={period}
               recentBookTitle={state.recentBookTitle}
+              productSummary={state.productSummary}
               viewModel={state.viewModel}
             />
           )}

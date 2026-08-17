@@ -17,6 +17,10 @@ interface LibraryBottomSheetProps {
   readonly period: LibraryPeriod;
   readonly recentBookTitle?: string;
   readonly viewModel: LibraryViewModel;
+  readonly productSummary?: {
+    readonly totalEntries: number;
+    readonly activeSessionType?: string;
+  };
 }
 
 export function LibraryBottomSheet({
@@ -25,6 +29,7 @@ export function LibraryBottomSheet({
   period,
   recentBookTitle,
   viewModel,
+  productSummary,
 }: LibraryBottomSheetProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
@@ -67,6 +72,12 @@ export function LibraryBottomSheet({
         </button>
       </div>
       <dl className="library-sheet-stats">
+        {productSummary && (
+          <div>
+            <dt>Registros</dt>
+            <dd>{productSummary.totalEntries}</dd>
+          </div>
+        )}
         <div>
           <dt>Livros</dt>
           <dd>{viewModel.totalBooks}</dd>
@@ -80,6 +91,9 @@ export function LibraryBottomSheet({
           <dd>{viewModel.completedBooks}</dd>
         </div>
       </dl>
+      {productSummary?.activeSessionType && (
+        <p>Sessão em andamento · {productSummary.activeSessionType}</p>
+      )}
       {mode === "shelf" && <p>{summary.shelf}</p>}
       {recentBookTitle && (
         <div className="library-sheet__recent">
@@ -95,6 +109,13 @@ export function LibraryBottomSheet({
         type="button"
       >
         Abrir Coleção
+      </button>
+      <button
+        className="button button--secondary"
+        onClick={() => void navigate("/estatisticas")}
+        type="button"
+      >
+        Abrir Estatísticas
       </button>
     </section>
   );

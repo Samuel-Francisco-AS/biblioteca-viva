@@ -10,6 +10,7 @@ export * from "./deleteBookEntry";
 export * from "./libraryEntries";
 export * from "./sessions";
 export * from "./tags";
+export * from "./statistics";
 export * from "./ports";
 export * from "./queries";
 export type {

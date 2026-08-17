@@ -61,6 +61,7 @@ export function OrganizationPanel({
 
   async function create(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
     setBusy(true);
     setError(undefined);
     const name = new FormData(event.currentTarget).get("tagName");
@@ -75,7 +76,7 @@ export function OrganizationPanel({
           tagIds: [...entry.tagIds, tag.id],
         }),
       );
-      event.currentTarget.reset();
+      formElement.reset();
     } catch (failure: unknown) {
       setError(presentApplicationError(failure).message);
     } finally {

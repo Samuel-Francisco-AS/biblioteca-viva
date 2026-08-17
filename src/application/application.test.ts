@@ -148,6 +148,9 @@ class FakeQuoteRepository implements QuoteRepository {
 class FakeActivityRepository implements ActivityRepository {
   readonly activities: Activity[] = [];
   constructor(private readonly state: TestState) {}
+  list(): Promise<readonly Activity[]> {
+    return Promise.resolve(this.activities);
+  }
   save(activity: Activity): Promise<void> {
     this.state.timeline.push("activity");
     if (this.state.failures.has("activity_save"))

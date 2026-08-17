@@ -175,7 +175,7 @@ describe("App", () => {
     ).toHaveAttribute("aria-modal", "true");
     const links = within(navigation).getAllByRole("link");
 
-    expect(links).toHaveLength(5);
+    expect(links).toHaveLength(6);
     expect(
       within(navigation).getByRole("link", { name: "Biblioteca" }),
     ).toHaveAttribute("aria-current", "page");

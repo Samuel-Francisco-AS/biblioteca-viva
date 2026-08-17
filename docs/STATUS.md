@@ -9,13 +9,13 @@
 - **blocos concluídos:** Bloco 5 — Backup, restauração e recuperação, com G5 aprovado; Bloco 6 — Biblioteca visual conectada, com G6 aprovado;
 - **prompts tecnicamente implementados:** Prompts 1 a 19; sua conclusão técnica não aprova os gates humanos pendentes;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **trabalho atual:** P1-A e P1-B tecnicamente concluídos; P1-C — histórico, timeline e estatísticas — é o próximo checkpoint;
+- **trabalho atual:** P1-A, P1-B e P1-C tecnicamente concluídos; o próximo trabalho planejado é P2 — Biblioteca Evolutiva;
 - **gate:** G0 a G3 aprovados; G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
-- **último checkpoint técnico:** P1-A em `b2f7236`; P1-B validado e com commit técnico a registrar; o início documental está em `b1b2fb0`;
+- **último checkpoint técnico:** P1-C validado e com commit técnico a registrar; P1-A está em `b2f7236`, P1-B em `9a7800a` e o início documental em `b1b2fb0`;
 - **repositório:** Git inicializado;
 - **branch ativa:** `main`;
-- **APK:** APK debug com P1-B gerado e não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `9a626209856f3d0cdad387f132f23f478c7aa0d1fe6f60e76e2ad8a13af37bbb`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
+- **APK:** APK debug com P1-C gerado e não instalado, em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.526.051 bytes e SHA-256 `43bb65fd49270dbf13a9b1824ae474e851b5441424c252f8e2971632489e9ed6`; o APK anterior validado no Moto G06 permanece como evidência física histórica;
 - **release Android:** ainda não existe APK release assinado nem artefato Android público;
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
@@ -55,13 +55,15 @@
 
 ## Trabalho atual
 
-Os Prompts 1–19 e R1–R3 formam o baseline. P1-A implementou os seis tipos de `LibraryEntry`, progresso discriminado, anotações por `entryId`, Coleção e rotas genéricas e migração aditiva v3 → v4. P1-B acrescentou `Tag`, favoritos operáveis, sessões tipadas, timer persistente e backup v3 com migração aditiva v4 → v5; P1-C acrescentará histórico, timeline e estatísticas. A versão permanece `0.2.0-alpha.1`; G4 e G7–G10 continuam abertos e G11 não foi iniciado.
+Os Prompts 1–19 e R1–R3 formam o baseline. P1-A implementou os seis tipos de `LibraryEntry`, progresso discriminado, anotações por `entryId`, Coleção e rotas genéricas e migração aditiva v3 → v4. P1-B acrescentou `Tag`, favoritos operáveis, sessões tipadas, timer persistente e backup v3 com migração aditiva v4 → v5. P1-C acrescentou Estatísticas, timeline derivada, resumo global da Biblioteca e fatos reutilizáveis para P2. P1 está tecnicamente concluído e o próximo trabalho é P2 — Biblioteca Evolutiva. A versão permanece `0.2.0-alpha.1`; G4 e G7–G10 continuam abertos e G11 não foi iniciado.
 
 ## Bloqueios
 
 Nenhum bloqueio técnico identificado. As evidências físicas são parciais: não cobrem o gerenciamento de anotações e a playlist de R2, o novo drawer/sheet/balões/períodos/edge-to-edge, uso prolongado, TalkBack, teclado, contraste, texto ampliado, lifecycle, desempenho nem toda a checklist integrada. R3 responde tecnicamente à sensação congelada de reduced motion por feedback causal sem loops, mas a percepção real, a latência sonora e a nova restauração ainda precisam de validação no Moto G06. G4 e G7–G10 não foram aprovados; G11 não foi iniciado.
 
 ## Última evidência de validação
+
+Em 2026-08-16, P1-C e P1 foram concluídos tecnicamente. Estatísticas derivadas suportam 7 dias, 30 dias e todo o período, totais e métricas por tipo, sessões recentes, timeline e fatos agregados para P2 sem tabela nova nem N+1. A Biblioteca ganhou resumo global somente em React; Phaser permanece restrito à projeção de livros. Passaram formatação/check, lint, typecheck, 643 testes em 72 arquivos, áudio, build, performance, dez E2E Chromium — incluindo a rota de Estatísticas a 320 px —, Android sync/build, ZIP e diff. JS inicial mede 657.385 bytes (186.720 gzip), CSS 22.770 (5.110 gzip) e Phaser lazy 1.221.398 (325.740 gzip). O APK não instalado possui 7.526.051 bytes e SHA-256 `43bb65fd49270dbf13a9b1824ae474e851b5441424c252f8e2971632489e9ed6`. Nenhum teste físico ou gate humano foi aprovado por esta automação.
 
 Em 2026-08-16, P1-B foi concluído tecnicamente. Schema v5 adiciona tags/sessions de modo aditivo; backup v3 exporta as novas coleções e importa v1/v2/v3, pausando sessão ativa restaurada. Favoritos, tags, sessões/timer, Arquivo/Coleção e milestones preparatórios estão integrados sem dado pessoal em evento ou Phaser. Passaram formatação/check, lint, typecheck, 639 testes em 71 arquivos, áudio, build, performance, nove E2E Chromium, Android sync/build, ZIP e diff. JS inicial mede 645.536 bytes (183.750 gzip), CSS 22.320 (5.010 gzip) e Phaser lazy 1.221.398 (325.740 gzip). O APK não instalado possui 7.526.051 bytes e SHA-256 `9a626209856f3d0cdad387f132f23f478c7aa0d1fe6f60e76e2ad8a13af37bbb`. Nenhum gate humano foi aprovado.
 

@@ -37,6 +37,12 @@ export const appRoutes: readonly AppRoute[] = [
     title: "Arquivo",
   },
   {
+    description: "Histórico, sessões e resumos derivados",
+    navigationLabel: "Estatísticas",
+    path: "/estatisticas",
+    title: "Estatísticas",
+  },
+  {
     description: "Experiência, áudio e dados",
     navigationLabel: "Ajustes",
     path: "/configuracoes",

@@ -69,6 +69,7 @@ import {
   RenameTag,
   ResumeSession,
   StartSession,
+  GetStatistics,
 } from "../application";
 import { MILESTONE_ID, MilestoneEngine } from "../domain";
 import { ContentLocalizer, PROTOTYPE_CONTENT } from "../content";
@@ -192,6 +193,7 @@ export interface ApplicationRuntime {
     readonly listSessions: ListSessions;
     readonly listSessionsByEntry: ListSessionsByEntry;
     readonly listTags: ListTags;
+    readonly getStatistics: GetStatistics;
   };
   readonly diagnostics: ApplicationDiagnostics;
   readonly events: LocalEventBus;
@@ -444,6 +446,13 @@ export async function createApplication(
       listSessions: new ListSessions(sessions),
       listSessionsByEntry: new ListSessionsByEntry(sessions),
       listTags: new ListTags(tags),
+      getStatistics: new GetStatistics({
+        activities,
+        clock,
+        libraryEntries,
+        sessions,
+        milestones: milestoneStore,
+      }),
     },
     diagnostics: {
       inspect: () => diagnosticsService.inspect(),

@@ -1028,3 +1028,9 @@ Dexie v4 é aditivo e não cria tabelas de P1-B. Rotas canônicas são `/novo-re
 P1-B elevou o schema a v5 e o backup a v3. `TagRepository` e `SessionRepository` são portas pequenas; adapters Dexie validam toda leitura/escrita com Zod. Casos de sessão usam `Clock`, salvam sessão, atividade e eventual progresso na mesma transação e publicam eventos técnicos somente após commit. React possui o único intervalo visual quando há sessão ativa; timestamps são a verdade. Phaser não recebe timer, etiquetas, títulos nem conteúdo pessoal.
 
 Backup v3 inclui entries, anotações, atividades, settings, milestones, tags e sessions. V1/v2 validam o checksum do formato original antes dos defaults; v3 faz replace dos dados pessoais e união monotônica de milestones. Sessão ativa importada vira pausada com duração acumulada até o instante do snapshot e só retoma por ação explícita.
+
+## 37. Estatísticas e timeline em P1-C
+
+`GetStatistics` carrega Entries, Sessions, Activities e Milestones uma vez por coleção e entrega ao agregador puro. Nenhum total derivável é persistido. Janelas de 7/30 dias e todo o período usam `Clock`; somente sessões concluídas entram no histórico, e uma Activity de conclusão impede item duplicado da mesma Session. React resolve títulos por `Map<entryId, LibraryEntry>`; persistência continua sem título ou conteúdo pessoal.
+
+`ProductProgressFacts` deriva contagens, conclusões, sessões, durações por tipo e IDs de milestones. Esses fatos preparam decisões futuras de P2 sem implementar salas, reputação, desbloqueio ou scene Phaser. A Biblioteca usa apenas o resumo React; sua projeção Phaser continua exclusivamente de livros.

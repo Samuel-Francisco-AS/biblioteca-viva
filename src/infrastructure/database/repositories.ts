@@ -241,6 +241,28 @@ export class DexieQuoteRepository implements QuoteRepository {
 export class DexieActivityRepository implements ActivityRepository {
   constructor(private readonly database: BibliotecaDatabase) {}
 
+  async list(): Promise<readonly Activity[]> {
+    try {
+      const stored: unknown[] = await this.database.activities.toArray();
+      return Object.freeze(
+        stored
+          .map((item) => {
+            const parsed = persistedActivitySchema.safeParse(item);
+            if (!parsed.success) throw readFailure("read_activity");
+            return Object.freeze(parsed.data);
+          })
+          .sort(
+            (left, right) =>
+              right.occurredAt.localeCompare(left.occurredAt) ||
+              left.id.localeCompare(right.id),
+          ),
+      );
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("list_activities");
+    }
+  }
+
   async save(activity: Activity): Promise<void> {
     const parsed = persistedActivitySchema.safeParse(activity);
     if (!parsed.success) throw writeFailure("save_activity");

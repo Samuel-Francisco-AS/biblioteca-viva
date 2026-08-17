@@ -245,3 +245,7 @@ O seletor de tipo usa botões de superfície inteira com nome e descrição; for
 ## 21. P1-B
 
 Tags usam checkbox com nome visível, favorito expõe `aria-pressed`, e ações de renomear/excluir permanecem botões explícitos com confirmação. Timer anuncia estado/duração em região viva, possui controles textuais e não depende de cor. Filtros de Coleção/Arquivo usam label e controles nativos. Prompt/confirm do browser são provisórios acessíveis pelo agente do usuário; foco, TalkBack, teclado virtual, 320 px e texto ampliado ainda exigem prova humana.
+
+## 22. P1-C
+
+Estatísticas usa headings, filtros nativos, números e listas textuais. Nenhum valor depende de barra ou cor. Timeline usa lista ordenada e `time`; sessão ativa oferece link textual aos controles. A automação cobre semântica/viewport, mas leitura TalkBack, contraste percebido e texto ampliado continuam evidência humana pendente.

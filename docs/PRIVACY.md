@@ -97,3 +97,5 @@ Filmes, séries, estudos, atividades físicas e trabalho ampliam a sensibilidade
 ## 13. Dados compartilhados de P1-B
 
 Etiquetas, duração, distância explicitamente registrada, esforço percebido, resultado e nota de sessão também são pessoais. O app não criptografa IndexedDB nem o JSON v3, não cria telemetria e não registra esses valores em logs, eventos ou Phaser. Exportar, guardar e compartilhar backup continuam ações explícitas; uma sessão ativa restaurada sempre fica pausada.
+
+Estatísticas e timeline são calculadas localmente. Activities persistem somente IDs, tipos, números mínimos e instante; títulos são resolvidos em memória. Nenhuma métrica, ritmo, inferência de saúde ou produtividade é enviada ou persistida como perfil.

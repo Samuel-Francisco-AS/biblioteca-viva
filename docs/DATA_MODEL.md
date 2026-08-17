@@ -218,3 +218,7 @@ O schema Dexie v5 preserva as sete tabelas históricas e adiciona `tags` (`&id,&
 `Tag` guarda ID, grafia escolhida, nome normalizado sem remoção de acentos e metadata. `tagIds` referencia a entidade em `LibraryEntry`, `Note` e `Quote`; exclusão remove as referências nas três coleções dentro da mesma transação sem excluir conteúdo.
 
 `Session` discrimina leitura, exibição (filme/série), estudo, atividade física e trabalho. Duração usa segundos inteiros; `activeSince` existe somente em `active`, e o tempo atual deriva do `Clock`, não de ticks. Estados são `active | paused | completed`, com no máximo uma sessão aberta globalmente. Editar ou excluir histórico não retrocede progresso já confirmado no Entry.
+
+## 16. Derivações P1-C
+
+Estatísticas, timeline e `ProductProgressFacts` são valores em memória, não tabelas. O agregado separa contagens/duração por tipo; páginas, episódios, distância e unidades de estudo não são somados entre si. Session ativa é exposta separadamente e nunca contabilizada como concluída. Timeline combina Activities técnicas e Sessions concluídas, com deduplicação pelo `sessionId`.

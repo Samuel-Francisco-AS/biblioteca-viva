@@ -44,6 +44,7 @@ export interface AnnotationSharePort {
 }
 
 export interface ActivityRepository {
+  list(): Promise<readonly Activity[]>;
   save(activity: Activity): Promise<void>;
 }
 

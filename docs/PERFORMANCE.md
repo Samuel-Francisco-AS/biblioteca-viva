@@ -107,3 +107,11 @@ O build P1-A registra JS inicial de 610.700 bytes (177.310 gzip), CSS de 22.000 
 O schema v5 possui nove tabelas. Coleção e Arquivo carregam entries/tags/anotações em paralelo e filtram em memória, sem query por card. Em idle sem sessão ativa há zero intervalos de sessão; com sessão ativa existe um intervalo React de apresentação e a duração persistente continua baseada em timestamps. Visibility/appState apenas recalculam/consultam o estado. Nenhuma dependência ou plugin novo foi adicionado; o baseline binário final será registrado após a matriz do checkpoint.
 
 O baseline P1-B validado registra JS inicial de 645.536 bytes (183.750 gzip), CSS de 22.320 bytes (5.010 gzip) e Phaser lazy de 1.221.398 bytes (325.740 gzip). O crescimento inicial sobre P1-A é 34.836 bytes brutos e 6.440 gzip; Phaser permanece lazy e sem crescimento.
+
+## 11. Baseline P1-C
+
+O build P1-C registra JS inicial de 657.385 bytes (186.720 gzip), CSS de 22.770 bytes (5.110 gzip) e Phaser lazy de 1.221.398 bytes (325.740 gzip). O crescimento inicial sobre P1-B é 11.849 bytes brutos e 2.970 gzip; o chunk Phaser permaneceu idêntico e como `dynamic entry`.
+
+Estatísticas leem Entries, Sessions e Activities uma vez por coleção, em paralelo no serviço de aplicação, e agregam com arrays e `Map`; não existe query por Entry nem tabela de totais derivados. O dataset sintético de 300 Entries e 2.000 Sessions prova determinismo e uma chamada por coleção sem benchmark de tempo frágil. O schema continua v5 com nove tabelas.
+
+Em idle sem sessão aberta existem zero intervalos de sessão; com sessão aberta existe um intervalo React de apresentação. A duração de domínio permanece derivada do `Clock` e dos timestamps, inclusive após visibilidade, reload e retomada. O timer único da atmosfera continua independente. P1-C não adicionou dependência, plugin, permissão ou asset.

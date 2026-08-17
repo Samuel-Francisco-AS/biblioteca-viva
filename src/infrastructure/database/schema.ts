@@ -517,6 +517,7 @@ export const persistedMilestoneSchema = z.strictObject({
       "NoteCreated",
       "QuoteCreated",
       "LibraryEntryCompleted",
+      "SessionChanged",
     ]),
   }),
 });

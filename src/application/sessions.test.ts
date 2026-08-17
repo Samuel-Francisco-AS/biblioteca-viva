@@ -7,12 +7,14 @@ import {
   createBook,
   createSeries,
   createStudy,
+  MilestoneEngine,
   type DomainEvent,
 } from "../domain";
 import {
   BibliotecaDatabase,
   DexieActivityRepository,
   DexieLibraryEntryRepository,
+  DexieMilestoneStore,
   DexieNoteRepository,
   DexieQuoteRepository,
   DexieSessionRepository,
@@ -20,6 +22,7 @@ import {
   DexieTransactionRunner,
   LocalEventBus,
 } from "../infrastructure";
+import { PROTOTYPE_CONTENT } from "../content";
 import {
   CompleteSession,
   CreateManualSession,
@@ -58,6 +61,12 @@ async function context() {
     sessions: new DexieSessionRepository(database),
     tags: new DexieTagRepository(database),
     transaction: new DexieTransactionRunner(database),
+    milestones: new DexieMilestoneStore(
+      database,
+      new MilestoneEngine(),
+      PROTOTYPE_CONTENT.milestones,
+      PROTOTYPE_CONTENT.rewards,
+    ),
   };
   return {
     database,

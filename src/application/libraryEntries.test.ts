@@ -35,6 +35,7 @@ function setup(now = T0) {
     },
   };
   const activityRepository: ActivityRepository = {
+    list: () => Promise.resolve([]),
     save: (activity) => {
       activities.push(activity);
       return Promise.resolve();
