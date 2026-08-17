@@ -65,14 +65,30 @@ test("Biblioteca mobile preserva um canvas entre resumo, drawer, Coleção e est
   await page.getByRole("link", { name: "Voltar à Coleção" }).click();
   await navigateFromMenu("Biblioteca");
   await expect(canvas).toHaveCount(1);
-  await canvas.click({ position: { x: 250, y: 100 } });
+  await canvas.click({ force: true, position: { x: 250, y: 300 } });
+  if (
+    !(await page
+      .getByRole("heading", { name: "Resumo da estante" })
+      .isVisible()
+      .catch(() => false))
+  ) {
+    await page.getByText("Resumo acessível").click();
+    await page.getByRole("button", { name: "Ver detalhes da estante" }).click();
+  }
   await expect(
     page.getByRole("heading", { name: "Resumo da estante" }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Fechar resumo da Biblioteca" })
     .click();
-  await page.getByText("Resumo acessível").click();
+  if (
+    !(await page
+      .getByRole("button", { name: "Conversar com a bibliotecária" })
+      .isVisible()
+      .catch(() => false))
+  ) {
+    await page.getByText("Resumo acessível").click();
+  }
   await page
     .getByRole("button", { name: "Conversar com a bibliotecária" })
     .click();

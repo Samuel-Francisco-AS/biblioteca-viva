@@ -20,6 +20,15 @@ const rawPrototypeContent = {
       panelTitleKey: "character.creature.panel-title",
       dialogueEvents: ["creature.interaction"],
     },
+    ...(
+      ["researcher", "projectionist", "training-keeper", "scribe"] as const
+    ).map((id) => ({
+      id: `character.${id}`,
+      nameKey: `resident.${id}.name`,
+      eyebrowKey: `resident.${id}.eyebrow`,
+      panelTitleKey: `resident.${id}.panel-title`,
+      dialogueEvents: [`${id}.interaction` as const],
+    })),
   ],
   rooms: [
     {
@@ -127,6 +136,10 @@ const rawPrototypeContent = {
   ],
   fallbacks: {
     "librarian.interaction": "dialogue.librarian.fallback",
+    "researcher.interaction": "dialogue.researcher.fallback",
+    "projectionist.interaction": "dialogue.projectionist.fallback",
+    "training-keeper.interaction": "dialogue.training-keeper.fallback",
+    "scribe.interaction": "dialogue.scribe.fallback",
     "creature.interaction": "dialogue.creature.fallback",
     "book.first-completed": "dialogue.librarian.fallback",
   },
@@ -229,6 +242,32 @@ const rawPrototypeContent = {
       once: false,
       cooldownHours: 0,
     },
+    ...(
+      ["researcher", "projectionist", "training-keeper", "scribe"] as const
+    ).flatMap((id) => [
+      {
+        id: `dialogue.${id}.stage`,
+        characterId: `character.${id}`,
+        textKey: `dialogue.${id}.stage`,
+        events: [`${id}.interaction` as const],
+        conditions: [
+          { fact: "roomStage" as const, operator: "gte" as const, value: 3 },
+        ],
+        priority: 30,
+        once: false,
+        cooldownHours: 1,
+      },
+      {
+        id: `dialogue.${id}.fallback`,
+        characterId: `character.${id}`,
+        textKey: `dialogue.${id}.fallback`,
+        events: [`${id}.interaction` as const],
+        conditions: [],
+        priority: 0,
+        once: false,
+        cooldownHours: 0,
+      },
+    ]),
   ],
   locales: [{ locale: "pt-BR", messages: PT_BR_MESSAGES }],
 } as const;

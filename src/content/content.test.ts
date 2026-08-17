@@ -78,6 +78,10 @@ describe("conteúdo contextual", () => {
     expect(PROTOTYPE_CONTENT.characters.map(({ id }) => id)).toEqual([
       "character.librarian",
       "character.creature",
+      "character.researcher",
+      "character.projectionist",
+      "character.training-keeper",
+      "character.scribe",
     ]);
     expect(PROTOTYPE_CONTENT.rooms[0]?.id).toBe("room.main");
     expect(PROTOTYPE_CONTENT.decorations[0]).toMatchObject({

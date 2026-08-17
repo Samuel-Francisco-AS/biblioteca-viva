@@ -9,7 +9,7 @@
 - **blocos concluídos:** Bloco 5 — Backup, restauração e recuperação, com G5 aprovado; Bloco 6 — Biblioteca visual conectada, com G6 aprovado;
 - **prompts tecnicamente implementados:** Prompts 1 a 19; sua conclusão técnica não aprova os gates humanos pendentes;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **trabalho atual:** P2-B implementa a camada visual das cinco salas sobre a fundação P2-SOL; P2-C (residentes e rotinas) permanece pendente;
+- **trabalho atual:** P2-C concluído tecnicamente sobre P2-SOL/P2-B; próximo trabalho P3 — Memória Conectada;
 - **gate:** G0 a G3 aprovados; G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
 - **último checkpoint técnico:** P1-C está em `5f19e12` e a auditoria final foi registrada no commit corretivo desta operação; P1-A está em `b2f7236`, P1-B em `9a7800a` e o início documental em `b1b2fb0`;
@@ -20,7 +20,7 @@
 - **plataforma alvo:** Android, com versão web para desenvolvimento;
 - **aparelho principal de testes:** Moto G06, como referência primária de validação, sem restringir a compatibilidade;
 - **compatibilidade:** diferentes celulares Android, proporções de tela, densidades e áreas seguras;
-- **estado geral:** primeira rodada integrada no Moto G06 executada em 2026-08-13; G0–G3, G5 e G6 permanecem aprovados; G4 e G7–G10 permanecem abertos; G11 não foi iniciado.
+- **estado geral:** P2-SOL, P2-B e P2-C concluídos tecnicamente; primeira rodada integrada no Moto G06 executada em 2026-08-13; G0–G3, G5 e G6 permanecem aprovados; G4 e G7–G10 permanecem abertos; G11 não foi iniciado.
 
 ## Decisões já aprovadas
 
@@ -54,6 +54,8 @@
 - [x] aprovar o conjunto documental inicial.
 
 ## Trabalho atual
+
+P2-C acrescenta catálogo declarativo para bibliotecária, pesquisador, projecionista, cuidador do treino e escriba; presença secundária a partir do `highestReachedStage` 2; rotinas por estados, âncoras, período e scheduler único da cena; interação `ResidentInteracted`, fallback React e falas contextuais no DialogueService existente. A criatura permanece conceito próprio, com presença determinística entre salas e fallback principal. Não houve schema, migração, backup, asset, dependência, plugin ou permissão nova.
 
 Os Prompts 1–19 e R1–R3 formam o baseline. P1-A implementou os seis tipos de `LibraryEntry`, progresso discriminado, anotações por `entryId`, Coleção e rotas genéricas e migração aditiva v3 → v4. P1-B acrescentou `Tag`, favoritos operáveis, sessões tipadas, timer persistente e backup v3 com migração aditiva v4 → v5. P1-C acrescentou Estatísticas, timeline derivada, resumo global da Biblioteca e fatos reutilizáveis para P2. P1 está tecnicamente concluído e o próximo trabalho é P2 — Biblioteca Evolutiva. A versão permanece `0.2.0-alpha.1`; G4 e G7–G10 continuam abertos e G11 não foi iniciado.
 

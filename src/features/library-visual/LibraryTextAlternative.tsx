@@ -2,6 +2,7 @@ import type { RefObject } from "react";
 import { Link } from "react-router-dom";
 
 import type { LibraryInteraction, LibraryViewModel } from "./contracts";
+import type { ResidentCatalogEntry } from "../../content";
 import {
   libraryPanelSummary,
   progressDescription,
@@ -13,6 +14,8 @@ interface LibraryTextAlternativeProps {
   readonly onInteraction: (interaction: LibraryInteraction) => void;
   readonly shelfButtonRef: RefObject<HTMLButtonElement | null>;
   readonly viewModel: LibraryViewModel;
+  readonly resident?: ResidentCatalogEntry;
+  readonly residentButtonRef: RefObject<HTMLButtonElement | null>;
 }
 
 export function LibraryTextAlternative({
@@ -21,6 +24,8 @@ export function LibraryTextAlternative({
   onInteraction,
   shelfButtonRef,
   viewModel,
+  resident,
+  residentButtonRef,
 }: LibraryTextAlternativeProps) {
   const summary = libraryPanelSummary(viewModel);
   const highlightedProgress = viewModel.highlightedBook
@@ -70,6 +75,29 @@ export function LibraryTextAlternative({
         >
           Ver detalhes da estante
         </button>
+        {resident && resident.id !== "librarian" && (
+          <button
+            className="button button--secondary"
+            onClick={() =>
+              onInteraction({
+                residentId: resident.id,
+                roomId: resident.homeRoomId,
+                type: "ResidentInteracted",
+              })
+            }
+            ref={residentButtonRef}
+            type="button"
+          >
+            Conversar com{" "}
+            {resident.nameKey.split(".").at(-1) === "researcher"
+              ? "Pesquisador"
+              : resident.nameKey.split(".").at(-1) === "projectionist"
+                ? "Projecionista"
+                : resident.nameKey.split(".").at(-1) === "training-keeper"
+                  ? "Cuidador do treino"
+                  : "Escriba"}
+          </button>
+        )}
         <button
           className="button button--secondary"
           onClick={() => onInteraction({ type: "LibrarianSelected" })}

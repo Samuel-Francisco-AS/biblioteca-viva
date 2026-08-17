@@ -212,3 +212,12 @@ export interface ResidentDefinition {
   readonly id: ResidentId;
   readonly homeRoomId: RoomId;
 }
+
+export const RESIDENT_HOME_ROOMS: Readonly<Record<ResidentId, RoomId>> =
+  Object.freeze({
+    librarian: "main-library",
+    researcher: "study-room",
+    projectionist: "projection-room",
+    "training-keeper": "training-room",
+    scribe: "office",
+  });

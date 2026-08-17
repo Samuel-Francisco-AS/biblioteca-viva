@@ -901,7 +901,6 @@ blockquote {
   width: 100%;
   border: 0;
   background: linear-gradient(to bottom, rgb(6 13 12 / 72%), transparent);
-  pointer-events: none;
 }
 
 .top-bar--library .menu-button {
@@ -935,7 +934,7 @@ blockquote {
 
 .room-selector {
   position: absolute;
-  z-index: 4;
+  z-index: 0;
   inset-inline: var(--space-3);
   bottom: calc(var(--safe-bottom) + var(--space-3));
   display: grid;
@@ -944,6 +943,7 @@ blockquote {
   padding: var(--space-2);
   border-radius: var(--radius-lg);
   background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  pointer-events: none;
 }
 
 .room-selector__item {

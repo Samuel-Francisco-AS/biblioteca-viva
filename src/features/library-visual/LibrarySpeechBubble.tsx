@@ -8,7 +8,11 @@ export function LibrarySpeechBubble({
   readonly onClose: () => void;
 }) {
   const character =
-    dialogue.characterId === "character.librarian" ? "librarian" : "creature";
+    dialogue.characterId === "character.librarian"
+      ? "librarian"
+      : dialogue.characterId === "character.creature"
+        ? "creature"
+        : "resident";
   return (
     <aside
       aria-live="polite"

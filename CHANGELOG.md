@@ -8,6 +8,7 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 ### Adicionado
 
+- P2-C com catálogo declarativo dos cinco residentes, presença por estágio, rotinas compartilhadas por âncoras, comportamento por período, reduced motion sem loops, interação tipada, falas contextuais e política determinística de presença da criatura;
 - P2-SOL com Room Engine declarativo, cinco salas, estágios monotônicos por milestones, seletor React e troca de sala na mesma instância Phaser;
 - P2-B com renderer procedural compartilhado para Study, Projection, Training e Office, estágios, decorações derivadas, iluminação por período e retorno à Biblioteca Principal sem nova instância Phaser;
 

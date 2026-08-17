@@ -1,4 +1,4 @@
-import type { DecorationId, RoomId, RoomStage } from "../../domain";
+import type { DecorationId, ResidentId, RoomId, RoomStage } from "../../domain";
 
 export type LibraryVisualHostState =
   "creating" | "ready" | "paused" | "failed" | "destroyed";
@@ -18,6 +18,7 @@ export interface RoomViewModel {
   readonly dayPeriod: LibraryVisualPeriod;
   readonly reducedMotion: boolean;
   readonly highContrast: boolean;
+  readonly unlockedRoomIds?: readonly RoomId[];
 }
 
 export type ShelfOccupancy = "empty" | "initial" | "growing" | "full";
@@ -63,6 +64,11 @@ export type LibraryInteraction =
   | { readonly type: "ShelfSelected" }
   | { readonly type: "LibrarianSelected" }
   | { readonly type: "CreatureSelected" }
+  | {
+      readonly residentId: ResidentId;
+      readonly roomId: RoomId;
+      readonly type: "ResidentInteracted";
+    }
   | { readonly roomId: RoomId; readonly type: "RoomRequested" }
   | { readonly entryId: string; readonly type: "HighlightedBookSelected" }
   | {

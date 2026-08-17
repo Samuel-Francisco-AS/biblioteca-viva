@@ -19,7 +19,7 @@
 - **implementação concluída:** Blocos 4, 5 e 6;
 - **prompts tecnicamente implementados:** Prompts 4 a 19; Prompts 14 a 19 mantêm validações humanas acumuladas e não estão aprovados;
 - **fase atual:** produto — `P1 — Vida Registrada`, iniciado por D-049;
-- **próximo trabalho:** P2 — Biblioteca Evolutiva; P1-A/P1-B/P1-C estão tecnicamente concluídos, R1–R3 permanecem baseline e os gates humanos continuam abertos;
+- **próximo trabalho:** P3 — Memória Conectada; P2-C concluiu tecnicamente P2, enquanto os gates humanos continuam abertos;
 - **bloco atual:** Bloco 10 tecnicamente implementado; G10 e gates humanos anteriores permanecem abertos;
 - **APK:** diagnóstico interno validado no Moto G06 com Android 15; release assinado ainda não existe;
 - **código:** implementação do Bloco 4 validada no navegador; G4 aguarda uso real prolongado.
@@ -105,13 +105,13 @@ Não colocar expansões dentro dos blocos atuais apenas porque parecem fáceis.
   - `[x]` **P1-A:** seis variantes de `LibraryEntry`, CRUD unificado, anotações generalizadas, rotas e migração aditiva v3 → v4;
   - `[x]` **P1-B:** `Tag`, favoritos, sessões, timer persistente, Arquivo generalizado, milestones preparatórios e backup v3;
   - `[x]` **P1-C:** Estatísticas, timeline, histórico, resumo da Biblioteca e fatos derivados para P2;
-- `[ ]` **P2 — Biblioteca Evolutiva:** sistema de salas, Sala de Estudos, Sala de Projeção, Sala de Treino, Escritório, reputação, desbloqueios, personagens e rotinas;
+- `[x]` **P2 — Biblioteca Evolutiva:** sistema de salas, Sala de Estudos, Sala de Projeção, Sala de Treino, Escritório, desbloqueios, personagens e rotinas;
   - `[x]` **P2-SOL:** fundação arquitetural — catálogo, Room Engine, estágios monotônicos, navegação e contrato React ↔ Phaser em instância única;
   - `[x]` **P2-B:** cinco implementações visuais, decorações procedurais, períodos e troca de sala na instância Phaser única;
-  - `[ ]` **P2-C:** residentes e rotinas;
+  - `[x]` **P2-C:** residentes, rotinas, diálogo contextual e presença determinística da criatura;
 - `[ ]` **P3 — Memória Conectada:** calendário avançado, metas opcionais, ritmos, conexões, revisão, coleções e memória conectada.
 
-P1 implementa `Book`, `Movie`, `Series`, `Study`, `PhysicalActivity` e `Work`. P2 e P3 são futuros; nenhuma nova sala Phaser pertence a P1.
+P1 implementa `Book`, `Movie`, `Series`, `Study`, `PhysicalActivity` e `Work`. P2 está tecnicamente concluído; o próximo trabalho é P3 — Memória Conectada.
 
 ## Fase de refinamento pós-protótipo
 

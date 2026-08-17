@@ -1058,3 +1058,9 @@ Resultado automático: 661 testes Vitest em 74 arquivos e dez E2E Chromium. Pass
 A cobertura unitária verifica o mapeamento declarativo de decorações no estágio 1 e 4 para Study, Projection, Training e Office, além das 20 combinações puras de sala e período. O host preserva uma única factory/game durante 50 trocas que percorrem os cinco `RoomId` e também atualiza Study 1 → 2 sem recriar a instância. A interface React mantém selector bloqueado/desbloqueado e bottom sheet contextual; a semântica do canvas não substitui esse caminho.
 
 A validação física de composição, contraste percebido, toque, áudio, TalkBack, FPS e conforto das cinco salas continua pendente do checkpoint Android; esta automação não aprova gate humano.
+
+## 30. P2-C — habitantes, rotinas e vida ambiental
+
+A cobertura automatizada valida o catálogo dos cinco residentes, residência, ausência no estágio 1 e presença monotônica a partir do estágio 2; estados permitidos por período, âncoras conhecidas, transição e política determinística da criatura com fallback. O contrato `ResidentInteracted` contém somente `residentId` e `roomId`, e o teste arquitetural mantém Phaser sem importação de conteúdo ou serviço de diálogo.
+
+Resultado automático desta implementação: 692 testes Vitest em 77 arquivos. Formatação, format:check, lint, typecheck e diff passaram. A prova humana de 30 trocas, percepção visual, TalkBack, áudio, FPS e estabilidade Android permanece pendente e não é inferida pela automação.

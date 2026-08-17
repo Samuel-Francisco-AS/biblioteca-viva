@@ -43,6 +43,15 @@ import {
 } from "./tapSelectionPolicy";
 import { RoomSceneRenderer } from "./RoomSceneRenderer";
 import { ROOM_VISUAL_DEFINITIONS } from "./roomVisuals";
+import {
+  creatureRoomForPeriod,
+  PhaserResidentRoutineScheduler,
+  residentIdForRoom,
+  residentIsUnlocked,
+  residentVisualDefinition,
+  routineAnchorsForRoom,
+  routineStatesForPeriod,
+} from "./residentRoutine";
 
 function rectangleContains(
   hitArea: Phaser.Geom.Rectangle,
@@ -72,6 +81,10 @@ export class InitialLibraryScene extends Phaser.Scene {
   private librarianFigure?: Phaser.GameObjects.Graphics;
   private readonly librarianPhase = { value: 0 };
   private librarianZone?: Phaser.GameObjects.Zone;
+  private resident?: Phaser.GameObjects.Container;
+  private residentFigure?: Phaser.GameObjects.Graphics;
+  private residentZone?: Phaser.GameObjects.Zone;
+  private residentRoutine?: PhaserResidentRoutineScheduler;
   private lighting?: Phaser.GameObjects.Graphics;
   private readonly motion = new SceneMotionLifecycle();
   private readonly presentedUnlockEventIds = new Set<string>();
@@ -131,6 +144,10 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.librarian = this.add
       .container(0, 0, [this.librarianFigure])
       .setDepth(40);
+    this.residentFigure = this.add.graphics();
+    this.resident = this.add
+      .container(0, 0, [this.residentFigure])
+      .setDepth(40);
     this.creatureFigure = this.add.graphics();
     this.creature = this.add
       .container(0, 0, [this.creatureFigure])
@@ -150,6 +167,7 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.librarianZone = this.createInteractiveZone(
       this.beginLibrarianSelection,
     );
+    this.residentZone = this.createInteractiveZone(this.beginResidentSelection);
     this.creatureZone = this.createInteractiveZone(this.beginCreatureSelection);
     this.highlightedBookZone = this.createInteractiveZone(
       this.beginHighlightedBookSelection,
@@ -222,6 +240,10 @@ export class InitialLibraryScene extends Phaser.Scene {
           type: "DecorationUnlockPresented",
         });
     }
+    if (this.room.roomId !== "main-library" && this.renderedSize) {
+      this.renderRoomVisual("preference-change");
+      return;
+    }
     this.resetMotionPhases();
     this.startMotion("preference-change");
     this.applyMotionFrame();
@@ -283,10 +305,12 @@ export class InitialLibraryScene extends Phaser.Scene {
 
   pauseMotion(): void {
     this.motion.pause();
+    this.residentRoutine?.pause();
   }
 
   resumeMotion(): void {
     this.motion.resume();
+    this.residentRoutine?.resume();
   }
 
   runtimeSnapshot(): LibraryVisualRuntimeSnapshot {
@@ -302,6 +326,7 @@ export class InitialLibraryScene extends Phaser.Scene {
       interactiveZones: [
         this.shelfZone,
         this.librarianZone,
+        this.residentZone,
         this.creatureZone,
         this.highlightedBookZone,
       ].filter((zone) => zone?.active).length,
@@ -470,9 +495,66 @@ export class InitialLibraryScene extends Phaser.Scene {
       .fillCircle(radius * 0.18, -radius * 0.62, 1.3);
   }
 
-  private drawCreature(layout: LibrarySceneLayout): void {
+  private drawResident(size: {
+    readonly width: number;
+    readonly height: number;
+  }): void {
+    const residentId = residentIdForRoom(this.room.roomId);
+    const resident = this.resident;
+    const graphics = this.residentFigure;
+    const unlocked =
+      this.room.roomId !== "main-library" &&
+      residentId !== undefined &&
+      residentIsUnlocked(this.room.roomId, this.room.stage);
+    if (!resident || !graphics || !residentId || !unlocked) {
+      resident?.setVisible(false);
+      return;
+    }
+    const visual = residentVisualDefinition(residentId);
+    const radius = Math.max(12, Math.min(22, size.width * 0.045));
+    resident
+      .setVisible(true)
+      .setPosition(size.width * 0.54, size.height * 0.62);
+    graphics.clear();
+    graphics
+      .fillStyle(visual.accent)
+      .fillCircle(0, -radius * 0.72, radius * 0.7);
+    graphics
+      .fillStyle(visual.detail)
+      .fillCircle(0, -radius * 0.58, radius * 0.48);
+    graphics
+      .fillStyle(visual.body)
+      .fillRoundedRect(
+        -radius * 0.82,
+        -radius * 0.05,
+        radius * 1.64,
+        radius * 1.5,
+        4,
+      );
+    graphics
+      .fillStyle(visual.detail)
+      .fillRect(-radius * 0.35, radius * 0.2, radius * 0.7, radius * 0.75);
+    if (residentId === "researcher" || residentId === "scribe") {
+      graphics
+        .fillStyle(0xf6e7c8)
+        .fillRoundedRect(
+          radius * 0.45,
+          radius * 0.15,
+          radius * 0.52,
+          radius * 0.7,
+          2,
+        );
+    }
+  }
+
+  private drawCreature(layout: Pick<LibrarySceneLayout, "creature">): void {
     const graphics = this.creatureFigure;
     if (!graphics || !this.creature) return;
+    const creatureRoom = creatureRoomForPeriod({
+      period: this.period,
+      unlockedRoomIds: this.room.unlockedRoomIds ?? ["main-library"],
+    });
+    this.creature.setVisible(creatureRoom === this.room.roomId);
     const radius = layout.creature.radius;
     graphics.clear();
     graphics
@@ -664,6 +746,8 @@ export class InitialLibraryScene extends Phaser.Scene {
       this.renderRoomVisual(reconciliationReason);
       return;
     }
+    this.residentRoutine?.stop();
+    this.residentRoutine = undefined;
     this.roomRenderer?.destroy();
     this.roomRenderer = undefined;
     this.setMainObjectsVisible(true);
@@ -673,6 +757,7 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.drawCounter(layout);
     this.drawLibrarian(layout);
     this.drawCreature(layout);
+    this.drawResident({ width: size.width, height: size.height });
     const hasHighlight = this.projection.highlightedBook !== null;
     this.drawHighlightedBook(layout, hasHighlight);
     this.drawReadingLamp(layout);
@@ -680,6 +765,16 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.drawAtmosphere(layout, size.width, size.height);
     this.updateZone(this.shelfZone, layout.shelfHitArea);
     this.updateZone(this.librarianZone, layout.librarianHitArea);
+    this.updateZone(
+      this.residentZone,
+      {
+        x: size.width * 0.42,
+        y: size.height * 0.48,
+        width: size.width * 0.24,
+        height: size.height * 0.28,
+      },
+      false,
+    );
     this.updateZone(this.creatureZone, layout.creatureHitArea);
     this.updateZone(
       this.highlightedBookZone,
@@ -701,6 +796,8 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.motion.replace([], reconciliationReason ?? "room-change");
     this.roomRenderer ??= new RoomSceneRenderer(this);
     this.roomRenderer.render(definition, this.room, size);
+    this.residentRoutine?.stop();
+    this.residentRoutine = undefined;
     const targetSize = LIBRARY_ROOM_INTERACTION.minimumTargetSize;
     this.updateZone(this.shelfZone, {
       height: Math.max(targetSize, size.height * 0.32),
@@ -714,6 +811,50 @@ export class InitialLibraryScene extends Phaser.Scene {
       x: size.width * 0.04,
       y: size.height * 0.68,
     });
+    this.drawResident(size);
+    this.updateZone(
+      this.residentZone,
+      {
+        height: Math.max(targetSize, size.height * 0.24),
+        width: Math.max(targetSize, size.width * 0.25),
+        x: size.width * 0.4,
+        y: size.height * 0.48,
+      },
+      this.room.stage >= 2,
+    );
+    const residentId = residentIdForRoom(this.room.roomId);
+    if (
+      !this.reducedMotion &&
+      residentId &&
+      this.room.stage >= 2 &&
+      this.resident
+    ) {
+      const allowed =
+        residentId === "projectionist" || residentId === "training-keeper"
+          ? (["working", "observing", "walking", "resting"] as const)
+          : (["working", "organizing", "observing", "resting"] as const);
+      this.residentRoutine = new PhaserResidentRoutineScheduler(
+        this,
+        residentId,
+        this.resident,
+        routineStatesForPeriod(this.period, allowed),
+        routineAnchorsForRoom(this.room.roomId, size.width, size.height),
+        this.period,
+      );
+      this.residentRoutine.start();
+    }
+    const creatureRoom = creatureRoomForPeriod({
+      period: this.period,
+      unlockedRoomIds: this.room.unlockedRoomIds ?? ["main-library"],
+    });
+    const creatureVisible = creatureRoom === this.room.roomId;
+    this.creature?.setVisible(creatureVisible);
+    if (creatureVisible) {
+      this.creature?.setPosition(size.width * 0.78, size.height * 0.72);
+      this.drawCreature({
+        creature: { x: 0, y: 0, radius: Math.max(12, size.width * 0.035) },
+      });
+    }
     this.updateZone(
       this.creatureZone,
       { height: 1, width: 1, x: 0, y: 0 },
@@ -732,6 +873,7 @@ export class InitialLibraryScene extends Phaser.Scene {
       this.shelf,
       this.counter,
       this.librarian,
+      this.resident,
       this.creature,
       this.highlightedBook,
       this.readingLamp,
@@ -910,6 +1052,10 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.beginSelection("librarian", pointer);
   };
 
+  private beginResidentSelection = (pointer: Phaser.Input.Pointer): void => {
+    this.beginSelection("librarian", pointer);
+  };
+
   private beginCreatureSelection = (pointer: Phaser.Input.Pointer): void => {
     this.beginSelection("creature", pointer);
   };
@@ -931,8 +1077,9 @@ export class InitialLibraryScene extends Phaser.Scene {
         this.interactionHandler?.({ type: "ShelfSelected" });
       if (target === "librarian")
         this.interactionHandler?.({
-          roomId: "main-library",
-          type: "RoomRequested",
+          residentId: residentIdForRoom(this.room.roomId) ?? "researcher",
+          roomId: this.room.roomId,
+          type: "ResidentInteracted",
         });
       return;
     }
@@ -956,6 +1103,8 @@ export class InitialLibraryScene extends Phaser.Scene {
   private shutdown = (): void => {
     this.tapSelection.cancel();
     this.motion.destroy();
+    this.residentRoutine?.stop();
+    this.residentRoutine = undefined;
     this.unlockTween?.remove();
     this.unlockTween = undefined;
     this.atmosphereTween?.remove();
@@ -971,6 +1120,7 @@ export class InitialLibraryScene extends Phaser.Scene {
     [
       [this.shelfZone, this.beginShelfSelection],
       [this.librarianZone, this.beginLibrarianSelection],
+      [this.residentZone, this.beginResidentSelection],
       [this.creatureZone, this.beginCreatureSelection],
       [this.highlightedBookZone, this.beginHighlightedBookSelection],
     ].forEach(([zone, handler]) => {

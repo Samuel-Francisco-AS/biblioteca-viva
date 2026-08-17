@@ -2,6 +2,10 @@ import type { Clock } from "./ports";
 
 export const DIALOGUE_EVENTS = [
   "librarian.interaction",
+  "researcher.interaction",
+  "projectionist.interaction",
+  "training-keeper.interaction",
+  "scribe.interaction",
   "creature.interaction",
   "book.first-completed",
 ] as const;
@@ -13,6 +17,10 @@ export const DIALOGUE_FACTS = [
   "daysSinceLastVisit",
   "inProgressBooks",
   "totalBooks",
+  "roomStage",
+  "hasRecentSession",
+  "sessionCountBand",
+  "hasCompletedAssociatedEntry",
 ] as const;
 
 export type DialogueFact = (typeof DIALOGUE_FACTS)[number];
@@ -55,6 +63,10 @@ export interface DialogueFacts {
   readonly daysSinceLastVisit?: number;
   readonly inProgressBooks: number;
   readonly totalBooks: number;
+  readonly roomStage?: number;
+  readonly hasRecentSession?: number;
+  readonly sessionCountBand?: number;
+  readonly hasCompletedAssociatedEntry?: number;
 }
 
 export interface DialogueHistory {
@@ -96,6 +108,10 @@ export interface LibraryDialogueFacts {
   readonly completedBooks: number;
   readonly inProgressBooks: number;
   readonly totalBooks: number;
+  readonly roomStage?: number;
+  readonly hasRecentSession?: number;
+  readonly sessionCountBand?: number;
+  readonly hasCompletedAssociatedEntry?: number;
 }
 
 export interface DialoguePort {

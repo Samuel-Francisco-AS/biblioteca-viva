@@ -7,7 +7,7 @@ import type {
   RoomId,
   RoomProgress,
 } from "./domain";
-import { ROOM_NAMES } from "./content";
+import { RESIDENT_CATALOG, ROOM_NAMES } from "./content";
 import type {
   AudioPort,
   DialoguePort,
@@ -126,6 +126,7 @@ export function LibraryPage({
   const shelfButtonRef = useRef<HTMLButtonElement>(null);
   const librarianButtonRef = useRef<HTMLButtonElement>(null);
   const creatureButtonRef = useRef<HTMLButtonElement>(null);
+  const residentButtonRef = useRef<HTMLButtonElement>(null);
   const [attempt, setAttempt] = useState(0);
   const [sheetMode, setSheetMode] = useState<LibrarySheetMode | null>(null);
   const [speechBubble, setSpeechBubble] = useState<LocalizedDialogue | null>(
@@ -219,12 +220,30 @@ export function LibraryPage({
 
   useEffect(() => {
     if (!application || state.kind !== "ready") return;
+    const activeRoom = state.rooms.find((room) => room.roomId === activeRoomId);
+    const context =
+      activeRoomId === "main-library"
+        ? {}
+        : {
+            roomStage: activeRoom?.highestReachedStage ?? 1,
+            hasRecentSession: Number(
+              (state.productSummary?.totalEntries ?? 0) > 0,
+            ),
+            sessionCountBand: Math.min(
+              2,
+              Math.floor((state.viewModel.totalBooks ?? 0) / 3),
+            ),
+            hasCompletedAssociatedEntry: Number(
+              (activeRoom?.highestReachedStage ?? 1) >= 4,
+            ),
+          };
     void application.dialogue.enterLibrary({
       completedBooks: state.viewModel.completedBooks,
       inProgressBooks: state.viewModel.inProgressBooks,
       totalBooks: state.viewModel.totalBooks,
+      ...context,
     });
-  }, [application, state]);
+  }, [activeRoomId, application, state]);
 
   useEffect(
     () => () => {
@@ -234,7 +253,13 @@ export function LibraryPage({
   );
 
   async function openCharacterDialogue(
-    event: "creature.interaction" | "librarian.interaction",
+    event:
+      | "creature.interaction"
+      | "librarian.interaction"
+      | "researcher.interaction"
+      | "projectionist.interaction"
+      | "training-keeper.interaction"
+      | "scribe.interaction",
   ) {
     if (!application) return;
     const request = dialogueRequest.current + 1;
@@ -266,6 +291,12 @@ export function LibraryPage({
     if (interaction.type === "CreatureSelected") {
       application?.audio?.emit({ type: "CreatureSelected" });
       void openCharacterDialogue("creature.interaction");
+    }
+    if (interaction.type === "ResidentInteracted") {
+      const event = `${interaction.residentId}.interaction` as Parameters<
+        typeof openCharacterDialogue
+      >[0];
+      void openCharacterDialogue(event);
     }
   }
 
@@ -374,6 +405,9 @@ export function LibraryPage({
               stage:
                 state.rooms.find((room) => room.roomId === activeRoomId)
                   ?.highestReachedStage ?? 1,
+              unlockedRoomIds: state.rooms
+                .filter((room) => room.unlocked)
+                .map((room) => room.roomId),
               dayPeriod: period,
               reducedMotion,
               highContrast,
@@ -420,6 +454,10 @@ export function LibraryPage({
               onInteraction={handleInteraction}
               shelfButtonRef={shelfButtonRef}
               viewModel={state.viewModel}
+              resident={RESIDENT_CATALOG.find(
+                (candidate) => candidate.homeRoomId === activeRoomId,
+              )}
+              residentButtonRef={residentButtonRef}
             />
           </details>
           {diagnostics && (
