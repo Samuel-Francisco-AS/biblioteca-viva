@@ -97,3 +97,7 @@ No Moto G06 e, se disponível, em uma segunda configuração Android:
 7. observar tela preta/context loss real e degradação após pressão de memória.
 
 Continuam pendentes: FPS real, frame pacing, memória, temperatura, toque e abertura percebidos, outros apps, background real, rotação física, context loss e estabilidade de 30 minutos. G9 permanece aberto.
+
+## 9. Baseline P1-A
+
+O build P1-A registra JS inicial de 610.700 bytes (177.310 gzip), CSS de 22.000 bytes (4.930 gzip) e Phaser lazy de 1.221.398 bytes (325.740 gzip). Coleção e Arquivo carregam coleções em lote e agregam com arrays/Maps; não há query por card. O schema possui sete tabelas. P1-A não adiciona timer, listener global, dependência ou plugin; sessões e seu timer pertencem a P1-B.

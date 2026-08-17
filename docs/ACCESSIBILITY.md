@@ -237,3 +237,7 @@ O tema escuro usa tokens semânticos para fundos, superfícies, texto, bordas, f
 O canvas continua apenas visual e recebe descrição curta, não equivalência falsa de leitor de tela. O disclosure “Resumo acessível” mantém contagens, estante, marco e botões nativos; ao falhar Phaser, ele abre automaticamente. O bottom sheet é diálogo DOM com heading, conteúdo rolável, Escape, botão fechar e retorno ao acionador React. Os balões usam `aria-live="polite"`, uma única frase localizada e nenhum foco automático; fechar pelo equivalente React devolve foco à personagem correspondente.
 
 Drawer e sheet respeitam safe areas; system bars transparentes não recebem controles essenciais sob seus insets. Períodos alteram somente iluminação, nunca informação exclusiva. Reduced motion elimina loops e a transição de atmosfera, mas toque ainda produz highlight/estado, texto, sheet ou balão. Testes automatizam semântica, foco, Escape, superfície integral, texto ampliado estrutural e overflow; contraste percebido, TalkBack, teclado virtual, barras reais e conforto continuam humanos.
+
+## 20. P1-A
+
+O seletor de tipo usa botões de superfície inteira com nome e descrição; formulários específicos mantêm labels reais, submissão única e erros públicos. Coleção oferece controles nativos de tipo, status, favorito e ordenação, e cards continuam links integrais. A automação cobre os seis tipos e viewport estreita; TalkBack, teclado virtual, texto ampliado e contraste percebido ainda exigem validação humana.

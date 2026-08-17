@@ -103,9 +103,9 @@ test("rotas inexistentes e livro ausente degradam para caminhos convencionais", 
     page.getByRole("button", { name: "Abrir resumo da Biblioteca" }),
   ).toBeVisible();
 
-  await page.goto("/livros/id-inexistente");
+  await page.goto("/registros/id-inexistente");
   await expect(
-    page.getByRole("heading", { name: "Livro não encontrado" }),
+    page.getByRole("heading", { name: "Não foi possível abrir o registro" }),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Voltar à Coleção" }),

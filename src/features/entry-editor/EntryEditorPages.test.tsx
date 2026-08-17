@@ -19,6 +19,8 @@ const book: BookEntry = {
   status: "in_progress",
   totalPages: 320,
   currentPage: 42,
+  favorite: false,
+  tagIds: [],
   rating: 4,
   startedAt: "2026-07-29T23:59:59.999Z",
   createdAt: "2026-07-29T10:00:00.000Z",
@@ -56,7 +58,7 @@ function renderCreate(facade: EditorApplication) {
           path="/novo-livro"
           element={<NewBookPage application={facade} />}
         />
-        <Route path="/livros/:id" element={<p>Detalhe aberto</p>} />
+        <Route path="/registros/:id" element={<p>Detalhe aberto</p>} />
         <Route path="/colecao" element={<p>Coleção aberta</p>} />
       </Routes>
     </MemoryRouter>,
@@ -71,7 +73,7 @@ function renderEdit(facade: EditorApplication) {
           path="/livros/:id/editar"
           element={<EditBookPage application={facade} />}
         />
-        <Route path="/livros/:id" element={<p>Detalhe aberto</p>} />
+        <Route path="/registros/:id" element={<p>Detalhe aberto</p>} />
         <Route path="/colecao" element={<p>Coleção aberta</p>} />
       </Routes>
     </MemoryRouter>,

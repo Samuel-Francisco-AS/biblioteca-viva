@@ -1,13 +1,13 @@
-import type { BookEntry, DomainEvent, Note, Quote } from "../domain";
+import type { DomainEvent, LibraryEntry, Note, Quote } from "../domain";
 import type { Activity } from "./activities";
 import type { MilestoneProcessor } from "./milestones";
 export type { AudioPort, AudioSettingsPort } from "./audio";
 export type { DialogueHistoryPort, DialoguePort } from "./dialogue";
 
 export interface LibraryEntryRepository {
-  getById(id: string): Promise<BookEntry | undefined>;
-  list(): Promise<readonly BookEntry[]>;
-  save(entry: BookEntry): Promise<void>;
+  getById(id: string): Promise<LibraryEntry | undefined>;
+  list(): Promise<readonly LibraryEntry[]>;
+  save(entry: LibraryEntry): Promise<void>;
 }
 
 export interface NoteRepository {
@@ -38,6 +38,10 @@ export interface AnnotationSharePort {
 
 export interface ActivityRepository {
   save(activity: Activity): Promise<void>;
+}
+
+export interface LibraryEntryDeletionStore {
+  deleteLibraryEntry(id: string): Promise<"deleted" | "not-found">;
 }
 
 export interface BookDeletionStore {

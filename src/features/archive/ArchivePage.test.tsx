@@ -15,6 +15,8 @@ const book: BookEntry = {
   status: "completed",
   totalPages: 120,
   currentPage: 120,
+  favorite: false,
+  tagIds: [],
   completedAt: "2026-07-29T12:00:00.000Z",
   createdAt: "2026-07-20T10:00:00.000Z",
   updatedAt: "2026-07-29T12:00:00.000Z",
@@ -24,6 +26,8 @@ const note: Note = {
   id: "note-1",
   entryId: book.id,
   content: "Reflexão sobre memória",
+  favorite: false,
+  tagIds: [],
   createdAt: "2026-07-29T11:00:00.000Z",
   updatedAt: "2026-07-29T11:00:00.000Z",
   revision: 1,
@@ -32,7 +36,9 @@ const quote: Quote = {
   id: "quote-1",
   entryId: book.id,
   content: "O oceano guardava histórias",
-  page: 18,
+  favorite: false,
+  tagIds: [],
+  location: { type: "book", page: 18 },
   createdAt: "2026-07-29T12:00:00.000Z",
   updatedAt: "2026-07-29T12:00:00.000Z",
   revision: 1,
@@ -97,7 +103,7 @@ function application(
       updateQuote: { execute: calls.updateQuote },
     },
     queries: {
-      listBookEntries: { execute: calls.books },
+      listLibraryEntries: { execute: calls.books },
       listAllNotes: { execute: calls.notes },
       listAllQuotes: { execute: calls.quotes },
     },
@@ -180,7 +186,7 @@ describe("Arquivo de anotações", () => {
 
   it("aceita citação sem página e autor ausente", async () => {
     const noAuthor = { ...book, author: undefined };
-    const withoutPage = { ...quote, page: undefined };
+    const withoutPage = { ...quote, location: undefined };
     const { facade } = application({
       books: () => Promise.resolve([noAuthor]),
       quotes: () => Promise.resolve([withoutPage]),
@@ -234,8 +240,10 @@ describe("Arquivo de anotações", () => {
     const { facade } = application();
     renderArchive(facade, "/arquivo?q=oceano");
     expect(
-      await screen.findByRole("link", { name: `Abrir livro ${book.title}` }),
-    ).toHaveAttribute("href", "/livros/book-1?from=%2Farquivo%3Fq%3Doceano");
+      await screen.findByRole("link", {
+        name: `Abrir registro ${book.title}`,
+      }),
+    ).toHaveAttribute("href", "/registros/book-1?from=%2Farquivo%3Fq%3Doceano");
   });
 
   it("trata livro relacionado ausente sem quebrar a página", async () => {
@@ -243,11 +251,11 @@ describe("Arquivo de anotações", () => {
     renderArchive(facade);
     expect(
       await screen.findAllByRole("heading", {
-        name: "Livro relacionado indisponível",
+        name: "Registro relacionado indisponível",
       }),
     ).toHaveLength(2);
     expect(
-      screen.queryByRole("link", { name: /Abrir livro/ }),
+      screen.queryByRole("link", { name: /Abrir registro/ }),
     ).not.toBeInTheDocument();
   });
 

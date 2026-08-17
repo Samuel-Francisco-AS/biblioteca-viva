@@ -6,7 +6,7 @@
 
 Objetivo: tornar a Biblioteca Viva capaz de registrar o que a pessoa lê, assiste, aprende, pratica e constrói. Tipos oficiais: Livro, Filme, Série, Estudo, Atividade física e Trabalho.
 
-### P1-A — Registros múltiplos e migração segura
+### P1-A — Registros múltiplos e migração segura — tecnicamente concluído
 
 - união discriminada de seis `LibraryEntry`;
 - progresso especializado e invariantes por variante;

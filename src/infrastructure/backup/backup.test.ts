@@ -41,6 +41,8 @@ const book = Object.freeze({
   status: "in_progress" as const,
   currentPage: 12,
   totalPages: 300,
+  favorite: false,
+  tagIds: [],
   createdAt: "2026-07-30T10:00:00.000Z",
   updatedAt: "2026-07-30T11:00:00.000Z",
   revision: 2,
@@ -49,6 +51,8 @@ const note = Object.freeze({
   id: "note-1",
   entryId: book.id,
   content: "n".repeat(20_000),
+  favorite: false,
+  tagIds: [],
   createdAt: book.createdAt,
   updatedAt: book.updatedAt,
   revision: 1,
@@ -57,7 +61,9 @@ const quote = Object.freeze({
   id: "quote-1",
   entryId: book.id,
   content: "citação",
-  page: 12,
+  favorite: false,
+  tagIds: [],
+  location: { type: "book" as const, page: 12 },
   createdAt: book.createdAt,
   updatedAt: book.updatedAt,
   revision: 1,
@@ -209,13 +215,33 @@ describe("backup JSON v2", () => {
       data,
     });
     const raw = JSON.parse(current.content) as {
-      data: Record<string, unknown>;
+      data: {
+        libraryEntries: Array<Record<string, unknown>>;
+        notes: Array<Record<string, unknown>>;
+        quotes: Array<Record<string, unknown>>;
+        milestones?: unknown;
+      };
       formatVersion: number;
       integrity?: { algorithm: "SHA-256"; digest: string };
       [key: string]: unknown;
     };
     raw.formatVersion = 1;
     delete raw.data.milestones;
+    for (const entry of raw.data.libraryEntries) {
+      delete entry.favorite;
+      delete entry.tagIds;
+    }
+    for (const annotation of raw.data.notes) {
+      delete annotation.favorite;
+      delete annotation.tagIds;
+      delete annotation.location;
+    }
+    for (const annotation of raw.data.quotes) {
+      delete annotation.favorite;
+      delete annotation.tagIds;
+      annotation.page = 12;
+      delete annotation.location;
+    }
     const unsigned = structuredClone(raw);
     delete unsigned.integrity;
     const bytes = new TextEncoder().encode(
@@ -232,7 +258,73 @@ describe("backup JSON v2", () => {
     const inspected = await codec.inspect(JSON.stringify(raw));
     expect(inspected.summary.formatVersion).toBe(1);
     expect(inspected.data.milestones).toEqual([]);
+    expect(inspected.data.libraryEntries[0]).toMatchObject({
+      favorite: false,
+      tagIds: [],
+    });
+    expect(inspected.data.quotes[0]).toMatchObject({
+      location: { type: "book", page: 12 },
+    });
     expect(inspected.summary.warnings.join(" ")).toMatch(/nenhum marco/u);
+  });
+
+  it("aceita backup v2 histórico e aplica defaults somente após validar seu checksum", async () => {
+    const codec = new JsonBackupCodec();
+    const current = await codec.encode({
+      appVersion: "0.2.0-alpha.1",
+      createdAt: book.createdAt,
+      databaseVersion: 3,
+      data,
+    });
+    const raw = JSON.parse(current.content) as {
+      data: {
+        libraryEntries: Array<Record<string, unknown>>;
+        notes: Array<Record<string, unknown>>;
+        quotes: Array<Record<string, unknown>>;
+      };
+      integrity?: { algorithm: "SHA-256"; digest: string };
+      [key: string]: unknown;
+    };
+    for (const entry of raw.data.libraryEntries) {
+      delete entry.favorite;
+      delete entry.tagIds;
+    }
+    for (const annotation of raw.data.notes) {
+      delete annotation.favorite;
+      delete annotation.tagIds;
+      delete annotation.location;
+    }
+    for (const annotation of raw.data.quotes) {
+      delete annotation.favorite;
+      delete annotation.tagIds;
+      annotation.page = 12;
+      delete annotation.location;
+    }
+    const unsigned = structuredClone(raw);
+    delete unsigned.integrity;
+    const digest = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(canonicalize(checksumMaterial(unsigned))),
+    );
+    raw.integrity = {
+      algorithm: "SHA-256",
+      digest: [...new Uint8Array(digest)]
+        .map((value) => value.toString(16).padStart(2, "0"))
+        .join(""),
+    };
+    const inspected = await codec.inspect(JSON.stringify(raw));
+    expect(inspected.summary.formatVersion).toBe(2);
+    expect(inspected.data.libraryEntries[0]).toMatchObject({
+      favorite: false,
+      tagIds: [],
+    });
+    expect(inspected.data.notes[0]).toMatchObject({
+      favorite: false,
+      tagIds: [],
+    });
+    expect(inspected.data.quotes[0]).toMatchObject({
+      location: { type: "book", page: 12 },
+    });
   });
 
   it("exporta marco/recompensa e rejeita adulteração", async () => {
@@ -365,6 +457,8 @@ describe("backup JSON v2", () => {
       rating: undefined,
       startedAt: undefined,
       completedAt: undefined,
+      favorite: false,
+      tagIds: [],
       createdAt: "2026-07-30T12:00:00.000Z",
       updatedAt: "2026-07-30T12:00:00.000Z",
       revision: 1,
@@ -373,7 +467,9 @@ describe("backup JSON v2", () => {
       id: "quote-sem-pagina",
       entryId: optionalBook.id,
       content: "Citação sem página",
-      page: undefined,
+      favorite: false,
+      tagIds: [],
+      location: undefined,
       createdAt: optionalBook.createdAt,
       updatedAt: optionalBook.updatedAt,
       revision: 1,

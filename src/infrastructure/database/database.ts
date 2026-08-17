@@ -5,9 +5,10 @@ import {
   DATABASE_SCHEMA_V1,
   DATABASE_SCHEMA_V2,
   DATABASE_SCHEMA_V3,
+  DATABASE_SCHEMA_V4,
   SCHEMA_MARKER_KEY,
   type PersistedActivity,
-  type PersistedBook,
+  type PersistedLibraryEntry,
   type PersistedMetadata,
   type PersistedMilestone,
   type PersistedNote,
@@ -18,7 +19,7 @@ import {
 const MIGRATION_TIMESTAMP = "1970-01-01T00:00:00.000Z";
 
 export class BibliotecaDatabase extends Dexie {
-  libraryEntries!: EntityTable<PersistedBook, "id">;
+  libraryEntries!: EntityTable<PersistedLibraryEntry, "id">;
   notes!: EntityTable<PersistedNote, "id">;
   quotes!: EntityTable<PersistedQuote, "id">;
   activities!: EntityTable<PersistedActivity, "id">;
@@ -44,6 +45,42 @@ export class BibliotecaDatabase extends Dexie {
         await transaction.table<PersistedMetadata>("metadata").put({
           key: SCHEMA_MARKER_KEY,
           value: "3",
+          updatedAt: MIGRATION_TIMESTAMP,
+        });
+      });
+    this.version(4)
+      .stores(DATABASE_SCHEMA_V4)
+      .upgrade(async (transaction) => {
+        await transaction
+          .table<Record<string, unknown>>("libraryEntries")
+          .toCollection()
+          .modify((entry) => {
+            if (!("favorite" in entry)) entry.favorite = false;
+            if (!("tagIds" in entry)) entry.tagIds = [];
+          });
+        for (const tableName of ["notes", "quotes"] as const) {
+          await transaction
+            .table<Record<string, unknown>>(tableName)
+            .toCollection()
+            .modify((annotation) => {
+              if (!("favorite" in annotation)) annotation.favorite = false;
+              if (!("tagIds" in annotation)) annotation.tagIds = [];
+              if (
+                tableName === "quotes" &&
+                typeof annotation.page === "number" &&
+                !("location" in annotation)
+              ) {
+                annotation.location = {
+                  type: "book",
+                  page: annotation.page,
+                };
+                delete annotation.page;
+              }
+            });
+        }
+        await transaction.table<PersistedMetadata>("metadata").put({
+          key: SCHEMA_MARKER_KEY,
+          value: "4",
           updatedAt: MIGRATION_TIMESTAMP,
         });
       });

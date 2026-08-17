@@ -60,7 +60,7 @@ describe("edição de anotações", () => {
         id: "quote-1",
         entryId: book.id,
         content: "Antes",
-        page: 20,
+        location: { type: "book", page: 20 },
         createdAt,
       },
       book,
@@ -68,15 +68,31 @@ describe("edição de anotações", () => {
     expect(updateQuote(quote, { content: "Depois", updatedAt }, book)).toEqual({
       ...quote,
       content: "Depois",
-      page: undefined,
+      location: undefined,
       updatedAt,
       revision: 2,
     });
     expect(() =>
-      updateQuote(quote, { content: "Depois", page: 101, updatedAt }, book),
+      updateQuote(
+        quote,
+        {
+          content: "Depois",
+          location: { type: "book", page: 101 },
+          updatedAt,
+        },
+        book,
+      ),
     ).toThrow();
     expect(() =>
-      updateQuote(quote, { content: "Depois", page: 0, updatedAt }, book),
+      updateQuote(
+        quote,
+        {
+          content: "Depois",
+          location: { type: "book", page: 0 },
+          updatedAt,
+        },
+        book,
+      ),
     ).toThrow();
   });
 
@@ -94,13 +110,17 @@ describe("edição de anotações", () => {
     });
     const updated = updateQuote(
       quote,
-      { content: "Depois", page: 900, updatedAt },
+      {
+        content: "Depois",
+        location: { type: "book", page: 900 },
+        updatedAt,
+      },
       withoutTotal,
     );
     expect(updated).toMatchObject({
       id: quote.id,
       createdAt,
-      page: 900,
+      location: { type: "book", page: 900 },
       revision: 2,
     });
   });

@@ -1,5 +1,13 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  NavLink,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 
 import { appRoutes } from "./routes";
 import { useAndroidBackButton } from "./useAndroidBackButton";
@@ -10,11 +18,9 @@ import { isDiagnosticsEnabled } from "./app/diagnosticsAvailability";
 import { CollectionPage } from "./features/collection/CollectionPage";
 import { ArchivePage } from "./features/archive/ArchivePage";
 import { SettingsPage } from "./features/settings/SettingsPage";
-import { BookDetailPage } from "./features/entry-detail/BookDetailPage";
-import {
-  EditBookPage,
-  NewBookPage,
-} from "./features/entry-editor/EntryEditorPages";
+import { NewEntryPage } from "./features/entry-editor/NewEntryPage";
+import { EditEntryPage } from "./features/entry-editor/EditEntryPage";
+import { EntryDetailPage } from "./features/entry-detail/EntryDetailPage";
 import "./styles.css";
 import { useAudioExperience } from "./useAudioExperience";
 import { MILESTONE_ID, type MilestoneReached } from "./domain";
@@ -31,6 +37,17 @@ function NotFoundPage() {
         Voltar para a Biblioteca
       </Link>
     </section>
+  );
+}
+
+function LegacyEntryRedirect({ edit = false }: { readonly edit?: boolean }) {
+  const { id = "" } = useParams();
+  const location = useLocation();
+  return (
+    <Navigate
+      replace
+      to={`/registros/${encodeURIComponent(id)}${edit ? "/editar" : ""}${location.search}`}
+    />
   );
 }
 
@@ -67,9 +84,9 @@ export function App({ application, diagnostics }: AppProps) {
   const sectionTitle =
     activeRoute?.title ??
     (location.pathname.endsWith("/editar")
-      ? "Editar livro"
-      : location.pathname.startsWith("/livros/")
-        ? "Detalhes do livro"
+      ? "Editar registro"
+      : location.pathname.startsWith("/registros/")
+        ? "Detalhes do registro"
         : "Página não encontrada");
 
   useAndroidBackButton();
@@ -336,17 +353,26 @@ export function App({ application, diagnostics }: AppProps) {
             }
           />
           <Route
+            path="/novo-registro"
+            element={<NewEntryPage application={application} />}
+          />
+          <Route
+            path="/registros/:id/editar"
+            element={<EditEntryPage application={application} />}
+          />
+          <Route
+            path="/registros/:id"
+            element={<EntryDetailPage application={application} />}
+          />
+          <Route
             path="/novo-livro"
-            element={<NewBookPage application={application} />}
+            element={<Navigate replace to="/novo-registro" />}
           />
           <Route
             path="/livros/:id/editar"
-            element={<EditBookPage application={application} />}
+            element={<LegacyEntryRedirect edit />}
           />
-          <Route
-            path="/livros/:id"
-            element={<BookDetailPage application={application} />}
-          />
+          <Route path="/livros/:id" element={<LegacyEntryRedirect />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         {diagnosticsBuildEnabled &&

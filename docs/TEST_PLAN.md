@@ -6,6 +6,10 @@ Garantir que a Biblioteca Viva preserve dados, funcione no Android real, mantenh
 
 ## 2. Níveis
 
+### Evidência P1-A
+
+P1-A encerrou com 620 testes Vitest em 67 arquivos e nove E2E Chromium. As novas matrizes cobrem factories e updates das seis variantes, auto-start/auto-complete aplicável, totais desconhecidos, eventos sem conteúdo pessoal, formulário de seis tipos, Coleção unificada, backup v1/v2 histórico e migração real v3 → v4 com banco vazio, múltiplos status, Unicode, anotações, atividades, settings, milestones, luminária e reabertura idempotente. A automação Android compilou o APK debug; não houve instalação, TalkBack ou validação física.
+
 ### Domínio
 
 - invariantes de livro;

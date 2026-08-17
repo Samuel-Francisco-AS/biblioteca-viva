@@ -1,5 +1,5 @@
 import { InvalidProgressError, InvalidRevisionError } from "./errors";
-import type { EntryStatus } from "./types";
+import type { EntryStatus, EntryType } from "./types";
 import type {
   DecorationId,
   MilestoneId,
@@ -23,13 +23,16 @@ interface EventMetadata {
 export interface LibraryEntryCreated extends EventMetadata {
   readonly type: "LibraryEntryCreated";
   readonly payload: {
-    readonly entryType: "book";
+    readonly entryType: EntryType;
     readonly status: EntryStatus;
   };
 }
 export interface LibraryEntryUpdated extends EventMetadata {
   readonly type: "LibraryEntryUpdated";
-  readonly payload: { readonly changedFields: readonly string[] };
+  readonly payload: {
+    readonly changedFields: readonly string[];
+    readonly entryType: EntryType;
+  };
 }
 export interface ProgressUpdated extends EventMetadata {
   readonly type: "ProgressUpdated";
@@ -40,7 +43,10 @@ export interface ProgressUpdated extends EventMetadata {
 }
 export interface LibraryEntryCompleted extends EventMetadata {
   readonly type: "LibraryEntryCompleted";
-  readonly payload: { readonly completedAt: string };
+  readonly payload: {
+    readonly completedAt: string;
+    readonly entryType: EntryType;
+  };
 }
 export interface NoteCreated extends EventMetadata {
   readonly type: "NoteCreated";
@@ -103,7 +109,10 @@ export function createLibraryEntryUpdatedEvent(
   return event({
     type: "LibraryEntryUpdated",
     ...input,
-    payload: { changedFields: Object.freeze([...input.payload.changedFields]) },
+    payload: {
+      changedFields: Object.freeze([...input.payload.changedFields]),
+      entryType: input.payload.entryType,
+    },
   });
 }
 

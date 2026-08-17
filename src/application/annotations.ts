@@ -2,6 +2,7 @@ import {
   updateNote,
   updateQuote,
   type BookEntry,
+  type LibraryEntry,
   type Note,
   type Quote,
 } from "../domain";
@@ -71,21 +72,21 @@ async function loadQuote(
   }
 }
 
-async function loadRelatedBook(
+async function loadRelatedEntry(
   repository: LibraryEntryRepository,
   entryId: string,
-): Promise<BookEntry> {
+): Promise<LibraryEntry> {
   try {
-    const book = await repository.getById(entryId);
-    if (!book)
+    const entry = await repository.getById(entryId);
+    if (!entry)
       throw new ApplicationError(
         "NOT_FOUND",
-        "Livro relacionado não encontrado.",
+        "Registro relacionado não encontrado.",
       );
-    return book;
+    return entry;
   } catch (error: unknown) {
     if (error instanceof ApplicationError) throw error;
-    throw persistenceFailed("get_book");
+    throw persistenceFailed("get_entry");
   }
 }
 
@@ -112,10 +113,15 @@ export class UpdateQuote {
   async execute(input: unknown): Promise<Quote> {
     const parsed = parseInput(updateQuoteSchema, input);
     const existing = await loadQuote(this.dependencies.quotes, parsed.id);
-    const book = await loadRelatedBook(
+    const entry = await loadRelatedEntry(
       this.dependencies.libraryEntries,
       existing.entryId,
     );
+    if (entry.type === "physical_activity" || entry.type === "work")
+      throw new ApplicationError(
+        "VALIDATION_FAILED",
+        "Citações estão disponíveis para livros, filmes, séries e estudos.",
+      );
     const occurredAt = await currentTime(this.dependencies);
     const updated = applyDomain(() =>
       updateQuote(
@@ -123,9 +129,13 @@ export class UpdateQuote {
         {
           content: parsed.content,
           updatedAt: occurredAt,
-          ...(parsed.page !== undefined && { page: parsed.page }),
+          ...(parsed.location !== undefined
+            ? { location: parsed.location }
+            : parsed.page !== undefined && {
+                location: { type: "book", page: parsed.page },
+              }),
         },
-        book,
+        entry.type === "book" ? entry : undefined,
       ),
     );
     await runTransaction(this.dependencies, () =>
@@ -198,6 +208,10 @@ function bookReference(book: BookEntry): string {
   return `${book.title}${book.author ? ` — ${book.author}` : ""}`;
 }
 
+function entryReference(entry: LibraryEntry): string {
+  return entry.type === "book" ? bookReference(entry) : entry.title;
+}
+
 export class ShareNote {
   constructor(
     private readonly notes: NoteRepository,
@@ -208,10 +222,10 @@ export class ShareNote {
   async execute(input: unknown) {
     const { id } = parseInput(annotationIdSchema, input);
     const note = await loadNote(this.notes, id);
-    const book = await loadRelatedBook(this.books, note.entryId);
+    const entry = await loadRelatedEntry(this.books, note.entryId);
     return deliverShare(this.share, {
       title: "Compartilhar nota de leitura",
-      text: `Nota de leitura\n${bookReference(book)}\n\n${note.content}`,
+      text: `Nota do registro\n${entryReference(entry)}\n\n${note.content}`,
     });
   }
 }
@@ -226,10 +240,12 @@ export class ShareQuote {
   async execute(input: unknown) {
     const { id } = parseInput(annotationIdSchema, input);
     const quote = await loadQuote(this.quotes, id);
-    const book = await loadRelatedBook(this.books, quote.entryId);
+    const entry = await loadRelatedEntry(this.books, quote.entryId);
+    const page =
+      quote.location?.type === "book" ? quote.location.page : undefined;
     return deliverShare(this.share, {
       title: "Compartilhar citação de leitura",
-      text: `Citação de leitura\n${bookReference(book)}${quote.page === undefined ? "" : `\nPágina ${quote.page}`}\n\n“${quote.content}”`,
+      text: `Citação do registro\n${entryReference(entry)}${page === undefined ? "" : `\nPágina ${page}`}\n\n“${quote.content}”`,
     });
   }
 }

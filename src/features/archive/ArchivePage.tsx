@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
-import type { BookEntry, Note, Quote } from "../../domain";
+import type { LibraryEntry, Note, Quote } from "../../domain";
 import type { AnnotationShareResult } from "../../application";
 import { AnnotationActions } from "../annotations/AnnotationActions";
 import { formatDateTime } from "../books/bookPresentation";
@@ -26,7 +26,9 @@ export interface ArchiveApplication {
     readonly updateQuote: { execute(input: unknown): Promise<Quote> };
   };
   readonly queries: {
-    readonly listBookEntries: { execute(): Promise<readonly BookEntry[]> };
+    readonly listLibraryEntries: {
+      execute(): Promise<readonly LibraryEntry[]>;
+    };
     readonly listAllNotes: { execute(): Promise<readonly Note[]> };
     readonly listAllQuotes: { execute(): Promise<readonly Quote[]> };
   };
@@ -34,14 +36,14 @@ export interface ArchiveApplication {
 
 interface RelatedAnnotation<T extends Note | Quote> {
   readonly annotation: T;
-  readonly book?: BookEntry;
+  readonly entry?: LibraryEntry;
 }
 
 function matchesArchiveSearch(
   item: RelatedAnnotation<Note | Quote>,
   query: string,
 ): boolean {
-  const searchable = `${item.annotation.content} ${item.book?.title ?? ""} ${item.book?.author ?? ""}`;
+  const searchable = `${item.annotation.content} ${item.entry?.title ?? ""} ${item.entry?.type === "book" ? (item.entry.author ?? "") : ""}`;
   return normalizeSearch(searchable).includes(normalizeSearch(query));
 }
 
@@ -52,7 +54,7 @@ export function ArchivePage({
 }) {
   const [notes, setNotes] = useState<readonly Note[]>();
   const [quotes, setQuotes] = useState<readonly Quote[]>();
-  const [books, setBooks] = useState<readonly BookEntry[]>();
+  const [entries, setEntries] = useState<readonly LibraryEntry[]>();
   const [error, setError] = useState<string>();
   const [params, setParams] = useSearchParams();
   const location = useLocation();
@@ -63,13 +65,13 @@ export function ArchivePage({
     if (!application) return;
     let active = true;
     void Promise.all([
-      application.queries.listBookEntries.execute(),
+      application.queries.listLibraryEntries.execute(),
       application.queries.listAllNotes.execute(),
       application.queries.listAllQuotes.execute(),
     ]).then(
-      ([loadedBooks, loadedNotes, loadedQuotes]) => {
+      ([loadedEntries, loadedNotes, loadedQuotes]) => {
         if (!active) return;
-        setBooks(loadedBooks);
+        setEntries(loadedEntries);
         setNotes(loadedNotes);
         setQuotes(loadedQuotes);
       },
@@ -82,29 +84,29 @@ export function ArchivePage({
     };
   }, [application]);
 
-  const bookById = useMemo(
-    () => new Map((books ?? []).map((book) => [book.id, book])),
-    [books],
+  const entryById = useMemo(
+    () => new Map((entries ?? []).map((entry) => [entry.id, entry])),
+    [entries],
   );
   const visibleNotes = useMemo(
     () =>
       (notes ?? [])
         .map((annotation) => ({
           annotation,
-          book: bookById.get(annotation.entryId),
+          entry: entryById.get(annotation.entryId),
         }))
         .filter((item) => matchesArchiveSearch(item, query)),
-    [bookById, notes, query],
+    [entryById, notes, query],
   );
   const visibleQuotes = useMemo(
     () =>
       (quotes ?? [])
         .map((annotation) => ({
           annotation,
-          book: bookById.get(annotation.entryId),
+          entry: entryById.get(annotation.entryId),
         }))
         .filter((item) => matchesArchiveSearch(item, query)),
-    [bookById, query, quotes],
+    [entryById, query, quotes],
   );
 
   function clearSearch() {
@@ -126,7 +128,7 @@ export function ArchivePage({
         <p>{error}</p>
       </section>
     );
-  if (!books || !notes || !quotes)
+  if (!entries || !notes || !quotes)
     return <p role="status">Carregando Arquivo…</p>;
 
   const total = notes.length + quotes.length;
@@ -145,8 +147,8 @@ export function ArchivePage({
       <div className="form-field archive-search">
         <label htmlFor="archive-search">Buscar no Arquivo</label>
         <p className="field-help" id="archive-search-help">
-          Busca no conteúdo, título ou autor, sem diferenciar maiúsculas e
-          acentos.
+          Busca no conteúdo e no título do registro, sem diferenciar maiúsculas
+          e acentos.
         </p>
         <input
           id="archive-search"
@@ -209,14 +211,16 @@ export function ArchivePage({
               <p>Nenhuma nota corresponde à busca.</p>
             ) : (
               <ul className="annotation-list">
-                {visibleNotes.map(({ annotation, book }) => (
+                {visibleNotes.map(({ annotation, entry }) => (
                   <li key={annotation.id}>
                     <article aria-labelledby={`archive-note-${annotation.id}`}>
                       <p className="eyebrow">Nota</p>
                       <h4 id={`archive-note-${annotation.id}`}>
-                        {book?.title ?? "Livro relacionado indisponível"}
+                        {entry?.title ?? "Registro relacionado indisponível"}
                       </h4>
-                      {book?.author && <p>{book.author}</p>}
+                      {entry?.type === "book" && entry.author && (
+                        <p>{entry.author}</p>
+                      )}
                       <p>{annotation.content}</p>
                       <time
                         className="annotation-date"
@@ -224,15 +228,15 @@ export function ArchivePage({
                       >
                         Adicionada em {formatDateTime(annotation.createdAt)}
                       </time>
-                      {book && (
+                      {entry && (
                         <Link
                           className="text-link"
                           to={{
-                            pathname: `/livros/${encodeURIComponent(book.id)}`,
+                            pathname: `/registros/${encodeURIComponent(entry.id)}`,
                             search: detailSearch,
                           }}
                         >
-                          Abrir livro {book.title}
+                          Abrir registro {entry.title}
                         </Link>
                       )}
                       <AnnotationActions
@@ -271,17 +275,19 @@ export function ArchivePage({
               <p>Nenhuma citação corresponde à busca.</p>
             ) : (
               <ul className="annotation-list">
-                {visibleQuotes.map(({ annotation, book }) => (
+                {visibleQuotes.map(({ annotation, entry }) => (
                   <li key={annotation.id}>
                     <article aria-labelledby={`archive-quote-${annotation.id}`}>
                       <p className="eyebrow">Citação</p>
                       <h4 id={`archive-quote-${annotation.id}`}>
-                        {book?.title ?? "Livro relacionado indisponível"}
+                        {entry?.title ?? "Registro relacionado indisponível"}
                       </h4>
-                      {book?.author && <p>{book.author}</p>}
+                      {entry?.type === "book" && entry.author && (
+                        <p>{entry.author}</p>
+                      )}
                       <blockquote>{annotation.content}</blockquote>
-                      {annotation.page !== undefined && (
-                        <p>Página {annotation.page}</p>
+                      {annotation.location?.type === "book" && (
+                        <p>Página {annotation.location.page}</p>
                       )}
                       <time
                         className="annotation-date"
@@ -289,15 +295,15 @@ export function ArchivePage({
                       >
                         Adicionada em {formatDateTime(annotation.createdAt)}
                       </time>
-                      {book && (
+                      {entry && (
                         <Link
                           className="text-link"
                           to={{
-                            pathname: `/livros/${encodeURIComponent(book.id)}`,
+                            pathname: `/registros/${encodeURIComponent(entry.id)}`,
                             search: detailSearch,
                           }}
                         >
-                          Abrir livro {book.title}
+                          Abrir registro {entry.title}
                         </Link>
                       )}
                       <AnnotationActions
@@ -325,9 +331,10 @@ export function ArchivePage({
                             ),
                           );
                         }}
-                        {...(book?.totalPages !== undefined && {
-                          totalPages: book.totalPages,
-                        })}
+                        {...(entry?.type === "book" &&
+                          entry.totalPages !== undefined && {
+                            totalPages: entry.totalPages,
+                          })}
                       />
                     </article>
                   </li>

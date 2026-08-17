@@ -48,6 +48,8 @@ export function createBook(input: CreateBookInput): BookEntry {
       author: optionalText(input.author),
     }),
     status,
+    favorite: input.favorite ?? false,
+    tagIds: Object.freeze([...(input.tagIds ?? [])]),
     ...(totalPages !== undefined && { totalPages }),
     currentPage:
       status === "completed" && totalPages !== undefined

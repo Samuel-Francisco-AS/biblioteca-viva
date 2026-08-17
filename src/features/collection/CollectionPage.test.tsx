@@ -15,6 +15,8 @@ const book: BookEntry = {
   status: "in_progress",
   totalPages: 200,
   currentPage: 50,
+  favorite: false,
+  tagIds: [],
   createdAt: "2026-07-20T10:00:00.000Z",
   updatedAt: "2026-07-29T10:00:00.000Z",
   revision: 2,
@@ -33,7 +35,7 @@ function renderCollection(
 ) {
   const execute = vi.fn(() => result);
   const application: CollectionApplication = {
-    queries: { listBookEntries: { execute } },
+    queries: { listLibraryEntries: { execute } },
   };
   render(
     <MemoryRouter initialEntries={[entry]}>
@@ -53,11 +55,11 @@ describe("Coleção", () => {
   it("mostra estado vazio com ação para cadastrar", async () => {
     renderCollection(Promise.resolve([]));
     expect(
-      await screen.findByText("Seu primeiro livro começa aqui"),
+      await screen.findByText("Seu primeiro registro começa aqui"),
     ).toBeVisible();
     expect(
-      screen.getByRole("link", { name: "Cadastrar primeiro livro" }),
-    ).toHaveAttribute("href", "/novo-livro");
+      screen.getByRole("link", { name: "Criar primeiro registro" }),
+    ).toHaveAttribute("href", "/novo-registro");
   });
 
   it("lista dados, status, progresso conhecido e link de detalhe", async () => {
@@ -73,7 +75,7 @@ describe("Coleção", () => {
     ).toHaveValue(50);
     expect(
       screen.getByRole("link", { name: `Abrir detalhes de ${book.title}` }),
-    ).toHaveAttribute("href", "/livros/book-1?from=%2Fcolecao");
+    ).toHaveAttribute("href", "/registros/book-1?from=%2Fcolecao");
     expect(execute).toHaveBeenCalledOnce();
   });
 
@@ -84,7 +86,7 @@ describe("Coleção", () => {
     await user.click(await screen.findByText(book.author ?? ""));
 
     expect(screen.getByLabelText("URL atual")).toHaveTextContent(
-      "/livros/book-1?from=%2Fcolecao",
+      "/registros/book-1?from=%2Fcolecao",
     );
   });
 
@@ -125,11 +127,13 @@ describe("Coleção", () => {
       Promise.resolve([book]),
       "/colecao?q=cidade&status=in_progress&sort=title",
     );
-    expect(await screen.findByLabelText("Buscar livros")).toHaveValue("cidade");
+    expect(await screen.findByLabelText("Buscar registros")).toHaveValue(
+      "cidade",
+    );
     expect(screen.getByLabelText("Status")).toHaveValue("in_progress");
     expect(screen.getByLabelText("Ordenar por")).toHaveValue("title");
-    await user.clear(screen.getByLabelText("Buscar livros"));
-    await user.type(screen.getByLabelText("Buscar livros"), "serras");
+    await user.clear(screen.getByLabelText("Buscar registros"));
+    await user.type(screen.getByLabelText("Buscar registros"), "serras");
     await waitFor(() =>
       expect(screen.getByLabelText("URL atual")).toHaveTextContent("q=serras"),
     );
@@ -137,7 +141,7 @@ describe("Coleção", () => {
       screen.getByRole("link", { name: /Abrir detalhes/ }),
     ).toHaveAttribute(
       "href",
-      "/livros/book-1?from=%2Fcolecao%3Fstatus%3Din_progress%26sort%3Dtitle%26q%3Dserras",
+      "/registros/book-1?from=%2Fcolecao%3Fstatus%3Din_progress%26sort%3Dtitle%26q%3Dserras",
     );
     expect(execute).toHaveBeenCalledOnce();
   });
@@ -150,7 +154,7 @@ describe("Coleção", () => {
     );
     expect(
       await screen.findByRole("heading", {
-        name: "Nenhum livro corresponde aos controles",
+        name: "Nenhum registro corresponde aos controles",
       }),
     ).toBeVisible();
     await user.click(

@@ -44,7 +44,7 @@ const quote = createQuote(
     id: "quote-1",
     entryId: book.id,
     content: "Citação inicial",
-    page: 12,
+    location: { type: "book", page: 12 },
     createdAt,
   },
   book,
@@ -133,7 +133,11 @@ describe("casos de uso de anotações", () => {
       revision: 2,
       content: "Nota revisada",
     });
-    expect(updatedQuote).toMatchObject({ id: quote.id, revision: 2, page: 20 });
+    expect(updatedQuote).toMatchObject({
+      id: quote.id,
+      revision: 2,
+      location: { type: "book", page: 20 },
+    });
     expect(notes.values.size).toBe(1);
     expect(quotes.values.size).toBe(1);
   });

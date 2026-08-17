@@ -9,6 +9,9 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 ### Adicionado
 
 - início documental de `P1 — Vida Registrada`, com seis tipos oficiais e estrutura futura P1/P2/P3;
+- P1-A com união discriminada de Livro, Filme, Série, Estudo, Atividade Física e Trabalho, CRUD e progresso especializados;
+- schema Dexie v4 aditivo, anotações ligadas a `entryId`, localização discriminada e migração sem revisão artificial;
+- rotas de registro, seletor de tipo e Coleção unificada, mantendo redirecionamentos para URLs históricas de livros;
 
 - sistema visual escuro semântico e drawer lateral acessível para as cinco áreas do aplicativo;
 - Biblioteca com canvas protagonista, bottom sheet compartilhado, balões React e alternativa acessível compacta;

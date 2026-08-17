@@ -89,3 +89,7 @@ Fixtures Vitest e Playwright usam apenas nomes e textos explicitamente fictício
 ## 11. Compartilhamento explícito de anotação
 
 R2 permite compartilhar uma nota ou citação somente após ação explícita no item. O texto humano inclui o tipo, o conteúdo escolhido, página quando existente e referência legível ao livro quando disponível. Não inclui ID interno, revisão, timestamps, schema, caminho privado ou metadata de persistência. Web Share ou a folha nativa controla o destino; o aplicativo só anuncia conclusão quando o adapter encerra o fluxo e nunca registra o conteúdo em logs ou diagnósticos. Indisponibilidade não impede editar ou excluir.
+
+## 12. Novos registros de P1-A
+
+Filmes, séries, estudos, atividades físicas e trabalho ampliam a sensibilidade do IndexedDB local: podem revelar disciplina, prática, objetivo, projeto, organização, cliente e próxima ação. O app não criptografa o IndexedDB, não cria telemetria e não envia esses campos ao Phaser ou a logs. Backup v3 e sessões ainda não existem em P1-A e serão tratados em P1-B.

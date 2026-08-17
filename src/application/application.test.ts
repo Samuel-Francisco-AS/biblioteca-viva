@@ -516,6 +516,8 @@ describe("ListNotesByBook e ListQuotesByBook", () => {
       id: "note-1",
       entryId: "book-1",
       content: "Primeira",
+      favorite: false,
+      tagIds: [],
       createdAt: T0,
       updatedAt: T0,
       revision: 1,
@@ -533,7 +535,9 @@ describe("ListNotesByBook e ListQuotesByBook", () => {
       id: "quote-1",
       entryId: "book-1",
       content: "Trecho",
-      page: 8,
+      favorite: false,
+      tagIds: [],
+      location: { type: "book" as const, page: 8 },
       createdAt: T0,
       updatedAt: T0,
       revision: 1,
@@ -580,6 +584,8 @@ describe("ListAllNotes e ListAllQuotes", () => {
       id: "note-global",
       entryId: "book-1",
       content: "Nota global",
+      favorite: false,
+      tagIds: [],
       createdAt: T0,
       updatedAt: T0,
       revision: 1,
@@ -588,6 +594,8 @@ describe("ListAllNotes e ListAllQuotes", () => {
       id: "quote-global",
       entryId: "book-2",
       content: "Citação global",
+      favorite: false,
+      tagIds: [],
       createdAt: T1,
       updatedAt: T1,
       revision: 1,
@@ -934,7 +942,7 @@ describe("AddQuote", () => {
     expect(quote).toMatchObject({
       id: "entity-1",
       content: "Uma passagem",
-      page: 80,
+      location: { type: "book", page: 80 },
     });
     expect(context.quotes.quotes.get(quote.id)).toBe(quote);
     expect(context.activities.activities[0]?.type).toBe("quote_added");

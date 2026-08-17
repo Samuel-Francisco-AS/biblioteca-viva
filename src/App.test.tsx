@@ -112,7 +112,7 @@ describe("App", () => {
     await application.experience.setTextSize("larger");
     await application.experience.setMotion("reduce");
     const rendered = render(
-      <MemoryRouter initialEntries={["/novo-livro"]}>
+      <MemoryRouter initialEntries={["/novo-registro"]}>
         <App application={application} />
       </MemoryRouter>,
     );
@@ -257,7 +257,7 @@ describe("App", () => {
   it.each([
     ["Biblioteca", "Biblioteca"],
     ["Coleção", "Coleção"],
-    ["Novo livro", "Novo livro"],
+    ["Novo registro", "Novo registro"],
     ["Arquivo", "Arquivo"],
     ["Configurações", "Configurações"],
   ])("navega para %s e atualiza o título da seção", async (linkName, title) => {

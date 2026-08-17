@@ -1,41 +1,41 @@
-import type { BookEntry, Note, Quote } from "../domain";
+import type { BookEntry, LibraryEntry, Note, Quote } from "../domain";
 import { ApplicationError, notFound, toValidationError } from "./errors";
 import type {
   LibraryEntryRepository,
   NoteRepository,
   QuoteRepository,
 } from "./ports";
-import { bookIdSchema } from "./schemas";
+import { libraryEntryIdSchema } from "./schemas";
 
-export class GetBookEntry {
+export class GetLibraryEntry {
   constructor(private readonly repository: LibraryEntryRepository) {}
 
-  async execute(input: unknown): Promise<BookEntry> {
+  async execute(input: unknown): Promise<LibraryEntry> {
     let id: string;
     try {
-      id = bookIdSchema.parse(input).id;
+      id = libraryEntryIdSchema.parse(input).id;
     } catch (error: unknown) {
       throw toValidationError(error);
     }
-    let book: BookEntry | undefined;
+    let entry: LibraryEntry | undefined;
     try {
-      book = await this.repository.getById(id);
+      entry = await this.repository.getById(id);
     } catch {
       throw new ApplicationError(
         "PERSISTENCE_FAILED",
         "Não foi possível consultar os dados.",
-        { operation: "get_book" },
+        { operation: "get_entry" },
       );
     }
-    if (book === undefined) throw notFound();
-    return book;
+    if (entry === undefined) throw notFound();
+    return entry;
   }
 }
 
-export class ListBookEntries {
+export class ListLibraryEntries {
   constructor(private readonly repository: LibraryEntryRepository) {}
 
-  async execute(): Promise<readonly BookEntry[]> {
+  async execute(): Promise<readonly LibraryEntry[]> {
     try {
       const entries = await this.repository.list();
       return Object.freeze([...entries]);
@@ -43,9 +43,36 @@ export class ListBookEntries {
       throw new ApplicationError(
         "PERSISTENCE_FAILED",
         "Não foi possível consultar os dados.",
-        { operation: "list_books" },
+        { operation: "list_entries" },
       );
     }
+  }
+}
+
+export class GetBookEntry {
+  private readonly generic: GetLibraryEntry;
+
+  constructor(repository: LibraryEntryRepository) {
+    this.generic = new GetLibraryEntry(repository);
+  }
+
+  async execute(input: unknown): Promise<BookEntry> {
+    const entry = await this.generic.execute(input);
+    if (entry.type !== "book") throw notFound();
+    return entry;
+  }
+}
+
+export class ListBookEntries {
+  private readonly generic: ListLibraryEntries;
+
+  constructor(repository: LibraryEntryRepository) {
+    this.generic = new ListLibraryEntries(repository);
+  }
+
+  async execute(): Promise<readonly BookEntry[]> {
+    const entries = await this.generic.execute();
+    return Object.freeze(entries.filter((entry) => entry.type === "book"));
   }
 }
 
@@ -56,7 +83,7 @@ async function listAnnotations<T>(
 ): Promise<readonly T[]> {
   let entryId: string;
   try {
-    entryId = bookIdSchema.parse(input).id;
+    entryId = libraryEntryIdSchema.parse(input).id;
   } catch (error: unknown) {
     throw toValidationError(error);
   }
@@ -71,25 +98,28 @@ async function listAnnotations<T>(
   }
 }
 
-export class ListNotesByBook {
+export class ListNotesByEntry {
   constructor(private readonly repository: NoteRepository) {}
 
   execute(input: unknown): Promise<readonly Note[]> {
-    return listAnnotations(input, "list_notes_by_book", (entryId) =>
+    return listAnnotations(input, "list_notes_by_entry", (entryId) =>
       this.repository.listByEntryId(entryId),
     );
   }
 }
 
-export class ListQuotesByBook {
+export class ListQuotesByEntry {
   constructor(private readonly repository: QuoteRepository) {}
 
   execute(input: unknown): Promise<readonly Quote[]> {
-    return listAnnotations(input, "list_quotes_by_book", (entryId) =>
+    return listAnnotations(input, "list_quotes_by_entry", (entryId) =>
       this.repository.listByEntryId(entryId),
     );
   }
 }
+
+export class ListNotesByBook extends ListNotesByEntry {}
+export class ListQuotesByBook extends ListQuotesByEntry {}
 
 async function listAllAnnotations<T>(
   operation: string,

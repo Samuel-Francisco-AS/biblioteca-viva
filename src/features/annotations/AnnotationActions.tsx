@@ -31,8 +31,8 @@ export function AnnotationActions(props: Props) {
   const [mode, setMode] = useState<"view" | "edit" | "delete">("view");
   const [content, setContent] = useState(annotation.content);
   const [page, setPage] = useState(
-    kind === "quote" && annotation.page !== undefined
-      ? String(annotation.page)
+    kind === "quote" && annotation.location?.type === "book"
+      ? String(annotation.location.page)
       : "",
   );
   const [error, setError] = useState("");
@@ -56,8 +56,8 @@ export function AnnotationActions(props: Props) {
   function cancelEdit() {
     setContent(annotation.content);
     setPage(
-      kind === "quote" && annotation.page !== undefined
-        ? String(annotation.page)
+      kind === "quote" && annotation.location?.type === "book"
+        ? String(annotation.location.page)
         : "",
     );
     setError("");

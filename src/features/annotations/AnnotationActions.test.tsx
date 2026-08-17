@@ -10,6 +10,8 @@ const note: Note = {
   id: "note-1",
   entryId: "book-1",
   content: "Nota inicial",
+  favorite: false,
+  tagIds: [],
   createdAt: "2026-08-16T10:00:00.000Z",
   updatedAt: "2026-08-16T10:00:00.000Z",
   revision: 1,
@@ -18,7 +20,7 @@ const quote: Quote = {
   ...note,
   id: "quote-1",
   content: "Citação inicial",
-  page: 12,
+  location: { type: "book", page: 12 },
 };
 
 describe("ações compartilhadas de anotação", () => {

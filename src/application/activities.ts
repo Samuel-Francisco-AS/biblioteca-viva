@@ -1,4 +1,4 @@
-import type { EntryStatus } from "../domain";
+import type { EntryStatus, EntryType } from "../domain";
 
 interface ActivityMetadata {
   readonly id: string;
@@ -10,6 +10,22 @@ interface ActivityMetadata {
 export interface BookCreatedActivity extends ActivityMetadata {
   readonly type: "book_created";
   readonly metadata: { readonly status: EntryStatus };
+}
+
+export interface EntryCreatedActivity extends ActivityMetadata {
+  readonly type: "entry_created";
+  readonly metadata: {
+    readonly entryType: EntryType;
+    readonly status: EntryStatus;
+  };
+}
+
+export interface EntryUpdatedActivity extends ActivityMetadata {
+  readonly type: "entry_updated";
+  readonly metadata: {
+    readonly changedFields: readonly string[];
+    readonly entryType: EntryType;
+  };
 }
 
 export interface BookUpdatedActivity extends ActivityMetadata {
@@ -44,6 +60,8 @@ export interface QuoteAddedActivity extends ActivityMetadata {
 }
 
 export type Activity =
+  | EntryCreatedActivity
+  | EntryUpdatedActivity
   | BookCreatedActivity
   | BookUpdatedActivity
   | ProgressUpdatedActivity

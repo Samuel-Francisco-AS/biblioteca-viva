@@ -56,7 +56,7 @@ describe("repositórios Dexie de anotações", () => {
         id: "quote-a",
         entryId: book.id,
         content: "Citação A",
-        page: 8,
+        location: { type: "book", page: 8 },
         createdAt,
       },
       book,
@@ -76,7 +76,7 @@ describe("repositórios Dexie de anotações", () => {
         quote,
         {
           content: "Citação atualizada",
-          page: 9,
+          location: { type: "book", page: 9 },
           updatedAt: "2026-08-16T11:00:00.000Z",
         },
         book,
@@ -98,7 +98,7 @@ describe("repositórios Dexie de anotações", () => {
     await expect(reopenedNotes.list()).resolves.toHaveLength(1);
     await expect(reopenedQuotes.getById(quote.id)).resolves.toMatchObject({
       content: "Citação atualizada",
-      page: 9,
+      location: { type: "book", page: 9 },
       revision: 2,
     });
     await expect(

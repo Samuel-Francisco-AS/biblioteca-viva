@@ -326,3 +326,7 @@ abrir Biblioteca
 ```
 
 O sheet sobrepõe sem redimensionar ou recriar Phaser; Escape/fechar devolvem foco ao acionador React quando conhecido. O balão não recebe foco automaticamente, contém uma única frase localizada e é substituído pela interação seguinte. “Resumo acessível” expande os equivalentes React para estante, personagens e Coleção; falha do canvas o abre automaticamente. O período local atualiza a atmosfera na mesma instância e, ao voltar do background, é recalculado sem rede ou persistência.
+
+## 21. Novo registro e Coleção em P1-A
+
+`Novo registro → escolher um dos seis tipos → formulário específico → detalhe genérico`. Livro reutiliza seu formulário maduro; os demais mostram somente campos próprios. Coleção busca metadados seguros por variante, filtra tipo/status/favorito e ordena por atualização, criação ou título. O card inteiro abre `/registros/:id`; URLs antigas redirecionam. O detalhe mantém conclusão explícita para Filme, Atividade Física e Trabalho e progresso especializado para Série e Estudo. Sessões, etiquetas operáveis e timer entram somente em P1-B.

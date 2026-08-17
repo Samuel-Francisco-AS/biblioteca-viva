@@ -115,6 +115,10 @@ export function validateBook(book: BookEntry): void {
     throw new InvalidFieldError("status", "não pertence a EntryStatus");
   }
   requireText(book.title, "title");
+  book.tagIds.forEach((id) => requireId(id, "tagIds"));
+  if (new Set(book.tagIds).size !== book.tagIds.length) {
+    throw new InvalidFieldError("tagIds", "não pode conter duplicatas");
+  }
   const totalPages = validateTotalPages(book.totalPages);
   validateRating(book.rating);
   validatePage(book.currentPage, "currentPage");

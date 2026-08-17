@@ -1,23 +1,55 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
-import { ENTRY_STATUSES, type BookEntry } from "../../domain";
-import { presentApplicationError } from "../entry-editor/errorMessages";
+import { ENTRY_STATUSES, ENTRY_TYPES, type LibraryEntry } from "../../domain";
 import {
   progressPercentage,
   progressText,
   statusLabels,
 } from "../books/bookPresentation";
+import { presentApplicationError } from "../entry-editor/errorMessages";
 import {
   deriveCollection,
+  entryTypeLabels,
   parseCollectionSort,
   parseStatusFilter,
+  parseTypeFilter,
 } from "./collectionControls";
 
 export interface CollectionApplication {
   readonly queries: {
-    readonly listBookEntries: { execute(): Promise<readonly BookEntry[]> };
+    readonly listLibraryEntries: {
+      execute(): Promise<readonly LibraryEntry[]>;
+    };
   };
+}
+
+function secondaryText(entry: LibraryEntry): string {
+  switch (entry.type) {
+    case "book":
+      return entry.author ?? "Autor não informado";
+    case "movie":
+      return (
+        [entry.director, entry.year, entry.platform]
+          .filter(Boolean)
+          .join(" · ") || "Detalhes não informados"
+      );
+    case "series":
+      return `${entry.episodesWatched}${entry.totalEpisodes === undefined ? " episódios" : ` de ${entry.totalEpisodes} episódios`}`;
+    case "study":
+      return (
+        [entry.area, entry.discipline].filter(Boolean).join(" · ") ||
+        "Área não informada"
+      );
+    case "physical_activity":
+      return entry.modality ?? entry.category;
+    case "work":
+      return (
+        [entry.area, entry.organization].filter(Boolean).join(" · ") ||
+        entry.nextAction ||
+        "Detalhes não informados"
+      );
+  }
 }
 
 export function CollectionPage({
@@ -25,55 +57,51 @@ export function CollectionPage({
 }: {
   readonly application?: CollectionApplication;
 }) {
-  const [books, setBooks] = useState<readonly BookEntry[]>();
+  const [entries, setEntries] = useState<readonly LibraryEntry[]>();
   const [error, setError] = useState<string>();
   const [params, setParams] = useSearchParams();
   const location = useLocation();
   const searchRef = useRef<HTMLInputElement>(null);
   const query = params.get("q") ?? "";
   const status = parseStatusFilter(params.get("status"));
+  const type = parseTypeFilter(params.get("type"));
+  const favoritesOnly = params.get("favorite") === "true";
   const sort = parseCollectionSort(params.get("sort"));
-  const visibleBooks = useMemo(
-    () => deriveCollection(books ?? [], query, status, sort),
-    [books, query, sort, status],
+  const visibleEntries = useMemo(
+    () =>
+      deriveCollection(entries ?? [], query, status, sort, type, favoritesOnly),
+    [entries, favoritesOnly, query, sort, status, type],
   );
 
   useEffect(() => {
     if (!application) return;
     let active = true;
-    void application.queries.listBookEntries.execute().then(
-      (loaded) => {
-        if (active) setBooks(loaded);
-      },
-      (failure: unknown) => {
-        if (active) setError(presentApplicationError(failure).message);
-      },
+    void application.queries.listLibraryEntries.execute().then(
+      (loaded) => active && setEntries(loaded),
+      (failure: unknown) =>
+        active && setError(presentApplicationError(failure).message),
     );
     return () => {
       active = false;
     };
   }, [application]);
 
-  function updateParam(name: "q" | "sort" | "status", value: string) {
+  function updateParam(name: string, value: string) {
     setParams(
       (current) => {
         const next = new URLSearchParams(current);
         if (
           value === "" ||
           value === "all" ||
-          (name === "sort" && value === "recent")
-        ) {
+          (name === "sort" && value === "recent") ||
+          (name === "favorite" && value === "false")
+        )
           next.delete(name);
-        } else next.set(name, value);
+        else next.set(name, value);
         return next;
       },
       { replace: true },
     );
-  }
-
-  function clearControls() {
-    setParams({}, { replace: true });
-    requestAnimationFrame(() => searchRef.current?.focus());
   }
 
   if (!application)
@@ -90,43 +118,46 @@ export function CollectionPage({
         <p>{error}</p>
       </section>
     );
-  if (!books) return <p role="status">Carregando Coleção…</p>;
-  if (books.length === 0)
+  if (!entries) return <p role="status">Carregando Coleção…</p>;
+  if (entries.length === 0)
     return (
       <section
         className="content-card"
         aria-labelledby="empty-collection-title"
       >
         <p className="eyebrow">Coleção vazia</p>
-        <h2 id="empty-collection-title">Seu primeiro livro começa aqui</h2>
-        <p>Cadastre um livro para acompanhar sua leitura.</p>
-        <Link className="button button--primary" to="/novo-livro">
-          Cadastrar primeiro livro
+        <h2 id="empty-collection-title">Seu primeiro registro começa aqui</h2>
+        <p>Registre algo que você lê, assiste, aprende, pratica ou constrói.</p>
+        <Link className="button button--primary" to="/novo-registro">
+          Criar primeiro registro
         </Link>
       </section>
     );
 
   const controlsActive =
-    query.trim() !== "" || status !== "all" || sort !== "recent";
+    query.trim() !== "" ||
+    status !== "all" ||
+    type !== "all" ||
+    favoritesOnly ||
+    sort !== "recent";
   const returnPath = `${location.pathname}${location.search}`;
-
   return (
     <section aria-labelledby="collection-title">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">Seus livros</p>
+          <p className="eyebrow">Seus registros</p>
           <h2 id="collection-title">Coleção</h2>
         </div>
-        <Link className="button button--primary" to="/novo-livro">
-          Adicionar livro
+        <Link className="button button--primary" to="/novo-registro">
+          Novo registro
         </Link>
       </div>
       <fieldset className="collection-controls">
         <legend className="visually-hidden">Controles da Coleção</legend>
         <div className="form-field">
-          <label htmlFor="collection-search">Buscar livros</label>
+          <label htmlFor="collection-search">Buscar registros</label>
           <p className="field-help" id="collection-search-help">
-            Busca por título ou autor, sem diferenciar maiúsculas e acentos.
+            Busca nos metadados principais de cada tipo.
           </p>
           <input
             id="collection-search"
@@ -136,6 +167,21 @@ export function CollectionPage({
             aria-describedby="collection-search-help"
             onChange={(event) => updateParam("q", event.target.value)}
           />
+        </div>
+        <div className="form-field">
+          <label htmlFor="collection-type">Tipo</label>
+          <select
+            id="collection-type"
+            value={type}
+            onChange={(event) => updateParam("type", event.target.value)}
+          >
+            <option value="all">Todos os tipos</option>
+            {ENTRY_TYPES.map((entryType) => (
+              <option key={entryType} value={entryType}>
+                {entryTypeLabels[entryType]}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-field">
           <label htmlFor="collection-status">Status</label>
@@ -152,6 +198,16 @@ export function CollectionPage({
             ))}
           </select>
         </div>
+        <label className="checkbox-field">
+          <input
+            type="checkbox"
+            checked={favoritesOnly}
+            onChange={(event) =>
+              updateParam("favorite", String(event.target.checked))
+            }
+          />{" "}
+          Somente favoritos
+        </label>
         <div className="form-field">
           <label htmlFor="collection-sort">Ordenar por</label>
           <select
@@ -160,87 +216,85 @@ export function CollectionPage({
             onChange={(event) => updateParam("sort", event.target.value)}
           >
             <option value="recent">Atualização recente</option>
+            <option value="created">Criação recente</option>
             <option value="title">Título</option>
-            <option value="progress">Progresso</option>
           </select>
         </div>
       </fieldset>
       <div className="result-summary" aria-live="polite">
         <p>
-          {visibleBooks.length}{" "}
-          {visibleBooks.length === 1
-            ? "livro encontrado"
-            : "livros encontrados"}
-          {controlsActive ? ` de ${books.length}` : ""}.
+          {visibleEntries.length}{" "}
+          {visibleEntries.length === 1
+            ? "registro encontrado"
+            : "registros encontrados"}
+          {controlsActive ? ` de ${entries.length}` : ""}.
         </p>
-        {query !== "" && (
+        {controlsActive && (
           <button
             className="button button--secondary"
             type="button"
             onClick={() => {
-              updateParam("q", "");
+              setParams({}, { replace: true });
               requestAnimationFrame(() => searchRef.current?.focus());
             }}
           >
-            Limpar busca
+            Limpar busca e filtros
           </button>
         )}
       </div>
-      {visibleBooks.length === 0 ? (
+      {visibleEntries.length === 0 ? (
         <section
           className="content-card no-results"
           aria-labelledby="collection-no-results"
         >
           <h3 id="collection-no-results">
-            Nenhum livro corresponde aos controles
+            Nenhum registro corresponde aos controles
           </h3>
-          <p>Altere a busca ou o status para ver outros livros.</p>
-          <button
-            className="button button--secondary"
-            type="button"
-            onClick={clearControls}
-          >
-            Limpar busca e filtros
-          </button>
+          <p>Altere a busca ou os filtros para ver outros registros.</p>
         </section>
       ) : (
         <ul className="book-grid">
-          {visibleBooks.map((book) => {
-            const percentage = progressPercentage(book);
-            return (
-              <li className="book-card" key={book.id}>
-                <Link
-                  aria-label={`Abrir detalhes de ${book.title}`}
-                  aria-describedby={`book-${book.id}-progress`}
-                  className="book-card__link"
-                  to={{
-                    pathname: `/livros/${encodeURIComponent(book.id)}`,
-                    search: `?from=${encodeURIComponent(returnPath)}`,
-                  }}
-                >
-                  <article aria-labelledby={`book-${book.id}-title`}>
-                    <p className="status-badge">{statusLabels[book.status]}</p>
-                    <h3 id={`book-${book.id}-title`}>{book.title}</h3>
-                    <p>{book.author ?? "Autor não informado"}</p>
-                    <p id={`book-${book.id}-progress`}>{progressText(book)}</p>
-                    {book.totalPages !== undefined &&
-                    percentage !== undefined ? (
-                      <progress
-                        aria-label={`Progresso de ${book.title}`}
-                        aria-describedby={`book-${book.id}-progress`}
-                        max={book.totalPages}
-                        value={Math.min(book.currentPage, book.totalPages)}
-                      />
-                    ) : (
-                      <p className="progress-unknown">
-                        Porcentagem indisponível sem total de páginas.
-                      </p>
-                    )}
-                  </article>
-                </Link>
-              </li>
-            );
-          })}
+          {visibleEntries.map((entry) => (
+            <li className="book-card" key={entry.id}>
+              <Link
+                aria-label={`Abrir detalhes de ${entry.title}`}
+                className="book-card__link"
+                to={{
+                  pathname: `/registros/${encodeURIComponent(entry.id)}`,
+                  search: `?from=${encodeURIComponent(returnPath)}`,
+                }}
+              >
+                <article aria-labelledby={`entry-${entry.id}-title`}>
+                  <p className="eyebrow">
+                    {entryTypeLabels[entry.type]}
+                    {entry.favorite ? " · Favorito" : ""}
+                  </p>
+                  <p className="status-badge">{statusLabels[entry.status]}</p>
+                  <h3 id={`entry-${entry.id}-title`}>{entry.title}</h3>
+                  <p>{secondaryText(entry)}</p>
+                  {entry.type === "book" && (
+                    <>
+                      <p>{progressText(entry)}</p>
+                      {entry.totalPages !== undefined ? (
+                        <progress
+                          aria-label={`Progresso de ${entry.title}`}
+                          max={entry.totalPages}
+                          value={Math.min(entry.currentPage, entry.totalPages)}
+                        />
+                      ) : (
+                        <p className="progress-unknown">
+                          Porcentagem indisponível sem total de páginas.
+                        </p>
+                      )}
+                      <span className="visually-hidden">
+                        {progressPercentage(entry) ?? ""}
+                      </span>
+                    </>
+                  )}
+                </article>
+              </Link>
+            </li>
+          ))}
         </ul>
       )}
     </section>

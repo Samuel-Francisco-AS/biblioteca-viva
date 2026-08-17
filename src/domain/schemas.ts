@@ -16,6 +16,24 @@ const normalizedOptionalText = z
   .transform((value) => value.trim().replace(/\s+/gu, " "))
   .optional();
 
+const annotationLocationSchema = z.discriminatedUnion("type", [
+  z.strictObject({ type: z.literal("book"), page: z.int().positive() }),
+  z.strictObject({ type: z.literal("movie"), minute: z.int().nonnegative() }),
+  z.strictObject({
+    type: z.literal("series"),
+    season: z.int().positive(),
+    episode: z.int().positive(),
+    minute: z.int().nonnegative().optional(),
+  }),
+  z
+    .strictObject({
+      type: z.literal("study"),
+      module: normalizedOptionalText,
+      topic: normalizedOptionalText,
+    })
+    .refine((value) => value.module !== undefined || value.topic !== undefined),
+]);
+
 export const createBookInputSchema = z.strictObject({
   id: normalizedRequiredText,
   title: normalizedRequiredText,
@@ -27,6 +45,8 @@ export const createBookInputSchema = z.strictObject({
   startedAt: z.iso.datetime({ offset: false }).optional(),
   completedAt: z.iso.datetime({ offset: false }).optional(),
   createdAt: z.iso.datetime({ offset: false }),
+  favorite: z.boolean().optional(),
+  tagIds: z.array(normalizedRequiredText).optional(),
 });
 
 export const updateBibliographicDataInputSchema = z.strictObject({
@@ -52,11 +72,12 @@ export const createNoteInputSchema = z.strictObject({
   entryId: normalizedRequiredText,
   content: normalizedRequiredText,
   createdAt: z.iso.datetime({ offset: false }),
+  favorite: z.boolean().optional(),
+  tagIds: z.array(normalizedRequiredText).optional(),
+  location: annotationLocationSchema.optional(),
 });
 
-export const createQuoteInputSchema = createNoteInputSchema.extend({
-  page: z.int().positive().optional(),
-});
+export const createQuoteInputSchema = createNoteInputSchema;
 
 export const updateNoteInputSchema = z.strictObject({
   content: normalizedRequiredText,
@@ -64,7 +85,7 @@ export const updateNoteInputSchema = z.strictObject({
 });
 
 export const updateQuoteInputSchema = updateNoteInputSchema.extend({
-  page: z.int().positive().optional(),
+  location: annotationLocationSchema.optional(),
 });
 
 export type ParsedCreateBookInput = z.output<typeof createBookInputSchema>;

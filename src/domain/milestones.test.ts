@@ -92,7 +92,7 @@ const events: readonly [
   [
     createLibraryEntryCompletedEvent({
       ...metadata,
-      payload: { completedAt: metadata.occurredAt },
+      payload: { entryType: "book", completedAt: metadata.occurredAt },
     }),
     MILESTONE_ID.firstCompletedBook,
   ],

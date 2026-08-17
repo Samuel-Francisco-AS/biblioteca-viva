@@ -1,5 +1,5 @@
 import type { Activity } from "./activities";
-import type { BookEntry, Note, Quote, ReachedMilestone } from "../domain";
+import type { LibraryEntry, Note, Quote, ReachedMilestone } from "../domain";
 
 export const BACKUP_FORMAT_VERSION = 2;
 export const BACKUP_KIND = "biblioteca-viva-backup";
@@ -12,7 +12,7 @@ export interface BackupSetting {
 }
 
 export interface BackupData {
-  readonly libraryEntries: readonly BookEntry[];
+  readonly libraryEntries: readonly LibraryEntry[];
   readonly milestones: readonly ReachedMilestone[];
   readonly notes: readonly Note[];
   readonly quotes: readonly Quote[];

@@ -23,7 +23,8 @@ async function resetIndexedDb(page: Page): Promise<void> {
 }
 
 async function createBook(page: Page, fixture: BookFixture): Promise<void> {
-  await page.goto("/novo-livro");
+  await page.goto("/novo-registro");
+  await page.getByRole("button", { name: /Livro/u }).click();
   await page.getByLabel("Título (obrigatório)").fill(fixture.title);
   if (fixture.author)
     await page.getByLabel("Autor (opcional)").fill(fixture.author);

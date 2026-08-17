@@ -121,7 +121,9 @@ function History({
                 <article>
                   <h4>Citação</h4>
                   <blockquote>{quote.content}</blockquote>
-                  {quote.page !== undefined && <p>Página {quote.page}</p>}
+                  {quote.location?.type === "book" && (
+                    <p>Página {quote.location.page}</p>
+                  )}
                   <p className="annotation-date">
                     Adicionada em {formatDateTime(quote.createdAt)}
                   </p>
@@ -309,7 +311,7 @@ export function BookDetailPage({
           <Link
             className="button button--secondary"
             to={{
-              pathname: `/livros/${encodeURIComponent(book.id)}/editar`,
+              pathname: `/registros/${encodeURIComponent(book.id)}/editar`,
               search: `?from=${encodeURIComponent(returnPath)}`,
             }}
           >

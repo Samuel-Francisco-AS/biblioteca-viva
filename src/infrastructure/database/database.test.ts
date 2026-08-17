@@ -239,10 +239,14 @@ describe("BibliotecaDatabase e migrações", () => {
     const migrated = new BibliotecaDatabase(name);
     await migrated.open();
     const repository = new DexieLibraryEntryRepository(migrated);
-    expect(await repository.getById(original.id)).toEqual(original);
+    expect(await repository.getById(original.id)).toEqual({
+      ...original,
+      favorite: false,
+      tagIds: [],
+    });
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
       key: SCHEMA_MARKER_KEY,
-      value: "3",
+      value: "4",
     });
     migrated.close();
 
@@ -275,7 +279,7 @@ describe("BibliotecaDatabase e migrações", () => {
     expect(await migrated.settings.get("audio.preferences.v1")).toBeDefined();
     expect(await migrated.milestones.count()).toBe(0);
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-      value: "3",
+      value: "4",
     });
     migrated.close();
 
@@ -398,7 +402,7 @@ describe("repositórios Dexie", () => {
       id: "quote-1",
       entryId: "book-1",
       content: "Trecho",
-      page: 9,
+      location: { type: "book", page: 9 },
       createdAt: T0,
     });
     await notes.save(note);
@@ -439,7 +443,7 @@ describe("repositórios Dexie", () => {
       id: "quote-1",
       entryId: "book-1",
       content: "Trecho",
-      page: 5,
+      location: { type: "book", page: 5 },
       createdAt: T0,
     });
     await notes.save(laterNote);

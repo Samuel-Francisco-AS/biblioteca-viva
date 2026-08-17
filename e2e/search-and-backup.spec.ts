@@ -20,11 +20,11 @@ test("busca, filtro, ordenação e Arquivo preservam navegação", async ({
   });
 
   await page.goto("/colecao");
-  await page.getByLabel("Buscar livros").fill("lia omega");
+  await page.getByLabel("Buscar registros").fill("lia omega");
   await expect(
     page.getByRole("heading", { name: "Árvore Azul" }),
   ).toBeVisible();
-  await page.getByLabel("Buscar livros").fill("Caderno");
+  await page.getByLabel("Buscar registros").fill("Caderno");
   await page.getByLabel("Status").selectOption("in_progress");
   await page.getByLabel("Ordenar por").selectOption("title");
   await page
@@ -35,7 +35,7 @@ test("busca, filtro, ordenação e Arquivo preservam navegação", async ({
 
   await navigateFromMenu("Arquivo");
   await page.getByLabel("Buscar no Arquivo").fill("Mapa fictício");
-  await page.getByRole("link", { name: "Abrir livro Árvore Azul" }).click();
+  await page.getByRole("link", { name: "Abrir registro Árvore Azul" }).click();
   await page.getByRole("link", { name: "Voltar ao Arquivo" }).click();
   await expect(page).toHaveURL(/\/arquivo\?q=Mapa\+fict%C3%ADcio/u);
 });

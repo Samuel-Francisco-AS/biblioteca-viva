@@ -5,16 +5,16 @@ import type {
   NoteRepository,
   QuoteRepository,
 } from "../../application";
-import type { BookEntry, Note, Quote } from "../../domain";
+import type { LibraryEntry, Note, Quote } from "../../domain";
 import type { BibliotecaDatabase } from "./database";
 import { InfrastructureError } from "./errors";
 import {
   persistedActivitySchema,
-  persistedBookSchema,
+  persistedLibraryEntrySchema,
   persistedNoteSchema,
   persistedQuoteSchema,
   type PersistedActivity,
-  type PersistedBook,
+  type PersistedLibraryEntry,
   type PersistedNote,
   type PersistedQuote,
 } from "./schema";
@@ -27,8 +27,8 @@ function writeFailure(operation: string): InfrastructureError {
   return new InfrastructureError("DATABASE_WRITE_FAILED", operation);
 }
 
-function immutableBook(value: unknown): BookEntry {
-  const parsed = persistedBookSchema.safeParse(value);
+function immutableEntry(value: unknown): LibraryEntry {
+  const parsed = persistedLibraryEntrySchema.safeParse(value);
   if (!parsed.success) throw readFailure("read_book");
   return Object.freeze({ ...parsed.data });
 }
@@ -60,21 +60,21 @@ function chronological<
 export class DexieLibraryEntryRepository implements LibraryEntryRepository {
   constructor(private readonly database: BibliotecaDatabase) {}
 
-  async getById(id: string): Promise<BookEntry | undefined> {
+  async getById(id: string): Promise<LibraryEntry | undefined> {
     try {
       const stored: unknown = await this.database.libraryEntries.get(id);
-      return stored === undefined ? undefined : immutableBook(stored);
+      return stored === undefined ? undefined : immutableEntry(stored);
     } catch (error: unknown) {
       if (error instanceof InfrastructureError) throw error;
       throw readFailure("get_book");
     }
   }
 
-  async list(): Promise<readonly BookEntry[]> {
+  async list(): Promise<readonly LibraryEntry[]> {
     try {
       const stored: unknown[] = await this.database.libraryEntries.toArray();
       const books = stored
-        .map(immutableBook)
+        .map(immutableEntry)
         .sort(
           (left, right) =>
             left.createdAt.localeCompare(right.createdAt) ||
@@ -87,13 +87,13 @@ export class DexieLibraryEntryRepository implements LibraryEntryRepository {
     }
   }
 
-  async save(entry: BookEntry): Promise<void> {
-    const parsed = persistedBookSchema.safeParse(entry);
+  async save(entry: LibraryEntry): Promise<void> {
+    const parsed = persistedLibraryEntrySchema.safeParse(entry);
     if (!parsed.success) throw writeFailure("save_book");
     try {
       await this.database.libraryEntries.put({
         ...parsed.data,
-      } satisfies PersistedBook);
+      } satisfies PersistedLibraryEntry);
     } catch {
       throw writeFailure("save_book");
     }

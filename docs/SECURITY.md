@@ -131,6 +131,10 @@ Em uma origem HTTP insegura, o navegador pode indisponibilizar UUID e integridad
 
 O workflow usa somente actions oficiais de checkout/setup Node, `permissions: contents: read`, `npm ci` e lockfile. Não recebe secrets, não assina Android e não publica artefatos. Fixtures E2E são fictícias; o reset usa CDP somente contra a origem local controlada do preview e não adiciona endpoint ao build. Resultados e traces ficam ignorados pelo Git. A execução hospedada depende de push posterior.
 
+## 13. Fronteiras de P1-A
+
+Cada variante persistida passa por schema Zod estrito; localizações de anotação são discriminadas e devem corresponder ao tipo do registro. A migração v3 → v4 é aditiva, não eleva revisão nem timestamps e foi exercitada com reabertura. Eventos e atividades genéricos não contêm título, direção, disciplina, modalidade, organização, descrição ou próxima ação. Nenhuma dependência, plugin ou permissão foi adicionada.
+
 ### Auditoria npm em 2026-08-11
 
 `npm audit` reportou quatro ocorrências high, sem critical: `brace-expansion@5.0.8` via ESLint/minimatch, `nanoid@3.3.16` via Vite/PostCSS e React Router `7.18.1`. As duas primeiras pertencem ao toolchain com entradas controladas; o caso do nanoid exige custom generator de tamanho zero, não usado pelo produto. O advisory do Router afeta actions em RSC mode; esta aplicação é SPA estática, sem RSC, servidor ou actions remotas. Não houve upgrade fora de escopo apenas para zerar o contador. Reavaliar versões patch antes de G11 e imediatamente se algum desses caminhos passar a receber entrada não confiável.

@@ -39,7 +39,7 @@ describe("DexieExperienceSettingsRepository", () => {
     await expect(
       new DexieExperienceSettingsRepository(reopened, new SystemClock()).load(),
     ).resolves.toEqual(preferences);
-    expect(reopened.verno).toBe(3);
+    expect(reopened.verno).toBe(4);
   });
 
   it("rejeita valores inválidos e versões futuras com validação estrita", async () => {

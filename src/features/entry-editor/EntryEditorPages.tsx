@@ -63,7 +63,7 @@ export function NewBookPage({
       const book = await availableApplication.commands.createBookEntry.execute(
         converted.data,
       );
-      void navigate(`/livros/${encodeURIComponent(book.id)}`);
+      void navigate(`/registros/${encodeURIComponent(book.id)}`);
     } catch (error: unknown) {
       const presented = presentApplicationError(error);
       setErrors(presented.fieldErrors);
@@ -159,7 +159,7 @@ export function EditBookPage({
           converted.data,
         );
       void navigate({
-        pathname: `/livros/${encodeURIComponent(updated.id)}`,
+        pathname: `/registros/${encodeURIComponent(updated.id)}`,
         search: `?from=${encodeURIComponent(returnPath)}`,
       });
     } catch (error: unknown) {
@@ -181,7 +181,7 @@ export function EditBookPage({
         onSubmit={save}
         onCancel={() =>
           void navigate({
-            pathname: `/livros/${encodeURIComponent(book.id)}`,
+            pathname: `/registros/${encodeURIComponent(book.id)}`,
             search: `?from=${encodeURIComponent(returnPath)}`,
           })
         }

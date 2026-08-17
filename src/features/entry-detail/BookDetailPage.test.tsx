@@ -15,6 +15,8 @@ const book: BookEntry = {
   status: "in_progress",
   totalPages: 200,
   currentPage: 20,
+  favorite: false,
+  tagIds: [],
   rating: 4,
   startedAt: "2020-01-10T12:00:00.000Z",
   createdAt: "2026-07-20T10:00:00.000Z",
@@ -25,6 +27,8 @@ const note: Note = {
   id: "note-1",
   entryId: book.id,
   content: "Uma observação",
+  favorite: false,
+  tagIds: [],
   createdAt: "2026-07-29T11:00:00.000Z",
   updatedAt: "2026-07-29T11:00:00.000Z",
   revision: 1,
@@ -33,7 +37,9 @@ const quote: Quote = {
   id: "quote-1",
   entryId: book.id,
   content: "Uma passagem",
-  page: 15,
+  favorite: false,
+  tagIds: [],
+  location: { type: "book", page: 15 },
   createdAt: "2026-07-29T12:00:00.000Z",
   updatedAt: "2026-07-29T12:00:00.000Z",
   revision: 1,
@@ -184,7 +190,7 @@ describe("detalhe do livro", () => {
     expect(screen.getByText("4 de 5")).toBeVisible();
     expect(screen.getByRole("link", { name: "Editar dados" })).toHaveAttribute(
       "href",
-      "/livros/book-1/editar?from=%2Fcolecao",
+      "/registros/book-1/editar?from=%2Fcolecao",
     );
     expect(
       screen.getByRole("link", { name: "Voltar à Coleção" }),
@@ -238,7 +244,10 @@ describe("detalhe do livro", () => {
     const existing = application({
       listNotes: () => Promise.resolve([note]),
       listQuotes: () =>
-        Promise.resolve([quote, { ...quote, id: "quote-2", page: undefined }]),
+        Promise.resolve([
+          quote,
+          { ...quote, id: "quote-2", location: undefined },
+        ]),
     });
     await loaded(existing.facade);
     expect(screen.getByText(note.content)).toBeVisible();

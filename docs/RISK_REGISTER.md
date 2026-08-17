@@ -19,6 +19,8 @@ Escala: probabilidade e impacto `baixo`, `médio` ou `alto`.
 | R-13 | gamificação virar culpa | média | alto | guia de conteúdo e revisão ética | streak, punição ou degradação sugerida | ativo |
 | R-14 | arquitetura inchada antes do uso | média | médio | modular monolith e pastas sob demanda | abstração sem implementação real | ativo |
 | R-15 | advisories transitivos do toolchain/Router | baixa no uso atual | médio | lockfile, contexto registrado e revisão patch antes de G11 | entrada não confiável atingir toolchain ou adoção de RSC/actions | monitorado |
+| R-16 | migração v3 → v4 perder ou aparentar editar livros | baixa após automação | alto | migração aditiva, fixtures antigas, datas/revisões preservadas e reabertura | contagem ou semântica divergir após upgrade | mitigado parcialmente |
+| R-17 | crescimento da união gerar casts ou campos amorfos | média | alto | união discriminada, factories por variante, exhaustive switches e lint estrito | `as BookEntry`, `any` ou opcionais incompatíveis surgirem | ativo |
 
 ## Revisão
 

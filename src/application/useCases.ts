@@ -74,6 +74,7 @@ async function persistBookMutation(
           revision: input.updated.revision,
           payload: {
             completedAt: input.updated.completedAt ?? input.occurredAt,
+            entryType: "book",
           },
         })
       : input.fallbackEvent;
@@ -95,7 +96,8 @@ async function loadBook(
 ): Promise<BookEntry> {
   let book: BookEntry | undefined;
   try {
-    book = await dependencies.libraryEntries.getById(id);
+    const entry = await dependencies.libraryEntries.getById(id);
+    book = entry?.type === "book" ? entry : undefined;
   } catch {
     throw new ApplicationError(
       "PERSISTENCE_FAILED",
@@ -105,6 +107,24 @@ async function loadBook(
   }
   if (book === undefined) throw notFound();
   return book;
+}
+
+async function loadLibraryEntry(
+  dependencies: Pick<ApplicationDependencies, "libraryEntries">,
+  id: string,
+) {
+  try {
+    const entry = await dependencies.libraryEntries.getById(id);
+    if (!entry) throw notFound();
+    return entry;
+  } catch (error: unknown) {
+    if (error instanceof ApplicationError) throw error;
+    throw new ApplicationError(
+      "PERSISTENCE_FAILED",
+      "Não foi possível consultar os dados.",
+      { operation: "get_entry" },
+    );
+  }
 }
 
 export class CreateBookEntry {
@@ -199,7 +219,7 @@ export class UpdateBookEntry {
         aggregateId: updated.id,
         occurredAt,
         revision: updated.revision,
-        payload: { changedFields },
+        payload: { changedFields, entryType: "book" },
       }),
     );
     return updated;
@@ -292,7 +312,7 @@ export class ChangeBookStatus {
         aggregateId: updated.id,
         occurredAt,
         revision: updated.revision,
-        payload: { changedFields: ["status"] },
+        payload: { changedFields: ["status"], entryType: "book" },
       }),
       occurredAt,
       updated,
@@ -306,7 +326,12 @@ export class AddNote {
 
   async execute(input: unknown): Promise<Note> {
     const parsed = parseInput(addNoteSchema, input);
-    const book = await loadBook(this.dependencies, parsed.entryId);
+    const entry = await loadLibraryEntry(this.dependencies, parsed.entryId);
+    if (parsed.location !== undefined && parsed.location.type !== entry.type)
+      throw new ApplicationError(
+        "VALIDATION_FAILED",
+        "A localização não corresponde ao tipo de registro.",
+      );
     const id = await generatedId(this.dependencies, "generate_note_id");
     const occurredAt = await currentTime(this.dependencies);
     const note = applyDomain(() =>
@@ -320,7 +345,7 @@ export class AddNote {
     const activity = createActivity({
       id: activityId,
       type: "note_added",
-      aggregateId: book.id,
+      aggregateId: entry.id,
       occurredAt,
       revision: note.revision,
       metadata: { noteId: note.id },
@@ -328,7 +353,7 @@ export class AddNote {
     const eventId = await generatedId(this.dependencies, "generate_event_id");
     const event = createNoteCreatedEvent({
       eventId,
-      aggregateId: book.id,
+      aggregateId: entry.id,
       occurredAt,
       revision: note.revision,
       payload: { noteId: note.id },
@@ -349,12 +374,39 @@ export class AddQuote {
 
   async execute(input: unknown): Promise<Quote> {
     const parsed = parseInput(addQuoteSchema, input);
-    const book = await loadBook(this.dependencies, parsed.entryId);
+    const entry = await loadLibraryEntry(this.dependencies, parsed.entryId);
+    if (entry.type === "physical_activity" || entry.type === "work")
+      throw new ApplicationError(
+        "VALIDATION_FAILED",
+        "Citações estão disponíveis para livros, filmes, séries e estudos.",
+      );
+    if (
+      (parsed.location !== undefined && parsed.location.type !== entry.type) ||
+      (parsed.page !== undefined && entry.type !== "book")
+    )
+      throw new ApplicationError(
+        "VALIDATION_FAILED",
+        "A localização não corresponde ao tipo de registro.",
+      );
     const id = await generatedId(this.dependencies, "generate_quote_id");
     const occurredAt = await currentTime(this.dependencies);
     const quote = applyDomain(() =>
-      createQuote({ ...parsed, id, createdAt: occurredAt }, book),
+      createQuote(
+        {
+          ...parsed,
+          id,
+          createdAt: occurredAt,
+          ...(parsed.location !== undefined
+            ? { location: parsed.location }
+            : parsed.page !== undefined && {
+                location: { type: "book", page: parsed.page },
+              }),
+        },
+        entry.type === "book" ? entry : undefined,
+      ),
     );
+    const page =
+      quote.location?.type === "book" ? quote.location.page : undefined;
 
     const activityId = await generatedId(
       this.dependencies,
@@ -363,23 +415,23 @@ export class AddQuote {
     const activity = createActivity({
       id: activityId,
       type: "quote_added",
-      aggregateId: book.id,
+      aggregateId: entry.id,
       occurredAt,
       revision: quote.revision,
       metadata: {
         quoteId: quote.id,
-        ...(quote.page !== undefined && { page: quote.page }),
+        ...(page !== undefined && { page }),
       },
     });
     const eventId = await generatedId(this.dependencies, "generate_event_id");
     const event = createQuoteCreatedEvent({
       eventId,
-      aggregateId: book.id,
+      aggregateId: entry.id,
       occurredAt,
       revision: quote.revision,
       payload: {
         quoteId: quote.id,
-        ...(quote.page !== undefined && { page: quote.page }),
+        ...(page !== undefined && { page }),
       },
     });
     let milestoneEvents = Object.freeze([]) as readonly DomainEvent[];

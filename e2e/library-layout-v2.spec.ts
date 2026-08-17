@@ -91,7 +91,7 @@ test("rotas principais não apresentam overflow estrutural em viewport estreita"
   const routes = [
     "/",
     "/colecao",
-    "/novo-livro",
+    "/novo-registro",
     "/arquivo",
     "/configuracoes",
     detailUrl,

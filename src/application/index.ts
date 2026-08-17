@@ -7,6 +7,7 @@ export * from "./errors";
 export * from "./experience";
 export * from "./milestones";
 export * from "./deleteBookEntry";
+export * from "./libraryEntries";
 export * from "./ports";
 export * from "./queries";
 export type {

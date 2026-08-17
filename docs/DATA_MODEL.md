@@ -26,9 +26,11 @@ Operações recebem IDs e datas explicitamente. Elas não usam relógio ou gerad
 
 ## 3. LibraryEntry e BookEntry
 
-No baseline do protótipo, `LibraryEntry` ainda possui somente `BookEntry`. D-049 aprova para P1 a evolução aditiva para uma união discriminada com `BookEntry`, `MovieEntry`, `SeriesEntry`, `StudyEntry`, `PhysicalActivityEntry` e `WorkEntry`. A implementação e o schema continuam em v3 até P1-A concluir sua migração; esta seção não antecipa estado técnico.
+Desde P1-A, `LibraryEntry` é uma união discriminada real com `BookEntry`, `MovieEntry`, `SeriesEntry`, `StudyEntry`, `PhysicalActivityEntry` e `WorkEntry`. `BookEntry` preserva páginas, avaliação e regras históricas; Filme é dirigido por estado; Série usa episódios; Estudo usa `hours | sessions | modules | topics | exercises | percent`; Atividade Física e Trabalho permanecem orientados a sessões futuras e conclusão explícita.
 
 Campos comuns aprovados para P1: `id`, `type`, `title`, `status`, `createdAt`, `updatedAt`, `revision`, `startedAt?`, `completedAt?`, `favorite` e `tagIds`. Cada variante mantém campos e progresso próprios; é proibido concentrar páginas, episódios, disciplina, distância e cliente em uma entidade amorfa de opcionais.
+
+O schema Dexie v4 mantém as sete tabelas de v3 e amplia `libraryEntries` com índices `type` e `status`. A migração adiciona somente defaults comuns e converte `Quote.page` em `location: { type: "book", page }`; não altera `updatedAt`, `revision`, IDs nem conteúdo. `Note` e `Quote` referenciam `entryId`, possuem `favorite`/`tagIds` e localização discriminada para livro, filme, série ou estudo. Tags e sessions ainda não possuem tabelas: pertencem a P1-B.
 
 | Campo | Tipo | Obrigatório | Regra |
 |---|---|---:|---|

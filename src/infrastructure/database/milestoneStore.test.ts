@@ -43,10 +43,12 @@ const completedBook = {
   completedAt: "2026-08-10T12:00:00.000Z",
   createdAt: "2026-08-10T10:00:00.000Z",
   currentPage: 100,
+  favorite: false,
   id: "book-1",
   revision: 2,
   status: "completed" as const,
   title: "Fixture fictícia",
+  tagIds: [],
   totalPages: 100,
   type: "book" as const,
   updatedAt: "2026-08-10T12:00:00.000Z",
@@ -56,7 +58,7 @@ const completionEvent = createLibraryEntryCompletedEvent({
   aggregateId: completedBook.id,
   eventId: "event-completed-1",
   occurredAt: completedBook.completedAt,
-  payload: { completedAt: completedBook.completedAt },
+  payload: { entryType: "book", completedAt: completedBook.completedAt },
   revision: completedBook.revision,
 });
 

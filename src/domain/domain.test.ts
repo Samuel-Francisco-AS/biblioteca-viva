@@ -70,6 +70,8 @@ describe("BookEntry", () => {
       title: "Livro",
       status: "planned",
       currentPage: 0,
+      favorite: false,
+      tagIds: [],
       createdAt: T0,
       updatedAt: T0,
       revision: 1,
@@ -400,6 +402,8 @@ describe("Note e Quote", () => {
       id: "note-1",
       entryId: "book-1",
       content: "uma nota",
+      favorite: false,
+      tagIds: [],
       createdAt: T0,
       updatedAt: T0,
       revision: 1,
@@ -425,12 +429,16 @@ describe("Note e Quote", () => {
           id: "quote-1",
           entryId: book.id,
           content: " Trecho ",
-          page: 90,
+          location: { type: "book", page: 90 },
           createdAt: T0,
         },
         book,
       ),
-    ).toMatchObject({ content: "Trecho", page: 90, revision: 1 });
+    ).toMatchObject({
+      content: "Trecho",
+      location: { type: "book", page: 90 },
+      revision: 1,
+    });
   });
 
   it.each([0, -1, 91])("rejeita página de citação inválida: %s", (page) => {
@@ -441,7 +449,7 @@ describe("Note e Quote", () => {
           id: "quote-1",
           entryId: book.id,
           content: "Trecho",
-          page,
+          location: { type: "book", page },
           createdAt: T0,
         },
         book,
@@ -546,7 +554,7 @@ describe("eventos de domínio", () => {
       }),
       createLibraryEntryUpdatedEvent({
         ...metadata,
-        payload: { changedFields: ["title"] },
+        payload: { entryType: "book", changedFields: ["title"] },
       }),
       createProgressUpdatedEvent({
         ...metadata,
@@ -554,7 +562,7 @@ describe("eventos de domínio", () => {
       }),
       createLibraryEntryCompletedEvent({
         ...metadata,
-        payload: { completedAt: T1 },
+        payload: { entryType: "book", completedAt: T1 },
       }),
       createNoteCreatedEvent({ ...metadata, payload: { noteId: "note-1" } }),
       createQuoteCreatedEvent({

@@ -580,6 +580,26 @@ blockquote {
   list-style: none;
 }
 
+.type-picker {
+  display: grid;
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  list-style: none;
+}
+
+.type-picker__option {
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  text-align: left;
+}
+
 .book-card {
   min-width: 0;
 }

@@ -1016,3 +1016,9 @@ Coleção preserva a consulta única e o estado de URL, mas cada livro é um lin
 `libraryAtmosphere.ts` deriva quatro períodos da hora local e possui um monitor testável que mantém somente o timer até a próxima fronteira e um listener de visibilidade. O ID visual chega por contrato a `LibraryVisualHost`, que chama `setAtmosphere` na instância existente. Phaser desenha um único overlay procedural adicional e no máximo um tween finito de 500 ms; reduced motion aplica diretamente. Não há acesso a domínio, Dexie, áudio, rede, geolocalização ou persistência.
 
 No Android, `MainActivity` usa AndroidX já transitivo para edge-to-edge e ícones claros; temas nativos/splash e a raiz web compartilham fundo profundo. `viewport-fit=cover` e tokens de safe area mantêm controles fora das barras. Nenhum plugin, permissão ou dependência foi adicionado.
+
+## 35. Registros múltiplos em P1-A
+
+O fluxo genérico é `React → casos de uso de LibraryEntry → porta pequena → adapter Dexie`. Factories e updates fazem dispatch pela união discriminada; wrappers de livro preservam compatibilidade sem casts. React não importa Dexie. Coleção carrega todos os registros em lote e filtra metadados em memória; Arquivo faz um único join por `Map<entryId, LibraryEntry>`. Phaser continua recebendo somente a projeção de livros e fatos agregados antigos, sem títulos dos novos tipos.
+
+Dexie v4 é aditivo e não cria tabelas de P1-B. Rotas canônicas são `/novo-registro`, `/registros/:id` e `/registros/:id/editar`; rotas de livro redirecionam preservando ID e query. Eventos genéricos levam somente ID, tipo, instante e campos técnicos controlados. Backup continua v2 até P1-B, quando o formato v3 incorporará as novas coleções persistentes.

@@ -31,6 +31,8 @@ function makeBook(index: number): BookEntry {
     status: statuses[index % statuses.length] ?? "planned",
     ...(totalPages !== undefined && { totalPages }),
     currentPage: index % 101,
+    favorite: false,
+    tagIds: [],
     createdAt: `2026-01-${String((index % 28) + 1).padStart(2, "0")}T10:00:00.000Z`,
     updatedAt: `2026-07-${String((index % 28) + 1).padStart(2, "0")}T10:00:00.000Z`,
     revision: 1,
@@ -101,26 +103,16 @@ describe("controles derivados da Coleção", () => {
     ).toEqual(["abacate", "Árvore", "Zebra"]);
   });
 
-  it("ordena progresso conhecido antes do desconhecido", () => {
-    const books = [
-      {
-        ...makeBook(10),
-        id: "unknown-low",
-        totalPages: undefined,
-        currentPage: 20,
-      },
-      {
-        ...makeBook(20),
-        id: "unknown-high",
-        totalPages: undefined,
-        currentPage: 80,
-      },
-      { ...makeBook(3), id: "known-low", totalPages: 100, currentPage: 10 },
-      { ...makeBook(4), id: "known-high", totalPages: 100, currentPage: 90 },
-    ];
+  it("ordena criação recente sem comparar progressos incompatíveis", () => {
     expect(
-      deriveCollection(books, "", "all", "progress").map(({ id }) => id),
-    ).toEqual(["known-high", "known-low", "unknown-high", "unknown-low"]);
+      deriveCollection(hundredBooks, "", "all", "created").map(
+        ({ createdAt }) => createdAt,
+      ),
+    ).toEqual(
+      [...hundredBooks]
+        .sort((left, right) => right.createdAt.localeCompare(left.createdAt))
+        .map(({ createdAt }) => createdAt),
+    );
   });
 
   it("usa fallbacks seguros para parâmetros inválidos", () => {
@@ -134,11 +126,13 @@ describe("controles derivados da Coleção", () => {
       hundredBooks,
       "livro",
       "in_progress",
-      "progress",
+      "recent",
     );
     expect(result.length).toBeGreaterThan(0);
     expect(JSON.stringify(hundredBooks)).toBe(before);
     expect(Object.isFrozen(hundredBooks)).toBe(true);
-    expect(result.every((book) => book.currentPage >= 0)).toBe(true);
+    expect(
+      result.every((entry) => entry.type === "book" && entry.currentPage >= 0),
+    ).toBe(true);
   });
 });

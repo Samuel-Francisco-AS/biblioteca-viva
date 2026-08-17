@@ -1,8 +1,18 @@
-import { DECORATION_IDS, ENTRY_STATUSES, MILESTONE_IDS } from "../../domain";
+import {
+  DECORATION_IDS,
+  ENTRY_STATUSES,
+  MILESTONE_IDS,
+  PHYSICAL_ACTIVITY_CATEGORIES,
+  STUDY_PROGRESS_UNITS,
+  type BookEntry,
+  type LibraryEntry,
+  type Note,
+  type Quote,
+} from "../../domain";
 import { z } from "zod";
 
 export const DATABASE_NAME = "biblioteca-viva";
-export const DATABASE_VERSION = 3;
+export const DATABASE_VERSION = 4;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
 export const DATABASE_SCHEMA_V1 = {
@@ -23,12 +33,27 @@ export const DATABASE_SCHEMA_V3 = {
   milestones: "&id, reachedAt",
 } as const;
 
+export const DATABASE_SCHEMA_V4 = {
+  ...DATABASE_SCHEMA_V3,
+  libraryEntries: "&id, type, status, createdAt",
+} as const;
+
 const isoUtc = z.iso.datetime({ offset: false });
 const entityMetadata = {
   id: z.string().trim().min(1),
   createdAt: isoUtc,
   updatedAt: isoUtc,
   revision: z.int().positive(),
+};
+
+const commonEntry = {
+  ...entityMetadata,
+  title: z.string().trim().min(1),
+  status: z.enum(ENTRY_STATUSES),
+  startedAt: isoUtc.optional(),
+  completedAt: isoUtc.optional(),
+  favorite: z.boolean(),
+  tagIds: z.array(z.string().trim().min(1)),
 };
 
 export const persistedBookSchema = z
@@ -43,6 +68,8 @@ export const persistedBookSchema = z
     rating: z.int().min(1).max(5).optional(),
     startedAt: isoUtc.optional(),
     completedAt: isoUtc.optional(),
+    favorite: z.boolean(),
+    tagIds: z.array(z.string().trim().min(1)),
   })
   .superRefine((book, context) => {
     if (book.updatedAt < book.createdAt) {
@@ -97,15 +124,168 @@ export const persistedBookSchema = z
     }
   });
 
+const persistedMovieSchema = z.strictObject({
+  ...commonEntry,
+  type: z.literal("movie"),
+  director: z.string().trim().min(1).optional(),
+  year: z.int().positive().optional(),
+  durationMinutes: z.int().positive().optional(),
+  platform: z.string().trim().min(1).optional(),
+});
+
+const persistedSeriesSchema = z
+  .strictObject({
+    ...commonEntry,
+    type: z.literal("series"),
+    platform: z.string().trim().min(1).optional(),
+    episodesWatched: z.int().nonnegative(),
+    totalEpisodes: z.int().positive().optional(),
+    currentSeason: z.int().positive().optional(),
+    currentEpisode: z.int().positive().optional(),
+  })
+  .superRefine((entry, context) => {
+    if (
+      entry.totalEpisodes !== undefined &&
+      entry.episodesWatched > entry.totalEpisodes
+    )
+      context.addIssue({
+        code: "custom",
+        path: ["episodesWatched"],
+        message: "invalid progress",
+      });
+  });
+
+const persistedStudySchema = z
+  .strictObject({
+    ...commonEntry,
+    type: z.literal("study"),
+    area: z.string().trim().min(1).optional(),
+    discipline: z.string().trim().min(1).optional(),
+    objective: z.string().trim().min(1).optional(),
+    progressUnit: z.enum(STUDY_PROGRESS_UNITS),
+    progressCurrent: z.int().nonnegative(),
+    progressTotal: z.int().positive().optional(),
+    deadline: isoUtc.optional(),
+  })
+  .superRefine((entry, context) => {
+    if (
+      entry.progressTotal !== undefined &&
+      entry.progressCurrent > entry.progressTotal
+    )
+      context.addIssue({
+        code: "custom",
+        path: ["progressCurrent"],
+        message: "invalid progress",
+      });
+    if (
+      entry.progressUnit === "percent" &&
+      (entry.progressCurrent > 100 ||
+        (entry.progressTotal !== undefined && entry.progressTotal !== 100))
+    )
+      context.addIssue({
+        code: "custom",
+        path: ["progressCurrent"],
+        message: "invalid percent scale",
+      });
+  });
+
+const persistedPhysicalActivitySchema = z.strictObject({
+  ...commonEntry,
+  type: z.literal("physical_activity"),
+  category: z.enum(PHYSICAL_ACTIVITY_CATEGORIES),
+  modality: z.string().trim().min(1).optional(),
+  objective: z.string().trim().min(1).optional(),
+});
+
+const persistedWorkSchema = z.strictObject({
+  ...commonEntry,
+  type: z.literal("work"),
+  area: z.string().trim().min(1).optional(),
+  organization: z.string().trim().min(1).optional(),
+  description: z.string().trim().min(1).optional(),
+  deadline: isoUtc.optional(),
+  nextAction: z.string().trim().min(1).optional(),
+});
+
+export const persistedLibraryEntrySchema = z
+  .discriminatedUnion("type", [
+    persistedBookSchema,
+    persistedMovieSchema,
+    persistedSeriesSchema,
+    persistedStudySchema,
+    persistedPhysicalActivitySchema,
+    persistedWorkSchema,
+  ])
+  .superRefine((entry, context) => {
+    if (entry.updatedAt < entry.createdAt)
+      context.addIssue({
+        code: "custom",
+        path: ["updatedAt"],
+        message: "invalid chronology",
+      });
+    if (
+      entry.completedAt !== undefined &&
+      entry.startedAt !== undefined &&
+      entry.completedAt < entry.startedAt
+    )
+      context.addIssue({
+        code: "custom",
+        path: ["completedAt"],
+        message: "invalid chronology",
+      });
+    if (entry.status === "completed" && entry.completedAt === undefined)
+      context.addIssue({
+        code: "custom",
+        path: ["completedAt"],
+        message: "required",
+      });
+    if (entry.status !== "completed" && entry.completedAt !== undefined)
+      context.addIssue({
+        code: "custom",
+        path: ["completedAt"],
+        message: "unexpected",
+      });
+  });
+
+export const persistedAnnotationLocationSchema = z
+  .discriminatedUnion("type", [
+    z.strictObject({ type: z.literal("book"), page: z.int().positive() }),
+    z.strictObject({ type: z.literal("movie"), minute: z.int().nonnegative() }),
+    z.strictObject({
+      type: z.literal("series"),
+      season: z.int().positive(),
+      episode: z.int().positive(),
+      minute: z.int().nonnegative().optional(),
+    }),
+    z.strictObject({
+      type: z.literal("study"),
+      module: z.string().trim().min(1).optional(),
+      topic: z.string().trim().min(1).optional(),
+    }),
+  ])
+  .superRefine((location, context) => {
+    if (
+      location.type === "study" &&
+      location.module === undefined &&
+      location.topic === undefined
+    )
+      context.addIssue({
+        code: "custom",
+        path: ["module"],
+        message: "module or topic required",
+      });
+  });
+
 export const persistedNoteSchema = z.strictObject({
   ...entityMetadata,
   entryId: z.string().trim().min(1),
   content: z.string().trim().min(1),
+  favorite: z.boolean(),
+  tagIds: z.array(z.string().trim().min(1)),
+  location: persistedAnnotationLocationSchema.optional(),
 });
 
-export const persistedQuoteSchema = persistedNoteSchema.extend({
-  page: z.int().positive().optional(),
-});
+export const persistedQuoteSchema = persistedNoteSchema;
 
 const activityMetadata = {
   id: z.string().trim().min(1),
@@ -115,6 +295,36 @@ const activityMetadata = {
 };
 
 export const persistedActivitySchema = z.discriminatedUnion("type", [
+  z.strictObject({
+    ...activityMetadata,
+    type: z.literal("entry_created"),
+    metadata: z.strictObject({
+      entryType: z.enum([
+        "book",
+        "movie",
+        "series",
+        "study",
+        "physical_activity",
+        "work",
+      ]),
+      status: z.enum(ENTRY_STATUSES),
+    }),
+  }),
+  z.strictObject({
+    ...activityMetadata,
+    type: z.literal("entry_updated"),
+    metadata: z.strictObject({
+      entryType: z.enum([
+        "book",
+        "movie",
+        "series",
+        "study",
+        "physical_activity",
+        "work",
+      ]),
+      changedFields: z.array(z.string().min(1)).min(1),
+    }),
+  }),
   z.strictObject({
     ...activityMetadata,
     type: z.literal("book_created"),
@@ -192,9 +402,10 @@ export const persistedMilestoneSchema = z.strictObject({
   }),
 });
 
-export type PersistedBook = z.infer<typeof persistedBookSchema>;
-export type PersistedNote = z.infer<typeof persistedNoteSchema>;
-export type PersistedQuote = z.infer<typeof persistedQuoteSchema>;
+export type PersistedBook = BookEntry;
+export type PersistedLibraryEntry = LibraryEntry;
+export type PersistedNote = Note;
+export type PersistedQuote = Quote;
 export type PersistedActivity = z.infer<typeof persistedActivitySchema>;
 export type PersistedMetadata = z.infer<typeof persistedMetadataSchema>;
 export type PersistedSetting = z.infer<typeof persistedSettingSchema>;

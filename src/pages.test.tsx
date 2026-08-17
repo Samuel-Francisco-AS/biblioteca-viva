@@ -48,11 +48,13 @@ const book: BookEntry = {
   author: "Autora de teste",
   createdAt: "2026-07-20T10:00:00.000Z",
   currentPage: 40,
+  favorite: false,
   id: "book-1",
   revision: 1,
   status: "in_progress",
   title: "Título de teste",
   totalPages: 100,
+  tagIds: [],
   type: "book",
   updatedAt: "2026-07-30T10:00:00.000Z",
 };

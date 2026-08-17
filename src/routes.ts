@@ -19,16 +19,16 @@ export const appRoutes: readonly AppRoute[] = [
     title: "Biblioteca",
   },
   {
-    description: "Seus livros e leituras",
+    description: "Tudo o que você registra",
     navigationLabel: "Coleção",
     path: "/colecao",
     title: "Coleção",
   },
   {
-    description: "Adicionar uma obra à coleção",
-    navigationLabel: "Novo",
-    path: "/novo-livro",
-    title: "Novo livro",
+    description: "Registrar leitura, mídia, estudo, prática ou trabalho",
+    navigationLabel: "Novo registro",
+    path: "/novo-registro",
+    title: "Novo registro",
   },
   {
     description: "Notas e citações reunidas",

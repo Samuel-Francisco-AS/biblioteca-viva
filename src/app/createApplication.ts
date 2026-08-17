@@ -8,14 +8,23 @@ import {
   UpdateNote,
   UpdateQuote,
   DeleteBookEntry,
+  DeleteLibraryEntry,
+  ChangeLibraryEntryStatus,
+  CreateLibraryEntry,
+  UpdateLibraryEntry,
+  UpdateLibraryEntryProgress,
   ChangeBookStatus,
   CreateBookEntry,
   GetBookEntry,
+  GetLibraryEntry,
   ListAllNotes,
   ListAllQuotes,
   ListBookEntries,
+  ListLibraryEntries,
   ListNotesByBook,
+  ListNotesByEntry,
   ListQuotesByBook,
+  ListQuotesByEntry,
   ListMilestones,
   UpdateBookEntry,
   UpdateBookProgress,
@@ -53,6 +62,7 @@ import {
   DATABASE_NAME,
   DexieActivityRepository,
   DexieBookDeletionStore,
+  DexieLibraryEntryDeletionStore,
   DexieLibraryEntryRepository,
   DexieNoteRepository,
   DexieQuoteRepository,
@@ -118,8 +128,11 @@ export interface ApplicationRuntime {
     readonly addNote: AddNote;
     readonly addQuote: AddQuote;
     readonly changeBookStatus: ChangeBookStatus;
+    readonly changeLibraryEntryStatus: ChangeLibraryEntryStatus;
     readonly createBookEntry: CreateBookEntry;
+    readonly createLibraryEntry: CreateLibraryEntry;
     readonly deleteBookEntry: DeleteBookEntry;
+    readonly deleteLibraryEntry: DeleteLibraryEntry;
     readonly deleteNote: DeleteNote;
     readonly deleteQuote: DeleteQuote;
     readonly shareNote: ShareNote;
@@ -128,14 +141,20 @@ export interface ApplicationRuntime {
     readonly updateQuote: UpdateQuote;
     readonly updateBookEntry: UpdateBookEntry;
     readonly updateBookProgress: UpdateBookProgress;
+    readonly updateLibraryEntry: UpdateLibraryEntry;
+    readonly updateLibraryEntryProgress: UpdateLibraryEntryProgress;
   };
   readonly queries: {
     readonly getBookEntry: GetBookEntry;
+    readonly getLibraryEntry: GetLibraryEntry;
     readonly listAllNotes: ListAllNotes;
     readonly listAllQuotes: ListAllQuotes;
     readonly listBookEntries: ListBookEntries;
+    readonly listLibraryEntries: ListLibraryEntries;
     readonly listNotesByBook: ListNotesByBook;
+    readonly listNotesByEntry: ListNotesByEntry;
     readonly listQuotesByBook: ListQuotesByBook;
+    readonly listQuotesByEntry: ListQuotesByEntry;
     readonly listMilestones: ListMilestones;
   };
   readonly diagnostics: ApplicationDiagnostics;
@@ -178,7 +197,7 @@ export async function createApplication(
   await database.open();
   await database.metadata.put({
     key: SCHEMA_MARKER_KEY,
-    value: "3",
+    value: "4",
     updatedAt: "1970-01-01T00:00:00.000Z",
   });
 
@@ -187,6 +206,7 @@ export async function createApplication(
   const quotes = new DexieQuoteRepository(database);
   const activities = new DexieActivityRepository(database);
   const bookDeletion = new DexieBookDeletionStore(database);
+  const entryDeletion = new DexieLibraryEntryDeletionStore(database);
   const transaction = new DexieTransactionRunner(database);
   const milestoneStore = new DexieMilestoneStore(
     database,
@@ -339,8 +359,11 @@ export async function createApplication(
       addNote: new AddNote(dependencies),
       addQuote: new AddQuote(dependencies),
       changeBookStatus: new ChangeBookStatus(dependencies),
+      changeLibraryEntryStatus: new ChangeLibraryEntryStatus(dependencies),
       createBookEntry: new CreateBookEntry(dependencies),
+      createLibraryEntry: new CreateLibraryEntry(dependencies),
       deleteBookEntry: new DeleteBookEntry(bookDeletion),
+      deleteLibraryEntry: new DeleteLibraryEntry(entryDeletion),
       deleteNote: new DeleteNote(dependencies),
       deleteQuote: new DeleteQuote(dependencies),
       shareNote: new ShareNote(notes, libraryEntries, annotationShare),
@@ -349,14 +372,20 @@ export async function createApplication(
       updateQuote: new UpdateQuote(dependencies),
       updateBookEntry: new UpdateBookEntry(dependencies),
       updateBookProgress: new UpdateBookProgress(dependencies),
+      updateLibraryEntry: new UpdateLibraryEntry(dependencies),
+      updateLibraryEntryProgress: new UpdateLibraryEntryProgress(dependencies),
     },
     queries: {
       getBookEntry: new GetBookEntry(libraryEntries),
+      getLibraryEntry: new GetLibraryEntry(libraryEntries),
       listAllNotes: new ListAllNotes(notes),
       listAllQuotes: new ListAllQuotes(quotes),
       listBookEntries: new ListBookEntries(libraryEntries),
+      listLibraryEntries: new ListLibraryEntries(libraryEntries),
       listNotesByBook: new ListNotesByBook(notes),
+      listNotesByEntry: new ListNotesByEntry(notes),
       listQuotesByBook: new ListQuotesByBook(quotes),
+      listQuotesByEntry: new ListQuotesByEntry(quotes),
       listMilestones: new ListMilestones(milestoneStore),
     },
     diagnostics: {
