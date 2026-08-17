@@ -93,3 +93,7 @@ R2 permite compartilhar uma nota ou citação somente após ação explícita no
 ## 12. Novos registros de P1-A
 
 Filmes, séries, estudos, atividades físicas e trabalho ampliam a sensibilidade do IndexedDB local: podem revelar disciplina, prática, objetivo, projeto, organização, cliente e próxima ação. O app não criptografa o IndexedDB, não cria telemetria e não envia esses campos ao Phaser ou a logs. Backup v3 e sessões ainda não existem em P1-A e serão tratados em P1-B.
+
+## 13. Dados compartilhados de P1-B
+
+Etiquetas, duração, distância explicitamente registrada, esforço percebido, resultado e nota de sessão também são pessoais. O app não criptografa IndexedDB nem o JSON v3, não cria telemetria e não registra esses valores em logs, eventos ou Phaser. Exportar, guardar e compartilhar backup continuam ações explícitas; uma sessão ativa restaurada sempre fica pausada.

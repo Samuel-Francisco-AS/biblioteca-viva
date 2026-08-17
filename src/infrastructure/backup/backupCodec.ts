@@ -17,6 +17,8 @@ import {
   persistedNoteSchema,
   persistedQuoteSchema,
   persistedSettingSchema,
+  persistedSessionSchema,
+  persistedTagSchema,
 } from "../database/schema";
 
 const digestSchema = z.string().regex(/^[a-f0-9]{64}$/u);
@@ -61,7 +63,7 @@ const legacyDataSchema = z.strictObject({
   activities: z.array(persistedActivitySchema),
   settings: z.array(backupSettingSchema),
 });
-const dataSchema = z.strictObject({
+const v2DataSchema = z.strictObject({
   libraryEntries: z.array(
     z.union([persistedLibraryEntrySchema, legacyBookSchema]),
   ),
@@ -71,6 +73,10 @@ const dataSchema = z.strictObject({
   settings: z.array(backupSettingSchema),
   milestones: z.array(persistedMilestoneSchema),
 });
+const dataSchema = v2DataSchema.extend({
+  tags: z.array(persistedTagSchema),
+  sessions: z.array(persistedSessionSchema),
+});
 const envelopeMetadataSchema = z.strictObject({ policy: z.literal("replace") });
 const legacyUnsignedSchema = z.strictObject({
   kind: z.literal(BACKUP_KIND),
@@ -79,6 +85,15 @@ const legacyUnsignedSchema = z.strictObject({
   appVersion: z.string().trim().min(1),
   databaseVersion: z.int().positive(),
   data: legacyDataSchema,
+  metadata: envelopeMetadataSchema,
+});
+const v2UnsignedSchema = z.strictObject({
+  kind: z.literal(BACKUP_KIND),
+  formatVersion: z.literal(2),
+  createdAt: z.iso.datetime({ offset: false }),
+  appVersion: z.string().trim().min(1),
+  databaseVersion: z.int().positive(),
+  data: v2DataSchema,
   metadata: envelopeMetadataSchema,
 });
 const unsignedSchema = z.strictObject({
@@ -96,6 +111,7 @@ const integritySchema = z.strictObject({
 });
 const envelopeSchema = z.discriminatedUnion("formatVersion", [
   legacyUnsignedSchema.extend({ integrity: integritySchema }),
+  v2UnsignedSchema.extend({ integrity: integritySchema }),
   unsignedSchema.extend({ integrity: integritySchema }),
 ]);
 
@@ -164,6 +180,8 @@ function counts(data: BackupData): BackupCounts {
     quotes: data.quotes.length,
     activities: data.activities.length,
     settings: data.settings.length,
+    sessions: data.sessions.length,
+    tags: data.tags.length,
   });
 }
 
@@ -179,6 +197,8 @@ function sortData(data: BackupData): BackupData {
     settings: Object.freeze(
       [...data.settings].sort((a, b) => a.key.localeCompare(b.key)),
     ),
+    sessions: Object.freeze(byId(data.sessions)),
+    tags: Object.freeze(byId(data.tags)),
   });
 }
 
@@ -189,6 +209,8 @@ function rejectDuplicates(data: {
   readonly quotes: readonly { readonly id: string }[];
   readonly activities: readonly { readonly id: string }[];
   readonly settings: readonly { readonly key: string }[];
+  readonly sessions?: readonly { readonly id: string }[];
+  readonly tags?: readonly { readonly id: string }[];
 }): void {
   const collections: readonly [string, readonly string[]][] = [
     ["libraryEntries", data.libraryEntries.map((item) => item.id)],
@@ -197,6 +219,8 @@ function rejectDuplicates(data: {
     ["quotes", data.quotes.map((item) => item.id)],
     ["activities", data.activities.map((item) => item.id)],
     ["settings", data.settings.map((item) => item.key)],
+    ["sessions", (data.sessions ?? []).map((item) => item.id)],
+    ["tags", (data.tags ?? []).map((item) => item.id)],
   ];
   for (const [, ids] of collections) {
     if (new Set(ids).size !== ids.length) {
@@ -209,11 +233,13 @@ function rejectDuplicates(data: {
 }
 
 type ParsedV1Data = z.infer<typeof legacyDataSchema>;
-type ParsedV2Data = z.infer<typeof dataSchema>;
+type ParsedV2Data = z.infer<typeof v2DataSchema>;
+type ParsedV3Data = z.infer<typeof dataSchema>;
 
 function normalizeData(
-  data: ParsedV1Data | ParsedV2Data,
+  data: ParsedV1Data | ParsedV2Data | ParsedV3Data,
   milestones: z.infer<typeof persistedMilestoneSchema>[],
+  restoredAt: string,
 ): BackupData {
   return Object.freeze({
     libraryEntries: Object.freeze(
@@ -247,6 +273,30 @@ function normalizeData(
     activities: Object.freeze([...data.activities]),
     settings: Object.freeze([...data.settings]),
     milestones: Object.freeze([...milestones]),
+    tags: Object.freeze("tags" in data ? [...data.tags] : []),
+    sessions: Object.freeze(
+      "sessions" in data
+        ? data.sessions.map((session) =>
+            session.status === "active"
+              ? {
+                  ...session,
+                  status: "paused" as const,
+                  accumulatedDuration:
+                    session.accumulatedDuration +
+                    Math.max(
+                      0,
+                      Math.floor(
+                        (Date.parse(restoredAt) -
+                          Date.parse(session.activeSince ?? restoredAt)) /
+                          1000,
+                      ),
+                    ),
+                  activeSince: undefined,
+                }
+              : session,
+          )
+        : [],
+    ),
   });
 }
 
@@ -335,6 +385,7 @@ export class JsonBackupCodec implements BackupCodecPort {
       );
     if (
       root.formatVersion !== 1 &&
+      root.formatVersion !== 2 &&
       root.formatVersion !== BACKUP_FORMAT_VERSION
     )
       throw new BackupError(
@@ -360,6 +411,8 @@ export class JsonBackupCodec implements BackupCodecPort {
     rejectDuplicates({
       ...parsed.data.data,
       milestones: sourceFormatVersion === 1 ? [] : parsed.data.data.milestones,
+      sessions: sourceFormatVersion === 3 ? parsed.data.data.sessions : [],
+      tags: sourceFormatVersion === 3 ? parsed.data.data.tags : [],
     });
     const { integrity, ...unsigned } = parsed.data;
     if ((await sha256(checksumMaterial(unsigned))) !== integrity.digest)
@@ -371,6 +424,7 @@ export class JsonBackupCodec implements BackupCodecPort {
       normalizeData(
         parsed.data.data,
         sourceFormatVersion === 1 ? [] : parsed.data.data.milestones,
+        parsed.data.createdAt,
       ),
     );
     return Object.freeze({
@@ -388,7 +442,7 @@ export class JsonBackupCodec implements BackupCodecPort {
                 "Este backup é anterior aos marcos; nenhum marco será inventado e marcos legítimos existentes serão preservados.",
               ]
             : []),
-          ...(parsed.data.databaseVersion > 4
+          ...(parsed.data.databaseVersion > 5
             ? [
                 "O backup foi criado por um schema de banco mais recente, mas o formato é compatível.",
               ]

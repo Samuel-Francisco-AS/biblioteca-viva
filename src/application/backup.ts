@@ -1,7 +1,14 @@
 import type { Activity } from "./activities";
-import type { LibraryEntry, Note, Quote, ReachedMilestone } from "../domain";
+import type {
+  LibraryEntry,
+  Note,
+  Quote,
+  ReachedMilestone,
+  Session,
+  Tag,
+} from "../domain";
 
-export const BACKUP_FORMAT_VERSION = 2;
+export const BACKUP_FORMAT_VERSION = 3;
 export const BACKUP_KIND = "biblioteca-viva-backup";
 export const MAX_BACKUP_BYTES = 10 * 1024 * 1024;
 
@@ -18,6 +25,8 @@ export interface BackupData {
   readonly quotes: readonly Quote[];
   readonly activities: readonly Activity[];
   readonly settings: readonly BackupSetting[];
+  readonly sessions: readonly Session[];
+  readonly tags: readonly Tag[];
 }
 
 export interface BackupSnapshot extends BackupData {
@@ -31,7 +40,9 @@ export function hasRelevantRestoreData(data: BackupData): boolean {
     data.quotes.length > 0 ||
     data.activities.length > 0 ||
     data.settings.length > 0 ||
-    data.milestones.length > 0
+    data.milestones.length > 0 ||
+    data.sessions.length > 0 ||
+    data.tags.length > 0
   );
 }
 
@@ -42,13 +53,15 @@ export interface BackupCounts {
   readonly quotes: number;
   readonly activities: number;
   readonly settings: number;
+  readonly sessions: number;
+  readonly tags: number;
 }
 
 export interface BackupSummary {
   readonly createdAt: string;
   readonly appVersion: string;
   readonly databaseVersion: number;
-  readonly formatVersion: 1 | 2;
+  readonly formatVersion: 1 | 2 | 3;
   readonly policy: "replace";
   readonly counts: BackupCounts;
   readonly warnings: readonly string[];

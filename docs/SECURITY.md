@@ -135,6 +135,12 @@ O workflow usa somente actions oficiais de checkout/setup Node, `permissions: co
 
 Cada variante persistida passa por schema Zod estrito; localizações de anotação são discriminadas e devem corresponder ao tipo do registro. A migração v3 → v4 é aditiva, não eleva revisão nem timestamps e foi exercitada com reabertura. Eventos e atividades genéricos não contêm título, direção, disciplina, modalidade, organização, descrição ou próxima ação. Nenhuma dependência, plugin ou permissão foi adicionada.
 
+## 14. Sessões, etiquetas e backup v3
+
+O índice único de `normalizedName` reforça deduplicação; criação e renomeação verificam colisão na transação. Exclusão global de tag e cascata de Entry são atômicas. Início/retomada consulta a sessão aberta dentro da transação. O timer não usa serviço de background, wake lock ou notificação.
+
+Restore valida limite, schema estrito, duplicatas e SHA-256 antes de escrever; v1/v2 preservam canonicalização original. Logs/eventos não incluem título, organização/cliente, modalidade, objetivo, descrição, próxima ação, nome de tag, nota ou resultado de sessão. IndexedDB e backup continuam sem criptografia fornecida pelo app.
+
 ### Auditoria npm em 2026-08-11
 
 `npm audit` reportou quatro ocorrências high, sem critical: `brace-expansion@5.0.8` via ESLint/minimatch, `nanoid@3.3.16` via Vite/PostCSS e React Router `7.18.1`. As duas primeiras pertencem ao toolchain com entradas controladas; o caso do nanoid exige custom generator de tamanho zero, não usado pelo produto. O advisory do Router afeta actions em RSC mode; esta aplicação é SPA estática, sem RSC, servidor ou actions remotas. Não houve upgrade fora de escopo apenas para zerar o contador. Reavaliar versões patch antes de G11 e imediatamente se algum desses caminhos passar a receber entrada não confiável.

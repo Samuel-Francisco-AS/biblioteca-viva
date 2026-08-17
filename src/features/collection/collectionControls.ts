@@ -75,6 +75,8 @@ export function deriveCollection(
   sort: CollectionSort,
   type: TypeFilter = "all",
   favoritesOnly = false,
+  tagNames: ReadonlyMap<string, string> = new Map(),
+  tagId = "all",
 ): readonly LibraryEntry[] {
   const normalizedQuery = normalizeSearch(query);
   const result = entries.filter(
@@ -82,7 +84,10 @@ export function deriveCollection(
       (status === "all" || entry.status === status) &&
       (type === "all" || entry.type === type) &&
       (!favoritesOnly || entry.favorite) &&
-      normalizeSearch(searchableFields(entry)).includes(normalizedQuery),
+      (tagId === "all" || entry.tagIds.includes(tagId)) &&
+      normalizeSearch(
+        `${searchableFields(entry)} ${entry.tagIds.map((id) => tagNames.get(id) ?? "").join(" ")}`,
+      ).includes(normalizedQuery),
   );
   return [...result].sort((left, right) => {
     if (sort === "title") return compareTitle(left, right);

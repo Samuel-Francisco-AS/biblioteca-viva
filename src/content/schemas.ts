@@ -58,7 +58,18 @@ export const milestoneRewardDefinitionSchema = z.strictObject({
 });
 
 export const milestoneConditionSchema = z.strictObject({
-  fact: z.enum(["totalBooks", "totalNotes", "totalQuotes", "completedBooks"]),
+  fact: z.enum([
+    "totalBooks",
+    "totalMovies",
+    "totalSeries",
+    "totalStudies",
+    "totalPhysicalActivities",
+    "totalWorkEntries",
+    "totalSessions",
+    "totalNotes",
+    "totalQuotes",
+    "completedBooks",
+  ]),
   operator: z.literal("gte"),
   value: z.int().positive(),
 });
@@ -70,6 +81,7 @@ export const milestoneDefinitionSchema = z.strictObject({
     "NoteCreated",
     "QuoteCreated",
     "LibraryEntryCompleted",
+    "SessionChanged",
   ]),
   id: z.enum(MILESTONE_IDS),
   rewardIds: z.array(stableIdSchema),

@@ -1222,3 +1222,16 @@ blockquote {
   animation-iteration-count: 1 !important;
   transition-duration: 0.001ms !important;
 }
+.active-session {
+  align-items: center;
+  background: var(--surface, #231f2b);
+  border-bottom: 1px solid var(--border, #51495e);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  justify-content: space-between;
+  padding: 0.55rem max(1rem, env(safe-area-inset-right)) 0.55rem
+    max(1rem, env(safe-area-inset-left));
+  position: relative;
+  z-index: 5;
+}

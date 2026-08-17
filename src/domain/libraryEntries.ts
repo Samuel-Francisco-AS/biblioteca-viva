@@ -132,6 +132,19 @@ function tagIds(values: readonly string[] | undefined): readonly string[] {
   ]);
 }
 
+export function organizeLibraryEntry(
+  entry: LibraryEntry,
+  input: { readonly favorite?: boolean; readonly tagIds?: readonly string[] },
+  updatedAt: string,
+): LibraryEntry {
+  return Object.freeze({
+    ...entry,
+    ...nextMetadata(entry, updatedAt),
+    ...(input.favorite !== undefined && { favorite: input.favorite }),
+    ...(input.tagIds !== undefined && { tagIds: tagIds(input.tagIds) }),
+  });
+}
+
 function common<TType extends LibraryEntry["type"]>(
   type: TType,
   input: CommonCreateInput,

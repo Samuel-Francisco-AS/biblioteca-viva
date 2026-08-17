@@ -19,7 +19,7 @@
 - **implementação concluída:** Blocos 4, 5 e 6;
 - **prompts tecnicamente implementados:** Prompts 4 a 19; Prompts 14 a 19 mantêm validações humanas acumuladas e não estão aprovados;
 - **fase atual:** produto — `P1 — Vida Registrada`, iniciado por D-049;
-- **próximo trabalho:** P1-B — etiquetas, favoritos e sessões; P1-A está tecnicamente concluído, R1–R3 permanecem baseline e os gates humanos continuam abertos;
+- **próximo trabalho:** P1-C — histórico, timeline e estatísticas; P1-A/P1-B estão tecnicamente concluídos, R1–R3 permanecem baseline e os gates humanos continuam abertos;
 - **bloco atual:** Bloco 10 tecnicamente implementado; G10 e gates humanos anteriores permanecem abertos;
 - **APK:** diagnóstico interno validado no Moto G06 com Android 15; release assinado ainda não existe;
 - **código:** implementação do Bloco 4 validada no navegador; G4 aguarda uso real prolongado.
@@ -103,7 +103,7 @@ Não colocar expansões dentro dos blocos atuais apenas porque parecem fáceis.
 
 - `[~]` **P1 — Vida Registrada:** registros, etiquetas, favoritos, sessões, histórico e estatísticas;
   - `[x]` **P1-A:** seis variantes de `LibraryEntry`, CRUD unificado, anotações generalizadas, rotas e migração aditiva v3 → v4;
-  - `[ ]` **P1-B:** `Tag`, favoritos, sessões, timer persistente, Arquivo generalizado, milestones preparatórios e backup v3;
+  - `[x]` **P1-B:** `Tag`, favoritos, sessões, timer persistente, Arquivo generalizado, milestones preparatórios e backup v3;
   - `[ ]` **P1-C:** Estatísticas, timeline, histórico, resumo da Biblioteca e fatos derivados para P2;
 - `[ ]` **P2 — Biblioteca Evolutiva:** sistema de salas, Sala de Estudos, Sala de Projeção, Sala de Treino, Escritório, reputação, desbloqueios, personagens e rotinas;
 - `[ ]` **P3 — Memória Conectada:** calendário avançado, metas opcionais, ritmos, conexões, revisão, coleções e memória conectada.

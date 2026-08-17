@@ -58,19 +58,30 @@ export class DexieMilestoneStore
 
   async process(event: DomainEvent): Promise<readonly ReachedMilestone[]> {
     if (event.type === "MilestoneReached") return Object.freeze([]);
-    const [books, totalNotes, totalQuotes, reached] = await Promise.all([
-      this.database.libraryEntries.toArray(),
-      this.database.notes.count(),
-      this.database.quotes.count(),
-      this.list(),
-    ]);
+    const [entries, totalNotes, totalQuotes, totalSessions, reached] =
+      await Promise.all([
+        this.database.libraryEntries.toArray(),
+        this.database.notes.count(),
+        this.database.quotes.count(),
+        this.database.sessions.count(),
+        this.list(),
+      ]);
     const candidates = this.engine.evaluate({
       definitions: this.definitions,
       event,
       facts: {
-        completedBooks: books.filter(({ status }) => status === "completed")
-          .length,
-        totalBooks: books.length,
+        completedBooks: entries.filter(
+          ({ type, status }) => type === "book" && status === "completed",
+        ).length,
+        totalBooks: entries.filter(({ type }) => type === "book").length,
+        totalMovies: entries.filter(({ type }) => type === "movie").length,
+        totalSeries: entries.filter(({ type }) => type === "series").length,
+        totalStudies: entries.filter(({ type }) => type === "study").length,
+        totalPhysicalActivities: entries.filter(
+          ({ type }) => type === "physical_activity",
+        ).length,
+        totalWorkEntries: entries.filter(({ type }) => type === "work").length,
+        totalSessions,
         totalNotes,
         totalQuotes,
       },

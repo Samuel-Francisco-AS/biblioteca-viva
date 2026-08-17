@@ -52,6 +52,23 @@ import {
   type ExperiencePreferencesPort,
   type ExperienceSettingsPort,
   type AnnotationSharePort,
+  CompleteSession,
+  CreateManualSession,
+  CreateTag,
+  DeleteSession,
+  DeleteTag,
+  EditSession,
+  GetOpenSession,
+  ListSessions,
+  ListSessionsByEntry,
+  ListTags,
+  OrganizeLibraryEntry,
+  OrganizeNote,
+  OrganizeQuote,
+  PauseSession,
+  RenameTag,
+  ResumeSession,
+  StartSession,
 } from "../application";
 import { MILESTONE_ID, MilestoneEngine } from "../domain";
 import { ContentLocalizer, PROTOTYPE_CONTENT } from "../content";
@@ -66,6 +83,8 @@ import {
   DexieLibraryEntryRepository,
   DexieNoteRepository,
   DexieQuoteRepository,
+  DexieSessionRepository,
+  DexieTagRepository,
   DexieTransactionRunner,
   DexieMilestoneStore,
   DiagnosticsService,
@@ -143,6 +162,19 @@ export interface ApplicationRuntime {
     readonly updateBookProgress: UpdateBookProgress;
     readonly updateLibraryEntry: UpdateLibraryEntry;
     readonly updateLibraryEntryProgress: UpdateLibraryEntryProgress;
+    readonly completeSession: CompleteSession;
+    readonly createManualSession: CreateManualSession;
+    readonly createTag: CreateTag;
+    readonly deleteSession: DeleteSession;
+    readonly deleteTag: DeleteTag;
+    readonly editSession: EditSession;
+    readonly organizeLibraryEntry: OrganizeLibraryEntry;
+    readonly organizeNote: OrganizeNote;
+    readonly organizeQuote: OrganizeQuote;
+    readonly pauseSession: PauseSession;
+    readonly renameTag: RenameTag;
+    readonly resumeSession: ResumeSession;
+    readonly startSession: StartSession;
   };
   readonly queries: {
     readonly getBookEntry: GetBookEntry;
@@ -156,6 +188,10 @@ export interface ApplicationRuntime {
     readonly listQuotesByBook: ListQuotesByBook;
     readonly listQuotesByEntry: ListQuotesByEntry;
     readonly listMilestones: ListMilestones;
+    readonly getOpenSession: GetOpenSession;
+    readonly listSessions: ListSessions;
+    readonly listSessionsByEntry: ListSessionsByEntry;
+    readonly listTags: ListTags;
   };
   readonly diagnostics: ApplicationDiagnostics;
   readonly events: LocalEventBus;
@@ -197,7 +233,7 @@ export async function createApplication(
   await database.open();
   await database.metadata.put({
     key: SCHEMA_MARKER_KEY,
-    value: "4",
+    value: String(DATABASE_VERSION),
     updatedAt: "1970-01-01T00:00:00.000Z",
   });
 
@@ -205,6 +241,8 @@ export async function createApplication(
   const notes = new DexieNoteRepository(database);
   const quotes = new DexieQuoteRepository(database);
   const activities = new DexieActivityRepository(database);
+  const sessions = new DexieSessionRepository(database);
+  const tags = new DexieTagRepository(database);
   const bookDeletion = new DexieBookDeletionStore(database);
   const entryDeletion = new DexieLibraryEntryDeletionStore(database);
   const transaction = new DexieTransactionRunner(database);
@@ -279,6 +317,8 @@ export async function createApplication(
     milestones: milestoneStore,
     notes,
     quotes,
+    sessions,
+    tags,
     transaction,
   };
   const annotationShare =
@@ -374,6 +414,19 @@ export async function createApplication(
       updateBookProgress: new UpdateBookProgress(dependencies),
       updateLibraryEntry: new UpdateLibraryEntry(dependencies),
       updateLibraryEntryProgress: new UpdateLibraryEntryProgress(dependencies),
+      completeSession: new CompleteSession(dependencies),
+      createManualSession: new CreateManualSession(dependencies),
+      createTag: new CreateTag(dependencies),
+      deleteSession: new DeleteSession(dependencies),
+      deleteTag: new DeleteTag(dependencies),
+      editSession: new EditSession(dependencies),
+      organizeLibraryEntry: new OrganizeLibraryEntry(dependencies),
+      organizeNote: new OrganizeNote(dependencies),
+      organizeQuote: new OrganizeQuote(dependencies),
+      pauseSession: new PauseSession(dependencies),
+      renameTag: new RenameTag(dependencies),
+      resumeSession: new ResumeSession(dependencies),
+      startSession: new StartSession(dependencies),
     },
     queries: {
       getBookEntry: new GetBookEntry(libraryEntries),
@@ -387,6 +440,10 @@ export async function createApplication(
       listQuotesByBook: new ListQuotesByBook(quotes),
       listQuotesByEntry: new ListQuotesByEntry(quotes),
       listMilestones: new ListMilestones(milestoneStore),
+      getOpenSession: new GetOpenSession(sessions),
+      listSessions: new ListSessions(sessions),
+      listSessionsByEntry: new ListSessionsByEntry(sessions),
+      listTags: new ListTags(tags),
     },
     diagnostics: {
       inspect: () => diagnosticsService.inspect(),

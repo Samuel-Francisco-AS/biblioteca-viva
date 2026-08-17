@@ -109,6 +109,8 @@ const data: BackupData = Object.freeze({
       updatedAt: book.updatedAt,
     },
   ],
+  sessions: [],
+  tags: [],
 });
 
 const laterBook = Object.freeze({
@@ -162,9 +164,11 @@ const replacementData: BackupData = Object.freeze({
       updatedAt: laterBook.updatedAt,
     },
   ],
+  sessions: [],
+  tags: [],
 });
 
-describe("backup JSON v2", () => {
+describe("backup JSON v3", () => {
   it("cria envelope versionado, legível, determinístico e íntegro", async () => {
     const codec = new JsonBackupCodec();
     const artifact = await codec.encode({
@@ -176,7 +180,7 @@ describe("backup JSON v2", () => {
     const raw = JSON.parse(artifact.content) as Record<string, unknown>;
     expect(raw).toMatchObject({
       kind: BACKUP_KIND,
-      formatVersion: 2,
+      formatVersion: 3,
       appVersion: "0.2.0-alpha.1",
       databaseVersion: 2,
     });
@@ -219,6 +223,8 @@ describe("backup JSON v2", () => {
         libraryEntries: Array<Record<string, unknown>>;
         notes: Array<Record<string, unknown>>;
         quotes: Array<Record<string, unknown>>;
+        sessions?: unknown;
+        tags?: unknown;
         milestones?: unknown;
       };
       formatVersion: number;
@@ -227,6 +233,8 @@ describe("backup JSON v2", () => {
     };
     raw.formatVersion = 1;
     delete raw.data.milestones;
+    delete raw.data.sessions;
+    delete raw.data.tags;
     for (const entry of raw.data.libraryEntries) {
       delete entry.favorite;
       delete entry.tagIds;
@@ -281,10 +289,15 @@ describe("backup JSON v2", () => {
         libraryEntries: Array<Record<string, unknown>>;
         notes: Array<Record<string, unknown>>;
         quotes: Array<Record<string, unknown>>;
+        sessions?: unknown;
+        tags?: unknown;
       };
       integrity?: { algorithm: "SHA-256"; digest: string };
       [key: string]: unknown;
     };
+    raw.formatVersion = 2;
+    delete raw.data.sessions;
+    delete raw.data.tags;
     for (const entry of raw.data.libraryEntries) {
       delete entry.favorite;
       delete entry.tagIds;
@@ -354,6 +367,58 @@ describe("backup JSON v2", () => {
     );
   });
 
+  it("faz round-trip v3 de tags e pausa sessão ativa no instante exportado", async () => {
+    const codec = new JsonBackupCodec();
+    const createdAt = "2026-07-30T11:02:00.000Z";
+    const artifact = await codec.encode({
+      appVersion: "0.2.0-alpha.1",
+      createdAt,
+      databaseVersion: 5,
+      data: {
+        ...data,
+        tags: [
+          {
+            id: "tag-ação",
+            name: "Ação",
+            normalizedName: "ação",
+            createdAt: book.createdAt,
+            updatedAt: book.createdAt,
+            revision: 1,
+          },
+        ],
+        sessions: [
+          {
+            id: "session-1",
+            entryId: book.id,
+            entryType: "book",
+            kind: "reading",
+            status: "active",
+            startedAt: book.updatedAt,
+            accumulatedDuration: 30,
+            activeSince: book.updatedAt,
+            createdAt: book.updatedAt,
+            updatedAt: book.updatedAt,
+            revision: 1,
+          },
+        ],
+      },
+    });
+    const inspected = await codec.inspect(artifact.content);
+    expect(inspected.summary).toMatchObject({
+      formatVersion: 3,
+      counts: { tags: 1, sessions: 1 },
+    });
+    expect(inspected.data.tags[0]).toMatchObject({
+      name: "Ação",
+      normalizedName: "ação",
+    });
+    expect(inspected.data.sessions[0]).toMatchObject({
+      status: "paused",
+      accumulatedDuration: 150,
+      activeSince: undefined,
+    });
+  });
+
   it.each([
     ["JSON inválido", "{", "INVALID_JSON"],
     ["formato desconhecido", "{}", "UNRECOGNIZED_FORMAT"],
@@ -373,7 +438,7 @@ describe("backup JSON v2", () => {
     });
     const raw = JSON.parse(artifact.content) as Record<string, unknown>;
     await expect(
-      codec.inspect(JSON.stringify({ ...raw, formatVersion: 3 })),
+      codec.inspect(JSON.stringify({ ...raw, formatVersion: 4 })),
     ).rejects.toMatchObject({ code: "FUTURE_FORMAT_VERSION" });
     const withoutIntegrity = { ...raw };
     delete withoutIntegrity.integrity;
@@ -492,6 +557,8 @@ describe("backup JSON v2", () => {
       quotes: [quoteWithoutPage, quote],
       activities: manyActivities,
       settings: [],
+      sessions: [],
+      tags: [],
     });
     const source = new BibliotecaDatabase(sourceName);
     await source.open();
@@ -551,6 +618,8 @@ describe("backup JSON v2", () => {
       notes: 1,
       quotes: 2,
       settings: 0,
+      sessions: 0,
+      tags: 0,
     });
 
     const destination = new BibliotecaDatabase(destinationName);
@@ -567,6 +636,8 @@ describe("backup JSON v2", () => {
       quotes: 2,
       activities: 8,
       settings: 0,
+      sessions: 0,
+      tags: 0,
     });
     expect(await destinationStore.read()).toEqual({
       ...inspected.data,
@@ -585,6 +656,8 @@ describe("snapshot Dexie e restauração", () => {
       notes: [],
       quotes: [],
       settings: [],
+      sessions: [],
+      tags: [],
     };
     expect(hasRelevantRestoreData(empty)).toBe(false);
     expect(
@@ -681,7 +754,7 @@ describe("snapshot Dexie e restauração", () => {
       integrity: { digest: string };
     };
     const future = structuredClone(raw);
-    future.formatVersion = 3;
+    future.formatVersion = 4;
     const badChecksum = structuredClone(raw);
     badChecksum.integrity.digest = "0".repeat(64);
     const invalidEntity = structuredClone(raw);
@@ -1072,6 +1145,8 @@ describe("snapshot Dexie e restauração", () => {
         quotes: 1,
         activities: 1,
         settings: 1,
+        sessions: 0,
+        tags: 0,
       });
       expect(order).toEqual(isEmpty ? ["replace"] : ["deliver", "replace"]);
     }

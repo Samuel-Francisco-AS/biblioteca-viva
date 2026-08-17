@@ -124,6 +124,31 @@ export function updateNote(note: Note, input: UpdateAnnotationInput): Note {
   });
 }
 
+export function organizeAnnotation(
+  annotation: Note,
+  input: { readonly favorite?: boolean; readonly tagIds?: readonly string[] },
+  updatedAt: string,
+): Note;
+export function organizeAnnotation(
+  annotation: Quote,
+  input: { readonly favorite?: boolean; readonly tagIds?: readonly string[] },
+  updatedAt: string,
+): Quote;
+export function organizeAnnotation(
+  annotation: Note | Quote,
+  input: { readonly favorite?: boolean; readonly tagIds?: readonly string[] },
+  updatedAt: string,
+): Note | Quote {
+  return Object.freeze({
+    ...annotation,
+    ...nextMetadata(annotation, updatedAt),
+    ...(input.favorite !== undefined && { favorite: input.favorite }),
+    ...(input.tagIds !== undefined && {
+      tagIds: normalizedTagIds(input.tagIds),
+    }),
+  });
+}
+
 export function updateQuote(
   quote: Quote,
   input: UpdateQuoteInput,

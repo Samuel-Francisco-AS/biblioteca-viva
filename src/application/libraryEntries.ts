@@ -25,6 +25,8 @@ import {
   generatedId,
   parseInput,
   publishEvent,
+  publishEvents,
+  processMilestones,
   runTransaction,
   saveActivity,
   saveEntity,
@@ -135,7 +137,13 @@ async function loadEntry(
 
 type WriteDependencies = Pick<
   ApplicationDependencies,
-  "activities" | "clock" | "events" | "ids" | "libraryEntries" | "transaction"
+  | "activities"
+  | "clock"
+  | "events"
+  | "ids"
+  | "libraryEntries"
+  | "milestones"
+  | "transaction"
 >;
 
 async function persistMutation(
@@ -216,14 +224,18 @@ export class CreateLibraryEntry {
       revision: entry.revision,
       payload: { entryType: entry.type, status: entry.status },
     });
+    let milestoneEvents = Object.freeze(
+      [],
+    ) as readonly import("../domain").DomainEvent[];
     await runTransaction(this.dependencies, async () => {
       await saveEntity(
         () => this.dependencies.libraryEntries.save(entry),
         "save_entry",
       );
       await saveActivity(this.dependencies, activity);
+      milestoneEvents = await processMilestones(this.dependencies, event);
     });
-    await publishEvent(this.dependencies, event);
+    await publishEvents(this.dependencies, [event, ...milestoneEvents]);
     return entry;
   }
 }

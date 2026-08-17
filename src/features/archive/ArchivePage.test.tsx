@@ -101,11 +101,14 @@ function application(
       shareQuote: { execute: calls.shareQuote },
       updateNote: { execute: calls.updateNote },
       updateQuote: { execute: calls.updateQuote },
+      organizeNote: { execute: vi.fn(() => Promise.resolve(note)) },
+      organizeQuote: { execute: vi.fn(() => Promise.resolve(quote)) },
     },
     queries: {
       listLibraryEntries: { execute: calls.books },
       listAllNotes: { execute: calls.notes },
       listAllQuotes: { execute: calls.quotes },
+      listTags: { execute: vi.fn(() => Promise.resolve([])) },
     },
   };
   return { calls, facade };

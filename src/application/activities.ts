@@ -59,6 +59,23 @@ export interface QuoteAddedActivity extends ActivityMetadata {
   readonly metadata: { readonly quoteId: string; readonly page?: number };
 }
 
+export interface SessionStartedActivity extends ActivityMetadata {
+  readonly type: "session_started";
+  readonly metadata: {
+    readonly sessionId: string;
+    readonly entryType: EntryType;
+  };
+}
+
+export interface SessionCompletedActivity extends ActivityMetadata {
+  readonly type: "session_completed";
+  readonly metadata: {
+    readonly sessionId: string;
+    readonly entryType: EntryType;
+    readonly duration: number;
+  };
+}
+
 export type Activity =
   | EntryCreatedActivity
   | EntryUpdatedActivity
@@ -67,7 +84,9 @@ export type Activity =
   | ProgressUpdatedActivity
   | StatusChangedActivity
   | NoteAddedActivity
-  | QuoteAddedActivity;
+  | QuoteAddedActivity
+  | SessionStartedActivity
+  | SessionCompletedActivity;
 
 export function createActivity<T extends Activity>(activity: T): T {
   Object.freeze(activity.metadata);

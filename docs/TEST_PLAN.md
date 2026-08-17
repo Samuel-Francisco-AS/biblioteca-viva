@@ -10,6 +10,10 @@ Garantir que a Biblioteca Viva preserve dados, funcione no Android real, mantenh
 
 P1-A encerrou com 620 testes Vitest em 67 arquivos e nove E2E Chromium. As novas matrizes cobrem factories e updates das seis variantes, auto-start/auto-complete aplicável, totais desconhecidos, eventos sem conteúdo pessoal, formulário de seis tipos, Coleção unificada, backup v1/v2 histórico e migração real v3 → v4 com banco vazio, múltiplos status, Unicode, anotações, atividades, settings, milestones, luminária e reabertura idempotente. A automação Android compilou o APK debug; não houve instalação, TalkBack ou validação física.
 
+### Evidência P1-B
+
+P1-B encerrou com 639 testes Vitest em 71 arquivos e nove E2E Chromium. As provas novas cobrem normalização/colisão de tags, associação/favorito, exclusão cruzada, cinco kinds de sessão cobrindo seis tipos, unicidade global, pause/resume/complete por `Clock`, integrações de Livro/Série/Estudo, migração v4 → v5, backup v3 e conversão de sessão ativa em pausada. Formatação/check, lint, typecheck, áudio, build/performance, Android sync/build, ZIP e diff também passaram; nenhuma validação física é alegada.
+
 ### Domínio
 
 - invariantes de livro;

@@ -33,3 +33,12 @@ Revisar este arquivo:
 - quando um risco se materializar.
 
 Quando materializado, registrar defeito, decisão e teste de regressão. Risco encerrado permanece no histórico com justificativa.
+# Riscos P1-B
+
+- **migração v4 → v5:** risco controlado por upgrade aditivo, fixture com reabertura e ausência de edição artificial;
+- **backup v3:** risco alto de perda mitigado por validação estrita, SHA-256 por versão, replace transacional e milestones monotônicos;
+- **sessão esquecida:** timer sobrevive por timestamp, indicador global permanece visível e restore pausa sessões antigas;
+- **volume de sessões:** índices mínimos e agregação em lote; reavaliar somente com volume real;
+- **trabalho/atividade:** dados potencialmente sensíveis permanecem locais, sem telemetria/log/Phaser;
+- **complexidade da união:** exhaustive switches e schemas discriminados evitam opcionais amorfos;
+- **N+1 em filtros/stats:** coleções são carregadas em lote e relacionadas por `Map`.

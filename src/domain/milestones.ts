@@ -5,6 +5,12 @@ export const MILESTONE_ID = Object.freeze({
   firstCompletedBook: "milestone.first-completed-book",
   firstNote: "milestone.first-note",
   firstQuote: "milestone.first-quote",
+  firstMovie: "milestone.first-movie",
+  firstSeries: "milestone.first-series",
+  firstStudy: "milestone.first-study",
+  firstPhysicalActivity: "milestone.first-physical-activity",
+  firstWork: "milestone.first-work",
+  firstSession: "milestone.first-session",
 } as const);
 
 export const MILESTONE_IDS = Object.freeze(Object.values(MILESTONE_ID));
@@ -26,7 +32,16 @@ export type MilestoneSourceEventType = Exclude<
 >;
 
 export type MilestoneFact =
-  "totalBooks" | "totalNotes" | "totalQuotes" | "completedBooks";
+  | "totalBooks"
+  | "totalMovies"
+  | "totalSeries"
+  | "totalStudies"
+  | "totalPhysicalActivities"
+  | "totalWorkEntries"
+  | "totalSessions"
+  | "totalNotes"
+  | "totalQuotes"
+  | "completedBooks";
 
 export interface MilestoneCondition {
   readonly fact: MilestoneFact;
@@ -46,7 +61,8 @@ export interface MilestoneDefinition {
     | "LibraryEntryCreated"
     | "NoteCreated"
     | "QuoteCreated"
-    | "LibraryEntryCompleted";
+    | "LibraryEntryCompleted"
+    | "SessionChanged";
   readonly id: MilestoneId;
   readonly rewardIds: readonly string[];
   readonly ruleVersion: number;
@@ -74,6 +90,12 @@ export interface MilestoneFacts {
   readonly totalBooks: number;
   readonly totalNotes: number;
   readonly totalQuotes: number;
+  readonly totalMovies?: number;
+  readonly totalSeries?: number;
+  readonly totalStudies?: number;
+  readonly totalPhysicalActivities?: number;
+  readonly totalWorkEntries?: number;
+  readonly totalSessions?: number;
 }
 
 export interface MilestoneEvaluationInput {
@@ -88,7 +110,7 @@ function conditionMatches(
   condition: MilestoneCondition,
   facts: MilestoneFacts,
 ): boolean {
-  return facts[condition.fact] >= condition.value;
+  return (facts[condition.fact] ?? 0) >= condition.value;
 }
 
 /** Pure policy: it evaluates facts and returns candidates without side effects. */

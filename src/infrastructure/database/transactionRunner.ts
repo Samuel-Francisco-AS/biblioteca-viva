@@ -13,6 +13,8 @@ export class DexieTransactionRunner implements ApplicationTransactionRunner {
         this.database.quotes,
         this.database.activities,
         this.database.milestones,
+        this.database.tags,
+        this.database.sessions,
       ],
       operation,
     );

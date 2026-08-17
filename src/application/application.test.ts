@@ -26,6 +26,8 @@ import {
   type LibraryEntryRepository,
   type NoteRepository,
   type QuoteRepository,
+  type SessionRepository,
+  type TagRepository,
 } from "./index";
 import {
   changeBookStatus,
@@ -253,6 +255,21 @@ function setup(entries: readonly BookEntry[] = []): TestContext {
       );
     };
   });
+  const sessions: SessionRepository = {
+    delete: () => Promise.resolve(false),
+    getById: () => Promise.resolve(undefined),
+    getOpen: () => Promise.resolve(undefined),
+    list: () => Promise.resolve([]),
+    listByEntryId: () => Promise.resolve([]),
+    save: () => Promise.resolve(),
+  };
+  const tags: TagRepository = {
+    delete: () => Promise.resolve(false),
+    getById: () => Promise.resolve(undefined),
+    getByNormalizedName: () => Promise.resolve(undefined),
+    list: () => Promise.resolve([]),
+    save: () => Promise.resolve(),
+  };
   return {
     activities,
     clock,
@@ -264,6 +281,8 @@ function setup(entries: readonly BookEntry[] = []): TestContext {
       libraryEntries: library,
       notes,
       quotes,
+      sessions,
+      tags,
       transaction,
     },
     events,

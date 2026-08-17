@@ -35,7 +35,10 @@ function renderCollection(
 ) {
   const execute = vi.fn(() => result);
   const application: CollectionApplication = {
-    queries: { listLibraryEntries: { execute } },
+    queries: {
+      listLibraryEntries: { execute },
+      listTags: { execute: vi.fn(() => Promise.resolve([])) },
+    },
   };
   render(
     <MemoryRouter initialEntries={[entry]}>

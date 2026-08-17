@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
-import { ENTRY_STATUSES, ENTRY_TYPES, type LibraryEntry } from "../../domain";
+import {
+  ENTRY_STATUSES,
+  ENTRY_TYPES,
+  type LibraryEntry,
+  type Tag,
+} from "../../domain";
 import {
   progressPercentage,
   progressText,
@@ -21,6 +26,7 @@ export interface CollectionApplication {
     readonly listLibraryEntries: {
       execute(): Promise<readonly LibraryEntry[]>;
     };
+    readonly listTags: { execute(): Promise<readonly Tag[]> };
   };
 }
 
@@ -58,6 +64,7 @@ export function CollectionPage({
   readonly application?: CollectionApplication;
 }) {
   const [entries, setEntries] = useState<readonly LibraryEntry[]>();
+  const [tags, setTags] = useState<readonly Tag[]>([]);
   const [error, setError] = useState<string>();
   const [params, setParams] = useSearchParams();
   const location = useLocation();
@@ -66,18 +73,36 @@ export function CollectionPage({
   const status = parseStatusFilter(params.get("status"));
   const type = parseTypeFilter(params.get("type"));
   const favoritesOnly = params.get("favorite") === "true";
+  const tagId = params.get("tag") ?? "all";
   const sort = parseCollectionSort(params.get("sort"));
   const visibleEntries = useMemo(
     () =>
-      deriveCollection(entries ?? [], query, status, sort, type, favoritesOnly),
-    [entries, favoritesOnly, query, sort, status, type],
+      deriveCollection(
+        entries ?? [],
+        query,
+        status,
+        sort,
+        type,
+        favoritesOnly,
+        new Map(tags.map((tag) => [tag.id, tag.name])),
+        tagId,
+      ),
+    [entries, favoritesOnly, query, sort, status, tagId, tags, type],
   );
 
   useEffect(() => {
     if (!application) return;
     let active = true;
-    void application.queries.listLibraryEntries.execute().then(
-      (loaded) => active && setEntries(loaded),
+    void Promise.all([
+      application.queries.listLibraryEntries.execute(),
+      application.queries.listTags.execute(),
+    ]).then(
+      ([loaded, loadedTags]) => {
+        if (active) {
+          setEntries(loaded);
+          setTags(loadedTags);
+        }
+      },
       (failure: unknown) =>
         active && setError(presentApplicationError(failure).message),
     );
@@ -139,6 +164,7 @@ export function CollectionPage({
     status !== "all" ||
     type !== "all" ||
     favoritesOnly ||
+    tagId !== "all" ||
     sort !== "recent";
   const returnPath = `${location.pathname}${location.search}`;
   return (
@@ -208,6 +234,21 @@ export function CollectionPage({
           />{" "}
           Somente favoritos
         </label>
+        <div className="form-field">
+          <label htmlFor="collection-tag">Etiqueta</label>
+          <select
+            id="collection-tag"
+            value={tagId}
+            onChange={(event) => updateParam("tag", event.target.value)}
+          >
+            <option value="all">Todas as etiquetas</option>
+            {tags.map((tag) => (
+              <option key={tag.id} value={tag.id}>
+                {tag.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="form-field">
           <label htmlFor="collection-sort">Ordenar por</label>
           <select

@@ -8,6 +8,8 @@ export * from "./experience";
 export * from "./milestones";
 export * from "./deleteBookEntry";
 export * from "./libraryEntries";
+export * from "./sessions";
+export * from "./tags";
 export * from "./ports";
 export * from "./queries";
 export type {

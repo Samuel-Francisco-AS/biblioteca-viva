@@ -1022,3 +1022,9 @@ No Android, `MainActivity` usa AndroidX já transitivo para edge-to-edge e ícon
 O fluxo genérico é `React → casos de uso de LibraryEntry → porta pequena → adapter Dexie`. Factories e updates fazem dispatch pela união discriminada; wrappers de livro preservam compatibilidade sem casts. React não importa Dexie. Coleção carrega todos os registros em lote e filtra metadados em memória; Arquivo faz um único join por `Map<entryId, LibraryEntry>`. Phaser continua recebendo somente a projeção de livros e fatos agregados antigos, sem títulos dos novos tipos.
 
 Dexie v4 é aditivo e não cria tabelas de P1-B. Rotas canônicas são `/novo-registro`, `/registros/:id` e `/registros/:id/editar`; rotas de livro redirecionam preservando ID e query. Eventos genéricos levam somente ID, tipo, instante e campos técnicos controlados. Backup continua v2 até P1-B, quando o formato v3 incorporará as novas coleções persistentes.
+
+## 36. Tags, sessões e backup v3
+
+P1-B elevou o schema a v5 e o backup a v3. `TagRepository` e `SessionRepository` são portas pequenas; adapters Dexie validam toda leitura/escrita com Zod. Casos de sessão usam `Clock`, salvam sessão, atividade e eventual progresso na mesma transação e publicam eventos técnicos somente após commit. React possui o único intervalo visual quando há sessão ativa; timestamps são a verdade. Phaser não recebe timer, etiquetas, títulos nem conteúdo pessoal.
+
+Backup v3 inclui entries, anotações, atividades, settings, milestones, tags e sessions. V1/v2 validam o checksum do formato original antes dos defaults; v3 faz replace dos dados pessoais e união monotônica de milestones. Sessão ativa importada vira pausada com duração acumulada até o instante do snapshot e só retoma por ação explícita.

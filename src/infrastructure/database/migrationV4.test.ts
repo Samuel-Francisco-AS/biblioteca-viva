@@ -44,7 +44,7 @@ describe("migração aditiva do schema v3 para v4", () => {
     await migrated.open();
     expect(await migrated.libraryEntries.count()).toBe(0);
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-      value: "4",
+      value: "5",
     });
     migrated.close();
     const reopened = new BibliotecaDatabase(databaseName);

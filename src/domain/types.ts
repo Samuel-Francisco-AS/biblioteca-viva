@@ -113,6 +113,65 @@ export interface WorkEntry extends LibraryEntryBase {
   readonly nextAction?: string;
 }
 
+export interface Tag extends EntityMetadata {
+  readonly name: string;
+  readonly normalizedName: string;
+}
+
+export const SESSION_STATUSES = ["active", "paused", "completed"] as const;
+export type SessionStatus = (typeof SESSION_STATUSES)[number];
+
+interface SessionBase extends EntityMetadata {
+  readonly entryId: string;
+  readonly entryType: EntryType;
+  readonly status: SessionStatus;
+  readonly startedAt: string;
+  readonly endedAt?: string;
+  /** Segundos inteiros já confirmados antes do trecho ativo atual. */
+  readonly accumulatedDuration: number;
+  readonly activeSince?: string;
+  readonly note?: string;
+}
+
+export interface ReadingSession extends SessionBase {
+  readonly kind: "reading";
+  readonly entryType: "book";
+  readonly startPage?: number;
+  readonly endPage?: number;
+}
+
+export interface ViewingSession extends SessionBase {
+  readonly kind: "viewing";
+  readonly entryType: "movie" | "series";
+  readonly watchedDuration?: number;
+  readonly episodesCompleted?: number;
+}
+
+export interface StudySession extends SessionBase {
+  readonly kind: "study";
+  readonly entryType: "study";
+}
+
+export interface PhysicalActivitySession extends SessionBase {
+  readonly kind: "physical_activity";
+  readonly entryType: "physical_activity";
+  readonly distanceMeters?: number;
+  readonly perceivedExertion?: number;
+}
+
+export interface WorkSession extends SessionBase {
+  readonly kind: "work";
+  readonly entryType: "work";
+  readonly result?: string;
+}
+
+export type Session =
+  | ReadingSession
+  | ViewingSession
+  | StudySession
+  | PhysicalActivitySession
+  | WorkSession;
+
 export type LibraryEntry =
   | BookEntry
   | MovieEntry

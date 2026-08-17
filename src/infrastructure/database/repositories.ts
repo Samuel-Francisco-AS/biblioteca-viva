@@ -4,8 +4,10 @@ import type {
   LibraryEntryRepository,
   NoteRepository,
   QuoteRepository,
+  SessionRepository,
+  TagRepository,
 } from "../../application";
-import type { LibraryEntry, Note, Quote } from "../../domain";
+import type { LibraryEntry, Note, Quote, Session, Tag } from "../../domain";
 import type { BibliotecaDatabase } from "./database";
 import { InfrastructureError } from "./errors";
 import {
@@ -13,10 +15,14 @@ import {
   persistedLibraryEntrySchema,
   persistedNoteSchema,
   persistedQuoteSchema,
+  persistedSessionSchema,
+  persistedTagSchema,
   type PersistedActivity,
   type PersistedLibraryEntry,
   type PersistedNote,
   type PersistedQuote,
+  type PersistedSession,
+  type PersistedTag,
 } from "./schema";
 
 function readFailure(operation: string): InfrastructureError {
@@ -42,6 +48,18 @@ function immutableNote(value: unknown): Note {
 function immutableQuote(value: unknown): Quote {
   const parsed = persistedQuoteSchema.safeParse(value);
   if (!parsed.success) throw readFailure("read_quote");
+  return Object.freeze({ ...parsed.data });
+}
+
+function immutableTag(value: unknown): Tag {
+  const parsed = persistedTagSchema.safeParse(value);
+  if (!parsed.success) throw readFailure("read_tag");
+  return Object.freeze({ ...parsed.data });
+}
+
+function immutableSession(value: unknown): Session {
+  const parsed = persistedSessionSchema.safeParse(value);
+  if (!parsed.success) throw readFailure("read_session");
   return Object.freeze({ ...parsed.data });
 }
 
@@ -232,6 +250,148 @@ export class DexieActivityRepository implements ActivityRepository {
       );
     } catch {
       throw writeFailure("save_activity");
+    }
+  }
+}
+
+export class DexieTagRepository implements TagRepository {
+  constructor(private readonly database: BibliotecaDatabase) {}
+
+  async delete(id: string): Promise<boolean> {
+    try {
+      if ((await this.database.tags.get(id)) === undefined) return false;
+      await this.database.tags.delete(id);
+      return true;
+    } catch {
+      throw writeFailure("delete_tag");
+    }
+  }
+
+  async getById(id: string): Promise<Tag | undefined> {
+    try {
+      const stored: unknown = await this.database.tags.get(id);
+      return stored === undefined ? undefined : immutableTag(stored);
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("get_tag");
+    }
+  }
+
+  async getByNormalizedName(normalizedName: string): Promise<Tag | undefined> {
+    try {
+      const stored: unknown = await this.database.tags
+        .where("normalizedName")
+        .equals(normalizedName)
+        .first();
+      return stored === undefined ? undefined : immutableTag(stored);
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("get_tag_by_name");
+    }
+  }
+
+  async list(): Promise<readonly Tag[]> {
+    try {
+      const stored: unknown[] = await this.database.tags.toArray();
+      return Object.freeze(
+        stored
+          .map(immutableTag)
+          .sort((a, b) => a.name.localeCompare(b.name, "pt-BR")),
+      );
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("list_tags");
+    }
+  }
+
+  async save(tag: Tag): Promise<void> {
+    const parsed = persistedTagSchema.safeParse(tag);
+    if (!parsed.success) throw writeFailure("save_tag");
+    try {
+      await this.database.tags.put({ ...parsed.data } satisfies PersistedTag);
+    } catch {
+      throw writeFailure("save_tag");
+    }
+  }
+}
+
+export class DexieSessionRepository implements SessionRepository {
+  constructor(private readonly database: BibliotecaDatabase) {}
+
+  async delete(id: string): Promise<boolean> {
+    try {
+      if ((await this.database.sessions.get(id)) === undefined) return false;
+      await this.database.sessions.delete(id);
+      return true;
+    } catch {
+      throw writeFailure("delete_session");
+    }
+  }
+
+  async getById(id: string): Promise<Session | undefined> {
+    try {
+      const stored: unknown = await this.database.sessions.get(id);
+      return stored === undefined ? undefined : immutableSession(stored);
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("get_session");
+    }
+  }
+
+  async getOpen(): Promise<Session | undefined> {
+    try {
+      const stored: unknown[] = await this.database.sessions
+        .where("status")
+        .anyOf("active", "paused")
+        .toArray();
+      if (stored.length > 1) throw readFailure("multiple_open_sessions");
+      return stored[0] === undefined ? undefined : immutableSession(stored[0]);
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("get_open_session");
+    }
+  }
+
+  async list(): Promise<readonly Session[]> {
+    try {
+      const stored: unknown[] = await this.database.sessions.toArray();
+      return Object.freeze(
+        stored
+          .map(immutableSession)
+          .sort((a, b) => b.startedAt.localeCompare(a.startedAt)),
+      );
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("list_sessions");
+    }
+  }
+
+  async listByEntryId(entryId: string): Promise<readonly Session[]> {
+    try {
+      const stored: unknown[] = await this.database.sessions
+        .where("entryId")
+        .equals(entryId)
+        .toArray();
+      return Object.freeze(
+        stored
+          .map(immutableSession)
+          .sort((a, b) => b.startedAt.localeCompare(a.startedAt)),
+      );
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw readFailure("list_entry_sessions");
+    }
+  }
+
+  async save(session: Session): Promise<void> {
+    const parsed = persistedSessionSchema.safeParse(session);
+    if (!parsed.success) throw writeFailure("save_session");
+    try {
+      await this.database.sessions.put({
+        ...parsed.data,
+      } satisfies PersistedSession);
+    } catch {
+      throw writeFailure("save_session");
     }
   }
 }

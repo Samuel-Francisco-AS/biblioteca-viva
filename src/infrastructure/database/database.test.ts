@@ -208,7 +208,7 @@ describe("exclusão transacional de livro", () => {
 });
 
 describe("BibliotecaDatabase e migrações", () => {
-  it("abre o schema atual com sete tabelas e versão 3", async () => {
+  it("abre o schema atual com nove tabelas e versão 5", async () => {
     const database = new BibliotecaDatabase(databaseName("open"));
     await database.open();
 
@@ -220,7 +220,9 @@ describe("BibliotecaDatabase e migrações", () => {
       "milestones",
       "notes",
       "quotes",
+      "sessions",
       "settings",
+      "tags",
     ]);
     database.close();
   });
@@ -246,7 +248,7 @@ describe("BibliotecaDatabase e migrações", () => {
     });
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
       key: SCHEMA_MARKER_KEY,
-      value: "4",
+      value: "5",
     });
     migrated.close();
 
@@ -279,7 +281,7 @@ describe("BibliotecaDatabase e migrações", () => {
     expect(await migrated.settings.get("audio.preferences.v1")).toBeDefined();
     expect(await migrated.milestones.count()).toBe(0);
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-      value: "4",
+      value: "5",
     });
     migrated.close();
 

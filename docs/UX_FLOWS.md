@@ -330,3 +330,9 @@ O sheet sobrepõe sem redimensionar ou recriar Phaser; Escape/fechar devolvem fo
 ## 21. Novo registro e Coleção em P1-A
 
 `Novo registro → escolher um dos seis tipos → formulário específico → detalhe genérico`. Livro reutiliza seu formulário maduro; os demais mostram somente campos próprios. Coleção busca metadados seguros por variante, filtra tipo/status/favorito e ordena por atualização, criação ou título. O card inteiro abre `/registros/:id`; URLs antigas redirecionam. O detalhe mantém conclusão explícita para Filme, Atividade Física e Trabalho e progresso especializado para Série e Estudo. Sessões, etiquetas operáveis e timer entram somente em P1-B.
+
+## 22. Organização e sessões em P1-B
+
+No detalhe, `Organização` permite favoritar, criar/associar, renomear e excluir etiquetas. Coleção busca nomes de tags e filtra por tag; Arquivo filtra tipo de anotação, tipo de registro, favorito e tag.
+
+`Sessões` oferece iniciar/pausar/retomar/concluir/cancelar, registro manual e edição/exclusão do histórico. Apenas uma sessão pode ficar aberta. Um indicador React global persiste entre rotas/reload e abre o registro; timestamps preservam precisão em background sem serviço Android, wake lock, som ou notificação.

@@ -57,6 +57,15 @@ export interface QuoteCreated extends EventMetadata {
   readonly payload: { readonly quoteId: string; readonly page?: number };
 }
 
+export interface SessionChanged extends EventMetadata {
+  readonly type: "SessionChanged";
+  readonly payload: {
+    readonly entryType: EntryType;
+    readonly sessionId: string;
+    readonly status: "active" | "paused" | "completed" | "deleted";
+  };
+}
+
 export interface MilestoneReached extends EventMetadata {
   readonly type: "MilestoneReached";
   readonly payload: {
@@ -74,6 +83,7 @@ export type DomainEvent =
   | LibraryEntryCompleted
   | NoteCreated
   | QuoteCreated
+  | SessionChanged
   | MilestoneReached;
 
 type EventInput<TPayload> = EventMetadata & { readonly payload: TPayload };
@@ -168,4 +178,11 @@ export function createMilestoneReachedEvent(
       rewardIds: Object.freeze([...input.payload.rewardIds]),
     },
   });
+}
+
+export function createSessionChangedEvent(
+  input: EventInput<SessionChanged["payload"]>,
+): SessionChanged {
+  requireId(input.payload.sessionId, "sessionId");
+  return event({ type: "SessionChanged", ...input });
 }

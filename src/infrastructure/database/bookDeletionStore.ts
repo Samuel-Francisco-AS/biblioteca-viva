@@ -17,6 +17,7 @@ export class DexieLibraryEntryDeletionStore implements LibraryEntryDeletionStore
           this.database.notes,
           this.database.quotes,
           this.database.activities,
+          this.database.sessions,
         ],
         async () => {
           const existing = await this.database.libraryEntries.get(id);
@@ -29,6 +30,7 @@ export class DexieLibraryEntryDeletionStore implements LibraryEntryDeletionStore
             .where("aggregateId")
             .equals(id)
             .delete();
+          await this.database.sessions.where("entryId").equals(id).delete();
           return "deleted";
         },
       );

@@ -26,6 +26,7 @@ import { useAudioExperience } from "./useAudioExperience";
 import { MILESTONE_ID, type MilestoneReached } from "./domain";
 import { LibraryPage } from "./pages";
 import { useExperiencePreferences } from "./useExperiencePreferences";
+import { ActiveSessionIndicator } from "./features/sessions/ActiveSessionIndicator";
 
 function NotFoundPage() {
   return (
@@ -226,6 +227,7 @@ export function App({ application, diagnostics }: AppProps) {
           <h1>{sectionTitle}</h1>
         </div>
       </header>
+      <ActiveSessionIndicator application={application} />
 
       {navigationOpen && (
         <div className="navigation-layer">

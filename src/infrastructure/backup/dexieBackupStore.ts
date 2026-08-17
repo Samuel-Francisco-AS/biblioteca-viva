@@ -7,41 +7,55 @@ import { hasRelevantRestoreData } from "../../application";
 import type { BibliotecaDatabase } from "../database/database";
 import {
   persistedActivitySchema,
-  persistedBookSchema,
+  persistedLibraryEntrySchema,
   persistedMilestoneSchema,
   persistedNoteSchema,
   persistedQuoteSchema,
   persistedSettingSchema,
+  persistedSessionSchema,
+  persistedTagSchema,
 } from "../database/schema";
 
 export class DexieBackupSnapshotStore implements BackupSnapshotPort {
   constructor(private readonly database: BibliotecaDatabase) {}
 
   async read(): Promise<BackupSnapshot> {
-    const [libraryEntries, notes, quotes, activities, settings, milestones] =
-      await this.database.transaction(
-        "r",
-        [
-          this.database.libraryEntries,
-          this.database.notes,
-          this.database.quotes,
-          this.database.activities,
-          this.database.settings,
-          this.database.milestones,
-        ],
-        () =>
-          Promise.all([
-            this.database.libraryEntries.toArray(),
-            this.database.notes.toArray(),
-            this.database.quotes.toArray(),
-            this.database.activities.toArray(),
-            this.database.settings.toArray(),
-            this.database.milestones.toArray(),
-          ]),
-      );
+    const [
+      libraryEntries,
+      notes,
+      quotes,
+      activities,
+      settings,
+      milestones,
+      tags,
+      sessions,
+    ] = await this.database.transaction(
+      "r",
+      [
+        this.database.libraryEntries,
+        this.database.notes,
+        this.database.quotes,
+        this.database.activities,
+        this.database.settings,
+        this.database.milestones,
+        this.database.tags,
+        this.database.sessions,
+      ],
+      () =>
+        Promise.all([
+          this.database.libraryEntries.toArray(),
+          this.database.notes.toArray(),
+          this.database.quotes.toArray(),
+          this.database.activities.toArray(),
+          this.database.settings.toArray(),
+          this.database.milestones.toArray(),
+          this.database.tags.toArray(),
+          this.database.sessions.toArray(),
+        ]),
+    );
     const data = {
       libraryEntries: Object.freeze(
-        libraryEntries.map((item) => persistedBookSchema.parse(item)),
+        libraryEntries.map((item) => persistedLibraryEntrySchema.parse(item)),
       ),
       milestones: Object.freeze(
         milestones.map((item) => persistedMilestoneSchema.parse(item)),
@@ -58,6 +72,10 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
       settings: Object.freeze(
         settings.map((item) => persistedSettingSchema.parse(item)),
       ),
+      tags: Object.freeze(tags.map((item) => persistedTagSchema.parse(item))),
+      sessions: Object.freeze(
+        sessions.map((item) => persistedSessionSchema.parse(item)),
+      ),
     };
     return Object.freeze({
       ...data,
@@ -68,7 +86,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
   async replace(data: BackupData): Promise<void> {
     const valid = {
       libraryEntries: data.libraryEntries.map((item) =>
-        persistedBookSchema.parse(item),
+        persistedLibraryEntrySchema.parse(item),
       ),
       notes: data.notes.map((item) => persistedNoteSchema.parse(item)),
       quotes: data.quotes.map((item) => persistedQuoteSchema.parse(item)),
@@ -79,6 +97,8 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
       milestones: data.milestones.map((item) =>
         persistedMilestoneSchema.parse(item),
       ),
+      tags: data.tags.map((item) => persistedTagSchema.parse(item)),
+      sessions: data.sessions.map((item) => persistedSessionSchema.parse(item)),
     };
     await this.database.transaction(
       "rw",
@@ -89,6 +109,8 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
         this.database.activities,
         this.database.settings,
         this.database.milestones,
+        this.database.tags,
+        this.database.sessions,
       ],
       async () => {
         const existingMilestones = await this.database.milestones.toArray();
@@ -106,6 +128,8 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
           this.database.activities.clear(),
           this.database.settings.clear(),
           this.database.milestones.clear(),
+          this.database.tags.clear(),
+          this.database.sessions.clear(),
         ]);
         await this.database.libraryEntries.bulkAdd(valid.libraryEntries);
         await this.database.notes.bulkAdd(valid.notes);
@@ -113,6 +137,8 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
         await this.database.activities.bulkAdd(valid.activities);
         await this.database.settings.bulkAdd(valid.settings);
         await this.database.milestones.bulkAdd([...mergedMilestones.values()]);
+        await this.database.tags.bulkAdd(valid.tags);
+        await this.database.sessions.bulkAdd(valid.sessions);
       },
     );
   }

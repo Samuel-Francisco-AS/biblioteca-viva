@@ -70,3 +70,7 @@ Antes de G11: checkpoint humano G4/G7–G10, nova restauração física, identid
 Pós-protótipo: avaliar retenção/apresentação de atividades históricas somente se surgir um consumidor; SQLite somente se gatilhos documentados ocorrerem; outros tipos/salas/conta.
 
 Opcionais condicionados a evidência: preservar offset da música, comprimir WAVs, dividir o chunk lazy do Phaser, segunda configuração Android. Visual procedural e fallback local são decisões deliberadas até revisão artística, não defeitos automáticos.
+
+## P1-B — manutenção
+
+Ao evoluir sessões, preservar a regra de uma aberta globalmente, o `Clock` como verdade e a política de restore `active → paused`. Novos detalhes específicos entram na união e no schema correspondente, nunca em payload amorfo. Mudança de `normalizedName`, índice único, duração ou status exige migração e testes de colisão/rollback. Backup v1/v2 continua sendo validado no formato original.

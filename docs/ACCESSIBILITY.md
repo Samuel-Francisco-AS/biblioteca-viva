@@ -241,3 +241,7 @@ Drawer e sheet respeitam safe areas; system bars transparentes não recebem cont
 ## 20. P1-A
 
 O seletor de tipo usa botões de superfície inteira com nome e descrição; formulários específicos mantêm labels reais, submissão única e erros públicos. Coleção oferece controles nativos de tipo, status, favorito e ordenação, e cards continuam links integrais. A automação cobre os seis tipos e viewport estreita; TalkBack, teclado virtual, texto ampliado e contraste percebido ainda exigem validação humana.
+
+## 21. P1-B
+
+Tags usam checkbox com nome visível, favorito expõe `aria-pressed`, e ações de renomear/excluir permanecem botões explícitos com confirmação. Timer anuncia estado/duração em região viva, possui controles textuais e não depende de cor. Filtros de Coleção/Arquivo usam label e controles nativos. Prompt/confirm do browser são provisórios acessíveis pelo agente do usuário; foco, TalkBack, teclado virtual, 320 px e texto ampliado ainda exigem prova humana.

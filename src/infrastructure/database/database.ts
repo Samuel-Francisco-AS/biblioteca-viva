@@ -6,6 +6,7 @@ import {
   DATABASE_SCHEMA_V2,
   DATABASE_SCHEMA_V3,
   DATABASE_SCHEMA_V4,
+  DATABASE_SCHEMA_V5,
   SCHEMA_MARKER_KEY,
   type PersistedActivity,
   type PersistedLibraryEntry,
@@ -14,6 +15,8 @@ import {
   type PersistedNote,
   type PersistedQuote,
   type PersistedSetting,
+  type PersistedSession,
+  type PersistedTag,
 } from "./schema";
 
 const MIGRATION_TIMESTAMP = "1970-01-01T00:00:00.000Z";
@@ -26,6 +29,8 @@ export class BibliotecaDatabase extends Dexie {
   settings!: EntityTable<PersistedSetting, "key">;
   metadata!: EntityTable<PersistedMetadata, "key">;
   milestones!: EntityTable<PersistedMilestone, "id">;
+  tags!: EntityTable<PersistedTag, "id">;
+  sessions!: EntityTable<PersistedSession, "id">;
 
   constructor(name = DATABASE_NAME) {
     super(name);
@@ -81,6 +86,15 @@ export class BibliotecaDatabase extends Dexie {
         await transaction.table<PersistedMetadata>("metadata").put({
           key: SCHEMA_MARKER_KEY,
           value: "4",
+          updatedAt: MIGRATION_TIMESTAMP,
+        });
+      });
+    this.version(5)
+      .stores(DATABASE_SCHEMA_V5)
+      .upgrade(async (transaction) => {
+        await transaction.table<PersistedMetadata>("metadata").put({
+          key: SCHEMA_MARKER_KEY,
+          value: "5",
           updatedAt: MIGRATION_TIMESTAMP,
         });
       });

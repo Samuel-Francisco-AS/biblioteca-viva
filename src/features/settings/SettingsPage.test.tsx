@@ -24,6 +24,8 @@ const counts = {
   quotes: 1,
   activities: 4,
   settings: 0,
+  sessions: 0,
+  tags: 0,
 };
 const summary: BackupSummary = {
   createdAt: "2026-07-30T12:00:00.000Z",

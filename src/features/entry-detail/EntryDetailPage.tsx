@@ -12,6 +12,14 @@ import { safeReturnPath } from "../books/navigationOrigin";
 import { entryTypeLabels } from "../collection/collectionControls";
 import { presentApplicationError } from "../entry-editor/errorMessages";
 import { BookDetailPage, type BookDetailApplication } from "./BookDetailPage";
+import {
+  SessionPanel,
+  type SessionApplication,
+} from "../sessions/SessionPanel";
+import {
+  OrganizationPanel,
+  type OrganizationApplication,
+} from "../tags/OrganizationPanel";
 
 interface EntryDetailApplication extends BookDetailApplication {
   readonly commands: BookDetailApplication["commands"] & {
@@ -24,6 +32,17 @@ interface EntryDetailApplication extends BookDetailApplication {
     readonly updateLibraryEntryProgress: {
       execute(input: unknown): Promise<LibraryEntry>;
     };
+    readonly completeSession: SessionApplication["commands"]["completeSession"];
+    readonly createManualSession: SessionApplication["commands"]["createManualSession"];
+    readonly createTag: OrganizationApplication["commands"]["createTag"];
+    readonly deleteTag: OrganizationApplication["commands"]["deleteTag"];
+    readonly deleteSession: SessionApplication["commands"]["deleteSession"];
+    readonly editSession: SessionApplication["commands"]["editSession"];
+    readonly organizeLibraryEntry: OrganizationApplication["commands"]["organizeLibraryEntry"];
+    readonly renameTag: OrganizationApplication["commands"]["renameTag"];
+    readonly pauseSession: SessionApplication["commands"]["pauseSession"];
+    readonly resumeSession: SessionApplication["commands"]["resumeSession"];
+    readonly startSession: SessionApplication["commands"]["startSession"];
   };
   readonly queries: BookDetailApplication["queries"] & {
     readonly getLibraryEntry: {
@@ -35,6 +54,9 @@ interface EntryDetailApplication extends BookDetailApplication {
     readonly listQuotesByEntry: {
       execute(input: unknown): Promise<readonly Quote[]>;
     };
+    readonly getOpenSession: SessionApplication["queries"]["getOpenSession"];
+    readonly listSessionsByEntry: SessionApplication["queries"]["listSessionsByEntry"];
+    readonly listTags: OrganizationApplication["queries"]["listTags"];
   };
 }
 
@@ -142,7 +164,17 @@ export function EntryDetailPage({
     );
   if (!entry) return <p role="status">Carregando registro…</p>;
   if (entry.type === "book")
-    return <BookDetailPage application={application} />;
+    return (
+      <>
+        <BookDetailPage application={application} />
+        <OrganizationPanel
+          application={application}
+          entry={entry}
+          onChange={setEntry}
+        />
+        <SessionPanel application={application} entry={entry} />
+      </>
+    );
   const availableApplication = application;
   const currentEntry = entry;
 
@@ -356,6 +388,12 @@ export function EntryDetailPage({
           )}
         </section>
       )}
+      <OrganizationPanel
+        application={availableApplication}
+        entry={currentEntry}
+        onChange={setEntry}
+      />
+      <SessionPanel application={availableApplication} entry={currentEntry} />
     </section>
   );
 }

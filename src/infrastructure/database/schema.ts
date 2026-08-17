@@ -3,16 +3,19 @@ import {
   ENTRY_STATUSES,
   MILESTONE_IDS,
   PHYSICAL_ACTIVITY_CATEGORIES,
+  SESSION_STATUSES,
   STUDY_PROGRESS_UNITS,
   type BookEntry,
   type LibraryEntry,
   type Note,
   type Quote,
+  type Session,
+  type Tag,
 } from "../../domain";
 import { z } from "zod";
 
 export const DATABASE_NAME = "biblioteca-viva";
-export const DATABASE_VERSION = 4;
+export const DATABASE_VERSION = 5;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
 export const DATABASE_SCHEMA_V1 = {
@@ -36,6 +39,12 @@ export const DATABASE_SCHEMA_V3 = {
 export const DATABASE_SCHEMA_V4 = {
   ...DATABASE_SCHEMA_V3,
   libraryEntries: "&id, type, status, createdAt",
+} as const;
+
+export const DATABASE_SCHEMA_V5 = {
+  ...DATABASE_SCHEMA_V4,
+  tags: "&id,&normalizedName",
+  sessions: "&id,entryId,status,startedAt",
 } as const;
 
 const isoUtc = z.iso.datetime({ offset: false });
@@ -287,6 +296,85 @@ export const persistedNoteSchema = z.strictObject({
 
 export const persistedQuoteSchema = persistedNoteSchema;
 
+export const persistedTagSchema = z.strictObject({
+  ...entityMetadata,
+  name: z.string().trim().min(1),
+  normalizedName: z.string().trim().min(1),
+});
+
+const sessionMetadata = {
+  ...entityMetadata,
+  entryId: z.string().trim().min(1),
+  status: z.enum(SESSION_STATUSES),
+  startedAt: isoUtc,
+  endedAt: isoUtc.optional(),
+  accumulatedDuration: z.int().nonnegative(),
+  activeSince: isoUtc.optional(),
+  note: z.string().trim().min(1).optional(),
+};
+
+export const persistedSessionSchema = z
+  .discriminatedUnion("kind", [
+    z.strictObject({
+      ...sessionMetadata,
+      kind: z.literal("reading"),
+      entryType: z.literal("book"),
+      startPage: z.int().positive().optional(),
+      endPage: z.int().positive().optional(),
+    }),
+    z.strictObject({
+      ...sessionMetadata,
+      kind: z.literal("viewing"),
+      entryType: z.enum(["movie", "series"]),
+      watchedDuration: z.int().nonnegative().optional(),
+      episodesCompleted: z.int().nonnegative().optional(),
+    }),
+    z.strictObject({
+      ...sessionMetadata,
+      kind: z.literal("study"),
+      entryType: z.literal("study"),
+    }),
+    z.strictObject({
+      ...sessionMetadata,
+      kind: z.literal("physical_activity"),
+      entryType: z.literal("physical_activity"),
+      distanceMeters: z.int().nonnegative().optional(),
+      perceivedExertion: z.int().min(1).max(10).optional(),
+    }),
+    z.strictObject({
+      ...sessionMetadata,
+      kind: z.literal("work"),
+      entryType: z.literal("work"),
+      result: z.string().trim().min(1).optional(),
+    }),
+  ])
+  .superRefine((session, context) => {
+    if (session.status === "active" && session.activeSince === undefined)
+      context.addIssue({
+        code: "custom",
+        path: ["activeSince"],
+        message: "required",
+      });
+    if (session.status !== "active" && session.activeSince !== undefined)
+      context.addIssue({
+        code: "custom",
+        path: ["activeSince"],
+        message: "unexpected",
+      });
+    if (session.status === "completed" && session.endedAt === undefined)
+      context.addIssue({
+        code: "custom",
+        path: ["endedAt"],
+        message: "required",
+      });
+    if (session.status !== "completed" && session.endedAt !== undefined)
+      context.addIssue({
+        code: "custom",
+        path: ["endedAt"],
+        message: "unexpected",
+      });
+  });
+
 const activityMetadata = {
   id: z.string().trim().min(1),
   aggregateId: z.string().trim().min(1),
@@ -366,6 +454,37 @@ export const persistedActivitySchema = z.discriminatedUnion("type", [
       page: z.int().positive().optional(),
     }),
   }),
+  z.strictObject({
+    ...activityMetadata,
+    type: z.literal("session_started"),
+    metadata: z.strictObject({
+      sessionId: z.string().trim().min(1),
+      entryType: z.enum([
+        "book",
+        "movie",
+        "series",
+        "study",
+        "physical_activity",
+        "work",
+      ]),
+    }),
+  }),
+  z.strictObject({
+    ...activityMetadata,
+    type: z.literal("session_completed"),
+    metadata: z.strictObject({
+      sessionId: z.string().trim().min(1),
+      entryType: z.enum([
+        "book",
+        "movie",
+        "series",
+        "study",
+        "physical_activity",
+        "work",
+      ]),
+      duration: z.int().nonnegative(),
+    }),
+  }),
 ]);
 
 export const persistedMetadataSchema = z.strictObject({
@@ -406,6 +525,8 @@ export type PersistedBook = BookEntry;
 export type PersistedLibraryEntry = LibraryEntry;
 export type PersistedNote = Note;
 export type PersistedQuote = Quote;
+export type PersistedTag = Tag;
+export type PersistedSession = Session;
 export type PersistedActivity = z.infer<typeof persistedActivitySchema>;
 export type PersistedMetadata = z.infer<typeof persistedMetadataSchema>;
 export type PersistedSetting = z.infer<typeof persistedSettingSchema>;

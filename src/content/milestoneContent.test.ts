@@ -18,12 +18,18 @@ function mutableCatalog(): MutableMilestoneCatalog & Record<string, unknown> {
 }
 
 describe("definições declarativas de marcos", () => {
-  it("valida as quatro regras, a recompensa e a decoração do protótipo", () => {
+  it("valida regras históricas e fatos de preparação para P2", () => {
     expect(PROTOTYPE_CONTENT.milestones.map(({ id }) => id)).toEqual([
       "milestone.first-book",
       "milestone.first-note",
       "milestone.first-quote",
       "milestone.first-completed-book",
+      "milestone.first-movie",
+      "milestone.first-series",
+      "milestone.first-study",
+      "milestone.first-physical-activity",
+      "milestone.first-work",
+      "milestone.first-session",
     ]);
     expect(PROTOTYPE_CONTENT.rewards).toEqual([
       {

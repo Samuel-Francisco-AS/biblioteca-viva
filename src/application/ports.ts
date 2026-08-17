@@ -1,4 +1,11 @@
-import type { DomainEvent, LibraryEntry, Note, Quote } from "../domain";
+import type {
+  DomainEvent,
+  LibraryEntry,
+  Note,
+  Quote,
+  Session,
+  Tag,
+} from "../domain";
 import type { Activity } from "./activities";
 import type { MilestoneProcessor } from "./milestones";
 export type { AudioPort, AudioSettingsPort } from "./audio";
@@ -40,6 +47,23 @@ export interface ActivityRepository {
   save(activity: Activity): Promise<void>;
 }
 
+export interface TagRepository {
+  delete(id: string): Promise<boolean>;
+  getById(id: string): Promise<Tag | undefined>;
+  getByNormalizedName(normalizedName: string): Promise<Tag | undefined>;
+  list(): Promise<readonly Tag[]>;
+  save(tag: Tag): Promise<void>;
+}
+
+export interface SessionRepository {
+  delete(id: string): Promise<boolean>;
+  getById(id: string): Promise<Session | undefined>;
+  getOpen(): Promise<Session | undefined>;
+  list(): Promise<readonly Session[]>;
+  listByEntryId(entryId: string): Promise<readonly Session[]>;
+  save(session: Session): Promise<void>;
+}
+
 export interface LibraryEntryDeletionStore {
   deleteLibraryEntry(id: string): Promise<"deleted" | "not-found">;
 }
@@ -73,5 +97,7 @@ export interface ApplicationDependencies {
   readonly milestones?: MilestoneProcessor;
   readonly notes: NoteRepository;
   readonly quotes: QuoteRepository;
+  readonly sessions: SessionRepository;
+  readonly tags: TagRepository;
   readonly transaction: ApplicationTransactionRunner;
 }

@@ -101,3 +101,9 @@ Continuam pendentes: FPS real, frame pacing, memória, temperatura, toque e aber
 ## 9. Baseline P1-A
 
 O build P1-A registra JS inicial de 610.700 bytes (177.310 gzip), CSS de 22.000 bytes (4.930 gzip) e Phaser lazy de 1.221.398 bytes (325.740 gzip). Coleção e Arquivo carregam coleções em lote e agregam com arrays/Maps; não há query por card. O schema possui sete tabelas. P1-A não adiciona timer, listener global, dependência ou plugin; sessões e seu timer pertencem a P1-B.
+
+## 10. Política P1-B
+
+O schema v5 possui nove tabelas. Coleção e Arquivo carregam entries/tags/anotações em paralelo e filtram em memória, sem query por card. Em idle sem sessão ativa há zero intervalos de sessão; com sessão ativa existe um intervalo React de apresentação e a duração persistente continua baseada em timestamps. Visibility/appState apenas recalculam/consultam o estado. Nenhuma dependência ou plugin novo foi adicionado; o baseline binário final será registrado após a matriz do checkpoint.
+
+O baseline P1-B validado registra JS inicial de 645.536 bytes (183.750 gzip), CSS de 22.320 bytes (5.010 gzip) e Phaser lazy de 1.221.398 bytes (325.740 gzip). O crescimento inicial sobre P1-A é 34.836 bytes brutos e 6.440 gzip; Phaser permanece lazy e sem crescimento.

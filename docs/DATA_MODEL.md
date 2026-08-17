@@ -210,3 +210,11 @@ Backups v1 íntegros continuam aceitos e são normalizados com zero marcos: uma 
 ### Preferências de experiência
 
 `experience.preferences.v1` usa a tabela `settings` existente, sem schema v4. O valor estrito contém `motion: system | reduce | normal`, `highContrast: boolean` e `textSize: default | large | larger`. Não contém conteúdo pessoal. Valor ausente ou inválido produz defaults em memória; gravações válidas entram automaticamente no backup v2 e seguem a política `replace` de settings.
+
+## 15. Infraestrutura compartilhada de P1-B
+
+O schema Dexie v5 preserva as sete tabelas históricas e adiciona `tags` (`&id,&normalizedName`) e `sessions` (`&id,entryId,status,startedAt`). V4 → v5 é aditiva e não toca entries, anotações, datas, revisões, settings ou milestones.
+
+`Tag` guarda ID, grafia escolhida, nome normalizado sem remoção de acentos e metadata. `tagIds` referencia a entidade em `LibraryEntry`, `Note` e `Quote`; exclusão remove as referências nas três coleções dentro da mesma transação sem excluir conteúdo.
+
+`Session` discrimina leitura, exibição (filme/série), estudo, atividade física e trabalho. Duração usa segundos inteiros; `activeSince` existe somente em `active`, e o tempo atual deriva do `Clock`, não de ticks. Estados são `active | paused | completed`, com no máximo uma sessão aberta globalmente. Editar ou excluir histórico não retrocede progresso já confirmado no Entry.

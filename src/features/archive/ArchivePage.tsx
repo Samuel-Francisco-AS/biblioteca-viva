@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
-import type { LibraryEntry, Note, Quote } from "../../domain";
+import {
+  ENTRY_TYPES,
+  type LibraryEntry,
+  type Note,
+  type Quote,
+  type Tag,
+} from "../../domain";
 import type { AnnotationShareResult } from "../../application";
 import { AnnotationActions } from "../annotations/AnnotationActions";
 import { formatDateTime } from "../books/bookPresentation";
@@ -24,6 +30,8 @@ export interface ArchiveApplication {
     };
     readonly updateNote: { execute(input: unknown): Promise<Note> };
     readonly updateQuote: { execute(input: unknown): Promise<Quote> };
+    readonly organizeNote: { execute(input: unknown): Promise<Note> };
+    readonly organizeQuote: { execute(input: unknown): Promise<Quote> };
   };
   readonly queries: {
     readonly listLibraryEntries: {
@@ -31,6 +39,7 @@ export interface ArchiveApplication {
     };
     readonly listAllNotes: { execute(): Promise<readonly Note[]> };
     readonly listAllQuotes: { execute(): Promise<readonly Quote[]> };
+    readonly listTags: { execute(): Promise<readonly Tag[]> };
   };
 }
 
@@ -55,11 +64,16 @@ export function ArchivePage({
   const [notes, setNotes] = useState<readonly Note[]>();
   const [quotes, setQuotes] = useState<readonly Quote[]>();
   const [entries, setEntries] = useState<readonly LibraryEntry[]>();
+  const [tags, setTags] = useState<readonly Tag[]>([]);
   const [error, setError] = useState<string>();
   const [params, setParams] = useSearchParams();
   const location = useLocation();
   const searchRef = useRef<HTMLInputElement>(null);
   const query = params.get("q") ?? "";
+  const kind = params.get("kind") ?? "all";
+  const entryType = params.get("entryType") ?? "all";
+  const favoritesOnly = params.get("favorite") === "true";
+  const tagId = params.get("tag") ?? "all";
 
   useEffect(() => {
     if (!application) return;
@@ -68,12 +82,14 @@ export function ArchivePage({
       application.queries.listLibraryEntries.execute(),
       application.queries.listAllNotes.execute(),
       application.queries.listAllQuotes.execute(),
+      application.queries.listTags.execute(),
     ]).then(
-      ([loadedEntries, loadedNotes, loadedQuotes]) => {
+      ([loadedEntries, loadedNotes, loadedQuotes, loadedTags]) => {
         if (!active) return;
         setEntries(loadedEntries);
         setNotes(loadedNotes);
         setQuotes(loadedQuotes);
+        setTags(loadedTags);
       },
       (failure: unknown) => {
         if (active) setError(presentApplicationError(failure).message);
@@ -95,8 +111,15 @@ export function ArchivePage({
           annotation,
           entry: entryById.get(annotation.entryId),
         }))
-        .filter((item) => matchesArchiveSearch(item, query)),
-    [entryById, notes, query],
+        .filter((item) => matchesArchiveSearch(item, query))
+        .filter(
+          ({ annotation, entry }) =>
+            (kind === "all" || kind === "note") &&
+            (entryType === "all" || entry?.type === entryType) &&
+            (!favoritesOnly || annotation.favorite) &&
+            (tagId === "all" || annotation.tagIds.includes(tagId)),
+        ),
+    [entryById, entryType, favoritesOnly, kind, notes, query, tagId],
   );
   const visibleQuotes = useMemo(
     () =>
@@ -105,8 +128,15 @@ export function ArchivePage({
           annotation,
           entry: entryById.get(annotation.entryId),
         }))
-        .filter((item) => matchesArchiveSearch(item, query)),
-    [entryById, query, quotes],
+        .filter((item) => matchesArchiveSearch(item, query))
+        .filter(
+          ({ annotation, entry }) =>
+            (kind === "all" || kind === "quote") &&
+            (entryType === "all" || entry?.type === entryType) &&
+            (!favoritesOnly || annotation.favorite) &&
+            (tagId === "all" || annotation.tagIds.includes(tagId)),
+        ),
+    [entryById, entryType, favoritesOnly, kind, query, quotes, tagId],
   );
 
   function clearSearch() {
@@ -144,6 +174,96 @@ export function ArchivePage({
           <h2 id="archive-title">Arquivo de anotações</h2>
         </div>
       </div>
+      <fieldset className="collection-controls">
+        <legend>Filtros do Arquivo</legend>
+        <label className="form-field">
+          Anotação
+          <select
+            value={kind}
+            onChange={(event) =>
+              setParams(
+                (current) => {
+                  const next = new URLSearchParams(current);
+                  if (event.target.value === "all") next.delete("kind");
+                  else next.set("kind", event.target.value);
+                  return next;
+                },
+                { replace: true },
+              )
+            }
+          >
+            <option value="all">Notas e citações</option>
+            <option value="note">Notas</option>
+            <option value="quote">Citações</option>
+          </select>
+        </label>
+        <label className="form-field">
+          Tipo de registro
+          <select
+            value={entryType}
+            onChange={(event) =>
+              setParams(
+                (current) => {
+                  const next = new URLSearchParams(current);
+                  if (event.target.value === "all") next.delete("entryType");
+                  else next.set("entryType", event.target.value);
+                  return next;
+                },
+                { replace: true },
+              )
+            }
+          >
+            <option value="all">Todos</option>
+            {ENTRY_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="form-field">
+          Etiqueta
+          <select
+            value={tagId}
+            onChange={(event) =>
+              setParams(
+                (current) => {
+                  const next = new URLSearchParams(current);
+                  if (event.target.value === "all") next.delete("tag");
+                  else next.set("tag", event.target.value);
+                  return next;
+                },
+                { replace: true },
+              )
+            }
+          >
+            <option value="all">Todas</option>
+            {tags.map((tag) => (
+              <option key={tag.id} value={tag.id}>
+                {tag.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="checkbox-field">
+          <input
+            checked={favoritesOnly}
+            onChange={(event) =>
+              setParams(
+                (current) => {
+                  const next = new URLSearchParams(current);
+                  if (event.target.checked) next.set("favorite", "true");
+                  else next.delete("favorite");
+                  return next;
+                },
+                { replace: true },
+              )
+            }
+            type="checkbox"
+          />{" "}
+          Somente favoritas
+        </label>
+      </fieldset>
       <div className="form-field archive-search">
         <label htmlFor="archive-search">Buscar no Arquivo</label>
         <p className="field-help" id="archive-search-help">
@@ -263,6 +383,27 @@ export function ArchivePage({
                           );
                         }}
                       />
+                      <button
+                        aria-pressed={annotation.favorite}
+                        className="text-button"
+                        onClick={() =>
+                          void application.commands.organizeNote
+                            .execute({
+                              id: annotation.id,
+                              favorite: !annotation.favorite,
+                            })
+                            .then((updated) =>
+                              setNotes((current) =>
+                                current?.map((item) =>
+                                  item.id === updated.id ? updated : item,
+                                ),
+                              ),
+                            )
+                        }
+                        type="button"
+                      >
+                        {annotation.favorite ? "Desfavoritar" : "Favoritar"}
+                      </button>
                     </article>
                   </li>
                 ))}
@@ -336,6 +477,27 @@ export function ArchivePage({
                             totalPages: entry.totalPages,
                           })}
                       />
+                      <button
+                        aria-pressed={annotation.favorite}
+                        className="text-button"
+                        onClick={() =>
+                          void application.commands.organizeQuote
+                            .execute({
+                              id: annotation.id,
+                              favorite: !annotation.favorite,
+                            })
+                            .then((updated) =>
+                              setQuotes((current) =>
+                                current?.map((item) =>
+                                  item.id === updated.id ? updated : item,
+                                ),
+                              ),
+                            )
+                        }
+                        type="button"
+                      >
+                        {annotation.favorite ? "Desfavoritar" : "Favoritar"}
+                      </button>
                     </article>
                   </li>
                 ))}
