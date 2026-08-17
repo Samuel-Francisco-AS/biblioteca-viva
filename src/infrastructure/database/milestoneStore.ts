@@ -10,7 +10,11 @@ import {
   type MilestoneDefinition,
   type MilestoneRewardDefinition,
   type ReachedMilestone,
+  deriveRoomProgress,
+  ROOM_STAGE_MILESTONE_IDS,
+  type RoomDefinition,
 } from "../../domain";
+import { roomFacts } from "../../application";
 import type { BibliotecaDatabase } from "./database";
 import { persistedMilestoneSchema, type PersistedMilestone } from "./schema";
 import { InfrastructureError } from "./errors";
@@ -36,6 +40,7 @@ export class DexieMilestoneStore
     private readonly engine: MilestoneEngine,
     private readonly definitions: readonly MilestoneDefinition[],
     private readonly rewards: readonly MilestoneRewardDefinition[],
+    private readonly rooms: readonly RoomDefinition[] = [],
   ) {}
 
   async list(): Promise<readonly ReachedMilestone[]> {
@@ -102,6 +107,60 @@ export class DexieMilestoneStore
           "DATABASE_WRITE_FAILED",
           "save_milestone",
         );
+      }
+    }
+    const allReached = [...reached, ...inserted];
+    const affectedType =
+      "payload" in event && "entryType" in event.payload
+        ? event.payload.entryType
+        : undefined;
+    const affectedRooms = this.rooms.filter(
+      (room) =>
+        room.id === "main-library" ||
+        (affectedType !== undefined &&
+          room.associatedEntryTypes.includes(affectedType)),
+    );
+    if (affectedRooms.length > 0) {
+      const sessions = await this.database.sessions.toArray();
+      const facts = roomFacts({
+        entries,
+        sessions,
+        milestoneIds: allReached.map(({ id }) => id),
+      });
+      for (const room of affectedRooms) {
+        const progress = deriveRoomProgress(room, facts);
+        for (const stage of [2, 3, 4] as const) {
+          const id = ROOM_STAGE_MILESTONE_IDS[room.id][stage];
+          if (
+            !id ||
+            stage > progress.currentStage ||
+            allReached.some((item) => item.id === id)
+          )
+            continue;
+          const candidate: ReachedMilestone = Object.freeze({
+            id,
+            reachedAt: event.occurredAt,
+            rewards: Object.freeze([]),
+            ruleVersion: 1,
+            source: Object.freeze({
+              eventId: event.eventId,
+              eventType: event.type,
+            }),
+          });
+          try {
+            await this.database.milestones.add(
+              persistedMilestoneSchema.parse(candidate),
+            );
+            inserted.push(candidate);
+            allReached.push(candidate);
+          } catch (error: unknown) {
+            if (!(error instanceof Dexie.ConstraintError))
+              throw new InfrastructureError(
+                "DATABASE_WRITE_FAILED",
+                "save_room_stage_milestone",
+              );
+          }
+        }
       }
     }
     return Object.freeze(inserted);

@@ -11,6 +11,21 @@ export const MILESTONE_ID = Object.freeze({
   firstPhysicalActivity: "milestone.first-physical-activity",
   firstWork: "milestone.first-work",
   firstSession: "milestone.first-session",
+  mainLibraryStage2: "milestone.room.main-library.stage-2",
+  mainLibraryStage3: "milestone.room.main-library.stage-3",
+  mainLibraryStage4: "milestone.room.main-library.stage-4",
+  studyRoomStage2: "milestone.room.study-room.stage-2",
+  studyRoomStage3: "milestone.room.study-room.stage-3",
+  studyRoomStage4: "milestone.room.study-room.stage-4",
+  projectionRoomStage2: "milestone.room.projection-room.stage-2",
+  projectionRoomStage3: "milestone.room.projection-room.stage-3",
+  projectionRoomStage4: "milestone.room.projection-room.stage-4",
+  trainingRoomStage2: "milestone.room.training-room.stage-2",
+  trainingRoomStage3: "milestone.room.training-room.stage-3",
+  trainingRoomStage4: "milestone.room.training-room.stage-4",
+  officeStage2: "milestone.room.office.stage-2",
+  officeStage3: "milestone.room.office.stage-3",
+  officeStage4: "milestone.room.office.stage-4",
 } as const);
 
 export const MILESTONE_IDS = Object.freeze(Object.values(MILESTONE_ID));

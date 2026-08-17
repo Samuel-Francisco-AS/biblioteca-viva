@@ -44,6 +44,7 @@ function game(): LibraryVisualGame {
     setInteractionHandler: vi.fn(),
     setReducedMotion: vi.fn(),
     updateProjection: vi.fn(),
+    updateRoom: vi.fn(),
   };
 }
 
@@ -504,6 +505,35 @@ describe("LibraryVisualHost", () => {
       true,
     );
     expect(loadFactory).toHaveBeenCalledOnce();
+  });
+
+  it("preserva um game e um canvas lógico durante 50 trocas de sala", async () => {
+    const instance = game();
+    const { createLibraryVisualGame, loadFactory } = factoryFor(instance);
+    const rendered = renderHost({ loadFactory });
+    await waitFor(() => expect(createLibraryVisualGame).toHaveBeenCalledOnce());
+    const roomIds = ["main-library", "study-room"] as const;
+    for (let index = 0; index < 50; index += 1) {
+      rendered.rerender(
+        <LibraryVisualHost
+          loadFactory={loadFactory}
+          projection={projection}
+          room={{
+            roomId: roomIds[index % roomIds.length] ?? "main-library",
+            unlocked: true,
+            stage: 2,
+            dayPeriod: "morning",
+            reducedMotion: false,
+            highContrast: false,
+          }}
+        />,
+      );
+    }
+    expect(loadFactory).toHaveBeenCalledOnce();
+    expect(createLibraryVisualGame).toHaveBeenCalledOnce();
+    expect(instance.destroy).not.toHaveBeenCalled();
+    expect(instance.updateRoom).toHaveBeenCalledTimes(50);
+    expect(document.querySelectorAll(".library-visual-host")).toHaveLength(1);
   });
 });
 

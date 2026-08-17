@@ -1,3 +1,5 @@
+import type { DecorationId, RoomId, RoomStage } from "../../domain";
+
 export type LibraryVisualHostState =
   "creating" | "ready" | "paused" | "failed" | "destroyed";
 
@@ -8,6 +10,15 @@ export interface LibraryVisualSize {
 
 export type LibraryVisualPeriod =
   "lateNight" | "morning" | "afternoon" | "night";
+
+export interface RoomViewModel {
+  readonly roomId: RoomId;
+  readonly unlocked: boolean;
+  readonly stage: RoomStage;
+  readonly dayPeriod: LibraryVisualPeriod;
+  readonly reducedMotion: boolean;
+  readonly highContrast: boolean;
+}
 
 export type ShelfOccupancy = "empty" | "initial" | "growing" | "full";
 
@@ -52,6 +63,7 @@ export type LibraryInteraction =
   | { readonly type: "ShelfSelected" }
   | { readonly type: "LibrarianSelected" }
   | { readonly type: "CreatureSelected" }
+  | { readonly roomId: RoomId; readonly type: "RoomRequested" }
   | { readonly entryId: string; readonly type: "HighlightedBookSelected" }
   | {
       readonly decorationId: DecorationId;
@@ -71,6 +83,7 @@ export interface LibraryVisualGame {
     animate: boolean,
   ): void;
   setReducedMotion(this: void, reducedMotion: boolean): void;
+  updateRoom(this: void, room: RoomViewModel): void;
   setInteractionHandler(
     this: void,
     onInteraction: ((interaction: LibraryInteraction) => void) | undefined,
@@ -92,6 +105,7 @@ export interface CreateLibraryVisualGameOptions {
   readonly period: LibraryVisualPeriod;
   readonly projection: LibraryViewModel;
   readonly reducedMotion: boolean;
+  readonly room: RoomViewModel;
   readonly size: LibraryVisualSize;
 }
 
@@ -102,4 +116,3 @@ export type LibraryVisualGameFactory = (
 export interface LibraryVisualFactoryModule {
   readonly createLibraryVisualGame: LibraryVisualGameFactory;
 }
-import type { DecorationId } from "../../domain";

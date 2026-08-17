@@ -318,6 +318,15 @@ export class CompleteSession {
         duration: completed.accumulatedDuration,
       },
     });
+    const event = await sessionEvent(
+      this.dependencies,
+      completed,
+      "completed",
+      now,
+    );
+    let milestoneEvents = Object.freeze(
+      [],
+    ) as readonly import("../domain").DomainEvent[];
     await runTransaction(this.dependencies, async () => {
       await saveEntity(
         () => this.dependencies.sessions.save(completed),
@@ -329,11 +338,9 @@ export class CompleteSession {
           "save_entry",
         );
       await saveActivity(this.dependencies, activity);
+      milestoneEvents = await processMilestones(this.dependencies, event);
     });
-    await publishEvent(
-      this.dependencies,
-      await sessionEvent(this.dependencies, completed, "completed", now),
-    );
+    await publishEvents(this.dependencies, [event, ...milestoneEvents]);
     return completed;
   }
 }
@@ -372,6 +379,15 @@ export class CreateManualSession {
         duration: session.accumulatedDuration,
       },
     });
+    const event = await sessionEvent(
+      this.dependencies,
+      session,
+      "completed",
+      now,
+    );
+    let milestoneEvents = Object.freeze(
+      [],
+    ) as readonly import("../domain").DomainEvent[];
     await runTransaction(this.dependencies, async () => {
       await saveEntity(
         () => this.dependencies.sessions.save(session),
@@ -383,11 +399,9 @@ export class CreateManualSession {
           "save_entry",
         );
       await saveActivity(this.dependencies, activity);
+      milestoneEvents = await processMilestones(this.dependencies, event);
     });
-    await publishEvent(
-      this.dependencies,
-      await sessionEvent(this.dependencies, session, "completed", now),
-    );
+    await publishEvents(this.dependencies, [event, ...milestoneEvents]);
     return session;
   }
 }

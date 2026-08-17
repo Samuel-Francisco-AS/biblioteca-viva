@@ -222,3 +222,7 @@ O schema Dexie v5 preserva as sete tabelas históricas e adiciona `tags` (`&id,&
 ## 16. Derivações P1-C
 
 Estatísticas, timeline e `ProductProgressFacts` são valores em memória, não tabelas. O agregado separa contagens/duração por tipo; páginas, episódios, distância e unidades de estudo não são somados entre si. Session ativa é exposta separadamente e nunca contabilizada como concluída. Timeline combina Activities técnicas e Sessions concluídas, com deduplicação pelo `sessionId`.
+
+## 17. Salas derivadas em P2-SOL
+
+Salas não são entidades persistidas e `LibraryEntry` não recebe `roomId`. `RoomProgress` deriva de `ProductProgressFacts`, catálogo e milestones. Dexie continua v5 sem tabela ou migration nova; os IDs `milestone.room.<room>.stage-<2..4>` usam a tabela `milestones` existente e entram naturalmente no backup v3 com união monotônica. `lastVisitedRoomId` não foi persistido nesta fundação para evitar ampliar settings sem necessidade do fluxo essencial.

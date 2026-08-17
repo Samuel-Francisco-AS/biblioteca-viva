@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import type { BookEntry, ReachedMilestone } from "./domain";
+import type {
+  BookEntry,
+  ReachedMilestone,
+  RoomId,
+  RoomProgress,
+} from "./domain";
+import { ROOM_NAMES } from "./content";
 import type {
   AudioPort,
   DialoguePort,
@@ -39,6 +45,7 @@ export interface LibraryPageApplication {
     readonly getStatistics?: {
       execute(input?: unknown): Promise<StatisticsSnapshot>;
     };
+    readonly getRoomProgress?: { execute(): Promise<readonly RoomProgress[]> };
   };
 }
 
@@ -49,6 +56,7 @@ type LibraryPageState =
       readonly kind: "ready";
       readonly recentBookTitle?: string;
       readonly viewModel: LibraryViewModel;
+      readonly rooms: readonly RoomProgress[];
       readonly productSummary?: {
         readonly totalEntries: number;
         readonly activeSessionType?: string;
@@ -97,11 +105,13 @@ export function LibraryPage({
   onDecorationUnlockPresented,
   pendingDecorationUnlock,
   reducedMotion = false,
+  highContrast = false,
 }: {
   readonly application?: LibraryPageApplication;
   readonly onDecorationUnlockPresented?: (eventId: string) => void;
   readonly pendingDecorationUnlock?: { readonly eventId: string };
   readonly reducedMotion?: boolean;
+  readonly highContrast?: boolean;
 }) {
   const diagnosticsEnabled =
     import.meta.env.DEV || import.meta.env.VITE_ENABLE_DIAGNOSTICS === "true";
@@ -122,6 +132,8 @@ export function LibraryPage({
     null,
   );
   const [canvasFailed, setCanvasFailed] = useState(false);
+  const [activeRoomId, setActiveRoomId] = useState<RoomId>("main-library");
+  const [roomNotice, setRoomNotice] = useState<string | null>(null);
   const [atmosphereOverride, setAtmosphereOverride] =
     useState<AtmosphereOverride>("automatic");
   const period =
@@ -147,8 +159,18 @@ export function LibraryPage({
       application.queries.listMilestones.list(),
       application.queries.getStatistics?.execute({ window: "all" }) ??
         Promise.resolve(undefined),
+      application.queries.getRoomProgress?.execute() ??
+        Promise.resolve([
+          {
+            roomId: "main-library",
+            unlocked: true,
+            currentStage: 1,
+            highestReachedStage: 1,
+            requirements: [],
+          },
+        ] as const),
     ]).then(
-      ([books, milestones, statistics]) => {
+      ([books, milestones, statistics, rooms]) => {
         if (!active) return;
         diagnostics?.resources({
           libraryPreparationDurationMs: Math.max(
@@ -165,6 +187,7 @@ export function LibraryPage({
           viewModel: projectionService.project(
             projectionInput(books, milestones, pendingDecorationUnlock),
           ),
+          rooms,
           ...(statistics && {
             productSummary: {
               totalEntries: statistics.totalEntries,
@@ -222,6 +245,10 @@ export function LibraryPage({
   }
 
   function handleInteraction(interaction: LibraryInteraction) {
+    if (interaction.type === "RoomRequested") {
+      requestRoom(interaction.roomId);
+      return;
+    }
     if (interaction.type === "DecorationUnlockPresented") {
       onDecorationUnlockPresented?.(interaction.eventId);
       return;
@@ -240,6 +267,27 @@ export function LibraryPage({
       application?.audio?.emit({ type: "CreatureSelected" });
       void openCharacterDialogue("creature.interaction");
     }
+  }
+
+  function requestRoom(roomId: RoomId) {
+    if (state.kind !== "ready") return;
+    const room = state.rooms.find((candidate) => candidate.roomId === roomId);
+    if (!room?.unlocked) {
+      const subject =
+        roomId === "study-room"
+          ? "estudo"
+          : roomId === "projection-room"
+            ? "filme ou série"
+            : roomId === "training-room"
+              ? "atividade física"
+              : "trabalho";
+      setRoomNotice(
+        `${ROOM_NAMES[roomId]} bloqueada. Registre seu primeiro ${subject} para desbloquear.`,
+      );
+      return;
+    }
+    setRoomNotice(null);
+    setActiveRoomId(roomId);
   }
 
   function closeSheet() {
@@ -294,6 +342,25 @@ export function LibraryPage({
       )}
       {state.kind === "ready" && (
         <div className="library-stage" data-period={period}>
+          <section aria-label="Salas" className="room-selector">
+            {state.rooms.map((room) => (
+              <button
+                aria-current={room.roomId === activeRoomId ? "true" : undefined}
+                className="room-selector__item"
+                key={room.roomId}
+                onClick={() => requestRoom(room.roomId)}
+                type="button"
+              >
+                <strong>{ROOM_NAMES[room.roomId]}</strong>
+                <span>
+                  {room.unlocked
+                    ? `Estágio ${room.highestReachedStage}`
+                    : "Bloqueada"}
+                </span>
+              </button>
+            ))}
+            {roomNotice && <p role="status">{roomNotice}</p>}
+          </section>
           <LibraryVisualHost
             diagnostics={diagnostics}
             onAvailabilityChange={handleAvailabilityChange}
@@ -301,6 +368,16 @@ export function LibraryPage({
             period={period}
             projection={state.viewModel}
             reducedMotion={reducedMotion}
+            room={{
+              roomId: activeRoomId,
+              unlocked: true,
+              stage:
+                state.rooms.find((room) => room.roomId === activeRoomId)
+                  ?.highestReachedStage ?? 1,
+              dayPeriod: period,
+              reducedMotion,
+              highContrast,
+            }}
           />
           {speechBubble && (
             <LibrarySpeechBubble

@@ -1034,3 +1034,9 @@ Backup v3 inclui entries, anotações, atividades, settings, milestones, tags e 
 `GetStatistics` carrega Entries, Sessions, Activities e Milestones uma vez por coleção e entrega ao agregador puro. Nenhum total derivável é persistido. Janelas de 7/30 dias e todo o período usam `Clock`; somente sessões concluídas entram no histórico, e uma Activity de conclusão impede item duplicado da mesma Session. React resolve títulos por `Map<entryId, LibraryEntry>`; persistência continua sem título ou conteúdo pessoal.
 
 `ProductProgressFacts` deriva contagens, conclusões, sessões, durações por tipo e IDs de milestones. Esses fatos preparam decisões futuras de P2 sem implementar salas, reputação, desbloqueio ou scene Phaser. A Biblioteca usa apenas o resumo React; sua projeção Phaser continua exclusivamente de livros.
+
+## 38. Fundação do Room Engine em P2-SOL
+
+`RoomDefinition` e `ROOM_CATALOG` declaram cinco IDs fechados, tipos associados, topologia hub e regras 0–4. `deriveRoomProgress` é puro e recebe fatos agregados e milestones históricos; o estágio corrente pode refletir fatos reduzidos, enquanto `highestReachedStage` nunca regride. Estágios 2–4 são marcos estáveis persistidos pelo store idempotente na transação da ação relevante.
+
+React consulta `GetRoomProgress`, aceita ou rejeita `RoomRequested` e entrega um `RoomViewModel` sem conteúdo pessoal. `LibraryVisualHost` mantém um único `Phaser.Game`/canvas e atualiza a sala ativa na cena existente, preservando áudio, atmosfera, resize e lifecycle. A representação das cinco salas, decoração e residentes permanece para P2-B/P2-C.

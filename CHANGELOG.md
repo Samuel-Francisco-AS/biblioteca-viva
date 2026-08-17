@@ -8,6 +8,8 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 ### Adicionado
 
+- P2-SOL com Room Engine declarativo, cinco salas, estágios monotônicos por milestones, seletor React e troca de sala na mesma instância Phaser;
+
 - início documental de `P1 — Vida Registrada`, com seis tipos oficiais e estrutura futura P1/P2/P3;
 - P1-A com união discriminada de Livro, Filme, Série, Estudo, Atividade Física e Trabalho, CRUD e progresso especializados;
 - P1-B com etiquetas normalizadas, favoritos, sessões tipadas e persistentes, Arquivo/Coleção filtráveis, milestones preparatórios, schema Dexie v5 e backup v3 retrocompatível;

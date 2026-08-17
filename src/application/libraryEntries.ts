@@ -24,7 +24,6 @@ import {
   currentTime,
   generatedId,
   parseInput,
-  publishEvent,
   publishEvents,
   processMilestones,
   runTransaction,
@@ -169,14 +168,18 @@ async function persistMutation(
     revision: updated.revision,
     payload: { entryType: updated.type, changedFields },
   });
+  let milestoneEvents = Object.freeze(
+    [],
+  ) as readonly import("../domain").DomainEvent[];
   await runTransaction(dependencies, async () => {
     await saveEntity(
       () => dependencies.libraryEntries.save(updated),
       "save_entry",
     );
     await saveActivity(dependencies, activity);
+    milestoneEvents = await processMilestones(dependencies, event);
   });
-  await publishEvent(dependencies, event);
+  await publishEvents(dependencies, [event, ...milestoneEvents]);
   return updated;
 }
 

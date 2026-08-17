@@ -1,15 +1,15 @@
 # STATUS — Biblioteca Viva
 
-> Última atualização: 2026-08-16
+> Última atualização: 2026-08-17
 > Atualizar este arquivo ao começar e ao encerrar cada bloco relevante.
 
 ## Estado executivo
 
-- **Fase:** produto — `P1 — Vida Registrada`;
+- **Fase:** produto — `P2 — Biblioteca Evolutiva` (fundação P2-SOL);
 - **blocos concluídos:** Bloco 5 — Backup, restauração e recuperação, com G5 aprovado; Bloco 6 — Biblioteca visual conectada, com G6 aprovado;
 - **prompts tecnicamente implementados:** Prompts 1 a 19; sua conclusão técnica não aprova os gates humanos pendentes;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **trabalho atual:** P1-A, P1-B e P1-C tecnicamente concluídos; o próximo trabalho planejado é P2 — Biblioteca Evolutiva;
+- **trabalho atual:** P2-SOL implementa a fundação arquitetural do Room Engine; as salas visuais, decorações, residentes e rotinas de P2 continuam pendentes;
 - **gate:** G0 a G3 aprovados; G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
 - **último checkpoint técnico:** P1-C está em `5f19e12` e a auditoria final foi registrada no commit corretivo desta operação; P1-A está em `b2f7236`, P1-B em `9a7800a` e o início documental em `b1b2fb0`;
@@ -62,6 +62,8 @@ Os Prompts 1–19 e R1–R3 formam o baseline. P1-A implementou os seis tipos de
 Nenhum bloqueio técnico identificado. As evidências físicas são parciais: não cobrem o gerenciamento de anotações e a playlist de R2, o novo drawer/sheet/balões/períodos/edge-to-edge, uso prolongado, TalkBack, teclado, contraste, texto ampliado, lifecycle, desempenho nem toda a checklist integrada. R3 responde tecnicamente à sensação congelada de reduced motion por feedback causal sem loops, mas a percepção real, a latência sonora e a nova restauração ainda precisam de validação no Moto G06. G4 e G7–G10 não foram aprovados; G11 não foi iniciado.
 
 ## Última evidência de validação
+
+Em 2026-08-17, P2-SOL estabeleceu cinco `RoomId`, catálogo e requisitos declarativos, cálculo puro de estágios 0–4, desbloqueios pelos milestones reais de P1 e monotonicidade por milestones de estágio. React controla seleção/bloqueio e entrega `RoomViewModel` mínimo à mesma instância Phaser; a prova integrada percorre 50 trocas sem recriar host ou game. Passaram formatação/check, lint, typecheck, 661 testes Vitest em 74 arquivos, áudio, build, performance, dez E2E Chromium, Android sync/build e diff. Phaser permanece lazy; Dexie permanece v5 e backup v3. Não houve teste físico ou aprovação de gate; P2 visual não está concluído.
 
 Em 2026-08-16, P1-C e P1 foram concluídos tecnicamente. Estatísticas derivadas suportam 7 dias, 30 dias e todo o período, totais e métricas por tipo, sessões recentes, timeline e fatos agregados para P2 sem tabela nova nem N+1. A Biblioteca ganhou resumo global somente em React; Phaser permanece restrito à projeção de livros. Passaram formatação/check, lint, typecheck, 644 testes em 72 arquivos, áudio, build, performance, dez E2E Chromium — incluindo a rota de Estatísticas a 320 px —, Android sync/build, ZIP e diff. JS inicial mede 657.385 bytes (186.720 gzip), CSS 22.770 (5.110 gzip) e Phaser lazy 1.221.398 (325.740 gzip). O APK não instalado possui 7.526.051 bytes e SHA-256 `43bb65fd49270dbf13a9b1824ae474e851b5441424c252f8e2971632489e9ed6`. A auditoria final acrescentou regressão direta para edição/exclusão/cancelamento de sessões sem retroceder progresso. Nenhum teste físico ou gate humano foi aprovado por esta automação.
 

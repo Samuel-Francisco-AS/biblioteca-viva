@@ -7,6 +7,7 @@ import type {
   LibraryVisualPeriod,
   LibraryVisualSize,
   LibraryViewModel,
+  RoomViewModel,
 } from "./contracts";
 import type { LibraryVisualDiagnostics } from "./diagnostics";
 
@@ -20,6 +21,7 @@ interface LibraryVisualHostProps {
   readonly period?: LibraryVisualPeriod;
   readonly projection: LibraryViewModel;
   readonly reducedMotion?: boolean;
+  readonly room?: RoomViewModel;
 }
 
 const loadPhaserFactory = () => import("./phaser/createPhaserGame");
@@ -44,6 +46,14 @@ export function LibraryVisualHost({
   period = "night",
   projection,
   reducedMotion = false,
+  room = {
+    roomId: "main-library",
+    unlocked: true,
+    stage: 1,
+    dayPeriod: period,
+    reducedMotion,
+    highContrast: false,
+  },
 }: LibraryVisualHostProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const generationRef = useRef(0);
@@ -52,6 +62,7 @@ export function LibraryVisualHost({
   const latestProjectionRef = useRef(projection);
   const latestPeriodRef = useRef(period);
   const latestReducedMotionRef = useRef(reducedMotion);
+  const latestRoomRef = useRef(room);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -59,11 +70,13 @@ export function LibraryVisualHost({
     latestProjectionRef.current = projection;
     latestPeriodRef.current = period;
     latestReducedMotionRef.current = reducedMotion;
+    latestRoomRef.current = room;
     gameRef.current?.setInteractionHandler(onInteraction);
     gameRef.current?.updateProjection(projection);
     gameRef.current?.setAtmosphere(period, !reducedMotion);
     gameRef.current?.setReducedMotion(reducedMotion);
-  }, [onInteraction, period, projection, reducedMotion]);
+    gameRef.current?.updateRoom(room);
+  }, [onInteraction, period, projection, reducedMotion, room]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -165,6 +178,7 @@ export function LibraryVisualHost({
           projection: latestProjectionRef.current,
           period: latestPeriodRef.current,
           reducedMotion: latestReducedMotionRef.current,
+          room: latestRoomRef.current,
           size: requestedCreationSize,
         });
       })

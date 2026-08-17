@@ -5,12 +5,14 @@ import "fake-indexeddb/auto";
 import Dexie from "dexie";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { PROTOTYPE_CONTENT } from "../../content";
+import { PROTOTYPE_CONTENT, ROOM_CATALOG } from "../../content";
 import { ApplicationError, CreateBookEntry } from "../../application";
 import {
   MILESTONE_ID,
   MilestoneEngine,
   createLibraryEntryCompletedEvent,
+  createManualSession,
+  createSessionChangedEvent,
 } from "../../domain";
 import { BibliotecaDatabase } from "./database";
 import { DexieMilestoneStore } from "./milestoneStore";
@@ -202,6 +204,48 @@ describe("DexieMilestoneStore", () => {
     if (!(failure instanceof InfrastructureError)) throw failure;
     expect(failure.code).toBe("DATABASE_READ_FAILED");
     expect(failure.message).not.toMatch(/private-title/u);
+    db.close();
+  });
+
+  it("persiste estágio de sala uma vez sob avaliações concorrentes", async () => {
+    const db = database();
+    await db.open();
+    await db.libraryEntries.add(completedBook);
+    for (let index = 0; index < 3; index += 1) {
+      await db.sessions.add(
+        createManualSession({
+          id: `session-${index}`,
+          entryId: completedBook.id,
+          entryType: "book",
+          occurredAt: `2026-08-10T1${index}:00:00.000Z`,
+          duration: 60,
+        }),
+      );
+    }
+    const milestones = new DexieMilestoneStore(
+      db,
+      new MilestoneEngine(),
+      PROTOTYPE_CONTENT.milestones,
+      PROTOTYPE_CONTENT.rewards,
+      ROOM_CATALOG,
+    );
+    const event = createSessionChangedEvent({
+      aggregateId: completedBook.id,
+      eventId: "event-room-stage",
+      occurredAt: "2026-08-10T14:00:00.000Z",
+      revision: 2,
+      payload: {
+        entryType: "book",
+        sessionId: "session-2",
+        status: "completed",
+      },
+    });
+    await Promise.all([milestones.process(event), milestones.process(event)]);
+    expect(
+      (await milestones.list()).filter(
+        ({ id }) => id === MILESTONE_ID.mainLibraryStage2,
+      ),
+    ).toHaveLength(1);
     db.close();
   });
 });

@@ -70,9 +70,10 @@ import {
   ResumeSession,
   StartSession,
   GetStatistics,
+  GetRoomProgress,
 } from "../application";
 import { MILESTONE_ID, MilestoneEngine } from "../domain";
-import { ContentLocalizer, PROTOTYPE_CONTENT } from "../content";
+import { ContentLocalizer, PROTOTYPE_CONTENT, ROOM_CATALOG } from "../content";
 import {
   BibliotecaDatabase,
   BrowserStoragePersistence,
@@ -194,6 +195,7 @@ export interface ApplicationRuntime {
     readonly listSessionsByEntry: ListSessionsByEntry;
     readonly listTags: ListTags;
     readonly getStatistics: GetStatistics;
+    readonly getRoomProgress: GetRoomProgress;
   };
   readonly diagnostics: ApplicationDiagnostics;
   readonly events: LocalEventBus;
@@ -253,6 +255,7 @@ export async function createApplication(
     new MilestoneEngine(),
     PROTOTYPE_CONTENT.milestones,
     PROTOTYPE_CONTENT.rewards,
+    ROOM_CATALOG,
   );
   const clock = new SystemClock();
   const ids = new CryptoIdGenerator(platform);
@@ -326,6 +329,13 @@ export async function createApplication(
   const annotationShare =
     options.annotationShare ?? new PlatformAnnotationShare();
 
+  const getStatistics = new GetStatistics({
+    activities,
+    clock,
+    libraryEntries,
+    sessions,
+    milestones: milestoneStore,
+  });
   return {
     appVersion: packageMetadata.version,
     audio,
@@ -446,13 +456,8 @@ export async function createApplication(
       listSessions: new ListSessions(sessions),
       listSessionsByEntry: new ListSessionsByEntry(sessions),
       listTags: new ListTags(tags),
-      getStatistics: new GetStatistics({
-        activities,
-        clock,
-        libraryEntries,
-        sessions,
-        milestones: milestoneStore,
-      }),
+      getStatistics,
+      getRoomProgress: new GetRoomProgress(getStatistics, ROOM_CATALOG),
     },
     diagnostics: {
       inspect: () => diagnosticsService.inspect(),

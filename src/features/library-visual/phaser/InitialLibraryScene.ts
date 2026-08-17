@@ -6,6 +6,7 @@ import type {
   LibraryVisualPeriod,
   LibraryVisualRuntimeSnapshot,
   LibraryViewModel,
+  RoomViewModel,
 } from "../contracts";
 import {
   LIBRARY_ROOM_ANIMATIONS,
@@ -75,6 +76,7 @@ export class InitialLibraryScene extends Phaser.Scene {
   private projection: LibraryViewModel;
   private period: LibraryVisualPeriod;
   private readingLamp?: Phaser.GameObjects.Container;
+  private room: RoomViewModel;
   private readingLampFigure?: Phaser.GameObjects.Graphics;
   private reducedMotion: boolean;
   private renderedSize?: { readonly height: number; readonly width: number };
@@ -86,6 +88,7 @@ export class InitialLibraryScene extends Phaser.Scene {
   constructor(
     projection: LibraryViewModel,
     reducedMotion: boolean,
+    room: RoomViewModel,
     interactionHandler?: (interaction: LibraryInteraction) => void,
     period: LibraryVisualPeriod = "night",
   ) {
@@ -93,6 +96,7 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.projection = projection;
     this.period = period;
     this.reducedMotion = reducedMotion;
+    this.room = room;
     this.interactionHandler = interactionHandler;
   }
 
@@ -250,6 +254,10 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.presentPendingUnlock();
   }
 
+  updateRoom(room: RoomViewModel): void {
+    this.room = room;
+  }
+
   pauseMotion(): void {
     this.motion.pause();
   }
@@ -259,6 +267,7 @@ export class InitialLibraryScene extends Phaser.Scene {
   }
 
   runtimeSnapshot(): LibraryVisualRuntimeSnapshot {
+    void this.room.roomId;
     return Object.freeze({
       activeTweens: this.tweens.getTweens().length,
       displayObjects: this.children.length,

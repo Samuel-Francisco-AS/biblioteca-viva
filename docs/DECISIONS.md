@@ -538,4 +538,15 @@ Evoluir o backup para formato v2 incluindo `milestones`, aceitando v1 com seu ch
 
 **Consequências:** D-009 permanece como registro verdadeiro da restrição do protótipo, mas deixa de bloquear a expansão em P1. Esta decisão não aprova retroativamente gate algum: G4 e G7–G10 permanecem abertos e G11 permanece não iniciado enquanto esse for o estado real. A sala Phaser principal continua representando livros em P1; nenhuma sala de P2 é antecipada. Conta, backend, sincronização, nuvem e recursos sociais continuam fora. Atividade física registra prática sem aconselhamento médico; Trabalho registra projetos, notas e sessões sem virar gestão empresarial.
 
+## D-050 — Salas derivadas e monotônicas em uma única cena
+
+- **Data:** 2026-08-17
+- **Status:** aceita
+
+**Contexto:** P2 precisa permitir cinco ambientes e evolução espacial sem duplicar dados pessoais, cenas, games ou fontes de verdade. Contagens e sessões atuais podem diminuir por edição/exclusão, mas uma conquista espacial não deve regredir.
+
+**Decisão:** modelar salas por `RoomId` fechado e catálogo declarativo. Calcular `RoomProgress` puramente a partir de `ProductProgressFacts` e milestones; persistir somente novos máximos como `milestone.room.<room>.stage-<2..4>` pela tabela/garantia idempotente existente. React decide navegação e bloqueio; Phaser recebe `RoomViewModel` e troca a sala ativa dentro do único game, canvas, host e cena. Definir apenas identidades/residências futuras dos cinco residentes.
+
+**Consequências:** Dexie permanece v5 e backup v3; não existem tabela de salas, XP, `roomId` em Entry ou cinco cenas duplicadas. Estado atual pode diminuir, `highestReachedStage` não. P2-SOL conclui somente a fundação; visuais, decorações, personagens e rotinas seguem para P2-B/P2-C.
+
 Use `templates/ADR_TEMPLATE.md` para novas decisões.

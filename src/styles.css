@@ -933,6 +933,42 @@ blockquote {
   background: var(--color-bg-deep);
 }
 
+.room-selector {
+  position: absolute;
+  z-index: 4;
+  inset-inline: var(--space-3);
+  bottom: calc(var(--safe-bottom) + var(--space-3));
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+}
+
+.room-selector__item {
+  min-height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  background: transparent;
+  cursor: pointer;
+}
+
+.room-selector__item strong,
+.room-selector__item span {
+  display: block;
+  font-size: var(--font-size-xs);
+}
+.room-selector__item[aria-current="true"] {
+  border-color: var(--color-focus);
+  background: var(--color-surface-raised);
+}
+.room-selector p {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
 .library-summary-trigger {
   position: absolute;
   z-index: 8;

@@ -39,6 +39,7 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
   period,
   projection,
   reducedMotion,
+  room,
   size,
 }) => {
   let game: Phaser.Game | undefined;
@@ -46,6 +47,7 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
   const scene = new InitialLibraryScene(
     projection,
     reducedMotion,
+    room,
     onInteraction,
     period,
   );
@@ -89,6 +91,9 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
       },
       updateProjection: (nextProjection) => {
         if (!destroyed) scene.updateProjection(nextProjection);
+      },
+      updateRoom: (nextRoom) => {
+        if (!destroyed) scene.updateRoom(nextRoom);
       },
     });
   } catch (error: unknown) {

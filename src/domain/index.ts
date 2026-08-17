@@ -3,6 +3,7 @@ export * from "./book";
 export * from "./errors";
 export * from "./events";
 export * from "./milestones";
+export * from "./rooms";
 export * from "./libraryEntries";
 export * from "./sessions";
 export * from "./tags";
