@@ -16,7 +16,7 @@ P1-B encerrou com 639 testes Vitest em 71 arquivos e nove E2E Chromium. As prova
 
 ### Evidência P1-C
 
-P1-C encerrou com 643 testes Vitest em 72 arquivos e dez E2E Chromium. O agregador puro possui datasets determinísticos, incluindo 300 Entries e 2.000 Sessions. Testes cobrem janelas, filtros, totais por tipo, duração, métricas especializadas, deduplicação Activity/Session, exclusão da sessão ativa, atualização após edição/exclusão e uma leitura por coleção. O E2E novo cobre tag/favorito, sessão através de navegação, pause/reload/resume/complete e atualização de Estatísticas; a matriz estreita cobre Estatísticas em 320 × 640. Formatação/check, lint, typecheck, áudio, build/performance, Android sync/build, ZIP e diff passaram. Não houve instalação, TalkBack, teste perceptivo, uso prolongado ou validação física.
+P1-C e a auditoria final encerraram com 644 testes Vitest em 72 arquivos e dez E2E Chromium. O agregador puro possui datasets determinísticos, incluindo 300 Entries e 2.000 Sessions. Testes cobrem janelas, filtros, totais por tipo, duração, métricas especializadas, deduplicação Activity/Session, exclusão da sessão ativa, atualização após edição/exclusão e uma leitura por coleção. A regressão final prova edição/exclusão do histórico sem retroceder progresso e cancelamento de sessão aberta. O E2E novo cobre tag/favorito, sessão através de navegação, pause/reload/resume/complete e atualização de Estatísticas; a matriz estreita cobre Estatísticas em 320 × 640. Formatação/check, lint, typecheck, áudio, build/performance, Android sync/build, ZIP e diff passaram. Não houve instalação, TalkBack, teste perceptivo, uso prolongado ou validação física.
 
 ### Domínio
 

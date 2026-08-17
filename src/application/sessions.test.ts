@@ -26,6 +26,8 @@ import { PROTOTYPE_CONTENT } from "../content";
 import {
   CompleteSession,
   CreateManualSession,
+  DeleteSession,
+  EditSession,
   PauseSession,
   ResumeSession,
   StartSession,
@@ -163,6 +165,55 @@ describe("casos de uso de sessão", () => {
     expect(
       await test.dependencies.libraryEntries.getById(series.id),
     ).toMatchObject({ episodesWatched: 2, status: "completed" });
+    test.database.close();
+  });
+
+  it("edita/exclui o histórico sem retroceder progresso e cancela sessão aberta", async () => {
+    const test = await context();
+    const book = createBook({
+      id: "book-history",
+      title: "Histórico",
+      totalPages: 100,
+      createdAt: "2026-08-16T09:00:00.000Z",
+    });
+    await test.dependencies.libraryEntries.save(book);
+    const completed = await new CreateManualSession(test.dependencies).execute({
+      entryId: book.id,
+      entryType: "book",
+      duration: 1_200,
+      endPage: 50,
+    });
+    test.setNow("2026-08-16T11:00:00.000Z");
+    const edited = await new EditSession(test.dependencies).execute({
+      id: completed.id,
+      duration: 900,
+      note: "Registro corrigido",
+    });
+    expect(edited).toMatchObject({
+      accumulatedDuration: 900,
+      note: "Registro corrigido",
+      revision: 2,
+    });
+    await new DeleteSession(test.dependencies).execute({ id: completed.id });
+    expect(
+      await test.dependencies.sessions.getById(completed.id),
+    ).toBeUndefined();
+    expect(
+      await test.dependencies.libraryEntries.getById(book.id),
+    ).toMatchObject({ currentPage: 50, status: "in_progress" });
+
+    const open = await new StartSession(test.dependencies).execute({
+      entryId: book.id,
+      entryType: "book",
+    });
+    await new DeleteSession(test.dependencies).execute({ id: open.id });
+    expect(await test.dependencies.sessions.getOpen()).toBeUndefined();
+    expect(test.published.slice(-4).map(({ payload }) => payload)).toEqual([
+      expect.objectContaining({ status: "completed" }),
+      expect.objectContaining({ status: "deleted" }),
+      expect.objectContaining({ status: "active" }),
+      expect.objectContaining({ status: "deleted" }),
+    ]);
     test.database.close();
   });
 });
