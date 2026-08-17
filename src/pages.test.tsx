@@ -339,6 +339,28 @@ describe("Página Biblioteca", () => {
     expect(screen.queryByText("book-1")).not.toBeInTheDocument();
   });
 
+  it("ancora o balão na posição informada pela cena e expõe exploração compacta", async () => {
+    renderLibrary(Promise.resolve([book]));
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    expect(
+      screen.getByRole("navigation", { name: "Explorar salas" }),
+    ).toBeVisible();
+    expect(screen.queryByLabelText("Salas")).not.toBeInTheDocument();
+
+    act(() =>
+      visualHostMock.interaction?.({
+        anchor: { x: 72, y: 64 },
+        type: "LibrarianSelected",
+      }),
+    );
+
+    const bubble = await screen.findByText("Uma observação tranquila");
+    expect(bubble.closest("aside")).toHaveStyle({
+      "--bubble-anchor-x": "72%",
+      "--bubble-anchor-y": "64%",
+    });
+  });
+
   it("abre o painel da criatura, substitui o anterior e fecha sem duplicação", async () => {
     const user = userEvent.setup();
     renderLibrary(Promise.resolve([book]));

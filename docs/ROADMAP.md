@@ -109,6 +109,7 @@ Não colocar expansões dentro dos blocos atuais apenas porque parecem fáceis.
   - `[x]` **P2-SOL:** fundação arquitetural — catálogo, Room Engine, estágios monotônicos, navegação e contrato React ↔ Phaser em instância única;
   - `[x]` **P2-B:** cinco implementações visuais, decorações procedurais, períodos e troca de sala na instância Phaser única;
   - `[x]` **P2-C:** residentes, rotinas, diálogo contextual e presença determinística da criatura;
+  - `[x]` **P2-D:** composição minimalista, exploração horizontal, balões ancorados e disclosures mobile;
 - `[ ]` **P3 — Memória Conectada:** calendário avançado, metas opcionais, ritmos, conexões, revisão, coleções e memória conectada.
 
 P1 implementa `Book`, `Movie`, `Series`, `Study`, `PhysicalActivity` e `Work`. P2 está tecnicamente concluído; o próximo trabalho é P3 — Memória Conectada.

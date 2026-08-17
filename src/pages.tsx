@@ -132,6 +132,9 @@ export function LibraryPage({
   const [speechBubble, setSpeechBubble] = useState<LocalizedDialogue | null>(
     null,
   );
+  const [speechAnchor, setSpeechAnchor] = useState<
+    { readonly x: number; readonly y: number } | undefined
+  >();
   const [canvasFailed, setCanvasFailed] = useState(false);
   const [activeRoomId, setActiveRoomId] = useState<RoomId>("main-library");
   const [roomNotice, setRoomNotice] = useState<string | null>(null);
@@ -285,14 +288,17 @@ export function LibraryPage({
       setSheetMode(activeRoomId === "main-library" ? "shelf" : "room");
     }
     if (interaction.type === "LibrarianSelected") {
+      setSpeechAnchor(interaction.anchor);
       application?.audio?.emit({ type: "LibrarianSelected" });
       void openCharacterDialogue("librarian.interaction");
     }
     if (interaction.type === "CreatureSelected") {
+      setSpeechAnchor(interaction.anchor);
       application?.audio?.emit({ type: "CreatureSelected" });
       void openCharacterDialogue("creature.interaction");
     }
     if (interaction.type === "ResidentInteracted") {
+      setSpeechAnchor(interaction.anchor);
       const event = `${interaction.residentId}.interaction` as Parameters<
         typeof openCharacterDialogue
       >[0];
@@ -333,6 +339,7 @@ export function LibraryPage({
   function closeSpeechBubble() {
     const dialogue = speechBubble;
     setSpeechBubble(null);
+    setSpeechAnchor(undefined);
     requestAnimationFrame(() => {
       if (dialogue?.characterId === "character.librarian")
         librarianButtonRef.current?.focus();
@@ -373,25 +380,6 @@ export function LibraryPage({
       )}
       {state.kind === "ready" && (
         <div className="library-stage" data-period={period}>
-          <section aria-label="Salas" className="room-selector">
-            {state.rooms.map((room) => (
-              <button
-                aria-current={room.roomId === activeRoomId ? "true" : undefined}
-                className="room-selector__item"
-                key={room.roomId}
-                onClick={() => requestRoom(room.roomId)}
-                type="button"
-              >
-                <strong>{ROOM_NAMES[room.roomId]}</strong>
-                <span>
-                  {room.unlocked
-                    ? `Estágio ${room.highestReachedStage}`
-                    : "Bloqueada"}
-                </span>
-              </button>
-            ))}
-            {roomNotice && <p role="status">{roomNotice}</p>}
-          </section>
           <LibraryVisualHost
             diagnostics={diagnostics}
             onAvailabilityChange={handleAvailabilityChange}
@@ -415,6 +403,7 @@ export function LibraryPage({
           />
           {speechBubble && (
             <LibrarySpeechBubble
+              anchor={speechAnchor}
               dialogue={speechBubble}
               onClose={closeSpeechBubble}
             />
@@ -431,6 +420,54 @@ export function LibraryPage({
           >
             <span aria-hidden="true" />
           </button>
+          <nav aria-label="Explorar salas" className="library-room-explorer">
+            <button
+              aria-label="Sala anterior"
+              disabled={
+                state.rooms.findIndex(
+                  (room) => room.roomId === activeRoomId,
+                ) === 0
+              }
+              onClick={() => {
+                const index = state.rooms.findIndex(
+                  (room) => room.roomId === activeRoomId,
+                );
+                const previous = state.rooms[index - 1];
+                if (previous) requestRoom(previous.roomId);
+              }}
+              type="button"
+            >
+              <span aria-hidden="true">←</span>
+            </button>
+            <p aria-live="polite">
+              <strong>{ROOM_NAMES[activeRoomId]}</strong>
+              <span>Deslize para explorar</span>
+            </p>
+            <button
+              aria-label="Próxima sala"
+              disabled={
+                state.rooms.findIndex(
+                  (room) => room.roomId === activeRoomId,
+                ) ===
+                state.rooms.length - 1
+              }
+              onClick={() => {
+                const index = state.rooms.findIndex(
+                  (room) => room.roomId === activeRoomId,
+                );
+                const next = state.rooms[index + 1];
+                if (next) requestRoom(next.roomId);
+              }}
+              type="button"
+            >
+              <span aria-hidden="true">→</span>
+            </button>
+          </nav>
+          {roomNotice && (
+            <p className="library-room-notice" role="status">
+              {roomNotice}
+            </p>
+          )}
           {sheetMode && (
             <LibraryBottomSheet
               mode={sheetMode}

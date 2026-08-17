@@ -1077,6 +1077,7 @@ export class InitialLibraryScene extends Phaser.Scene {
         this.interactionHandler?.({ type: "ShelfSelected" });
       if (target === "librarian")
         this.interactionHandler?.({
+          anchor: this.anchorFor(this.resident),
           residentId: residentIdForRoom(this.room.roomId) ?? "researcher",
           roomId: this.room.roomId,
           type: "ResidentInteracted",
@@ -1086,9 +1087,15 @@ export class InitialLibraryScene extends Phaser.Scene {
     if (target === "shelf")
       this.interactionHandler?.({ type: "ShelfSelected" });
     if (target === "librarian")
-      this.interactionHandler?.({ type: "LibrarianSelected" });
+      this.interactionHandler?.({
+        anchor: this.anchorFor(this.librarian),
+        type: "LibrarianSelected",
+      });
     if (target === "creature")
-      this.interactionHandler?.({ type: "CreatureSelected" });
+      this.interactionHandler?.({
+        anchor: this.anchorFor(this.creature),
+        type: "CreatureSelected",
+      });
     if (target === "highlighted-book") {
       const entryId = this.projection.highlightedBook?.entryId;
       if (entryId)
@@ -1099,6 +1106,22 @@ export class InitialLibraryScene extends Phaser.Scene {
   private cancelSelection = (): void => {
     this.tapSelection.cancel();
   };
+
+  /** Converts the live Phaser position into a React overlay anchor. */
+  private anchorFor(
+    object: Phaser.GameObjects.GameObject | undefined,
+  ): { readonly x: number; readonly y: number } | undefined {
+    const size = this.renderedSize;
+    if (!size || !object || !("x" in object) || !("y" in object))
+      return undefined;
+    const x = Number(object.x);
+    const y = Number(object.y);
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return undefined;
+    return {
+      x: Math.round(Math.min(94, Math.max(6, (x / size.width) * 100))),
+      y: Math.round(Math.min(90, Math.max(8, (y / size.height) * 100))),
+    };
+  }
 
   private shutdown = (): void => {
     this.tapSelection.cancel();

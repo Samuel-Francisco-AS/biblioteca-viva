@@ -63,6 +63,9 @@ export function LibraryVisualHost({
   const latestPeriodRef = useRef(period);
   const latestReducedMotionRef = useRef(reducedMotion);
   const latestRoomRef = useRef(room);
+  const panStartRef = useRef<
+    { readonly pointerId: number; readonly x: number } | undefined
+  >(undefined);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -251,6 +254,34 @@ export function LibraryVisualHost({
       ref={containerRef}
       role="img"
       style={verticalPanStyle}
+      onPointerDown={(event) => {
+        panStartRef.current = { pointerId: event.pointerId, x: event.clientX };
+      }}
+      onPointerUp={(event) => {
+        const start = panStartRef.current;
+        panStartRef.current = undefined;
+        if (!start || start.pointerId !== event.pointerId) return;
+        const distance = event.clientX - start.x;
+        if (Math.abs(distance) < 56) return;
+        const rooms = [
+          "main-library",
+          "study-room",
+          "projection-room",
+          "training-room",
+          "office",
+        ] as const;
+        const index = rooms.indexOf(latestRoomRef.current.roomId);
+        const next = rooms[index + (distance < 0 ? 1 : -1)];
+        if (next) {
+          latestInteractionRef.current?.({
+            roomId: next,
+            type: "RoomRequested",
+          });
+        }
+      }}
+      onPointerCancel={() => {
+        panStartRef.current = undefined;
+      }}
     />
   );
 }

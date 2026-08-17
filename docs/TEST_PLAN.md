@@ -1064,3 +1064,11 @@ A validação física de composição, contraste percebido, toque, áudio, TalkB
 A cobertura automatizada valida o catálogo dos cinco residentes, residência, ausência no estágio 1 e presença monotônica a partir do estágio 2; estados permitidos por período, âncoras conhecidas, transição e política determinística da criatura com fallback. O contrato `ResidentInteracted` contém somente `residentId` e `roomId`, e o teste arquitetural mantém Phaser sem importação de conteúdo ou serviço de diálogo.
 
 Resultado automático desta implementação: 692 testes Vitest em 77 arquivos. Formatação, format:check, lint, typecheck e diff passaram. A prova humana de 30 trocas, percepção visual, TalkBack, áudio, FPS e estabilidade Android permanece pendente e não é inferida pela automação.
+
+## 31. P2-D — composição espacial e densidade mobile
+
+A regressão React cobre a retirada do selector em cinco abas, a navegação compacta equivalente e a âncora percentual recebida do Phaser para o balão React. A âncora é calculada a partir da posição corrente da entidade e do tamanho renderizado da cena, preservando a referência proporcional quando o host muda de tamanho; texto, diálogo e foco permanecem em React. O host preserva a mesma factory, game, canvas, cena e lifecycle, e trata arraste horizontal como pedido tipado de troca de sala.
+
+Detalhes de livro deixam apenas identidade e progresso expandidos; status, notas, citações, histórico e metadados passam a disclosures nativos. O bottom sheet limita sua altura no retrato e os controles de exploração ocupam uma única cápsula segura, sem restaurar as cinco abas.
+
+Ainda é obrigatória a validação humana no Moto G06: arrastar entre salas desbloqueadas/bloqueadas, keyboard/Touch exploration, safe areas, TalkBack, texto ampliado, não sobreposição de header/sheet/balão e conforto visual. Nenhum gate humano é aprovado por automação.

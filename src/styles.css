@@ -708,6 +708,20 @@ blockquote {
   padding-top: 0;
 }
 
+.detail-disclosure > summary {
+  cursor: pointer;
+  color: var(--color-text);
+  font-weight: 720;
+}
+
+.detail-disclosure[open] > summary {
+  margin-bottom: var(--space-4);
+}
+
+.detail-summary__essentials {
+  margin-bottom: var(--space-3);
+}
+
 .detail-layout > .destructive-section {
   margin-top: var(--space-6);
   border: var(--border-width) solid
@@ -932,41 +946,66 @@ blockquote {
   background: var(--color-bg-deep);
 }
 
-.room-selector {
+.library-room-explorer {
   position: absolute;
-  z-index: 0;
-  inset-inline: var(--space-3);
-  bottom: calc(var(--safe-bottom) + var(--space-3));
+  z-index: 8;
+  top: max(4.5rem, calc(3.5rem + env(safe-area-inset-top)));
+  left: 50%;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: var(--space-1);
-  padding: var(--space-2);
-  border-radius: var(--radius-lg);
-  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
-  pointer-events: none;
+  grid-template-columns: var(--touch-target) auto var(--touch-target);
+  max-width: calc(100% - var(--space-7));
+  transform: translateX(-50%);
+  align-items: center;
+  border: 1px solid
+    color-mix(in srgb, var(--color-border-strong) 80%, transparent);
+  border-radius: 999px;
+  background: rgb(10 19 18 / 76%);
+  backdrop-filter: blur(10px);
 }
 
-.room-selector__item {
-  min-height: 44px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text);
+.library-room-explorer button {
+  width: var(--touch-target);
+  min-height: var(--touch-target);
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
   background: transparent;
-  cursor: pointer;
+  color: var(--color-text);
+  font-size: 1.1rem;
 }
 
-.room-selector__item strong,
-.room-selector__item span {
-  display: block;
-  font-size: var(--font-size-xs);
-}
-.room-selector__item[aria-current="true"] {
-  border-color: var(--color-focus);
-  background: var(--color-surface-raised);
-}
-.room-selector p {
-  grid-column: 1 / -1;
+.library-room-explorer p {
+  display: grid;
+  min-width: min(11rem, 44vw);
   margin: 0;
+  text-align: center;
+}
+
+.library-room-explorer strong {
+  overflow: hidden;
+  font-size: var(--font-size-small);
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.library-room-explorer span {
+  color: var(--color-text-muted);
+  font-size: 0.68rem;
+}
+
+.library-room-notice {
+  position: absolute;
+  z-index: 9;
+  top: max(8rem, calc(7rem + env(safe-area-inset-top)));
+  right: var(--space-4);
+  left: var(--space-4);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-small);
+  background: rgb(10 19 18 / 88%);
+  color: var(--color-text-secondary);
+  text-align: center;
 }
 
 .library-summary-trigger {
@@ -999,7 +1038,7 @@ blockquote {
   bottom: 0;
   left: 0;
   display: grid;
-  max-height: min(68%, 34rem);
+  max-height: min(56%, 30rem);
   padding: var(--space-3) max(var(--space-5), env(safe-area-inset-right))
     calc(var(--space-5) + env(safe-area-inset-bottom))
     max(var(--space-5), env(safe-area-inset-left));
@@ -1065,6 +1104,17 @@ blockquote {
   border-radius: var(--radius-medium);
   background: color-mix(in srgb, var(--color-surface-raised) 96%, transparent);
   box-shadow: var(--shadow-raised);
+  left: clamp(
+    var(--space-3),
+    calc(var(--bubble-anchor-x, 50%) - 8.5rem),
+    calc(100% - 17rem - var(--space-3))
+  );
+  top: clamp(
+    4.5rem,
+    calc(var(--bubble-anchor-y, 50%) - 9rem),
+    calc(100% - 10rem)
+  );
+  transform: translateY(-100%);
 }
 
 .library-speech-bubble::after {
@@ -1077,22 +1127,12 @@ blockquote {
   transform: rotate(45deg);
 }
 
-.library-speech-bubble--librarian {
-  top: 48%;
-  right: 7%;
-}
-
-.library-speech-bubble--librarian::after {
-  right: 22%;
-}
-
-.library-speech-bubble--creature {
-  right: 18%;
-  bottom: 20%;
-}
-
-.library-speech-bubble--creature::after {
-  right: 44%;
+.library-speech-bubble::after {
+  right: clamp(
+    var(--space-3),
+    calc(100% - var(--bubble-anchor-x, 50%)),
+    calc(100% - var(--space-3))
+  );
 }
 
 .library-speech-bubble p {
@@ -1247,6 +1287,21 @@ blockquote {
   .book-form__actions .button,
   .inline-actions .button {
     width: 100%;
+  }
+}
+
+@media (max-width: 28rem) {
+  .library-room-explorer p {
+    min-width: 9rem;
+  }
+
+  .library-bottom-sheet {
+    max-height: 52%;
+    gap: var(--space-3);
+  }
+
+  .library-sheet-stats div {
+    padding: var(--space-2);
   }
 }
 

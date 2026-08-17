@@ -9,7 +9,7 @@
 - **blocos concluídos:** Bloco 5 — Backup, restauração e recuperação, com G5 aprovado; Bloco 6 — Biblioteca visual conectada, com G6 aprovado;
 - **prompts tecnicamente implementados:** Prompts 1 a 19; sua conclusão técnica não aprova os gates humanos pendentes;
 - **implementação concluída:** Blocos 4, 5 e 6;
-- **trabalho atual:** P2-C concluído tecnicamente sobre P2-SOL/P2-B; próximo trabalho P3 — Memória Conectada;
+- **trabalho atual:** P2-D concluído tecnicamente: refinamento de composição, exploração horizontal e densidade mobile sobre P2-C; checkpoint Android continua pendente;
 - **gate:** G0 a G3 aprovados; G5 e G6 aprovados por Sam em 2026-08-06; G4 permanece aberto;
 - **versão:** `0.2.0-alpha.1`, marco do domínio, aplicação e persistência validados;
 - **último checkpoint técnico:** P1-C está em `5f19e12` e a auditoria final foi registrada no commit corretivo desta operação; P1-A está em `b2f7236`, P1-B em `9a7800a` e o início documental em `b1b2fb0`;
@@ -54,6 +54,8 @@
 - [x] aprovar o conjunto documental inicial.
 
 ## Trabalho atual
+
+P2-D substitui o seletor comprimido de cinco salas por exploração horizontal no host visual e controles compactos equivalentes em React, sem criar game, cena, scheduler ou estado novo. Os balões agora recebem âncora normalizada da posição viva da entidade Phaser e se reposicionam por layout/resize; detalhes secundários do livro passam a disclosures e o sheet usa altura menor em retrato. Não houve schema, migração, backup, dependência ou asset novo. A composição, gesto, áreas seguras, TalkBack e conforto no Moto G06 exigem novo checkpoint humano.
 
 P2-C acrescenta catálogo declarativo para bibliotecária, pesquisador, projecionista, cuidador do treino e escriba; presença secundária a partir do `highestReachedStage` 2; rotinas por estados, âncoras, período e scheduler único da cena; interação `ResidentInteracted`, fallback React e falas contextuais no DialogueService existente. A criatura permanece conceito próprio, com presença determinística entre salas e fallback principal. Não houve schema, migração, backup, asset, dependência, plugin ou permissão nova.
 

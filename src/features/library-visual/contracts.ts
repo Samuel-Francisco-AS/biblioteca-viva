@@ -62,9 +62,16 @@ export type LibrarySceneEvent =
 
 export type LibraryInteraction =
   | { readonly type: "ShelfSelected" }
-  | { readonly type: "LibrarianSelected" }
-  | { readonly type: "CreatureSelected" }
   | {
+      readonly anchor?: { readonly x: number; readonly y: number };
+      readonly type: "LibrarianSelected";
+    }
+  | {
+      readonly anchor?: { readonly x: number; readonly y: number };
+      readonly type: "CreatureSelected";
+    }
+  | {
+      readonly anchor?: { readonly x: number; readonly y: number };
       readonly residentId: ResidentId;
       readonly roomId: RoomId;
       readonly type: "ResidentInteracted";

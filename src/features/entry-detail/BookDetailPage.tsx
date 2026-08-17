@@ -318,40 +318,45 @@ export function BookDetailPage({
             Editar dados
           </Link>
         </div>
-        <dl className="book-facts">
+        <dl className="book-facts detail-summary__essentials">
           <div>
             <dt>Progresso</dt>
             <dd>{progressText(book)}</dd>
           </div>
-          <div>
-            <dt>Avaliação</dt>
-            <dd>
-              {book.rating === undefined
-                ? "Não informada"
-                : `${book.rating} de 5`}
-            </dd>
-          </div>
-          <div>
-            <dt>Início</dt>
-            <dd>
-              {book.startedAt === undefined
-                ? "Não informado"
-                : formatDate(book.startedAt)}
-            </dd>
-          </div>
-          <div>
-            <dt>Conclusão</dt>
-            <dd>
-              {book.completedAt === undefined
-                ? "Não concluído"
-                : formatDate(book.completedAt)}
-            </dd>
-          </div>
-          <div>
-            <dt>Última atualização</dt>
-            <dd>{formatDateTime(book.updatedAt)}</dd>
-          </div>
         </dl>
+        <details className="detail-disclosure">
+          <summary>Mais informações</summary>
+          <dl className="book-facts">
+            <div>
+              <dt>Avaliação</dt>
+              <dd>
+                {book.rating === undefined
+                  ? "Não informada"
+                  : `${book.rating} de 5`}
+              </dd>
+            </div>
+            <div>
+              <dt>Início</dt>
+              <dd>
+                {book.startedAt === undefined
+                  ? "Não informado"
+                  : formatDate(book.startedAt)}
+              </dd>
+            </div>
+            <div>
+              <dt>Conclusão</dt>
+              <dd>
+                {book.completedAt === undefined
+                  ? "Não concluído"
+                  : formatDate(book.completedAt)}
+              </dd>
+            </div>
+            <div>
+              <dt>Última atualização</dt>
+              <dd>{formatDateTime(book.updatedAt)}</dd>
+            </div>
+          </dl>
+        </details>
         <Link className="text-link" to={returnPath}>
           {returnPath.startsWith("/arquivo")
             ? "Voltar ao Arquivo"
@@ -372,8 +377,8 @@ export function BookDetailPage({
         />
       </section>
 
-      <section className="content-card" aria-labelledby="status-title">
-        <h2 id="status-title">Status da leitura</h2>
+      <details className="content-card detail-disclosure">
+        <summary id="status-title">Status da leitura</summary>
         <p>Status atual: {statusLabels[book.status]}.</p>
         <StatusActions
           book={book}
@@ -382,10 +387,10 @@ export function BookDetailPage({
           }
           onUpdated={updateBook}
         />
-      </section>
+      </details>
 
-      <section className="content-card" aria-labelledby="note-form-title">
-        <h2 id="note-form-title">Adicionar nota</h2>
+      <details className="content-card detail-disclosure">
+        <summary id="note-form-title">Adicionar nota</summary>
         <NoteForm
           entryId={book.id}
           addNote={(input) => application.commands.addNote.execute(input)}
@@ -394,10 +399,10 @@ export function BookDetailPage({
             setAnnouncement(message);
           }}
         />
-      </section>
+      </details>
 
-      <section className="content-card" aria-labelledby="quote-form-title">
-        <h2 id="quote-form-title">Adicionar citação</h2>
+      <details className="content-card detail-disclosure">
+        <summary id="quote-form-title">Adicionar citação</summary>
         <QuoteForm
           entryId={book.id}
           totalPages={book.totalPages}
@@ -407,10 +412,10 @@ export function BookDetailPage({
             setAnnouncement(message);
           }}
         />
-      </section>
+      </details>
 
-      <section className="content-card" aria-labelledby="history-title">
-        <h2 id="history-title">Histórico de leitura</h2>
+      <details className="content-card detail-disclosure">
+        <summary id="history-title">Histórico de leitura</summary>
         <History
           notes={notes}
           quotes={quotes}
@@ -450,7 +455,7 @@ export function BookDetailPage({
             );
           }}
         />
-      </section>
+      </details>
 
       <section
         className="content-card destructive-section"
