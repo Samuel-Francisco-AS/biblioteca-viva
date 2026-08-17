@@ -1052,3 +1052,9 @@ Resultado final da matriz: 589 testes Vitest em 63 arquivos e oito E2E Chromium,
 A matriz do Room Engine cobre integridade dos cinco IDs/conexões, quatro políticas de unlock incluindo Movie OU Series, fronteiras `threshold - 1 / threshold / threshold + 1`, monotonicidade após redução dos fatos e fallback de navegação. O host prova 50 trocas entre salas com uma única criação de game/host, sem destroy ou listener/observer adicional. A suíte preserva os testes de backup v3 e milestones; P2 visual e validação humana não são inferidos.
 
 Resultado automático: 661 testes Vitest em 74 arquivos e dez E2E Chromium. Passaram formatação/check, lint, typecheck, áudio, build, relatório de performance com Phaser lazy, Android sync/build e diff. Nenhum teste físico, TalkBack, áudio percebido ou profiling de FPS foi executado.
+
+## 29. P2-B — salas e evolução visual
+
+A cobertura unitária verifica o mapeamento declarativo de decorações no estágio 1 e 4 para Study, Projection, Training e Office, além das 20 combinações puras de sala e período. O host preserva uma única factory/game durante 50 trocas que percorrem os cinco `RoomId` e também atualiza Study 1 → 2 sem recriar a instância. A interface React mantém selector bloqueado/desbloqueado e bottom sheet contextual; a semântica do canvas não substitui esse caminho.
+
+A validação física de composição, contraste percebido, toque, áudio, TalkBack, FPS e conforto das cinco salas continua pendente do checkpoint Android; esta automação não aprova gate humano.

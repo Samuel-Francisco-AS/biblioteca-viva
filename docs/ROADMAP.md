@@ -107,7 +107,8 @@ Não colocar expansões dentro dos blocos atuais apenas porque parecem fáceis.
   - `[x]` **P1-C:** Estatísticas, timeline, histórico, resumo da Biblioteca e fatos derivados para P2;
 - `[ ]` **P2 — Biblioteca Evolutiva:** sistema de salas, Sala de Estudos, Sala de Projeção, Sala de Treino, Escritório, reputação, desbloqueios, personagens e rotinas;
   - `[x]` **P2-SOL:** fundação arquitetural — catálogo, Room Engine, estágios monotônicos, navegação e contrato React ↔ Phaser em instância única;
-  - `[ ]` **P2-B/P2-C:** cinco implementações visuais, decorações, residentes e rotinas;
+  - `[x]` **P2-B:** cinco implementações visuais, decorações procedurais, períodos e troca de sala na instância Phaser única;
+  - `[ ]` **P2-C:** residentes e rotinas;
 - `[ ]` **P3 — Memória Conectada:** calendário avançado, metas opcionais, ritmos, conexões, revisão, coleções e memória conectada.
 
 P1 implementa `Book`, `Movie`, `Series`, `Study`, `PhysicalActivity` e `Work`. P2 e P3 são futuros; nenhuma nova sala Phaser pertence a P1.

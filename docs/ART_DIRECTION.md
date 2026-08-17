@@ -135,3 +135,9 @@ Uma mudança artística só é aprovada quando:
 - asset ausente não causa tela preta;
 - desempenho atende `PERFORMANCE.md`;
 - screenshot e teste manual foram registrados.
+
+## P2-B — salas evolutivas
+
+As cinco salas mantêm madeira escura, paredes profundas, metais envelhecidos e luz âmbar. A Biblioteca Principal preserva a composição R3. Estudos usa gabinete de pesquisa; Projeção, tela antiga e projetor; Treino, salão de prática sem linguagem de academia; Escritório, atelier antigo. Cada secundária começa com quatro formas-base e recebe três decorações procedurais estáticas nos estágios 2–4. Não há títulos, disciplinas, clientes, cartazes reais nem residentes nesta fase.
+
+Manhã privilegia legibilidade; tarde aquece o ambiente; noite escurece com fonte local; madrugada resfria o fundo preservando fontes quentes. Alto contraste reutiliza a política visual existente e movimento reduzido não cria loops nas salas novas.

@@ -512,7 +512,13 @@ describe("LibraryVisualHost", () => {
     const { createLibraryVisualGame, loadFactory } = factoryFor(instance);
     const rendered = renderHost({ loadFactory });
     await waitFor(() => expect(createLibraryVisualGame).toHaveBeenCalledOnce());
-    const roomIds = ["main-library", "study-room"] as const;
+    const roomIds = [
+      "main-library",
+      "study-room",
+      "projection-room",
+      "training-room",
+      "office",
+    ] as const;
     for (let index = 0; index < 50; index += 1) {
       rendered.rerender(
         <LibraryVisualHost
@@ -534,6 +540,33 @@ describe("LibraryVisualHost", () => {
     expect(instance.destroy).not.toHaveBeenCalled();
     expect(instance.updateRoom).toHaveBeenCalledTimes(50);
     expect(document.querySelectorAll(".library-visual-host")).toHaveLength(1);
+  });
+
+  it("atualiza o estágio da mesma sala sem recriar o game", async () => {
+    const instance = game();
+    const { createLibraryVisualGame, loadFactory } = factoryFor(instance);
+    const initialRoom = {
+      roomId: "study-room" as const,
+      unlocked: true,
+      stage: 1 as const,
+      dayPeriod: "morning" as const,
+      reducedMotion: false,
+      highContrast: false,
+    };
+    const rendered = renderHost({ loadFactory, room: initialRoom });
+    await waitFor(() => expect(createLibraryVisualGame).toHaveBeenCalledOnce());
+    rendered.rerender(
+      <LibraryVisualHost
+        loadFactory={loadFactory}
+        projection={projection}
+        room={{ ...initialRoom, stage: 2 }}
+      />,
+    );
+    expect(createLibraryVisualGame).toHaveBeenCalledOnce();
+    expect(instance.updateRoom).toHaveBeenLastCalledWith({
+      ...initialRoom,
+      stage: 2,
+    });
   });
 });
 

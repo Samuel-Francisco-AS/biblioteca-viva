@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { ROOM_NAMES } from "../../content";
+import type { RoomProgress } from "../../domain";
 import type { LibraryViewModel } from "./contracts";
 import type { LibraryPeriod } from "./libraryAtmosphere";
 import { LIBRARY_PERIOD_LABELS } from "./libraryAtmosphere";
@@ -9,7 +11,7 @@ import {
   progressDescription,
 } from "./libraryPresentation";
 
-export type LibrarySheetMode = "summary" | "shelf";
+export type LibrarySheetMode = "summary" | "shelf" | "room";
 
 interface LibraryBottomSheetProps {
   readonly mode: LibrarySheetMode;
@@ -21,6 +23,7 @@ interface LibraryBottomSheetProps {
     readonly totalEntries: number;
     readonly activeSessionType?: string;
   };
+  readonly room?: RoomProgress;
 }
 
 export function LibraryBottomSheet({
@@ -30,6 +33,7 @@ export function LibraryBottomSheet({
   recentBookTitle,
   viewModel,
   productSummary,
+  room,
 }: LibraryBottomSheetProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
@@ -55,10 +59,18 @@ export function LibraryBottomSheet({
       <div className="section-heading">
         <div>
           <p className="eyebrow">
-            {mode === "summary" ? LIBRARY_PERIOD_LABELS[period] : "Estante"}
+            {mode === "summary"
+              ? LIBRARY_PERIOD_LABELS[period]
+              : mode === "room"
+                ? "Sala evolutiva"
+                : "Estante"}
           </p>
           <h2 id="library-sheet-title">
-            {mode === "summary" ? "Sua biblioteca" : "Resumo da estante"}
+            {mode === "summary"
+              ? "Sua biblioteca"
+              : mode === "room" && room
+                ? ROOM_NAMES[room.roomId]
+                : "Resumo da estante"}
           </h2>
         </div>
         <button
@@ -95,6 +107,31 @@ export function LibraryBottomSheet({
         <p>Sessão em andamento · {productSummary.activeSessionType}</p>
       )}
       {mode === "shelf" && <p>{summary.shelf}</p>}
+      {mode === "room" && room && (
+        <>
+          <p>
+            Estágio {room.highestReachedStage} ·{" "}
+            {room.highestReachedStage === 4 ? "Consolidada" : "Em evolução"}
+          </p>
+          {room.requirements.filter((requirement) => !requirement.met)[0] ? (
+            <p>
+              Próximo estágio:{" "}
+              {
+                room.requirements.filter((requirement) => !requirement.met)[0]
+                  ?.current
+              }{" "}
+              de{" "}
+              {
+                room.requirements.filter((requirement) => !requirement.met)[0]
+                  ?.target
+              }{" "}
+              registros relacionados.
+            </p>
+          ) : (
+            <p>Todos os requisitos atuais desta sala foram alcançados.</p>
+          )}
+        </>
+      )}
       {recentBookTitle && (
         <div className="library-sheet__recent">
           <p className="eyebrow">Leitura recente</p>

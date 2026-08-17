@@ -115,3 +115,7 @@ O build P1-C registra JS inicial de 657.385 bytes (186.720 gzip), CSS de 22.770 
 Estatísticas leem Entries, Sessions e Activities uma vez por coleção, em paralelo no serviço de aplicação, e agregam com arrays e `Map`; não existe query por Entry nem tabela de totais derivados. O dataset sintético de 300 Entries e 2.000 Sessions prova determinismo e uma chamada por coleção sem benchmark de tempo frágil. O schema continua v5 com nove tabelas.
 
 Em idle sem sessão aberta existem zero intervalos de sessão; com sessão aberta existe um intervalo React de apresentação. A duração de domínio permanece derivada do `Clock` e dos timestamps, inclusive após visibilidade, reload e retomada. O timer único da atmosfera continua independente. P1-C não adicionou dependência, plugin, permissão ou asset.
+
+## 12. P2-B — orçamento de salas
+
+P2-B usa um renderer Phaser compartilhado: cada sala secundária possui dois `Graphics` próprios (geometria e iluminação), duas zonas úteis e nenhuma textura, entidade individual, shader, física, partícula ou loop decorativo. Objetos desenhados dependem exclusivamente de `RoomId + stage`; registros individuais não entram na cena. Na troca, o renderer anterior é destruído antes do atual e a infraestrutura do game/canvas/host permanece. A Biblioteca Principal continua com seu orçamento R3 e a criatura apenas nela.

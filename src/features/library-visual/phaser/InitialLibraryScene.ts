@@ -41,6 +41,8 @@ import {
   TapSelectionPolicy,
   type LibraryTapTarget,
 } from "./tapSelectionPolicy";
+import { RoomSceneRenderer } from "./RoomSceneRenderer";
+import { ROOM_VISUAL_DEFINITIONS } from "./roomVisuals";
 
 function rectangleContains(
   hitArea: Phaser.Geom.Rectangle,
@@ -77,6 +79,7 @@ export class InitialLibraryScene extends Phaser.Scene {
   private period: LibraryVisualPeriod;
   private readingLamp?: Phaser.GameObjects.Container;
   private room: RoomViewModel;
+  private roomRenderer?: RoomSceneRenderer;
   private readingLampFigure?: Phaser.GameObjects.Graphics;
   private reducedMotion: boolean;
   private renderedSize?: { readonly height: number; readonly width: number };
@@ -176,6 +179,10 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.period = period;
     const layout = this.currentLayout;
     if (!layout || !this.renderedSize) return;
+    if (this.room.roomId !== "main-library") {
+      this.renderRoomVisual();
+      return;
+    }
     this.atmosphereTween?.remove();
     this.atmosphereTween = undefined;
     this.drawAtmosphere(
@@ -255,7 +262,23 @@ export class InitialLibraryScene extends Phaser.Scene {
   }
 
   updateRoom(room: RoomViewModel): void {
+    const roomChanged = this.room.roomId !== room.roomId;
+    const stageChanged = this.room.stage !== room.stage;
+    const highContrastChanged = this.room.highContrast !== room.highContrast;
     this.room = room;
+    if (!this.renderedSize) return;
+    if (roomChanged && room.roomId === "main-library") {
+      this.renderLayout(this.scale.gameSize, "room-change");
+      return;
+    }
+    if (
+      roomChanged ||
+      stageChanged ||
+      highContrastChanged ||
+      this.period !== room.dayPeriod
+    ) {
+      this.renderRoomVisual(roomChanged ? "room-change" : undefined);
+    }
   }
 
   pauseMotion(): void {
@@ -637,6 +660,13 @@ export class InitialLibraryScene extends Phaser.Scene {
     if (reconciliationReason) this.resetMotionPhases();
     this.currentLayout = layout;
     this.renderedSize = { height: size.height, width: size.width };
+    if (this.room.roomId !== "main-library") {
+      this.renderRoomVisual(reconciliationReason);
+      return;
+    }
+    this.roomRenderer?.destroy();
+    this.roomRenderer = undefined;
+    this.setMainObjectsVisible(true);
     this.recordFallbackChoices();
     this.drawBackground(layout, size.width, size.height);
     this.drawShelf(layout);
@@ -659,6 +689,55 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.applyMotionFrame();
     if (reconciliationReason) this.startMotion(reconciliationReason);
     this.presentPendingUnlock();
+  }
+
+  private renderRoomVisual(
+    reconciliationReason?: MotionReconciliationReason,
+  ): void {
+    const size = this.renderedSize;
+    const definition = ROOM_VISUAL_DEFINITIONS[this.room.roomId];
+    if (!size || !definition) return;
+    this.setMainObjectsVisible(false);
+    this.motion.replace([], reconciliationReason ?? "room-change");
+    this.roomRenderer ??= new RoomSceneRenderer(this);
+    this.roomRenderer.render(definition, this.room, size);
+    const targetSize = LIBRARY_ROOM_INTERACTION.minimumTargetSize;
+    this.updateZone(this.shelfZone, {
+      height: Math.max(targetSize, size.height * 0.32),
+      width: Math.max(targetSize, size.width * 0.48),
+      x: size.width * 0.27,
+      y: size.height * 0.4,
+    });
+    this.updateZone(this.librarianZone, {
+      height: Math.max(targetSize, size.height * 0.2),
+      width: Math.max(targetSize, size.width * 0.25),
+      x: size.width * 0.04,
+      y: size.height * 0.68,
+    });
+    this.updateZone(
+      this.creatureZone,
+      { height: 1, width: 1, x: 0, y: 0 },
+      false,
+    );
+    this.updateZone(
+      this.highlightedBookZone,
+      { height: 1, width: 1, x: 0, y: 0 },
+      false,
+    );
+  }
+
+  private setMainObjectsVisible(visible: boolean): void {
+    [
+      this.background,
+      this.shelf,
+      this.counter,
+      this.librarian,
+      this.creature,
+      this.highlightedBook,
+      this.readingLamp,
+      this.lighting,
+      this.atmosphere,
+    ].forEach((object) => object?.setVisible(visible));
   }
 
   private recordFallbackChoices(): void {
@@ -847,6 +926,16 @@ export class InitialLibraryScene extends Phaser.Scene {
 
   private finishSelection = (pointer: Phaser.Input.Pointer): void => {
     const target = this.tapSelection.end(pointer.id, pointer.wasCanceled);
+    if (this.room.roomId !== "main-library") {
+      if (target === "shelf")
+        this.interactionHandler?.({ type: "ShelfSelected" });
+      if (target === "librarian")
+        this.interactionHandler?.({
+          roomId: "main-library",
+          type: "RoomRequested",
+        });
+      return;
+    }
     if (target === "shelf")
       this.interactionHandler?.({ type: "ShelfSelected" });
     if (target === "librarian")
@@ -871,6 +960,8 @@ export class InitialLibraryScene extends Phaser.Scene {
     this.unlockTween = undefined;
     this.atmosphereTween?.remove();
     this.atmosphereTween = undefined;
+    this.roomRenderer?.destroy();
+    this.roomRenderer = undefined;
     this.scale.off(Phaser.Scale.Events.RESIZE, this.handleResize, this);
     this.load.off(
       Phaser.Loader.Events.FILE_LOAD_ERROR,

@@ -14,6 +14,7 @@ export interface SceneMotionDefinition {
 export type MotionReconciliationReason =
   | "initial"
   | "layout-mode-change"
+  | "room-change"
   | "highlight-presence-change"
   | "preference-change";
 

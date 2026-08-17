@@ -257,7 +257,7 @@ export function LibraryPage({
       dialogueRequest.current += 1;
       application?.audio?.emit({ type: "ShelfSelected" });
       setSpeechBubble(null);
-      setSheetMode("shelf");
+      setSheetMode(activeRoomId === "main-library" ? "shelf" : "room");
     }
     if (interaction.type === "LibrarianSelected") {
       application?.audio?.emit({ type: "LibrarianSelected" });
@@ -404,6 +404,11 @@ export function LibraryPage({
               period={period}
               recentBookTitle={state.recentBookTitle}
               productSummary={state.productSummary}
+              room={
+                sheetMode === "room"
+                  ? state.rooms.find((room) => room.roomId === activeRoomId)
+                  : undefined
+              }
               viewModel={state.viewModel}
             />
           )}
