@@ -40,7 +40,7 @@ Para restaurar, use Configurações → Arquivo de backup → inspecionar → co
 
 ## 6. Phaser e performance
 
-Confirme primeiro `npm run performance:report`. Para regressão visual, verifique import lazy em `LibraryVisualHost.tsx`, uma instância/canvas, observer/listener, `InitialLibraryScene.shutdown`, zonas, tweens e resize. Use o build diagnóstico e os testes de 20 ciclos. Não force context loss ou split manual sem evidência. Phaser nunca recebe entidades completas.
+Confirme primeiro `npm run performance:report`. Para regressão visual, verifique import lazy em `LibraryVisualHost.tsx`, uma instância/canvas, observer/listener, `SpatialWorldScene.shutdown`, zonas, tweens, pan e resize. W1 mantém `World/Space/Connection` efêmeros; não adicione persistência espacial, `PlacedObject` ou Dexie sem iniciar W2 com migração/backup/testes. Use o build diagnóstico e os testes de 20 ciclos. Não force context loss ou split manual sem evidência. Phaser nunca recebe entidades completas.
 
 ## 7. E2E e CI
 
@@ -67,7 +67,7 @@ O APK fica em `android/app/build/outputs/apk/debug/app-debug.apk`. Registre tama
 
 Antes de G11: checkpoint humano G4/G7–G10, nova restauração física, identidade/ícone/splash, revisão de assets/licenças, assinatura e checklist release.
 
-Pós-protótipo: avaliar retenção/apresentação de atividades históricas somente se surgir um consumidor; SQLite somente se gatilhos documentados ocorrerem; outros tipos/salas/conta.
+Pós-W1: W2 só começa após validação humana da composição; editor, salas temáticas novas, conta e backend seguem fora de escopo. Avaliar retenção/apresentação de atividades históricas somente se surgir um consumidor; SQLite somente se gatilhos documentados ocorrerem.
 
 Opcionais condicionados a evidência: preservar offset da música, comprimir WAVs, dividir o chunk lazy do Phaser, segunda configuração Android. Visual procedural e fallback local são decisões deliberadas até revisão artística, não defeitos automáticos.
 

@@ -19,8 +19,10 @@ test("ciclo principal persiste livro, anotações, conclusão e marco", async ({
     page.getByText("120 de 240 páginas", { exact: true }),
   ).toBeVisible();
 
+  await page.locator("summary", { hasText: "Adicionar nota" }).click();
   await page.getByLabel("Nota (obrigatório)").fill("Nota fictícia de leitura.");
   await page.getByRole("button", { name: "Adicionar nota" }).click();
+  await page.locator("summary", { hasText: "Histórico de leitura" }).click();
   await expect(page.getByText("Nota fictícia de leitura.")).toBeVisible();
   await page.getByRole("button", { name: "Editar nota" }).click();
   await page
@@ -35,6 +37,7 @@ test("ciclo principal persiste livro, anotações, conclusão e marco", async ({
       .last(),
   ).toBeVisible();
 
+  await page.locator("summary", { hasText: "Adicionar citação" }).click();
   await page
     .getByLabel("Citação (obrigatório)")
     .fill("Citação fictícia para regressão.");
@@ -64,6 +67,7 @@ test("ciclo principal persiste livro, anotações, conclusão e marco", async ({
   await page.getByRole("button", { name: "Excluir citação" }).click();
   await expect(page.getByText("Citação fictícia revisada.")).toHaveCount(0);
 
+  await page.locator("summary", { hasText: "Status da leitura" }).click();
   await page.getByRole("button", { name: "Concluir leitura" }).click();
   await expect(page.getByText("Status atual: Concluído.")).toBeVisible();
   await expect(

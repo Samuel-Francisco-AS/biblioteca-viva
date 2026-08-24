@@ -5,9 +5,9 @@ import host from "../LibraryVisualHost.tsx?raw";
 import { LIBRARY_CANVAS_TOUCH_ACTION } from "./roomConfig";
 
 describe("configuração de rolagem da sala", () => {
-  it("permite pan vertical no host e no canvas", () => {
-    expect(LIBRARY_CANVAS_TOUCH_ACTION).toBe("pan-y");
-    expect(host).toMatch(/touchAction:\s*["']pan-y["']/u);
+  it("reserva o gesto do canvas para o pan do mundo", () => {
+    expect(LIBRARY_CANVAS_TOUCH_ACTION).toBe("none");
+    expect(host).toMatch(/touchAction:\s*["']none["']/u);
     expect(factory).toMatch(
       /game\.canvas\.style\.touchAction\s*=\s*LIBRARY_CANVAS_TOUCH_ACTION/u,
     );

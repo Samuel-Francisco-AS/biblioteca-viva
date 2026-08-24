@@ -1,63 +1,37 @@
 # Visão da Biblioteca Viva
 
-## Frase de produto
+> Revisão de direção: 2026-08-18
+> Estado: direção aprovada; W1 tem implementação técnica corrigida e aguarda validação humana no Moto G06.
 
-> Aquilo que você lê, assiste, aprende, pratica e constrói pode deixar memória na sua biblioteca.
+## Frase de produto
+> Aquilo que você lê, assiste, aprende, pratica e constrói deixa memória em um lugar que cresce com você.
 
 ## Propósito
-
-Transformar registros culturais, de aprendizado, prática e trabalho em um espaço pessoal, visível, afetivo e persistente. O aplicativo deve ajudar a preservar experiências e tornar natural o reencontro com registros, anotações, citações e aprendizados, sem pretender controlar toda a vida.
+Transformar registros culturais, de aprendizado, prática e trabalho em um espaço pessoal, visível, afetivo e persistente. A Biblioteca Viva não deve apenas mostrar estatísticas ou uma coleção: deve materializar a trajetória do usuário em um ambiente que se expande, ganha objetos, habitantes, marcas e organização própria.
 
 ## Promessa central
+Registrar e viver experiências altera a memória estruturada do aplicativo e o mundo visual pessoal que a representa. O usuário não recebe uma sala pronta para cada categoria: ele constrói, ocupa e reorganiza uma biblioteca/casa viva ao longo do tempo.
 
-O usuário não apenas marca um livro como concluído. Ele vê que aquele livro deixou uma presença: a estante muda, a biblioteca reage, um personagem comenta e um pequeno elemento do ambiente passa a existir.
-
-## Natureza do produto
-
-Biblioteca Viva é simultaneamente:
-
-- uma ferramenta pessoal confiável;
-- uma experiência visual e sonora acolhedora;
-- um projeto de portfólio público e bem documentado;
-- uma fundação capaz de crescer sem reescrita integral.
-
-Não é, neste momento, um produto comercial, rede social ou serviço em nuvem.
-
-## Princípios inegociáveis
-
-1. **Registro antes da gamificação.** O app continua útil sem o cenário.
-2. **Visual e som são núcleo, não enfeite.** Devem reagir a ações reais.
-3. **Progresso sem culpa.** Pausa, abandono e retorno não geram punição.
-4. **Privacidade por padrão.** Conteúdo pessoal permanece local nesta fase.
-5. **Recompensa significativa.** Desbloqueios refletem hábitos e conteúdo.
-6. **Acessibilidade paralela.** Phaser encanta; React garante acesso aos dados.
-7. **Crescimento modular.** Novos tipos e salas entram por módulos verticais.
-8. **Honestidade técnica.** Não prometer segurança, escala ou IA inexistentes.
-9. **Manutenção humana.** O código precisa ser compreensível sem o Codex.
-10. **Escopo disciplinado.** O protótipo prova um ciclo completo antes de expandir.
+## Princípios
+1. Registro antes da gamificação.
+2. O mundo é consequência da vida registrada, não um placar.
+3. Liberdade espacial: o usuário decide como ocupar o espaço.
+4. Desbloqueio não é imposição: conquistar um objeto não determina onde colocá-lo.
+5. Progresso sem culpa.
+6. Visual e som são núcleo; dados e ações essenciais continuam acessíveis fora da cena.
+7. Privacidade por padrão e local-first.
+8. Phaser é mundo, não banco.
+9. Crescimento modular.
+10. Manutenção humana.
 
 ## Experiência desejada
-
-O usuário deve sentir que:
-
-- a biblioteca pertence a ele;
-- o aplicativo se lembra do que foi preservado;
-- registrar algo tem consequência visível, mas não vira obrigação;
-- retornar após uma pausa é acolhedor;
-- a coleção cresce como memória, não como placar;
-- o cenário possui vida sem atrapalhar a tarefa prática.
+O usuário deve sentir que aquele lugar é dele; que existe continuidade espacial; que explora um ambiente em vez de trocar artificialmente de aba; que objetos conquistados podem ser posicionados e reorganizados; que novas áreas parecem expansão da construção; e que retornar é reencontrar um lugar conhecido.
 
 ## Anti-visão
+Não virar planilha com pixel art, cinco dashboards fantasiados de cômodos, casa em que cada categoria exige um quarto, jogo de decoração desconectado dos registros, máquina de streaks, editor penoso ou arquitetura inflada.
 
-Biblioteca Viva não deve se tornar:
+## Horizonte espacial
+O ambiente começa pequeno e cresce organicamente. Cômodos, corredores e expansões são semanticamente neutros. Categorias vivem no domínio dos dados; o espaço pertence ao usuário.
 
-- uma planilha com pixel art colada;
-- um jogo que torna cadastro e edição penosos;
-- uma máquina de sequência diária, culpa e notificações manipulativas;
-- um catálogo dependente de internet;
-- um sistema que sacrifica dados por animações;
-- um amontoado de abstrações criado para parecer “escalável”.
-
-## Horizonte
-
-A fase de produto começa com livros, filmes, séries, estudos, atividade física e trabalho como vida registrada. Em P2, esses fatos poderão formar salas, personagens, ecossistemas e rotinas; em P3, conexões e revisitas. Essa visão é direção modular, não licença para transformar a Biblioteca Viva em um super app que controla tudo.
+## Horizonte técnico
+React permanece responsável pela aplicação convencional e acessível. Phaser evolui de renderer de “sala atual” para runtime de mundo 2D/2.5D persistente com câmera, espaços conectados, objetos e habitantes. Dexie continua como adaptador local enquanto atender ao produto. 3D real, conta, sincronização e social ficam fora deste reboot.

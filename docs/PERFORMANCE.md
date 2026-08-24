@@ -14,7 +14,7 @@ Medir antes de otimizar. Alterações são justificadas apenas por gargalo real 
 - até três tweens contínuos (bibliotecária, criatura e destaque), um tween transitório de desbloqueio e no máximo um tween finito de atmosfera;
 - zero tween repetitivo com movimento reduzido;
 - correspondência direta de uma representação por livro entre um e cinco livros; acima disso, compressão gradual e determinística até oito grupos visuais, inclusive com 100 livros ou mais;
-- zero partículas, shaders próprios, pós-processamento, física, câmera móvel ou atlas/textura própria carregada atualmente.
+- zero partículas, shaders próprios, pós-processamento ou física. W1 mantém uma instância/canvas, sem zonas ou tweens próprios; usa piso local repetido e paredes procedurais modulares, sem tilemap ou novo subsistema.
 
 O Phaser recebe somente `LibraryViewModel`, nunca entidades completas, títulos, autores ou anotações. O destaque visual contém apenas ID técnico, status e resumo de progresso e usa rótulo genérico na cena. A projeção faz duas consultas em paralelo na rota (livros e marcos), sem N+1, e resume coleções maiores sem crescimento linear ilimitado. A política produz 0, 1, 2, 3, 4 e 5 grupos para os primeiros livros, 6 para 10, 7 para 15 e no máximo 8 para 20, 100 ou mais.
 
@@ -119,3 +119,11 @@ Em idle sem sessão aberta existem zero intervalos de sessão; com sessão abert
 ## 12. P2-B — orçamento de salas
 
 P2-B usa um renderer Phaser compartilhado: cada sala secundária possui dois `Graphics` próprios (geometria e iluminação), duas zonas úteis e nenhuma textura, entidade individual, shader, física, partícula ou loop decorativo. Objetos desenhados dependem exclusivamente de `RoomId + stage`; registros individuais não entram na cena. Na troca, o renderer anterior é destruído antes do atual e a infraestrutura do game/canvas/host permanece. A Biblioteca Principal continua com seu orçamento R3 e a criatura apenas nela.
+
+## 13. W1 — composição corrigida
+
+W1 substituiu a geometria dependente da viewport por uma planta fixa de dois espaços e um conector curto. Após o smoke test físico reprovado, B foi aproximado cinco células no eixo Y e os bounds passaram de 832×832 para 832×672 units; não houve novo subsistema. A cena continua com uma instância, um canvas, zero zonas, zero tweens, zero física, partículas, shaders, polling ou tilemap. O resize só reposiciona/clampa a mesma câmera e recria os objetos pertencentes à mesma cena; o host preserva observer/listener próprios e seu cleanup já coberto.
+
+O piso usa módulos de 320 world units (10 células) mascarados somente nas áreas navegáveis. As paredes são desenhadas como células procedurais discretas, com borda e orientação simples, e as portas recebem soleiras procedurais; o número de objetos de display depende dos tiles/máscaras efetivamente produzidos pela cena e deve ser lido pelo diagnóstico runtime em build interno, não estimado como métrica Android. Não há FPS, memória, temperatura ou conforto medido para o Moto G06.
+
+Na auditoria técnica de 2026-08-20, `public/assets/` mediu 10.047.976 bytes após retirar do runtime dez PNGs de parede sem referência. Eles eram cópias byte a byte das fontes preservadas em `art-source/world/architecture/walls/`; nenhum asset de parede do Kit Zero era carregado pela W1, que usa o fallback procedural. Os quatro pisos efetivamente referenciados permanecem em `public/assets/world/architecture/floors/` e somam 9.256.558 bytes; são os maiores assets empacotados. O build resultante mede 11.964.852 bytes em `dist`; JS inicial 671.938 bytes (190.390 gzip) e Phaser lazy 1.205.487 bytes (321.810 gzip). Não houve compressão, conversão ou decisão artística nova.

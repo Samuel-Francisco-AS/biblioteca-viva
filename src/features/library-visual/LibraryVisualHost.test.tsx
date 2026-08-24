@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { StrictMode, type ComponentProps } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -111,6 +111,22 @@ describe("LibraryVisualHost", () => {
 
     await waitFor(() => expect(createLibraryVisualGame).toHaveBeenCalledOnce());
     expect(loadFactory).toHaveBeenCalledOnce();
+  });
+
+  it("não troca RoomId quando o usuário explora o mundo por arraste", async () => {
+    const instance = game();
+    const { createLibraryVisualGame, loadFactory } = factoryFor(instance);
+    const onInteraction = vi.fn();
+    renderHost({ loadFactory, onInteraction });
+
+    await waitFor(() => expect(createLibraryVisualGame).toHaveBeenCalledOnce());
+    const host = screen.getByRole("img", { name: "Sala visual da biblioteca" });
+    fireEvent.pointerDown(host, { clientX: 240, pointerId: 4 });
+    fireEvent.pointerUp(host, { clientX: 40, pointerId: 4 });
+
+    expect(onInteraction).not.toHaveBeenCalledWith(
+      expect.objectContaining({ type: "RoomRequested" }),
+    );
   });
 
   it("destrói exatamente uma instância e remove observer ao desmontar", async () => {

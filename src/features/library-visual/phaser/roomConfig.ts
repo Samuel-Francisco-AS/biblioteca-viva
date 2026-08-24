@@ -65,7 +65,7 @@ export const LIBRARY_ROOM_INTERACTION = {
   startEvent: "pointerdown",
 } as const;
 
-export const LIBRARY_CANVAS_TOUCH_ACTION = "pan-y" as const;
+export const LIBRARY_CANVAS_TOUCH_ACTION = "none" as const;
 
 export const LIBRARY_ROOM_PALETTE = {
   bookCompleted: 0xd8b84b,

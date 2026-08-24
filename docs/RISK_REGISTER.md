@@ -9,9 +9,9 @@ Escala: probabilidade e impacto `baixo`, `médio` ou `alto`.
 | R-03 | perda ou evicção de dados | média | alto | backup v2 retrocompatível, restauração transacional e marcos monotônicos implementados; nova validação Android pendente | dado some após reinício/atualização | mitigado parcialmente |
 | R-04 | Phaser assumir regras de negócio | média | alto | projeção e ponte tipada; testes de dependência | cena importa repositório ou domínio mutável | ativo |
 | R-05 | desempenho ruim em aparelho modesto | média | alto | lazy load, sala pequena, modo reduzido e perfil | FPS instável ou memória crescente | ativo |
-| R-06 | produção de arte e áudio atrasar | alta | médio | fallback geométrico, assets mínimos e manifests | código pronto sem conteúdo disponível | ativo |
+| R-06 | produção de arte e áudio atrasar | alta | médio | fallback geométrico, assets mínimos e manifests; W1 registrou incompatibilidade de escala do Kit Zero sem mascará-la | código pronto sem conteúdo disponível | ativo |
 | R-07 | dependência excessiva do Codex | média | alto | README, AGENTS, manutenção, E2E e relatórios reproduzíveis | usuário não consegue explicar alteração | mitigado parcialmente |
-| R-08 | documentação divergir do código | baixa | alto | auditoria do Prompt 19, docs no mesmo commit e STATUS volátil | comportamento contradiz documento | mitigado parcialmente |
+| R-08 | documentação divergir do código | média | alto | auditoria por código/testes/histórico, docs no mesmo checkpoint e STATUS volátil | comportamento contradiz documento | mitigado parcialmente |
 | R-09 | segurança exagerada ou falsa | média | médio | afirmações honestas e ameaça local | promessa de criptografia sem implementação | ativo |
 | R-10 | plugin/dependência quebrar Android | média | alto | APK cedo, plugins mínimos, lockfile | sync/build nativo falha | ativo |
 | R-11 | backup importar conteúdo malicioso | baixa | alto | Zod estrito, 10 MiB, checksum e transação replace testados | arquivo externo aceito sem validação | mitigado parcialmente |

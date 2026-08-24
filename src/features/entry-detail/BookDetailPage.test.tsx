@@ -176,8 +176,16 @@ async function loaded(facade: BookDetailApplication) {
   await screen.findByRole("heading", { name: book.title });
 }
 
+async function openDisclosure(
+  user: ReturnType<typeof userEvent.setup>,
+  label: string,
+) {
+  await user.click(screen.getByText(label, { selector: "summary" }));
+}
+
 describe("detalhe do livro", () => {
   it("carrega pelo ID e apresenta dados, edição e retorno", async () => {
+    const user = userEvent.setup();
     const { calls, facade } = application();
     renderDetail(facade);
     expect(screen.getByRole("status")).toHaveTextContent("Carregando livro");
@@ -187,6 +195,7 @@ describe("detalhe do livro", () => {
     expect(calls.get).toHaveBeenCalledWith({ id: "book-1" });
     expect(calls.listNotes).toHaveBeenCalledWith({ id: "book-1" });
     expect(screen.getByText("Autora")).toBeVisible();
+    await openDisclosure(user, "Mais informações");
     expect(screen.getByText("4 de 5")).toBeVisible();
     expect(screen.getByRole("link", { name: "Editar dados" })).toHaveAttribute(
       "href",
@@ -241,6 +250,7 @@ describe("detalhe do livro", () => {
   });
 
   it("mostra históricos vazios e registros existentes", async () => {
+    const user = userEvent.setup();
     const existing = application({
       listNotes: () => Promise.resolve([note]),
       listQuotes: () =>
@@ -250,6 +260,7 @@ describe("detalhe do livro", () => {
         ]),
     });
     await loaded(existing.facade);
+    await openDisclosure(user, "Histórico de leitura");
     expect(screen.getByText(note.content)).toBeVisible();
     expect(screen.getAllByText(quote.content)).toHaveLength(2);
     expect(screen.getByText("Página 15")).toBeVisible();
@@ -257,8 +268,10 @@ describe("detalhe do livro", () => {
   });
 
   it("mostra estados vazios próprios para notas e citações", async () => {
+    const user = userEvent.setup();
     const { facade } = application();
     await loaded(facade);
+    await openDisclosure(user, "Histórico de leitura");
     expect(screen.getByText("Nenhuma nota adicionada.")).toBeVisible();
     expect(screen.getByText("Nenhuma citação adicionada.")).toBeVisible();
   });
@@ -453,6 +466,7 @@ describe("status", () => {
     const user = userEvent.setup();
     const { calls, facade } = application();
     await loaded(facade);
+    await openDisclosure(user, "Status da leitura");
     expect(
       screen.getByRole("button", { name: "Pausar leitura" }),
     ).toBeVisible();
@@ -482,6 +496,7 @@ describe("status", () => {
         Promise.reject(new ApplicationError("VALIDATION_FAILED", "interno")),
     });
     await loaded(failed.facade);
+    await openDisclosure(user, "Status da leitura");
     await user.click(screen.getByRole("button", { name: "Pausar leitura" }));
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Revise os dados",
@@ -493,6 +508,7 @@ describe("status", () => {
     const user = userEvent.setup();
     const pending = application({ status: () => new Promise(() => undefined) });
     await loaded(pending.facade);
+    await openDisclosure(user, "Status da leitura");
     const button = screen.getByRole("button", { name: "Pausar leitura" });
     await user.dblClick(button);
     expect(pending.calls.status).toHaveBeenCalledOnce();
@@ -505,6 +521,7 @@ describe("notas e citações", () => {
     const user = userEvent.setup();
     const { calls, facade } = application();
     await loaded(facade);
+    await openDisclosure(user, "Adicionar nota");
     const field = screen.getByLabelText("Nota (obrigatório)");
     await user.type(field, "Minha nota");
     await user.click(screen.getByRole("button", { name: "Adicionar nota" }));
@@ -515,6 +532,7 @@ describe("notas e citações", () => {
       }),
     );
     expect(field).toHaveValue("");
+    await openDisclosure(user, "Histórico de leitura");
     expect(screen.getByText(note.content)).toBeVisible();
   });
 
@@ -525,6 +543,7 @@ describe("notas e citações", () => {
         Promise.reject(new ApplicationError("PERSISTENCE_FAILED", "interno")),
     });
     await loaded(failed.facade);
+    await openDisclosure(user, "Adicionar nota");
     await user.click(screen.getByRole("button", { name: "Adicionar nota" }));
     expect(screen.getByText("Escreva a nota antes de salvar.")).toBeVisible();
     expect(failed.calls.addNote).not.toHaveBeenCalled();
@@ -537,8 +556,13 @@ describe("notas e citações", () => {
 
   it("adiciona citação com página e converte página vazia em ausência", async () => {
     const user = userEvent.setup();
-    const { calls, facade } = application();
+    let quoteSequence = 0;
+    const { calls, facade } = application({
+      addQuote: () =>
+        Promise.resolve({ ...quote, id: `quote-${++quoteSequence}` }),
+    });
     await loaded(facade);
+    await openDisclosure(user, "Adicionar citação");
     const content = screen.getByLabelText("Citação (obrigatório)");
     const page = screen.getByLabelText("Página (opcional)");
     await user.type(content, "Com página");
@@ -564,6 +588,7 @@ describe("notas e citações", () => {
         Promise.reject(new ApplicationError("PERSISTENCE_FAILED", "interno")),
     });
     await loaded(failed.facade);
+    await openDisclosure(user, "Adicionar citação");
     const content = screen.getByLabelText("Citação (obrigatório)");
     const page = screen.getByLabelText("Página (opcional)");
     await user.type(content, "Guardar");
@@ -586,6 +611,7 @@ describe("notas e citações", () => {
     });
     const user = userEvent.setup();
     await loaded(pending.facade);
+    await openDisclosure(user, "Adicionar nota");
     await user.type(screen.getByLabelText("Nota (obrigatório)"), "Uma nota");
     const noteForm = screen
       .getByRole("button", { name: "Adicionar nota" })
@@ -599,6 +625,7 @@ describe("notas e citações", () => {
     );
     expect(pending.calls.addNote).toHaveBeenCalledOnce();
 
+    await openDisclosure(user, "Adicionar citação");
     await user.type(
       screen.getByLabelText("Citação (obrigatório)"),
       "Uma citação",

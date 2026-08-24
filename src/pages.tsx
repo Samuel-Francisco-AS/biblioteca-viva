@@ -14,6 +14,7 @@ import type {
   LocalizedDialogue,
   StatisticsSnapshot,
 } from "./application";
+import { DEFAULT_PLACED_OBJECT, type PlacedObject } from "./application";
 import { presentApplicationError } from "./features/entry-editor/errorMessages";
 import {
   LibraryBottomSheet,
@@ -46,6 +47,14 @@ export interface LibraryPageApplication {
       execute(input?: unknown): Promise<StatisticsSnapshot>;
     };
     readonly getRoomProgress?: { execute(): Promise<readonly RoomProgress[]> };
+    readonly listPlacedObjects?: {
+      execute(): Promise<readonly PlacedObject[]>;
+    };
+  };
+  readonly commands?: {
+    readonly updatePlacedObjectTransform: {
+      execute(input: unknown): Promise<PlacedObject>;
+    };
   };
 }
 
@@ -61,6 +70,7 @@ type LibraryPageState =
         readonly totalEntries: number;
         readonly activeSessionType?: string;
       };
+      readonly placedObjects: readonly PlacedObject[];
     };
 
 type AtmosphereOverride = LibraryPeriod | "automatic";
@@ -83,6 +93,7 @@ function projectionInput(
   books: readonly BookEntry[],
   milestones: readonly ReachedMilestone[],
   pendingDecorationUnlock?: { readonly eventId: string },
+  placedObjects?: readonly PlacedObject[],
 ) {
   return {
     books: books.map(
@@ -97,6 +108,7 @@ function projectionInput(
     ),
     milestones,
     ...(pendingDecorationUnlock && { pendingDecorationUnlock }),
+    ...(placedObjects && { placedObjects }),
   };
 }
 
@@ -145,6 +157,9 @@ export function LibraryPage({
   const handleAvailabilityChange = useCallback((available: boolean) => {
     setCanvasFailed(!available);
   }, []);
+  const [selectedObjectId, setSelectedObjectId] = useState<string>();
+  const [movingObjectId, setMovingObjectId] = useState<string>();
+  const [placementNotice, setPlacementNotice] = useState<string | null>(null);
   const [state, setState] = useState<LibraryPageState>(() =>
     application
       ? { kind: "loading" }
@@ -173,8 +188,10 @@ export function LibraryPage({
             requirements: [],
           },
         ] as const),
+      application.queries.listPlacedObjects?.execute() ??
+        Promise.resolve([DEFAULT_PLACED_OBJECT]),
     ]).then(
-      ([books, milestones, statistics, rooms]) => {
+      ([books, milestones, statistics, rooms, placedObjects]) => {
         if (!active) return;
         diagnostics?.resources({
           libraryPreparationDurationMs: Math.max(
@@ -189,9 +206,15 @@ export function LibraryPage({
           kind: "ready",
           ...(recent && { recentBookTitle: recent.title }),
           viewModel: projectionService.project(
-            projectionInput(books, milestones, pendingDecorationUnlock),
+            projectionInput(
+              books,
+              milestones,
+              pendingDecorationUnlock,
+              placedObjects,
+            ),
           ),
           rooms,
+          placedObjects,
           ...(statistics && {
             productSummary: {
               totalEntries: statistics.totalEntries,
@@ -273,6 +296,28 @@ export function LibraryPage({
   }
 
   function handleInteraction(interaction: LibraryInteraction) {
+    if (interaction.type === "PlacedObjectSelected") {
+      setSelectedObjectId(interaction.instanceId);
+      setMovingObjectId(undefined);
+      setPlacementNotice(null);
+      return;
+    }
+    if (interaction.type === "PlacedObjectTransformCommitted") {
+      void application?.commands?.updatePlacedObjectTransform
+        .execute(interaction)
+        .then(
+          () => {
+            setMovingObjectId(undefined);
+            setPlacementNotice("Posição salva.");
+            setAttempt((current) => current + 1);
+          },
+          (failure: unknown) => {
+            setMovingObjectId(undefined);
+            setPlacementNotice(presentApplicationError(failure).message);
+          },
+        );
+      return;
+    }
     if (interaction.type === "RoomRequested") {
       requestRoom(interaction.roomId);
       return;
@@ -386,6 +431,7 @@ export function LibraryPage({
             onInteraction={handleInteraction}
             period={period}
             projection={state.viewModel}
+            placementModeInstanceId={movingObjectId}
             reducedMotion={reducedMotion}
             room={{
               roomId: activeRoomId,
@@ -401,6 +447,66 @@ export function LibraryPage({
               highContrast,
             }}
           />
+          {selectedObjectId && (
+            <section
+              className="library-object-actions"
+              aria-label="Objeto selecionado"
+            >
+              <p>Objeto de teste selecionado</p>
+              <button
+                className="button button--primary"
+                onClick={() => setMovingObjectId(selectedObjectId)}
+                type="button"
+              >
+                Mover
+              </button>
+              <button
+                className="button button--secondary"
+                onClick={() => {
+                  const object =
+                    state.placedObjects.find(
+                      (candidate) => candidate.instanceId === selectedObjectId,
+                    ) ??
+                    state.viewModel.placedObjects?.find(
+                      (candidate) => candidate.instanceId === selectedObjectId,
+                    );
+                  if (!object) return;
+                  const rotations = [0, 90, 180, 270] as const;
+                  const rotation =
+                    rotations[
+                      (rotations.indexOf(object.rotation) + 1) %
+                        rotations.length
+                    ];
+                  void application?.commands?.updatePlacedObjectTransform
+                    .execute({ ...object, rotation })
+                    .then(
+                      () => {
+                        setPlacementNotice("Orientação salva.");
+                        setAttempt((current) => current + 1);
+                      },
+                      (failure: unknown) =>
+                        setPlacementNotice(
+                          presentApplicationError(failure).message,
+                        ),
+                    );
+                }}
+                type="button"
+              >
+                Girar
+              </button>
+              {movingObjectId && (
+                <p role="status">
+                  Arraste o objeto para uma posição válida e solte para
+                  confirmar.
+                </p>
+              )}
+            </section>
+          )}
+          {placementNotice && (
+            <p className="library-room-notice" role="status">
+              {placementNotice}
+            </p>
+          )}
           {speechBubble && (
             <LibrarySpeechBubble
               anchor={speechAnchor}

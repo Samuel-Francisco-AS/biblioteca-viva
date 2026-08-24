@@ -71,6 +71,10 @@ import {
   StartSession,
   GetStatistics,
   GetRoomProgress,
+  ListPlacedObjects,
+  UpdatePlacedObjectTransform,
+  placementIsValid,
+  WORLD_PLACEMENT_AREAS,
 } from "../application";
 import { MILESTONE_ID, MilestoneEngine } from "../domain";
 import { ContentLocalizer, PROTOTYPE_CONTENT, ROOM_CATALOG } from "../content";
@@ -95,6 +99,7 @@ import {
   SystemClock,
   createPlatformBackupFiles,
   DexieBackupSnapshotStore,
+  DexiePlacedObjectRepository,
   JsonBackupCodec,
   DATABASE_VERSION,
   type DatabaseDiagnostics,
@@ -177,6 +182,7 @@ export interface ApplicationRuntime {
     readonly renameTag: RenameTag;
     readonly resumeSession: ResumeSession;
     readonly startSession: StartSession;
+    readonly updatePlacedObjectTransform: UpdatePlacedObjectTransform;
   };
   readonly queries: {
     readonly getBookEntry: GetBookEntry;
@@ -196,6 +202,7 @@ export interface ApplicationRuntime {
     readonly listTags: ListTags;
     readonly getStatistics: GetStatistics;
     readonly getRoomProgress: GetRoomProgress;
+    readonly listPlacedObjects: ListPlacedObjects;
   };
   readonly diagnostics: ApplicationDiagnostics;
   readonly events: LocalEventBus;
@@ -247,6 +254,7 @@ export async function createApplication(
   const activities = new DexieActivityRepository(database);
   const sessions = new DexieSessionRepository(database);
   const tags = new DexieTagRepository(database);
+  const placedObjects = new DexiePlacedObjectRepository(database);
   const bookDeletion = new DexieBookDeletionStore(database);
   const entryDeletion = new DexieLibraryEntryDeletionStore(database);
   const transaction = new DexieTransactionRunner(database);
@@ -324,6 +332,7 @@ export async function createApplication(
     quotes,
     sessions,
     tags,
+    placedObjects,
     transaction,
   };
   const annotationShare =
@@ -439,6 +448,10 @@ export async function createApplication(
       renameTag: new RenameTag(dependencies),
       resumeSession: new ResumeSession(dependencies),
       startSession: new StartSession(dependencies),
+      updatePlacedObjectTransform: new UpdatePlacedObjectTransform(
+        placedObjects,
+        (object) => placementIsValid(object, WORLD_PLACEMENT_AREAS),
+      ),
     },
     queries: {
       getBookEntry: new GetBookEntry(libraryEntries),
@@ -458,6 +471,7 @@ export async function createApplication(
       listTags: new ListTags(tags),
       getStatistics,
       getRoomProgress: new GetRoomProgress(getStatistics, ROOM_CATALOG),
+      listPlacedObjects: new ListPlacedObjects(placedObjects),
     },
     diagnostics: {
       inspect: () => diagnosticsService.inspect(),

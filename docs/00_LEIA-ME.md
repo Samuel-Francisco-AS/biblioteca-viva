@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> Estado atual em 2026-08-16: protótipo e R1–R3 preservados como baseline técnico; `P1 — Vida Registrada` iniciado por decisão explícita de Sam; G4 e G7–G10 permanecem abertos; versão `0.2.0-alpha.1`.
+> Estado atual em 2026-08-20: Prompts 1–19, R1–R3, P1 e P2 são baseline histórico; o reboot espacial está em W1 com implementação técnica corrigida e validação física pendente; G4 e G7–G10 permanecem abertos; versão `0.2.0-alpha.1`.
 
 ## 1. Função desta documentação
 
@@ -31,7 +31,7 @@ Ela está dividida por frequência de mudança:
 
 Para refinamentos posteriores ao protótipo técnico, leia `REFINEMENT_PLAN.md` depois de `ROADMAP.md`; `EXECUTION_PLAN.md` permanece como histórico dos Prompts 1–19.
 
-Para a fase de produto, leia `PRODUCT_PHASE_PLAN.md` depois de `ROADMAP.md`. P1 não é Prompt 20 nem uma nova rodada R.
+Para o histórico de produto, leia `PRODUCT_PHASE_PLAN.md` depois de `ROADMAP.md`. Para o trabalho espacial vigente, leia também `WORLD_MODEL.md`, `ART_DIRECTION.md` e `ASSET_SPEC.md`; `EXECUTION_PLAN.md` permanece histórico dos Prompts 1–19.
 
 ### Avaliar uma mudança arquitetural
 
@@ -53,7 +53,7 @@ Para a fase de produto, leia `PRODUCT_PHASE_PLAN.md` depois de `ROADMAP.md`. P1 
 |---|---|---|
 | `STATUS.md` | estado atual e próximo trabalho | toda sessão ou gate |
 | `VISION.md` | propósito e princípios duradouros | direção do produto mudar |
-| `PRODUCT.md` | contrato do protótipo | escopo aprovado mudar |
+| `PRODUCT.md` | contrato do produto e núcleo espacial | escopo aprovado mudar |
 | `PLANO_MESTRE.md` | visão completa de longo prazo | estratégia macro mudar |
 | `ARCHITECTURE.md` | stack, camadas e contratos | decisão técnica estrutural mudar |
 | `DATA_MODEL.md` | entidades, invariantes e migrações | schema ou regra persistente mudar |
@@ -67,6 +67,8 @@ Para a fase de produto, leia `PRODUCT_PHASE_PLAN.md` depois de `ROADMAP.md`. P1 
 | `PRIVACY.md` | tratamento de dados pessoais | coleta, conta ou integração mudar |
 | `ACCESSIBILITY.md` | requisitos de acesso | UI ou preferências sensoriais mudar |
 | `ART_DIRECTION.md` | linguagem visual e assets | direção artística mudar |
+| `WORLD_MODEL.md` | conceitos e limites do mundo espacial | slice espacial ou persistência mudar |
+| `ASSET_SPEC.md` | escala e kit visual do mundo | pipeline ou especificação de asset mudar |
 | `ASSET_REGISTRY.md` | origem e licença dos assets | asset entrar, mudar ou sair |
 | `AUDIO.md` | sistema e direção sonora | comportamento de áudio mudar |
 | `CONTENT_GUIDE.md` | textos, diálogos e dados de conteúdo | tom ou schema de conteúdo mudar |
@@ -103,4 +105,7 @@ Para a fase de produto, leia `PRODUCT_PHASE_PLAN.md` depois de `ROADMAP.md`. P1 
 - repositório Git inicializado na branch `main`;
 - stack e arquitetura aprovadas;
 - APK diagnóstico interno validado no Gate G3; APK release assinado permanece pendente;
-- tipos além de livro permanecem fora do protótipo.
+- P1 implementou seis tipos de registro e schema Dexie v5/backup v3;
+- P2 permanece histórico: suas salas temáticas foram substituídas como direção futura pelo mundo contínuo;
+- W1 possui somente dois espaços neutros efêmeros e câmera móvel; validação no Moto G06 permanece pendente;
+- W2 e persistência espacial não foram iniciadas.

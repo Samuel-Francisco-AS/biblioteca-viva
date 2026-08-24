@@ -23,7 +23,7 @@
 ## Escopo e qualidade
 
 - implemente apenas o pedido e não antecipe blocos;
-- não crie conta, backend, sincronização, outros tipos de mídia ou múltiplas salas no protótipo;
+- não crie conta, backend, sincronização, tipos de mídia além dos seis já implementados, salas temáticas novas ou múltiplos mundos; o W1 vigente limita-se a dois espaços neutros efêmeros conectados;
 - não faça refatoração global, abstração sem uso, diretório vazio ou dependência preventiva;
 - preserve TypeScript estrito; não use `any`, `@ts-ignore`, casts cegos ou lint desativado para ocultar erro;
 - erros não são ignorados silenciosamente;

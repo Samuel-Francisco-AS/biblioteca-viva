@@ -12,10 +12,11 @@ import {
   type Session,
   type Tag,
 } from "../../domain";
+import { placedObjectSchema, type PlacedObject } from "../../application/world";
 import { z } from "zod";
 
 export const DATABASE_NAME = "biblioteca-viva";
-export const DATABASE_VERSION = 5;
+export const DATABASE_VERSION = 6;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
 export const DATABASE_SCHEMA_V1 = {
@@ -45,6 +46,11 @@ export const DATABASE_SCHEMA_V5 = {
   ...DATABASE_SCHEMA_V4,
   tags: "&id,&normalizedName",
   sessions: "&id,entryId,status,startedAt",
+} as const;
+
+export const DATABASE_SCHEMA_V6 = {
+  ...DATABASE_SCHEMA_V5,
+  placedObjects: "&instanceId, spaceId",
 } as const;
 
 const isoUtc = z.iso.datetime({ offset: false });
@@ -522,6 +528,8 @@ export const persistedMilestoneSchema = z.strictObject({
   }),
 });
 
+export const persistedPlacedObjectSchema = placedObjectSchema;
+
 export type PersistedBook = BookEntry;
 export type PersistedLibraryEntry = LibraryEntry;
 export type PersistedNote = Note;
@@ -532,3 +540,4 @@ export type PersistedActivity = z.infer<typeof persistedActivitySchema>;
 export type PersistedMetadata = z.infer<typeof persistedMetadataSchema>;
 export type PersistedSetting = z.infer<typeof persistedSettingSchema>;
 export type PersistedMilestone = z.infer<typeof persistedMilestoneSchema>;
+export type PersistedPlacedObject = PlacedObject;

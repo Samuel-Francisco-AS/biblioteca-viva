@@ -11,7 +11,7 @@ import type {
 } from "./contracts";
 import type { LibraryVisualDiagnostics } from "./diagnostics";
 
-const verticalPanStyle = { touchAction: "pan-y" } as const;
+const worldPanStyle = { touchAction: "none" } as const;
 
 interface LibraryVisualHostProps {
   readonly diagnostics?: LibraryVisualDiagnostics;
@@ -22,6 +22,7 @@ interface LibraryVisualHostProps {
   readonly projection: LibraryViewModel;
   readonly reducedMotion?: boolean;
   readonly room?: RoomViewModel;
+  readonly placementModeInstanceId?: string;
 }
 
 const loadPhaserFactory = () => import("./phaser/createPhaserGame");
@@ -54,6 +55,7 @@ export function LibraryVisualHost({
     reducedMotion,
     highContrast: false,
   },
+  placementModeInstanceId,
 }: LibraryVisualHostProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const generationRef = useRef(0);
@@ -63,9 +65,7 @@ export function LibraryVisualHost({
   const latestPeriodRef = useRef(period);
   const latestReducedMotionRef = useRef(reducedMotion);
   const latestRoomRef = useRef(room);
-  const panStartRef = useRef<
-    { readonly pointerId: number; readonly x: number } | undefined
-  >(undefined);
+  const latestPlacementModeRef = useRef(placementModeInstanceId);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -74,12 +74,21 @@ export function LibraryVisualHost({
     latestPeriodRef.current = period;
     latestReducedMotionRef.current = reducedMotion;
     latestRoomRef.current = room;
+    latestPlacementModeRef.current = placementModeInstanceId;
     gameRef.current?.setInteractionHandler(onInteraction);
     gameRef.current?.updateProjection(projection);
     gameRef.current?.setAtmosphere(period, !reducedMotion);
     gameRef.current?.setReducedMotion(reducedMotion);
     gameRef.current?.updateRoom(room);
-  }, [onInteraction, period, projection, reducedMotion, room]);
+    gameRef.current?.setObjectPlacementMode?.(placementModeInstanceId);
+  }, [
+    onInteraction,
+    period,
+    placementModeInstanceId,
+    projection,
+    reducedMotion,
+    room,
+  ]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -183,6 +192,7 @@ export function LibraryVisualHost({
           reducedMotion: latestReducedMotionRef.current,
           room: latestRoomRef.current,
           size: requestedCreationSize,
+          placementModeInstanceId: latestPlacementModeRef.current,
         });
       })
       .then((createdGame) => {
@@ -197,6 +207,7 @@ export function LibraryVisualHost({
         lastAppliedSize = requestedCreationSize;
         createdGame.setInteractionHandler(latestInteractionRef.current);
         createdGame.updateProjection(latestProjectionRef.current);
+        createdGame.setObjectPlacementMode?.(latestPlacementModeRef.current);
         diagnostics?.transition("ready", generation, 1, true);
         diagnostics?.resources({
           canvasCount: container.querySelectorAll("canvas").length,
@@ -253,35 +264,7 @@ export function LibraryVisualHost({
       className="library-visual-host"
       ref={containerRef}
       role="img"
-      style={verticalPanStyle}
-      onPointerDown={(event) => {
-        panStartRef.current = { pointerId: event.pointerId, x: event.clientX };
-      }}
-      onPointerUp={(event) => {
-        const start = panStartRef.current;
-        panStartRef.current = undefined;
-        if (!start || start.pointerId !== event.pointerId) return;
-        const distance = event.clientX - start.x;
-        if (Math.abs(distance) < 56) return;
-        const rooms = [
-          "main-library",
-          "study-room",
-          "projection-room",
-          "training-room",
-          "office",
-        ] as const;
-        const index = rooms.indexOf(latestRoomRef.current.roomId);
-        const next = rooms[index + (distance < 0 ? 1 : -1)];
-        if (next) {
-          latestInteractionRef.current?.({
-            roomId: next,
-            type: "RoomRequested",
-          });
-        }
-      }}
-      onPointerCancel={() => {
-        panStartRef.current = undefined;
-      }}
+      style={worldPanStyle}
     />
   );
 }

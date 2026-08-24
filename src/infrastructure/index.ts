@@ -6,6 +6,7 @@ export * from "./database/errors";
 export * from "./database/repositories";
 export * from "./database/schema";
 export * from "./database/transactionRunner";
+export * from "./database/placedObjectRepository";
 export * from "./events/localEventBus";
 export * from "./experience/experienceSettingsRepository";
 export * from "./files/browserFileDelivery";

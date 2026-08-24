@@ -946,6 +946,29 @@ blockquote {
   background: var(--color-bg-deep);
 }
 
+.library-object-actions {
+  position: absolute;
+  z-index: 12;
+  right: var(--space-4);
+  bottom: max(var(--space-4), env(safe-area-inset-bottom));
+  display: flex;
+  max-width: calc(100% - var(--space-8));
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-3);
+  border: 1px solid
+    color-mix(in srgb, var(--color-border-strong) 80%, transparent);
+  border-radius: var(--radius-medium);
+  background: rgb(10 19 18 / 92%);
+  box-shadow: var(--shadow-medium);
+}
+
+.library-object-actions p {
+  width: 100%;
+  margin: 0;
+}
+
 .library-room-explorer {
   position: absolute;
   z-index: 8;

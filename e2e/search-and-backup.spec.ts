@@ -6,6 +6,7 @@ test("busca, filtro, ordenação e Arquivo preservam navegação", async ({
   page,
 }) => {
   await createBook({ author: "Lia Ômega", title: "Árvore Azul" });
+  await page.locator("summary", { hasText: "Adicionar nota" }).click();
   await page
     .getByLabel("Nota (obrigatório)")
     .fill("Mapa fictício do capítulo.");
@@ -52,6 +53,7 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
     title: "Backup de Ensaio",
     totalPages: 80,
   });
+  await page.locator("summary", { hasText: "Status da leitura" }).click();
   await page.getByRole("button", { name: "Concluir leitura" }).click();
   await navigateFromMenu("Configurações");
   await page.getByLabel("Usar alto contraste").check();

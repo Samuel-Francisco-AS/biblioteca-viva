@@ -55,6 +55,7 @@ export interface LibraryViewModel {
   readonly shelfVisualGroupCount: number;
   readonly totalBooks: number;
   readonly unlockedDecorationIds: readonly DecorationId[];
+  readonly placedObjects?: readonly import("../../application").PlacedObject[];
 }
 
 export type LibrarySceneEvent =
@@ -82,6 +83,15 @@ export type LibraryInteraction =
       readonly decorationId: DecorationId;
       readonly eventId: string;
       readonly type: "DecorationUnlockPresented";
+    }
+  | { readonly type: "PlacedObjectSelected"; readonly instanceId: string }
+  | {
+      readonly instanceId: string;
+      readonly rotation: import("../../application").ObjectRotation;
+      readonly spaceId: "space-a" | "space-b";
+      readonly type: "PlacedObjectTransformCommitted";
+      readonly x: number;
+      readonly y: number;
     };
 
 export interface LibraryVisualGame {
@@ -101,6 +111,7 @@ export interface LibraryVisualGame {
     this: void,
     onInteraction: ((interaction: LibraryInteraction) => void) | undefined,
   ): void;
+  setObjectPlacementMode?(this: void, instanceId: string | undefined): void;
   updateProjection(this: void, projection: LibraryViewModel): void;
 }
 
@@ -120,6 +131,7 @@ export interface CreateLibraryVisualGameOptions {
   readonly reducedMotion: boolean;
   readonly room: RoomViewModel;
   readonly size: LibraryVisualSize;
+  readonly placementModeInstanceId?: string;
 }
 
 export type LibraryVisualGameFactory = (

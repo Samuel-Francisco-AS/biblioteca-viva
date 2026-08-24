@@ -242,3 +242,37 @@ A CI valida somente o produto web. `android:sync` e `android:build:debug` contin
 ## 14. Checkpoint técnico R1-B
 
 Em 2026-08-16, `android:sync` e `android:build:debug` passaram com App, Filesystem e Share, além da bridge local `BackupDocument` já existente. Não houve plugin, permissão, código nativo, assinatura ou versão nova. O APK debug não foi instalado: `android/app/build/outputs/apk/debug/app-debug.apk`, 7.526.051 bytes, SHA-256 `b0a875a2aa160054fd6bc80a6818b0adfb39f0330803b3822f89e2d0c4f11016`, ZIP íntegro. A restauração contextual e a percepção de latência sonora continuam pendentes no Moto G06.
+
+## 15. Checkpoint técnico W1 corrigida
+
+Em 2026-08-20, `android:sync` e `android:build:debug` concluíram para a correção de composição W1. Não houve instalação, alteração de versão, assinatura, keystore, plugin, permissão ou release. O APK debug gerado é:
+
+- caminho: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- tamanho: 19.890.133 bytes;
+- SHA-256: `f85646dd87c958723aeb21571d6abd8ed4d25aa61cdf64404e5729e44a63c585`;
+- integridade ZIP: aprovada.
+
+A validação física da composição, pan, lifecycle e desempenho da W1 corrigida continua pendente no Moto G06.
+
+## 16. Estabilização pós-W1 e auditoria de assets
+
+Em 2026-08-20, `android:sync` e `android:build:debug` passaram após remover do runtime dez cópias públicas de paredes sem referência, preservadas como fontes em `art-source/`. Não houve instalação, alteração de versão, assinatura, keystore, plugin, permissão ou release. O APK debug gerado é:
+
+- caminho: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- tamanho: 16.783.450 bytes;
+- SHA-256: `8fa3da71370583b316b8ebdf39e3b348c2c85b7532e43f8391799bde4e6466f5`;
+- integridade ZIP: aprovada;
+- diferença para o checkpoint W1 anterior: -3.106.683 bytes (-15,62%).
+
+A redução é de empacotamento; não substitui a validação física pendente da W1 no Moto G06.
+
+## 17. Segunda correção técnica W1
+
+Em 2026-08-22, `android:sync` e `android:build:debug` passaram após a compactação da planta W1 e o ajuste das paredes procedurais. Não houve instalação, alteração de versão, assinatura, keystore, plugin, permissão ou release. O APK debug gerado é:
+
+- caminho: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- tamanho: 16.783.450 bytes;
+- SHA-256: `4bbce904c58716d9b397c6e128fad334a13a045dad2bb8cd19ef2f7db3f5b393`;
+- integridade ZIP: aprovada.
+
+A W1 foi tecnicamente corrigida novamente após o smoke test físico reprovado. Este APK não foi instalado; a nova validação de composição, saída de A, continuidade até B, pan e bounds no Moto G06 continua pendente.

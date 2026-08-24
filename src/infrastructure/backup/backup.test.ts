@@ -180,7 +180,7 @@ describe("backup JSON v3", () => {
     const raw = JSON.parse(artifact.content) as Record<string, unknown>;
     expect(raw).toMatchObject({
       kind: BACKUP_KIND,
-      formatVersion: 3,
+      formatVersion: 4,
       appVersion: "0.2.0-alpha.1",
       databaseVersion: 2,
     });
@@ -226,6 +226,7 @@ describe("backup JSON v3", () => {
         sessions?: unknown;
         tags?: unknown;
         milestones?: unknown;
+        placedObjects?: unknown;
       };
       formatVersion: number;
       integrity?: { algorithm: "SHA-256"; digest: string };
@@ -235,6 +236,7 @@ describe("backup JSON v3", () => {
     delete raw.data.milestones;
     delete raw.data.sessions;
     delete raw.data.tags;
+    delete raw.data.placedObjects;
     for (const entry of raw.data.libraryEntries) {
       delete entry.favorite;
       delete entry.tagIds;
@@ -291,6 +293,7 @@ describe("backup JSON v3", () => {
         quotes: Array<Record<string, unknown>>;
         sessions?: unknown;
         tags?: unknown;
+        placedObjects?: unknown;
       };
       integrity?: { algorithm: "SHA-256"; digest: string };
       [key: string]: unknown;
@@ -298,6 +301,7 @@ describe("backup JSON v3", () => {
     raw.formatVersion = 2;
     delete raw.data.sessions;
     delete raw.data.tags;
+    delete raw.data.placedObjects;
     for (const entry of raw.data.libraryEntries) {
       delete entry.favorite;
       delete entry.tagIds;
@@ -405,7 +409,7 @@ describe("backup JSON v3", () => {
     });
     const inspected = await codec.inspect(artifact.content);
     expect(inspected.summary).toMatchObject({
-      formatVersion: 3,
+      formatVersion: 4,
       counts: { tags: 1, sessions: 1 },
     });
     expect(inspected.data.tags[0]).toMatchObject({
@@ -438,7 +442,7 @@ describe("backup JSON v3", () => {
     });
     const raw = JSON.parse(artifact.content) as Record<string, unknown>;
     await expect(
-      codec.inspect(JSON.stringify({ ...raw, formatVersion: 4 })),
+      codec.inspect(JSON.stringify({ ...raw, formatVersion: 5 })),
     ).rejects.toMatchObject({ code: "FUTURE_FORMAT_VERSION" });
     const withoutIntegrity = { ...raw };
     delete withoutIntegrity.integrity;
@@ -620,6 +624,7 @@ describe("backup JSON v3", () => {
       settings: 0,
       sessions: 0,
       tags: 0,
+      placedObjects: 0,
     });
 
     const destination = new BibliotecaDatabase(destinationName);
@@ -638,6 +643,7 @@ describe("backup JSON v3", () => {
       settings: 0,
       sessions: 0,
       tags: 0,
+      placedObjects: 0,
     });
     expect(await destinationStore.read()).toEqual({
       ...inspected.data,
@@ -754,7 +760,7 @@ describe("snapshot Dexie e restauração", () => {
       integrity: { digest: string };
     };
     const future = structuredClone(raw);
-    future.formatVersion = 4;
+    future.formatVersion = 5;
     const badChecksum = structuredClone(raw);
     badChecksum.integrity.digest = "0".repeat(64);
     const invalidEntity = structuredClone(raw);
@@ -1147,6 +1153,7 @@ describe("snapshot Dexie e restauração", () => {
         settings: 1,
         sessions: 0,
         tags: 0,
+        placedObjects: 0,
       });
       expect(order).toEqual(isEmpty ? ["replace"] : ["deliver", "replace"]);
     }

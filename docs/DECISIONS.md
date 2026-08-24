@@ -550,3 +550,45 @@ Evoluir o backup para formato v2 incluindo `milestones`, aceitando v1 com seu ch
 **Consequências:** Dexie permanece v5 e backup v3; não existem tabela de salas, XP, `roomId` em Entry ou cinco cenas duplicadas. Estado atual pode diminuir, `highestReachedStage` não. P2-SOL conclui somente a fundação; visuais, decorações, personagens e rotinas seguem para P2-B/P2-C.
 
 Use `templates/ADR_TEMPLATE.md` para novas decisões.
+
+# Adendo a DECISIONS.md
+
+## D-NEW-01 — Reboot espacial
+- Data: 2026-08-18
+- Status: aceita
+- Decisão: substituir como direção futura `sala temática = categoria` por mundo contínuo de espaços neutros conectados.
+- Consequência: P2 permanece histórico; a fundação espacial precede o antigo P3.
+
+## D-NEW-02 — Phaser permanece
+- Data: 2026-08-18
+- Status: aceita
+- Decisão: evoluir Phaser 3 para runtime 2D/2.5D de mundo, câmera, objetos e habitantes.
+- Consequência: React segue aplicação convencional; Phaser segue sem Dexie/regra de negócio.
+
+## D-NEW-03 — Layout é dado persistente
+- Data: 2026-08-18
+- Status: aceita
+- Decisão: posição/orientação escolhidas são estado pessoal persistente separado de unlock.
+- Consequência: modelo de dados e backup evoluirão quando W2 for implementado.
+
+## D-NEW-04 — Sem sala obrigatória por objeto
+- Data: 2026-08-18
+- Status: aceita
+- Decisão: tipo de registro pode originar recompensa, mas não determina onde ela deve ficar.
+
+## D-NEW-05 — 3D real adiado
+- Data: 2026-08-18
+- Status: aceita
+- Decisão: usar 2D/2.5D com Phaser e reavaliar engine só por gatilho técnico concreto.
+
+### Registro de implementação W1 — 2026-08-20
+
+Sem criar uma decisão arquitetural nova, a correção do spike materializou dois espaços técnicos efêmeros (`space-a` e `space-b`) numa planta fixa, com câmera X/Y e conector curto. Ela confirma D-NEW-01/D-NEW-02 e não materializa D-NEW-03/D-NEW-04: não há layout pessoal, `PlacedObject`, unlock, migração ou backup espacial. A geometria é deliberadamente provisória e a validação humana no Moto G06 continua pendente.
+
+### Registro de implementação W2 — 2026-08-23
+
+W2 materializa D-NEW-03 com a menor fatia: `placedObjects` em Dexie v6 e backup v4, um único objeto procedural de teste e validação retangular dentro dos dois espaços fixos. O exterior é camada visual depth 00, distribuída por hash determinístico e sem persistência. Phaser continua sem Dexie; apenas emite transformação para a aplicação após soltar. Backups v1–v3 permanecem compatíveis e restauram sem objetos. A validação física W1/W2 no Moto G06 continua pendente.
+
+### Correção W2 após teste físico — 2026-08-24
+
+O primeiro teste no Moto G06 reprovou a W2: manifest interno apontava para caminho inexistente, bounds verticais eram insuficientes em viewport alta, ações React do objeto ficavam fora da área visível e o exterior revelava macro-tiles. A correção preserva schema v6/backup v4 e a cena única; usa o path real `architecture/floors/interior`, calcula bounds mínimos a partir da viewport e de `EXTERIOR_CAMERA_MARGIN`, torna a zona do objeto interativa e sobrepõe o painel existente de ações. O exterior passa a usar células menores e crops determinísticos das quatro fontes. O filesystem atual contém `architecture`, não `arquitecture`; a divergência não foi reorganizada nesta rodada.

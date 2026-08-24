@@ -5,6 +5,7 @@ import {
   SHELF_DIRECT_REPRESENTATION_LIMIT,
   SHELF_MAX_VISUAL_GROUPS,
 } from "./LibraryProjectionService";
+import { DEFAULT_PLACED_OBJECT } from "../../application";
 import type { ReachedMilestone } from "../../domain";
 import type { LibraryProjectionBook } from "./LibraryProjectionService";
 
@@ -57,6 +58,7 @@ describe("LibraryProjectionService", () => {
       hasFirstCompletionMilestone: false,
       highlightedBook: null,
       inProgressBooks: 0,
+      placedObjects: [DEFAULT_PLACED_OBJECT],
       roomState: "default",
       shelfOccupancy: "empty",
       shelfVisualGroupCount: 0,

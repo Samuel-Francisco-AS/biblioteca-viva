@@ -44,7 +44,10 @@ test("tag, favorito, sessão persistente e estatísticas formam memória unifica
   await page
     .getByLabel("Etiqueta")
     .selectOption({ label: "Pesquisa Fictícia" });
-  await page.getByLabel("Somente favoritos").check();
+  const favoritesOnly = page.getByLabel("Somente favoritos");
+  if (!(await favoritesOnly.isChecked())) {
+    await favoritesOnly.check();
+  }
   await expect(
     page.getByRole("heading", { name: "Estudo de Estatística Fictício" }),
   ).toBeVisible();

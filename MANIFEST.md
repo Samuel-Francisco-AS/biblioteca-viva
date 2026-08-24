@@ -22,6 +22,8 @@ Este manifesto indexa a documentação inicial do repositório Biblioteca Viva, 
 - `docs/ARCHITECTURE.md` — análise completa de stack e arquitetura;
 - `docs/EXECUTION_PLAN.md` — 11 blocos e 19 prompts completos.
 - `docs/REFINEMENT_PLAN.md` — plano operacional das rodadas de refinamento pós-protótipo.
+- `docs/WORLD_MODEL.md` — modelo e limites do reboot espacial;
+- `docs/ASSET_SPEC.md` — especificação do kit visual 2D/2.5D do reboot.
 
 ## Documentos operacionais
 
@@ -57,4 +59,4 @@ Este manifesto indexa a documentação inicial do repositório Biblioteca Viva, 
 
 ## Estado técnico
 
-Os Prompts 1–19 estão tecnicamente implementados. A primeira rodada integrada no Moto G06 confirmou partes do ciclo e originou a fase descrita em `docs/REFINEMENT_PLAN.md`; ela não aprovou G4 ou G7–G10. G5 e G6 permanecem aprovados, G11 não foi iniciado e a versão continua `0.2.0-alpha.1`. Os comandos, rotas e caminhos reais estão registrados em `README.md`, `AGENTS.md` e `docs/STATUS.md`.
+Os Prompts 1–19, R1–R3, P1 e P2 estão preservados como histórico técnico. O estado operacional atual é o reboot espacial: W1 tem implementação técnica corrigida e validação humana pendente; W2 não começou e não existe persistência espacial. G5/G6 seguem aprovados; G4 e G7–G10 seguem abertos; G11 não foi iniciado e a versão permanece `0.2.0-alpha.1`.

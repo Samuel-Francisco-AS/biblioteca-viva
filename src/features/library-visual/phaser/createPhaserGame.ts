@@ -5,13 +5,13 @@ import type {
   LibraryVisualGameFactory,
   LibraryVisualSize,
 } from "../contracts";
-import { InitialLibraryScene } from "./InitialLibraryScene";
+import { SpatialWorldScene } from "./SpatialWorldScene";
 import { LIBRARY_CANVAS_TOUCH_ACTION } from "./roomConfig";
 
 function gameConfig(
   container: HTMLElement,
   size: LibraryVisualSize,
-  scene: InitialLibraryScene,
+  scene: SpatialWorldScene,
 ): Phaser.Types.Core.GameConfig {
   return {
     banner: false,
@@ -41,16 +41,18 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
   reducedMotion,
   room,
   size,
+  placementModeInstanceId,
 }) => {
   let game: Phaser.Game | undefined;
   let destroyed = false;
-  const scene = new InitialLibraryScene(
+  const scene = new SpatialWorldScene(
     projection,
     reducedMotion,
     room,
     onInteraction,
     period,
   );
+  scene.setObjectPlacementMode(placementModeInstanceId);
   try {
     game = new Phaser.Game(gameConfig(container, size, scene));
     game.canvas.style.touchAction = LIBRARY_CANVAS_TOUCH_ACTION;
@@ -85,6 +87,9 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
         nextHandler: ((interaction: LibraryInteraction) => void) | undefined,
       ) => {
         if (!destroyed) scene.setInteractionHandler(nextHandler);
+      },
+      setObjectPlacementMode: (instanceId) => {
+        if (!destroyed) scene.setObjectPlacementMode(instanceId);
       },
       setReducedMotion: (nextReducedMotion) => {
         if (!destroyed) scene.setReducedMotion(nextReducedMotion);

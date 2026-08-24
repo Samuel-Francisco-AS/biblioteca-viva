@@ -8,6 +8,8 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 ### Adicionado
 
+- W1 do reboot espacial: mundo Phaser procedural efêmero maior que a viewport, dois espaços neutros conectados, câmera com bounds e pan X/Y por toque/pointer, sem schema ou persistência espacial;
+
 - P2-C com catálogo declarativo dos cinco residentes, presença por estágio, rotinas compartilhadas por âncoras, comportamento por período, reduced motion sem loops, interação tipada, falas contextuais e política determinística de presença da criatura;
 - P2-SOL com Room Engine declarativo, cinco salas, estágios monotônicos por milestones, seletor React e troca de sala na mesma instância Phaser;
 - P2-B com renderer procedural compartilhado para Study, Projection, Training e Office, estágios, decorações derivadas, iluminação por período e retorno à Biblioteca Principal sem nova instância Phaser;
@@ -33,6 +35,11 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 ### Alterado
 
+- fluxos automatizados de detalhe e backup agora percorrem os disclosures nativos da UX vigente; cópias públicas não usadas das paredes experimentais do Kit Zero deixaram de ser empacotadas;
+- W1 do reboot espacial substituiu a composição dependente da viewport por uma planta fixa: `space-a` 12×9 e `space-b` 10×8, conexão curta em L, bounds derivados e enquadramento inicial voltado à saída;
+- arquitetura W1 passou a montar paredes procedurais em segmentos de uma célula e a repetir o piso em módulos menores; os PNGs de parede do Kit Zero aguardam revisão de escala em W5;
+- a Biblioteca deixa de trocar a sala P2 por arraste; o gesto do canvas passa a explorar o mundo espacial único e preserva toque curto para interações futuras;
+
 - Coleção agora abre livros pela superfície inteira do card; detalhe, formulários, Arquivo e Configurações usam hierarquia mais contínua e menos caixas;
 - Android usa fundo escuro edge-to-edge com system bars transparentes e controles protegidos por safe areas;
 
@@ -46,6 +53,7 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 ### Corrigido
 
+- W1 reorganiza os dois espaços em uma planta mais compacta, encurta a curva da passagem, reduz os bounds verticais e torna paredes/soleiras procedurais contínuas; a nova validação física no Moto G06 permanece pendente.
 - interação da sala Phaser para permitir rolagem por toque e rodinha sem perder cliques ou toques curtos.
 
 ### Removido

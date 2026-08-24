@@ -22,6 +22,7 @@ const visualHostMock = vi.hoisted(() => ({
     | undefined,
   projection: undefined as
     import("./features/library-visual/contracts").LibraryViewModel | undefined,
+  placementModeInstanceId: undefined as string | undefined,
 }));
 
 vi.mock("./features/library-visual/LibraryVisualHost", () => ({
@@ -29,16 +30,19 @@ vi.mock("./features/library-visual/LibraryVisualHost", () => ({
     onAvailabilityChange,
     onInteraction,
     period,
+    placementModeInstanceId,
     projection,
   }: {
     readonly onAvailabilityChange?: (available: boolean) => void;
     readonly onInteraction?: (event: LibraryInteraction) => void;
     readonly period?: import("./features/library-visual/contracts").LibraryVisualPeriod;
+    readonly placementModeInstanceId?: string;
     readonly projection: import("./features/library-visual/contracts").LibraryViewModel;
   }) => {
     visualHostMock.availability = onAvailabilityChange;
     visualHostMock.interaction = onInteraction;
     visualHostMock.period = period;
+    visualHostMock.placementModeInstanceId = placementModeInstanceId;
     visualHostMock.projection = projection;
     return <div aria-label="Visualização da Biblioteca" role="img" />;
   },
@@ -415,5 +419,50 @@ describe("Página Biblioteca", () => {
     await user.selectOptions(selector, "automatic");
     expect(visualHostMock.period).toBe(automaticPeriod);
     expect(selector).toHaveValue("automatic");
+  });
+
+  it("recebe seleção Phaser e expõe Mover e Girar no painel React", async () => {
+    const user = userEvent.setup();
+    const updatePlacedObjectTransform = vi.fn(() =>
+      Promise.resolve({
+        definitionId: "object.reading-table",
+        instanceId: "placed-object.reading-table",
+        rotation: 90 as const,
+        spaceId: "space-a" as const,
+        x: 192,
+        y: 224,
+      }),
+    );
+    const application: LibraryPageApplication = {
+      commands: {
+        updatePlacedObjectTransform: { execute: updatePlacedObjectTransform },
+      },
+      dialogue: dialogue(),
+      queries: {
+        listBookEntries: { execute: () => Promise.resolve([book]) },
+        listMilestones: { list: () => Promise.resolve([]) },
+      },
+    };
+    render(
+      <MemoryRouter>
+        <LibraryPage application={application} />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: "placed-object.reading-table",
+        type: "PlacedObjectSelected",
+      }),
+    );
+
+    await user.click(screen.getByRole("button", { name: "Mover" }));
+    expect(visualHostMock.placementModeInstanceId).toBe(
+      "placed-object.reading-table",
+    );
+    await user.click(screen.getByRole("button", { name: "Girar" }));
+    expect(updatePlacedObjectTransform).toHaveBeenCalledWith(
+      expect.objectContaining({ rotation: 90 }),
+    );
   });
 });

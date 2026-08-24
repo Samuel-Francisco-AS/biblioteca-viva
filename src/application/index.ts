@@ -27,3 +27,5 @@ export type {
 } from "./schemas";
 export { createBookEntrySchema, updateBookEntrySchema } from "./schemas";
 export * from "./useCases";
+export * from "./world";
+export * from "./worldObjects";

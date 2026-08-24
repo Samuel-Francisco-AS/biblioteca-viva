@@ -258,6 +258,12 @@ Nenhum item Android desta seção foi executado. Instalação sobre a versão an
 - desempenho e memória;
 - exportação e restauração.
 
+### W2 — validação técnica e checkpoint humano pendente
+
+Cobertura focada W2: bounds exteriores finitos, distribuição determinística das quatro variantes, validação por footprint e backup/migração de `placedObjects`. A automação não substitui a inspeção no Moto G06: percorrer o perímetro, conferir seams/filtering/repetição, selecionar o objeto, entrar em Mover, arrastar sem pan simultâneo, girar, fechar/reabrir e confirmar persistência. Nenhum desses itens físicos está marcado como executado.
+
+Em 2026-08-24, o primeiro teste físico W2 foi reprovado: piso interno preto, pan vertical sem percurso útil, ações do objeto não visíveis/operáveis e macro-repetição exterior. A correção executou testes focados para paths internos/externos, distribuição/crop determinísticos, intervalo vertical após resize e ponte Phaser → React para Mover/Girar. A revalidação humana no Moto G06 continua obrigatória.
+
 ## 3. Comandos obrigatórios
 
 Após o scaffold, manter scripts equivalentes a:
@@ -1072,3 +1078,37 @@ A regressão React cobre a retirada do selector em cinco abas, a navegação com
 Detalhes de livro deixam apenas identidade e progresso expandidos; status, notas, citações, histórico e metadados passam a disclosures nativos. O bottom sheet limita sua altura no retrato e os controles de exploração ocupam uma única cápsula segura, sem restaurar as cinco abas.
 
 Ainda é obrigatória a validação humana no Moto G06: arrastar entre salas desbloqueadas/bloqueadas, keyboard/Touch exploration, safe areas, TalkBack, texto ampliado, não sobreposição de header/sheet/balão e conforto visual. Nenhum gate humano é aprovado por automação.
+
+# Adendo ao plano de testes — Reboot espacial
+
+## W1 corrigida novamente após smoke test físico reprovado — 2026-08-22
+
+Automação específica em `spatialWorld.test.ts` cobre `CELL_SIZE=32`, `space-a` 12×9, `space-b` 10×8, parede de uma célula, portas de duas, corredor de três, posição relativa compacta, ausência de overlap entre os espaços, conexão contínua na curva, portas encaixadas, bounds derivados 832×672 e mundo maior que viewport. Também cobre posição inicial determinística, clamp X/Y nos dois extremos, limiar de pan e `pointercancel`. A composição pura amostra spawn, extremos X/Y, curva e entrada de B; em cada caso exige piso conectado substancial e presente no centro da viewport, sem screenshot/pixel assertion frágil. `woodFloorMaterial.test.ts` cobre repetição determinística dos módulos de piso de 10 células.
+
+`LibraryVisualHost.test.tsx` e testes de lifecycle preservam uma factory/game/canvas, resize sem recriação, cleanup de observer/listener e ausência de pedido `RoomRequested` por arraste. A cena W1 não importa Dexie/repository e a arquitetura existente continua protegendo domínio sem Phaser.
+
+Resultado da estabilização: `format`, `format:check`, lint, typecheck, `audio:check`, build, `performance:report`, `android:sync`, `android:build:debug`, ZIP do APK e `git diff --check` passaram. Vitest passou com 702 testes em 79 arquivos; os sete testes de `BookDetailPage.test.tsx` passaram a abrir os disclosures nativos que a UX atual mantém fechados. Playwright passou com 10 cenários; os três fluxos históricos de detalhe/backup abriram os disclosures antes de interagir, e o filtro de favoritos foi tornado idempotente quando já está ativo. O cenário móvel integrado conserva todas as asserções e usa timeout explícito de 45 s para a execução concorrente. Nenhum resultado físico anterior vale como evidência da composição corrigida.
+
+### Checklist humana pendente — Moto G06
+
+- [ ] Space A parece um ambiente, não uma moldura gigante.
+- [ ] Escala das paredes e do piso parece natural.
+- [ ] Enquadramento inicial e saída de A são compreensíveis.
+- [ ] A → conexão → B é entendido sem instrução e B pertence ao mesmo edifício.
+- [ ] Pan horizontal, vertical, diagonal e com uma mão são confortáveis.
+- [ ] Câmera não revela grandes oceanos vazios; bounds e terminações parecem naturais.
+- [ ] Não há canvas duplicado, tela preta persistente ou travamento.
+- [ ] Demais funções React continuam operacionais e desempenho percebido continua aceitável.
+
+Não instalar APK, aprovar W1 ou inferir FPS, temperatura, TalkBack, safe areas físicas ou conforto de pan sem essa validação.
+
+## W2
+Automação: schema/migração, round-trip de PlacedObject, rotações, bounds, commit só ao concluir, falha/rollback, backup, reload e Phaser sem Dexie.
+
+Humano: selecionar, mover, girar, cancelar, bordas, erro recuperável e precisão de toque.
+
+## Regressões
+Preservar CRUD, Coleção, Arquivo, Estatísticas, backup, áudio, preferências, fallback sem canvas, build web e Android debug quando aplicável.
+
+## Performance
+Medir FPS, objetos, tamanho do mundo, hit areas, tweens, ordenação e memória estrutural antes de culling, spatial index ou física.

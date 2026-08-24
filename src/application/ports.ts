@@ -8,6 +8,7 @@ import type {
 } from "../domain";
 import type { Activity } from "./activities";
 import type { MilestoneProcessor } from "./milestones";
+import type { PlacedObjectRepository } from "./worldObjects";
 export type { AudioPort, AudioSettingsPort } from "./audio";
 export type { DialogueHistoryPort, DialoguePort } from "./dialogue";
 
@@ -101,4 +102,5 @@ export interface ApplicationDependencies {
   readonly sessions: SessionRepository;
   readonly tags: TagRepository;
   readonly transaction: ApplicationTransactionRunner;
+  readonly placedObjects?: PlacedObjectRepository;
 }

@@ -1,145 +1,36 @@
-# Direção artística
+# Direção artística — Reboot espacial
 
-> A identidade final ainda precisa de referências aprovadas no Gate G0. Este documento define princípios e pipeline, não uma paleta fechada.
+## Intenção
+Um lugar íntimo, antigo, mágico, habitado e construído ao longo do tempo. Abandonar a sensação de cinco cenários temáticos e buscar um único lugar coerente.
 
-## 1. Intenção
+## Espaço
+Construção contínua; cômodos neutros; corredores/passagens visíveis; câmera sobre planta maior; suporte a crescimento; objetos de naturezas diferentes coexistem.
 
-A Biblioteca Viva deve parecer um lugar íntimo, antigo, mágico e habitado, sem se tornar sombria demais ou infantil. O visual precisa apoiar leitura e registro, não competir com eles.
+## Perspectiva
+Direção vigente: top-down oblíquo 2.5D ortogonal. Profundidade por sobreposição/ordenação; isométrico só após mockup/protótipo. Sem 3D real.
 
-R3 consolida essa intenção em grafite/verde-floresta profundos, madeira nogueira, texto creme confortável e âmbar/dourado de uso contido. A sala retrato usa estante superior, segmento lateral, balcão à direita, bibliotecária próxima, criatura no espaço central/baixo e luminária integrada quando desbloqueada. É composição procedural de protótipo, não arte final aprovada.
+## Objetos
+Assets posicionáveis precisam de footprint, origem, hit area, seleção, rotações, depth, legibilidade mobile e fallback.
 
-Atmosfera combina base da sala, overlay barato, luz direcional e luzes locais. Manhã é relativamente neutra/dourada; tarde, mais quente; noite, azul-esverdeada profunda; madrugada, índigo/grafite mais frio. A iluminação ambiente mantém móveis e interações legíveis sem a luminária. Reduced motion remove loops contínuos; vida vem de estado causal, highlight estático, balão, sheet, projeção e troca imediata de período.
+## Habitantes
+Devem parecer habitantes do lugar, não mascotes presos a uma sala temática.
 
-Palavras-guia:
+## Iluminação
+Manhã/tarde/noite/madrugada continuam como atmosfera global. Luzes locais podem vir de objetos, sem exigir iluminação dinâmica cara no primeiro slice.
 
-- acolhedora;
-- contemplativa;
-- artesanal;
-- misteriosa;
-- viva;
-- legível;
-- pessoal.
+## UI
+Menus, drawer, balões e sheets ocupam o mínimo e não fragmentam o mundo em painéis permanentes.
 
-## 2. Estilo do protótipo
+## Pipeline
+Registrar dimensões lógicas, pivô, footprint, rotações, depth policy, estados, licença e fallback.
 
-- pixel art ou arte 2D de baixa complexidade;
+## Obsoleto como direção futura
+- sala fixa por categoria;
+- troca de sala como aba;
 - câmera fixa;
-- orientação retrato;
-- sala pequena;
-- poucos assets reutilizados com intenção;
-- animações curtas e discretas;
-- iluminação simples;
-- composição que funcione em telas estreitas;
-- fallback geométrico sempre disponível.
+- composição inteira sempre contida na viewport.
+P2 permanece histórico.
 
-## 3. Hierarquia visual
+## Estado W1
 
-1. ação atual e texto da interface;
-2. objeto recentemente alterado;
-3. estante e bibliotecária;
-4. criatura e elementos ambientais;
-5. partículas e decoração.
-
-Efeitos não devem obscurecer texto, navegação ou objeto tocável.
-
-## 4. Estados da primeira estante
-
-- vazia;
-- inicial;
-- ocupada;
-- possui concluído.
-
-Usar faixas de ocupação e grupos de lombadas, não um sprite completo para cada livro. Livro recente pode receber destaque temporário.
-
-## 5. Personagens
-
-### Bibliotecária
-
-- presença calma;
-- idle pequeno;
-- silhueta clara;
-- não sexualizada;
-- reação acolhedora, sem fiscalizar produtividade.
-
-### Criatura
-
-- pequena;
-- reconhecível em escala mobile;
-- movimento delimitado;
-- personalidade expressa por animação simples;
-- não bloqueia toque em outros objetos.
-
-## 6. Cor e iluminação
-
-- paleta limitada;
-- contraste suficiente entre cenário e UI;
-- cor nunca é único indicador;
-- iluminação comunica atmosfera, não progresso obrigatório;
-- estados concluídos podem acrescentar calor ou brilho sem transformar a tela em carnaval arcano de shopping.
-
-Para a arte procedural do Prompt 13, a paleta provisória combina madeira escura e média, papel creme, piso ocre, parede azul acinzentada, verde suave para a criatura, violeta discreto para a bibliotecária e dourado para conclusão. Esses valores vivem no manifesto técnico e continuam sujeitos a moodboard e teste no aparelho; não constituem paleta final.
-
-A bibliotecária é uma figura geométrica com cabelo, rosto, corpo e avental; a criatura usa corpo oval, orelhas triangulares e olhos claros. A iluminação é composta por áreas circulares quentes e translúcidas. A estante vazia preserva prateleiras claramente visíveis; os estados preenchidos acrescentam grupos limitados de lombadas, e conclusão acrescenta um selo dourado sem substituir a faixa de ocupação.
-
-O primeiro desbloqueio usa uma pequena luminária de leitura procedural sobre o balcão. Ela reaproveita formas e paleta do manifesto, sem asset binário novo. Ao ser concedida, surge com uma animação discreta de até 650 ms; com movimento reduzido, aparece diretamente no estado final. O objeto permanece parte da sala após o marco histórico, mesmo que o livro de origem seja retomado ou excluído.
-
-O modo de alto contraste do Prompt 17 preserva a identidade quente da sala, mas prioriza a camada funcional React por tokens de superfícies, texto, bordas, foco, links, controles e erros. Não constitui novo tema artístico e não recolore o canvas. As escalas grande/maior aplicam-se ao shell sem zoom da cena. Movimento reduzido mantém personagens, destaque e luminária reconhecíveis em poses estáticas, sem remover informação.
-
-## 7. Assets e nomes
-
-Organização sugerida:
-
-```text
-public/assets/phaser/
-  room/
-  shelves/
-  characters/
-  creatures/
-  decorations/
-  effects/
-  atlases/
-```
-
-IDs internos estáveis e nomes de arquivo em `kebab-case`. Manifests definem posição, frame, animação e fallback. Código não espalha caminhos e coordenadas.
-
-## 8. Pipeline
-
-Para cada asset:
-
-1. registrar origem e licença;
-2. manter arquivo-fonte fora do bundle quando necessário;
-3. exportar em escala e formato definidos;
-4. validar transparência e bordas;
-5. incluir em atlas quando vantajoso;
-6. testar no aparelho;
-7. registrar tamanho e impacto;
-8. manter fallback.
-
-## 9. Limites do protótipo
-
-- sem múltiplas salas;
-- sem editor livre;
-- sem pathfinding complexo;
-- sem dezenas de NPCs;
-- sem ciclos climáticos avançados;
-- sem animação longa de desbloqueio;
-- sem arte final antes de o fluxo de dados funcionar.
-
-## 10. Aprovação visual
-
-Uma mudança artística só é aprovada quando:
-
-- funciona em 320 px e no aparelho alvo;
-- objeto tocável permanece claro;
-- modo reduzido continua coerente;
-- asset ausente não causa tela preta;
-- desempenho atende `PERFORMANCE.md`;
-- screenshot e teste manual foram registrados.
-
-## P2-B/P2-C — salas e habitantes
-
-As cinco salas mantêm madeira escura, paredes profundas, metais envelhecidos e luz âmbar. A Biblioteca Principal preserva a composição R3. Estudos usa gabinete de pesquisa; Projeção, tela antiga e projetor; Treino, salão de prática sem linguagem de academia; Escritório, atelier antigo. Cada secundária começa com quatro formas-base e recebe três decorações procedurais estáticas nos estágios 2–4. Residentes usam uma única silhueta procedural por sala, poucos detalhes e paletas sóbrias; não há títulos, disciplinas, clientes ou cartazes reais.
-
-Manhã privilegia legibilidade; tarde aquece o ambiente; noite escurece com fonte local; madrugada resfria o fundo preservando fontes quentes. Alto contraste reutiliza a política visual existente e movimento reduzido não cria loops nas salas novas.
-
-P2-C mantém a bibliotecária existente e acrescenta Pesquisador, Projecionista, Cuidador do treino e Escriba. As figuras são não sexualizadas, legíveis em escala mobile e associadas a mesa, projetor, área de prática ou arquivo. Rotinas usam somente âncoras declaradas e tweens curtos; não há assets, física, pathfinding ou animação contínua em movimento reduzido.
+W1 usa apenas dois espaços neutros e paredes/poucas âncoras procedurais para validar continuidade, escala e câmera. Isso não substitui o Kit Zero nem inicia produção artística. Os PNGs de parede atuais não possuem proporção compatível com módulos de 32 world units e serão revistos em W5.

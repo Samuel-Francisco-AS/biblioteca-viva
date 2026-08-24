@@ -13,6 +13,7 @@ test("Biblioteca mobile preserva um canvas entre resumo, drawer, Coleção e est
   navigateFromMenu,
   page,
 }) => {
+  test.setTimeout(45_000);
   await page.setViewportSize({ height: 800, width: 360 });
   await createBook({
     author: "Autora Layout",

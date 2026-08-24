@@ -19,6 +19,7 @@ import {
   persistedSettingSchema,
   persistedSessionSchema,
   persistedTagSchema,
+  persistedPlacedObjectSchema,
 } from "../database/schema";
 
 const digestSchema = z.string().regex(/^[a-f0-9]{64}$/u);
@@ -73,9 +74,12 @@ const v2DataSchema = z.strictObject({
   settings: z.array(backupSettingSchema),
   milestones: z.array(persistedMilestoneSchema),
 });
-const dataSchema = v2DataSchema.extend({
+const v3DataSchema = v2DataSchema.extend({
   tags: z.array(persistedTagSchema),
   sessions: z.array(persistedSessionSchema),
+});
+const dataSchema = v3DataSchema.extend({
+  placedObjects: z.array(persistedPlacedObjectSchema),
 });
 const envelopeMetadataSchema = z.strictObject({ policy: z.literal("replace") });
 const legacyUnsignedSchema = z.strictObject({
@@ -105,6 +109,15 @@ const unsignedSchema = z.strictObject({
   data: dataSchema,
   metadata: envelopeMetadataSchema,
 });
+const v3UnsignedSchema = z.strictObject({
+  kind: z.literal(BACKUP_KIND),
+  formatVersion: z.literal(3),
+  createdAt: z.iso.datetime({ offset: false }),
+  appVersion: z.string().trim().min(1),
+  databaseVersion: z.int().positive(),
+  data: v3DataSchema,
+  metadata: envelopeMetadataSchema,
+});
 const integritySchema = z.strictObject({
   algorithm: z.literal("SHA-256"),
   digest: digestSchema,
@@ -112,6 +125,7 @@ const integritySchema = z.strictObject({
 const envelopeSchema = z.discriminatedUnion("formatVersion", [
   legacyUnsignedSchema.extend({ integrity: integritySchema }),
   v2UnsignedSchema.extend({ integrity: integritySchema }),
+  v3UnsignedSchema.extend({ integrity: integritySchema }),
   unsignedSchema.extend({ integrity: integritySchema }),
 ]);
 
@@ -182,6 +196,7 @@ function counts(data: BackupData): BackupCounts {
     settings: data.settings.length,
     sessions: data.sessions.length,
     tags: data.tags.length,
+    placedObjects: (data.placedObjects ?? []).length,
   });
 }
 
@@ -199,6 +214,11 @@ function sortData(data: BackupData): BackupData {
     ),
     sessions: Object.freeze(byId(data.sessions)),
     tags: Object.freeze(byId(data.tags)),
+    placedObjects: Object.freeze(
+      [...(data.placedObjects ?? [])].sort((a, b) =>
+        a.instanceId.localeCompare(b.instanceId),
+      ),
+    ),
   });
 }
 
@@ -211,6 +231,7 @@ function rejectDuplicates(data: {
   readonly settings: readonly { readonly key: string }[];
   readonly sessions?: readonly { readonly id: string }[];
   readonly tags?: readonly { readonly id: string }[];
+  readonly placedObjects?: readonly { readonly instanceId: string }[];
 }): void {
   const collections: readonly [string, readonly string[]][] = [
     ["libraryEntries", data.libraryEntries.map((item) => item.id)],
@@ -221,6 +242,10 @@ function rejectDuplicates(data: {
     ["settings", data.settings.map((item) => item.key)],
     ["sessions", (data.sessions ?? []).map((item) => item.id)],
     ["tags", (data.tags ?? []).map((item) => item.id)],
+    [
+      "placedObjects",
+      (data.placedObjects ?? []).map((item) => item.instanceId),
+    ],
   ];
   for (const [, ids] of collections) {
     if (new Set(ids).size !== ids.length) {
@@ -234,10 +259,11 @@ function rejectDuplicates(data: {
 
 type ParsedV1Data = z.infer<typeof legacyDataSchema>;
 type ParsedV2Data = z.infer<typeof v2DataSchema>;
-type ParsedV3Data = z.infer<typeof dataSchema>;
+type ParsedV3Data = z.infer<typeof v3DataSchema>;
+type ParsedV4Data = z.infer<typeof dataSchema>;
 
 function normalizeData(
-  data: ParsedV1Data | ParsedV2Data | ParsedV3Data,
+  data: ParsedV1Data | ParsedV2Data | ParsedV3Data | ParsedV4Data,
   milestones: z.infer<typeof persistedMilestoneSchema>[],
   restoredAt: string,
 ): BackupData {
@@ -296,6 +322,9 @@ function normalizeData(
               : session,
           )
         : [],
+    ),
+    placedObjects: Object.freeze(
+      "placedObjects" in data ? [...data.placedObjects] : [],
     ),
   });
 }
@@ -386,6 +415,7 @@ export class JsonBackupCodec implements BackupCodecPort {
     if (
       root.formatVersion !== 1 &&
       root.formatVersion !== 2 &&
+      root.formatVersion !== 3 &&
       root.formatVersion !== BACKUP_FORMAT_VERSION
     )
       throw new BackupError(
@@ -411,8 +441,12 @@ export class JsonBackupCodec implements BackupCodecPort {
     rejectDuplicates({
       ...parsed.data.data,
       milestones: sourceFormatVersion === 1 ? [] : parsed.data.data.milestones,
-      sessions: sourceFormatVersion === 3 ? parsed.data.data.sessions : [],
-      tags: sourceFormatVersion === 3 ? parsed.data.data.tags : [],
+      sessions: "sessions" in parsed.data.data ? parsed.data.data.sessions : [],
+      tags: "tags" in parsed.data.data ? parsed.data.data.tags : [],
+      placedObjects:
+        "placedObjects" in parsed.data.data
+          ? parsed.data.data.placedObjects
+          : [],
     });
     const { integrity, ...unsigned } = parsed.data;
     if ((await sha256(checksumMaterial(unsigned))) !== integrity.digest)
@@ -442,7 +476,7 @@ export class JsonBackupCodec implements BackupCodecPort {
                 "Este backup é anterior aos marcos; nenhum marco será inventado e marcos legítimos existentes serão preservados.",
               ]
             : []),
-          ...(parsed.data.databaseVersion > 5
+          ...(parsed.data.databaseVersion > 6
             ? [
                 "O backup foi criado por um schema de banco mais recente, mas o formato é compatível.",
               ]
