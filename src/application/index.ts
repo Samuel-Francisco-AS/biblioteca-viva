@@ -29,3 +29,7 @@ export { createBookEntrySchema, updateBookEntrySchema } from "./schemas";
 export * from "./useCases";
 export * from "./world";
 export * from "./worldObjects";
+export * from "./worldStructure";
+export * from "./worldStructureRepository";
+export * from "./worldStructureObjects";
+export * from "./worldStructureEditing";

@@ -75,6 +75,16 @@ import {
   UpdatePlacedObjectTransform,
   placementIsValid,
   WORLD_PLACEMENT_AREAS,
+  GetWorldStructure,
+  GetStructuralInventory,
+  PlaceStructure,
+  MoveStructure,
+  RotateStructure,
+  StoreStructure,
+  AddFloorCells,
+  RemoveFloorCells,
+  initialWorldStructure,
+  recoverObjectsForInitialStructure,
 } from "../application";
 import { MILESTONE_ID, MilestoneEngine } from "../domain";
 import { ContentLocalizer, PROTOTYPE_CONTENT, ROOM_CATALOG } from "../content";
@@ -100,6 +110,7 @@ import {
   createPlatformBackupFiles,
   DexieBackupSnapshotStore,
   DexiePlacedObjectRepository,
+  DexieWorldStructureRepository,
   JsonBackupCodec,
   DATABASE_VERSION,
   type DatabaseDiagnostics,
@@ -183,6 +194,12 @@ export interface ApplicationRuntime {
     readonly resumeSession: ResumeSession;
     readonly startSession: StartSession;
     readonly updatePlacedObjectTransform: UpdatePlacedObjectTransform;
+    readonly placeStructure: PlaceStructure;
+    readonly moveStructure: MoveStructure;
+    readonly rotateStructure: RotateStructure;
+    readonly storeStructure: StoreStructure;
+    readonly addFloorCells: AddFloorCells;
+    readonly removeFloorCells: RemoveFloorCells;
   };
   readonly queries: {
     readonly getBookEntry: GetBookEntry;
@@ -203,6 +220,8 @@ export interface ApplicationRuntime {
     readonly getStatistics: GetStatistics;
     readonly getRoomProgress: GetRoomProgress;
     readonly listPlacedObjects: ListPlacedObjects;
+    readonly getWorldStructure: GetWorldStructure;
+    readonly getStructuralInventory: GetStructuralInventory;
   };
   readonly diagnostics: ApplicationDiagnostics;
   readonly events: LocalEventBus;
@@ -255,6 +274,11 @@ export async function createApplication(
   const sessions = new DexieSessionRepository(database);
   const tags = new DexieTagRepository(database);
   const placedObjects = new DexiePlacedObjectRepository(database);
+  const worldStructures = new DexieWorldStructureRepository(database);
+  await worldStructures.initializeIfAbsent(
+    initialWorldStructure(await new SystemClock().now()),
+    recoverObjectsForInitialStructure,
+  );
   const bookDeletion = new DexieBookDeletionStore(database);
   const entryDeletion = new DexieLibraryEntryDeletionStore(database);
   const transaction = new DexieTransactionRunner(database);
@@ -345,6 +369,13 @@ export async function createApplication(
     sessions,
     milestones: milestoneStore,
   });
+  const listPlacedObjects = new ListPlacedObjects(placedObjects);
+  const structureEditing = {
+    clock,
+    ids,
+    objects: { list: () => listPlacedObjects.execute() },
+    repository: worldStructures,
+  };
   return {
     appVersion: packageMetadata.version,
     audio,
@@ -413,7 +444,12 @@ export async function createApplication(
       },
       import: async (content, protection) => {
         if (!platform.backupIntegrity) throw unsafeContextError();
-        return importBackup.execute(content, protection);
+        const result = await importBackup.execute(content, protection);
+        await worldStructures.initializeIfAbsent(
+          initialWorldStructure(await clock.now()),
+          recoverObjectsForInitialStructure,
+        );
+        return result;
       },
     },
     commands: {
@@ -452,6 +488,12 @@ export async function createApplication(
         placedObjects,
         (object) => placementIsValid(object, WORLD_PLACEMENT_AREAS),
       ),
+      placeStructure: new PlaceStructure(structureEditing),
+      moveStructure: new MoveStructure(structureEditing),
+      rotateStructure: new RotateStructure(structureEditing),
+      storeStructure: new StoreStructure(structureEditing),
+      addFloorCells: new AddFloorCells(structureEditing),
+      removeFloorCells: new RemoveFloorCells(structureEditing),
     },
     queries: {
       getBookEntry: new GetBookEntry(libraryEntries),
@@ -471,7 +513,9 @@ export async function createApplication(
       listTags: new ListTags(tags),
       getStatistics,
       getRoomProgress: new GetRoomProgress(getStatistics, ROOM_CATALOG),
-      listPlacedObjects: new ListPlacedObjects(placedObjects),
+      listPlacedObjects,
+      getWorldStructure: new GetWorldStructure(worldStructures),
+      getStructuralInventory: new GetStructuralInventory(worldStructures),
     },
     diagnostics: {
       inspect: () => diagnosticsService.inspect(),

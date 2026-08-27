@@ -1,5 +1,8 @@
 import {
-  DEFAULT_PLACED_OBJECT,
+  DEFAULT_PLACED_OBJECTS,
+  TEST_OBJECT_DEFINITION_ID,
+  TEST_OBJECT_INSTANCE_ID,
+  defaultPlacedObject,
   placedObjectSchema,
   type PlacedObject,
 } from "./world";
@@ -14,7 +17,7 @@ export interface PlacedObjectRepository {
 }
 
 const transformSchema = z.strictObject({
-  instanceId: z.literal(DEFAULT_PLACED_OBJECT.instanceId),
+  instanceId: z.string().trim().min(1),
   rotation: placedObjectSchema.shape.rotation,
   spaceId: placedObjectSchema.shape.spaceId,
   x: z.number().finite().nonnegative(),
@@ -26,9 +29,22 @@ export class ListPlacedObjects {
   async execute(): Promise<readonly PlacedObject[]> {
     try {
       const objects = await this.repository.list();
-      return objects.length > 0
-        ? Object.freeze([...objects])
-        : Object.freeze([DEFAULT_PLACED_OBJECT]);
+      const visibleObjects = objects.filter(
+        (object) =>
+          !(
+            object.definitionId === TEST_OBJECT_DEFINITION_ID &&
+            object.instanceId === TEST_OBJECT_INSTANCE_ID
+          ),
+      );
+      const existingIds = new Set(
+        visibleObjects.map((object) => object.instanceId),
+      );
+      return Object.freeze([
+        ...visibleObjects,
+        ...DEFAULT_PLACED_OBJECTS.filter(
+          (object) => !existingIds.has(object.instanceId),
+        ),
+      ]);
     } catch {
       throw new ApplicationError(
         "PERSISTENCE_FAILED",
@@ -55,7 +71,14 @@ export class UpdatePlacedObjectTransform {
     try {
       const existing =
         (await this.repository.getById(transform.instanceId)) ??
-        DEFAULT_PLACED_OBJECT;
+        defaultPlacedObject(transform.instanceId);
+      if (!existing) {
+        throw new ApplicationError(
+          "VALIDATION_FAILED",
+          "O objeto selecionado não está disponível.",
+          { operation: "find_placed_object" },
+        );
+      }
       const next = placedObjectSchema.parse({ ...existing, ...transform });
       if (!this.validate(next)) {
         throw new ApplicationError(
