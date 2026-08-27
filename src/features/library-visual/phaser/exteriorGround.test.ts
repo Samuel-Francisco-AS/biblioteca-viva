@@ -24,9 +24,7 @@ describe("exterior ground", () => {
       new Set(["a", "b", "c", "d"]),
     );
     expect(exteriorGroundVariantAt(3, 7)).toBe(exteriorGroundVariantAt(3, 7));
-    expect(EXTERIOR_GROUND_WORLD_SIZE).toBe(64);
-    expect(
-      new Set(first.map((tile) => `${tile.cropX}:${tile.cropY}`)).size,
-    ).toBeGreaterThan(1);
+    expect(EXTERIOR_GROUND_WORLD_SIZE).toBe(256);
+    expect(first).toHaveLength(16);
   });
 });

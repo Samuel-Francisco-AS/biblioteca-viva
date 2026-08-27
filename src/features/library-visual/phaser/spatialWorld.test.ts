@@ -8,56 +8,46 @@ import {
   WALL_THICKNESS,
   EXTERIOR_CAMERA_MARGIN,
   CameraPanPolicy,
+  LatestValue,
   cameraBoundsFor,
   clampCameraScroll,
   initialCameraScroll,
-  rectanglesOverlap,
   spatialWorldLayout,
 } from "./spatialWorld";
 
-describe("spike espacial W1", () => {
+describe("projeção espacial W3", () => {
   const viewport = { height: 640, width: 360 };
   const world = spatialWorldLayout();
 
-  it("fixa a malha e os dois espaços neutros na escala W1", () => {
+  it("projeta o cômodo inicial persistente na escala do grid", () => {
     expect(CELL_SIZE).toBe(32);
     expect(WALL_THICKNESS).toBe(CELL_SIZE);
     expect(DOOR_WIDTH).toBe(CELL_SIZE * 2);
     expect(CORRIDOR_WIDTH).toBe(CELL_SIZE * 3);
-    expect(world.spaceA).toEqual({ height: 288, width: 384, x: 96, y: 128 });
-    expect(world.spaceB).toEqual({ height: 256, width: 320, x: 480, y: 416 });
-    expect(world.connection.corridor.width).toBe(CORRIDOR_WIDTH);
+    expect(world.spaceA).toEqual({ height: 320, width: 384, x: 96, y: 128 });
+    expect(world.floorAreas).toEqual([world.spaceA]);
+    expect(world.spaceB).toEqual(world.spaceA);
     expect(world.connection.doorwayA.floor.width).toBe(DOOR_WIDTH);
-    expect(world.connection.doorwayB.floor.height).toBe(DOOR_WIDTH);
+    expect(world.connection.doorwayB.floor.width).toBe(DOOR_WIDTH);
+    expect(world.connection.doorwayB.orientation).toBe("south");
   });
 
-  it("mantém A e B próximos, com uma conexão contínua e curta em L", () => {
-    expect(rectanglesOverlap(world.spaceA, world.spaceB)).toBe(false);
-    expect(world.spaceA.x).toBeLessThan(world.spaceB.x);
-    expect(world.spaceA.y).toBeLessThan(world.spaceB.y);
-    expect(world.connection.doorwayA.floor.y).toBe(
-      world.spaceA.y + world.spaceA.height,
-    );
-    expect(
-      world.connection.doorwayB.floor.x + world.connection.doorwayB.floor.width,
-    ).toBe(world.spaceB.x);
-    expect(world.connection.turn.y).toBeGreaterThan(
-      world.connection.corridor.y,
-    );
-    expect(
-      world.connection.corridor.y + world.connection.corridor.height,
-    ).toBeGreaterThan(world.connection.turn.y);
-    expect(world.connection.turn.x + world.connection.turn.width).toBe(
-      world.spaceB.x,
-    );
-    expect(world.floorAreas).toHaveLength(6);
+  it("mantém a abertura horizontal dentro do único cômodo", () => {
+    expect(world.connection.doorwayA.orientation).toBe("south");
+    expect(world.connection.doorwayA.floor).toEqual({
+      height: 32,
+      width: 64,
+      x: 256,
+      y: 416,
+    });
+    expect(world.connection.doorwayA.wall.y).toBe(448);
   });
 
   it("deriva bounds finitos com perímetro exterior configurado", () => {
     expect(EXTERIOR_CAMERA_MARGIN).toBe(CELL_SIZE * 4);
-    expect(world.bounds).toEqual({ height: 864, width: 1024, x: -64, y: -32 });
+    expect(world.bounds).toEqual({ height: 640, width: 704, x: -64, y: -32 });
     expect(world.bounds.width).toBeGreaterThan(viewport.width);
-    expect(world.bounds.height).toBeGreaterThan(viewport.height);
+    expect(world.bounds.height).toBeGreaterThanOrEqual(viewport.height);
     expect(world.bounds.x).toBeLessThan(world.spaceA.x - WALL_THICKNESS);
     expect(world.bounds.y).toBeLessThan(world.spaceA.y - WALL_THICKNESS);
   });
@@ -75,10 +65,10 @@ describe("spike espacial W1", () => {
   it("clampa a câmera nos limites X e Y após resize", () => {
     expect(
       clampCameraScroll({ x: 9_999, y: -20 }, world.bounds, viewport),
-    ).toEqual({ x: 600, y: -20 });
+    ).toEqual({ x: 280, y: -32 });
     expect(
       clampCameraScroll({ x: 0, y: 9_999 }, world.bounds, viewport),
-    ).toEqual({ x: 0, y: 192 });
+    ).toEqual({ x: 0, y: -32 });
     const samples = [
       initialCameraScroll(world, viewport),
       { x: world.bounds.x, y: world.bounds.y },
@@ -137,5 +127,19 @@ describe("spike espacial W1", () => {
     pan.begin(8, 0, 0, { x: 0, y: 0 });
     pan.cancel();
     expect(pan.end(8)).toBe(false);
+  });
+
+  it("retém somente a posição de drag mais recente até o próximo frame", () => {
+    const latest = new LatestValue<{
+      readonly x: number;
+      readonly y: number;
+    }>();
+    latest.push({ x: 32, y: 64 });
+    latest.push({ x: 96, y: 128 });
+    expect(latest.take()).toEqual({ x: 96, y: 128 });
+    expect(latest.take()).toBeUndefined();
+    latest.push({ x: 160, y: 192 });
+    latest.clear();
+    expect(latest.take()).toBeUndefined();
   });
 });

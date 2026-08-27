@@ -21,7 +21,10 @@ export interface WorldRectangle {
 export interface SpatialDoorway {
   /** Free floor immediately outside a two-cell architectural opening. */
   readonly floor: WorldRectangle;
-  readonly orientation: "east" | "south";
+  /** W3-A supports only a wall parallel to the X axis. */
+  readonly orientation: "south";
+  /** Logical wall line occupied by the matching open/closed door asset. */
+  readonly wall: Pick<WorldRectangle, "width" | "x" | "y">;
 }
 
 export interface SpatialWorldLayout {
@@ -45,6 +48,25 @@ export interface CameraScroll {
   readonly y: number;
 }
 
+/** Retains only the newest input value until the next render-frame consumer. */
+export class LatestValue<T> {
+  private latest?: T;
+
+  push(value: T): void {
+    this.latest = value;
+  }
+
+  take(): T | undefined {
+    const value = this.latest;
+    this.latest = undefined;
+    return value;
+  }
+
+  clear(): void {
+    this.latest = undefined;
+  }
+}
+
 export interface ViewportComposition {
   /** Portion of the viewport occupied by its largest connected floor shape. */
   readonly largestConnectedFloorRatio: number;
@@ -53,31 +75,21 @@ export interface ViewportComposition {
 }
 
 /**
- * Fixed, ephemeral W1 geometry. Coordinates describe usable floor; walls are
- * built one cell outside its exposed edges. The short offset connector keeps
- * both spaces in one coordinate system without becoming a third room.
+ * Compatibility projection of the persistent W3 blueprint. The legacy space
+ * keys remain only so W2 transforms can be recovered without changing schema.
  */
 export function spatialWorldLayout(): SpatialWorldLayout {
-  const spaceA = cells(3, 4, 12, 9);
-  const spaceB = cells(15, 13, 10, 8);
+  const spaceA = cells(3, 4, 12, 10);
+  const spaceB = spaceA;
   const doorwayA: SpatialDoorway = {
-    floor: cells(11, 13, 2, 1),
+    floor: cells(8, 13, 2, 1),
     orientation: "south",
+    wall: { width: DOOR_WIDTH, x: 8 * CELL_SIZE, y: 14 * CELL_SIZE },
   };
-  const corridor = cells(10, 14, 3, 3);
-  const turn = cells(13, 16, 2, 3);
-  const doorwayB: SpatialDoorway = {
-    floor: cells(14, 17, 1, 2),
-    orientation: "east",
-  };
-  const floorAreas = [
-    spaceA,
-    spaceB,
-    doorwayA.floor,
-    corridor,
-    turn,
-    doorwayB.floor,
-  ] as const;
+  const doorwayB = doorwayA;
+  const corridor = cells(8, 13, 2, 1);
+  const turn = corridor;
+  const floorAreas = [spaceA] as const;
 
   return {
     bounds: boundsForFloorAreas(floorAreas),
@@ -217,7 +229,8 @@ export class CameraPanPolicy {
   }
 }
 
-export const CAMERA_PAN_THRESHOLD = 12;
+/** Keeps taps distinct while removing the perceptible mobile drag deadzone. */
+export const CAMERA_PAN_THRESHOLD = 6;
 
 function boundsForFloorAreas(
   floorAreas: readonly WorldRectangle[],
