@@ -249,3 +249,7 @@ Tags usam checkbox com nome visível, favorito expõe `aria-pressed`, e ações 
 ## 22. P1-C
 
 Estatísticas usa headings, filtros nativos, números e listas textuais. Nenhum valor depende de barra ou cor. Timeline usa lista ordenada e `time`; sessão ativa oferece link textual aos controles. A automação cobre semântica/viewport, mas leitura TalkBack, contraste percebido e texto ampliado continuam evidência humana pendente.
+
+## W3 estrutural — Processo 1
+
+O resumo acessível informa o cômodo inicial, células de piso e peças estruturais colocadas. O canvas permanece complementar; não há ainda modo Construção acessível, editor ou inventário UI.

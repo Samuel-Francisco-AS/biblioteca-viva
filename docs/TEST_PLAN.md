@@ -258,11 +258,19 @@ Nenhum item Android desta seção foi executado. Instalação sobre a versão an
 - desempenho e memória;
 - exportação e restauração.
 
-### W2 — validação técnica e checkpoint humano pendente
+### W2 — validação técnica e checkpoint humano aprovado
 
-Cobertura focada W2: bounds exteriores finitos, distribuição determinística das quatro variantes, validação por footprint e backup/migração de `placedObjects`. A automação não substitui a inspeção no Moto G06: percorrer o perímetro, conferir seams/filtering/repetição, selecionar o objeto, entrar em Mover, arrastar sem pan simultâneo, girar, fechar/reabrir e confirmar persistência. Nenhum desses itens físicos está marcado como executado.
+Cobertura focada W2: bounds exteriores finitos, distribuição determinística das quatro variantes, validação por footprint e backup/migração de `placedObjects`. Desde 2026-08-26, os testes focados também verificam os quatro sources declarados da escrivaninha e cadeira, a troca de sprite por orientação sem rotação automática do bitmap, bootstrap sem duplicação, commit/recusa de drag e rotação persistida. A automação não substitui a inspeção no Moto G06: percorrer o perímetro, conferir seams/filtering/repetição, selecionar os dois móveis, entrar em Mover, arrastar sem pan simultâneo, girar, fechar/reabrir e confirmar persistência. Nenhum desses itens físicos está marcado como executado.
 
 Em 2026-08-24, o primeiro teste físico W2 foi reprovado: piso interno preto, pan vertical sem percurso útil, ações do objeto não visíveis/operáveis e macro-repetição exterior. A correção executou testes focados para paths internos/externos, distribuição/crop determinísticos, intervalo vertical após resize e ponte Phaser → React para Mover/Girar. A revalidação humana no Moto G06 continua obrigatória.
+
+Em 2026-08-26, W2.1 verificou programaticamente os oito PNGs runtime como sRGBA com alpha mínimo zero e cantos transparentes; os testes focados preservam pan, cancelamento, commit no fim do drag, rotação, persistência e leitura legado. A inspeção física da resposta imediata continua obrigatória.
+
+Em 2026-08-26, W2.2 acrescentou cenários focados de preview imediato e rollback de Girar, posição otimista durante commit de Mover e exterior determinístico com 16 texturas completas. A responsividade física continua pendente.
+
+Em 2026-08-26, W2.3 acrescentou testes focados de latest-value para drag, pan com threshold/cancelamento e giros rápidos coalescidos, inclusive falha antiga sem reversão do preview final. A validação física de drag contínuo, giro em rajada e conforto do pan no Moto G06 continua obrigatória.
+
+Em 2026-08-26, Sam aprovou a W2 no Moto G06: assets sem fundo preto, seleção/Mover/Girar, drag suficiente para a fase, confirmação sem snapback, exterior contínuo, câmera aceitável e posição/orientação persistentes após reabrir repetidamente. W2.4 acrescenta regressão para fechar o cartão em Mover, toast temporário/reutilizável e reduced motion, além de não renderizar a fixture procedural histórica. Isso não aprova gates históricos independentes.
 
 ## 3. Comandos obrigatórios
 
@@ -1107,8 +1115,18 @@ Automação: schema/migração, round-trip de PlacedObject, rotações, bounds, 
 
 Humano: selecionar, mover, girar, cancelar, bordas, erro recuperável e precisão de toque.
 
+## W3-A — paredes reais
+
+Automação: `process-wall-assets.mjs --check` abre e mede os 12 PNGs runtime/fonte, exige RGBA, alpha 0–1 e bounds/padding conhecidos; `wallAssets.test.ts` valida catálogo/IDs/orientação e `wallComposition.test.ts` valida cantos, segmentos por eixo, preferência 4/2/1, cobertura lógica, determinismo, porta aberta/fechada coincidente e ausência de porta vertical/segmento reto no vão. `spatialWorld.test.ts` atualiza bounds e a entrada norte de B; `worldObjects.test.ts` preserva placement/transformação W2. Os testes existentes do host continuam cobrindo game/canvas único, resize e cleanup.
+
+Humano no Moto G06 (pendente): abrir a Biblioteca em viewport de retrato, percorrer A → corredor → B, verificar os quatro cantos, módulos 1/2, paredes dos dois eixos, passagem/porta fechada e aberta quando o estado for exposto, seams, profundidade com os dois móveis, bounds e pan. Não há screenshot pixel a pixel nem alegação de aprovação artística/física.
+
 ## Regressões
 Preservar CRUD, Coleção, Arquivo, Estatísticas, backup, áudio, preferências, fallback sem canvas, build web e Android debug quando aplicável.
 
 ## Performance
 Medir FPS, objetos, tamanho do mundo, hit areas, tweens, ordenação e memória estrutural antes de culling, spatial index ou física.
+
+## W3 estrutural — Processo 1
+
+Automação cobre catálogo/topologia, células e arestas, conflitos, blueprint 12×10, quatro cantos, abertura sem segmento, inventário derivado, determinismo, Dexie v7, backup v5/v1–v4, projeção/fallback e lifecycle. Pendente no Moto G06: preview técnico, cômodo completo, quatro cantos, porta, móveis junto às paredes, fallback, viewport móvel e pan até limites.

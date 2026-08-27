@@ -134,9 +134,9 @@ A fonte 2×:
 
 A Biblioteca Viva **não será pixel art estrita de baixa resolução**. A direção é “pixel-art-inspired / illustrated 2D”, com detalhe alto e câmera suave.
 
-### Achado W1
+### Achado W3-A
 
-Os PNGs atuais do Kit Zero de parede foram avaliados no W1 e não são módulos de 32 world units: suas dimensões e perspectiva não permitem montar segmentos, cantos e portas sem escala/crop visualmente excessivos. O spike usa parede procedural discreta por célula; isso é um fallback de validação, não mudança desta especificação. A revisão/substituição das peças pertence a W5.
+A família aprovada de paredes mede 300 px visíveis por célula lógica nos segmentos: horizontal 1/2/4 = 300/600/1200 px de largura; vertical 1/2/4 = 300/600/1200 px de altura. Ela é renderizada por escala comum de 32/300, sem crop, rotação ou espelhamento. Os canvases preservam 48 px transparentes à direita/abaixo; os pivôs de arquitetura usam canto superior esquerdo e offsets declarados de canto/porta. Esta integração não congela aprovação artística: seams e proporção no Moto G06 continuam pendentes.
 
 ---
 

@@ -15,21 +15,25 @@ pan em área livre → câmera acompanha → respeitar bounds → soltar
 ```
 No W1 não há objetos selecionáveis. Toque curto não inicia pan; drag de objeto só existirá em modo de edição futuro.
 
-## Interagir — futuro W2+
+## Interagir — W2
 ```text
 toque curto → selecionar → feedback visual → React mostra ações contextuais
 ```
 
-## Mover — futuro W2
+## Mover — W2 concluída
 ```text
 selecionar → Mover → modo posicionamento → drag
-→ preview válido/inválido → confirmar
-→ Application valida → persistir → projeção atualiza
+→ Phaser conserva somente o ponto mais recente por frame
+→ preview válido/inválido → confirmar → persistir
 ```
 Falha restaura estado seguro e informa o usuário.
 
-## Girar — futuro W2
-Selecionar → Girar → próxima orientação permitida → preview → validar → persistir no commit.
+O cartão contextual possui fechamento acessível: fechar encerra Mover, limpa a seleção e aplica apenas uma transição visual curta.
+
+## Girar — W2 concluída
+Selecionar → Girar → próxima orientação permitida → preview imediato → persistir o último estado desejado. Falha do último commit restaura o estado seguro.
+
+Confirmações usam um único toast textual temporário; nova confirmação atualiza o texto e reinicia sua leitura, sem mover foco.
 
 ## Desbloqueio — futuro W3
 Ação real → regra/milestone → unlock persistido → feedback → objeto disponível. Não posicionar automaticamente salvo regra estrutural explícita.

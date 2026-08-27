@@ -592,3 +592,32 @@ W2 materializa D-NEW-03 com a menor fatia: `placedObjects` em Dexie v6 e backup 
 ### Correção W2 após teste físico — 2026-08-24
 
 O primeiro teste no Moto G06 reprovou a W2: manifest interno apontava para caminho inexistente, bounds verticais eram insuficientes em viewport alta, ações React do objeto ficavam fora da área visível e o exterior revelava macro-tiles. A correção preserva schema v6/backup v4 e a cena única; usa o path real `architecture/floors/interior`, calcula bounds mínimos a partir da viewport e de `EXTERIOR_CAMERA_MARGIN`, torna a zona do objeto interativa e sobrepõe o painel existente de ações. O exterior passa a usar células menores e crops determinísticos das quatro fontes. O filesystem atual contém `architecture`, não `arquitecture`; a divergência não foi reorganizada nesta rodada.
+
+### Integração limitada de mobiliário real na W2 — 2026-08-26
+
+A W2 passa a usar escrivaninha e cadeira reais para validar o pipeline de `PlacedObject`. Isso é uma integração visual limitada da W2 e não representa início nem conclusão da produção artística W5. As quatro orientações são fontes explícitas do sprite, sem rotação automática do bitmap; o catálogo mantém `object.reading-table` como fallback procedural para leitura segura do estado legado. Schema Dexie permanece v6 e backup permanece v4.
+
+### Correções de interação e exterior W2.2 — 2026-08-26
+
+Transformações W2 passam a ser refletidas otimisticamente na projeção e revertidas somente se a persistência falhar; Phaser mantém o preview confirmado enquanto a projeção é consolidada. O exterior usa texturas completas maiores em vez de crops de grade pequena. A decisão é limitada a responsividade e leitura do W2; não altera schema, backup ou escopo W5.
+
+### Responsividade final W2.3 — 2026-08-26
+
+O drag Phaser conserva somente o último ponto recebido até o frame seguinte, em vez de processar uma fila de `pointermove`; commits de rotação por instância são serializados e coalescidos no último estado desejado, sem remover preview imediato ou rollback. O pan permanece direto, com `setScroll` síncrono, ganho 1:1 fora de clamp e deadzone de 6 px: não há evidência técnica suficiente para mudar sua calibração nesta rodada. Não há alteração de assets, exterior, schema, backup ou arquitetura.
+
+### Encerramento W2.4 — 2026-08-26
+
+O cartão React de objeto selecionado recebe fechamento acessível e transição curta; confirmações passam a toast textual temporário e reutilizável. A instância técnica exata `placed-object.reading-table`/`object.reading-table` deixa a composição normal, mas a definição, validação de leitura e formatos Dexie v6/backup v4 permanecem compatíveis. Após validação humana no Moto G06, W2 está aprovada: transparência, seleção, Mover, Girar, drag suficiente, ausência de snapback, exterior, câmera e persistência foram aceitos para a fase. Otimização e refinamento fino das mecânicas espaciais ficam para rodada futura específica e não bloqueiam o encerramento da W2.
+
+### D-NEW-06 — Composição declarativa de paredes W3-A — 2026-08-26
+
+- **Status:** aceita
+- **Contexto:** a W1 desenhava cada célula exposta por Graphics; a nova família contém segmentos horizontal/vertical 1/2/4, quatro cantos e somente porta horizontal.
+- **Decisão:** manter a geometria de piso/células como fonte da verdade e derivar um plano puro, determinístico e validável de peças declaradas. O catálogo concentra ID, arquivo runtime, orientação, extensão, pivô, offset, profundidade e fallback. Phaser apenas pre-carrega/renderiza esse plano com escala única de 32/300; ausência de textura local volta a Graphics sem carregar rede. Paredes não são `PlacedObject` nem persistência.
+- **Consequências:** segmentos não sofrem rotação/espelhamento; a porta fechada/aberta usa a mesma linha lógica e não há porta vertical. B muda de `(15,13)` para `(13,17)` células, com segunda entrada horizontal na borda norte, para não fingir arte vertical. As áreas W2 acompanham a geometria; Dexie v6, backup v4, domínio e contratos de `PlacedObject` não mudam. Validação artística/mobile permanece humana.
+
+### D-NEW-07 — Estrutura persistente por células e arestas — 2026-08-27
+
+- **Status:** aceita; substitui D-NEW-06 na execução visual após sua reprovação no Moto G06.
+- **Decisão:** estrutura é `WorldStructureState`, separada de `PlacedObject`: piso ocupa células; paredes, cantos e porta reivindicam arestas inteiras; pixels não definem topologia. Inventário futuro é concessão menos colocação, sempre derivado.
+- **Blueprint:** cômodo 12×10 em x=3..14/y=4..13, porta horizontal inferior central; os quatro cantos reservam braços de quatro arestas e os trechos restantes são explícitos. Dexie v7 usa `worldStructures`; backup v5 inclui estrutura e v1–v4 recebem blueprint apenas se ela estiver ausente. Editor/inventário UI e progressão ficam nos Processos 2 e 3; portas verticais seguem fora por ausência de assets.

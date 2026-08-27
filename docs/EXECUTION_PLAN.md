@@ -4,7 +4,7 @@
 > Base arquitetural: `ARQUITETURA_E_STACK_BIBLIOTECA_VIVA.md`  
 > Escopo: protótipo de uso pessoal, visual e sonoro, com qualidade de portfólio e APK Android
 
-> Este documento permanece histórico para os Prompts 1–19. A fase de produto iniciada por D-049 usa `PRODUCT_PHASE_PLAN.md`; o reboot vigente usa `ROADMAP.md`, `WORLD_MODEL.md` e `ASSET_SPEC.md`. P1 não é Prompt 20 nem R4.
+> Este documento permanece histórico para os Prompts 1–19. A fase de produto iniciada por D-049 usa `PRODUCT_PHASE_PLAN.md`; o reboot vigente usa `ROADMAP.md`, `WORLD_MODEL.md` e `ASSET_SPEC.md`. P1 não é Prompt 20 nem R4. Em 2026-08-26, W3-A concluiu tecnicamente apenas a composição arquitetural de paredes; o resultado está registrado no roadmap/status e não reescreve os prompts históricos.
 
 ---
 

@@ -31,6 +31,6 @@ Registrar dimensões lógicas, pivô, footprint, rotações, depth policy, estad
 - composição inteira sempre contida na viewport.
 P2 permanece histórico.
 
-## Estado W1
+## Estado W3-A
 
-W1 usa apenas dois espaços neutros e paredes/poucas âncoras procedurais para validar continuidade, escala e câmera. Isso não substitui o Kit Zero nem inicia produção artística. Os PNGs de parede atuais não possuem proporção compatível com módulos de 32 world units e serão revistos em W5.
+W1/W2 mantêm dois espaços neutros, agora delimitados por uma família modular real de paredes. A escala comum é 300 px-fonte para 32 world units; os segmentos medidos de 1/2/4 células e os quatro cantos compõem o plano lógico sem rotação/espelhamento. A porta horizontal possui estados aberto/fechado no catálogo, mas a cena conserva o estado fechado enquanto não existe interação aprovada. Porta vertical continua fora por ausência de arte aprovada. A leitura artística, seams e escala no Moto G06 continuam humanas e pendentes.

@@ -41,4 +41,4 @@ P1 continua fonte dos registros. Milestones/fatos P2 podem originar unlocks, mas
 
 ## Estado W2
 
-O código preserva os dois espaços técnicos efêmeros e acrescenta somente um `ObjectDefinition` declarativo e a instância de teste `placed-object.reading-table`. A transformação persistida contém instância, definição, espaço, posição e rotação; seleção, preview, drag e câmera permanecem efêmeros. Não há inventário, unlock, residentes ou expansão livre.
+O código preserva os dois espaços técnicos efêmeros e acrescenta as instâncias iniciais `placed-object.furniture.desk.wood-01` e `placed-object.furniture.chair.wood-01`. A transformação persistida contém instância, definição, espaço, posição e rotação; seleção, preview, drag e câmera permanecem efêmeros. `object.reading-table` continua definido apenas para leitura segura de estado W2 anterior. Não há inventário, unlock, residentes ou expansão livre.

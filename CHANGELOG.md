@@ -8,6 +8,7 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 ### Adicionado
 
+- integração limitada W2 de `furniture.desk.wood-01` e `furniture.chair.wood-01`, com quatro sprites runtime por orientação, footprints declarados e compatibilidade de leitura para o objeto procedural legado;
 - W1 do reboot espacial: mundo Phaser procedural efêmero maior que a viewport, dois espaços neutros conectados, câmera com bounds e pan X/Y por toque/pointer, sem schema ou persistência espacial;
 
 - P2-C com catálogo declarativo dos cinco residentes, presença por estágio, rotinas compartilhadas por âncoras, comportamento por período, reduced motion sem loops, interação tipada, falas contextuais e política determinística de presença da criatura;
@@ -53,6 +54,8 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 ### Corrigido
 
+- W2 ganha fechamento acessível do cartão de objeto, toast temporário de confirmação e remoção visual da fixture procedural histórica, sem alterar compatibilidade de dados.
+- W2 descarta posições intermediárias de drag acima da cadência de frame e coalesce a persistência de giros rápidos no último estado desejado, mantendo preview imediato e rollback seguro.
 - W1 reorganiza os dois espaços em uma planta mais compacta, encurta a curva da passagem, reduz os bounds verticais e torna paredes/soleiras procedurais contínuas; a nova validação física no Moto G06 permanece pendente.
 - interação da sala Phaser para permitir rolagem por toque e rodinha sem perder cliques ou toques curtos.
 
