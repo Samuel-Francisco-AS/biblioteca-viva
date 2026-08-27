@@ -42,6 +42,7 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
   room,
   size,
   placementModeInstanceId,
+  constructionState,
 }) => {
   let game: Phaser.Game | undefined;
   let destroyed = false;
@@ -53,6 +54,9 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
     period,
   );
   scene.setObjectPlacementMode(placementModeInstanceId);
+  scene.setConstructionState(
+    constructionState ?? { active: false, tool: "explore" },
+  );
   try {
     game = new Phaser.Game(gameConfig(container, size, scene));
     game.canvas.style.touchAction = LIBRARY_CANVAS_TOUCH_ACTION;
@@ -90,6 +94,9 @@ export const createLibraryVisualGame: LibraryVisualGameFactory = ({
       },
       setObjectPlacementMode: (instanceId) => {
         if (!destroyed) scene.setObjectPlacementMode(instanceId);
+      },
+      setConstructionState: (state) => {
+        if (!destroyed) scene.setConstructionState(state);
       },
       setReducedMotion: (nextReducedMotion) => {
         if (!destroyed) scene.setReducedMotion(nextReducedMotion);

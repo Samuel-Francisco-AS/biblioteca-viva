@@ -8,6 +8,7 @@ import type {
   LibraryVisualSize,
   LibraryViewModel,
   RoomViewModel,
+  ConstructionSceneState,
 } from "./contracts";
 import type { LibraryVisualDiagnostics } from "./diagnostics";
 
@@ -23,6 +24,7 @@ interface LibraryVisualHostProps {
   readonly reducedMotion?: boolean;
   readonly room?: RoomViewModel;
   readonly placementModeInstanceId?: string;
+  readonly constructionState?: ConstructionSceneState;
 }
 
 const loadPhaserFactory = () => import("./phaser/createPhaserGame");
@@ -56,6 +58,7 @@ export function LibraryVisualHost({
     highContrast: false,
   },
   placementModeInstanceId,
+  constructionState = { active: false, tool: "explore" },
 }: LibraryVisualHostProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const generationRef = useRef(0);
@@ -66,6 +69,7 @@ export function LibraryVisualHost({
   const latestReducedMotionRef = useRef(reducedMotion);
   const latestRoomRef = useRef(room);
   const latestPlacementModeRef = useRef(placementModeInstanceId);
+  const latestConstructionRef = useRef(constructionState);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -75,16 +79,19 @@ export function LibraryVisualHost({
     latestReducedMotionRef.current = reducedMotion;
     latestRoomRef.current = room;
     latestPlacementModeRef.current = placementModeInstanceId;
+    latestConstructionRef.current = constructionState;
     gameRef.current?.setInteractionHandler(onInteraction);
     gameRef.current?.updateProjection(projection);
     gameRef.current?.setAtmosphere(period, !reducedMotion);
     gameRef.current?.setReducedMotion(reducedMotion);
     gameRef.current?.updateRoom(room);
     gameRef.current?.setObjectPlacementMode?.(placementModeInstanceId);
+    gameRef.current?.setConstructionState?.(constructionState);
   }, [
     onInteraction,
     period,
     placementModeInstanceId,
+    constructionState,
     projection,
     reducedMotion,
     room,
@@ -193,6 +200,7 @@ export function LibraryVisualHost({
           room: latestRoomRef.current,
           size: requestedCreationSize,
           placementModeInstanceId: latestPlacementModeRef.current,
+          constructionState: latestConstructionRef.current,
         });
       })
       .then((createdGame) => {
@@ -208,6 +216,7 @@ export function LibraryVisualHost({
         createdGame.setInteractionHandler(latestInteractionRef.current);
         createdGame.updateProjection(latestProjectionRef.current);
         createdGame.setObjectPlacementMode?.(latestPlacementModeRef.current);
+        createdGame.setConstructionState?.(latestConstructionRef.current);
         diagnostics?.transition("ready", generation, 1, true);
         diagnostics?.resources({
           canvasCount: container.querySelectorAll("canvas").length,

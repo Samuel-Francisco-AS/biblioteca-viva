@@ -10,7 +10,11 @@ import type {
   LibraryViewModel,
   ShelfOccupancy,
 } from "./contracts";
-import { DEFAULT_PLACED_OBJECT, type PlacedObject } from "../../application";
+import {
+  DEFAULT_PLACED_OBJECTS,
+  type PlacedObject,
+  type WorldStructureState,
+} from "../../application";
 
 export interface LibraryProjectionBook {
   readonly currentPage: number;
@@ -26,6 +30,7 @@ export interface LibraryProjectionInput {
   readonly milestones?: readonly ReachedMilestone[];
   readonly pendingDecorationUnlock?: { readonly eventId: string };
   readonly placedObjects?: readonly PlacedObject[];
+  readonly worldStructure?: WorldStructureState;
 }
 
 export const SHELF_OCCUPANCY_RANGES = {
@@ -127,8 +132,9 @@ export class LibraryProjectionService {
       totalBooks,
       unlockedDecorationIds,
       placedObjects: Object.freeze([
-        ...(input.placedObjects ?? [DEFAULT_PLACED_OBJECT]),
+        ...(input.placedObjects ?? DEFAULT_PLACED_OBJECTS),
       ]),
+      ...(input.worldStructure && { worldStructure: input.worldStructure }),
     };
   }
 }

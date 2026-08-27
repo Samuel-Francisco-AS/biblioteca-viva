@@ -9,6 +9,7 @@ import {
   type DialogueEvent,
   type DialoguePort,
   type LocalizedDialogue,
+  type PlacedObject,
 } from "./application";
 import type { BookEntry, ReachedMilestone } from "./domain";
 import type { LibraryInteraction } from "./features/library-visual/contracts";
@@ -425,8 +426,8 @@ describe("Página Biblioteca", () => {
     const user = userEvent.setup();
     const updatePlacedObjectTransform = vi.fn(() =>
       Promise.resolve({
-        definitionId: "object.reading-table",
-        instanceId: "placed-object.reading-table",
+        definitionId: "furniture.desk.wood-01",
+        instanceId: "placed-object.furniture.desk.wood-01",
         rotation: 90 as const,
         spaceId: "space-a" as const,
         x: 192,
@@ -451,18 +452,300 @@ describe("Página Biblioteca", () => {
     await screen.findByRole("img", { name: "Visualização da Biblioteca" });
     act(() =>
       visualHostMock.interaction?.({
-        instanceId: "placed-object.reading-table",
+        instanceId: "placed-object.furniture.desk.wood-01",
         type: "PlacedObjectSelected",
       }),
     );
 
     await user.click(screen.getByRole("button", { name: "Mover" }));
     expect(visualHostMock.placementModeInstanceId).toBe(
-      "placed-object.reading-table",
+      "placed-object.furniture.desk.wood-01",
     );
     await user.click(screen.getByRole("button", { name: "Girar" }));
     expect(updatePlacedObjectTransform).toHaveBeenCalledWith(
       expect.objectContaining({ rotation: 90 }),
     );
+  });
+
+  it("fecha as ações do objeto e encerra Mover sem alterar a seleção oculta", async () => {
+    const user = userEvent.setup();
+    renderLibrary(Promise.resolve([book]));
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: "placed-object.furniture.desk.wood-01",
+        type: "PlacedObjectSelected",
+      }),
+    );
+    expect(screen.getByLabelText("Objeto selecionado")).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Mover" }));
+    expect(visualHostMock.placementModeInstanceId).toBe(
+      "placed-object.furniture.desk.wood-01",
+    );
+    await user.click(
+      screen.getByRole("button", { name: "Fechar ações do objeto" }),
+    );
+    expect(visualHostMock.placementModeInstanceId).toBeUndefined();
+    expect(screen.getByRole("button", { name: "Mover" })).toBeDisabled();
+  });
+
+  it("fecha o cartão instantaneamente com redução de movimento", async () => {
+    const user = userEvent.setup();
+    render(
+      <MemoryRouter>
+        <LibraryPage
+          application={{
+            dialogue: dialogue(),
+            queries: {
+              listBookEntries: { execute: () => Promise.resolve([book]) },
+              listMilestones: { list: () => Promise.resolve([]) },
+            },
+          }}
+          reducedMotion
+        />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: "placed-object.furniture.desk.wood-01",
+        type: "PlacedObjectSelected",
+      }),
+    );
+    await user.click(
+      screen.getByRole("button", { name: "Fechar ações do objeto" }),
+    );
+    expect(
+      screen.queryByLabelText("Objeto selecionado"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("reutiliza o toast de confirmação e o remove depois do ciclo", async () => {
+    const user = userEvent.setup();
+    const application: LibraryPageApplication = {
+      commands: {
+        updatePlacedObjectTransform: {
+          execute: () =>
+            Promise.resolve({
+              definitionId: "furniture.desk.wood-01",
+              instanceId: "placed-object.furniture.desk.wood-01",
+              rotation: 90 as const,
+              spaceId: "space-a" as const,
+              x: 224,
+              y: 256,
+            }),
+        },
+      },
+      dialogue: dialogue(),
+      queries: {
+        listBookEntries: { execute: () => Promise.resolve([book]) },
+        listMilestones: { list: () => Promise.resolve([]) },
+      },
+    };
+    render(
+      <MemoryRouter>
+        <LibraryPage application={application} />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: "placed-object.furniture.desk.wood-01",
+        type: "PlacedObjectSelected",
+      }),
+    );
+    await user.click(screen.getByRole("button", { name: "Girar" }));
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(screen.getByRole("status")).toHaveTextContent("Orientação salva.");
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: "placed-object.furniture.desk.wood-01",
+        rotation: 90,
+        spaceId: "space-a",
+        type: "PlacedObjectTransformCommitted",
+        x: 224,
+        y: 256,
+      }),
+    );
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(screen.getByRole("status")).toHaveTextContent("Posição salva.");
+    await new Promise((resolve) => window.setTimeout(resolve, 2_700));
+    expect(screen.getByRole("status")).toHaveClass(
+      "library-placement-toast--exiting",
+    );
+    await new Promise((resolve) => window.setTimeout(resolve, 300));
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+
+  it("antecipa Girar e restaura a projeção se a persistência falhar", async () => {
+    const user = userEvent.setup();
+    let rejectSave: (reason?: unknown) => void = () => undefined;
+    const pending = new Promise<PlacedObject>((_resolve, reject) => {
+      rejectSave = reject;
+    });
+    const application: LibraryPageApplication = {
+      commands: { updatePlacedObjectTransform: { execute: () => pending } },
+      dialogue: dialogue(),
+      queries: {
+        listBookEntries: { execute: () => Promise.resolve([book]) },
+        listMilestones: { list: () => Promise.resolve([]) },
+      },
+    };
+    render(
+      <MemoryRouter>
+        <LibraryPage application={application} />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: "placed-object.furniture.desk.wood-01",
+        type: "PlacedObjectSelected",
+      }),
+    );
+    await user.click(screen.getByRole("button", { name: "Girar" }));
+    await waitFor(() =>
+      expect(
+        visualHostMock.projection?.placedObjects?.find(
+          (object) =>
+            object.instanceId === "placed-object.furniture.desk.wood-01",
+        )?.rotation,
+      ).toBe(90),
+    );
+    rejectSave(new ApplicationError("PERSISTENCE_FAILED", "Falha de teste"));
+    await waitFor(() =>
+      expect(
+        visualHostMock.projection?.placedObjects?.find(
+          (object) =>
+            object.instanceId === "placed-object.furniture.desk.wood-01",
+        )?.rotation,
+      ).toBe(0),
+    );
+  });
+
+  it("coalesce giros rápidos e não deixa uma falha antiga reverter a orientação final", async () => {
+    const user = userEvent.setup();
+    let rejectFirst: (reason?: unknown) => void = () => undefined;
+    let resolveLast: (value: PlacedObject) => void = () => undefined;
+    let saveCount = 0;
+    const updatePlacedObjectTransform = vi.fn(() => {
+      saveCount += 1;
+      return saveCount === 1
+        ? new Promise<PlacedObject>((_resolve, reject) => {
+            rejectFirst = reject;
+          })
+        : new Promise<PlacedObject>((resolve) => {
+            resolveLast = resolve;
+          });
+    });
+    const application: LibraryPageApplication = {
+      commands: {
+        updatePlacedObjectTransform: { execute: updatePlacedObjectTransform },
+      },
+      dialogue: dialogue(),
+      queries: {
+        listBookEntries: { execute: () => Promise.resolve([book]) },
+        listMilestones: { list: () => Promise.resolve([]) },
+      },
+    };
+    render(
+      <MemoryRouter>
+        <LibraryPage application={application} />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: "placed-object.furniture.desk.wood-01",
+        type: "PlacedObjectSelected",
+      }),
+    );
+    const rotate = screen.getByRole("button", { name: "Girar" });
+    await user.click(rotate);
+    await waitFor(() =>
+      expect(updatePlacedObjectTransform).toHaveBeenCalledTimes(1),
+    );
+    await user.click(rotate);
+    await user.click(rotate);
+    expect(updatePlacedObjectTransform).toHaveBeenCalledTimes(1);
+    expect(
+      visualHostMock.projection?.placedObjects?.find(
+        (object) =>
+          object.instanceId === "placed-object.furniture.desk.wood-01",
+      )?.rotation,
+    ).toBe(270);
+
+    rejectFirst(new ApplicationError("PERSISTENCE_FAILED", "Falha de teste"));
+    await waitFor(() =>
+      expect(updatePlacedObjectTransform).toHaveBeenCalledTimes(2),
+    );
+    expect(updatePlacedObjectTransform).toHaveBeenLastCalledWith(
+      expect.objectContaining({ rotation: 270 }),
+    );
+    expect(
+      visualHostMock.projection?.placedObjects?.find(
+        (object) =>
+          object.instanceId === "placed-object.furniture.desk.wood-01",
+      )?.rotation,
+    ).toBe(270);
+    resolveLast({
+      definitionId: "furniture.desk.wood-01",
+      instanceId: "placed-object.furniture.desk.wood-01",
+      rotation: 270,
+      spaceId: "space-a",
+      x: 192,
+      y: 224,
+    });
+  });
+
+  it("mantém a posição confirmada na projeção enquanto o commit está pendente", async () => {
+    let resolveSave: (value: PlacedObject) => void = () => undefined;
+    const pending = new Promise<PlacedObject>((resolve) => {
+      resolveSave = resolve;
+    });
+    const application: LibraryPageApplication = {
+      commands: { updatePlacedObjectTransform: { execute: () => pending } },
+      dialogue: dialogue(),
+      queries: {
+        listBookEntries: { execute: () => Promise.resolve([book]) },
+        listMilestones: { list: () => Promise.resolve([]) },
+      },
+    };
+    render(
+      <MemoryRouter>
+        <LibraryPage application={application} />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: "placed-object.furniture.desk.wood-01",
+        rotation: 0,
+        spaceId: "space-a",
+        type: "PlacedObjectTransformCommitted",
+        x: 224,
+        y: 256,
+      }),
+    );
+    await waitFor(() =>
+      expect(
+        visualHostMock.projection?.placedObjects?.find(
+          (object) =>
+            object.instanceId === "placed-object.furniture.desk.wood-01",
+        )?.x,
+      ).toBe(224),
+    );
+    resolveSave({
+      definitionId: "furniture.desk.wood-01",
+      instanceId: "placed-object.furniture.desk.wood-01",
+      rotation: 0,
+      spaceId: "space-a",
+      x: 224,
+      y: 256,
+    });
   });
 });

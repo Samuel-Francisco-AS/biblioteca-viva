@@ -56,6 +56,7 @@ export interface LibraryViewModel {
   readonly totalBooks: number;
   readonly unlockedDecorationIds: readonly DecorationId[];
   readonly placedObjects?: readonly import("../../application").PlacedObject[];
+  readonly worldStructure?: import("../../application").WorldStructureState;
 }
 
 export type LibrarySceneEvent =
@@ -92,7 +93,31 @@ export type LibraryInteraction =
       readonly type: "PlacedObjectTransformCommitted";
       readonly x: number;
       readonly y: number;
+    }
+  | { readonly instanceId: string; readonly type: "StructureSelected" }
+  | {
+      readonly anchor: { readonly x: number; readonly y: number };
+      readonly definitionId: import("../../application").StructureDefinitionId;
+      readonly type: "StructurePlacementCommitted";
+    }
+  | {
+      readonly anchor: { readonly x: number; readonly y: number };
+      readonly instanceId: string;
+      readonly type: "StructureMoveCommitted";
+    }
+  | {
+      readonly cells: readonly { readonly x: number; readonly y: number }[];
+      readonly mode: "paint-floor" | "remove-floor";
+      readonly type: "FloorCellsCommitted";
     };
+
+export interface ConstructionSceneState {
+  readonly active: boolean;
+  readonly movingInstanceId?: string;
+  readonly placingDefinitionId?: import("../../application").StructureDefinitionId;
+  readonly tool:
+    "explore" | "select" | "place-structure" | "paint-floor" | "remove-floor";
+}
 
 export interface LibraryVisualGame {
   destroy(this: void): void;
@@ -112,6 +137,7 @@ export interface LibraryVisualGame {
     onInteraction: ((interaction: LibraryInteraction) => void) | undefined,
   ): void;
   setObjectPlacementMode?(this: void, instanceId: string | undefined): void;
+  setConstructionState?(this: void, state: ConstructionSceneState): void;
   updateProjection(this: void, projection: LibraryViewModel): void;
 }
 
@@ -132,6 +158,7 @@ export interface CreateLibraryVisualGameOptions {
   readonly room: RoomViewModel;
   readonly size: LibraryVisualSize;
   readonly placementModeInstanceId?: string;
+  readonly constructionState?: ConstructionSceneState;
 }
 
 export type LibraryVisualGameFactory = (

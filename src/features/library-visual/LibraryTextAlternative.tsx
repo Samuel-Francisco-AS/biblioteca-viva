@@ -66,6 +66,14 @@ export function LibraryTextAlternative({
         <p>Nenhum livro atualizado para destacar.</p>
       )}
       <p>{summary.milestone}</p>
+      {viewModel.worldStructure && (
+        <p>
+          Há um cômodo inicial estrutural com{" "}
+          {viewModel.worldStructure.floorCells.length} células de piso e{" "}
+          {viewModel.worldStructure.placements.length} peças arquitetônicas
+          colocadas. O modo Construção ainda não está disponível.
+        </p>
+      )}
       <div className="library-text-alternative__actions">
         <button
           className="button button--secondary"

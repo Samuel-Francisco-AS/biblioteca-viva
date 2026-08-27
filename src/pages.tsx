@@ -14,7 +14,13 @@ import type {
   LocalizedDialogue,
   StatisticsSnapshot,
 } from "./application";
-import { DEFAULT_PLACED_OBJECT, type PlacedObject } from "./application";
+import {
+  DEFAULT_PLACED_OBJECTS,
+  nextObjectRotation,
+  type PlacedObject,
+  type StructuralInventory,
+  type WorldStructureState,
+} from "./application";
 import { presentApplicationError } from "./features/entry-editor/errorMessages";
 import {
   LibraryBottomSheet,
@@ -25,6 +31,10 @@ import { LibraryVisualDiagnosticsPanel } from "./features/library-visual/Library
 import { LibraryVisualHost } from "./features/library-visual/LibraryVisualHost";
 import { LibraryProjectionService } from "./features/library-visual/LibraryProjectionService";
 import { LibraryTextAlternative } from "./features/library-visual/LibraryTextAlternative";
+import {
+  ConstructionControls,
+  type ConstructionTool,
+} from "./features/library-visual/ConstructionControls";
 import type {
   LibraryInteraction,
   LibraryViewModel,
@@ -50,12 +60,50 @@ export interface LibraryPageApplication {
     readonly listPlacedObjects?: {
       execute(): Promise<readonly PlacedObject[]>;
     };
+    readonly getWorldStructure?: {
+      execute(): Promise<WorldStructureState | undefined>;
+    };
+    readonly getStructuralInventory?: {
+      execute(): Promise<StructuralInventory>;
+    };
   };
   readonly commands?: {
     readonly updatePlacedObjectTransform: {
       execute(input: unknown): Promise<PlacedObject>;
     };
+    readonly placeStructure?: {
+      execute(input: unknown): Promise<WorldStructureState>;
+    };
+    readonly moveStructure?: {
+      execute(input: unknown): Promise<WorldStructureState>;
+    };
+    readonly rotateStructure?: {
+      execute(input: unknown): Promise<WorldStructureState>;
+    };
+    readonly storeStructure?: {
+      execute(input: unknown): Promise<WorldStructureState>;
+    };
+    readonly addFloorCells?: {
+      execute(input: unknown): Promise<{
+        state: WorldStructureState;
+        placed: number;
+        ignored: number;
+      }>;
+    };
+    readonly removeFloorCells?: {
+      execute(input: unknown): Promise<{
+        state: WorldStructureState;
+        removed: number;
+        ignored: number;
+      }>;
+    };
   };
+}
+
+interface PendingPlacedObjectTransform {
+  readonly next: PlacedObject;
+  readonly previous: PlacedObject;
+  readonly successNotice: string;
 }
 
 type LibraryPageState =
@@ -71,6 +119,7 @@ type LibraryPageState =
         readonly activeSessionType?: string;
       };
       readonly placedObjects: readonly PlacedObject[];
+      readonly structuralInventory?: StructuralInventory;
     };
 
 type AtmosphereOverride = LibraryPeriod | "automatic";
@@ -94,6 +143,7 @@ function projectionInput(
   milestones: readonly ReachedMilestone[],
   pendingDecorationUnlock?: { readonly eventId: string },
   placedObjects?: readonly PlacedObject[],
+  worldStructure?: WorldStructureState,
 ) {
   return {
     books: books.map(
@@ -109,6 +159,7 @@ function projectionInput(
     milestones,
     ...(pendingDecorationUnlock && { pendingDecorationUnlock }),
     ...(placedObjects && { placedObjects }),
+    ...(worldStructure && { worldStructure }),
   };
 }
 
@@ -134,6 +185,17 @@ export function LibraryPage({
   const projectionService = useMemo(() => new LibraryProjectionService(), []);
   const automaticPeriod = useAutomaticLibraryPeriod();
   const dialogueRequest = useRef(0);
+  const placedObjectTransformQueues = useRef(
+    new Map<
+      string,
+      {
+        inFlight: boolean;
+        pending?: PendingPlacedObjectTransform;
+      }
+    >(),
+  );
+  const objectActionsCloseTimer = useRef<number | undefined>(undefined);
+  const placementNoticeTimer = useRef<number | undefined>(undefined);
   const summaryButtonRef = useRef<HTMLButtonElement>(null);
   const shelfButtonRef = useRef<HTMLButtonElement>(null);
   const librarianButtonRef = useRef<HTMLButtonElement>(null);
@@ -158,8 +220,17 @@ export function LibraryPage({
     setCanvasFailed(!available);
   }, []);
   const [selectedObjectId, setSelectedObjectId] = useState<string>();
+  const [objectActionsObjectId, setObjectActionsObjectId] = useState<string>();
+  const [objectActionsClosing, setObjectActionsClosing] = useState(false);
   const [movingObjectId, setMovingObjectId] = useState<string>();
   const [placementNotice, setPlacementNotice] = useState<string | null>(null);
+  const [placementNoticeExiting, setPlacementNoticeExiting] = useState(false);
+  const [constructionMode, setConstructionMode] = useState(false);
+  const [constructionTool, setConstructionTool] =
+    useState<ConstructionTool>("explore");
+  const [placingStructureDefinitionId, setPlacingStructureDefinitionId] =
+    useState<import("./application").StructureDefinitionId>();
+  const [movingStructureId, setMovingStructureId] = useState<string>();
   const [state, setState] = useState<LibraryPageState>(() =>
     application
       ? { kind: "loading" }
@@ -168,6 +239,136 @@ export function LibraryPage({
           message: "Não foi possível iniciar o armazenamento local.",
         },
   );
+
+  function applyPlacedObjectPreview(next: PlacedObject): void {
+    setState((current) => {
+      if (current.kind !== "ready") return current;
+      const placedObjects = current.placedObjects.map((object) =>
+        object.instanceId === next.instanceId ? next : object,
+      );
+      return {
+        ...current,
+        placedObjects,
+        viewModel: { ...current.viewModel, placedObjects },
+      };
+    });
+  }
+
+  function showPlacementNotice(message: string | null): void {
+    setPlacementNoticeExiting(false);
+    setPlacementNotice(message);
+  }
+
+  function applyStructureState(next: WorldStructureState): void {
+    setState((current) =>
+      current.kind === "ready"
+        ? {
+            ...current,
+            viewModel: { ...current.viewModel, worldStructure: next },
+          }
+        : current,
+    );
+    void application?.queries.getStructuralInventory?.execute().then(
+      (structuralInventory) =>
+        setState((current) =>
+          current.kind === "ready"
+            ? { ...current, structuralInventory }
+            : current,
+        ),
+      () => undefined,
+    );
+  }
+
+  function runStructure(
+    operation: () => Promise<
+      WorldStructureState | { readonly state: WorldStructureState }
+    >,
+    success: string,
+  ): void {
+    void operation().then(
+      (result) => {
+        applyStructureState("state" in result ? result.state : result);
+        showPlacementNotice(success);
+      },
+      (failure: unknown) =>
+        showPlacementNotice(presentApplicationError(failure).message),
+    );
+  }
+
+  function queuePlacedObjectTransform(
+    next: PlacedObject,
+    previous: PlacedObject,
+    successNotice: string,
+  ): void {
+    const command = application?.commands?.updatePlacedObjectTransform;
+    if (!command) return;
+    const queues = placedObjectTransformQueues.current;
+    const queue = queues.get(next.instanceId) ?? { inFlight: false };
+    queue.pending = { next, previous, successNotice };
+    queues.set(next.instanceId, queue);
+    if (queue.inFlight) return;
+    queue.inFlight = true;
+    void (async () => {
+      while (queue.pending) {
+        const pending = queue.pending;
+        queue.pending = undefined;
+        try {
+          await command.execute({
+            instanceId: pending.next.instanceId,
+            rotation: pending.next.rotation,
+            spaceId: pending.next.spaceId,
+            x: pending.next.x,
+            y: pending.next.y,
+          });
+          if (!queue.pending) showPlacementNotice(pending.successNotice);
+        } catch (failure: unknown) {
+          if (!queue.pending) {
+            applyPlacedObjectPreview(pending.previous);
+            showPlacementNotice(presentApplicationError(failure).message);
+          }
+        }
+      }
+      queue.inFlight = false;
+      queues.delete(next.instanceId);
+    })();
+  }
+
+  function closeObjectActions(): void {
+    setMovingObjectId(undefined);
+    setSelectedObjectId(undefined);
+    if (!objectActionsObjectId || reducedMotion) {
+      setObjectActionsObjectId(undefined);
+      setObjectActionsClosing(false);
+      return;
+    }
+    setObjectActionsClosing(true);
+    window.clearTimeout(objectActionsCloseTimer.current);
+    objectActionsCloseTimer.current = window.setTimeout(() => {
+      setObjectActionsObjectId(undefined);
+      setObjectActionsClosing(false);
+    }, 200);
+  }
+
+  useEffect(
+    () => () => window.clearTimeout(objectActionsCloseTimer.current),
+    [],
+  );
+
+  useEffect(() => {
+    if (!placementNotice) return;
+    window.clearTimeout(placementNoticeTimer.current);
+    placementNoticeTimer.current = window.setTimeout(() => {
+      setPlacementNoticeExiting(true);
+      placementNoticeTimer.current = window.setTimeout(
+        () => {
+          setPlacementNotice(null);
+          setPlacementNoticeExiting(false);
+        },
+        reducedMotion ? 0 : 300,
+      );
+    }, 2_500);
+    return () => window.clearTimeout(placementNoticeTimer.current);
+  }, [placementNotice, reducedMotion]);
 
   useEffect(() => {
     if (!application) return;
@@ -189,9 +390,21 @@ export function LibraryPage({
           },
         ] as const),
       application.queries.listPlacedObjects?.execute() ??
-        Promise.resolve([DEFAULT_PLACED_OBJECT]),
+        Promise.resolve(DEFAULT_PLACED_OBJECTS),
+      application.queries.getWorldStructure?.execute() ??
+        Promise.resolve(undefined),
+      application.queries.getStructuralInventory?.execute() ??
+        Promise.resolve(undefined),
     ]).then(
-      ([books, milestones, statistics, rooms, placedObjects]) => {
+      ([
+        books,
+        milestones,
+        statistics,
+        rooms,
+        placedObjects,
+        worldStructure,
+        structuralInventory,
+      ]) => {
         if (!active) return;
         diagnostics?.resources({
           libraryPreparationDurationMs: Math.max(
@@ -211,10 +424,12 @@ export function LibraryPage({
               milestones,
               pendingDecorationUnlock,
               placedObjects,
+              worldStructure,
             ),
           ),
           rooms,
           placedObjects,
+          ...(structuralInventory && { structuralInventory }),
           ...(statistics && {
             productSummary: {
               totalEntries: statistics.totalEntries,
@@ -296,26 +511,92 @@ export function LibraryPage({
   }
 
   function handleInteraction(interaction: LibraryInteraction) {
+    if (interaction.type === "StructurePlacementCommitted") {
+      if (state.kind !== "ready" || !application?.commands?.placeStructure)
+        return;
+      runStructure(
+        () =>
+          application.commands!.placeStructure!.execute({
+            anchor: interaction.anchor,
+            definitionId: interaction.definitionId,
+            expectedRevision: state.viewModel.worldStructure?.revision,
+          }),
+        "Peça colocada.",
+      );
+      setPlacingStructureDefinitionId(undefined);
+      setConstructionTool("select");
+      return;
+    }
+    if (interaction.type === "StructureMoveCommitted") {
+      if (state.kind !== "ready" || !application?.commands?.moveStructure)
+        return;
+      runStructure(
+        () =>
+          application.commands!.moveStructure!.execute({
+            anchor: interaction.anchor,
+            expectedRevision: state.viewModel.worldStructure?.revision,
+            instanceId: interaction.instanceId,
+          }),
+        "Peça movida.",
+      );
+      setMovingStructureId(undefined);
+      setConstructionTool("select");
+      return;
+    }
+    if (interaction.type === "FloorCellsCommitted") {
+      if (state.kind !== "ready") return;
+      const command =
+        interaction.mode === "paint-floor"
+          ? application?.commands?.addFloorCells
+          : application?.commands?.removeFloorCells;
+      if (!command) return;
+      runStructure(
+        () =>
+          command.execute({
+            cells: interaction.cells,
+            expectedRevision: state.viewModel.worldStructure?.revision,
+          }),
+        interaction.mode === "paint-floor"
+          ? "Piso atualizado."
+          : "Piso removido.",
+      );
+      return;
+    }
+    if (interaction.type === "StructureSelected") return;
+    if (
+      constructionMode &&
+      (interaction.type === "PlacedObjectSelected" ||
+        interaction.type === "PlacedObjectTransformCommitted")
+    )
+      return;
     if (interaction.type === "PlacedObjectSelected") {
+      window.clearTimeout(objectActionsCloseTimer.current);
       setSelectedObjectId(interaction.instanceId);
+      setObjectActionsObjectId(interaction.instanceId);
+      setObjectActionsClosing(false);
       setMovingObjectId(undefined);
-      setPlacementNotice(null);
+      showPlacementNotice(null);
       return;
     }
     if (interaction.type === "PlacedObjectTransformCommitted") {
-      void application?.commands?.updatePlacedObjectTransform
-        .execute(interaction)
-        .then(
-          () => {
-            setMovingObjectId(undefined);
-            setPlacementNotice("Posição salva.");
-            setAttempt((current) => current + 1);
-          },
-          (failure: unknown) => {
-            setMovingObjectId(undefined);
-            setPlacementNotice(presentApplicationError(failure).message);
-          },
-        );
+      const previous =
+        state.kind === "ready"
+          ? state.placedObjects.find(
+              (object) => object.instanceId === interaction.instanceId,
+            )
+          : undefined;
+      const next: PlacedObject = {
+        definitionId: previous?.definitionId ?? "object.reading-table",
+        instanceId: interaction.instanceId,
+        rotation: interaction.rotation,
+        spaceId: interaction.spaceId,
+        x: interaction.x,
+        y: interaction.y,
+      };
+      applyPlacedObjectPreview(next);
+      setMovingObjectId(undefined);
+      if (previous)
+        queuePlacedObjectTransform(next, previous, "Posição salva.");
       return;
     }
     if (interaction.type === "RoomRequested") {
@@ -432,6 +713,14 @@ export function LibraryPage({
             period={period}
             projection={state.viewModel}
             placementModeInstanceId={movingObjectId}
+            constructionState={{
+              active: constructionMode,
+              ...(movingStructureId && { movingInstanceId: movingStructureId }),
+              ...(placingStructureDefinitionId && {
+                placingDefinitionId: placingStructureDefinitionId,
+              }),
+              tool: constructionTool,
+            }}
             reducedMotion={reducedMotion}
             room={{
               roomId: activeRoomId,
@@ -447,14 +736,121 @@ export function LibraryPage({
               highContrast,
             }}
           />
-          {selectedObjectId && (
+          {!constructionMode && state.viewModel.worldStructure && (
+            <button
+              className="button button--primary library-construction-trigger"
+              onClick={() => {
+                setConstructionMode(true);
+                setConstructionTool("explore");
+                setPlacingStructureDefinitionId(undefined);
+                setMovingStructureId(undefined);
+                closeObjectActions();
+                showPlacementNotice("Modo Construção iniciado.");
+              }}
+              type="button"
+            >
+              Construir
+            </button>
+          )}
+          {constructionMode &&
+            state.viewModel.worldStructure &&
+            state.structuralInventory &&
+            application?.commands?.placeStructure &&
+            application.commands.moveStructure &&
+            application.commands.rotateStructure &&
+            application.commands.storeStructure &&
+            application.commands.addFloorCells &&
+            application.commands.removeFloorCells && (
+              <ConstructionControls
+                inventory={state.structuralInventory}
+                onAddFloor={(cell) =>
+                  runStructure(
+                    () =>
+                      application.commands!.addFloorCells!.execute({
+                        cells: [cell],
+                        expectedRevision:
+                          state.viewModel.worldStructure!.revision,
+                      }),
+                    "Piso atualizado.",
+                  )
+                }
+                onExit={() => {
+                  setConstructionMode(false);
+                  setConstructionTool("explore");
+                  setPlacingStructureDefinitionId(undefined);
+                  setMovingStructureId(undefined);
+                  showPlacementNotice("Modo Construção encerrado.");
+                }}
+                onMove={(placement) => {
+                  setMovingStructureId(placement.instanceId);
+                  setPlacingStructureDefinitionId(undefined);
+                  setConstructionTool("place-structure");
+                }}
+                onPlace={(definitionId) => {
+                  setPlacingStructureDefinitionId(
+                    definitionId as import("./application").StructureDefinitionId,
+                  );
+                  setMovingStructureId(undefined);
+                  setConstructionTool("place-structure");
+                }}
+                onRemoveFloor={(cell) =>
+                  runStructure(
+                    () =>
+                      application.commands!.removeFloorCells!.execute({
+                        cells: [cell],
+                        expectedRevision:
+                          state.viewModel.worldStructure!.revision,
+                      }),
+                    "Piso atualizado.",
+                  )
+                }
+                onRotate={(placement) =>
+                  runStructure(
+                    () =>
+                      application.commands!.rotateStructure!.execute({
+                        expectedRevision:
+                          state.viewModel.worldStructure!.revision,
+                        instanceId: placement.instanceId,
+                      }),
+                    "Orientação atualizada.",
+                  )
+                }
+                onStore={(placement) =>
+                  runStructure(
+                    () =>
+                      application.commands!.storeStructure!.execute({
+                        expectedRevision:
+                          state.viewModel.worldStructure!.revision,
+                        instanceId: placement.instanceId,
+                      }),
+                    "Peça guardada no inventário.",
+                  )
+                }
+                onToolChange={setConstructionTool}
+                structure={state.viewModel.worldStructure}
+                tool={constructionTool}
+              />
+            )}
+          {objectActionsObjectId && (
             <section
-              className="library-object-actions"
+              className={`library-object-actions${
+                objectActionsClosing ? " library-object-actions--exiting" : ""
+              }`}
               aria-label="Objeto selecionado"
             >
-              <p>Objeto de teste selecionado</p>
+              <p>Objeto selecionado</p>
+              <button
+                aria-label="Fechar ações do objeto"
+                className="library-object-actions__close"
+                disabled={objectActionsClosing}
+                onClick={closeObjectActions}
+                type="button"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
               <button
                 className="button button--primary"
+                disabled={!selectedObjectId || objectActionsClosing}
                 onClick={() => setMovingObjectId(selectedObjectId)}
                 type="button"
               >
@@ -462,6 +858,7 @@ export function LibraryPage({
               </button>
               <button
                 className="button button--secondary"
+                disabled={!selectedObjectId || objectActionsClosing}
                 onClick={() => {
                   const object =
                     state.placedObjects.find(
@@ -471,24 +868,10 @@ export function LibraryPage({
                       (candidate) => candidate.instanceId === selectedObjectId,
                     );
                   if (!object) return;
-                  const rotations = [0, 90, 180, 270] as const;
-                  const rotation =
-                    rotations[
-                      (rotations.indexOf(object.rotation) + 1) %
-                        rotations.length
-                    ];
-                  void application?.commands?.updatePlacedObjectTransform
-                    .execute({ ...object, rotation })
-                    .then(
-                      () => {
-                        setPlacementNotice("Orientação salva.");
-                        setAttempt((current) => current + 1);
-                      },
-                      (failure: unknown) =>
-                        setPlacementNotice(
-                          presentApplicationError(failure).message,
-                        ),
-                    );
+                  const rotation = nextObjectRotation(object.rotation);
+                  const next = { ...object, rotation };
+                  applyPlacedObjectPreview(next);
+                  queuePlacedObjectTransform(next, object, "Orientação salva.");
                 }}
                 type="button"
               >
@@ -503,7 +886,15 @@ export function LibraryPage({
             </section>
           )}
           {placementNotice && (
-            <p className="library-room-notice" role="status">
+            <p
+              aria-live="polite"
+              className={`library-room-notice library-placement-toast${
+                placementNoticeExiting
+                  ? " library-placement-toast--exiting"
+                  : ""
+              }`}
+              role="status"
+            >
               {placementNotice}
             </p>
           )}

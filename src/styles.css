@@ -962,11 +962,40 @@ blockquote {
   border-radius: var(--radius-medium);
   background: rgb(10 19 18 / 92%);
   box-shadow: var(--shadow-medium);
+  animation: object-actions-enter 200ms ease-out;
 }
 
 .library-object-actions p {
   width: 100%;
   margin: 0;
+}
+
+.library-object-actions--exiting {
+  pointer-events: none;
+  animation: object-actions-exit 200ms ease-in forwards;
+}
+
+.library-object-actions__close {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  display: grid;
+  width: var(--touch-target);
+  min-height: var(--touch-target);
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  place-items: center;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.library-object-actions__close:hover,
+.library-object-actions__close:focus-visible {
+  background: color-mix(in srgb, var(--color-surface-raised) 72%, transparent);
+  color: var(--color-text);
 }
 
 .library-room-explorer {
@@ -1029,6 +1058,14 @@ blockquote {
   background: rgb(10 19 18 / 88%);
   color: var(--color-text-secondary);
   text-align: center;
+}
+
+.library-placement-toast {
+  animation: placement-toast-enter 200ms ease-out;
+}
+
+.library-placement-toast--exiting {
+  animation: placement-toast-exit 300ms ease-in forwards;
 }
 
 .library-summary-trigger {
@@ -1269,6 +1306,48 @@ blockquote {
   }
 }
 
+@keyframes object-actions-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.25rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes object-actions-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes placement-toast-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes placement-toast-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
 @media (min-width: 36rem) {
   .book-form__numbers,
   .book-grid,
@@ -1379,4 +1458,63 @@ blockquote {
 }
 .timeline p {
   margin-block: 0.25rem 0;
+}
+
+.library-construction-trigger,
+.construction-controls {
+  bottom: max(0.75rem, env(safe-area-inset-bottom));
+  left: max(0.75rem, env(safe-area-inset-left));
+  position: absolute;
+  z-index: 8;
+}
+
+.construction-controls {
+  display: grid;
+  gap: 0.5rem;
+  max-width: min(20rem, calc(100vw - 1.5rem));
+}
+
+.construction-controls__context,
+.construction-sheet,
+.construction-selection,
+.construction-confirm,
+.construction-alternative {
+  background: var(--surface, #231f2b);
+  border: 1px solid var(--border, #51495e);
+  border-radius: 0.75rem;
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 45%);
+  margin: 0;
+  padding: 0.75rem;
+}
+
+.construction-toolbar,
+.construction-item,
+.construction-selection,
+.construction-confirm,
+.construction-alternative {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.construction-sheet {
+  max-height: min(65dvh, 31rem);
+  overflow: auto;
+}
+
+.construction-item {
+  border-top: 1px solid var(--border, #51495e);
+  justify-content: space-between;
+  padding-block: 0.5rem;
+}
+
+.construction-item span:first-child {
+  flex: 1 1 11rem;
+}
+
+@media (max-width: 360px) {
+  .construction-toolbar .button {
+    flex: 1 1 calc(50% - 0.5rem);
+  }
 }

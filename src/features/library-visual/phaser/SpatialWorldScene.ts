@@ -2,6 +2,7 @@ import Phaser from "phaser";
 
 import type {
   LibraryInteraction,
+  ConstructionSceneState,
   LibraryVisualPeriod,
   LibraryVisualRuntimeSnapshot,
   LibraryViewModel,
@@ -10,6 +11,7 @@ import type {
 import {
   CELL_SIZE,
   CameraPanPolicy,
+  LatestValue,
   clampCameraScroll,
   initialCameraScroll,
   cameraBoundsFor,
@@ -24,16 +26,32 @@ import {
 } from "./woodFloorMaterial";
 import {
   EXTERIOR_GROUND_FILTERING,
-  EXTERIOR_GROUND_CROP_SIZE,
   EXTERIOR_GROUND_TEXTURES,
   EXTERIOR_GROUND_WORLD_SIZE,
   exteriorGroundTiles,
 } from "./exteriorGround";
 import {
-  DEFAULT_PLACED_OBJECT,
+  structurePieceDepth,
+  structureRenderPlan,
+  type StructureRenderPiece,
+} from "./structureRenderPlan";
+import { WALL_ASSETS } from "./wallAssets";
+import {
+  DEFAULT_PLACED_OBJECTS,
+  objectDefinition,
+  orientationForRotation,
   placementIsValid,
   type PlacedObject,
+  type StructurePlacement,
+  structureDefinition,
 } from "../../../application";
+import { worldBounds } from "../../../application";
+
+interface RenderedObject {
+  readonly graphics?: Phaser.GameObjects.Graphics;
+  readonly sprite?: Phaser.GameObjects.Image;
+  readonly zone: Phaser.GameObjects.Zone;
+}
 
 /** W1 procedural world: visual/transient only, with no persistent spatial data. */
 export class SpatialWorldScene extends Phaser.Scene {
@@ -42,12 +60,29 @@ export class SpatialWorldScene extends Phaser.Scene {
   private floorMasks: Phaser.GameObjects.Graphics[] = [];
   private floorTiles: Phaser.GameObjects.Image[] = [];
   private exteriorTiles: Phaser.GameObjects.Image[] = [];
+  private wallFallbacks: Phaser.GameObjects.Graphics[] = [];
+  private wallSprites: Phaser.GameObjects.Image[] = [];
   private objectZones: Phaser.GameObjects.Zone[] = [];
   private objectGraphics: Phaser.GameObjects.Graphics[] = [];
+  private objectSprites: Phaser.GameObjects.Image[] = [];
+  private structureZones: Phaser.GameObjects.Zone[] = [];
+  private constructionPreview?: Phaser.GameObjects.Graphics;
+  private construction: ConstructionSceneState = {
+    active: false,
+    tool: "explore",
+  };
+  private constructionPointerId?: number;
+  private floorGesture?: {
+    readonly pointerId: number;
+    readonly cells: Map<string, { readonly x: number; readonly y: number }>;
+  };
+  private renderedObjects = new Map<string, RenderedObject>();
   private projection: LibraryViewModel;
   private interactionHandler?: (interaction: LibraryInteraction) => void;
   private placementModeInstanceId?: string;
+  private placementPreview?: PlacedObject;
   private drag?: { readonly pointerId: number; object: PlacedObject };
+  private readonly pendingDragPointer = new LatestValue<Phaser.Input.Pointer>();
   private readonly pan = new CameraPanPolicy();
   private rendered = false;
   private readonly world = spatialWorldLayout();
@@ -72,6 +107,17 @@ export class SpatialWorldScene extends Phaser.Scene {
     }
     for (const [variant, path] of Object.entries(EXTERIOR_GROUND_TEXTURES))
       this.load.image(`architecture.floor.exterior-ground-01.${variant}`, path);
+    for (const asset of WALL_ASSETS)
+      this.load.image(asset.id, asset.runtimePath);
+    for (const object of DEFAULT_PLACED_OBJECTS) {
+      const definition = objectDefinition(object.definitionId);
+      if (!definition?.visual) continue;
+      for (const [orientation, path] of Object.entries(
+        definition.visual.sources,
+      )) {
+        this.load.image(`${definition.id}.${orientation}`, path);
+      }
+    }
   }
 
   create(): void {
@@ -89,6 +135,7 @@ export class SpatialWorldScene extends Phaser.Scene {
 
   pauseMotion(): void {
     this.pan.cancel();
+    this.pendingDragPointer.clear();
   }
 
   resumeMotion(): void {}
@@ -115,6 +162,15 @@ export class SpatialWorldScene extends Phaser.Scene {
   setObjectPlacementMode(instanceId: string | undefined): void {
     this.placementModeInstanceId = instanceId;
     this.drag = undefined;
+    this.pendingDragPointer.clear();
+  }
+
+  setConstructionState(state: ConstructionSceneState): void {
+    this.construction = state;
+    this.constructionPointerId = undefined;
+    this.floorGesture = undefined;
+    this.clearConstructionPreview();
+    if (this.rendered) this.renderObjects();
   }
 
   setReducedMotion(_reducedMotion: boolean): void {
@@ -123,7 +179,22 @@ export class SpatialWorldScene extends Phaser.Scene {
 
   updateProjection(projection: LibraryViewModel): void {
     this.projection = projection;
-    if (this.rendered) this.renderObjects();
+    const preview = this.placementPreview;
+    if (preview) {
+      const projected = projection.placedObjects?.find(
+        (object) => object.instanceId === preview.instanceId,
+      );
+      if (projected) this.placementPreview = undefined;
+    }
+    if (this.rendered) this.renderWorld(this.scale.gameSize);
+  }
+
+  update(): void {
+    const pointer = this.pendingDragPointer.take();
+    const drag = this.drag;
+    if (!pointer || !drag || pointer.id !== drag.pointerId) return;
+    drag.object = this.objectAtPointer(drag.object, pointer);
+    this.updateDragPreview(drag.object);
   }
 
   updateRoom(_room: RoomViewModel): void {
@@ -131,6 +202,48 @@ export class SpatialWorldScene extends Phaser.Scene {
   }
 
   private readonly beginPan = (pointer: Phaser.Input.Pointer): void => {
+    if (this.construction.active) {
+      if (this.construction.tool === "explore") {
+        const camera = this.cameras.main;
+        this.pan.begin(pointer.id, pointer.x, pointer.y, {
+          x: camera.scrollX,
+          y: camera.scrollY,
+        });
+        return;
+      }
+      if (this.construction.tool === "select") {
+        const selected = this.structureAt(pointer.worldX, pointer.worldY);
+        if (selected)
+          this.interactionHandler?.({
+            type: "StructureSelected",
+            instanceId: selected.instanceId,
+          });
+        else
+          this.interactionHandler?.({
+            type: "StructureSelected",
+            instanceId: "",
+          });
+        return;
+      }
+      if (
+        this.construction.tool === "paint-floor" ||
+        this.construction.tool === "remove-floor"
+      ) {
+        this.floorGesture = { pointerId: pointer.id, cells: new Map() };
+        this.collectFloorCell(pointer);
+        return;
+      }
+      if (
+        this.construction.tool === "place-structure" &&
+        (this.construction.placingDefinitionId ||
+          this.construction.movingInstanceId)
+      ) {
+        this.constructionPointerId = pointer.id;
+        this.updateConstructionPreview(pointer);
+        return;
+      }
+      return;
+    }
     const selected = this.objectAt(pointer.worldX, pointer.worldY);
     if (this.placementModeInstanceId) {
       const object = this.objects().find(
@@ -154,9 +267,16 @@ export class SpatialWorldScene extends Phaser.Scene {
   };
 
   private readonly movePan = (pointer: Phaser.Input.Pointer): void => {
+    if (this.floorGesture?.pointerId === pointer.id) {
+      this.collectFloorCell(pointer);
+      return;
+    }
+    if (this.constructionPointerId === pointer.id) {
+      this.updateConstructionPreview(pointer);
+      return;
+    }
     if (this.drag?.pointerId === pointer.id) {
-      this.drag.object = this.objectAtPointer(this.drag.object, pointer);
-      this.renderObjects();
+      this.pendingDragPointer.push(pointer);
       return;
     }
     const target = this.pan.move(pointer.id, pointer.x, pointer.y);
@@ -167,16 +287,50 @@ export class SpatialWorldScene extends Phaser.Scene {
   };
 
   private readonly endPan = (pointer: Phaser.Input.Pointer): void => {
+    if (this.floorGesture?.pointerId === pointer.id) {
+      const gesture = this.floorGesture;
+      this.floorGesture = undefined;
+      this.interactionHandler?.({
+        cells: [...gesture.cells.values()],
+        mode: this.construction.tool as "paint-floor" | "remove-floor",
+        type: "FloorCellsCommitted",
+      });
+      return;
+    }
+    if (this.constructionPointerId === pointer.id) {
+      this.constructionPointerId = undefined;
+      const anchor = this.snappedAnchor(pointer);
+      const moving = this.construction.movingInstanceId;
+      const definitionId = this.construction.placingDefinitionId;
+      this.clearConstructionPreview();
+      if (moving)
+        this.interactionHandler?.({
+          anchor,
+          instanceId: moving,
+          type: "StructureMoveCommitted",
+        });
+      else if (definitionId)
+        this.interactionHandler?.({
+          anchor,
+          definitionId,
+          type: "StructurePlacementCommitted",
+        });
+      return;
+    }
     if (this.drag?.pointerId === pointer.id) {
+      this.pendingDragPointer.clear();
+      this.drag.object = this.objectAtPointer(this.drag.object, pointer);
       const object = this.drag.object;
       this.drag = undefined;
       if (placementIsValid(object, this.world.placementSpaces)) {
+        this.placementPreview = object;
         this.interactionHandler?.({
           type: "PlacedObjectTransformCommitted",
           ...object,
         });
+      } else {
+        this.renderObjects();
       }
-      this.renderObjects();
       return;
     }
     this.pan.end(pointer.id);
@@ -184,12 +338,29 @@ export class SpatialWorldScene extends Phaser.Scene {
 
   private readonly cancelPan = (): void => {
     this.pan.cancel();
+    this.pendingDragPointer.clear();
+    this.constructionPointerId = undefined;
+    this.floorGesture = undefined;
+    this.clearConstructionPreview();
+    if (!this.drag) return;
+    this.drag = undefined;
+    if (this.rendered) this.renderObjects();
   };
 
   private readonly renderWorld = (size: Phaser.Structs.Size): void => {
     const camera = this.cameras.main;
     const previousScroll = { x: camera.scrollX, y: camera.scrollY };
-    this.cameraBounds = cameraBoundsFor(this.world.bounds, size);
+    const structure = this.projection.worldStructure;
+    const floorBounds = structure ? worldBounds(structure) : undefined;
+    const dynamicBounds = floorBounds
+      ? {
+          x: floorBounds.x - CELL_SIZE * 5,
+          y: floorBounds.y - CELL_SIZE * 5,
+          width: floorBounds.width + CELL_SIZE * 10,
+          height: floorBounds.height + CELL_SIZE * 10,
+        }
+      : this.world.bounds;
+    this.cameraBounds = cameraBoundsFor(dynamicBounds, size);
     camera.setBounds(
       this.cameraBounds.x,
       this.cameraBounds.y,
@@ -218,9 +389,9 @@ export class SpatialWorldScene extends Phaser.Scene {
     this.clearExteriorTiles();
     this.renderExteriorGround();
     this.clearFloorTiles();
-    for (const floorArea of this.world.floorAreas) this.renderFloor(floorArea);
-    this.renderModularWalls(architecture);
-    this.renderScaleAnchors(architecture);
+    this.renderFloorCells(structure?.floorCells);
+    this.clearWallPieces();
+    this.renderWallPlan();
     this.renderObjects();
   };
 
@@ -239,12 +410,6 @@ export class SpatialWorldScene extends Phaser.Scene {
           .image(tile.x, tile.y, key)
           .setOrigin(0)
           .setDepth(0)
-          .setCrop(
-            tile.cropX,
-            tile.cropY,
-            EXTERIOR_GROUND_CROP_SIZE,
-            EXTERIOR_GROUND_CROP_SIZE,
-          )
           .setDisplaySize(
             EXTERIOR_GROUND_WORLD_SIZE,
             EXTERIOR_GROUND_WORLD_SIZE,
@@ -256,56 +421,296 @@ export class SpatialWorldScene extends Phaser.Scene {
   private renderObjects(): void {
     for (const zone of this.objectZones) zone.destroy();
     for (const graphics of this.objectGraphics) graphics.destroy();
+    for (const sprite of this.objectSprites) sprite.destroy();
     this.objectZones = [];
     this.objectGraphics = [];
+    this.objectSprites = [];
+    this.renderedObjects.clear();
+    this.clearStructureZones();
     const objects = this.drag
       ? this.objects().map((object) =>
           object.instanceId === this.drag?.object.instanceId
             ? this.drag.object
             : object,
         )
-      : this.objects();
+      : this.visibleObjects();
     for (const object of objects) {
       const valid = placementIsValid(object, this.world.placementSpaces);
-      const graphics = this.add.graphics().setDepth(40);
-      this.objectGraphics.push(graphics);
-      graphics
-        .fillStyle(valid ? 0x8e5e35 : 0x9d3434, 0.95)
-        .fillRoundedRect(object.x, object.y, 64, 48, 6)
-        .lineStyle(2, 0xe7c47b, 0.95)
-        .strokeRoundedRect(object.x, object.y, 64, 48, 6);
-      graphics.fillStyle(0x312117).fillRect(object.x + 8, object.y + 9, 48, 10);
+      const definition = objectDefinition(object.definitionId);
+      if (!definition) continue;
+      const { footprint } = definition;
+      const depth = 40 + object.y + footprint.height;
+      if (definition.visual) {
+        const sprite = this.add
+          .image(
+            object.x + footprint.width / 2,
+            object.y + footprint.height / 2,
+            `${definition.id}.${orientationForRotation(object.rotation)}`,
+          )
+          .setDisplaySize(
+            definition.visual.displayWidth,
+            definition.visual.displayHeight,
+          )
+          .setOrigin(definition.visual.pivot.x, definition.visual.pivot.y)
+          .setDepth(depth);
+        this.objectSprites.push(sprite);
+      } else {
+        const graphics = this.add.graphics().setDepth(depth);
+        this.objectGraphics.push(graphics);
+        graphics
+          .fillStyle(valid ? 0x8e5e35 : 0x9d3434, 0.95)
+          .fillRoundedRect(
+            object.x,
+            object.y,
+            footprint.width,
+            footprint.height,
+            6,
+          )
+          .lineStyle(2, 0xe7c47b, 0.95)
+          .strokeRoundedRect(
+            object.x,
+            object.y,
+            footprint.width,
+            footprint.height,
+            6,
+          );
+        graphics
+          .fillStyle(0x312117)
+          .fillRect(object.x + 8, object.y + 9, footprint.width - 16, 10);
+      }
+      const hitArea = definition.visual?.hitArea ?? footprint;
+      if (this.construction.active) continue;
       const zone = this.add
-        .zone(object.x + 32, object.y + 24, 64, 48)
-        .setDepth(41)
+        .zone(
+          object.x + footprint.width / 2,
+          object.y +
+            footprint.height / 2 -
+            (hitArea.height - footprint.height) / 2,
+          hitArea.width,
+          hitArea.height,
+        )
+        .setDepth(depth + 1)
         .setInteractive({ useHandCursor: true })
         .setData("placedObject", object);
       this.objectZones.push(zone);
+      this.renderedObjects.set(object.instanceId, {
+        ...(definition.visual
+          ? { sprite: this.objectSprites.at(-1) }
+          : {
+              graphics: this.objectGraphics.at(-1),
+            }),
+        zone,
+      });
+    }
+    if (this.construction.active) this.renderStructureZones();
+  }
+
+  private renderStructureZones(): void {
+    const structure = this.projection.worldStructure;
+    if (!structure) return;
+    for (const placement of structure.placements) {
+      const definition = structureDefinition(placement.definitionId);
+      if (!definition) continue;
+      const span = (definition.visualSpanCells ?? 1) * CELL_SIZE;
+      const zone = this.add
+        .zone(
+          placement.anchor.x * CELL_SIZE + span / 2,
+          placement.anchor.y * CELL_SIZE + span / 2,
+          span,
+          span,
+        )
+        .setDepth(80)
+        .setInteractive({ useHandCursor: true });
+      zone.setData("structurePlacement", placement);
+      this.structureZones.push(zone);
+    }
+  }
+
+  private clearStructureZones(): void {
+    for (const zone of this.structureZones) zone.destroy();
+    this.structureZones = [];
+  }
+
+  private structureAt(x: number, y: number): StructurePlacement | undefined {
+    return this.structureZones
+      .map((zone) => zone.getData("structurePlacement") as StructurePlacement)
+      .find((placement) => {
+        const definition = structureDefinition(placement.definitionId);
+        const span = (definition?.visualSpanCells ?? 1) * CELL_SIZE;
+        const px = placement.anchor.x * CELL_SIZE;
+        const py = placement.anchor.y * CELL_SIZE;
+        return (
+          x >= px - CELL_SIZE &&
+          x <= px + span &&
+          y >= py - CELL_SIZE &&
+          y <= py + span
+        );
+      });
+  }
+
+  private snappedAnchor(pointer: Phaser.Input.Pointer): {
+    readonly x: number;
+    readonly y: number;
+  } {
+    return {
+      x: Math.round(pointer.worldX / CELL_SIZE),
+      y: Math.round(pointer.worldY / CELL_SIZE),
+    };
+  }
+
+  private collectFloorCell(pointer: Phaser.Input.Pointer): void {
+    const gesture = this.floorGesture;
+    if (!gesture) return;
+    const cell = this.snappedAnchor(pointer);
+    gesture.cells.set(`${cell.x}:${cell.y}`, cell);
+    this.drawFloorPreview(
+      [...gesture.cells.values()],
+      this.construction.tool === "paint-floor",
+    );
+  }
+
+  private updateConstructionPreview(pointer: Phaser.Input.Pointer): void {
+    const anchor = this.snappedAnchor(pointer);
+    const definitionId =
+      this.construction.placingDefinitionId ??
+      this.projection.worldStructure?.placements.find(
+        (item) => item.instanceId === this.construction.movingInstanceId,
+      )?.definitionId;
+    if (!definitionId) return;
+    const definition = structureDefinition(definitionId);
+    if (!definition) return;
+    const span = (definition.visualSpanCells ?? 1) * CELL_SIZE;
+    this.clearConstructionPreview();
+    const preview = this.add.graphics().setDepth(90);
+    preview
+      .lineStyle(3, 0x8cd790, 0.95)
+      .strokeRect(anchor.x * CELL_SIZE, anchor.y * CELL_SIZE, span, CELL_SIZE);
+    preview
+      .fillStyle(0x8cd790, 0.18)
+      .fillRect(anchor.x * CELL_SIZE, anchor.y * CELL_SIZE, span, CELL_SIZE);
+    this.constructionPreview = preview;
+  }
+
+  private drawFloorPreview(
+    cells: readonly { readonly x: number; readonly y: number }[],
+    adding: boolean,
+  ): void {
+    this.clearConstructionPreview();
+    const preview = this.add.graphics().setDepth(90);
+    const color = adding ? 0x8cd790 : 0xe4a062;
+    for (const cell of cells)
+      preview
+        .lineStyle(2, color, 0.95)
+        .strokeRect(
+          cell.x * CELL_SIZE,
+          cell.y * CELL_SIZE,
+          CELL_SIZE,
+          CELL_SIZE,
+        )
+        .fillStyle(color, 0.16)
+        .fillRect(cell.x * CELL_SIZE, cell.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+    this.constructionPreview = preview;
+  }
+
+  private clearConstructionPreview(): void {
+    this.constructionPreview?.destroy();
+    this.constructionPreview = undefined;
+  }
+
+  /** Hot path: mutates the selected preview only; no GameObjects are rebuilt. */
+  private updateDragPreview(object: PlacedObject): void {
+    const definition = objectDefinition(object.definitionId);
+    const rendered = this.renderedObjects.get(object.instanceId);
+    if (!definition || !rendered) return;
+    const { footprint } = definition;
+    const depth = 40 + object.y + footprint.height;
+    const hitArea = definition.visual?.hitArea ?? footprint;
+    rendered.sprite
+      ?.setPosition(
+        object.x + footprint.width / 2,
+        object.y + footprint.height / 2,
+      )
+      .setDepth(depth);
+    rendered.zone
+      .setPosition(
+        object.x + footprint.width / 2,
+        object.y +
+          footprint.height / 2 -
+          (hitArea.height - footprint.height) / 2,
+      )
+      .setDepth(depth + 1)
+      .setData("placedObject", object);
+    if (rendered.graphics) {
+      const valid = placementIsValid(object, this.world.placementSpaces);
+      rendered.graphics
+        .clear()
+        .fillStyle(valid ? 0x8e5e35 : 0x9d3434, 0.95)
+        .fillRoundedRect(
+          object.x,
+          object.y,
+          footprint.width,
+          footprint.height,
+          6,
+        )
+        .lineStyle(2, 0xe7c47b, 0.95)
+        .strokeRoundedRect(
+          object.x,
+          object.y,
+          footprint.width,
+          footprint.height,
+          6,
+        )
+        .fillStyle(0x312117)
+        .fillRect(object.x + 8, object.y + 9, footprint.width - 16, 10)
+        .setDepth(depth);
     }
   }
 
   private objectAt(x: number, y: number): PlacedObject | undefined {
-    return this.objects().find(
-      (object) =>
-        x >= object.x &&
-        x <= object.x + 64 &&
-        y >= object.y &&
-        y <= object.y + 48,
-    );
+    return this.objects().find((object) => {
+      const definition = objectDefinition(object.definitionId);
+      if (!definition) return false;
+      const hitArea = definition.visual?.hitArea ?? definition.footprint;
+      const hitX = object.x + (definition.footprint.width - hitArea.width) / 2;
+      const hitY =
+        object.y + (definition.footprint.height - hitArea.height) / 2;
+      return (
+        x >= hitX &&
+        x <= hitX + hitArea.width &&
+        y >= hitY &&
+        y <= hitY + hitArea.height
+      );
+    });
   }
 
   private objects(): readonly PlacedObject[] {
-    return this.projection.placedObjects ?? [DEFAULT_PLACED_OBJECT];
+    return this.projection.placedObjects ?? DEFAULT_PLACED_OBJECTS;
+  }
+
+  private visibleObjects(): readonly PlacedObject[] {
+    const preview = this.placementPreview;
+    if (!preview) return this.objects();
+    return this.objects().map((object) =>
+      object.instanceId === preview.instanceId ? preview : object,
+    );
   }
 
   private objectAtPointer(
     object: PlacedObject,
     pointer: Phaser.Input.Pointer,
   ): PlacedObject {
+    const definition = objectDefinition(object.definitionId);
+    if (!definition) return object;
     const candidate = {
       ...object,
-      x: Math.round((pointer.worldX - 32) / CELL_SIZE) * CELL_SIZE,
-      y: Math.round((pointer.worldY - 24) / CELL_SIZE) * CELL_SIZE,
+      x:
+        Math.round(
+          (pointer.worldX - definition.footprint.width / 2) / CELL_SIZE,
+        ) * CELL_SIZE,
+      y:
+        Math.round(
+          (pointer.worldY - definition.footprint.height / 2) / CELL_SIZE,
+        ) * CELL_SIZE,
     };
     const space = Object.entries(this.world.placementSpaces).find(
       ([, area]) =>
@@ -317,112 +722,53 @@ export class SpatialWorldScene extends Phaser.Scene {
     return { ...candidate, spaceId: space ?? object.spaceId };
   }
 
-  private renderModularWalls(graphics: Phaser.GameObjects.Graphics): void {
-    const floorCells = floorCellKeys(this.world.floorAreas);
-    for (const key of floorCells) {
-      const { x, y } = parseCellKey(key);
-      if (!floorCells.has(cellKey(x, y - 1)))
-        this.renderWallCell(graphics, x, y - 1, "horizontal");
-      if (!floorCells.has(cellKey(x, y + 1)))
-        this.renderWallCell(graphics, x, y + 1, "horizontal");
-      if (!floorCells.has(cellKey(x - 1, y)))
-        this.renderWallCell(graphics, x - 1, y, "vertical");
-      if (!floorCells.has(cellKey(x + 1, y)))
-        this.renderWallCell(graphics, x + 1, y, "vertical");
-    }
-    this.renderDoorwayThresholds(graphics);
+  private renderWallPlan(): void {
+    const plan = structureRenderPlan(this.projection.worldStructure);
+    for (const piece of plan) this.renderWallPiece(piece);
   }
 
-  private renderWallCell(
-    graphics: Phaser.GameObjects.Graphics,
-    cellX: number,
-    cellY: number,
-    orientation: "horizontal" | "vertical",
-  ): void {
-    const x = cellX * CELL_SIZE;
-    const y = cellY * CELL_SIZE;
-    graphics
-      .fillStyle(0x3f4039)
-      .fillRoundedRect(x + 2, y + 2, CELL_SIZE - 4, CELL_SIZE - 4, 3)
-      .fillStyle(0x57564b)
-      .fillRect(
-        x + 5,
-        y + 5,
-        orientation === "horizontal" ? CELL_SIZE - 10 : 5,
-        orientation === "horizontal" ? 5 : CELL_SIZE - 10,
-      )
-      .lineStyle(1, 0x92876a, 0.72)
-      .strokeRoundedRect(x + 2, y + 2, CELL_SIZE - 4, CELL_SIZE - 4, 3);
-  }
-
-  private renderDoorwayThresholds(graphics: Phaser.GameObjects.Graphics): void {
-    for (const doorway of [
-      this.world.connection.doorwayA,
-      this.world.connection.doorwayB,
-    ]) {
-      const { floor } = doorway;
-      graphics
-        .fillStyle(0x69513a, 0.9)
-        .fillRect(floor.x + 3, floor.y + 3, floor.width - 6, floor.height - 6)
-        .lineStyle(2, 0xb08a58, 0.8)
-        .strokeRect(
-          floor.x + 4,
-          floor.y + 4,
-          floor.width - 8,
-          floor.height - 8,
-        );
-    }
-  }
-
-  private renderScaleAnchors(graphics: Phaser.GameObjects.Graphics): void {
-    const { spaceA, spaceB } = this.world;
-    graphics
-      .fillStyle(0x5b3825)
-      .fillRoundedRect(
-        spaceA.x + CELL_SIZE * 2,
-        spaceA.y + CELL_SIZE * 2,
-        CELL_SIZE * 3,
-        CELL_SIZE * 1.5,
-        5,
-      )
-      .lineStyle(3, 0xba8c57)
-      .strokeRoundedRect(
-        spaceA.x + CELL_SIZE * 2,
-        spaceA.y + CELL_SIZE * 2,
-        CELL_SIZE * 3,
-        CELL_SIZE * 1.5,
-        5,
-      )
-      .fillStyle(0x2c211a)
-      .fillRect(
-        spaceA.x + spaceA.width - CELL_SIZE * 1.5,
-        spaceA.y + CELL_SIZE * 2,
-        CELL_SIZE * 0.5,
-        CELL_SIZE * 4,
-      )
-      .fillStyle(0x765136)
-      .fillRect(
-        spaceA.x + spaceA.width - CELL_SIZE * 1.25,
-        spaceA.y + CELL_SIZE * 2.25,
-        CELL_SIZE * 0.25,
-        CELL_SIZE * 3.5,
-      )
-      .fillStyle(0x614431)
-      .fillRoundedRect(
-        spaceB.x + CELL_SIZE * 2,
-        spaceB.y + CELL_SIZE * 2,
-        CELL_SIZE * 2,
-        CELL_SIZE * 2,
-        6,
-      )
-      .lineStyle(3, 0xc29862)
-      .strokeRoundedRect(
-        spaceB.x + CELL_SIZE * 2,
-        spaceB.y + CELL_SIZE * 2,
-        CELL_SIZE * 2,
-        CELL_SIZE * 2,
-        6,
+  private renderWallPiece(piece: StructureRenderPiece): void {
+    const { asset } = piece;
+    const x = piece.anchor.x + asset.offset.xCells * CELL_SIZE;
+    const y = piece.anchor.y + asset.offset.yCells * CELL_SIZE;
+    const depth = structurePieceDepth(piece);
+    if (this.textures.exists(asset.id)) {
+      this.textures.get(asset.id).setFilter(Phaser.Textures.FilterMode.LINEAR);
+      this.wallSprites.push(
+        this.add
+          .image(x, y, asset.id)
+          .setOrigin(asset.pivot.x, asset.pivot.y)
+          .setScale(CELL_SIZE / asset.pixelsPerLogicalCell)
+          .setDepth(depth),
       );
+      return;
+    }
+    this.renderWallFallback(piece, x, y, depth);
+  }
+
+  /** Missing/corrupt local art keeps the world usable without remote loading. */
+  private renderWallFallback(
+    piece: StructureRenderPiece,
+    x: number,
+    y: number,
+    depth: number,
+  ): void {
+    const graphics = this.add.graphics().setDepth(depth);
+    const width = piece.widthCells * CELL_SIZE;
+    const height = piece.heightCells * CELL_SIZE;
+    graphics.fillStyle(piece.kind === "door" ? 0x6b5136 : 0x45473f, 0.96);
+    if (piece.kind === "corner") {
+      const span = piece.asset.logicalLengthCells * CELL_SIZE;
+      graphics.fillRect(x, y, span, CELL_SIZE * 0.72);
+      graphics.fillRect(x, y, CELL_SIZE * 0.72, span);
+      this.wallFallbacks.push(graphics);
+      return;
+    }
+    if (piece.asset.orientation === "horizontal")
+      graphics.fillRect(x, y, width, Math.max(CELL_SIZE * 0.72, height));
+    else graphics.fillRect(x, y, Math.max(CELL_SIZE * 0.72, width), height);
+    graphics.lineStyle(1, 0xaaa07a, 0.75).strokeRect(x, y, width, height);
+    this.wallFallbacks.push(graphics);
   }
 
   private renderFloor(space: WorldRectangle): void {
@@ -450,6 +796,41 @@ export class SpatialWorldScene extends Phaser.Scene {
     }
   }
 
+  /** A single mask keeps cell persistence without creating a display object per cell. */
+  private renderFloorCells(
+    cells: readonly { readonly x: number; readonly y: number }[] | undefined,
+  ): void {
+    if (!cells || cells.length === 0) {
+      for (const area of this.world.floorAreas) this.renderFloor(area);
+      return;
+    }
+    const bounds = worldBounds({
+      ...this.projection.worldStructure!,
+      floorCells: cells,
+    });
+    const mask = this.add.graphics().setVisible(false);
+    for (const cell of cells)
+      mask
+        .fillStyle(0xffffff)
+        .fillRect(cell.x * CELL_SIZE, cell.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+    this.floorMasks.push(mask);
+    const area = { ...bounds };
+    for (const tile of woodFloorTiles(area)) {
+      const textureKey = `architecture.floor.wood-01.${tile.variant}`;
+      this.textures
+        .get(textureKey)
+        .setFilter(Phaser.Textures.FilterMode.LINEAR);
+      this.floorTiles.push(
+        this.add
+          .image(tile.x, tile.y, textureKey)
+          .setDepth(1)
+          .setMask(mask.createGeometryMask())
+          .setOrigin(0)
+          .setDisplaySize(WOOD_FLOOR_WORLD_SIZE, WOOD_FLOOR_WORLD_SIZE),
+      );
+    }
+  }
+
   private clearFloorTiles(): void {
     for (const tile of this.floorTiles) tile.destroy();
     for (const mask of this.floorMasks) mask.destroy();
@@ -462,12 +843,24 @@ export class SpatialWorldScene extends Phaser.Scene {
     this.exteriorTiles = [];
   }
 
+  private clearWallPieces(): void {
+    for (const sprite of this.wallSprites) sprite.destroy();
+    for (const fallback of this.wallFallbacks) fallback.destroy();
+    this.wallSprites = [];
+    this.wallFallbacks = [];
+  }
+
   private readonly shutdown = (): void => {
     this.pan.cancel();
     this.clearFloorTiles();
     this.clearExteriorTiles();
+    this.clearWallPieces();
+    this.clearStructureZones();
+    this.clearConstructionPreview();
     for (const zone of this.objectZones) zone.destroy();
     for (const graphics of this.objectGraphics) graphics.destroy();
+    for (const sprite of this.objectSprites) sprite.destroy();
+    this.renderedObjects.clear();
     this.game.canvas.removeEventListener("pointercancel", this.cancelPan);
     this.scale.off(Phaser.Scale.Events.RESIZE, this.renderWorld, this);
     this.input.off(Phaser.Input.Events.POINTER_DOWN, this.beginPan, this);
@@ -479,33 +872,4 @@ export class SpatialWorldScene extends Phaser.Scene {
       this,
     );
   };
-}
-
-function floorCellKeys(floorAreas: readonly WorldRectangle[]): Set<string> {
-  const cells = new Set<string>();
-  for (const area of floorAreas) {
-    for (
-      let y = area.y / CELL_SIZE;
-      y < (area.y + area.height) / CELL_SIZE;
-      y += 1
-    ) {
-      for (
-        let x = area.x / CELL_SIZE;
-        x < (area.x + area.width) / CELL_SIZE;
-        x += 1
-      ) {
-        cells.add(cellKey(x, y));
-      }
-    }
-  }
-  return cells;
-}
-
-function cellKey(x: number, y: number): string {
-  return `${x}:${y}`;
-}
-
-function parseCellKey(key: string): { readonly x: number; readonly y: number } {
-  const [x, y] = key.split(":");
-  return { x: Number(x), y: Number(y) };
 }
