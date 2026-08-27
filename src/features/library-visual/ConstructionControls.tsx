@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import {
   STRUCTURE_CATALOG,
+  structuralInventoryFamilyForDefinition,
   structureDefinition,
   type StructuralInventory,
   type StructurePlacement,
@@ -171,7 +172,10 @@ export function ConstructionControls({
               {STRUCTURE_CATALOG.filter(
                 (item) => item.category === category,
               ).map((item) => {
-                const available = inventory.available[item.id] ?? 0;
+                const available =
+                  inventory.available[
+                    structuralInventoryFamilyForDefinition(item.id)
+                  ] ?? 0;
                 return (
                   <div className="construction-item" key={item.id}>
                     <span>
@@ -220,8 +224,12 @@ export function ConstructionControls({
         >
           <h3 id="floor-tools-title">Piso</h3>
           <p>
-            {inventory.available["architecture.floor.wood-01"] ?? 0} unidades
-            disponíveis. Célula focal: {focus.x}, {focus.y}.
+            {inventory.available[
+              structuralInventoryFamilyForDefinition(
+                "architecture.floor.wood-01",
+              )
+            ] ?? 0}{" "}
+            unidades disponíveis. Célula focal: {focus.x}, {focus.y}.
           </p>
           <button
             className="button button--primary"

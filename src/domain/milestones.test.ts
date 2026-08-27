@@ -6,6 +6,9 @@ import {
   DECORATION_ID,
   MILESTONE_ID,
   MilestoneEngine,
+  REWARD_ID,
+  STRUCTURAL_INVENTORY_FAMILY_ID,
+  STRUCTURAL_MILESTONE_DEFINITIONS,
   createLibraryEntryCompletedEvent,
   createLibraryEntryCreatedEvent,
   createNoteCreatedEvent,
@@ -15,6 +18,7 @@ import {
   type MilestoneFacts,
   type MilestoneRewardDefinition,
   type ReachedMilestone,
+  evaluateStructuralMilestones,
 } from "./index";
 
 const facts: MilestoneFacts = Object.freeze({
@@ -186,5 +190,191 @@ describe("MilestoneEngine puro", () => {
   it("executa em Node sem DOM", () => {
     expect(typeof window).toBe("undefined");
     expect(typeof document).toBe("undefined");
+  });
+});
+
+const structuralRewards: readonly MilestoneRewardDefinition[] = Object.freeze([
+  ...rewards,
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.floorWood,
+    id: REWARD_ID.structureFirstActivityFloor,
+    quantity: 12,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.wallShort,
+    id: REWARD_ID.structureFirstActivityWallShort,
+    quantity: 4,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.wallMedium,
+    id: REWARD_ID.structureFirstActivityWallMedium,
+    quantity: 2,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.floorWood,
+    id: REWARD_ID.structureLibraryExpansionFloor,
+    quantity: 20,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.wallMedium,
+    id: REWARD_ID.structureLibraryExpansionWallMedium,
+    quantity: 4,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.wallLong,
+    id: REWARD_ID.structureLibraryExpansionWallLong,
+    quantity: 2,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.cornerStone,
+    id: REWARD_ID.structureLibraryExpansionCorner,
+    quantity: 1,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.floorWood,
+    id: REWARD_ID.structureNewSpaceFloor,
+    quantity: 32,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.wallLong,
+    id: REWARD_ID.structureNewSpaceWallLong,
+    quantity: 4,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.cornerStone,
+    id: REWARD_ID.structureNewSpaceCorner,
+    quantity: 4,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.doorHorizontal,
+    id: REWARD_ID.structureNewSpaceDoor,
+    quantity: 1,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.floorWood,
+    id: REWARD_ID.structureConsolidatedFloor,
+    quantity: 48,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.wallLong,
+    id: REWARD_ID.structureConsolidatedWallLong,
+    quantity: 6,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.cornerStone,
+    id: REWARD_ID.structureConsolidatedCorner,
+    quantity: 4,
+    type: "structure-grant",
+  },
+  {
+    familyId: STRUCTURAL_INVENTORY_FAMILY_ID.doorHorizontal,
+    id: REWARD_ID.structureConsolidatedDoor,
+    quantity: 1,
+    type: "structure-grant",
+  },
+]);
+
+describe("marcos estruturais declarativos", () => {
+  it.each([
+    [0, []],
+    [1, [MILESTONE_ID.structureFirstActivity]],
+    [4, [MILESTONE_ID.structureFirstActivity]],
+    [
+      5,
+      [
+        MILESTONE_ID.structureFirstActivity,
+        MILESTONE_ID.structureLibraryExpansion,
+      ],
+    ],
+    [
+      14,
+      [
+        MILESTONE_ID.structureFirstActivity,
+        MILESTONE_ID.structureLibraryExpansion,
+      ],
+    ],
+    [
+      15,
+      [
+        MILESTONE_ID.structureFirstActivity,
+        MILESTONE_ID.structureLibraryExpansion,
+        MILESTONE_ID.structureNewSpace,
+      ],
+    ],
+    [
+      29,
+      [
+        MILESTONE_ID.structureFirstActivity,
+        MILESTONE_ID.structureLibraryExpansion,
+        MILESTONE_ID.structureNewSpace,
+      ],
+    ],
+    [
+      30,
+      [
+        MILESTONE_ID.structureConsolidated,
+        MILESTONE_ID.structureFirstActivity,
+        MILESTONE_ID.structureLibraryExpansion,
+        MILESTONE_ID.structureNewSpace,
+      ],
+    ],
+  ] as const)("avalia limiar %i sem duplicar", (count, expected) => {
+    expect(
+      evaluateStructuralMilestones({
+        definitions: STRUCTURAL_MILESTONE_DEFINITIONS,
+        facts: { eligibleCompletedSessionCount: count },
+        reached: [],
+        reachedAt: metadata.occurredAt,
+        rewards: structuralRewards,
+        sourceEventId: metadata.eventId,
+      }).map(({ id }) => id),
+    ).toEqual([...expected].sort());
+  });
+
+  it("mantém histórico alcançado e concede payloads exatos", () => {
+    const reached = evaluateStructuralMilestones({
+      definitions: STRUCTURAL_MILESTONE_DEFINITIONS,
+      facts: { eligibleCompletedSessionCount: 5 },
+      reached: [],
+      reachedAt: metadata.occurredAt,
+      rewards: structuralRewards,
+      sourceEventId: metadata.eventId,
+    });
+    expect(
+      evaluateStructuralMilestones({
+        definitions: STRUCTURAL_MILESTONE_DEFINITIONS,
+        facts: { eligibleCompletedSessionCount: 30 },
+        reached,
+        reachedAt: metadata.occurredAt,
+        rewards: structuralRewards,
+        sourceEventId: metadata.eventId,
+      }).map(({ id }) => id),
+    ).toEqual([
+      MILESTONE_ID.structureConsolidated,
+      MILESTONE_ID.structureNewSpace,
+    ]);
+    expect(reached[0]?.rewards).toEqual(
+      expect.arrayContaining([
+        {
+          familyId: STRUCTURAL_INVENTORY_FAMILY_ID.floorWood,
+          id: REWARD_ID.structureFirstActivityFloor,
+          quantity: 12,
+          type: "structure-grant",
+        },
+      ]),
+    );
   });
 });

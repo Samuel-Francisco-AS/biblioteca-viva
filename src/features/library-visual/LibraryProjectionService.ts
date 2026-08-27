@@ -104,7 +104,9 @@ export class LibraryProjectionService {
     const unlockedDecorationIds = Object.freeze(
       milestones.some((milestone) =>
         milestone.rewards.some(
-          (reward) => reward.decorationId === DECORATION_ID.readingLamp,
+          (reward) =>
+            reward.type === "decoration" &&
+            reward.decorationId === DECORATION_ID.readingLamp,
         ),
       )
         ? [DECORATION_ID.readingLamp]

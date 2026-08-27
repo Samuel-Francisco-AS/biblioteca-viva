@@ -6,6 +6,7 @@ export * from "./milestones";
 export * from "./rooms";
 export * from "./libraryEntries";
 export * from "./sessions";
+export * from "./structuralProgress";
 export * from "./tags";
 export * from "./schemas";
 export * from "./types";

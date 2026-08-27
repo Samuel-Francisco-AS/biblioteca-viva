@@ -1,4 +1,10 @@
 import { z } from "zod";
+import {
+  STRUCTURAL_INVENTORY_FAMILY_ID,
+  isStructuralInventoryFamilyId,
+  type ReachedMilestone,
+  type StructuralInventoryFamilyId,
+} from "../domain";
 
 /** Shared world grid contract; renderers consume it but do not define it. */
 export const WORLD_CELL_SIZE = 32;
@@ -20,6 +26,7 @@ export type StructureDefinitionId =
   | "architecture.wall.stone-01.vertical-1"
   | "architecture.wall.stone-01.vertical-2"
   | "architecture.wall.stone-01.vertical-4"
+  | "architecture.wall.stone-01.door-horizontal.open"
   | "architecture.wall.stone-01.door-horizontal.closed";
 
 export interface GridPoint {
@@ -59,6 +66,7 @@ export interface StructureDefinition {
   readonly corner?: CornerOrientation;
   readonly fallback: "procedural-door" | "procedural-floor" | "procedural-wall";
   readonly id: StructureDefinitionId;
+  readonly inventoryFamilyId: StructuralInventoryFamilyId;
   readonly movable: boolean;
   readonly orientation?: EdgeAxis;
   readonly pivot: { readonly x: number; readonly y: number };
@@ -76,6 +84,12 @@ const wall = (
   category: "wall",
   fallback: "procedural-wall",
   id,
+  inventoryFamilyId:
+    visualSpanCells === 1
+      ? STRUCTURAL_INVENTORY_FAMILY_ID.wallShort
+      : visualSpanCells === 2
+        ? STRUCTURAL_INVENTORY_FAMILY_ID.wallMedium
+        : STRUCTURAL_INVENTORY_FAMILY_ID.wallLong,
   movable: true,
   orientation,
   pivot: { x: 0, y: 0 },
@@ -90,6 +104,7 @@ export const STRUCTURE_CATALOG: readonly StructureDefinition[] = Object.freeze([
     category: "floor",
     fallback: "procedural-floor",
     id: "architecture.floor.wood-01",
+    inventoryFamilyId: STRUCTURAL_INVENTORY_FAMILY_ID.floorWood,
     movable: true,
     pivot: { x: 0, y: 0 },
     rotatable: true,
@@ -101,6 +116,7 @@ export const STRUCTURE_CATALOG: readonly StructureDefinition[] = Object.freeze([
     corner,
     fallback: "procedural-wall" as const,
     id: `architecture.wall.stone-01.corner-${corner}` as StructureDefinitionId,
+    inventoryFamilyId: STRUCTURAL_INVENTORY_FAMILY_ID.cornerStone,
     movable: true,
     pivot: { x: 0, y: 0 },
     rotatable: false,
@@ -120,24 +136,33 @@ export const STRUCTURE_CATALOG: readonly StructureDefinition[] = Object.freeze([
   wall("architecture.wall.stone-01.vertical-1", "vertical", 1),
   wall("architecture.wall.stone-01.vertical-2", "vertical", 2),
   wall("architecture.wall.stone-01.vertical-4", "vertical", 4),
-  {
-    assetId: "architecture.wall.stone-01.door-horizontal.closed",
-    category: "door",
-    fallback: "procedural-door",
-    id: "architecture.wall.stone-01.door-horizontal.closed",
+  ...(["closed", "open"] as const).map((state) => ({
+    assetId: `architecture.wall.stone-01.door-horizontal.${state}`,
+    category: "door" as const,
+    fallback: "procedural-door" as const,
+    id: `architecture.wall.stone-01.door-horizontal.${state}` as StructureDefinitionId,
+    inventoryFamilyId: STRUCTURAL_INVENTORY_FAMILY_ID.doorHorizontal,
     movable: true,
-    orientation: "horizontal",
+    orientation: "horizontal" as const,
     pivot: { x: 0, y: 0 },
     rotatable: false,
     visualOffsetCells: { x: -1, y: 0 },
     visualSpanCells: 4,
-  },
+  })),
 ]);
 
 export function structureDefinition(
   id: string,
 ): StructureDefinition | undefined {
   return STRUCTURE_CATALOG.find((definition) => definition.id === id);
+}
+
+export function structuralInventoryFamilyForDefinition(
+  id: StructureDefinitionId,
+): StructuralInventoryFamilyId {
+  const definition = structureDefinition(id);
+  if (!definition) throw new Error(`Definição estrutural ausente: ${id}`);
+  return definition.inventoryFamilyId;
 }
 
 export function floorCellKey(cell: FloorCell): string {
@@ -218,6 +243,8 @@ export function validateStructureCatalog(
       definition.orientation !== "horizontal"
     )
       throw new Error(`Porta vertical não aprovada: ${definition.id}`);
+    if (!isStructuralInventoryFamilyId(definition.inventoryFamilyId))
+      throw new Error(`Família estrutural inválida: ${definition.id}`);
   }
   return true;
 }
@@ -321,51 +348,88 @@ export function initialWorldStructure(now: string): WorldStructureState {
 }
 
 export interface StructuralInventory {
-  readonly available: Readonly<Record<string, number>>;
-  readonly granted: Readonly<Record<string, number>>;
-  readonly placed: Readonly<Record<string, number>>;
+  readonly available: Readonly<Record<StructuralInventoryFamilyId, number>>;
+  readonly granted: Readonly<Record<StructuralInventoryFamilyId, number>>;
+  readonly placed: Readonly<Record<StructuralInventoryFamilyId, number>>;
 }
 
-const INITIAL_RESERVE: Readonly<Record<StructureDefinitionId, number>> =
-  Object.freeze({
-    "architecture.floor.wood-01": 24,
-    "architecture.wall.stone-01.corner-ne": 1,
-    "architecture.wall.stone-01.corner-nw": 1,
-    "architecture.wall.stone-01.corner-se": 1,
-    "architecture.wall.stone-01.corner-sw": 1,
-    "architecture.wall.stone-01.horizontal-1": 2,
-    "architecture.wall.stone-01.horizontal-2": 2,
-    "architecture.wall.stone-01.horizontal-4": 1,
-    "architecture.wall.stone-01.vertical-1": 2,
-    "architecture.wall.stone-01.vertical-2": 2,
-    "architecture.wall.stone-01.vertical-4": 1,
-    "architecture.wall.stone-01.door-horizontal.closed": 0,
-  });
+/**
+ * The former reserve repeated orientated assets. A physical family uses the
+ * maximum reserve of its interchangeable variants, never their sum.
+ */
+export const INITIAL_STRUCTURAL_RESERVE: Readonly<
+  Record<StructuralInventoryFamilyId, number>
+> = Object.freeze({
+  [STRUCTURAL_INVENTORY_FAMILY_ID.floorWood]: 24,
+  [STRUCTURAL_INVENTORY_FAMILY_ID.wallShort]: 2,
+  [STRUCTURAL_INVENTORY_FAMILY_ID.wallMedium]: 2,
+  [STRUCTURAL_INVENTORY_FAMILY_ID.wallLong]: 1,
+  [STRUCTURAL_INVENTORY_FAMILY_ID.cornerStone]: 1,
+  [STRUCTURAL_INVENTORY_FAMILY_ID.doorHorizontal]: 0,
+});
+
+/** Blueprint placements plus the physical reserve, fixed at first creation. */
+const INITIAL_STRUCTURAL_GRANTED: Readonly<
+  Record<StructuralInventoryFamilyId, number>
+> = Object.freeze({
+  [STRUCTURAL_INVENTORY_FAMILY_ID.floorWood]: 144,
+  [STRUCTURAL_INVENTORY_FAMILY_ID.wallShort]: 2,
+  [STRUCTURAL_INVENTORY_FAMILY_ID.wallMedium]: 4,
+  [STRUCTURAL_INVENTORY_FAMILY_ID.wallLong]: 2,
+  [STRUCTURAL_INVENTORY_FAMILY_ID.cornerStone]: 5,
+  [STRUCTURAL_INVENTORY_FAMILY_ID.doorHorizontal]: 1,
+});
 
 export function structuralInventory(
   state: WorldStructureState,
+  milestones: readonly ReachedMilestone[] = [],
 ): StructuralInventory {
   validateWorldStructure(state);
-  const placed: Record<string, number> = {
-    "architecture.floor.wood-01": state.floorCells.length,
-  };
+  const placed = emptyFamilyCounts();
+  placed[STRUCTURAL_INVENTORY_FAMILY_ID.floorWood] = state.floorCells.length;
   for (const placement of state.placements)
-    placed[placement.definitionId] = (placed[placement.definitionId] ?? 0) + 1;
-  const granted: Record<string, number> = {};
-  for (const definition of STRUCTURE_CATALOG)
-    granted[definition.id] =
-      (placed[definition.id] ?? 0) + (INITIAL_RESERVE[definition.id] ?? 0);
-  const available: Record<string, number> = {};
-  for (const [id, amount] of Object.entries(granted)) {
-    const remaining = amount - (placed[id] ?? 0);
-    if (remaining < 0) throw new Error(`Inventário estrutural negativo: ${id}`);
-    available[id] = remaining;
+    placed[structuralInventoryFamilyForDefinition(placement.definitionId)] += 1;
+  const granted = { ...INITIAL_STRUCTURAL_GRANTED };
+  const processedMilestones = new Set<string>();
+  for (const milestone of milestones) {
+    if (processedMilestones.has(milestone.id)) continue;
+    processedMilestones.add(milestone.id);
+    for (const reward of milestone.rewards) {
+      if (reward.type !== "structure-grant") continue;
+      if (
+        !isStructuralInventoryFamilyId(reward.familyId) ||
+        !Number.isInteger(reward.quantity) ||
+        reward.quantity <= 0
+      )
+        throw new Error("Recompensa estrutural inválida");
+      granted[reward.familyId] += reward.quantity;
+    }
+  }
+  const available = emptyFamilyCounts();
+  for (const familyId of Object.keys(
+    granted,
+  ) as readonly StructuralInventoryFamilyId[]) {
+    const remaining = granted[familyId] - placed[familyId];
+    if (remaining < 0)
+      throw new Error(`Inventário estrutural negativo: ${familyId}`);
+    available[familyId] = remaining;
   }
   return Object.freeze({
     available: Object.freeze(available),
     granted: Object.freeze(granted),
     placed: Object.freeze(placed),
   });
+}
+
+function emptyFamilyCounts(): Record<StructuralInventoryFamilyId, number> {
+  return {
+    [STRUCTURAL_INVENTORY_FAMILY_ID.floorWood]: 0,
+    [STRUCTURAL_INVENTORY_FAMILY_ID.wallShort]: 0,
+    [STRUCTURAL_INVENTORY_FAMILY_ID.wallMedium]: 0,
+    [STRUCTURAL_INVENTORY_FAMILY_ID.wallLong]: 0,
+    [STRUCTURAL_INVENTORY_FAMILY_ID.cornerStone]: 0,
+    [STRUCTURAL_INVENTORY_FAMILY_ID.doorHorizontal]: 0,
+  };
 }
 
 export function worldBounds(state: WorldStructureState): {

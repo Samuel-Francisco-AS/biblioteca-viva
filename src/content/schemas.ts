@@ -1,7 +1,11 @@
 import { z } from "zod";
 
 import { DIALOGUE_EVENTS, DIALOGUE_FACTS } from "../application";
-import { DECORATION_IDS, MILESTONE_IDS } from "../domain";
+import {
+  DECORATION_IDS,
+  MILESTONE_IDS,
+  STRUCTURAL_INVENTORY_FAMILY_IDS,
+} from "../domain";
 
 const stableIdSchema = z
   .string()
@@ -51,11 +55,19 @@ export const decorationDefinitionSchema = z.strictObject({
   state: z.enum(["available", "reserved", "unlockable"]),
 });
 
-export const milestoneRewardDefinitionSchema = z.strictObject({
-  decorationId: z.enum(DECORATION_IDS),
-  id: stableIdSchema,
-  type: z.literal("decoration"),
-});
+export const milestoneRewardDefinitionSchema = z.discriminatedUnion("type", [
+  z.strictObject({
+    decorationId: z.enum(DECORATION_IDS),
+    id: stableIdSchema,
+    type: z.literal("decoration"),
+  }),
+  z.strictObject({
+    familyId: z.enum(STRUCTURAL_INVENTORY_FAMILY_IDS),
+    id: stableIdSchema,
+    quantity: z.int().positive(),
+    type: z.literal("structure-grant"),
+  }),
+]);
 
 export const milestoneConditionSchema = z.strictObject({
   fact: z.enum([
@@ -69,6 +81,7 @@ export const milestoneConditionSchema = z.strictObject({
     "totalNotes",
     "totalQuotes",
     "completedBooks",
+    "eligibleCompletedSessionCount",
   ]),
   operator: z.literal("gte"),
   value: z.int().positive(),
@@ -188,7 +201,11 @@ export function validateContentReferences(catalog: ContentCatalog): string[] {
     }
   }
   for (const reward of catalog.rewards) {
-    if (reward.decorationId && !decorations.has(reward.decorationId))
+    if (
+      reward.type === "decoration" &&
+      reward.decorationId &&
+      !decorations.has(reward.decorationId)
+    )
       issues.push(`Decoração inexistente: ${reward.decorationId}`);
   }
 

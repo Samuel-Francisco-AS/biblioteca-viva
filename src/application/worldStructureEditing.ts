@@ -7,6 +7,7 @@ import {
   floorCellKey,
   placementEdges,
   structureDefinition,
+  structuralInventoryFamilyForDefinition,
   structuralInventory,
   unitEdgeKey,
   validateWorldStructure,
@@ -265,7 +266,11 @@ export class PlaceStructure {
     const definition = structureDefinition(parsed.definitionId);
     if (!definition || definition.category === "floor")
       throw editError("INVALID_COORDINATE");
-    if ((structuralInventory(state).available[parsed.definitionId] ?? 0) < 1)
+    if (
+      structuralInventory(state).available[
+        structuralInventoryFamilyForDefinition(parsed.definitionId)
+      ] < 1
+    )
       throw editError("NO_AVAILABILITY");
     const placement = {
       anchor: parsed.anchor,
@@ -470,8 +475,8 @@ export class AddFloorCells {
       )
         continue;
       if (
-        (structuralInventory(working).available["architecture.floor.wood-01"] ??
-          0) < 1
+        structuralInventory(working).available["structure-family.floor.wood"] <
+        1
       )
         continue;
       if (

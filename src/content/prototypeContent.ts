@@ -1,6 +1,11 @@
 import { parseContentCatalog } from "./schemas";
 import { PT_BR_MESSAGES } from "./locales/pt-BR";
-import { DECORATION_ID, MILESTONE_ID, REWARD_ID } from "../domain";
+import {
+  DECORATION_ID,
+  MILESTONE_ID,
+  REWARD_ID,
+  STRUCTURAL_INVENTORY_FAMILY_ID,
+} from "../domain";
 
 const rawPrototypeContent = {
   version: 1,
@@ -58,6 +63,96 @@ const rawPrototypeContent = {
       id: REWARD_ID.firstCompletionReadingLamp,
       type: "decoration",
       decorationId: DECORATION_ID.readingLamp,
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.floorWood,
+      id: REWARD_ID.structureFirstActivityFloor,
+      quantity: 12,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.wallShort,
+      id: REWARD_ID.structureFirstActivityWallShort,
+      quantity: 4,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.wallMedium,
+      id: REWARD_ID.structureFirstActivityWallMedium,
+      quantity: 2,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.floorWood,
+      id: REWARD_ID.structureLibraryExpansionFloor,
+      quantity: 20,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.wallMedium,
+      id: REWARD_ID.structureLibraryExpansionWallMedium,
+      quantity: 4,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.wallLong,
+      id: REWARD_ID.structureLibraryExpansionWallLong,
+      quantity: 2,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.cornerStone,
+      id: REWARD_ID.structureLibraryExpansionCorner,
+      quantity: 1,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.floorWood,
+      id: REWARD_ID.structureNewSpaceFloor,
+      quantity: 32,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.wallLong,
+      id: REWARD_ID.structureNewSpaceWallLong,
+      quantity: 4,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.cornerStone,
+      id: REWARD_ID.structureNewSpaceCorner,
+      quantity: 4,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.doorHorizontal,
+      id: REWARD_ID.structureNewSpaceDoor,
+      quantity: 1,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.floorWood,
+      id: REWARD_ID.structureConsolidatedFloor,
+      quantity: 48,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.wallLong,
+      id: REWARD_ID.structureConsolidatedWallLong,
+      quantity: 6,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.cornerStone,
+      id: REWARD_ID.structureConsolidatedCorner,
+      quantity: 4,
+      type: "structure-grant",
+    },
+    {
+      familyId: STRUCTURAL_INVENTORY_FAMILY_ID.doorHorizontal,
+      id: REWARD_ID.structureConsolidatedDoor,
+      quantity: 1,
+      type: "structure-grant",
     },
   ],
   milestones: [
@@ -131,6 +226,61 @@ const rawPrototypeContent = {
       eventType: "SessionChanged",
       conditions: [{ fact: "totalSessions", operator: "gte", value: 1 }],
       rewardIds: [],
+      ruleVersion: 1,
+    },
+    {
+      id: MILESTONE_ID.structureFirstActivity,
+      eventType: "SessionChanged",
+      conditions: [
+        { fact: "eligibleCompletedSessionCount", operator: "gte", value: 1 },
+      ],
+      rewardIds: [
+        REWARD_ID.structureFirstActivityFloor,
+        REWARD_ID.structureFirstActivityWallShort,
+        REWARD_ID.structureFirstActivityWallMedium,
+      ],
+      ruleVersion: 1,
+    },
+    {
+      id: MILESTONE_ID.structureLibraryExpansion,
+      eventType: "SessionChanged",
+      conditions: [
+        { fact: "eligibleCompletedSessionCount", operator: "gte", value: 5 },
+      ],
+      rewardIds: [
+        REWARD_ID.structureLibraryExpansionFloor,
+        REWARD_ID.structureLibraryExpansionWallMedium,
+        REWARD_ID.structureLibraryExpansionWallLong,
+        REWARD_ID.structureLibraryExpansionCorner,
+      ],
+      ruleVersion: 1,
+    },
+    {
+      id: MILESTONE_ID.structureNewSpace,
+      eventType: "SessionChanged",
+      conditions: [
+        { fact: "eligibleCompletedSessionCount", operator: "gte", value: 15 },
+      ],
+      rewardIds: [
+        REWARD_ID.structureNewSpaceFloor,
+        REWARD_ID.structureNewSpaceWallLong,
+        REWARD_ID.structureNewSpaceCorner,
+        REWARD_ID.structureNewSpaceDoor,
+      ],
+      ruleVersion: 1,
+    },
+    {
+      id: MILESTONE_ID.structureConsolidated,
+      eventType: "SessionChanged",
+      conditions: [
+        { fact: "eligibleCompletedSessionCount", operator: "gte", value: 30 },
+      ],
+      rewardIds: [
+        REWARD_ID.structureConsolidatedFloor,
+        REWARD_ID.structureConsolidatedWallLong,
+        REWARD_ID.structureConsolidatedCorner,
+        REWARD_ID.structureConsolidatedDoor,
+      ],
       ruleVersion: 1,
     },
   ],

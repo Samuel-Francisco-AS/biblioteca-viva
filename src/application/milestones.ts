@@ -31,7 +31,9 @@ export function milestoneReachedEvents(
         occurredAt: milestone.reachedAt,
         payload: {
           decorationIds: milestone.rewards.flatMap((reward) =>
-            reward.decorationId ? [reward.decorationId] : [],
+            reward.type === "decoration" && reward.decorationId
+              ? [reward.decorationId]
+              : [],
           ),
           milestoneId: milestone.id,
           rewardIds: milestone.rewards.map(({ id }) => id),

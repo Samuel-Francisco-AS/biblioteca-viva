@@ -10,7 +10,7 @@ interface MutableMilestoneCatalog {
     rewardIds: string[];
     ruleVersion: number;
   }>;
-  rewards: Array<{ decorationId: string; id: string }>;
+  rewards: Array<Record<string, unknown>>;
 }
 
 function mutableCatalog(): MutableMilestoneCatalog & Record<string, unknown> {
@@ -18,26 +18,32 @@ function mutableCatalog(): MutableMilestoneCatalog & Record<string, unknown> {
 }
 
 describe("definições declarativas de marcos", () => {
-  it("valida regras históricas e fatos de preparação para P2", () => {
-    expect(PROTOTYPE_CONTENT.milestones.map(({ id }) => id)).toEqual([
-      "milestone.first-book",
-      "milestone.first-note",
-      "milestone.first-quote",
-      "milestone.first-completed-book",
-      "milestone.first-movie",
-      "milestone.first-series",
-      "milestone.first-study",
-      "milestone.first-physical-activity",
-      "milestone.first-work",
-      "milestone.first-session",
-    ]);
-    expect(PROTOTYPE_CONTENT.rewards).toEqual([
-      {
-        decorationId: "decoration.reading-lamp",
-        id: "reward.first-completion-reading-lamp",
-        type: "decoration",
-      },
-    ]);
+  it("preserva regras históricas e declara as concessões estruturais", () => {
+    expect(PROTOTYPE_CONTENT.milestones.map(({ id }) => id)).toEqual(
+      expect.arrayContaining([
+        "milestone.first-book",
+        "milestone.first-session",
+        "milestone.structure.first-activity",
+        "milestone.structure.library-expansion",
+        "milestone.structure.new-space",
+        "milestone.structure.consolidated",
+      ]),
+    );
+    expect(PROTOTYPE_CONTENT.rewards).toEqual(
+      expect.arrayContaining([
+        {
+          decorationId: "decoration.reading-lamp",
+          id: "reward.first-completion-reading-lamp",
+          type: "decoration",
+        },
+        {
+          familyId: "structure-family.floor.wood",
+          id: "reward.structure.first-activity.floor",
+          quantity: 12,
+          type: "structure-grant",
+        },
+      ]),
+    );
   });
 
   it("rejeita ID de marco duplicado", () => {

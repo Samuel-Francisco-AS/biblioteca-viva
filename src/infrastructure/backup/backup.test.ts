@@ -116,6 +116,24 @@ const data: BackupData = Object.freeze({
   tags: [],
 });
 
+const structuralMilestone: BackupData["milestones"][number] = Object.freeze({
+  id: "milestone.structure.first-activity",
+  reachedAt: book.updatedAt,
+  rewards: Object.freeze([
+    Object.freeze({
+      familyId: "structure-family.floor.wood",
+      id: "reward.structure.first-activity.floor",
+      quantity: 12,
+      type: "structure-grant" as const,
+    }),
+  ]),
+  ruleVersion: 1,
+  source: Object.freeze({
+    eventId: "session-1",
+    eventType: "SessionChanged" as const,
+  }),
+});
+
 const laterBook = Object.freeze({
   ...book,
   id: "book-z",
@@ -172,6 +190,18 @@ const replacementData: BackupData = Object.freeze({
 });
 
 describe("backup JSON v3", () => {
+  it("mantém concessão estrutural no envelope v5", async () => {
+    const artifact = await new JsonBackupCodec().encode({
+      appVersion: "0.2.0-alpha.1",
+      createdAt: book.updatedAt,
+      databaseVersion: 7,
+      data: { ...data, milestones: [structuralMilestone] },
+    });
+    expect(
+      (await new JsonBackupCodec().inspect(artifact.content)).data.milestones,
+    ).toEqual([structuralMilestone]);
+  });
+
   it("cria envelope versionado, legível, determinístico e íntegro", async () => {
     const codec = new JsonBackupCodec();
     const artifact = await codec.encode({

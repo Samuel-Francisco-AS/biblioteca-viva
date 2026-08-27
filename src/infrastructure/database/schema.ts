@@ -4,6 +4,7 @@ import {
   MILESTONE_IDS,
   PHYSICAL_ACTIVITY_CATEGORIES,
   SESSION_STATUSES,
+  STRUCTURAL_INVENTORY_FAMILY_IDS,
   STUDY_PROGRESS_UNITS,
   type BookEntry,
   type LibraryEntry,
@@ -518,11 +519,19 @@ export const persistedMilestoneSchema = z.strictObject({
   id: z.enum(MILESTONE_IDS),
   reachedAt: isoUtc,
   rewards: z.array(
-    z.strictObject({
-      decorationId: z.enum(DECORATION_IDS).optional(),
-      id: z.string().trim().min(1),
-      type: z.literal("decoration"),
-    }),
+    z.discriminatedUnion("type", [
+      z.strictObject({
+        decorationId: z.enum(DECORATION_IDS).optional(),
+        id: z.string().trim().min(1),
+        type: z.literal("decoration"),
+      }),
+      z.strictObject({
+        familyId: z.enum(STRUCTURAL_INVENTORY_FAMILY_IDS),
+        id: z.string().trim().min(1),
+        quantity: z.int().positive(),
+        type: z.literal("structure-grant"),
+      }),
+    ]),
   ),
   ruleVersion: z.int().positive(),
   source: z.strictObject({
