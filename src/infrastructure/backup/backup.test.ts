@@ -180,7 +180,7 @@ describe("backup JSON v3", () => {
     const raw = JSON.parse(artifact.content) as Record<string, unknown>;
     expect(raw).toMatchObject({
       kind: BACKUP_KIND,
-      formatVersion: 4,
+      formatVersion: 5,
       appVersion: "0.2.0-alpha.1",
       databaseVersion: 2,
     });
@@ -409,7 +409,7 @@ describe("backup JSON v3", () => {
     });
     const inspected = await codec.inspect(artifact.content);
     expect(inspected.summary).toMatchObject({
-      formatVersion: 4,
+      formatVersion: 5,
       counts: { tags: 1, sessions: 1 },
     });
     expect(inspected.data.tags[0]).toMatchObject({
@@ -442,7 +442,7 @@ describe("backup JSON v3", () => {
     });
     const raw = JSON.parse(artifact.content) as Record<string, unknown>;
     await expect(
-      codec.inspect(JSON.stringify({ ...raw, formatVersion: 5 })),
+      codec.inspect(JSON.stringify({ ...raw, formatVersion: 6 })),
     ).rejects.toMatchObject({ code: "FUTURE_FORMAT_VERSION" });
     const withoutIntegrity = { ...raw };
     delete withoutIntegrity.integrity;
@@ -760,7 +760,7 @@ describe("snapshot Dexie e restauração", () => {
       integrity: { digest: string };
     };
     const future = structuredClone(raw);
-    future.formatVersion = 5;
+    future.formatVersion = 6;
     const badChecksum = structuredClone(raw);
     badChecksum.integrity.digest = "0".repeat(64);
     const invalidEntity = structuredClone(raw);

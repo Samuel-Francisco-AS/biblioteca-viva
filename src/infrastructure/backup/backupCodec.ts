@@ -20,6 +20,7 @@ import {
   persistedSessionSchema,
   persistedTagSchema,
   persistedPlacedObjectSchema,
+  persistedWorldStructureSchema,
 } from "../database/schema";
 
 const digestSchema = z.string().regex(/^[a-f0-9]{64}$/u);
@@ -78,8 +79,11 @@ const v3DataSchema = v2DataSchema.extend({
   tags: z.array(persistedTagSchema),
   sessions: z.array(persistedSessionSchema),
 });
-const dataSchema = v3DataSchema.extend({
+const v4DataSchema = v3DataSchema.extend({
   placedObjects: z.array(persistedPlacedObjectSchema),
+});
+const dataSchema = v4DataSchema.extend({
+  worldStructure: persistedWorldStructureSchema.optional(),
 });
 const envelopeMetadataSchema = z.strictObject({ policy: z.literal("replace") });
 const legacyUnsignedSchema = z.strictObject({
@@ -109,6 +113,15 @@ const unsignedSchema = z.strictObject({
   data: dataSchema,
   metadata: envelopeMetadataSchema,
 });
+const v4UnsignedSchema = z.strictObject({
+  kind: z.literal(BACKUP_KIND),
+  formatVersion: z.literal(4),
+  createdAt: z.iso.datetime({ offset: false }),
+  appVersion: z.string().trim().min(1),
+  databaseVersion: z.int().positive(),
+  data: v4DataSchema,
+  metadata: envelopeMetadataSchema,
+});
 const v3UnsignedSchema = z.strictObject({
   kind: z.literal(BACKUP_KIND),
   formatVersion: z.literal(3),
@@ -126,6 +139,7 @@ const envelopeSchema = z.discriminatedUnion("formatVersion", [
   legacyUnsignedSchema.extend({ integrity: integritySchema }),
   v2UnsignedSchema.extend({ integrity: integritySchema }),
   v3UnsignedSchema.extend({ integrity: integritySchema }),
+  v4UnsignedSchema.extend({ integrity: integritySchema }),
   unsignedSchema.extend({ integrity: integritySchema }),
 ]);
 
@@ -197,6 +211,7 @@ function counts(data: BackupData): BackupCounts {
     sessions: data.sessions.length,
     tags: data.tags.length,
     placedObjects: (data.placedObjects ?? []).length,
+    ...(data.worldStructure && { worldStructure: 1 }),
   });
 }
 
@@ -219,6 +234,7 @@ function sortData(data: BackupData): BackupData {
         a.instanceId.localeCompare(b.instanceId),
       ),
     ),
+    ...(data.worldStructure && { worldStructure: data.worldStructure }),
   });
 }
 
@@ -260,10 +276,12 @@ function rejectDuplicates(data: {
 type ParsedV1Data = z.infer<typeof legacyDataSchema>;
 type ParsedV2Data = z.infer<typeof v2DataSchema>;
 type ParsedV3Data = z.infer<typeof v3DataSchema>;
-type ParsedV4Data = z.infer<typeof dataSchema>;
+type ParsedV4Data = z.infer<typeof v4DataSchema>;
+type ParsedV5Data = z.infer<typeof dataSchema>;
 
 function normalizeData(
-  data: ParsedV1Data | ParsedV2Data | ParsedV3Data | ParsedV4Data,
+  data:
+    ParsedV1Data | ParsedV2Data | ParsedV3Data | ParsedV4Data | ParsedV5Data,
   milestones: z.infer<typeof persistedMilestoneSchema>[],
   restoredAt: string,
 ): BackupData {
@@ -326,6 +344,9 @@ function normalizeData(
     placedObjects: Object.freeze(
       "placedObjects" in data ? [...data.placedObjects] : [],
     ),
+    ...("worldStructure" in data && data.worldStructure
+      ? { worldStructure: data.worldStructure }
+      : {}),
   });
 }
 
@@ -416,6 +437,7 @@ export class JsonBackupCodec implements BackupCodecPort {
       root.formatVersion !== 1 &&
       root.formatVersion !== 2 &&
       root.formatVersion !== 3 &&
+      root.formatVersion !== 4 &&
       root.formatVersion !== BACKUP_FORMAT_VERSION
     )
       throw new BackupError(
