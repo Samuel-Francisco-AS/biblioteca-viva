@@ -3,23 +3,18 @@ export const TAP_MOVEMENT_THRESHOLD = 12;
 export type LibraryTapTarget =
   "shelf" | "librarian" | "creature" | "highlighted-book";
 
-interface PendingTap {
+interface PendingTap<Target extends string> {
   readonly pointerId: number;
   readonly startX: number;
   readonly startY: number;
-  readonly target: LibraryTapTarget;
+  readonly target: Target;
   cancelled: boolean;
 }
 
-export class TapSelectionPolicy {
-  private pending?: PendingTap;
+export class TapSelectionPolicy<Target extends string = LibraryTapTarget> {
+  private pending?: PendingTap<Target>;
 
-  begin(
-    target: LibraryTapTarget,
-    pointerId: number,
-    x: number,
-    y: number,
-  ): void {
+  begin(target: Target, pointerId: number, x: number, y: number): void {
     this.pending = {
       cancelled: false,
       pointerId,
@@ -41,7 +36,7 @@ export class TapSelectionPolicy {
     }
   }
 
-  end(pointerId: number, wasCancelled = false): LibraryTapTarget | undefined {
+  end(pointerId: number, wasCancelled = false): Target | undefined {
     const pending = this.pending;
     if (!pending || pending.pointerId !== pointerId) return undefined;
     this.pending = undefined;
