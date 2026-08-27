@@ -248,4 +248,124 @@ describe("DexieMilestoneStore", () => {
     ).toHaveLength(1);
     db.close();
   });
+
+  it("concede marcos estruturais pela sessão concluída sem duplicar em concorrência", async () => {
+    const db = database();
+    await db.open();
+    await db.libraryEntries.add(completedBook);
+    for (let index = 0; index < 5; index += 1) {
+      await db.sessions.add(
+        createManualSession({
+          id: `structural-session-${index}`,
+          entryId: completedBook.id,
+          entryType: "book",
+          occurredAt: `2026-08-11T10:0${index}:00.000Z`,
+          duration: 60,
+        }),
+      );
+    }
+    const milestones = store(db);
+    const event = createSessionChangedEvent({
+      aggregateId: completedBook.id,
+      eventId: "event-structural-completion",
+      occurredAt: "2026-08-11T11:00:00.000Z",
+      revision: 1,
+      payload: {
+        entryType: "book",
+        sessionId: "structural-session-4",
+        status: "completed",
+      },
+    });
+    const results = await Promise.all([
+      milestones.process(event),
+      milestones.process({ ...event, eventId: "event-structural-repeat" }),
+    ]);
+    expect(
+      results.flat().filter(({ id }) => id.startsWith("milestone.structure.")),
+    ).toHaveLength(2);
+    expect(
+      (await milestones.list()).filter(({ id }) =>
+        id.startsWith("milestone.structure."),
+      ),
+    ).toHaveLength(2);
+    db.close();
+  });
+
+  it("ignora sessão concluída sem entrada compatível para a progressão estrutural", async () => {
+    const db = database();
+    await db.open();
+    await db.libraryEntries.add(completedBook);
+    const invalid = createManualSession({
+      id: "invalid-structural-session",
+      entryId: completedBook.id,
+      entryType: "series",
+      occurredAt: "2026-08-11T12:00:00.000Z",
+      duration: 60,
+    });
+    await db.sessions.add(invalid);
+    const milestones = store(db);
+    await milestones.process(
+      createSessionChangedEvent({
+        aggregateId: completedBook.id,
+        eventId: "event-invalid-structural-session",
+        occurredAt: "2026-08-11T12:00:00.000Z",
+        revision: invalid.revision,
+        payload: {
+          entryType: "series",
+          sessionId: invalid.id,
+          status: "completed",
+        },
+      }),
+    );
+    expect(
+      (await milestones.list()).filter(({ id }) =>
+        id.startsWith("milestone.structure."),
+      ),
+    ).toEqual([]);
+    db.close();
+  });
+
+  it("reconcilia marcos estruturais antigos uma vez e preserva os existentes", async () => {
+    const db = database();
+    await db.open();
+    await db.libraryEntries.add(completedBook);
+    for (let index = 0; index < 15; index += 1) {
+      await db.sessions.add(
+        createManualSession({
+          id: `historic-session-${index}`,
+          entryId: completedBook.id,
+          entryType: "book",
+          occurredAt: `2026-08-12T10:${String(index).padStart(2, "0")}:00.000Z`,
+          duration: 60,
+        }),
+      );
+    }
+    const milestones = store(db);
+    await db.milestones.add({
+      id: MILESTONE_ID.structureFirstActivity,
+      reachedAt: "2026-08-12T09:00:00.000Z",
+      rewards: [],
+      ruleVersion: 1,
+      source: { eventId: "historic-source", eventType: "SessionChanged" },
+    });
+    const first = await milestones.reconcile({
+      reachedAt: "2026-08-12T12:00:00.000Z",
+      sourceEventId: "event-structural-reconciliation",
+    });
+    const second = await milestones.reconcile({
+      reachedAt: "2026-08-12T12:01:00.000Z",
+      sourceEventId: "event-structural-reconciliation",
+    });
+    expect(first.map(({ id }) => id)).toEqual([
+      MILESTONE_ID.structureLibraryExpansion,
+      MILESTONE_ID.structureNewSpace,
+    ]);
+    expect(second).toEqual([]);
+    expect(
+      (await milestones.list()).filter(({ id }) =>
+        id.startsWith("milestone.structure."),
+      ),
+    ).toHaveLength(3);
+    db.close();
+  });
 });

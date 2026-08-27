@@ -694,7 +694,7 @@ describe("snapshot Dexie e restauração", () => {
     databases.add(destinationName);
     const structureData: BackupData = Object.freeze({
       ...data,
-      placedObjects: [DEFAULT_PLACED_OBJECTS[0]!],
+      placedObjects: [DEFAULT_PLACED_OBJECTS[0]],
       worldStructure: INITIAL_WORLD_STRUCTURE,
     });
     const source = new BibliotecaDatabase(sourceName);

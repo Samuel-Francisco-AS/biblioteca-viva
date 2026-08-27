@@ -88,12 +88,12 @@ describe("fatos puros de progressão estrutural", () => {
     });
     const paused = pauseSession(active, "2026-08-27T12:01:00.000Z");
     const zero: Session = {
-      ...completedSessions[0]!,
+      ...completedSessions[0],
       accumulatedDuration: 0,
       id: "session-zero",
     };
     const missing: Session = {
-      ...completedSessions[0]!,
+      ...completedSessions[0],
       entryId: "entry-missing",
       id: "session-missing",
     };
@@ -106,10 +106,10 @@ describe("fatos puros de progressão estrutural", () => {
 
   it("deduplica ID e independe da ordem de leitura", () => {
     const input = [
-      completedSessions[2]!,
-      completedSessions[0]!,
-      { ...completedSessions[0]! },
-      completedSessions[1]!,
+      completedSessions[2],
+      completedSessions[0],
+      { ...completedSessions[0] },
+      completedSessions[1],
     ];
     expect(deriveStructuralProgressFacts(input, entries)).toEqual({
       eligibleCompletedSessionCount: 3,

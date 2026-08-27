@@ -158,6 +158,44 @@ describe("App", () => {
     await Dexie.delete(databaseName);
   });
 
+  it("consolida o unlock estrutural e permite abrir Construção", async () => {
+    const user = userEvent.setup();
+    const databaseName = `app-structural-${crypto.randomUUID()}`;
+    const application = await createApplication({ databaseName });
+    const rendered = render(
+      <MemoryRouter initialEntries={["/registros/fixture"]}>
+        <App application={application} />
+      </MemoryRouter>,
+    );
+    const book = await application.commands.createBookEntry.execute({
+      title: "Livro estrutural fictício",
+    });
+    await act(() =>
+      application.commands.createManualSession.execute({
+        duration: 60,
+        entryId: book.id,
+        entryType: "book",
+      }),
+    );
+    const heading = await screen.findByRole("heading", {
+      name: "Novas peças desbloqueadas",
+    });
+    const announcement = heading.closest("section");
+    if (!announcement) throw new Error("Feedback estrutural ausente.");
+    expect(announcement).toHaveTextContent("Novas peças desbloqueadas");
+    expect(announcement).toHaveTextContent("Piso de madeira: 12");
+    await user.click(
+      within(announcement).getByRole("button", { name: "Abrir construção" }),
+    );
+    await screen.findByLabelText("Modo Construção");
+    expect(
+      await screen.findByRole("dialog", { name: "Peças estruturais" }),
+    ).toBeVisible();
+    rendered.unmount();
+    application.close();
+    await Dexie.delete(databaseName);
+  });
+
   it("oferece as cinco opções no drawer e identifica a rota ativa", async () => {
     const user = userEvent.setup();
     renderApp();

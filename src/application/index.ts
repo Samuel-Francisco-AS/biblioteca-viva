@@ -11,6 +11,7 @@ export * from "./libraryEntries";
 export * from "./sessions";
 export * from "./tags";
 export * from "./statistics";
+export * from "./structuralProgression";
 export * from "./rooms";
 export * from "./ports";
 export * from "./queries";

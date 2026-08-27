@@ -5,6 +5,7 @@ import {
   structuralInventoryFamilyForDefinition,
   structureDefinition,
   type StructuralInventory,
+  type StructuralProgressionSnapshot,
   type StructurePlacement,
   type WorldStructureState,
 } from "../../application";
@@ -26,6 +27,8 @@ interface ConstructionControlsProps {
   readonly onToolChange: (tool: ConstructionTool) => void;
   readonly onSelectionChange: (instanceId: string | undefined) => void;
   readonly selectedInstanceId?: string;
+  readonly openStructuresToken?: string;
+  readonly structuralProgress?: StructuralProgressionSnapshot;
 }
 
 function humanName(id: string): string {
@@ -53,6 +56,8 @@ export function ConstructionControls({
   onToolChange,
   onSelectionChange,
   selectedInstanceId,
+  openStructuresToken,
+  structuralProgress,
   structure,
   tool,
 }: ConstructionControlsProps) {
@@ -104,6 +109,16 @@ export function ConstructionControls({
     sheet,
     tool,
   ]);
+  useEffect(() => {
+    if (!openStructuresToken) return;
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (active) setSheet("structures");
+    });
+    return () => {
+      active = false;
+    };
+  }, [openStructuresToken]);
   const currentDefinition =
     selected && structureDefinition(selected.definitionId);
   return (
@@ -111,6 +126,13 @@ export function ConstructionControls({
       <p className="construction-controls__context" role="status">
         Modo Construção. Móveis e livros estão temporariamente bloqueados.
       </p>
+      {structuralProgress && (
+        <p className="construction-controls__progress">
+          {structuralProgress.isComplete
+            ? "Todos os marcos estruturais atuais foram alcançados."
+            : `Próximo desbloqueio: ${structuralProgress.progressCurrent} de ${structuralProgress.nextMilestone?.threshold ?? structuralProgress.progressCurrent} sessões elegíveis.`}
+        </p>
+      )}
       <div
         className="construction-toolbar"
         role="toolbar"

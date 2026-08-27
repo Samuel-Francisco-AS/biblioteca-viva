@@ -5,13 +5,18 @@ import {
   type LibraryEntry,
   type Session,
 } from "../../domain";
+import type { SessionCompletionResult } from "../../application";
 import { presentApplicationError } from "../entry-editor/errorMessages";
 import { formatSessionDuration } from "./sessionPresentation";
 
 export interface SessionApplication {
   readonly commands: {
-    readonly completeSession: { execute(input: unknown): Promise<Session> };
-    readonly createManualSession: { execute(input: unknown): Promise<Session> };
+    readonly completeSession: {
+      execute(input: unknown): Promise<SessionCompletionResult>;
+    };
+    readonly createManualSession: {
+      execute(input: unknown): Promise<SessionCompletionResult>;
+    };
     readonly deleteSession: {
       execute(input: unknown): Promise<{ readonly deleted: true }>;
     };

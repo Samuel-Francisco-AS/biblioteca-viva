@@ -1,7 +1,7 @@
 import type { Activity } from "./activities";
 import type { ApplicationDependencies } from "./ports";
 import type { DomainEvent } from "../domain";
-import { milestoneReachedEvents } from "./milestones";
+import { milestoneReachedEvents, type MilestoneProcessor } from "./milestones";
 import {
   ApplicationError,
   activityPersistenceFailed,
@@ -71,6 +71,27 @@ export async function processMilestones(
   if (!dependencies.milestones) return Object.freeze([]);
   try {
     return milestoneReachedEvents(await dependencies.milestones.process(event));
+  } catch {
+    throw persistenceFailed("save_milestone");
+  }
+}
+
+export async function processMilestonesWithDetails(
+  dependencies: Pick<ApplicationDependencies, "milestones">,
+  event: DomainEvent,
+): Promise<{
+  readonly events: readonly DomainEvent[];
+  readonly reached: readonly import("../domain").ReachedMilestone[];
+}> {
+  const milestones: MilestoneProcessor | undefined = dependencies.milestones;
+  if (!milestones)
+    return Object.freeze({
+      events: Object.freeze([]),
+      reached: Object.freeze([]),
+    });
+  try {
+    const reached = await milestones.process(event);
+    return Object.freeze({ events: milestoneReachedEvents(reached), reached });
   } catch {
     throw persistenceFailed("save_milestone");
   }

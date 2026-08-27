@@ -48,6 +48,10 @@ import {
 } from "./constructionInput";
 import { TapSelectionPolicy } from "./tapSelectionPolicy";
 import {
+  shouldPresentStructuralUnlockFeedback,
+  structuralUnlockFeedbackDuration,
+} from "./structuralUnlockFeedback";
+import {
   DEFAULT_PLACED_OBJECTS,
   objectDefinition,
   orientationForRotation,
@@ -79,6 +83,11 @@ export class SpatialWorldScene extends Phaser.Scene {
   private structureZones: Phaser.GameObjects.Zone[] = [];
   private constructionPreview?: Phaser.GameObjects.Graphics;
   private selectionHighlight?: Phaser.GameObjects.Graphics;
+  private structuralUnlockHighlight?: Phaser.GameObjects.Graphics;
+  private structuralUnlockTimer?: Phaser.Time.TimerEvent;
+  private structuralUnlockTween?: Phaser.Tweens.Tween;
+  private lastStructuralUnlockToken?: string;
+  private reducedMotion: boolean;
   private construction: ConstructionSceneState = {
     active: false,
     tool: "explore",
@@ -109,15 +118,16 @@ export class SpatialWorldScene extends Phaser.Scene {
 
   constructor(
     projection: LibraryViewModel,
-    _reducedMotion: boolean,
+    reducedMotion: boolean,
     _room: RoomViewModel,
     interactionHandler?: (interaction: LibraryInteraction) => void,
     _period: LibraryVisualPeriod = "night",
   ) {
     super("spatial-world");
     this.projection = projection;
+    this.reducedMotion = reducedMotion;
     this.interactionHandler = interactionHandler;
-    void [_reducedMotion, _room, _period];
+    void [_room, _period];
   }
 
   preload(): void {
@@ -150,10 +160,16 @@ export class SpatialWorldScene extends Phaser.Scene {
     this.game.canvas.addEventListener("pointercancel", this.cancelPan);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.shutdown, this);
     this.renderWorld(this.scale.gameSize);
+    const feedback = this.projection.structuralUnlockFeedback;
+    if (feedback) {
+      this.lastStructuralUnlockToken = feedback.token;
+      this.presentStructuralUnlockFeedback();
+    }
   }
 
   pauseMotion(): void {
     this.cancelPan();
+    this.clearStructuralUnlockFeedback();
   }
 
   resumeMotion(): void {}
@@ -207,12 +223,23 @@ export class SpatialWorldScene extends Phaser.Scene {
     }
   }
 
-  setReducedMotion(_reducedMotion: boolean): void {
-    void _reducedMotion;
+  setReducedMotion(reducedMotion: boolean): void {
+    this.reducedMotion = reducedMotion;
   }
 
   updateProjection(projection: LibraryViewModel): void {
     this.projection = projection;
+    const feedback = projection.structuralUnlockFeedback;
+    if (!feedback) this.clearStructuralUnlockFeedback();
+    else if (
+      shouldPresentStructuralUnlockFeedback(
+        this.lastStructuralUnlockToken,
+        feedback,
+      )
+    ) {
+      this.lastStructuralUnlockToken = feedback.token;
+      this.presentStructuralUnlockFeedback();
+    }
     this.awaitingStructureProjection = false;
     this.cancelConstructionGesture();
     this.clearConstructionPreview();
@@ -1017,6 +1044,40 @@ export class SpatialWorldScene extends Phaser.Scene {
     this.wallFallbacks = [];
   }
 
+  private presentStructuralUnlockFeedback(): void {
+    this.clearStructuralUnlockFeedback();
+    const highlight = this.add.graphics().setDepth(50).setScrollFactor(0);
+    highlight.fillStyle(0xd5a83a, 0.24);
+    highlight.fillRoundedRect(12, 12, 164, 48, 12);
+    highlight.lineStyle(2, 0xf8dfa0, 0.9);
+    highlight.strokeRoundedRect(12, 12, 164, 48, 12);
+    this.structuralUnlockHighlight = highlight;
+    if (!this.reducedMotion) {
+      this.structuralUnlockTween = this.tweens.add({
+        alpha: 0.58,
+        duration: 360,
+        ease: "Sine.easeInOut",
+        targets: highlight,
+        yoyo: true,
+      });
+    }
+    this.structuralUnlockTimer = this.time.delayedCall(
+      structuralUnlockFeedbackDuration(this.reducedMotion),
+      () => this.clearStructuralUnlockFeedback(),
+      [],
+      this,
+    );
+  }
+
+  private clearStructuralUnlockFeedback(): void {
+    this.structuralUnlockTimer?.remove(false);
+    this.structuralUnlockTimer = undefined;
+    this.structuralUnlockTween?.remove();
+    this.structuralUnlockTween = undefined;
+    this.structuralUnlockHighlight?.destroy();
+    this.structuralUnlockHighlight = undefined;
+  }
+
   private readonly shutdown = (): void => {
     this.pan.cancel();
     this.cancelConstructionGesture();
@@ -1028,6 +1089,7 @@ export class SpatialWorldScene extends Phaser.Scene {
     this.clearWallPieces();
     this.clearStructureZones();
     this.clearConstructionPreview();
+    this.clearStructuralUnlockFeedback();
     for (const zone of this.objectZones) zone.destroy();
     for (const graphics of this.objectGraphics) graphics.destroy();
     for (const sprite of this.objectSprites) sprite.destroy();

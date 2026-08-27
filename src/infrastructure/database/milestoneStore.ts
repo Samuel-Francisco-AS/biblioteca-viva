@@ -3,9 +3,13 @@ import Dexie from "dexie";
 import type {
   MilestoneProcessor,
   MilestoneRepository,
+  StructuralProgressionStore,
 } from "../../application";
 import {
   MilestoneEngine,
+  STRUCTURAL_MILESTONE_DEFINITIONS,
+  deriveStructuralProgressFacts,
+  evaluateStructuralMilestones,
   type DomainEvent,
   type MilestoneDefinition,
   type MilestoneRewardDefinition,
@@ -16,7 +20,12 @@ import {
 } from "../../domain";
 import { roomFacts } from "../../application";
 import type { BibliotecaDatabase } from "./database";
-import { persistedMilestoneSchema, type PersistedMilestone } from "./schema";
+import {
+  persistedLibraryEntrySchema,
+  persistedMilestoneSchema,
+  persistedSessionSchema,
+  type PersistedMilestone,
+} from "./schema";
 import { InfrastructureError } from "./errors";
 
 function readMilestone(value: unknown): ReachedMilestone {
@@ -33,7 +42,7 @@ function readMilestone(value: unknown): ReachedMilestone {
 }
 
 export class DexieMilestoneStore
-  implements MilestoneProcessor, MilestoneRepository
+  implements MilestoneProcessor, MilestoneRepository, StructuralProgressionStore
 {
   constructor(
     private readonly database: BibliotecaDatabase,
@@ -63,16 +72,27 @@ export class DexieMilestoneStore
 
   async process(event: DomainEvent): Promise<readonly ReachedMilestone[]> {
     if (event.type === "MilestoneReached") return Object.freeze([]);
-    const [entries, totalNotes, totalQuotes, totalSessions, reached] =
+    const [storedEntries, storedSessions, totalNotes, totalQuotes, reached] =
       await Promise.all([
         this.database.libraryEntries.toArray(),
+        this.database.sessions.toArray(),
         this.database.notes.count(),
         this.database.quotes.count(),
-        this.database.sessions.count(),
         this.list(),
       ]);
+    const entries = storedEntries.map((entry) =>
+      persistedLibraryEntrySchema.parse(entry),
+    );
+    const sessions = storedSessions.map((session) =>
+      persistedSessionSchema.parse(session),
+    );
     const candidates = this.engine.evaluate({
-      definitions: this.definitions,
+      definitions: this.definitions.filter(
+        (definition) =>
+          !STRUCTURAL_MILESTONE_DEFINITIONS.some(
+            (structural) => structural.id === definition.id,
+          ),
+      ),
       event,
       facts: {
         completedBooks: entries.filter(
@@ -86,29 +106,28 @@ export class DexieMilestoneStore
           ({ type }) => type === "physical_activity",
         ).length,
         totalWorkEntries: entries.filter(({ type }) => type === "work").length,
-        totalSessions,
+        totalSessions: sessions.length,
         totalNotes,
         totalQuotes,
       },
       reached,
       rewards: this.rewards,
     });
-    const inserted: ReachedMilestone[] = [];
-    for (const candidate of candidates) {
-      const parsed = persistedMilestoneSchema.parse(candidate);
-      try {
-        await this.database.milestones.add({
-          ...parsed,
-        } satisfies PersistedMilestone);
-        inserted.push(readMilestone(parsed));
-      } catch (error: unknown) {
-        if (error instanceof Dexie.ConstraintError) continue;
-        throw new InfrastructureError(
-          "DATABASE_WRITE_FAILED",
-          "save_milestone",
-        );
-      }
-    }
+    const structuralCandidates =
+      event.type === "SessionChanged"
+        ? evaluateStructuralMilestones({
+            definitions: STRUCTURAL_MILESTONE_DEFINITIONS,
+            facts: deriveStructuralProgressFacts(sessions, entries),
+            reached,
+            reachedAt: event.occurredAt,
+            rewards: this.rewards,
+            sourceEventId: event.eventId,
+          })
+        : Object.freeze([]);
+    const inserted = await this.insertCandidates([
+      ...candidates,
+      ...structuralCandidates,
+    ]);
     const allReached = [...reached, ...inserted];
     const affectedType =
       "payload" in event && "entryType" in event.payload
@@ -121,7 +140,6 @@ export class DexieMilestoneStore
           room.associatedEntryTypes.includes(affectedType)),
     );
     if (affectedRooms.length > 0) {
-      const sessions = await this.database.sessions.toArray();
       const facts = roomFacts({
         entries,
         sessions,
@@ -164,5 +182,72 @@ export class DexieMilestoneStore
       }
     }
     return Object.freeze(inserted);
+  }
+
+  async reconcile(input: {
+    readonly reachedAt: string;
+    readonly sourceEventId: string;
+  }): Promise<readonly ReachedMilestone[]> {
+    try {
+      return await this.database.transaction(
+        "rw",
+        [
+          this.database.libraryEntries,
+          this.database.sessions,
+          this.database.milestones,
+        ],
+        async () => {
+          const [storedEntries, storedSessions, reached] = await Promise.all([
+            this.database.libraryEntries.toArray(),
+            this.database.sessions.toArray(),
+            this.list(),
+          ]);
+          const entries = storedEntries.map((entry) =>
+            persistedLibraryEntrySchema.parse(entry),
+          );
+          const sessions = storedSessions.map((session) =>
+            persistedSessionSchema.parse(session),
+          );
+          return this.insertCandidates(
+            evaluateStructuralMilestones({
+              definitions: STRUCTURAL_MILESTONE_DEFINITIONS,
+              facts: deriveStructuralProgressFacts(sessions, entries),
+              reached,
+              reachedAt: input.reachedAt,
+              rewards: this.rewards,
+              sourceEventId: input.sourceEventId,
+            }),
+          );
+        },
+      );
+    } catch (error: unknown) {
+      if (error instanceof InfrastructureError) throw error;
+      throw new InfrastructureError(
+        "DATABASE_WRITE_FAILED",
+        "reconcile_structural_milestones",
+      );
+    }
+  }
+
+  private async insertCandidates(
+    candidates: readonly ReachedMilestone[],
+  ): Promise<ReachedMilestone[]> {
+    const inserted: ReachedMilestone[] = [];
+    for (const candidate of candidates) {
+      const parsed = persistedMilestoneSchema.parse(candidate);
+      try {
+        await this.database.milestones.add({
+          ...parsed,
+        } satisfies PersistedMilestone);
+        inserted.push(readMilestone(parsed));
+      } catch (error: unknown) {
+        if (error instanceof Dexie.ConstraintError) continue;
+        throw new InfrastructureError(
+          "DATABASE_WRITE_FAILED",
+          "save_milestone",
+        );
+      }
+    }
+    return inserted;
   }
 }

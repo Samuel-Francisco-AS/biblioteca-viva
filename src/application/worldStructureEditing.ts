@@ -19,6 +19,7 @@ import {
   type WorldStructureState,
 } from "./worldStructure";
 import type { WorldStructureRepository } from "./worldStructureRepository";
+import type { MilestoneRepository } from "./milestones";
 
 export type StructureOperationCode =
   | "NO_AVAILABILITY"
@@ -68,6 +69,14 @@ export interface StructureEditingDependencies {
   readonly ids: { generate(): Promise<string> };
   readonly objects: { list(): Promise<readonly PlacedObject[]> };
   readonly repository: WorldStructureRepository;
+  readonly milestones?: MilestoneRepository;
+}
+
+async function inventoryFor(
+  state: WorldStructureState,
+  milestones?: MilestoneRepository,
+) {
+  return structuralInventory(state, milestones ? await milestones.list() : []);
 }
 
 function stateWith(
@@ -233,11 +242,14 @@ async function commit(
 }
 
 export class GetStructuralInventory {
-  constructor(private readonly repository: WorldStructureRepository) {}
+  constructor(
+    private readonly repository: WorldStructureRepository,
+    private readonly milestones?: MilestoneRepository,
+  ) {}
   async execute() {
     const state = await this.repository.get();
     if (!state) throw editError("PERSISTENCE_FAILED");
-    return structuralInventory(state);
+    return inventoryFor(state, this.milestones);
   }
 }
 
@@ -267,7 +279,7 @@ export class PlaceStructure {
     if (!definition || definition.category === "floor")
       throw editError("INVALID_COORDINATE");
     if (
-      structuralInventory(state).available[
+      (await inventoryFor(state, this.deps.milestones)).available[
         structuralInventoryFamilyForDefinition(parsed.definitionId)
       ] < 1
     )
@@ -475,8 +487,9 @@ export class AddFloorCells {
       )
         continue;
       if (
-        structuralInventory(working).available["structure-family.floor.wood"] <
-        1
+        (await inventoryFor(working, this.deps.milestones)).available[
+          "structure-family.floor.wood"
+        ] < 1
       )
         continue;
       if (

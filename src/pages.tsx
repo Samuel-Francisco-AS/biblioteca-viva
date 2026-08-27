@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import type {
   BookEntry,
@@ -20,6 +20,7 @@ import {
   nextObjectRotation,
   type PlacedObject,
   type StructuralInventory,
+  type StructuralProgressionSnapshot,
   type WorldStructureState,
 } from "./application";
 import { presentApplicationError } from "./features/entry-editor/errorMessages";
@@ -66,6 +67,9 @@ export interface LibraryPageApplication {
     };
     readonly getStructuralInventory?: {
       execute(): Promise<StructuralInventory>;
+    };
+    readonly getStructuralProgress?: {
+      execute(): Promise<StructuralProgressionSnapshot>;
     };
   };
   readonly commands?: {
@@ -121,6 +125,7 @@ type LibraryPageState =
       };
       readonly placedObjects: readonly PlacedObject[];
       readonly structuralInventory?: StructuralInventory;
+      readonly structuralProgress?: StructuralProgressionSnapshot;
     };
 
 type AtmosphereOverride = LibraryPeriod | "automatic";
@@ -151,6 +156,7 @@ function projectionInput(
   books: readonly BookEntry[],
   milestones: readonly ReachedMilestone[],
   pendingDecorationUnlock?: { readonly eventId: string },
+  pendingStructuralUnlock?: import("./features/library-visual/contracts").StructuralUnlockFeedback,
   placedObjects?: readonly PlacedObject[],
   worldStructure?: WorldStructureState,
 ) {
@@ -167,6 +173,7 @@ function projectionInput(
     ),
     milestones,
     ...(pendingDecorationUnlock && { pendingDecorationUnlock }),
+    ...(pendingStructuralUnlock && { pendingStructuralUnlock }),
     ...(placedObjects && { placedObjects }),
     ...(worldStructure && { worldStructure }),
   };
@@ -176,15 +183,18 @@ export function LibraryPage({
   application,
   onDecorationUnlockPresented,
   pendingDecorationUnlock,
+  pendingStructuralUnlock,
   reducedMotion = false,
   highContrast = false,
 }: {
   readonly application?: LibraryPageApplication;
   readonly onDecorationUnlockPresented?: (eventId: string) => void;
   readonly pendingDecorationUnlock?: { readonly eventId: string };
+  readonly pendingStructuralUnlock?: import("./features/library-visual/contracts").StructuralUnlockFeedback;
   readonly reducedMotion?: boolean;
   readonly highContrast?: boolean;
 }) {
+  const location = useLocation();
   const diagnosticsEnabled =
     import.meta.env.DEV || import.meta.env.VITE_ENABLE_DIAGNOSTICS === "true";
   const diagnostics = useMemo(
@@ -237,6 +247,7 @@ export function LibraryPage({
   const [constructionMode, setConstructionMode] = useState(false);
   const [constructionTool, setConstructionTool] =
     useState<ConstructionTool>("explore");
+  const [openStructuresToken, setOpenStructuresToken] = useState<string>();
   const [placingStructureDefinitionId, setPlacingStructureDefinitionId] =
     useState<import("./application").StructureDefinitionId>();
   const [movingStructureId, setMovingStructureId] = useState<string>();
@@ -285,6 +296,7 @@ export function LibraryPage({
   function applyStructureState(
     next: WorldStructureState,
     structuralInventory?: StructuralInventory,
+    structuralProgress?: StructuralProgressionSnapshot,
   ): void {
     if (!mountedRef.current) return;
     setSelectedStructureId((selected) =>
@@ -299,6 +311,7 @@ export function LibraryPage({
             ...current,
             viewModel: { ...current.viewModel, worldStructure: next },
             ...(structuralInventory && { structuralInventory }),
+            ...(structuralProgress && { structuralProgress }),
           }
         : current,
     );
@@ -320,15 +333,18 @@ export function LibraryPage({
   async function refreshStructureState(token: number): Promise<boolean> {
     const getStructure = application?.queries.getWorldStructure;
     if (!getStructure) return false;
-    const [structure, structuralInventory] = await Promise.all([
-      getStructure.execute(),
-      application?.queries.getStructuralInventory?.execute() ??
-        Promise.resolve(undefined),
-    ]);
+    const [structure, structuralInventory, structuralProgress] =
+      await Promise.all([
+        getStructure.execute(),
+        application?.queries.getStructuralInventory?.execute() ??
+          Promise.resolve(undefined),
+        application?.queries.getStructuralProgress?.execute() ??
+          Promise.resolve(undefined),
+      ]);
     if (!operationIsCurrent(token) || !structure) return false;
     setPlacingStructureDefinitionId(undefined);
     setMovingStructureId(undefined);
-    applyStructureState(structure, structuralInventory);
+    applyStructureState(structure, structuralInventory, structuralProgress);
     return true;
   }
 
@@ -491,6 +507,8 @@ export function LibraryPage({
         Promise.resolve(undefined),
       application.queries.getStructuralInventory?.execute() ??
         Promise.resolve(undefined),
+      application.queries.getStructuralProgress?.execute() ??
+        Promise.resolve(undefined),
     ]).then(
       ([
         books,
@@ -500,6 +518,7 @@ export function LibraryPage({
         placedObjects,
         worldStructure,
         structuralInventory,
+        structuralProgress,
       ]) => {
         if (!active) return;
         diagnostics?.resources({
@@ -519,6 +538,7 @@ export function LibraryPage({
               books,
               milestones,
               pendingDecorationUnlock,
+              pendingStructuralUnlock,
               placedObjects,
               worldStructure,
             ),
@@ -526,6 +546,7 @@ export function LibraryPage({
           rooms,
           placedObjects,
           ...(structuralInventory && { structuralInventory }),
+          ...(structuralProgress && { structuralProgress }),
           ...(statistics && {
             productSummary: {
               totalEntries: statistics.totalEntries,
@@ -552,8 +573,32 @@ export function LibraryPage({
     attempt,
     diagnostics,
     pendingDecorationUnlock,
+    pendingStructuralUnlock,
     projectionService,
   ]);
+
+  useEffect(() => {
+    const token = (
+      location.state as { readonly openStructuralConstruction?: string } | null
+    )?.openStructuralConstruction;
+    if (!token || state.kind !== "ready") return;
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (!active) return;
+      setConstructionMode(true);
+      setConstructionTool("explore");
+      setPlacingStructureDefinitionId(undefined);
+      setMovingStructureId(undefined);
+      setSelectedStructureId(undefined);
+      setOpenStructuresToken(token);
+      setSelectedObjectId(undefined);
+      setObjectActionsObjectId(undefined);
+      setObjectActionsClosing(false);
+    });
+    return () => {
+      active = false;
+    };
+  }, [location.state, state.kind]);
 
   useEffect(() => {
     if (!application || state.kind !== "ready") return;
@@ -872,6 +917,7 @@ export function LibraryPage({
             application.commands.removeFloorCells && (
               <ConstructionControls
                 inventory={state.structuralInventory}
+                structuralProgress={state.structuralProgress}
                 onAddFloor={(cell) =>
                   runStructure(
                     () =>
@@ -937,6 +983,7 @@ export function LibraryPage({
                   )
                 }
                 onToolChange={setConstructionTool}
+                openStructuresToken={openStructuresToken}
                 selectedInstanceId={selectedStructureId}
                 onSelectionChange={setSelectedStructureId}
                 structure={state.viewModel.worldStructure}

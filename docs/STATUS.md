@@ -66,4 +66,8 @@ A primeira W3-A visual foi reprovada no Moto G06: o compositor por limites de pi
 
 ## Processo 2 — Gate P2 técnico — 2026-08-27
 
-P2-C1 conectou React, host, Phaser, casos de uso e projeção confirmada, com single-flight, token, unmount e recuperação de revisão obsoleta. P2-C2 acrescentou hit areas por modo, seleção estrutural, snap centralizado, previews efêmeros, lote de piso e cleanup sem persistência no canvas. P2-C3 adicionou regressão integrada/E2E, prova de backup v5 com `WorldStructureState` separado de `PlacedObject`, reload e correções responsivas localizadas. O Gate P2 é técnico; a inspeção física Moto G06, TalkBack e aprovação artística permanecem pendentes. Processo 3 não foi iniciado.
+P2-C1 conectou React, host, Phaser, casos de uso e projeção confirmada, com single-flight, token, unmount e recuperação de revisão obsoleta. P2-C2 acrescentou hit areas por modo, seleção estrutural, snap centralizado, previews efêmeros, lote de piso e cleanup sem persistência no canvas. P2-C3 adicionou regressão integrada/E2E, prova de backup v5 com `WorldStructureState` separado de `PlacedObject`, reload e correções responsivas localizadas. O Gate P2 é técnico; a inspeção física Moto G06, TalkBack e aprovação artística permanecem pendentes.
+
+## Processo 3 — P3-B técnico — 2026-08-27
+
+P3-B conecta sessão concluída e sessão manual concluída à avaliação estrutural P3-A dentro da transação já usada por sessão, entrada, atividade e milestones. A reconciliação não bloqueante da inicialização executa depois da persistência disponível, insere somente marcos estruturais ausentes e publica feedback somente após commit. Inventário e projeção usam marcos persistidos; React consolida a notificação acessível e a ação explícita abre Construção sem selecionar peça. Phaser recebe apenas token/famílias para um realce finito, com variante estática em movimento reduzido. Permanecem para P3-C: documentação final, E2E amplo, Android/APK e validação humana/física.

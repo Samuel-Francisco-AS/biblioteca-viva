@@ -20,7 +20,8 @@ export type AudioIntent =
   | { readonly type: "ShelfSelected" }
   | { readonly type: "LibrarianSelected" }
   | { readonly type: "CreatureSelected" }
-  | { readonly type: "BookCompleted" };
+  | { readonly type: "BookCompleted" }
+  | { readonly type: "StructuralUnlocked" };
 
 export interface AudioDiagnosticsSnapshot {
   readonly activeEffects: number;

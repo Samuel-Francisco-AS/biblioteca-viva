@@ -137,6 +137,9 @@ export class AudioService implements AudioPort {
         return;
       case "BookCompleted":
         this.playEffect("milestone.book-completed");
+        return;
+      case "StructuralUnlocked":
+        this.playEffect("milestone.book-completed");
     }
   }
 

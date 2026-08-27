@@ -1,4 +1,10 @@
-import type { DecorationId, ResidentId, RoomId, RoomStage } from "../../domain";
+import type {
+  DecorationId,
+  ResidentId,
+  RoomId,
+  RoomStage,
+  StructuralInventoryFamilyId,
+} from "../../domain";
 
 export type LibraryVisualHostState =
   "creating" | "ready" | "paused" | "failed" | "destroyed";
@@ -57,6 +63,13 @@ export interface LibraryViewModel {
   readonly unlockedDecorationIds: readonly DecorationId[];
   readonly placedObjects?: readonly import("../../application").PlacedObject[];
   readonly worldStructure?: import("../../application").WorldStructureState;
+  readonly structuralUnlockFeedback?: StructuralUnlockFeedback | null;
+}
+
+/** Ephemeral presentation request. It deliberately contains no progress rule. */
+export interface StructuralUnlockFeedback {
+  readonly familyIds: readonly StructuralInventoryFamilyId[];
+  readonly token: string;
 }
 
 export type LibrarySceneEvent =

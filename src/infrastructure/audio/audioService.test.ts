@@ -200,6 +200,15 @@ describe("AudioService", () => {
     expect(backend.plays).toEqual([]);
   });
 
+  it("reutiliza o efeito de milestone para um feedback estrutural consolidado", async () => {
+    await service.initialize();
+    service.emit({ type: "StructuralUnlocked" });
+    await flush();
+    expect(backend.plays.map(({ cue }) => cue.id)).toEqual([
+      "milestone.book-completed",
+    ]);
+  });
+
   it("reproduz a intenção do mesmo gesto somente depois que a inicialização termina", async () => {
     const initialization = service.initialize();
     service.emit({ type: "PageChanged" });

@@ -6,6 +6,7 @@ import {
   Route,
   Routes,
   useLocation,
+  useNavigate,
   useParams,
 } from "react-router-dom";
 
@@ -23,7 +24,12 @@ import { EditEntryPage } from "./features/entry-editor/EditEntryPage";
 import { EntryDetailPage } from "./features/entry-detail/EntryDetailPage";
 import "./styles.css";
 import { useAudioExperience } from "./useAudioExperience";
-import { MILESTONE_ID, type MilestoneReached } from "./domain";
+import {
+  MILESTONE_ID,
+  type MilestoneReached,
+  type StructuralInventoryFamilyId,
+} from "./domain";
+import { isStructuralMilestoneId, structuralGrants } from "./application";
 import { LibraryPage } from "./pages";
 import { useExperiencePreferences } from "./useExperiencePreferences";
 import { ActiveSessionIndicator } from "./features/sessions/ActiveSessionIndicator";
@@ -64,7 +70,25 @@ const diagnosticsBuildEnabled =
 const unsafeContextGuidance =
   "Este ambiente não oferece todas as APIs necessárias para salvar e exportar com segurança. Abra a aplicação por localhost, HTTPS ou pelo APK Android. Os dados de outras origens do navegador não foram apagados.";
 
+function structuralFamilyName(id: StructuralInventoryFamilyId): string {
+  switch (id) {
+    case "structure-family.floor.wood":
+      return "Piso de madeira";
+    case "structure-family.wall.short":
+      return "Parede curta";
+    case "structure-family.wall.medium":
+      return "Parede média";
+    case "structure-family.wall.long":
+      return "Parede longa";
+    case "structure-family.corner.stone":
+      return "Canto de pedra";
+    case "structure-family.door.horizontal":
+      return "Porta horizontal";
+  }
+}
+
 export function App({ application, diagnostics }: AppProps) {
+  const navigate = useNavigate();
   const location = useLocation();
   const mainRef = useRef<HTMLElement>(null);
   const previousPathRef = useRef(location.pathname);
@@ -80,6 +104,16 @@ export function App({ application, diagnostics }: AppProps) {
   const [pendingDecorationUnlock, setPendingDecorationUnlock] = useState<{
     readonly eventId: string;
   } | null>(null);
+  const [structuralUnlock, setStructuralUnlock] = useState<{
+    readonly families: readonly {
+      readonly familyId: StructuralInventoryFamilyId;
+      readonly quantity: number;
+    }[];
+    readonly token: string;
+  } | null>(null);
+  const structuralMilestoneIdsRef = useRef(new Set<string>());
+  const structuralBatchScheduledRef = useRef(false);
+  const structuralFeedbackTokenRef = useRef(0);
   const activeRoute = appRoutes.find(
     (route) => route.path === location.pathname,
   );
@@ -181,6 +215,46 @@ export function App({ application, diagnostics }: AppProps) {
           });
       }
     };
+    const flushStructuralFeedback = () => {
+      structuralBatchScheduledRef.current = false;
+      const milestoneIds = new Set(structuralMilestoneIdsRef.current);
+      structuralMilestoneIdsRef.current.clear();
+      if (milestoneIds.size === 0) return;
+      void application.queries.listMilestones.list().then(
+        (milestones) => {
+          if (!active) return;
+          const totals = new Map<StructuralInventoryFamilyId, number>();
+          for (const grant of structuralGrants(
+            milestones.filter((milestone) => milestoneIds.has(milestone.id)),
+          )) {
+            totals.set(
+              grant.familyId,
+              (totals.get(grant.familyId) ?? 0) + grant.quantity,
+            );
+          }
+          if (totals.size === 0) return;
+          structuralFeedbackTokenRef.current += 1;
+          const token = `structural-unlock-${structuralFeedbackTokenRef.current}`;
+          setStructuralUnlock({
+            families: Object.freeze(
+              [...totals.entries()].map(([familyId, quantity]) => ({
+                familyId,
+                quantity,
+              })),
+            ),
+            token,
+          });
+          application.audio.emit({ type: "StructuralUnlocked" });
+        },
+        () => console.warn("Progressão estrutural indisponível: LIST_FAILED."),
+      );
+    };
+    const scheduleStructuralFeedback = (milestoneId: string) => {
+      structuralMilestoneIdsRef.current.add(milestoneId);
+      if (structuralBatchScheduledRef.current) return;
+      structuralBatchScheduledRef.current = true;
+      void Promise.resolve().then(flushStructuralFeedback);
+    };
     const unsubscribe = application.events.subscribe(
       "MilestoneReached",
       (event) => {
@@ -190,8 +264,20 @@ export function App({ application, diagnostics }: AppProps) {
         ) {
           void reactToFirstCompletion(event);
         }
+        if (
+          event.type === "MilestoneReached" &&
+          isStructuralMilestoneId(event.payload.milestoneId)
+        )
+          scheduleStructuralFeedback(event.payload.milestoneId);
       },
     );
+    void application.commands.reconcileStructuralProgress
+      .execute()
+      .catch(() => {
+        console.warn(
+          "Progressão estrutural indisponível: RECONCILIATION_FAILED.",
+        );
+      });
     return () => {
       active = false;
       unsubscribe();
@@ -322,6 +408,42 @@ export function App({ application, diagnostics }: AppProps) {
             </button>
           </section>
         )}
+        {structuralUnlock && (
+          <section
+            aria-atomic="true"
+            aria-live="polite"
+            className="milestone-notification structural-unlock-notification"
+            role="status"
+          >
+            <h2>Novas peças desbloqueadas</h2>
+            <ul>
+              {structuralUnlock.families.map(({ familyId, quantity }) => (
+                <li key={familyId}>
+                  {structuralFamilyName(familyId)}: {quantity}
+                </li>
+              ))}
+            </ul>
+            <button
+              className="button button--primary"
+              onClick={() => {
+                void navigate("/", {
+                  state: { openStructuralConstruction: structuralUnlock.token },
+                });
+                setStructuralUnlock(null);
+              }}
+              type="button"
+            >
+              Abrir construção
+            </button>
+            <button
+              className="button button--secondary"
+              onClick={() => setStructuralUnlock(null)}
+              type="button"
+            >
+              Dispensar
+            </button>
+          </section>
+        )}
         <Routes>
           <Route
             path="/"
@@ -334,6 +456,16 @@ export function App({ application, diagnostics }: AppProps) {
                   );
                 }}
                 pendingDecorationUnlock={pendingDecorationUnlock ?? undefined}
+                pendingStructuralUnlock={
+                  structuralUnlock
+                    ? {
+                        familyIds: structuralUnlock.families.map(
+                          ({ familyId }) => familyId,
+                        ),
+                        token: structuralUnlock.token,
+                      }
+                    : undefined
+                }
                 reducedMotion={effectiveExperience.reducedMotion}
                 highContrast={effectiveExperience.highContrast}
               />

@@ -77,6 +77,8 @@ import {
   WORLD_PLACEMENT_AREAS,
   GetWorldStructure,
   GetStructuralInventory,
+  GetStructuralProgress,
+  ReconcileStructuralProgress,
   PlaceStructure,
   MoveStructure,
   RotateStructure,
@@ -200,6 +202,7 @@ export interface ApplicationRuntime {
     readonly storeStructure: StoreStructure;
     readonly addFloorCells: AddFloorCells;
     readonly removeFloorCells: RemoveFloorCells;
+    readonly reconcileStructuralProgress: ReconcileStructuralProgress;
   };
   readonly queries: {
     readonly getBookEntry: GetBookEntry;
@@ -222,6 +225,7 @@ export interface ApplicationRuntime {
     readonly listPlacedObjects: ListPlacedObjects;
     readonly getWorldStructure: GetWorldStructure;
     readonly getStructuralInventory: GetStructuralInventory;
+    readonly getStructuralProgress: GetStructuralProgress;
   };
   readonly diagnostics: ApplicationDiagnostics;
   readonly events: LocalEventBus;
@@ -352,6 +356,7 @@ export async function createApplication(
     ids,
     libraryEntries,
     milestones: milestoneStore,
+    structuralProgression: milestoneStore,
     notes,
     quotes,
     sessions,
@@ -375,6 +380,7 @@ export async function createApplication(
     ids,
     objects: { list: () => listPlacedObjects.execute() },
     repository: worldStructures,
+    milestones: milestoneStore,
   };
   return {
     appVersion: packageMetadata.version,
@@ -494,6 +500,11 @@ export async function createApplication(
       storeStructure: new StoreStructure(structureEditing),
       addFloorCells: new AddFloorCells(structureEditing),
       removeFloorCells: new RemoveFloorCells(structureEditing),
+      reconcileStructuralProgress: new ReconcileStructuralProgress({
+        clock,
+        events,
+        progression: milestoneStore,
+      }),
     },
     queries: {
       getBookEntry: new GetBookEntry(libraryEntries),
@@ -515,7 +526,15 @@ export async function createApplication(
       getRoomProgress: new GetRoomProgress(getStatistics, ROOM_CATALOG),
       listPlacedObjects,
       getWorldStructure: new GetWorldStructure(worldStructures),
-      getStructuralInventory: new GetStructuralInventory(worldStructures),
+      getStructuralInventory: new GetStructuralInventory(
+        worldStructures,
+        milestoneStore,
+      ),
+      getStructuralProgress: new GetStructuralProgress({
+        entries: libraryEntries,
+        milestones: milestoneStore,
+        sessions,
+      }),
     },
     diagnostics: {
       inspect: () => diagnosticsService.inspect(),

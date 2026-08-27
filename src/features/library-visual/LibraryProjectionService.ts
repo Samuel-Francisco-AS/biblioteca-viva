@@ -9,6 +9,7 @@ import type {
   LibraryProgressSummary,
   LibraryViewModel,
   ShelfOccupancy,
+  StructuralUnlockFeedback,
 } from "./contracts";
 import {
   DEFAULT_PLACED_OBJECTS,
@@ -31,6 +32,7 @@ export interface LibraryProjectionInput {
   readonly pendingDecorationUnlock?: { readonly eventId: string };
   readonly placedObjects?: readonly PlacedObject[];
   readonly worldStructure?: WorldStructureState;
+  readonly pendingStructuralUnlock?: StructuralUnlockFeedback;
 }
 
 export const SHELF_OCCUPANCY_RANGES = {
@@ -131,6 +133,9 @@ export class LibraryProjectionService {
       roomState: "default",
       shelfOccupancy,
       shelfVisualGroupCount: shelfVisualGroupCountFor(totalBooks),
+      ...(input.pendingStructuralUnlock && {
+        structuralUnlockFeedback: input.pendingStructuralUnlock,
+      }),
       totalBooks,
       unlockedDecorationIds,
       placedObjects: Object.freeze([

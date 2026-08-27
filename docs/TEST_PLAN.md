@@ -1134,3 +1134,7 @@ Automação cobre catálogo/topologia, células e arestas, conflitos, blueprint 
 ## P2-C1/C2/C3 — editor estrutural
 
 Automação cobre a ponte React→host→Phaser→intenção→caso de uso→projeção, revisão obsoleta, seleção, snap, hit areas, lote de piso, cleanup e canvas único. O E2E `construction-editor.spec.ts` usa bounding box do canvas para colocar/mover uma peça real, percorre girar, piso, guardar, retorno ao modo normal e reload. Backup testa v5 com estrutura/piso e `PlacedObject` separados, importação repetida sem duplicação e inventário derivado; v4 já é aceito. Pendente humano: Moto G06, TalkBack, contraste percebido, texto ampliado real, safe areas, arte e conforto de toque.
+
+## P3-B — progressão estrutural integrada
+
+Automação focada cobre conclusão/manual de sessão, transação com milestone, concorrência single-flight, concessão estrutural idempotente, reconciliação de histórico, inventário derivado por família, projeção do próximo marco e estado concluído após 30 sessões. React cobre feedback consolidado, abertura explícita de Construção, inventário/progresso sem reload e descarte após unmount já coberto pelo padrão estrutural P2-C1. Phaser recebe somente token/famílias e prova deduplicação por token e duração finita/reduzida. P3-C ainda deve executar E2E amplo, Android/APK e validação humana.

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   AddFloorCells,
+  GetStructuralInventory,
   INITIAL_WORLD_STRUCTURE,
   MoveStructure,
   PlaceStructure,
@@ -11,6 +12,7 @@ import {
   type WorldStructureRepository,
   type WorldStructureState,
 } from "./index";
+import { MILESTONE_ID, STRUCTURAL_INVENTORY_FAMILY_ID } from "../domain";
 
 function harness(initial: WorldStructureState = INITIAL_WORLD_STRUCTURE) {
   let state = initial;
@@ -89,5 +91,34 @@ describe("W3 structural editing", () => {
     });
     expect(result.removed).toBe(0);
     expect(world.state().revision).toBe(1);
+  });
+
+  it("deriva o inventário a partir das concessões estruturais persistidas", async () => {
+    const world = harness();
+    const inventory = await new GetStructuralInventory(world.repository, {
+      list: () =>
+        Promise.resolve([
+          {
+            id: MILESTONE_ID.structureFirstActivity,
+            reachedAt: "2026-08-27T00:00:00.000Z",
+            rewards: [
+              {
+                familyId: STRUCTURAL_INVENTORY_FAMILY_ID.wallShort,
+                id: "reward.fixture.wall-short",
+                quantity: 3,
+                type: "structure-grant" as const,
+              },
+            ],
+            ruleVersion: 1,
+            source: {
+              eventId: "event-fixture",
+              eventType: "SessionChanged" as const,
+            },
+          },
+        ]),
+    }).execute();
+    expect(inventory.available[STRUCTURAL_INVENTORY_FAMILY_ID.wallShort]).toBe(
+      5,
+    );
   });
 });

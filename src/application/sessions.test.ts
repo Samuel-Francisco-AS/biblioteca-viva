@@ -116,7 +116,18 @@ describe("casos de uso de sessão", () => {
     const completed = await new CompleteSession(test.dependencies).execute({
       id: paused.id,
     });
-    expect(completed.accumulatedDuration).toBe(120);
+    expect(completed.session.accumulatedDuration).toBe(120);
+    expect(completed.newStructuralMilestones.map(({ id }) => id)).toEqual([
+      "milestone.structure.first-activity",
+    ]);
+    expect(completed.structuralGrants).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          familyId: "structure-family.floor.wood",
+          quantity: 12,
+        }),
+      ]),
+    );
     expect(
       await test.dependencies.libraryEntries.getById(book.id),
     ).toMatchObject({ currentPage: 30, status: "in_progress" });
@@ -185,7 +196,7 @@ describe("casos de uso de sessão", () => {
     });
     test.setNow("2026-08-16T11:00:00.000Z");
     const edited = await new EditSession(test.dependencies).execute({
-      id: completed.id,
+      id: completed.session.id,
       duration: 900,
       note: "Registro corrigido",
     });
@@ -194,9 +205,11 @@ describe("casos de uso de sessão", () => {
       note: "Registro corrigido",
       revision: 2,
     });
-    await new DeleteSession(test.dependencies).execute({ id: completed.id });
+    await new DeleteSession(test.dependencies).execute({
+      id: completed.session.id,
+    });
     expect(
-      await test.dependencies.sessions.getById(completed.id),
+      await test.dependencies.sessions.getById(completed.session.id),
     ).toBeUndefined();
     expect(
       await test.dependencies.libraryEntries.getById(book.id),
@@ -214,6 +227,35 @@ describe("casos de uso de sessão", () => {
       expect.objectContaining({ status: "active" }),
       expect.objectContaining({ status: "deleted" }),
     ]);
+    test.database.close();
+  });
+
+  it("coalesce duas conclusões simultâneas e publica uma concessão estrutural", async () => {
+    const test = await context();
+    const book = createBook({
+      id: "book-concurrent",
+      title: "Concorrência",
+      createdAt: "2026-08-16T09:00:00.000Z",
+    });
+    await test.dependencies.libraryEntries.save(book);
+    const open = await new StartSession(test.dependencies).execute({
+      entryId: book.id,
+      entryType: "book",
+    });
+    test.setNow("2026-08-16T10:01:00.000Z");
+    const command = new CompleteSession(test.dependencies);
+    const [first, second] = await Promise.all([
+      command.execute({ id: open.id }),
+      command.execute({ id: open.id }),
+    ]);
+    expect(first.session).toEqual(second.session);
+    expect(first.newStructuralMilestones).toHaveLength(1);
+    expect(second.newStructuralMilestones).toHaveLength(1);
+    expect(
+      (await test.dependencies.activities.list()).filter(
+        ({ type }) => type === "session_completed",
+      ),
+    ).toHaveLength(1);
     test.database.close();
   });
 });

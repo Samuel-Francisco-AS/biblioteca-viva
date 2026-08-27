@@ -268,6 +268,37 @@ describe("Página Biblioteca", () => {
     });
   });
 
+  it("recebe feedback estrutural efêmero e abre o inventário somente por ação explícita", async () => {
+    const application = constructionApplication();
+    render(
+      <MemoryRouter
+        initialEntries={[
+          { pathname: "/", state: { openStructuralConstruction: "unlock-1" } },
+        ]}
+      >
+        <LibraryPage
+          application={application}
+          pendingStructuralUnlock={{
+            familyIds: ["structure-family.floor.wood"],
+            token: "unlock-1",
+          }}
+        />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    await screen.findByLabelText("Modo Construção");
+    expect(visualHostMock.projection?.structuralUnlockFeedback).toEqual({
+      familyIds: ["structure-family.floor.wood"],
+      token: "unlock-1",
+    });
+    expect(
+      await screen.findByRole("dialog", { name: "Peças estruturais" }),
+    ).toBeVisible();
+    expect(
+      visualHostMock.constructionState?.placingDefinitionId,
+    ).toBeUndefined();
+  });
+
   it("propaga a instância em movimento para o host", async () => {
     const user = userEvent.setup();
     await renderConstruction(constructionApplication());
