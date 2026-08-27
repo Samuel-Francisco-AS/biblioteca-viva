@@ -23,6 +23,8 @@ interface ConstructionControlsProps {
   readonly structure: WorldStructureState;
   readonly tool: ConstructionTool;
   readonly onToolChange: (tool: ConstructionTool) => void;
+  readonly onSelectionChange: (instanceId: string | undefined) => void;
+  readonly selectedInstanceId?: string;
 }
 
 function humanName(id: string): string {
@@ -48,12 +50,16 @@ export function ConstructionControls({
   onRotate,
   onStore,
   onToolChange,
+  onSelectionChange,
+  selectedInstanceId,
   structure,
   tool,
 }: ConstructionControlsProps) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [sheet, setSheet] = useState<"structures" | "floor" | null>(null);
-  const [selected, setSelected] = useState<StructurePlacement>();
+  const selected = structure.placements.find(
+    (placement) => placement.instanceId === selectedInstanceId,
+  );
   const [confirmStore, setConfirmStore] = useState(false);
   const [focus, setFocus] = useState(() => focalCell(structure));
   useEffect(() => {
@@ -63,7 +69,7 @@ export function ConstructionControls({
         else if (sheet) {
           setSheet(null);
           triggerRef.current?.focus();
-        } else if (selected) setSelected(undefined);
+        } else if (selected) onSelectionChange(undefined);
         return;
       }
       const delta =
@@ -87,7 +93,16 @@ export function ConstructionControls({
     };
     window.addEventListener("keydown", key);
     return () => window.removeEventListener("keydown", key);
-  }, [confirmStore, focus, onAddFloor, onRemoveFloor, selected, sheet, tool]);
+  }, [
+    confirmStore,
+    focus,
+    onAddFloor,
+    onRemoveFloor,
+    onSelectionChange,
+    selected,
+    sheet,
+    tool,
+  ]);
   const currentDefinition =
     selected && structureDefinition(selected.definitionId);
   return (
@@ -252,7 +267,7 @@ export function ConstructionControls({
           <button
             className="button button--secondary"
             key={placement.instanceId}
-            onClick={() => setSelected(placement)}
+            onClick={() => onSelectionChange(placement.instanceId)}
             type="button"
           >
             {humanName(placement.definitionId)} ·{" "}
@@ -297,7 +312,7 @@ export function ConstructionControls({
           </button>
           <button
             className="button button--secondary"
-            onClick={() => setSelected(undefined)}
+            onClick={() => onSelectionChange(undefined)}
             type="button"
           >
             Fechar seleção
@@ -316,7 +331,7 @@ export function ConstructionControls({
             className="button button--primary"
             onClick={() => {
               onStore(selected);
-              setSelected(undefined);
+              onSelectionChange(undefined);
               setConfirmStore(false);
             }}
             type="button"

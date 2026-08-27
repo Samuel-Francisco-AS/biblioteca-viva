@@ -15,6 +15,7 @@ import type {
   StatisticsSnapshot,
 } from "./application";
 import {
+  ApplicationError,
   DEFAULT_PLACED_OBJECTS,
   nextObjectRotation,
   type PlacedObject,
@@ -124,6 +125,14 @@ type LibraryPageState =
 
 type AtmosphereOverride = LibraryPeriod | "automatic";
 
+function isStaleStructureConflict(failure: unknown): boolean {
+  return (
+    failure instanceof ApplicationError &&
+    failure.code === "CONFLICT" &&
+    failure.context.operation === "structure_stale_state"
+  );
+}
+
 function useAutomaticLibraryPeriod(): LibraryPeriod {
   const [period, setPeriod] = useState(() => deriveLibraryPeriod(new Date()));
   useEffect(() => {
@@ -231,6 +240,16 @@ export function LibraryPage({
   const [placingStructureDefinitionId, setPlacingStructureDefinitionId] =
     useState<import("./application").StructureDefinitionId>();
   const [movingStructureId, setMovingStructureId] = useState<string>();
+  const [selectedStructureId, setSelectedStructureId] = useState<string>();
+  const mountedRef = useRef(true);
+  const structureOperationRef = useRef({ pending: false, token: 0 });
+  useEffect(
+    () => () => {
+      mountedRef.current = false;
+      structureOperationRef.current.token += 1;
+    },
+    [],
+  );
   const [state, setState] = useState<LibraryPageState>(() =>
     application
       ? { kind: "loading" }
@@ -259,17 +278,36 @@ export function LibraryPage({
     setPlacementNotice(message);
   }
 
-  function applyStructureState(next: WorldStructureState): void {
+  function operationIsCurrent(token: number): boolean {
+    return mountedRef.current && structureOperationRef.current.token === token;
+  }
+
+  function applyStructureState(
+    next: WorldStructureState,
+    structuralInventory?: StructuralInventory,
+  ): void {
+    if (!mountedRef.current) return;
+    setSelectedStructureId((selected) =>
+      selected &&
+      !next.placements.some((placement) => placement.instanceId === selected)
+        ? undefined
+        : selected,
+    );
     setState((current) =>
       current.kind === "ready"
         ? {
             ...current,
             viewModel: { ...current.viewModel, worldStructure: next },
+            ...(structuralInventory && { structuralInventory }),
           }
         : current,
     );
+  }
+
+  function refreshStructuralInventory(token: number): void {
     void application?.queries.getStructuralInventory?.execute().then(
       (structuralInventory) =>
+        operationIsCurrent(token) &&
         setState((current) =>
           current.kind === "ready"
             ? { ...current, structuralInventory }
@@ -279,20 +317,78 @@ export function LibraryPage({
     );
   }
 
+  async function refreshStructureState(token: number): Promise<boolean> {
+    const getStructure = application?.queries.getWorldStructure;
+    if (!getStructure) return false;
+    const [structure, structuralInventory] = await Promise.all([
+      getStructure.execute(),
+      application?.queries.getStructuralInventory?.execute() ??
+        Promise.resolve(undefined),
+    ]);
+    if (!operationIsCurrent(token) || !structure) return false;
+    setPlacingStructureDefinitionId(undefined);
+    setMovingStructureId(undefined);
+    applyStructureState(structure, structuralInventory);
+    return true;
+  }
+
+  function applySuccessfulStructureState(
+    next: WorldStructureState,
+    token: number,
+  ): void {
+    if (!operationIsCurrent(token)) return;
+    applyStructureState(next);
+    refreshStructuralInventory(token);
+  }
+
   function runStructure(
     operation: () => Promise<
       WorldStructureState | { readonly state: WorldStructureState }
     >,
     success: string,
   ): void {
-    void operation().then(
-      (result) => {
-        applyStructureState("state" in result ? result.state : result);
-        showPlacementNotice(success);
-      },
-      (failure: unknown) =>
-        showPlacementNotice(presentApplicationError(failure).message),
-    );
+    if (structureOperationRef.current.pending) return;
+    const token = structureOperationRef.current.token + 1;
+    structureOperationRef.current = { pending: true, token };
+    void operation()
+      .then(
+        (result) => {
+          if (!operationIsCurrent(token)) return;
+          applySuccessfulStructureState(
+            "state" in result ? result.state : result,
+            token,
+          );
+          showPlacementNotice(success);
+        },
+        async (failure: unknown) => {
+          if (!operationIsCurrent(token)) return;
+          if (isStaleStructureConflict(failure)) {
+            try {
+              const refreshed = await refreshStructureState(token);
+              if (refreshed && operationIsCurrent(token)) {
+                showPlacementNotice(
+                  failure instanceof ApplicationError
+                    ? failure.message
+                    : presentApplicationError(failure).message,
+                );
+                return;
+              }
+            } catch (refreshFailure: unknown) {
+              if (!operationIsCurrent(token)) return;
+              showPlacementNotice(
+                presentApplicationError(refreshFailure).message,
+              );
+              return;
+            }
+          }
+          if (!operationIsCurrent(token)) return;
+          showPlacementNotice(presentApplicationError(failure).message);
+        },
+      )
+      .finally(() => {
+        if (structureOperationRef.current.token === token)
+          structureOperationRef.current.pending = false;
+      });
   }
 
   function queuePlacedObjectTransform(
@@ -562,7 +658,19 @@ export function LibraryPage({
       );
       return;
     }
-    if (interaction.type === "StructureSelected") return;
+    if (interaction.type === "StructureSelected") {
+      if (!constructionMode || state.kind !== "ready") return;
+      if (
+        state.viewModel.worldStructure?.placements.some(
+          (placement) => placement.instanceId === interaction.instanceId,
+        )
+      ) {
+        setSelectedStructureId(interaction.instanceId);
+        setPlacingStructureDefinitionId(undefined);
+        setMovingStructureId(undefined);
+      } else setSelectedStructureId(undefined);
+      return;
+    }
     if (
       constructionMode &&
       (interaction.type === "PlacedObjectSelected" ||
@@ -744,6 +852,7 @@ export function LibraryPage({
                 setConstructionTool("explore");
                 setPlacingStructureDefinitionId(undefined);
                 setMovingStructureId(undefined);
+                setSelectedStructureId(undefined);
                 closeObjectActions();
                 showPlacementNotice("Modo Construção iniciado.");
               }}
@@ -779,6 +888,7 @@ export function LibraryPage({
                   setConstructionTool("explore");
                   setPlacingStructureDefinitionId(undefined);
                   setMovingStructureId(undefined);
+                  setSelectedStructureId(undefined);
                   showPlacementNotice("Modo Construção encerrado.");
                 }}
                 onMove={(placement) => {
@@ -827,6 +937,8 @@ export function LibraryPage({
                   )
                 }
                 onToolChange={setConstructionTool}
+                selectedInstanceId={selectedStructureId}
+                onSelectionChange={setSelectedStructureId}
                 structure={state.viewModel.worldStructure}
                 tool={constructionTool}
               />

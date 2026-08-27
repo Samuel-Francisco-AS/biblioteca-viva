@@ -5,11 +5,16 @@ import { describe, expect, it, vi } from "vitest";
 
 import {
   ApplicationError,
+  INITIAL_WORLD_STRUCTURE,
+  structuralInventory,
   type AudioPort,
   type DialogueEvent,
   type DialoguePort,
   type LocalizedDialogue,
   type PlacedObject,
+  type StructuralInventory,
+  type StructurePlacement,
+  type WorldStructureState,
 } from "./application";
 import type { BookEntry, ReachedMilestone } from "./domain";
 import type { LibraryInteraction } from "./features/library-visual/contracts";
@@ -24,6 +29,9 @@ const visualHostMock = vi.hoisted(() => ({
   projection: undefined as
     import("./features/library-visual/contracts").LibraryViewModel | undefined,
   placementModeInstanceId: undefined as string | undefined,
+  constructionState: undefined as
+    | import("./features/library-visual/contracts").ConstructionSceneState
+    | undefined,
 }));
 
 vi.mock("./features/library-visual/LibraryVisualHost", () => ({
@@ -32,18 +40,21 @@ vi.mock("./features/library-visual/LibraryVisualHost", () => ({
     onInteraction,
     period,
     placementModeInstanceId,
+    constructionState,
     projection,
   }: {
     readonly onAvailabilityChange?: (available: boolean) => void;
     readonly onInteraction?: (event: LibraryInteraction) => void;
     readonly period?: import("./features/library-visual/contracts").LibraryVisualPeriod;
     readonly placementModeInstanceId?: string;
+    readonly constructionState?: import("./features/library-visual/contracts").ConstructionSceneState;
     readonly projection: import("./features/library-visual/contracts").LibraryViewModel;
   }) => {
     visualHostMock.availability = onAvailabilityChange;
     visualHostMock.interaction = onInteraction;
     visualHostMock.period = period;
     visualHostMock.placementModeInstanceId = placementModeInstanceId;
+    visualHostMock.constructionState = constructionState;
     visualHostMock.projection = projection;
     return <div aria-label="Visualização da Biblioteca" role="img" />;
   },
@@ -115,7 +126,553 @@ function renderLibrary(
   return execute;
 }
 
+function structureState(
+  placements: readonly StructurePlacement[] = INITIAL_WORLD_STRUCTURE.placements,
+  revision = 1,
+): WorldStructureState {
+  return {
+    ...INITIAL_WORLD_STRUCTURE,
+    placements,
+    revision,
+    updatedAt: `2026-08-27T00:00:0${revision}.000Z`,
+  };
+}
+
+const selectedWall: StructurePlacement = {
+  anchor: { x: 7, y: 4 },
+  definitionId: "architecture.wall.stone-01.horizontal-1",
+  instanceId: "structure.wall-a",
+};
+
+const secondWall: StructurePlacement = {
+  anchor: { x: 3, y: 7 },
+  definitionId: "architecture.wall.stone-01.vertical-1",
+  instanceId: "structure.wall-b",
+};
+
+type StructureCommands = Pick<
+  NonNullable<LibraryPageApplication["commands"]>,
+  | "addFloorCells"
+  | "moveStructure"
+  | "placeStructure"
+  | "removeFloorCells"
+  | "rotateStructure"
+  | "storeStructure"
+>;
+
+function constructionApplication({
+  commands,
+  getStructuralInventory,
+  getWorldStructure,
+  inventory,
+  structure = structureState([selectedWall]),
+}: {
+  readonly commands?: Partial<StructureCommands>;
+  readonly getStructuralInventory?: { execute(): Promise<StructuralInventory> };
+  readonly getWorldStructure?: {
+    execute(): Promise<WorldStructureState | undefined>;
+  };
+  readonly inventory?: StructuralInventory;
+  readonly structure?: WorldStructureState;
+} = {}): LibraryPageApplication {
+  const currentInventory = inventory ?? structuralInventory(structure);
+  const stateCommand = { execute: () => Promise.resolve(structure) };
+  return {
+    commands: {
+      addFloorCells: {
+        execute: () =>
+          Promise.resolve({ ignored: 0, placed: 1, state: structure }),
+      },
+      moveStructure: stateCommand,
+      placeStructure: stateCommand,
+      removeFloorCells: {
+        execute: () =>
+          Promise.resolve({ ignored: 0, removed: 1, state: structure }),
+      },
+      rotateStructure: stateCommand,
+      storeStructure: stateCommand,
+      updatePlacedObjectTransform: {
+        execute: () =>
+          Promise.resolve({
+            definitionId: "furniture.desk.wood-01",
+            instanceId: "placed-object.furniture.desk.wood-01",
+            rotation: 0,
+            spaceId: "space-a",
+            x: 192,
+            y: 224,
+          }),
+      },
+      ...commands,
+    },
+    dialogue: dialogue(),
+    queries: {
+      getStructuralInventory: getStructuralInventory ?? {
+        execute: () => Promise.resolve(currentInventory),
+      },
+      getWorldStructure: getWorldStructure ?? {
+        execute: () => Promise.resolve(structure),
+      },
+      listBookEntries: { execute: () => Promise.resolve([]) },
+      listMilestones: { list: () => Promise.resolve([]) },
+    },
+  };
+}
+
+async function renderConstruction(
+  application: LibraryPageApplication,
+): Promise<void> {
+  render(
+    <MemoryRouter>
+      <LibraryPage application={application} />
+    </MemoryRouter>,
+  );
+  await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+}
+
+async function enterConstruction(
+  user: ReturnType<typeof userEvent.setup>,
+): Promise<void> {
+  await user.click(screen.getByRole("button", { name: "Construir" }));
+  await screen.findByLabelText("Modo Construção");
+}
+
 describe("Página Biblioteca", () => {
+  it("fornece o modo normal de construção ao host inicialmente", async () => {
+    renderLibrary(Promise.resolve([]));
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    expect(visualHostMock.constructionState).toEqual({
+      active: false,
+      tool: "explore",
+    });
+  });
+
+  it("propaga modo, ferramenta e definição de colocação para o host", async () => {
+    const user = userEvent.setup();
+    await renderConstruction(constructionApplication());
+
+    await enterConstruction(user);
+    expect(visualHostMock.constructionState).toEqual({
+      active: true,
+      tool: "explore",
+    });
+    await user.click(screen.getByRole("button", { name: "Estruturas" }));
+    expect(visualHostMock.constructionState).toMatchObject({
+      active: true,
+      tool: "place-structure",
+    });
+    await user.click(screen.getAllByRole("button", { name: "Colocar" })[0]);
+    expect(visualHostMock.constructionState).toEqual({
+      active: true,
+      placingDefinitionId: "architecture.wall.stone-01.horizontal-1",
+      tool: "place-structure",
+    });
+  });
+
+  it("propaga a instância em movimento para o host", async () => {
+    const user = userEvent.setup();
+    await renderConstruction(constructionApplication());
+    await enterConstruction(user);
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: selectedWall.instanceId,
+        type: "StructureSelected",
+      }),
+    );
+
+    await user.click(screen.getByRole("button", { name: "Mover" }));
+    expect(visualHostMock.constructionState).toEqual({
+      active: true,
+      movingInstanceId: selectedWall.instanceId,
+      tool: "place-structure",
+    });
+  });
+
+  it("atualiza, troca e limpa a seleção estrutural recebida do host", async () => {
+    const user = userEvent.setup();
+    const structure = structureState([selectedWall, secondWall]);
+    await renderConstruction(constructionApplication({ structure }));
+    await enterConstruction(user);
+
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: selectedWall.instanceId,
+        type: "StructureSelected",
+      }),
+    );
+    expect(screen.getByLabelText("Peça selecionada")).toHaveTextContent(
+      "Parede horizontal",
+    );
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: secondWall.instanceId,
+        type: "StructureSelected",
+      }),
+    );
+    expect(screen.getByLabelText("Peça selecionada")).toHaveTextContent(
+      "Parede vertical",
+    );
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: "structure.inexistente",
+        type: "StructureSelected",
+      }),
+    );
+    expect(screen.queryByLabelText("Peça selecionada")).not.toBeInTheDocument();
+  });
+
+  it("ignora seleção estrutural no modo normal e a limpa ao sair", async () => {
+    const user = userEvent.setup();
+    await renderConstruction(constructionApplication());
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: selectedWall.instanceId,
+        type: "StructureSelected",
+      }),
+    );
+    expect(screen.queryByLabelText("Peça selecionada")).not.toBeInTheDocument();
+
+    await enterConstruction(user);
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: selectedWall.instanceId,
+        type: "StructureSelected",
+      }),
+    );
+    expect(screen.getByLabelText("Peça selecionada")).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Sair" }));
+    await enterConstruction(user);
+    expect(screen.queryByLabelText("Peça selecionada")).not.toBeInTheDocument();
+  });
+
+  it("envia uma colocação, movimento e lote de piso uma única vez", async () => {
+    const placeStructure = vi.fn(() => Promise.resolve(structureState()));
+    const moveStructure = vi.fn(() => Promise.resolve(structureState()));
+    const addFloorCells = vi.fn(() =>
+      Promise.resolve({ ignored: 0, placed: 2, state: structureState() }),
+    );
+    await renderConstruction(
+      constructionApplication({
+        commands: {
+          addFloorCells: { execute: addFloorCells },
+          moveStructure: { execute: moveStructure },
+          placeStructure: { execute: placeStructure },
+        },
+      }),
+    );
+
+    act(() =>
+      visualHostMock.interaction?.({
+        anchor: { x: 8, y: 5 },
+        definitionId: "architecture.wall.stone-01.horizontal-1",
+        type: "StructurePlacementCommitted",
+      }),
+    );
+    await waitFor(() => expect(placeStructure).toHaveBeenCalledOnce());
+    act(() =>
+      visualHostMock.interaction?.({
+        anchor: { x: 8, y: 6 },
+        instanceId: selectedWall.instanceId,
+        type: "StructureMoveCommitted",
+      }),
+    );
+    await waitFor(() => expect(moveStructure).toHaveBeenCalledOnce());
+    act(() =>
+      visualHostMock.interaction?.({
+        cells: [
+          { x: 8, y: 5 },
+          { x: 8, y: 6 },
+        ],
+        mode: "paint-floor",
+        type: "FloorCellsCommitted",
+      }),
+    );
+    await waitFor(() => expect(addFloorCells).toHaveBeenCalledOnce());
+    expect(addFloorCells).toHaveBeenCalledWith(
+      expect.objectContaining({
+        cells: [
+          { x: 8, y: 5 },
+          { x: 8, y: 6 },
+        ],
+      }),
+    );
+  });
+
+  it("bloqueia callback estrutural repetido durante single-flight", async () => {
+    let resolvePlace: (value: WorldStructureState) => void = () => undefined;
+    const placeStructure = vi.fn(
+      () =>
+        new Promise<WorldStructureState>((resolve) => {
+          resolvePlace = resolve;
+        }),
+    );
+    await renderConstruction(
+      constructionApplication({
+        commands: { placeStructure: { execute: placeStructure } },
+      }),
+    );
+    const placement = {
+      anchor: { x: 8, y: 5 },
+      definitionId: "architecture.wall.stone-01.horizontal-1" as const,
+      type: "StructurePlacementCommitted" as const,
+    };
+    act(() => visualHostMock.interaction?.(placement));
+    act(() => visualHostMock.interaction?.(placement));
+    expect(placeStructure).toHaveBeenCalledOnce();
+
+    resolvePlace(structureState(undefined, 2));
+    await waitFor(() =>
+      expect(visualHostMock.projection?.worldStructure?.revision).toBe(2),
+    );
+  });
+
+  it("atualiza projeção e inventário uma vez após sucesso estrutural", async () => {
+    const next = structureState(undefined, 2);
+    const getStructuralInventory = vi
+      .fn<() => Promise<StructuralInventory>>()
+      .mockResolvedValue(structuralInventory(next));
+    const placeStructure = vi.fn(() => Promise.resolve(next));
+    await renderConstruction(
+      constructionApplication({
+        commands: { placeStructure: { execute: placeStructure } },
+        getStructuralInventory: { execute: getStructuralInventory },
+      }),
+    );
+    getStructuralInventory.mockClear();
+    act(() =>
+      visualHostMock.interaction?.({
+        anchor: { x: 8, y: 5 },
+        definitionId: "architecture.wall.stone-01.horizontal-1",
+        type: "StructurePlacementCommitted",
+      }),
+    );
+
+    await waitFor(() =>
+      expect(visualHostMock.projection?.worldStructure).toBe(next),
+    );
+    await waitFor(() => expect(getStructuralInventory).toHaveBeenCalledOnce());
+  });
+
+  it("invalida o token e descarta resposta estrutural após unmount", async () => {
+    let resolvePlace: (value: WorldStructureState) => void = () => undefined;
+    const application = constructionApplication({
+      commands: {
+        placeStructure: {
+          execute: () =>
+            new Promise<WorldStructureState>((resolve) => {
+              resolvePlace = resolve;
+            }),
+        },
+      },
+    });
+    const result = render(
+      <MemoryRouter>
+        <LibraryPage application={application} />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("img", { name: "Visualização da Biblioteca" });
+    act(() =>
+      visualHostMock.interaction?.({
+        anchor: { x: 8, y: 5 },
+        definitionId: "architecture.wall.stone-01.horizontal-1",
+        type: "StructurePlacementCommitted",
+      }),
+    );
+    result.unmount();
+    act(() => resolvePlace(structureState(undefined, 2)));
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+
+  it("não deixa resposta de inventário antiga acompanhar uma projeção mais nova", async () => {
+    let resolveOldInventory: (value: StructuralInventory) => void = () =>
+      undefined;
+    const oldInventory = new Promise<StructuralInventory>((resolve) => {
+      resolveOldInventory = resolve;
+    });
+    const revisionTwo = structureState(undefined, 2);
+    const revisionThree = structureState(undefined, 3);
+    const getStructuralInventory = vi
+      .fn<() => Promise<StructuralInventory>>()
+      .mockResolvedValueOnce(structuralInventory(structureState()))
+      .mockReturnValueOnce(oldInventory)
+      .mockResolvedValueOnce(structuralInventory(revisionThree));
+    const placeStructure = vi.fn(() => Promise.resolve(revisionTwo));
+    const moveStructure = vi.fn(() => Promise.resolve(revisionThree));
+    await renderConstruction(
+      constructionApplication({
+        commands: {
+          moveStructure: { execute: moveStructure },
+          placeStructure: { execute: placeStructure },
+        },
+        getStructuralInventory: { execute: getStructuralInventory },
+      }),
+    );
+    act(() =>
+      visualHostMock.interaction?.({
+        anchor: { x: 8, y: 5 },
+        definitionId: "architecture.wall.stone-01.horizontal-1",
+        type: "StructurePlacementCommitted",
+      }),
+    );
+    await waitFor(() =>
+      expect(visualHostMock.projection?.worldStructure?.revision).toBe(2),
+    );
+    act(() =>
+      visualHostMock.interaction?.({
+        anchor: { x: 8, y: 6 },
+        instanceId: selectedWall.instanceId,
+        type: "StructureMoveCommitted",
+      }),
+    );
+    await waitFor(() =>
+      expect(visualHostMock.projection?.worldStructure?.revision).toBe(3),
+    );
+    act(() => resolveOldInventory(structuralInventory(revisionTwo)));
+    expect(visualHostMock.projection?.worldStructure?.revision).toBe(3);
+  });
+
+  it("libera single-flight depois de sucesso e erro estrutural", async () => {
+    const placeStructure = vi
+      .fn<() => Promise<WorldStructureState>>()
+      .mockRejectedValueOnce(
+        new ApplicationError("PERSISTENCE_FAILED", "Falha de teste"),
+      )
+      .mockResolvedValue(structureState(undefined, 2));
+    await renderConstruction(
+      constructionApplication({
+        commands: { placeStructure: { execute: placeStructure } },
+      }),
+    );
+    const placement = {
+      anchor: { x: 8, y: 5 },
+      definitionId: "architecture.wall.stone-01.horizontal-1" as const,
+      type: "StructurePlacementCommitted" as const,
+    };
+    act(() => visualHostMock.interaction?.(placement));
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent(
+        "Não foi possível acessar",
+      ),
+    );
+    act(() => visualHostMock.interaction?.(placement));
+    await waitFor(() => expect(placeStructure).toHaveBeenCalledTimes(2));
+    await waitFor(() =>
+      expect(visualHostMock.projection?.worldStructure?.revision).toBe(2),
+    );
+    act(() => visualHostMock.interaction?.(placement));
+    await waitFor(() => expect(placeStructure).toHaveBeenCalledTimes(3));
+  });
+
+  it("recarrega estrutura e inventário no conflito sem repetir a escrita", async () => {
+    const persisted = structureState([selectedWall, secondWall], 2);
+    const getWorldStructure = vi
+      .fn<() => Promise<WorldStructureState | undefined>>()
+      .mockResolvedValueOnce(structureState([selectedWall]))
+      .mockResolvedValueOnce(persisted);
+    const getStructuralInventory = vi
+      .fn<() => Promise<StructuralInventory>>()
+      .mockResolvedValueOnce(
+        structuralInventory(structureState([selectedWall])),
+      )
+      .mockResolvedValueOnce(structuralInventory(persisted));
+    const placeStructure = vi.fn(() =>
+      Promise.reject(
+        new ApplicationError(
+          "CONFLICT",
+          "A construção foi atualizada. Tente novamente.",
+          { operation: "structure_stale_state" },
+        ),
+      ),
+    );
+    const user = userEvent.setup();
+    await renderConstruction(
+      constructionApplication({
+        commands: { placeStructure: { execute: placeStructure } },
+        getStructuralInventory: { execute: getStructuralInventory },
+        getWorldStructure: { execute: getWorldStructure },
+      }),
+    );
+    await enterConstruction(user);
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: selectedWall.instanceId,
+        type: "StructureSelected",
+      }),
+    );
+    getWorldStructure.mockClear();
+    getStructuralInventory.mockClear();
+    act(() =>
+      visualHostMock.interaction?.({
+        anchor: { x: 8, y: 5 },
+        definitionId: "architecture.wall.stone-01.horizontal-1",
+        type: "StructurePlacementCommitted",
+      }),
+    );
+
+    await waitFor(() => expect(getWorldStructure).toHaveBeenCalledOnce());
+    expect(getStructuralInventory).toHaveBeenCalledOnce();
+    expect(placeStructure).toHaveBeenCalledOnce();
+    expect(visualHostMock.projection?.worldStructure).toBe(persisted);
+    expect(screen.getByLabelText("Peça selecionada")).toBeVisible();
+    expect(
+      screen
+        .getAllByRole("status")
+        .find((element) =>
+          element.textContent?.includes("A construção foi atualizada."),
+        ),
+    ).toHaveTextContent("A construção foi atualizada. Tente novamente.");
+  });
+
+  it("limpa seleção ausente quando a projeção persistida substitui a atual", async () => {
+    const initial = structureState([selectedWall]);
+    const persisted = structureState([secondWall], 2);
+    const getWorldStructure = vi
+      .fn<() => Promise<WorldStructureState | undefined>>()
+      .mockResolvedValueOnce(initial)
+      .mockResolvedValueOnce(persisted);
+    const getStructuralInventory = vi
+      .fn<() => Promise<StructuralInventory>>()
+      .mockResolvedValueOnce(structuralInventory(initial))
+      .mockResolvedValueOnce(structuralInventory(persisted));
+    const user = userEvent.setup();
+    await renderConstruction(
+      constructionApplication({
+        commands: {
+          placeStructure: {
+            execute: () =>
+              Promise.reject(
+                new ApplicationError(
+                  "CONFLICT",
+                  "A construção foi atualizada. Tente novamente.",
+                  { operation: "structure_stale_state" },
+                ),
+              ),
+          },
+        },
+        getStructuralInventory: { execute: getStructuralInventory },
+        getWorldStructure: { execute: getWorldStructure },
+        structure: initial,
+      }),
+    );
+    await enterConstruction(user);
+    act(() =>
+      visualHostMock.interaction?.({
+        instanceId: selectedWall.instanceId,
+        type: "StructureSelected",
+      }),
+    );
+    act(() =>
+      visualHostMock.interaction?.({
+        anchor: { x: 8, y: 5 },
+        definitionId: "architecture.wall.stone-01.horizontal-1",
+        type: "StructurePlacementCommitted",
+      }),
+    );
+    await waitFor(() =>
+      expect(
+        screen.queryByLabelText("Peça selecionada"),
+      ).not.toBeInTheDocument(),
+    );
+  });
   it("oferece resumo e equivalentes React sem depender das interações do canvas", async () => {
     const user = userEvent.setup();
     const dialoguePort = dialogue();
