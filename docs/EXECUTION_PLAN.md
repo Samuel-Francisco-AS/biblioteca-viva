@@ -1381,3 +1381,7 @@ O trabalho não termina quando “o Codex implementou”. Termina quando:
 - a documentação foi atualizada;
 - o gate foi aprovado;
 - o usuário consegue continuar o projeto sem depender da memória da conversa.
+
+## Processo 2 — encerramento técnico (2026-08-27)
+
+P2-C1 (ponte e conflitos), P2-C2 (gestos/hit areas/previews) e P2-C3 (integração, E2E, backup, regressão, build e APK) foram executados sem iniciar Processo 3. A pendência explícita é a validação física Moto G06/TalkBack e a aprovação artística; ela não pode ser inferida da automação.

@@ -89,5 +89,9 @@ Preservar uma instância/canvas, lazy load, cleanup e Phaser sem regra de negóc
 ## Acessibilidade
 React mantém acesso aos dados e feedback. O editor espacial exigirá alternativa específica antes de ser considerado finalizado.
 
+## Processo 2 — editor estrutural
+
+`pages.tsx` é o orquestrador: envia `constructionState` ao mesmo host/canvas, recebe intenções tipadas, chama os casos de uso e aplica apenas a projeção confirmada. Phaser centraliza conversão tela→mundo→grid, hit areas e preview efêmeros; não acessa Dexie nem escreve em `pointermove`. `WorldStructureState` e `PlacedObject` continuam repositórios e coleções de backup separados. Conflito de revisão recarrega estrutura/inventário sem repetir escrita.
+
 ## Gatilhos para reconsiderar Phaser
 Somente geometria/iluminação 3D real, pathfinding/editor extremamente complexos ou gargalo físico persistente e comprovado.

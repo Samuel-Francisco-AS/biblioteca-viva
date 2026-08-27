@@ -57,3 +57,7 @@ Seleção, mover, girar, reload de posição e objetos persistidos pertencem a W
 
 ## Fora do primeiro slice
 Editor completo de paredes, construção livre, dezenas de móveis, pathfinding geral, física complexa, multiplayer, sincronização, marketplace, 3D, crafting e economia virtual.
+
+## Processo 2 — construção estrutural
+
+O único cômodo persistente pode ser editado em modo Construção: selecionar, colocar, mover, girar quando a família permite, guardar e adicionar/remover piso. Há alternativa DOM para as operações e confirmação acessível; Phaser não é autoridade de negócio. Progressão, concessões e novos inventários pertencem ao Processo 3 e não foram iniciados.

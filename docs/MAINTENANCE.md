@@ -74,3 +74,7 @@ Opcionais condicionados a evidência: preservar offset da música, comprimir WAV
 ## P1-B — manutenção
 
 Ao evoluir sessões, preservar a regra de uma aberta globalmente, o `Clock` como verdade e a política de restore `active → paused`. Novos detalhes específicos entram na união e no schema correspondente, nunca em payload amorfo. Mudança de `normalizedName`, índice único, duração ou status exige migração e testes de colisão/rollback. Backup v1/v2 continua sendo validado no formato original.
+
+## P2 — manutenção do editor estrutural
+
+Antes de mudar célula, definição ou gesto, execute os testes de `constructionInput`, `SpatialWorldScene`/render plan, host, `pages`, backup e E2E estrutural. Não persista preview, seleção, câmera ou ferramenta. Mudança no formato de `WorldStructureState` exige migração, backup e rollback; não altere versão de backup apenas por UI. Para Android gere e registre APK, SHA-256 e tamanho, sem instalar ou assinar sem autorização.

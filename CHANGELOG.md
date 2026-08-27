@@ -103,6 +103,22 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 
 - Gates G0, G1 e G2 aprovados; Blocos 0, 1 e 2 concluídos.
 
+## Não lançado — Processo 2 técnico (2026-08-27)
+
+### Adicionado
+
+- P2-C1: ponte React–Phaser para edição estrutural, projeção confirmada, single-flight e recuperação de revisão;
+- P2-C2: hit areas por modo, seleção/snap, previews efêmeros, colocar/mover e piso em lote;
+- P2-C3: E2E estrutural, cobertura de backup v5/reload e regressão de foco de anotação.
+
+### Alterado
+
+- o acionador e o painel de Construção não disputam mais a área do resumo acessível e o inventário permanece rolável na viewport.
+
+### Pendente
+
+- Gate humano Moto G06/TalkBack e aprovação artística; Processo 3 não foi iniciado.
+
 ## Como atualizar
 
 - registre mudanças observáveis, não cada arquivo tocado;

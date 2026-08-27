@@ -1463,15 +1463,17 @@ blockquote {
 .library-construction-trigger,
 .construction-controls {
   bottom: max(0.75rem, env(safe-area-inset-bottom));
-  left: max(0.75rem, env(safe-area-inset-left));
+  right: max(0.75rem, env(safe-area-inset-right));
   position: absolute;
-  z-index: 8;
+  z-index: 11;
 }
 
 .construction-controls {
   display: grid;
   gap: 0.5rem;
+  max-height: calc(100dvh - 5rem);
   max-width: min(20rem, calc(100vw - 1.5rem));
+  overflow-y: auto;
 }
 
 .construction-controls__context,

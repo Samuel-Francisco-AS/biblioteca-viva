@@ -1130,3 +1130,7 @@ Medir FPS, objetos, tamanho do mundo, hit areas, tweens, ordenação e memória 
 ## W3 estrutural — Processo 1
 
 Automação cobre catálogo/topologia, células e arestas, conflitos, blueprint 12×10, quatro cantos, abertura sem segmento, inventário derivado, determinismo, Dexie v7, backup v5/v1–v4, projeção/fallback e lifecycle. Pendente no Moto G06: preview técnico, cômodo completo, quatro cantos, porta, móveis junto às paredes, fallback, viewport móvel e pan até limites.
+
+## P2-C1/C2/C3 — editor estrutural
+
+Automação cobre a ponte React→host→Phaser→intenção→caso de uso→projeção, revisão obsoleta, seleção, snap, hit areas, lote de piso, cleanup e canvas único. O E2E `construction-editor.spec.ts` usa bounding box do canvas para colocar/mover uma peça real, percorre girar, piso, guardar, retorno ao modo normal e reload. Backup testa v5 com estrutura/piso e `PlacedObject` separados, importação repetida sem duplicação e inventário derivado; v4 já é aceito. Pendente humano: Moto G06, TalkBack, contraste percebido, texto ampliado real, safe areas, arte e conforto de toque.

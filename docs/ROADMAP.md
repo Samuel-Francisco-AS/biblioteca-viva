@@ -38,6 +38,10 @@ O mundo W1/W2 agora compõe paredes por geometria lógica → plano puro → cat
 ## W3-B — Unlock → disponibilidade
 Separar unlock de placement; reaproveitar milestones; objeto desbloqueado pode ser colocado sem sala/categoria obrigatória.
 
+## Processo 2 — editor estrutural — conclusão técnica
+
+P2-C1, P2-C2 e P2-C3 concluíram a ponte de edição, os gestos/previews e a validação integrada respectivamente. O editor preserva `WorldStructureState` via reload e backup v5; a cena só mantém gesto, seleção, preview e câmera efêmeros. O Gate P2 técnico não substitui validação física no Moto G06. Processo 3 (progressão, concessões e inventário por família) permanece fora do início.
+
 ## W4 — Habitantes no mundo
 Adaptar scheduler, âncoras globais, deslocamentos entre espaços, balões e reduced motion; sem pathfinding geral inicialmente.
 

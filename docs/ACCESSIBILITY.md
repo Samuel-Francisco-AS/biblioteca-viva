@@ -253,3 +253,7 @@ Estatísticas usa headings, filtros nativos, números e listas textuais. Nenhum 
 ## W3 estrutural — Processo 1
 
 O resumo acessível informa o cômodo inicial, células de piso e peças estruturais colocadas. O canvas permanece complementar; não há ainda modo Construção acessível, editor ou inventário UI.
+
+## Processo 2 — modo Construção
+
+Há botão textual de entrada/saída, toolbar nomeada, sheets DOM roláveis, alternativa de peças colocadas e confirmação explícita para Guardar. Escape fecha confirmação/sheet/seleção, toast usa região viva e o canvas continua complementar. A correção P2-C3 evita que o resumo acessível cubra o acionador e limita o painel à viewport. TalkBack, teclado virtual, alto contraste e texto ampliado em aparelho permanecem prova humana pendente.

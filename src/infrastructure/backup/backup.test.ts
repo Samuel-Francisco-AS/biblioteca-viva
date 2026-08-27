@@ -14,6 +14,9 @@ import {
   ListBookEntries,
   ListNotesByBook,
   ListQuotesByBook,
+  DEFAULT_PLACED_OBJECTS,
+  INITIAL_WORLD_STRUCTURE,
+  structuralInventory,
   hasRelevantRestoreData,
   type BackupData,
   type BackupFileSharePort,
@@ -654,6 +657,56 @@ describe("backup JSON v3", () => {
 });
 
 describe("snapshot Dexie e restauração", () => {
+  it("exporta e restaura a estrutura v5 sem misturá-la aos objetos colocados", async () => {
+    const sourceName = `structure-source-${crypto.randomUUID()}`;
+    const destinationName = `structure-destination-${crypto.randomUUID()}`;
+    databases.add(sourceName);
+    databases.add(destinationName);
+    const structureData: BackupData = Object.freeze({
+      ...data,
+      placedObjects: [DEFAULT_PLACED_OBJECTS[0]!],
+      worldStructure: INITIAL_WORLD_STRUCTURE,
+    });
+    const source = new BibliotecaDatabase(sourceName);
+    await source.open();
+    const sourceStore = new DexieBackupSnapshotStore(source);
+    await sourceStore.replace(structureData);
+    const codec = new JsonBackupCodec();
+    const exporter = new ExportBackup(
+      sourceStore,
+      codec,
+      { now: () => Promise.resolve(book.updatedAt) },
+      "0.2.0-alpha.1",
+      7,
+    );
+    const artifact = await exporter.execute();
+    const inspected = await codec.inspect(artifact.content);
+    expect(inspected.summary).toMatchObject({
+      counts: { placedObjects: 1, worldStructure: 1 },
+      formatVersion: 5,
+    });
+    expect(inspected.data.worldStructure).toEqual(INITIAL_WORLD_STRUCTURE);
+    expect(inspected.data.placedObjects).toEqual([DEFAULT_PLACED_OBJECTS[0]]);
+    const destination = new BibliotecaDatabase(destinationName);
+    await destination.open();
+    const destinationStore = new DexieBackupSnapshotStore(destination);
+    const importer = new ImportBackup(destinationStore, codec, exporter, {
+      shareBackupFile: () => Promise.resolve("flow-finished"),
+    });
+    await importer.execute(artifact.content);
+    await importer.execute(artifact.content);
+    const restored = await destinationStore.read();
+    expect(restored.worldStructure).toEqual(INITIAL_WORLD_STRUCTURE);
+    expect(restored.placedObjects).toEqual([DEFAULT_PLACED_OBJECTS[0]]);
+    expect(await destination.worldStructures.count()).toBe(1);
+    expect(await destination.placedObjects.count()).toBe(1);
+    expect(structuralInventory(restored.worldStructure!).placed).toEqual(
+      structuralInventory(INITIAL_WORLD_STRUCTURE).placed,
+    );
+    destination.close();
+    source.close();
+  });
+
   it("considera relevantes todas as coleções substituídas e ignora metadata técnica", async () => {
     const empty: BackupData = {
       activities: [],

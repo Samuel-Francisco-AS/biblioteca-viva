@@ -621,3 +621,9 @@ O cartão React de objeto selecionado recebe fechamento acessível e transição
 - **Status:** aceita; substitui D-NEW-06 na execução visual após sua reprovação no Moto G06.
 - **Decisão:** estrutura é `WorldStructureState`, separada de `PlacedObject`: piso ocupa células; paredes, cantos e porta reivindicam arestas inteiras; pixels não definem topologia. Inventário futuro é concessão menos colocação, sempre derivado.
 - **Blueprint:** cômodo 12×10 em x=3..14/y=4..13, porta horizontal inferior central; os quatro cantos reservam braços de quatro arestas e os trechos restantes são explícitos. Dexie v7 usa `worldStructures`; backup v5 inclui estrutura e v1–v4 recebem blueprint apenas se ela estiver ausente. Editor/inventário UI e progressão ficam nos Processos 2 e 3; portas verticais seguem fora por ausência de assets.
+
+### D-NEW-08 — Editor P2 mantém Phaser efêmero — 2026-08-27
+
+- **Status:** aceita.
+- **Decisão:** React controla modo/ferramenta/seleção confirmada; Phaser só traduz gesto em intenção, mostra preview consultivo e ativa hit areas por modo. A escrita passa pelos casos de uso e somente a projeção persistida reconcilia a cena.
+- **Consequências:** não há Dexie no React/Phaser, não há escrita em `pointermove`, conflitos recarregam a fonte persistida e previews/câmera/ferramenta não integram backup. Processo 3 continua separado.

@@ -104,7 +104,10 @@ export function AnnotationActions(props: Props) {
       focusAfterRender("edit");
     } catch (failure: unknown) {
       setError(presentApplicationError(failure).message);
-      focusAfterRender("content");
+      // The editor stays mounted after a failed save, so restore focus
+      // synchronously instead of leaving it on the submitter until a frame
+      // happens to run.
+      contentRef.current?.focus();
     } finally {
       busyRef.current = false;
       setBusy(false);

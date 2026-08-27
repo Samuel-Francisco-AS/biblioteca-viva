@@ -42,3 +42,7 @@ P1 continua fonte dos registros. Milestones/fatos P2 podem originar unlocks, mas
 ## Estado W2
 
 O código preserva os dois espaços técnicos efêmeros e acrescenta as instâncias iniciais `placed-object.furniture.desk.wood-01` e `placed-object.furniture.chair.wood-01`. A transformação persistida contém instância, definição, espaço, posição e rotação; seleção, preview, drag e câmera permanecem efêmeros. `object.reading-table` continua definido apenas para leitura segura de estado W2 anterior. Não há inventário, unlock, residentes ou expansão livre.
+
+## Processo 2 — estrutura editável
+
+`WorldStructureState` é persistido separadamente: células de piso e placements de arestas/cantos/porta, revisão e blueprint. Seleção, ferramenta, preview, lote de gesto e câmera não são persistidos nem exportados. O inventário estrutural é derivado de concessão menos placements/células; guardar devolve disponibilidade. Backup v5 inclui a estrutura, v4 continua aceito sem ela e `PlacedObject` não é fundido ao layout.
