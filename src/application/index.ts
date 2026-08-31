@@ -31,6 +31,7 @@ export * from "./useCases";
 export * from "./world";
 export * from "./worldObjects";
 export * from "./worldStructure";
+export * from "./worldStructureAnalysis";
 export * from "./worldStructureRepository";
 export * from "./worldStructureObjects";
 export * from "./worldStructureEditing";

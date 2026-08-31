@@ -67,6 +67,7 @@ export interface StructureDefinition {
   readonly fallback: "procedural-door" | "procedural-floor" | "procedural-wall";
   readonly id: StructureDefinitionId;
   readonly inventoryFamilyId: StructuralInventoryFamilyId;
+  readonly logicalSpanCells?: number;
   readonly movable: boolean;
   readonly orientation?: EdgeAxis;
   readonly pivot: { readonly x: number; readonly y: number };
@@ -78,24 +79,25 @@ export interface StructureDefinition {
 const wall = (
   id: Extract<StructureDefinitionId, `architecture.wall.stone-01.${string}`>,
   orientation: EdgeAxis,
-  visualSpanCells: number,
+  spanCells: number,
 ): StructureDefinition => ({
   assetId: id,
   category: "wall",
   fallback: "procedural-wall",
   id,
   inventoryFamilyId:
-    visualSpanCells === 1
+    spanCells === 1
       ? STRUCTURAL_INVENTORY_FAMILY_ID.wallShort
-      : visualSpanCells === 2
+      : spanCells === 2
         ? STRUCTURAL_INVENTORY_FAMILY_ID.wallMedium
         : STRUCTURAL_INVENTORY_FAMILY_ID.wallLong,
+  logicalSpanCells: spanCells,
   movable: true,
   orientation,
   pivot: { x: 0, y: 0 },
   rotatable: true,
   visualOffsetCells: { x: 0, y: 0 },
-  visualSpanCells,
+  visualSpanCells: spanCells,
 });
 
 export const STRUCTURE_CATALOG: readonly StructureDefinition[] = Object.freeze([
@@ -117,6 +119,7 @@ export const STRUCTURE_CATALOG: readonly StructureDefinition[] = Object.freeze([
     fallback: "procedural-wall" as const,
     id: `architecture.wall.stone-01.corner-${corner}` as StructureDefinitionId,
     inventoryFamilyId: STRUCTURAL_INVENTORY_FAMILY_ID.cornerStone,
+    logicalSpanCells: 4,
     movable: true,
     pivot: { x: 0, y: 0 },
     rotatable: false,
@@ -142,6 +145,7 @@ export const STRUCTURE_CATALOG: readonly StructureDefinition[] = Object.freeze([
     fallback: "procedural-door" as const,
     id: `architecture.wall.stone-01.door-horizontal.${state}` as StructureDefinitionId,
     inventoryFamilyId: STRUCTURAL_INVENTORY_FAMILY_ID.doorHorizontal,
+    logicalSpanCells: 4,
     movable: true,
     orientation: "horizontal" as const,
     pivot: { x: 0, y: 0 },
@@ -150,6 +154,31 @@ export const STRUCTURE_CATALOG: readonly StructureDefinition[] = Object.freeze([
     visualSpanCells: 4,
   })),
 ]);
+
+const ROTATED_STRUCTURE_DEFINITION: Readonly<
+  Partial<Record<StructureDefinitionId, StructureDefinitionId>>
+> = Object.freeze({
+  "architecture.wall.stone-01.horizontal-1":
+    "architecture.wall.stone-01.vertical-1",
+  "architecture.wall.stone-01.vertical-1":
+    "architecture.wall.stone-01.horizontal-1",
+  "architecture.wall.stone-01.horizontal-2":
+    "architecture.wall.stone-01.vertical-2",
+  "architecture.wall.stone-01.vertical-2":
+    "architecture.wall.stone-01.horizontal-2",
+  "architecture.wall.stone-01.horizontal-4":
+    "architecture.wall.stone-01.vertical-4",
+  "architecture.wall.stone-01.vertical-4":
+    "architecture.wall.stone-01.horizontal-4",
+  "architecture.wall.stone-01.corner-ne":
+    "architecture.wall.stone-01.corner-se",
+  "architecture.wall.stone-01.corner-se":
+    "architecture.wall.stone-01.corner-sw",
+  "architecture.wall.stone-01.corner-sw":
+    "architecture.wall.stone-01.corner-nw",
+  "architecture.wall.stone-01.corner-nw":
+    "architecture.wall.stone-01.corner-ne",
+});
 
 export function structureDefinition(
   id: string,
@@ -165,6 +194,12 @@ export function structuralInventoryFamilyForDefinition(
   return definition.inventoryFamilyId;
 }
 
+export function rotatedStructureDefinitionId(
+  id: StructureDefinitionId,
+): StructureDefinitionId | undefined {
+  return ROTATED_STRUCTURE_DEFINITION[id];
+}
+
 export function floorCellKey(cell: FloorCell): string {
   return `${cell.x}:${cell.y}`;
 }
@@ -173,51 +208,319 @@ export function unitEdgeKey(edge: UnitEdge): string {
   return `${edge.axis}:${edge.x}:${edge.y}`;
 }
 
+export interface LogicalSegment {
+  readonly axis: EdgeAxis;
+  readonly end: GridPoint;
+  readonly spanCells: number;
+  readonly start: GridPoint;
+}
+
+export type LogicalStructureIntervalPart =
+  "corner-horizontal-arm" | "corner-vertical-arm" | "main";
+
+export interface LogicalStructureInterval extends LogicalSegment {
+  readonly category: Exclude<StructuralCategory, "floor">;
+  readonly definitionId: StructureDefinitionId;
+  readonly instanceId: string;
+  readonly part: LogicalStructureIntervalPart;
+}
+
+export interface LogicalLinearPlacementGeometry {
+  readonly interval: LogicalStructureInterval;
+  readonly kind: "door" | "wall";
+}
+
+export interface LogicalCornerPlacementGeometry {
+  readonly horizontalArm: LogicalStructureInterval;
+  readonly kind: "corner";
+  readonly orientation: CornerOrientation;
+  readonly vertex: GridPoint;
+  readonly verticalArm: LogicalStructureInterval;
+}
+
+export type LogicalPlacementGeometry =
+  LogicalCornerPlacementGeometry | LogicalLinearPlacementGeometry;
+
+/** Creates an interval in logical cells; bitmap dimensions never participate. */
+export function createLogicalSegment(
+  axis: EdgeAxis,
+  start: GridPoint,
+  spanCells: number,
+): LogicalSegment {
+  if (axis !== "horizontal" && axis !== "vertical")
+    throw new Error(`Eixo lógico inválido: ${String(axis)}`);
+  assertIntegerPoint(start, "Início do segmento");
+  if (!Number.isSafeInteger(spanCells) || spanCells <= 0)
+    throw new Error(
+      "Span lógico deve ser um inteiro positivo seguro em células",
+    );
+  const end = Object.freeze({
+    x: start.x + (axis === "horizontal" ? spanCells : 0),
+    y: start.y + (axis === "vertical" ? spanCells : 0),
+  });
+  assertIntegerPoint(end, "Fim do segmento");
+  return Object.freeze({
+    axis,
+    end,
+    spanCells,
+    start: Object.freeze({ ...start }),
+  });
+}
+
+export function logicalSegmentKey(segment: LogicalSegment): string {
+  return `${segment.axis}:${segment.start.x}:${segment.start.y}:${segment.end.x}:${segment.end.y}`;
+}
+
+/** Derives the cells/edges/vertices occupied by one persisted placement. */
+export function placementGeometry(
+  placement: StructurePlacement,
+): LogicalPlacementGeometry {
+  assertIntegerPoint(placement.anchor, "Âncora estrutural");
+  const definition = requiredDefinition(placement.definitionId);
+  if (definition.category === "floor")
+    throw new Error(
+      "Piso ocupa floorCells e não pode ser um placement estrutural",
+    );
+  const spanCells = requiredLogicalSpan(definition);
+  const { x, y } = placement.anchor;
+  if (definition.category === "wall" || definition.category === "door") {
+    if (!definition.orientation)
+      throw new Error(`Eixo lógico ausente: ${definition.id}`);
+    return Object.freeze({
+      interval: logicalStructureInterval(
+        placement,
+        definition.category,
+        "main",
+        createLogicalSegment(definition.orientation, { x, y }, spanCells),
+      ),
+      kind: definition.category,
+    });
+  }
+  if (!definition.corner)
+    throw new Error(`Orientação lógica de canto ausente: ${definition.id}`);
+  const extendsWest = definition.corner === "ne" || definition.corner === "se";
+  const extendsNorth = definition.corner === "ne" || definition.corner === "nw";
+  const vertex = Object.freeze({ x, y });
+  return Object.freeze({
+    horizontalArm: logicalStructureInterval(
+      placement,
+      "corner",
+      "corner-horizontal-arm",
+      createLogicalSegment(
+        "horizontal",
+        { x: extendsWest ? x - spanCells : x, y },
+        spanCells,
+      ),
+    ),
+    kind: "corner",
+    orientation: definition.corner,
+    vertex,
+    verticalArm: logicalStructureInterval(
+      placement,
+      "corner",
+      "corner-vertical-arm",
+      createLogicalSegment(
+        "vertical",
+        { x, y: extendsNorth ? y - spanCells : y },
+        spanCells,
+      ),
+    ),
+  });
+}
+
+/** Returns a stable interval order regardless of persisted placement order. */
+export function logicalStructureIntervals(
+  placements: readonly StructurePlacement[],
+): readonly LogicalStructureInterval[] {
+  const intervals = placements.flatMap((placement) =>
+    geometryIntervals(placementGeometry(placement)),
+  );
+  intervals.sort(compareLogicalStructureIntervals);
+  return Object.freeze(intervals);
+}
+
+/**
+ * Validates one collinear run. Every neighbour must share exactly one endpoint;
+ * gaps, overlaps and duplicate intervals are reported rather than repaired.
+ */
+export function validateCollinearSegments(
+  segments: readonly LogicalSegment[],
+): true {
+  if (segments.length < 2)
+    throw new Error("Conexão colinear requer pelo menos dois segmentos");
+  for (const segment of segments) validateLogicalSegment(segment);
+  const ordered = [...segments].sort(compareLogicalSegments);
+  const axis = ordered[0].axis;
+  const line = fixedCoordinate(ordered[0]);
+  for (const segment of ordered) {
+    if (segment.axis !== axis)
+      throw new Error("Segmentos incompatíveis devem usar o mesmo eixo");
+    if (fixedCoordinate(segment) !== line)
+      throw new Error("Segmentos do mesmo eixo não são colineares");
+  }
+  for (let index = 1; index < ordered.length; index += 1) {
+    const previous = ordered[index - 1];
+    const current = ordered[index];
+    const previousEnd = endCoordinate(previous);
+    const currentStart = startCoordinate(current);
+    if (logicalSegmentKey(previous) === logicalSegmentKey(current))
+      throw new Error(
+        `Intervalo estrutural duplicado: ${logicalSegmentKey(current)}`,
+      );
+    if (currentStart < previousEnd)
+      throw new Error(
+        `Intervalos estruturais sobrepostos: ${logicalSegmentKey(previous)} / ${logicalSegmentKey(current)}`,
+      );
+    if (currentStart > previousEnd)
+      throw new Error(
+        `Gap lógico entre segmentos: ${logicalSegmentKey(previous)} / ${logicalSegmentKey(current)}`,
+      );
+  }
+  return true;
+}
+
+/** Validates the two perpendicular neighbours attached to a corner's free ends. */
+export function validateCornerConnection(
+  corner: StructurePlacement,
+  firstNeighbour: StructurePlacement,
+  secondNeighbour: StructurePlacement,
+): true {
+  const geometry = placementGeometry(corner);
+  if (geometry.kind !== "corner")
+    throw new Error("A conexão de canto exige um canto como vértice");
+  const neighbours = [firstNeighbour, secondNeighbour].map((placement) => {
+    const neighbour = placementGeometry(placement);
+    if (neighbour.kind === "corner")
+      throw new Error("A conexão de canto exige segmentos lineares vizinhos");
+    return neighbour.interval;
+  });
+  const horizontal = neighbours.filter(
+    (interval) => interval.axis === "horizontal",
+  );
+  const vertical = neighbours.filter(
+    (interval) => interval.axis === "vertical",
+  );
+  if (horizontal.length !== 1 || vertical.length !== 1)
+    throw new Error(
+      "Canto exige um segmento horizontal e um vertical compatíveis",
+    );
+  validateCornerArmConnection(
+    geometry.horizontalArm,
+    horizontal[0],
+    geometry.vertex,
+  );
+  validateCornerArmConnection(
+    geometry.verticalArm,
+    vertical[0],
+    geometry.vertex,
+  );
+  return true;
+}
+
+/** Validates a horizontal door as the middle replacement in a wall run. */
+export function validateHorizontalDoorConnection(
+  door: StructurePlacement,
+  firstNeighbour: StructurePlacement,
+  secondNeighbour: StructurePlacement,
+): true {
+  const geometry = placementGeometry(door);
+  if (geometry.kind !== "door" || geometry.interval.axis !== "horizontal")
+    throw new Error("A conexão exige uma porta horizontal");
+  const neighbours = [firstNeighbour, secondNeighbour].map((placement) => {
+    const neighbour = placementGeometry(placement);
+    if (neighbour.kind === "door")
+      throw new Error("Uma porta não pode substituir outra porta adjacente");
+    return neighbour.kind === "corner"
+      ? neighbour.horizontalArm
+      : neighbour.interval;
+  });
+  if (neighbours.some((interval) => interval.axis !== "horizontal"))
+    throw new Error("Porta horizontal exige segmentos horizontais vizinhos");
+  const run = [neighbours[0], geometry.interval, neighbours[1]];
+  validateCollinearSegments(run);
+  const ordered = [...run].sort(compareLogicalSegments);
+  if (ordered[1] !== geometry.interval)
+    throw new Error(
+      "Porta horizontal deve substituir o intervalo entre dois segmentos",
+    );
+  return true;
+}
+
+/** Rejects exact duplicates and partial interval overlap deterministically. */
+export function validateStructuralOccupancy(
+  placements: readonly StructurePlacement[],
+): true {
+  const intervals = logicalStructureIntervals(placements);
+  const cornerVertices = placements
+    .map((placement) => ({
+      geometry: placementGeometry(placement),
+      instanceId: placement.instanceId,
+    }))
+    .filter(
+      (
+        item,
+      ): item is {
+        readonly geometry: LogicalCornerPlacementGeometry;
+        readonly instanceId: string;
+      } => item.geometry.kind === "corner",
+    )
+    .sort(
+      (first, second) =>
+        first.geometry.vertex.y - second.geometry.vertex.y ||
+        first.geometry.vertex.x - second.geometry.vertex.x ||
+        first.instanceId.localeCompare(second.instanceId),
+    );
+  const occupiedVertices = new Set<string>();
+  for (const corner of cornerVertices) {
+    const vertexKey = `${corner.geometry.vertex.x}:${corner.geometry.vertex.y}`;
+    if (occupiedVertices.has(vertexKey))
+      throw new Error(`Vértice de canto duplicado: ${vertexKey}`);
+    occupiedVertices.add(vertexKey);
+  }
+  const exact = new Set<string>();
+  const occupiedEdges = new Set<string>();
+  for (const interval of intervals) {
+    const intervalKey = logicalSegmentKey(interval);
+    if (exact.has(intervalKey))
+      throw new Error(`Intervalo estrutural duplicado: ${intervalKey}`);
+    exact.add(intervalKey);
+    for (const edge of logicalSegmentEdges(interval)) {
+      const edgeKey = unitEdgeKey(edge);
+      if (occupiedEdges.has(edgeKey))
+        throw new Error(`Intervalo estrutural sobreposto: ${edgeKey}`);
+      occupiedEdges.add(edgeKey);
+    }
+  }
+  return true;
+}
+
 export function placementEdges(
   placement: StructurePlacement,
 ): readonly UnitEdge[] {
-  const definition = requiredDefinition(placement.definitionId);
-  const { x, y } = placement.anchor;
-  if (definition.category === "floor") return [];
-  if (definition.category === "door")
-    return horizontalEdges(x, y, definition.visualSpanCells ?? 0);
-  if (definition.category === "wall")
-    return definition.orientation === "horizontal"
-      ? horizontalEdges(x, y, definition.visualSpanCells ?? 0)
-      : verticalEdges(x, y, definition.visualSpanCells ?? 0);
-  const length = definition.visualSpanCells ?? 0;
-  switch (definition.corner) {
-    case "ne":
-      return [
-        ...horizontalEdges(x - length, y, length),
-        ...verticalEdges(x, y - length, length),
-      ];
-    case "nw":
-      return [
-        ...horizontalEdges(x, y, length),
-        ...verticalEdges(x, y - length, length),
-      ];
-    case "se":
-      return [
-        ...horizontalEdges(x - length, y, length),
-        ...verticalEdges(x, y, length),
-      ];
-    case "sw":
-      return [...horizontalEdges(x, y, length), ...verticalEdges(x, y, length)];
-    default:
-      throw new Error(`Canto inválido: ${placement.definitionId}`);
-  }
+  return geometryIntervals(placementGeometry(placement)).flatMap(
+    logicalSegmentEdges,
+  );
 }
 
 export function passableEdges(
   placement: StructurePlacement,
 ): readonly UnitEdge[] {
   if (
-    placement.definitionId !==
-    "architecture.wall.stone-01.door-horizontal.closed"
+    placement.definitionId !== "architecture.wall.stone-01.door-horizontal.open"
   )
     return [];
-  return horizontalEdges(placement.anchor.x + 1, placement.anchor.y, 2);
+  const geometry = placementGeometry(placement);
+  if (geometry.kind !== "door") return [];
+  return logicalSegmentEdges(
+    createLogicalSegment(
+      "horizontal",
+      {
+        x: geometry.interval.start.x + 1,
+        y: geometry.interval.start.y,
+      },
+      2,
+    ),
+  );
 }
 
 export function validateStructureCatalog(
@@ -239,10 +542,26 @@ export function validateStructureCatalog(
     )
       throw new Error(`Extensão estrutural inválida: ${definition.id}`);
     if (
+      definition.category !== "floor" &&
+      (!Number.isSafeInteger(definition.logicalSpanCells) ||
+        (definition.logicalSpanCells ?? 0) <= 0)
+    )
+      throw new Error(
+        `Span lógico deve ser inteiro positivo: ${definition.id}`,
+      );
+    if (definition.category === "wall" && !definition.orientation)
+      throw new Error(`Eixo lógico ausente: ${definition.id}`);
+    if (definition.category === "corner" && !definition.corner)
+      throw new Error(`Orientação lógica de canto ausente: ${definition.id}`);
+    if (
       definition.category === "door" &&
       definition.orientation !== "horizontal"
     )
       throw new Error(`Porta vertical não aprovada: ${definition.id}`);
+    if (definition.category === "door" && definition.logicalSpanCells !== 4)
+      throw new Error(
+        `Porta horizontal deve ocupar quatro células: ${definition.id}`,
+      );
     if (!isStructuralInventoryFamilyId(definition.inventoryFamilyId))
       throw new Error(`Família estrutural inválida: ${definition.id}`);
   }
@@ -264,20 +583,14 @@ export function validateWorldStructure(state: WorldStructureState): true {
     cells.add(key);
   }
   const ids = new Set<string>();
-  const edges = new Set<string>();
   for (const placement of state.placements) {
     if (ids.has(placement.instanceId))
       throw new Error(`Peça estrutural duplicada: ${placement.instanceId}`);
     ids.add(placement.instanceId);
     assertIntegerPoint(placement.anchor, "Âncora estrutural");
     requiredDefinition(placement.definitionId);
-    for (const edge of placementEdges(placement)) {
-      const key = unitEdgeKey(edge);
-      if (edges.has(key))
-        throw new Error(`Aresta estrutural duplicada: ${key}`);
-      edges.add(key);
-    }
   }
+  validateStructuralOccupancy(state.placements);
   return true;
 }
 
@@ -491,12 +804,115 @@ function verticalEdges(
     y: y + offset,
   }));
 }
+function logicalStructureInterval(
+  placement: StructurePlacement,
+  category: Exclude<StructuralCategory, "floor">,
+  part: LogicalStructureIntervalPart,
+  segment: LogicalSegment,
+): LogicalStructureInterval {
+  return Object.freeze({
+    ...segment,
+    category,
+    definitionId: placement.definitionId,
+    instanceId: placement.instanceId,
+    part,
+  });
+}
+function geometryIntervals(
+  geometry: LogicalPlacementGeometry,
+): readonly LogicalStructureInterval[] {
+  return geometry.kind === "corner"
+    ? [geometry.horizontalArm, geometry.verticalArm]
+    : [geometry.interval];
+}
+function requiredLogicalSpan(definition: StructureDefinition): number {
+  const spanCells = definition.logicalSpanCells;
+  if (
+    typeof spanCells !== "number" ||
+    !Number.isSafeInteger(spanCells) ||
+    spanCells <= 0
+  )
+    throw new Error(`Span lógico inválido: ${definition.id}`);
+  return spanCells;
+}
+function logicalSegmentEdges(segment: LogicalSegment): readonly UnitEdge[] {
+  return segment.axis === "horizontal"
+    ? horizontalEdges(segment.start.x, segment.start.y, segment.spanCells)
+    : verticalEdges(segment.start.x, segment.start.y, segment.spanCells);
+}
+function validateLogicalSegment(segment: LogicalSegment): void {
+  const expected = createLogicalSegment(
+    segment.axis,
+    segment.start,
+    segment.spanCells,
+  );
+  assertIntegerPoint(segment.end, "Fim do segmento");
+  if (!pointsEqual(expected.end, segment.end))
+    throw new Error(
+      `Endpoint incompatível com eixo/span: ${logicalSegmentKey(segment)}`,
+    );
+}
+function compareLogicalSegments(
+  first: LogicalSegment,
+  second: LogicalSegment,
+): number {
+  const byAxis = first.axis.localeCompare(second.axis);
+  if (byAxis !== 0) return byAxis;
+  const byLine = fixedCoordinate(first) - fixedCoordinate(second);
+  if (byLine !== 0) return byLine;
+  const byStart = startCoordinate(first) - startCoordinate(second);
+  if (byStart !== 0) return byStart;
+  const byEnd = endCoordinate(first) - endCoordinate(second);
+  if (byEnd !== 0) return byEnd;
+  return logicalSegmentKey(first).localeCompare(logicalSegmentKey(second));
+}
+function compareLogicalStructureIntervals(
+  first: LogicalStructureInterval,
+  second: LogicalStructureInterval,
+): number {
+  const byGeometry = compareLogicalSegments(first, second);
+  if (byGeometry !== 0) return byGeometry;
+  const byCategory = first.category.localeCompare(second.category);
+  if (byCategory !== 0) return byCategory;
+  const byDefinition = first.definitionId.localeCompare(second.definitionId);
+  if (byDefinition !== 0) return byDefinition;
+  const byPart = first.part.localeCompare(second.part);
+  if (byPart !== 0) return byPart;
+  return first.instanceId.localeCompare(second.instanceId);
+}
+function fixedCoordinate(segment: LogicalSegment): number {
+  return segment.axis === "horizontal" ? segment.start.y : segment.start.x;
+}
+function startCoordinate(segment: LogicalSegment): number {
+  return segment.axis === "horizontal" ? segment.start.x : segment.start.y;
+}
+function endCoordinate(segment: LogicalSegment): number {
+  return segment.axis === "horizontal" ? segment.end.x : segment.end.y;
+}
+function pointsEqual(first: GridPoint, second: GridPoint): boolean {
+  return first.x === second.x && first.y === second.y;
+}
+function validateCornerArmConnection(
+  arm: LogicalSegment,
+  neighbour: LogicalSegment,
+  vertex: GridPoint,
+): void {
+  validateCollinearSegments([arm, neighbour]);
+  const freeEndpoint = pointsEqual(arm.start, vertex) ? arm.end : arm.start;
+  const neighbourTouchesFreeEndpoint =
+    pointsEqual(neighbour.start, freeEndpoint) ||
+    pointsEqual(neighbour.end, freeEndpoint);
+  if (!neighbourTouchesFreeEndpoint)
+    throw new Error(
+      `Segmento ${arm.axis} não se conecta à extremidade livre do canto`,
+    );
+}
 function requiredDefinition(id: StructureDefinitionId): StructureDefinition {
   const definition = structureDefinition(id);
   if (!definition) throw new Error(`Definição estrutural ausente: ${id}`);
   return definition;
 }
 function assertIntegerPoint(point: GridPoint, label: string): void {
-  if (!Number.isInteger(point.x) || !Number.isInteger(point.y))
-    throw new Error(`${label} deve usar coordenadas inteiras`);
+  if (!Number.isSafeInteger(point.x) || !Number.isSafeInteger(point.y))
+    throw new Error(`${label} deve usar coordenadas inteiras seguras`);
 }

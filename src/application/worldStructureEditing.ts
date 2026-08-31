@@ -6,6 +6,7 @@ import { objectDefinition } from "./world";
 import {
   floorCellKey,
   placementEdges,
+  rotatedStructureDefinitionId,
   structureDefinition,
   structuralInventoryFamilyForDefinition,
   structuralInventory,
@@ -352,29 +353,6 @@ export class MoveStructure {
   }
 }
 
-const rotations: Readonly<Record<string, StructureDefinitionId | undefined>> = {
-  "architecture.wall.stone-01.horizontal-1":
-    "architecture.wall.stone-01.vertical-1",
-  "architecture.wall.stone-01.vertical-1":
-    "architecture.wall.stone-01.horizontal-1",
-  "architecture.wall.stone-01.horizontal-2":
-    "architecture.wall.stone-01.vertical-2",
-  "architecture.wall.stone-01.vertical-2":
-    "architecture.wall.stone-01.horizontal-2",
-  "architecture.wall.stone-01.horizontal-4":
-    "architecture.wall.stone-01.vertical-4",
-  "architecture.wall.stone-01.vertical-4":
-    "architecture.wall.stone-01.horizontal-4",
-  "architecture.wall.stone-01.corner-ne":
-    "architecture.wall.stone-01.corner-se",
-  "architecture.wall.stone-01.corner-se":
-    "architecture.wall.stone-01.corner-sw",
-  "architecture.wall.stone-01.corner-sw":
-    "architecture.wall.stone-01.corner-nw",
-  "architecture.wall.stone-01.corner-nw":
-    "architecture.wall.stone-01.corner-ne",
-};
-
 export class RotateStructure {
   constructor(private readonly deps: StructureEditingDependencies) {}
   async execute(input: unknown): Promise<WorldStructureState> {
@@ -395,7 +373,8 @@ export class RotateStructure {
     const previous = state.placements.find(
       (item) => item.instanceId === parsed.instanceId,
     );
-    const definitionId = previous && rotations[previous.definitionId];
+    const definitionId =
+      previous && rotatedStructureDefinitionId(previous.definitionId);
     if (!previous || !definitionId) throw editError("ORIENTATION_UNAVAILABLE");
     const next = { ...previous, definitionId };
     const violation = placementAllowed(state, next, previous.instanceId);

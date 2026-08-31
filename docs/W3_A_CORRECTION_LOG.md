@@ -1,12 +1,14 @@
 # W3-A — log de correção
 
-> Estado documental: **R0 em auditoria**. Evidência técnica de R0 produzida em 2026-08-30; aceite humano pendente. W3-A-R1 não foi iniciada nem autorizada.
+> Estado documental: **R0 aceito para prosseguimento**. R1-A e R1-B estão tecnicamente concluídas e aguardam aceite humano conjunto. W3-A-R2-A permanece pendente e não autorizada.
 
 ## Resultado do gate W3-A-R0
 
 A validação física posterior ao P3-C reabriu W3-A. O Moto G06 demonstrou dois defeitos objetivos: a planta inicial não é percebida como uma sala contínua e o painel “Peças colocadas” retira do mapa o papel de superfície principal durante seleção e movimento.
 
 R0 é exclusivamente diagnóstico. A auditoria não alterou código de produção, testes, PNGs, schema, backup, blueprint, grants, migrações, máquina de estados ou UI. Os artefatos temporários usados para inspecionar os PNGs e reconstruir a composição ficaram fora do repositório.
+
+O usuário aceitou R0 para prosseguimento ao autorizar nominalmente a execução de W3-A-R1. Esse aceite encerra somente o bloqueio diagnóstico de R0; não aprova automaticamente R1 nem qualquer gate posterior.
 
 ## Estado Git
 
@@ -283,25 +285,102 @@ O blueprint mistura ocupação lógica de quatro arestas, uma passagem central d
 
 A alternativa acessível foi implementada como lista permanente dentro do overlay principal. Estados independentes permitem seleção + moving + sheet + lista + toast e overlays convencionais. CSS entrega quase toda a viewport ao scroll do painel. Android Back não participa dessa hierarquia.
 
-## Contrato proposto para R1–R5
+## Contrato e execução de R1–R5
 
-Nenhum item abaixo está autorizado por R0.
+O aceite de R0 autorizou exclusivamente R1-A e, em complementação nominal posterior, R1-B. Nenhum gate a partir de R2-A foi autorizado.
 
-### R1 — contrato canônico de geometria e identidade
+### R1 — geometria canônica e identidade
 
-Escopo exato recomendado:
+**Estado:** `tecnicamente concluída — aguardando aceite humano`. Este estado reúne R1-A e R1-B e não registra nem presume aprovação humana.
 
-1. criar um analisador puro que derive perímetro do piso e reporte arestas ausentes, extras, duplicadas e componentes;
-2. provar por teste que o blueprint v1 atual tem 120 células, 44 arestas de perímetro e diferença vazia;
-3. definir explicitamente a semântica da porta: quatro arestas estruturais, abertura central de duas e estado visual; corrigir `passableEdges` ou removê-lo se continuar sem consumidor;
-4. criar uma assinatura canônica normalizada do blueprint v1, sem conteúdo pessoal e sem persistir hash por enquanto;
-5. classificar `canonical-v1 | modified-v1 | future/unknown` antes de planejar qualquer migração;
-6. não alterar schema, backup, PNG, grants ou UI em R1;
-7. parar e pedir autorização se a correção exigir reescrever estado `modified-v1`.
+#### R1-A — geometria lógica, rotação e porta — concluída
 
-Critério de saída: a aplicação consegue demonstrar, em regra pura e testes, qual geometria é canônica e qual estado jamais pode ser sobrescrito. R1 não deve tentar resolver arte ou overlay.
+O contrato anterior derivava ocupação lógica de `visualSpanCells`, expandia placements diretamente em arestas unitárias e não representava endpoints, intervalos ou o vértice ocupado por um canto. Assim, ele detectava uma aresta repetida, mas não conseguia distinguir deterministicamente gap, overlap, intervalo duplicado, conexão colinear, conexão perpendicular de canto ou porta anexada fora de um vão. `passableEdges` também estava invertido: a porta fechada expunha as duas arestas centrais e a aberta não expunha passagem.
 
-### R2 — contrato de arte e planos de junção
+R1 separou o span lógico mínimo no catálogo e introduziu uma geometria pura normalizada: segmento com eixo, início, fim e span inteiro positivo seguro; canto com vértice e braços horizontal/vertical; parede e porta com intervalo explícito. As validações ordenam cópias dos dados, nunca corrigem nem mutam o estado recebido, e retornam erros específicos para eixo incompatível, não colinearidade, gap, overlap, duplicidade, endpoint incorreto, canto incompatível e porta externa. Coordenadas inteiras negativas continuam válidas; coordenadas ou endpoints fora de `Number.isSafeInteger` são rejeitados como já ocorre na fronteira Zod.
+
+#### Contrato adotado
+
+- paredes de 1, 2 e 4 células nos eixos horizontal e vertical usam `logicalSpanCells`; `placementEdges` não consulta offset, pivot, alpha, bounding box, tamanho de PNG nem `visualSpanCells`;
+- dois segmentos colineares válidos compartilham exatamente um endpoint; leitura em qualquer ordem produz a mesma ordenação e o mesmo resultado;
+- cada orientação `ne | nw | se | sw` ocupa o vértice-âncora, cria dois braços perpendiculares de quatro células e só aceita vizinhos nas extremidades livres compatíveis;
+- porta horizontal aberta ou fechada ocupa quatro arestas na mesma linha entre dois intervalos; uma porta externa, sobreposta ou usada como vizinha de outra porta é inválida;
+- porta fechada não expõe passagem; porta aberta expõe somente as duas arestas centrais sem alterar o intervalo estrutural externo;
+- intervalos exatos, overlaps parciais e dois cantos no mesmo vértice são inválidos; a validação de `WorldStructureState` reutiliza essa ocupação normalizada;
+- rotação é uma função pura compartilhada pelo caso de uso: muda o eixo das paredes 1/2/4 e preserva o span; cantos conservam o ciclo já existente;
+- a planta inicial foi preservada e continua com 120 células de piso e 44 arestas estruturais únicas; a porta inferior foi validada entre os braços dos dois cantos reais.
+
+#### R1-B — analisador puro de perímetro — concluída
+
+`deriveFloorPerimeterEdges` cancela somente arestas internas compartilhadas e deriva um conjunto unitário ordenado para formas retangulares, côncavas, com buracos e com múltiplos componentes. Célula repetida ou coordenada fora de inteiro seguro retorna erro; a entrada não é deduplicada nem corrigida silenciosamente.
+
+`analyzeStructurePerimeter` compara esse perímetro com todas as arestas produzidas pelos placements e retorna, sem mutar o estado:
+
+- `perimeterEdges` e `structuralEdges` únicos e ordenados;
+- `missingEdges`, `extraEdges` e `duplicateEdges` em listas separadas;
+- `connectedComponents`, cada um com arestas, graus de vértice e diagnóstico próprio de fechamento;
+- `endpoints` e `incompatibleDegrees` ordenados;
+- `closed`, que só é verdadeiro quando há perímetro, cobertura exata, ausência de duplicidade e grau 2 em todos os vértices de todos os componentes.
+
+Fechamento permanece diagnóstico: nenhuma classe de edição importa ou consulta o analisador.
+
+Resultado explícito do blueprint v1:
+
+| Medida | Resultado |
+|---|---:|
+| `floorCells` | 120 |
+| arestas de perímetro | 44 |
+| arestas estruturais únicas | 44 |
+| ausentes | 0 |
+| extras | 0 |
+| duplicadas/sobrepostas | 0 |
+| componentes conectados | 1 |
+| endpoints/graus incompatíveis | 0 |
+| fechado | sim |
+
+#### R1-B — assinatura e classificador — concluída
+
+`normalizeWorldStructureSignature` produz uma representação ordenada com todas as células e, para cada placement, `definitionId`, âncora, orientação lógica e estado de porta (`open | closed | null`). Timestamps, revisão e IDs de instância são deliberadamente ignorados; diferenças de quantidade ou geometria permanecem na representação.
+
+`worldStructureSignature` serializa essa representação de forma estável, sem hash e sem persistência. `CANONICAL_WORLD_STRUCTURE_V1_SIGNATURE` fixa em memória a assinatura derivada do blueprint v1 explícito. `classifyWorldStructureIdentity` compara a assinatura completa e possui somente três resultados:
+
+- `canonical-v1`: versão 1 exatamente igual ao blueprint canônico, inclusive piso, placements, definições, âncoras, orientações e estado da porta;
+- `modified-v1`: versão 1 com qualquer diferença relevante;
+- `future/unknown`: qualquer versão diferente de 1, mesmo que a geometria coincida, sem possibilidade de ser tratada como canônica pelo classificador.
+
+#### Arquivos
+
+- R1-A preservada em `src/application/worldStructure.ts`, `src/application/worldStructureEditing.ts` e `src/application/worldStructureGeometry.test.ts`;
+- `src/application/worldStructureAnalysis.ts`: perímetro, componentes, graus, normalização, assinatura e classificação puras;
+- `src/application/worldStructureAnalysis.test.ts`: regressões focadas de perímetro e identidade;
+- `src/application/index.ts`: exportação mecânica do novo contrato puro;
+- `docs/W3_A_CORRECTION_LOG.md`: registro operacional reconciliado de R0 e R1.
+
+#### Testes e checks
+
+| Comando | Resultado |
+|---|---|
+| baseline de R1-A `npx vitest run src/application/worldStructureGeometry.test.ts src/application/worldStructure.test.ts src/application/worldStructureEditing.test.ts` | passou: 32 testes em 3 arquivos |
+| focado de R1-A/R1-B `npx vitest run src/application/worldStructureAnalysis.test.ts src/application/worldStructureGeometry.test.ts src/application/worldStructure.test.ts src/application/worldStructureEditing.test.ts` | passou: 53 testes em 4 arquivos |
+| `npm run format` | passou |
+| `npm run format:check` | passou |
+| `npm run lint` | passou |
+| `npm run typecheck` | passou |
+| `git diff --check` | passou, sem saída |
+
+A cobertura consolidada preserva toda R1-A e acrescenta retângulo, concavidade, buraco, múltiplos componentes, ausência, extra, duplicidade, ordem invertida, não mutação e blueprint v1 para o perímetro. Identidade cobre blueprint intacto; ordem/metadados/IDs ignorados; piso alterado; placement adicionado, removido e movido; orientação, porta e definição alteradas; versões desconhecida e futuras.
+
+#### Limitações e pendências preservadas
+
+- R1 não exige fechamento global para salvar layouts editados; as funções de conexão validam a relação solicitada e `validateWorldStructure` continua responsável por integridade e conflitos de ocupação, não por transformar todo layout em um cômodo fechado;
+- `visualSpanCells` permanece apenas para compatibilidade mecânica dos chamadores visuais existentes; nenhuma regra nova de geometria o consulta e nenhuma consolidação de metadado visual foi iniciada;
+- o analisador e o classificador não possuem consumidor de escrita: são contratos puros para diagnóstico/decisão posterior e não bloqueiam edição nem autorizam substituição automática;
+- a assinatura é calculada em memória, não contém hash persistido e não altera `WorldStructureState`;
+- nenhum estado persistido foi regravado; schema v7, backup v5, blueprint, grants, milestones e inventário permaneceram inalterados;
+- nenhum arquivo Phaser, React, CSS, PNG ou catálogo visual runtime foi tocado;
+- W3-A-R2-A não foi iniciado.
+
+### R2-A — contrato de arte e planos de junção
 
 - escolha humana entre reexportar/normalizar os quatro cantos e declarar insets/join anchors explícitos; não esticar arte silenciosamente;
 - fontes preservadas, runtime gerado deterministicamente e IDs estáveis;
@@ -348,23 +427,31 @@ Critério de saída: a aplicação consegue demonstrar, em regra pura e testes, 
 | grants | estoque é por família, não orientação | não converter variantes em estoques independentes |
 | acessibilidade | remover a lista permanente pode retirar a alternativa ao canvas | torná-la sob demanda e plenamente operável, não eliminá-la |
 
-## Decisões que exigem autorização humana
+## Decisões humanas
 
-1. aprovar este diagnóstico e autorizar nominalmente W3-A-R1;
-2. confirmar que R1 deve preservar schema v7/backup v5 e usar fingerprint calculado;
-3. decidir se a porta continua ocupando quatro arestas com passagem central de duas;
-4. escolher reexportação/normalização de arte ou join anchors explícitos para os cantos, sem distorção automática;
-5. aprovar o padrão mobile da alternativa “Peças colocadas” (disclosure, sheet ou drawer compacto);
-6. definir se um blueprint v1 canônico já persistido poderá ser migrado automaticamente após comparação exata;
-7. executar e decidir R6 no Moto G06; automação não aprova seams, toque, safe areas, TalkBack, áudio percebido ou desempenho físico.
+Resolvidas para R1:
+
+1. R0 foi aceito para prosseguimento e R1 foi autorizada nominalmente em duas partes;
+2. schema v7 e backup v5 foram preservados; a assinatura é somente calculada em memória;
+3. porta ocupa quatro arestas e somente a variante aberta expõe as duas centrais como passagem.
+
+Ainda pendentes e não autorizadas:
+
+1. aceitar ou reprovar tecnicamente R1 antes de autorizar R2-A;
+2. escolher reexportação/normalização de arte ou join anchors explícitos para os cantos, sem distorção automática;
+3. aprovar o padrão mobile da alternativa “Peças colocadas” (disclosure, sheet ou drawer compacto);
+4. decidir em gate futuro se um blueprint v1 canônico persistido poderá ser migrado automaticamente; R1 não autoriza essa escrita;
+5. executar e decidir R6 no Moto G06; automação não aprova seams, toque, safe areas, TalkBack, áudio percebido ou desempenho físico.
 
 ## Matriz de gates W3-A-R0–R6
 
 | Gate | Entrega | Estado | Evidência/saída necessária |
 |---|---|---|---|
-| R0 | auditoria e especificação executável | **pendente** | evidência técnica produzida; falta aceite humano deste relatório |
-| R1 | geometria canônica, porta e classificador de identidade | **pendente** | autorização nominal, implementação limitada e testes puros |
-| R2 | assets e planos de junção | **pendente** | decisão artística humana, pipeline e inspeção dos 12 PNGs |
+| R0 | auditoria e especificação executável | **aceito para prosseguimento** | autorização humana nominal que iniciou R1 |
+| R1 | R1-A geometria/porta + R1-B perímetro/identidade | **tecnicamente concluída; aceite humano pendente** | 53 testes focados e checks de R1 verdes |
+| R2-A | contrato de arte, gabaritos e validador | **próximo gate pendente; não autorizado** | exige aceite humano nominal de R1 |
+| Produção artística | quatro cantos candidatos fora do runtime | **bloqueada por R2-A** | exige aceite de R2-A e inspeção humana dos candidatos |
+| R2-B | validação e integração dos quatro cantos | **bloqueada** | exige aprovação visual humana dos quatro candidatos |
 | R3 | compositor, depth e hit areas | **pendente** | uma transformação única e composição sem vãos/sobreposições |
 | R4 | máquina de estados e UI responsiva | **pendente** | mapa protagonista, overlays exclusivos, Back/Escape e mobile |
 | R5 | regressão, compatibilidade e APK técnico | **pendente** | matriz automatizada acordada e artefato sem aprovação física inferida |
@@ -383,4 +470,4 @@ Critério de saída: a aplicação consegue demonstrar, em regra pura e testes, 
 
 O conjunto preexistente permaneceu presente. R0 acrescentou somente `docs/W3_A_CORRECTION_LOG.md` como segundo arquivo não rastreado e alterou conteúdo nos já modificados `docs/STATUS.md` e `docs/ROADMAP.md`. Nenhum arquivo de produção, teste ou asset foi alterado por R0.
 
-R0 deve parar depois desses checks. Não iniciar W3-A-R1 sem autorização humana nominal.
+R0 parou depois desses checks e foi posteriormente aceito para prosseguimento pela autorização humana que iniciou R1. R1-A e R1-B agora aguardam aceite humano conjunto; R2-A não foi iniciado.
