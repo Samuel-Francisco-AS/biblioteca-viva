@@ -257,3 +257,7 @@ O resumo acessível informa o cômodo inicial, células de piso e peças estrutu
 ## Processo 2 — modo Construção
 
 Há botão textual de entrada/saída, toolbar nomeada, sheets DOM roláveis, alternativa de peças colocadas e confirmação explícita para Guardar. Escape fecha confirmação/sheet/seleção, toast usa região viva e o canvas continua complementar. A correção P2-C3 evita que o resumo acessível cubra o acionador e limita o painel à viewport. TalkBack, teclado virtual, alto contraste e texto ampliado em aparelho permanecem prova humana pendente.
+
+## P3-C — auditoria de acesso
+
+Construção mantém controles semânticos, nomes acessíveis, foco visível herdado, ordem DOM coerente, confirmação antes de Guardar, estados de preview com forma/traço além de cor, `aria-live="polite"` consolidado para unlock e ação acessível `Abrir construção`. Escape fecha confirmação, sheet, seleção e, sem subestado aberto, sai previsivelmente do modo. Sheets são dialogs não modais: não anunciam uma armadilha de foco que não implementam. A alternativa React cobre operações essenciais do canvas. Não houve validação TalkBack, teclado virtual, contraste percebido ou alvo físico no Moto G06.

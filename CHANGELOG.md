@@ -125,3 +125,21 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 - mova itens de “Não lançado” para uma versão somente após gate aprovado;
 - use datas absolutas no formato `AAAA-MM-DD`;
 - nunca reescreva versões antigas para esconder decisões ou regressões.
+
+## Não lançado — W3-A / P3-C técnico (2026-08-28)
+
+### Adicionado
+
+- migração Dexie v6→v7 coberta para `worldStructures` sem perda de `PlacedObject`;
+- E2E de sessão elegível, unlock estrutural consolidado, abertura de Construção e reload sem duplicação.
+
+### Corrigido
+
+- aviso de backup v5 agora compara contra o schema Dexie v7 vigente, sem alertar sobre o próprio artefato recém-exportado;
+- abertura horizontal do compositor legado não mantém segmento atrás da porta;
+- token de `Abrir construção` é consumido e não reabre o modo em reload;
+- Escape sai do modo Construção quando não há subpainel, confirmação ou seleção ativos.
+
+### Documentado
+
+- W3-A1 a W3-A6 e P3-C estão tecnicamente concluídos; teste físico/artístico, TalkBack, safe areas, áudio e desempenho no Moto G06 permanecem pendentes.

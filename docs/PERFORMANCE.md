@@ -131,3 +131,9 @@ Na auditoria técnica de 2026-08-20, `public/assets/` mediu 10.047.976 bytes ap�
 ## 14. P2 — editor estrutural
 
 P2 preserva uma instância Phaser e um canvas; alternar modo apenas habilita/desabilita hit areas existentes e limpa Graphics/zones/previews do gesto. Não há polling, escrita em `pointermove`, partículas, shader ou física. Phaser permanece chunk lazy; métricas de build são produzidas por `performance:report` e não substituem FPS, temperatura ou conforto físico no Moto G06.
+
+## P3-C — auditoria estrutural
+
+W3-A preserva uma instância Phaser, um canvas e uma cena. Não há física, polling, shader, partícula ou write em `pointermove`; o lote de piso só comita no encerramento do gesto. Texturas são pré-carregadas uma vez, preview/Graphics/zones são efêmeros e timers/tweens de unlock são removidos em pausa, shutdown e troca de projeção. `performance:report` valida a fronteira lazy do Phaser e os tamanhos de chunk; ele não mede FPS, aquecimento, pan percebido ou memória no Moto G06.
+
+No gate P3-C de 2026-08-28, o relatório registrou 721.686 bytes (202.490 gzip) no chunk inicial e 1.225.305 bytes (326.590 gzip) em `createPhaserGame`, que continua entrada dinâmica. O comando passou; o aumento histórico não é tratado como aprovação de desempenho físico nem motivou mudança de budget sem diagnóstico.

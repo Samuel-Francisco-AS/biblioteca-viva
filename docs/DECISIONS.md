@@ -627,3 +627,9 @@ O cartão React de objeto selecionado recebe fechamento acessível e transição
 - **Status:** aceita.
 - **Decisão:** React controla modo/ferramenta/seleção confirmada; Phaser só traduz gesto em intenção, mostra preview consultivo e ativa hit areas por modo. A escrita passa pelos casos de uso e somente a projeção persistida reconcilia a cena.
 - **Consequências:** não há Dexie no React/Phaser, não há escrita em `pointermove`, conflitos recarregam a fonte persistida e previews/câmera/ferramenta não integram backup. Processo 3 continua separado.
+
+### D-NEW-09 — Encerramento técnico W3-A e consumo do token de construção — 2026-08-28
+
+- **Status:** aceita.
+- **Decisão:** P3-C mantém modo Construção, seleção, preview, feedback e intenção de navegação como estados efêmeros. O token de `Abrir construção` é consumido com `replace` logo após a abertura explícita, para não ressurgir em reload.
+- **Consequências:** estrutura, grants, milestones e inventário continuam dados persistidos; reload não reapresenta áudio/animação/modo sem evento novo. W3-A1–W3-A6 estão tecnicamente concluídas, sem aprovação física ou artística inferida.

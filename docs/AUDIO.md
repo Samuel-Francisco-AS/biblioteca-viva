@@ -152,3 +152,7 @@ Nenhuma ação ou informação depende de ouvir.
 ## 13. Diagnóstico técnico do Prompt 18
 
 `AudioService.diagnostics()` informa somente disponibilidade, suspensão, música desejada, efeitos pendentes e contagens de players conhecidos pelo próprio serviço. Os testes confirmam no máximo uma música ativa, pause/resume idempotente e zero players após dispose. Não há enumeração de AudioNodes privados, conteúdo pessoal, polling ou mudança na arquitetura do Prompt 14. A música ainda reinicia após pause/resume conforme limitação aceita; validação sonora física permanece pendente.
+
+## P3-C — feedback estrutural
+
+O unlock estrutural reutiliza `milestone.book-completed` por `AudioService` somente depois de `MilestoneReached` persistido. React consolida múltiplos marcos do mesmo ciclo e emite no máximo um `StructuralUnlocked`; sem marco novo, não há tentativa de áudio. Mute e volumes continuam pertencendo ao serviço, e falha/autoplay bloqueado não altera dados persistidos. Não foram introduzidos loops, zumbidos ou nós persistentes; aprovação auditiva no Moto G06 segue pendente.

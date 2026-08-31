@@ -38,7 +38,9 @@ export function composeWalls(
   input: WallCompositionInput,
 ): readonly WallRenderPiece[] {
   const floor = floorCellKeys(input.floorAreas);
-  const segments = exposedWallRuns(floor).flatMap((run) => composeRun(run));
+  const segments = exposedWallRuns(floor, input.doorways).flatMap((run) =>
+    composeRun(run),
+  );
   const corners = convexCorners(floor).map((corner) => composeCorner(corner));
   const doors = input.doorways.map((doorway, index) =>
     composeDoorway(doorway, input.doorState, index),
@@ -142,14 +144,28 @@ function requiredAsset(id: string): WallAssetDefinition {
   return asset;
 }
 
-function exposedWallRuns(floor: ReadonlySet<string>): readonly WallRun[] {
+function exposedWallRuns(
+  floor: ReadonlySet<string>,
+  doorways: readonly SpatialDoorway[],
+): readonly WallRun[] {
   const horizontal = new Map<string, number[]>();
   const vertical = new Map<string, number[]>();
+  const horizontalOpenings = new Set<string>();
+  for (const doorway of doorways) {
+    for (
+      let x = doorway.wall.x / CELL_SIZE;
+      x < (doorway.wall.x + doorway.wall.width) / CELL_SIZE;
+      x += 1
+    )
+      horizontalOpenings.add(`${x}:${doorway.wall.y / CELL_SIZE}`);
+  }
   for (const key of floor) {
     const { x, y } = parseCellKey(key);
-    if (!floor.has(cellKey(x, y - 1))) addLineCell(horizontal, `north:${y}`, x);
+    if (!floor.has(cellKey(x, y - 1)) && !horizontalOpenings.has(`${x}:${y}`))
+      addLineCell(horizontal, `north:${y}`, x);
     if (!floor.has(cellKey(x, y + 1)))
-      addLineCell(horizontal, `south:${y + 1}`, x);
+      if (!horizontalOpenings.has(`${x}:${y + 1}`))
+        addLineCell(horizontal, `south:${y + 1}`, x);
     if (!floor.has(cellKey(x - 1, y))) addLineCell(vertical, `west:${x}`, y);
     if (!floor.has(cellKey(x + 1, y)))
       addLineCell(vertical, `east:${x + 1}`, y);

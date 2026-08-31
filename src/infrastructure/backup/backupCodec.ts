@@ -11,6 +11,7 @@ import {
 } from "../../application";
 import { z } from "zod";
 import {
+  DATABASE_VERSION,
   persistedActivitySchema,
   persistedLibraryEntrySchema,
   persistedMilestoneSchema,
@@ -498,7 +499,7 @@ export class JsonBackupCodec implements BackupCodecPort {
                 "Este backup é anterior aos marcos; nenhum marco será inventado e marcos legítimos existentes serão preservados.",
               ]
             : []),
-          ...(parsed.data.databaseVersion > 6
+          ...(parsed.data.databaseVersion > DATABASE_VERSION
             ? [
                 "O backup foi criado por um schema de banco mais recente, mas o formato é compatível.",
               ]

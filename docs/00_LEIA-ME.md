@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> Estado atual em 2026-08-20: Prompts 1–19, R1–R3, P1 e P2 são baseline histórico; o reboot espacial está em W1 com implementação técnica corrigida e validação física pendente; G4 e G7–G10 permanecem abertos; versão `0.2.0-alpha.1`.
+> Estado atual em 2026-08-28: Prompts 1–19, R1–R3, P1 e P2 são baseline histórico; W3-A (construção estrutural) está tecnicamente concluída após P3-C e aguarda apenas validação física/artística no Moto G06; G4 e G7–G10 permanecem abertos; versão `0.2.0-alpha.1`.
 
 ## 1. Função desta documentação
 
@@ -29,7 +29,7 @@ Ela está dividida por frequência de mudança:
 4. `ROADMAP.md`;
 5. prompt correspondente em `EXECUTION_PLAN.md`.
 
-Para refinamentos posteriores ao protótipo técnico, leia `REFINEMENT_PLAN.md` depois de `ROADMAP.md`; `EXECUTION_PLAN.md` permanece como histórico dos Prompts 1–19.
+Para refinamentos posteriores ao protótipo técnico, leia `REFINEMENT_PLAN.md` depois de `ROADMAP.md`. Para a W3-A vigente, `EXECUTION_PLAN.md` contém também a decomposição e o gate P3-C.
 
 Para o histórico de produto, leia `PRODUCT_PHASE_PLAN.md` depois de `ROADMAP.md`. Para o trabalho espacial vigente, leia também `WORLD_MODEL.md`, `ART_DIRECTION.md` e `ASSET_SPEC.md`; `EXECUTION_PLAN.md` permanece histórico dos Prompts 1–19.
 
@@ -107,5 +107,6 @@ Para o histórico de produto, leia `PRODUCT_PHASE_PLAN.md` depois de `ROADMAP.md
 - APK diagnóstico interno validado no Gate G3; APK release assinado permanece pendente;
 - P1 implementou seis tipos de registro e schema Dexie v5/backup v3;
 - P2 permanece histórico: suas salas temáticas foram substituídas como direção futura pelo mundo contínuo;
-- W1 possui somente dois espaços neutros efêmeros e câmera móvel; validação no Moto G06 permanece pendente;
-- W2 e persistência espacial não foram iniciadas.
+- W1 permanece como histórico de dois espaços neutros efêmeros; não é a autoridade da estrutura persistida atual;
+- W3-A implementa pisos e estruturas manipuláveis, inventário físico, blueprint idempotente e progressão por sessões elegíveis; estantes, livros visuais e leitor em forma de livro pertencem às próximas etapas da W3;
+- P3-C aprovou os gates automatizados, web e Android; validação física, artística, TalkBack, safe areas reais e desempenho percebido no Moto G06 permanecem pendentes.

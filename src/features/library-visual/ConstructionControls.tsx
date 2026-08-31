@@ -76,6 +76,7 @@ export function ConstructionControls({
           setSheet(null);
           triggerRef.current?.focus();
         } else if (selected) onSelectionChange(undefined);
+        else onExit();
         return;
       }
       const delta =
@@ -104,6 +105,7 @@ export function ConstructionControls({
     focus,
     onAddFloor,
     onRemoveFloor,
+    onExit,
     onSelectionChange,
     selected,
     sheet,
@@ -177,7 +179,6 @@ export function ConstructionControls({
       {sheet === "structures" && (
         <section
           className="construction-sheet"
-          aria-modal="true"
           aria-labelledby="structure-inventory-title"
           role="dialog"
         >
@@ -240,7 +241,6 @@ export function ConstructionControls({
       {sheet === "floor" && (
         <section
           className="construction-sheet"
-          aria-modal="true"
           aria-labelledby="floor-tools-title"
           role="dialog"
         >
@@ -352,7 +352,6 @@ export function ConstructionControls({
       {confirmStore && selected && (
         <section
           className="construction-confirm"
-          aria-modal="true"
           role="dialog"
           aria-label="Guardar esta peça"
         >

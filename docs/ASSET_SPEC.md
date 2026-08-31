@@ -1353,3 +1353,7 @@ a criatura
 na escala já aprovada visualmente no Moto G06.
 
 Quando isso funcionar, a direção deixa de ser apenas referência artística e se torna um **pipeline real de produção**.
+
+## Adendo W3-A — assets estruturais vigentes
+
+O kit ativo W3-A usa escala comum de 300 px-fonte para 32 world units e catálogo declarativo. Paredes de 1/2/4 células existem nos eixos horizontal e vertical corretos; cantos NE/NW/SE/SW são peças próprias e a porta horizontal fechada/aberta compartilha o mesmo vão. Phaser não rotaciona bitmaps estruturalmente para fingir outra orientação. O catálogo contém pivot, offset, extensão, depth e fallback; a geometria lógica permanece fora do renderer. Porta vertical continua fora do produto porque não há asset aprovado. Aprovação de seams no Moto G06 é requisito humano, não uma conclusão do pipeline.

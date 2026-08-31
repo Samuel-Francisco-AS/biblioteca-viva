@@ -92,3 +92,7 @@ Antes do Gate G11:
 - [ ] nenhum item está em estado `remover` ou `restrito` incompatível;
 - [ ] arquivos-fonte privados não foram empacotados por engano;
 - [ ] screenshots e vídeo de portfólio também usam conteúdo autorizado.
+
+## W3-A / P3-C — estado de assets estruturais
+
+Os 12 PNGs runtime em `public/assets/world/architecture/walls/` correspondem um a um às fontes preservadas em `art-source/world/architecture/walls/`: quatro cantos, três segmentos horizontais, três verticais e porta horizontal aberta/fechada. `npm run wall-assets:check` valida presença, dimensão, PNG RGBA, alpha e bounds; o processamento gera PNG32 sem modificar `art-source`. O catálogo `WALL_ASSETS` usa os mesmos paths e fornece fallback Graphics se uma textura não carregar. Não há PNG ou definição de porta vertical. Seams, coesão e leitura artística permanecem pendentes de inspeção humana.

@@ -4,7 +4,7 @@
 > Base arquitetural: `ARQUITETURA_E_STACK_BIBLIOTECA_VIVA.md`  
 > Escopo: protótipo de uso pessoal, visual e sonoro, com qualidade de portfólio e APK Android
 
-> Este documento permanece histórico para os Prompts 1–19. A fase de produto iniciada por D-049 usa `PRODUCT_PHASE_PLAN.md`; o reboot vigente usa `ROADMAP.md`, `WORLD_MODEL.md` e `ASSET_SPEC.md`. P1 não é Prompt 20 nem R4. Em 2026-08-26, W3-A concluiu tecnicamente apenas a composição arquitetural de paredes; o resultado está registrado no roadmap/status e não reescreve os prompts históricos.
+> Este documento permanece histórico para os Prompts 1–19. A fase de produto iniciada por D-049 usa `PRODUCT_PHASE_PLAN.md`; o reboot vigente usa `ROADMAP.md`, `WORLD_MODEL.md` e `ASSET_SPEC.md`. P1 não é Prompt 20 nem R4. A descrição histórica de W3-A limitada à composição de paredes foi substituída pelo estado canônico de `STATUS.md`: em 2026-08-28, P3-C concluiu tecnicamente W3-A1–W3-A6, mantendo a validação física/artística como pendência humana.
 
 ---
 
@@ -1385,3 +1385,7 @@ O trabalho não termina quando “o Codex implementou”. Termina quando:
 ## Processo 2 — encerramento técnico (2026-08-27)
 
 P2-C1 (ponte e conflitos), P2-C2 (gestos/hit areas/previews) e P2-C3 (integração, E2E, backup, regressão, build e APK) foram executados sem iniciar Processo 3. A pendência explícita é a validação física Moto G06/TalkBack e a aprovação artística; ela não pode ser inferida da automação.
+
+## Processo 3 — P3-C, encerramento técnico W3-A (2026-08-28)
+
+P3-C auditou e integrou W3-A1 (modelo), W3-A2 (catálogo/blueprint), W3-A3 (Dexie v7/backup v5), W3-A4 (casos de uso/React), W3-A5 (Phaser/lifecycle) e W3-A6 (progressão). O gate acrescentou regressão E2E de sessão elegível/unlock/reload, correções de estado efêmero e documentos reconciliados. Não inclui estantes, livros visuais, leitor em forma de livro ou porta vertical. A aprovação no Moto G06, TalkBack, safe areas e arte permanece humana.

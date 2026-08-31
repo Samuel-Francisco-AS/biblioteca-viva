@@ -90,3 +90,34 @@ test("editor estrutural persiste gesto de canvas e mantém o retorno ao modo nor
   await expect(page.getByRole("button", { name: "Construir" })).toBeVisible();
   await expect(page.locator(".library-visual-host canvas")).toHaveCount(1);
 });
+
+test("uma sessão elegível desbloqueia peças uma única vez e abre Construção", async ({
+  page,
+  createBook,
+}) => {
+  test.setTimeout(60_000);
+  await createBook({ title: "Sessão estrutural fictícia" });
+
+  await page.getByLabel("Duração em minutos").fill("1");
+  await page.getByRole("button", { name: "Registrar sessão" }).click();
+  const unlock = page.getByRole("status").filter({
+    has: page.getByRole("heading", { name: "Novas peças desbloqueadas" }),
+  });
+  await expect(unlock).toContainText("Piso de madeira: 12");
+  await unlock.getByRole("button", { name: "Abrir construção" }).click();
+
+  await expect(page.getByLabel("Modo Construção")).toBeVisible();
+  await expect(
+    page.getByRole("dialog", { name: "Peças estruturais" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Piso" }).click();
+  await expect(page.getByText("36 unidades disponíveis.")).toBeVisible();
+
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "Novas peças desbloqueadas" }),
+  ).toHaveCount(0);
+  await page.getByRole("button", { name: "Construir" }).click();
+  await page.getByRole("button", { name: "Piso" }).click();
+  await expect(page.getByText("36 unidades disponíveis.")).toBeVisible();
+});

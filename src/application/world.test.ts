@@ -20,7 +20,7 @@ describe("W2 placement validation", () => {
     [{ ...DEFAULT_PLACED_OBJECT, rotation: 90, x: 448 }, false],
     [
       { ...DEFAULT_PLACED_OBJECT, spaceId: "space-b" as const, x: 448, y: 576 },
-      true,
+      false,
     ],
   ];
   it.each(cases)(

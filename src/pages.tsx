@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import type {
   BookEntry,
@@ -195,6 +195,7 @@ export function LibraryPage({
   readonly highContrast?: boolean;
 }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const diagnosticsEnabled =
     import.meta.env.DEV || import.meta.env.VITE_ENABLE_DIAGNOSTICS === "true";
   const diagnostics = useMemo(
@@ -594,11 +595,12 @@ export function LibraryPage({
       setSelectedObjectId(undefined);
       setObjectActionsObjectId(undefined);
       setObjectActionsClosing(false);
+      void navigate(location.pathname, { replace: true, state: null });
     });
     return () => {
       active = false;
     };
-  }, [location.state, state.kind]);
+  }, [location.pathname, location.state, navigate, state.kind]);
 
   useEffect(() => {
     if (!application || state.kind !== "ready") return;

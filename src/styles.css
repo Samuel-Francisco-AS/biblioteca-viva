@@ -1091,6 +1091,13 @@ blockquote {
   background: var(--color-accent-warm);
 }
 
+.library-stage:has(.library-construction-trigger) .library-summary-trigger {
+  bottom: calc(
+    max(var(--space-4), env(safe-area-inset-bottom)) + var(--touch-target) +
+      var(--space-3)
+  );
+}
+
 .library-bottom-sheet {
   position: absolute;
   z-index: 12;

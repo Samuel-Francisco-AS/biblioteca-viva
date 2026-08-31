@@ -1,48 +1,9 @@
-# Modelo de Mundo — Biblioteca Viva
+# Modelo do mundo
 
-> Documento novo para o reboot.
+`WorldStructureState` representa o mundo estrutural persistido `world.main`. Seus pisos são células inteiras e suas peças são placements com âncora em grade. Arestas horizontais/verticais e cantos explícitos tornam ocupação e colisão determinísticas; peças duplicadas ou arestas duplicadas são inválidas.
 
-## Objetivo
-Separar conteúdo registrado, recompensa/desbloqueio, estrutura física e organização escolhida.
+O blueprint inicial é um cômodo 12×10 idempotente. Ele só preenche uma instalação sem estrutura; nunca sobrescreve edição ou restore. `PlacedObject` continua um agregado separado e é recuperado para o footprint vigente somente no primeiro bootstrap quando necessário.
 
-## Conceitos
-- **World:** ambiente global.
-- **Space:** área navegável neutra.
-- **Connection:** relação entre áreas.
-- **ObjectDefinition:** modelo declarativo de objeto.
-- **Unlock:** direito adquirido.
-- **PlacedObject:** instância posicionada.
-- **Resident:** habitante.
-- **Anchor:** ponto semântico.
+O catálogo possui as famílias físicas `floor.wood`, `wall.short`, `wall.medium`, `wall.long`, `corner.stone` e `door.horizontal`. Inventário é derivado de reserva inicial, placements e grants persistidos. Horizontal e vertical são variantes corretas de paredes; aberta/fechada são variantes da mesma porta horizontal. Porta vertical não é modelada.
 
-## Invariantes
-- PlacedObject referencia definição conhecida e espaço válido.
-- Posição respeita limites.
-- Rotação pertence às opções da definição.
-- Unlock e placement são separados.
-- Mover objeto não altera o fato histórico que o desbloqueou.
-- Phaser não é fonte de verdade do layout.
-
-## Derivado, persistido e efêmero
-**Derivado:** desbloqueio efetivo, atmosfera, destaque, reações, presença de residentes.
-
-**Persistido (futuro W2):** instância colocada, posição, orientação, espaço e, futuramente se necessário, estado de armazenamento.
-
-**Efêmero:** seleção, preview de drag, câmera, hover e animação.
-
-## Inventário
-O primeiro slice não precisa de inventário completo. Basta conceitualmente distinguir `desbloqueado + não colocado` e `desbloqueado + colocado`.
-
-## Expansão
-Ainda não decidir entre layouts predefinidos, extensões anexadas ou construção parcialmente livre. Portanto, não implementar editor de paredes nem modelo excessivamente genérico.
-
-## Compatibilidade
-P1 continua fonte dos registros. Milestones/fatos P2 podem originar unlocks, mas as salas temáticas deixam de ser estrutura definitiva. Não migrar automaticamente as cinco salas.
-
-## Estado W2
-
-O código preserva os dois espaços técnicos efêmeros e acrescenta as instâncias iniciais `placed-object.furniture.desk.wood-01` e `placed-object.furniture.chair.wood-01`. A transformação persistida contém instância, definição, espaço, posição e rotação; seleção, preview, drag e câmera permanecem efêmeros. `object.reading-table` continua definido apenas para leitura segura de estado W2 anterior. Não há inventário, unlock, residentes ou expansão livre.
-
-## Processo 2 — estrutura editável
-
-`WorldStructureState` é persistido separadamente: células de piso e placements de arestas/cantos/porta, revisão e blueprint. Seleção, ferramenta, preview, lote de gesto e câmera não são persistidos nem exportados. O inventário estrutural é derivado de concessão menos placements/células; guardar devolve disponibilidade. Backup v5 inclui a estrutura, v4 continua aceito sem ela e `PlacedObject` não é fundido ao layout.
+Phaser transforma estrutura em plano de renderização e usa previews apenas em memória. Preview, seleção, pan, realce, timer e tween não são persistidos e não devem sobreviver reload, pause, shutdown ou troca de modo.

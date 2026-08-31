@@ -40,7 +40,7 @@ describe("migração aditiva do schema v4 para v5", () => {
     expect(await migrated.tags.count()).toBe(0);
     expect(await migrated.sessions.count()).toBe(0);
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-      value: "6",
+      value: "7",
     });
     migrated.close();
 

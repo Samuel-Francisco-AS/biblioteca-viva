@@ -52,6 +52,8 @@ npm run test:e2e
 
 `playwright.config.ts` inicia `vite preview` em `127.0.0.1:4173`. `e2e/fixtures.ts` limpa apenas IndexedDB dessa origem via CDP. Fixtures são pequenas e fictícias. Falha gera trace em `test-results/`; reproduza pelo nome do teste e use `npx playwright show-trace <arquivo>`.
 
+Os E2E usam um worker: cada cenário pode abrir Phaser/WebGL e a execução concorrente esgota o compositor do Chromium, produzindo timeouts não reproduzíveis isoladamente. Isso não reduz a suíte nem suas asserções; mantém a evidência serial e determinística.
+
 `.github/workflows/ci.yml` usa Node 22, `npm ci`, Chromium, formatação, lint, tipos, Vitest, áudio, build, relatório de performance e E2E. Workflow hospedado só é comprovado após push. Falha de CI deve ser reproduzida no mesmo comando, sem relaxar check. Android permanece local para evitar SDK/Gradle na CI inicial.
 
 ## 8. APK e release futura
@@ -78,3 +80,7 @@ Ao evoluir sessões, preservar a regra de uma aberta globalmente, o `Clock` como
 ## P2 — manutenção do editor estrutural
 
 Antes de mudar célula, definição ou gesto, execute os testes de `constructionInput`, `SpatialWorldScene`/render plan, host, `pages`, backup e E2E estrutural. Não persista preview, seleção, câmera ou ferramenta. Mudança no formato de `WorldStructureState` exige migração, backup e rollback; não altere versão de backup apenas por UI. Para Android gere e registre APK, SHA-256 e tamanho, sem instalar ou assinar sem autorização.
+
+## P3-C — manutenção W3-A
+
+Antes de alterar progressão, execute testes de `structuralProgress`, `milestones`, `sessions`, `structuralProgression`, `milestoneStore`, backup e App. Preserve os limiares 1/5/15/30, famílias físicas e grants idempotentes; não introduza XP/moeda/streak. Mudança Dexie exige nova migração aditiva e regressão v6→atual; mudança de backup exige codec, checksum, v4 e restore repetido. Depois de qualquer alteração estrutural, execute também `wall-assets:check`, `performance:report`, E2E e build Android antes da checklist humana.

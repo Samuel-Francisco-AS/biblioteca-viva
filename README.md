@@ -1,47 +1,38 @@
 # Biblioteca Viva
 
-Biblioteca Viva é um aplicativo local-first para registrar livros, filmes, séries, estudos, atividades físicas e trabalho. A interface React mantém as funções convencionais e acessíveis; a Biblioteca Phaser é uma visualização complementar, carregada sob demanda.
+Biblioteca Viva é um aplicativo local-first para registrar livros, filmes, séries, estudos, atividades físicas e trabalho. React entrega as operações convencionais e acessíveis; a Biblioteca Phaser é uma projeção complementar carregada sob demanda.
 
 ## Estado
 
-Versão `0.2.0-alpha.1`. Prompts 1–19, R1–R3, P1 e P2 são histórico técnico. G0–G3, G5 e G6 estão aprovados; G4 e G7–G10 permanecem abertos. Não há release pública, APK assinado ou publicação em loja.
+W3-A está tecnicamente concluída: a Biblioteca possui estrutura construída pelo usuário, pisos em células, paredes/cantos e porta exclusivamente horizontal, inventário físico e desbloqueios por sessões elegíveis. Dexie está no schema v7 e backup no formato v5, compatível com v1–v4. A validação física/artística, TalkBack, safe areas e desempenho percebido no Moto G06 continuam humanas e pendentes.
 
-O reboot espacial está em W1: um mundo Phaser efêmero com dois espaços neutros conectados, câmera X/Y e pan manual. A implementação técnica corrigida aguarda validação humana no Moto G06. W2 não começou: não há `PlacedObject`, inventário, layout persistido, tabela Dexie, migração ou backup espacial.
+Estantes reativas, livros visuais vinculados a atividades, livro aberto manipulável e leitor em forma de livro são próximos slices W3; não estão implementados.
 
-## Stack e arquitetura
-
-- TypeScript estrito, React 19 e Vite 8;
-- Phaser 3 lazy na Biblioteca;
-- Dexie/IndexedDB schema v5, validado nas fronteiras;
-- backup JSON v3, leitor retrocompatível de v1/v2;
-- Web Audio nativo atrás de uma porta de aplicação;
-- Capacitor 8 para Android;
-- Vitest, Testing Library e Playwright Chromium.
+## Arquitetura
 
 ```text
-React → Application → Domain → Ports → Infrastructure
-
-dados persistidos → projeções → React host → Phaser
-World/Space/Connection efêmeros W1 → Phaser → câmera efêmera
+dados Dexie → Application/Domain → LibraryViewModel → React host → Phaser
+WorldStructureState (células/arestas) ── separado de ── PlacedObject
 ```
 
-React e Phaser não acessam Dexie. Phaser recebe projeções resumidas e emite interações tipadas; não decide regra de negócio nem é fonte de verdade de layout.
+React e Phaser não acessam Dexie. Phaser não decide regras de construção ou progressão: consome projeções e emite interações tipadas. Há uma cena e um canvas; previews, seleção, pan e realces são efêmeros.
 
 ## Desenvolvimento
 
 ```bash
 npm ci
-npm run dev
 npm run format:check
 npm run lint
 npm run typecheck
 npm run test:run
 npm run audio:check
+npm run wall-assets:check
 npm run build
 npm run performance:report
+npm run test:e2e
 ```
 
-Para E2E, instale Chromium uma vez com `npx playwright install chromium` e execute `npm run test:e2e` após o build. `performance:report` confirma que Phaser continua entrada dinâmica.
+Para E2E local, instale Chromium uma vez com `npx playwright install chromium`.
 
 ## Android
 
@@ -50,13 +41,6 @@ npm run android:sync
 npm run android:build:debug
 ```
 
-O APK debug fica em `android/app/build/outputs/apk/debug/app-debug.apk`; ele não é release. FPS, conforto de pan, safe areas, TalkBack e estabilidade física exigem validação humana no Moto G06.
+O APK debug esperado é `android/app/build/outputs/apk/debug/app-debug.apk`. Ele não é release nem é instalado automaticamente. Consulte `docs/TEST_PLAN.md` para a checklist Moto G06.
 
-## Limitações atuais
-
-- W1 ainda não foi aprovada humanamente;
-- paredes W1 são modulares procedurais: o Kit Zero atual não tem peças em escala compatível e será revisto em W5;
-- áudio e arte continuam provisórios;
-- não há conta, backend, sincronização ou armazenamento remoto.
-
-Leia [docs/STATUS.md](docs/STATUS.md) e [AGENTS.md](AGENTS.md) antes de contribuir.
+Leia `AGENTS.md` e `docs/STATUS.md` antes de contribuir.

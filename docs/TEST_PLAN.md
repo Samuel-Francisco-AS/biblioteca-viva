@@ -1138,3 +1138,13 @@ Automação cobre a ponte React→host→Phaser→intenção→caso de uso→pro
 ## P3-B — progressão estrutural integrada
 
 Automação focada cobre conclusão/manual de sessão, transação com milestone, concorrência single-flight, concessão estrutural idempotente, reconciliação de histórico, inventário derivado por família, projeção do próximo marco e estado concluído após 30 sessões. React cobre feedback consolidado, abertura explícita de Construção, inventário/progresso sem reload e descarte após unmount já coberto pelo padrão estrutural P2-C1. Phaser recebe somente token/famílias e prova deduplicação por token e duração finita/reduzida. P3-C ainda deve executar E2E amplo, Android/APK e validação humana.
+
+## P3-C — gate técnico W3-A (2026-08-28)
+
+Automação cobre W3-A1–W3-A6: células/arestas/catálogo/inventário, operações place/move/rotate/store e piso em lote, revisão obsoleta/single-flight/unmount, lifecycle, marcos 1/5/15/30, reconciliação idempotente, Dexie v6→v7, backup v5/v4 e áudio estrutural. O E2E real cobre sessão positiva → unlock consolidado → anúncio acessível → `Abrir construção` → inventário derivado → reload sem duplicação.
+
+A matriz P3-C passou em 2026-08-28: 798 testes Vitest/93 arquivos e 12 cenários Chromium. Playwright usa um worker, pois cada cenário cria Phaser/WebGL e a concorrência esgotava o compositor, causando timeout que não ocorria na evidência serial; nenhum cenário, timeout ou asserção foi removido. Também passaram `format`, `format:check`, lint, typecheck, `audio:check`, `wall-assets:check`, build, `performance:report`, `android:sync`, `android:build:debug` e `git diff --check`. O APK debug gerado, não instalado, está em `android/app/build/outputs/apk/debug/app-debug.apk` (36.125.507 bytes; SHA-256 `87973cc480abf2d8112438c24155ba0a79bf8d0d195fa6fb1e242b830b55a454`).
+
+### Checklist humana Moto G06
+
+Para cada item, registrar **aprovado**, **reprovado**, **não testado** ou **não aplicável**: instalação/atualização sem limpar dados; fechar/reabrir/reiniciar; exportar/restaurar backup; painel rolável; pisos; paredes curta/média/longa nos dois eixos; quatro cantos; porta horizontal; selecionar/mover/girar/guardar/cancelar; gestos nas bordas e pan; sessão/unlock/silêncio; seams/grade/profundidade/clipping/safe areas; atraso/aquecimento/memória/segundo plano; mute/volume/som único; TalkBack/foco/anúncios/alternativa React/movimento reduzido/contraste. Reabrir W3-A para qualquer defeito objetivo de persistência, acesso, lifecycle, interação, safe area ou desempenho físico.

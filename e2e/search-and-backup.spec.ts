@@ -113,7 +113,7 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
   ).toHaveCount(0);
 });
 
-test("restauração em base vazia não exige backup de segurança", async ({
+test("restauração após bootstrap estrutural protege o estado persistido", async ({
   createBook,
   navigateFromMenu,
   page,
@@ -140,9 +140,14 @@ test("restauração em base vazia não exige backup de segurança", async ({
   await page.reload();
   await page.getByLabel("Arquivo de backup").setInputFiles(backupPath);
   await expect(
-    page.getByText(/não possui dados atuais relevantes/u),
+    page.getByText(/Há dados atuais que serão substituídos/u),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Restaurar backup" }).click();
+  await page
+    .getByRole("button", { name: "Continuar sem criar backup" })
+    .click();
+  await page
+    .getByRole("button", { name: "Confirmar e restaurar sem backup" })
+    .click();
   await expect(
     page.getByRole("heading", { name: "Restauração concluída" }),
   ).toBeVisible();

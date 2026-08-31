@@ -375,6 +375,20 @@ describe("Página Biblioteca", () => {
     expect(screen.queryByLabelText("Peça selecionada")).not.toBeInTheDocument();
   });
 
+  it("fecha o modo Construção com Escape quando não há painel ou seleção ativa", async () => {
+    const user = userEvent.setup();
+    await renderConstruction(constructionApplication());
+    await enterConstruction(user);
+
+    await user.keyboard("{Escape}");
+
+    expect(screen.queryByLabelText("Modo Construção")).not.toBeInTheDocument();
+    expect(visualHostMock.constructionState).toEqual({
+      active: false,
+      tool: "explore",
+    });
+  });
+
   it("envia uma colocação, movimento e lote de piso uma única vez", async () => {
     const placeStructure = vi.fn(() => Promise.resolve(structureState()));
     const moveStructure = vi.fn(() => Promise.resolve(structureState()));
