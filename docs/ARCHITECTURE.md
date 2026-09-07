@@ -1,53 +1,62 @@
 # Arquitetura
 
-## Dependências
+## Visão de dependências
 
 ```text
-presentation (React/Phaser) → application → domain
-infrastructure → application ports
+presentation (React e Phaser) -> application -> domain
+infrastructure ----------------> application ports
 ```
 
-Domain não importa React, Phaser, Dexie, Capacitor, DOM ou browser. Infrastructure valida entradas externas e implementa portas. React e Phaser nunca acessam Dexie.
+- `domain` contém entidades, invariantes, transições, erros e regras puras.
+- `application` coordena casos de uso, transações e portas.
+- `infrastructure` implementa persistência, plataforma, áudio e outros adapters.
+- React apresenta fluxos convencionais e acessíveis.
+- Phaser apresenta o mundo visual e emite intenções tipadas.
 
-## Estrutura W3-A
+Domain não importa React, Phaser, Dexie, Capacitor, DOM ou browser. React e Phaser não acessam Dexie diretamente.
 
-`WorldStructureState` é a fonte de verdade da construção e permanece separado de `PlacedObject`. Ele contém células de piso, placements ancorados e revisão. `STRUCTURE_CATALOG` tipa família física, categoria, orientação, extensão, campos visuais legados de compatibilidade, fallback e asset. Dados persistidos carregam identidade e placement lógico; canvas, alpha, escala, planos, regiões e depth são definições runtime, não estado pessoal.
+## Composição
 
-`worldStructure.ts` é a autoridade para spans, intervalos, endpoints, vértices de canto, ocupação por arestas, rotação e semântica de porta. `worldStructureAnalysis.ts` deriva perímetro, componentes, fechamento diagnóstico e identidade normalizada `canonical-v1 | modified-v1 | future/unknown`. `worldStructureEditing.ts` orquestra place/move/rotate/store e piso sobre essas regras puras; ele não exige fechamento global nem consulta pixels.
+O composition root cria adapters e casos de uso. Entradas externas passam por validação antes de chegar ao domínio. Entidade, atividade e marco aplicável são confirmados na mesma fronteira transacional; eventos são publicados somente após commit.
 
-`DexieWorldStructureRepository` persiste somente `world.main`. O bootstrap inicializa o blueprint uma vez, na mesma transação que recupera objetos legados quando isso é necessário. Edição usa expected revision; a UI faz recuperação de conflito por reload da projeção.
+## Estado do mundo
 
-## Fronteira de transação e eventos
+`WorldStructureState` é a fonte persistida para pisos e peças estruturais de `world.main`. `PlacedObject` é outro agregado. Estrutura e objetos não compartilham placement, revisão ou regras de ocupação.
 
-Sessão, atividade e milestones são tratados no fluxo transacional existente. O `DexieMilestoneStore` avalia os marcos estruturais antes do evento; `MilestoneReached` só é publicado após commit. Reconciliação lê sessões anteriores, insere somente IDs ausentes e é idempotente. Backup restaura estrutura e milestones antes de o inventário ser consultado, sem armazenar projeções visuais.
+O bootstrap cria o blueprint somente quando a estrutura está ausente. Não reconhece uma edição pessoal como candidata a reset e não regrava restore válido.
 
-## Apresentação e renderização
+Edição usa revisão esperada. Em conflito, a aplicação recarrega a projeção antes de uma nova intenção.
 
-React orquestra os casos de uso, modo Construção, seleção, alternativa acessível, notificações e feedback consolidado. Phaser recebe `LibraryViewModel` e `ConstructionSceneState`, renderiza o plano e emite intenções tipadas. Ele não conhece Dexie nem regras de progressão. Há uma instância Phaser, uma cena e um canvas; pan, hit areas, previews, Graphics, timers e realce de unlock são limpos em troca de modo, pausa, shutdown e nova projeção.
+## Fronteira React–Phaser
 
-### Autoridades visuais entregues em W3-A-R3
+React controla navegação, modo Construção, painéis, seleção acessível, mensagens e feedback. Phaser recebe `LibraryViewModel` e estado de cena, renderiza e emite interações. Entidades pessoais completas não atravessam essa fronteira quando uma projeção mínima é suficiente.
 
-O caminho estrutural ativo possui estas autoridades:
+Há uma instância Phaser, uma cena e um canvas. Entrar e sair de Construção alterna estado e overlays sem desmontar o host. Sair da rota encerra o lifecycle.
 
-- `structureVisualGeometry.ts`: metadado canônico dos 12 assets e transformação pura de placement/geometria lógica em origem de junção, posição do canvas, escala, bounds, planos e regiões ocupadas;
-- `structureVisualDepth.ts`: depth puro derivado da borda inferior visível, com bandas traseira/frontal e desempate estável;
-- `structureVisualFallback.ts`: regiões procedurais e depth derivados da mesma transformação, sem hit area paralela;
-- `structureRenderPlan.ts`: materializa transformação e depth uma vez por placement e ordena o plano;
-- `SpatialWorldScene.ts`: aplica a projeção pronta ao sprite ou ao único fallback correspondente;
-- `constructionInput.ts`: consome as mesmas `interactionRegions` usadas pelo renderer, incluindo os dois braços de cada canto.
+## Autoridades estruturais
 
-`WALL_ASSETS`, `visualOffsetCells`, `visualSpanCells` e `pivot` permanecem como compatibilidade para APIs históricas; o renderer estrutural, o render plan e o hit testing ativos não os consultam. `wallComposition.ts` continua histórico e fora desse runtime.
+- `worldStructure.ts`: spans, intervalos, endpoints, cantos, ocupação e porta.
+- `worldStructureAnalysis.ts`: perímetro, fechamento diagnóstico e identidade normalizada.
+- `worldStructureEditing.ts`: colocar, mover, girar, guardar e editar piso.
+- `structureVisualGeometry.ts`: metadado e transformação visual canônicos.
+- `structureVisualTopology.ts`: normal interior derivada do piso.
+- `structureVisualContinuity.ts`: comparação de perfis entre junções.
+- `structureVisualDepth.ts`: depth pela base visível e desempate estável.
+- `structureVisualFallback.ts`: fallback derivado da mesma geometria.
+- `structureRenderPlan.ts`: transformação e depth materializados por placement.
+- `constructionInput.ts`: interação baseada nas mesmas regiões do renderer.
+- `SpatialWorldScene.ts`: aplicação do plano ao sprite ou fallback.
 
-### Continuidade estrutural vigente
+Campos visuais legados podem permanecer para compatibilidade, mas não são autoridade do renderer ativo. `wallComposition.ts` é histórico e não deve receber correção destinada ao runtime atual.
 
-A correção concluída deriva a normal interior da adjacência do piso e alinha o perfil estrutural por translação assinada na transformação canônica. Não há exceção por blueprint, coordenada ou `instanceId`. A repetição R3-C-B2 passou 9/9, com 31/31 emendas sem canal conectado de fundo; as oito evidências oficiais permanecem a baseline estrutural.
+## Invariantes
 
-### Shell de apresentação em R4
+- Nenhuma correção depende de blueprint, coordenada ou `instanceId`.
+- Sprite, fallback, hit area, preview, seleção e depth derivam da transformação canônica.
+- Normal interior depende apenas da adjacência do piso.
+- Estado efêmero não entra no banco ou no backup.
+- Mudança persistente exige migração aditiva e compatibilidade de backup.
 
-`routes.ts` é o contrato central de destinos e metadados da navegação. `App` escolhe o header e o dock a partir desse contrato; “Resumo” aponta para a rota existente `/estatisticas`, e Novo registro continua sendo uma rota direta/contextual da Coleção. O drawer deixou de ser uma segunda navegação primária.
+## Decisões
 
-Na Biblioteca, o shell React é uma camada ao redor do `LibraryVisualHost`, não uma substituição do renderer. O host permanece montado ao alternar Construção, etiqueta, painel ou navegação visual; somente a saída real da rota encerra seu lifecycle. Construção comunica seu estado ao shell para ocultar o dock global e deixa um limite explícito para sua futura barra exclusiva.
-
-`LibraryContextLabel` recebe sala/período já projetados pela página. Sua chave é apenas esse contexto; uma mudança real remonta o ciclo e cancela o timer anterior, enquanto rerenders comuns não o reiniciam. O ciclo React remove a etiqueta aos 5.000 ms, e a animação CSS normal ocupa exatamente esse intervalo. A alternativa semântica permanente permanece fora do canvas.
-
-Nenhum contrato de domínio, aplicação, persistência, backup, inventário, progressão ou Phaser foi ampliado por R4. Os conteúdos internos das rotas e a máquina completa da Construção continuam pendentes.
+Consulte `decisions/README.md`. O registro anterior, incluindo decisões substituídas, está em `history/legacy/DECISIONS_LEGACY.md`.

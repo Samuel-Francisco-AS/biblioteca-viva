@@ -1,5 +1,7 @@
 # Plano de refinamento pós-protótipo
 
+> **ARQUIVO HISTÓRICO:** R1–R3 foram encerradas. Pendências e próximos passos deste plano não representam o estado atual.
+
 > Início da fase: 2026-08-13
 > Estado: R1, R2 e R3 tecnicamente concluídos; próximo trabalho é o checkpoint integrado Android pós-R1–R3
 > Base: primeira rodada integrada de uso físico realizada por Sam no Moto G06

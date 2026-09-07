@@ -1,17 +1,49 @@
-# Produto — Biblioteca Viva
+# Produto
+
+## Visão
+
+> Aquilo que você lê, assiste, aprende, pratica e constrói deixa memória em um lugar que cresce com você.
+
+A Biblioteca Viva transforma registros culturais, de aprendizado, prática e trabalho em um espaço pessoal, persistente e afetivo. O mundo visual representa a trajetória do usuário; não é um placar nem um editor de decoração desconectado dos dados.
+
+## Princípios
+
+1. Registro antes da gamificação.
+2. O mundo é consequência da vida registrada.
+3. O usuário decide como construir e ocupar o espaço.
+4. Desbloquear um objeto não determina onde colocá-lo.
+5. Progresso não pune ausência ou ritmo irregular.
+6. Visual e som são parte do produto, mas ações essenciais permanecem acessíveis fora do canvas.
+7. Privacidade e funcionamento local são padrões.
+8. Phaser apresenta; não persiste nem decide regras de negócio.
+9. Crescimento é incremental e baseado em evidência.
+10. O produto precisa continuar compreensível e mantido por uma pessoa.
 
 ## Contrato atual
 
-A Biblioteca Viva mantém registros pessoais localmente e oferece uma Biblioteca visual opcional. A pessoa pode construir uma biblioteca estrutural simples: adicionar/remover pisos, colocar, mover, girar e guardar paredes/cantos/porta horizontal a partir de inventário físico.
+A pessoa pode registrar livro, filme, série, estudo, atividade física e trabalho; acompanhar progresso; criar notas e citações; usar etiquetas e favoritos; registrar sessões; consultar histórico e estatísticas; e construir uma Biblioteca visual persistente.
 
-O mundo começa com um único cômodo simples e persistido. Pisos são células; paredes 1/2/4, cantos e porta horizontal são peças declaradas. A porta vertical não existe por decisão de assets. Assets ausentes degradam para fallback utilizável, sem bloquear dados ou operações.
+O mundo começa com um cômodo estrutural simples. Pisos são células e paredes, cantos e porta horizontal são peças declaradas. O usuário pode ampliar o piso e reorganizar a estrutura. Assets ausentes degradam para fallback funcional.
 
-## Progressão estrutural
+Uma sessão conta para progressão estrutural somente quando está concluída, tem duração positiva e pertence a um registro existente compatível. Marcos cumulativos em 1, 5, 15 e 30 sessões elegíveis concedem famílias físicas. Não existem XP, moeda, nível ou streak.
 
-Uma sessão conta para estrutura somente se estiver concluída, tiver duração positiva e estiver ligada a um registro existente do mesmo tipo. Os marcos cumulativos são 1, 5, 15 e 30 sessões elegíveis. Cada marco grava concessões físicas por família; não há XP, moedas, nível ou streak. Depois do marco 30 não há nova mecânica oculta: a projeção informa conclusão dos marcos atuais.
+## Experiência desejada
 
-O unlock apresenta feedback consolidado, anúncio acessível e a ação `Abrir construção`. O usuário pode dispensar o feedback; nenhum áudio ou animação reaparece em reload sem um novo evento persistido.
+O usuário deve reconhecer o lugar como seu, perceber continuidade espacial e reencontrar uma memória visível de suas atividades. A interface convencional deve ser clara por si mesma; a Biblioteca visual acrescenta presença, exploração e afeto sem esconder dados ou ações.
 
-## Limites W3-A
+## Limites atuais
 
-W3-A não implementa estantes reativas, livros visuais associados a atividades, livro aberto manipulável, leitor em forma de livro, portas verticais, novos mundos, personagem, multiplayer, nuvem ou analytics. A arte, seams e ergonomia no Moto G06 dependem de aprovação humana posterior.
+Não estão implementados nem implicitamente autorizados:
+
+- porta vertical;
+- novos mundos ou salas obrigatórias por categoria;
+- personagens e rotinas novos;
+- conta, backend, sincronização ou nuvem;
+- multiplayer, social ou analytics;
+- aconselhamento médico ou avaliação de produtividade;
+- XP, moedas, ranking ou streak punitiva;
+- estantes reativas, livros visuais, livro aberto manipulável ou leitor em forma de livro.
+
+## Anti-visão
+
+Evitar planilha fantasiada de pixel art, dashboards apresentados como cômodos, categorias presas a salas, gamificação coercitiva, editor que cobre o mapa e arquitetura ampliada antes de existir necessidade observada.

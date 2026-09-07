@@ -1,5 +1,7 @@
 # W3-A-R — Plano corretivo pós-auditoria
 
+> **ARQUIVO HISTÓRICO:** todos os gates R0–R6 foram encerrados. Estados, bloqueios, prompts e pedidos de autorização abaixo pertencem ao momento de elaboração e não devem ser executados.
+
 > Projeto: Biblioteca Viva
 >
 > Revisão: 3 — plano fracionado após a auditoria W3-A-R0

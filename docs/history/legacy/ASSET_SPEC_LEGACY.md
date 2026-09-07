@@ -1,5 +1,7 @@
 # ASSET_SPEC.md — Especificação visual e técnica de assets da Biblioteca Viva
 
+> **ARQUIVO HISTÓRICO:** contém propostas, Kit Zero e decisões abertas da fase original. O contrato operacional vigente está em `../../ASSET_PIPELINE.md`.
+
 > Revisão: 2026-08-18  
 > Estado: especificação inicial aprovada para produção do primeiro kit visual do reboot espacial.  
 > Escopo: assets 2D/2.5D usados pelo mundo Phaser.  

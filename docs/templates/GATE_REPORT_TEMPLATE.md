@@ -1,4 +1,4 @@
-# Relatório — Bloco/Prompt
+# Relatório — Fatia/Gate
 
 ## Resultado
 
@@ -51,7 +51,7 @@ Descrição curta do comportamento entregue.
 
 ## Estado Git
 
-Confirmar explicitamente que nenhum commit, tag ou push foi realizado.
+Registrar branch, commit-base, estado da árvore e qualquer operação Git explicitamente autorizada.
 
 ## Recomendação de gate
 

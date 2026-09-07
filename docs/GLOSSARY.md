@@ -1,34 +1,29 @@
 # Glossário
 
-- **Biblioteca Viva:** produto completo e também metáfora do ambiente persistente.
-- **Biblioteca visual:** rota/cena Phaser que representa os dados.
+- **Biblioteca Viva:** produto completo e metáfora do ambiente persistente.
+- **Biblioteca visual:** superfície Phaser que representa dados e mundo projetados.
 - **Coleção:** interface React para listar e organizar registros.
-- **LibraryEntry:** união discriminada de um registro pessoal; em P1 abrange livro, filme, série, estudo, atividade física e trabalho.
-- **BookEntry:** variante de livro implementada no protótipo.
-- **MovieEntry / SeriesEntry / StudyEntry:** variantes históricas aprovadas para P1.
-- **PhysicalActivityEntry:** prática acompanhada sem finalidade médica ou prescritiva, aprovada em D-049.
-- **WorkEntry:** projeto ou atividade produtiva pessoal/profissional leve, sem gestão empresarial, aprovada em D-049.
-- **P1 — Vida Registrada:** fase de registros, etiquetas, favoritos, sessões, histórico e estatísticas.
-- **P2 — Biblioteca Evolutiva:** fase futura de salas, reputação, desbloqueios, personagens e rotinas.
-- **P3 — Memória Conectada:** fase futura de calendário avançado, ritmos, conexões, revisão e coleções.
-- **Anotação:** nota ou citação associada a um registro.
-- **Atividade:** histórico mínimo de ação relevante; não é event sourcing.
-- **Evento de domínio:** fato ocorrido usado para desacoplar reações.
-- **Marco:** condição declarativa alcançada uma vez ou repetidamente.
-- **Recompensa:** consequência de marco, como decoração ou diálogo.
-- **LibraryViewModel:** projeção imutável consumida pelo Phaser.
-- **LibraryInteraction:** evento emitido pelo Phaser para a aplicação.
-- **Porta:** interface definida pela aplicação para serviço externo.
-- **Adaptador:** implementação concreta de uma porta, como Dexie.
-- **Local-first:** funções essenciais e dados funcionam localmente e offline.
-- **Modular monolith:** uma aplicação implantável com módulos e limites internos claros.
-- **Gate:** condição verificável que encerra um bloco.
-- **Prompt:** porção coesa de trabalho entregue ao Codex.
-- **Fallback geométrico:** representação simples usada quando asset falha ou não existe.
-- **Modo reduzido:** preferência que limita movimento e efeitos para conforto e desempenho.
-- **Schema:** contrato validável de dados.
-- **Migração:** transformação versionada entre schemas persistentes.
-- **Backup envelope:** arquivo versionado que contém dados exportados e metadados.
-- **APK debug:** pacote Android para testes, não distribuição final.
-- **APK release:** pacote otimizado e assinado.
-- **AAB:** formato de publicação em lojas Android, quando necessário.
+- **LibraryEntry:** união de livro, filme, série, estudo, atividade física e trabalho.
+- **Sessão elegível:** sessão concluída, positiva e ligada a registro compatível existente.
+- **Marco:** condição histórica idempotente.
+- **Concessão:** quantidade física desbloqueada para uma família estrutural.
+- **Inventário:** projeção derivada de reserva, placements e concessões.
+- **WorldStructureState:** agregado persistido de pisos e peças estruturais de `world.main`.
+- **PlacedObject:** objeto posicionável persistido, separado da estrutura.
+- **Placement:** identidade, definição, âncora e orientação lógica de uma peça ou objeto.
+- **Blueprint:** estrutura inicial criada somente quando o mundo está ausente.
+- **Perímetro:** conjunto de arestas externas das células de piso.
+- **Continuidade transversal:** alinhamento visual de espessura e lado ocupado entre peças vizinhas.
+- **Transformação canônica:** única conversão de geometria lógica em posição, escala, bounds e regiões visuais.
+- **Fallback:** representação funcional usada quando um asset não está disponível.
+- **LibraryViewModel:** projeção imutável consumida pela apresentação visual.
+- **LibraryInteraction:** intenção tipada emitida pelo Phaser.
+- **Porta:** contrato da aplicação implementado por um adapter externo.
+- **Local-first:** funções essenciais e dados permanecem locais e offline.
+- **Schema:** contrato validável da forma persistida.
+- **Migração:** transformação versionada entre schemas.
+- **Backup envelope:** arquivo versionado com dados, metadados e integridade.
+- **APK debug:** pacote para diagnóstico e teste, não distribuição.
+- **APK release:** pacote assinado e preparado para distribuição.
+- **Gate:** conjunto verificável de critérios de conclusão.
+- **Documento histórico:** evidência preservada que não autoriza nem define trabalho atual.

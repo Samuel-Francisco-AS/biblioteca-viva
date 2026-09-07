@@ -1,5 +1,7 @@
 # Plano de testes
 
+> **ARQUIVO HISTÓRICO:** checklists marcadas ou abertas registram checkpoints de épocas diferentes. A estratégia vigente está em `../../TESTING.md`.
+
 ## 1. Objetivo
 
 Garantir que a Biblioteca Viva preserve dados, funcione no Android real, mantenha a separação React–Phaser e continue utilizável com áudio, movimento ou cenário visual reduzidos.

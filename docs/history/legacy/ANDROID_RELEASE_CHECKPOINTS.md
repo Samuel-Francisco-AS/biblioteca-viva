@@ -1,5 +1,7 @@
 # Android, APK e release
 
+> **ARQUIVO HISTÓRICO:** hashes, tamanhos e checklists abaixo pertencem a builds antigos. O guia vigente está em `../../ANDROID.md`.
+
 ## 1. Estratégia
 
 Capacitor entra cedo. O primeiro APK de depuração pertence ao Gate G2; assinatura de release pertence ao Gate G11.

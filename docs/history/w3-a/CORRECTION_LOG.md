@@ -1,5 +1,7 @@
 # W3-A — log de correção
 
+> **ARQUIVO HISTÓRICO:** registro cronológico integral. Estados intermediários, worktrees sujas e recomendações de próximo gate foram superados pelo encerramento de R6 em 2026-09-06.
+
 > Estado documental em 2026-09-06: **R0–R3-C-B2 e a rodada FIX estão concluídas; R4 foi concluída e aprovada; R5 e o gate final pré-R6 foram concluídos; R6 foi aprovada pelo usuário no Moto G06 com duas ressalvas não bloqueadoras**. A rodada corretiva W3-A está integralmente encerrada, e a próxima etapa de produto ainda não foi iniciada.
 
 ## Resultado do gate W3-A-R0
@@ -1277,7 +1279,7 @@ Os 24 PNGs estruturais, `wall-corner-contract.json` (`2547195…`) e os oito art
 
 W3-A-DOC-SYNC-HANDOFF não reinterpreta nem corrige o resultado: R3-C-B2 foi executada, terminou com 8/9 casos e está tecnicamente reprovada/não concluída. A causa combinada permanece a assimetria transversal dos assets lineares, `sourceReferencePx` linear no início do alpha bbox, braços leste/sul dos cantos no lado oposto e ausência de semântica explícita de normal/lado/centerline/perfil transversal compartilhado. O `side` hoje presente em `WorldJoinPlane` identifica o lado longitudinal do plano de junção; ele não define a lateral ocupada em relação ao eixo lógico. Os testes anteriores provaram endpoints e planos, mas não a continuidade dos perfis transversais vizinhos.
 
-O handoff conciso está em [`W3_A_CORRECTION_HANDOFF.md`](W3_A_CORRECTION_HANDOFF.md). O próximo gate recomendado recebe o nome provisório **W3-A-R3-C-B2-FIX**, deverá ser subdividido e depende de autorização humana nominal. Ele não foi iniciado. R4 e as etapas posteriores também não foram iniciadas. Nenhum código, teste, asset ou artefato de evidência foi alterado por esta sincronização documental.
+Naquele checkpoint, o handoff conciso estava em `W3_A_CORRECTION_HANDOFF.md`; ele foi retirado do conjunto ativo após o encerramento e substituído pelo [resumo histórico](README.md). O próximo gate então recomendado recebia o nome provisório **W3-A-R3-C-B2-FIX**, deveria ser subdividido e dependia de autorização humana nominal. Ele ainda não havia sido iniciado naquele momento. R4 e as etapas posteriores também não haviam sido iniciadas. Nenhum código, teste, asset ou artefato de evidência foi alterado por aquela sincronização documental.
 
 ### R4 — máquina de estados e UI mobile
 

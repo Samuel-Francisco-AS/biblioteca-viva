@@ -1,5 +1,7 @@
 # Plano da fase de produto
 
+> **ARQUIVO HISTÓRICO:** a direção de salas temáticas P2 foi substituída pelo reboot espacial. Este plano não define a próxima fase.
+
 > D-049 inicia formalmente a fase de produto. O protótipo e R1–R3 permanecem baseline técnico; gates humanos pendentes não são aprovados por este plano.
 
 ## P1 — Vida Registrada

@@ -1,5 +1,7 @@
 # Biblioteca Viva — Plano de Execução por Blocos e Prompts do Codex
 
+> **ARQUIVO HISTÓRICO:** Prompts 1–19 encerrados. As instruções abaixo não autorizam execução e podem descrever arquitetura ou gates substituídos.
+
 > Data: 28 de julho de 2026  
 > Base arquitetural: `ARQUITETURA_E_STACK_BIBLIOTECA_VIVA.md`  
 > Escopo: protótipo de uso pessoal, visual e sonoro, com qualidade de portfólio e APK Android

@@ -1,158 +1,201 @@
 # Changelog
 
-Mudanças relevantes da Biblioteca Viva serão registradas neste arquivo.
-
-O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionamento semântico quando houver artefatos executáveis.
+Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog. O registro bruto anterior à reorganização documental, incluindo checkpoints intermediários, está preservado em `docs/history/legacy/CHANGELOG_LEGACY.md`.
 
 ## [Não lançado]
 
 ### Adicionado
 
-- integração limitada W2 de `furniture.desk.wood-01` e `furniture.chair.wood-01`, com quatro sprites runtime por orientação, footprints declarados e compatibilidade de leitura para o objeto procedural legado;
-- W1 do reboot espacial: mundo Phaser procedural efêmero maior que a viewport, dois espaços neutros conectados, câmera com bounds e pan X/Y por toque/pointer, sem schema ou persistência espacial;
+#### Produto e registros
 
-- P2-C com catálogo declarativo dos cinco residentes, presença por estágio, rotinas compartilhadas por âncoras, comportamento por período, reduced motion sem loops, interação tipada, falas contextuais e política determinística de presença da criatura;
-- P2-SOL com Room Engine declarativo, cinco salas, estágios monotônicos por milestones, seletor React e troca de sala na mesma instância Phaser;
-- P2-B com renderer procedural compartilhado para Study, Projection, Training e Office, estágios, decorações derivadas, iluminação por período e retorno à Biblioteca Principal sem nova instância Phaser;
+- união discriminada de seis tipos de registro: Livro, Filme, Série, Estudo, Atividade física e Trabalho;
+- criação, edição, detalhamento, progresso e conclusão especializados por tipo;
+- Coleção unificada, busca, filtros, ordenação e redirecionamentos para URLs históricas de livros;
+- notas e citações generalizadas para os tipos compatíveis, com edição, exclusão confirmada e compartilhamento explícito;
+- etiquetas normalizadas e favoritos em registros, notas e citações;
+- sessões tipadas e persistentes, com uma sessão aberta globalmente, pause, retomada e duração baseada em timestamps;
+- timeline, sessões recentes, estatísticas por período e categoria e resumo global da Biblioteca;
+- métricas derivadas sem tabela própria, score, ranking ou streak.
 
-- início documental de `P1 — Vida Registrada`, com seis tipos oficiais e estrutura futura P1/P2/P3;
-- P1-A com união discriminada de Livro, Filme, Série, Estudo, Atividade Física e Trabalho, CRUD e progresso especializados;
-- P1-B com etiquetas normalizadas, favoritos, sessões tipadas e persistentes, Arquivo/Coleção filtráveis, milestones preparatórios, schema Dexie v5 e backup v3 retrocompatível;
-- P1-C com Estatísticas, timeline unificada, sessões recentes, janelas temporais, resumo global da Biblioteca e fatos derivados para as futuras salas de P2;
-- schema Dexie v4 aditivo, anotações ligadas a `entryId`, localização discriminada e migração sem revisão artificial;
-- rotas de registro, seletor de tipo e Coleção unificada, mantendo redirecionamentos para URLs históricas de livros;
+#### Dados, backup e progressão
 
-- sistema visual escuro semântico e drawer lateral acessível para as cinco áreas do aplicativo;
-- Biblioteca com canvas protagonista, bottom sheet compartilhado, balões React e alternativa acessível compacta;
-- atmosferas procedurais de manhã, tarde, noite e madrugada pela hora local, com preview somente diagnóstico;
+- schema Dexie v4 para registros múltiplos e anotações generalizadas;
+- schema Dexie v5 com tabelas de etiquetas e sessões;
+- schema Dexie v6 com `placedObjects`;
+- schema Dexie v7 com `worldStructures`;
+- backup v3 para etiquetas, sessões e dados da fase P1;
+- backup v4 para objetos posicionados;
+- backup v5 para estrutura persistente, preservando leitura dos formatos v1 a v4;
+- inspeção de backup sem escrita, integridade SHA-256, restauração transacional e união monotônica de marcos;
+- marcos idempotentes, recompensas declarativas e progressão estrutural por sessões elegíveis;
+- concessões físicas por família nos limiares 1, 5, 15 e 30, com inventário derivado.
 
-- backup Android com salvamento em local escolhido, compartilhamento nativo e restauração recuperável;
-- exclusão transacional de livros, notas, citações e atividades relacionadas.
-- preferências de experiência, conteúdo contextual, marcos e luminária de leitura;
-- perfil estrutural do runtime, Playwright Chromium e GitHub Actions para checks web.
-- barra acessível de progresso no detalhe, com porcentagem, páginas lidas e restantes, e estado textual sem total conhecido.
-- edição, exclusão confirmada e compartilhamento explícito de notas e citações no detalhe e no Arquivo;
-- playlist musical declarativa, sequencial e validada, preparada para múltiplos cues sem adicionar assets.
+#### Experiência convencional
+
+- sistema visual escuro semântico e componentes responsivos;
+- dock global com Biblioteca, Coleção, Arquivo, Resumo e Ajustes;
+- Novo registro como ação contextual da Coleção;
+- Busca e Filtros recolhíveis, com estado preservado, foco, Escape e Android Back;
+- Resumo com métricas reais, estados vazios, tipos compactos e gráfico SVG responsivo;
+- preferências de movimento, contraste e tamanho de texto;
+- edge-to-edge Android com system bars transparentes e safe areas.
+
+#### Biblioteca visual e reboot espacial
+
+- host Phaser carregado sob demanda, com uma instância, uma cena e um canvas;
+- projeção tipada entre aplicação, React e Phaser;
+- W1 com mundo maior que a viewport, câmera, bounds, pan e atmosfera por período;
+- W2 com objetos persistentes, seleção, mover, girar, drag coalescido, preview e rollback;
+- pisos internos e exteriores modulares, objetos de mesa e cadeira em quatro orientações e fallback procedural;
+- `WorldStructureState` persistente para `world.main`, separado de `PlacedObject`;
+- catálogo estrutural de pisos, paredes de 1/2/4 células, quatro cantos e porta horizontal aberta/fechada;
+- editor de Construção para piso e peças, com revisão otimista, single-flight e inventário físico;
+- alternativa textual acessível, feedback consolidado de desbloqueio e ação `Abrir construção`;
+- etiqueta contextual de sala/período com ciclo de 5.000 ms;
+- faixa compacta de peças colocadas e ações contextuais que preservam o mapa como superfície principal.
+
+#### Áudio, conteúdo e qualidade
+
+- serviço de áudio atrás de porta da aplicação;
+- seis WAVs próprios e determinísticos, com silêncio como fallback;
+- playlist musical declarativa, sequencial e validada;
+- preferências independentes de música e efeitos;
+- conteúdo contextual local, locale `pt-BR`, fallbacks e seleção determinística de diálogos;
+- diagnóstico técnico restrito a desenvolvimento e builds internos;
+- suíte Playwright Chromium e CI web;
+- validações de assets estruturais, relatório de desempenho e scripts Android reproduzíveis.
 
 ### Alterado
 
-- fluxos automatizados de detalhe e backup agora percorrem os disclosures nativos da UX vigente; cópias públicas não usadas das paredes experimentais do Kit Zero deixaram de ser empacotadas;
-- W1 do reboot espacial substituiu a composição dependente da viewport por uma planta fixa: `space-a` 12×9 e `space-b` 10×8, conexão curta em L, bounds derivados e enquadramento inicial voltado à saída;
-- arquitetura W1 passou a montar paredes procedurais em segmentos de uma célula e a repetir o piso em módulos menores; os PNGs de parede do Kit Zero aguardam revisão de escala em W5;
-- a Biblioteca deixa de trocar a sala P2 por arraste; o gesto do canvas passa a explorar o mundo espacial único e preserva toque curto para interações futuras;
-
-- Coleção agora abre livros pela superfície inteira do card; detalhe, formulários, Arquivo e Configurações usam hierarquia mais contínua e menos caixas;
-- Android usa fundo escuro edge-to-edge com system bars transparentes e controles protegidos por safe areas;
-
-- validação física de atualização, limpeza de armazenamento e restauração no Moto G06, com aprovação dos Gates G5 e G6.
-- documentação pública e operacional alinhada ao protótipo tecnicamente implementado até o Prompt 19.
-- progresso positivo inicia livros planejados e a última página conhecida reutiliza a conclusão transacional existente;
-- estantes pequenas usam uma representação por livro até cinco, com compressão gradual limitada a oito para coleções maiores.
-- restauração dispensa backup de segurança em base funcionalmente vazia e oferece escolha explícita, com confirmação adicional, quando há dados atuais;
-- música local é preparada após o primeiro gesto permitido e reutiliza a decodificação entre entradas na Biblioteca.
-- áudio avança pelo término natural real, protege callbacks obsoletos e mantém efeitos substituíveis somente pelo manifesto.
+- o produto deixou de ser centrado apenas em livros e passou a representar seis tipos de experiência;
+- a direção inicial de cinco salas temáticas foi substituída por um mundo espacial contínuo, semanticamente neutro e construído pelo usuário;
+- a antiga navegação por drawer foi substituída por um dock único;
+- a Biblioteca deixou de trocar salas por arraste; o gesto em área livre passou a explorar o mundo;
+- Construção passou a ocultar temporariamente o dock sem desmontar o host Phaser;
+- o blueprint fixo W1 deixou de ser a autoridade da estrutura; `world.main` persistido passou a ser a fonte de verdade;
+- estrutura e objetos passaram a possuir agregados, regras de ocupação e persistência independentes;
+- o renderer estrutural deixou de consultar offsets, pivôs e spans visuais legados;
+- sprite, fallback, hit testing, preview, seleção e depth passaram a consumir a mesma transformação canônica;
+- o inventário deixou de ser uma contagem independente e passou a ser derivado de reserva, placements e concessões;
+- restauração em base preenchida passou a exigir escolha explícita sobre backup de segurança;
+- música passou a ser preparada após gesto permitido e a reutilizar decodificação entre entradas;
+- fluxos automatizados foram adaptados aos disclosures e à navegação vigentes;
+- somente as 17 texturas necessárias ao mapa inicial permanecem bloqueantes; 11 texturas são carregadas depois do primeiro frame;
+- a leitura inicial duplicada em desenvolvimento pelo StrictMode foi deduplicada.
 
 ### Corrigido
 
-- W2 ganha fechamento acessível do cartão de objeto, toast temporário de confirmação e remoção visual da fixture procedural histórica, sem alterar compatibilidade de dados.
-- W2 descarta posições intermediárias de drag acima da cadência de frame e coalesce a persistência de giros rápidos no último estado desejado, mantendo preview imediato e rollback seguro.
-- W1 reorganiza os dois espaços em uma planta mais compacta, encurta a curva da passagem, reduz os bounds verticais e torna paredes/soleiras procedurais contínuas; a nova validação física no Moto G06 permanece pendente.
-- interação da sala Phaser para permitir rolagem por toque e rodinha sem perder cliques ou toques curtos.
+#### Produto, dados e Android
+
+- exportação Android passou a diferenciar salvamento em destino escolhido e compartilhamento nativo;
+- exclusão de registros, anotações e atividades relacionadas passou a ser transacional;
+- restauração preserva marcos legítimos e não repete recompensa, áudio ou notificação;
+- atualização de schema preserva IDs, datas, revisões, objetos e conteúdo existente;
+- aviso de backup v5 passou a comparar corretamente com o schema Dexie v7;
+- sessão ativa restaurada volta em estado seguro, sem acumular duração fictícia;
+- rolagem vertical e rodinha do mouse deixaram de disputar toque curto no canvas;
+- Android Back passou a fechar subestados antes de sair da rota ou encerrar o aplicativo.
+
+#### W1 e W2
+
+- caminhos de assets internos foram reconciliados com a grafia real `architecture`;
+- bounds passaram a considerar viewport alta e margens de câmera;
+- ações de objeto selecionado deixaram de ficar fora da área visível;
+- exterior passou a usar células e crops determinísticos menores para reduzir macro-tiles;
+- o cartão de objeto recebeu fechamento acessível e confirmação por toast;
+- drag descarta posições intermediárias acima da cadência de frame;
+- giros rápidos persistem o último estado desejado e restauram estado seguro em falha.
+
+#### Rodada corretiva W3-A R0–R6
+
+- quatro cantos estruturais não conformes foram substituídos por candidatos determinísticos aprovados e promovidos às fontes e ao runtime;
+- metadado visual duplicado foi unificado em `structureVisualGeometry`;
+- porta horizontal deixou de depender do offset visual legado;
+- depth passou a ser derivado da base visível, com bandas e desempate estável;
+- fallback procedural passou a usar a mesma geometria e depth dos sprites;
+- hit areas passaram a usar as regiões da transformação canônica, incluindo os dois braços de cantos;
+- inicialização do Phaser foi protegida contra leitura de tweens antes do primeiro render;
+- o contrato de porta passou a separar corredor estrutural de envelope visual;
+- normal interior passou a ser derivada exclusivamente da adjacência do piso;
+- alinhamento transversal passou a usar translação assinada geral, sem exceção por blueprint, coordenada ou `instanceId`;
+- acabamento longitudinal passou a respeitar a tolerância de um pixel-fonte;
+- a matriz de continuidade evoluiu de 19/31 para 31/31 junções;
+- a repetição oficial do renderer ativo passou 9/9 cenários;
+- controles superiores obsoletos foram removidos da Biblioteca;
+- paletas e peças colocadas deixaram de cobrir permanentemente o mapa;
+- expansão de piso, colocação, seleção, movimento e Resumo passaram a atualizar sem reload;
+- R6 confirmou no Moto G06 o dock, Construção, Busca/Filtros recolhidos e preservação dos dados pessoais.
+
+### Desempenho
+
+- no cenário local de produção do gate pré-R6, o primeiro frame observado mudou de 1.642 para 1.453 ms a frio e de 1.426 para 1.233 ms com cache;
+- a carga inicial bloqueante foi reduzida de 28 para 17 texturas;
+- a demora inicial da Biblioteca e o engasgo no card do Resumo continuam conhecidos e não foram declarados resolvidos.
 
 ### Removido
 
-- nada registrado.
+- composição futura baseada em cinco salas obrigatórias por categoria;
+- drawer como segunda navegação primária;
+- controles superiores obsoletos da Biblioteca;
+- fixture procedural histórica da composição normal de objetos;
+- cópias públicas de paredes experimentais sem uso no runtime;
+- áudio procedural reprovado como fallback ativo;
+- tolerância legada do comando padrão de validação dos cantos.
+
+### Segurança e privacidade
+
+- registros, sessões, estrutura e backups continuam locais, sem conta, backend, sincronização ou telemetria;
+- arquivos externos são validados por tamanho, schema, versão, duplicatas e integridade antes de qualquer escrita;
+- restauração ocorre em transação e não publica eventos de conquista;
+- fixtures, E2E e CI usam conteúdo fictício e não recebem backups pessoais;
+- logs e diagnósticos não incluem títulos, autores, notas, citações, etiquetas ou payload de backup.
+
+### Documentação
+
+- documentação reorganizada entre contratos vigentes, decisões e arquivo histórico;
+- `MANIFEST.md` e `docs/00_LEIA-ME.md` foram fundidos em `docs/README.md`;
+- visão e contrato do produto foram consolidados em `docs/PRODUCT.md`;
+- estado atual foi reconciliado com Dexie v7, backup v5 e encerramento da W3-A;
+- planos concluídos, checklists antigos e logs integrais foram movidos para `docs/history/`;
+- plano de testes cumulativo foi substituído por `docs/TESTING.md`;
+- decisões vigentes foram consolidadas em ADRs individuais;
+- o handoff obsoleto da W3-A foi substituído por um resumo histórico.
 
 ## [0.2.0-alpha.1] — 2026-07-29
 
 ### Adicionado
 
-- domínio puro de livros, progresso, status, notas e citações, com operações imutáveis e erros tipados;
-- schemas Zod de fronteira, eventos mínimos sem conteúdo pessoal e suíte de domínio em ambiente Node;
-- camada de aplicação com portas assíncronas, oito casos de uso, atividades mínimas e erros públicos estáveis;
-- testes Node de orquestração, ordem dos efeitos e falhas de repositórios, atividades e eventos;
-- persistência local Dexie/IndexedDB com seis tabelas, migração v1 → v2, repositórios concretos e validação na leitura;
-- transações para entidade e atividade, event bus local pós-commit, Clock e IDs de plataforma e composition root;
-- diagnóstico técnico interno para desenvolvimento e APKs de gate, ausente do build normal;
-- validação automatizada com 140 testes e validação manual de persistência no navegador e no Moto G06 com Android 15.
+- domínio puro de livros, progresso, status, notas e citações;
+- schemas Zod de fronteira e eventos mínimos sem conteúdo pessoal;
+- camada de aplicação com portas, casos de uso, atividades e erros públicos;
+- persistência Dexie/IndexedDB com migração v1 para v2;
+- repositórios concretos, transações, event bus pós-commit, Clock e IDs de plataforma;
+- diagnóstico técnico interno para desenvolvimento e APKs de gate;
+- suíte inicial de domínio, aplicação e persistência;
+- validação manual de persistência no navegador e no Moto G06.
 
 ### Alterado
 
-- documentação do modelo de dados, arquitetura e testes alinhada aos contratos dos Prompts 4–6;
-- comandos de escrita passaram a usar a porta transacional, com publicação de eventos somente após o commit.
+- comandos de escrita passaram a usar a fronteira transacional;
+- eventos passaram a ser publicados somente após commit;
+- documentação técnica foi alinhada aos contratos dos Prompts 4–6.
 
 ### Corrigido
 
-- disponibilidade do painel técnico em APKs internos por um modo diagnóstico explícito, sem incluí-lo no build normal de produção.
-
-### Removido
-
-- nada registrado.
+- painel técnico passou a usar modo diagnóstico explícito e a permanecer fora do build normal.
 
 ## [0.1.0] — 2026-07-28
 
 ### Adicionado
 
-- fundação React, Vite e TypeScript estrito, com lint, formatação, testes e build web;
-- shell responsivo e navegável com Biblioteca, Coleção, Novo livro, Arquivo e Configurações;
-- integração Capacitor 8.4.2, plataforma Android e geração do primeiro APK debug;
-- tratamento do botão Voltar nativo e das safe areas no shell Android;
-- prova física no Moto G06 com Android 15, aprovando instalação, abertura, navegação, ciclo de vida e encerramento pela raiz.
+- fundação React, Vite e TypeScript estrito;
+- formatação, lint, testes e build web;
+- shell responsivo com Biblioteca, Coleção, Novo livro, Arquivo e Configurações;
+- React Router e tratamento inicial de Android Back;
+- Capacitor 8, plataforma Android e primeiro APK debug;
+- safe areas e prova física inicial no Moto G06.
 
 ### Alterado
 
-- Gates G0, G1 e G2 aprovados; Blocos 0, 1 e 2 concluídos.
-
-## Não lançado — Processo 2 técnico (2026-08-27)
-
-### Adicionado
-
-- P2-C1: ponte React–Phaser para edição estrutural, projeção confirmada, single-flight e recuperação de revisão;
-- P2-C2: hit areas por modo, seleção/snap, previews efêmeros, colocar/mover e piso em lote;
-- P2-C3: E2E estrutural, cobertura de backup v5/reload e regressão de foco de anotação.
-
-### Alterado
-
-- o acionador e o painel de Construção não disputam mais a área do resumo acessível e o inventário permanece rolável na viewport.
-
-### Pendente
-
-- Gate humano Moto G06/TalkBack e aprovação artística; Processo 3 não foi iniciado.
-
-## Como atualizar
-
-- registre mudanças observáveis, não cada arquivo tocado;
-- mova itens de “Não lançado” para uma versão somente após gate aprovado;
-- use datas absolutas no formato `AAAA-MM-DD`;
-- nunca reescreva versões antigas para esconder decisões ou regressões.
-
-## Não lançado — W3-A / P3-C técnico (2026-08-28)
-
-### Adicionado
-
-- migração Dexie v6→v7 coberta para `worldStructures` sem perda de `PlacedObject`;
-- E2E de sessão elegível, unlock estrutural consolidado, abertura de Construção e reload sem duplicação.
-
-### Corrigido
-
-- aviso de backup v5 agora compara contra o schema Dexie v7 vigente, sem alertar sobre o próprio artefato recém-exportado;
-- abertura horizontal do compositor legado não mantém segmento atrás da porta;
-- token de `Abrir construção` é consumido e não reabre o modo em reload;
-- Escape sai do modo Construção quando não há subpainel, confirmação ou seleção ativos.
-
-### Documentado
-
-- W3-A1 a W3-A6 e P3-C estão tecnicamente concluídos; teste físico/artístico, TalkBack, safe areas, áudio e desempenho no Moto G06 permanecem pendentes.
-
-### Correção W3-A em andamento
-
-- R1 introduziu spans, intervalos, endpoints, vértices, análise de perímetro e identidade normalizada sem regravar dados;
-- R2 promoveu os quatro cantos `production`, gerou runtimes pixel-equivalentes pelo pipeline oficial e encerrou a tolerância legada do check padrão;
-- R3 unificou metadado e transformação visual, renderer e hit testing, depth por base visível e fallback procedimental na mesma geometria;
-- R3-C-B2 executou o renderer Phaser ativo em Chromium e preservou sete capturas e manifesto: 8/9 casos passaram, mas a continuidade transversal falhou nos lados direito e inferior;
-- W3-A permanece aberta: o próximo gate corretivo para normal/lado/centerline/perfil transversal ainda não foi autorizado, e R4 não foi iniciado.
-
-### Falha visual conhecida
-
-- planos longitudinais e fechamento lógico podem coincidir enquanto perfis visíveis ocupam lados opostos do eixo; a sala canônica apresenta salto de centerline de aproximadamente 25,12 world units à direita, e o cenário modificado chega a 45,76 no lado inferior;
-- o fallback reproduz corretamente a geometria atual e não é um defeito independente; não foi aplicada correção por offset, coordenada ou blueprint.
+- Gates G0, G1 e G2 foram aprovados;
+- Blocos de contrato, fundação e prova Android foram encerrados.

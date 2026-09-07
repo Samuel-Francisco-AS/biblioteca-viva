@@ -1,5 +1,7 @@
 # Biblioteca Viva — Plano Mestre do Aplicativo Completo
 
+> **ARQUIVO HISTÓRICO:** visão original ampla, com hipóteses e funcionalidades não aprovadas no produto atual. Não define escopo nem próximo trabalho.
+
 > Documento de visão, produto, arquitetura e evolução de longo prazo do aplicativo **Biblioteca Viva**.  
 > Nome provisório: **Biblioteca Viva**.  
 > Este documento descreve a visão ampla do produto. Ele não representa uma promessa de implementar tudo de uma vez.

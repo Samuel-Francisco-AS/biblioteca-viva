@@ -1,5 +1,7 @@
 # Registro de decisões
 
+> **ARQUIVO HISTÓRICO:** inclui decisões substituídas e registros de implementação. As decisões vigentes estão em `../../decisions/README.md`.
+
 Decisões não são apagadas quando substituídas. Altere o status para `substituída` e referencie a decisão nova.
 
 ## Formato

@@ -1,5 +1,7 @@
 # Registro de assets e licenças
 
+> Registro consolidado em 2026-09-07. Estados como `candidato` ou `provisório` continuam válidos até uma aprovação específica de release; o encerramento técnico da W3-A não promove automaticamente todos os assets do produto.
+
 Todo asset visual, sonoro, fonte ou ícone incluído no projeto deve aparecer neste arquivo antes de um release.
 
 ## Regras
@@ -39,7 +41,7 @@ Nota W3 estrutural (atualizada em 2026-09-03): os quatro cantos aprovados foram 
 | `creature-touch-provisional-v1` | áudio WAV | `public/audio/creature-touch.wav` | autoria interna; gerado por `scripts/generate-audio-assets.mjs` em 2026-08-07 | criação própria; licença final acompanha o projeto | PCM mono 22.050 Hz/16-bit, glissando curto arredondado | criatura | gerado |
 | `book-completed-provisional-v1` | áudio WAV | `public/audio/book-completed.wav` | autoria interna; gerado por `scripts/generate-audio-assets.mjs` em 2026-08-07 | criação própria; licença final acompanha o projeto | PCM mono 22.050 Hz/16-bit, três notas ascendentes | conclusão de livro | gerado |
 
-A primeira sala e a paisagem sonora não usam conteúdo externo ou baixado. Phaser Graphics gera os elementos visuais. Os seis WAVs provisórios são criação interna determinística, reproduzível apenas com Node padrão e substituível pelo caminho ou manifesto. Ausência de arquivo sonoro degrada para silêncio. Nova validação humana decide se os itens gerados podem avançar de estado.
+A primeira sala e a paisagem sonora não usam conteúdo externo ou baixado. Phaser Graphics gera os elementos visuais. Os seis WAVs provisórios são criação interna determinística, reproduzível apenas com Node padrão e substituível pelo caminho ou manifesto. Ausência de arquivo sonoro degrada para silêncio. Aprovação técnica anterior não substitui a revisão específica de licença, arte e áudio necessária para mudar o estado de release.
 
 ## Estados
 
@@ -99,6 +101,6 @@ Antes do Gate G11:
 
 ## W3-A / P3-C — estado de assets estruturais
 
-Os 12 PNGs runtime em `public/assets/world/architecture/walls/` correspondem um a um às fontes preservadas em `art-source/world/architecture/walls/`: quatro cantos, três segmentos horizontais, três verticais e porta horizontal aberta/fechada. `npm run wall-assets:check` valida presença, dimensão, PNG RGBA, alpha e bounds; o processamento gera PNG32 sem modificar `art-source`. `STRUCTURE_VISUAL_ASSETS` usa os mesmos paths, e `SpatialWorldScene` escolhe atomicamente sprite ou fallback Graphics se uma textura não estiver disponível. Não há PNG ou definição de porta vertical. Seams, coesão e leitura artística permanecem pendentes de inspeção humana.
+Os 12 PNGs runtime em `public/assets/world/architecture/walls/` correspondem um a um às fontes preservadas em `art-source/world/architecture/walls/`: quatro cantos, três segmentos horizontais, três verticais e porta horizontal aberta/fechada. `npm run wall-assets:check` valida presença, dimensão, PNG RGBA, alpha e bounds; o processamento gera PNG32 sem modificar `art-source`. `STRUCTURE_VISUAL_ASSETS` usa os mesmos paths, e `SpatialWorldScene` escolhe atomicamente sprite ou fallback Graphics se uma textura não estiver disponível. Não há PNG ou definição de porta vertical. A continuidade estrutural foi aprovada na W3-A; coesão artística e licença final continuam sujeitas ao gate de release.
 
-Os quatro cantos ativos estão conformes ao contrato individual `production`; isso não garante, sozinho, continuidade transversal com retas e portas. O contrato composto vigente compara normal/lado ocupado, centerline e perfil estrutural entre vizinhos e passou 31/31 emendas em B2. Procedência, hashes, dimensões e PNGs permanecem inalterados; R4 não autoriza editar assets por caso particular.
+Os quatro cantos ativos estão conformes ao contrato individual `production`; isso não garante, sozinho, continuidade transversal com retas e portas. O contrato composto vigente compara normal/lado ocupado, centerline e perfil estrutural entre vizinhos e passou 31/31 emendas em B2. Procedência, hashes, dimensões e PNGs permanecem inalterados. Nenhuma tarefa futura pode editar assets por caso particular sem escopo e novo gate explícitos.

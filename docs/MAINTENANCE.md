@@ -1,107 +1,45 @@
-# Manutenção e evolução
+# Manutenção
 
-## 1. Rotina base
+## Rotina
 
-Leia `STATUS`, `AGENTS`, o documento da área e `DECISIONS`. Instale com `npm ci`, mantenha o lockfile e faça mudanças verticais pequenas. Não atualize React, Vite, Phaser, Capacitor, Dexie e o banco no mesmo lote.
+1. Ler `STATUS.md`, `README.md` e decisões aplicáveis.
+2. Inspecionar código, testes e estado Git.
+3. Delimitar mudança vertical pequena.
+4. Executar teste focado e ampliar conforme o risco.
+5. Atualizar documentação e changelog.
+6. Registrar validação humana sem inferir o que não foi executado.
 
-## 2. Conteúdo e diálogos
+## Dados e backup
 
-Nova fala no contexto existente:
+- Nunca editar migração publicada.
+- Nova forma persistida exige versão aditiva, fixtures anteriores, upgrade, reabertura e rollback.
+- Mudança no backup exige codec, inspeção sem escrita, restore transacional, checksum e compatibilidade declarada.
+- Não usar banco ou backup pessoal em teste.
+- Não limpar dados físicos antes de uma estratégia de recuperação confirmada.
 
-1. crie a chave em `src/content/locales/pt-BR.ts`;
-2. adicione a definição em `src/content/prototypeContent.ts` com ID estável, personagem, evento, prioridade, `once` e cooldown;
-3. valide referências em `src/content/schemas.ts` e execute `src/content/content.test.ts` e `src/application/dialogue.test.ts`.
+## Mundo e Phaser
 
-Novo contexto exige primeiro um fato estruturado realmente conhecido. Amplie os contratos em `src/application/dialogue.ts`, forneça fallback, integre pela aplicação/React e teste cooldown/once. Não envie título, autor ou anotações ao selector; Phaser continua emitindo somente interação tipada.
+- Preservar separação entre `WorldStructureState` e `PlacedObject`.
+- Não persistir câmera, seleção, preview, ferramenta ou animação.
+- Alteração estrutural exige regressões de geometria, continuidade, renderer, input, fallback, depth, backup e Android.
+- Não corrigir layout por identidade da sala, coordenada ou instância.
+- Confirmar uma instância/canvas e cleanup antes de criar nova arquitetura de lifecycle.
 
-## 3. Áudio
+## Conteúdo, áudio e assets
 
-Adicione ou substitua arquivos em `public/audio/`, atualize somente `sources` do cue estável em `src/infrastructure/audio/audioManifest.ts`, o gerador determinístico quando aplicável e `docs/ASSET_REGISTRY.md`. Para música adicional, acrescente cue musical e seu ID na ordem desejada de `AUDIO_PLAYLISTS`; a validação rejeita referências ausentes, duplicadas, não musicais ou playlist vazia. Execute `npm run audio:check` para os WAVs físicos atuais e testes de manifesto/backend/serviço. Ausência de asset degrada para silêncio. Para duplicação, confira `AudioService.diagnostics()`, `useAudioExperience.ts`, música desejada, índice/geração, players ativos e eventos visibility/Capacitor; reproduza término natural, wrap-around, entrada, pause, resume, saída e dispose antes de mudar a arquitetura.
+- Conteúdo novo usa ID estável, locale, fallback e teste de referências.
+- Áudio novo entra pelo manifesto e degrada para silêncio.
+- Asset novo exige fonte, autoria, licença, transformação, estado e registro.
+- Fontes e runtimes estruturais passam pelos scripts determinísticos existentes.
 
-## 4. Decorações e marcos
+## Dependências
 
-Decoração: registre ID e recompensa em `src/content/prototypeContent.ts`, valide referências, projete somente o ID em `LibraryViewModel` e desenhe fallback procedural na cena. Registre asset/licença.
+Não atualizar React, Vite, Phaser, Capacitor, Dexie e schema no mesmo lote. Toda dependência nova precisa justificar valor, custo de bundle/Android, manutenção e licença.
 
-Marco: acrescente definição declarativa ao conteúdo, condição suportada pelo `MilestoneEngine` e teste domínio, transação, concorrência e idempotência. `DexieMilestoneStore` usa chave estável e `add`; evento/reação somente após commit. Se a forma persistida mudar, siga também migração e backup.
+## CI e E2E
 
-## 5. Dexie e backup
+E2E usa dados fictícios e origem controlada. Falha deve ser reproduzida pelo cenário, sem relaxar asserção para obter verde. CI web não substitui build ou aparelho Android.
 
-Migração:
+## Release
 
-1. não edite versões publicadas em `src/infrastructure/database/database.ts`/`schema.ts`;
-2. adicione nova versão e migração aditiva;
-3. valide toda leitura;
-4. crie fixtures de versão anterior e testes de upgrade/reabertura/rollback;
-5. atualize `DATA_MODEL`, `DECISIONS`, backup e checklist Android.
-
-Formato de backup: altere contratos em `src/application/backup.ts`, codec em `src/infrastructure/backup/backupCodec.ts` e store em `dexieBackupStore.ts`. Preserve versões anteriores quando houver política segura, checksum canônico, inspeção sem escrita, limite de 10 MiB e restauração transacional. Atualize fixtures/testes v1/v2 e documentação.
-
-Para restaurar, use Configurações → Arquivo de backup → inspecionar → confirmar. Em base preenchida, escolha explicitamente criar backup de segurança pelo fluxo existente ou continuar sem ele após a confirmação adicional; em base vazia, não crie backup artificial. Nunca limpe dados físicos antes de confirmar cópia externa. Em erro de persistência, registre apenas código sanitizado; verifique suporte/origem, schema, validação na leitura, transação e `navigator.storage.persist()`, sem copiar conteúdo pessoal.
-
-## 6. Phaser e performance
-
-Confirme primeiro `npm run performance:report`. Para regressão visual, verifique import lazy em `LibraryVisualHost.tsx`, uma instância/canvas, observer/listener, `SpatialWorldScene.shutdown`, zonas, tweens, pan e resize. W1 mantém `World/Space/Connection` efêmeros; não adicione persistência espacial, `PlacedObject` ou Dexie sem iniciar W2 com migração/backup/testes. Use o build diagnóstico e os testes de 20 ciclos. Não force context loss ou split manual sem evidência. Phaser nunca recebe entidades completas.
-
-## 7. E2E e CI
-
-```bash
-npx playwright install chromium
-npm run build
-npm run test:e2e
-```
-
-`playwright.config.ts` inicia `vite preview` em `127.0.0.1:4173`. `e2e/fixtures.ts` limpa apenas IndexedDB dessa origem via CDP. Fixtures são pequenas e fictícias. Falha gera trace em `test-results/`; reproduza pelo nome do teste e use `npx playwright show-trace <arquivo>`.
-
-Os E2E usam um worker: cada cenário pode abrir Phaser/WebGL e a execução concorrente esgota o compositor do Chromium, produzindo timeouts não reproduzíveis isoladamente. Isso não reduz a suíte nem suas asserções; mantém a evidência serial e determinística.
-
-`.github/workflows/ci.yml` usa Node 22, `npm ci`, Chromium, formatação, lint, tipos, Vitest, áudio, build, relatório de performance e E2E. Workflow hospedado só é comprovado após push. Falha de CI deve ser reproduzida no mesmo comando, sem relaxar check. Android permanece local para evitar SDK/Gradle na CI inicial.
-
-## 8. APK e release futura
-
-```bash
-npm run android:sync
-npm run android:build:debug
-```
-
-O APK fica em `android/app/build/outputs/apk/debug/app-debug.apk`. Registre tamanho, SHA-256 e integridade ZIP; não instale ou assine sem escopo. Release futura exige `docs/ANDROID_RELEASE.md`, checklist G11, keystore fora do Git, versão/changelog, atualização sobre build assinado anterior e testes físicos completos.
-
-## 9. Débitos classificados
-
-Antes de G11: checkpoint humano G4/G7–G10, nova restauração física, identidade/ícone/splash, revisão de assets/licenças, assinatura e checklist release.
-
-Pós-W1: W2 só começa após validação humana da composição; editor, salas temáticas novas, conta e backend seguem fora de escopo. Avaliar retenção/apresentação de atividades históricas somente se surgir um consumidor; SQLite somente se gatilhos documentados ocorrerem.
-
-Opcionais condicionados a evidência: preservar offset da música, comprimir WAVs, dividir o chunk lazy do Phaser, segunda configuração Android. Visual procedural e fallback local são decisões deliberadas até revisão artística, não defeitos automáticos.
-
-## P1-B — manutenção
-
-Ao evoluir sessões, preservar a regra de uma aberta globalmente, o `Clock` como verdade e a política de restore `active → paused`. Novos detalhes específicos entram na união e no schema correspondente, nunca em payload amorfo. Mudança de `normalizedName`, índice único, duração ou status exige migração e testes de colisão/rollback. Backup v1/v2 continua sendo validado no formato original.
-
-## P2 — manutenção do editor estrutural
-
-Antes de mudar célula, definição ou gesto, execute os testes de `constructionInput`, `SpatialWorldScene`/render plan, host, `pages`, backup e E2E estrutural. Não persista preview, seleção, câmera ou ferramenta. Mudança no formato de `WorldStructureState` exige migração, backup e rollback; não altere versão de backup apenas por UI. Para Android gere e registre APK, SHA-256 e tamanho, sem instalar ou assinar sem autorização.
-
-## P3-C — manutenção W3-A
-
-Antes de alterar progressão, execute testes de `structuralProgress`, `milestones`, `sessions`, `structuralProgression`, `milestoneStore`, backup e App. Preserve os limiares 1/5/15/30, famílias físicas e grants idempotentes; não introduza XP/moeda/streak. Mudança Dexie exige nova migração aditiva e regressão v6→atual; mudança de backup exige codec, checksum, v4 e restore repetido. Depois de qualquer alteração estrutural, execute também `wall-assets:check`, `performance:report`, E2E e build Android antes da checklist humana.
-
-## Assets e guias estruturais W3-A
-
-Os três papéis são distintos e devem permanecer auditáveis:
-
-- `art-candidates/`: origem aprovada e imutável da promoção; não é carregada no runtime;
-- `art-source/`: fonte ativa preservada; é a entrada do pipeline oficial;
-- `public/assets/`: saída runtime gerada; diferenças de compressão/metadata são aceitáveis somente com equivalência RGBA comprovada.
-
-Use somente os comandos oficiais existentes:
-
-```text
-npm run wall-assets:process
-npm run wall-assets:check
-npm run wall-guides:generate
-npm run wall-guides:check
-```
-
-`wall-assets:process` valida fontes e runtimes contra `production` quando essa especificação existe. `wall-assets:check` deve permanecer sem tolerância legada no comando padrão. `wall-guides:generate` pode reescrever deterministicamente os artefatos; compare hashes pré/pós e aceite somente as mudanças derivadas esperadas. Após promover ou alterar assets, regenere `art-guides/w3-a-r2-a/validator-report.json` pelo gerador oficial e confirme que contrato, gabaritos e montagens permaneceram byte a byte idênticos quando não estiverem no escopo.
-
-Canvas, bbox e planos longitudinais individuais não bastam como gate de composição. A regressão vigente compara normal/lado ocupado, centerline e perfis transversais em junções reais, sem offsets por blueprint; R3-C-B2 passou 9/9 e 31/31. R4 está em andamento e não autoriza afrouxar esse gate nem alterar os oito artefatos oficiais.
+Não assinar, instalar, publicar ou mudar versão sem escopo. Use `ANDROID.md`, `SECURITY.md`, `PRIVACY.md` e o template de release.

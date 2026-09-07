@@ -1,23 +1,34 @@
 # Biblioteca Viva
 
-Biblioteca Viva é um aplicativo local-first para registrar livros, filmes, séries, estudos, atividades físicas e trabalho. React entrega as operações convencionais e acessíveis; a Biblioteca Phaser é uma projeção complementar carregada sob demanda.
+Biblioteca Viva é um aplicativo local-first para registrar livros, filmes, séries, estudos, atividades físicas e trabalho. A aplicação convencional e acessível é construída em React; a Biblioteca visual usa Phaser como projeção complementar de um mundo persistente.
 
-## Estado
+## Estado atual
 
-W3-A está tecnicamente concluída: a Biblioteca possui estrutura construída pelo usuário, pisos em células, paredes/cantos e porta exclusivamente horizontal, inventário físico e desbloqueios por sessões elegíveis. Dexie está no schema v7 e backup no formato v5, compatível com v1–v4. A validação física/artística, TalkBack, safe areas e desempenho percebido no Moto G06 continuam humanas e pendentes.
+A rodada corretiva W3-A foi encerrada em 2026-09-06 e validada no Moto G06. O produto possui:
 
-Estantes reativas, livros visuais vinculados a atividades, livro aberto manipulável e leitor em forma de livro são próximos slices W3; não estão implementados.
+- seis tipos de registro, progresso, notas, citações, etiquetas, favoritos e sessões;
+- estatísticas e histórico derivados localmente;
+- estrutura persistente editável com pisos, paredes, cantos e porta horizontal;
+- objetos posicionáveis separados da estrutura;
+- progressão estrutural por sessões elegíveis, sem XP, moedas ou streaks;
+- banco Dexie no schema v7 e backup no formato v5, com leitura dos formatos v1 a v4;
+- aplicação Android via Capacitor e geração de APK debug.
 
-## Arquitetura
+A próxima etapa de produto ainda não foi escolhida. Estantes reativas, livros visuais ligados às atividades, livro aberto manipulável e um leitor em forma de livro são possibilidades registradas, não funcionalidades iniciadas.
 
-```text
-dados Dexie → Application/Domain → LibraryViewModel → React host → Phaser
-WorldStructureState (células/arestas) ── separado de ── PlacedObject
-```
+## Limitações conhecidas
 
-React e Phaser não acessam Dexie. Phaser não decide regras de construção ou progressão: consome projeções e emite interações tipadas. Há uma cena e um canvas; previews, seleção, pan e realces são efêmeros.
+- A abertura inicial da Biblioteca ainda pode parecer lenta no Moto G06.
+- O card de Resumo pode apresentar engasgo perceptível no aparelho.
+- Desempenho físico não foi declarado resolvido pela aprovação de R6.
+- A auditoria manual completa com TalkBack, a revisão final de áudio e a preparação de release assinado permanecem abertas.
+- Não existem conta, backend, sincronização, nuvem, multiplayer, analytics ou porta vertical.
 
-## Desenvolvimento
+## Documentação
+
+Comece em [`docs/README.md`](docs/README.md). O presente está em [`docs/STATUS.md`](docs/STATUS.md); documentos em `docs/history/` preservam contexto, mas não orientam trabalho novo.
+
+## Verificação técnica
 
 ```bash
 npm ci
@@ -32,15 +43,11 @@ npm run performance:report
 npm run test:e2e
 ```
 
-Para E2E local, instale Chromium uma vez com `npx playwright install chromium`.
-
-## Android
+Para Android:
 
 ```bash
 npm run android:sync
 npm run android:build:debug
 ```
 
-O APK debug esperado é `android/app/build/outputs/apk/debug/app-debug.apk`. Ele não é release nem é instalado automaticamente. Consulte `docs/TEST_PLAN.md` para a checklist Moto G06.
-
-Leia `AGENTS.md` e `docs/STATUS.md` antes de contribuir.
+O APK debug esperado é `android/app/build/outputs/apk/debug/app-debug.apk`. Ele não é release, não é assinado para distribuição e não deve ser instalado automaticamente.

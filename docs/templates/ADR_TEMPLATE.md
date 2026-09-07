@@ -1,7 +1,7 @@
-# D-XXX — Título da decisão
+# ADR-XXX — Título da decisão
 
 - **Data:** AAAA-MM-DD
-- **Status:** proposta | aceita | substituída | rejeitada
+- **Estado:** proposta | aceita | substituída | rejeitada
 - **Substitui:** opcional
 - **Substituída por:** opcional
 

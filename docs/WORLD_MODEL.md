@@ -1,25 +1,44 @@
 # Modelo do mundo
 
-`WorldStructureState` representa o mundo estrutural persistido `world.main`. Seus pisos são células inteiras e suas peças são placements com identidade estável, `definitionId` e âncora em grade. Arestas horizontais/verticais e cantos explícitos tornam ocupação e colisão determinísticas; peças duplicadas ou arestas duplicadas são inválidas.
+## Estrutura lógica
 
-## Geometria lógica normalizada
+`WorldStructureState` representa `world.main`. Pisos são células inteiras. Peças estruturais têm identidade estável, `definitionId`, âncora em grade e revisão do agregado.
 
-Uma célula de piso é o quadrado cujo vértice noroeste é `(x,y)`. Uma aresta unitária começa em `(x,y)` e avança uma célula no eixo horizontal ou vertical. Paredes e portas viram intervalos semiabertos com eixo, início, fim e `logicalSpanCells` inteiro positivo; o endpoint final é `start + span` no eixo. Um canto possui um vértice lógico e dois intervalos perpendiculares de quatro células, derivados exclusivamente de `ne | nw | se | sw`.
+Uma célula ocupa o quadrado iniciado em `(x,y)`. Uma aresta unitária avança uma célula no eixo horizontal ou vertical. Paredes e portas formam intervalos semiabertos; cantos possuem um vértice e dois braços perpendiculares.
 
-O perímetro do piso é o conjunto de arestas expostas após cancelar somente as arestas internas compartilhadas. Fechamento lógico significa cobertura exata desse perímetro, sem aresta ausente, extra ou duplicada, com grau dois em todos os vértices de cada componente. Essa análise é pura e diagnóstica: layouts editados podem permanecer abertos se respeitarem as regras locais de edição.
+Peças duplicadas, arestas duplicadas ou estado fora do catálogo são inválidos. Layouts editados podem permanecer abertos quando respeitam regras locais; fechamento global é diagnóstico, não pré-condição de toda edição.
 
-A identidade normalizada ordena células e placements e conserva somente definição, âncora, orientação e estado da porta. Timestamps, revisão e `instanceId` não participam. Assim, `canonical-v1` exige igualdade geométrica completa com o blueprint; qualquer diferença na versão 1 é `modified-v1`, e outra versão é `future/unknown`.
+## Perímetro e identidade
 
-O blueprint inicial é um cômodo 12×10 idempotente. Ele só preenche uma instalação sem estrutura; nunca sobrescreve edição ou restore. `PlacedObject` continua um agregado separado e é recuperado para o footprint vigente somente no primeiro bootstrap quando necessário.
+O perímetro é formado pelas arestas externas após cancelar arestas internas compartilhadas. Fechamento lógico exige cobertura exata, ausência de duplicidade e grau dois nos vértices do componente.
 
-O catálogo possui as famílias físicas `floor.wood`, `wall.short`, `wall.medium`, `wall.long`, `corner.stone` e `door.horizontal`. Inventário é derivado de reserva inicial, placements e grants persistidos. Horizontal e vertical são variantes corretas de paredes; aberta/fechada são variantes da mesma porta horizontal. Porta vertical não é modelada.
+A identidade normalizada ignora timestamps, revisão e `instanceId`. O blueprint é `canonical-v1` somente quando a geometria completa coincide; uma edição na mesma versão é `modified-v1`; versões desconhecidas são `future/unknown`.
 
-A porta horizontal aberta ou fechada ocupa o mesmo intervalo estrutural externo de quatro arestas. A variante fechada não expõe passagem; a aberta expõe somente as duas arestas centrais, sem mudar endpoints, placement ou planos longitudinais. O antigo deslocamento visual de uma célula não pertence à semântica lógica e não é consultado pela transformação canônica.
+## Blueprint e inventário
 
-## Fechamento lógico e continuidade visual
+O blueprint inicial é um cômodo 12×10. Ele só é criado quando `world.main` não existe. O inventário é calculado por família física a partir de reserva, placements e concessões. Orientações não criam estoques distintos.
 
-Fechamento lógico não comprova continuidade visual transversal. Dois assets podem compartilhar o mesmo endpoint e o mesmo plano longitudinal, mas desenhar sua espessura em lados opostos do eixo. R3-C-B2 confirmou esse caso nos lados direito e inferior mesmo com os cômodos canônico e modificado logicamente fechados.
+## Peças vigentes
 
-O contrato visual vigente declara, independentemente do blueprint, normal transversal, lado ocupado, centerline e perfil comparável por junção. A normal interior é derivada somente da adjacência do piso e a translação assinada é aplicada uma vez na transformação canônica. O analisador compara vizinhos pelo endpoint/eixo; a repetição B2 confirmou 31/31 emendas sem canal conectado de fundo.
+- piso de madeira;
+- paredes curtas, médias e longas;
+- quatro orientações de canto;
+- porta horizontal aberta ou fechada.
 
-Phaser transforma estrutura em plano de renderização e usa previews apenas em memória. Preview, seleção, pan, realce, timer e tween não são persistidos e não devem sobreviver reload, pause, shutdown ou troca de modo. Sprite, hit testing, depth e fallback estrutural derivam da mesma transformação canônica, incluindo o alinhamento transversal já validado.
+A porta ocupa o mesmo intervalo estrutural nos dois estados. Porta vertical não é modelada por falta de asset aprovado.
+
+## Estrutura versus objeto
+
+`PlacedObject` não faz parte da estrutura. Objetos possuem footprint e orientação próprios, enquanto paredes, cantos, portas e pisos seguem as regras de células e arestas.
+
+## Continuidade visual
+
+Fechamento lógico não prova continuidade visual. O contrato atual compara, por junção, eixo, normal transversal, lado ocupado, centerline, perfil e tolerância.
+
+A normal interior é derivada exclusivamente da adjacência do piso. A translação assinada é aplicada uma vez pela transformação canônica. Não existem offsets especiais por cômodo, coordenada ou instância.
+
+Sprite, fallback, depth, hit testing, preview e seleção consomem a mesma transformação. A baseline final da W3-A possui 31/31 junções válidas e 9/9 cenários visuais.
+
+## Estado efêmero
+
+Preview, seleção, pan, câmera, realce, timer, tween e ferramenta ativa vivem somente em memória e são limpos ao sair do modo, pausar, desmontar ou receber nova projeção.

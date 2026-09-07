@@ -1,101 +1,42 @@
 # Privacidade
 
-## 1. Princípio
+## Princípio
 
-Registros pessoais são privados por padrão. Na fase de protótipo, o aplicativo funciona sem conta e mantém dados no aparelho, salvo quando o próprio usuário exporta um backup.
+Registros pessoais são privados por padrão. O aplicativo funciona sem conta e mantém dados no aparelho, exceto quando o próprio usuário exporta ou compartilha conteúdo.
 
-## 2. Dados tratados no protótipo
+## Dados tratados
 
-- títulos e autores;
-- status e progresso;
+- títulos, autores e metadados de registros;
+- progresso, avaliações, etiquetas e favoritos;
 - notas e citações;
-- etiquetas e avaliações;
-- histórico de atividade;
+- sessões, duração e histórico de atividade;
 - preferências de áudio e experiência;
-- estado de marcos e biblioteca.
+- estrutura, objetos, marcos e recompensas da Biblioteca.
 
-Esses dados podem revelar interesses, rotina, estudo e opiniões. Devem ser tratados como conteúdo pessoal mesmo sem nome ou e-mail.
+Esses dados podem revelar interesses, rotina, estudo, saúde percebida, projetos, organizações e opiniões, mesmo sem nome ou e-mail.
 
-No Prompt 6, livros, notas, citações e atividades passam a ser armazenados localmente em IndexedDB/Dexie. O aplicativo não adiciona criptografia própria. O sistema operacional ou navegador pode remover armazenamento local, especialmente sem persistência concedida; mesmo com a concessão, preservação absoluta não é prometida e backup ainda não existe.
+## Coleta e transmissão
 
-## 3. Coleta e transmissão
+Não existem conta, sincronização, analytics de terceiros, publicidade, backend ou IA remota processando notas. Qualquer mudança exige decisão, revisão deste documento e análise de segurança.
 
-No protótipo:
+## Armazenamento local
 
-- não existe conta;
-- não existe sincronização;
-- não existe analytics de terceiros;
-- não existe envio automático de conteúdo;
-- não existe publicidade;
-- não existe IA processando notas.
+IndexedDB/Dexie não recebe criptografia própria da aplicação. O sistema ou navegador pode remover armazenamento local; persistência concedida reduz risco, mas não garante conservação absoluta.
 
-Qualquer mudança nesses pontos exige revisão deste documento, `SECURITY.md` e decisão explícita.
+## Backup e compartilhamento
 
-## 4. Backups
+O backup v5 é JSON legível e não criptografado. Exportação, destino e guarda são escolhas do usuário. O aplicativo não envia o arquivo automaticamente e não inclui conteúdo pessoal no nome padrão.
 
-- exportação é iniciada pelo usuário;
-- arquivo deve indicar que contém dados pessoais;
-- o app não controla a segurança do destino escolhido;
-- exemplos e testes não usam backup real do usuário;
-- arquivos de backup devem estar no `.gitignore` quando o repositório existir.
+Compartilhar nota ou citação exige ação explícita no item. O payload humano não inclui IDs internos, revisão, schema ou metadados técnicos. O destino é controlado pela folha nativa ou Web Share.
 
-## 5. Exclusão
+## Logs, testes e portfólio
 
-O usuário deve poder:
+Logs, eventos e diagnósticos não contêm título, autor, nota, citação, nome de etiqueta, cliente, objetivo, backup ou caminho sensível. Fixtures, screenshots, vídeos e traces públicos usam conteúdo fictício ou deliberadamente liberado.
 
-- excluir ou arquivar registros;
-- apagar notas e citações;
-- limpar todos os dados com confirmação forte;
-- exportar antes da limpeza;
-- compreender quando uma exclusão é reversível ou definitiva.
+## Exclusão
 
-## 6. Logs e diagnóstico
+Exclusões de conteúdo devem ser explícitas, confirmadas quando destrutivas e transacionais. Marcos históricos podem sobreviver à exclusão do registro de origem quando esse comportamento fizer parte do contrato aprovado. Arquivos exportados fora do app precisam ser excluídos pelo usuário no destino escolhido.
 
-Logs técnicos podem conter IDs e códigos de erro, mas não:
+## Política pública
 
-- texto de notas ou citações;
-- títulos reais por padrão;
-- conteúdo de backup;
-- caminhos com dados sensíveis;
-- tokens futuros.
-
-O painel disponível apenas em desenvolvimento e em builds diagnósticos internos mostra nome/versão do banco, abertura, suporte à persistência, contagens e falha sanitizada. Ele nunca lista títulos, autores, notas, citações, payloads ou stack traces e não integra o build normal de produção.
-
-## 7. Portfólio e demonstração
-
-Screenshots, vídeos e fixtures públicas devem usar conteúdo fictício ou de domínio público. Nunca publicar biblioteca pessoal sem revisão deliberada.
-
-## 8. Gatilhos para política pública
-
-Criar política de privacidade formal antes de:
-
-- publicar em loja para terceiros;
-- criar conta;
-- coletar telemetria;
-- usar serviços externos;
-- sincronizar dados;
-- permitir compartilhamento;
-- monetizar;
-- tratar dados de crianças ou grupos sensíveis.
-
-## 9. Backup implementado
-
-O backup v2 inclui livros, progresso, notas, citações, atividades, configurações aplicáveis e estado técnico de marcos/recompensas. Marcos guardam apenas ID, instante, versão, origem técnica e IDs de recompensa: nunca título, autor, nota, citação ou fala. Backups v1 continuam aceitos e não inventam marcos. O JSON UTF-8 é legível e não criptografado. O aplicativo não envia o arquivo automaticamente: exportação, compartilhamento e destino dependem de ação explícita. Depois da entrega, guardar e excluir manualmente a cópia externa é responsabilidade do usuário. Nomes de arquivo não incluem dados pessoais.
-
-## 10. Testes públicos
-
-Fixtures Vitest e Playwright usam apenas nomes e textos explicitamente fictícios. CI não recebe banco, backup pessoal, screenshot do usuário ou telemetria. Traces de falha podem conter somente os dados fictícios do cenário automatizado e não são versionados.
-
-## 11. Compartilhamento explícito de anotação
-
-R2 permite compartilhar uma nota ou citação somente após ação explícita no item. O texto humano inclui o tipo, o conteúdo escolhido, página quando existente e referência legível ao livro quando disponível. Não inclui ID interno, revisão, timestamps, schema, caminho privado ou metadata de persistência. Web Share ou a folha nativa controla o destino; o aplicativo só anuncia conclusão quando o adapter encerra o fluxo e nunca registra o conteúdo em logs ou diagnósticos. Indisponibilidade não impede editar ou excluir.
-
-## 12. Novos registros de P1-A
-
-Filmes, séries, estudos, atividades físicas e trabalho ampliam a sensibilidade do IndexedDB local: podem revelar disciplina, prática, objetivo, projeto, organização, cliente e próxima ação. O app não criptografa o IndexedDB, não cria telemetria e não envia esses campos ao Phaser ou a logs. Backup v3 e sessões ainda não existem em P1-A e serão tratados em P1-B.
-
-## 13. Dados compartilhados de P1-B
-
-Etiquetas, duração, distância explicitamente registrada, esforço percebido, resultado e nota de sessão também são pessoais. O app não criptografa IndexedDB nem o JSON v3, não cria telemetria e não registra esses valores em logs, eventos ou Phaser. Exportar, guardar e compartilhar backup continuam ações explícitas; uma sessão ativa restaurada sempre fica pausada.
-
-Estatísticas e timeline são calculadas localmente. Activities persistem somente IDs, tipos, números mínimos e instante; títulos são resolvidos em memória. Nenhuma métrica, ritmo, inferência de saúde ou produtividade é enviada ou persistida como perfil.
+Revisar e publicar política formal antes de distribuir para terceiros, criar conta, integrar serviço externo, coletar telemetria, sincronizar dados, monetizar ou tratar grupos com obrigação adicional.
