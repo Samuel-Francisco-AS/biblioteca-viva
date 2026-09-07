@@ -2,7 +2,7 @@ import { expect, test } from "./fixtures";
 
 test("busca, filtro, ordenação e Arquivo preservam navegação", async ({
   createBook,
-  navigateFromMenu,
+  navigateFromDock,
   page,
 }) => {
   await createBook({ author: "Lia Ômega", title: "Árvore Azul" });
@@ -34,7 +34,7 @@ test("busca, filtro, ordenação e Arquivo preservam navegação", async ({
   await page.getByRole("link", { name: "Voltar à Coleção" }).click();
   await expect(page).toHaveURL(/q=Caderno.*status=in_progress.*sort=title/u);
 
-  await navigateFromMenu("Arquivo");
+  await navigateFromDock("Arquivo");
   await page.getByLabel("Buscar no Arquivo").fill("Mapa fictício");
   await page.getByRole("link", { name: "Abrir registro Árvore Azul" }).click();
   await page.getByRole("link", { name: "Voltar ao Arquivo" }).click();
@@ -43,7 +43,7 @@ test("busca, filtro, ordenação e Arquivo preservam navegação", async ({
 
 test("backup web real é baixado, validado, restaurado e persiste", async ({
   createBook,
-  navigateFromMenu,
+  navigateFromDock,
   page,
 }) => {
   await createBook({
@@ -55,7 +55,7 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
   });
   await page.locator("summary", { hasText: "Status da leitura" }).click();
   await page.getByRole("button", { name: "Concluir leitura" }).click();
-  await navigateFromMenu("Configurações");
+  await navigateFromDock("Ajustes");
   await page.getByLabel("Usar alto contraste").check();
   await page.getByLabel("Tamanho do texto").selectOption("larger");
 
@@ -74,7 +74,7 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
   ).toBeVisible();
 
   await createBook({ title: "Registro removido pela restauração" });
-  await navigateFromMenu("Configurações");
+  await navigateFromDock("Ajustes");
   await page.getByLabel("Arquivo de backup").setInputFiles(backupPath);
   await expect(
     page.getByRole("heading", {
@@ -99,12 +99,12 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
   await page.reload();
   await expect(page.getByLabel("Usar alto contraste")).toBeChecked();
   await expect(page.getByLabel("Tamanho do texto")).toHaveValue("larger");
-  await navigateFromMenu("Biblioteca");
+  await navigateFromDock("Biblioteca");
   await page.getByText("Resumo acessível").click();
   await expect(
     page.getByText(/a luminária de leitura permanece na sala/u),
   ).toBeVisible();
-  await navigateFromMenu("Coleção");
+  await navigateFromDock("Coleção");
   await expect(
     page.getByRole("heading", { name: "Backup de Ensaio" }),
   ).toBeVisible();
@@ -115,7 +115,7 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
 
 test("restauração após bootstrap estrutural protege o estado persistido", async ({
   createBook,
-  navigateFromMenu,
+  navigateFromDock,
   page,
 }) => {
   await createBook({
@@ -125,7 +125,7 @@ test("restauração após bootstrap estrutural protege o estado persistido", asy
     title: "Arquivo para Base Vazia",
     totalPages: 70,
   });
-  await navigateFromMenu("Configurações");
+  await navigateFromDock("Ajustes");
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: "Exportar backup" }).click();
   const backupPath = await (await downloadPromise).path();
@@ -151,7 +151,7 @@ test("restauração após bootstrap estrutural protege o estado persistido", asy
   await expect(
     page.getByRole("heading", { name: "Restauração concluída" }),
   ).toBeVisible();
-  await navigateFromMenu("Coleção");
+  await navigateFromDock("Coleção");
   await expect(
     page.getByRole("heading", { name: "Arquivo para Base Vazia" }),
   ).toBeVisible();

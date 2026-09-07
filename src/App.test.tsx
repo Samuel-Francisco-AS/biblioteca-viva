@@ -68,8 +68,10 @@ describe("App", () => {
       "Biblioteca",
     );
     expect(
-      screen.getByRole("button", { name: "Abrir menu principal" }),
-    ).toHaveAttribute("aria-expanded", "false");
+      within(
+        screen.getByRole("navigation", { name: "Navegação principal" }),
+      ).getAllByRole("link"),
+    ).toHaveLength(5);
     expect(screen.getByRole("main")).toBeVisible();
     expect(
       screen.getByRole("heading", { name: "Sua Biblioteca Viva" }),
@@ -189,31 +191,29 @@ describe("App", () => {
     );
     await screen.findByLabelText("Modo Construção");
     expect(
+      screen.queryByRole("navigation", { name: "Navegação principal" }),
+    ).not.toBeInTheDocument();
+    expect(
       await screen.findByRole("dialog", { name: "Peças estruturais" }),
+    ).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Sair" }));
+    expect(
+      screen.getByRole("navigation", { name: "Navegação principal" }),
     ).toBeVisible();
     rendered.unmount();
     application.close();
     await Dexie.delete(databaseName);
   });
 
-  it("oferece as cinco opções no drawer e identifica a rota ativa", async () => {
-    const user = userEvent.setup();
+  it("oferece as cinco áreas no dock, com ícone, rótulo e rota ativa", () => {
     renderApp();
-
-    const trigger = screen.getByRole("button", {
-      name: "Abrir menu principal",
-    });
-    await user.click(trigger);
 
     const navigation = screen.getByRole("navigation", {
       name: "Navegação principal",
     });
-    expect(
-      screen.getByRole("dialog", { name: "Menu principal" }),
-    ).toHaveAttribute("aria-modal", "true");
     const links = within(navigation).getAllByRole("link");
 
-    expect(links).toHaveLength(6);
+    expect(links).toHaveLength(5);
     expect(
       within(navigation).getByRole("link", { name: "Biblioteca" }),
     ).toHaveAttribute("aria-current", "page");
@@ -221,12 +221,16 @@ describe("App", () => {
       within(navigation).getByRole("link", { name: "Coleção" }),
     ).not.toHaveAttribute("aria-current");
 
-    await user.keyboard("{Escape}");
-    expect(navigation).not.toBeInTheDocument();
-    expect(trigger).toHaveFocus();
+    expect(
+      within(navigation).getByRole("link", { name: "Resumo e estatísticas" }),
+    ).toHaveTextContent("Resumo");
+    for (const link of links) {
+      expect(link.querySelector("svg")).toBeInTheDocument();
+      expect(link.textContent?.trim()).not.toBe("");
+    }
   });
 
-  it("repete 20 ciclos de drawer, sheet, saída e retorno sem duplicar a estrutura", async () => {
+  it("repete 20 ciclos de dock, sheet, saída e retorno sem duplicar a estrutura", async () => {
     const user = userEvent.setup();
     const databaseName = `app-r3-cycles-${crypto.randomUUID()}`;
     const audioBackend: AudioBackend = {
@@ -255,22 +259,12 @@ describe("App", () => {
 
     for (let cycle = 0; cycle < 20; cycle += 1) {
       await user.click(
-        screen.getByRole("button", { name: "Abrir menu principal" }),
-      );
-      await user.keyboard("{Escape}");
-      await user.click(
         screen.getByRole("button", { name: "Abrir resumo da Biblioteca" }),
       );
       await user.click(
         screen.getByRole("button", { name: "Fechar resumo da Biblioteca" }),
       );
-      await user.click(
-        screen.getByRole("button", { name: "Abrir menu principal" }),
-      );
       await user.click(screen.getByRole("link", { name: "Coleção" }));
-      await user.click(
-        screen.getByRole("button", { name: "Abrir menu principal" }),
-      );
       await user.click(screen.getByRole("link", { name: "Biblioteca" }));
       await screen.findByRole("button", {
         name: "Abrir resumo da Biblioteca",
@@ -278,8 +272,10 @@ describe("App", () => {
     }
 
     expect(
-      screen.getAllByRole("button", { name: "Abrir menu principal" }),
-    ).toHaveLength(1);
+      within(
+        screen.getByRole("navigation", { name: "Navegação principal" }),
+      ).getAllByRole("link"),
+    ).toHaveLength(5);
     expect(
       screen.getAllByRole("img", {
         name: "Estrutura visual inicial da biblioteca",
@@ -293,26 +289,53 @@ describe("App", () => {
   }, 15_000);
 
   it.each([
-    ["Biblioteca", "Biblioteca"],
-    ["Coleção", "Coleção"],
-    ["Novo registro", "Novo registro"],
-    ["Arquivo", "Arquivo"],
-    ["Configurações", "Configurações"],
-  ])("navega para %s e atualiza o título da seção", async (linkName, title) => {
+    ["Biblioteca", "Sua Biblioteca Viva"],
+    ["Coleção", "Coleção indisponível"],
+    ["Arquivo", "Arquivo indisponível"],
+    ["Resumo e estatísticas", "Estatísticas indisponíveis"],
+    ["Ajustes", "Experiência"],
+  ])("navega para %s e atualiza a rota ativa", async (linkName, heading) => {
     const user = userEvent.setup();
-    renderApp();
+    renderApp(linkName === "Biblioteca" ? "/colecao" : "/");
 
-    await user.click(
-      screen.getByRole("button", { name: "Abrir menu principal" }),
-    );
     await user.click(screen.getByRole("link", { name: linkName }));
 
-    expect(screen.getByRole("banner").querySelector("h1")).toHaveTextContent(
-      title,
+    expect(screen.getByRole("link", { name: linkName })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getByRole("main")).toHaveFocus();
+    expect(screen.getByRole("heading", { name: heading })).toBeVisible();
+  });
+
+  it("mantém Novo registro como ação contextual da Coleção e fora do dock", async () => {
+    const user = userEvent.setup();
+    const databaseName = `app-new-entry-${crypto.randomUUID()}`;
+    const application = await createApplication({ databaseName });
+    const rendered = render(
+      <MemoryRouter initialEntries={["/colecao"]}>
+        <App application={application} />
+      </MemoryRouter>,
+    );
+    const navigation = screen.getByRole("navigation", {
+      name: "Navegação principal",
+    });
+
+    expect(
+      within(navigation).queryByRole("link", { name: "Novo registro" }),
+    ).not.toBeInTheDocument();
+    await user.click(
+      await screen.findByRole("link", { name: "Criar primeiro registro" }),
     );
     expect(
-      screen.queryByRole("navigation", { name: "Navegação principal" }),
-    ).not.toBeInTheDocument();
+      screen.getByRole("heading", { name: "Novo registro", level: 1 }),
+    ).toBeVisible();
+    expect(
+      within(navigation).getByRole("link", { name: "Coleção" }),
+    ).toHaveAttribute("aria-current", "page");
+    rendered.unmount();
+    application.close();
+    await Dexie.delete(databaseName);
   });
 
   it("trata uma rota desconhecida e oferece retorno para a Biblioteca", async () => {

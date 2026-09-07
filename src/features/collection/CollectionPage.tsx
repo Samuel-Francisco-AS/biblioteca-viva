@@ -69,6 +69,8 @@ export function CollectionPage({
   const [params, setParams] = useSearchParams();
   const location = useLocation();
   const searchRef = useRef<HTMLInputElement>(null);
+  const searchToggleRef = useRef<HTMLButtonElement>(null);
+  const [searchExpanded, setSearchExpanded] = useState(false);
   const query = params.get("q") ?? "";
   const status = parseStatusFilter(params.get("status"));
   const type = parseTypeFilter(params.get("type"));
@@ -129,6 +131,29 @@ export function CollectionPage({
     );
   }
 
+  useEffect(() => {
+    if (!searchExpanded) return;
+    const closeSearch = () => {
+      setSearchExpanded(false);
+      requestAnimationFrame(() => searchToggleRef.current?.focus());
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      closeSearch();
+    };
+    const onNativeBack = (event: Event) => {
+      event.preventDefault();
+      closeSearch();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("biblioteca-viva:native-back", onNativeBack);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("biblioteca-viva:native-back", onNativeBack);
+    };
+  }, [searchExpanded]);
+
   if (!application)
     return (
       <section className="content-card" role="alert">
@@ -159,13 +184,15 @@ export function CollectionPage({
       </section>
     );
 
-  const controlsActive =
-    query.trim() !== "" ||
-    status !== "all" ||
-    type !== "all" ||
-    favoritesOnly ||
-    tagId !== "all" ||
-    sort !== "recent";
+  const activeControlCount = [
+    query.trim() !== "",
+    status !== "all",
+    type !== "all",
+    favoritesOnly,
+    tagId !== "all",
+    sort !== "recent",
+  ].filter(Boolean).length;
+  const controlsActive = activeControlCount > 0;
   const returnPath = `${location.pathname}${location.search}`;
   return (
     <section aria-labelledby="collection-title">
@@ -174,12 +201,35 @@ export function CollectionPage({
           <p className="eyebrow">Seus registros</p>
           <h2 id="collection-title">Coleção</h2>
         </div>
-        <Link className="button button--primary" to="/novo-registro">
-          Novo registro
-        </Link>
+        <div className="section-heading__actions">
+          <button
+            aria-controls="collection-search-controls"
+            aria-expanded={searchExpanded}
+            className="button button--primary"
+            onClick={() => {
+              const next = !searchExpanded;
+              setSearchExpanded(next);
+              if (next)
+                requestAnimationFrame(() => searchRef.current?.focus());
+            }}
+            ref={searchToggleRef}
+            type="button"
+          >
+            Busca{activeControlCount > 0 ? ` · ${activeControlCount}` : ""}
+          </button>
+          <Link className="button button--primary" to="/novo-registro">
+            Novo registro
+          </Link>
+        </div>
       </div>
-      <fieldset className="collection-controls">
-        <legend className="visually-hidden">Controles da Coleção</legend>
+      <div
+        aria-hidden={!searchExpanded}
+        className="collapsible-controls"
+        data-expanded={searchExpanded}
+        id="collection-search-controls"
+      >
+        <fieldset className="collection-controls" inert={!searchExpanded}>
+          <legend className="visually-hidden">Controles da Coleção</legend>
         <div className="form-field">
           <label htmlFor="collection-search">Buscar registros</label>
           <p className="field-help" id="collection-search-help">
@@ -261,7 +311,8 @@ export function CollectionPage({
             <option value="title">Título</option>
           </select>
         </div>
-      </fieldset>
+        </fieldset>
+      </div>
       <div className="result-summary" aria-live="polite">
         <p>
           {visibleEntries.length}{" "}
@@ -276,6 +327,7 @@ export function CollectionPage({
             type="button"
             onClick={() => {
               setParams({}, { replace: true });
+              setSearchExpanded(true);
               requestAnimationFrame(() => searchRef.current?.focus());
             }}
           >

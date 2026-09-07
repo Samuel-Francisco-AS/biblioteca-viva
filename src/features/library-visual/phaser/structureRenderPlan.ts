@@ -1,62 +1,116 @@
 import {
   INITIAL_WORLD_STRUCTURE,
-  structureDefinition,
   type StructurePlacement,
   type WorldStructureState,
 } from "../../../application";
-import { CELL_SIZE } from "./spatialWorld";
-import { wallAsset, type WallAssetDefinition } from "./wallAssets";
+import {
+  structureVisualAsset,
+  structureVisualTransform,
+  type StructureVisualAssetMetadata,
+  type StructureVisualTransform,
+  type WorldRectangle,
+} from "./structureVisualGeometry";
+import { resolveStructureInteriorNormals } from "./structureVisualTopology";
+import {
+  compareStructureVisualDepth,
+  structureVisualDepth,
+  type StructureVisualDepth,
+} from "./structureVisualDepth";
 
 export interface StructureRenderPiece {
-  readonly asset: WallAssetDefinition;
-  readonly anchor: { readonly x: number; readonly y: number };
+  readonly depth: StructureVisualDepth;
   readonly heightCells: number;
   readonly key: string;
   readonly kind: "corner" | "door" | "wall";
+  readonly metadata: StructureVisualAssetMetadata;
+  readonly transform: StructureVisualTransform;
   readonly widthCells: number;
 }
 
+export interface StructureSpriteProjection {
+  readonly alphaBounds: WorldRectangle;
+  readonly canvasBounds: WorldRectangle;
+  readonly instanceId: string;
+  readonly origin: { readonly x: 0; readonly y: 0 };
+  readonly scale: number;
+  readonly scaleX: number;
+  readonly scaleY: number;
+  readonly textureKey: string;
+  readonly x: number;
+  readonly y: number;
+}
+
 /**
- * Pure projection of already validated placements. It does not infer a wall
- * from floor boundaries, and therefore never puts a segment under a corner.
+ * Pure projection of already validated placements. Floor adjacency only
+ * resolves each existing arm's interior side; it never manufactures a piece.
  */
 export function structureRenderPlan(
   structure: WorldStructureState = INITIAL_WORLD_STRUCTURE,
 ): readonly StructureRenderPiece[] {
   return Object.freeze(
     structure.placements
-      .map((placement) => renderPiece(placement))
-      .sort((a, b) => a.key.localeCompare(b.key)),
+      .map((placement) => renderPiece(structure, placement))
+      .sort((a, b) => compareStructureVisualDepth(a.depth, b.depth)),
   );
 }
 
 export function structurePieceDepth(piece: StructureRenderPiece): number {
-  return (
-    (piece.asset.depthPolicy === "architecture-front" ? 50 : 10) +
-    piece.anchor.y
+  return piece.depth.value;
+}
+
+/** Renderer adapter only; all geometry remains owned by the canonical transform. */
+export function structureSpriteProjection(
+  piece: StructureRenderPiece,
+): StructureSpriteProjection {
+  const { transform } = piece;
+  return Object.freeze({
+    alphaBounds: transform.alphaBounds,
+    canvasBounds: transform.canvasBounds,
+    instanceId: transform.placementKey,
+    origin: Object.freeze({ x: 0, y: 0 }),
+    scale: transform.scale,
+    scaleX: transform.spriteRendering.scale.x,
+    scaleY: transform.spriteRendering.scale.y,
+    textureKey: transform.textureKey,
+    x: transform.spriteRendering.position.x,
+    y: transform.spriteRendering.position.y,
+  });
+}
+
+/** Derives topology explicitly before invoking the pure canonical transform. */
+export function structureVisualTransformForState(
+  structure: WorldStructureState,
+  placement: StructurePlacement,
+): StructureVisualTransform {
+  return structureVisualTransform(
+    placement,
+    resolveStructureInteriorNormals(structure, placement),
   );
 }
 
-function renderPiece(placement: StructurePlacement): StructureRenderPiece {
-  const definition = structureDefinition(placement.definitionId);
-  const asset = definition?.assetId ? wallAsset(definition.assetId) : undefined;
-  if (!definition || !asset)
+function renderPiece(
+  structure: WorldStructureState,
+  placement: StructurePlacement,
+): StructureRenderPiece {
+  const metadata = structureVisualAsset(placement.definitionId);
+  if (!metadata)
     throw new Error(`Peça estrutural sem asset: ${placement.definitionId}`);
-  const span = definition.visualSpanCells ?? 1;
+  const transform = structureVisualTransformForState(structure, placement);
+  const depth = structureVisualDepth(transform);
+  const span = metadata.logicalSpanCells;
+  const vertical = metadata.orientation === "vertical";
   return Object.freeze({
-    anchor: {
-      x: placement.anchor.x * CELL_SIZE,
-      y: placement.anchor.y * CELL_SIZE,
-    },
-    asset,
-    heightCells: asset.orientation === "vertical" ? span : 1,
+    depth,
+    heightCells: vertical ? span : 1,
     key: placement.instanceId,
     kind:
-      definition.category === "door"
+      metadata.role === "door-horizontal"
         ? "door"
-        : definition.category === "corner"
+        : metadata.role === "corner"
           ? "corner"
           : "wall",
-    widthCells: asset.orientation === "horizontal" ? span : 1,
+    metadata,
+    transform,
+    widthCells: vertical ? 1 : span,
   });
 }

@@ -24,6 +24,8 @@ Este manifesto indexa a documentação inicial do repositório Biblioteca Viva, 
 - `docs/REFINEMENT_PLAN.md` — plano operacional das rodadas de refinamento pós-protótipo.
 - `docs/WORLD_MODEL.md` — modelo e limites do reboot espacial;
 - `docs/ASSET_SPEC.md` — especificação do kit visual 2D/2.5D do reboot.
+- `docs/W3_A_CORRECTION_LOG.md` — histórico integral dos gates e diagnósticos da correção W3-A;
+- `docs/W3_A_CORRECTION_HANDOFF.md` — estado mínimo para retomar a W3-A em nova conversa.
 
 ## Documentos operacionais
 
@@ -59,4 +61,6 @@ Este manifesto indexa a documentação inicial do repositório Biblioteca Viva, 
 
 ## Estado técnico
 
-Os Prompts 1–19, R1–R3, P1 e P2 estão preservados como histórico técnico. O estado operacional atual é o reboot espacial: W1 tem implementação técnica corrigida e validação humana pendente; W2 não começou e não existe persistência espacial. G5/G6 seguem aprovados; G4 e G7–G10 seguem abertos; G11 não foi iniciado e a versão permanece `0.2.0-alpha.1`.
+Os Prompts 1–19, R1–R3, P1, P2, W1 e W2 estão preservados como histórico técnico. O estado operacional atual é a correção W3-A: R0, R1-A, R1-B, R2-A, R2-B1, R2-B2-A, R2-B2-B, R3-A, R3-B, R3-C-A e R3-C-B1 foram concluídas conforme seus gates. R3-C-B2 foi executada no renderer Phaser ativo e está tecnicamente reprovada/não concluída: 8/9 casos passaram, e sete evidências preservam a descontinuidade transversal dos lados direito e inferior.
+
+W3-A-R3-C-B2-FIX é somente um nome provisório para o próximo gate, ainda não autorizado e a ser subdividido. R4 e etapas posteriores não foram iniciadas. G5/G6 seguem aprovados; G4 e G7–G10 seguem abertos; G11 não foi iniciado e a versão permanece `0.2.0-alpha.1`.

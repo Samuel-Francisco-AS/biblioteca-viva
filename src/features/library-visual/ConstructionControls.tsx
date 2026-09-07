@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from "react";
 
 import {
   STRUCTURE_CATALOG,
+  structureOperationMessage,
   structuralInventoryFamilyForDefinition,
   structureDefinition,
   type StructuralInventory,
-  type StructuralProgressionSnapshot,
+  type StructureDefinitionId,
   type StructurePlacement,
   type WorldStructureState,
 } from "../../application";
@@ -13,369 +14,538 @@ import {
 export type ConstructionTool =
   "explore" | "select" | "place-structure" | "paint-floor" | "remove-floor";
 
+type ConstructionSheet = "structures" | "floor" | "pieces";
+
 interface ConstructionControlsProps {
+  readonly busy: boolean;
+  readonly canRotatePlacement: boolean;
+  readonly floorPreviewCount: number;
+  readonly floorPreviewIssue?: import("../../application").StructureOperationCode;
+  readonly floorPreviewValid: boolean;
+  readonly hasValidStructurePreview: boolean;
   readonly inventory: StructuralInventory;
-  readonly onAddFloor: (cell: { x: number; y: number }) => void;
+  readonly onCancelAction: () => void;
+  readonly onConfirmAction: () => void;
   readonly onExit: () => void;
   readonly onMove: (placement: StructurePlacement) => void;
-  readonly onPlace: (definitionId: string) => void;
-  readonly onRemoveFloor: (cell: { x: number; y: number }) => void;
+  readonly onPlace: (definitionId: StructureDefinitionId) => void;
+  readonly onRemove: (placement: StructurePlacement) => void;
   readonly onRotate: (placement: StructurePlacement) => void;
-  readonly onStore: (placement: StructurePlacement) => void;
+  readonly onRotatePlacement: () => void;
+  readonly onSelectionChange: (instanceId: string | undefined) => void;
+  readonly onToolChange: (tool: ConstructionTool) => void;
+  readonly openStructuresToken?: string;
+  readonly placementKind?: "move" | "place";
+  readonly selectedInstanceId?: string;
   readonly structure: WorldStructureState;
   readonly tool: ConstructionTool;
-  readonly onToolChange: (tool: ConstructionTool) => void;
-  readonly onSelectionChange: (instanceId: string | undefined) => void;
-  readonly selectedInstanceId?: string;
-  readonly openStructuresToken?: string;
-  readonly structuralProgress?: StructuralProgressionSnapshot;
 }
 
 function humanName(id: string): string {
+  if (id.includes("floor")) return "Piso de madeira";
   if (id.includes("corner")) return "Canto de pedra";
   if (id.includes("door")) return "Porta horizontal";
-  if (id.includes("vertical")) return "Parede vertical";
-  return "Parede horizontal";
+  if (id.includes("vertical-4")) return "Parede vertical longa";
+  if (id.includes("vertical-2")) return "Parede vertical média";
+  if (id.includes("vertical")) return "Parede vertical curta";
+  if (id.includes("horizontal-4")) return "Parede longa";
+  if (id.includes("horizontal-2")) return "Parede média";
+  return "Parede curta";
 }
 
-function focalCell(structure: WorldStructureState) {
-  const cell = structure.floorCells[0] ?? { x: 3, y: 4 };
-  return { x: cell.x, y: cell.y };
+function paletteOrder(id: string): number {
+  const order = [
+    "horizontal-4",
+    "horizontal-2",
+    "horizontal-1",
+    "vertical-4",
+    "vertical-2",
+    "vertical-1",
+    "corner-sw",
+    "corner-se",
+    "corner-nw",
+    "corner-ne",
+    "door-horizontal.closed",
+    "door-horizontal.open",
+  ];
+  return order.findIndex((part) => id.includes(part));
 }
 
-/** Compact DOM alternative: all edit operations remain possible without canvas precision. */
+function orientationName(placement: StructurePlacement): string {
+  const definition = structureDefinition(placement.definitionId);
+  const orientation = definition?.orientation ?? definition?.corner;
+  return orientation ? orientation.toLocaleUpperCase("pt-BR") : "Estrutural";
+}
+
 export function ConstructionControls({
+  busy,
+  canRotatePlacement,
+  floorPreviewCount,
+  floorPreviewIssue,
+  floorPreviewValid,
+  hasValidStructurePreview,
   inventory,
-  onAddFloor,
+  onCancelAction,
+  onConfirmAction,
   onExit,
   onMove,
   onPlace,
-  onRemoveFloor,
+  onRemove,
   onRotate,
-  onStore,
-  onToolChange,
+  onRotatePlacement,
   onSelectionChange,
-  selectedInstanceId,
+  onToolChange,
   openStructuresToken,
-  structuralProgress,
+  placementKind,
+  selectedInstanceId,
   structure,
   tool,
 }: ConstructionControlsProps) {
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const [sheet, setSheet] = useState<"structures" | "floor" | null>(null);
+  const lastTriggerRef = useRef<HTMLButtonElement>(null);
+  const [sheet, setSheet] = useState<ConstructionSheet | null>(null);
+  const [confirmRemove, setConfirmRemove] = useState(false);
   const selected = structure.placements.find(
     (placement) => placement.instanceId === selectedInstanceId,
   );
-  const [confirmStore, setConfirmStore] = useState(false);
-  const [focus, setFocus] = useState(() => focalCell(structure));
+  const placing = tool === "place-structure" && placementKind !== undefined;
+  const editingFloor = tool === "paint-floor" || tool === "remove-floor";
+
+  function focusMap(): void {
+    requestAnimationFrame(() =>
+      document.querySelector<HTMLElement>(".library-visual-host")?.focus(),
+    );
+  }
+
+  function closeSheet(): void {
+    setSheet(null);
+    requestAnimationFrame(() => lastTriggerRef.current?.focus());
+  }
+
+  function handleBack(): void {
+    if (confirmRemove) {
+      setConfirmRemove(false);
+      return;
+    }
+    if (sheet) {
+      closeSheet();
+      return;
+    }
+    if (placing || editingFloor) {
+      onCancelAction();
+      return;
+    }
+    if (selected) {
+      onSelectionChange(undefined);
+      onToolChange("explore");
+      return;
+    }
+    onExit();
+  }
+
   useEffect(() => {
-    const key = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        if (confirmStore) setConfirmStore(false);
-        else if (sheet) {
-          setSheet(null);
-          triggerRef.current?.focus();
-        } else if (selected) onSelectionChange(undefined);
-        else onExit();
-        return;
-      }
-      const delta =
-        event.key === "ArrowLeft"
-          ? [-1, 0]
-          : event.key === "ArrowRight"
-            ? [1, 0]
-            : event.key === "ArrowUp"
-              ? [0, -1]
-              : event.key === "ArrowDown"
-                ? [0, 1]
-                : undefined;
-      if (delta) {
-        event.preventDefault();
-        setFocus((cell) => ({ x: cell.x + delta[0], y: cell.y + delta[1] }));
-      }
-      if (event.key === "Enter" && sheet === "floor") {
-        if (tool === "paint-floor") onAddFloor(focus);
-        if (tool === "remove-floor") onRemoveFloor(focus);
-      }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      handleBack();
     };
-    window.addEventListener("keydown", key);
-    return () => window.removeEventListener("keydown", key);
-  }, [
-    confirmStore,
-    focus,
-    onAddFloor,
-    onRemoveFloor,
-    onExit,
-    onSelectionChange,
-    selected,
-    sheet,
-    tool,
-  ]);
+    const onNativeBack = (event: Event) => {
+      event.preventDefault();
+      handleBack();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("biblioteca-viva:native-back", onNativeBack);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("biblioteca-viva:native-back", onNativeBack);
+    };
+  });
+
   useEffect(() => {
     if (!openStructuresToken) return;
-    let active = true;
-    void Promise.resolve().then(() => {
-      if (active) setSheet("structures");
-    });
-    return () => {
-      active = false;
-    };
+    setSheet("structures");
   }, [openStructuresToken]);
-  const currentDefinition =
-    selected && structureDefinition(selected.definitionId);
+
+  const floorAvailable =
+    inventory.available[
+      structuralInventoryFamilyForDefinition("architecture.floor.wood-01")
+    ] ?? 0;
+
   return (
     <aside className="construction-controls" aria-label="Modo Construção">
-      <p className="construction-controls__context" role="status">
-        Modo Construção. Móveis e livros estão temporariamente bloqueados.
+      <p className="construction-mode-label" aria-live="polite">
+        {placing
+          ? placementKind === "move"
+            ? "Mover peça"
+            : "Posicionar estrutura"
+          : editingFloor
+            ? tool === "paint-floor"
+              ? "Adicionar piso"
+              : "Remover piso"
+            : selected
+              ? `${humanName(selected.definitionId)} selecionada`
+              : sheet
+                ? "Escolher no painel"
+                : "Explore e expanda sua Biblioteca"}
       </p>
-      {structuralProgress && (
-        <p className="construction-controls__progress">
-          {structuralProgress.isComplete
-            ? "Todos os marcos estruturais atuais foram alcançados."
-            : `Próximo desbloqueio: ${structuralProgress.progressCurrent} de ${structuralProgress.nextMilestone?.threshold ?? structuralProgress.progressCurrent} sessões elegíveis.`}
-        </p>
-      )}
-      <div
-        className="construction-toolbar"
-        role="toolbar"
-        aria-label="Ferramentas de construção"
-      >
-        <button
-          className="button button--secondary"
-          aria-pressed={tool === "explore"}
-          onClick={() => onToolChange("explore")}
-          type="button"
-        >
-          Explorar
-        </button>
-        <button
-          ref={triggerRef}
-          className="button button--secondary"
-          aria-expanded={sheet === "structures"}
-          onClick={() => {
-            setSheet("structures");
-            onToolChange("place-structure");
-          }}
-          type="button"
-        >
-          Estruturas
-        </button>
-        <button
-          className="button button--secondary"
-          aria-expanded={sheet === "floor"}
-          onClick={() => setSheet("floor")}
-          type="button"
-        >
-          Piso
-        </button>
-        <button
-          className="button button--secondary"
-          onClick={onExit}
-          type="button"
-        >
-          Sair
-        </button>
-      </div>
+
       {sheet === "structures" && (
-        <section
-          className="construction-sheet"
-          aria-labelledby="structure-inventory-title"
-          role="dialog"
-        >
-          <h3 id="structure-inventory-title">Peças estruturais</h3>
-          {(["wall", "corner", "door"] as const).map((category) => (
-            <div key={category}>
-              <h4>
-                {category === "wall"
-                  ? "Paredes"
-                  : category === "corner"
-                    ? "Cantos"
-                    : "Portas"}
-              </h4>
-              {STRUCTURE_CATALOG.filter(
-                (item) => item.category === category,
-              ).map((item) => {
-                const available =
-                  inventory.available[
-                    structuralInventoryFamilyForDefinition(item.id)
-                  ] ?? 0;
-                return (
-                  <div className="construction-item" key={item.id}>
-                    <span>
-                      {humanName(item.id)} · {item.visualSpanCells ?? 1} célula
-                      {(item.visualSpanCells ?? 1) === 1 ? "" : "s"} ·{" "}
-                      {item.orientation ?? item.corner}
-                    </span>
-                    <span>
-                      {available} disponível{available === 1 ? "" : "is"}
-                    </span>
+        <div className="construction-sheet-layer">
+          <section
+            className="construction-sheet construction-sheet--structures"
+            aria-labelledby="structure-inventory-title"
+            role="dialog"
+          >
+            <div className="construction-sheet__handle" aria-hidden="true" />
+            <div className="construction-sheet__heading">
+              <div>
+                <p className="eyebrow">Inventário disponível</p>
+                <h3 id="structure-inventory-title">Estruturas</h3>
+              </div>
+              <button
+                aria-label="Fechar estruturas"
+                className="construction-sheet__close"
+                onClick={closeSheet}
+                type="button"
+              >
+                ×
+              </button>
+            </div>
+            <div className="construction-palette">
+              {[...STRUCTURE_CATALOG]
+                .filter((item) => item.category !== "floor")
+                .sort(
+                  (first, second) =>
+                    paletteOrder(first.id) - paletteOrder(second.id),
+                )
+                .map((item) => {
+                  const available =
+                    inventory.available[
+                      structuralInventoryFamilyForDefinition(item.id)
+                    ] ?? 0;
+                  return (
                     <button
-                      className="button button--primary"
+                      className="construction-palette__item"
                       disabled={available === 0}
+                      key={item.id}
                       onClick={() => {
                         onPlace(item.id);
                         setSheet(null);
+                        focusMap();
                       }}
                       type="button"
                     >
-                      Colocar
+                      <span
+                        className={`construction-palette__preview construction-palette__preview--${item.orientation ?? "corner"}`}
+                        aria-hidden="true"
+                      />
+                      <strong>{humanName(item.id)}</strong>
+                      <small>
+                        {item.visualSpanCells ?? 1} célula
+                        {(item.visualSpanCells ?? 1) === 1 ? "" : "s"} ·{" "}
+                        {available} disponíveis
+                      </small>
                     </button>
-                    {available === 0 && <small>Sem disponibilidade.</small>}
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
-          ))}
-          <button
-            className="button button--secondary"
-            onClick={() => {
-              setSheet(null);
-              triggerRef.current?.focus();
-            }}
-            type="button"
-          >
-            Fechar
-          </button>
-        </section>
+          </section>
+        </div>
       )}
+
       {sheet === "floor" && (
-        <section
-          className="construction-sheet"
-          aria-labelledby="floor-tools-title"
-          role="dialog"
-        >
-          <h3 id="floor-tools-title">Piso</h3>
-          <p>
-            {inventory.available[
-              structuralInventoryFamilyForDefinition(
-                "architecture.floor.wood-01",
-              )
-            ] ?? 0}{" "}
-            unidades disponíveis. Célula focal: {focus.x}, {focus.y}.
-          </p>
-          <button
-            className="button button--primary"
-            aria-pressed={tool === "paint-floor"}
-            onClick={() => onToolChange("paint-floor")}
-            type="button"
+        <div className="construction-sheet-layer">
+          <section
+            className="construction-sheet construction-sheet--compact"
+            aria-labelledby="floor-tools-title"
+            role="dialog"
           >
-            Adicionar piso
-          </button>
-          <button
-            className="button button--secondary"
-            aria-pressed={tool === "remove-floor"}
-            onClick={() => onToolChange("remove-floor")}
-            type="button"
-          >
-            Remover piso
-          </button>
-          <button
-            className="button button--secondary"
-            onClick={() => onToolChange("explore")}
-            type="button"
-          >
-            Cancelar ferramenta
-          </button>
-          <button
-            className="button button--secondary"
-            onClick={() => {
-              setSheet(null);
-              triggerRef.current?.focus();
-            }}
-            type="button"
-          >
-            Fechar
-          </button>
-        </section>
+            <div className="construction-sheet__handle" aria-hidden="true" />
+            <div className="construction-sheet__heading">
+              <div>
+                <p className="eyebrow">{floorAvailable} disponíveis</p>
+                <h3 id="floor-tools-title">Piso</h3>
+              </div>
+              <button
+                aria-label="Fechar piso"
+                className="construction-sheet__close"
+                onClick={closeSheet}
+                type="button"
+              >
+                ×
+              </button>
+            </div>
+            <div className="construction-floor-options">
+              <button
+                className="construction-option"
+                disabled={floorAvailable === 0}
+                onClick={() => {
+                  onToolChange("paint-floor");
+                  setSheet(null);
+                }}
+                type="button"
+              >
+                <span aria-hidden="true">＋</span>
+                <span>
+                  <strong>Adicionar piso</strong>
+                  <small>Expanda a planta por células conectadas.</small>
+                </span>
+              </button>
+              <button
+                className="construction-option"
+                onClick={() => {
+                  onToolChange("remove-floor");
+                  setSheet(null);
+                }}
+                type="button"
+              >
+                <span aria-hidden="true">−</span>
+                <span>
+                  <strong>Remover piso</strong>
+                  <small>Mantenha a área construída conectada.</small>
+                </span>
+              </button>
+            </div>
+          </section>
+        </div>
       )}
-      <section
-        className="construction-alternative"
-        aria-label="Alternativa de construção"
-      >
-        <h3>Peças colocadas</h3>
-        {structure.placements.map((placement) => (
-          <button
-            className="button button--secondary"
-            key={placement.instanceId}
-            onClick={() => onSelectionChange(placement.instanceId)}
-            type="button"
+
+      {sheet === "pieces" && (
+        <div className="construction-sheet-layer">
+          <section
+            className="construction-sheet construction-sheet--pieces"
+            aria-labelledby="placed-pieces-title"
+            role="dialog"
           >
-            {humanName(placement.definitionId)} ·{" "}
-            {structureDefinition(placement.definitionId)?.orientation ??
-              structureDefinition(placement.definitionId)?.corner}
-          </button>
-        ))}
-      </section>
-      {selected && (
-        <section
-          className="construction-selection"
-          aria-label="Peça selecionada"
-        >
-          <h3>{humanName(selected.definitionId)}</h3>
-          <p>
-            Orientação:{" "}
-            {currentDefinition?.orientation ?? currentDefinition?.corner}.
-            Extensão: {currentDefinition?.visualSpanCells ?? 1}.
+            <div className="construction-sheet__handle" aria-hidden="true" />
+            <div className="construction-sheet__heading">
+              <div>
+                <p className="eyebrow">{structure.placements.length} no mapa</p>
+                <h3 id="placed-pieces-title">Peças colocadas</h3>
+              </div>
+              <button
+                aria-label="Fechar peças colocadas"
+                className="construction-sheet__close"
+                onClick={closeSheet}
+                type="button"
+              >
+                ×
+              </button>
+            </div>
+            <ul className="construction-piece-list">
+              {structure.placements.map((placement, index) => (
+                <li key={placement.instanceId}>
+                  <button
+                    aria-label={`${humanName(placement.definitionId)}, ${orientationName(placement)}, peça ${index + 1}, posição ${placement.anchor.x}, ${placement.anchor.y}`}
+                    onClick={() => {
+                      onSelectionChange(placement.instanceId);
+                      onToolChange("select");
+                      setSheet(null);
+                      focusMap();
+                    }}
+                    type="button"
+                  >
+                    <span
+                      className="construction-piece-list__mark"
+                      aria-hidden="true"
+                    >
+                      {placement.definitionId.includes("corner") ? "⌜" : "━"}
+                    </span>
+                    <span>
+                      <strong>{humanName(placement.definitionId)}</strong>
+                      <small>
+                        #{String(index + 1).padStart(2, "0")} ·{" "}
+                        {orientationName(placement)}
+                      </small>
+                      <small>
+                        posição {placement.anchor.x}, {placement.anchor.y}
+                      </small>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </div>
+      )}
+
+      {confirmRemove && selected && (
+        <div className="construction-dialog-layer">
+          <section
+            className="construction-dialog"
+            aria-describedby="remove-piece-description"
+            aria-labelledby="remove-piece-title"
+            role="alertdialog"
+          >
+            <p className="eyebrow">Volta para o inventário</p>
+            <h3 id="remove-piece-title">Remover esta peça?</h3>
+            <p id="remove-piece-description">
+              Ela sairá do mapa e ficará disponível para usar novamente.
+            </p>
+            <div>
+              <button
+                className="button button--secondary"
+                onClick={() => setConfirmRemove(false)}
+                type="button"
+              >
+                Cancelar
+              </button>
+              <button
+                className="button button--primary"
+                disabled={busy}
+                onClick={() => {
+                  onRemove(selected);
+                  setConfirmRemove(false);
+                }}
+                type="button"
+              >
+                Remover peça
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {placing ? (
+        <>
+          <p className="construction-hint" role="status">
+            {hasValidStructurePreview
+              ? "Posição válida. Confirme para salvar."
+              : "Arraste ou toque em uma borda de piso livre."}
           </p>
-          <button
-            className="button button--primary"
-            onClick={() => onMove(selected)}
-            type="button"
+          <div
+            className="construction-action-bar"
+            role="toolbar"
+            aria-label="Posicionar peça"
           >
-            Mover
-          </button>
-          {currentDefinition?.rotatable !== false && (
+            <button onClick={onCancelAction} type="button">
+              <span aria-hidden="true">×</span>
+              Cancelar
+            </button>
+            {canRotatePlacement && (
+              <button onClick={onRotatePlacement} type="button">
+                <span aria-hidden="true">↻</span>
+                Girar
+              </button>
+            )}
             <button
-              className="button button--secondary"
-              onClick={() => onRotate(selected)}
+              className="construction-action-bar__primary"
+              disabled={!hasValidStructurePreview || busy}
+              onClick={onConfirmAction}
               type="button"
             >
-              Girar
+              <span aria-hidden="true">✓</span>
+              Confirmar
             </button>
-          )}
-          <button
-            className="button button--secondary"
-            onClick={() => setConfirmStore(true)}
-            type="button"
+          </div>
+        </>
+      ) : editingFloor ? (
+        <>
+          <p className="construction-hint" role="status">
+            {floorPreviewCount > 0
+              ? floorPreviewValid
+                ? `${floorPreviewCount} célula${floorPreviewCount === 1 ? "" : "s"} pronta${floorPreviewCount === 1 ? "" : "s"} para aplicar.`
+                : floorPreviewIssue
+                  ? structureOperationMessage(floorPreviewIssue)
+                  : "A seleção atual não pode ser aplicada."
+              : "Toque ou arraste sobre o mapa para marcar o piso."}
+          </p>
+          <div
+            className="construction-action-bar"
+            role="toolbar"
+            aria-label="Editar piso"
           >
-            Guardar
-          </button>
-          <button
-            className="button button--secondary"
-            onClick={() => onSelectionChange(undefined)}
-            type="button"
-          >
-            Fechar seleção
-          </button>
-        </section>
-      )}
-      {confirmStore && selected && (
-        <section
-          className="construction-confirm"
-          role="dialog"
-          aria-label="Guardar esta peça"
+            <button onClick={onCancelAction} type="button">
+              <span aria-hidden="true">×</span>
+              Cancelar
+            </button>
+            <button
+              className="construction-action-bar__primary"
+              disabled={floorPreviewCount === 0 || !floorPreviewValid || busy}
+              onClick={onConfirmAction}
+              type="button"
+            >
+              <span aria-hidden="true">✓</span>
+              {tool === "paint-floor" ? "Aplicar piso" : "Aplicar remoção"}
+              {floorPreviewCount > 0 ? ` (${floorPreviewCount})` : ""}
+            </button>
+          </div>
+        </>
+      ) : selected ? (
+        <div
+          className="construction-action-bar construction-action-bar--four"
+          role="toolbar"
+          aria-label="Peça selecionada"
         >
-          <p>Guardar esta peça? Ela voltará ao inventário.</p>
+          <button onClick={() => onMove(selected)} type="button">
+            <span aria-hidden="true">✥</span>
+            Mover
+          </button>
           <button
-            className="button button--primary"
+            disabled={
+              structureDefinition(selected.definitionId)?.rotatable === false ||
+              busy
+            }
+            onClick={() => onRotate(selected)}
+            type="button"
+          >
+            <span aria-hidden="true">↻</span>
+            Girar
+          </button>
+          <button onClick={() => setConfirmRemove(true)} type="button">
+            <span aria-hidden="true">⇧</span>
+            Remover
+          </button>
+          <button
             onClick={() => {
-              onStore(selected);
               onSelectionChange(undefined);
-              setConfirmStore(false);
+              onToolChange("explore");
             }}
             type="button"
           >
-            Guardar peça
-          </button>
-          <button
-            className="button button--secondary"
-            onClick={() => setConfirmStore(false)}
-            type="button"
-          >
+            <span aria-hidden="true">×</span>
             Cancelar
           </button>
-        </section>
-      )}
+        </div>
+      ) : !sheet ? (
+        <div
+          className="construction-action-bar construction-action-bar--four"
+          role="toolbar"
+          aria-label="Ferramentas de construção"
+        >
+          <button
+            ref={lastTriggerRef}
+            onClick={() => setSheet("structures")}
+            type="button"
+          >
+            <span aria-hidden="true">▥</span>
+            Estruturas
+          </button>
+          <button
+            onClick={(event) => {
+              lastTriggerRef.current = event.currentTarget;
+              setSheet("floor");
+            }}
+            type="button"
+          >
+            <span aria-hidden="true">▦</span>
+            Piso
+          </button>
+          <button
+            onClick={(event) => {
+              lastTriggerRef.current = event.currentTarget;
+              setSheet("pieces");
+            }}
+            type="button"
+          >
+            <span aria-hidden="true">◎</span>
+            Peças
+          </button>
+          <button onClick={onExit} type="button">
+            <span aria-hidden="true">↙</span>
+            Sair
+          </button>
+        </div>
+      ) : null}
     </aside>
   );
 }

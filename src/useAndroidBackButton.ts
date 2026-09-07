@@ -29,6 +29,10 @@ export function useAndroidBackButton() {
     let removeListener: (() => Promise<void>) | undefined;
 
     void CapacitorApp.addListener("backButton", ({ canGoBack }) => {
+      const inAppBack = new Event("biblioteca-viva:native-back", {
+        cancelable: true,
+      });
+      if (!window.dispatchEvent(inAppBack)) return;
       if (pathnameRef.current !== LIBRARY_PATH) {
         if (canGoBack) {
           void navigateRef.current(-1);

@@ -1,9 +1,15 @@
-export type WallAssetRole =
-  "corner" | "door-horizontal" | "segment-horizontal" | "segment-vertical";
+import {
+  STRUCTURE_VISUAL_ASSETS,
+  type StructureVisualAssetMetadata,
+  type StructureVisualDepthLayer,
+  type StructureVisualRole,
+} from "./structureVisualGeometry";
+
+export type WallAssetRole = StructureVisualRole;
 
 export type WallCorner = "ne" | "nw" | "se" | "sw";
 export type WallOrientation = "horizontal" | "vertical";
-export type WallDepthPolicy = "architecture-back" | "architecture-front";
+export type WallDepthPolicy = StructureVisualDepthLayer;
 
 export interface WallAssetDefinition {
   readonly corner?: WallCorner;
@@ -21,113 +27,14 @@ export interface WallAssetDefinition {
   readonly runtimePath: string;
 }
 
-const wallRuntimePath = (file: string) =>
-  `/assets/world/architecture/walls/${file}`;
-
-const common = {
-  fallback: "procedural-wall",
-  pixelsPerLogicalCell: 300,
-  pivot: { x: 0, y: 0 },
-} as const;
-
-export const WALL_ASSETS: readonly WallAssetDefinition[] = Object.freeze([
-  {
-    ...common,
-    corner: "ne",
-    depthPolicy: "architecture-back",
-    id: "architecture.wall.stone-01.corner-ne",
-    logicalLengthCells: 4,
-    offset: { xCells: -4, yCells: -4 },
-    orientation: "horizontal",
-    role: "corner",
-    runtimePath: wallRuntimePath("wall-corner-ne.png"),
-  },
-  {
-    ...common,
-    corner: "nw",
-    depthPolicy: "architecture-back",
-    id: "architecture.wall.stone-01.corner-nw",
-    logicalLengthCells: 4,
-    offset: { xCells: 0, yCells: -4 },
-    orientation: "horizontal",
-    role: "corner",
-    runtimePath: wallRuntimePath("wall-corner-nw.png"),
-  },
-  {
-    ...common,
-    corner: "se",
-    depthPolicy: "architecture-front",
-    id: "architecture.wall.stone-01.corner-se",
-    logicalLengthCells: 4,
-    offset: { xCells: -4, yCells: 0 },
-    orientation: "horizontal",
-    role: "corner",
-    runtimePath: wallRuntimePath("wall-corner-se.png"),
-  },
-  {
-    ...common,
-    corner: "sw",
-    depthPolicy: "architecture-front",
-    id: "architecture.wall.stone-01.corner-sw",
-    logicalLengthCells: 4,
-    offset: { xCells: 0, yCells: 0 },
-    orientation: "horizontal",
-    role: "corner",
-    runtimePath: wallRuntimePath("wall-corner-sw.png"),
-  },
-  {
-    fallback: "procedural-door",
-    depthPolicy: "architecture-back",
-    id: "architecture.wall.stone-01.door-horizontal.closed",
-    logicalLengthCells: 4,
-    offset: { xCells: -1, yCells: 0 },
-    orientation: "horizontal",
-    pixelsPerLogicalCell: 300,
-    pivot: { x: 0, y: 0 },
-    role: "door-horizontal",
-    runtimePath: wallRuntimePath("wall-door-horizontal-closed.png"),
-  },
-  {
-    fallback: "procedural-door",
-    depthPolicy: "architecture-back",
-    id: "architecture.wall.stone-01.door-horizontal.open",
-    logicalLengthCells: 4,
-    offset: { xCells: -1, yCells: 0 },
-    orientation: "horizontal",
-    pixelsPerLogicalCell: 300,
-    pivot: { x: 0, y: 0 },
-    role: "door-horizontal",
-    runtimePath: wallRuntimePath("wall-door-horizontal-open.png"),
-  },
-  ...([1, 2, 4] as const).flatMap((length) => [
-    {
-      ...common,
-      depthPolicy: "architecture-back" as const,
-      id: `architecture.wall.stone-01.horizontal-${length}`,
-      logicalLengthCells: length,
-      offset: { xCells: 0, yCells: 0 },
-      orientation: "horizontal" as const,
-      role: "segment-horizontal" as const,
-      runtimePath: wallRuntimePath(
-        length === 4
-          ? "wall-horizontal.png"
-          : `wall-horizontal-${length}cell.png`,
-      ),
-    },
-    {
-      ...common,
-      depthPolicy: "architecture-back" as const,
-      id: `architecture.wall.stone-01.vertical-${length}`,
-      logicalLengthCells: length,
-      offset: { xCells: 0, yCells: 0 },
-      orientation: "vertical" as const,
-      role: "segment-vertical" as const,
-      runtimePath: wallRuntimePath(
-        length === 4 ? "wall-vertical.png" : `wall-vertical-${length}cell.png`,
-      ),
-    },
-  ]),
-]);
+/**
+ * Compatibility projection retained for historical composition and fallback
+ * APIs. Active structure rendering and input use STRUCTURE_VISUAL_ASSETS and
+ * never these legacy offsets or pivots.
+ */
+export const WALL_ASSETS: readonly WallAssetDefinition[] = Object.freeze(
+  STRUCTURE_VISUAL_ASSETS.map((metadata) => legacyWallAsset(metadata)),
+);
 
 export function wallAsset(id: string): WallAssetDefinition | undefined {
   return WALL_ASSETS.find((asset) => asset.id === id);
@@ -159,4 +66,39 @@ export function validateWallAssetCatalog(
       throw new Error(`Porta não horizontal: ${asset.id}`);
   }
   return true;
+}
+
+function legacyWallAsset(
+  metadata: StructureVisualAssetMetadata,
+): WallAssetDefinition {
+  return Object.freeze({
+    ...(metadata.corner ? { corner: metadata.corner } : {}),
+    depthPolicy: metadata.depth.layer,
+    fallback:
+      metadata.role === "door-horizontal"
+        ? "procedural-door"
+        : "procedural-wall",
+    id: metadata.definitionId,
+    logicalLengthCells: metadata.logicalSpanCells,
+    offset: legacyOffset(metadata),
+    orientation:
+      metadata.role === "segment-vertical" ? "vertical" : "horizontal",
+    pixelsPerLogicalCell: metadata.sourcePixelsPerCell,
+    pivot: Object.freeze({ x: 0, y: 0 }),
+    role: metadata.role,
+    runtimePath: metadata.runtimePath,
+  });
+}
+
+function legacyOffset(metadata: StructureVisualAssetMetadata): {
+  readonly xCells: number;
+  readonly yCells: number;
+} {
+  if (metadata.role === "door-horizontal")
+    return Object.freeze({ xCells: -1, yCells: 0 });
+  if (metadata.corner === "ne")
+    return Object.freeze({ xCells: -4, yCells: -4 });
+  if (metadata.corner === "nw") return Object.freeze({ xCells: 0, yCells: -4 });
+  if (metadata.corner === "se") return Object.freeze({ xCells: -4, yCells: 0 });
+  return Object.freeze({ xCells: 0, yCells: 0 });
 }

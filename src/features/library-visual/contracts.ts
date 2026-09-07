@@ -91,7 +91,6 @@ export type LibraryInteraction =
       readonly roomId: RoomId;
       readonly type: "ResidentInteracted";
     }
-  | { readonly roomId: RoomId; readonly type: "RoomRequested" }
   | { readonly entryId: string; readonly type: "HighlightedBookSelected" }
   | {
       readonly decorationId: DecorationId;
@@ -110,6 +109,11 @@ export type LibraryInteraction =
   | { readonly instanceId: string; readonly type: "StructureSelected" }
   | {
       readonly anchor: { readonly x: number; readonly y: number };
+      readonly type: "StructurePreviewChanged";
+      readonly valid: boolean;
+    }
+  | {
+      readonly anchor: { readonly x: number; readonly y: number };
       readonly definitionId: import("../../application").StructureDefinitionId;
       readonly type: "StructurePlacementCommitted";
     }
@@ -120,14 +124,28 @@ export type LibraryInteraction =
     }
   | {
       readonly cells: readonly { readonly x: number; readonly y: number }[];
+      readonly issue?: import("../../application").StructureOperationCode;
+      readonly mode: "paint-floor" | "remove-floor";
+      readonly type: "FloorPreviewChanged";
+      readonly valid: boolean;
+    }
+  | {
+      readonly cells: readonly { readonly x: number; readonly y: number }[];
       readonly mode: "paint-floor" | "remove-floor";
       readonly type: "FloorCellsCommitted";
     };
 
 export interface ConstructionSceneState {
   readonly active: boolean;
+  readonly floorAvailable?: number;
+  readonly floorPreviewCells?: readonly {
+    readonly x: number;
+    readonly y: number;
+  }[];
   readonly movingInstanceId?: string;
   readonly placingDefinitionId?: import("../../application").StructureDefinitionId;
+  readonly previewAnchor?: { readonly x: number; readonly y: number };
+  readonly selectedInstanceId?: string;
   readonly tool:
     "explore" | "select" | "place-structure" | "paint-floor" | "remove-floor";
 }

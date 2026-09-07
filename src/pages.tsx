@@ -4,10 +4,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import type {
   BookEntry,
   ReachedMilestone,
-  RoomId,
   RoomProgress,
 } from "./domain";
-import { RESIDENT_CATALOG, ROOM_NAMES } from "./content";
+import { ROOM_NAMES } from "./content";
 import type {
   AudioPort,
   DialoguePort,
@@ -18,6 +17,8 @@ import {
   ApplicationError,
   DEFAULT_PLACED_OBJECTS,
   nextObjectRotation,
+  rotatedStructureDefinitionId,
+  type GridPoint,
   type PlacedObject,
   type StructuralInventory,
   type StructuralProgressionSnapshot,
@@ -28,6 +29,7 @@ import {
   LibraryBottomSheet,
   type LibrarySheetMode,
 } from "./features/library-visual/LibraryBottomSheet";
+import { LibraryContextLabel } from "./features/library-visual/LibraryContextLabel";
 import { LibrarySpeechBubble } from "./features/library-visual/LibrarySpeechBubble";
 import { LibraryVisualDiagnosticsPanel } from "./features/library-visual/LibraryVisualDiagnostics";
 import { LibraryVisualHost } from "./features/library-visual/LibraryVisualHost";
@@ -48,6 +50,11 @@ import {
   LIBRARY_PERIOD_LABELS,
   type LibraryPeriod,
 } from "./features/library-visual/libraryAtmosphere";
+import {
+  markStartupEvent,
+  measureStartupPhase,
+  startupNow,
+} from "./startupPerformance";
 
 export interface LibraryPageApplication {
   readonly audio?: Pick<AudioPort, "emit">;
@@ -179,6 +186,33 @@ function projectionInput(
   };
 }
 
+function loadLibraryPageData(application: LibraryPageApplication) {
+  return Promise.all([
+    application.queries.listBookEntries.execute(),
+    application.queries.listMilestones.list(),
+    application.queries.getStatistics?.execute({ window: "all" }) ??
+      Promise.resolve(undefined),
+    application.queries.getRoomProgress?.execute() ??
+      Promise.resolve([
+        {
+          roomId: "main-library",
+          unlocked: true,
+          currentStage: 1,
+          highestReachedStage: 1,
+          requirements: [],
+        },
+      ] as const),
+    application.queries.listPlacedObjects?.execute() ??
+      Promise.resolve(DEFAULT_PLACED_OBJECTS),
+    application.queries.getWorldStructure?.execute() ??
+      Promise.resolve(undefined),
+    application.queries.getStructuralInventory?.execute() ??
+      Promise.resolve(undefined),
+    application.queries.getStructuralProgress?.execute() ??
+      Promise.resolve(undefined),
+  ]);
+}
+
 export function LibraryPage({
   application,
   onDecorationUnlockPresented,
@@ -186,6 +220,7 @@ export function LibraryPage({
   pendingStructuralUnlock,
   reducedMotion = false,
   highContrast = false,
+  onConstructionModeChange,
 }: {
   readonly application?: LibraryPageApplication;
   readonly onDecorationUnlockPresented?: (eventId: string) => void;
@@ -193,6 +228,7 @@ export function LibraryPage({
   readonly pendingStructuralUnlock?: import("./features/library-visual/contracts").StructuralUnlockFeedback;
   readonly reducedMotion?: boolean;
   readonly highContrast?: boolean;
+  readonly onConstructionModeChange?: (active: boolean) => void;
 }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -214,6 +250,11 @@ export function LibraryPage({
       }
     >(),
   );
+  const libraryLoadRef = useRef<{
+    readonly application: LibraryPageApplication;
+    readonly attempt: number;
+    readonly promise: ReturnType<typeof loadLibraryPageData>;
+  }>(undefined);
   const objectActionsCloseTimer = useRef<number | undefined>(undefined);
   const placementNoticeTimer = useRef<number | undefined>(undefined);
   const summaryButtonRef = useRef<HTMLButtonElement>(null);
@@ -230,14 +271,13 @@ export function LibraryPage({
     { readonly x: number; readonly y: number } | undefined
   >();
   const [canvasFailed, setCanvasFailed] = useState(false);
-  const [activeRoomId, setActiveRoomId] = useState<RoomId>("main-library");
-  const [roomNotice, setRoomNotice] = useState<string | null>(null);
   const [atmosphereOverride, setAtmosphereOverride] =
     useState<AtmosphereOverride>("automatic");
   const period =
     atmosphereOverride === "automatic" ? automaticPeriod : atmosphereOverride;
   const handleAvailabilityChange = useCallback((available: boolean) => {
     setCanvasFailed(!available);
+    if (!available) setSheetMode("summary");
   }, []);
   const [selectedObjectId, setSelectedObjectId] = useState<string>();
   const [objectActionsObjectId, setObjectActionsObjectId] = useState<string>();
@@ -253,15 +293,34 @@ export function LibraryPage({
     useState<import("./application").StructureDefinitionId>();
   const [movingStructureId, setMovingStructureId] = useState<string>();
   const [selectedStructureId, setSelectedStructureId] = useState<string>();
+  const [structurePreviewAnchor, setStructurePreviewAnchor] =
+    useState<GridPoint>();
+  const [structurePreviewValid, setStructurePreviewValid] = useState(false);
+  const [floorPreviewCells, setFloorPreviewCells] = useState<
+    readonly GridPoint[]
+  >([]);
+  const [floorPreviewValid, setFloorPreviewValid] = useState(false);
+  const [floorPreviewIssue, setFloorPreviewIssue] =
+    useState<import("./application").StructureOperationCode>();
+  const [structureBusy, setStructureBusy] = useState(false);
   const mountedRef = useRef(true);
   const structureOperationRef = useRef({ pending: false, token: 0 });
+  useEffect(() => {
+    onConstructionModeChange?.(constructionMode);
+  }, [constructionMode, onConstructionModeChange]);
   useEffect(
     () => () => {
+      onConstructionModeChange?.(false);
+    },
+    [onConstructionModeChange],
+  );
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
       mountedRef.current = false;
       structureOperationRef.current.token += 1;
-    },
-    [],
-  );
+    };
+  }, []);
   const [state, setState] = useState<LibraryPageState>(() =>
     application
       ? { kind: "loading" }
@@ -343,8 +402,6 @@ export function LibraryPage({
           Promise.resolve(undefined),
       ]);
     if (!operationIsCurrent(token) || !structure) return false;
-    setPlacingStructureDefinitionId(undefined);
-    setMovingStructureId(undefined);
     applyStructureState(structure, structuralInventory, structuralProgress);
     return true;
   }
@@ -363,18 +420,19 @@ export function LibraryPage({
       WorldStructureState | { readonly state: WorldStructureState }
     >,
     success: string,
+    callbacks?: { readonly onSuccess?: (state: WorldStructureState) => void },
   ): void {
     if (structureOperationRef.current.pending) return;
     const token = structureOperationRef.current.token + 1;
     structureOperationRef.current = { pending: true, token };
+    setStructureBusy(true);
     void operation()
       .then(
         (result) => {
           if (!operationIsCurrent(token)) return;
-          applySuccessfulStructureState(
-            "state" in result ? result.state : result,
-            token,
-          );
+          const next = "state" in result ? result.state : result;
+          applySuccessfulStructureState(next, token);
+          callbacks?.onSuccess?.(next);
           showPlacementNotice(success);
         },
         async (failure: unknown) => {
@@ -403,8 +461,10 @@ export function LibraryPage({
         },
       )
       .finally(() => {
-        if (structureOperationRef.current.token === token)
+        if (structureOperationRef.current.token === token) {
           structureOperationRef.current.pending = false;
+          setStructureBusy(false);
+        }
       });
   }
 
@@ -477,7 +537,7 @@ export function LibraryPage({
           setPlacementNotice(null);
           setPlacementNoticeExiting(false);
         },
-        reducedMotion ? 0 : 300,
+        reducedMotion ? 0 : 220,
       );
     }, 2_500);
     return () => window.clearTimeout(placementNoticeTimer.current);
@@ -487,30 +547,22 @@ export function LibraryPage({
     if (!application) return;
     let active = true;
     const preparationStartedAt = performance.now();
-    void Promise.all([
-      application.queries.listBookEntries.execute(),
-      application.queries.listMilestones.list(),
-      application.queries.getStatistics?.execute({ window: "all" }) ??
-        Promise.resolve(undefined),
-      application.queries.getRoomProgress?.execute() ??
-        Promise.resolve([
-          {
-            roomId: "main-library",
-            unlocked: true,
-            currentStage: 1,
-            highestReachedStage: 1,
-            requirements: [],
-          },
-        ] as const),
-      application.queries.listPlacedObjects?.execute() ??
-        Promise.resolve(DEFAULT_PLACED_OBJECTS),
-      application.queries.getWorldStructure?.execute() ??
-        Promise.resolve(undefined),
-      application.queries.getStructuralInventory?.execute() ??
-        Promise.resolve(undefined),
-      application.queries.getStructuralProgress?.execute() ??
-        Promise.resolve(undefined),
-    ]).then(
+    if (
+      libraryLoadRef.current?.application !== application ||
+      libraryLoadRef.current.attempt !== attempt
+    ) {
+      const dataReadStartedAt = startupNow();
+      markStartupEvent("library-data-read-requested");
+      libraryLoadRef.current = {
+        application,
+        attempt,
+        promise: loadLibraryPageData(application).then((loaded) => {
+          measureStartupPhase("dexie-library-read", dataReadStartedAt);
+          return loaded;
+        }),
+      };
+    }
+    void libraryLoadRef.current.promise.then(
       ([
         books,
         milestones,
@@ -521,6 +573,7 @@ export function LibraryPage({
         structuralInventory,
         structuralProgress,
       ]) => {
+        const projectionStartedAt = startupNow();
         if (!active) return;
         diagnostics?.resources({
           libraryPreparationDurationMs: Math.max(
@@ -531,19 +584,21 @@ export function LibraryPage({
         const recent = [...books].sort((first, second) =>
           second.updatedAt.localeCompare(first.updatedAt),
         )[0];
+        const viewModel = projectionService.project(
+          projectionInput(
+            books,
+            milestones,
+            pendingDecorationUnlock,
+            pendingStructuralUnlock,
+            placedObjects,
+            worldStructure,
+          ),
+        );
+        measureStartupPhase("library-projection", projectionStartedAt);
         setState({
           kind: "ready",
           ...(recent && { recentBookTitle: recent.title }),
-          viewModel: projectionService.project(
-            projectionInput(
-              books,
-              milestones,
-              pendingDecorationUnlock,
-              pendingStructuralUnlock,
-              placedObjects,
-              worldStructure,
-            ),
-          ),
+          viewModel,
           rooms,
           placedObjects,
           ...(structuralInventory && { structuralInventory }),
@@ -591,7 +646,12 @@ export function LibraryPage({
       setPlacingStructureDefinitionId(undefined);
       setMovingStructureId(undefined);
       setSelectedStructureId(undefined);
+      setStructurePreviewAnchor(undefined);
+      setStructurePreviewValid(false);
+      setFloorPreviewCells([]);
       setOpenStructuresToken(token);
+      setSheetMode(null);
+      setSpeechBubble(null);
       setSelectedObjectId(undefined);
       setObjectActionsObjectId(undefined);
       setObjectActionsClosing(false);
@@ -604,30 +664,12 @@ export function LibraryPage({
 
   useEffect(() => {
     if (!application || state.kind !== "ready") return;
-    const activeRoom = state.rooms.find((room) => room.roomId === activeRoomId);
-    const context =
-      activeRoomId === "main-library"
-        ? {}
-        : {
-            roomStage: activeRoom?.highestReachedStage ?? 1,
-            hasRecentSession: Number(
-              (state.productSummary?.totalEntries ?? 0) > 0,
-            ),
-            sessionCountBand: Math.min(
-              2,
-              Math.floor((state.viewModel.totalBooks ?? 0) / 3),
-            ),
-            hasCompletedAssociatedEntry: Number(
-              (activeRoom?.highestReachedStage ?? 1) >= 4,
-            ),
-          };
     void application.dialogue.enterLibrary({
       completedBooks: state.viewModel.completedBooks,
       inProgressBooks: state.viewModel.inProgressBooks,
       totalBooks: state.viewModel.totalBooks,
-      ...context,
     });
-  }, [activeRoomId, application, state]);
+  }, [application, state]);
 
   useEffect(
     () => () => {
@@ -653,56 +695,144 @@ export function LibraryPage({
     setSpeechBubble(dialogue);
   }
 
-  function handleInteraction(interaction: LibraryInteraction) {
-    if (interaction.type === "StructurePlacementCommitted") {
-      if (state.kind !== "ready" || !application?.commands?.placeStructure)
-        return;
+  function clearConstructionPreview(): void {
+    setStructurePreviewAnchor(undefined);
+    setStructurePreviewValid(false);
+    setFloorPreviewCells([]);
+    setFloorPreviewValid(false);
+    setFloorPreviewIssue(undefined);
+  }
+
+  function cancelConstructionAction(): void {
+    const returnToSelection = Boolean(movingStructureId && selectedStructureId);
+    setPlacingStructureDefinitionId(undefined);
+    setMovingStructureId(undefined);
+    clearConstructionPreview();
+    setConstructionTool(returnToSelection ? "select" : "explore");
+  }
+
+  function confirmConstructionAction(): void {
+    if (state.kind !== "ready" || !state.viewModel.worldStructure) return;
+    const revision = state.viewModel.worldStructure.revision;
+    if (
+      constructionTool === "place-structure" &&
+      structurePreviewAnchor &&
+      structurePreviewValid &&
+      placingStructureDefinitionId &&
+      application?.commands?.placeStructure
+    ) {
       runStructure(
         () =>
           application.commands!.placeStructure!.execute({
-            anchor: interaction.anchor,
-            definitionId: interaction.definitionId,
-            expectedRevision: state.viewModel.worldStructure?.revision,
+            anchor: structurePreviewAnchor,
+            definitionId: placingStructureDefinitionId,
+            expectedRevision: revision,
           }),
         "Peça colocada.",
+        {
+          onSuccess: () => {
+            setPlacingStructureDefinitionId(undefined);
+            setSelectedStructureId(undefined);
+            clearConstructionPreview();
+            setConstructionTool("explore");
+          },
+        },
       );
-      setPlacingStructureDefinitionId(undefined);
-      setConstructionTool("select");
       return;
     }
-    if (interaction.type === "StructureMoveCommitted") {
-      if (state.kind !== "ready" || !application?.commands?.moveStructure)
-        return;
+    if (
+      constructionTool === "place-structure" &&
+      structurePreviewAnchor &&
+      structurePreviewValid &&
+      movingStructureId &&
+      application?.commands?.moveStructure
+    ) {
       runStructure(
         () =>
           application.commands!.moveStructure!.execute({
-            anchor: interaction.anchor,
-            expectedRevision: state.viewModel.worldStructure?.revision,
-            instanceId: interaction.instanceId,
+            anchor: structurePreviewAnchor,
+            expectedRevision: revision,
+            instanceId: movingStructureId,
           }),
         "Peça movida.",
+        {
+          onSuccess: () => {
+            setMovingStructureId(undefined);
+            clearConstructionPreview();
+            setConstructionTool("select");
+          },
+        },
       );
-      setMovingStructureId(undefined);
-      setConstructionTool("select");
       return;
     }
-    if (interaction.type === "FloorCellsCommitted") {
-      if (state.kind !== "ready") return;
+    if (
+      (constructionTool === "paint-floor" ||
+        constructionTool === "remove-floor") &&
+      floorPreviewCells.length > 0 &&
+      floorPreviewValid
+    ) {
       const command =
-        interaction.mode === "paint-floor"
+        constructionTool === "paint-floor"
           ? application?.commands?.addFloorCells
           : application?.commands?.removeFloorCells;
       if (!command) return;
       runStructure(
         () =>
           command.execute({
-            cells: interaction.cells,
-            expectedRevision: state.viewModel.worldStructure?.revision,
+            cells: floorPreviewCells,
+            expectedRevision: revision,
           }),
-        interaction.mode === "paint-floor"
-          ? "Piso atualizado."
+        constructionTool === "paint-floor"
+          ? "Piso aplicado."
           : "Piso removido.",
+        {
+          onSuccess: () => {
+            clearConstructionPreview();
+            setConstructionTool("explore");
+          },
+        },
       );
+    }
+  }
+
+  function rotatePlacementPreview(): void {
+    if (placingStructureDefinitionId) {
+      const rotated = rotatedStructureDefinitionId(
+        placingStructureDefinitionId,
+      );
+      if (!rotated) return;
+      setPlacingStructureDefinitionId(rotated);
+      setStructurePreviewValid(false);
+      return;
+    }
+    if (state.kind !== "ready") return;
+    const moving = state.viewModel.worldStructure?.placements.find(
+      (placement) => placement.instanceId === movingStructureId,
+    );
+    const revision = state.viewModel.worldStructure?.revision;
+    if (!moving || !revision || !application?.commands?.rotateStructure) return;
+    runStructure(
+      () =>
+        application.commands!.rotateStructure!.execute({
+          expectedRevision: revision,
+          instanceId: moving.instanceId,
+        }),
+      "Orientação atualizada.",
+    );
+  }
+
+  function handleInteraction(interaction: LibraryInteraction) {
+    if (interaction.type === "StructurePreviewChanged") {
+      if (!constructionMode) return;
+      setStructurePreviewAnchor(interaction.anchor);
+      setStructurePreviewValid(interaction.valid);
+      return;
+    }
+    if (interaction.type === "FloorPreviewChanged") {
+      if (!constructionMode) return;
+      setFloorPreviewCells(interaction.cells);
+      setFloorPreviewValid(interaction.valid);
+      setFloorPreviewIssue(interaction.issue);
       return;
     }
     if (interaction.type === "StructureSelected") {
@@ -715,6 +845,8 @@ export function LibraryPage({
         setSelectedStructureId(interaction.instanceId);
         setPlacingStructureDefinitionId(undefined);
         setMovingStructureId(undefined);
+        setStructurePreviewAnchor(undefined);
+        setStructurePreviewValid(false);
       } else setSelectedStructureId(undefined);
       return;
     }
@@ -754,10 +886,6 @@ export function LibraryPage({
         queuePlacedObjectTransform(next, previous, "Posição salva.");
       return;
     }
-    if (interaction.type === "RoomRequested") {
-      requestRoom(interaction.roomId);
-      return;
-    }
     if (interaction.type === "DecorationUnlockPresented") {
       onDecorationUnlockPresented?.(interaction.eventId);
       return;
@@ -766,7 +894,7 @@ export function LibraryPage({
       dialogueRequest.current += 1;
       application?.audio?.emit({ type: "ShelfSelected" });
       setSpeechBubble(null);
-      setSheetMode(activeRoomId === "main-library" ? "shelf" : "room");
+      setSheetMode("shelf");
     }
     if (interaction.type === "LibrarianSelected") {
       setSpeechAnchor(interaction.anchor);
@@ -785,27 +913,6 @@ export function LibraryPage({
       >[0];
       void openCharacterDialogue(event);
     }
-  }
-
-  function requestRoom(roomId: RoomId) {
-    if (state.kind !== "ready") return;
-    const room = state.rooms.find((candidate) => candidate.roomId === roomId);
-    if (!room?.unlocked) {
-      const subject =
-        roomId === "study-room"
-          ? "estudo"
-          : roomId === "projection-room"
-            ? "filme ou série"
-            : roomId === "training-room"
-              ? "atividade física"
-              : "trabalho";
-      setRoomNotice(
-        `${ROOM_NAMES[roomId]} bloqueada. Registre seu primeiro ${subject} para desbloquear.`,
-      );
-      return;
-    }
-    setRoomNotice(null);
-    setActiveRoomId(roomId);
   }
 
   function closeSheet() {
@@ -860,7 +967,11 @@ export function LibraryPage({
         </section>
       )}
       {state.kind === "ready" && (
-        <div className="library-stage" data-period={period}>
+        <div
+          className="library-stage"
+          data-construction-mode={constructionMode}
+          data-period={period}
+        >
           <LibraryVisualHost
             diagnostics={diagnostics}
             onAvailabilityChange={handleAvailabilityChange}
@@ -870,18 +981,29 @@ export function LibraryPage({
             placementModeInstanceId={movingObjectId}
             constructionState={{
               active: constructionMode,
+              floorAvailable:
+                state.structuralInventory?.available[
+                  "structure-family.floor.wood"
+                ] ?? 0,
+              ...(floorPreviewCells.length > 0 && { floorPreviewCells }),
               ...(movingStructureId && { movingInstanceId: movingStructureId }),
               ...(placingStructureDefinitionId && {
                 placingDefinitionId: placingStructureDefinitionId,
+              }),
+              ...(structurePreviewAnchor && {
+                previewAnchor: structurePreviewAnchor,
+              }),
+              ...(selectedStructureId && {
+                selectedInstanceId: selectedStructureId,
               }),
               tool: constructionTool,
             }}
             reducedMotion={reducedMotion}
             room={{
-              roomId: activeRoomId,
+              roomId: "main-library",
               unlocked: true,
               stage:
-                state.rooms.find((room) => room.roomId === activeRoomId)
+                state.rooms.find((room) => room.roomId === "main-library")
                   ?.highestReachedStage ?? 1,
               unlockedRoomIds: state.rooms
                 .filter((room) => room.unlocked)
@@ -891,6 +1013,21 @@ export function LibraryPage({
               highContrast,
             }}
           />
+          {!constructionMode && (
+            <>
+              <LibraryContextLabel
+                periodLabel={LIBRARY_PERIOD_LABELS[period].toLocaleLowerCase(
+                  "pt-BR",
+                )}
+                reducedMotion={reducedMotion}
+                roomName={ROOM_NAMES["main-library"]}
+              />
+              <p className="visually-hidden" aria-live="polite">
+                Sala atual: {ROOM_NAMES["main-library"]}. Período visual:{" "}
+                {LIBRARY_PERIOD_LABELS[period]}.
+              </p>
+            </>
+          )}
           {!constructionMode && state.viewModel.worldStructure && (
             <button
               className="button button--primary library-construction-trigger"
@@ -900,8 +1037,10 @@ export function LibraryPage({
                 setPlacingStructureDefinitionId(undefined);
                 setMovingStructureId(undefined);
                 setSelectedStructureId(undefined);
+                clearConstructionPreview();
+                setSheetMode(null);
+                setSpeechBubble(null);
                 closeObjectActions();
-                showPlacementNotice("Modo Construção iniciado.");
               }}
               type="button"
             >
@@ -918,48 +1057,63 @@ export function LibraryPage({
             application.commands.addFloorCells &&
             application.commands.removeFloorCells && (
               <ConstructionControls
+                busy={structureBusy}
+                canRotatePlacement={Boolean(
+                  rotatedStructureDefinitionId(
+                    placingStructureDefinitionId ??
+                      state.viewModel.worldStructure.placements.find(
+                        (placement) =>
+                          placement.instanceId === movingStructureId,
+                      )?.definitionId ??
+                      "architecture.floor.wood-01",
+                  ),
+                )}
+                floorPreviewCount={floorPreviewCells.length}
+                floorPreviewIssue={floorPreviewIssue}
+                floorPreviewValid={floorPreviewValid}
+                hasValidStructurePreview={structurePreviewValid}
                 inventory={state.structuralInventory}
-                structuralProgress={state.structuralProgress}
-                onAddFloor={(cell) =>
-                  runStructure(
-                    () =>
-                      application.commands!.addFloorCells!.execute({
-                        cells: [cell],
-                        expectedRevision:
-                          state.viewModel.worldStructure!.revision,
-                      }),
-                    "Piso atualizado.",
-                  )
-                }
+                onCancelAction={cancelConstructionAction}
+                onConfirmAction={confirmConstructionAction}
                 onExit={() => {
                   setConstructionMode(false);
                   setConstructionTool("explore");
                   setPlacingStructureDefinitionId(undefined);
                   setMovingStructureId(undefined);
                   setSelectedStructureId(undefined);
+                  clearConstructionPreview();
                   showPlacementNotice("Modo Construção encerrado.");
                 }}
                 onMove={(placement) => {
                   setMovingStructureId(placement.instanceId);
                   setPlacingStructureDefinitionId(undefined);
+                  setStructurePreviewAnchor(placement.anchor);
+                  setStructurePreviewValid(true);
                   setConstructionTool("place-structure");
                 }}
                 onPlace={(definitionId) => {
-                  setPlacingStructureDefinitionId(
-                    definitionId as import("./application").StructureDefinitionId,
-                  );
+                  setPlacingStructureDefinitionId(definitionId);
                   setMovingStructureId(undefined);
+                  setSelectedStructureId(undefined);
+                  setStructurePreviewAnchor(undefined);
+                  setStructurePreviewValid(false);
                   setConstructionTool("place-structure");
                 }}
-                onRemoveFloor={(cell) =>
+                onRemove={(placement) =>
                   runStructure(
                     () =>
-                      application.commands!.removeFloorCells!.execute({
-                        cells: [cell],
+                      application.commands!.storeStructure!.execute({
                         expectedRevision:
                           state.viewModel.worldStructure!.revision,
+                        instanceId: placement.instanceId,
                       }),
-                    "Piso atualizado.",
+                    "Peça removida e devolvida ao inventário.",
+                    {
+                      onSuccess: () => {
+                        setSelectedStructureId(undefined);
+                        setConstructionTool("explore");
+                      },
+                    },
                   )
                 }
                 onRotate={(placement) =>
@@ -973,19 +1127,19 @@ export function LibraryPage({
                     "Orientação atualizada.",
                   )
                 }
-                onStore={(placement) =>
-                  runStructure(
-                    () =>
-                      application.commands!.storeStructure!.execute({
-                        expectedRevision:
-                          state.viewModel.worldStructure!.revision,
-                        instanceId: placement.instanceId,
-                      }),
-                    "Peça guardada no inventário.",
-                  )
-                }
-                onToolChange={setConstructionTool}
+                onRotatePlacement={rotatePlacementPreview}
+                onToolChange={(tool) => {
+                  clearConstructionPreview();
+                  setConstructionTool(tool);
+                }}
                 openStructuresToken={openStructuresToken}
+                placementKind={
+                  movingStructureId
+                    ? "move"
+                    : placingStructureDefinitionId
+                      ? "place"
+                      : undefined
+                }
                 selectedInstanceId={selectedStructureId}
                 onSelectionChange={setSelectedStructureId}
                 structure={state.viewModel.worldStructure}
@@ -1059,103 +1213,81 @@ export function LibraryPage({
               {placementNotice}
             </p>
           )}
-          {speechBubble && (
+          {!constructionMode && speechBubble && (
             <LibrarySpeechBubble
               anchor={speechAnchor}
               dialogue={speechBubble}
               onClose={closeSpeechBubble}
             />
           )}
-          <button
-            aria-label="Abrir resumo da Biblioteca"
-            className="library-summary-trigger"
-            onClick={() => {
-              setSpeechBubble(null);
-              setSheetMode("summary");
-            }}
-            ref={summaryButtonRef}
-            type="button"
-          >
-            <span aria-hidden="true" />
-          </button>
-          <nav aria-label="Explorar salas" className="library-room-explorer">
+          {!constructionMode && (
             <button
-              aria-label="Sala anterior"
-              disabled={
-                state.rooms.findIndex(
-                  (room) => room.roomId === activeRoomId,
-                ) === 0
-              }
+              aria-label="Abrir resumo da Biblioteca"
+              className="button button--secondary library-summary-trigger"
               onClick={() => {
-                const index = state.rooms.findIndex(
-                  (room) => room.roomId === activeRoomId,
-                );
-                const previous = state.rooms[index - 1];
-                if (previous) requestRoom(previous.roomId);
+                setSpeechBubble(null);
+                setSheetMode("summary");
               }}
+              ref={summaryButtonRef}
               type="button"
             >
-              <span aria-hidden="true">←</span>
+              Resumo
             </button>
-            <p aria-live="polite">
-              <strong>{ROOM_NAMES[activeRoomId]}</strong>
-              <span>Deslize para explorar</span>
-            </p>
-            <button
-              aria-label="Próxima sala"
-              disabled={
-                state.rooms.findIndex(
-                  (room) => room.roomId === activeRoomId,
-                ) ===
-                state.rooms.length - 1
-              }
-              onClick={() => {
-                const index = state.rooms.findIndex(
-                  (room) => room.roomId === activeRoomId,
-                );
-                const next = state.rooms[index + 1];
-                if (next) requestRoom(next.roomId);
-              }}
-              type="button"
-            >
-              <span aria-hidden="true">→</span>
-            </button>
-          </nav>
-          {roomNotice && (
-            <p className="library-room-notice" role="status">
-              {roomNotice}
-            </p>
           )}
-          {sheetMode && (
+          {!constructionMode && sheetMode && sheetMode !== "summary" && (
             <LibraryBottomSheet
               mode={sheetMode}
               onClose={closeSheet}
               period={period}
               recentBookTitle={state.recentBookTitle}
               productSummary={state.productSummary}
-              room={
-                sheetMode === "room"
-                  ? state.rooms.find((room) => room.roomId === activeRoomId)
-                  : undefined
-              }
               viewModel={state.viewModel}
             />
           )}
-          <details className="library-accessible-summary" open={canvasFailed}>
-            <summary>Resumo acessível</summary>
-            <LibraryTextAlternative
-              creatureButtonRef={creatureButtonRef}
-              librarianButtonRef={librarianButtonRef}
-              onInteraction={handleInteraction}
-              shelfButtonRef={shelfButtonRef}
-              viewModel={state.viewModel}
-              resident={RESIDENT_CATALOG.find(
-                (candidate) => candidate.homeRoomId === activeRoomId,
+          {!constructionMode && sheetMode === "summary" && (
+            <section
+              aria-labelledby="library-accessible-panel-title"
+              className="library-bottom-sheet library-accessible-panel"
+              onKeyDown={(event) => {
+                if (event.key === "Escape") closeSheet();
+              }}
+              role="dialog"
+            >
+              <div aria-hidden="true" className="library-bottom-sheet__handle" />
+              <div className="section-heading">
+                <div>
+                  <p className="eyebrow">Alternativa ao cenário visual</p>
+                  <h2 id="library-accessible-panel-title">
+                    Resumo da Biblioteca
+                  </h2>
+                </div>
+                <button
+                  aria-label="Fechar resumo da Biblioteca"
+                  autoFocus
+                  className="drawer-close"
+                  onClick={closeSheet}
+                  type="button"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <LibraryTextAlternative
+                creatureButtonRef={creatureButtonRef}
+                librarianButtonRef={librarianButtonRef}
+                onInteraction={handleInteraction}
+                shelfButtonRef={shelfButtonRef}
+                viewModel={state.viewModel}
+                residentButtonRef={residentButtonRef}
+              />
+              {canvasFailed && (
+                <p role="status">
+                  O cenário visual está indisponível; seus dados permanecem
+                  acessíveis neste resumo.
+                </p>
               )}
-              residentButtonRef={residentButtonRef}
-            />
-          </details>
-          {diagnostics && (
+            </section>
+          )}
+          {!constructionMode && diagnostics && (
             <div className="library-atmosphere-diagnostics">
               <label htmlFor="library-atmosphere-override">
                 Pré-visualizar período

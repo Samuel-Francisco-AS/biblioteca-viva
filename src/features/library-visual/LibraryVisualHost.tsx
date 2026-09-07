@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import type {
   LibraryInteraction,
@@ -11,6 +11,11 @@ import type {
   ConstructionSceneState,
 } from "./contracts";
 import type { LibraryVisualDiagnostics } from "./diagnostics";
+import {
+  markStartupEvent,
+  measureStartupPhase,
+  startupNow,
+} from "../../startupPerformance";
 
 const worldPanStyle = { touchAction: "none" } as const;
 
@@ -27,7 +32,16 @@ interface LibraryVisualHostProps {
   readonly constructionState?: ConstructionSceneState;
 }
 
-const loadPhaserFactory = () => import("./phaser/createPhaserGame");
+let phaserFactoryPromise: Promise<LibraryVisualFactoryModule> | undefined;
+
+const loadPhaserFactory = () => {
+  phaserFactoryPromise ??= import("./phaser/createPhaserGame");
+  return phaserFactoryPromise;
+};
+
+export function preloadLibraryVisualFactory(): void {
+  void loadPhaserFactory().catch(() => undefined);
+}
 
 function sizeFromContainer(container: HTMLElement): LibraryVisualSize {
   const bounds = container.getBoundingClientRect();
@@ -72,16 +86,20 @@ export function LibraryVisualHost({
   const latestConstructionRef = useRef(constructionState);
   const [failed, setFailed] = useState(false);
 
-  useEffect(() => {
-    latestInteractionRef.current = onInteraction;
-    latestProjectionRef.current = projection;
-    latestPeriodRef.current = period;
-    latestReducedMotionRef.current = reducedMotion;
-    latestRoomRef.current = room;
-    latestPlacementModeRef.current = placementModeInstanceId;
-    latestConstructionRef.current = constructionState;
-    gameRef.current?.setInteractionHandler(onInteraction);
+  latestInteractionRef.current = onInteraction;
+  latestProjectionRef.current = projection;
+  latestPeriodRef.current = period;
+  latestReducedMotionRef.current = reducedMotion;
+  latestRoomRef.current = room;
+  latestPlacementModeRef.current = placementModeInstanceId;
+  latestConstructionRef.current = constructionState;
+
+  useLayoutEffect(() => {
     gameRef.current?.updateProjection(projection);
+  }, [projection]);
+
+  useEffect(() => {
+    gameRef.current?.setInteractionHandler(onInteraction);
     gameRef.current?.setAtmosphere(period, !reducedMotion);
     gameRef.current?.setReducedMotion(reducedMotion);
     gameRef.current?.updateRoom(room);
@@ -92,7 +110,6 @@ export function LibraryVisualHost({
     period,
     placementModeInstanceId,
     constructionState,
-    projection,
     reducedMotion,
     room,
   ]);
@@ -182,10 +199,14 @@ export function LibraryVisualHost({
       diagnostics?.resources({ activeObservers: 1 });
     }
 
+    const factoryLoadStartedAt = startupNow();
+    markStartupEvent("phaser-factory-requested");
     void loadFactory()
       .then(({ createLibraryVisualGame }) => {
+        measureStartupPhase("phaser-module-load", factoryLoadStartedAt);
         if (destroyed) return undefined;
         requestedCreationSize = sizeFromContainer(container);
+        const phaserStartedAt = startupNow();
         return createLibraryVisualGame({
           container,
           onInteraction: (interaction) => {
@@ -201,6 +222,9 @@ export function LibraryVisualHost({
           size: requestedCreationSize,
           placementModeInstanceId: latestPlacementModeRef.current,
           constructionState: latestConstructionRef.current,
+        }).then((createdGame) => {
+          measureStartupPhase("phaser-instance", phaserStartedAt);
+          return createdGame;
         });
       })
       .then((createdGame) => {
@@ -274,6 +298,7 @@ export function LibraryVisualHost({
       ref={containerRef}
       role="img"
       style={worldPanStyle}
+      tabIndex={0}
     />
   );
 }

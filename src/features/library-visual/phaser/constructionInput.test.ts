@@ -12,9 +12,12 @@ import {
   snapFloorCell,
   snapStructureAnchor,
   structureAtWorldPoint,
+  structureContainsWorldPoint,
   structureHitArea,
+  structureHitRegions,
 } from "./constructionInput";
 import { CELL_SIZE } from "./spatialWorld";
+import { structureVisualTransform } from "./structureVisualGeometry";
 import { TapSelectionPolicy } from "./tapSelectionPolicy";
 
 const horizontalWall: StructurePlacement = {
@@ -82,14 +85,16 @@ describe("entrada de Construção", () => {
     expect(snapStructureAnchor(point)).toEqual(snapStructureAnchor(point));
   });
 
-  it("usa áreas geométricas estruturais, sem depender do alpha dos assets", () => {
+  it("usa as regiões ocupadas da mesma transformação que posiciona o sprite", () => {
     const verticalArea = structureHitArea(verticalWall);
-    expect(verticalArea).toEqual({
-      height: CELL_SIZE * 2,
-      width: CELL_SIZE,
-      x: 12 * CELL_SIZE,
-      y: 6 * CELL_SIZE,
-    });
+    const verticalTransform = structureVisualTransform(verticalWall);
+    expect(verticalArea).toEqual(
+      verticalTransform.interactionRegions[0]?.bounds,
+    );
+    expect(verticalArea?.height).toBe(CELL_SIZE * 2);
+    expect(verticalArea?.width).toBeCloseTo(235 * (CELL_SIZE / 300), 10);
+    expect(verticalArea?.x).toBe(12 * CELL_SIZE);
+    expect(verticalArea?.y).toBe(6 * CELL_SIZE);
     const structure = {
       ...INITIAL_WORLD_STRUCTURE,
       placements: [horizontalWall, verticalWall],
@@ -115,6 +120,141 @@ describe("entrada de Construção", () => {
       x: 11 * CELL_SIZE,
       y: 4 * CELL_SIZE,
     });
+  });
+
+  it("seleciona a parede direita na região transladada para o interior", () => {
+    const rightWall = INITIAL_WORLD_STRUCTURE.placements.find(
+      ({ instanceId }) => instanceId === "initial.wall.right",
+    );
+    if (!rightWall) throw new Error("Parede direita canônica ausente.");
+    const alignedRegions = structureHitRegions(
+      rightWall,
+      INITIAL_WORLD_STRUCTURE,
+    );
+    const unalignedRegions = structureHitRegions(rightWall);
+    const aligned = alignedRegions[0];
+    const unaligned = unalignedRegions[0];
+    if (!aligned || !unaligned) throw new Error("Região vertical ausente.");
+    const point = {
+      x: aligned.x + aligned.width / 2,
+      y: aligned.y + aligned.height / 2,
+    };
+
+    expect(aligned.x + aligned.width).toBeCloseTo(15 * CELL_SIZE, 10);
+    expect(unaligned.x).toBe(15 * CELL_SIZE);
+    expect(structureAtWorldPoint(INITIAL_WORLD_STRUCTURE, point)).toEqual(
+      rightWall,
+    );
+    expect(structureContainsWorldPoint(rightWall, point)).toBe(false);
+  });
+
+  it.each(["ne", "nw", "se", "sw"] as const)(
+    "treats corner-%s as two arms and excludes its transparent interior",
+    (corner) => {
+      const candidate: StructurePlacement = {
+        anchor: { x: -2, y: 3 },
+        definitionId: `architecture.wall.stone-01.corner-${corner}`,
+        instanceId: `structure.corner.${corner}`,
+      };
+      const transform = structureVisualTransform(candidate);
+      const regions = structureHitRegions(candidate);
+      expect(regions).toEqual(
+        transform.interactionRegions.map(({ bounds }) => bounds),
+      );
+      expect(regions).toHaveLength(2);
+
+      for (const area of regions) {
+        expect(
+          structureContainsWorldPoint(candidate, {
+            x: area.x + area.width / 2,
+            y: area.y + area.height / 2,
+          }),
+        ).toBe(true);
+      }
+
+      expect(
+        structureContainsWorldPoint(candidate, {
+          x: transform.alphaBounds.x + transform.alphaBounds.width / 2,
+          y: transform.alphaBounds.y + transform.alphaBounds.height / 2,
+        }),
+      ).toBe(false);
+    },
+  );
+
+  it("selects one corner instance once at either arm or their intersection", () => {
+    const corner: StructurePlacement = {
+      anchor: { x: 0, y: 0 },
+      definitionId: "architecture.wall.stone-01.corner-sw",
+      instanceId: "structure.corner.compound",
+    };
+    const [horizontal, vertical] = structureHitRegions(corner);
+    if (!horizontal || !vertical) throw new Error("Braços de canto ausentes.");
+    const structure = { ...INITIAL_WORLD_STRUCTURE, placements: [corner] };
+    const points = [
+      {
+        x: horizontal.x + horizontal.width / 2,
+        y: horizontal.y + horizontal.height / 2,
+      },
+      {
+        x: vertical.x + vertical.width / 2,
+        y: vertical.y + vertical.height / 2,
+      },
+      {
+        x: Math.max(horizontal.x, vertical.x) + 1,
+        y: Math.max(horizontal.y, vertical.y) + 1,
+      },
+    ];
+    expect(
+      points.map((point) => structureAtWorldPoint(structure, point)),
+    ).toEqual([corner, corner, corner]);
+  });
+
+  it("aligns open and closed doors to x=224..352 without lateral offset", () => {
+    const regions = ["closed", "open"].map((state) => {
+      const candidate: StructurePlacement = {
+        anchor: { x: 7, y: 14 },
+        definitionId:
+          state === "closed"
+            ? "architecture.wall.stone-01.door-horizontal.closed"
+            : "architecture.wall.stone-01.door-horizontal.open",
+        instanceId: `structure.door.${state}`,
+      };
+      const [area] = structureHitRegions(candidate);
+      if (!area) throw new Error(`Área da porta ${state} ausente.`);
+      expect(area).toEqual(
+        structureVisualTransform(candidate).interactionRegions[0]?.bounds,
+      );
+      expect(area.x).toBe(224);
+      expect(area.x + area.width).toBe(352);
+      return area;
+    });
+    expect(regions[0]?.x).toBe(regions[1]?.x);
+    expect(regions[0]?.width).toBe(regions[1]?.width);
+  });
+
+  it("recomputes negative and rotated placements through the canonical function", () => {
+    const horizontal: StructurePlacement = {
+      anchor: { x: -4, y: -3 },
+      definitionId: "architecture.wall.stone-01.horizontal-2",
+      instanceId: "structure.moved",
+    };
+    const vertical: StructurePlacement = {
+      ...horizontal,
+      definitionId: "architecture.wall.stone-01.vertical-2",
+    };
+    for (const candidate of [horizontal, vertical]) {
+      const regions = structureHitRegions(candidate);
+      expect(regions).toEqual(
+        structureVisualTransform(candidate).interactionRegions.map(
+          ({ bounds }) => bounds,
+        ),
+      );
+      expect(regions[0]?.x).toBeLessThan(0);
+      expect(regions[0]?.y).toBeLessThan(0);
+    }
+    expect(structureHitRegions(vertical)).not.toEqual(
+      structureHitRegions(horizontal),
+    );
   });
 
   it("marca localmente destino estrutural livre e rejeita ocupação", () => {

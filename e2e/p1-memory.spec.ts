@@ -1,7 +1,7 @@
 import { expect, test } from "./fixtures";
 
 test("tag, favorito, sessão persistente e estatísticas formam memória unificada", async ({
-  navigateFromMenu,
+  navigateFromDock,
   page,
 }) => {
   await page.goto("/novo-registro");
@@ -16,7 +16,7 @@ test("tag, favorito, sessão persistente e estatísticas formam memória unifica
 
   await page.getByRole("button", { name: "Iniciar sessão" }).click();
   await expect(page.getByText(/Sessão em andamento/u).first()).toBeVisible();
-  await navigateFromMenu("Coleção");
+  await navigateFromDock("Coleção");
   await expect(page.getByRole("link", { name: "Abrir sessão" })).toBeVisible();
   await page.getByRole("link", { name: "Abrir sessão" }).click();
   await page.getByRole("button", { name: "Pausar" }).click();
@@ -26,7 +26,7 @@ test("tag, favorito, sessão persistente e estatísticas formam memória unifica
   await page.getByRole("button", { name: "Concluir sessão" }).click();
   await expect(page.getByText("Nenhuma sessão concluída.")).toHaveCount(0);
 
-  await navigateFromMenu("Estatísticas");
+  await navigateFromDock("Resumo e estatísticas");
   await expect(
     page.getByRole("heading", { level: 2, name: "Estatísticas" }),
   ).toBeVisible();
@@ -40,13 +40,14 @@ test("tag, favorito, sessão persistente e estatísticas formam memória unifica
     }),
   ).toBeVisible();
 
-  await navigateFromMenu("Coleção");
+  await navigateFromDock("Coleção");
   await page
     .getByLabel("Etiqueta")
     .selectOption({ label: "Pesquisa Fictícia" });
   const favoritesOnly = page.getByLabel("Somente favoritos");
   if (!(await favoritesOnly.isChecked())) {
-    await favoritesOnly.check();
+    await favoritesOnly.click();
+    await expect(page.getByLabel("Somente favoritos")).toBeChecked();
   }
   await expect(
     page.getByRole("heading", { name: "Estudo de Estatística Fictício" }),

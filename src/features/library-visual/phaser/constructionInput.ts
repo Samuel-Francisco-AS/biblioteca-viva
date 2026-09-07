@@ -1,8 +1,7 @@
 import {
   floorCellKey,
-  placementEdges,
   structureDefinition,
-  unitEdgeKey,
+  structurePlacementIssue,
   type GridPoint,
   type StructureDefinitionId,
   type StructurePlacement,
@@ -11,6 +10,11 @@ import {
 import type { ConstructionSceneState } from "../contracts";
 
 import { CELL_SIZE } from "./spatialWorld";
+import {
+  structureVisualAsset,
+  structureVisualTransform,
+} from "./structureVisualGeometry";
+import { structureVisualTransformForState } from "./structureRenderPlan";
 
 export interface ScreenPoint {
   readonly x: number;
@@ -69,35 +73,64 @@ export function snapFloorCell(world: ScreenPoint): GridPoint {
 
 export function structureHitArea(
   placement: StructurePlacement,
+  structure?: WorldStructureState,
 ): StructureHitArea | undefined {
-  const definition = structureDefinition(placement.definitionId);
-  if (!definition) return undefined;
-  const span = (definition.visualSpanCells ?? 1) * CELL_SIZE;
-  const x = (placement.anchor.x + definition.visualOffsetCells.x) * CELL_SIZE;
-  const y = (placement.anchor.y + definition.visualOffsetCells.y) * CELL_SIZE;
-  if (definition.category === "corner")
-    return { height: span, width: span, x, y };
-  if (definition.orientation === "vertical")
-    return { height: span, width: CELL_SIZE, x, y };
-  return { height: CELL_SIZE, width: span, x, y };
+  const regions = structureHitRegions(placement, structure);
+  if (regions.length === 0) return undefined;
+  if (regions.length === 1) return regions[0];
+  const left = Math.min(...regions.map((area) => area.x));
+  const top = Math.min(...regions.map((area) => area.y));
+  const right = Math.max(...regions.map((area) => area.x + area.width));
+  const bottom = Math.max(...regions.map((area) => area.y + area.height));
+  return Object.freeze({
+    height: bottom - top,
+    width: right - left,
+    x: left,
+    y: top,
+  });
 }
 
-/** Deliberately geometric: no PNG alpha or display bounds take part in input. */
+/** Exact occupied regions shared with the renderer's canonical transform. */
+export function structureHitRegions(
+  placement: StructurePlacement,
+  structure?: WorldStructureState,
+): readonly StructureHitArea[] {
+  if (!structureVisualAsset(placement.definitionId)) return Object.freeze([]);
+  const transform = structure
+    ? structureVisualTransformForState(structure, placement)
+    : structureVisualTransform(placement);
+  return Object.freeze(
+    transform.interactionRegions.map(({ bounds }) =>
+      Object.freeze({ ...bounds }),
+    ),
+  );
+}
+
+export function structureContainsWorldPoint(
+  placement: StructurePlacement,
+  world: ScreenPoint,
+  structure?: WorldStructureState,
+): boolean {
+  return structureHitRegions(placement, structure).some(
+    (area) =>
+      world.x >= area.x &&
+      world.x < area.x + area.width &&
+      world.y >= area.y &&
+      world.y < area.y + area.height,
+  );
+}
+
+/** Selection is evaluated once per placement, even when regions overlap. */
 export function structureAtWorldPoint(
   structure: WorldStructureState | undefined,
   world: ScreenPoint,
 ): StructurePlacement | undefined {
   if (!structure) return undefined;
-  return [...structure.placements].reverse().find((placement) => {
-    const area = structureHitArea(placement);
-    return (
-      area !== undefined &&
-      world.x >= area.x &&
-      world.x <= area.x + area.width &&
-      world.y >= area.y &&
-      world.y <= area.y + area.height
+  return [...structure.placements]
+    .reverse()
+    .find((placement) =>
+      structureContainsWorldPoint(placement, world, structure),
     );
-  });
 }
 
 /**
@@ -116,29 +149,7 @@ export function isStructurePreviewValid(
     definitionId,
     instanceId: "construction.preview",
   };
-  const occupiedEdges = new Set<string>();
-  for (const placement of structure.placements) {
-    if (placement.instanceId === movingInstanceId) continue;
-    for (const edge of placementEdges(placement))
-      occupiedEdges.add(unitEdgeKey(edge));
-  }
-  if (
-    placementEdges(candidate).some((edge) =>
-      occupiedEdges.has(unitEdgeKey(edge)),
-    )
-  )
-    return false;
-
-  const floorCells = new Set(structure.floorCells.map(floorCellKey));
-  return placementEdges(candidate).some(
-    (edge) =>
-      (edge.axis === "horizontal" &&
-        (floorCells.has(`${edge.x}:${edge.y}`) ||
-          floorCells.has(`${edge.x}:${edge.y - 1}`))) ||
-      (edge.axis === "vertical" &&
-        (floorCells.has(`${edge.x}:${edge.y}`) ||
-          floorCells.has(`${edge.x - 1}:${edge.y}`))),
-  );
+  return structurePlacementIssue(structure, candidate, movingInstanceId) === undefined;
 }
 
 /** Preserves first encounter order and never emits a duplicate cell. */

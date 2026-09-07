@@ -1,4 +1,10 @@
 import Phaser from "phaser";
+import {
+  markStartupEvent,
+  markStartupMilestone,
+  measureStartupPhase,
+  startupNow,
+} from "../../../startupPerformance";
 
 import type {
   LibraryInteraction,
@@ -31,20 +37,22 @@ import {
   exteriorGroundTiles,
 } from "./exteriorGround";
 import {
+  structureSpriteProjection,
   structurePieceDepth,
   structureRenderPlan,
   type StructureRenderPiece,
+  type StructureSpriteProjection,
 } from "./structureRenderPlan";
-import { WALL_ASSETS } from "./wallAssets";
+import { STRUCTURE_VISUAL_ASSETS } from "./structureVisualGeometry";
+import { structureVisualFallbackGeometry } from "./structureVisualFallback";
 import {
   FloorGestureBatch,
   constructionHitAreas,
   isStructurePreviewValid,
-  screenToWorld,
   snapFloorCell,
   snapStructureAnchor,
   structureAtWorldPoint,
-  structureHitArea,
+  structureHitRegions,
 } from "./constructionInput";
 import { TapSelectionPolicy } from "./tapSelectionPolicy";
 import {
@@ -53,12 +61,12 @@ import {
 } from "./structuralUnlockFeedback";
 import {
   DEFAULT_PLACED_OBJECTS,
+  evaluateFloorEdit,
   objectDefinition,
   orientationForRotation,
   placementIsValid,
   type PlacedObject,
   type StructurePlacement,
-  structureDefinition,
 } from "../../../application";
 import { worldBounds } from "../../../application";
 
@@ -68,6 +76,100 @@ interface RenderedObject {
   readonly zone: Phaser.GameObjects.Zone;
 }
 
+interface StructureProjectionTarget {
+  setDepth(value: number): unknown;
+  setOrigin(x: number, y?: number): unknown;
+  setScale(x: number, y?: number): unknown;
+}
+
+interface StructureDestroyable {
+  destroy(): void;
+}
+
+export interface StructureFallbackRenderTarget extends StructureDestroyable {
+  fillRect(x: number, y: number, width: number, height: number): unknown;
+  fillStyle(color: number, alpha?: number): unknown;
+  lineStyle(width: number, color: number, alpha?: number): unknown;
+  setData(key: string, value: unknown): unknown;
+  setDepth(value: number): unknown;
+  strokeRect(x: number, y: number, width: number, height: number): unknown;
+}
+
+export interface StructureSpriteRenderTarget
+  extends StructureDestroyable, StructureProjectionTarget {}
+
+export interface StructurePieceRenderTarget {
+  configureTexture(textureKey: string): void;
+  createFallback(): StructureFallbackRenderTarget;
+  createSprite(
+    x: number,
+    y: number,
+    textureKey: string,
+  ): StructureSpriteRenderTarget;
+  textureExists(textureKey: string): boolean;
+}
+
+export type RenderedStructurePiece =
+  | {
+      readonly kind: "fallback";
+      readonly object: StructureFallbackRenderTarget;
+    }
+  | {
+      readonly kind: "sprite";
+      readonly object: StructureSpriteRenderTarget;
+    };
+
+/** Applies a canonical projection without introducing renderer-side geometry. */
+export function applyStructureSpriteProjection(
+  sprite: StructureProjectionTarget,
+  projection: StructureSpriteProjection,
+  depth: number,
+): void {
+  sprite.setOrigin(projection.origin.x, projection.origin.y);
+  sprite.setScale(projection.scaleX, projection.scaleY);
+  sprite.setDepth(depth);
+}
+
+/** Chooses exactly one visual path while sharing canonical geometry and depth. */
+export function renderStructurePieceToTarget(
+  piece: StructureRenderPiece,
+  target: StructurePieceRenderTarget,
+): RenderedStructurePiece {
+  const projection = structureSpriteProjection(piece);
+  const depth = structurePieceDepth(piece);
+  if (target.textureExists(projection.textureKey)) {
+    target.configureTexture(projection.textureKey);
+    const sprite = target.createSprite(
+      projection.x,
+      projection.y,
+      projection.textureKey,
+    );
+    applyStructureSpriteProjection(sprite, projection, depth);
+    return Object.freeze({ kind: "sprite", object: sprite });
+  }
+
+  const fallback = structureVisualFallbackGeometry(
+    piece.transform,
+    piece.depth,
+  );
+  const graphics = target.createFallback();
+  graphics.setDepth(fallback.depth);
+  graphics.setData("structureInstanceId", fallback.instanceId);
+  graphics.fillStyle(piece.kind === "door" ? 0x6b5136 : 0x45473f, 0.96);
+  for (const { bounds } of fallback.regions)
+    graphics.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+  graphics.lineStyle(1, 0xaaa07a, 0.75);
+  for (const { bounds } of fallback.regions)
+    graphics.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
+  return Object.freeze({ kind: "fallback", object: graphics });
+}
+
+export function destroyStructureRenderObjects(
+  objects: readonly StructureDestroyable[],
+): void {
+  for (const object of objects) object.destroy();
+}
+
 /** W1 procedural world: visual/transient only, with no persistent spatial data. */
 export class SpatialWorldScene extends Phaser.Scene {
   private background?: Phaser.GameObjects.Graphics;
@@ -75,8 +177,8 @@ export class SpatialWorldScene extends Phaser.Scene {
   private floorMasks: Phaser.GameObjects.Graphics[] = [];
   private floorTiles: Phaser.GameObjects.Image[] = [];
   private exteriorTiles: Phaser.GameObjects.Image[] = [];
-  private wallFallbacks: Phaser.GameObjects.Graphics[] = [];
-  private wallSprites: Phaser.GameObjects.Image[] = [];
+  private wallFallbacks: StructureFallbackRenderTarget[] = [];
+  private wallSprites: StructureSpriteRenderTarget[] = [];
   private objectZones: Phaser.GameObjects.Zone[] = [];
   private objectGraphics: Phaser.GameObjects.Graphics[] = [];
   private objectSprites: Phaser.GameObjects.Image[] = [];
@@ -98,8 +200,6 @@ export class SpatialWorldScene extends Phaser.Scene {
     readonly mode: "paint-floor" | "remove-floor";
     readonly pointerId: number;
   };
-  private awaitingStructureProjection = false;
-  private selectedStructureId?: string;
   private selectionCandidate?: StructurePlacement;
   private readonly selectionTap = new TapSelectionPolicy<
     "empty" | "structure"
@@ -113,6 +213,8 @@ export class SpatialWorldScene extends Phaser.Scene {
   private readonly pendingDragPointer = new LatestValue<Phaser.Input.Pointer>();
   private readonly pan = new CameraPanPolicy();
   private rendered = false;
+  private textureLoadStartedAt?: number;
+  private deferredTextureKeys = new Set<string>();
   private readonly world = spatialWorldLayout();
   private cameraBounds = this.world.bounds;
 
@@ -131,25 +233,36 @@ export class SpatialWorldScene extends Phaser.Scene {
   }
 
   preload(): void {
+    this.textureLoadStartedAt = startupNow();
+    markStartupEvent("texture-load-requested");
     for (const [variant, path] of Object.entries(WOOD_FLOOR_TEXTURES)) {
       this.load.image(`architecture.floor.wood-01.${variant}`, path);
     }
     for (const [variant, path] of Object.entries(EXTERIOR_GROUND_TEXTURES))
       this.load.image(`architecture.floor.exterior-ground-01.${variant}`, path);
-    for (const asset of WALL_ASSETS)
-      this.load.image(asset.id, asset.runtimePath);
-    for (const object of DEFAULT_PLACED_OBJECTS) {
+    const requiredTextureKeys = this.requiredTextureKeys();
+    for (const asset of STRUCTURE_VISUAL_ASSETS) {
+      if (requiredTextureKeys.has(asset.textureKey))
+        this.load.image(asset.textureKey, asset.runtimePath);
+      else this.deferredTextureKeys.add(asset.textureKey);
+    }
+    for (const object of this.objects()) {
       const definition = objectDefinition(object.definitionId);
       if (!definition?.visual) continue;
       for (const [orientation, path] of Object.entries(
         definition.visual.sources,
       )) {
-        this.load.image(`${definition.id}.${orientation}`, path);
+        const textureKey = `${definition.id}.${orientation}`;
+        if (requiredTextureKeys.has(textureKey))
+          this.load.image(textureKey, path);
+        else this.deferredTextureKeys.add(textureKey);
       }
     }
   }
 
   create(): void {
+    if (this.textureLoadStartedAt !== undefined)
+      measureStartupPhase("texture-load-decode", this.textureLoadStartedAt);
     this.background = this.add.graphics().setDepth(0);
     this.architecture = this.add.graphics().setDepth(2);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.renderWorld, this);
@@ -160,6 +273,10 @@ export class SpatialWorldScene extends Phaser.Scene {
     this.game.canvas.addEventListener("pointercancel", this.cancelPan);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.shutdown, this);
     this.renderWorld(this.scale.gameSize);
+    this.game.events.once(Phaser.Core.Events.POST_RENDER, () => {
+      markStartupMilestone("first-map-visible-frame");
+      this.time.delayedCall(250, this.loadDeferredTextures, [], this);
+    });
     const feedback = this.projection.structuralUnlockFeedback;
     if (feedback) {
       this.lastStructuralUnlockToken = feedback.token;
@@ -175,6 +292,14 @@ export class SpatialWorldScene extends Phaser.Scene {
   resumeMotion(): void {}
 
   runtimeSnapshot(): LibraryVisualRuntimeSnapshot {
+    if (!this.rendered) {
+      return Object.freeze({
+        activeTweens: 0,
+        displayObjects: 0,
+        fps: null,
+        interactiveZones: 0,
+      });
+    }
     return Object.freeze({
       activeTweens: this.tweens.getTweens().length,
       displayObjects: this.children.length,
@@ -202,24 +327,22 @@ export class SpatialWorldScene extends Phaser.Scene {
   }
 
   setConstructionState(state: ConstructionSceneState): void {
+    const previousSelectedInstanceId = this.construction.selectedInstanceId;
     this.construction = state;
-    if (
-      !state.active ||
-      (!state.placingDefinitionId && !state.movingInstanceId)
-    )
-      this.awaitingStructureProjection = false;
     this.cancelConstructionGesture();
-    if (
-      !state.active ||
-      !this.projection.worldStructure?.placements.some(
-        (placement) => placement.instanceId === this.selectedStructureId,
-      )
-    )
-      this.setSelectedStructure(undefined);
+    this.setSelectedStructure(
+      state.active ? state.selectedInstanceId : undefined,
+    );
     this.clearConstructionPreview();
     if (this.rendered) {
       this.updateHitAreas();
-      this.showInitialConstructionPreview();
+      this.restoreConstructionPreview();
+      if (
+        state.active &&
+        state.selectedInstanceId &&
+        state.selectedInstanceId !== previousSelectedInstanceId
+      )
+        this.focusStructureIfNeeded(state.selectedInstanceId);
     }
   }
 
@@ -240,11 +363,11 @@ export class SpatialWorldScene extends Phaser.Scene {
       this.lastStructuralUnlockToken = feedback.token;
       this.presentStructuralUnlockFeedback();
     }
-    this.awaitingStructureProjection = false;
     this.cancelConstructionGesture();
     this.clearConstructionPreview();
     const selectedStillExists = projection.worldStructure?.placements.some(
-      (placement) => placement.instanceId === this.selectedStructureId,
+      (placement) =>
+        placement.instanceId === this.construction.selectedInstanceId,
     );
     if (!selectedStillExists) {
       this.setSelectedStructure(undefined);
@@ -258,7 +381,7 @@ export class SpatialWorldScene extends Phaser.Scene {
     }
     if (this.rendered) this.renderWorld(this.scale.gameSize);
     if (selectedStillExists)
-      this.setSelectedStructure(this.selectedStructureId);
+      this.setSelectedStructure(this.construction.selectedInstanceId);
   }
 
   update(): void {
@@ -271,6 +394,54 @@ export class SpatialWorldScene extends Phaser.Scene {
 
   updateRoom(_room: RoomViewModel): void {
     void _room;
+  }
+
+  private requiredTextureKeys(): Set<string> {
+    const keys = new Set<string>(
+      this.projection.worldStructure?.placements.map(
+        (placement) => placement.definitionId,
+      ) ?? [],
+    );
+    for (const object of this.objects()) {
+      const definition = objectDefinition(object.definitionId);
+      if (!definition?.visual) continue;
+      keys.add(
+        `${definition.id}.${orientationForRotation(object.rotation)}`,
+      );
+    }
+    return keys;
+  }
+
+  private loadDeferredTextures(): void {
+    if (this.deferredTextureKeys.size === 0) return;
+    const sources = new Map<string, string>();
+    for (const asset of STRUCTURE_VISUAL_ASSETS)
+      sources.set(asset.textureKey, asset.runtimePath);
+    for (const object of this.objects()) {
+      const definition = objectDefinition(object.definitionId);
+      if (!definition?.visual) continue;
+      for (const [orientation, path] of Object.entries(
+        definition.visual.sources,
+      ))
+        sources.set(`${definition.id}.${orientation}`, path);
+    }
+    const queuedKeys = [...this.deferredTextureKeys].filter(
+      (key) => !this.textures.exists(key) && sources.has(key),
+    );
+    this.deferredTextureKeys.clear();
+    if (queuedKeys.length === 0) return;
+    markStartupEvent("deferred-texture-load-requested");
+    this.load.once(Phaser.Loader.Events.COMPLETE, () => {
+      markStartupEvent("deferred-texture-load-completed");
+      const required = this.requiredTextureKeys();
+      if (queuedKeys.some((key) => required.has(key)) && this.rendered)
+        this.renderWorld(this.scale.gameSize);
+    });
+    for (const key of queuedKeys) {
+      const source = sources.get(key);
+      if (source) this.load.image(key, source);
+    }
+    this.load.start();
   }
 
   private readonly beginPan = (pointer: Phaser.Input.Pointer): void => {
@@ -297,8 +468,11 @@ export class SpatialWorldScene extends Phaser.Scene {
         this.construction.tool === "paint-floor" ||
         this.construction.tool === "remove-floor"
       ) {
+        const batch = new FloorGestureBatch();
+        for (const cell of this.construction.floorPreviewCells ?? [])
+          batch.add(cell);
         this.floorGesture = {
-          batch: new FloorGestureBatch(),
+          batch,
           mode: this.construction.tool,
           pointerId: pointer.id,
         };
@@ -341,10 +515,12 @@ export class SpatialWorldScene extends Phaser.Scene {
   private readonly movePan = (pointer: Phaser.Input.Pointer): void => {
     this.selectionTap.move(pointer.id, pointer.x, pointer.y);
     if (this.floorGesture?.pointerId === pointer.id) {
+      this.autoPanConstruction(pointer);
       this.collectFloorCell(pointer);
       return;
     }
     if (this.constructionPointerId === pointer.id) {
+      this.autoPanConstruction(pointer);
       this.updateConstructionPreview(pointer);
       return;
     }
@@ -375,36 +551,32 @@ export class SpatialWorldScene extends Phaser.Scene {
     if (this.floorGesture?.pointerId === pointer.id) {
       const gesture = this.floorGesture;
       this.floorGesture = undefined;
-      const cells = gesture.batch.values();
-      this.clearConstructionPreview();
-      if (cells.length > 0 && !pointer.wasCanceled)
+      const evaluation = this.floorEvaluation(
+        gesture.batch.values(),
+        gesture.mode,
+      );
+      const previewCells =
+        evaluation.cells.length > 0 ? evaluation.cells : gesture.batch.values();
+      if (previewCells.length > 0 && !pointer.wasCanceled)
         this.interactionHandler?.({
-          cells,
+          cells: previewCells,
+          ...(evaluation.issue && { issue: evaluation.issue }),
           mode: gesture.mode,
-          type: "FloorCellsCommitted",
+          type: "FloorPreviewChanged",
+          valid: evaluation.valid,
         });
       return;
     }
     if (this.constructionPointerId === pointer.id) {
       this.constructionPointerId = undefined;
       const anchor = this.snappedStructureAnchor(pointer);
-      const moving = this.construction.movingInstanceId;
-      const definitionId = this.construction.placingDefinitionId;
       const valid = this.isConstructionPreviewValid(anchor);
-      this.clearConstructionPreview();
-      if (valid && !pointer.wasCanceled && moving) {
-        this.awaitingStructureProjection = true;
+      if (!pointer.wasCanceled) {
+        this.drawConstructionPreview(anchor);
         this.interactionHandler?.({
           anchor,
-          instanceId: moving,
-          type: "StructureMoveCommitted",
-        });
-      } else if (valid && !pointer.wasCanceled && definitionId) {
-        this.awaitingStructureProjection = true;
-        this.interactionHandler?.({
-          anchor,
-          definitionId,
-          type: "StructurePlacementCommitted",
+          type: "StructurePreviewChanged",
+          valid,
         });
       }
       return;
@@ -438,16 +610,24 @@ export class SpatialWorldScene extends Phaser.Scene {
   };
 
   private readonly renderWorld = (size: Phaser.Structs.Size): void => {
+    const firstRender = !this.rendered;
+    const renderStartedAt = startupNow();
+    markStartupEvent("render-world-called");
     const camera = this.cameras.main;
     const previousScroll = { x: camera.scrollX, y: camera.scrollY };
+    const zoom = Math.min(
+      1,
+      size.width / (this.world.spaceA.width + CELL_SIZE * 2),
+    );
+    camera.setZoom(zoom);
     const structure = this.projection.worldStructure;
     const floorBounds = structure ? worldBounds(structure) : undefined;
     const dynamicBounds = floorBounds
       ? {
-          x: floorBounds.x - CELL_SIZE * 5,
-          y: floorBounds.y - CELL_SIZE * 5,
-          width: floorBounds.width + CELL_SIZE * 10,
-          height: floorBounds.height + CELL_SIZE * 10,
+          x: floorBounds.x - CELL_SIZE * 10,
+          y: floorBounds.y - CELL_SIZE * 10,
+          width: floorBounds.width + CELL_SIZE * 20,
+          height: floorBounds.height + CELL_SIZE * 20,
         }
       : this.world.bounds;
     this.cameraBounds = cameraBoundsFor(dynamicBounds, size);
@@ -459,7 +639,16 @@ export class SpatialWorldScene extends Phaser.Scene {
     );
     const scroll = this.rendered
       ? clampCameraScroll(previousScroll, this.cameraBounds, size)
-      : initialCameraScroll(this.world, size);
+      : floorBounds
+        ? clampCameraScroll(
+            {
+              x: floorBounds.x + floorBounds.width / 2 - size.width / 2,
+              y: floorBounds.y + floorBounds.height / 2 - size.height / 2,
+            },
+            this.cameraBounds,
+            size,
+          )
+        : initialCameraScroll(this.world, size);
     camera.setScroll(scroll.x, scroll.y);
     this.rendered = true;
 
@@ -483,7 +672,9 @@ export class SpatialWorldScene extends Phaser.Scene {
     this.clearWallPieces();
     this.renderWallPlan();
     this.renderObjects();
-    this.showInitialConstructionPreview();
+    this.restoreConstructionPreview();
+    if (firstRender)
+      measureStartupPhase("first-render-world", renderStartedAt);
   };
 
   private renderExteriorGround(): void {
@@ -599,20 +790,18 @@ export class SpatialWorldScene extends Phaser.Scene {
     const structure = this.projection.worldStructure;
     if (!structure) return;
     for (const placement of structure.placements) {
-      const definition = structureDefinition(placement.definitionId);
-      if (!definition) continue;
-      const area = structureHitArea(placement);
-      if (!area) continue;
-      const zone = this.add
-        .zone(
-          area.x + area.width / 2,
-          area.y + area.height / 2,
-          area.width,
-          area.height,
-        )
-        .setDepth(80);
-      zone.setData("structurePlacement", placement);
-      this.structureZones.push(zone);
+      for (const area of structureHitRegions(placement, structure)) {
+        const zone = this.add
+          .zone(
+            area.x + area.width / 2,
+            area.y + area.height / 2,
+            area.width,
+            area.height,
+          )
+          .setDepth(80);
+        zone.setData("structurePlacement", placement);
+        this.structureZones.push(zone);
+      }
     }
   }
 
@@ -642,15 +831,41 @@ export class SpatialWorldScene extends Phaser.Scene {
     );
   }
 
+  private focusStructureIfNeeded(instanceId: string): void {
+    const structure = this.projection.worldStructure;
+    const placement = structure?.placements.find(
+      (item) => item.instanceId === instanceId,
+    );
+    if (!structure || !placement) return;
+    const regions = structureHitRegions(placement, structure);
+    if (regions.length === 0) return;
+    const left = Math.min(...regions.map((region) => region.x));
+    const top = Math.min(...regions.map((region) => region.y));
+    const right = Math.max(
+      ...regions.map((region) => region.x + region.width),
+    );
+    const bottom = Math.max(
+      ...regions.map((region) => region.y + region.height),
+    );
+    const view = this.cameras.main.worldView;
+    const padding = CELL_SIZE;
+    const visible =
+      left >= view.left + padding &&
+      right <= view.right - padding &&
+      top >= view.top + padding &&
+      bottom <= view.bottom - padding;
+    if (visible) return;
+    const x = (left + right) / 2;
+    const y = (top + bottom) / 2;
+    if (this.reducedMotion) this.cameras.main.centerOn(x, y);
+    else this.cameras.main.pan(x, y, 260, "Sine.easeOut", true);
+  }
+
   private worldPoint(pointer: Phaser.Input.Pointer): {
     readonly x: number;
     readonly y: number;
   } {
-    const camera = this.cameras.main;
-    return screenToWorld(
-      { x: pointer.x, y: pointer.y },
-      { scrollX: camera.scrollX, scrollY: camera.scrollY, zoom: camera.zoom },
-    );
+    return { x: pointer.worldX, y: pointer.worldY };
   }
 
   private snappedStructureAnchor(pointer: Phaser.Input.Pointer): {
@@ -665,9 +880,10 @@ export class SpatialWorldScene extends Phaser.Scene {
     if (!gesture) return;
     const cell = snapFloorCell(this.worldPoint(pointer));
     gesture.batch.add(cell);
+    const evaluation = this.floorEvaluation(gesture.batch.values(), gesture.mode);
     this.drawFloorPreview(
-      gesture.batch.values(),
-      gesture.mode === "paint-floor",
+      evaluation.cells.length > 0 ? evaluation.cells : gesture.batch.values(),
+      evaluation.valid,
     );
   }
 
@@ -685,14 +901,15 @@ export class SpatialWorldScene extends Phaser.Scene {
         (item) => item.instanceId === this.construction.movingInstanceId,
       )?.definitionId;
     if (!definitionId) return;
-    const definition = structureDefinition(definitionId);
-    if (!definition) return;
-    const area = structureHitArea({
-      anchor,
-      definitionId,
-      instanceId: "construction.preview",
-    });
-    if (!area) return;
+    const areas = structureHitRegions(
+      {
+        anchor,
+        definitionId,
+        instanceId: "construction.preview",
+      },
+      this.projection.worldStructure,
+    );
+    if (areas.length === 0) return;
     const valid = isStructurePreviewValid(
       this.projection.worldStructure,
       definitionId,
@@ -703,28 +920,39 @@ export class SpatialWorldScene extends Phaser.Scene {
       this.constructionPreview ?? this.add.graphics().setDepth(90);
     preview.clear();
     const color = valid ? 0x8cd790 : 0xe16b6b;
-    preview
-      .lineStyle(3, color, 0.95)
-      .strokeRect(area.x, area.y, area.width, area.height)
-      .fillStyle(color, valid ? 0.18 : 0.12)
-      .fillRect(area.x, area.y, area.width, area.height);
-    if (!valid) {
+    for (const area of areas) {
       preview
-        .lineStyle(2, 0xffe2a8, 0.95)
-        .lineBetween(area.x, area.y, area.x + area.width, area.y + area.height)
-        .lineBetween(area.x + area.width, area.y, area.x, area.y + area.height);
+        .lineStyle(3, color, 0.95)
+        .strokeRect(area.x, area.y, area.width, area.height)
+        .fillStyle(color, valid ? 0.18 : 0.12)
+        .fillRect(area.x, area.y, area.width, area.height);
+      if (!valid)
+        preview
+          .lineStyle(2, 0xffe2a8, 0.95)
+          .lineBetween(
+            area.x,
+            area.y,
+            area.x + area.width,
+            area.y + area.height,
+          )
+          .lineBetween(
+            area.x + area.width,
+            area.y,
+            area.x,
+            area.y + area.height,
+          );
     }
     this.constructionPreview = preview;
   }
 
   private drawFloorPreview(
     cells: readonly { readonly x: number; readonly y: number }[],
-    adding: boolean,
+    valid: boolean,
   ): void {
     const preview =
       this.constructionPreview ?? this.add.graphics().setDepth(90);
     preview.clear();
-    const color = adding ? 0x8cd790 : 0xe4a062;
+    const color = valid ? 0x8cd790 : 0xe16b6b;
     for (const cell of cells) {
       const x = cell.x * CELL_SIZE;
       const y = cell.y * CELL_SIZE;
@@ -733,13 +961,33 @@ export class SpatialWorldScene extends Phaser.Scene {
         .strokeRect(x, y, CELL_SIZE, CELL_SIZE)
         .fillStyle(color, 0.16)
         .fillRect(x, y, CELL_SIZE, CELL_SIZE);
-      if (!adding)
+      if (!valid)
         preview
           .lineStyle(2, 0xffe2a8, 0.95)
           .lineBetween(x, y, x + CELL_SIZE, y + CELL_SIZE)
           .lineBetween(x + CELL_SIZE, y, x, y + CELL_SIZE);
     }
     this.constructionPreview = preview;
+  }
+
+  private floorEvaluation(
+    cells: readonly { readonly x: number; readonly y: number }[],
+    mode: "paint-floor" | "remove-floor",
+  ) {
+    const structure = this.projection.worldStructure;
+    if (!structure)
+      return {
+        cells: Object.freeze([]),
+        issue: "NO_FLOOR_CHANGE" as const,
+        valid: false,
+      };
+    return evaluateFloorEdit(
+      structure,
+      cells,
+      mode,
+      this.construction.floorAvailable ?? 0,
+      this.projection.placedObjects,
+    );
   }
 
   private clearConstructionPreview(): void {
@@ -768,37 +1016,78 @@ export class SpatialWorldScene extends Phaser.Scene {
     );
   }
 
-  private showInitialConstructionPreview(): void {
+  private restoreConstructionPreview(): void {
+    if (!this.construction.active) return;
     if (
-      !this.construction.active ||
+      this.construction.tool === "paint-floor" ||
+      this.construction.tool === "remove-floor"
+    ) {
+      const cells = this.construction.floorPreviewCells ?? [];
+      if (cells.length > 0) {
+        const evaluation = this.floorEvaluation(cells, this.construction.tool);
+        this.drawFloorPreview(
+          evaluation.cells.length > 0 ? evaluation.cells : cells,
+          evaluation.valid,
+        );
+      }
+      return;
+    }
+    if (
       this.construction.tool !== "place-structure" ||
-      this.awaitingStructureProjection ||
       (!this.construction.placingDefinitionId &&
         !this.construction.movingInstanceId)
     )
       return;
     const camera = this.cameras.main;
-    this.drawConstructionPreview(
+    const anchor =
+      this.construction.previewAnchor ??
       snapStructureAnchor({
         x: camera.scrollX + camera.width / 2,
         y: camera.scrollY + camera.height / 2,
-      }),
+      });
+    this.drawConstructionPreview(anchor);
+    this.interactionHandler?.({
+      anchor,
+      type: "StructurePreviewChanged",
+      valid: this.isConstructionPreviewValid(anchor),
+    });
+  }
+
+  private autoPanConstruction(pointer: Phaser.Input.Pointer): void {
+    const camera = this.cameras.main;
+    const edge = Math.min(
+      64,
+      Math.max(40, Math.min(camera.width, camera.height) * 0.12),
     );
+    const speed = 12;
+    const deltaX =
+      pointer.x < edge ? -speed : pointer.x > camera.width - edge ? speed : 0;
+    const deltaY =
+      pointer.y < edge ? -speed : pointer.y > camera.height - edge ? speed : 0;
+    if (deltaX === 0 && deltaY === 0) return;
+    const scroll = clampCameraScroll(
+      { x: camera.scrollX + deltaX, y: camera.scrollY + deltaY },
+      this.cameraBounds,
+      camera,
+    );
+    camera.setScroll(scroll.x, scroll.y);
   }
 
   private setSelectedStructure(instanceId: string | undefined): void {
-    this.selectedStructureId = instanceId;
     this.selectionHighlight?.destroy();
     this.selectionHighlight = undefined;
     const placement = this.projection.worldStructure?.placements.find(
       (candidate) => candidate.instanceId === instanceId,
     );
-    const area = placement && structureHitArea(placement);
-    if (!area) return;
+    const areas = placement
+      ? structureHitRegions(placement, this.projection.worldStructure)
+      : [];
+    if (areas.length === 0) return;
     const highlight = this.add.graphics().setDepth(89);
-    highlight
-      .lineStyle(3, 0xfff1b8, 0.98)
-      .strokeRect(area.x - 2, area.y - 2, area.width + 4, area.height + 4);
+    for (const area of areas)
+      highlight
+        .lineStyle(3, 0xfff1b8, 0.98)
+        .strokeRect(area.x - 2, area.y - 2, area.width + 4, area.height + 4);
     this.selectionHighlight = highlight;
   }
 
@@ -922,47 +1211,18 @@ export class SpatialWorldScene extends Phaser.Scene {
   }
 
   private renderWallPiece(piece: StructureRenderPiece): void {
-    const { asset } = piece;
-    const x = piece.anchor.x + asset.offset.xCells * CELL_SIZE;
-    const y = piece.anchor.y + asset.offset.yCells * CELL_SIZE;
-    const depth = structurePieceDepth(piece);
-    if (this.textures.exists(asset.id)) {
-      this.textures.get(asset.id).setFilter(Phaser.Textures.FilterMode.LINEAR);
-      this.wallSprites.push(
-        this.add
-          .image(x, y, asset.id)
-          .setOrigin(asset.pivot.x, asset.pivot.y)
-          .setScale(CELL_SIZE / asset.pixelsPerLogicalCell)
-          .setDepth(depth),
-      );
-      return;
-    }
-    this.renderWallFallback(piece, x, y, depth);
-  }
-
-  /** Missing/corrupt local art keeps the world usable without remote loading. */
-  private renderWallFallback(
-    piece: StructureRenderPiece,
-    x: number,
-    y: number,
-    depth: number,
-  ): void {
-    const graphics = this.add.graphics().setDepth(depth);
-    const width = piece.widthCells * CELL_SIZE;
-    const height = piece.heightCells * CELL_SIZE;
-    graphics.fillStyle(piece.kind === "door" ? 0x6b5136 : 0x45473f, 0.96);
-    if (piece.kind === "corner") {
-      const span = piece.asset.logicalLengthCells * CELL_SIZE;
-      graphics.fillRect(x, y, span, CELL_SIZE * 0.72);
-      graphics.fillRect(x, y, CELL_SIZE * 0.72, span);
-      this.wallFallbacks.push(graphics);
-      return;
-    }
-    if (piece.asset.orientation === "horizontal")
-      graphics.fillRect(x, y, width, Math.max(CELL_SIZE * 0.72, height));
-    else graphics.fillRect(x, y, Math.max(CELL_SIZE * 0.72, width), height);
-    graphics.lineStyle(1, 0xaaa07a, 0.75).strokeRect(x, y, width, height);
-    this.wallFallbacks.push(graphics);
+    const rendered = renderStructurePieceToTarget(piece, {
+      configureTexture: (textureKey) => {
+        this.textures
+          .get(textureKey)
+          .setFilter(Phaser.Textures.FilterMode.LINEAR);
+      },
+      createFallback: () => this.add.graphics(),
+      createSprite: (x, y, textureKey) => this.add.image(x, y, textureKey),
+      textureExists: (textureKey) => this.textures.exists(textureKey),
+    });
+    if (rendered.kind === "sprite") this.wallSprites.push(rendered.object);
+    else this.wallFallbacks.push(rendered.object);
   }
 
   private renderFloor(space: WorldRectangle): void {
@@ -1038,8 +1298,8 @@ export class SpatialWorldScene extends Phaser.Scene {
   }
 
   private clearWallPieces(): void {
-    for (const sprite of this.wallSprites) sprite.destroy();
-    for (const fallback of this.wallFallbacks) fallback.destroy();
+    destroyStructureRenderObjects(this.wallSprites);
+    destroyStructureRenderObjects(this.wallFallbacks);
     this.wallSprites = [];
     this.wallFallbacks = [];
   }
@@ -1081,7 +1341,6 @@ export class SpatialWorldScene extends Phaser.Scene {
   private readonly shutdown = (): void => {
     this.pan.cancel();
     this.cancelConstructionGesture();
-    this.selectedStructureId = undefined;
     this.selectionHighlight?.destroy();
     this.selectionHighlight = undefined;
     this.clearFloorTiles();

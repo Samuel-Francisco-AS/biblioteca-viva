@@ -31,6 +31,8 @@ export type StructureOperationCode =
   | "FLOOR_OCCUPIED_BY_OBJECT"
   | "FLOOR_DISCONNECTED"
   | "STRUCTURE_UNSUPPORTED"
+  | "NO_FLOOR_CHANGE"
+  | "FLOOR_NOT_CONNECTED"
   | "STALE_STATE"
   | "TECHNICAL_LIMIT"
   | "PERSISTENCE_FAILED";
@@ -44,6 +46,8 @@ const messages: Readonly<Record<StructureOperationCode, string>> = {
   FLOOR_OCCUPIED_BY_OBJECT: "Há um objeto ocupando esta célula de piso.",
   FLOOR_DISCONNECTED: "A remoção desconectaria o piso da Biblioteca.",
   STRUCTURE_UNSUPPORTED: "Uma peça estrutural ficaria sem apoio no piso.",
+  NO_FLOOR_CHANGE: "Marque pelo menos uma célula que possa ser alterada.",
+  FLOOR_NOT_CONNECTED: "O piso novo precisa tocar a área construída.",
   STALE_STATE: "A construção foi atualizada. Tente novamente.",
   TECHNICAL_LIMIT: "Este ponto está além da área atual de expansão.",
   PERSISTENCE_FAILED: "Não foi possível salvar a construção.",
@@ -95,32 +99,6 @@ function stateWith(
   return Object.freeze(next);
 }
 
-function technicalEnvelope(state: WorldStructureState): {
-  readonly maxX: number;
-  readonly maxY: number;
-  readonly minX: number;
-  readonly minY: number;
-} {
-  const xs = state.floorCells.map((cell) => cell.x);
-  const ys = state.floorCells.map((cell) => cell.y);
-  return {
-    maxX: Math.max(...xs) + 4,
-    maxY: Math.max(...ys) + 4,
-    minX: Math.min(...xs) - 4,
-    minY: Math.min(...ys) - 4,
-  };
-}
-
-function inEnvelope(point: GridPoint, state: WorldStructureState): boolean {
-  const bounds = technicalEnvelope(state);
-  return (
-    point.x >= bounds.minX &&
-    point.x <= bounds.maxX &&
-    point.y >= bounds.minY &&
-    point.y <= bounds.maxY
-  );
-}
-
 function hasFloorContact(
   placement: StructurePlacement,
   floorCells: readonly FloorCell[],
@@ -135,12 +113,11 @@ function hasFloorContact(
   );
 }
 
-function placementAllowed(
+export function structurePlacementIssue(
   state: WorldStructureState,
   placement: StructurePlacement,
   exceptInstanceId?: string,
 ): StructureOperationCode | undefined {
-  if (!inEnvelope(placement.anchor, state)) return "TECHNICAL_LIMIT";
   const existing = new Set<string>();
   for (const candidate of state.placements) {
     if (candidate.instanceId === exceptInstanceId) continue;
@@ -213,6 +190,76 @@ function floorAllowedToRemove(
   )
     return "STRUCTURE_UNSUPPORTED";
   return undefined;
+}
+
+export interface FloorEditEvaluation {
+  readonly cells: readonly FloorCell[];
+  readonly issue?: StructureOperationCode;
+  readonly valid: boolean;
+}
+
+/** Shared authority for the preview color, primary action and persisted edit. */
+export function evaluateFloorEdit(
+  state: WorldStructureState,
+  input: readonly FloorCell[],
+  mode: "paint-floor" | "remove-floor",
+  availableFloor: number,
+  objects: readonly PlacedObject[] = [],
+): FloorEditEvaluation {
+  const existing = new Set(state.floorCells.map(floorCellKey));
+  const seen = new Set<string>();
+  const candidates: FloorCell[] = [];
+  for (const cell of input) {
+    const key = floorCellKey(cell);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    if (mode === "paint-floor" ? !existing.has(key) : existing.has(key))
+      candidates.push(cell);
+  }
+  if (candidates.length === 0)
+    return { cells: Object.freeze([]), issue: "NO_FLOOR_CHANGE", valid: false };
+
+  if (mode === "paint-floor") {
+    if (candidates.length > availableFloor)
+      return {
+        cells: Object.freeze(candidates),
+        issue: "NO_AVAILABILITY",
+        valid: false,
+      };
+    const connected = new Set(existing);
+    for (const cell of candidates) {
+      const touchesFloor = [
+        `${cell.x + 1}:${cell.y}`,
+        `${cell.x - 1}:${cell.y}`,
+        `${cell.x}:${cell.y + 1}`,
+        `${cell.x}:${cell.y - 1}`,
+      ].some((key) => connected.has(key));
+      if (!touchesFloor)
+        return {
+          cells: Object.freeze(candidates),
+          issue: "FLOOR_NOT_CONNECTED",
+          valid: false,
+        };
+      connected.add(floorCellKey(cell));
+    }
+    return { cells: Object.freeze(candidates), valid: true };
+  }
+
+  let floorCells = state.floorCells;
+  for (const cell of candidates) {
+    const working = { ...state, floorCells };
+    const issue = floorAllowedToRemove(working, cell, objects);
+    if (issue)
+      return { cells: Object.freeze(candidates), issue, valid: false };
+    floorCells = floorCells.filter(
+      (item) => floorCellKey(item) !== floorCellKey(cell),
+    );
+  }
+  return { cells: Object.freeze(candidates), valid: true };
+}
+
+export function structureOperationMessage(code: StructureOperationCode): string {
+  return messages[code];
 }
 
 async function load(
@@ -290,7 +337,7 @@ export class PlaceStructure {
       definitionId: parsed.definitionId,
       instanceId: await this.deps.ids.generate(),
     };
-    const violation = placementAllowed(state, placement);
+    const violation = structurePlacementIssue(state, placement);
     if (violation) throw editError(violation);
     return commit(
       this.deps,
@@ -334,7 +381,7 @@ export class MoveStructure {
     );
     if (!previous) throw editError("INVALID_COORDINATE");
     const next = { ...previous, anchor: parsed.anchor };
-    const violation = placementAllowed(state, next, previous.instanceId);
+    const violation = structurePlacementIssue(state, next, previous.instanceId);
     if (violation) throw editError(violation);
     return commit(
       this.deps,
@@ -377,7 +424,7 @@ export class RotateStructure {
       previous && rotatedStructureDefinitionId(previous.definitionId);
     if (!previous || !definitionId) throw editError("ORIENTATION_UNAVAILABLE");
     const next = { ...previous, definitionId };
-    const violation = placementAllowed(state, next, previous.instanceId);
+    const violation = structurePlacementIssue(state, next, previous.instanceId);
     if (violation) throw editError(violation);
     return commit(
       this.deps,
@@ -453,49 +500,25 @@ export class AddFloorCells {
     const state = await load(this.deps);
     if (state.revision !== parsed.expectedRevision)
       throw editError("STALE_STATE");
-    let working = state;
-    let placed = 0;
-    const seen = new Set<string>();
-    for (const cell of parsed.cells) {
-      const key = floorCellKey(cell);
-      if (seen.has(key)) continue;
-      seen.add(key);
-      if (
-        !inEnvelope(cell, working) ||
-        working.floorCells.some((item) => floorCellKey(item) === key)
-      )
-        continue;
-      if (
-        (await inventoryFor(working, this.deps.milestones)).available[
-          "structure-family.floor.wood"
-        ] < 1
-      )
-        continue;
-      if (
-        !working.floorCells.some(
-          (item) => Math.abs(item.x - cell.x) + Math.abs(item.y - cell.y) === 1,
-        )
-      )
-        continue;
-      working = stateWith(
-        working,
-        {
-          floorCells: [...working.floorCells, cell],
-          placements: working.placements,
-        },
-        working.updatedAt,
-      );
-      placed += 1;
-    }
-    if (placed === 0) return { ignored: parsed.cells.length, placed: 0, state };
+    const inventory = await inventoryFor(state, this.deps.milestones);
+    const evaluation = evaluateFloorEdit(
+      state,
+      parsed.cells,
+      "paint-floor",
+      inventory.available["structure-family.floor.wood"],
+    );
+    if (!evaluation.valid) throw editError(evaluation.issue ?? "NO_FLOOR_CHANGE");
     const next = stateWith(
       state,
-      { floorCells: working.floorCells, placements: state.placements },
+      {
+        floorCells: [...state.floorCells, ...evaluation.cells],
+        placements: state.placements,
+      },
       await this.deps.clock.now(),
     );
     return {
-      ignored: parsed.cells.length - placed,
-      placed,
+      ignored: parsed.cells.length - evaluation.cells.length,
+      placed: evaluation.cells.length,
       state: await commit(this.deps, next, state.revision),
     };
   }
@@ -525,38 +548,28 @@ export class RemoveFloorCells {
     ]);
     if (state.revision !== parsed.expectedRevision)
       throw editError("STALE_STATE");
-    let working = state;
-    let removed = 0;
-    const seen = new Set<string>();
-    for (const cell of parsed.cells) {
-      const key = floorCellKey(cell);
-      if (seen.has(key)) continue;
-      seen.add(key);
-      if (!working.floorCells.some((item) => floorCellKey(item) === key))
-        continue;
-      if (floorAllowedToRemove(working, cell, objects)) continue;
-      working = stateWith(
-        working,
-        {
-          floorCells: working.floorCells.filter(
-            (item) => floorCellKey(item) !== key,
-          ),
-          placements: working.placements,
-        },
-        working.updatedAt,
-      );
-      removed += 1;
-    }
-    if (removed === 0)
-      return { ignored: parsed.cells.length, removed: 0, state };
+    const evaluation = evaluateFloorEdit(
+      state,
+      parsed.cells,
+      "remove-floor",
+      Number.POSITIVE_INFINITY,
+      objects,
+    );
+    if (!evaluation.valid) throw editError(evaluation.issue ?? "NO_FLOOR_CHANGE");
+    const removedKeys = new Set(evaluation.cells.map(floorCellKey));
     const next = stateWith(
       state,
-      { floorCells: working.floorCells, placements: state.placements },
+      {
+        floorCells: state.floorCells.filter(
+          (cell) => !removedKeys.has(floorCellKey(cell)),
+        ),
+        placements: state.placements,
+      },
       await this.deps.clock.now(),
     );
     return {
-      ignored: parsed.cells.length - removed,
-      removed,
+      ignored: parsed.cells.length - evaluation.cells.length,
+      removed: evaluation.cells.length,
       state: await commit(this.deps, next, state.revision),
     };
   }

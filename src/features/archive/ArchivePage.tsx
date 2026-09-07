@@ -69,6 +69,8 @@ export function ArchivePage({
   const [params, setParams] = useSearchParams();
   const location = useLocation();
   const searchRef = useRef<HTMLInputElement>(null);
+  const filtersToggleRef = useRef<HTMLButtonElement>(null);
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
   const query = params.get("q") ?? "";
   const kind = params.get("kind") ?? "all";
   const entryType = params.get("entryType") ?? "all";
@@ -140,9 +142,39 @@ export function ArchivePage({
   );
 
   function clearSearch() {
-    setParams({}, { replace: true });
+    setParams(
+      (current) => {
+        const next = new URLSearchParams(current);
+        next.delete("q");
+        return next;
+      },
+      { replace: true },
+    );
     requestAnimationFrame(() => searchRef.current?.focus());
   }
+
+  useEffect(() => {
+    if (!filtersExpanded) return;
+    const closeFilters = () => {
+      setFiltersExpanded(false);
+      requestAnimationFrame(() => filtersToggleRef.current?.focus());
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      closeFilters();
+    };
+    const onNativeBack = (event: Event) => {
+      event.preventDefault();
+      closeFilters();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("biblioteca-viva:native-back", onNativeBack);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("biblioteca-viva:native-back", onNativeBack);
+    };
+  }, [filtersExpanded]);
 
   if (!application)
     return (
@@ -165,6 +197,12 @@ export function ArchivePage({
   const visibleTotal = visibleNotes.length + visibleQuotes.length;
   const returnPath = `${location.pathname}${location.search}`;
   const detailSearch = `?from=${encodeURIComponent(returnPath)}`;
+  const activeFilterCount = [
+    kind !== "all",
+    entryType !== "all",
+    favoritesOnly,
+    tagId !== "all",
+  ].filter(Boolean).length;
 
   return (
     <section aria-labelledby="archive-title">
@@ -173,9 +211,36 @@ export function ArchivePage({
           <p className="eyebrow">Suas leituras registradas</p>
           <h2 id="archive-title">Arquivo de anotações</h2>
         </div>
+        <button
+          aria-controls="archive-filter-controls"
+          aria-expanded={filtersExpanded}
+          className="button button--primary"
+          onClick={() => {
+            const next = !filtersExpanded;
+            setFiltersExpanded(next);
+            if (next)
+              requestAnimationFrame(() => {
+                document
+                  .querySelector<HTMLElement>(
+                    "#archive-filter-controls select",
+                  )
+                  ?.focus();
+              });
+          }}
+          ref={filtersToggleRef}
+          type="button"
+        >
+          Filtros{activeFilterCount > 0 ? ` · ${activeFilterCount}` : ""}
+        </button>
       </div>
-      <fieldset className="collection-controls">
-        <legend>Filtros do Arquivo</legend>
+      <div
+        aria-hidden={!filtersExpanded}
+        className="collapsible-controls"
+        data-expanded={filtersExpanded}
+        id="archive-filter-controls"
+      >
+        <fieldset className="collection-controls" inert={!filtersExpanded}>
+          <legend>Filtros do Arquivo</legend>
         <label className="form-field">
           Anotação
           <select
@@ -263,7 +328,8 @@ export function ArchivePage({
           />{" "}
           Somente favoritas
         </label>
-      </fieldset>
+        </fieldset>
+      </div>
       <div className="form-field archive-search">
         <label htmlFor="archive-search">Buscar no Arquivo</label>
         <p className="field-help" id="archive-search-help">
@@ -278,7 +344,15 @@ export function ArchivePage({
           aria-describedby="archive-search-help"
           onChange={(event) => {
             const value = event.target.value;
-            setParams(value === "" ? {} : { q: value }, { replace: true });
+            setParams(
+              (current) => {
+                const next = new URLSearchParams(current);
+                if (value === "") next.delete("q");
+                else next.set("q", value);
+                return next;
+              },
+              { replace: true },
+            );
           }}
         />
       </div>

@@ -1,8 +1,13 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Link,
   Navigate,
-  NavLink,
   Route,
   Routes,
   useLocation,
@@ -10,9 +15,11 @@ import {
   useParams,
 } from "react-router-dom";
 
-import { appRoutes } from "./routes";
+import { APP_ROUTE_PATHS, appRoutes, primaryAppRoutes } from "./routes";
 import { useAndroidBackButton } from "./useAndroidBackButton";
+import { AppHeader } from "./app/AppHeader";
 import { DevelopmentDiagnostics } from "./app/DevelopmentDiagnostics";
+import { PrimaryDock } from "./app/PrimaryDock";
 import type { ApplicationDiagnostics } from "./app/createApplication";
 import type { ApplicationRuntime } from "./app/createApplication";
 import { isDiagnosticsEnabled } from "./app/diagnosticsAvailability";
@@ -34,6 +41,7 @@ import { LibraryPage } from "./pages";
 import { useExperiencePreferences } from "./useExperiencePreferences";
 import { ActiveSessionIndicator } from "./features/sessions/ActiveSessionIndicator";
 import { StatisticsPage } from "./features/statistics/StatisticsPage";
+import { measureStartupPhase } from "./startupPerformance";
 
 function NotFoundPage() {
   return (
@@ -62,6 +70,7 @@ function LegacyEntryRedirect({ edit = false }: { readonly edit?: boolean }) {
 interface AppProps {
   readonly application?: ApplicationRuntime;
   readonly diagnostics?: ApplicationDiagnostics;
+  readonly shellStartedAt?: number;
 }
 
 const diagnosticsBuildEnabled =
@@ -87,15 +96,12 @@ function structuralFamilyName(id: StructuralInventoryFamilyId): string {
   }
 }
 
-export function App({ application, diagnostics }: AppProps) {
+export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const mainRef = useRef<HTMLElement>(null);
   const previousPathRef = useRef(location.pathname);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const drawerRef = useRef<HTMLElement>(null);
-  const restoreMenuFocusRef = useRef(false);
-  const [navigationOpen, setNavigationOpen] = useState(false);
+  const [libraryConstructionMode, setLibraryConstructionMode] = useState(false);
   const [milestoneReaction, setMilestoneReaction] = useState<{
     readonly dialogue?: string;
     readonly dialogueUnavailable?: boolean;
@@ -118,16 +124,31 @@ export function App({ application, diagnostics }: AppProps) {
     (route) => route.path === location.pathname,
   );
   const sectionTitle =
-    activeRoute?.title ??
-    (location.pathname.endsWith("/editar")
-      ? "Editar registro"
-      : location.pathname.startsWith("/registros/")
-        ? "Detalhes do registro"
-        : "Página não encontrada");
+    libraryConstructionMode && location.pathname === APP_ROUTE_PATHS.library
+      ? "Construção"
+      : (activeRoute?.title ??
+        (location.pathname.endsWith("/editar")
+          ? "Editar registro"
+          : location.pathname.startsWith("/registros/")
+            ? "Detalhes do registro"
+            : "Página não encontrada"));
+  const primaryTopLevel = primaryAppRoutes.some(
+    (route) => route.path === location.pathname,
+  );
+  const headerBackTo =
+    location.pathname === APP_ROUTE_PATHS.newEntry ||
+    location.pathname.startsWith("/registros/")
+      ? APP_ROUTE_PATHS.collection
+      : undefined;
 
   useAndroidBackButton();
   useAudioExperience(application?.audio);
   const effectiveExperience = useExperiencePreferences(application?.experience);
+
+  useLayoutEffect(() => {
+    if (shellStartedAt === undefined) return;
+    measureStartupPhase("react-shell", shellStartedAt);
+  }, [shellStartedAt]);
 
   useEffect(() => {
     if (previousPathRef.current !== location.pathname) {
@@ -136,51 +157,9 @@ export function App({ application, diagnostics }: AppProps) {
     }
   }, [location.pathname]);
 
-  useEffect(() => {
-    if (!navigationOpen) {
-      if (restoreMenuFocusRef.current) {
-        restoreMenuFocusRef.current = false;
-        menuButtonRef.current?.focus();
-      }
-      return;
-    }
-    const firstLink = drawerRef.current?.querySelector<HTMLAnchorElement>("a");
-    firstLink?.focus();
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [navigationOpen]);
-
-  function closeNavigation({ restoreFocus = true } = {}) {
-    restoreMenuFocusRef.current = restoreFocus;
-    setNavigationOpen(false);
-  }
-
-  function handleDrawerKeyDown(event: KeyboardEvent<HTMLElement>) {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      closeNavigation();
-      return;
-    }
-    if (event.key !== "Tab") return;
-    const focusable = Array.from(
-      drawerRef.current?.querySelectorAll<HTMLElement>(
-        'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
-      ) ?? [],
-    );
-    if (focusable.length === 0) return;
-    const first = focusable[0];
-    const last = focusable.at(-1);
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last?.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first?.focus();
-    }
-  }
+  const handleConstructionModeChange = useCallback((active: boolean) => {
+    setLibraryConstructionMode(active);
+  }, []);
 
   useEffect(() => {
     if (!application) return;
@@ -287,6 +266,7 @@ export function App({ application, diagnostics }: AppProps) {
   return (
     <div
       className="app-shell"
+      data-construction-mode={libraryConstructionMode}
       data-high-contrast={effectiveExperience.highContrast}
       data-reduced-motion={effectiveExperience.reducedMotion}
       data-text-size={effectiveExperience.textSize}
@@ -295,81 +275,16 @@ export function App({ application, diagnostics }: AppProps) {
         Ir para o conteúdo principal
       </a>
 
-      <header
-        className={`top-bar${location.pathname === "/" ? " top-bar--library" : ""}`}
-      >
-        <button
-          aria-controls="primary-navigation"
-          aria-expanded={navigationOpen}
-          aria-label="Abrir menu principal"
-          className="menu-button"
-          onClick={() => setNavigationOpen(true)}
-          ref={menuButtonRef}
-          type="button"
-        >
-          <span aria-hidden="true" className="menu-button__icon" />
-        </button>
-        <div>
-          <p className="top-bar__brand">Biblioteca Viva</p>
-          <h1>{sectionTitle}</h1>
-        </div>
-      </header>
-      <ActiveSessionIndicator application={application} />
-
-      {navigationOpen && (
-        <div className="navigation-layer">
-          <button
-            aria-label="Fechar menu principal"
-            className="navigation-backdrop"
-            onClick={() => closeNavigation()}
-            tabIndex={-1}
-            type="button"
-          />
-          <aside
-            aria-label="Menu principal"
-            aria-modal="true"
-            className="primary-navigation"
-            id="primary-navigation"
-            onKeyDown={handleDrawerKeyDown}
-            ref={drawerRef}
-            role="dialog"
-          >
-            <div className="primary-navigation__heading">
-              <div>
-                <p className="eyebrow">Biblioteca Viva</p>
-                <h2>Explorar</h2>
-              </div>
-              <button
-                aria-label="Fechar menu principal"
-                className="drawer-close"
-                onClick={() => closeNavigation()}
-                type="button"
-              >
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
-            <nav aria-label="Navegação principal">
-              <ul>
-                {appRoutes.map((route) => (
-                  <li key={route.path}>
-                    <NavLink
-                      aria-label={route.title}
-                      className={({ isActive }) =>
-                        `primary-navigation__link${isActive ? " primary-navigation__link--active" : ""}`
-                      }
-                      end={route.path === "/"}
-                      onClick={() => closeNavigation({ restoreFocus: false })}
-                      to={route.path}
-                    >
-                      <strong>{route.navigationLabel}</strong>
-                      <span>{route.description}</span>
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </aside>
-        </div>
+      <AppHeader
+        backTo={headerBackTo}
+        brandOnly={
+          primaryTopLevel && location.pathname !== APP_ROUTE_PATHS.library
+        }
+        immersive={location.pathname === APP_ROUTE_PATHS.library}
+        title={sectionTitle}
+      />
+      {!libraryConstructionMode && (
+        <ActiveSessionIndicator application={application} />
       )}
 
       <main
@@ -446,10 +361,11 @@ export function App({ application, diagnostics }: AppProps) {
         )}
         <Routes>
           <Route
-            path="/"
+            path={APP_ROUTE_PATHS.library}
             element={
               <LibraryPage
                 application={application}
+                onConstructionModeChange={handleConstructionModeChange}
                 onDecorationUnlockPresented={(eventId) => {
                   setPendingDecorationUnlock((pending) =>
                     pending?.eventId === eventId ? null : pending,
@@ -472,19 +388,19 @@ export function App({ application, diagnostics }: AppProps) {
             }
           />
           <Route
-            path="/colecao"
+            path={APP_ROUTE_PATHS.collection}
             element={<CollectionPage application={application} />}
           />
           <Route
-            path="/arquivo"
+            path={APP_ROUTE_PATHS.archive}
             element={<ArchivePage application={application} />}
           />
           <Route
-            path="/estatisticas"
+            path={APP_ROUTE_PATHS.statistics}
             element={<StatisticsPage application={application} />}
           />
           <Route
-            path="/configuracoes"
+            path={APP_ROUTE_PATHS.settings}
             element={
               <SettingsPage
                 application={application}
@@ -493,26 +409,29 @@ export function App({ application, diagnostics }: AppProps) {
             }
           />
           <Route
-            path="/novo-registro"
+            path={APP_ROUTE_PATHS.newEntry}
             element={<NewEntryPage application={application} />}
           />
           <Route
-            path="/registros/:id/editar"
+            path={APP_ROUTE_PATHS.entryEdit}
             element={<EditEntryPage application={application} />}
           />
           <Route
-            path="/registros/:id"
+            path={APP_ROUTE_PATHS.entryDetail}
             element={<EntryDetailPage application={application} />}
           />
           <Route
-            path="/novo-livro"
-            element={<Navigate replace to="/novo-registro" />}
+            path={APP_ROUTE_PATHS.legacyNewBook}
+            element={<Navigate replace to={APP_ROUTE_PATHS.newEntry} />}
           />
           <Route
-            path="/livros/:id/editar"
+            path={APP_ROUTE_PATHS.legacyBookEdit}
             element={<LegacyEntryRedirect edit />}
           />
-          <Route path="/livros/:id" element={<LegacyEntryRedirect />} />
+          <Route
+            path={APP_ROUTE_PATHS.legacyBookDetail}
+            element={<LegacyEntryRedirect />}
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         {diagnosticsBuildEnabled &&
@@ -523,6 +442,7 @@ export function App({ application, diagnostics }: AppProps) {
           location.pathname === "/configuracoes" &&
           diagnostics && <DevelopmentDiagnostics diagnostics={diagnostics} />}
       </main>
+      {!libraryConstructionMode && <PrimaryDock pathname={location.pathname} />}
     </div>
   );
 }

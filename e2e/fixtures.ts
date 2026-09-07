@@ -44,20 +44,19 @@ async function createBook(page: Page, fixture: BookFixture): Promise<void> {
   ).toBeVisible();
 }
 
-async function navigateFromMenu(page: Page, name: string): Promise<void> {
-  await page.getByRole("button", { name: "Abrir menu principal" }).click();
+async function navigateFromDock(page: Page, name: string): Promise<void> {
   await page.getByRole("link", { name, exact: true }).click();
 }
 
 export const test = base.extend<{
   createBook: (fixture: BookFixture) => Promise<void>;
-  navigateFromMenu: (name: string) => Promise<void>;
+  navigateFromDock: (name: string) => Promise<void>;
 }>({
   createBook: async ({ page }, use) => {
     await use((fixture) => createBook(page, fixture));
   },
-  navigateFromMenu: async ({ page }, use) => {
-    await use((name) => navigateFromMenu(page, name));
+  navigateFromDock: async ({ page }, use) => {
+    await use((name) => navigateFromDock(page, name));
   },
   page: async ({ page }, use) => {
     await resetIndexedDb(page);

@@ -2,7 +2,7 @@ import { expect, test } from "./fixtures";
 
 test("ciclo principal persiste livro, anotações, conclusão e marco", async ({
   createBook,
-  navigateFromMenu,
+  navigateFromDock,
   page,
 }) => {
   await createBook({
@@ -74,7 +74,7 @@ test("ciclo principal persiste livro, anotações, conclusão e marco", async ({
     page.getByText(/luminária de leitura foi desbloqueada/u),
   ).toBeVisible();
 
-  await navigateFromMenu("Biblioteca");
+  await navigateFromDock("Biblioteca");
   await page.getByText("Resumo acessível").click();
   await expect(
     page.getByText("Concluídos agora").locator("..").getByText("1"),
@@ -89,7 +89,7 @@ test("ciclo principal persiste livro, anotações, conclusão e marco", async ({
   await expect(
     page.getByText(/a luminária de leitura permanece na sala/u),
   ).toBeVisible();
-  await navigateFromMenu("Coleção");
+  await navigateFromDock("Coleção");
   await expect(
     page.getByRole("heading", { name: "A Casa das Palavras" }),
   ).toBeVisible();

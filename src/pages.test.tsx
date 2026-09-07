@@ -268,6 +268,44 @@ describe("Página Biblioteca", () => {
     });
   });
 
+  it("mantém o mesmo host ao ocultar o shell global durante Construção", async () => {
+    const user = userEvent.setup();
+    const onConstructionModeChange = vi.fn();
+    render(
+      <MemoryRouter>
+        <LibraryPage
+          application={constructionApplication()}
+          onConstructionModeChange={onConstructionModeChange}
+        />
+      </MemoryRouter>,
+    );
+    const host = await screen.findByRole("img", {
+      name: "Visualização da Biblioteca",
+    });
+    expect(screen.getByText(/Biblioteca Principal ·/u)).toBeVisible();
+
+    await enterConstruction(user);
+
+    expect(onConstructionModeChange).toHaveBeenLastCalledWith(true);
+    expect(
+      screen.getByRole("img", { name: "Visualização da Biblioteca" }),
+    ).toBe(host);
+    expect(
+      screen.queryByText(/Biblioteca Principal ·/u),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Abrir resumo da Biblioteca" }),
+    ).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Sair" }));
+
+    expect(onConstructionModeChange).toHaveBeenLastCalledWith(false);
+    expect(
+      screen.getByRole("img", { name: "Visualização da Biblioteca" }),
+    ).toBe(host);
+    expect(screen.getByText(/Biblioteca Principal ·/u)).toBeVisible();
+  });
+
   it("recebe feedback estrutural efêmero e abre o inventário somente por ação explícita", async () => {
     const application = constructionApplication();
     render(

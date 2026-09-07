@@ -134,6 +134,7 @@ import {
   PlatformAnnotationShare,
 } from "../infrastructure";
 import packageMetadata from "../../package.json";
+import { measureStartupPhase, startupNow } from "../startupPerformance";
 
 export interface ApplicationDiagnostics {
   inspect(): Promise<DatabaseDiagnostics>;
@@ -258,6 +259,7 @@ function unsafeContextError(): BackupError {
 export async function createApplication(
   options: CreateApplicationOptions = {},
 ): Promise<ApplicationRuntime> {
+  const dexieBootstrapStartedAt = startupNow();
   const platformCapabilities =
     options.platformCapabilities ?? new BrowserPlatformCapabilities();
   const platform = platformCapabilities.inspect();
@@ -321,6 +323,7 @@ export async function createApplication(
     options.experienceReporter ?? consoleExperienceErrorReporter,
   );
   await experience.loadPreferences();
+  measureStartupPhase("dexie-bootstrap", dexieBootstrapStartedAt);
   events.subscribe("MilestoneReached", (event) => {
     if (event.type !== "MilestoneReached") return;
     if (event.payload.milestoneId === MILESTONE_ID.firstCompletedBook)

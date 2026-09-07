@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const port = 4_173;
+const b2DevelopmentPort = 4_174;
+const reuseExistingServer = !process.env.CI;
 
 export default defineConfig({
   expect: { timeout: 10_000 },
@@ -23,10 +25,18 @@ export default defineConfig({
     baseURL: `http://127.0.0.1:${port}`,
     trace: "retain-on-failure",
   },
-  webServer: {
-    command: `npm run preview -- --host 127.0.0.1 --port ${port}`,
-    port,
-    reuseExistingServer: !process.env.CI,
-    timeout: 30_000,
-  },
+  webServer: [
+    {
+      command: `npm run preview -- --host 127.0.0.1 --port ${port}`,
+      port,
+      reuseExistingServer,
+      timeout: 30_000,
+    },
+    {
+      command: `npm run dev -- --host 127.0.0.1 --port ${b2DevelopmentPort}`,
+      port: b2DevelopmentPort,
+      reuseExistingServer,
+      timeout: 30_000,
+    },
+  ],
 });

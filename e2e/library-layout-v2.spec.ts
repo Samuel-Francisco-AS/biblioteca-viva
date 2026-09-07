@@ -8,9 +8,9 @@ function horizontalOverflow(page: Page): Promise<number> {
   );
 }
 
-test("Biblioteca mobile preserva um canvas entre resumo, drawer, Coleção e estante", async ({
+test("Biblioteca mobile preserva o canvas entre resumo, dock, Coleção e estante", async ({
   createBook,
-  navigateFromMenu,
+  navigateFromDock,
   page,
 }) => {
   test.setTimeout(45_000);
@@ -22,7 +22,7 @@ test("Biblioteca mobile preserva um canvas entre resumo, drawer, Coleção e est
     title: "Sala em Teste",
     totalPages: 100,
   });
-  await navigateFromMenu("Biblioteca");
+  await navigateFromDock("Biblioteca");
 
   const canvas = page.locator(".library-visual-host canvas");
   await expect(canvas).toHaveCount(1);
@@ -36,21 +36,13 @@ test("Biblioteca mobile preserva um canvas entre resumo, drawer, Coleção e est
     .getByRole("button", { name: "Fechar resumo da Biblioteca" })
     .click();
 
-  await page.getByRole("button", { name: "Abrir menu principal" }).click();
-  await expect(
-    page.getByRole("dialog", { name: "Menu principal" }),
-  ).toBeVisible();
-  await page.locator(".navigation-backdrop").click({
-    position: { x: 350, y: 100 },
+  const collectionDestination = page.getByRole("link", {
+    name: "Coleção",
+    exact: true,
   });
-  await expect(
-    page.getByRole("dialog", { name: "Menu principal" }),
-  ).not.toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Resumo da estante" }),
-  ).not.toBeVisible();
-  await page.getByRole("button", { name: "Abrir menu principal" }).click();
-  await page.getByRole("link", { name: "Coleção", exact: true }).click();
+  await collectionDestination.focus();
+  await expect(collectionDestination).toBeFocused();
+  await page.keyboard.press("Enter");
   const bookSurface = page.getByRole("link", {
     name: "Abrir detalhes de Sala em Teste",
   });
@@ -64,7 +56,7 @@ test("Biblioteca mobile preserva um canvas entre resumo, drawer, Coleção e est
   ).toBeVisible();
 
   await page.getByRole("link", { name: "Voltar à Coleção" }).click();
-  await navigateFromMenu("Biblioteca");
+  await navigateFromDock("Biblioteca");
   await expect(canvas).toHaveCount(1);
   await canvas.click({ force: true, position: { x: 250, y: 300 } });
   if (
