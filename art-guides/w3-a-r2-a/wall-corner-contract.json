@@ -1,0 +1,252 @@
+{
+  "contractVersion": 2,
+  "coordinateSystem": {
+    "origin": "top-left pixel edge of the PNG canvas",
+    "xDirection": "right",
+    "yDirection": "down",
+    "rectangles": "half-open: x <= pixel < x + width and y <= pixel < y + height",
+    "joinPlanes": "pixel-edge coordinates; alpha reaches a plane when its last occupied pixel is immediately before that edge"
+  },
+  "format": {
+    "container": "PNG",
+    "colorSpace": "sRGB",
+    "bitDepth": 8,
+    "alpha": "straight RGBA with fully transparent forbidden area"
+  },
+  "pixelsPerLogicalCell": 300,
+  "cornerCanvas": { "width": 1248, "height": 1248 },
+  "outerPaddingPx": 24,
+  "tolerancePx": {
+    "canvas": 0,
+    "longitudinalExtent": 0,
+    "joinPlane": 0,
+    "alphaOutsideAllowedArea": 0,
+    "transverseProfileEdge": 1
+  },
+  "referenceProfiles": {
+    "horizontal": {
+      "asset": "wall-horizontal.png",
+      "compatibilityClass": "stone-01-horizontal-corridor",
+      "canvasCrossSize": 477,
+      "alphaStart": 24,
+      "alphaEndExclusive": 453,
+      "alphaThickness": 429,
+      "semantics": {
+        "kind": "continuous-structural-connection-profile",
+        "alphaOutsideProfile": "visual-envelope-only",
+        "visualEnvelopeContributesTo": [
+          "sprite",
+          "bounds",
+          "occupied-regions",
+          "interaction",
+          "fallback",
+          "depth"
+        ],
+        "endpointSupportCheck": "each-profile-row-has-alpha-in-outer-padding-band",
+        "endpointSupportTolerance": "tolerancePx.transverseProfileEdge"
+      }
+    },
+    "vertical": {
+      "asset": "wall-vertical.png",
+      "canvasCrossSize": 284,
+      "alphaStart": 24,
+      "alphaEndExclusive": 260,
+      "alphaThickness": 236
+    }
+  },
+  "orientations": [
+    {
+      "id": "ne",
+      "horizontalDirection": "west",
+      "verticalDirection": "north",
+      "logicalVertex": { "x": 1224, "y": 1224 },
+      "visualOrigin": { "x": 0, "y": 0 },
+      "horizontalReferenceOrigin": { "x": 0, "y": 771 },
+      "verticalReferenceOrigin": { "x": 964, "y": 0 },
+      "horizontalConnectionProfileClass": "stone-01-horizontal-corridor",
+      "externalJoinPlanes": [
+        { "arm": "horizontal", "side": "west", "axis": "x", "coordinate": 24 },
+        { "arm": "vertical", "side": "north", "axis": "y", "coordinate": 24 }
+      ],
+      "allowedAlphaRectangles": [
+        { "x": 24, "y": 795, "width": 1200, "height": 429 },
+        { "x": 988, "y": 24, "width": 236, "height": 1200 }
+      ]
+    },
+    {
+      "id": "nw",
+      "horizontalDirection": "east",
+      "verticalDirection": "north",
+      "logicalVertex": { "x": 24, "y": 1224 },
+      "visualOrigin": { "x": 0, "y": 0 },
+      "horizontalReferenceOrigin": { "x": 0, "y": 771 },
+      "verticalReferenceOrigin": { "x": 0, "y": 0 },
+      "horizontalConnectionProfileClass": "stone-01-horizontal-corridor",
+      "externalJoinPlanes": [
+        { "arm": "horizontal", "side": "east", "axis": "x", "coordinate": 1224 },
+        { "arm": "vertical", "side": "north", "axis": "y", "coordinate": 24 }
+      ],
+      "allowedAlphaRectangles": [
+        { "x": 24, "y": 795, "width": 1200, "height": 429 },
+        { "x": 24, "y": 24, "width": 236, "height": 1200 }
+      ]
+    },
+    {
+      "id": "se",
+      "horizontalDirection": "west",
+      "verticalDirection": "south",
+      "logicalVertex": { "x": 1224, "y": 24 },
+      "visualOrigin": { "x": 0, "y": 0 },
+      "horizontalReferenceOrigin": { "x": 0, "y": 0 },
+      "verticalReferenceOrigin": { "x": 964, "y": 0 },
+      "horizontalConnectionProfileClass": "stone-01-horizontal-corridor",
+      "externalJoinPlanes": [
+        { "arm": "horizontal", "side": "west", "axis": "x", "coordinate": 24 },
+        { "arm": "vertical", "side": "south", "axis": "y", "coordinate": 1224 }
+      ],
+      "allowedAlphaRectangles": [
+        { "x": 24, "y": 24, "width": 1200, "height": 429 },
+        { "x": 988, "y": 24, "width": 236, "height": 1200 }
+      ]
+    },
+    {
+      "id": "sw",
+      "horizontalDirection": "east",
+      "verticalDirection": "south",
+      "logicalVertex": { "x": 24, "y": 24 },
+      "visualOrigin": { "x": 0, "y": 0 },
+      "horizontalReferenceOrigin": { "x": 0, "y": 0 },
+      "verticalReferenceOrigin": { "x": 0, "y": 0 },
+      "horizontalConnectionProfileClass": "stone-01-horizontal-corridor",
+      "externalJoinPlanes": [
+        { "arm": "horizontal", "side": "east", "axis": "x", "coordinate": 1224 },
+        { "arm": "vertical", "side": "south", "axis": "y", "coordinate": 1224 }
+      ],
+      "allowedAlphaRectangles": [
+        { "x": 24, "y": 24, "width": 1200, "height": 429 },
+        { "x": 24, "y": 24, "width": 236, "height": 1200 }
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "name": "wall-corner-ne.png",
+      "role": "legacy-corner",
+      "axis": "horizontal+vertical",
+      "logicalSpan": "4+4",
+      "joinPlanes": ["x=24 west", "y=24 north"],
+      "baseline": { "canvas": "1248x1182", "alphaBounds": "1200x1134+24+24" },
+      "production": { "canvas": "1248x1248", "alphaBounds": "1200x1200+24+24" }
+    },
+    {
+      "name": "wall-corner-nw.png",
+      "role": "legacy-corner",
+      "axis": "horizontal+vertical",
+      "logicalSpan": "4+4",
+      "joinPlanes": ["x=1224 east", "y=24 north"],
+      "baseline": { "canvas": "1218x1248", "alphaBounds": "1170x1200+24+24" },
+      "production": { "canvas": "1248x1248", "alphaBounds": "1200x1200+24+24" }
+    },
+    {
+      "name": "wall-corner-se.png",
+      "role": "legacy-corner",
+      "axis": "horizontal+vertical",
+      "logicalSpan": "4+4",
+      "joinPlanes": ["x=24 west", "y=1224 south"],
+      "baseline": { "canvas": "1248x1170", "alphaBounds": "1200x1122+24+24" },
+      "production": { "canvas": "1248x1248", "alphaBounds": "1200x1200+24+24" }
+    },
+    {
+      "name": "wall-corner-sw.png",
+      "role": "legacy-corner",
+      "axis": "horizontal+vertical",
+      "logicalSpan": "4+4",
+      "joinPlanes": ["x=1224 east", "y=1224 south"],
+      "baseline": { "canvas": "1248x1157", "alphaBounds": "1200x1109+24+24" },
+      "production": { "canvas": "1248x1248", "alphaBounds": "1200x1200+24+24" }
+    },
+    {
+      "name": "wall-door-horizontal-closed.png",
+      "role": "door-measure-only",
+      "axis": "horizontal",
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "logicalSpan": "4",
+      "joinPlanes": ["x=24 west", "x=1224 east"],
+      "baseline": { "canvas": "1248x612", "alphaBounds": "1200x564+24+24" },
+      "visualOverhangKinds": [
+        "door-leaf",
+        "projecting-frame",
+        "arch",
+        "shadow",
+        "decorative-or-operational-projection"
+      ]
+    },
+    {
+      "name": "wall-door-horizontal-open.png",
+      "role": "door-measure-only",
+      "axis": "horizontal",
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "logicalSpan": "4",
+      "joinPlanes": ["x=24 west", "x=1224 east"],
+      "baseline": { "canvas": "1248x788", "alphaBounds": "1200x740+24+24" },
+      "visualOverhangKinds": [
+        "door-leaf",
+        "projecting-frame",
+        "arch",
+        "shadow",
+        "decorative-or-operational-projection"
+      ]
+    },
+    {
+      "name": "wall-horizontal-1cell.png",
+      "role": "straight-reference",
+      "axis": "horizontal",
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "logicalSpan": "1",
+      "joinPlanes": ["x=24 west", "x=324 east"],
+      "baseline": { "canvas": "348x477", "alphaBounds": "300x429+24+24" }
+    },
+    {
+      "name": "wall-horizontal-2cell.png",
+      "role": "straight-reference",
+      "axis": "horizontal",
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "logicalSpan": "2",
+      "joinPlanes": ["x=24 west", "x=624 east"],
+      "baseline": { "canvas": "648x477", "alphaBounds": "600x429+24+24" }
+    },
+    {
+      "name": "wall-horizontal.png",
+      "role": "straight-reference",
+      "axis": "horizontal",
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "logicalSpan": "4",
+      "joinPlanes": ["x=24 west", "x=1224 east"],
+      "baseline": { "canvas": "1248x477", "alphaBounds": "1200x429+24+24" }
+    },
+    {
+      "name": "wall-vertical-1cell.png",
+      "role": "straight-reference",
+      "axis": "vertical",
+      "logicalSpan": "1",
+      "joinPlanes": ["y=24 north", "y=324 south"],
+      "baseline": { "canvas": "284x348", "alphaBounds": "235x300+25+24" }
+    },
+    {
+      "name": "wall-vertical-2cell.png",
+      "role": "straight-reference",
+      "axis": "vertical",
+      "logicalSpan": "2",
+      "joinPlanes": ["y=24 north", "y=624 south"],
+      "baseline": { "canvas": "284x648", "alphaBounds": "235x600+25+24" }
+    },
+    {
+      "name": "wall-vertical.png",
+      "role": "straight-reference",
+      "axis": "vertical",
+      "logicalSpan": "4",
+      "joinPlanes": ["y=24 north", "y=1224 south"],
+      "baseline": { "canvas": "284x1248", "alphaBounds": "236x1200+24+24" }
+    }
+  ]
+}

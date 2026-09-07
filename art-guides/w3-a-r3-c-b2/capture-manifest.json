@@ -1,0 +1,174 @@
+{
+  "generatedAt": "2026-09-02T00:00:00.000Z",
+  "rendererPath": [
+    "WorldStructureState",
+    "structureRenderPlan",
+    "structureVisualGeometry",
+    "SpatialWorldScene",
+    "canvas Phaser"
+  ],
+  "rendererBackend": "Phaser.AUTO → Canvas (Chromium --disable-webgl)",
+  "seamInspections": [
+    {
+      "categories": [
+        "door",
+        "horizontal-corner",
+        "vertical-corner"
+      ],
+      "connectedBackgroundChannels": 0,
+      "examinedSeams": 8,
+      "scenario": "canonical",
+      "transparentPixels": 23
+    },
+    {
+      "categories": [
+        "door",
+        "vertical-corner"
+      ],
+      "connectedBackgroundChannels": 0,
+      "examinedSeams": 8,
+      "scenario": "door-states",
+      "transparentPixels": 23
+    },
+    {
+      "categories": [
+        "door",
+        "horizontal-corner",
+        "straight-straight",
+        "vertical-corner"
+      ],
+      "connectedBackgroundChannels": 0,
+      "examinedSeams": 15,
+      "scenario": "modified",
+      "transparentPixels": 31
+    }
+  ],
+  "captures": [
+    {
+      "browser": "151.0.7922.34",
+      "canvas": {
+        "height": 720,
+        "width": 960
+      },
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "doorState": "closed",
+      "file": "canonical-room-full.png",
+      "requestFailures": [],
+      "scenario": "Sala canônica completa com assets reais e móveis",
+      "sha256": "d075c9b11543dfa9f41c7136cad37a02f894ea85a02879fb7a00f6952afc8b19",
+      "viewport": {
+        "height": 720,
+        "width": 960
+      }
+    },
+    {
+      "browser": "151.0.7922.34",
+      "canvas": {
+        "height": 640,
+        "width": 320
+      },
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "doorState": "closed",
+      "file": "canonical-room-mobile-320x640.png",
+      "requestFailures": [],
+      "scenario": "Sala canônica em viewport móvel; captura direta do canvas",
+      "sha256": "9f24e524f44ec8ce474354ff0c2b6e7a9ffae3b6454bc63e7b9b8aeb31d85600",
+      "viewport": {
+        "height": 640,
+        "width": 320
+      }
+    },
+    {
+      "browser": "151.0.7922.34",
+      "canvas": {
+        "height": 800,
+        "width": 360
+      },
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "doorState": "closed",
+      "file": "canonical-room-mobile-360x800.png",
+      "requestFailures": [],
+      "scenario": "Sala canônica em viewport móvel; captura direta do canvas",
+      "sha256": "4c0bcce157330b3ffb08dbd4a98ee5e6064cc787f624b2cc091e3ee59218ab18",
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "browser": "151.0.7922.34",
+      "canvas": {
+        "height": 720,
+        "width": 960
+      },
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "doorState": "closed",
+      "file": "depth-selection-detail.png",
+      "requestFailures": [],
+      "scenario": "Móvel entre arquitetura traseira/frontal, estrutura selecionada e preview ativo",
+      "sha256": "dc01a027495d4c356a1b66b91262131f0846c6f4929f1857b4cc890614a0de9a",
+      "viewport": {
+        "height": 720,
+        "width": 960
+      }
+    },
+    {
+      "browser": "151.0.7922.34",
+      "canvas": {
+        "height": 720,
+        "width": 960
+      },
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "doorState": "both",
+      "file": "door-states-detail.png",
+      "requestFailures": [],
+      "scenario": "Porta aberta ao norte e fechada ao sul nos mesmos planos x=224..352",
+      "sha256": "ff34f73bda8549c06716d226b65febf37edcddd620ed061c278c339576ae1ce3",
+      "viewport": {
+        "height": 720,
+        "width": 960
+      }
+    },
+    {
+      "browser": "151.0.7922.34",
+      "canvas": {
+        "height": 720,
+        "width": 960
+      },
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "doorState": "both",
+      "file": "fallback-detail.png",
+      "requestFailures": [],
+      "scenario": "Fallback forçado de canto, reta e portas aberta/fechada por supressão externa de disponibilidade",
+      "sha256": "8a0e8720dba3e3bdf3a38d6f225743550f98a9373b716a7134f3b1b8e4271269",
+      "viewport": {
+        "height": 720,
+        "width": 960
+      }
+    },
+    {
+      "browser": "151.0.7922.34",
+      "canvas": {
+        "height": 720,
+        "width": 960
+      },
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "doorState": "open",
+      "file": "modified-room-full.png",
+      "requestFailures": [],
+      "scenario": "Cômodo fechado não canônico com peças de 1, 2 e 4 células e quatro cantos",
+      "sha256": "ce452f0147e2f11bb6f118a7ca00b4bfc8e2e72f9a332ad5f2562d5e9966a662",
+      "viewport": {
+        "height": 720,
+        "width": 960
+      }
+    }
+  ]
+}

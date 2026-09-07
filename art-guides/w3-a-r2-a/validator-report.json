@@ -1,0 +1,254 @@
+{
+  "contractVersion": 2,
+  "connectionProfiles": {
+    "stone-01-horizontal-corridor": {
+      "axis": "horizontal",
+      "continuous": true,
+      "interval": {
+        "endExclusive": 453,
+        "start": 24
+      },
+      "referenceAsset": "wall-horizontal.png",
+      "thickness": 429,
+      "visualEnvelopePolicy": "visual-envelope-only"
+    }
+  },
+  "generatedFrom": "art-source/world/architecture/walls",
+  "tolerancesPx": {
+    "canvas": 0,
+    "longitudinalExtent": 0,
+    "joinPlane": 0,
+    "alphaOutsideAllowedArea": 0,
+    "transverseProfileEdge": 1
+  },
+  "assets": [
+    {
+      "name": "wall-corner-ne.png",
+      "canvas": "1248x1248",
+      "alphaBounds": "1200x1200+24+24",
+      "padding": {
+        "bottom": 24,
+        "left": 24,
+        "right": 24,
+        "top": 24
+      },
+      "longitudinalAxis": "horizontal+vertical",
+      "logicalSpan": "4+4",
+      "externalJoinPlanes": [
+        "x=24 west",
+        "y=24 north"
+      ],
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "status": "conforming"
+    },
+    {
+      "name": "wall-corner-nw.png",
+      "canvas": "1248x1248",
+      "alphaBounds": "1200x1200+24+24",
+      "padding": {
+        "bottom": 24,
+        "left": 24,
+        "right": 24,
+        "top": 24
+      },
+      "longitudinalAxis": "horizontal+vertical",
+      "logicalSpan": "4+4",
+      "externalJoinPlanes": [
+        "x=1224 east",
+        "y=24 north"
+      ],
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "status": "conforming"
+    },
+    {
+      "name": "wall-corner-se.png",
+      "canvas": "1248x1248",
+      "alphaBounds": "1200x1200+24+24",
+      "padding": {
+        "bottom": 24,
+        "left": 24,
+        "right": 24,
+        "top": 24
+      },
+      "longitudinalAxis": "horizontal+vertical",
+      "logicalSpan": "4+4",
+      "externalJoinPlanes": [
+        "x=24 west",
+        "y=1224 south"
+      ],
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "status": "conforming"
+    },
+    {
+      "name": "wall-corner-sw.png",
+      "canvas": "1248x1248",
+      "alphaBounds": "1200x1200+24+24",
+      "padding": {
+        "bottom": 24,
+        "left": 24,
+        "right": 24,
+        "top": 24
+      },
+      "longitudinalAxis": "horizontal+vertical",
+      "logicalSpan": "4+4",
+      "externalJoinPlanes": [
+        "x=1224 east",
+        "y=1224 south"
+      ],
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "status": "conforming"
+    },
+    {
+      "name": "wall-door-horizontal-closed.png",
+      "canvas": "1248x612",
+      "alphaBounds": "1200x564+24+24",
+      "padding": {
+        "bottom": 24,
+        "left": 24,
+        "right": 24,
+        "top": 24
+      },
+      "longitudinalAxis": "horizontal",
+      "logicalSpan": "4",
+      "externalJoinPlanes": [
+        "x=24 west",
+        "x=1224 east"
+      ],
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "status": "conforming-structural-profile"
+    },
+    {
+      "name": "wall-door-horizontal-open.png",
+      "canvas": "1248x788",
+      "alphaBounds": "1200x740+24+24",
+      "padding": {
+        "bottom": 24,
+        "left": 24,
+        "right": 24,
+        "top": 24
+      },
+      "longitudinalAxis": "horizontal",
+      "logicalSpan": "4",
+      "externalJoinPlanes": [
+        "x=24 west",
+        "x=1224 east"
+      ],
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "status": "conforming-structural-profile"
+    },
+    {
+      "name": "wall-horizontal-1cell.png",
+      "canvas": "348x477",
+      "alphaBounds": "300x429+24+24",
+      "padding": {
+        "bottom": 24,
+        "left": 24,
+        "right": 24,
+        "top": 24
+      },
+      "longitudinalAxis": "horizontal",
+      "logicalSpan": "1",
+      "externalJoinPlanes": [
+        "x=24 west",
+        "x=324 east"
+      ],
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "status": "conforming-reference"
+    },
+    {
+      "name": "wall-horizontal-2cell.png",
+      "canvas": "648x477",
+      "alphaBounds": "600x429+24+24",
+      "padding": {
+        "bottom": 24,
+        "left": 24,
+        "right": 24,
+        "top": 24
+      },
+      "longitudinalAxis": "horizontal",
+      "logicalSpan": "2",
+      "externalJoinPlanes": [
+        "x=24 west",
+        "x=624 east"
+      ],
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "status": "conforming-reference"
+    },
+    {
+      "name": "wall-horizontal.png",
+      "canvas": "1248x477",
+      "alphaBounds": "1200x429+24+24",
+      "padding": {
+        "bottom": 24,
+        "left": 24,
+        "right": 24,
+        "top": 24
+      },
+      "longitudinalAxis": "horizontal",
+      "logicalSpan": "4",
+      "externalJoinPlanes": [
+        "x=24 west",
+        "x=1224 east"
+      ],
+      "connectionProfileClass": "stone-01-horizontal-corridor",
+      "status": "conforming-reference"
+    },
+    {
+      "name": "wall-vertical-1cell.png",
+      "canvas": "284x348",
+      "alphaBounds": "235x300+25+24",
+      "padding": {
+        "bottom": 24,
+        "left": 25,
+        "right": 24,
+        "top": 24
+      },
+      "longitudinalAxis": "vertical",
+      "logicalSpan": "1",
+      "externalJoinPlanes": [
+        "y=24 north",
+        "y=324 south"
+      ],
+      "connectionProfileClass": null,
+      "status": "conforming-reference"
+    },
+    {
+      "name": "wall-vertical-2cell.png",
+      "canvas": "284x648",
+      "alphaBounds": "235x600+25+24",
+      "padding": {
+        "bottom": 24,
+        "left": 25,
+        "right": 24,
+        "top": 24
+      },
+      "longitudinalAxis": "vertical",
+      "logicalSpan": "2",
+      "externalJoinPlanes": [
+        "y=24 north",
+        "y=624 south"
+      ],
+      "connectionProfileClass": null,
+      "status": "conforming-reference"
+    },
+    {
+      "name": "wall-vertical.png",
+      "canvas": "284x1248",
+      "alphaBounds": "236x1200+24+24",
+      "padding": {
+        "bottom": 24,
+        "left": 24,
+        "right": 24,
+        "top": 24
+      },
+      "longitudinalAxis": "vertical",
+      "logicalSpan": "4",
+      "externalJoinPlanes": [
+        "y=24 north",
+        "y=1224 south"
+      ],
+      "connectionProfileClass": null,
+      "status": "conforming-reference"
+    }
+  ]
+}

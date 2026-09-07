@@ -1,0 +1,1718 @@
+{
+  "baseUrl": "http://127.0.0.1:4180/art-guides/w3-a-r4-ux-proposal/index.html",
+  "consoleErrors": [],
+  "duplicateIdScreens": [],
+  "generatedAt": "2026-09-05T15:58:38.371Z",
+  "horizontalOverflows": [],
+  "interactionChecks": [
+    "dock abre Coleção",
+    "Coleção abre seletor dos seis tipos",
+    "tipo abre formulário",
+    "formulário retorna ao detalhe",
+    "Construção abre palette sob demanda",
+    "Escape volta palette para explore",
+    "lista sob demanda fecha e seleciona peça",
+    "Escape fecha seleção antes de sair da Construção",
+    "Ajustes abre fluxo dedicado de backup"
+  ],
+  "metrics": [
+    {
+      "name": "library-320x640",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Resumo",
+          "width": 90
+        },
+        {
+          "height": 48,
+          "label": "Construir",
+          "width": 101
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 62
+        }
+      ],
+      "document": {
+        "clientWidth": 320,
+        "scrollHeight": 640,
+        "scrollWidth": 320
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca",
+        "H2:Biblioteca visual"
+      ],
+      "primaryActions": [
+        {
+          "bottomDistance": 80,
+          "label": "Construir"
+        }
+      ],
+      "route": "library",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 640,
+        "width": 320
+      }
+    },
+    {
+      "name": "library-360x800",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Resumo",
+          "width": 90
+        },
+        {
+          "height": 48,
+          "label": "Construir",
+          "width": 101
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 70
+        }
+      ],
+      "document": {
+        "clientWidth": 360,
+        "scrollHeight": 800,
+        "scrollWidth": 360
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca",
+        "H2:Biblioteca visual"
+      ],
+      "primaryActions": [
+        {
+          "bottomDistance": 80,
+          "label": "Construir"
+        }
+      ],
+      "route": "library",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "name": "library-desktop-1280x800",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Resumo",
+          "width": 98
+        },
+        {
+          "height": 48,
+          "label": "Construir",
+          "width": 109
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 113
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 113
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 113
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 113
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 113
+        }
+      ],
+      "document": {
+        "clientWidth": 1280,
+        "scrollHeight": 800,
+        "scrollWidth": 1280
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca",
+        "H2:Biblioteca visual"
+      ],
+      "primaryActions": [
+        {
+          "bottomDistance": 80,
+          "label": "Construir"
+        }
+      ],
+      "route": "library",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 800,
+        "width": 1280
+      }
+    },
+    {
+      "name": "library-loading-320x640",
+      "controls": [
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 62
+        }
+      ],
+      "document": {
+        "clientWidth": 320,
+        "scrollHeight": 640,
+        "scrollWidth": 320
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca",
+        "H2:Preparando sua Biblioteca"
+      ],
+      "primaryActions": [],
+      "route": "library-loading",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 640,
+        "width": 320
+      }
+    },
+    {
+      "name": "library-error-320x640",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Tentar novamente",
+          "width": 181
+        },
+        {
+          "height": 48,
+          "label": "Ir para Coleção",
+          "width": 154
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 62
+        }
+      ],
+      "document": {
+        "clientWidth": 320,
+        "scrollHeight": 640,
+        "scrollWidth": 320
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca",
+        "H2:Não foi possível abrir a Biblioteca agora"
+      ],
+      "primaryActions": [
+        {
+          "bottomDistance": 200,
+          "label": "Tentar novamente"
+        }
+      ],
+      "route": "library-error",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 640,
+        "width": 320
+      }
+    },
+    {
+      "name": "library-canvas-unavailable-320x640",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Abrir Coleção",
+          "width": 141
+        },
+        {
+          "height": 48,
+          "label": "Tentar o mapa novamente",
+          "width": 244
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 62
+        }
+      ],
+      "document": {
+        "clientWidth": 320,
+        "scrollHeight": 784,
+        "scrollWidth": 320
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca",
+        "H2:A Biblioteca visual não está disponível"
+      ],
+      "primaryActions": [
+        {
+          "bottomDistance": 40,
+          "label": "Abrir Coleção"
+        }
+      ],
+      "route": "library-canvas",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 640,
+        "width": 320
+      }
+    },
+    {
+      "name": "collection-empty-320x640",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Criar primeiro registro",
+          "width": 213
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 62
+        }
+      ],
+      "document": {
+        "clientWidth": 320,
+        "scrollHeight": 640,
+        "scrollWidth": 320
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca Viva",
+        "H2:Comece por algo que importa agora"
+      ],
+      "primaryActions": [
+        {
+          "bottomDistance": 200,
+          "label": "Criar primeiro registro"
+        }
+      ],
+      "route": "collection-empty",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 640,
+        "width": 320
+      }
+    },
+    {
+      "name": "collection-320x640",
+      "controls": [
+        {
+          "height": 52,
+          "label": "",
+          "width": 288
+        },
+        {
+          "height": 48,
+          "label": "Todos",
+          "width": 75
+        },
+        {
+          "height": 48,
+          "label": "Em andamento",
+          "width": 146
+        },
+        {
+          "height": 48,
+          "label": "Favoritos",
+          "width": 100
+        },
+        {
+          "height": 111,
+          "label": "Abrir A Casa das Marés",
+          "width": 288
+        },
+        {
+          "height": 108,
+          "label": "Abrir Jardim de Vidro",
+          "width": 288
+        },
+        {
+          "height": 108,
+          "label": "Abrir Órbita Norte",
+          "width": 288
+        },
+        {
+          "height": 52,
+          "label": "＋ Novo registro",
+          "width": 166
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 62
+        }
+      ],
+      "document": {
+        "clientWidth": 320,
+        "scrollHeight": 1074,
+        "scrollWidth": 320
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca Viva",
+        "H2:Coleção"
+      ],
+      "primaryActions": [
+        {
+          "bottomDistance": 82,
+          "label": "＋ Novo registro"
+        }
+      ],
+      "route": "collection",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 640,
+        "width": 320
+      }
+    },
+    {
+      "name": "collection-360x800",
+      "controls": [
+        {
+          "height": 52,
+          "label": "",
+          "width": 328
+        },
+        {
+          "height": 48,
+          "label": "Todos",
+          "width": 75
+        },
+        {
+          "height": 48,
+          "label": "Em andamento",
+          "width": 146
+        },
+        {
+          "height": 48,
+          "label": "Favoritos",
+          "width": 100
+        },
+        {
+          "height": 108,
+          "label": "Abrir A Casa das Marés",
+          "width": 328
+        },
+        {
+          "height": 108,
+          "label": "Abrir Jardim de Vidro",
+          "width": 328
+        },
+        {
+          "height": 108,
+          "label": "Abrir Órbita Norte",
+          "width": 328
+        },
+        {
+          "height": 108,
+          "label": "Abrir Botânica Urbana",
+          "width": 328
+        },
+        {
+          "height": 108,
+          "label": "Abrir Caminhada da Lagoa",
+          "width": 328
+        },
+        {
+          "height": 52,
+          "label": "＋ Novo registro",
+          "width": 166
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 70
+        }
+      ],
+      "document": {
+        "clientWidth": 360,
+        "scrollHeight": 1068,
+        "scrollWidth": 360
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca Viva",
+        "H2:Coleção"
+      ],
+      "primaryActions": [
+        {
+          "bottomDistance": 82,
+          "label": "＋ Novo registro"
+        }
+      ],
+      "route": "collection",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "name": "collection-desktop-1280x800",
+      "controls": [
+        {
+          "height": 52,
+          "label": "",
+          "width": 832
+        },
+        {
+          "height": 48,
+          "label": "Todos",
+          "width": 75
+        },
+        {
+          "height": 48,
+          "label": "Em andamento",
+          "width": 146
+        },
+        {
+          "height": 48,
+          "label": "Favoritos",
+          "width": 100
+        },
+        {
+          "height": 48,
+          "label": "Filtros · 0",
+          "width": 99
+        },
+        {
+          "height": 108,
+          "label": "Abrir A Casa das Marés",
+          "width": 404
+        },
+        {
+          "height": 108,
+          "label": "Abrir Jardim de Vidro",
+          "width": 404
+        },
+        {
+          "height": 108,
+          "label": "Abrir Órbita Norte",
+          "width": 404
+        },
+        {
+          "height": 108,
+          "label": "Abrir Botânica Urbana",
+          "width": 404
+        },
+        {
+          "height": 108,
+          "label": "Abrir Caminhada da Lagoa",
+          "width": 404
+        },
+        {
+          "height": 108,
+          "label": "Abrir Atlas de Pesquisa",
+          "width": 404
+        },
+        {
+          "height": 52,
+          "label": "＋ Novo registro",
+          "width": 166
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 113
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 113
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 113
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 113
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 113
+        }
+      ],
+      "document": {
+        "clientWidth": 1280,
+        "scrollHeight": 800,
+        "scrollWidth": 1280
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca Viva",
+        "H2:Coleção"
+      ],
+      "primaryActions": [
+        {
+          "bottomDistance": 82,
+          "label": "＋ Novo registro"
+        }
+      ],
+      "route": "collection",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 800,
+        "width": 1280
+      }
+    },
+    {
+      "name": "entry-type-picker-320x640",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Voltar",
+          "width": 48
+        },
+        {
+          "height": 102,
+          "label": "LivroPáginas, notas e citações",
+          "width": 139
+        },
+        {
+          "height": 102,
+          "label": "FilmeDireção, ano e duração",
+          "width": 139
+        },
+        {
+          "height": 102,
+          "label": "SérieEpisódios e plataforma",
+          "width": 139
+        },
+        {
+          "height": 102,
+          "label": "EstudoÁrea, objetivo e progresso",
+          "width": 139
+        },
+        {
+          "height": 102,
+          "label": "Atividade físicaPrática e duração",
+          "width": 139
+        },
+        {
+          "height": 102,
+          "label": "TrabalhoProjeto e próxima ação",
+          "width": 139
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 62
+        }
+      ],
+      "document": {
+        "clientWidth": 320,
+        "scrollHeight": 677,
+        "scrollWidth": 320
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca Viva",
+        "H2:O que você quer guardar?"
+      ],
+      "primaryActions": [],
+      "route": "editor",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 640,
+        "width": 320
+      }
+    },
+    {
+      "name": "book-editor-320x640",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Voltar",
+          "width": 48
+        },
+        {
+          "height": 48,
+          "label": "Trocar tipo",
+          "width": 120
+        },
+        {
+          "height": 50,
+          "label": "",
+          "width": 288
+        },
+        {
+          "height": 50,
+          "label": "",
+          "width": 288
+        },
+        {
+          "height": 50,
+          "label": "PlanejadoEm andamentoConcluído",
+          "width": 288
+        },
+        {
+          "height": 50,
+          "label": "",
+          "width": 288
+        },
+        {
+          "height": 48,
+          "label": "Cancelar",
+          "width": 111
+        },
+        {
+          "height": 48,
+          "label": "Salvar registro",
+          "width": 167
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 62
+        }
+      ],
+      "document": {
+        "clientWidth": 320,
+        "scrollHeight": 1080,
+        "scrollWidth": 320
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca Viva",
+        "H2:Novo registro",
+        "H3:Essencial"
+      ],
+      "primaryActions": [
+        {
+          "bottomDistance": 79,
+          "label": "Salvar registro"
+        }
+      ],
+      "route": "editor",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 640,
+        "width": 320
+      }
+    },
+    {
+      "name": "detail-360x800",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Voltar",
+          "width": 48
+        },
+        {
+          "height": 48,
+          "label": "Editar",
+          "width": 54
+        },
+        {
+          "height": 48,
+          "label": "Iniciar sessão",
+          "width": 328
+        },
+        {
+          "height": 68,
+          "label": "Adicionar nota",
+          "width": 159
+        },
+        {
+          "height": 68,
+          "label": "Guardar citação",
+          "width": 159
+        },
+        {
+          "height": 48,
+          "label": "Ver todas",
+          "width": 88
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 70
+        }
+      ],
+      "document": {
+        "clientWidth": 360,
+        "scrollHeight": 1131,
+        "scrollWidth": 360
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Detalhe",
+        "H2:A Casa das Marés",
+        "H3:Continuar",
+        "H3:Memórias recentes"
+      ],
+      "primaryActions": [
+        {
+          "bottomDistance": 383,
+          "label": "Iniciar sessão"
+        }
+      ],
+      "route": "detail",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "name": "session-active-360x800",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Voltar",
+          "width": 48
+        },
+        {
+          "height": 48,
+          "label": "Concluir",
+          "width": 90
+        },
+        {
+          "height": 112,
+          "label": "",
+          "width": 328
+        },
+        {
+          "height": 48,
+          "label": "Pausar",
+          "width": 127
+        },
+        {
+          "height": 48,
+          "label": "Concluir",
+          "width": 191
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 70
+        }
+      ],
+      "document": {
+        "clientWidth": 360,
+        "scrollHeight": 867,
+        "scrollWidth": 360
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Sessão",
+        "H2:Sessão em andamento"
+      ],
+      "primaryActions": [
+        {
+          "bottomDistance": 150,
+          "label": "Concluir"
+        }
+      ],
+      "route": "session",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "name": "archive-320x640",
+      "controls": [
+        {
+          "height": 52,
+          "label": "",
+          "width": 288
+        },
+        {
+          "height": 48,
+          "label": "Tudo",
+          "width": 68
+        },
+        {
+          "height": 48,
+          "label": "Notas",
+          "width": 75
+        },
+        {
+          "height": 48,
+          "label": "Citações",
+          "width": 94
+        },
+        {
+          "height": 48,
+          "label": "Filtros",
+          "width": 77
+        },
+        {
+          "height": 48,
+          "label": "Abrir registro",
+          "width": 120
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 62
+        }
+      ],
+      "document": {
+        "clientWidth": 320,
+        "scrollHeight": 835,
+        "scrollWidth": 320
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca Viva",
+        "H2:Arquivo"
+      ],
+      "primaryActions": [],
+      "route": "archive",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 640,
+        "width": 320
+      }
+    },
+    {
+      "name": "statistics-360x800",
+      "controls": [
+        {
+          "height": 48,
+          "label": "30 dias",
+          "width": 84
+        },
+        {
+          "height": 48,
+          "label": "90 dias",
+          "width": 84
+        },
+        {
+          "height": 48,
+          "label": "Tudo",
+          "width": 68
+        },
+        {
+          "height": 48,
+          "label": "Filtrar",
+          "width": 75
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 70
+        }
+      ],
+      "document": {
+        "clientWidth": 360,
+        "scrollHeight": 1279,
+        "scrollWidth": 360
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca Viva",
+        "H2:Estatísticas",
+        "H3:Memória do período",
+        "H3:Atividade recente"
+      ],
+      "primaryActions": [],
+      "route": "statistics",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "name": "settings-320x640",
+      "controls": [
+        {
+          "height": 88,
+          "label": "AaExperiênciaMovimento, contraste e tamanho do texto›",
+          "width": 288
+        },
+        {
+          "height": 76,
+          "label": "♫ÁudioMúsica 45% · efeitos 70%›",
+          "width": 219
+        },
+        {
+          "height": 89,
+          "label": "⇄Backup e restauraçãoCrie uma cópia recuperável dos dados›",
+          "width": 288
+        },
+        {
+          "height": 76,
+          "label": "●Dados neste dispositivoArmazenamento local ativo›",
+          "width": 258
+        },
+        {
+          "height": 76,
+          "label": "iSobreVersão 0.2.0-alpha.1›",
+          "width": 190
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 62
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 62
+        }
+      ],
+      "document": {
+        "clientWidth": 320,
+        "scrollHeight": 722,
+        "scrollWidth": 320
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Biblioteca Viva",
+        "H2:Ajustes"
+      ],
+      "primaryActions": [],
+      "route": "settings",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 640,
+        "width": 320
+      }
+    },
+    {
+      "name": "backup-360x800",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Voltar",
+          "width": 48
+        },
+        {
+          "height": 48,
+          "label": "Exportar backup",
+          "width": 328
+        },
+        {
+          "height": 50,
+          "label": "",
+          "width": 328
+        },
+        {
+          "height": 48,
+          "label": "Revisar arquivo selecionado",
+          "width": 328
+        },
+        {
+          "height": 63,
+          "label": "Biblioteca",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Coleção",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Arquivo",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Estatísticas",
+          "width": 70
+        },
+        {
+          "height": 63,
+          "label": "Ajustes",
+          "width": 70
+        }
+      ],
+      "document": {
+        "clientWidth": 360,
+        "scrollHeight": 965,
+        "scrollWidth": 360
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Backup",
+        "H2:Backup e restauração",
+        "H3:Salvar uma cópia",
+        "H3:Restaurar de um arquivo"
+      ],
+      "primaryActions": [
+        {
+          "bottomDistance": 410,
+          "label": "Exportar backup"
+        }
+      ],
+      "route": "backup",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "name": "construction-explore-320x640",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Sair",
+          "width": 64
+        },
+        {
+          "height": 55,
+          "label": "▥Estruturas",
+          "width": 89
+        },
+        {
+          "height": 55,
+          "label": "▦Piso",
+          "width": 89
+        },
+        {
+          "height": 55,
+          "label": "◎Colocadas",
+          "width": 89
+        }
+      ],
+      "document": {
+        "clientWidth": 320,
+        "scrollHeight": 640,
+        "scrollWidth": 320
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Construção"
+      ],
+      "overlayCoverage": 0.109,
+      "primaryActions": [],
+      "route": "construction-explore",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 640,
+        "width": 320
+      }
+    },
+    {
+      "name": "construction-palette-320x640",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Sair",
+          "width": 64
+        },
+        {
+          "height": 48,
+          "label": "Fechar palette",
+          "width": 48
+        },
+        {
+          "height": 48,
+          "label": "Paredes",
+          "width": 91
+        },
+        {
+          "height": 48,
+          "label": "Cantos",
+          "width": 83
+        },
+        {
+          "height": 48,
+          "label": "Portas",
+          "width": 79
+        },
+        {
+          "height": 114,
+          "label": "Parede longa4 células · 3 disponíveis",
+          "width": 139
+        },
+        {
+          "height": 114,
+          "label": "Parede média2 células · 4 disponíveis",
+          "width": 139
+        },
+        {
+          "height": 136,
+          "label": "Parede curta1 célula · 5 disponíveis",
+          "width": 139
+        },
+        {
+          "height": 136,
+          "label": "Parede vertical2 células · 2 disponíveis",
+          "width": 139
+        }
+      ],
+      "document": {
+        "clientWidth": 320,
+        "scrollHeight": 640,
+        "scrollWidth": 320
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Construção",
+        "H2:Estruturas"
+      ],
+      "overlayCoverage": 0.56,
+      "primaryActions": [],
+      "route": "construction-palette",
+      "scrollOwners": [
+        {
+          "className": "bottom-sheet",
+          "clientHeight": 357,
+          "scrollHeight": 427,
+          "tag": "section"
+        }
+      ],
+      "viewport": {
+        "height": 640,
+        "width": 320
+      }
+    },
+    {
+      "name": "construction-placing-360x800",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Sair",
+          "width": 64
+        },
+        {
+          "height": 55,
+          "label": "×Cancelar",
+          "width": 103
+        },
+        {
+          "height": 55,
+          "label": "↻Girar",
+          "width": 103
+        },
+        {
+          "height": 55,
+          "label": "✓Colocar",
+          "width": 103
+        }
+      ],
+      "document": {
+        "clientWidth": 360,
+        "scrollHeight": 800,
+        "scrollWidth": 360
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Construção"
+      ],
+      "overlayCoverage": 0.088,
+      "primaryActions": [
+        {
+          "bottomDistance": 20,
+          "label": "✓Colocar"
+        }
+      ],
+      "route": "construction-placing",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "name": "construction-selection-360x800",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Sair",
+          "width": 64
+        },
+        {
+          "height": 55,
+          "label": "✥Mover",
+          "width": 76
+        },
+        {
+          "height": 55,
+          "label": "↻Girar",
+          "width": 76
+        },
+        {
+          "height": 55,
+          "label": "⇧Guardar",
+          "width": 76
+        },
+        {
+          "height": 55,
+          "label": "×Fechar",
+          "width": 76
+        }
+      ],
+      "document": {
+        "clientWidth": 360,
+        "scrollHeight": 800,
+        "scrollWidth": 360
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Construção"
+      ],
+      "overlayCoverage": 0.088,
+      "primaryActions": [],
+      "route": "construction-select",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "name": "construction-moving-360x800",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Sair",
+          "width": 64
+        },
+        {
+          "height": 55,
+          "label": "×Cancelar",
+          "width": 103
+        },
+        {
+          "height": 55,
+          "label": "✥Movendo",
+          "width": 103
+        },
+        {
+          "height": 55,
+          "label": "✓Confirmar",
+          "width": 103
+        }
+      ],
+      "document": {
+        "clientWidth": 360,
+        "scrollHeight": 800,
+        "scrollWidth": 360
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Construção"
+      ],
+      "overlayCoverage": 0.088,
+      "primaryActions": [
+        {
+          "bottomDistance": 20,
+          "label": "✓Confirmar"
+        }
+      ],
+      "route": "construction-moving",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "name": "construction-floor-360x800",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Sair",
+          "width": 64
+        },
+        {
+          "height": 55,
+          "label": "＋Adicionar",
+          "width": 103
+        },
+        {
+          "height": 55,
+          "label": "−Remover",
+          "width": 103
+        },
+        {
+          "height": 55,
+          "label": "✓Concluir",
+          "width": 103
+        }
+      ],
+      "document": {
+        "clientWidth": 360,
+        "scrollHeight": 800,
+        "scrollWidth": 360
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Construção"
+      ],
+      "overlayCoverage": 0.088,
+      "primaryActions": [
+        {
+          "bottomDistance": 20,
+          "label": "✓Concluir"
+        }
+      ],
+      "route": "construction-floor",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "name": "construction-confirm-360x800",
+      "controls": [
+        {
+          "height": 48,
+          "label": "Sair",
+          "width": 64
+        },
+        {
+          "height": 48,
+          "label": "Cancelar",
+          "width": 138
+        },
+        {
+          "height": 48,
+          "label": "Guardar",
+          "width": 138
+        }
+      ],
+      "document": {
+        "clientWidth": 360,
+        "scrollHeight": 800,
+        "scrollWidth": 360
+      },
+      "duplicateIds": [],
+      "headings": [
+        "H1:Construção",
+        "H2:Guardar esta parede?"
+      ],
+      "overlayCoverage": 0.262,
+      "primaryActions": [
+        {
+          "bottomDistance": 306,
+          "label": "Guardar"
+        }
+      ],
+      "route": "construction-confirm",
+      "scrollOwners": [],
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    }
+  ],
+  "pageErrors": [],
+  "requestFailures": []
+}
