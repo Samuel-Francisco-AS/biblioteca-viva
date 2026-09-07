@@ -633,3 +633,59 @@ O cartão React de objeto selecionado recebe fechamento acessível e transição
 - **Status:** aceita.
 - **Decisão:** P3-C mantém modo Construção, seleção, preview, feedback e intenção de navegação como estados efêmeros. O token de `Abrir construção` é consumido com `replace` logo após a abertura explícita, para não ressurgir em reload.
 - **Consequências:** estrutura, grants, milestones e inventário continuam dados persistidos; reload não reapresenta áudio/animação/modo sem evento novo. W3-A1–W3-A6 estão tecnicamente concluídas, sem aprovação física ou artística inferida.
+
+### D-NEW-10 — Geometria visual estrutural única — 2026-09-02
+
+- **Status:** aceita.
+- **Contexto:** renderer e hit testing calculavam posição por cópias diferentes de offset, pivot e span, permitindo divergência entre sprite e interação.
+- **Decisão:** `structureVisualGeometry` é a autoridade pura dos metadados e da transformação dos 12 assets estruturais. Renderer, render plan e hit testing consomem a mesma posição de canvas, escala, bounds, planos e regiões; campos visuais antigos permanecem somente como compatibilidade temporária.
+- **Consequências:** a porta não recebe o deslocamento histórico de uma célula, cantos usam dois braços em vez do quadrado transparente e nenhuma correção pode ser duplicada em consumidores. A decisão não afirma que o contrato atual representa toda a continuidade transversal.
+
+### D-NEW-11 — Depth estrutural derivado da geometria visível — 2026-09-02
+
+- **Status:** aceita.
+- **Contexto:** as fórmulas históricas `10 + anchor.y` e `50 + anchor.y` não representavam a base visual efetiva e dependiam apenas da âncora.
+- **Decisão:** `structureVisualDepth` usa a borda inferior da união das regiões visíveis como `visualSortY`, aplica bandas traseira/frontal em torno da origem 40 e resolve empates por chave estável do placement.
+- **Consequências:** movimento, orientação e coordenadas fracionárias recalculam depth deterministicamente, sem offsets/pivôs legados nem exceção de instância. Móveis e overlays preservam suas regras enquanto não houver autorização específica.
+
+### D-NEW-12 — Fallback derivado da mesma autoridade visual — 2026-09-02
+
+- **Status:** aceita.
+- **Contexto:** o fallback anterior recompunha retângulos por span lógico e espessura arbitrária, divergindo de cantos, portas e sprites.
+- **Decisão:** `structureVisualFallback` deriva forma, bounds, planos e depth da transformação canônica já calculada; textura disponível produz somente sprite, e textura indisponível produz somente um Graphics sem hit area ou evento paralelo.
+- **Consequências:** o fallback reproduz fielmente a geometria vigente, inclusive suas limitações. A descontinuidade observada em R3-C-B2 não é um defeito independente do fallback.
+
+### D-NEW-13 — Correções estruturais não podem reconhecer o blueprint — 2026-09-03
+
+- **Status:** aceita.
+- **Contexto:** a falha transversal aparece tanto na sala canônica quanto em um cômodo test-only diferente; offsets por coordenada ou `instanceId` mascarariam somente exemplos conhecidos.
+- **Decisão:** qualquer correção visual estrutural deve ser função de definição, orientação, placement lógico e contrato geométrico geral. São rejeitadas exceções por blueprint, âncora específica, `instanceId` ou lado particular de uma sala.
+- **Consequências:** o gate corretivo deverá provar composições canônica e não canônica, ordem independente e todos os encontros relevantes antes de repetir a validação visual.
+
+### D-NEW-14 — Contrato transversal explícito — 2026-09-03
+
+- **Status:** aceita e subdividida; FIX-A foi concluída tecnicamente e aceita nominalmente. FIX-B foi depois subdividida em FIX-B1/FIX-B2.
+- **Contexto:** R3-C-B2 terminou com 8/9 casos. Planos longitudinais coincidem, mas cantos leste/sul e assets lineares ocupam lados transversais opostos porque o contrato não define normal/lado ocupado/centerline comparável. O `side` atual nomeia o lado longitudinal do plano, e os testes anteriores não comparavam os perfis de vizinhos.
+- **Decisão:** subdividir W3-A-R3-C-B2-FIX em FIX-A, FIX-B e FIX-C. FIX-A amplia `WorldJoinPlane` sem criar outra autoridade: tangente horizontal usa normal `+y = south`, tangente vertical usa `+x = east`; o perfil é intervalo semiaberto em world units e também em offsets assinados relativos ao eixo lógico; lateral, centerline e espessura são derivadas; a tolerância transversal do par é o maior valor de um pixel-fonte convertido pelas escalas participantes, enquanto planos longitudinais mantêm tolerância zero. Um analisador puro recebe explicitamente as transformações/planos vizinhos, agrupa por endpoint lógico + eixo e retorna diagnóstico tipado e ordenado.
+- **Consequências:** FIX-A caracteriza, mas não corrige, as posições atuais. O oráculo detecta os saltos de aproximadamente `25,12` e `45,76` world units e também explicitou a diferença entre envelope e perfil das portas. `spriteCanvasPosition`, `joinOrigin`, `sourceReferencePx`, escala, bounds, hit regions, depth, fallback e ordem visual permaneceram inalterados. O contrato de porta foi separado em FIX-B1; FIX-B2, FIX-C, a repetição de B2 e R4 dependem de autorização nominal própria. R3-C-B2 permanece 8/9, tecnicamente reprovada/não concluída.
+
+### D-NEW-15 — Perfil estrutural das portas separado do envelope visual — 2026-09-03
+
+- **Status:** decisão humana aceita, implementada tecnicamente em FIX-B1 e aceita nominalmente por Sam.
+- **Contexto:** a tentativa inicial de FIX-B parou sem escrita porque o alpha bbox fechado tinha 564 px, o aberto 740 px e o PNG achatado não permitia separar automaticamente folha, moldura e batente. Sam decidiu que aberta e fechada substituem o mesmo trecho horizontal de quatro células e possuem interfaces oeste/leste idênticas às paredes e aos braços horizontais dos cantos.
+- **Decisão:** o contrato versão 2 define a classe única `stone-01-horizontal-corridor`, cuja autoridade é o perfil de referência `[24,453)` do `wall-horizontal.png`, com 429 px-fonte (`45,76` world units). `SourceJoinPlane.profile` e `WorldJoinPlane.profile` representam a conexão estrutural contínua; `visualProfile`, alpha bounds e regiões ocupadas preservam o envelope completo, inclusive folha, moldura, arco, sombra e projeções. Transparência/antialiasing pontual continua limitado à tolerância global preexistente de um pixel-fonte.
+- **Consequências:** os dois endpoints das portas aberta/fechada, as retas horizontais e os braços horizontais dos quatro cantos referenciam a mesma classe, sem duplicar as medidas nos endpoints. O analisador passa a ignorar o excesso visual ao comparar encaixe; renderer, posição, escala, bounds, interação e depth não mudam. O fallback conserva as regiões visuais e valida seu envelope por `visualProfile`. FIX-B1 não deriva normal topológica nem aplica translação; essa responsabilidade foi autorizada depois em FIX-B2.
+
+### D-NEW-16 — Normal interior topológica e alinhamento assinado — 2026-09-04
+
+- **Status:** regra autorizada por Sam e implementada em FIX-B2; revisão humana e reconfirmação visual pendentes.
+- **Contexto:** após FIX-B1, 12 das 31 junções preservadas ainda colocavam perfis estruturais em lados opostos do eixo lógico. O estado persistido já contém piso e placements suficientes para determinar o interior em trechos periféricos sem reconhecer a sala canônica.
+- **Decisão:** resolver cada intervalo/ braço pela adjacência de suas arestas unitárias: piso somente no lado negativo produz norte/oeste; somente no positivo produz sul/leste. Zero lados, ambos os lados ou suporte misto são ambíguos; lados exclusivos contraditórios no mesmo braço são inconsistentes. Nesses casos, preservar a posição e emitir diagnóstico tipado. O render plan deriva o contexto do `WorldStructureState` e o fornece explicitamente à transformação pura. Para espessura `t`, o alvo é `[0,t)` na normal positiva e `[-t,0)` na negativa; a única translação é `target.start − measured.start`. Restrições do mesmo eixo podem diferir no máximo pela tolerância vigente de um pixel-fonte e nunca são promediadas.
+- **Consequências:** retas/portas movem apenas no eixo normal, cantos combinam uma restrição por braço e todos os bounds, regiões, planos, fallback e depth continuam derivados da transformação canônica. Não há persistência de normal/offset nem consulta a blueprint, coordenada conhecida ou `instanceId`. As composições canônica, modificada e de portas passam de 19/31 para 31/31; a repetição visual de B2 e R4 continuam não iniciadas.
+
+### D-NEW-17 — Shell único e etiqueta contextual temporária — 2026-09-05
+
+- **Status:** direção visual aceita por Sam; primeira implementação em andamento dentro de R4.
+- **Contexto:** o protótipo `art-guides/w3-a-r4-ux-proposal/` foi aprovado como direção, não como substituto da Biblioteca real. Sam alterou a proposta para exigir que a etiqueta contextual não permaneça fixa e complete todo o ciclo em cinco segundos. A navegação anterior ainda concentrava destinos em drawer, enquanto Construção e overlays precisavam coexistir com o canvas real sem recriá-lo.
+- **Decisão:** manter um único contrato central de rotas e um dock global de cinco áreas — Biblioteca, Coleção, Arquivo, Resumo e Ajustes —, fazendo Resumo reutilizar `/estatisticas` e deixando Novo registro como ação contextual da Coleção. O shell React envolve o `LibraryVisualHost`; no modo Construção, omite o dock sem desmontar o host. A etiqueta usa sala/período reais, reinicia somente por mudança desse contexto e é removida aos 5.000 ms; reduced motion remove somente fade/deslocamento, e uma alternativa textual permanente conserva a informação.
+- **Consequências:** o drawer deixa de ser navegação primária concorrente; URLs históricas continuam válidas; Phaser, planta, assets, geometria, depth, câmera, hit testing, dados e fallback permanecem autoridades existentes. Coleção, formulários, detalhe, Arquivo, Estatísticas, Ajustes e Construção recebem apenas adaptação mínima nesta entrega. A máquina completa e os conteúdos internos continuam pendentes, sem criar subdivisão nominal de R4.

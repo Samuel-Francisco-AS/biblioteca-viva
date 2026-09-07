@@ -143,3 +143,16 @@ O formato segue a ideia de **Keep a Changelog** e o projeto utilizará versionam
 ### Documentado
 
 - W3-A1 a W3-A6 e P3-C estão tecnicamente concluídos; teste físico/artístico, TalkBack, safe areas, áudio e desempenho no Moto G06 permanecem pendentes.
+
+### Correção W3-A em andamento
+
+- R1 introduziu spans, intervalos, endpoints, vértices, análise de perímetro e identidade normalizada sem regravar dados;
+- R2 promoveu os quatro cantos `production`, gerou runtimes pixel-equivalentes pelo pipeline oficial e encerrou a tolerância legada do check padrão;
+- R3 unificou metadado e transformação visual, renderer e hit testing, depth por base visível e fallback procedimental na mesma geometria;
+- R3-C-B2 executou o renderer Phaser ativo em Chromium e preservou sete capturas e manifesto: 8/9 casos passaram, mas a continuidade transversal falhou nos lados direito e inferior;
+- W3-A permanece aberta: o próximo gate corretivo para normal/lado/centerline/perfil transversal ainda não foi autorizado, e R4 não foi iniciado.
+
+### Falha visual conhecida
+
+- planos longitudinais e fechamento lógico podem coincidir enquanto perfis visíveis ocupam lados opostos do eixo; a sala canônica apresenta salto de centerline de aproximadamente 25,12 world units à direita, e o cenário modificado chega a 45,76 no lado inferior;
+- o fallback reproduz corretamente a geometria atual e não é um defeito independente; não foi aplicada correção por offset, coordenada ou blueprint.

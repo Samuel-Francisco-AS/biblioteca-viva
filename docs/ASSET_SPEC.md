@@ -136,7 +136,7 @@ A Biblioteca Viva **não será pixel art estrita de baixa resolução**. A dire�
 
 ### Achado W3-A
 
-A família aprovada de paredes mede 300 px visíveis por célula lógica nos segmentos: horizontal 1/2/4 = 300/600/1200 px de largura; vertical 1/2/4 = 300/600/1200 px de altura. Ela é renderizada por escala comum de 32/300, sem crop, rotação ou espelhamento. Os canvases preservam 48 px transparentes à direita/abaixo; os pivôs de arquitetura usam canto superior esquerdo e offsets declarados de canto/porta. Esta integração não congela aprovação artística: seams e proporção no Moto G06 continuam pendentes.
+A família de paredes mede 300 px visíveis por célula lógica nos segmentos: horizontal 1/2/4 = 300/600/1200 px de largura; vertical 1/2/4 = 300/600/1200 px de altura. Ela é renderizada por escala comum de 32/300, sem crop, rotação ou espelhamento. Os segmentos preservam 24 px transparentes antes e depois do eixo longitudinal. A transformação estrutural ativa usa origem `(0,0)`, `sourceReferencePx`, bounds e planos medidos; offsets e pivôs antigos permanecem somente como compatibilidade e não posicionam sprites ou hit areas. O contrato executável de R2-A está em `art-guides/w3-a-r2-a/`: planos externos ficam nas bordas de pixel 24 e `24 + span×300`, com tolerância longitudinal zero. Esta integração não congela aprovação artística: seams, continuidade transversal e proporção no Moto G06 continuam pendentes.
 
 ---
 
@@ -1356,4 +1356,12 @@ Quando isso funcionar, a direção deixa de ser apenas referência artística e 
 
 ## Adendo W3-A — assets estruturais vigentes
 
-O kit ativo W3-A usa escala comum de 300 px-fonte para 32 world units e catálogo declarativo. Paredes de 1/2/4 células existem nos eixos horizontal e vertical corretos; cantos NE/NW/SE/SW são peças próprias e a porta horizontal fechada/aberta compartilha o mesmo vão. Phaser não rotaciona bitmaps estruturalmente para fingir outra orientação. O catálogo contém pivot, offset, extensão, depth e fallback; a geometria lógica permanece fora do renderer. Porta vertical continua fora do produto porque não há asset aprovado. Aprovação de seams no Moto G06 é requisito humano, não uma conclusão do pipeline.
+O kit ativo W3-A usa escala comum de 300 px-fonte para 32 world units e autoridade visual declarativa. Paredes de 1/2/4 células existem nos eixos horizontal e vertical corretos; cantos NE/NW/SE/SW são peças próprias e a porta horizontal fechada/aberta compartilha o mesmo vão. Phaser não rotaciona bitmaps estruturalmente para fingir outra orientação. A geometria lógica produz intervalos e vértices; `structureVisualGeometry` produz canvas, alpha, planos, regiões e escala; `structureVisualDepth` e `structureVisualFallback` derivam da mesma saída. Porta vertical continua fora do produto porque não há asset aprovado.
+
+W3-A-R2-A mede alpha no canvas original e fixa o contrato dos cantos em `art-guides/w3-a-r2-a/wall-corner-contract.json`: PNG sRGBA 8-bit, canvas 1248×1248, bbox `1200x1200+24+24`, dois braços de 1200 px e nenhuma opacidade fora da união dos corredores horizontal/vertical da orientação. O validador usa 0 px de tolerância para canvas, extensão e planos; aceita 1 px apenas na diferença transversal registrada das retas verticais. Em R2-B2-B, os quatro cantos `production` foram promovidos às fontes e ao runtime, e o comando padrão deixou de tolerar os cantos legados. Gabaritos e montagens continuam diagnósticos, não runtime.
+
+### Continuidade transversal validada
+
+Canvas, alpha bbox, orientação e planos longitudinais conformes são necessários, mas não suficientes. O defeito histórico de R3-C-B2 mostrou que uma reta e um canto podiam alcançar o mesmo plano usando perfis em lados opostos do eixo lógico. FIX-A/B1/B2 tornou normal, lateral ocupada, centerline e perfil estrutural comparáveis parte do contrato geral e separou o envelope visual da interface contínua das portas.
+
+A correção deriva a normal interior exclusivamente do piso adjacente e aplica a translação assinada uma vez na transformação canônica, sem valor, tolerância, asset ou offset por coordenada/blueprint. Retas 1/2/4, quatro cantos, portas e fallback participam do oráculo; a repetição R3-C-B2 passou 9/9 e 31/31 emendas. Os PNGs e demais assets não foram alterados por R4.

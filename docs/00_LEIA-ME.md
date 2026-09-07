@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> Estado atual em 2026-08-28: Prompts 1–19, R1–R3, P1 e P2 são baseline histórico; W3-A (construção estrutural) está tecnicamente concluída após P3-C e aguarda apenas validação física/artística no Moto G06; G4 e G7–G10 permanecem abertos; versão `0.2.0-alpha.1`.
+> Estado atual em 2026-09-06: Prompts 1–19, R1–R3, P1, P2, W1 e W2 são baseline histórico. R3-C-B2, R4, R5, o gate final pré-R6 e R6 foram concluídos; o usuário aprovou a validação física no Moto G06 com duas ressalvas não bloqueadoras de desempenho. A rodada corretiva W3-A está integralmente encerrada e a próxima etapa de produto ainda não foi iniciada. G4 e G7–G10 permanecem abertos; versão `0.2.0-alpha.1`.
 
 ## 1. Função desta documentação
 
@@ -29,7 +29,7 @@ Ela está dividida por frequência de mudança:
 4. `ROADMAP.md`;
 5. prompt correspondente em `EXECUTION_PLAN.md`.
 
-Para refinamentos posteriores ao protótipo técnico, leia `REFINEMENT_PLAN.md` depois de `ROADMAP.md`. Para a W3-A vigente, `EXECUTION_PLAN.md` contém também a decomposição e o gate P3-C.
+Para refinamentos posteriores ao protótipo técnico, leia `REFINEMENT_PLAN.md` depois de `ROADMAP.md`. Para retomar a correção W3-A, leia primeiro `W3_A_CORRECTION_HANDOFF.md` e consulte `W3_A_CORRECTION_LOG.md` para o histórico completo. `EXECUTION_PLAN.md` permanece histórico e contém a decomposição original e o gate P3-C.
 
 Para o histórico de produto, leia `PRODUCT_PHASE_PLAN.md` depois de `ROADMAP.md`. Para o trabalho espacial vigente, leia também `WORLD_MODEL.md`, `ART_DIRECTION.md` e `ASSET_SPEC.md`; `EXECUTION_PLAN.md` permanece histórico dos Prompts 1–19.
 
@@ -59,6 +59,8 @@ Para o histórico de produto, leia `PRODUCT_PHASE_PLAN.md` depois de `ROADMAP.md
 | `DATA_MODEL.md` | entidades, invariantes e migrações | schema ou regra persistente mudar |
 | `UX_FLOWS.md` | navegação e fluxos | comportamento do usuário mudar |
 | `ROADMAP.md` | marcos, gates e progresso | prompt ou gate mudar de estado |
+| `W3_A_CORRECTION_LOG.md` | histórico integral da correção estrutural W3-A | gate corretivo executar ou mudar de estado |
+| `W3_A_CORRECTION_HANDOFF.md` | ponto conciso de retomada da W3-A | diagnóstico, validação ou próximo gate mudar |
 | `EXECUTION_PLAN.md` | prompts completos do Codex | estratégia de execução mudar |
 | `REFINEMENT_PLAN.md` | rodadas operacionais posteriores ao protótipo | achado real, prioridade ou rodada mudar |
 | `PRODUCT_PHASE_PLAN.md` | plano operacional P1–P3 da fase de produto | fase, checkpoint ou limite macro mudar |
@@ -108,5 +110,9 @@ Para o histórico de produto, leia `PRODUCT_PHASE_PLAN.md` depois de `ROADMAP.md
 - P1 implementou seis tipos de registro e schema Dexie v5/backup v3;
 - P2 permanece histórico: suas salas temáticas foram substituídas como direção futura pelo mundo contínuo;
 - W1 permanece como histórico de dois espaços neutros efêmeros; não é a autoridade da estrutura persistida atual;
-- W3-A implementa pisos e estruturas manipuláveis, inventário físico, blueprint idempotente e progressão por sessões elegíveis; estantes, livros visuais e leitor em forma de livro pertencem às próximas etapas da W3;
-- P3-C aprovou os gates automatizados, web e Android; validação física, artística, TalkBack, safe areas reais e desempenho percebido no Moto G06 permanecem pendentes.
+- W3-A implementa pisos e estruturas manipuláveis, inventário físico, blueprint idempotente e progressão por sessões elegíveis; R1/R2 e R3-A/R3-B/R3-C-A/R3-C-B1 foram concluídas conforme seus gates;
+- R3-C-B2 passou 9/9 após a correção geral por normal topológica, com 31/31 emendas e oito evidências oficiais preservadas;
+- R4 foi concluída e aprovada; R5 e o gate final pré-R6 também foram concluídos, sem reabrir R3-C-B2;
+- R6 foi aprovada pelo usuário no Moto G06: os controles superiores obsoletos estavam ausentes, Resumo inferior e Construir foram preservados, o dock funcionou, Busca e Filtros apareceram recolhidos como previsto e os dados pessoais permaneceram preservados;
+- a demora perceptível na abertura inicial da Biblioteca e um engasgo no card do Resumo já existiam antes do gate, foram aceitos como não bloqueadores e ficam adiados para a fase final específica de otimização. O desempenho físico não está marcado como aprovado ou resolvido;
+- a rodada corretiva W3-A está integralmente encerrada; a próxima etapa de produto ainda não foi iniciada.

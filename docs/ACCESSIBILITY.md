@@ -226,17 +226,17 @@ R2 usa um único padrão React para ações de nota e citação no detalhe e no 
 
 Nenhum item desta checklist foi executado no Prompt 17. Não há alegação de conformidade total WCAG. Prompt 17 e G9 permanecem abertos até validação humana integrada; G7 e G8 também permanecem abertos.
 
-## 18. Shell e rotas convencionais de R3-A
+## 18. Shell e rotas convencionais em R4
 
-O drawer é um diálogo modal React com nome acessível, navegação interna identificada, contenção de Tab/Shift+Tab, Escape, fechamento explícito, backdrop sem clique atravessando e retorno de foco ao botão de menu. Cada destino é um link nativo de área inteira e mantém `aria-current`. A Coleção usa um único link envolvendo o conteúdo não interativo do livro; não há botão ou link aninhado, e um teste clica no autor para provar que a superfície inteira navega.
+O drawer primário foi substituído por um único dock com cinco links nativos de área inteira, ícone e rótulo visível. Cada destino preserva nome acessível, `aria-current="page"`, foco visível, teclado e alvo mínimo de 48×48 CSS px. O conteúdo convencional reserva a altura do dock e a safe area inferior; a Coleção mantém um único link por card sem controle interativo aninhado.
 
-O tema escuro usa tokens semânticos para fundos, superfícies, texto, bordas, foco, estado e controles. Alto contraste substitui os mesmos tokens; texto grande/maior e alvo mínimo de 44 px permanecem. Detalhe e Configurações reduziram bordas sem remover headings, labels, erros associados, confirmações ou zona destrutiva. A automação cobre estrutura, foco e teclado; contraste percebido, TalkBack, teclado virtual, safe areas físicas e conforto visual continuam humanos.
+O tema escuro usa tokens semânticos para fundos, superfícies, texto, bordas, foco, estado e controles. Alto contraste substitui os mesmos tokens; texto grande/maior permanece no mesmo shell. Detalhe e Configurações preservam headings, labels, erros associados, confirmações e zona destrutiva. A automação cobre estrutura, foco, teclado, 320×640, 360×800, overflow e reserva do dock; contraste percebido, TalkBack, teclado virtual, safe areas físicas e conforto visual continuam humanos.
 
 ## 19. Biblioteca, sheet e balões em R3-B
 
 O canvas continua apenas visual e recebe descrição curta, não equivalência falsa de leitor de tela. O disclosure “Resumo acessível” mantém contagens, estante, marco e botões nativos; ao falhar Phaser, ele abre automaticamente. O bottom sheet é diálogo DOM com heading, conteúdo rolável, Escape, botão fechar e retorno ao acionador React. Os balões usam `aria-live="polite"`, uma única frase localizada e nenhum foco automático; fechar pelo equivalente React devolve foco à personagem correspondente.
 
-Drawer e sheet respeitam safe areas; system bars transparentes não recebem controles essenciais sob seus insets. Períodos alteram somente iluminação, nunca informação exclusiva. Reduced motion elimina loops e a transição de atmosfera, mas toque ainda produz highlight/estado, texto, sheet ou balão. Testes automatizam semântica, foco, Escape, superfície integral, texto ampliado estrutural e overflow; contraste percebido, TalkBack, teclado virtual, barras reais e conforto continuam humanos.
+Dock e sheet respeitam safe areas; system bars transparentes não recebem controles essenciais sob seus insets. Períodos alteram somente iluminação, nunca informação exclusiva. A etiqueta contextual é `aria-hidden` porque sala/período continuam em alternativa textual viva e permanente; ela não recebe foco. Reduced motion elimina seu fade/deslocamento sem mudar a remoção aos 5.000 ms. Testes automatizam semântica, foco, Escape, superfície integral, texto ampliado estrutural e overflow; contraste percebido, TalkBack, teclado virtual, barras reais e conforto continuam humanos.
 
 ## 20. P1-A
 
@@ -261,3 +261,17 @@ Há botão textual de entrada/saída, toolbar nomeada, sheets DOM roláveis, alt
 ## P3-C — auditoria de acesso
 
 Construção mantém controles semânticos, nomes acessíveis, foco visível herdado, ordem DOM coerente, confirmação antes de Guardar, estados de preview com forma/traço além de cor, `aria-live="polite"` consolidado para unlock e ação acessível `Abrir construção`. Escape fecha confirmação, sheet, seleção e, sem subestado aberto, sai previsivelmente do modo. Sheets são dialogs não modais: não anunciam uma armadilha de foco que não implementam. A alternativa React cobre operações essenciais do canvas. Não houve validação TalkBack, teclado virtual, contraste percebido ou alvo físico no Moto G06.
+
+## R4 — pendências de interface preservadas
+
+A primeira implementação de R4 corrigiu a navegação primária, a reserva do dock, a etiqueta transitória e o conflito do dock com Construção. Ela não redesenhou os conteúdos internos nem os subestados da tarefa.
+
+Continuam pendentes dentro de R4:
+
+- reduzir a oclusão do mapa pelo painel “Peças colocadas” sem remover a alternativa acessível;
+- tornar palette, placing, selecting, moving, piso e confirmação subestados mutuamente coerentes;
+- manter o mapa como superfície principal em 320×640 e 360×800, inclusive com texto ampliado e safe areas;
+- alinhar Escape e Android Back à mesma ordem de fechamento antes de sair;
+- validar foco, TalkBack, teclado virtual, contraste percebido e toque físico.
+
+As capturas de implementação provam apenas a composição automatizada nas viewports registradas. Não houve TalkBack, teclado virtual, barras físicas, toque real ou Android Back; nenhum gate humano foi fechado e R4 permanece em andamento.

@@ -21,6 +21,8 @@ Escala: probabilidade e impacto `baixo`, `médio` ou `alto`.
 | R-15 | advisories transitivos do toolchain/Router | baixa no uso atual | médio | lockfile, contexto registrado e revisão patch antes de G11 | entrada não confiável atingir toolchain ou adoção de RSC/actions | monitorado |
 | R-16 | migração v3 → v4 perder ou aparentar editar livros | baixa após automação | alto | migração aditiva, fixtures antigas, datas/revisões preservadas e reabertura | contagem ou semântica divergir após upgrade | mitigado parcialmente |
 | R-17 | crescimento da união gerar casts ou campos amorfos | média | alto | união discriminada, factories por variante, exhaustive switches e lint estrito | `as BookEntry`, `any` ou opcionais incompatíveis surgirem | ativo |
+| R-18 | validação estrutural produzir falso positivo ao conferir somente endpoint/plano longitudinal | baixa após regressão | alto | normal/lado ocupado, centerline e perfil transversal comparados em composições canônica e não canônica | planos coincidem, mas espessuras saltam, deixam gap ou ocupam lados opostos | mitigado por FIX-A/B1/B2 e B2 9/9 |
+| R-19 | mascarar defeito geral com offset específico do blueprint | baixa após correção geral | alto | proibir exceções por `instanceId`/coordenada; exigir transformação geral, ordem independente e regressão composta | correção move apenas um canto, lado ou sala conhecida | mitigado; nenhuma exceção introduzida |
 
 ## Revisão
 
@@ -33,6 +35,8 @@ Revisar este arquivo:
 - quando um risco se materializar.
 
 Quando materializado, registrar defeito, decisão e teste de regressão. Risco encerrado permanece no histórico com justificativa.
+
+R-18 foi observado no renderer Phaser ativo: fechamento lógico e planos longitudinais passaram, mas os perfis transversais dos lados direito e inferior ficaram em lados opostos. FIX-A/B1/B2 estabeleceu o contrato e o alinhamento gerais; a repetição passou 9/9 e 31/31 sem editar assets. O risco permanece monitorado por regressão, mas não bloqueia mais R4.
 # Riscos P1-B
 
 - **migração v4 → v5:** risco controlado por upgrade aditivo, fixture com reabertura e ausência de edição artificial;

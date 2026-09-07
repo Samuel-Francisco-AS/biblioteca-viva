@@ -1148,3 +1148,177 @@ A matriz P3-C passou em 2026-08-28: 798 testes Vitest/93 arquivos e 12 cenários
 ### Checklist humana Moto G06
 
 Para cada item, registrar **aprovado**, **reprovado**, **não testado** ou **não aplicável**: instalação/atualização sem limpar dados; fechar/reabrir/reiniciar; exportar/restaurar backup; painel rolável; pisos; paredes curta/média/longa nos dois eixos; quatro cantos; porta horizontal; selecionar/mover/girar/guardar/cancelar; gestos nas bordas e pan; sessão/unlock/silêncio; seams/grade/profundidade/clipping/safe areas; atraso/aquecimento/memória/segundo plano; mute/volume/som único; TalkBack/foco/anúncios/alternativa React/movimento reduzido/contraste. Reabrir W3-A para qualquer defeito objetivo de persistência, acesso, lifecycle, interação, safe area ou desempenho físico.
+
+## W3-A — matriz corretiva R1–R3 e gate visual B2
+
+### Contratos puros e integração
+
+As rodadas corretivas preservam matrizes focadas, sem converter contagens históricas em uma suíte global atual:
+
+| Rodada | Cobertura principal | Resultado registrado |
+|---|---|---|
+| R1-A/R1-B | spans, intervalos, endpoints, cantos, porta, rotação, perímetro, componentes e identidade normalizada | 53 testes em 4 arquivos |
+| R3-A | metadado/transformação dos 12 assets, bounds, regiões, negativos, imutabilidade e oito encontros por planos | 59 testes em 5 arquivos na matriz daquele gate |
+| R3-B | renderer e hit testing na mesma transformação; porta sem offset; dois braços por canto | 105 testes em 9 arquivos na matriz consolidada |
+| R3-C-A | depth por base visível, bandas e desempate estável | 118 testes em 10 arquivos na matriz consolidada |
+| R3-C-B1 | fallback dos 12 assets, lifecycle, transição para textura e ausência de Graphics órfãos | 134 testes em 11 arquivos na matriz consolidada |
+
+Esses testes comprovaram fechamento lógico, endpoints e planos longitudinais, mas a composição pura de R3-A agrupava encontros por coordenada/cardinalidade e não comparava a continuidade dos perfis transversais de peças vizinhas. Essa lacuna produziu falso positivo e passa a ser requisito explícito para qualquer gate corretivo.
+
+### W3-A-R3-C-B2 — Playwright e evidências
+
+O teste focado `e2e/w3-a-r3-c-b2.spec.ts` usa o factory Phaser ativo, estado descartável em memória e screenshots diretos do canvas. Chromium `151.0.7922.34`, com `--disable-webgl`, executou nove casos: **8 passaram e 1 falhou**. Não houve erro de console, exceção Phaser, warning nem request failure nos cenários capturados.
+
+As sete evidências e o manifesto estão em `art-guides/w3-a-r3-c-b2/`:
+
+- `canonical-room-full.png`;
+- `canonical-room-mobile-320x640.png`;
+- `canonical-room-mobile-360x800.png`;
+- `modified-room-full.png`;
+- `door-states-detail.png`;
+- `depth-selection-detail.png`;
+- `fallback-detail.png`;
+- `capture-manifest.json`.
+
+O caso bloqueador `checks closure, stable ordering and collinearity of visible corridors` preservou o fechamento lógico e a ordenação estável, mas encontrou perfis em lados opostos nos encontros direitos canônico e modificado. As capturas também revelam o equivalente no lado inferior. Portanto, **W3-A-R3-C-B2 está tecnicamente reprovada/não concluída**; as sete capturas não constituem aprovação visual humana.
+
+### W3-A-R3-C-B2-FIX-A — regressão transversal executável
+
+FIX-A foi autorizada nominalmente e implementou, antes de qualquer repetição de B2, um oráculo puro em `structureVisualContinuity.test.ts`. Toda junção compara, com tolerância explícita apenas para a variação real de um pixel-fonte:
+
+1. endpoint e plano longitudinal;
+2. normal ou lado transversal ocupado em relação ao eixo lógico;
+3. centerline do perfil visível;
+4. intervalo transversal semiaberto dos dois vizinhos;
+5. continuidade de espessura, sem gap, salto ou sobreposição indevida;
+6. salas canônica e não canônica, quatro cantos, retas 1/2/4, portas aberta/fechada e fallback;
+7. independência da ordem dos placements e ausência de exceções por blueprint, coordenada ou `instanceId`.
+
+Os 16 casos focados aceitam perfis alinhados e rejeitam lados opostos, centerlines deslocadas, gaps, overlaps e espessura fora da tolerância; cobrem limites semiabertos, negativos/frações, escalas distintas, ordem, paredes 1/2/4 nos dois eixos, quatro cantos, porta aberta/fechada, fallback e as três composições reais de B2. A canônica produz 8 junções (4 compatíveis/4 incompatíveis), a modificada 15 (10/5) e `door-states` 8 (2/6). O salto direito canônico é `25,12` world units e o encontro inferior reta/canto modificado, `45,76`. A matriz focada final passou com 150/150 testes em 12 arquivos; o lint manteve somente quatro parâmetros não usados preexistentes em `SpatialWorldScene.test.ts:70/72`.
+
+Nenhum teste fica vermelho para caracterizar a falha: os problemas fazem parte do resultado esperado e tipado. FIX-A não repetiu o E2E B2 nem alterou suas capturas. R3-C-B2 permanece 8/9, reprovada/não concluída; FIX-B, FIX-C e R4 não foram iniciados. Build, suíte global, Android e APK continuam fora desta etapa.
+
+### W3-A-R3-C-B2-FIX-B1 — perfil estrutural das portas
+
+Sam aceitou nominalmente FIX-A e a parada sem escrita da primeira tentativa de FIX-B. FIX-B foi subdividida, e somente B1 foi autorizada para formalizar a decisão humana de que porta aberta/fechada possui a mesma interface oeste/leste do corredor horizontal oficial.
+
+O contrato máquina-legível versão 2 define `stone-01-horizontal-corridor` uma única vez a partir de `[24,453)`, espessura 429 px-fonte ou `45,76` world units. Os testes provam:
+
+1. referência única e validada pelas três retas horizontais, pelos quatro braços horizontais de canto e pelos dois endpoints de cada porta;
+2. `profile` estrutural idêntico nas portas aberta/fechada, sem alterar `visualProfile`, alpha bounds de 564/740 px, regiões ocupadas, sprite, posição, escala, interaction, fallback ou depth;
+3. análise de continuidade baseada no perfil estrutural, eliminando `thickness-mismatch` devido à folha/projeções;
+4. suporte alpha read-only em cada linha do corredor dentro das faixas laterais `outerPaddingPx`, permitindo somente a tolerância preexistente de um pixel-fonte e sem connected components;
+5. rejeição de referência de classe divergente e de porta com mais linhas sem suporte que a tolerância;
+6. nenhuma normal topológica, translação, offset legado, regra por placement, coordenada, blueprint ou `instanceId`.
+
+Antes da escrita, os 150 testes em 12 arquivos de FIX-A passaram. Depois de B1, a matriz R1/R3/FIX-A/FIX-B1 passou com 171/171 testes em 14 arquivos. A canônica permanece 4/8 compatível; a modificada evolui de 10/15 para 11/15; `door-states`, de 2/8 para 4/8. As falhas restantes são lado/centerline/intervalo não alinhados, sem gap longitudinal, endpoint ausente/ambíguo ou incompatibilidade de espessura da porta.
+
+`format`, `format:check`, typecheck, `wall-assets:check`, `wall-guides:check` e `git diff --check` passam. O lint conserva exclusivamente os quatro erros preexistentes em `SpatialWorldScene.test.ts:70/72`. Somente o contrato fonte e `validator-report.json` derivado mudam; oito gabaritos/montagens, 24 PNGs estruturais e oito evidências B2 mantêm hashes. E2E B2, suíte global, build, performance, Android e APK não foram executados. FIX-B2, FIX-C, repetição de B2 e R4 não foram iniciados.
+
+### Regressão de inicialização visual anterior a FIX-B2
+
+`SpatialWorldScene.test.ts` instancia a scene antes da injeção dos plugins Phaser e exige um snapshot vazio (`0` tweens, display objects e zonas; `fps: null`) sem exceção. Isso reproduz a janela real entre `new Phaser.Game(...)` e `SpatialWorldScene.create()`, na qual `tweens` e `children` ainda não existem. Depois do primeiro `renderWorld`, o caminho vigente continua reportando os contadores reais.
+
+A matriz R1/R3/FIX-A/FIX-B1 com essa regressão passou com 172/172 testes em 14 arquivos; o conjunto direto de host, scene, geometria, continuidade e fallback passou com 84/84 em cinco arquivos. Typecheck e build passaram. Em navegador de desenvolvimento, a Biblioteca atingiu `ready`, 1 instância ativa, 1 canvas visível, 67 display objects e 2 zonas interativas; a saída de produção também montou um canvas visível sem fallback ou erro. Os quatro erros de lint permanecem exclusivamente nos parâmetros não usados preexistentes de `SpatialWorldScene.test.ts:86/88`.
+
+Não houve E2E B2, screenshot persistido, suíte global, performance, Android ou APK. O contrato estrutural das portas, as contagens 4/8–11/15–4/8, os 24 PNGs e as oito evidências B2 permanecem inalterados. FIX-B2, FIX-C, repetição de B2 e R4 não foram iniciados.
+
+### W3-A-R3-C-B2-FIX-B2 — normal topológica e alinhamento assinado
+
+Sam aceitou FIX-B1 e o reparo de inicialização antes de autorizar FIX-B2. A baseline pré-escrita passou com 172/172 testes em 14 arquivos.
+
+`structureVisualTopology.test.ts` cobre norte, sul, leste, oeste, cadeia aberta, peça isolada, piso dos dois lados, ausência de piso, suporte parcial, conflito de normais, canto com dois braços, sala canônica, sala deslocada para coordenadas negativas e independência da ordem. Resultados não resolvidos são discriminados e preservam posição; nenhuma coordenada, blueprint ou `instanceId` participa da decisão.
+
+`structureVisualGeometry.test.ts` prova `[0,t)` e `[-t,0)`, centerline, espessura e translação para ambos os sinais; retas 1/2/4 horizontais e verticais; quatro cantos com restrições perpendiculares; portas aberta/fechada no perfil estrutural FIX-B1; coordenadas fracionárias/negativas; preservação segura sob ambiguidade; e rejeição sem média de restrições do mesmo eixo divergentes além de um pixel-fonte. A tolerância longitudinal continua zero no analisador.
+
+As regressões integradas exigem que `structureRenderPlan` derive o contexto e que sprite, hit regions, seleção, preview, fallback e depth usem a transformação resultante. A parede direita canônica é selecionável somente em sua região interior transladada, e a projeção Phaser da porta inferior recebe o mesmo `y` canônico sem correção do renderer.
+
+| Composição | Antes | Depois | Unpaired depois | Issues depois |
+|---|---:|---:|---:|---:|
+| canônica | 4/8 | 8/8 | 0 | 0 |
+| modificada | 11/15 | 15/15 | 0 | 0 |
+| portas | 4/8 | 8/8 | 0 | 0 |
+| total | 19/31 | 31/31 | 0 | 0 |
+
+Os testes preservam as asserções diagnósticas de FIX-A ao comparar o estado anterior sem contexto topológico ao resultado corrigido. Depois de FIX-B2 há zero incompatibilidade de lado, centerline, gap, overlap, intervalo ou espessura; endpoints e métricas longitudinais são idênticos. Todas as peças das três composições obtêm normal resolvida, sem ambiguidade nova.
+
+Validação executada: 109/109 testes focados em seis arquivos; 203/203 na matriz R1/R3/FIX-A/B1/B2 em 15 arquivos; e 131/131 no foco de host/cena/geometria/continuidade/input/topologia em sete arquivos. `format`, `format:check`, typecheck, build, 12 assets, 9 guias e `git diff --check` passaram. O lint manteve exclusivamente quatro erros preexistentes em `SpatialWorldScene.test.ts:86/88`.
+
+O host automatizado conserva `state: ready`, uma instância ativa e um canvas; o snapshot pré-render continua seguro. A sessão, porém, não expôs navegador controlável para confirmar o mapa ao vivo após FIX-B2. Não houve substituição por E2E B2 nem nova screenshot; essa reconfirmação permanece pendente antes da repetição visual autorizada. Suíte global, performance, Android e APK não foram executados. FIX-C separado e R4 não foram iniciados.
+
+### Repetição concluída de W3-A-R3-C-B2
+
+O oráculo E2E deixou de presumir escala uniforme: para cada peça linear, calcula separadamente a escala-base transversal `CELL_SIZE/sourcePixelsPerCell` e a escala longitudinal resultante do span fonte mais 14 px-fonte simétricos por endpoint; cantos permanecem uniformes. Posição, textura, depth, origem, visibilidade e quantidade de sprites continuam comparados independentemente.
+
+A primeira tentativa da repetição foi interrompida porque a expectativa de escala ainda era a antiga; sua captura canônica e manifesto parciais não foram promovidos como baseline. Depois da correção do oráculo, uma comparação de RGB marcou `(6,2)` na composição modificada. O diagnóstico isolado encontrou alpha combinado 255 nas três amostras de `+1`, zero pixel transparente na matriz 11×46 e nenhum caminho de fundo por conectividade 4 ou 8. A igualdade cromática com o frame sem paredes era falso positivo. A asserção vigente compõe individualmente os alphas das duas peças com posição, escala e filtragem LINEAR do renderer e rejeita qualquer caminho alpha-zero que atravesse o perfil estrutural inteiro.
+
+A varredura cobre parede horizontal/cantos, parede vertical/cantos, portas e retas consecutivas. Resultado final: canônica 8/8, modificada 15/15 e portas 8/8, zero canal conectado nas 31 emendas. Pixels transparentes isolados do contorno permanecem permitidos somente quando não atravessam a faixa. O Playwright passou 9/9 duas vezes no Chromium `151.0.7922.34`, com sete capturas coerentes, mobile exatamente em 320×640 e 360×800, fallback atômico e arrays vazios de erro, warning e request failure.
+
+Validação complementar: continuidade/geometria/render plan/cena 78/78 em quatro arquivos; `wall-assets:check` validou 12 assets; typecheck, lint e build passaram; `git diff --check` passou. A correção de lint em `SpatialWorldScene.test.ts` apenas removeu parâmetros ociosos dos stubs. Não houve mudança de produção, PNG-fonte, persistência, schema, backup, blueprint ou dependência. R4 não foi iniciado.
+
+## R4 — primeira implementação do shell (trabalho em andamento)
+
+A direção visual aprovada foi conectada ao produto sem reutilizar a Biblioteca simplificada do protótipo. A cobertura desta entrega exige:
+
+1. contrato único com cinco destinos do dock, rota ativa, link integral, nome acessível e criação contextual pela Coleção;
+2. URLs diretas e redirecionamentos históricos de Novo registro/detalhe, além do foco no `main` após navegação por teclado;
+3. alvo mínimo de 48×48 CSS px, safe area, reserva inferior do conteúdo, zero overflow horizontal e composição em 320×640, 360×800 e desktop;
+4. alto contraste e texto maior no mesmo shell;
+5. Construção sem dock global, controles existentes ativos, ausência de fallback e preservação do mesmo elemento canvas ao entrar/sair;
+6. etiqueta presente na entrada, removida exatamente aos 5.000 ms, reiniciada por mudança real de sala/período, não reiniciada por rerender comum, sem animação em reduced motion e com timer limpo no unmount;
+7. alternativa textual de sala/período independente da etiqueta visual e sem mudança de foco.
+
+O baseline E2E tinha duas ocorrências de infraestrutura. O import JSON do contrato de cantos falhava no loader Node antes da coleta; a declaração recebeu o atributo padrão `with { type: "json" }`. O spec B2 também dependia historicamente do Vite DEV para importar o factory TypeScript no browser; a configuração agora mantém o preview para os fluxos convencionais e inicia uma origem DEV isolada para B2. O `check()` do favorito clicava um checkbox controlado cujo nó era substituído pela atualização da URL; o harness passou a usar um clique único e continua exigindo `toBeChecked()`, sem espera arbitrária ou redução da asserção. Nenhuma dessas correções altera produção.
+
+Resultados registrados em 2026-09-05:
+
+- shell, etiqueta, página e host: 78/78 testes focados;
+- suíte Vitest completa: 986/986 em 104 arquivos;
+- Playwright completo: 24/24, incluindo R4, fluxos convencionais e B2;
+- R3-C-B2 isolado em diretório temporário: 9/9;
+- continuidade estrutural: 16/16 casos, incluindo a asserção das três composições em 31/31 emendas;
+- build diagnóstico: estado `ready`, uma instância ativa e um canvas; build de produção sem fallback;
+- cinco screenshots reais em `art-guides/w3-a-r4-ux-proposal/captures/implementation/`, separados das oito evidências oficiais B2 e das 50 imagens da auditoria.
+- `npm run format`, `format:check`, lint, typecheck, `wall-assets:check`, build e `git diff --check` passaram; os oito SHA-256 oficiais de B2 coincidem com o handoff. O build conserva apenas o aviso não bloqueador já conhecido de chunks acima de 500 kB.
+
+TalkBack, teclado virtual, safe areas físicas, toque, áudio percebido, performance em aparelho, Android Back, Android build e APK não foram executados nessa primeira entrega. A migração interna das rotas e a máquina completa da Construção ainda estavam pendentes naquele ponto histórico.
+
+### Encerramento aprovado de R4
+
+Em 2026-09-06, Sam aprovou a direção visual e a correção funcional final de R4. O smoke Selenium/Firefox da rodada comprovou pela interface pública expansão de piso, colocação, seleção pela faixa horizontal, movimento com resposta imediata e Resumo real em `320×640` e `1280×800`. Essa evidência encerra R4 no escopo web, sem aprovar comportamento físico Android.
+
+## W3-A-R5 — regressão essencial, compatibilidade e APK técnico
+
+Evidência executada em 2026-09-06, limitada ao gate R5:
+
+| Verificação | Resultado |
+|---|---|
+| `src/infrastructure/backup/backup.test.ts` | passou |
+| `src/features/library-visual/LibraryVisualHost.test.tsx` | passou |
+| total Vitest focado | 2 arquivos, 49/49 testes |
+| smoke Selenium em Firefox 155 headless | passou em perfil temporário isolado |
+| `npm run build` | passou; aviso não bloqueador de chunks acima de 500 kB |
+| `npm run android:sync` | passou |
+| `npm run android:build:debug` | passou; avisos não bloqueadores de `flatDir` |
+| `git diff --check` | passou na conferência documental final |
+
+O smoke criou somente `Registro fictício R5 — 2026-09-06`, confirmou sua presença na Coleção e no detalhe, voltou à Biblioteca, confirmou o canvas, entrou e saiu de Construção sem trocar o elemento canvas, carregou o Resumo com 1 registro real, recarregou exatamente uma vez e confirmou o registro e a contagem estrutural estável em 8 peças antes/depois. Não houve acesso direto ao store, IndexedDB, callbacks internos ou `page.evaluate`.
+
+A primeira tentativa do mesmo fluxo falhou porque o seletor temporário exigia texto exatamente `Sair`, enquanto o botão público contém o ícone textual `↙ Sair`. A tela estava íntegra; a captura `art-guides/w3-a-r4-ux-proposal/captures/r5/failure-7-construction.png` foi preservada. Após ajustar apenas o seletor do harness efêmero, o fluxo passou sem correção de produto.
+
+A inspeção dos schemas e adapters confirmou Dexie v7, backup v5 e leitores v1–v4 sem mudança. As fronteiras vigentes validam os seis tipos de registro e preservam sessões/progresso, notas/citações, favoritos/etiquetas, preferências, estrutura, peças, piso, inventário derivado e marcos. O arquivo focado de backup cobre versões históricas, round-trip atual, restauração transacional, reabertura, estrutura v5, objetos e união monotônica de marcos usando somente bancos fictícios descartáveis. O arquivo do host cobre StrictMode, criação tardia, cleanup, resize, visibilidade, sincronização de projeção/estado e preservação da instância.
+
+APK debug técnico, não instalado: `android/app/build/outputs/apk/debug/app-debug.apk`, 36.952.055 bytes, SHA-256 `99d379427949798ba1e1c20728bb254a1f021d09599f4f173b3bcbb0cb08e6fe`, gerado em 2026-09-06 18:35:54 -03:00. R5 não executou suíte global, E2E completo, B2, matriz 31/31, assets, performance, acessibilidade, instalação ou teste físico. R6 permanece responsável pelo Moto G06.
+
+## W3-A-R6 — evidência humana no Moto G06
+
+Em 2026-09-06, o usuário instalou e inspecionou o APK no Moto G06. As capturas humanas da aplicação Android real confirmaram:
+
+- ausência dos controles superiores obsoletos na Biblioteca;
+- preservação do Resumo inferior e de Construir, além do funcionamento do dock inferior;
+- Busca recolhida na Coleção, ao lado de Novo registro;
+- Filtros recolhidos no Arquivo, com a busca textual ainda visível;
+- preservação dos dados pessoais;
+- aprovação das alterações aparentes do gate.
+
+R6 foi aprovada pelo usuário com duas ressalvas não bloqueadoras, ambas já existentes antes do gate: demora perceptível na abertura inicial da Biblioteca e engasgo no card do Resumo. Os dois pontos foram aceitos e adiados para a fase final específica de otimização. Esta evidência não marca o desempenho físico como aprovado ou resolvido. Nenhum teste automatizado, build, Selenium, sync Android ou novo APK foi executado neste encerramento documental.

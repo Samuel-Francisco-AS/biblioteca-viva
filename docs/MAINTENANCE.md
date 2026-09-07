@@ -84,3 +84,24 @@ Antes de mudar célula, definição ou gesto, execute os testes de `construction
 ## P3-C — manutenção W3-A
 
 Antes de alterar progressão, execute testes de `structuralProgress`, `milestones`, `sessions`, `structuralProgression`, `milestoneStore`, backup e App. Preserve os limiares 1/5/15/30, famílias físicas e grants idempotentes; não introduza XP/moeda/streak. Mudança Dexie exige nova migração aditiva e regressão v6→atual; mudança de backup exige codec, checksum, v4 e restore repetido. Depois de qualquer alteração estrutural, execute também `wall-assets:check`, `performance:report`, E2E e build Android antes da checklist humana.
+
+## Assets e guias estruturais W3-A
+
+Os três papéis são distintos e devem permanecer auditáveis:
+
+- `art-candidates/`: origem aprovada e imutável da promoção; não é carregada no runtime;
+- `art-source/`: fonte ativa preservada; é a entrada do pipeline oficial;
+- `public/assets/`: saída runtime gerada; diferenças de compressão/metadata são aceitáveis somente com equivalência RGBA comprovada.
+
+Use somente os comandos oficiais existentes:
+
+```text
+npm run wall-assets:process
+npm run wall-assets:check
+npm run wall-guides:generate
+npm run wall-guides:check
+```
+
+`wall-assets:process` valida fontes e runtimes contra `production` quando essa especificação existe. `wall-assets:check` deve permanecer sem tolerância legada no comando padrão. `wall-guides:generate` pode reescrever deterministicamente os artefatos; compare hashes pré/pós e aceite somente as mudanças derivadas esperadas. Após promover ou alterar assets, regenere `art-guides/w3-a-r2-a/validator-report.json` pelo gerador oficial e confirme que contrato, gabaritos e montagens permaneceram byte a byte idênticos quando não estiverem no escopo.
+
+Canvas, bbox e planos longitudinais individuais não bastam como gate de composição. A regressão vigente compara normal/lado ocupado, centerline e perfis transversais em junções reais, sem offsets por blueprint; R3-C-B2 passou 9/9 e 31/31. R4 está em andamento e não autoriza afrouxar esse gate nem alterar os oito artefatos oficiais.
