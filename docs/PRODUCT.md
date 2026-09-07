@@ -31,9 +31,13 @@ Uma sessão conta para progressão estrutural somente quando está concluída, t
 
 O usuário deve reconhecer o lugar como seu, perceber continuidade espacial e reencontrar uma memória visível de suas atividades. A interface convencional deve ser clara por si mesma; a Biblioteca visual acrescenta presença, exploração e afeto sem esconder dados ou ações.
 
+## Planejado, ainda não implementado
+
+A continuação aprovada como roteiro da W3 inclui estantes reais, livros visuais derivados dos registros, desbloqueio da primeira estante, livro aberto manipulável e painel React em forma de livro. O planejamento não equivale a implementação em curso: cada fatia W3-B–W3-F precisa ser aberta e validada separadamente. Ver `W3_PLAN.md`.
+
 ## Limites atuais
 
-Não estão implementados nem implicitamente autorizados:
+Não estão implementados:
 
 - porta vertical;
 - novos mundos ou salas obrigatórias por categoria;
@@ -42,7 +46,6 @@ Não estão implementados nem implicitamente autorizados:
 - multiplayer, social ou analytics;
 - aconselhamento médico ou avaliação de produtividade;
 - XP, moedas, ranking ou streak punitiva;
-- estantes reativas, livros visuais, livro aberto manipulável ou leitor em forma de livro.
 
 ## Anti-visão
 

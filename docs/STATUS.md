@@ -47,14 +47,15 @@
 - revisão final de procedência/licenças dos assets antes de release;
 - assinatura, atualização sobre release anterior e publicação Android.
 
-## Próxima decisão
+## Próxima etapa planejada
 
-Não há etapa de implementação autorizada. Antes de iniciar trabalho de produto, escolher e especificar uma fatia entre as possibilidades já registradas:
+A sequência de produto já definida continua em **W3-B — Estantes reais**. A etapa deve integrar as quatro orientações de estante, pivôs, footprints, seleção, movimento e rotação sobre a infraestrutura de `PlacedObject` existente.
 
-- estantes reativas;
-- livros visuais vinculados às atividades;
-- livro aberto manipulável;
-- leitor com apresentação em forma de livro;
-- estabilização de desempenho percebido.
+Depois dela, o roteiro segue nesta ordem:
 
-A escolha deve definir objetivo, fora de escopo, evidência e impacto em dados antes de entrar em `ROADMAP.md` como trabalho aprovado.
+1. W3-C — livros derivados dos registros;
+2. W3-D — primeiro livro e desbloqueio permanente da estante;
+3. W3-E — livro ativo e manipulável no mundo;
+4. W3-F — painel React em forma de livro para visualização e progresso.
+
+W3-B a W3-F estão planejadas, mas ainda não iniciadas. Cada etapa precisa de contrato executável, fora de escopo, testes e gate humano antes da implementação. A demora inicial da Biblioteca, o engasgo do Resumo, acessibilidade e áudio permanecem preocupações transversais e não substituem a sequência da W3. Ver `W3_PLAN.md`.

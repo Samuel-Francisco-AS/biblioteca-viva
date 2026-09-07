@@ -14,19 +14,30 @@ O histórico detalhado está em `HISTORY.md` e `history/w3-a/`.
 
 ## Agora
 
-Não existe fatia de produto autorizada. O trabalho permitido antes de uma escolha é diagnóstico, documentação e investigação sem mudança de comportamento.
+**Próxima etapa planejada: W3-B — Estantes reais.** A W3-A encerrou a fundação estrutural; W3-B retoma a sequência de estantes e livros que havia sido definida antes da ampliação corretiva da arquitetura.
 
-## Candidatas à próxima fatia
+Nenhuma etapa W3-B–W3-F está em execução. Iniciar uma delas ainda exige escopo e gate explícitos, mas não exige escolher novamente entre ideias concorrentes.
 
-| Candidata | Valor esperado | Dependências a esclarecer |
+## Continuação da W3
+
+| Etapa | Estado | Entrega principal |
 |---|---|---|
-| estabilização de desempenho | reduzir demora inicial e engasgo no Resumo | perfil físico reproduzível e orçamento |
-| estantes reativas | materializar coleção e atividade na Biblioteca | projeção, densidade e acessibilidade |
-| livros visuais | ligar registros ao mundo sem expor conteúdo pessoal ao Phaser | identidade visual e limites da projeção |
-| livro aberto manipulável | criar objeto afetivo e interativo | modelo, gestos, persistência e fallback |
-| leitor em forma de livro | melhorar leitura de conteúdo no React | escopo editorial, navegação e acesso |
+| W3-B — Estantes reais | próxima, não iniciada | quatro orientações, pivôs, footprints, movimento e rotação |
+| W3-C — Livros derivados dos registros | planejada | um sprite por `BookEntry`, estilo determinístico, slots e múltiplas estantes |
+| W3-D — Primeiro livro e desbloqueio | planejada | marco, concessão permanente da estante, posição inicial e reação audiovisual |
+| W3-E — Livro ativo no mundo | planejada | livro aberto ligado por `bookId`, movimento, giro e ação atômica de pausar/guardar |
+| W3-F — Visualização e progresso | planejada | painel React em forma de livro antigo, progresso, notas e citações |
 
-## Critério para autorizar uma fatia
+Detalhes, autoridades e questões ainda abertas estão em `W3_PLAN.md`.
+
+## Trabalho transversal
+
+- medir e investigar a demora inicial da Biblioteca e o engasgo do Resumo no Moto G06;
+- preservar alternativa React, foco, teclado, TalkBack e redução de movimento em cada fatia;
+- validar áudio percebido e procedência dos assets antes de release;
+- evoluir Dexie e backup juntos sempre que uma etapa introduzir estado persistente novo.
+
+## Critério para iniciar uma fatia
 
 Antes de implementar:
 

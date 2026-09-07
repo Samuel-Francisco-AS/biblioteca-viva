@@ -160,6 +160,8 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 - plano de testes cumulativo foi substituído por `docs/TESTING.md`;
 - decisões vigentes foram consolidadas em ADRs individuais;
 - o handoff obsoleto da W3-A foi substituído por um resumo histórico.
+- o roteiro já definido da W3-B à W3-F foi restaurado como planejamento vigente, distinguindo etapa planejada de etapa em execução;
+- `docs/W3_PLAN.md` passou a registrar a continuidade entre o reboot espacial, a ampliação da W3-A e as próximas etapas de estantes e livros.
 
 ## [0.2.0-alpha.1] — 2026-07-29
 

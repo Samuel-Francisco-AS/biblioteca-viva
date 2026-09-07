@@ -33,6 +33,7 @@ Esta é a entrada única da documentação. O conjunto separa contratos vigentes
 | `STATUS.md` | presente, problemas conhecidos e próxima decisão |
 | `PRODUCT.md` | visão, contrato atual e limites do produto |
 | `ROADMAP.md` | trabalho futuro e critérios de entrada |
+| `W3_PLAN.md` | sequência vigente W3-B–W3-F, dependências e limites |
 | `ARCHITECTURE.md` | camadas, dependências e autoridades técnicas |
 | `DATA_MODEL.md` | entidades, persistência, schemas e backup |
 | `WORLD_MODEL.md` | geometria, estrutura, objetos e renderização do mundo |

@@ -14,7 +14,7 @@ A rodada corretiva W3-A foi encerrada em 2026-09-06 e validada no Moto G06. O pr
 - banco Dexie no schema v7 e backup no formato v5, com leitura dos formatos v1 a v4;
 - aplicação Android via Capacitor e geração de APK debug.
 
-A próxima etapa de produto ainda não foi escolhida. Estantes reativas, livros visuais ligados às atividades, livro aberto manipulável e um leitor em forma de livro são possibilidades registradas, não funcionalidades iniciadas.
+A continuação planejada da W3 começa por **W3-B — Estantes reais** e segue por livros derivados dos registros, desbloqueio da primeira estante, livro ativo no mundo e visualização/progresso em React. Nenhuma dessas etapas posteriores à W3-A foi iniciada. O roteiro e seus limites estão em [`docs/W3_PLAN.md`](docs/W3_PLAN.md).
 
 ## Limitações conhecidas
 
