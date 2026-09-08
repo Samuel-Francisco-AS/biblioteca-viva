@@ -39,7 +39,7 @@ export const APP_ROUTE_PATHS = {
 
 export const appRoutes: readonly AppRoute[] = [
   {
-    description: "Sua sala e o resumo das leituras",
+    description: "Experiência visual da Biblioteca em reformulação",
     id: "library",
     path: APP_ROUTE_PATHS.library,
     primaryNavigation: {

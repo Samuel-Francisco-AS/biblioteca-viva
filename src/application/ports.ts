@@ -8,10 +8,7 @@ import type {
 } from "../domain";
 import type { Activity } from "./activities";
 import type { MilestoneProcessor } from "./milestones";
-import type { StructuralProgressionStore } from "./structuralProgression";
-import type { PlacedObjectRepository } from "./worldObjects";
 export type { AudioPort, AudioSettingsPort } from "./audio";
-export type { DialogueHistoryPort, DialoguePort } from "./dialogue";
 
 export interface LibraryEntryRepository {
   getById(id: string): Promise<LibraryEntry | undefined>;
@@ -98,11 +95,9 @@ export interface ApplicationDependencies {
   readonly ids: IdGenerator;
   readonly libraryEntries: LibraryEntryRepository;
   readonly milestones?: MilestoneProcessor;
-  readonly structuralProgression?: StructuralProgressionStore;
   readonly notes: NoteRepository;
   readonly quotes: QuoteRepository;
   readonly sessions: SessionRepository;
   readonly tags: TagRepository;
   readonly transaction: ApplicationTransactionRunner;
-  readonly placedObjects?: PlacedObjectRepository;
 }

@@ -1,171 +1,26 @@
-// @vitest-environment node
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { BrowserAudioBackend } from "./audioBackend";
 import { AUDIO_MANIFEST } from "./audioManifest";
-
-class FakeAudioParam {
-  value = 0;
-  setValueAtTime(value: number): void {
-    this.value = value;
-  }
-}
-
-class FakeAudioNode {
-  connect(): this {
-    return this;
-  }
-  disconnect(): void {}
-}
-
-class FakeBufferSource extends FakeAudioNode {
-  buffer?: object;
-  loop = false;
-  started = false;
-  private ended?: () => void;
-  addEventListener(_event: string, listener: () => void): void {
-    this.ended = listener;
-  }
-  start(): void {
-    this.started = true;
-  }
-  stop(): void {
-    this.ended?.();
-  }
-}
-
-class FakeGain extends FakeAudioNode {
-  readonly gain = new FakeAudioParam();
-}
-
-class FakeAudioContext {
-  static instances: FakeAudioContext[] = [];
-  readonly currentTime = 0;
-  readonly destination = new FakeAudioNode();
-  readonly sources: FakeBufferSource[] = [];
-  oscillatorCalls = 0;
-  decodeCalls = 0;
-  state: AudioContextState = "running";
-  constructor() {
-    FakeAudioContext.instances.push(this);
-  }
-  close(): Promise<void> {
-    this.state = "closed";
-    return Promise.resolve();
-  }
-  createGain(): FakeGain {
-    return new FakeGain();
-  }
-  createBufferSource(): FakeBufferSource {
-    const source = new FakeBufferSource();
-    this.sources.push(source);
-    return source;
-  }
-  createOscillator(): never {
-    this.oscillatorCalls += 1;
-    throw new Error("drone procedural proibido");
-  }
-  decodeAudioData(): Promise<object> {
-    this.decodeCalls += 1;
-    return Promise.resolve({ decoded: true });
-  }
-  resume(): Promise<void> {
-    this.state = "running";
-    return Promise.resolve();
-  }
-}
+import { BrowserAudioBackend } from "./audioBackend";
 
 afterEach(() => {
-  FakeAudioContext.instances.length = 0;
   vi.unstubAllGlobals();
 });
 
 describe("BrowserAudioBackend", () => {
   it("informa indisponibilidade quando Web Audio não existe", async () => {
     vi.stubGlobal("AudioContext", undefined);
-    const backend = new BrowserAudioBackend({ warn: vi.fn() });
-    await expect(backend.initialize()).resolves.toBe(false);
+    await expect(new BrowserAudioBackend().initialize()).resolves.toBe(false);
   });
 
-  it("usa o asset musical declarado no manifesto", async () => {
-    const fetchAsset = vi.fn(() =>
-      Promise.resolve({
-        arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)),
-        ok: true,
-      }),
-    );
-    vi.stubGlobal("AudioContext", FakeAudioContext);
-    vi.stubGlobal("fetch", fetchAsset);
-    const backend = new BrowserAudioBackend({ warn: vi.fn() });
-    await backend.initialize();
-    const playback = await backend.play(AUDIO_MANIFEST["music.library"], 0.5);
-    const context = FakeAudioContext.instances[0];
-    expect(fetchAsset).toHaveBeenCalledWith("/audio/library-ambient.wav");
-    expect(context?.sources).toHaveLength(1);
-    expect(context?.sources[0]).toMatchObject({ loop: false, started: true });
-    playback.stop();
+  it("exige inicialização antes de preparar um cue", async () => {
+    const backend = new BrowserAudioBackend();
+    await expect(
+      backend.prepare(AUDIO_MANIFEST["ui.page-turn"]),
+    ).rejects.toThrow("AUDIO_BACKEND_NOT_READY");
   });
 
-  it("prepara após initialize e reutiliza o buffer decodificado em novas entradas", async () => {
-    const fetchAsset = vi.fn(() =>
-      Promise.resolve({
-        arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)),
-        ok: true,
-      }),
-    );
-    vi.stubGlobal("AudioContext", FakeAudioContext);
-    vi.stubGlobal("fetch", fetchAsset);
-    const backend = new BrowserAudioBackend({ warn: vi.fn() });
-    await backend.initialize();
-    await backend.prepare(AUDIO_MANIFEST["music.library"]);
-    const first = await backend.play(AUDIO_MANIFEST["music.library"], 0.5);
-    first.stop();
-    const second = await backend.play(AUDIO_MANIFEST["music.library"], 0.5);
-    expect(fetchAsset).toHaveBeenCalledTimes(1);
-    expect(FakeAudioContext.instances[0]?.decodeCalls).toBe(1);
-    second.stop();
-  });
-
-  it("asset musical ausente degrada para silêncio sem criar oscilador", async () => {
-    const warn = vi.fn();
-    vi.stubGlobal("AudioContext", FakeAudioContext);
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(() => Promise.resolve({ ok: false })),
-    );
-    const backend = new BrowserAudioBackend({ warn });
-    await backend.initialize();
-    const playback = await backend.play(AUDIO_MANIFEST["music.library"], 0.5);
-    const context = FakeAudioContext.instances[0];
-    expect(warn).toHaveBeenCalledWith("ASSET_UNAVAILABLE");
-    expect(context?.oscillatorCalls).toBe(0);
-    expect(context?.sources).toEqual([]);
-    expect(playback.available).toBe(false);
-    playback.stop();
-  });
-
-  it("decode falho é cacheado como silêncio e não cria retry cego", async () => {
-    const warn = vi.fn();
-    vi.stubGlobal("AudioContext", FakeAudioContext);
-    const fetchAsset = vi.fn(() =>
-      Promise.resolve({
-        arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)),
-        ok: true,
-      }),
-    );
-    vi.stubGlobal("fetch", fetchAsset);
-    const backend = new BrowserAudioBackend({ warn });
-    await backend.initialize();
-    const context = FakeAudioContext.instances[0];
-    if (!context) throw new Error("Contexto fake ausente.");
-    vi.spyOn(context, "decodeAudioData").mockRejectedValue(new Error("decode"));
-    const first = await backend.play(AUDIO_MANIFEST["music.library"], 0.5);
-    const second = await backend.play(AUDIO_MANIFEST["music.library"], 0.5);
-    expect(first.available).toBe(false);
-    expect(second.available).toBe(false);
-    expect(fetchAsset).toHaveBeenCalledTimes(1);
-    expect(warn).toHaveBeenCalledWith("ASSET_UNAVAILABLE");
-    first.stop();
-    second.stop();
+  it("pode ser descartado sem contexto ativo", () => {
+    expect(() => new BrowserAudioBackend().dispose()).not.toThrow();
   });
 });

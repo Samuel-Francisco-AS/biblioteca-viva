@@ -18,8 +18,6 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
   retries: process.env.CI ? 1 : 0,
   testDir: "./e2e",
-  // Cada cenário pode iniciar Phaser/WebGL. Executá-los em paralelo esgota o
-  // compositor do Chromium e produz timeouts que não se reproduzem isolados.
   workers: 1,
   use: {
     baseURL: `http://127.0.0.1:${port}`,

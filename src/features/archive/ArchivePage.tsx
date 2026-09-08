@@ -221,9 +221,7 @@ export function ArchivePage({
             if (next)
               requestAnimationFrame(() => {
                 document
-                  .querySelector<HTMLElement>(
-                    "#archive-filter-controls select",
-                  )
+                  .querySelector<HTMLElement>("#archive-filter-controls select")
                   ?.focus();
               });
           }}
@@ -241,93 +239,93 @@ export function ArchivePage({
       >
         <fieldset className="collection-controls" inert={!filtersExpanded}>
           <legend>Filtros do Arquivo</legend>
-        <label className="form-field">
-          Anotação
-          <select
-            value={kind}
-            onChange={(event) =>
-              setParams(
-                (current) => {
-                  const next = new URLSearchParams(current);
-                  if (event.target.value === "all") next.delete("kind");
-                  else next.set("kind", event.target.value);
-                  return next;
-                },
-                { replace: true },
-              )
-            }
-          >
-            <option value="all">Notas e citações</option>
-            <option value="note">Notas</option>
-            <option value="quote">Citações</option>
-          </select>
-        </label>
-        <label className="form-field">
-          Tipo de registro
-          <select
-            value={entryType}
-            onChange={(event) =>
-              setParams(
-                (current) => {
-                  const next = new URLSearchParams(current);
-                  if (event.target.value === "all") next.delete("entryType");
-                  else next.set("entryType", event.target.value);
-                  return next;
-                },
-                { replace: true },
-              )
-            }
-          >
-            <option value="all">Todos</option>
-            {ENTRY_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="form-field">
-          Etiqueta
-          <select
-            value={tagId}
-            onChange={(event) =>
-              setParams(
-                (current) => {
-                  const next = new URLSearchParams(current);
-                  if (event.target.value === "all") next.delete("tag");
-                  else next.set("tag", event.target.value);
-                  return next;
-                },
-                { replace: true },
-              )
-            }
-          >
-            <option value="all">Todas</option>
-            {tags.map((tag) => (
-              <option key={tag.id} value={tag.id}>
-                {tag.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="checkbox-field">
-          <input
-            checked={favoritesOnly}
-            onChange={(event) =>
-              setParams(
-                (current) => {
-                  const next = new URLSearchParams(current);
-                  if (event.target.checked) next.set("favorite", "true");
-                  else next.delete("favorite");
-                  return next;
-                },
-                { replace: true },
-              )
-            }
-            type="checkbox"
-          />{" "}
-          Somente favoritas
-        </label>
+          <label className="form-field">
+            Anotação
+            <select
+              value={kind}
+              onChange={(event) =>
+                setParams(
+                  (current) => {
+                    const next = new URLSearchParams(current);
+                    if (event.target.value === "all") next.delete("kind");
+                    else next.set("kind", event.target.value);
+                    return next;
+                  },
+                  { replace: true },
+                )
+              }
+            >
+              <option value="all">Notas e citações</option>
+              <option value="note">Notas</option>
+              <option value="quote">Citações</option>
+            </select>
+          </label>
+          <label className="form-field">
+            Tipo de registro
+            <select
+              value={entryType}
+              onChange={(event) =>
+                setParams(
+                  (current) => {
+                    const next = new URLSearchParams(current);
+                    if (event.target.value === "all") next.delete("entryType");
+                    else next.set("entryType", event.target.value);
+                    return next;
+                  },
+                  { replace: true },
+                )
+              }
+            >
+              <option value="all">Todos</option>
+              {ENTRY_TYPES.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="form-field">
+            Etiqueta
+            <select
+              value={tagId}
+              onChange={(event) =>
+                setParams(
+                  (current) => {
+                    const next = new URLSearchParams(current);
+                    if (event.target.value === "all") next.delete("tag");
+                    else next.set("tag", event.target.value);
+                    return next;
+                  },
+                  { replace: true },
+                )
+              }
+            >
+              <option value="all">Todas</option>
+              {tags.map((tag) => (
+                <option key={tag.id} value={tag.id}>
+                  {tag.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="checkbox-field">
+            <input
+              checked={favoritesOnly}
+              onChange={(event) =>
+                setParams(
+                  (current) => {
+                    const next = new URLSearchParams(current);
+                    if (event.target.checked) next.set("favorite", "true");
+                    else next.delete("favorite");
+                    return next;
+                  },
+                  { replace: true },
+                )
+              }
+              type="checkbox"
+            />{" "}
+            Somente favoritas
+          </label>
         </fieldset>
       </div>
       <div className="form-field archive-search">

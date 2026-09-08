@@ -51,7 +51,7 @@ afterEach(async () => {
 });
 
 describe("createApplication", () => {
-  it("completa os quatro marcos uma vez e os recarrega sem nova concessão", async () => {
+  it("completa os quatro marcos convencionais uma vez e os recarrega", async () => {
     const name = databaseName("milestone-composition");
     const first = await createApplication({ databaseName: name });
     const observedByFirstSubscriber: string[] = [];
@@ -103,43 +103,6 @@ describe("createApplication", () => {
     const second = await createApplication({ databaseName: name });
     runtimes.push(second);
     expect(await second.queries.listMilestones.list()).toHaveLength(4);
-    expect(
-      (await second.queries.listMilestones.list()).flatMap(
-        ({ rewards }) => rewards,
-      ),
-    ).toEqual([
-      {
-        decorationId: "decoration.reading-lamp",
-        id: "reward.first-completion-reading-lamp",
-        type: "decoration",
-      },
-    ]);
-  });
-
-  it("compõe diálogo, persiste once em settings e o recarrega", async () => {
-    const name = databaseName("dialogue-composition");
-    const first = await createApplication({ databaseName: name });
-    await first.dialogue.enterLibrary({
-      completedBooks: 0,
-      inProgressBooks: 0,
-      totalBooks: 1,
-    });
-    await expect(
-      first.dialogue.select("librarian.interaction"),
-    ).resolves.toMatchObject({ id: "dialogue.librarian.first-book" });
-    expect((await first.diagnostics.inspect()).counts.settings).toBe(1);
-    first.close();
-
-    const second = await createApplication({ databaseName: name });
-    runtimes.push(second);
-    await second.dialogue.enterLibrary({
-      completedBooks: 0,
-      inProgressBooks: 0,
-      totalBooks: 1,
-    });
-    await expect(
-      second.dialogue.select("librarian.interaction"),
-    ).resolves.not.toMatchObject({ id: "dialogue.librarian.first-book" });
   });
 
   it("conecta conclusão pós-commit ao efeito e recarrega preferências", async () => {
@@ -150,7 +113,6 @@ describe("createApplication", () => {
       databaseName: name,
     });
     await first.audio.initialize();
-    await first.audio.setMusicVolume(0.22);
     await first.audio.setEffectsVolume(0.73);
     await first.audio.setMuted(false);
     const book = await first.commands.createBookEntry.execute({
@@ -181,7 +143,6 @@ describe("createApplication", () => {
     runtimes.push(second);
     expect(second.audio.preferences()).toEqual({
       effectsVolume: 0.73,
-      musicVolume: 0.22,
       muted: false,
     });
   });

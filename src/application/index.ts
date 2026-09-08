@@ -2,7 +2,6 @@ export * from "./activities";
 export * from "./annotations";
 export * from "./audio";
 export * from "./backup";
-export * from "./dialogue";
 export * from "./errors";
 export * from "./experience";
 export * from "./milestones";
@@ -11,8 +10,6 @@ export * from "./libraryEntries";
 export * from "./sessions";
 export * from "./tags";
 export * from "./statistics";
-export * from "./structuralProgression";
-export * from "./rooms";
 export * from "./ports";
 export * from "./queries";
 export type {
@@ -28,10 +25,3 @@ export type {
 } from "./schemas";
 export { createBookEntrySchema, updateBookEntrySchema } from "./schemas";
 export * from "./useCases";
-export * from "./world";
-export * from "./worldObjects";
-export * from "./worldStructure";
-export * from "./worldStructureAnalysis";
-export * from "./worldStructureRepository";
-export * from "./worldStructureObjects";
-export * from "./worldStructureEditing";

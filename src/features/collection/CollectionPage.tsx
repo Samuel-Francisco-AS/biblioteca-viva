@@ -209,8 +209,7 @@ export function CollectionPage({
             onClick={() => {
               const next = !searchExpanded;
               setSearchExpanded(next);
-              if (next)
-                requestAnimationFrame(() => searchRef.current?.focus());
+              if (next) requestAnimationFrame(() => searchRef.current?.focus());
             }}
             ref={searchToggleRef}
             type="button"
@@ -230,87 +229,87 @@ export function CollectionPage({
       >
         <fieldset className="collection-controls" inert={!searchExpanded}>
           <legend className="visually-hidden">Controles da Coleção</legend>
-        <div className="form-field">
-          <label htmlFor="collection-search">Buscar registros</label>
-          <p className="field-help" id="collection-search-help">
-            Busca nos metadados principais de cada tipo.
-          </p>
-          <input
-            id="collection-search"
-            ref={searchRef}
-            type="search"
-            value={query}
-            aria-describedby="collection-search-help"
-            onChange={(event) => updateParam("q", event.target.value)}
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="collection-type">Tipo</label>
-          <select
-            id="collection-type"
-            value={type}
-            onChange={(event) => updateParam("type", event.target.value)}
-          >
-            <option value="all">Todos os tipos</option>
-            {ENTRY_TYPES.map((entryType) => (
-              <option key={entryType} value={entryType}>
-                {entryTypeLabels[entryType]}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="form-field">
-          <label htmlFor="collection-status">Status</label>
-          <select
-            id="collection-status"
-            value={status}
-            onChange={(event) => updateParam("status", event.target.value)}
-          >
-            <option value="all">Todos os status</option>
-            {ENTRY_STATUSES.map((entryStatus) => (
-              <option key={entryStatus} value={entryStatus}>
-                {statusLabels[entryStatus]}
-              </option>
-            ))}
-          </select>
-        </div>
-        <label className="checkbox-field">
-          <input
-            type="checkbox"
-            checked={favoritesOnly}
-            onChange={(event) =>
-              updateParam("favorite", String(event.target.checked))
-            }
-          />{" "}
-          Somente favoritos
-        </label>
-        <div className="form-field">
-          <label htmlFor="collection-tag">Etiqueta</label>
-          <select
-            id="collection-tag"
-            value={tagId}
-            onChange={(event) => updateParam("tag", event.target.value)}
-          >
-            <option value="all">Todas as etiquetas</option>
-            {tags.map((tag) => (
-              <option key={tag.id} value={tag.id}>
-                {tag.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="form-field">
-          <label htmlFor="collection-sort">Ordenar por</label>
-          <select
-            id="collection-sort"
-            value={sort}
-            onChange={(event) => updateParam("sort", event.target.value)}
-          >
-            <option value="recent">Atualização recente</option>
-            <option value="created">Criação recente</option>
-            <option value="title">Título</option>
-          </select>
-        </div>
+          <div className="form-field">
+            <label htmlFor="collection-search">Buscar registros</label>
+            <p className="field-help" id="collection-search-help">
+              Busca nos metadados principais de cada tipo.
+            </p>
+            <input
+              id="collection-search"
+              ref={searchRef}
+              type="search"
+              value={query}
+              aria-describedby="collection-search-help"
+              onChange={(event) => updateParam("q", event.target.value)}
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="collection-type">Tipo</label>
+            <select
+              id="collection-type"
+              value={type}
+              onChange={(event) => updateParam("type", event.target.value)}
+            >
+              <option value="all">Todos os tipos</option>
+              {ENTRY_TYPES.map((entryType) => (
+                <option key={entryType} value={entryType}>
+                  {entryTypeLabels[entryType]}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="form-field">
+            <label htmlFor="collection-status">Status</label>
+            <select
+              id="collection-status"
+              value={status}
+              onChange={(event) => updateParam("status", event.target.value)}
+            >
+              <option value="all">Todos os status</option>
+              {ENTRY_STATUSES.map((entryStatus) => (
+                <option key={entryStatus} value={entryStatus}>
+                  {statusLabels[entryStatus]}
+                </option>
+              ))}
+            </select>
+          </div>
+          <label className="checkbox-field">
+            <input
+              type="checkbox"
+              checked={favoritesOnly}
+              onChange={(event) =>
+                updateParam("favorite", String(event.target.checked))
+              }
+            />{" "}
+            Somente favoritos
+          </label>
+          <div className="form-field">
+            <label htmlFor="collection-tag">Etiqueta</label>
+            <select
+              id="collection-tag"
+              value={tagId}
+              onChange={(event) => updateParam("tag", event.target.value)}
+            >
+              <option value="all">Todas as etiquetas</option>
+              {tags.map((tag) => (
+                <option key={tag.id} value={tag.id}>
+                  {tag.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="form-field">
+            <label htmlFor="collection-sort">Ordenar por</label>
+            <select
+              id="collection-sort"
+              value={sort}
+              onChange={(event) => updateParam("sort", event.target.value)}
+            >
+              <option value="recent">Atualização recente</option>
+              <option value="created">Criação recente</option>
+              <option value="title">Título</option>
+            </select>
+          </div>
         </fieldset>
       </div>
       <div className="result-summary" aria-live="polite">

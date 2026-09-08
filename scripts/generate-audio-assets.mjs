@@ -61,62 +61,6 @@ function normalize(target, peak) {
   return target;
 }
 
-function createMusic() {
-  const duration = 16;
-  const output = samples(duration);
-  const progression = [
-    [261.63, 329.63, 392, 493.88],
-    [220, 261.63, 329.63, 392],
-    [174.61, 220, 261.63, 329.63],
-    [196, 293.66, 392, 440],
-  ];
-  progression.forEach((chord, chordIndex) => {
-    chord.forEach((frequency, noteIndex) => {
-      addTone(output, {
-        amplitude: 0.055 - noteIndex * 0.004,
-        attack: 0.75,
-        duration: 4.7,
-        frequency,
-        release: 1.05,
-        start: chordIndex * 4,
-        vibrato: { depth: 0.018, rate: 0.16 + noteIndex * 0.015 },
-      });
-    });
-  });
-
-  const melody = [
-    [1.2, 659.25],
-    [2.8, 783.99],
-    [4.9, 659.25],
-    [6.7, 587.33],
-    [8.9, 523.25],
-    [10.7, 659.25],
-    [12.8, 587.33],
-    [14.2, 493.88],
-  ];
-  melody.forEach(([start, frequency]) =>
-    addTone(output, {
-      amplitude: 0.026,
-      attack: 0.16,
-      duration: 1.15,
-      frequency,
-      release: 0.7,
-      start,
-      vibrato: { depth: 0.01, rate: 3.2 },
-    }),
-  );
-
-  const fadeDuration = 0.45;
-  for (let index = 0; index < output.length; index += 1) {
-    const time = index / SAMPLE_RATE;
-    output[index] *= Math.min(
-      smoothstep(time / fadeDuration),
-      smoothstep((duration - time) / fadeDuration),
-    );
-  }
-  return normalize(output, 0.5);
-}
-
 function deterministicNoise(length, seed) {
   const output = new Float64Array(length);
   let state = seed >>> 0;
@@ -140,59 +84,6 @@ function createInterfaceEffect() {
     const highPassed = noise[index] - previous * 0.82;
     previous = noise[index];
     output[index] = highPassed * envelope(time, duration, 0.025, 0.08) * 0.2;
-  }
-  return normalize(output, 0.32);
-}
-
-function createShelfEffect() {
-  const duration = 0.24;
-  const output = samples(duration);
-  const noise = deterministicNoise(output.length, 0xb00c);
-  for (let index = 0; index < output.length; index += 1) {
-    const time = index / SAMPLE_RATE;
-    const knock =
-      Math.sin(2 * Math.PI * (185 - 45 * time) * time) *
-      envelope(time, 0.13, 0.012, 0.1) *
-      0.32;
-    const paper = noise[index] * envelope(time, duration, 0.035, 0.14) * 0.12;
-    output[index] = knock + paper;
-  }
-  return normalize(output, 0.42);
-}
-
-function createLibrarianEffect() {
-  const output = samples(0.42);
-  addTone(output, {
-    amplitude: 0.16,
-    attack: 0.035,
-    duration: 0.35,
-    frequency: 523.25,
-    release: 0.25,
-    start: 0,
-  });
-  addTone(output, {
-    amplitude: 0.12,
-    attack: 0.04,
-    duration: 0.3,
-    frequency: 659.25,
-    release: 0.22,
-    start: 0.09,
-  });
-  return normalize(output, 0.34);
-}
-
-function createCreatureEffect() {
-  const duration = 0.32;
-  const output = samples(duration);
-  for (let index = 0; index < output.length; index += 1) {
-    const time = index / SAMPLE_RATE;
-    const progress = time / duration;
-    const frequency = 330 + 85 * smoothstep(progress);
-    const phase = 2 * Math.PI * frequency * time;
-    output[index] =
-      (Math.sin(phase) + 0.18 * Math.sin(phase * 0.5)) *
-      envelope(time, duration, 0.055, 0.16) *
-      0.18;
   }
   return normalize(output, 0.32);
 }
@@ -236,11 +127,7 @@ function encodeWav(source) {
 }
 
 const assets = new Map([
-  ["library-ambient.wav", createMusic()],
   ["ui-page.wav", createInterfaceEffect()],
-  ["shelf-touch.wav", createShelfEffect()],
-  ["librarian-touch.wav", createLibrarianEffect()],
-  ["creature-touch.wav", createCreatureEffect()],
   ["book-completed.wav", createCompletionEffect()],
 ]);
 

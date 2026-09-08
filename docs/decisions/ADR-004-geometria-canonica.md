@@ -1,6 +1,6 @@
 # ADR-004 — Geometria visual estrutural canônica
 
-- **Estado:** aceita
+- **Estado:** substituída por [ADR-008](ADR-008-world-reset.md)
 - **Data original:** 2026-09-04
 
 ## Decisão

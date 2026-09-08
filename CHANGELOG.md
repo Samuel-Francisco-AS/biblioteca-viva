@@ -4,6 +4,16 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### WORLD RESET — 2026-09-08
+
+- removidos integralmente o mundo visual anterior, seu renderer Phaser, Construção, contratos espaciais, progressão estrutural, salas, personagens, diálogos, assets, fontes, candidatos, guias, scripts e testes exclusivos;
+- a rota Biblioteca passou a apresentar um placeholder React curto e acessível, sem canvas ou estado espacial;
+- removido `phaser` e o preload visual; o aplicativo abre diretamente pelo bootstrap React;
+- criado o schema Dexie v8, que descarta os dados de desenvolvimento existentes e mantém somente as tabelas convencionais no schema ativo;
+- criado o backup v6 somente para dados convencionais; formatos v1–v5 são deliberadamente incompatíveis e rejeitados antes da escrita;
+- preservados os dez marcos convencionais, sem rewards, grants, decoração, diálogo ou efeitos no mundo;
+- reconciliada a documentação para um baseline sem mundo e registrada a direção futura de 3D real com apresentação ortográfica/2.5D, sem escolha de renderer neste checkpoint.
+
 ### Adicionado
 
 #### Produto e registros

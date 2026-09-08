@@ -29,7 +29,6 @@ describe("DexieAudioSettingsRepository", () => {
     );
     const preferences = {
       effectsVolume: 0.72,
-      musicVolume: 0.18,
       muted: true,
     };
     await repository.save(preferences);
@@ -53,7 +52,7 @@ describe("DexieAudioSettingsRepository", () => {
     await database.open();
     await database.settings.put({
       key: AUDIO_SETTINGS_KEY,
-      value: { effectsVolume: 4, musicVolume: "alto", muted: false },
+      value: { effectsVolume: 4, muted: false },
       updatedAt: "2026-08-06T12:00:00.000Z",
     });
     await expect(

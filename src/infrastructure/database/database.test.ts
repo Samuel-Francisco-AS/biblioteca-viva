@@ -208,7 +208,7 @@ describe("exclusão transacional de livro", () => {
 });
 
 describe("BibliotecaDatabase e migrações", () => {
-  it("abre o schema atual com onze tabelas e versão 7", async () => {
+  it("abre o schema atual com nove tabelas e versão 8", async () => {
     const database = new BibliotecaDatabase(databaseName("open"));
     await database.open();
 
@@ -219,17 +219,15 @@ describe("BibliotecaDatabase e migrações", () => {
       "metadata",
       "milestones",
       "notes",
-      "placedObjects",
       "quotes",
       "sessions",
       "settings",
       "tags",
-      "worldStructures",
     ]);
     database.close();
   });
 
-  it("migra v1 para v3 preservando livro e criando marcador técnico", async () => {
+  it("migra v1 para o baseline v8 descartando dados e criando marcador", async () => {
     const name = databaseName("migration");
     const legacy = new Dexie(name);
     legacy.version(1).stores(DATABASE_SCHEMA_V1);
@@ -242,28 +240,23 @@ describe("BibliotecaDatabase e migrações", () => {
 
     const migrated = new BibliotecaDatabase(name);
     await migrated.open();
-    const repository = new DexieLibraryEntryRepository(migrated);
-    expect(await repository.getById(original.id)).toEqual({
-      ...original,
-      favorite: false,
-      tagIds: [],
-    });
+    expect(await migrated.libraryEntries.count()).toBe(0);
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
       key: SCHEMA_MARKER_KEY,
-      value: "7",
+      value: "8",
     });
     migrated.close();
 
     const reopened = new BibliotecaDatabase(name);
     await reopened.open();
-    expect(await reopened.libraryEntries.count()).toBe(1);
+    expect(await reopened.libraryEntries.count()).toBe(0);
     expect(
       await reopened.metadata.where("key").equals(SCHEMA_MARKER_KEY).count(),
     ).toBe(1);
     reopened.close();
   });
 
-  it("migra v2 para v3, preserva dados/settings e reabre com marcos vazios", async () => {
+  it("migra v2 para o baseline v8 descartando dados e settings", async () => {
     const name = databaseName("migration-v2");
     const legacy = new Dexie(name);
     legacy.version(2).stores(DATABASE_SCHEMA_V2);
@@ -273,24 +266,24 @@ describe("BibliotecaDatabase e migrações", () => {
     await legacy.table("settings").put({
       key: "audio.preferences.v1",
       updatedAt: T0,
-      value: { effectsVolume: 0.5, musicVolume: 0.2, muted: false },
+      value: { effectsVolume: 0.5, muted: false },
     });
     legacy.close();
 
     const migrated = new BibliotecaDatabase(name);
     await migrated.open();
-    expect(await migrated.libraryEntries.get(original.id)).toEqual(original);
-    expect(await migrated.settings.get("audio.preferences.v1")).toBeDefined();
+    expect(await migrated.libraryEntries.get(original.id)).toBeUndefined();
+    expect(await migrated.settings.get("audio.preferences.v1")).toBeUndefined();
     expect(await migrated.milestones.count()).toBe(0);
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-      value: "7",
+      value: "8",
     });
     migrated.close();
 
     const reopened = new BibliotecaDatabase(name);
     await reopened.open();
-    expect(await reopened.libraryEntries.count()).toBe(1);
-    expect(await reopened.settings.count()).toBe(1);
+    expect(await reopened.libraryEntries.count()).toBe(0);
+    expect(await reopened.settings.count()).toBe(0);
     expect(await reopened.milestones.count()).toBe(0);
     reopened.close();
   });

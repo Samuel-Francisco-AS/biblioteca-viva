@@ -7,7 +7,6 @@ import { App } from "./App";
 import { createApplication } from "./app/createApplication";
 import { AppErrorBoundary } from "./app/AppErrorBoundary";
 import { startupNow } from "./startupPerformance";
-import { preloadLibraryVisualFactory } from "./features/library-visual/LibraryVisualHost";
 
 const rootElement = document.querySelector("#root");
 
@@ -16,8 +15,6 @@ if (!rootElement) {
 }
 
 const root = createRoot(rootElement);
-
-if (window.location.pathname === "/") preloadLibraryVisualFactory();
 
 function render(application?: Awaited<ReturnType<typeof createApplication>>) {
   const shellStartedAt = startupNow();

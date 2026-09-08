@@ -1,10 +1,8 @@
 import {
-  DECORATION_IDS,
   ENTRY_STATUSES,
   MILESTONE_IDS,
   PHYSICAL_ACTIVITY_CATEGORIES,
   SESSION_STATUSES,
-  STRUCTURAL_INVENTORY_FAMILY_IDS,
   STUDY_PROGRESS_UNITS,
   type BookEntry,
   type LibraryEntry,
@@ -13,15 +11,10 @@ import {
   type Session,
   type Tag,
 } from "../../domain";
-import { placedObjectSchema, type PlacedObject } from "../../application/world";
-import {
-  worldStructureSchema,
-  type WorldStructureState,
-} from "../../application/worldStructure";
 import { z } from "zod";
 
 export const DATABASE_NAME = "biblioteca-viva";
-export const DATABASE_VERSION = 7;
+export const DATABASE_VERSION = 8;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
 export const DATABASE_SCHEMA_V1 = {
@@ -61,6 +54,12 @@ export const DATABASE_SCHEMA_V6 = {
 export const DATABASE_SCHEMA_V7 = {
   ...DATABASE_SCHEMA_V6,
   worldStructures: "&id",
+} as const;
+
+export const DATABASE_SCHEMA_V8 = {
+  ...DATABASE_SCHEMA_V5,
+  placedObjects: null,
+  worldStructures: null,
 } as const;
 
 const isoUtc = z.iso.datetime({ offset: false });
@@ -518,21 +517,6 @@ export const persistedSettingSchema = z.strictObject({
 export const persistedMilestoneSchema = z.strictObject({
   id: z.enum(MILESTONE_IDS),
   reachedAt: isoUtc,
-  rewards: z.array(
-    z.discriminatedUnion("type", [
-      z.strictObject({
-        decorationId: z.enum(DECORATION_IDS).optional(),
-        id: z.string().trim().min(1),
-        type: z.literal("decoration"),
-      }),
-      z.strictObject({
-        familyId: z.enum(STRUCTURAL_INVENTORY_FAMILY_IDS),
-        id: z.string().trim().min(1),
-        quantity: z.int().positive(),
-        type: z.literal("structure-grant"),
-      }),
-    ]),
-  ),
   ruleVersion: z.int().positive(),
   source: z.strictObject({
     eventId: z.string().trim().min(1),
@@ -546,9 +530,6 @@ export const persistedMilestoneSchema = z.strictObject({
   }),
 });
 
-export const persistedPlacedObjectSchema = placedObjectSchema;
-export const persistedWorldStructureSchema = worldStructureSchema;
-
 export type PersistedBook = BookEntry;
 export type PersistedLibraryEntry = LibraryEntry;
 export type PersistedNote = Note;
@@ -559,5 +540,3 @@ export type PersistedActivity = z.infer<typeof persistedActivitySchema>;
 export type PersistedMetadata = z.infer<typeof persistedMetadataSchema>;
 export type PersistedSetting = z.infer<typeof persistedSettingSchema>;
 export type PersistedMilestone = z.infer<typeof persistedMilestoneSchema>;
-export type PersistedPlacedObject = PlacedObject;
-export type PersistedWorldStructure = WorldStructureState;

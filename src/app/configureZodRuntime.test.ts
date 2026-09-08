@@ -25,7 +25,7 @@ describe("configuração CSP-safe do Zod", () => {
     expect(config()).toMatchObject({ jitless: true });
   });
 
-  it("valida objetos sem executar a construção dinâmica bloqueada pela CSP", () => {
+  it("valida objetos sem executar geração dinâmica bloqueada pela CSP", () => {
     const dynamicFunction = vi.fn(() => {
       throw new Error("CSP bloqueou avaliação dinâmica");
     });

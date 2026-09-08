@@ -54,22 +54,30 @@ function activityPoints(
   snapshot: StatisticsSnapshot,
   window: (typeof STATISTICS_WINDOWS)[number],
   category: StatisticsCategory | undefined,
-): { readonly measure: "duration" | "events"; readonly points: readonly ActivityPoint[] } {
+): {
+  readonly measure: "duration" | "events";
+  readonly points: readonly ActivityPoint[];
+} {
   const measure = category && category !== "session" ? "events" : "duration";
   const values = new Map<string, number>();
   const relevantItems = snapshot.timeline.filter(
-    (item) => measure === "events" || (item.category === "session" && item.duration !== undefined),
+    (item) =>
+      measure === "events" ||
+      (item.category === "session" && item.duration !== undefined),
   );
   const validDates = relevantItems
     .map((item) => new Date(item.occurredAt))
     .filter((date) => !Number.isNaN(date.getTime()));
   const today = startOfDay(new Date());
-  const earliest = validDates.length > 0
-    ? new Date(Math.min(...validDates.map((date) => date.getTime())))
-    : today;
+  const earliest =
+    validDates.length > 0
+      ? new Date(Math.min(...validDates.map((date) => date.getTime())))
+      : today;
   const daySpan = Math.max(
     1,
-    Math.round((today.getTime() - startOfDay(earliest).getTime()) / 86_400_000) + 1,
+    Math.round(
+      (today.getTime() - startOfDay(earliest).getTime()) / 86_400_000,
+    ) + 1,
   );
   const monthly = window === "all" && daySpan > 92;
 
@@ -89,8 +97,14 @@ function activityPoints(
       const key = monthKey(cursor);
       points.push({
         key,
-        label: cursor.toLocaleDateString("pt-BR", { month: "long", year: "numeric" }),
-        shortLabel: cursor.toLocaleDateString("pt-BR", { month: "short", year: "2-digit" }),
+        label: cursor.toLocaleDateString("pt-BR", {
+          month: "long",
+          year: "numeric",
+        }),
+        shortLabel: cursor.toLocaleDateString("pt-BR", {
+          month: "short",
+          year: "2-digit",
+        }),
         value: values.get(key) ?? 0,
       });
       cursor.setMonth(cursor.getMonth() + 1);
@@ -108,7 +122,10 @@ function activityPoints(
           month: "long",
           year: "numeric",
         }),
-        shortLabel: cursor.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }),
+        shortLabel: cursor.toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+        }),
         value: values.get(key) ?? 0,
       });
       cursor.setDate(cursor.getDate() + 1);
@@ -152,28 +169,37 @@ function ActivityChart({
   const line = coordinates
     .map((point, index) => `${index === 0 ? "M" : "L"}${point.x},${point.y}`)
     .join(" ");
-  const area = coordinates.length > 0
-    ? `${line} L${coordinates.at(-1)?.x ?? right},${bottom} L${coordinates[0]?.x ?? left},${bottom} Z`
-    : "";
-  const active = activePoint === undefined ? undefined : series.points[activePoint];
-  const activeCoordinate = activePoint === undefined ? undefined : coordinates[activePoint];
+  const area =
+    coordinates.length > 0
+      ? `${line} L${coordinates.at(-1)?.x ?? right},${bottom} L${coordinates[0]?.x ?? left},${bottom} Z`
+      : "";
+  const active =
+    activePoint === undefined ? undefined : series.points[activePoint];
+  const activeCoordinate =
+    activePoint === undefined ? undefined : coordinates[activePoint];
   const formatValue = (value: number) =>
     series.measure === "duration"
       ? formatSessionDuration(value)
       : `${value} evento${value === 1 ? "" : "s"}`;
-  const summary = total === 0
-    ? `Sem ${series.measure === "duration" ? "sessões concluídas" : "eventos"} no período.`
-    : `${formatValue(total)} no total. ${series.points
-        .filter((point) => point.value > 0)
-        .map((point) => `${point.label}: ${formatValue(point.value)}`)
-        .join("; ")}.`;
+  const summary =
+    total === 0
+      ? `Sem ${series.measure === "duration" ? "sessões concluídas" : "eventos"} no período.`
+      : `${formatValue(total)} no total. ${series.points
+          .filter((point) => point.value > 0)
+          .map((point) => `${point.label}: ${formatValue(point.value)}`)
+          .join("; ")}.`;
 
   return (
-    <section className="statistics-chart" aria-labelledby="activity-chart-title">
+    <section
+      className="statistics-chart"
+      aria-labelledby="activity-chart-title"
+    >
       <div className="statistics-chart__heading">
         <div>
           <p className="eyebrow">
-            {series.measure === "duration" ? "Duração de sessões concluídas" : "Eventos da categoria"}
+            {series.measure === "duration"
+              ? "Duração de sessões concluídas"
+              : "Eventos da categoria"}
           </p>
           <h3 id="activity-chart-title">Atividade no período</h3>
         </div>
@@ -182,7 +208,9 @@ function ActivityChart({
           <span>total</span>
         </p>
       </div>
-      <p className="visually-hidden" id="activity-chart-summary">{summary}</p>
+      <p className="visually-hidden" id="activity-chart-summary">
+        {summary}
+      </p>
       <svg
         aria-describedby="activity-chart-summary"
         aria-label="Gráfico de atividade no período"
@@ -201,7 +229,12 @@ function ActivityChart({
           />
         ))}
         {maximum === 0 ? (
-          <text className="statistics-chart__empty" x={width / 2} y={82} textAnchor="middle">
+          <text
+            className="statistics-chart__empty"
+            x={width / 2}
+            y={82}
+            textAnchor="middle"
+          >
             Nenhuma atividade neste período
           </text>
         ) : (
@@ -219,7 +252,9 @@ function ActivityChart({
                   cy={coordinate.y}
                   key={point.key}
                   onBlur={() => setActivePoint(undefined)}
-                  onClick={() => setActivePoint(activePoint === index ? undefined : index)}
+                  onClick={() =>
+                    setActivePoint(activePoint === index ? undefined : index)
+                  }
                   onFocus={() => setActivePoint(index)}
                   r={activePoint === index ? 7 : 5}
                   role="button"
@@ -229,13 +264,26 @@ function ActivityChart({
             })}
           </>
         )}
-        {[0, Math.floor((series.points.length - 1) / 2), series.points.length - 1]
-          .filter((index, position, values) => index >= 0 && values.indexOf(index) === position)
+        {[
+          0,
+          Math.floor((series.points.length - 1) / 2),
+          series.points.length - 1,
+        ]
+          .filter(
+            (index, position, values) =>
+              index >= 0 && values.indexOf(index) === position,
+          )
           .map((index) => {
             const point = series.points[index];
             const coordinate = coordinates[index];
             return point && coordinate ? (
-              <text className="statistics-chart__axis-label" key={point.key} x={coordinate.x} y={151} textAnchor="middle">
+              <text
+                className="statistics-chart__axis-label"
+                key={point.key}
+                x={coordinate.x}
+                y={151}
+                textAnchor="middle"
+              >
                 {point.shortLabel}
               </text>
             ) : null;
@@ -414,7 +462,10 @@ export function StatisticsPage({
         </div>
       </section>
       <ActivityChart category={category} snapshot={snapshot} window={window} />
-      <section className="statistics-type-summary" aria-labelledby="type-summary">
+      <section
+        className="statistics-type-summary"
+        aria-labelledby="type-summary"
+      >
         <h3 id="type-summary">Resumo por tipo</h3>
         <div className="statistics-types">
           {ENTRY_TYPES.map((type) => {
@@ -429,9 +480,15 @@ export function StatisticsPage({
                 {hasData ? (
                   <p>
                     {item.entries} registro{item.entries === 1 ? "" : "s"}
-                    {item.completed > 0 ? ` · ${item.completed} concluído${item.completed === 1 ? "" : "s"}` : ""}
-                    {item.sessions > 0 ? ` · ${item.sessions} ${item.sessions === 1 ? "sessão" : "sessões"}` : ""}
-                    {item.duration > 0 ? ` · ${formatSessionDuration(item.duration)}` : ""}
+                    {item.completed > 0
+                      ? ` · ${item.completed} concluído${item.completed === 1 ? "" : "s"}`
+                      : ""}
+                    {item.sessions > 0
+                      ? ` · ${item.sessions} ${item.sessions === 1 ? "sessão" : "sessões"}`
+                      : ""}
+                    {item.duration > 0
+                      ? ` · ${formatSessionDuration(item.duration)}`
+                      : ""}
                   </p>
                 ) : (
                   <p>Sem registros ou sessões no período.</p>
@@ -444,13 +501,15 @@ export function StatisticsPage({
                 )}
                 {type === "physical_activity" && item.distanceMeters > 0 && (
                   <small>
-                    {(item.distanceMeters / 1000).toLocaleString("pt-BR")} km
-                    {" "}registrados
+                    {(item.distanceMeters / 1000).toLocaleString("pt-BR")} km{" "}
+                    registrados
                   </small>
                 )}
                 {type === "study" &&
                   Object.entries(item.progressByUnit).map(([unit, value]) => (
-                    <small key={unit}>{value} {unit} em sessões</small>
+                    <small key={unit}>
+                      {value} {unit} em sessões
+                    </small>
                   ))}
               </article>
             );
@@ -461,17 +520,25 @@ export function StatisticsPage({
         <section aria-labelledby="recent-sessions">
           <h3 id="recent-sessions">Sessões recentes</h3>
           {snapshot.recentSessions.length === 0 ? (
-            <p className="statistics-empty">Nenhuma sessão concluída no período.</p>
+            <p className="statistics-empty">
+              Nenhuma sessão concluída no período.
+            </p>
           ) : (
             <ul className="statistics-compact-list">
               {snapshot.recentSessions.map((session) => (
                 <li key={session.id}>
-                  <Link to={`/registros/${encodeURIComponent(session.entryId)}`}>
-                    {entryById.get(session.entryId)?.title ?? "Registro removido"}
+                  <Link
+                    to={`/registros/${encodeURIComponent(session.entryId)}`}
+                  >
+                    {entryById.get(session.entryId)?.title ??
+                      "Registro removido"}
                   </Link>
                   <small>
-                    {entryTypeLabels[session.entryType]} · {formatSessionDuration(session.accumulatedDuration)} ·{" "}
-                    {new Date(session.endedAt ?? session.startedAt).toLocaleDateString("pt-BR")}
+                    {entryTypeLabels[session.entryType]} ·{" "}
+                    {formatSessionDuration(session.accumulatedDuration)} ·{" "}
+                    {new Date(
+                      session.endedAt ?? session.startedAt,
+                    ).toLocaleDateString("pt-BR")}
                   </small>
                 </li>
               ))}
@@ -492,7 +559,9 @@ export function StatisticsPage({
                   <p>
                     <strong>{timelineLabel(item.kind)}</strong> ·{" "}
                     {entryById.get(item.entryId)?.title ?? "Registro removido"}
-                    {item.duration !== undefined ? ` · ${formatSessionDuration(item.duration)}` : ""}
+                    {item.duration !== undefined
+                      ? ` · ${formatSessionDuration(item.duration)}`
+                      : ""}
                   </p>
                 </li>
               ))}

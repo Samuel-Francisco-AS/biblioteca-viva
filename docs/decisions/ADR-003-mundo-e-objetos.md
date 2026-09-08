@@ -1,6 +1,6 @@
 # ADR-003 — Mundo persistente e objetos separados
 
-- **Estado:** aceita
+- **Estado:** substituída por [ADR-008](ADR-008-world-reset.md)
 - **Data original:** 2026-08-27
 
 ## Decisão

@@ -1,10 +1,6 @@
 import { InvalidProgressError, InvalidRevisionError } from "./errors";
 import type { EntryStatus, EntryType } from "./types";
-import type {
-  DecorationId,
-  MilestoneId,
-  MilestoneSourceEventType,
-} from "./milestones";
+import type { MilestoneId, MilestoneSourceEventType } from "./milestones";
 import {
   requireId,
   requireIsoUtc,
@@ -69,9 +65,7 @@ export interface SessionChanged extends EventMetadata {
 export interface MilestoneReached extends EventMetadata {
   readonly type: "MilestoneReached";
   readonly payload: {
-    readonly decorationIds: readonly DecorationId[];
     readonly milestoneId: MilestoneId;
-    readonly rewardIds: readonly string[];
     readonly sourceEventType: MilestoneSourceEventType;
   };
 }
@@ -167,17 +161,7 @@ export function createMilestoneReachedEvent(
   input: EventInput<MilestoneReached["payload"]>,
 ): MilestoneReached {
   requireId(input.payload.milestoneId, "milestoneId");
-  input.payload.rewardIds.forEach((id) => requireId(id, "rewardId"));
-  input.payload.decorationIds.forEach((id) => requireId(id, "decorationId"));
-  return event({
-    type: "MilestoneReached",
-    ...input,
-    payload: {
-      ...input.payload,
-      decorationIds: Object.freeze([...input.payload.decorationIds]),
-      rewardIds: Object.freeze([...input.payload.rewardIds]),
-    },
-  });
+  return event({ type: "MilestoneReached", ...input });
 }
 
 export function createSessionChangedEvent(

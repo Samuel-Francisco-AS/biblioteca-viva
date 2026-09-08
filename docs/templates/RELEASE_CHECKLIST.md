@@ -1,45 +1,24 @@
 # Checklist de release
 
-## Código e Git
+## Qualidade automática
 
-- [ ] gate aprovado;
-- [ ] branch correta;
-- [ ] árvore limpa;
-- [ ] versão definida;
-- [ ] changelog atualizado;
-- [ ] nenhuma credencial ou backup pessoal;
-- [ ] documentação coerente.
+- [ ] `npm run format:check`
+- [ ] `npm run lint`
+- [ ] `npm run typecheck`
+- [ ] `npm run test:run`
+- [ ] `npm run audio:check`
+- [ ] `npm run build`
+- [ ] `npm run performance:report`
+- [ ] `npm run test:e2e`
+- [ ] `npm run android:sync`
+- [ ] `npm run android:build:debug`
+- [ ] `git diff --check`
 
-## Qualidade
+## Validação humana
 
-- [ ] formatação;
-- [ ] lint;
-- [ ] typecheck;
-- [ ] testes;
-- [ ] build web;
-- [ ] E2E crítico;
-- [ ] migração;
-- [ ] exportação/restauração.
-
-## Android
-
-- [ ] sincronização Capacitor;
-- [ ] assinatura;
-- [ ] instalação limpa;
-- [ ] atualização sobre versão anterior;
-- [ ] ciclo de vida;
-- [ ] áudio;
-- [ ] toque e safe areas;
-- [ ] desempenho;
-- [ ] acessibilidade;
-- [ ] APK/AAB e checksum.
-
-## Produto
-
-- [ ] fluxo principal completo;
-- [ ] alternativa sem Phaser;
-- [ ] textos revisados;
-- [ ] assets e licenças;
-- [ ] limitações documentadas;
-- [ ] release aprovada por Sam;
-- [ ] tag criada somente depois da aprovação.
+- [ ] fluxos convencionais verificados com conteúdo fictício;
+- [ ] backup pós-reset exportado e restaurado;
+- [ ] APK validado em aparelho Android real;
+- [ ] TalkBack, áudio percebido e desempenho físico registrados;
+- [ ] documentação e changelog reconciliados;
+- [ ] nenhum segredo, backup pessoal ou exportação real incluído.

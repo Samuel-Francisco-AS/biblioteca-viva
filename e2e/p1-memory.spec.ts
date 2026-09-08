@@ -28,10 +28,10 @@ test("tag, favorito, sessão persistente e estatísticas formam memória unifica
 
   await navigateFromDock("Resumo e estatísticas");
   await expect(
-    page.getByRole("heading", { level: 2, name: "Estatísticas" }),
+    page.getByRole("heading", { level: 2, name: "Resumo" }),
   ).toBeVisible();
   await expect(
-    page.getByText("Sessões concluídas").locator("..").getByText("1"),
+    page.getByText("Sessões", { exact: true }).locator("..").getByText("1"),
   ).toBeVisible();
   await expect(
     page.getByRole("link", {
@@ -41,6 +41,7 @@ test("tag, favorito, sessão persistente e estatísticas formam memória unifica
   ).toBeVisible();
 
   await navigateFromDock("Coleção");
+  await page.getByRole("button", { name: /^Busca/u }).click();
   await page
     .getByLabel("Etiqueta")
     .selectOption({ label: "Pesquisa Fictícia" });

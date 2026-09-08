@@ -5,11 +5,6 @@ const engineSource = import.meta.glob<string>("../domain/milestones.ts", {
   import: "default",
   query: "?raw",
 });
-const phaserSources = import.meta.glob<string>("./library-visual/phaser/*.ts", {
-  eager: true,
-  import: "default",
-  query: "?raw",
-});
 const reactSources = import.meta.glob<string>(["../App.tsx", "../pages.tsx"], {
   eager: true,
   import: "default",
@@ -21,16 +16,8 @@ describe("fronteiras arquiteturais do motor de marcos", () => {
     const source = engineSource["../domain/milestones.ts"];
     expect(source).toBeDefined();
     expect(source).not.toMatch(
-      /from\s+["'](?:react|phaser|dexie|@capacitor)|window\.|document\.|indexedDB|AudioContext|filesystem/iu,
+      /from\s+["'](?:react|dexie|@capacitor)|window\.|document\.|indexedDB|AudioContext|filesystem/iu,
     );
-  });
-
-  it("impede Phaser de importar engine ou persistência", () => {
-    for (const [path, source] of Object.entries(phaserSources)) {
-      expect(source, path).not.toMatch(
-        /MilestoneEngine|milestoneStore|Dexie|BibliotecaDatabase|repository/iu,
-      );
-    }
   });
 
   it("mantém React como consumidor de eventos/projeção, sem decidir condições", () => {

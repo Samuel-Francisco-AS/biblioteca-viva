@@ -8,7 +8,6 @@ export const AUDIO_SETTINGS_KEY = "audio.preferences.v1";
 
 const audioPreferencesSchema = z.strictObject({
   effectsVolume: z.number().min(0).max(1),
-  musicVolume: z.number().min(0).max(1),
   muted: z.boolean(),
 });
 

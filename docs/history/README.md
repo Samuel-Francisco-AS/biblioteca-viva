@@ -1,16 +1,10 @@
-# Arquivo histórico
+# Histórico
 
-Os arquivos desta pasta preservam intenção, decisões, prompts, checklists e evidências de fases encerradas.
+Este diretório preserva contexto textual encerrado. Seus documentos não descrevem o runtime atual e não autorizam implementação.
 
-## Regra
+- `documentation/`: revisões documentais encerradas;
+- `world/`: contratos e guias do mundo anterior;
+- `plans/`: planos concluídos ou substituídos;
+- `decisions/`, `gates/`, `handoffs/`, `legacy/`, `phases/` e `w3-a/`: registros anteriores já existentes.
 
-> Conteúdo histórico não descreve necessariamente o produto atual e não autoriza implementação, edição, teste, commit ou release.
-
-Use-o para reconstruir contexto e decisões. Para trabalho novo, consulte `../STATUS.md`, `../README.md`, o contrato técnico ativo e `../decisions/README.md`.
-
-## Organização
-
-- `plans/`: planos mestre, prompts e fases substituídas ou concluídas.
-- `w3-a/`: plano, log e resumo da rodada corretiva encerrada.
-- `testing/`: plano cumulativo e evidências antigas.
-- `legacy/`: documentos monolíticos substituídos por versões ativas.
+Assets binários removidos não são arquivados aqui; o histórico Git é suficiente.

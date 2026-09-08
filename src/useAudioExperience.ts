@@ -82,8 +82,6 @@ export function useAudioExperience(audio?: AudioPort): void {
     const previous = previousPath.current;
     if (previous !== undefined && previous !== location.pathname)
       audio.emit({ type: "PageChanged" });
-    if (location.pathname === "/") audio.emit({ type: "LibraryEntered" });
-    else audio.emit({ type: "LibraryExited" });
     previousPath.current = location.pathname;
   }, [audio, location.pathname]);
 }

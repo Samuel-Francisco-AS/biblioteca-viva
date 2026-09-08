@@ -1,29 +1,11 @@
 # Glossário
 
-- **Biblioteca Viva:** produto completo e metáfora do ambiente persistente.
-- **Biblioteca visual:** superfície Phaser que representa dados e mundo projetados.
-- **Coleção:** interface React para listar e organizar registros.
-- **LibraryEntry:** união de livro, filme, série, estudo, atividade física e trabalho.
-- **Sessão elegível:** sessão concluída, positiva e ligada a registro compatível existente.
-- **Marco:** condição histórica idempotente.
-- **Concessão:** quantidade física desbloqueada para uma família estrutural.
-- **Inventário:** projeção derivada de reserva, placements e concessões.
-- **WorldStructureState:** agregado persistido de pisos e peças estruturais de `world.main`.
-- **PlacedObject:** objeto posicionável persistido, separado da estrutura.
-- **Placement:** identidade, definição, âncora e orientação lógica de uma peça ou objeto.
-- **Blueprint:** estrutura inicial criada somente quando o mundo está ausente.
-- **Perímetro:** conjunto de arestas externas das células de piso.
-- **Continuidade transversal:** alinhamento visual de espessura e lado ocupado entre peças vizinhas.
-- **Transformação canônica:** única conversão de geometria lógica em posição, escala, bounds e regiões visuais.
-- **Fallback:** representação funcional usada quando um asset não está disponível.
-- **LibraryViewModel:** projeção imutável consumida pela apresentação visual.
-- **LibraryInteraction:** intenção tipada emitida pelo Phaser.
-- **Porta:** contrato da aplicação implementado por um adapter externo.
-- **Local-first:** funções essenciais e dados permanecem locais e offline.
-- **Schema:** contrato validável da forma persistida.
-- **Migração:** transformação versionada entre schemas.
-- **Backup envelope:** arquivo versionado com dados, metadados e integridade.
-- **APK debug:** pacote para diagnóstico e teste, não distribuição.
-- **APK release:** pacote assinado e preparado para distribuição.
-- **Gate:** conjunto verificável de critérios de conclusão.
-- **Documento histórico:** evidência preservada que não autoriza nem define trabalho atual.
+- **Biblioteca:** rota preservada para a futura experiência visual; neste checkpoint apresenta uma página React simples.
+- **Coleção:** conjunto dos seis tipos de registro e suas ferramentas de busca, filtro e organização.
+- **Registro:** livro, filme, série, estudo, atividade física ou trabalho.
+- **Anotação:** nota ou citação associada a um registro compatível.
+- **Sessão:** período iniciado, pausado, retomado ou concluído e associado a um registro.
+- **Marco:** conquista convencional idempotente, sem recompensa espacial.
+- **Resumo:** estatísticas convencionais derivadas dos dados locais.
+- **Arquivo:** visão dos registros arquivados.
+- **Backup v6:** formato pós-reset aceito para exportação e restauração.

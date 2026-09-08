@@ -1,6 +1,6 @@
 import { expect, test } from "./fixtures";
 
-test("ciclo principal persiste livro, anotações, conclusão e marco", async ({
+test("ciclo principal persiste livro, edição, anotações e conclusão", async ({
   createBook,
   navigateFromDock,
   page,
@@ -70,28 +70,25 @@ test("ciclo principal persiste livro, anotações, conclusão e marco", async ({
   await page.locator("summary", { hasText: "Status da leitura" }).click();
   await page.getByRole("button", { name: "Concluir leitura" }).click();
   await expect(page.getByText("Status atual: Concluído.")).toBeVisible();
+  await page.getByRole("link", { name: "Editar dados" }).click();
+  await page.getByLabel("Título").fill("A Casa das Palavras — revista");
+  await page.getByRole("button", { name: "Salvar alterações" }).click();
   await expect(
-    page.getByText(/luminária de leitura foi desbloqueada/u),
+    page.getByRole("heading", { name: "A Casa das Palavras — revista" }),
   ).toBeVisible();
 
-  await navigateFromDock("Biblioteca");
-  await page.getByText("Resumo acessível").click();
+  await navigateFromDock("Resumo e estatísticas");
   await expect(
-    page.getByText("Concluídos agora").locator("..").getByText("1"),
-  ).toBeVisible();
-  await expect(
-    page.getByText(/a luminária de leitura permanece na sala/u),
+    page.getByText("Concluídos").locator("..").getByText("1"),
   ).toBeVisible();
 
   await page.reload();
-  await page.getByText("Resumo acessível").click();
-  await expect(page.getByText("Concluídos agora")).toBeVisible();
   await expect(
-    page.getByText(/a luminária de leitura permanece na sala/u),
+    page.getByText("Concluídos").locator("..").getByText("1"),
   ).toBeVisible();
   await navigateFromDock("Coleção");
   await expect(
-    page.getByRole("heading", { name: "A Casa das Palavras" }),
+    page.getByRole("heading", { name: "A Casa das Palavras — revista" }),
   ).toBeVisible();
 });
 
@@ -104,7 +101,9 @@ test("rotas inexistentes e livro ausente degradam para caminhos convencionais", 
   ).toBeVisible();
   await page.getByRole("link", { name: "Voltar para a Biblioteca" }).click();
   await expect(
-    page.getByRole("button", { name: "Abrir resumo da Biblioteca" }),
+    page.getByRole("heading", {
+      name: "Uma nova experiência está sendo preparada",
+    }),
   ).toBeVisible();
 
   await page.goto("/registros/id-inexistente");

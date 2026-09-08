@@ -26,16 +26,11 @@ import {
   publishEvent,
   publishEvents,
   processMilestones,
-  processMilestonesWithDetails,
   runTransaction,
   saveActivity,
   saveEntity,
 } from "./internal";
 import type { ApplicationDependencies } from "./ports";
-import {
-  structuralGrants,
-  type StructuralProgressionSnapshot,
-} from "./structuralProgression";
 
 const id = z.string().trim().min(1);
 const optionalText = z.string().trim().min(1).optional();
@@ -96,26 +91,11 @@ type SessionDependencies = Pick<
 >;
 
 export interface SessionCompletionResult {
-  readonly newStructuralMilestones: readonly import("../domain").ReachedMilestone[];
   readonly session: Session;
-  readonly structuralGrants: readonly import("../domain").GrantedStructureMilestoneReward[];
-  readonly structuralProgress?: StructuralProgressionSnapshot;
 }
 
-function completionResult(
-  session: Session,
-  reached: readonly import("../domain").ReachedMilestone[],
-  progress?: StructuralProgressionSnapshot,
-): SessionCompletionResult {
-  const newStructuralMilestones = reached.filter((milestone) =>
-    milestone.rewards.some((reward) => reward.type === "structure-grant"),
-  );
-  return Object.freeze({
-    newStructuralMilestones: Object.freeze(newStructuralMilestones),
-    session,
-    structuralGrants: structuralGrants(newStructuralMilestones),
-    ...(progress && { structuralProgress: progress }),
-  });
+function completionResult(session: Session): SessionCompletionResult {
+  return Object.freeze({ session });
 }
 
 async function loadEntry(dependencies: SessionDependencies, entryId: string) {
@@ -374,9 +354,6 @@ export class CompleteSession {
     let milestoneEvents = Object.freeze(
       [],
     ) as readonly import("../domain").DomainEvent[];
-    let reached = Object.freeze(
-      [],
-    ) as readonly import("../domain").ReachedMilestone[];
     await runTransaction(this.dependencies, async () => {
       await saveEntity(
         () => this.dependencies.sessions.save(completed),
@@ -388,15 +365,10 @@ export class CompleteSession {
           "save_entry",
         );
       await saveActivity(this.dependencies, activity);
-      const processed = await processMilestonesWithDetails(
-        this.dependencies,
-        event,
-      );
-      milestoneEvents = processed.events;
-      reached = processed.reached;
+      milestoneEvents = await processMilestones(this.dependencies, event);
     });
     await publishEvents(this.dependencies, [event, ...milestoneEvents]);
-    return completionResult(completed, reached);
+    return completionResult(completed);
   }
 }
 
@@ -443,9 +415,6 @@ export class CreateManualSession {
     let milestoneEvents = Object.freeze(
       [],
     ) as readonly import("../domain").DomainEvent[];
-    let reached = Object.freeze(
-      [],
-    ) as readonly import("../domain").ReachedMilestone[];
     await runTransaction(this.dependencies, async () => {
       await saveEntity(
         () => this.dependencies.sessions.save(session),
@@ -457,15 +426,10 @@ export class CreateManualSession {
           "save_entry",
         );
       await saveActivity(this.dependencies, activity);
-      const processed = await processMilestonesWithDetails(
-        this.dependencies,
-        event,
-      );
-      milestoneEvents = processed.events;
-      reached = processed.reached;
+      milestoneEvents = await processMilestones(this.dependencies, event);
     });
     await publishEvents(this.dependencies, [event, ...milestoneEvents]);
-    return completionResult(session, reached);
+    return completionResult(session);
   }
 }
 

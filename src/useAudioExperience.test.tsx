@@ -46,12 +46,10 @@ function audio(): AudioPort {
     pause: vi.fn(),
     preferences: vi.fn(() => ({
       effectsVolume: 0.6,
-      musicVolume: 0.35,
       muted: false,
     })),
     resume: vi.fn(),
     setEffectsVolume: vi.fn(() => Promise.resolve()),
-    setMusicVolume: vi.fn(() => Promise.resolve()),
     setMuted: vi.fn(() => Promise.resolve()),
   };
 }
@@ -61,7 +59,7 @@ function Harness({ audioPort }: { readonly audioPort: AudioPort }) {
   return (
     <>
       <button type="button">Ação React</button>
-      <canvas aria-label="Canvas Phaser" />
+      <button type="button">Outra ação</button>
     </>
   );
 }
@@ -86,25 +84,22 @@ describe("useAudioExperience", () => {
       </MemoryRouter>,
     );
     expect(vi.mocked(audioPort.initialize)).not.toHaveBeenCalled();
-    expect(vi.mocked(audioPort.emit)).toHaveBeenCalledWith({
-      type: "LibraryEntered",
-    });
 
     await user.click(screen.getByRole("button", { name: "Ação React" }));
     await user.click(screen.getByRole("button", { name: "Ação React" }));
-    fireEvent.pointerDown(screen.getByLabelText("Canvas Phaser"));
+    fireEvent.pointerDown(screen.getByRole("button", { name: "Outra ação" }));
     expect(vi.mocked(audioPort.initialize)).toHaveBeenCalledTimes(1);
   });
 
-  it("primeiro gesto no canvas Phaser também inicializa uma vez", () => {
+  it("primeiro gesto em outro controle também inicializa uma vez", () => {
     const audioPort = audio();
     render(
       <MemoryRouter>
         <Harness audioPort={audioPort} />
       </MemoryRouter>,
     );
-    fireEvent.pointerDown(screen.getByLabelText("Canvas Phaser"));
-    fireEvent.pointerDown(screen.getByLabelText("Canvas Phaser"));
+    fireEvent.pointerDown(screen.getByRole("button", { name: "Outra ação" }));
+    fireEvent.pointerDown(screen.getByRole("button", { name: "Outra ação" }));
     expect(vi.mocked(audioPort.initialize)).toHaveBeenCalledTimes(1);
   });
 

@@ -7,10 +7,8 @@ import type {
   Session,
   Tag,
 } from "../domain";
-import type { PlacedObject } from "./world";
-import type { WorldStructureState } from "./worldStructure";
 
-export const BACKUP_FORMAT_VERSION = 5;
+export const BACKUP_FORMAT_VERSION = 6;
 export const BACKUP_KIND = "biblioteca-viva-backup";
 export const MAX_BACKUP_BYTES = 10 * 1024 * 1024;
 
@@ -29,8 +27,6 @@ export interface BackupData {
   readonly settings: readonly BackupSetting[];
   readonly sessions: readonly Session[];
   readonly tags: readonly Tag[];
-  readonly placedObjects?: readonly PlacedObject[];
-  readonly worldStructure?: WorldStructureState;
 }
 
 export interface BackupSnapshot extends BackupData {
@@ -46,9 +42,7 @@ export function hasRelevantRestoreData(data: BackupData): boolean {
     data.settings.length > 0 ||
     data.milestones.length > 0 ||
     data.sessions.length > 0 ||
-    data.tags.length > 0 ||
-    (data.placedObjects?.length ?? 0) > 0 ||
-    data.worldStructure !== undefined
+    data.tags.length > 0
   );
 }
 
@@ -61,15 +55,13 @@ export interface BackupCounts {
   readonly settings: number;
   readonly sessions: number;
   readonly tags: number;
-  readonly placedObjects?: number;
-  readonly worldStructure?: number;
 }
 
 export interface BackupSummary {
   readonly createdAt: string;
   readonly appVersion: string;
   readonly databaseVersion: number;
-  readonly formatVersion: 1 | 2 | 3 | 4 | 5;
+  readonly formatVersion: 6;
   readonly policy: "replace";
   readonly counts: BackupCounts;
   readonly warnings: readonly string[];

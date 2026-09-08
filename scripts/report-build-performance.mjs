@@ -7,18 +7,9 @@ const manifestPath = join(outputDirectory, ".vite", "manifest.json");
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
 const entries = Object.entries(manifest);
 const applicationEntry = entries.find(([, chunk]) => chunk.isEntry);
-const phaserEntry = entries.find(([source]) =>
-  source.endsWith("/phaser/createPhaserGame.ts"),
-);
 
 if (!applicationEntry)
   throw new Error("Chunk inicial não encontrado no manifesto.");
-if (!phaserEntry)
-  throw new Error("Chunk lazy do Phaser não encontrado no manifesto.");
-if (phaserEntry[1].isEntry)
-  throw new Error("O Phaser foi incluído como entrypoint inicial.");
-if (!phaserEntry[1].isDynamicEntry)
-  throw new Error("A fronteira lazy do Phaser não foi preservada.");
 
 const chunks = await Promise.all(
   entries
@@ -35,6 +26,7 @@ const chunks = await Promise.all(
 );
 
 chunks.sort((left, right) => right.bytes - left.bytes);
-process.stdout.write(
-  `${JSON.stringify({ chunks, phaserLazy: true }, null, 2)}\n`,
-);
+const initialBytes = chunks
+  .filter(({ initial }) => initial)
+  .reduce((total, chunk) => total + chunk.bytes, 0);
+process.stdout.write(`${JSON.stringify({ chunks, initialBytes }, null, 2)}\n`);

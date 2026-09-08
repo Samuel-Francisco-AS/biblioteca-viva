@@ -18,7 +18,9 @@ async function resetIndexedDb(page: Page): Promise<void> {
   await session.detach();
   await page.reload();
   await expect(
-    page.getByRole("button", { name: "Abrir resumo da Biblioteca" }),
+    page.getByRole("heading", {
+      name: "Uma nova experiência está sendo preparada",
+    }),
   ).toBeVisible();
 }
 

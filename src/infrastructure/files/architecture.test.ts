@@ -55,16 +55,6 @@ describe("fronteiras de arquivos nativos e exclusão", () => {
     );
   });
 
-  it("mantém exclusão fora da cena Phaser", () => {
-    Object.entries(presentationSources)
-      .filter(([path]) => path.includes("/phaser/"))
-      .forEach(([path, source]) => {
-        expect(source, path).not.toMatch(
-          /DeleteBook|deleteBook|excluir|saveBackup|ContentResolver|useCases/iu,
-        );
-      });
-  });
-
   it("não registra URI nem conteúdo do backup", () => {
     Object.entries(infrastructureSources)
       .filter(([path]) => path.includes("/files/"))

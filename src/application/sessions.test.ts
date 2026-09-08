@@ -8,6 +8,7 @@ import {
   createSeries,
   createStudy,
   MilestoneEngine,
+  PRODUCT_MILESTONE_DEFINITIONS,
   type DomainEvent,
 } from "../domain";
 import {
@@ -22,7 +23,6 @@ import {
   DexieTransactionRunner,
   LocalEventBus,
 } from "../infrastructure";
-import { PROTOTYPE_CONTENT } from "../content";
 import {
   CompleteSession,
   CreateManualSession,
@@ -66,8 +66,7 @@ async function context() {
     milestones: new DexieMilestoneStore(
       database,
       new MilestoneEngine(),
-      PROTOTYPE_CONTENT.milestones,
-      PROTOTYPE_CONTENT.rewards,
+      PRODUCT_MILESTONE_DEFINITIONS,
     ),
   };
   return {
@@ -117,17 +116,6 @@ describe("casos de uso de sessão", () => {
       id: paused.id,
     });
     expect(completed.session.accumulatedDuration).toBe(120);
-    expect(completed.newStructuralMilestones.map(({ id }) => id)).toEqual([
-      "milestone.structure.first-activity",
-    ]);
-    expect(completed.structuralGrants).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          familyId: "structure-family.floor.wood",
-          quantity: 12,
-        }),
-      ]),
-    );
     expect(
       await test.dependencies.libraryEntries.getById(book.id),
     ).toMatchObject({ currentPage: 30, status: "in_progress" });
@@ -230,7 +218,7 @@ describe("casos de uso de sessão", () => {
     test.database.close();
   });
 
-  it("coalesce duas conclusões simultâneas e publica uma concessão estrutural", async () => {
+  it("coalesce duas conclusões simultâneas", async () => {
     const test = await context();
     const book = createBook({
       id: "book-concurrent",
@@ -249,8 +237,6 @@ describe("casos de uso de sessão", () => {
       command.execute({ id: open.id }),
     ]);
     expect(first.session).toEqual(second.session);
-    expect(first.newStructuralMilestones).toHaveLength(1);
-    expect(second.newStructuralMilestones).toHaveLength(1);
     expect(
       (await test.dependencies.activities.list()).filter(
         ({ type }) => type === "session_completed",

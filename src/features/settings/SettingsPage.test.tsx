@@ -31,7 +31,7 @@ const summary: BackupSummary = {
   createdAt: "2026-07-30T12:00:00.000Z",
   appVersion: "0.2.0-alpha.1",
   databaseVersion: 3,
-  formatVersion: 2,
+  formatVersion: 6,
   policy: "replace",
   counts,
   warnings: [],
@@ -64,7 +64,6 @@ function application(
 function audio(): AudioPort {
   let preferences = {
     effectsVolume: 0.6,
-    musicVolume: 0.35,
     muted: false,
   };
   return {
@@ -77,10 +76,6 @@ function audio(): AudioPort {
     resume: vi.fn(),
     setEffectsVolume: vi.fn((effectsVolume: number) => {
       preferences = { ...preferences, effectsVolume };
-      return Promise.resolve();
-    }),
-    setMusicVolume: vi.fn((musicVolume: number) => {
-      preferences = { ...preferences, musicVolume };
       return Promise.resolve();
     }),
     setMuted: vi.fn((muted: boolean) => {
@@ -163,27 +158,23 @@ describe("Configurações e backup", () => {
     ).toBeChecked();
   });
 
-  it("oferece volumes rotulados, teclado nativo e mute com aplicação imediata", async () => {
+  it("oferece volume rotulado, teclado nativo e mute com aplicação imediata", async () => {
     const audioPort = audio();
     const app = { ...application(), audio: audioPort };
     const user = userEvent.setup();
     render(<SettingsPage application={app} />);
 
-    const music = screen.getByRole("slider", { name: /Volume da música/u });
     const effects = screen.getByRole("slider", { name: /Volume dos efeitos/u });
     const mute = screen.getByRole("checkbox", {
-      name: "Silenciar música e efeitos",
+      name: "Silenciar efeitos",
     });
-    expect(music).toHaveValue("35");
     expect(effects).toHaveValue("60");
 
-    fireEvent.change(music, { target: { value: "24" } });
     effects.focus();
     expect(effects).toHaveFocus();
     fireEvent.change(effects, { target: { value: "61" } });
     await user.click(mute);
 
-    expect(vi.mocked(audioPort.setMusicVolume)).toHaveBeenCalledWith(0.24);
     expect(vi.mocked(audioPort.setEffectsVolume)).toHaveBeenCalledWith(0.61);
     expect(vi.mocked(audioPort.setMuted)).toHaveBeenCalledWith(true);
     expect(mute).toBeChecked();

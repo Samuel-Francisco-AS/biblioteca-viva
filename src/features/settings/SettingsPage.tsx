@@ -46,7 +46,8 @@ const errorMessages: Record<string, string> = {
     "O arquivo não é um backup reconhecido da Biblioteca Viva.",
   FUTURE_FORMAT_VERSION:
     "Este backup foi criado em um formato futuro ainda não suportado.",
-  UNSUPPORTED_FORMAT_VERSION: "A versão deste backup não é suportada.",
+  UNSUPPORTED_FORMAT_VERSION:
+    "Backups produzidos antes do WORLD RESET não são compatíveis com este aplicativo.",
   INVALID_BACKUP_DATA: "O backup contém dados inválidos ou incompatíveis.",
   DUPLICATE_ID: "O backup contém identificadores duplicados.",
   MISSING_CHECKSUM: "O backup não contém checksum de integridade.",
@@ -86,7 +87,7 @@ function Counts({ counts }: { readonly counts: BackupCounts }) {
   return (
     <dl className="backup-counts">
       <div>
-        <dt>Livros</dt>
+        <dt>Registros</dt>
         <dd>{counts.libraryEntries}</dd>
       </div>
       <div>
@@ -108,6 +109,14 @@ function Counts({ counts }: { readonly counts: BackupCounts }) {
       <div>
         <dt>Configurações</dt>
         <dd>{counts.settings}</dd>
+      </div>
+      <div>
+        <dt>Sessões</dt>
+        <dd>{counts.sessions}</dd>
+      </div>
+      <div>
+        <dt>Etiquetas</dt>
+        <dd>{counts.tags}</dd>
       </div>
     </dl>
   );
@@ -302,18 +311,6 @@ export function SettingsPage({ application, diagnostics }: Props) {
     }
   }
 
-  async function updateMusicVolume(value: number) {
-    setAudioPreferences((current) => ({ ...current, musicVolume: value }));
-    setAudioPreferenceError("");
-    try {
-      await application?.audio?.setMusicVolume(value);
-    } catch {
-      setAudioPreferenceError(
-        "O volume foi aplicado nesta sessão, mas não pôde ser persistido.",
-      );
-    }
-  }
-
   async function updateEffectsVolume(value: number) {
     setAudioPreferences((current) => ({ ...current, effectsVolume: value }));
     setAudioPreferenceError("");
@@ -449,28 +446,10 @@ export function SettingsPage({ application, diagnostics }: Props) {
         <p className="eyebrow">Experiência sonora</p>
         <h2 id="audio-settings-title">Áudio</h2>
         <p>
-          O som só começa depois de uma interação permitida. Música e efeitos
-          pausam quando o aplicativo fica em segundo plano.
+          O som só começa depois de uma interação permitida. Os efeitos pausam
+          quando o aplicativo fica em segundo plano.
         </p>
         <div className="audio-settings-controls">
-          <div className="form-field">
-            <label htmlFor="music-volume">
-              Volume da música: {Math.round(audioPreferences.musicVolume * 100)}
-              %
-            </label>
-            <input
-              id="music-volume"
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              value={Math.round(audioPreferences.musicVolume * 100)}
-              disabled={!application?.audio}
-              onChange={(event) =>
-                void updateMusicVolume(Number(event.target.value) / 100)
-              }
-            />
-          </div>
           <div className="form-field">
             <label htmlFor="effects-volume">
               Volume dos efeitos:{" "}
@@ -497,7 +476,7 @@ export function SettingsPage({ application, diagnostics }: Props) {
               disabled={!application?.audio}
               onChange={(event) => void updateMuted(event.target.checked)}
             />
-            Silenciar música e efeitos
+            Silenciar efeitos
           </label>
         </div>
         <p className="field-help">

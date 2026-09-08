@@ -30,13 +30,7 @@ export function milestoneReachedEvents(
         eventId: `event.${milestone.id}.${milestone.source.eventId}`,
         occurredAt: milestone.reachedAt,
         payload: {
-          decorationIds: milestone.rewards.flatMap((reward) =>
-            reward.type === "decoration" && reward.decorationId
-              ? [reward.decorationId]
-              : [],
-          ),
           milestoneId: milestone.id,
-          rewardIds: milestone.rewards.map(({ id }) => id),
           sourceEventType: milestone.source.eventType,
         },
         revision: milestone.ruleVersion,

@@ -38,14 +38,6 @@ export interface TimelineItem {
   readonly toPage?: number;
 }
 
-export interface ProductProgressFacts {
-  readonly entryCountsByType: Readonly<Record<EntryType, number>>;
-  readonly completedCountsByType: Readonly<Record<EntryType, number>>;
-  readonly sessionCountsByType: Readonly<Record<EntryType, number>>;
-  readonly sessionDurationByType: Readonly<Record<EntryType, number>>;
-  readonly reachedMilestoneIds: readonly string[];
-}
-
 export interface StatisticsSnapshot {
   readonly window: StatisticsWindow;
   readonly totalEntries: number;
@@ -58,7 +50,6 @@ export interface StatisticsSnapshot {
   readonly recentSessions: readonly Session[];
   readonly activeSession?: Session;
   readonly timeline: readonly TimelineItem[];
-  readonly progressFacts: ProductProgressFacts;
 }
 
 function emptyType(): TypeStatistics {
@@ -86,17 +77,6 @@ function typeRecord(): Record<EntryType, TypeStatistics> {
   };
 }
 
-function numberRecord(): Record<EntryType, number> {
-  return {
-    book: 0,
-    movie: 0,
-    series: 0,
-    study: 0,
-    physical_activity: 0,
-    work: 0,
-  };
-}
-
 function cutoff(window: StatisticsWindow, now: string): number | undefined {
   if (window === "all") return undefined;
   const days = window === "7d" ? 7 : 30;
@@ -118,7 +98,6 @@ function activityCategory(type: Activity["type"]): TimelineCategory {
 export function deriveStatistics(input: {
   readonly activities: readonly Activity[];
   readonly entries: readonly LibraryEntry[];
-  readonly milestones: readonly { readonly id: string }[];
   readonly now: string;
   readonly sessions: readonly Session[];
   readonly window: StatisticsWindow;
@@ -228,27 +207,6 @@ export function deriveStatistics(input: {
       (item) =>
         input.category === undefined || item.category === input.category,
     );
-  const entryCountsByType = numberRecord();
-  const completedCountsByType = numberRecord();
-  const sessionCountsByType = numberRecord();
-  const sessionDurationByType = numberRecord();
-  for (const type of ENTRY_TYPES) {
-    entryCountsByType[type] = input.entries.filter(
-      (entry) => entry.type === type,
-    ).length;
-    completedCountsByType[type] = input.entries.filter(
-      (entry) => entry.type === type && entry.status === "completed",
-    ).length;
-    sessionCountsByType[type] = input.sessions.filter(
-      (session) => session.entryType === type && session.status === "completed",
-    ).length;
-    sessionDurationByType[type] = input.sessions
-      .filter(
-        (session) =>
-          session.entryType === type && session.status === "completed",
-      )
-      .reduce((total, session) => total + session.accumulatedDuration, 0);
-  }
   const duration = completedSessions.reduce(
     (total, session) => total + session.accumulatedDuration,
     0,
@@ -276,15 +234,6 @@ export function deriveStatistics(input: {
         b.occurredAt.localeCompare(a.occurredAt),
       ),
     ),
-    progressFacts: Object.freeze({
-      entryCountsByType: Object.freeze(entryCountsByType),
-      completedCountsByType: Object.freeze(completedCountsByType),
-      sessionCountsByType: Object.freeze(sessionCountsByType),
-      sessionDurationByType: Object.freeze(sessionDurationByType),
-      reachedMilestoneIds: Object.freeze(
-        input.milestones.map(({ id }) => id).sort(),
-      ),
-    }),
   });
 }
 
@@ -297,26 +246,22 @@ const querySchema = z.strictObject({
 type StatisticsDependencies = Pick<
   ApplicationDependencies,
   "activities" | "clock" | "libraryEntries" | "sessions"
-> & {
-  readonly milestones: { list(): Promise<readonly { readonly id: string }[]> };
-};
+>;
 
 export class GetStatistics {
   constructor(private readonly dependencies: StatisticsDependencies) {}
   async execute(input: unknown = {}): Promise<StatisticsSnapshot> {
     const parsed = parseInput(querySchema, input);
-    const [entries, sessions, activities, milestones, now] = await Promise.all([
+    const [entries, sessions, activities, now] = await Promise.all([
       this.dependencies.libraryEntries.list(),
       this.dependencies.sessions.list(),
       this.dependencies.activities.list(),
-      this.dependencies.milestones.list(),
       currentTime(this.dependencies),
     ]);
     return deriveStatistics({
       entries,
       sessions,
       activities,
-      milestones,
       now,
       window: parsed.window ?? "30d",
       ...(parsed.entryType !== undefined && { entryType: parsed.entryType }),

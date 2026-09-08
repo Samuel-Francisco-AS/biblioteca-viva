@@ -1,6 +1,6 @@
 # ADR-002 — Arquitetura híbrida
 
-- **Estado:** aceita
+- **Estado:** substituída por [ADR-008](ADR-008-world-reset.md)
 - **Data consolidada:** 2026-09-07
 
 ## Decisão

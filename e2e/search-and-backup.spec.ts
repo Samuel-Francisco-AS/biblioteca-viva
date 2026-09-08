@@ -21,13 +21,17 @@ test("busca, filtro, ordenação e Arquivo preservam navegação", async ({
   });
 
   await page.goto("/colecao");
+  await page.getByRole("button", { name: /^Busca/u }).click();
   await page.getByLabel("Buscar registros").fill("lia omega");
   await expect(
     page.getByRole("heading", { name: "Árvore Azul" }),
   ).toBeVisible();
   await page.getByLabel("Buscar registros").fill("Caderno");
+  await expect(page).toHaveURL(/q=Caderno/u);
   await page.getByLabel("Status").selectOption("in_progress");
+  await expect(page).toHaveURL(/status=in_progress/u);
   await page.getByLabel("Ordenar por").selectOption("title");
+  await expect(page).toHaveURL(/sort=title/u);
   await page
     .getByRole("link", { name: "Abrir detalhes de Caderno Unicode" })
     .click();
@@ -100,9 +104,10 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
   await expect(page.getByLabel("Usar alto contraste")).toBeChecked();
   await expect(page.getByLabel("Tamanho do texto")).toHaveValue("larger");
   await navigateFromDock("Biblioteca");
-  await page.getByText("Resumo acessível").click();
   await expect(
-    page.getByText(/a luminária de leitura permanece na sala/u),
+    page.getByRole("heading", {
+      name: "Uma nova experiência está sendo preparada",
+    }),
   ).toBeVisible();
   await navigateFromDock("Coleção");
   await expect(
@@ -113,7 +118,7 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
   ).toHaveCount(0);
 });
 
-test("restauração após bootstrap estrutural protege o estado persistido", async ({
+test("restauração em base vazia recupera dados convencionais", async ({
   createBook,
   navigateFromDock,
   page,
@@ -140,14 +145,9 @@ test("restauração após bootstrap estrutural protege o estado persistido", asy
   await page.reload();
   await page.getByLabel("Arquivo de backup").setInputFiles(backupPath);
   await expect(
-    page.getByText(/Há dados atuais que serão substituídos/u),
+    page.getByText(/não possui dados atuais relevantes/u),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Continuar sem criar backup" })
-    .click();
-  await page
-    .getByRole("button", { name: "Confirmar e restaurar sem backup" })
-    .click();
+  await page.getByRole("button", { name: "Restaurar backup" }).click();
   await expect(
     page.getByRole("heading", { name: "Restauração concluída" }),
   ).toBeVisible();

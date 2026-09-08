@@ -118,7 +118,6 @@ describe("estatísticas derivadas P1-C", () => {
       entries: entries(),
       sessions: sessions(),
       activities: [],
-      milestones: [{ id: "milestone.first-session" }],
       now: NOW,
       window: "30d",
     });
@@ -141,14 +140,6 @@ describe("estatísticas derivadas P1-C", () => {
       distanceMeters: 5000,
     });
     expect(snapshot.byType.movie.sessions).toBe(0);
-    expect(snapshot.progressFacts.entryCountsByType).toEqual({
-      book: 1,
-      movie: 1,
-      series: 1,
-      study: 1,
-      physical_activity: 1,
-      work: 1,
-    });
   });
 
   it("não duplica sessão presente em Activity e respeita filtros", () => {
@@ -164,7 +155,6 @@ describe("estatísticas derivadas P1-C", () => {
       entries: entries(),
       sessions: sessions(),
       activities: [activity],
-      milestones: [],
       now: NOW,
       window: "7d",
       entryType: "book",
@@ -198,7 +188,6 @@ describe("estatísticas derivadas P1-C", () => {
       entries: bulkEntries,
       sessions: bulkSessions,
       activities: [],
-      milestones: [],
       now: NOW,
       window: "all",
     });
@@ -206,7 +195,6 @@ describe("estatísticas derivadas P1-C", () => {
       entries: bulkEntries,
       sessions: bulkSessions,
       activities: [],
-      milestones: [],
       now: NOW,
       window: "all",
     });
@@ -224,7 +212,6 @@ describe("estatísticas derivadas P1-C", () => {
     const sessionList = vi.fn(() =>
       Promise.resolve(sessions().filter(({ id }) => id !== "run")),
     );
-    const milestoneList = vi.fn(() => Promise.resolve([]));
     const service = new GetStatistics({
       activities: { list: activityList, save: () => Promise.resolve() },
       clock: { now: () => Promise.resolve(NOW) },
@@ -241,14 +228,11 @@ describe("estatísticas derivadas P1-C", () => {
         save: () => Promise.resolve(),
         delete: () => Promise.resolve(false),
       },
-      milestones: { list: milestoneList },
     });
     const snapshot = await service.execute({ window: "all" });
     expect(snapshot.sessions).toBe(4);
     expect(
-      [activityList, entryList, sessionList, milestoneList].map(
-        (fn) => fn.mock.calls.length,
-      ),
-    ).toEqual([1, 1, 1, 1]);
+      [activityList, entryList, sessionList].map((fn) => fn.mock.calls.length),
+    ).toEqual([1, 1, 1]);
   });
 });
