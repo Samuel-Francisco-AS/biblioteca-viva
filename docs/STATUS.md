@@ -1,37 +1,27 @@
 # Estado atual
 
-> Referência documental: 2026-09-08.
+> Referência documental: 2026-09-09.
 
 ## Produto
 
-- O aplicativo convencional está funcional: seis tipos de registro, criação, edição, detalhes, progresso, status, notas, citações, etiquetas, favoritos, busca, filtros, sessões, histórico, Resumo, Arquivo, Ajustes e preferências.
-- A operação permanece local-first, sem conta, backend, sincronização, nuvem ou analytics.
-- React, Dexie, Capacitor, Vite, Vitest e Playwright permanecem ativos.
+- O aplicativo convencional está funcional com os seis tipos de registro e operação local-first, sem conta, backend, sincronização, nuvem ou analytics.
+- React, Dexie v8, backup v6, Capacitor, Vite, Vitest e Playwright permanecem ativos; Dexie e backup contêm somente dados convencionais.
 
 ## Mundo
 
-- O mundo legado foi removido integralmente.
-- Phaser foi removido.
-- A rota Biblioteca permanece e apresenta um placeholder React acessível, sem canvas, renderer ou estado espacial.
-- A Biblioteca visual ainda não foi implementada.
-- O novo mundo começará do zero e não herdará contratos espaciais anteriores.
-- A direção aprovada é 3D real com câmera/apresentação ortográfica/2.5D.
+- **F0 e F1 estão concluídas. Three.js está aprovado como renderer da Fundação do novo mundo.**
+- A linha ativa é `React → WorldHost → ThreeWorldRuntime → Three.js`, com `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, lifecycle explícito, integração React ↔ Three e Android/Capacitor.
+- A direção permanece 3D real com apresentação ortográfica/2.5D. A cena atual é um spike técnico com fixture, não a Biblioteca final nem arquitetura permanente de conteúdo.
+- A F1 provou renderização, interação, lifecycle, observabilidade e viabilidade física no Moto G06. Ela não conclui a FUNDAÇÃO inteira nem garante desempenho do mundo completo.
+- Não existe persistência espacial nem pipeline 3D formal. Câmera, interação, assets e budget artístico definitivos permanecem futuros.
+- R3F e WebGPU não estão aprovados; renderers alternativos só voltam a ser considerados diante de evidência estrutural futura.
 
-## Dados e backup
+## Validações abertas
 
-- Dexie v8 é o baseline ativo e possui somente tabelas convencionais.
-- A adoção de v8 descarta todos os dados de desenvolvimento anteriores.
-- Backup v6 exporta e restaura somente dados convencionais do baseline atual.
-- Backups anteriores ao WORLD RESET são deliberadamente incompatíveis.
-- Dez regras de marcos convencionais permanecem, sem recompensa ou efeito espacial; o estado antigo não é preservado.
+- TalkBack completo e auditoria humana de tecnologias assistivas permanecem pendentes para F6 ou gate humano específico.
+- R-09 está parcialmente mitigado pela cena mínima a aproximadamente 60 FPS no Moto G06, mas permanece ativo para densidade, assets, iluminação, personagens e mundo real.
+- Teste térmico prolongado e performance de cenas complexas permanecem futuros.
 
-## Problemas e validações abertas
+## Próximo trabalho
 
-- Auditoria manual completa com TalkBack e tecnologias assistivas.
-- Validação auditiva final em aparelho.
-- Instalação e uso do APK atual em hardware Android real.
-- O desempenho da futura implementação 3D em hardware Android modesto ainda precisará ser provado.
-
-## Próxima decisão
-
-Definir a fundação técnica do novo mundo sem implementar arquitetura especulativa neste checkpoint.
+**F2 — Integração e endurecimento da Fundação Three.js:** consolidar limites React/runtime, lifecycle, recuperação, organização interna e contratos estáveis. Não iniciar F3–F6 nem a Biblioteca real antes do escopo correspondente.

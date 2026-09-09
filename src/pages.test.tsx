@@ -1,12 +1,16 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { LibraryPage } from "./pages";
 
+vi.mock("./features/library/WorldHost", () => ({
+  WorldHost: () => <div data-testid="world-host-stub" />,
+}));
+
 describe("Página Biblioteca", () => {
-  it("apresenta um placeholder acessível sem superfície gráfica", () => {
-    const { container } = render(
+  it("apresenta a fundação experimental e preserva ações convencionais", () => {
+    render(
       <MemoryRouter>
         <LibraryPage />
       </MemoryRouter>,
@@ -14,7 +18,7 @@ describe("Página Biblioteca", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Uma nova experiência está sendo preparada",
+        name: "Fundação 3D experimental",
       }),
     ).toBeVisible();
     expect(screen.getByRole("link", { name: "Abrir Coleção" })).toHaveAttribute(
@@ -24,6 +28,6 @@ describe("Página Biblioteca", () => {
     expect(
       screen.getByRole("link", { name: "Criar registro" }),
     ).toHaveAttribute("href", "/novo-registro");
-    expect(container.querySelector("canvas")).not.toBeInTheDocument();
+    expect(screen.getByTestId("world-host-stub")).toBeInTheDocument();
   });
 });

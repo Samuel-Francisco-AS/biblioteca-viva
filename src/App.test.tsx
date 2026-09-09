@@ -13,6 +13,9 @@ vi.mock("@capacitor/app", () => ({
     exitApp: vi.fn(),
   },
 }));
+vi.mock("./features/library/WorldHost", () => ({
+  WorldHost: () => <div data-testid="world-host-stub" />,
+}));
 
 describe("App", () => {
   it("abre o shell e a Biblioteca na rota inicial", () => {
@@ -28,10 +31,12 @@ describe("App", () => {
         screen.getByRole("navigation", { name: "Navegação principal" }),
       ).getAllByRole("link"),
     ).toHaveLength(5);
-    expect(container.querySelector("canvas")).not.toBeInTheDocument();
+    expect(
+      container.querySelector("[data-testid='world-host-stub']"),
+    ).toBeInTheDocument();
   });
 
-  it("mantém o placeholder e o acesso à Coleção", () => {
+  it("mantém a fundação e o acesso à Coleção", () => {
     render(
       <MemoryRouter>
         <App />
@@ -39,7 +44,7 @@ describe("App", () => {
     );
     expect(
       screen.getByRole("heading", {
-        name: "Uma nova experiência está sendo preparada",
+        name: "Fundação 3D experimental",
       }),
     ).toBeVisible();
     expect(screen.getByRole("link", { name: "Abrir Coleção" })).toHaveAttribute(

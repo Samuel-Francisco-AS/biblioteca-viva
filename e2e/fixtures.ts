@@ -19,7 +19,7 @@ async function resetIndexedDb(page: Page): Promise<void> {
   await page.reload();
   await expect(
     page.getByRole("heading", {
-      name: "Uma nova experiência está sendo preparada",
+      name: "Fundação 3D experimental",
     }),
   ).toBeVisible();
 }

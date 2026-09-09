@@ -4,6 +4,67 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F1-CLOSE — Fundação Three.js aprovada — 2026-09-09
+
+- concluída a F1 com a fundação Three.js integrada por host React próprio, cena técnica 3D, fixture GLB, interação bidirecional, lifecycle explícito e diagnóstico local;
+- registrado o gate físico aprovado no Moto G06, incluindo aproximadamente 60 FPS estabilizados na cena mínima, pan, pinch, picking, dez ciclos, background/resume e recuperação limpa após process death;
+- promovido Three.js a renderer aprovado da Fundação pela ADR-009, sem aprovar a Biblioteca final, pipeline 3D, persistência espacial, TalkBack ou performance de cenas complexas;
+- encerrado e arquivado o contrato temporário F0-D; F2 passa a ser a próxima fase.
+
+### F1-F-FIX — Alternativa React no Android — 2026-09-09
+
+- registrada a evidência humana inicial positiva da F1-F e o comportamento físico incompatível do `<select>` no Moto G06, que abria uma superfície branca vazia;
+- removidos o dropdown, suas opções e o label específico, sem alterar picking, highlight, gestos, câmera, cena, lifecycle ou observabilidade;
+- adicionados botões HTML nativos `Anterior`/`Próximo` com wrap centralizado, usando a seleção emitida pelo runtime como única fonte de verdade;
+- ampliados testes React e Chromium para navegação nos dois sentidos, extremidades, seleção Three → React → Three e layout mobile;
+- gerado novo APK debug para revalidação curta; F1-F permanece em validação humana e Three.js continua candidato experimental.
+
+### F1-E — Gates técnicos consolidados e Android — 2026-09-09
+
+- auditados os gates T1–T6 da Fundação Three.js sem adicionar funcionalidade ao mundo;
+- consolidados regressão convencional, build Vite de produção, baseline Chromium desktop/mobile, ponte React ↔ Three e dez ciclos de lifecycle;
+- confirmadas as fronteiras arquiteturais, o baseline estrutural de 46 meshes/11 selecionáveis/46–47 draw calls/546 triângulos e a ausência de persistência espacial;
+- concluídos sync Capacitor e build Gradle debug, com APK técnico identificado para a validação humana no Moto G06;
+- preservados Three.js como candidato experimental, R-09 como risco aberto e F1-F como gate físico pendente.
+
+### F1-D — Lifecycle formal e observabilidade — 2026-09-08
+
+- formalizados os estados `created`, `mounted`, `running`, `paused` e `disposed`, com start/pause/resume/dispose idempotentes, um único RAF e proteção contra callbacks tardios;
+- integradas pausa por visibilidade, retomada previsível, cancelamento seguro de gestos, resize por `ResizeObserver` com fallback de `window.resize` e cleanup determinístico;
+- adicionados snapshots locais de FPS, frame time médio, `renderer.info`, malhas, objetos, selecionáveis, primeiro frame utilizável e carregamento do GLB, exibidos em uma superfície React compacta atualizada em até 4 Hz;
+- ampliada a cobertura unitária de métricas/lifecycle/disposal e a E2E Chromium com dez ciclos completos de saída e retorno, canvas/loop únicos e interação funcional após a repetição;
+- preservados a cena e o bundle experimentais sem biblioteca de métricas, analytics, telemetria, persistência espacial ou funcionalidade da F1-E.
+
+### F1-C — Interação e ponte React ↔ Three — 2026-09-08
+
+- adicionados pan desktop/touch por Pointer Events, wheel zoom e pinch experimental com limites, distinção de tap/drag e pointer capture defensivo;
+- onze objetos técnicos receberam IDs e labels efêmeros; piso e paredes permanecem fora da seleção;
+- picking passou a usar `Raycaster` e resolve meshes filhos do GLB para o objeto lógico selecionável;
+- seleção ganhou highlight ciano por `Box3Helper`, removido e descartado ao trocar, limpar ou desmontar;
+- `WorldRuntime` passou a expor catálogo, callback de seleção e comando por ID, formando a ponte Three ↔ React sem persistência;
+- adicionada superfície React compacta com texto `aria-live` e `select` HTML nativo como alternativa ao canvas;
+- adicionada cobertura unitária e Chromium para seleção, gestos, cleanup, ponte bidirecional e viewport mobile sintético, sem antecipar a observabilidade da F1-D.
+
+### F1-B — Cena de referência + GLB — 2026-09-08
+
+- substituída a geometria única da F1-A por uma cena técnica descartável com piso, quatro segmentos de parede, quatro tipos de proxies e 46 meshes visíveis;
+- mantida a câmera ortográfica em apresentação 2.5D e adicionadas iluminação hemisférica e direcional simples, materiais baratos e sombras desligadas;
+- adicionado o fixture interno `f1-technical-pyramid.glb`, carregado pelo addon oficial `GLTFLoader`, com procedência registrada e sem pipeline 3D formal;
+- falha de asset passou a ser diagnosticável sem derrubar o canvas ou o aplicativo convencional, e callbacks tardios após unmount descartam o modelo carregado;
+- disposal passou a liberar geometrias, materiais e texturas da cena e do fixture sem descarte duplicado de recursos compartilhados;
+- adicionados testes do GLB real, construção da cena, sucesso/erro/loading tardio, disposal e smoke Chromium observável, sem antecipar interação da F1-C;
+- ajustada a altura do canvas em viewport estreita para preservar leitura da cena e evitar espaço vertical excessivo.
+
+### F1-A — Bootstrap da Fundação Three.js — 2026-09-08
+
+- incorporada a documentação final da F0 e instalado o contrato F0-D como autoridade temporária da F1;
+- adicionado `three@0.185.1` como candidato experimental, carregado sob demanda pela rota Biblioteca;
+- criada a fronteira `LibraryPage → WorldHost → ThreeWorldRuntime`, com `WebGLRenderer`, `Scene`, `OrthographicCamera`, uma geometria técnica e um único canvas;
+- adicionado lifecycle explícito de mount, start, pause, resume, resize e disposal, com limpeza de loop, observer, listener, canvas e recursos Three;
+- falha de inicialização do renderer passou a apresentar fallback textual sem bloquear as áreas convencionais;
+- adicionados testes de contrato/lifecycle/React e smoke Chromium de mount, unmount e remount sem acúmulo de canvas;
+- Dexie v8, backup v6 e as fronteiras de domínio/aplicação permanecem inalterados; não foi criado estado espacial persistente.
+
 ### WORLD RESET — 2026-09-08
 
 - removidos integralmente o mundo visual anterior, seu renderer Phaser, Construção, contratos espaciais, progressão estrutural, salas, personagens, diálogos, assets, fontes, candidatos, guias, scripts e testes exclusivos;

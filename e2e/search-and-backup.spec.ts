@@ -106,7 +106,7 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
   await navigateFromDock("Biblioteca");
   await expect(
     page.getByRole("heading", {
-      name: "Uma nova experiência está sendo preparada",
+      name: "Fundação 3D experimental",
     }),
   ).toBeVisible();
   await navigateFromDock("Coleção");

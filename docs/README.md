@@ -11,6 +11,7 @@ Este é o único índice da documentação ativa.
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | Como o aplicativo atual funciona? |
 | [`DATA_MODEL.md`](DATA_MODEL.md) | O que persistimos? |
 | [`WORLD.md`](WORLD.md) | Qual é a direção e o estado do mundo? |
+| [`BV_F1_MAPA_E_ETAPAS.md`](BV_F1_MAPA_E_ETAPAS.md) | Como a FUNDAÇÃO/F1 está decomposta? |
 | [`ART_DIRECTION.md`](ART_DIRECTION.md) | Qual aparência buscamos? |
 | [`ASSET_PIPELINE.md`](ASSET_PIPELINE.md) | Como assets entrarão? |
 | [`ASSET_REGISTRY.md`](ASSET_REGISTRY.md) | Quais assets ativos existem? |
@@ -30,3 +31,5 @@ Este é o único índice da documentação ativa.
 | [`history/`](history/README.md) | Como chegamos aqui? |
 
 `STATUS.md` é a única declaração operacional do presente. Histórico nunca autoriza implementação.
+
+A F1 encerrou o contrato temporário F0-D. [`ADR-009`](decisions/ADR-009-three-foundation.md) registra Three.js como renderer aprovado da Fundação; o contrato integral foi preservado em [`history/plans/`](history/plans/F0-D_THREE_FOUNDATION_SPIKE_CONTRACT.md).

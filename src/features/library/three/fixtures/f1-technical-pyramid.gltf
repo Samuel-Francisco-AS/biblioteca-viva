@@ -1,0 +1,48 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "Biblioteca Viva F1-B internal technical fixture"
+  },
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "scene": 0,
+  "scenes": [{ "name": "F1 technical fixture", "nodes": [0] }],
+  "nodes": [{ "name": "F1 technical pyramid", "mesh": 0 }],
+  "meshes": [
+    {
+      "name": "F1 technical pyramid mesh",
+      "primitives": [{ "attributes": { "POSITION": 0 }, "material": 0 }]
+    }
+  ],
+  "materials": [
+    {
+      "name": "F1 technical orange",
+      "doubleSided": true,
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [0.96, 0.39, 0.15, 1],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.85
+      },
+      "extensions": { "KHR_materials_unlit": {} }
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 216,
+      "uri": "data:application/octet-stream;base64,zcxMvwAAAADNzEw/zcxMPwAAAADNzEw/AAAAAJqZ2T8AAAAAzcxMPwAAAADNzEw/zcxMPwAAAADNzEy/AAAAAJqZ2T8AAAAAzcxMPwAAAADNzEy/zcxMvwAAAADNzEy/AAAAAJqZ2T8AAAAAzcxMvwAAAADNzEy/zcxMvwAAAADNzEw/AAAAAJqZ2T8AAAAAzcxMvwAAAADNzEy/zcxMPwAAAADNzEy/zcxMPwAAAADNzEw/zcxMvwAAAADNzEy/zcxMPwAAAADNzEw/zcxMvwAAAADNzEw/"
+    }
+  ],
+  "bufferViews": [
+    { "buffer": 0, "byteOffset": 0, "byteLength": 216, "target": 34962 }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 18,
+      "type": "VEC3",
+      "min": [-0.8, 0, -0.8],
+      "max": [0.8, 1.7, 0.8]
+    }
+  ]
+}
