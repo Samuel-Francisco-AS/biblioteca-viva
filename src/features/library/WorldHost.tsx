@@ -4,6 +4,7 @@ import type {
   WorldRuntime,
   WorldRuntimeDiagnostics,
   WorldRuntimeFactory,
+  WorldRuntimeFailure,
   WorldSelectableObject,
   WorldSelection,
 } from "./worldRuntime";
@@ -74,6 +75,7 @@ export function WorldHost({ runtimeFactory = createRuntime }: WorldHostProps) {
   const [selection, setSelection] = useState<WorldSelection>(null);
   const [diagnostics, setDiagnostics] =
     useState<WorldRuntimeDiagnostics>(EMPTY_DIAGNOSTICS);
+  const [failure, setFailure] = useState<WorldRuntimeFailure | null>(null);
   const [status, setStatus] = useState<WorldHostStatus>("initializing");
 
   const selectAdjacentObject = (direction: SelectionDirection): void => {
@@ -86,9 +88,17 @@ export function WorldHost({ runtimeFactory = createRuntime }: WorldHostProps) {
     let active = true;
     let runtime: WorldRuntime | undefined;
     let unsubscribeDiagnostics: (() => void) | undefined;
+    let unsubscribeFailure: (() => void) | undefined;
     let unsubscribeSelection: (() => void) | undefined;
+    let terminalFailureReported = false;
 
     if (!host) return;
+
+    setSelectableObjects([]);
+    setSelection(null);
+    setDiagnostics(EMPTY_DIAGNOSTICS);
+    setFailure(null);
+    setStatus("initializing");
 
     void runtimeFactory()
       .then((createdRuntime) => {
@@ -109,11 +119,32 @@ export function WorldHost({ runtimeFactory = createRuntime }: WorldHostProps) {
         unsubscribeSelection = runtime.onSelectionChange((nextSelection) => {
           if (active) setSelection(nextSelection);
         });
+        unsubscribeFailure = runtime.onFailure((nextFailure) => {
+          if (!active || runtime !== createdRuntime) return;
+
+          terminalFailureReported = true;
+          unsubscribeDiagnostics?.();
+          unsubscribeSelection?.();
+          unsubscribeFailure?.();
+          runtimeRef.current = null;
+          runtime.dispose();
+          setSelectableObjects([]);
+          setSelection(null);
+          setDiagnostics(EMPTY_DIAGNOSTICS);
+          setFailure(nextFailure);
+          setStatus("failed");
+          console.error(
+            `[Biblioteca Viva] three-world-runtime-failed:${nextFailure.code}`,
+            nextFailure.message,
+          );
+        });
+        if (terminalFailureReported) return;
         runtime.start();
         setStatus("ready");
       })
       .catch(() => {
         unsubscribeDiagnostics?.();
+        unsubscribeFailure?.();
         unsubscribeSelection?.();
         runtime?.dispose();
         runtimeRef.current = null;
@@ -125,6 +156,7 @@ export function WorldHost({ runtimeFactory = createRuntime }: WorldHostProps) {
     return () => {
       active = false;
       unsubscribeDiagnostics?.();
+      unsubscribeFailure?.();
       unsubscribeSelection?.();
       runtime?.dispose();
       runtime = undefined;
@@ -240,6 +272,7 @@ export function WorldHost({ runtimeFactory = createRuntime }: WorldHostProps) {
             A Biblioteca visual está indisponível neste dispositivo. Sua coleção
             e as demais áreas continuam funcionando normalmente.
           </p>
+          {failure && <p>{failure.message}</p>}
         </div>
       )}
     </div>

@@ -567,9 +567,10 @@ O piso provisório de 30 FPS foi superado com folga na cena mínima. Essa evidê
 ---
 
 # 11. F2 — Integração e endurecimento do runtime
-**Estado: ▶ PRÓXIMA**
 
-A F2 é o próximo trabalho depois da conclusão da F1.
+**Estado: ▶ EM ANDAMENTO — F2-B concluída**
+
+A F2 sucede a F1. O checkpoint F2-B consolidou a fronteira pública React ↔ runtime: falha terminal tipada, fallback React e a garantia de no máximo uma instância montada/viva por host. Lifecycle, recuperação e a organização interna permanecem nos próximos checkpoints da F2.
 
 Seu objetivo será transformar o spike em uma fundação mais confiável.
 
@@ -839,7 +840,7 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | F1-E | ✅ Concluída | Gates técnicos + APK |
 | F1-F | ✅ Concluída | Gate físico aprovado no Moto G06 |
 | F1-F-FIX | ✅ Concluída | Botões React revalidados fisicamente |
-| F2 | ▶ Próxima | Endurecer runtime e integração |
+| F2 | ▶ Em andamento (F2-B concluída) | Endurecer runtime e integração |
 | F3 | ⏳ Planejada | Câmera e interação mobile |
 | F4 | ⏳ Planejada | Contrato experimental de assets 3D |
 | F5 | ⏳ Planejada | Baseline de performance Android |
@@ -855,6 +856,6 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 
 O projeto deve ser considerado neste estado:
 
-> **F0 concluída. F1 e todos os seus checkpoints concluídos. Three.js aprovado como renderer da Fundação. Próxima ação: F2 — integração e endurecimento da Fundação Three.js.**
+> **F0 concluída. F1 e todos os seus checkpoints concluídos. Three.js aprovado como renderer da Fundação. F2 está em andamento; F2-B consolidou a fronteira React ↔ runtime.**
 
 A FUNDAÇÃO inteira ainda não está concluída: F2–F6 permanecem futuras. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.

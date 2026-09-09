@@ -24,4 +24,6 @@
 
 ## Próximo trabalho
 
-**F2 — Integração e endurecimento da Fundação Three.js:** consolidar limites React/runtime, lifecycle, recuperação, organização interna e contratos estáveis. Não iniciar F3–F6 nem a Biblioteca real antes do escopo correspondente.
+**F2-B concluída — fronteira pública React ↔ runtime:** `WorldRuntime` agora formaliza falha terminal tipada; `WorldHost` descarta a instância e limpa o estado efêmero antes do fallback. A instância montada/viva por host é limitada a uma.
+
+**Próximo trabalho — F2-C em diante:** endurecer lifecycle, recuperação e organização interna da Fundação Three.js. Não iniciar F3–F6 nem a Biblioteca real antes do escopo correspondente.

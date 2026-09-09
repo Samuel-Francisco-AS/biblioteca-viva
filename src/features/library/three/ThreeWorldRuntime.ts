@@ -13,6 +13,7 @@ import type {
   WorldFixtureStatus,
   WorldRuntime,
   WorldRuntimeDiagnostics,
+  WorldRuntimeFailureListener,
   WorldRuntimeState,
   WorldSelectableObject,
   WorldSelection,
@@ -94,6 +95,7 @@ function createFixtureLoader(): FixtureModelLoader {
 export class ThreeWorldRuntime implements WorldRuntime {
   private camera: OrthographicCamera | undefined;
   private readonly diagnosticsListeners = new Set<WorldDiagnosticsListener>();
+  private readonly failureListeners = new Set<WorldRuntimeFailureListener>();
   private drawCalls = 0;
   private fixture: Object3D | undefined;
   private fixtureLoadMs: number | null = null;
@@ -268,6 +270,12 @@ export class ThreeWorldRuntime implements WorldRuntime {
     return () => this.diagnosticsListeners.delete(listener);
   }
 
+  onFailure(listener: WorldRuntimeFailureListener): () => void {
+    if (this.state === "disposed") return () => undefined;
+    this.failureListeners.add(listener);
+    return () => this.failureListeners.delete(listener);
+  }
+
   onSelectionChange(listener: WorldSelectionListener): () => void {
     if (this.state === "disposed") return () => undefined;
     this.selectionListeners.add(listener);
@@ -349,6 +357,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
 
     this.interaction?.dispose();
     this.interaction = undefined;
+    this.failureListeners.clear();
     this.selectionListeners.clear();
     if (this.fixture) disposeObjectTree(this.fixture);
     if (this.referenceScene) disposeObjectTree(this.referenceScene.root);

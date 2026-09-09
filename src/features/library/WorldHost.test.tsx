@@ -6,6 +6,8 @@ import type {
   WorldDiagnosticsListener,
   WorldRuntime,
   WorldRuntimeDiagnostics,
+  WorldRuntimeFailure,
+  WorldRuntimeFailureListener,
   WorldSelectableObject,
   WorldSelection,
   WorldSelectionListener,
@@ -14,12 +16,16 @@ import { WorldHost } from "./WorldHost";
 
 interface TestWorldRuntime extends WorldRuntime {
   readonly dispose: Mock<() => void>;
+  readonly emitFailure: (failure: WorldRuntimeFailure) => void;
   readonly emitSelection: (selection: WorldSelection) => void;
   readonly getDiagnostics: Mock<() => WorldRuntimeDiagnostics>;
   readonly getSelectableObjects: Mock<() => readonly WorldSelectableObject[]>;
   readonly mount: Mock<(host: HTMLElement) => void>;
   readonly onDiagnosticsChange: Mock<
     (listener: WorldDiagnosticsListener) => () => void
+  >;
+  readonly onFailure: Mock<
+    (listener: WorldRuntimeFailureListener) => () => void
   >;
   readonly onSelectionChange: Mock<
     (listener: WorldSelectionListener) => () => void
@@ -34,7 +40,9 @@ function createRuntime(): TestWorldRuntime {
     { id: "table-01", label: "Mesa técnica 1" },
     { id: "fixture-pyramid", label: "Pirâmide técnica" },
   ] as const;
+  let canvas: HTMLCanvasElement | undefined;
   let selectionListener: WorldSelectionListener | undefined;
+  let failureListener: WorldRuntimeFailureListener | undefined;
   const diagnostics: WorldRuntimeDiagnostics = {
     activeFrameLoops: 1,
     drawCalls: 46,
@@ -56,18 +64,25 @@ function createRuntime(): TestWorldRuntime {
     selectionListener = undefined;
   });
   const runtime: TestWorldRuntime = {
-    dispose: vi.fn(),
+    dispose: vi.fn(() => canvas?.remove()),
+    emitFailure: (failure) => failureListener?.(failure),
     emitSelection: (selection) => selectionListener?.(selection),
     getDiagnostics: vi.fn(() => diagnostics),
     getSelectableObjects: vi.fn(() => selectables),
     mount: vi.fn((host: HTMLElement) => {
-      const canvas = document.createElement("canvas");
+      canvas = document.createElement("canvas");
       canvas.dataset.threeWorldCanvas = "true";
       host.append(canvas);
     }),
     onDiagnosticsChange: vi.fn((listener) => {
       listener(diagnostics);
       return vi.fn();
+    }),
+    onFailure: vi.fn((listener) => {
+      failureListener = listener;
+      return vi.fn(() => {
+        failureListener = undefined;
+      });
     }),
     onSelectionChange: vi.fn((listener) => {
       selectionListener = listener;
@@ -104,6 +119,7 @@ describe("WorldHost", () => {
     expect(runtime.start).toHaveBeenCalledOnce();
     expect(runtime.getSelectableObjects).toHaveBeenCalledOnce();
     expect(runtime.onDiagnosticsChange).toHaveBeenCalledOnce();
+    expect(runtime.onFailure).toHaveBeenCalledOnce();
     expect(runtime.onSelectionChange).toHaveBeenCalledOnce();
     expect(
       view.container.querySelectorAll("canvas[data-three-world-canvas='true']"),
@@ -243,6 +259,71 @@ describe("WorldHost", () => {
     );
 
     consoleError.mockRestore();
+  });
+
+  it("descarta a instância e limpa o estado efêmero ao receber falha terminal", async () => {
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    const runtime = createRuntime();
+    render(<WorldHost runtimeFactory={() => Promise.resolve(runtime)} />);
+
+    await screen.findByText("Ambiente 3D experimental em execução.");
+    act(() => {
+      runtime.emitSelection({ id: "table-01", label: "Mesa técnica 1" });
+      runtime.emitFailure({
+        code: "unavailable",
+        message: "O recurso gráfico deixou de estar disponível.",
+      });
+    });
+
+    expect(
+      screen.getByRole("heading", {
+        name: "O ambiente 3D não pôde ser iniciado",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.getByText("O recurso gráfico deixou de estar disponível."),
+    ).toBeVisible();
+    expect(screen.queryByTestId("world-diagnostics")).not.toBeInTheDocument();
+    expect(runtime.dispose).toHaveBeenCalledOnce();
+    expect(consoleError).toHaveBeenCalledWith(
+      "[Biblioteca Viva] three-world-runtime-failed:unavailable",
+      "O recurso gráfico deixou de estar disponível.",
+    );
+
+    consoleError.mockRestore();
+  });
+
+  it("descarta uma montagem viva antes de montar uma substituta", async () => {
+    const firstRuntime = createRuntime();
+    const secondRuntime = createRuntime();
+    const firstFactory = vi.fn(() => Promise.resolve(firstRuntime));
+    const secondFactory = vi.fn(() => Promise.resolve(secondRuntime));
+    const view = render(<WorldHost runtimeFactory={firstFactory} />);
+
+    await screen.findByText("Ambiente 3D experimental em execução.");
+    act(() => {
+      firstRuntime.emitSelection({
+        id: "table-01",
+        label: "Mesa técnica 1",
+      });
+    });
+    expect(
+      screen.getByText("Objeto selecionado: Mesa técnica 1."),
+    ).toBeVisible();
+
+    view.rerender(<WorldHost runtimeFactory={secondFactory} />);
+
+    await waitFor(() => expect(secondRuntime.mount).toHaveBeenCalledOnce());
+    expect(firstRuntime.dispose).toHaveBeenCalledOnce();
+    expect(secondRuntime.mount).toHaveBeenCalledAfter(firstRuntime.dispose);
+    expect(
+      screen.getByText("Objeto selecionado: Nenhum objeto selecionado."),
+    ).toBeVisible();
+    expect(
+      view.container.querySelectorAll("canvas[data-three-world-canvas='true']"),
+    ).toHaveLength(1);
   });
 
   it("descarta criação tardia sem montar nem atualizar o host desmontado", async () => {

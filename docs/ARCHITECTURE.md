@@ -29,9 +29,10 @@ Three.js
 ```
 
 - `LibraryPage` descreve a experiência e preserva as ações convencionais;
-- `WorldHost` pertence à apresentação, carrega o runtime sob demanda, controla uma única instância e faz a ponte de seleção e diagnóstico com React;
+- `WorldHost` pertence à apresentação, carrega o runtime sob demanda, mantém no máximo uma instância montada/viva por vez e faz a ponte de seleção, diagnóstico e falha terminal tipada com React;
 - `ThreeWorldRuntime` pertence à camada de apresentação/experiência, depende de browser/DOM e concentra `WebGLRenderer`, cena, `OrthographicCamera`, GLTF/GLB, input, picking, highlight, loop, resize, pause/resume, visibilidade, métricas e disposal;
 - React permanece responsável pela superfície semântica e pelo fallback, sem importar Three.js;
+- a fronteira `WorldRuntime` expõe somente descritores selecionáveis, diagnóstico efêmero e uma falha terminal segura para UI/log; não expõe tipos ou detalhes de Three.js;
 - renderer, canvas, loop, observers, listeners, gestos e recursos Three pertencem à instância do runtime;
 - `domain` e `application` não conhecem Three.js; o runtime não acessa Dexie, backup nem portas de persistência;
 - não existe entidade, tabela, porta ou backup espacial; seleção e câmera atuais são efêmeras.
