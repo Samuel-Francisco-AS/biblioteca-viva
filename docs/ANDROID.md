@@ -35,6 +35,17 @@ android/app/build/outputs/apk/debug/app-debug.apk
 
 Os warnings conhecidos de `flatDir` persistem. Esta evidência confirma o empacotamento técnico, não instalação, execução, toque, pinch, orientation, background/resume, desempenho ou temperatura no Moto G06.
 
+## Evidência técnica da F3-F1
+
+Em 2026-09-09, `npm run android:sync` e `npm run android:build:debug` passaram novamente. O sync preservou `@capacitor/app@8.1.1`, `@capacitor/filesystem@8.1.2` e `@capacitor/share@8.0.1`; o Gradle concluiu `assembleDebug` com sucesso e gerou:
+
+```text
+android/app/build/outputs/apk/debug/app-debug.apk
+7.525.817 bytes (7,2 MiB em disco)
+```
+
+Os warnings conhecidos de `flatDir` persistem. Este checkpoint confirmou o empacotamento técnico; a validação humana ampla posterior da F3 está registrada abaixo.
+
 ## Evidência física da F1-F — Moto G06
 
 O APK Three.js foi instalado e executado fisicamente. O aplicativo abriu, a Biblioteca carregou piso, paredes, proxies e fixture GLB, e pan, pinch, picking, highlight e a ponte React ↔ Three passaram sem crash, travamento, corrupção ou artefato gráfico relevante.
@@ -56,3 +67,9 @@ Após os gates técnicos da F2-F, a revalidação humana curta confirmou renderi
 Na rotação/orientação, houve queda transitória de aproximadamente 37–45 FPS, seguida de recuperação e estabilização em aproximadamente 60 FPS. Na sequência extrema de zoom-out até o máximo e zoom-in até o máximo, houve queda transitória de aproximadamente 45–48 FPS, com a mesma recuperação para aproximadamente 60 FPS. Não houve crash, travamento, degradação sustentada, perda de interação, dessincronização React ↔ Three ou evidência de regressão funcional associada à F2.
 
 As quedas são observações não bloqueantes, não falhas comprovadas nem benchmark formal, e não têm causalidade atribuída à F2 sem evidência. Esta validação curta não aprova TalkBack, temperatura prolongada, desempenho do mundo final, densidade real da Biblioteca ou budget artístico.
+
+## Fechamento físico da F3 — Moto G06
+
+A validação humana ampla da F3 foi positiva: o aplicativo abriu normalmente; framing inicial, pan, tap/seleção sem confusão com pan, pinch fluido sem seleção acidental, pinch → um pointer → pan, zoom mínimo/máximo, portrait → landscape → portrait e background/resume permaneceram funcionais. O FPS ficou aproximadamente em 60 ou muito próximo durante interações e rotação; não houve crash, travamento ou regressão funcional perceptível. Isto não é benchmark científico nem garantia para o mundo final.
+
+Depois dessa validação, o APK posterior ao fix matemático dos bounds foi gerado por sync e debug build aprovados. Esse APK **não foi revalidado fisicamente** no Moto G06. A limitação foi aceita como não bloqueante no fechamento da F3 e não deve ser interpretada como prova física do fix.

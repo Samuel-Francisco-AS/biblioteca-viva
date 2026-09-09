@@ -4,6 +4,66 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F3-CLOSE — Câmera e interação mobile concluída — 2026-09-09
+
+- encerrada a F3 com contrato runtime-only de câmera/framing/bounds, pan no plano X/Z, wheel e pinch focais, tap monotônico, viewport real por `ResizeObserver` e preservação de exploração/seleção em orientação;
+- consolidado o gate F3-F1: 64 arquivos/487 testes Vitest, 13 cenários E2E Chromium, format, lint, typecheck, áudio, build, relatório de performance, sync e debug build Android, com warnings conhecidos não bloqueantes;
+- registrada validação humana ampla positiva no Moto G06 para abertura, framing, pan, tap/seleção, pinch, pinch → pan, zoom, rotação e background/resume, sem crash, travamento ou regressão funcional perceptível e com FPS aproximadamente em 60 ou próximo durante interação/rotação; não é benchmark do mundo final;
+- registrada a correção matemática final dos bounds: região convexa de centros de câmera preserva patch mínimo projetado do piso técnico em vez de combinar os cantos vazios do AABB; ela passou 3 arquivos/61 testes dirigidos e novo build Android, sem alterar `CameraNavigation`, gestos, lifecycle ou renderer;
+- o APK posterior ao fix dos bounds não recebeu revalidação física específica no Moto G06. Essa ausência foi aceita como não bloqueante para encerrar F3 e não constitui evidência física inexistente; F4 passa a ser a próxima fase autorizada.
+
+### F3-F2-FIX — Limites diagonais da fixture — 2026-09-09
+
+- corrigido o clamp que aceitava a combinação diagonal dos extremos do retângulo envolvente da projeção e podia deixar apenas o fundo da cena nos limites superiores;
+- a região de navegação agora é convexa e garante na viewport um patch de área mínima pertencente à projeção real do piso técnico: 15% de cada span projetado, limitado somente pelo viewport disponível;
+- adicionada regressão matemática para os quatro cantos, portrait, landscape e zoom `0.7`, `1` e `2.2`, sem alterar `CameraNavigation` como autoridade, os gestos, o renderer, lifecycle, seleção ou persistência;
+- gerado novo APK debug em `android/app/build/outputs/apk/debug/app-debug.apk` (7.525.817 bytes), sem alteração Android nativa ou dependência nova;
+- F3-F1 permanece concluída tecnicamente; F3 permanece aberta e aguarda somente revalidação física curta dos limites corrigidos no Moto G06.
+
+### F3-F1 — Gate técnico consolidado + APK — 2026-09-09
+
+- concluídos formatação, análise estática, 487 testes Vitest, áudio, build web, relatório de bundle, 13 cenários E2E Chromium, sync Capacitor e Gradle debug;
+- confirmado o APK debug em `android/app/build/outputs/apk/debug/app-debug.apk`, com 7.525.817 bytes, sem alteração Android nativa ou dependência nova;
+- corrigida uma tipagem objetiva no novo cenário E2E de orientação; não houve alteração de contrato de câmera, interação, lifecycle, renderer ou persistência;
+- preservados os warnings conhecidos de chunks Vite acima de 500 kB, `NO_COLOR`/`FORCE_COLOR` e `flatDir`;
+- F3 permanece aberta: instalação e validação física de orientação, safe areas, toque/pinch, ergonomia, background/resume e extremos no Moto G06 são F3-F2.
+
+### F3-E — Viewport, orientação, safe areas e integração mobile — 2026-09-09
+
+- consolidada a autoridade do viewport na caixa real observada do `world-host`: Three não calcula header, dock, safe areas ou breakpoints, e o CSS reutiliza o contrato global de `env(safe-area-inset-*)` e a reserva existente do dock fixo;
+- a superfície da Biblioteca passou a conter largura e reduzir padding em tela estreita, com caixa responsiva baseada em proporção e limite vertical existente do app, sem overflow horizontal e sem duplicar safe areas;
+- resize/orientação válido preserva a mesma montagem, canvas, seleção e estado lógico de câmera salvo clamp matematicamente necessário; viewport inválido continua aguardando dimensão válida, e mudança geométrica encerra apenas o gesto em curso para impedir picking com coordenadas antigas;
+- adicionadas coberturas determinística e Chromium dirigida para gesto interrompido, picking após resize, portrait → landscape → portrait e 320×640. Não houve alteração Android nativa nem validação física de safe areas, system bars, orientação, toque/pinch, ergonomia ou FPS Android.
+
+### F3-D — Tap, seleção e arbitragem de gestos — 2026-09-09
+
+- consolidada uma candidatura de tap explícita, monotônica e vinculada ao `pointerId` inicial: somente `pointerup` elegível executa o `Raycaster` e pode alterar a seleção;
+- preservado o threshold centralizado de `8` CSS px, inclusive na borda; ultrapassá-lo consome o slop antes de pan e continua inelegível mesmo que o pointer retorne à origem;
+- pinch, segundo/terceiro pointer, wheel concorrente, cancelamento, perda de capture, pausa, disposal e terminalidade não geram seleção tardia; pinch → pan permanece limpo;
+- formalizado que tap válido em espaço vazio limpa a seleção, sem alterar a ponte React ↔ Three, os botões `Anterior`/`Próximo`, highlight, câmera, bounds ou persistência;
+- ampliada a cobertura focada de intenção de gesto e executado E2E Chromium dirigido à Biblioteca, sem teste físico, Android ou recalibragem ergonômica.
+
+### F3-C — Pan, zoom e pinch — 2026-09-09
+
+- pan passou a derivar posições sucessivas do canvas no plano navegável X/Z, mantendo escala coerente com viewport, aspect ratio e zoom sem alterar o target Y;
+- wheel agora normaliza unidades de `deltaMode` antes da curva exponencial e aplica zoom focal, mantendo o ponto sob o cursor quando os bounds técnicos permitem;
+- pinch passou a usar a razão entre distâncias sucessivas e a mapear o midpoint anterior para o atual, compondo pan+zoom sem depender da frequência dos eventos;
+- todos os gestos continuam passando por `CameraNavigation` e pelo clamp F3-B; seleção, picking pelo bounding rect atual, pinch → pan, cancelamento, pausa e terminalidade foram preservados;
+- ampliada a cobertura determinística para pan, âncoras, clamps, wheel normalizado, midpoint e pan+zoom, sem validar ergonomia física ou alterar a arbitragem final tap/gesto.
+
+### F3-B — Modelo de câmera, framing e limites — 2026-09-09
+
+- centralizado estado efêmero de foco X/Z e zoom em `CameraNavigation`, que passa a ser a única fonte para a `OrthographicCamera`; eventos continuam sob ownership de `ThreeWorldInteraction`;
+- framing passou a derivar bounds explícitos da fixture técnica e padding de 15%, com frustum e bounds de navegação dependentes de viewport e zoom; GLB tardio não reposiciona a câmera;
+- removida a deriva vertical incidental do pan: target Y é fixo, enquanto resize/orientação preservam estado lógico e seleção quando válidos;
+- ampliada a cobertura focada para framing, bounds, zoom, viewport inválido, orientação e fixture tardio, sem recalibrar curva de wheel, ganho de pinch ou ergonomia final.
+
+### F3-A — Contrato e baseline da câmera — 2026-09-09
+
+- formalizada a autoridade da câmera efêmera: `ThreeWorldRuntime` possui a instância/lifecycle e `ThreeWorldInteraction` possui a navegação por gesto, sem estado React, Dexie ou persistência espacial;
+- extraído o cálculo puro do frustum ortográfico da fixture F1, que rejeita viewport zero, negativo, não finito ou com derivação não representável em vez de fabricar estado de câmera;
+- adicionada cobertura focada para frustum e baseline inicial, preservando a calibração, o comportamento observável e os contratos de lifecycle/input da F2;
+
 ### F2-F — Regressão consolidada e fechamento técnico e físico — 2026-09-09
 
 - concluída tecnicamente a F2 — Integração e endurecimento da Fundação Three.js, sem nova funcionalidade espacial ou alteração de câmera, zoom, pan, pinch, framing, limites, safe areas ou UX mobile;

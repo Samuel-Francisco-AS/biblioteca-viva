@@ -40,4 +40,4 @@ A alternativa atual usa dois botões HTML nativos, `Anterior` e `Próximo`, que 
 
 Na revalidação física da F1-F-FIX, os botões ficaram visíveis e funcionais, identificaram o objeto corretamente em React e atualizaram seleção e highlight nos dois sentidos. A superfície branca do `<select>` deixou de ser necessária.
 
-Os botões são somente controles experimentais da Fundação, não uma decisão de UX final. O highlight ciano não é a única indicação de estado. A estrutura e a ponte foram aprovadas para a F1, mas TalkBack humano completo não foi executado e permanece pendente para F6 ou outro gate específico.
+Os botões são somente controles experimentais da Fundação, não uma decisão de UX final. O highlight ciano não é a única indicação de estado. A estrutura e a ponte foram aprovadas para a F1, e a F3 concluiu câmera/interação mobile; TalkBack humano completo não foi executado e permanece pendente para F6 ou outro gate específico. A evidência física da F3 não aprova TalkBack.

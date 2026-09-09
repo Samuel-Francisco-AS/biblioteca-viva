@@ -16,8 +16,8 @@
 - `infrastructure` implementa portas e valida dados externos.
 - React não acessa Dexie diretamente.
 - Eventos saem somente após o commit da transação correspondente.
-- A rota Biblioteca não possui mundo ou renderer neste baseline.
-- Não crie contratos espaciais especulativos antes de uma decisão aprovada.
+- A rota Biblioteca hospeda a Fundação Three.js por `WorldHost` e `ThreeWorldRuntime`; Three.js é o renderer aprovado.
+- A cena atual é uma fixture técnica descartável: não existe ainda Biblioteca final nem persistência espacial. Não crie contratos espaciais especulativos antes das fases autorizadas.
 
 ## Escopo e qualidade
 

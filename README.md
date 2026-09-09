@@ -4,7 +4,7 @@ Biblioteca Viva é um aplicativo local-first para registrar livros, filmes, sér
 
 O aplicativo convencional está funcional. A rota Biblioteca hospeda a Fundação Three.js aprovada na F1, isolada por um World Host React; a cena atual continua sendo uma fixture técnica, não a Biblioteca final.
 
-A F0 e a F1 da FUNDAÇÃO do novo mundo estão concluídas. O novo mundo continua definido como uma experiência 3D real com apresentação ortográfica/2.5D. **Three.js está aprovado como renderer da Fundação**, usando integração direta com React, `WebGLRenderer`, `OrthographicCamera` e GLTF/GLB. A FUNDAÇÃO inteira ainda não terminou; F2 é a próxima fase e F3–F6 permanecem futuras.
+F0, F1, F2 e F3 — Câmera e interação mobile — da FUNDAÇÃO do novo mundo estão concluídos. O novo mundo continua definido como uma experiência 3D real com apresentação ortográfica/2.5D. **Three.js está aprovado como renderer da Fundação**, usando integração direta com React, `WebGLRenderer`, `OrthographicCamera` e GLTF/GLB. **F4 — Contrato experimental de assets 3D é a próxima fase autorizada**; F5–F6 permanecem futuras. A FUNDAÇÃO inteira ainda não está concluída.
 
 React Three Fiber (R3F), WebGPU e renderers alternativos não fazem parte do baseline aprovado. Só serão reconsiderados diante de um problema estrutural concreto. O pipeline 3D formal e a persistência espacial continuam futuros.
 

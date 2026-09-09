@@ -197,8 +197,14 @@ test("viewport mobile mantém tap, pan, pinch sintético e alternativa React", a
     pointerId: 11,
     pointerType: "touch",
   });
+  await canvas.dispatchEvent("pointermove", {
+    clientX: canvasBox.x + 150,
+    clientY: canvasBox.y + 120,
+    pointerId: 11,
+    pointerType: "touch",
+  });
   await canvas.dispatchEvent("pointerup", {
-    clientX: canvasBox.x + 130,
+    clientX: canvasBox.x + 150,
     clientY: canvasBox.y + 120,
     pointerId: 11,
     pointerType: "touch",
@@ -248,6 +254,78 @@ test("viewport mobile mantém tap, pan, pinch sintético e alternativa React", a
   ).toBeVisible();
 });
 
+test("Biblioteca preserva a mesma superfície em portrait, landscape e viewport estreito", async ({
+  page,
+}) => {
+  const browserErrors: string[] = [];
+  page.on("pageerror", (error) => browserErrors.push(error.message));
+  page.on("console", (message) => {
+    if (message.type() === "error") browserErrors.push(message.text());
+  });
+  await page.setViewportSize({ height: 844, width: 390 });
+  await page.goto("/");
+  const canvas = page.locator("canvas[data-three-world-canvas='true']");
+  await expect(canvas).toHaveAttribute("data-fixture-status", "ready");
+
+  const initialCanvasBox = await canvas.boundingBox();
+  expect(initialCanvasBox?.width).toBeGreaterThan(250);
+  await page.getByRole("button", { name: "Próximo →" }).click();
+  await expect(canvas).toHaveAttribute("data-selected-object", "bookshelf-01");
+  const zoomBeforeOrientation = Number(
+    await canvas.getAttribute("data-camera-zoom"),
+  );
+
+  await page.setViewportSize({ height: 390, width: 844 });
+  await expect(canvas).toHaveCount(1);
+  await expect(canvas).toHaveAttribute("data-selected-object", "bookshelf-01");
+  expect(Number(await canvas.getAttribute("data-camera-zoom"))).toBeCloseTo(
+    zoomBeforeOrientation,
+    3,
+  );
+  expect(
+    await page.evaluate(
+      "document.documentElement.scrollWidth <= window.innerWidth",
+    ),
+  ).toBe(true);
+
+  const landscapeCanvasBox = await canvas.boundingBox();
+  expect(landscapeCanvasBox?.height).toBeGreaterThan(150);
+  if (!landscapeCanvasBox) return;
+  const pickX = Number(await canvas.getAttribute("data-test-pick-x"));
+  const pickY = Number(await canvas.getAttribute("data-test-pick-y"));
+  await canvas.dispatchEvent("pointerdown", {
+    clientX: landscapeCanvasBox.x + pickX,
+    clientY: landscapeCanvasBox.y + pickY,
+    pointerId: 21,
+    pointerType: "touch",
+  });
+  await canvas.dispatchEvent("pointerup", {
+    clientX: landscapeCanvasBox.x + pickX,
+    clientY: landscapeCanvasBox.y + pickY,
+    pointerId: 21,
+    pointerType: "touch",
+  });
+  await expect(canvas).toHaveAttribute("data-selected-object", "crate-01");
+
+  await page.setViewportSize({ height: 844, width: 390 });
+  await expect(canvas).toHaveCount(1);
+  await expect(canvas).toHaveAttribute("data-selected-object", "crate-01");
+  await expect(page.getByRole("button", { name: "← Anterior" })).toBeVisible();
+  await expect(
+    page.getByRole("navigation", { name: "Navegação principal" }),
+  ).toBeVisible();
+
+  await page.setViewportSize({ height: 640, width: 320 });
+  await expect(canvas).toHaveCount(1);
+  expect((await canvas.boundingBox())?.width).toBeGreaterThan(200);
+  expect(
+    await page.evaluate(
+      "document.documentElement.scrollWidth <= window.innerWidth",
+    ),
+  ).toBe(true);
+  expect(browserErrors).toEqual([]);
+});
+
 test("dez ciclos de rota não acumulam canvases, loops ou interação", async ({
   page,
 }) => {
@@ -295,6 +373,7 @@ test("dez ciclos de rota não acumulam canvases, loops ou interação", async ({
   await page.mouse.move(canvasBox.x + 160, canvasBox.y + 120);
   await page.mouse.down();
   await page.mouse.move(canvasBox.x + 200, canvasBox.y + 120);
+  await page.mouse.move(canvasBox.x + 220, canvasBox.y + 120);
   await page.mouse.up();
   await expect
     .poll(() => canvas.getAttribute("data-camera-target-x"))

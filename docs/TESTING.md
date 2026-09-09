@@ -157,6 +157,68 @@ Durante a rotação/orientação, houve queda transitória de aproximadamente 37
 
 Playwright e os demais gates automatizados não provaram esse comportamento físico. A validação humana complementa o gate técnico da F2; foi curta e dirigida, não aprova temperatura prolongada, TalkBack, densidade real da Biblioteca, performance do mundo final ou budget artístico.
 
+## F3-A — contrato e baseline da câmera
+
+- `cameraMath.test.ts` cobre o frustum ortográfico de referência da fixture F1 para viewport horizontal, de referência e vertical, além de rejeitar zero, negativo, `NaN`, infinito e overflow sem fabricar estado de câmera;
+- `ThreeWorldRuntime.test.ts` confirma a posição, zoom, planos near/far e frustum inicial da câmera, preservando os testes de resize, viewport transitório, picking por bounding box atual, pan, wheel, pinch e cancelamento;
+- gate dirigido: `npm run test:run -- src/features/library/three/cameraMath.test.ts src/features/library/three/interactionMath.test.ts src/features/library/three/ThreeWorldRuntime.test.ts` aprovou 3 arquivos e 34 testes. Não houve E2E, build, Android ou teste físico neste checkpoint.
+
+## F3-B — modelo de câmera, framing e limites
+
+- `cameraMath.test.ts` cobre framing com padding em portrait/landscape, zoom mínimo/máximo, target lógico no plano X/Z, bounds que variam com viewport/zoom, clamp, resize válido, entradas não finitas e viewport/overflow inválidos;
+- `ThreeWorldRuntime.test.ts` cobre framing inicial, preservação de target/zoom/seleção após orientação válida e a garantia de que a conclusão do GLB não reposiciona nem reenquadra a câmera;
+- a suíte preserva os testes F2 de viewport transitório, mesma montagem/canvas, seleção, picking pela bounding box atual, cancelamento, pinch → pan, pausa e terminalidade;
+- gate dirigido: `npm run test:run -- src/features/library/three/cameraMath.test.ts src/features/library/three/interactionMath.test.ts src/features/library/three/ThreeWorldRuntime.test.ts` aprovou 3 arquivos e 40 testes; `npm run typecheck`, `npm run format:check` e `git diff --check` passaram. Não houve E2E, build, Android ou teste físico neste checkpoint.
+
+## F3-C — pan, zoom e pinch
+
+- `cameraMath.test.ts` cobre pan derivado de pontos de tela em landscape/portrait e nos extremos de zoom, clamp no plano X/Z, zoom focal no centro, fora dele e próximo da borda, zoom-in/out, mínimos/máximos e a autoridade final dos bounds quando a âncora não pode permanecer exata;
+- `interactionMath.test.ts` cobre normalização de `WheelEvent.deltaMode`, curva exponencial de wheel e composição da razão de pinch sem depender da quantidade de eventos;
+- `ThreeWorldRuntime.test.ts` cobre wheel ancorado no bounding rect atual, midpoint de pinch em movimento com pan+zoom, pinch → pan e os contratos preexistentes de pointer adicional, cancelamento, pausa, terminalidade, seleção, picking e resize;
+- gate dirigido: `npm run test:run -- src/features/library/three/cameraMath.test.ts src/features/library/three/interactionMath.test.ts src/features/library/three/ThreeWorldRuntime.test.ts` aprovou 3 arquivos e 52 testes; `npm run typecheck`, `npm run format:check` e `git diff --check` passaram. Não houve E2E dirigido, build, Android ou teste físico neste checkpoint.
+
+## F3-D — tap, seleção e arbitragem de gestos
+
+- `interactionMath.test.ts` fixa o threshold centralizado em `8` CSS px e sua borda inclusiva (`<=`); `ThreeWorldRuntime.test.ts` cobre tap sem movimento, jitter, borda, ultrapassagem com retorno, slop sem salto, tap após pan e wheel, espaço vazio, segundo/terceiro pointer, pinch imóvel, wheel concorrente, `pointercancel`, `lostpointercapture`, pausa e `pointerup` tardio terminal;
+- `cameraMath.test.ts` preserva a matemática de framing/bounds/F3-C e `WorldHost.test.tsx` preserva os botões React `Anterior`/`Próximo`, wrap e a ponte bidirecional;
+- gate focado: `npm run test:run -- src/features/library/three/interactionMath.test.ts src/features/library/three/cameraMath.test.ts src/features/library/three/ThreeWorldRuntime.test.ts src/features/library/WorldHost.test.tsx` aprovou 4 arquivos e 65 testes; `npm run format:check`, `npm run typecheck` e `git diff --check` passaram;
+- E2E dirigido: `npm run test:e2e -- e2e/r4-shell.spec.ts` aprovou 5 cenários Chromium da Biblioteca, incluindo tap → seleção, drag → nenhuma seleção, pinch sintético → nenhuma seleção e controles React. Não houve E2E integral, build, Android ou teste físico; o aviso conhecido `NO_COLOR`/`FORCE_COLOR` do runner não bloqueou.
+
+## F3-E — viewport, orientação, safe areas e integração mobile
+
+- `ThreeWorldRuntime.test.ts` cobre portrait → landscape durante candidatura de tap: a mesma montagem mantém seleção, encerra o gesto e o `pointerup` antigo não faz picking; um gesto posterior seleciona pela geometria nova. Os testes preexistentes preservam canvas/renderer/câmera únicos, clamp, viewport inválido e bounding rect atual;
+- o gate focado `npm run test:run -- src/features/library/three/cameraMath.test.ts src/features/library/three/interactionMath.test.ts src/features/library/three/ThreeWorldRuntime.test.ts src/features/library/WorldHost.test.tsx src/pages.test.tsx` aprovou 5 arquivos e 67 testes; `npm run format:check`, `npm run typecheck` e `git diff --check` passaram;
+- `npm run build` foi executado para o preview E2E; o warning conhecido de chunks acima de 500 kB permaneceu sem bloquear;
+- E2E dirigido: `npm run test:e2e -- e2e/r4-shell.spec.ts` aprovou 6 cenários Chromium. A sequência acrescentada cobre 390×844 → 844×390 → 390×844, uma seleção/picking após a mudança, a identidade do mesmo canvas/runtime, zoom preservado, controles/dock e ausência de overflow; também cobre 320×640. O aviso conhecido `NO_COLOR`/`FORCE_COLOR` não bloqueou;
+- Chromium não prova safe areas ou system bars físicos, rotação física, toque/pinch físico, ergonomia, TalkBack, FPS Android ou temperatura. A validação humana ampla posterior fechou o escopo F3; performance aprofundada e acessibilidade permanecem para F5/F6.
+
+## F3-F1 — gate técnico consolidado + APK
+
+- `npm run format`, `npm run format:check`, `npm run lint` e `npm run typecheck` passaram; o formatter não alterou arquivos;
+- `npm run test:run`: 64 arquivos e 487 testes Vitest aprovados;
+- `npm run audio:check` verificou deterministicamente os dois WAVs declarados;
+- `npm run build` e `npm run performance:report` passaram com 224 módulos; o entrypoint inicial permaneceu em 628.314 bytes e o chunk dinâmico `ThreeWorldRuntime` ficou em 629.884 bytes;
+- `npm run test:e2e` aprovou 13 cenários Chromium em 37,2 s. A repetição precisou forçar o servidor local pelo modo CI porque o modo interativo tentou reutilizar portas já encerradas; os mesmos 13 cenários passaram, sem retry funcional;
+- `npm run android:sync` e `npm run android:build:debug` passaram; `assembleDebug` gerou `android/app/build/outputs/apk/debug/app-debug.apk` com 7.525.817 bytes;
+- `git diff --check` passou. Os warnings conhecidos permaneceram: chunks Vite acima de 500 kB, `NO_COLOR`/`FORCE_COLOR` no Playwright e `flatDir` no Gradle.
+
+Este gate confirma a regressão automatizada e o empacotamento. A validação humana ampla posterior fechou o escopo de câmera/interação da F3; performance aprofundada e TalkBack permanecem para F5/F6.
+
+## F3-F2-FIX — limites diagonais da fixture
+
+- `cameraMath.test.ts` força os quatro cantos por pan para os extremos e mede a interseção entre viewport e a projeção convexa do piso técnico; ela é sempre ao menos o patch mínimo explícito, com largura e altura de 15% dos spans projetados do piso, limitadas somente pela viewport disponível;
+- os casos cobrem portrait em zoom mínimo (`0.7`), normal (`1`) e máximo (`2.2`), além de landscape em zoom mínimo e máximo; as rotas de `CameraNavigation`, interação, lifecycle e renderer permanecem cobertas pelos testes preexistentes;
+- gate dirigido: `npm run test:run -- src/features/library/three/cameraMath.test.ts src/features/library/three/interactionMath.test.ts src/features/library/three/ThreeWorldRuntime.test.ts` aprovou 3 arquivos e 61 testes; `npm run format:check`, `npm run typecheck` e `git diff --check` foram executados neste checkpoint;
+- `npm run build`, `npm run android:sync` e `npm run android:build:debug` passaram; o APK debug foi atualizado em `android/app/build/outputs/apk/debug/app-debug.apk` com 7.525.817 bytes. Permaneceram os warnings conhecidos de chunks Vite acima de 500 kB e `flatDir` do Gradle;
+- não houve E2E adicional: não existe uma asserção Chromium simples que meça a área de geometria WebGL sem reintroduzir coordenadas de screenshot; a garantia é coberta na matemática pura.
+
+## F3-CLOSE — fechamento de câmera e interação mobile
+
+- F3-F1 consolidou 64 arquivos/487 testes Vitest, 13 cenários E2E Chromium, `format`, `format:check`, `lint`, `typecheck`, `audio:check`, build, relatório de performance, sync Capacitor e debug build Android; warnings conhecidos não bloquearam o gate;
+- a validação humana ampla no Moto G06 foi positiva: app abriu normalmente, framing inicial, pan, tap/seleção, pinch, pinch → um pointer → pan, zoom mínimo/máximo, portrait → landscape → portrait e background/resume permaneceram funcionais, sem crash, travamento ou regressão perceptível; o FPS ficou aproximadamente em 60 ou próximo durante interação e rotação;
+- a correção posterior dos bounds passou 3 arquivos/61 testes dirigidos, `format:check`, `typecheck`, `git diff --check`, build, sync e debug build Android, com novo APK;
+- **o fix final dos bounds não recebeu revalidação física específica no Moto G06.** A ausência foi aceita como risco residual não bloqueante: a evidência humana ampla da F3 já era positiva, a falha era localizada, a correção matemática tem regressão dirigida, os contratos de câmera/input/lifecycle/renderer não mudaram e a fixture é descartável. Não é evidência física inexistente.
+
 ## Comandos
 
 ```bash

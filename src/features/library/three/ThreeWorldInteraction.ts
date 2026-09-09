@@ -11,13 +11,15 @@ import {
 
 import type { WorldSelectableObject, WorldSelection } from "../worldRuntime";
 import {
+  TAP_DRAG_THRESHOLD_PX,
   exceedsTapDragThreshold,
-  panDistanceForPixels,
   pointerDistance,
   zoomFromPinch,
   zoomFromWheel,
   type PointerPosition,
 } from "./interactionMath";
+import { CameraNavigation } from "./CameraNavigation";
+import { CAMERA_TARGET_Y } from "./cameraMath";
 import type { ReferenceSelectableObject } from "./referenceScene";
 
 type GestureMode = "idle" | "tap" | "pan" | "pinch";
@@ -33,33 +35,24 @@ interface ThreeWorldInteractionOptions {
   readonly camera: OrthographicCamera;
   readonly canvas: HTMLCanvasElement;
   readonly catalog: readonly WorldSelectableObject[];
+  readonly navigation: CameraNavigation;
   readonly onSelectionChange: (selection: WorldSelection) => void;
   readonly render: () => void;
   readonly scene: Scene;
   readonly selectables: readonly ReferenceSelectableObject[];
 }
 
-const CAMERA_TARGET_BOUNDS = {
-  maxX: 4.5,
-  maxY: 3,
-  maxZ: 4.5,
-  minX: -4.5,
-  minY: 0,
-  minZ: -4.5,
-} as const;
-
 const TEST_PICK_OBJECT_ID = "crate-01";
 
 export class ThreeWorldInteraction {
   private readonly activePointers = new Map<number, ActivePointer>();
   private readonly camera: OrthographicCamera;
-  private readonly cameraTarget = new Vector3(0, 1.1, 0);
   private readonly canvas: HTMLCanvasElement;
   private disposed = false;
   private gestureMode: GestureMode = "idle";
   private highlight: Box3Helper | undefined;
-  private pinchInitialDistance = 0;
-  private pinchInitialZoom = 1;
+  private pinchPreviousDistance = 0;
+  private pinchPreviousMidpoint: PointerPosition | undefined;
   private readonly raycaster = new Raycaster();
   private readonly render: () => void;
   private readonly scene: Scene;
@@ -72,11 +65,18 @@ export class ThreeWorldInteraction {
   private readonly selectableRootIds = new Map<Object3D, string>();
   private viewportHeight = 1;
   private viewportWidth = 1;
+  // A tap can only be confirmed by the pointer that started this candidate.
+  // This flag is deliberately monotonic for one gesture: interruptions,
+  // multi-pointer input and movement beyond the CSS-pixel slop never revive it.
+  private tapCandidatePointerId: number | undefined;
+  private tapEligible = false;
   private readonly onSelectionChange: (selection: WorldSelection) => void;
+  private readonly navigation: CameraNavigation;
 
   constructor(options: ThreeWorldInteractionOptions) {
     this.camera = options.camera;
     this.canvas = options.canvas;
+    this.navigation = options.navigation;
     this.onSelectionChange = options.onSelectionChange;
     this.render = options.render;
     this.scene = options.scene;
@@ -176,6 +176,7 @@ export class ThreeWorldInteraction {
 
   private readonly handlePointerCancel = (event: PointerEvent): void => {
     if (!this.activePointers.has(event.pointerId)) return;
+    this.invalidateTapCandidate();
     this.activePointers.delete(event.pointerId);
     this.releasePointer(event.pointerId);
     this.continueAfterPointerEnd();
@@ -200,6 +201,7 @@ export class ThreeWorldInteraction {
     this.capturePointer(event.pointerId);
 
     if (this.activePointers.size === 1) {
+      this.beginTapCandidate(event.pointerId);
       this.gestureMode = "tap";
     } else {
       this.beginPinch();
@@ -220,18 +222,17 @@ export class ThreeWorldInteraction {
       return;
     }
 
-    if (
-      this.gestureMode === "tap" &&
-      exceedsTapDragThreshold(pointer.start, pointer.current)
-    ) {
+    if (this.gestureMode === "tap" && !this.remainsTapEligible(pointer)) {
       this.gestureMode = "pan";
+      // Consume the slop that classified this as a pan. The following move
+      // starts from the current position, so crossing 8 CSS px does not apply
+      // an abrupt pan delta that includes the finger's natural jitter.
+      pointer.previous = pointer.current;
       this.updateGestureDiagnostic();
+      return;
     }
     if (this.gestureMode === "pan") {
-      this.applyPan(
-        pointer.current.x - pointer.previous.x,
-        pointer.current.y - pointer.previous.y,
-      );
+      this.applyPan(pointer.previous, pointer.current);
     }
   };
 
@@ -240,10 +241,12 @@ export class ThreeWorldInteraction {
     if (this.disposed || !pointer) return;
     event.preventDefault();
     pointer.current = { x: event.clientX, y: event.clientY };
+    this.remainsTapEligible(pointer);
     const shouldPick =
       this.gestureMode === "tap" &&
       this.activePointers.size === 1 &&
-      !exceedsTapDragThreshold(pointer.start, pointer.current);
+      this.tapEligible &&
+      this.tapCandidatePointerId === event.pointerId;
 
     this.activePointers.delete(event.pointerId);
     this.releasePointer(event.pointerId);
@@ -254,57 +257,43 @@ export class ThreeWorldInteraction {
   private readonly handleWheel = (event: WheelEvent): void => {
     if (this.disposed) return;
     event.preventDefault();
-    const nextZoom = zoomFromWheel(this.camera.zoom, event.deltaY);
-    if (nextZoom === this.camera.zoom) return;
-    this.camera.zoom = nextZoom;
-    this.camera.updateProjectionMatrix();
+    if (this.activePointers.size > 0) {
+      // Wheel is never a selection gesture. Ending a current candidate here
+      // also makes a later pointerup inert if desktop input interleaves them.
+      this.invalidateTapCandidate();
+      if (this.gestureMode === "tap") {
+        this.gestureMode = "pan";
+        this.updateGestureDiagnostic();
+      }
+    }
+    const anchor = this.viewportPosition({
+      x: event.clientX,
+      y: event.clientY,
+    });
+    if (!anchor) return;
+    const nextZoom = zoomFromWheel(
+      this.navigation.getState().zoom,
+      event.deltaY,
+      event.deltaMode,
+      this.viewportHeight,
+    );
+    if (!this.navigation.zoomBetweenScreenPoints(anchor, anchor, nextZoom)) {
+      return;
+    }
     this.render();
     this.updateDiagnostics();
   };
 
-  private applyPan(deltaX: number, deltaY: number): void {
-    this.camera.updateMatrixWorld();
-    const horizontal = panDistanceForPixels(
-      deltaX,
-      this.camera.right - this.camera.left,
-      this.viewportWidth,
-      this.camera.zoom,
-    );
-    const vertical = panDistanceForPixels(
-      deltaY,
-      this.camera.top - this.camera.bottom,
-      this.viewportHeight,
-      this.camera.zoom,
-    );
-    const right = new Vector3()
-      .setFromMatrixColumn(this.camera.matrixWorld, 0)
-      .normalize();
-    const up = new Vector3()
-      .setFromMatrixColumn(this.camera.matrixWorld, 1)
-      .normalize();
-    const desiredTarget = this.cameraTarget
-      .clone()
-      .addScaledVector(right, -horizontal)
-      .addScaledVector(up, vertical);
-    desiredTarget.set(
-      Math.min(
-        CAMERA_TARGET_BOUNDS.maxX,
-        Math.max(CAMERA_TARGET_BOUNDS.minX, desiredTarget.x),
-      ),
-      Math.min(
-        CAMERA_TARGET_BOUNDS.maxY,
-        Math.max(CAMERA_TARGET_BOUNDS.minY, desiredTarget.y),
-      ),
-      Math.min(
-        CAMERA_TARGET_BOUNDS.maxZ,
-        Math.max(CAMERA_TARGET_BOUNDS.minZ, desiredTarget.z),
-      ),
-    );
-    const appliedDelta = desiredTarget.clone().sub(this.cameraTarget);
-    if (appliedDelta.lengthSq() === 0) return;
-    this.camera.position.add(appliedDelta);
-    this.cameraTarget.copy(desiredTarget);
-    this.camera.lookAt(this.cameraTarget);
+  private applyPan(previous: PointerPosition, current: PointerPosition): void {
+    const previousPosition = this.viewportPosition(previous);
+    const currentPosition = this.viewportPosition(current);
+    if (
+      !previousPosition ||
+      !currentPosition ||
+      !this.navigation.panBetweenScreenPoints(previousPosition, currentPosition)
+    ) {
+      return;
+    }
     this.render();
     this.updateDiagnostics();
   }
@@ -312,12 +301,13 @@ export class ThreeWorldInteraction {
   private beginPinch(): void {
     const pointers = [...this.activePointers.values()];
     if (pointers.length < 2) return;
+    this.invalidateTapCandidate();
     this.gestureMode = "pinch";
-    this.pinchInitialDistance = pointerDistance(
+    this.pinchPreviousDistance = pointerDistance(
       pointers[0]?.current ?? { x: 0, y: 0 },
       pointers[1]?.current ?? { x: 0, y: 0 },
     );
-    this.pinchInitialZoom = this.camera.zoom;
+    this.pinchPreviousMidpoint = this.pinchMidpoint(pointers);
     this.updateGestureDiagnostic();
   }
 
@@ -354,6 +344,33 @@ export class ThreeWorldInteraction {
       this.gestureMode = "pan";
       this.updateGestureDiagnostic();
     }
+  }
+
+  private beginTapCandidate(pointerId: number): void {
+    this.tapCandidatePointerId = pointerId;
+    this.tapEligible = true;
+  }
+
+  private invalidateTapCandidate(): void {
+    this.tapCandidatePointerId = undefined;
+    this.tapEligible = false;
+  }
+
+  private remainsTapEligible(pointer: ActivePointer): boolean {
+    if (!this.tapEligible || this.tapCandidatePointerId !== pointer.id) {
+      return false;
+    }
+    if (
+      !exceedsTapDragThreshold(
+        pointer.start,
+        pointer.current,
+        TAP_DRAG_THRESHOLD_PX,
+      )
+    ) {
+      return true;
+    }
+    this.invalidateTapCandidate();
+    return false;
   }
 
   private pick(position: PointerPosition): void {
@@ -410,17 +427,19 @@ export class ThreeWorldInteraction {
   }
 
   private resetGesture(): void {
+    this.invalidateTapCandidate();
     this.gestureMode = "idle";
-    this.pinchInitialDistance = 0;
-    this.pinchInitialZoom = this.camera.zoom;
+    this.pinchPreviousDistance = 0;
+    this.pinchPreviousMidpoint = undefined;
     this.updateGestureDiagnostic();
   }
 
   private updateDiagnostics(): void {
-    this.canvas.dataset.cameraTargetX = this.cameraTarget.x.toFixed(3);
-    this.canvas.dataset.cameraTargetY = this.cameraTarget.y.toFixed(3);
-    this.canvas.dataset.cameraTargetZ = this.cameraTarget.z.toFixed(3);
-    this.canvas.dataset.cameraZoom = this.camera.zoom.toFixed(3);
+    const state = this.navigation.getState();
+    this.canvas.dataset.cameraTargetX = state.targetX.toFixed(3);
+    this.canvas.dataset.cameraTargetY = CAMERA_TARGET_Y.toFixed(3);
+    this.canvas.dataset.cameraTargetZ = state.targetZ.toFixed(3);
+    this.canvas.dataset.cameraZoom = state.zoom.toFixed(3);
     this.canvas.dataset.gesture = this.gestureMode;
     this.canvas.dataset.selectableObjects = String(
       this.selectableDescriptors.size,
@@ -439,16 +458,60 @@ export class ThreeWorldInteraction {
       pointers[0]?.current ?? { x: 0, y: 0 },
       pointers[1]?.current ?? { x: 0, y: 0 },
     );
+    const midpoint = this.pinchMidpoint(pointers);
+    const previousMidpoint = this.pinchPreviousMidpoint;
+    if (!previousMidpoint || !midpoint) return;
     const nextZoom = zoomFromPinch(
-      this.pinchInitialZoom,
-      this.pinchInitialDistance,
+      this.navigation.getState().zoom,
+      this.pinchPreviousDistance,
       distance,
     );
-    if (nextZoom === this.camera.zoom) return;
-    this.camera.zoom = nextZoom;
-    this.camera.updateProjectionMatrix();
-    this.render();
-    this.updateDiagnostics();
+    const previousPosition = this.viewportPosition(previousMidpoint);
+    const currentPosition = this.viewportPosition(midpoint);
+    const changed =
+      previousPosition &&
+      currentPosition &&
+      this.navigation.zoomBetweenScreenPoints(
+        previousPosition,
+        currentPosition,
+        nextZoom,
+      );
+    this.pinchPreviousDistance = distance;
+    this.pinchPreviousMidpoint = midpoint;
+    if (changed) {
+      this.render();
+      this.updateDiagnostics();
+    }
+  }
+
+  private pinchMidpoint(
+    pointers: readonly ActivePointer[],
+  ): PointerPosition | undefined {
+    const first = pointers[0];
+    const second = pointers[1];
+    if (!first || !second) return undefined;
+    return {
+      x: (first.current.x + second.current.x) / 2,
+      y: (first.current.y + second.current.y) / 2,
+    };
+  }
+
+  private viewportPosition(position: PointerPosition): PointerPosition | null {
+    const bounds = this.canvas.getBoundingClientRect();
+    if (
+      !Number.isFinite(bounds.left) ||
+      !Number.isFinite(bounds.top) ||
+      !Number.isFinite(bounds.width) ||
+      !Number.isFinite(bounds.height) ||
+      bounds.width <= 0 ||
+      bounds.height <= 0
+    ) {
+      return null;
+    }
+    return {
+      x: ((position.x - bounds.left) * this.viewportWidth) / bounds.width,
+      y: ((position.y - bounds.top) * this.viewportHeight) / bounds.height,
+    };
   }
 
   private updateTestPickDiagnostic(): void {

@@ -1,6 +1,6 @@
 # Glossário
 
-- **Biblioteca:** rota preservada para a futura experiência visual; neste checkpoint apresenta uma página React simples.
+- **Biblioteca:** rota da experiência visual; atualmente hospeda uma Fundação Three.js técnica cuja cena é uma fixture, não a Biblioteca final.
 - **Coleção:** conjunto dos seis tipos de registro e suas ferramentas de busca, filtro e organização.
 - **Registro:** livro, filme, série, estudo, atividade física ou trabalho.
 - **Anotação:** nota ou citação associada a um registro compatível.

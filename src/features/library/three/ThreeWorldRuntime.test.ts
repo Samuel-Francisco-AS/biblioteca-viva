@@ -17,6 +17,7 @@ import {
   type FixtureModelLoader,
   type ThreeWorldRenderer,
 } from "./ThreeWorldRuntime";
+import { CAMERA_REFERENCE_HALF_HEIGHT } from "./cameraMath";
 
 class TestRenderer implements ThreeWorldRenderer {
   readonly domElement = document.createElement("canvas");
@@ -29,6 +30,20 @@ class TestRenderer implements ThreeWorldRenderer {
   readonly setPixelRatio = vi.fn();
   readonly setSize = vi.fn();
   readonly shadowMap = { enabled: true };
+
+  constructor() {
+    this.domElement.getBoundingClientRect = () => ({
+      bottom: 360,
+      height: 360,
+      left: 0,
+      right: 640,
+      top: 0,
+      width: 640,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    });
+  }
 }
 
 class TestFixtureLoader implements FixtureModelLoader {
@@ -110,6 +125,19 @@ function dispatchPointer(
   canvas.dispatchEvent(event);
 }
 
+function screenPositionForPoint(
+  camera: OrthographicCamera,
+  point: Vector3,
+  width = 640,
+  height = 360,
+): { readonly x: number; readonly y: number } {
+  const projected = point.clone().project(camera);
+  return {
+    x: ((projected.x + 1) * width) / 2,
+    y: ((1 - projected.y) * height) / 2,
+  };
+}
+
 afterEach(() => {
   document.body.replaceChildren();
   TestResizeObserver.instances = [];
@@ -146,6 +174,7 @@ describe("ThreeWorldRuntime", () => {
     });
 
     runtime.mount(host);
+    const mountedCamera = renderer.render.mock.calls.at(-1)?.[1];
     expect(runtime.getDiagnostics()).toMatchObject({
       activeFrameLoops: 0,
       drawCalls: 46,
@@ -163,6 +192,15 @@ describe("ThreeWorldRuntime", () => {
     expect(renderer.shadowMap.enabled).toBe(false);
     expect(renderer.setPixelRatio).toHaveBeenCalledOnce();
     expect(renderer.setSize).toHaveBeenCalledWith(640, 360, false);
+    expect(mountedCamera?.position.toArray()).toEqual([12, 11, 14]);
+    expect(mountedCamera?.zoom).toBe(1);
+    expect(mountedCamera?.near).toBe(0.1);
+    expect(mountedCamera?.far).toBe(100);
+    expect(mountedCamera?.top).toBe(CAMERA_REFERENCE_HALF_HEIGHT);
+    expect(mountedCamera?.bottom).toBe(-CAMERA_REFERENCE_HALF_HEIGHT);
+    const expectedLookDirection = new Vector3(-12, -9.9, -14).normalize();
+    const cameraLookDirection = mountedCamera?.getWorldDirection(new Vector3());
+    expect(cameraLookDirection?.angleTo(expectedLookDirection)).toBeCloseTo(0);
     expect(renderer.domElement.dataset.fixtureStatus).toBe("loading");
     expect(renderer.domElement.dataset.referenceMeshes).toBe("45");
     expect(renderer.domElement.dataset.referenceObjects).toBe("46");
@@ -278,6 +316,45 @@ describe("ThreeWorldRuntime", () => {
 
     expect(disposeGeometry).toHaveBeenCalledOnce();
     expect(disposeMaterial).toHaveBeenCalledOnce();
+  });
+
+  it("não reenquadra a câmera quando o GLB técnico termina de carregar", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const fixtureLoader = new TestFixtureLoader();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader,
+    });
+
+    runtime.mount(createHost());
+    const cameraBeforeFixture = renderer.render.mock.calls.at(-1)?.[1];
+    const positionBeforeFixture = cameraBeforeFixture?.position.toArray();
+    const zoomBeforeFixture = cameraBeforeFixture?.zoom;
+    const frustumBeforeFixture = cameraBeforeFixture
+      ? [
+          cameraBeforeFixture.left,
+          cameraBeforeFixture.right,
+          cameraBeforeFixture.top,
+          cameraBeforeFixture.bottom,
+        ]
+      : undefined;
+
+    fixtureLoader.succeed(new Group());
+
+    const cameraAfterFixture = renderer.render.mock.calls.at(-1)?.[1];
+    expect(cameraAfterFixture).toBe(cameraBeforeFixture);
+    expect(cameraAfterFixture?.position.toArray()).toEqual(
+      positionBeforeFixture,
+    );
+    expect(cameraAfterFixture?.zoom).toBe(zoomBeforeFixture);
+    expect([
+      cameraAfterFixture?.left,
+      cameraAfterFixture?.right,
+      cameraAfterFixture?.top,
+      cameraAfterFixture?.bottom,
+    ]).toEqual(frustumBeforeFixture);
+    runtime.dispose();
   });
 
   it("formaliza pause/resume, mantém um RAF e reinicia a janela de FPS", () => {
@@ -876,6 +953,456 @@ describe("ThreeWorldRuntime", () => {
     runtime.dispose();
   });
 
+  it("preserva target, zoom e seleção através de orientação válida", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const host = createHost(640, 360);
+    const getBounds = vi.spyOn(host, "getBoundingClientRect");
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+
+    runtime.mount(host);
+    runtime.selectObject("bookshelf-02");
+    const selectionListener = vi.fn();
+    runtime.onSelectionChange(selectionListener);
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: 100,
+      clientY: 100,
+      pointerId: 1,
+      pointerType: "touch",
+    });
+    dispatchPointer(renderer.domElement, "pointermove", {
+      clientX: 150,
+      clientY: 120,
+      pointerId: 1,
+      pointerType: "touch",
+    });
+    dispatchPointer(renderer.domElement, "pointermove", {
+      clientX: 170,
+      clientY: 120,
+      pointerId: 1,
+      pointerType: "touch",
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: 170,
+      clientY: 120,
+      pointerId: 1,
+      pointerType: "touch",
+    });
+    renderer.domElement.dispatchEvent(
+      new WheelEvent("wheel", { cancelable: true, deltaY: -300 }),
+    );
+    const stateBeforeOrientation = {
+      targetX: renderer.domElement.dataset.cameraTargetX,
+      targetY: renderer.domElement.dataset.cameraTargetY,
+      targetZ: renderer.domElement.dataset.cameraTargetZ,
+      zoom: renderer.domElement.dataset.cameraZoom,
+    };
+    expect(stateBeforeOrientation.targetY).toBe("1.100");
+    const selectionCallsBeforeOrientation = selectionListener.mock.calls.length;
+    getBounds.mockReturnValue({
+      bottom: 640,
+      height: 640,
+      left: 0,
+      right: 360,
+      top: 0,
+      width: 360,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    });
+
+    runtime.resize();
+
+    expect({
+      targetX: renderer.domElement.dataset.cameraTargetX,
+      targetY: renderer.domElement.dataset.cameraTargetY,
+      targetZ: renderer.domElement.dataset.cameraTargetZ,
+      zoom: renderer.domElement.dataset.cameraZoom,
+    }).toEqual(stateBeforeOrientation);
+    expect(renderer.domElement.dataset.selectedObject).toBe("bookshelf-02");
+    expect(selectionListener).toHaveBeenCalledTimes(
+      selectionCallsBeforeOrientation,
+    );
+    runtime.dispose();
+  });
+
+  it("encerra gesto ativo em resize e preserva seleção para o próximo gesto", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const host = createHost(640, 360);
+    const getBounds = vi.spyOn(host, "getBoundingClientRect");
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+    const listener = vi.fn();
+
+    runtime.mount(host);
+    runtime.onSelectionChange(listener);
+    runtime.selectObject("crate-02");
+    listener.mockClear();
+    const pickX = Number(renderer.domElement.dataset.testPickX);
+    const pickY = Number(renderer.domElement.dataset.testPickY);
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 41,
+      pointerType: "touch",
+    });
+    expect(renderer.domElement.dataset.gesture).toBe("tap");
+
+    getBounds.mockReturnValue({
+      bottom: 640,
+      height: 640,
+      left: 0,
+      right: 360,
+      top: 0,
+      width: 360,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    });
+    runtime.resize();
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 41,
+      pointerType: "touch",
+    });
+
+    expect(renderer.domElement.dataset.gesture).toBe("idle");
+    expect(renderer.domElement.dataset.selectedObject).toBe("crate-02");
+    expect(listener).not.toHaveBeenCalled();
+
+    vi.spyOn(renderer.domElement, "getBoundingClientRect").mockReturnValue({
+      bottom: 640,
+      height: 640,
+      left: 0,
+      right: 360,
+      top: 0,
+      width: 360,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    });
+    const resizedPickX = Number(renderer.domElement.dataset.testPickX);
+    const resizedPickY = Number(renderer.domElement.dataset.testPickY);
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: resizedPickX,
+      clientY: resizedPickY,
+      pointerId: 42,
+      pointerType: "touch",
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: resizedPickX,
+      clientY: resizedPickY,
+      pointerId: 42,
+      pointerType: "touch",
+    });
+
+    expect(listener).toHaveBeenLastCalledWith({
+      id: "crate-01",
+      label: "Caixa técnica 1",
+    });
+    runtime.dispose();
+  });
+
+  it("confirma tap somente se a candidatura nunca excedeu o slop", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+    const listener = vi.fn();
+
+    runtime.mount(createHost());
+    runtime.onSelectionChange(listener);
+    const pickX = Number(renderer.domElement.dataset.testPickX);
+    const pickY = Number(renderer.domElement.dataset.testPickY);
+
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 20,
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 20,
+    });
+    expect(listener).toHaveBeenLastCalledWith({
+      id: "crate-01",
+      label: "Caixa técnica 1",
+    });
+
+    runtime.selectObject("crate-02");
+    listener.mockClear();
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 21,
+    });
+    dispatchPointer(renderer.domElement, "pointermove", {
+      clientX: pickX + 3,
+      clientY: pickY + 4,
+      pointerId: 21,
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: pickX + 3,
+      clientY: pickY + 4,
+      pointerId: 21,
+    });
+    expect(listener).toHaveBeenLastCalledWith({
+      id: "crate-01",
+      label: "Caixa técnica 1",
+    });
+
+    runtime.selectObject("crate-02");
+    listener.mockClear();
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 22,
+    });
+    dispatchPointer(renderer.domElement, "pointermove", {
+      clientX: pickX + 8,
+      clientY: pickY,
+      pointerId: 22,
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: pickX + 8,
+      clientY: pickY,
+      pointerId: 22,
+    });
+    expect(listener).toHaveBeenLastCalledWith({
+      id: "crate-01",
+      label: "Caixa técnica 1",
+    });
+
+    runtime.selectObject("crate-02");
+    listener.mockClear();
+    const targetBeforeThreshold = renderer.domElement.dataset.cameraTargetX;
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 23,
+    });
+    dispatchPointer(renderer.domElement, "pointermove", {
+      clientX: pickX + 9,
+      clientY: pickY,
+      pointerId: 23,
+    });
+    expect(renderer.domElement.dataset.gesture).toBe("pan");
+    expect(renderer.domElement.dataset.cameraTargetX).toBe(
+      targetBeforeThreshold,
+    );
+    dispatchPointer(renderer.domElement, "pointermove", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 23,
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 23,
+    });
+    expect(renderer.domElement.dataset.cameraTargetX).not.toBe(
+      targetBeforeThreshold,
+    );
+    expect(renderer.domElement.dataset.selectedObject).toBe("crate-02");
+    expect(listener).not.toHaveBeenCalled();
+
+    renderer.domElement.dispatchEvent(
+      new WheelEvent("wheel", {
+        cancelable: true,
+        clientX: pickX,
+        clientY: pickY,
+        deltaY: -100,
+      }),
+    );
+    const nextPickX = Number(renderer.domElement.dataset.testPickX);
+    const nextPickY = Number(renderer.domElement.dataset.testPickY);
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: nextPickX,
+      clientY: nextPickY,
+      pointerId: 24,
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: nextPickX,
+      clientY: nextPickY,
+      pointerId: 24,
+    });
+    expect(listener).toHaveBeenLastCalledWith({
+      id: "crate-01",
+      label: "Caixa técnica 1",
+    });
+
+    listener.mockClear();
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: 5,
+      clientY: 5,
+      pointerId: 25,
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: 5,
+      clientY: 5,
+      pointerId: 25,
+    });
+    expect(listener).toHaveBeenLastCalledWith(null);
+    expect(renderer.domElement.dataset.selectedObject).toBe("");
+    runtime.dispose();
+  });
+
+  it("invalida candidaturas para pinch, pointer extra, wheel e cancelamentos", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+    const listener = vi.fn();
+
+    runtime.mount(createHost());
+    runtime.onSelectionChange(listener);
+    runtime.selectObject("crate-02");
+    listener.mockClear();
+    const pickX = Number(renderer.domElement.dataset.testPickX);
+    const pickY = Number(renderer.domElement.dataset.testPickY);
+
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 30,
+      pointerType: "touch",
+    });
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: pickX + 80,
+      clientY: pickY,
+      pointerId: 31,
+      pointerType: "touch",
+    });
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: pickX + 120,
+      clientY: pickY,
+      pointerId: 32,
+      pointerType: "touch",
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 30,
+      pointerType: "touch",
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: pickX + 80,
+      clientY: pickY,
+      pointerId: 31,
+      pointerType: "touch",
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: pickX + 120,
+      clientY: pickY,
+      pointerId: 32,
+      pointerType: "touch",
+    });
+    expect(listener).not.toHaveBeenCalled();
+    expect(renderer.domElement.dataset.selectedObject).toBe("crate-02");
+
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 33,
+    });
+    renderer.domElement.dispatchEvent(
+      new WheelEvent("wheel", {
+        cancelable: true,
+        clientX: pickX,
+        clientY: pickY,
+      }),
+    );
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 33,
+    });
+    expect(listener).not.toHaveBeenCalled();
+
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 34,
+    });
+    dispatchPointer(renderer.domElement, "pointercancel", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 34,
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 34,
+    });
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 35,
+    });
+    dispatchPointer(renderer.domElement, "lostpointercapture", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 35,
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 35,
+    });
+    expect(listener).not.toHaveBeenCalled();
+    expect(renderer.domElement.dataset.selectedObject).toBe("crate-02");
+    runtime.dispose();
+  });
+
+  it("invalida um candidato a tap ao pausar antes do pointerup", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    vi.spyOn(document, "hidden", "get").mockReturnValue(false);
+    const renderer = new TestRenderer();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+    const listener = vi.fn();
+
+    runtime.mount(createHost());
+    runtime.start();
+    runtime.onSelectionChange(listener);
+    runtime.selectObject("crate-02");
+    listener.mockClear();
+    const pickX = Number(renderer.domElement.dataset.testPickX);
+    const pickY = Number(renderer.domElement.dataset.testPickY);
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 40,
+    });
+    expect(renderer.domElement.dataset.gesture).toBe("tap");
+
+    runtime.pause();
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 40,
+    });
+
+    expect(renderer.domElement.dataset.gesture).toBe("idle");
+    expect(renderer.domElement.dataset.selectedObject).toBe("crate-02");
+    expect(listener).not.toHaveBeenCalled();
+    runtime.dispose();
+  });
+
   it("aguarda dimensões transitórias inválidas e retoma o mesmo viewport quando elas voltam", () => {
     vi.stubGlobal("ResizeObserver", TestResizeObserver);
     vi.spyOn(document, "hidden", "get").mockReturnValue(false);
@@ -1201,8 +1728,14 @@ describe("ThreeWorldRuntime", () => {
       pointerId: 1,
       pointerType: "touch",
     });
+    dispatchPointer(renderer.domElement, "pointermove", {
+      clientX: 170,
+      clientY: 120,
+      pointerId: 1,
+      pointerType: "touch",
+    });
     dispatchPointer(renderer.domElement, "pointerup", {
-      clientX: 150,
+      clientX: 170,
       clientY: 120,
       pointerId: 1,
       pointerType: "touch",
@@ -1273,6 +1806,105 @@ describe("ThreeWorldRuntime", () => {
     expect(setPointerCapture).toHaveBeenCalledTimes(3);
     expect(releasePointerCapture).toHaveBeenCalledTimes(3);
 
+    runtime.dispose();
+  });
+
+  it("mantém a âncora de wheel e move o midpoint durante pinch", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+    runtime.mount(createHost());
+    const camera = renderer.render.mock.calls.at(-1)?.[1];
+    expect(camera).toBeDefined();
+    if (!camera) return;
+
+    const wheelAnchor = new Vector3(1, 1.1, 0);
+    const wheelScreenBefore = screenPositionForPoint(camera, wheelAnchor);
+    renderer.domElement.dispatchEvent(
+      new WheelEvent("wheel", {
+        cancelable: true,
+        clientX: wheelScreenBefore.x,
+        clientY: wheelScreenBefore.y,
+        deltaY: -300,
+      }),
+    );
+    const wheelScreenAfter = screenPositionForPoint(camera, wheelAnchor);
+    expect(wheelScreenAfter.x).toBeCloseTo(wheelScreenBefore.x, 8);
+    expect(wheelScreenAfter.y).toBeCloseTo(wheelScreenBefore.y, 8);
+
+    const midpointAnchor = new Vector3(
+      camera.position.x - 12,
+      1.1,
+      camera.position.z - 14,
+    );
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: 240,
+      clientY: 180,
+      pointerId: 10,
+      pointerType: "touch",
+    });
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: 400,
+      clientY: 180,
+      pointerId: 11,
+      pointerType: "touch",
+    });
+    dispatchPointer(renderer.domElement, "pointermove", {
+      clientX: 260,
+      clientY: 180,
+      pointerId: 10,
+      pointerType: "touch",
+    });
+    let midpointScreen = screenPositionForPoint(camera, midpointAnchor);
+    expect(midpointScreen.x).toBeCloseTo(330, 8);
+    expect(midpointScreen.y).toBeCloseTo(180, 8);
+    dispatchPointer(renderer.domElement, "pointermove", {
+      clientX: 430,
+      clientY: 180,
+      pointerId: 11,
+      pointerType: "touch",
+    });
+    midpointScreen = screenPositionForPoint(camera, midpointAnchor);
+    expect(midpointScreen.x).toBeCloseTo(345, 8);
+    expect(midpointScreen.y).toBeCloseTo(180, 8);
+    expect(renderer.domElement.dataset.gesture).toBe("pinch");
+
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: 260,
+      clientY: 180,
+      pointerId: 10,
+      pointerType: "touch",
+    });
+    expect(renderer.domElement.dataset.gesture).toBe("pan");
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: 430,
+      clientY: 180,
+      pointerId: 11,
+      pointerType: "touch",
+    });
+    expect(renderer.domElement.dataset.gesture).toBe("idle");
+
+    const selectionListener = vi.fn();
+    runtime.onSelectionChange(selectionListener);
+    const pickX = Number(renderer.domElement.dataset.testPickX);
+    const pickY = Number(renderer.domElement.dataset.testPickY);
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 12,
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: pickX,
+      clientY: pickY,
+      pointerId: 12,
+    });
+    expect(selectionListener).toHaveBeenLastCalledWith({
+      id: "crate-01",
+      label: "Caixa técnica 1",
+    });
     runtime.dispose();
   });
 

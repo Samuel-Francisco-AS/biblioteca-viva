@@ -20,6 +20,11 @@ import type {
   WorldSelectionListener,
 } from "../worldRuntime";
 import { FrameMetricsWindow } from "./frameMetrics";
+import {
+  CAMERA_REFERENCE_HALF_HEIGHT,
+  CAMERA_REFERENCE_HALF_WIDTH,
+} from "./cameraMath";
+import { CameraNavigation } from "./CameraNavigation";
 import fixtureUrl from "./fixtures/f1-technical-pyramid.glb?url&no-inline";
 import {
   createReferenceScene,
@@ -124,7 +129,14 @@ class ThreeWorldMount {
         host,
         renderer,
         new Scene(),
-        new OrthographicCamera(-9, 9, 7, -7, 0.1, 100),
+        new OrthographicCamera(
+          -CAMERA_REFERENCE_HALF_WIDTH,
+          CAMERA_REFERENCE_HALF_WIDTH,
+          CAMERA_REFERENCE_HALF_HEIGHT,
+          -CAMERA_REFERENCE_HALF_HEIGHT,
+          0.1,
+          100,
+        ),
         frameScheduler,
       );
     } catch (error) {
@@ -284,6 +296,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private meshes = 0;
   private mountStartedAt: number | undefined;
   private mountedWorld: ThreeWorldMount | undefined;
+  private navigation: CameraNavigation | undefined;
   private pausedByVisibility = false;
   private renderedFrames = 0;
   private sceneObjects = 0;
@@ -294,6 +307,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private textures = 0;
   private timeToFirstUsableFrameMs: number | null = null;
   private triangles = 0;
+  private lastValidViewport:
+    { readonly height: number; readonly width: number } | undefined;
   private viewportReady = false;
   private readonly createRenderer: () => ThreeWorldRenderer;
   private readonly fixtureLoader: FixtureModelLoader;
@@ -356,8 +371,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       scene.background = new Color(0x18342d);
       scene.add(referenceScene.root);
       mountedWorld.addReferenceScene(referenceScene);
-      camera.position.set(12, 11, 14);
-      camera.lookAt(0, 1.1, 0);
+      this.navigation = new CameraNavigation(camera);
 
       renderer.shadowMap.enabled = false;
       renderer.domElement.className = "three-world-canvas";
@@ -383,6 +397,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         camera,
         canvas: renderer.domElement,
         catalog: this.selectableObjects,
+        navigation: this.navigation,
         onSelectionChange: this.handleSelectionChange,
         render: () => {
           if (!this.renderCurrentFrame()) return;
@@ -473,7 +488,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   resize(): void {
     const mountedWorld = this.mountedWorld;
     if (!mountedWorld || this.isTerminal()) return;
-    const { camera, host, renderer } = mountedWorld;
+    const { host, renderer } = mountedWorld;
 
     const bounds = host.getBoundingClientRect();
     const width = Math.round(bounds.width);
@@ -488,28 +503,21 @@ export class ThreeWorldRuntime implements WorldRuntime {
       // flight. Keep the last trusted viewport and wait for ResizeObserver (or
       // the fallback) to provide a usable one instead of manufacturing a 1px
       // frustum or making a normal layout transition terminal.
-      this.viewportReady = false;
-      mountedWorld.cancelFrame();
+      this.invalidateViewport(mountedWorld);
       return;
     }
-    const aspect = width / height;
-    const referenceHalfWidth = 9;
-    const referenceHalfHeight = 7;
-    const referenceAspect = referenceHalfWidth / referenceHalfHeight;
-    const halfWidth =
-      aspect >= referenceAspect
-        ? referenceHalfHeight * aspect
-        : referenceHalfWidth;
-    const halfHeight =
-      aspect >= referenceAspect
-        ? referenceHalfHeight
-        : referenceHalfWidth / aspect;
-
-    camera.left = -halfWidth;
-    camera.right = halfWidth;
-    camera.top = halfHeight;
-    camera.bottom = -halfHeight;
-    camera.updateProjectionMatrix();
+    const viewportChanged =
+      this.lastValidViewport?.width !== width ||
+      this.lastValidViewport.height !== height;
+    // Coordinates captured before a real layout change cannot safely continue
+    // through a different screen plane. Selection remains intact; only the
+    // active gesture is terminated, so the next gesture starts from the new
+    // canvas geometry.
+    if (viewportChanged) mountedWorld.getInteraction()?.cancelActiveGestures();
+    if (!this.navigation?.setViewport(width, height)) {
+      this.invalidateViewport(mountedWorld);
+      return;
+    }
     try {
       renderer.setSize(width, height, false);
     } catch {
@@ -517,6 +525,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       return;
     }
     mountedWorld.getInteraction()?.setViewport(width, height);
+    this.lastValidViewport = Object.freeze({ height, width });
     this.viewportReady = true;
     if (this.state === "paused") return;
     if (!this.renderCurrentFrame()) return;
@@ -755,6 +764,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private releaseMount(): void {
     const mountedWorld = this.mountedWorld;
     this.mountedWorld = undefined;
+    this.navigation = undefined;
     try {
       mountedWorld?.dispose();
     } catch {
@@ -774,7 +784,16 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.textures = 0;
     this.triangles = 0;
     this.pausedByVisibility = false;
+    this.lastValidViewport = undefined;
     this.viewportReady = false;
+  }
+
+  private invalidateViewport(mountedWorld: ThreeWorldMount): void {
+    this.viewportReady = false;
+    this.lastValidViewport = undefined;
+    this.navigation?.invalidateViewport();
+    mountedWorld.getInteraction()?.cancelActiveGestures();
+    mountedWorld.cancelFrame();
   }
 
   private clearListeners(): void {

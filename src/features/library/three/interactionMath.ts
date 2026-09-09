@@ -1,7 +1,16 @@
+import {
+  CAMERA_MAX_ZOOM,
+  CAMERA_MIN_ZOOM,
+  clampCameraZoom,
+} from "./cameraMath";
+
 export const TAP_DRAG_THRESHOLD_PX = 8;
-export const MIN_CAMERA_ZOOM = 0.7;
-export const MAX_CAMERA_ZOOM = 2.2;
+export const MIN_CAMERA_ZOOM = CAMERA_MIN_ZOOM;
+export const MAX_CAMERA_ZOOM = CAMERA_MAX_ZOOM;
 export const WHEEL_ZOOM_SENSITIVITY = 0.0015;
+export const WHEEL_LINE_HEIGHT_PX = 16;
+
+export { clampCameraZoom };
 
 export interface PointerPosition {
   readonly x: number;
@@ -23,15 +32,28 @@ export function exceedsTapDragThreshold(
   return pointerDistance(start, current) > threshold;
 }
 
-export function clampCameraZoom(zoom: number): number {
-  if (!Number.isFinite(zoom)) return 1;
-  return Math.min(MAX_CAMERA_ZOOM, Math.max(MIN_CAMERA_ZOOM, zoom));
+export function wheelDeltaPixels(
+  deltaY: number,
+  deltaMode: number,
+  pageHeight: number,
+): number {
+  if (!Number.isFinite(deltaY)) return 0;
+  if (deltaMode === 1) return deltaY * WHEEL_LINE_HEIGHT_PX;
+  if (deltaMode === 2 && Number.isFinite(pageHeight) && pageHeight > 0) {
+    return deltaY * pageHeight;
+  }
+  return deltaY;
 }
 
-export function zoomFromWheel(currentZoom: number, deltaY: number): number {
-  if (!Number.isFinite(deltaY)) return clampCameraZoom(currentZoom);
+export function zoomFromWheel(
+  currentZoom: number,
+  deltaY: number,
+  deltaMode = 0,
+  pageHeight = 0,
+): number {
+  const pixels = wheelDeltaPixels(deltaY, deltaMode, pageHeight);
   return clampCameraZoom(
-    currentZoom * Math.exp(-deltaY * WHEEL_ZOOM_SENSITIVITY),
+    currentZoom * Math.exp(-pixels * WHEEL_ZOOM_SENSITIVITY),
   );
 }
 

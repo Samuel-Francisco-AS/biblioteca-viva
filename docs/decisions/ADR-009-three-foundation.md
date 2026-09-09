@@ -38,10 +38,10 @@ No Moto G06, o APK abriu e renderizou piso, paredes, proxies e fixture sem crash
 
 ## Limitações
 
-- a aprovação da viabilidade Three.js não conclui a FUNDAÇÃO inteira; F2–F6 permanecem futuras;
+- no momento da aprovação desta decisão, F2–F6 permaneciam futuras; posteriormente F2 e F3 foram concluídas. F4–F6 continuam fora do escopo da decisão original e exigem seus próprios escopos;
 - a cena da F1 é mínima e não é o mundo da Biblioteca;
 - aproximadamente 60 FPS nessa cena não define budget, não é requisito permanente e não garante o produto completo;
-- câmera final, interação final, pipeline 3D formal/definitivo, persistência espacial e budget artístico permanecem futuros;
+- pipeline 3D formal/definitivo, persistência espacial, UX do mundo final e budget artístico permanecem futuros;
 - performance final de cenas complexas não foi aprovada;
 - TalkBack humano não foi executado e a temperatura de longo prazo não foi testada;
 - R3F e WebGPU não estão aprovados.

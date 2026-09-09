@@ -2,7 +2,7 @@
 
 **Data de referência:** 2026-09-09
 
-**Estado geral:** F0, F1 e F2 concluídas tecnicamente; Three.js aprovado como renderer da Fundação; F3 é a próxima fase autorizada
+**Estado geral:** F0, F1, F2 e F3 concluídos; Three.js aprovado como renderer da Fundação; F4 — Contrato experimental de assets 3D é a próxima fase autorizada
 
 **Escopo:** Fundação técnica do novo mundo 3D da Biblioteca Viva
 
@@ -47,7 +47,7 @@ com:
 - nenhum reaproveitamento da antiga W3-A;
 - nenhuma persistência espacial prematura.
 
-A F1 aprovou a viabilidade da base Three.js. A FUNDAÇÃO inteira termina somente depois de F2–F6; câmera, interação, assets, performance e acessibilidade ainda possuem trabalho futuro.
+A F1 aprovou a viabilidade da base Three.js, F2 concluiu a integração e o endurecimento do runtime, e F3 concluiu o contrato de câmera e interação mobile. A FUNDAÇÃO inteira termina somente depois de F4–F6; assets, performance e acessibilidade ainda possuem trabalho futuro.
 
 ---
 
@@ -79,10 +79,18 @@ F1 — Three.js Foundation Spike                       ✅ CONCLUÍDA
 F2 — Integração e endurecimento do runtime           ✅ CONCLUÍDA
  │
  ▼
-F3 — Câmera e interação mobile                       ▶ PRÓXIMA
+F3 — Câmera e interação mobile                       ✅ CONCLUÍDA
+ │
+ ├─ F3-A Contrato e baseline da câmera                ✅ CONCLUÍDA
+ ├─ F3-B Modelo de câmera, framing e limites          ✅ CONCLUÍDA
+ ├─ F3-C Pan, zoom e pinch                            ✅ CONCLUÍDA
+ ├─ F3-D Tap, seleção e arbitragem de gestos          ✅ CONCLUÍDA
+ ├─ F3-E Viewport, orientação e integração mobile     ✅ CONCLUÍDA
+ ├─ F3-F1 Gate técnico consolidado + APK               ✅ CONCLUÍDO
+ └─ Fechamento: bounds, gates e evidência humana        ✅ CONCLUÍDO
  │
  ▼
-F4 — Contrato experimental de assets 3D              ⏳ PLANEJADA
+F4 — Contrato experimental de assets 3D              ▶ PRÓXIMA
  │
  ▼
 F5 — Performance e Android físico                    ⏳ PLANEJADA
@@ -577,30 +585,63 @@ F2-F executou a regressão consolidada sem correção de comportamento: os gates
 ---
 
 # 12. F3 — Câmera e interação mobile
-**Estado: ▶ PRÓXIMA AUTORIZADA**
+**Estado: ✅ CONCLUÍDA**
 
-A F1 provou que pan, zoom, pinch e seleção funcionam.
+F3-A mapeou e formalizou o baseline da câmera. F3-B consolidou a autoridade navegável runtime-only: `CameraNavigation` mantém target X/Z e zoom; `ThreeWorldInteraction` continua owner de Pointer Events, wheel, pinch, picking e highlight, mas encaminha mudanças ao modelo. F3-C completou a navegação espacial: coordenadas do canvas passam pelo bounding rect atual para o viewport lógico, pan deriva dois pontos no plano X/Z, wheel preserva sua âncora e pinch usa razão de distâncias/midpoints sucessivos para compor pan+zoom. F3-D consolidou a intenção: a candidatura de tap é monotônica, pertence ao pointer inicial e só permite picking no `pointerup` se nunca cruzou o slop de `8` CSS px. F3-E consolidou a integração: React/CSS preserva safe areas e reserva o dock, enquanto o runtime recebe somente a caixa efetiva observada do host. O frustum da fixture agora é matemática pura e somente deriva de viewport finito, positivo e representável; viewport transitório mantém o último estado confiável e aguarda novo valor válido.
 
-A F3 deverá transformar isso em comportamento utilizável pelo produto.
+O framing contém bounds explícitos da fixture técnica com padding de 15%. Após F3-F2-FIX, os limites não usam apenas o retângulo envolvente da projeção: eles preservam dentro da viewport um patch retangular cuja largura e altura são ao menos 15% dos respectivos spans projetados do piso técnico, limitado somente pelo tamanho disponível da viewport. Esse patch pertence à projeção convexa real do piso, portanto também nos cantos diagonais há uma área visível de geometria técnica. Target Y é fixo em `1.1`, pois a faixa anterior era deriva incidental de `camera.up`, não plano navegável. A curva de wheel `0.0015` e os limites `0.7–2.2` foram aceitos para a fixture no fechamento da F3, sem constituir ergonomia final da Biblioteca. Câmera e seleção continuam runtime-only e não persistidas; os endurecimentos F2 de lifecycle, context loss, pausa, callbacks tardios, viewport, cancelamento e capture permanecem invariantes.
 
-Escopo previsto:
+### F3-A — Contrato e baseline da câmera
+**Estado: ✅ CONCLUÍDA**
 
-- comportamento final da câmera ortográfica;
-- enquadramento;
-- pan;
-- zoom;
-- pinch;
-- limites;
-- ergonomia;
-- relação entre toque, seleção e movimentação;
-- leitura em telas pequenas;
-- safe areas;
-- experiência mobile previsível.
+Cobriu o cálculo de frustum e o baseline inicial com testes focados, sem alterar a calibragem, a cena ou a UX.
+
+### F3-B — Modelo de câmera, framing e limites
+**Estado: ✅ CONCLUÍDA**
+
+Definiu framing determinístico sem GLB tardio, bounds explícitos e estado lógico único. Resize/orientação preservam foco, zoom e seleção se ainda forem válidos.
+
+Escopo concluído:
+
+- estado lógico único para foco X/Z e zoom;
+- enquadramento ortográfico técnico;
+- limites dependentes de viewport e zoom;
+- preservação em resize/orientação válido.
+
+### F3-C — Pan, zoom e pinch
+**Estado: ✅ CONCLUÍDA**
+
+Implementou pan derivado de screen space, wheel focal e pinch ancorado no midpoint, incluindo deslocamento simultâneo do midpoint. A razão incremental de distância torna o zoom independente da frequência de Pointer Events; todos os resultados passam pelo clamp F3-B. Não mudou seleção, thresholds de tap, safe areas ou ergonomia física.
+
+### F3-D — Tap, seleção e arbitragem de gestos
+**Estado: ✅ CONCLUÍDA**
+
+Fixou `8` CSS px com borda inclusiva, consumindo o slop que inicia pan e proibindo reabilitação de tap após afastar e voltar. Segundo pointer/pinch (mesmo imóvel), pointer extra, wheel concorrente, cancelamento, perda de capture, pausa, disposal e terminalidade invalidam seleção; pinch → pan segue limpo. O Raycaster somente roda para tap confirmado pela câmera e bounding rect atuais; tap em espaço vazio limpa seleção. Não houve hitbox especulativa, recalibragem de câmera ou alteração da ponte React ↔ Three.
+
+### F3-E — Viewport, orientação, safe areas e integração mobile
+**Estado: ✅ CONCLUÍDA**
+
+Consolidou o `world-host` como única autoridade do viewport Three: `ResizeObserver` observa a caixa real que o layout atribuiu, e Three não infere header, dock, safe areas ou breakpoints. O CSS reutiliza as variáveis globais de safe area, preserva a reserva do dock fixo, contém o canvas e reduz padding da Biblioteca em telas estreitas. Portrait, landscape e retorno preservam canvas/runtime, seleção e exploração salvo clamp necessário; viewport inválido segue aguardando. Resize encerra o gesto em curso para evitar coordenadas antigas, e picking seguinte usa bounding rect atual. Chromium cobriu 390×844, 844×390 e 320×640 sem overflow horizontal; a validação humana ampla posterior da F3 confirmou orientação e toque/pinch no Moto G06.
+
+### F3-F1 — Gate técnico consolidado + APK
+**Estado: ✅ CONCLUÍDO TECNICAMENTE**
+
+Consolidou formatação, análise estática, 487 testes Vitest, áudio, build e relatório de bundle, 13 E2E Chromium, sync Capacitor e Gradle debug. O APK foi gerado com 7.525.817 bytes. Não houve evidência física nova, alteração Android nativa, persistência espacial ou mudança de renderer.
+
+### F3-F2-FIX — Limites diagonais da fixture
+**Estado: ✅ CONCLUÍDO TECNICAMENTE**
+
+A validação humana ampla da F3 encontrou que os cantos superiores podiam mostrar apenas o fundo da cena. A causa era o clamp independente dos eixos do retângulo envolvente da projeção: seus cantos não pertencem necessariamente ao piso técnico inclinado. O modelo agora calcula uma região convexa de centros de câmera que mantém um patch retangular de área mínima dentro da projeção real do piso e da viewport. `CameraNavigation` continua a única autoridade; não houve alteração de gestos, renderer, lifecycle, zoom ou persistência. Os testes matemáticos cobrem quatro cantos, portrait, landscape e zoom `0.7`, `1` e `2.2`; build, sync e APK debug passaram. Não houve revalidação física específica desse fix; a limitação foi aceita como não bloqueante no fechamento da F3.
+
+### Fechamento da F3 — evidência humana e bounds
+**Estado: ✅ CONCLUÍDO**
+
+A validação humana ampla no Moto G06 foi positiva para abertura, framing, pan, tap/seleção, pinch, pinch → um pointer → pan, zoom, rotação e background/resume, sem crash, travamento ou regressão perceptível; o FPS ficou aproximadamente em 60 ou próximo durante interações e rotação. A falha residual nos limites superiores foi corrigida por região convexa de centros de câmera com patch mínimo visível do piso. O fix passou 3 arquivos/61 testes dirigidos, `format:check`, `typecheck`, `git diff --check`, build, sync e debug build Android, mas não recebeu revalidação física específica. Essa limitação de evidência foi aceita como risco residual não bloqueante: a correção é localizada e matemática, seus contratos não mudaram e a fixture é técnica e descartável.
 
 ---
 
 # 13. F4 — Contrato experimental de assets 3D
-**Estado: ⏳ PLANEJADA**
+**Estado: ▶ PRÓXIMA FASE AUTORIZADA**
 
 Esta será a primeira fase em que começaremos a trabalhar seriamente com objetos 3D.
 
@@ -826,8 +867,15 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | F1-F | ✅ Concluída | Gate físico aprovado no Moto G06 |
 | F1-F-FIX | ✅ Concluída | Botões React revalidados fisicamente |
 | F2 | ✅ Concluída | Endurecimento do runtime e integração, com gates técnicos e revalidação física curta no Moto G06 |
-| F3 | ▶ Próxima autorizada | Câmera e interação mobile |
-| F4 | ⏳ Planejada | Contrato experimental de assets 3D |
+| F3 | ✅ Concluída | Câmera e interação mobile |
+| F3-A | ✅ Concluída | Contrato e baseline da câmera |
+| F3-B | ✅ Concluída | Modelo de câmera, framing e limites |
+| F3-C | ✅ Concluída | Pan, wheel focal e pinch ancorado |
+| F3-D | ✅ Concluída | Tap, seleção e arbitragem de gestos |
+| F3-E | ✅ Concluída | Viewport, orientação, safe areas e integração mobile |
+| F3-F1 | ✅ Técnico | Gate consolidado e APK |
+| Fechamento F3 | ✅ Concluído | Evidência humana ampla e correção técnica de bounds; sem revalidação física específica do fix |
+| F4 | ▶ Próxima autorizada | Contrato experimental de assets 3D |
 | F5 | ⏳ Planejada | Baseline de performance Android |
 | F6 | ⏳ Planejada | Acessibilidade e fechamento |
 | Pipeline 3D | 🔒 Futuro | Produção sistemática de assets |
@@ -841,6 +889,6 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 
 O projeto deve ser considerado neste estado:
 
-> **F0 concluída. F1 e todos os seus checkpoints concluídos. Three.js aprovado como renderer da Fundação. F2 está concluída após gates técnicos e revalidação física curta no Moto G06; F2-B consolidou a fronteira React ↔ runtime, F2-C consolidou o ownership interno da montagem, F2-D1 tornou falhas estruturais de renderização terminais, F2-D2 definiu context loss terminal e F2-E endureceu viewport e input sem antecipar F3. F3 é a próxima fase autorizada.**
+> **F0, F1, F2 e F3 estão concluídas. Three.js está aprovado como renderer da Fundação. F3 estabeleceu o contrato de câmera e interação runtime-only, viewport real e bounds convexos da fixture; a validação humana ampla foi positiva. A correção final dos bounds não foi revalidada especificamente no aparelho, limitação aceita como não bloqueante no fechamento.**
 
-A FUNDAÇÃO inteira ainda não está concluída: F3–F6 permanecem futuras. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.
+A FUNDAÇÃO inteira ainda não está concluída: F4–F6 permanecem futuras. F4 é a próxima fase autorizada. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.
