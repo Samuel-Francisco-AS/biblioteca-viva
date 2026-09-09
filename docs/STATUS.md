@@ -9,7 +9,7 @@
 
 ## Mundo
 
-- **F0, F1 e F2 estão concluídas tecnicamente. Three.js está aprovado como renderer da Fundação do novo mundo.**
+- **F0, F1 e F2 estão concluídas. A F2 foi encerrada após gates técnicos e revalidação física curta no Moto G06. Three.js está aprovado como renderer da Fundação do novo mundo.**
 - A linha ativa é `React → WorldHost → ThreeWorldRuntime → Three.js`, com `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, lifecycle explícito, integração React ↔ Three e Android/Capacitor.
 - A direção permanece 3D real com apresentação ortográfica/2.5D. A cena atual é um spike técnico com fixture, não a Biblioteca final nem arquitetura permanente de conteúdo.
 - A F1 provou renderização, interação, lifecycle, observabilidade e viabilidade física no Moto G06. Ela não conclui a FUNDAÇÃO inteira nem garante desempenho do mundo completo.
@@ -24,7 +24,7 @@
 
 ## Próximo trabalho
 
-**F2 concluída — Integração e endurecimento da Fundação Three.js:** a fronteira `WorldRuntime`, ownership por montagem, terminalidade `failed`, política de context loss, descarte de callbacks tardios e segurança de viewport/input foram consolidados sem regressão detectada nos gates completos web, E2E e Android técnico. A validação humana física curta no Moto G06 continua recomendada para confirmar as mudanças estruturais de lifecycle, context loss, resize e input; ela não foi repetida neste checkpoint técnico.
+**F2 concluída — Integração e endurecimento da Fundação Three.js:** a fronteira `WorldRuntime`, ownership por montagem, terminalidade `failed`, política de context loss, descarte de callbacks tardios e segurança de viewport/input foram consolidados sem regressão detectada nos gates completos web, E2E e Android técnico. A revalidação humana física curta no Moto G06 confirmou background/resume, alinhamento do canvas com React, seleção/highlight e controles React sincronizados, pan, pinch, seleção por toque e rotação/orientação, sem crash, travamento, degradação sustentada, perda de interação ou dessincronização React ↔ Three. As quedas transitórias observadas de FPS em orientação e em extremos rápidos de zoom são não bloqueantes e não têm causalidade atribuída à F2 sem evidência.
 
 ```text
 F0 ✅

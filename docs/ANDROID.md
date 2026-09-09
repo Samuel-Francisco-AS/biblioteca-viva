@@ -48,3 +48,11 @@ Background/resume passou enquanto o processo permaneceu vivo: o aplicativo volto
 A cena simples estabilizou em aproximadamente 60 FPS. Valores iniciais de aproximadamente 8–12 FPS ocorreram enquanto a janela diagnóstica era preenchida e não representam desempenho sustentado. O teste curto de aproximadamente cinco minutos não revelou comportamento térmico anormal ou throttling percebido; isso não substitui teste prolongado.
 
 TalkBack completo não foi executado na F1 e permanece pendente para F6 ou outro gate humano específico.
+
+## Evidência física da F2 — revalidação curta no Moto G06
+
+Após os gates técnicos da F2-F, a revalidação humana curta confirmou renderização normal, pan, pinch, seleção por toque, seleção/highlight, sincronização React ↔ Three e os botões React sincronizados com seleção e highlight. O canvas permaneceu alinhado com a interface React; background/resume e rotação/orientação continuaram funcionais.
+
+Na rotação/orientação, houve queda transitória de aproximadamente 37–45 FPS, seguida de recuperação e estabilização em aproximadamente 60 FPS. Na sequência extrema de zoom-out até o máximo e zoom-in até o máximo, houve queda transitória de aproximadamente 45–48 FPS, com a mesma recuperação para aproximadamente 60 FPS. Não houve crash, travamento, degradação sustentada, perda de interação, dessincronização React ↔ Three ou evidência de regressão funcional associada à F2.
+
+As quedas são observações não bloqueantes, não falhas comprovadas nem benchmark formal, e não têm causalidade atribuída à F2 sem evidência. Esta validação curta não aprova TalkBack, temperatura prolongada, desempenho do mundo final, densidade real da Biblioteca ou budget artístico.

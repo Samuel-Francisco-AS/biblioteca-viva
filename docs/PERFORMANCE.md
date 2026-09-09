@@ -146,6 +146,15 @@ A cena possui somente 46 meshes e 546 triângulos, com efeitos caros fora do bas
 
 O usuário percebeu abertura mais rápida e maior fluidez em comparação contextual com a antiga implementação 2D removida da W3. A observação é subjetiva e não constitui benchmark científico entre Phaser e Three.js.
 
+### Observação humana da F2 — revalidação física curta
+
+Separadamente do baseline físico da F1-F, a revalidação humana curta da F2 no Moto G06 registrou os seguintes comportamentos transitórios:
+
+- na rotação/orientação, aproximadamente 37–45 FPS, com recuperação e estabilização em aproximadamente 60 FPS;
+- na sequência extrema zoom-out até o máximo e zoom-in até o máximo, aproximadamente 45–48 FPS, com recuperação e estabilização em aproximadamente 60 FPS.
+
+Não houve degradação sustentada, crash ou travamento. Essas observações são não bloqueantes: não constituem benchmark formal, não comprovam regressão e não atribuem causalidade à F2 sem evidência. Permanecem disponíveis para reavaliação em F3, no contexto de ergonomia e extremos de zoom, e em F5, no contexto de performance, frame time e Android físico. Elas não aprovam performance do mundo final, temperatura prolongada, densidade real da Biblioteca ou budget artístico.
+
 Registrar, quando tecnicamente disponível:
 
 - FPS;

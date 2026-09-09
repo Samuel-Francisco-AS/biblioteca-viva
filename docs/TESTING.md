@@ -149,6 +149,14 @@ Em 2026-09-09, o checkout consolidado passou sem correções de comportamento du
 
 Os únicos warnings observados foram os já conhecidos: chunks Vite acima de 500 kB, `NO_COLOR`/`FORCE_COLOR` no runner Playwright e `flatDir` no Gradle. A E2E continua sendo prova Chromium; não comprova toque, pinch, background/resume, desempenho, temperatura, instalação ou orientação física no Moto G06.
 
+## Evidência humana da F2 — revalidação física curta no Moto G06
+
+Após os gates automatizados da F2-F, uma validação humana curta e dirigida no Moto G06 confirmou que background/resume, alinhamento do canvas com a interface React, seleção e highlight, pan, pinch, seleção por toque, botões React sincronizados e rotação/orientação permaneceram funcionais. Não houve crash, travamento, degradação sustentada, perda de interação, dessincronização React ↔ Three nem evidência de regressão funcional associada à F2.
+
+Durante a rotação/orientação, houve queda transitória de aproximadamente 37–45 FPS, com recuperação e estabilização em aproximadamente 60 FPS. Na sequência extrema de zoom-out até o máximo e zoom-in até o máximo, houve queda transitória de aproximadamente 45–48 FPS, também seguida de recuperação e estabilização em aproximadamente 60 FPS. São observações humanas não bloqueantes, não benchmark formal e não regressão comprovada.
+
+Playwright e os demais gates automatizados não provaram esse comportamento físico. A validação humana complementa o gate técnico da F2; foi curta e dirigida, não aprova temperatura prolongada, TalkBack, densidade real da Biblioteca, performance do mundo final ou budget artístico.
+
 ## Comandos
 
 ```bash

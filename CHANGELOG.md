@@ -4,12 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
-### F2-F — Regressão consolidada e fechamento técnico — 2026-09-09
+### F2-F — Regressão consolidada e fechamento técnico e físico — 2026-09-09
 
 - concluída tecnicamente a F2 — Integração e endurecimento da Fundação Three.js, sem nova funcionalidade espacial ou alteração de câmera, zoom, pan, pinch, framing, limites, safe areas ou UX mobile;
 - confirmados os contratos de fronteira React/runtime, ownership de montagem, falha terminal, context loss, callbacks tardios, viewport transitório e cleanup de input pela regressão completa;
 - aprovados os gates de formatação, análise estática, 459 testes Vitest, áudio, build, relatório de bundle, 12 cenários E2E Chromium, sync Capacitor e Gradle debug;
-- mantida como recomendação uma revalidação humana física curta no Moto G06 para lifecycle, context loss, resize e input; nenhum comportamento físico foi alegado nesta etapa.
+- concluída a revalidação humana física curta no Moto G06: background/resume, alinhamento React/canvas, seleção/highlight, pan, pinch, seleção por toque, controles React e rotação/orientação permaneceram funcionais, sem crash, travamento, degradação sustentada, perda de interação ou dessincronização React ↔ Three;
+- registradas como observações não bloqueantes quedas transitórias para aproximadamente 37–45 FPS em orientação e 45–48 FPS na sequência extrema zoom-out/zoom-in, ambas com recuperação e estabilização em aproximadamente 60 FPS; não são benchmark formal, regressão comprovada ou causalidade atribuída à F2.
 
 ### F2-E — Viewport e input resistentes a interrupções — 2026-09-09
 

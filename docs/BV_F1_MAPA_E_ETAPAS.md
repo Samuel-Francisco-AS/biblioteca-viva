@@ -568,16 +568,16 @@ O piso provisório de 30 FPS foi superado com folga na cena mínima. Essa evidê
 
 # 11. F2 — Integração e endurecimento do runtime
 
-**Estado: ✅ CONCLUÍDA TECNICAMENTE**
+**Estado: ✅ CONCLUÍDA TÉCNICA E FISICAMENTE**
 
 A F2 sucede a F1. O checkpoint F2-B consolidou a fronteira pública React ↔ runtime: falha terminal tipada, fallback React e a garantia de no máximo uma instância montada/viva por host. O F2-C agrupou os recursos de cada montagem do `ThreeWorldRuntime` sob um owner interno e unificou sua liberação em `dispose()`, inclusive quando `mount()` é interrompido. O F2-D1 tornou falha estrutural de render/resize terminal, com cleanup único e notificação ao host, sem transformar falha de fixture em falha terminal e sem render incidental durante pausa. O F2-D2 definiu `webglcontextlost` como falha terminal: os listeners pertencem à montagem/canvas, são removidos no cleanup e uma restoration tardia não revive a instância. F2-E preservou essa montagem através de resize/orientation: viewport inválido aguarda dimensão válida, `ResizeObserver` não acumula e o fallback de janela é removido corretamente; Pointer Events não conservam gestos órfãos após cancelamento, perda de capture, pausa ou terminalidade. Não foram definidos parâmetros de câmera ou UX final.
 
-F2-F executou a regressão consolidada sem correção de comportamento: os gates de formatação, análise estática, 459 testes Vitest, áudio, build e relatório de bundle, 12 cenários E2E Chromium, sync Capacitor e Gradle debug passaram. O fechamento é técnico; uma validação física curta no Moto G06 para lifecycle, context loss, resize e input permanece recomendada antes de tratar também esse aspecto como revalidado por pessoa.
+F2-F executou a regressão consolidada sem correção de comportamento: os gates de formatação, análise estática, 459 testes Vitest, áudio, build e relatório de bundle, 12 cenários E2E Chromium, sync Capacitor e Gradle debug passaram. A revalidação humana física curta posterior no Moto G06 confirmou background/resume, alinhamento do canvas com React, seleção/highlight, pan, pinch, seleção por toque, botões React sincronizados e rotação/orientação, sem crash, travamento, degradação sustentada, perda de interação ou dessincronização React ↔ Three. Em orientação houve queda transitória de aproximadamente 37–45 FPS e, na sequência extrema zoom-out/zoom-in, de aproximadamente 45–48 FPS; ambas recuperaram e estabilizaram em aproximadamente 60 FPS. São observações não bloqueantes, sem causalidade atribuída à F2 e disponíveis para reavaliação em F3 (ergonomia e extremos de zoom) e F5 (performance, frame time e Android físico). A F2 está concluída técnica e fisicamente no escopo dessa validação curta; ela não aprova benchmark formal, mundo final, temperatura prolongada, TalkBack, densidade real ou budget artístico.
 
 ---
 
 # 12. F3 — Câmera e interação mobile
-**Estado: ⏳ PLANEJADA**
+**Estado: ▶ PRÓXIMA AUTORIZADA**
 
 A F1 provou que pan, zoom, pinch e seleção funcionam.
 
@@ -825,8 +825,8 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | F1-E | ✅ Concluída | Gates técnicos + APK |
 | F1-F | ✅ Concluída | Gate físico aprovado no Moto G06 |
 | F1-F-FIX | ✅ Concluída | Botões React revalidados fisicamente |
-| F2 | ▶ Em andamento (F2-E concluída) | Endurecer runtime e integração |
-| F3 | ⏳ Planejada | Câmera e interação mobile |
+| F2 | ✅ Concluída | Endurecimento do runtime e integração, com gates técnicos e revalidação física curta no Moto G06 |
+| F3 | ▶ Próxima autorizada | Câmera e interação mobile |
 | F4 | ⏳ Planejada | Contrato experimental de assets 3D |
 | F5 | ⏳ Planejada | Baseline de performance Android |
 | F6 | ⏳ Planejada | Acessibilidade e fechamento |
@@ -841,6 +841,6 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 
 O projeto deve ser considerado neste estado:
 
-> **F0 concluída. F1 e todos os seus checkpoints concluídos. Three.js aprovado como renderer da Fundação. F2 está em andamento; F2-B consolidou a fronteira React ↔ runtime, F2-C consolidou o ownership interno da montagem, F2-D1 tornou falhas estruturais de renderização terminais, F2-D2 definiu context loss terminal e F2-E endureceu viewport e input sem antecipar F3.**
+> **F0 concluída. F1 e todos os seus checkpoints concluídos. Three.js aprovado como renderer da Fundação. F2 está concluída após gates técnicos e revalidação física curta no Moto G06; F2-B consolidou a fronteira React ↔ runtime, F2-C consolidou o ownership interno da montagem, F2-D1 tornou falhas estruturais de renderização terminais, F2-D2 definiu context loss terminal e F2-E endureceu viewport e input sem antecipar F3. F3 é a próxima fase autorizada.**
 
-A FUNDAÇÃO inteira ainda não está concluída: F2–F6 permanecem futuras. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.
+A FUNDAÇÃO inteira ainda não está concluída: F3–F6 permanecem futuras. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.
