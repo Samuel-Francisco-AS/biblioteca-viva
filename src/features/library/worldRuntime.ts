@@ -20,7 +20,7 @@ export type WorldRuntimeFailureListener = (
 ) => void;
 
 export type WorldRuntimeState =
-  "created" | "mounted" | "running" | "paused" | "disposed";
+  "created" | "mounted" | "running" | "paused" | "failed" | "disposed";
 
 export type WorldFixtureStatus = "idle" | "loading" | "ready" | "error";
 

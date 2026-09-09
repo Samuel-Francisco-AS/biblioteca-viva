@@ -86,7 +86,12 @@ function createHost(width = 640, height = 360): HTMLDivElement {
 
 function dispatchPointer(
   canvas: HTMLCanvasElement,
-  type: "pointercancel" | "pointerdown" | "pointermove" | "pointerup",
+  type:
+    | "lostpointercapture"
+    | "pointercancel"
+    | "pointerdown"
+    | "pointermove"
+    | "pointerup",
   init: {
     readonly clientX: number;
     readonly clientY: number;
@@ -185,6 +190,14 @@ describe("ThreeWorldRuntime", () => {
       expect.any(Function),
       { passive: false },
     );
+    expect(addCanvasListener).toHaveBeenCalledWith(
+      "webglcontextlost",
+      expect.any(Function),
+    );
+    expect(addCanvasListener).toHaveBeenCalledWith(
+      "webglcontextrestored",
+      expect.any(Function),
+    );
 
     runtime.dispose();
     runtime.dispose();
@@ -217,6 +230,14 @@ describe("ThreeWorldRuntime", () => {
     );
     expect(removeCanvasListener).toHaveBeenCalledWith(
       "wheel",
+      expect.any(Function),
+    );
+    expect(removeCanvasListener).toHaveBeenCalledWith(
+      "webglcontextlost",
+      expect.any(Function),
+    );
+    expect(removeCanvasListener).toHaveBeenCalledWith(
+      "webglcontextrestored",
       expect.any(Function),
     );
     expect(renderer.dispose).toHaveBeenCalledOnce();
@@ -334,6 +355,264 @@ describe("ThreeWorldRuntime", () => {
       runtimeState: "disposed",
     });
     expect(() => runtime.start()).toThrow(/must be mounted/u);
+  });
+
+  it("encerra uma instância quando renderer.render falha no RAF", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    vi.spyOn(document, "hidden", "get").mockReturnValue(false);
+    const renderer = new TestRenderer();
+    const fixtureLoader = new TestFixtureLoader();
+    const callbacks = new Map<number, FrameRequestCallback>();
+    let nextFrameId = 0;
+    const request = vi.fn((callback: FrameRequestCallback) => {
+      const id = ++nextFrameId;
+      callbacks.set(id, callback);
+      return id;
+    });
+    const cancel = vi.fn((frameId: number) => callbacks.delete(frameId));
+    const host = createHost();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader,
+      frameScheduler: { cancel, request },
+    });
+    const failureListener = vi.fn();
+
+    runtime.mount(host);
+    runtime.onFailure(failureListener);
+    runtime.start();
+    const entry = callbacks.entries().next().value;
+    expect(entry).toBeDefined();
+    if (!entry) return;
+    const [frameId, callback] = entry;
+    callbacks.delete(frameId);
+    renderer.render.mockImplementation(() => {
+      throw new Error("render unavailable");
+    });
+
+    expect(() => callback(16)).not.toThrow();
+
+    expect(failureListener).toHaveBeenCalledOnce();
+    expect(failureListener).toHaveBeenCalledWith({
+      code: "unavailable",
+      message:
+        "O ambiente 3D encontrou uma falha de renderização e foi encerrado.",
+    });
+    expect(callbacks.size).toBe(0);
+    expect(runtime.getDiagnostics()).toMatchObject({
+      activeFrameLoops: 0,
+      runtimeState: "failed",
+    });
+    expect(renderer.dispose).toHaveBeenCalledOnce();
+    expect(host.querySelector("canvas")).not.toBeInTheDocument();
+
+    const geometry = new BoxGeometry();
+    const material = new MeshBasicMaterial();
+    const fixture = new Group();
+    fixture.add(new Mesh(geometry, material));
+    const disposeGeometry = vi.spyOn(geometry, "dispose");
+    fixtureLoader.succeed(fixture);
+    expect(disposeGeometry).toHaveBeenCalledOnce();
+
+    runtime.start();
+    runtime.resume();
+    runtime.pause();
+    runtime.resize();
+    runtime.selectObject("table-01");
+    runtime.dispose();
+    runtime.dispose();
+    expect(request).toHaveBeenCalledOnce();
+    expect(renderer.dispose).toHaveBeenCalledOnce();
+    expect(failureListener).toHaveBeenCalledOnce();
+  });
+
+  it("trata context loss como terminal e mantém restauração e GLB tardios inertes", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    vi.spyOn(document, "hidden", "get").mockReturnValue(false);
+    const renderer = new TestRenderer();
+    const fixtureLoader = new TestFixtureLoader();
+    const callbacks = new Map<number, FrameRequestCallback>();
+    let nextFrameId = 0;
+    const request = vi.fn((callback: FrameRequestCallback) => {
+      const id = ++nextFrameId;
+      callbacks.set(id, callback);
+      return id;
+    });
+    const cancel = vi.fn((frameId: number) => callbacks.delete(frameId));
+    const removeCanvasListener = vi.spyOn(
+      renderer.domElement,
+      "removeEventListener",
+    );
+    const host = createHost();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader,
+      frameScheduler: { cancel, request },
+    });
+    const failureListener = vi.fn();
+
+    runtime.mount(host);
+    runtime.onFailure(failureListener);
+    const selectionListener = vi.fn();
+    runtime.onSelectionChange(selectionListener);
+    runtime.start();
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: 100,
+      clientY: 100,
+      pointerId: 7,
+      pointerType: "touch",
+    });
+    expect(renderer.domElement.dataset.gesture).toBe("tap");
+
+    const contextLost = new Event("webglcontextlost", { cancelable: true });
+    renderer.domElement.dispatchEvent(contextLost);
+
+    expect(contextLost.defaultPrevented).toBe(true);
+    expect(failureListener).toHaveBeenCalledOnce();
+    expect(failureListener).toHaveBeenCalledWith({
+      code: "unavailable",
+      message:
+        "O ambiente 3D encontrou uma falha de renderização e foi encerrado.",
+    });
+    expect(runtime.getDiagnostics()).toMatchObject({
+      activeFrameLoops: 0,
+      runtimeState: "failed",
+    });
+    expect(callbacks.size).toBe(0);
+    expect(cancel).toHaveBeenCalledOnce();
+    expect(renderer.dispose).toHaveBeenCalledOnce();
+    expect(host.querySelector("canvas")).not.toBeInTheDocument();
+    expect(renderer.domElement.dataset.gesture).toBe("idle");
+    expect(removeCanvasListener).toHaveBeenCalledWith(
+      "webglcontextlost",
+      expect.any(Function),
+    );
+    expect(removeCanvasListener).toHaveBeenCalledWith(
+      "webglcontextrestored",
+      expect.any(Function),
+    );
+
+    const rendersBeforeLateCallbacks = renderer.render.mock.calls.length;
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: 100,
+      clientY: 100,
+      pointerId: 7,
+      pointerType: "touch",
+    });
+    const geometry = new BoxGeometry();
+    const material = new MeshBasicMaterial();
+    const fixture = new Group();
+    fixture.add(new Mesh(geometry, material));
+    const disposeGeometry = vi.spyOn(geometry, "dispose");
+    const disposeMaterial = vi.spyOn(material, "dispose");
+    fixtureLoader.succeed(fixture);
+    renderer.domElement.dispatchEvent(new Event("webglcontextrestored"));
+    document.dispatchEvent(new Event("visibilitychange"));
+    runtime.start();
+    runtime.pause();
+    runtime.resume();
+    runtime.resize();
+    runtime.selectObject("table-01");
+    runtime.dispose();
+    runtime.dispose();
+
+    expect(disposeGeometry).toHaveBeenCalledOnce();
+    expect(disposeMaterial).toHaveBeenCalledOnce();
+    expect(renderer.render).toHaveBeenCalledTimes(rendersBeforeLateCallbacks);
+    expect(selectionListener).toHaveBeenCalledOnce();
+    expect(runtime.getDiagnostics()).toMatchObject({
+      activeFrameLoops: 0,
+      runtimeState: "failed",
+    });
+    expect(callbacks.size).toBe(0);
+    expect(request).toHaveBeenCalledOnce();
+    expect(renderer.dispose).toHaveBeenCalledOnce();
+    expect(failureListener).toHaveBeenCalledOnce();
+  });
+
+  it("encerra a mesma montagem se resize não consegue atualizar o renderer", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const host = createHost();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+    const failureListener = vi.fn();
+
+    runtime.mount(host);
+    runtime.onFailure(failureListener);
+    renderer.setSize.mockImplementation(() => {
+      throw new Error("resize unavailable");
+    });
+
+    expect(() => runtime.resize()).not.toThrow();
+
+    expect(failureListener).toHaveBeenCalledOnce();
+    expect(runtime.getDiagnostics()).toMatchObject({
+      activeFrameLoops: 0,
+      runtimeState: "failed",
+    });
+    expect(renderer.dispose).toHaveBeenCalledOnce();
+    expect(host.querySelector("canvas")).not.toBeInTheDocument();
+  });
+
+  it("não renderiza por resize ou fixture enquanto pausado e retoma normalmente", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    vi.spyOn(document, "hidden", "get").mockReturnValue(false);
+    const renderer = new TestRenderer();
+    const fixtureLoader = new TestFixtureLoader();
+    const callbacks = new Map<number, FrameRequestCallback>();
+    let nextFrameId = 0;
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader,
+      frameScheduler: {
+        cancel: (frameId) => callbacks.delete(frameId),
+        request: (callback) => {
+          const id = ++nextFrameId;
+          callbacks.set(id, callback);
+          return id;
+        },
+      },
+    });
+
+    runtime.mount(createHost());
+    runtime.pause();
+    const rendersWhilePaused = renderer.render.mock.calls.length;
+    runtime.resize();
+    fixtureLoader.succeed(new Group());
+
+    expect(renderer.render).toHaveBeenCalledTimes(rendersWhilePaused);
+    expect(runtime.getDiagnostics().runtimeState).toBe("paused");
+    expect(callbacks.size).toBe(0);
+
+    runtime.resume();
+    expect(renderer.render).toHaveBeenCalledTimes(rendersWhilePaused + 1);
+    expect(runtime.getDiagnostics().runtimeState).toBe("running");
+    expect(callbacks.size).toBe(1);
+    runtime.dispose();
+  });
+
+  it("encerra quando uma seleção pede render fora do RAF", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+    const failureListener = vi.fn();
+
+    runtime.mount(createHost());
+    runtime.onFailure(failureListener);
+    renderer.render.mockImplementation(() => {
+      throw new Error("selection render unavailable");
+    });
+
+    expect(() => runtime.selectObject("table-01")).not.toThrow();
+    expect(failureListener).toHaveBeenCalledOnce();
+    expect(runtime.getDiagnostics().runtimeState).toBe("failed");
+    expect(renderer.dispose).toHaveBeenCalledOnce();
   });
 
   it("limita emissões React a quatro vezes por segundo durante o loop", () => {
@@ -460,6 +739,104 @@ describe("ThreeWorldRuntime", () => {
     runtime.dispose();
   });
 
+  it("cancela um pan ao pausar e não reutiliza o pointer anterior após retomar", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    vi.spyOn(document, "hidden", "get").mockReturnValue(false);
+    const renderer = new TestRenderer();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+
+    runtime.mount(createHost());
+    runtime.start();
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: 100,
+      clientY: 100,
+      pointerId: 7,
+      pointerType: "touch",
+    });
+    dispatchPointer(renderer.domElement, "pointermove", {
+      clientX: 140,
+      clientY: 100,
+      pointerId: 7,
+      pointerType: "touch",
+    });
+    expect(renderer.domElement.dataset.gesture).toBe("pan");
+
+    runtime.pause();
+    const rendersAfterPause = renderer.render.mock.calls.length;
+    expect(renderer.domElement.dataset.gesture).toBe("idle");
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: 140,
+      clientY: 100,
+      pointerId: 7,
+      pointerType: "touch",
+    });
+    expect(renderer.render).toHaveBeenCalledTimes(rendersAfterPause);
+
+    runtime.resume();
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: 160,
+      clientY: 100,
+      pointerId: 8,
+      pointerType: "touch",
+    });
+    expect(renderer.domElement.dataset.gesture).toBe("tap");
+    dispatchPointer(renderer.domElement, "pointercancel", {
+      clientX: 160,
+      clientY: 100,
+      pointerId: 8,
+      pointerType: "touch",
+    });
+    expect(renderer.domElement.dataset.gesture).toBe("idle");
+    runtime.dispose();
+  });
+
+  it("tolera perda de capture já interrompida e aceita o próximo gesto", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    renderer.domElement.setPointerCapture = vi.fn(() => {
+      throw new Error("capture unavailable");
+    });
+    renderer.domElement.hasPointerCapture = vi.fn(() => {
+      throw new Error("capture already lost");
+    });
+    renderer.domElement.releasePointerCapture = vi.fn(() => {
+      throw new Error("release unavailable");
+    });
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+
+    runtime.mount(createHost());
+    expect(() => {
+      dispatchPointer(renderer.domElement, "pointerdown", {
+        clientX: 100,
+        clientY: 100,
+        pointerId: 7,
+        pointerType: "touch",
+      });
+      dispatchPointer(renderer.domElement, "lostpointercapture", {
+        clientX: 100,
+        clientY: 100,
+        pointerId: 7,
+        pointerType: "touch",
+      });
+    }).not.toThrow();
+    expect(renderer.domElement.dataset.gesture).toBe("idle");
+
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: 120,
+      clientY: 100,
+      pointerId: 8,
+      pointerType: "touch",
+    });
+    expect(renderer.domElement.dataset.gesture).toBe("tap");
+    runtime.dispose();
+  });
+
   it("resize preserva renderer, canvas e seleção ao recalcular o frustum", () => {
     vi.stubGlobal("ResizeObserver", TestResizeObserver);
     const renderer = new TestRenderer();
@@ -496,6 +873,154 @@ describe("ThreeWorldRuntime", () => {
     expect(canvas.dataset.selectedObject).toBe("bookshelf-02");
     expect(TestResizeObserver.instances).toHaveLength(1);
 
+    runtime.dispose();
+  });
+
+  it("aguarda dimensões transitórias inválidas e retoma o mesmo viewport quando elas voltam", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    vi.spyOn(document, "hidden", "get").mockReturnValue(false);
+    const renderer = new TestRenderer();
+    const callbacks = new Map<number, FrameRequestCallback>();
+    let nextFrameId = 0;
+    const request = vi.fn((callback: FrameRequestCallback) => {
+      const id = ++nextFrameId;
+      callbacks.set(id, callback);
+      return id;
+    });
+    const host = createHost(0, 0);
+    const getBounds = vi.spyOn(host, "getBoundingClientRect");
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+      frameScheduler: {
+        cancel: (frameId) => callbacks.delete(frameId),
+        request,
+      },
+    });
+
+    runtime.mount(host);
+    runtime.start();
+    expect(renderer.setSize).not.toHaveBeenCalled();
+    expect(renderer.render).not.toHaveBeenCalled();
+    expect(callbacks.size).toBe(0);
+    expect(runtime.getDiagnostics().runtimeState).toBe("running");
+
+    getBounds.mockReturnValue({
+      bottom: 360,
+      height: 360,
+      left: 0,
+      right: 640,
+      top: 0,
+      width: 640,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    });
+    TestResizeObserver.instances[0]?.callback([], {} as ResizeObserver);
+
+    expect(renderer.setSize).toHaveBeenCalledOnce();
+    expect(renderer.setSize).toHaveBeenLastCalledWith(640, 360, false);
+    expect(renderer.render).toHaveBeenCalledOnce();
+    expect(callbacks.size).toBe(1);
+    expect(host.querySelectorAll("canvas")).toHaveLength(1);
+    expect(TestResizeObserver.instances).toHaveLength(1);
+
+    const rendersBeforeInvalidViewport = renderer.render.mock.calls.length;
+    getBounds.mockReturnValue({
+      bottom: 0,
+      height: 0,
+      left: 0,
+      right: 0,
+      top: 0,
+      width: 0,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    });
+    TestResizeObserver.instances[0]?.callback([], {} as ResizeObserver);
+    expect(renderer.setSize).toHaveBeenCalledOnce();
+    expect(renderer.render).toHaveBeenCalledTimes(rendersBeforeInvalidViewport);
+    expect(callbacks.size).toBe(0);
+
+    getBounds.mockReturnValue({
+      bottom: 360,
+      height: 360,
+      left: 0,
+      right: 640,
+      top: 0,
+      width: 640,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    });
+    TestResizeObserver.instances[0]?.callback([], {} as ResizeObserver);
+    expect(renderer.setSize).toHaveBeenCalledTimes(2);
+    expect(renderer.render).toHaveBeenCalledTimes(
+      rendersBeforeInvalidViewport + 1,
+    );
+    expect(callbacks.size).toBe(1);
+
+    runtime.dispose();
+    const setSizeCallsAfterDispose = renderer.setSize.mock.calls.length;
+    TestResizeObserver.instances[0]?.callback([], {} as ResizeObserver);
+    expect(renderer.setSize).toHaveBeenCalledTimes(setSizeCallsAfterDispose);
+  });
+
+  it("mantém picking alinhado à caixa atual do canvas depois de resize", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const host = createHost(640, 360);
+    const getHostBounds = vi.spyOn(host, "getBoundingClientRect");
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+    const listener = vi.fn();
+
+    runtime.mount(host);
+    runtime.onSelectionChange(listener);
+    getHostBounds.mockReturnValue({
+      bottom: 680,
+      height: 640,
+      left: 80,
+      right: 440,
+      top: 40,
+      width: 360,
+      x: 80,
+      y: 40,
+      toJSON: () => ({}),
+    });
+    runtime.resize();
+    vi.spyOn(renderer.domElement, "getBoundingClientRect").mockReturnValue({
+      bottom: 680,
+      height: 640,
+      left: 80,
+      right: 440,
+      top: 40,
+      width: 360,
+      x: 80,
+      y: 40,
+      toJSON: () => ({}),
+    });
+    const pickX = Number(renderer.domElement.dataset.testPickX);
+    const pickY = Number(renderer.domElement.dataset.testPickY);
+
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: 80 + pickX,
+      clientY: 40 + pickY,
+      pointerId: 1,
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: 80 + pickX,
+      clientY: 40 + pickY,
+      pointerId: 1,
+    });
+
+    expect(renderer.setSize).toHaveBeenLastCalledWith(360, 640, false);
+    expect(listener).toHaveBeenLastCalledWith({
+      id: "crate-01",
+      label: "Caixa técnica 1",
+    });
     runtime.dispose();
   });
 
@@ -704,6 +1229,13 @@ describe("ThreeWorldRuntime", () => {
       pointerId: 3,
       pointerType: "touch",
     });
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: 300,
+      clientY: 100,
+      pointerId: 4,
+      pointerType: "touch",
+    });
+    expect(renderer.domElement.dataset.gesture).toBe("pinch");
     const zoomBeforePinch = Number(renderer.domElement.dataset.cameraZoom);
     dispatchPointer(renderer.domElement, "pointermove", {
       clientX: 260,
@@ -720,8 +1252,19 @@ describe("ThreeWorldRuntime", () => {
       pointerId: 2,
       pointerType: "touch",
     });
-    dispatchPointer(renderer.domElement, "pointercancel", {
-      clientX: 260,
+    expect(renderer.domElement.dataset.gesture).toBe("pan");
+    const targetBeforeRemainingPan = renderer.domElement.dataset.cameraTargetX;
+    dispatchPointer(renderer.domElement, "pointermove", {
+      clientX: 280,
+      clientY: 100,
+      pointerId: 3,
+      pointerType: "touch",
+    });
+    expect(renderer.domElement.dataset.cameraTargetX).not.toBe(
+      targetBeforeRemainingPan,
+    );
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: 280,
       clientY: 100,
       pointerId: 3,
       pointerType: "touch",
@@ -745,13 +1288,17 @@ describe("ThreeWorldRuntime", () => {
       createRenderer: () => renderer,
       fixtureLoader,
     });
+    const failureListener = vi.fn();
 
     runtime.mount(host);
+    runtime.onFailure(failureListener);
     fixtureLoader.fail(new Error("invalid fixture"));
 
     expect(renderer.domElement.dataset.fixtureStatus).toBe("error");
     expect(host.querySelector("canvas")).toBeInTheDocument();
     expect(fixtureLoader.load).toHaveBeenCalledOnce();
+    expect(runtime.getDiagnostics().runtimeState).toBe("mounted");
+    expect(failureListener).not.toHaveBeenCalled();
     expect(consoleError).toHaveBeenCalledWith(
       "[Biblioteca Viva] f1-technical-fixture-load-failed",
     );
@@ -820,5 +1367,32 @@ describe("ThreeWorldRuntime", () => {
     expect(() => runtime.mount(host)).toThrow("renderer unavailable");
     expect(host.querySelector("canvas")).not.toBeInTheDocument();
     expect(() => runtime.dispose()).not.toThrow();
+    expect(() => runtime.mount(host)).toThrow(/only be mounted once/u);
+  });
+
+  it("libera a montagem parcial quando anexar o canvas falha", () => {
+    const renderer = new TestRenderer();
+    const host = createHost();
+    const removeCanvasListener = vi.spyOn(
+      renderer.domElement,
+      "removeEventListener",
+    );
+    vi.spyOn(host, "append").mockImplementation(() => {
+      throw new Error("host unavailable");
+    });
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+
+    expect(() => runtime.mount(host)).toThrow("host unavailable");
+    expect(renderer.dispose).toHaveBeenCalledOnce();
+    expect(removeCanvasListener).toHaveBeenCalledWith(
+      "pointerdown",
+      expect.any(Function),
+    );
+    expect(host.querySelector("canvas")).not.toBeInTheDocument();
+    expect(() => runtime.dispose()).not.toThrow();
+    expect(() => runtime.mount(host)).toThrow(/only be mounted once/u);
   });
 });

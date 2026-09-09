@@ -178,7 +178,7 @@ export class ThreeWorldInteraction {
     if (!this.activePointers.has(event.pointerId)) return;
     this.activePointers.delete(event.pointerId);
     this.releasePointer(event.pointerId);
-    if (this.activePointers.size === 0) this.resetGesture();
+    this.continueAfterPointerEnd();
   };
 
   private readonly handlePointerDown = (event: PointerEvent): void => {
@@ -188,6 +188,7 @@ export class ThreeWorldInteraction {
     ) {
       return;
     }
+    if (this.activePointers.size >= 2) return;
     event.preventDefault();
     const position = { x: event.clientX, y: event.clientY };
     this.activePointers.set(event.pointerId, {
@@ -247,7 +248,7 @@ export class ThreeWorldInteraction {
     this.activePointers.delete(event.pointerId);
     this.releasePointer(event.pointerId);
     if (shouldPick) this.pick(pointer.current);
-    if (this.activePointers.size === 0) this.resetGesture();
+    this.continueAfterPointerEnd();
   };
 
   private readonly handleWheel = (event: WheelEvent): void => {
@@ -341,11 +342,31 @@ export class ThreeWorldInteraction {
     this.canvas.dataset.highlightedObject = "";
   }
 
+  private continueAfterPointerEnd(): void {
+    if (this.activePointers.size === 0) {
+      this.resetGesture();
+      return;
+    }
+    if (this.activePointers.size === 1 && this.gestureMode === "pinch") {
+      // The remaining pointer must not inherit the pinch origin or turn the
+      // end of a two-finger gesture into a tap. Its next movement is a fresh
+      // pan delta from its own latest position.
+      this.gestureMode = "pan";
+      this.updateGestureDiagnostic();
+    }
+  }
+
   private pick(position: PointerPosition): void {
     const bounds = this.canvas.getBoundingClientRect();
-    const width = bounds.width || this.viewportWidth;
-    const height = bounds.height || this.viewportHeight;
-    if (width <= 0 || height <= 0) return;
+    const { height, width } = bounds;
+    if (
+      !Number.isFinite(width) ||
+      !Number.isFinite(height) ||
+      width <= 0 ||
+      height <= 0
+    ) {
+      return;
+    }
     const pointer = new Vector2(
       ((position.x - bounds.left) / width) * 2 - 1,
       -((position.y - bounds.top) / height) * 2 + 1,

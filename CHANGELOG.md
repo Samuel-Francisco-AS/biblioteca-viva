@@ -4,6 +4,25 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F2-E — Viewport e input resistentes a interrupções — 2026-09-09
+
+- resize passou a aguardar dimensões transitórias inválidas sem frustum artificial, frame, recriação ou falha terminal; retorno a uma dimensão válida atualiza a mesma montagem por `ResizeObserver`, preservando renderer, câmera, seleção e um único RAF;
+- picking passou a usar a bounding box atual do canvas; mudança de proporção e resize não deixam coordenadas permanentemente obsoletas;
+- Pointer Events agora saneiam `pointercancel`/perda de capture e a transição pinch → um pointer como pan limpo, sem seleção acidental ou gesto órfão após pausa, falha ou disposal;
+- cobertura unitária e Chromium dirigida validaram viewport, gesture cleanup, desktop/mobile sintético e ciclos de rota, sem definir ergonomia final de câmera ou interação.
+
+### F2-D2 — Context loss terminal e assíncrono em voo — 2026-09-09
+
+- `webglcontextlost` passou a ser falha terminal da instância Three: previne o default, cancela RAF/gestos, libera a montagem e entrega uma única falha segura `unavailable` ao fallback React;
+- listeners de context loss/restoration pertencem ao canvas da montagem e são removidos no cleanup; `webglcontextrestored` tardio não reconstrói nem retoma a instância descartada;
+- GLB que conclui após `failed` ou `disposed` é descartado com seus recursos, sem renderização ou reativação; falha normal de carregamento do fixture continua recuperável.
+
+### F2-D1 — Falhas terminais de execução do runtime — 2026-09-09
+
+- exceções estruturais de `renderer.render()` e `setSize()` passaram a encerrar a instância Three de uso único, cancelar RAF/gestos, liberar a montagem e emitir uma única falha segura ao fallback React;
+- renderizações fora do RAF seguem a mesma transição; chamadas posteriores de lifecycle, resize e seleção não revivem a instância;
+- pausa passou a impedir frames incidentais de resize e conclusão do fixture, preservando retomada normal; falha de carregamento do GLB continua recuperável;
+
 ### F1-CLOSE — Fundação Three.js aprovada — 2026-09-09
 
 - concluída a F1 com a fundação Three.js integrada por host React próprio, cena técnica 3D, fixture GLB, interação bidirecional, lifecycle explícito e diagnóstico local;

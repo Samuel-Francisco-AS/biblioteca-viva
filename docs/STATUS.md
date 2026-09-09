@@ -24,6 +24,6 @@
 
 ## Próximo trabalho
 
-**F2-B concluída — fronteira pública React ↔ runtime:** `WorldRuntime` agora formaliza falha terminal tipada; `WorldHost` descarta a instância e limpa o estado efêmero antes do fallback. A instância montada/viva por host é limitada a uma.
+**F2-E concluída — viewport e input resistentes a interrupções:** `ResizeObserver` permanece primário, com `window.resize` apenas como fallback; dimensões transitórias inválidas aguardam viewport válido sem frustum `NaN`/`Infinity`, recriação, frame ou falha terminal. A montagem, renderer, câmera, seleção e RAF permanecem únicos através de mudanças de aspect ratio. Pointer cancel/lost capture, pausa, falha e disposal limpam o gesto; `2 → 1` deixa o pinch em pan limpo, sem seleção acidental. Picking usa a bounding box atual do canvas após resize. A prova Chromium dirigida passou para desktop, viewport mobile sintético e ciclos de rota.
 
-**Próximo trabalho — F2-C em diante:** endurecer lifecycle, recuperação e organização interna da Fundação Three.js. Não iniciar F3–F6 nem a Biblioteca real antes do escopo correspondente.
+**Próximo trabalho — F2-F:** regressão consolidada da F2. Ergonomia final de câmera, zoom, pinch, seleção e safe areas continua em F3–F6, fora deste checkpoint.

@@ -15,18 +15,18 @@
 ```text
 F0 ✅
 F1 ✅
-F2 ▶ PRÓXIMA
+F2 ▶ EM ANDAMENTO (F2-E concluída)
 F3 ⏳
 F4 ⏳
 F5 ⏳
 F6 ⏳
 ```
 
-### F2 — Integração e endurecimento da Fundação Three.js — próxima
+### F2 — Integração e endurecimento da Fundação Three.js — em andamento
 
-Integração e endurecimento da Fundação Three.js, consolidando limites React/runtime, lifecycle, recuperação, organização interna e contratos estáveis.
+Integração e endurecimento da Fundação Three.js, consolidando limites React/runtime, lifecycle, recuperação, organização interna e contratos estáveis. F2-B definiu a falha terminal pública e o fallback React; F2-C consolidou ownership da montagem; F2-D1 tornou falhas estruturais de render/resize terminais e impede render incidental durante pausa; F2-D2 definiu `webglcontextlost` como falha terminal e torna restoration tardia inerte; F2-E endureceu viewport/orientation/input contra dimensões transitórias, callbacks tardios e interrupções de Pointer Events, sem calibrar a ergonomia.
 
-F2 ainda não foi iniciada nem subdividida formalmente.
+O próximo checkpoint aprovado é F2-F, para regressão consolidada da F2. Câmera e interação finais continuam em F3.
 
 ### F3 — Câmera e interação mobile — planejada
 

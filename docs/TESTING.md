@@ -111,6 +111,30 @@ No Moto G06, o gate humano da F1 foi concluído com:
 
 O breve quadro preto antes da reconstrução da cena e a janela de FPS inicialmente baixa foram observados, sem evidência de defeito estrutural ou desempenho sustentado baixo. TalkBack completo não foi executado e permanece pendente para F6 ou outro gate humano específico.
 
+## F2-D1 — falhas terminais de execução
+
+- doubles determinísticos cobrem exceção de `renderer.render()` dentro do RAF, sem RAF posterior, com canvas/recursos liberados e uma única falha pública `unavailable`;
+- o mesmo caminho terminal cobre `setSize()` no resize e render solicitado por seleção fora do RAF; `start`, `resume`, `pause`, `resize`, seleção e `dispose()` após a falha não revivem a instância nem repetem cleanup ou notificação;
+- pausa cobre resize e conclusão do fixture sem frame incidental, seguida de retomada normal; erro de carregamento do GLB continua degradado/recuperável e conclusão tardia após falha descarta o modelo;
+- `WorldHost` cobre uma falha síncrona emitida por `start()` sem anunciar a experiência como pronta.
+
+## F2-D2 — context loss terminal e assíncrono em voo
+
+- doubles determinísticos disparam `webglcontextlost` durante execução e comprovam `preventDefault`, estado `failed`, uma falha pública `unavailable`, cancelamento do RAF e gesto, remoção de canvas/listeners e cleanup único;
+- `webglcontextrestored` tardio, visibility, `start`, `pause`, `resume`, resize, seleção e `dispose()` depois da perda não agendam RAF, renderizam ou revivem a instância;
+- conclusão tardia do fixture GLB após context loss libera o modelo sem alterar o estado terminal; o teste de erro normal do fixture continua provando degradação recuperável sem falha pública.
+
+Esses doubles provam a política terminal e seus invariantes no runtime; não constituem reprodução física de perda de contexto WebGL em aparelho.
+
+## F2-E — viewport e input resistentes a interrupções
+
+- doubles do runtime cobrem `0×0`, viewport válido posterior pelo `ResizeObserver`, preservação do mesmo canvas/renderer e um único RAF; dimensão inválida não chama `setSize()` ou `render()`, nem torna o runtime terminal, e callback tardio do observer depois de `dispose()` é inerte;
+- resize com mudança forte de aspect ratio preserva câmera, montagem e seleção; picking posterior usa a bounding box atual do canvas, não coordenadas anteriores;
+- Pointer Events cobrem `pointercancel`, `lostpointercapture` com capture/release indisponíveis, pausa durante pan e início limpo após resume; pinch para um pointer muda para pan sem origem antiga ou seleção no encerramento, e pointer adicional além dos dois não entra no gesto;
+- terminalidade durante gesto continua coberta pelo context loss: o input é removido/cancelado, `pointerup` tardio não emite seleção nem renderiza;
+- gate unitário: `ThreeWorldRuntime.test.ts` (24 testes) e `npm run typecheck` aprovados; `git diff --check` aprovado;
+- gate browser dirigido: `npm run build` foi necessário para preview; passaram em Chromium os cenários de montagem, desktop (picking/pan/wheel), viewport mobile sintético (tap/pan/pinch) e dez ciclos Biblioteca → Coleção → Biblioteca, sem acumular canvas ou loop. Os warnings conhecidos de chunk Vite acima de 500 kB e `NO_COLOR`/`FORCE_COLOR` não bloquearam a prova.
+
 ## Comandos
 
 ```bash

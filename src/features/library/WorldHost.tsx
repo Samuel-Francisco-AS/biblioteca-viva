@@ -140,6 +140,7 @@ export function WorldHost({ runtimeFactory = createRuntime }: WorldHostProps) {
         });
         if (terminalFailureReported) return;
         runtime.start();
+        if (terminalFailureReported) return;
         setStatus("ready");
       })
       .catch(() => {

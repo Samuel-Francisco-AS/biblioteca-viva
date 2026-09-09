@@ -92,29 +92,200 @@ function createFixtureLoader(): FixtureModelLoader {
   };
 }
 
+/** Resources that live and are released together for one runtime mount. */
+class ThreeWorldMount {
+  private disposed = false;
+  private fixture: Object3D | undefined;
+  private interaction: ThreeWorldInteraction | undefined;
+  private referenceScene: ReferenceScene | undefined;
+  private resizeObserver: ResizeObserver | undefined;
+  private webglContextLostListener: ((event: Event) => void) | undefined;
+  private webglContextRestoredListener: (() => void) | undefined;
+  private visibilityListener: (() => void) | undefined;
+  private windowResizeListener: (() => void) | undefined;
+
+  private constructor(
+    readonly host: HTMLElement,
+    readonly renderer: ThreeWorldRenderer,
+    readonly scene: Scene,
+    readonly camera: OrthographicCamera,
+    private readonly frameScheduler: FrameScheduler,
+    private frameId: number | undefined = undefined,
+  ) {}
+
+  static create(
+    host: HTMLElement,
+    createRenderer: () => ThreeWorldRenderer,
+    frameScheduler: FrameScheduler,
+  ): ThreeWorldMount {
+    const renderer = createRenderer();
+    try {
+      return new ThreeWorldMount(
+        host,
+        renderer,
+        new Scene(),
+        new OrthographicCamera(-9, 9, 7, -7, 0.1, 100),
+        frameScheduler,
+      );
+    } catch (error) {
+      renderer.dispose();
+      renderer.domElement.remove();
+      throw error;
+    }
+  }
+
+  addReferenceScene(referenceScene: ReferenceScene): void {
+    this.referenceScene = referenceScene;
+  }
+
+  addInteraction(interaction: ThreeWorldInteraction): void {
+    this.interaction = interaction;
+  }
+
+  addFixture(fixture: Object3D): void {
+    this.fixture = fixture;
+  }
+
+  appendCanvas(): void {
+    this.host.append(this.renderer.domElement);
+  }
+
+  cancelFrame(): void {
+    const frameId = this.frameId;
+    this.frameId = undefined;
+    if (frameId === undefined) return;
+    this.frameScheduler.cancel(frameId);
+  }
+
+  getInteraction(): ThreeWorldInteraction | undefined {
+    return this.interaction;
+  }
+
+  hasActiveFrame(): boolean {
+    return this.frameId !== undefined;
+  }
+
+  requestFrame(callback: FrameRequestCallback): void {
+    this.frameId = this.frameScheduler.request(callback);
+  }
+
+  settleFrame(): void {
+    this.frameId = undefined;
+  }
+
+  watchResize(listener: () => void): void {
+    if (typeof ResizeObserver === "undefined") {
+      this.windowResizeListener = listener;
+      window.addEventListener("resize", listener);
+      return;
+    }
+    this.resizeObserver = new ResizeObserver(listener);
+    this.resizeObserver.observe(this.host);
+  }
+
+  watchVisibility(listener: () => void): void {
+    this.visibilityListener = listener;
+    document.addEventListener("visibilitychange", listener);
+  }
+
+  watchWebGLContext(
+    onLost: (event: Event) => void,
+    onRestored: () => void,
+  ): void {
+    this.webglContextLostListener = onLost;
+    this.webglContextRestoredListener = onRestored;
+    this.renderer.domElement.addEventListener("webglcontextlost", onLost);
+    this.renderer.domElement.addEventListener(
+      "webglcontextrestored",
+      onRestored,
+    );
+  }
+
+  dispose(): void {
+    if (this.disposed) return;
+    this.disposed = true;
+    this.safely(() => this.cancelFrame());
+    const resizeObserver = this.resizeObserver;
+    this.resizeObserver = undefined;
+    this.safely(() => resizeObserver?.disconnect());
+    const windowResizeListener = this.windowResizeListener;
+    this.windowResizeListener = undefined;
+    this.safely(() => {
+      if (windowResizeListener) {
+        window.removeEventListener("resize", windowResizeListener);
+      }
+    });
+    const visibilityListener = this.visibilityListener;
+    this.visibilityListener = undefined;
+    this.safely(() => {
+      if (visibilityListener) {
+        document.removeEventListener("visibilitychange", visibilityListener);
+      }
+    });
+    const webglContextLostListener = this.webglContextLostListener;
+    this.webglContextLostListener = undefined;
+    this.safely(() => {
+      if (webglContextLostListener) {
+        this.renderer.domElement.removeEventListener(
+          "webglcontextlost",
+          webglContextLostListener,
+        );
+      }
+    });
+    const webglContextRestoredListener = this.webglContextRestoredListener;
+    this.webglContextRestoredListener = undefined;
+    this.safely(() => {
+      if (webglContextRestoredListener) {
+        this.renderer.domElement.removeEventListener(
+          "webglcontextrestored",
+          webglContextRestoredListener,
+        );
+      }
+    });
+    const interaction = this.interaction;
+    this.interaction = undefined;
+    this.safely(() => interaction?.dispose());
+    const fixture = this.fixture;
+    this.fixture = undefined;
+    this.safely(() => {
+      if (fixture) disposeObjectTree(fixture);
+    });
+    const referenceScene = this.referenceScene;
+    this.referenceScene = undefined;
+    this.safely(() => {
+      if (referenceScene) disposeObjectTree(referenceScene.root);
+    });
+    this.safely(() => this.scene.clear());
+    this.safely(() => this.renderer.dispose());
+    this.safely(() => this.renderer.domElement.remove());
+  }
+
+  private safely(cleanup: () => void): void {
+    try {
+      cleanup();
+    } catch {
+      // Terminal cleanup continues so that one failed release cannot retain
+      // the remaining mount resources or revive the runtime.
+    }
+  }
+}
+
 export class ThreeWorldRuntime implements WorldRuntime {
-  private camera: OrthographicCamera | undefined;
   private readonly diagnosticsListeners = new Set<WorldDiagnosticsListener>();
   private readonly failureListeners = new Set<WorldRuntimeFailureListener>();
   private drawCalls = 0;
-  private fixture: Object3D | undefined;
   private fixtureLoadMs: number | null = null;
   private fixtureLoadStartedAt: number | undefined;
   private fixtureStatus: WorldFixtureStatus = "idle";
-  private frameId: number | undefined;
+  private failureReported = false;
   private readonly frameMetrics = new FrameMetricsWindow();
   private geometries = 0;
-  private host: HTMLElement | undefined;
-  private interaction: ThreeWorldInteraction | undefined;
   private lastDiagnosticsPublishedAt: number | undefined;
   private meshes = 0;
   private mountStartedAt: number | undefined;
-  private referenceScene: ReferenceScene | undefined;
+  private mountedWorld: ThreeWorldMount | undefined;
   private pausedByVisibility = false;
   private renderedFrames = 0;
-  private renderer: ThreeWorldRenderer | undefined;
-  private resizeObserver: ResizeObserver | undefined;
-  private scene: Scene | undefined;
   private sceneObjects = 0;
   private selectableObjects: readonly WorldSelectableObject[] = [];
   private selection: WorldSelection = null;
@@ -123,8 +294,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private textures = 0;
   private timeToFirstUsableFrameMs: number | null = null;
   private triangles = 0;
-  private usingWindowResize = false;
-
+  private viewportReady = false;
   private readonly createRenderer: () => ThreeWorldRenderer;
   private readonly fixtureLoader: FixtureModelLoader;
   private readonly fixtureUrl: string;
@@ -145,7 +315,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const frameMetrics = this.frameMetrics.snapshot();
     return Object.freeze({
       activeFrameLoops:
-        this.state === "running" && this.frameId !== undefined ? 1 : 0,
+        this.state === "running" && this.mountedWorld?.hasActiveFrame() ? 1 : 0,
       drawCalls: this.drawCalls,
       fixtureLoadMs: this.fixtureLoadMs,
       fixtureStatus: this.fixtureStatus,
@@ -174,14 +344,18 @@ export class ThreeWorldRuntime implements WorldRuntime {
 
     this.mountStartedAt = this.now();
     try {
-      const renderer = this.createRenderer();
-      this.renderer = renderer;
-      const scene = new Scene();
-      const camera = new OrthographicCamera(-9, 9, 7, -7, 0.1, 100);
+      const mountedWorld = ThreeWorldMount.create(
+        host,
+        this.createRenderer,
+        this.frameScheduler,
+      );
+      this.mountedWorld = mountedWorld;
       const referenceScene = createReferenceScene();
+      const { camera, renderer, scene } = mountedWorld;
 
       scene.background = new Color(0x18342d);
       scene.add(referenceScene.root);
+      mountedWorld.addReferenceScene(referenceScene);
       camera.position.set(12, 11, 14);
       camera.lookAt(0, 1.1, 0);
 
@@ -201,43 +375,37 @@ export class ThreeWorldRuntime implements WorldRuntime {
       renderer.domElement.setAttribute("aria-hidden", "true");
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-      this.host = host;
-      this.scene = scene;
-      this.camera = camera;
-      this.referenceScene = referenceScene;
       this.selectableObjects = Object.freeze([
         ...referenceScene.selectables.map(({ descriptor }) => descriptor),
         FIXTURE_SELECTABLE,
       ]);
-      this.interaction = new ThreeWorldInteraction({
+      const interaction = new ThreeWorldInteraction({
         camera,
         canvas: renderer.domElement,
         catalog: this.selectableObjects,
         onSelectionChange: this.handleSelectionChange,
         render: () => {
-          this.renderCurrentFrame();
+          if (!this.renderCurrentFrame()) return;
           this.publishDiagnostics(false);
         },
         scene,
         selectables: referenceScene.selectables,
       });
+      mountedWorld.addInteraction(interaction);
       this.state = "mounted";
 
-      host.append(renderer.domElement);
-      this.resize();
-      this.loadFixture();
-
-      if (typeof ResizeObserver === "undefined") {
-        window.addEventListener("resize", this.handleWindowResize);
-        this.usingWindowResize = true;
-      } else {
-        this.resizeObserver = new ResizeObserver(() => this.resize());
-        this.resizeObserver.observe(host);
-      }
-      document.addEventListener(
-        "visibilitychange",
-        this.handleVisibilityChange,
+      mountedWorld.watchWebGLContext(
+        this.handleWebGLContextLost,
+        this.handleWebGLContextRestored,
       );
+      mountedWorld.appendCanvas();
+      this.resize();
+      if (!this.mountedWorld) {
+        throw new Error("ThreeWorldRuntime renderer failed while mounting.");
+      }
+      this.loadFixture();
+      mountedWorld.watchResize(this.handleWindowResize);
+      mountedWorld.watchVisibility(this.handleVisibilityChange);
       this.publishDiagnostics(true);
     } catch (error) {
       this.dispose();
@@ -247,6 +415,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
 
   start(): void {
     if (this.state === "running") return;
+    if (this.state === "failed") return;
     if (this.state !== "mounted" && this.state !== "paused") {
       throw new Error("ThreeWorldRuntime must be mounted before it starts.");
     }
@@ -255,7 +424,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.state = "paused";
       this.pausedByVisibility = true;
       this.resetFrameMetrics();
-      this.interaction?.cancelActiveGestures();
+      this.mountedWorld?.getInteraction()?.cancelActiveGestures();
       this.publishDiagnostics(true);
       return;
     }
@@ -264,26 +433,27 @@ export class ThreeWorldRuntime implements WorldRuntime {
   }
 
   onDiagnosticsChange(listener: WorldDiagnosticsListener): () => void {
-    if (this.state === "disposed") return () => undefined;
+    if (this.isTerminal()) return () => undefined;
     this.diagnosticsListeners.add(listener);
     listener(this.getDiagnostics());
     return () => this.diagnosticsListeners.delete(listener);
   }
 
   onFailure(listener: WorldRuntimeFailureListener): () => void {
-    if (this.state === "disposed") return () => undefined;
+    if (this.isTerminal()) return () => undefined;
     this.failureListeners.add(listener);
     return () => this.failureListeners.delete(listener);
   }
 
   onSelectionChange(listener: WorldSelectionListener): () => void {
-    if (this.state === "disposed") return () => undefined;
+    if (this.isTerminal()) return () => undefined;
     this.selectionListeners.add(listener);
     listener(this.selection);
     return () => this.selectionListeners.delete(listener);
   }
 
   pause(): void {
+    if (this.isTerminal()) return;
     this.pausedByVisibility = false;
     this.pauseLoop();
   }
@@ -301,11 +471,27 @@ export class ThreeWorldRuntime implements WorldRuntime {
   }
 
   resize(): void {
-    if (!this.host || !this.renderer || !this.camera) return;
+    const mountedWorld = this.mountedWorld;
+    if (!mountedWorld || this.isTerminal()) return;
+    const { camera, host, renderer } = mountedWorld;
 
-    const bounds = this.host.getBoundingClientRect();
-    const width = Math.max(1, Math.round(bounds.width));
-    const height = Math.max(1, Math.round(bounds.height));
+    const bounds = host.getBoundingClientRect();
+    const width = Math.round(bounds.width);
+    const height = Math.round(bounds.height);
+    if (
+      !Number.isFinite(width) ||
+      !Number.isFinite(height) ||
+      width <= 0 ||
+      height <= 0
+    ) {
+      // A container can be briefly collapsed while navigation or layout is in
+      // flight. Keep the last trusted viewport and wait for ResizeObserver (or
+      // the fallback) to provide a usable one instead of manufacturing a 1px
+      // frustum or making a normal layout transition terminal.
+      this.viewportReady = false;
+      mountedWorld.cancelFrame();
+      return;
+    }
     const aspect = width / height;
     const referenceHalfWidth = 9;
     const referenceHalfHeight = 7;
@@ -319,83 +505,57 @@ export class ThreeWorldRuntime implements WorldRuntime {
         ? referenceHalfHeight
         : referenceHalfWidth / aspect;
 
-    this.camera.left = -halfWidth;
-    this.camera.right = halfWidth;
-    this.camera.top = halfHeight;
-    this.camera.bottom = -halfHeight;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(width, height, false);
-    this.interaction?.setViewport(width, height);
-    this.renderCurrentFrame();
+    camera.left = -halfWidth;
+    camera.right = halfWidth;
+    camera.top = halfHeight;
+    camera.bottom = -halfHeight;
+    camera.updateProjectionMatrix();
+    try {
+      renderer.setSize(width, height, false);
+    } catch {
+      this.failRuntime();
+      return;
+    }
+    mountedWorld.getInteraction()?.setViewport(width, height);
+    this.viewportReady = true;
+    if (this.state === "paused") return;
+    if (!this.renderCurrentFrame()) return;
+    if (this.state === "running" && !mountedWorld.hasActiveFrame()) {
+      mountedWorld.requestFrame(this.renderFrame);
+    }
     this.publishDiagnostics(false);
   }
 
   selectObject(id: string | null): void {
-    this.interaction?.selectObject(id);
+    if (this.isTerminal()) return;
+    this.mountedWorld?.getInteraction()?.selectObject(id);
   }
 
   dispose(): void {
     if (this.state === "disposed") return;
 
+    if (this.state === "failed") {
+      this.clearListeners();
+      return;
+    }
+
     this.state = "disposed";
-    if (this.frameId !== undefined) {
-      this.frameScheduler.cancel(this.frameId);
-      this.frameId = undefined;
-    }
-    this.resetFrameMetrics();
-    this.resizeObserver?.disconnect();
-    this.resizeObserver = undefined;
-
-    if (this.usingWindowResize) {
-      window.removeEventListener("resize", this.handleWindowResize);
-      this.usingWindowResize = false;
-    }
-    document.removeEventListener(
-      "visibilitychange",
-      this.handleVisibilityChange,
-    );
-
-    this.interaction?.dispose();
-    this.interaction = undefined;
+    this.releaseMount();
+    this.resetRuntimeData();
     this.failureListeners.clear();
     this.selectionListeners.clear();
-    if (this.fixture) disposeObjectTree(this.fixture);
-    if (this.referenceScene) disposeObjectTree(this.referenceScene.root);
-    this.scene?.clear();
-
-    const canvas = this.renderer?.domElement;
-    this.renderer?.dispose();
-    canvas?.remove();
-
-    this.camera = undefined;
-    this.fixture = undefined;
-    this.fixtureLoadStartedAt = undefined;
-    this.frameId = undefined;
-    this.host = undefined;
-    this.drawCalls = 0;
-    this.geometries = 0;
-    this.meshes = 0;
-    this.sceneObjects = 0;
-    this.selectableObjects = [];
-    this.selection = null;
-    this.referenceScene = undefined;
-    this.renderer = undefined;
-    this.scene = undefined;
-    this.textures = 0;
-    this.triangles = 0;
-    this.pausedByVisibility = false;
     this.publishDiagnostics(true);
     this.diagnosticsListeners.clear();
   }
 
   private readonly handleVisibilityChange = (): void => {
-    if (this.state === "disposed") return;
+    if (this.isTerminal()) return;
     if (document.hidden) {
       if (this.state === "running") {
         this.pausedByVisibility = true;
         this.pauseLoop();
       } else {
-        this.interaction?.cancelActiveGestures();
+        this.mountedWorld?.getInteraction()?.cancelActiveGestures();
       }
       return;
     }
@@ -407,10 +567,24 @@ export class ThreeWorldRuntime implements WorldRuntime {
 
   private readonly handleWindowResize = (): void => this.resize();
 
+  private readonly handleWebGLContextLost = (event: Event): void => {
+    // Three.js also prevents the default when it owns the renderer. Doing it
+    // here keeps the mount contract intact for renderer doubles and prevents
+    // the browser from treating this loss as an unhandled canvas event.
+    event.preventDefault();
+    this.failRuntime();
+  };
+
+  private readonly handleWebGLContextRestored = (): void => {
+    // Context loss is terminal for this use-once runtime. The listener is
+    // removed during failure cleanup, so a late restoration has no path back
+    // to a partially trusted renderer, scene, or interaction state.
+  };
+
   private readonly handleSelectionChange = (
     selection: WorldSelection,
   ): void => {
-    if (this.state === "disposed") return;
+    if (this.isTerminal()) return;
     this.selection = selection;
     for (const listener of this.selectionListeners) listener(selection);
   };
@@ -419,8 +593,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.fixtureLoadStartedAt = this.now();
     this.fixtureLoadMs = null;
     this.fixtureStatus = "loading";
-    if (this.renderer)
-      this.renderer.domElement.dataset.fixtureStatus = "loading";
+    const mountedWorld = this.mountedWorld;
+    if (mountedWorld)
+      mountedWorld.renderer.domElement.dataset.fixtureStatus = "loading";
     try {
       this.fixtureLoader.load(
         this.fixtureUrl,
@@ -433,7 +608,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
   }
 
   private readonly handleFixtureLoaded = (model: Object3D): void => {
-    if (this.state === "disposed" || !this.scene || !this.renderer) {
+    const mountedWorld = this.mountedWorld;
+    if (this.isTerminal() || !mountedWorld) {
       disposeObjectTree(model);
       return;
     }
@@ -441,22 +617,24 @@ export class ThreeWorldRuntime implements WorldRuntime {
     model.name = "f1-technical-gltf-fixture";
     model.position.set(0.4, 0.1, 2.6);
     model.scale.setScalar(1.35);
-    this.scene.add(model);
-    this.fixture = model;
-    this.interaction?.addSelectable(FIXTURE_SELECTABLE, model);
+    mountedWorld.scene.add(model);
+    mountedWorld.addFixture(model);
+    mountedWorld.getInteraction()?.addSelectable(FIXTURE_SELECTABLE, model);
+    if (this.isTerminal() || this.mountedWorld !== mountedWorld) return;
     const elapsed = Math.max(0, this.now() - (this.fixtureLoadStartedAt ?? 0));
     this.fixtureLoadMs = elapsed;
     this.fixtureStatus = "ready";
-    this.renderer.domElement.dataset.fixtureLoadMs = elapsed.toFixed(1);
-    this.renderer.domElement.dataset.fixtureStatus = "ready";
-    this.renderCurrentFrame();
+    mountedWorld.renderer.domElement.dataset.fixtureLoadMs = elapsed.toFixed(1);
+    mountedWorld.renderer.domElement.dataset.fixtureStatus = "ready";
+    if (!this.renderCurrentFrame()) return;
     this.publishDiagnostics(true);
   };
 
   private readonly handleFixtureError = (): void => {
-    if (this.state === "disposed" || !this.renderer) return;
+    const mountedWorld = this.mountedWorld;
+    if (this.isTerminal() || !mountedWorld) return;
     this.fixtureStatus = "error";
-    this.renderer.domElement.dataset.fixtureStatus = "error";
+    mountedWorld.renderer.domElement.dataset.fixtureStatus = "error";
     this.publishDiagnostics(true);
     console.error("[Biblioteca Viva] f1-technical-fixture-load-failed");
   };
@@ -464,27 +642,39 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly renderFrame = (timestamp: number): void => {
     if (this.state !== "running") return;
 
-    this.frameId = undefined;
-    this.renderCurrentFrame();
+    const mountedWorld = this.mountedWorld;
+    if (!mountedWorld) return;
+    mountedWorld.settleFrame();
+    if (!this.renderCurrentFrame()) return;
     if (this.state !== "running") return;
     this.renderedFrames += 1;
     this.frameMetrics.record(timestamp);
-    this.frameId = this.frameScheduler.request(this.renderFrame);
+    mountedWorld.requestFrame(this.renderFrame);
     if (this.state !== "running") {
-      this.frameScheduler.cancel(this.frameId);
-      this.frameId = undefined;
+      mountedWorld.cancelFrame();
       return;
     }
     this.publishDiagnostics(false, timestamp);
   };
 
-  private renderCurrentFrame(): void {
-    const renderer = this.renderer;
-    const scene = this.scene;
-    const camera = this.camera;
-    if (!renderer || !scene || !camera || this.state === "disposed") return;
-    renderer.render(scene, camera);
-    if (!this.renderer || !this.scene || !this.camera) return;
+  private renderCurrentFrame(): boolean {
+    const mountedWorld = this.mountedWorld;
+    if (
+      !mountedWorld ||
+      this.isTerminal() ||
+      this.state === "paused" ||
+      !this.viewportReady
+    ) {
+      return true;
+    }
+    const { camera, renderer, scene } = mountedWorld;
+    try {
+      renderer.render(scene, camera);
+    } catch {
+      this.failRuntime();
+      return false;
+    }
+    if (this.mountedWorld !== mountedWorld) return false;
 
     if (
       this.timeToFirstUsableFrameMs === null &&
@@ -504,16 +694,23 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.triangles = info.render.triangles;
     }
     this.updateObjectCounts(scene);
+    return true;
   }
 
   private activateLoop(): void {
-    if (this.state === "disposed" || this.state === "running") return;
+    if (this.isTerminal() || this.state === "running") return;
+    const mountedWorld = this.mountedWorld;
+    if (!mountedWorld) return;
     this.state = "running";
     this.pausedByVisibility = false;
     this.resetFrameMetrics();
     const timestamp = this.now();
-    this.frameId = this.frameScheduler.request(this.renderFrame);
-    this.renderCurrentFrame();
+    if (!this.viewportReady) {
+      this.publishDiagnostics(true, timestamp);
+      return;
+    }
+    mountedWorld.requestFrame(this.renderFrame);
+    if (!this.renderCurrentFrame()) return;
     if (this.state !== "running") return;
     this.renderedFrames += 1;
     this.frameMetrics.record(timestamp);
@@ -522,14 +719,68 @@ export class ThreeWorldRuntime implements WorldRuntime {
 
   private pauseLoop(): void {
     if (this.state !== "running" && this.state !== "mounted") return;
-    if (this.frameId !== undefined) {
-      this.frameScheduler.cancel(this.frameId);
-      this.frameId = undefined;
-    }
+    this.mountedWorld?.cancelFrame();
     this.state = "paused";
     this.resetFrameMetrics();
-    this.interaction?.cancelActiveGestures();
+    this.mountedWorld?.getInteraction()?.cancelActiveGestures();
     this.publishDiagnostics(true);
+  }
+
+  private failRuntime(): void {
+    if (this.failureReported || this.isTerminal()) return;
+
+    this.failureReported = true;
+    this.state = "failed";
+    this.releaseMount();
+    this.resetRuntimeData();
+    const failure = Object.freeze({
+      code: "unavailable" as const,
+      message:
+        "O ambiente 3D encontrou uma falha de renderização e foi encerrado.",
+    });
+    for (const listener of [...this.failureListeners]) {
+      try {
+        listener(failure);
+      } catch {
+        // A host listener cannot make this terminal runtime active again.
+      }
+    }
+    this.clearListeners();
+  }
+
+  private isTerminal(): boolean {
+    return this.state === "failed" || this.state === "disposed";
+  }
+
+  private releaseMount(): void {
+    const mountedWorld = this.mountedWorld;
+    this.mountedWorld = undefined;
+    try {
+      mountedWorld?.dispose();
+    } catch {
+      // ThreeWorldMount keeps cleanup best-effort; the terminal state remains.
+    }
+  }
+
+  private resetRuntimeData(): void {
+    this.resetFrameMetrics();
+    this.fixtureLoadStartedAt = undefined;
+    this.drawCalls = 0;
+    this.geometries = 0;
+    this.meshes = 0;
+    this.sceneObjects = 0;
+    this.selectableObjects = [];
+    this.selection = null;
+    this.textures = 0;
+    this.triangles = 0;
+    this.pausedByVisibility = false;
+    this.viewportReady = false;
+  }
+
+  private clearListeners(): void {
+    this.diagnosticsListeners.clear();
+    this.failureListeners.clear();
+    this.selectionListeners.clear();
   }
 
   private publishDiagnostics(force: boolean, timestamp = this.now()): void {
@@ -553,7 +804,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   }
 
   private updateCanvasDiagnostics(diagnostics: WorldRuntimeDiagnostics): void {
-    const canvas = this.renderer?.domElement;
+    const canvas = this.mountedWorld?.renderer.domElement;
     if (!canvas) return;
     canvas.dataset.activeFrameLoops = String(diagnostics.activeFrameLoops);
     canvas.dataset.drawCalls = String(diagnostics.drawCalls);

@@ -295,6 +295,31 @@ describe("WorldHost", () => {
     consoleError.mockRestore();
   });
 
+  it("não anuncia prontidão se start emite uma falha terminal síncrona", async () => {
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    const runtime = createRuntime();
+    runtime.start.mockImplementationOnce(() => {
+      runtime.emitFailure({
+        code: "unavailable",
+        message: "O ambiente 3D encontrou uma falha de renderização e foi encerrado.",
+      });
+    });
+    render(<WorldHost runtimeFactory={() => Promise.resolve(runtime)} />);
+
+    expect(
+      await screen.findByRole("heading", {
+        name: "O ambiente 3D não pôde ser iniciado",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.queryByText("Ambiente 3D experimental em execução."),
+    ).not.toBeInTheDocument();
+    expect(runtime.dispose).toHaveBeenCalledOnce();
+    consoleError.mockRestore();
+  });
+
   it("descarta uma montagem viva antes de montar uma substituta", async () => {
     const firstRuntime = createRuntime();
     const secondRuntime = createRuntime();
