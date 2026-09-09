@@ -9,7 +9,7 @@
 
 ## Mundo
 
-- **F0 e F1 estão concluídas. Three.js está aprovado como renderer da Fundação do novo mundo.**
+- **F0, F1 e F2 estão concluídas tecnicamente. Three.js está aprovado como renderer da Fundação do novo mundo.**
 - A linha ativa é `React → WorldHost → ThreeWorldRuntime → Three.js`, com `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, lifecycle explícito, integração React ↔ Three e Android/Capacitor.
 - A direção permanece 3D real com apresentação ortográfica/2.5D. A cena atual é um spike técnico com fixture, não a Biblioteca final nem arquitetura permanente de conteúdo.
 - A F1 provou renderização, interação, lifecycle, observabilidade e viabilidade física no Moto G06. Ela não conclui a FUNDAÇÃO inteira nem garante desempenho do mundo completo.
@@ -24,6 +24,16 @@
 
 ## Próximo trabalho
 
-**F2-E concluída — viewport e input resistentes a interrupções:** `ResizeObserver` permanece primário, com `window.resize` apenas como fallback; dimensões transitórias inválidas aguardam viewport válido sem frustum `NaN`/`Infinity`, recriação, frame ou falha terminal. A montagem, renderer, câmera, seleção e RAF permanecem únicos através de mudanças de aspect ratio. Pointer cancel/lost capture, pausa, falha e disposal limpam o gesto; `2 → 1` deixa o pinch em pan limpo, sem seleção acidental. Picking usa a bounding box atual do canvas após resize. A prova Chromium dirigida passou para desktop, viewport mobile sintético e ciclos de rota.
+**F2 concluída — Integração e endurecimento da Fundação Three.js:** a fronteira `WorldRuntime`, ownership por montagem, terminalidade `failed`, política de context loss, descarte de callbacks tardios e segurança de viewport/input foram consolidados sem regressão detectada nos gates completos web, E2E e Android técnico. A validação humana física curta no Moto G06 continua recomendada para confirmar as mudanças estruturais de lifecycle, context loss, resize e input; ela não foi repetida neste checkpoint técnico.
 
-**Próximo trabalho — F2-F:** regressão consolidada da F2. Ergonomia final de câmera, zoom, pinch, seleção e safe areas continua em F3–F6, fora deste checkpoint.
+```text
+F0 ✅
+F1 ✅
+F2 ✅
+F3 ▶ PRÓXIMA
+F4 ⏳
+F5 ⏳
+F6 ⏳
+```
+
+**Próximo trabalho — F3:** câmera e interação mobile. Ergonomia final de câmera, zoom, pinch, seleção e safe areas continua fora da F2.

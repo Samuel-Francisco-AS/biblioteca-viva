@@ -303,7 +303,8 @@ describe("WorldHost", () => {
     runtime.start.mockImplementationOnce(() => {
       runtime.emitFailure({
         code: "unavailable",
-        message: "O ambiente 3D encontrou uma falha de renderização e foi encerrado.",
+        message:
+          "O ambiente 3D encontrou uma falha de renderização e foi encerrado.",
       });
     });
     render(<WorldHost runtimeFactory={() => Promise.resolve(runtime)} />);

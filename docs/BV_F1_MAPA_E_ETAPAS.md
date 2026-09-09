@@ -2,7 +2,7 @@
 
 **Data de referência:** 2026-09-09
 
-**Estado geral:** F0 concluída; F1 e todos os seus checkpoints concluídos; Three.js aprovado como renderer da Fundação; F2 está em andamento com F2-E concluída
+**Estado geral:** F0, F1 e F2 concluídas tecnicamente; Three.js aprovado como renderer da Fundação; F3 é a próxima fase autorizada
 
 **Escopo:** Fundação técnica do novo mundo 3D da Biblioteca Viva
 
@@ -76,10 +76,10 @@ F1 — Three.js Foundation Spike                       ✅ CONCLUÍDA
      └─ F1-F-FIX Alternativa React                   ✅ CONCLUÍDA
  │
  ▼
-F2 — Integração e endurecimento do runtime           ▶ EM ANDAMENTO (F2-E)
+F2 — Integração e endurecimento do runtime           ✅ CONCLUÍDA
  │
  ▼
-F3 — Câmera e interação mobile                       ⏳ PLANEJADA
+F3 — Câmera e interação mobile                       ▶ PRÓXIMA
  │
  ▼
 F4 — Contrato experimental de assets 3D              ⏳ PLANEJADA
@@ -568,26 +568,11 @@ O piso provisório de 30 FPS foi superado com folga na cena mínima. Essa evidê
 
 # 11. F2 — Integração e endurecimento do runtime
 
-**Estado: ▶ EM ANDAMENTO — F2-E concluída**
+**Estado: ✅ CONCLUÍDA TECNICAMENTE**
 
 A F2 sucede a F1. O checkpoint F2-B consolidou a fronteira pública React ↔ runtime: falha terminal tipada, fallback React e a garantia de no máximo uma instância montada/viva por host. O F2-C agrupou os recursos de cada montagem do `ThreeWorldRuntime` sob um owner interno e unificou sua liberação em `dispose()`, inclusive quando `mount()` é interrompido. O F2-D1 tornou falha estrutural de render/resize terminal, com cleanup único e notificação ao host, sem transformar falha de fixture em falha terminal e sem render incidental durante pausa. O F2-D2 definiu `webglcontextlost` como falha terminal: os listeners pertencem à montagem/canvas, são removidos no cleanup e uma restoration tardia não revive a instância. F2-E preservou essa montagem através de resize/orientation: viewport inválido aguarda dimensão válida, `ResizeObserver` não acumula e o fallback de janela é removido corretamente; Pointer Events não conservam gestos órfãos após cancelamento, perda de capture, pausa ou terminalidade. Não foram definidos parâmetros de câmera ou UX final.
 
-Seu objetivo será transformar o spike em uma fundação mais confiável.
-
-Escopo previsto:
-
-- fronteiras definitivas entre React e runtime;
-- organização interna;
-- ownership de recursos;
-- lifecycle endurecido;
-- erros;
-- recuperação;
-- resize/orientation;
-- input;
-- testabilidade;
-- contratos estáveis da fundação.
-
-A subdivisão exata poderá ser ajustada conforme os problemas reais encontrados na F1.
+F2-F executou a regressão consolidada sem correção de comportamento: os gates de formatação, análise estática, 459 testes Vitest, áudio, build e relatório de bundle, 12 cenários E2E Chromium, sync Capacitor e Gradle debug passaram. O fechamento é técnico; uma validação física curta no Moto G06 para lifecycle, context loss, resize e input permanece recomendada antes de tratar também esse aspecto como revalidado por pessoa.
 
 ---
 

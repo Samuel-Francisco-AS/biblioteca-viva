@@ -24,6 +24,17 @@ android/app/build/outputs/apk/debug/app-debug.apk
 
 O APK contém o chunk dinâmico do runtime Three.js e o fixture GLB. Os warnings Gradle sobre `flatDir` permanecem conhecidos. Nenhum APK foi instalado ou executado em aparelho nesta etapa.
 
+## Evidência técnica da F2-F
+
+Em 2026-09-09, a regressão de fechamento repetiu `npm run android:sync` e `npm run android:build:debug`. O sync encontrou novamente `@capacitor/app@8.1.1`, `@capacitor/filesystem@8.1.2` e `@capacitor/share@8.0.1`; o Gradle concluiu `assembleDebug` com sucesso. O artefato gerado é:
+
+```text
+android/app/build/outputs/apk/debug/app-debug.apk
+7.525.817 bytes (7,2 MiB em disco)
+```
+
+Os warnings conhecidos de `flatDir` persistem. Esta evidência confirma o empacotamento técnico, não instalação, execução, toque, pinch, orientation, background/resume, desempenho ou temperatura no Moto G06.
+
 ## Evidência física da F1-F — Moto G06
 
 O APK Three.js foi instalado e executado fisicamente. O aplicativo abriu, a Biblioteca carregou piso, paredes, proxies e fixture GLB, e pan, pinch, picking, highlight e a ponte React ↔ Three passaram sem crash, travamento, corrupção ou artefato gráfico relevante.

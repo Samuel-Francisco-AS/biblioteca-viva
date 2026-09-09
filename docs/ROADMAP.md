@@ -15,20 +15,20 @@
 ```text
 F0 ✅
 F1 ✅
-F2 ▶ EM ANDAMENTO (F2-E concluída)
-F3 ⏳
+F2 ✅
+F3 ▶ PRÓXIMA
 F4 ⏳
 F5 ⏳
 F6 ⏳
 ```
 
-### F2 — Integração e endurecimento da Fundação Three.js — em andamento
+### F2 — Integração e endurecimento da Fundação Three.js — concluída
 
-Integração e endurecimento da Fundação Three.js, consolidando limites React/runtime, lifecycle, recuperação, organização interna e contratos estáveis. F2-B definiu a falha terminal pública e o fallback React; F2-C consolidou ownership da montagem; F2-D1 tornou falhas estruturais de render/resize terminais e impede render incidental durante pausa; F2-D2 definiu `webglcontextlost` como falha terminal e torna restoration tardia inerte; F2-E endureceu viewport/orientation/input contra dimensões transitórias, callbacks tardios e interrupções de Pointer Events, sem calibrar a ergonomia.
+Integração e endurecimento da Fundação Three.js, consolidando limites React/runtime, lifecycle, recuperação, organização interna e contratos estáveis. F2-B definiu a falha terminal pública e o fallback React; F2-C consolidou ownership da montagem; F2-D1 tornou falhas estruturais de render/resize terminais e impede render incidental durante pausa; F2-D2 definiu `webglcontextlost` como falha terminal e torna restoration tardia inerte; F2-E endureceu viewport/orientation/input contra dimensões transitórias, callbacks tardios e interrupções de Pointer Events, sem calibrar a ergonomia. F2-F executou a regressão consolidada, build web, E2E e Android técnico sem detectar regressão material.
 
-O próximo checkpoint aprovado é F2-F, para regressão consolidada da F2. Câmera e interação finais continuam em F3.
+F2 está tecnicamente concluída. Uma validação humana física curta no Moto G06 é recomendada para as alterações estruturais de lifecycle, context loss, resize e input, sem reabrir o fechamento técnico. Câmera e interação finais continuam em F3.
 
-### F3 — Câmera e interação mobile — planejada
+### F3 — Câmera e interação mobile — próxima autorizada
 
 Refinar câmera ortográfica/2.5D, pan, zoom, pinch, limites, seleção e ergonomia em tela pequena.
 

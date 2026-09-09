@@ -116,6 +116,19 @@ Amostras curtas no Chromium 151.0.7922.34 headless/Playwright 1.62.1 sobre previ
 
 O canvas observado media 734 × 466 CSS px no desktop e 293,625 × 271 CSS px no mobile. A seleção acrescentou um highlight e elevou a amostra a 47 draw calls e 47 geometrias, sem alterar os 546 triângulos de meshes. Não houve erro de console nem overflow horizontal nas duas amostras. Essas medições são baseline web local, não aprovam desempenho Android.
 
+#### Baseline de bundle da F2-F
+
+Build de produção Vite 8.1.5 em 2026-09-09, após o endurecimento do runtime:
+
+- 222 módulos transformados;
+- entrypoint JS inicial `index-DIVNhyZY.js`: 628.314 bytes (gzip exibido pelo Vite: 179,39 kB), aumento de 656 bytes diante da F1-E;
+- CSS `index-oRZ44BBB.css`: 24.520 bytes (gzip 5,53 kB), aumento de 155 bytes;
+- chunk dinâmico `ThreeWorldRuntime-azpYH93M.js`: 624.748 bytes (gzip 157,94 kB), aumento de 3.511 bytes ou aproximadamente 0,6%;
+- fixture `f1-technical-pyramid-PTGgLHNh.glb`: 1.044 bytes;
+- a divisão dinâmica do runtime Three e o warning conhecido de chunks acima de 500 kB foram preservados; não surgiu warning material novo.
+
+O relatório desta etapa mede artefatos do build. Não foram coletadas novas amostras de FPS/frame time para transformar a regressão técnica em benchmark de renderização ou desempenho Android.
+
 ### Moto G06
 
 O gate físico da F1-F, executado em build APK da cena técnica, produziu o primeiro baseline 3D identificado no aparelho:

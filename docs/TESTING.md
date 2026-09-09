@@ -135,6 +135,20 @@ Esses doubles provam a política terminal e seus invariantes no runtime; não co
 - gate unitário: `ThreeWorldRuntime.test.ts` (24 testes) e `npm run typecheck` aprovados; `git diff --check` aprovado;
 - gate browser dirigido: `npm run build` foi necessário para preview; passaram em Chromium os cenários de montagem, desktop (picking/pan/wheel), viewport mobile sintético (tap/pan/pinch) e dez ciclos Biblioteca → Coleção → Biblioteca, sem acumular canvas ou loop. Os warnings conhecidos de chunk Vite acima de 500 kB e `NO_COLOR`/`FORCE_COLOR` não bloquearam a prova.
 
+## F2-F — regressão consolidada e fechamento técnico
+
+Em 2026-09-09, o checkout consolidado passou sem correções de comportamento durante o checkpoint:
+
+- `npm run format`, `npm run format:check`, `npm run lint` e `npm run typecheck` passaram; o formatter alterou somente uma quebra de linha em teste, inspecionada como formatação;
+- `npm run test:run`: 63 arquivos e 459 testes Vitest aprovados, sem falha ou reexecução;
+- `npm run audio:check`: os dois WAVs declarados foram verificados deterministicamente;
+- `npm run build` e `npm run performance:report`: build Vite 8.1.5 com 222 módulos, fixture GLB e chunk Three dinâmico preservados;
+- `npm run test:e2e`: 12 cenários Chromium aprovados; a suíte cobriu fluxos convencionais, uma superfície Three, mount/unmount, saída/retorno, picking, ponte React ↔ Three, pan, wheel, pinch sintético, fallback, viewport mobile e dez ciclos vigentes;
+- `npm run android:sync` e `npm run android:build:debug`: sync Capacitor e `assembleDebug` aprovados, com APK debug gerado;
+- `git diff --check` passou.
+
+Os únicos warnings observados foram os já conhecidos: chunks Vite acima de 500 kB, `NO_COLOR`/`FORCE_COLOR` no runner Playwright e `flatDir` no Gradle. A E2E continua sendo prova Chromium; não comprova toque, pinch, background/resume, desempenho, temperatura, instalação ou orientação física no Moto G06.
+
 ## Comandos
 
 ```bash
