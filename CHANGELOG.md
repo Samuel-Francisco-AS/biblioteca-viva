@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F4-D2 — Load, attach e unload mantendo o host vivo — 2026-09-13
+
+- adicionada prova isolada com KayKit F4-B real, SHA-256 registrado, `GLTFLoader` de `three@0.185.1`, `THREE.Scene` e `disposeObjectTree()` reais;
+- comprovados owner experimental local, attach da root, unload com disposal observado de geometry/material/texture, sentinel preservado e novo load/attach no mesmo host;
+- não foram alterados `ThreeWorldRuntime`, produção ou assets, nem criados API permanente, `AssetManager`, cache, renderer ou política de concorrência; F4-D3 passa a ser o próximo checkpoint.
+
 ### F4-D1 — Auditoria e contrato experimental de loading/unload/ownership — 2026-09-13
 
 - auditado o caminho real do fixture F1: `GLTFLoader` entrega o root ao runtime, a montagem é seu único owner registrado até o disposal terminal e não existe unload de asset com host vivo, token de intenção ou abort de load;

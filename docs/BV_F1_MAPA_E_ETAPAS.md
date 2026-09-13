@@ -2,7 +2,7 @@
 
 **Data de referência:** 2026-09-13
 
-**Estado geral:** F0, F1, F2 e F3 concluídos; Three.js aprovado como renderer da Fundação; F4 — Contrato experimental de assets 3D — está em andamento (F4-A/B/C concluídas experimentalmente; F4-D é a próxima)
+**Estado geral:** F0, F1, F2 e F3 concluídos; Three.js aprovado como renderer da Fundação; F4 — Contrato experimental de assets 3D — está em andamento (F4-A/B/C, D1 e D2 concluídas experimentalmente; F4-D3 é a próxima)
 
 **Escopo:** Fundação técnica do novo mundo 3D da Biblioteca Viva
 
@@ -673,7 +673,7 @@ A validação humana ampla no Moto G06 foi positiva para abertura, framing, pan,
 
 # 13. F4 — Contrato experimental de assets 3D
 
-**Estado: ▶ EM ANDAMENTO — F4-A/B/C concluídas experimentalmente; F4-D é a próxima etapa autorizada**
+**Estado: ▶ EM ANDAMENTO — F4-A/B/C, F4-D1 e F4-D2 concluídas experimentalmente; F4-D3 é a próxima etapa autorizada**
 
 F4 produz evidência para formalizar um Pipeline 3D somente depois da FUNDAÇÃO. Ela não inicia catálogo da Biblioteca, arte definitiva, persistência espacial ou gestão permanente de assets. GLTF/GLB continua o caminho experimental de runtime; a ferramenta de autoria permanece substituível. Blender 3.3.21 está aprovado somente como ferramenta experimental de autoria durante F4, não como obrigação arquitetural, dependência ou ferramenta definitiva.
 
@@ -699,9 +699,9 @@ O diagnóstico, o contrato mínimo, a prova estrutural dos quatro GLBs pelo `GLT
 
 ### F4-D — Loading, unload e ownership/disposal
 
-**Estado: ▶ PRÓXIMA**
+**Estado: ▶ EM ANDAMENTO — D1 e D2 concluídas; D3 é a próxima**
 
-Carregar asset no runtime, removê-lo mantendo o runtime vivo, verificar ownership, liberação, repetição, callbacks tardios e erros recuperáveis. Não presume `AssetManager`, cache ou unload final.
+D1 auditou o fixture F1 e definiu o contrato experimental mínimo sem mudar produção. D2 comprovou em harness isolado que KayKit real pode ser carregado pelo `GLTFLoader`, aceito por owner local de teste, anexado a `THREE.Scene`, removido com `disposeObjectTree()` e substituído por nova root no mesmo host, preservando um sentinel. Geometry, material e texture emitiram disposal; não houve `AssetManager`, cache, API permanente ou alteração de runtime. D3 tratará repetição, isolamento e disposal; D4 permanece para callbacks tardios e erros.
 
 ### F4-E — Custo e compressão experimental
 
@@ -897,38 +897,38 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 
 # 17. Situação consolidada
 
-| Etapa                 | Estado         | Função principal                                                                                 |
-| --------------------- | -------------- | ------------------------------------------------------------------------------------------------ |
-| F0                    | ✅ Concluída   | Definir e contratar a Fundação                                                                   |
-| F0-A                  | ✅ Concluída   | Requisitos e não negociáveis                                                                     |
-| F0-B                  | ✅ Concluída   | Protocolo de prova                                                                               |
-| F0-C                  | ✅ Concluída   | Escolha tecnológica                                                                              |
-| F0-D                  | ✅ Concluída   | Contrato executável da F1                                                                        |
-| F1                    | ✅ Concluída   | Three.js provado e aprovado como renderer da Fundação                                            |
-| F1-A                  | ✅ Concluída   | Bootstrap do runtime                                                                             |
-| F1-A-FIX              | ✅ Concluída   | Tipagem sustentável e mapa operacional                                                           |
-| F1-B                  | ✅ Concluída   | Cena técnica + GLB                                                                               |
-| F1-C                  | ✅ Concluída   | Interação + ponte React ↔ Three                                                                  |
-| F1-D                  | ✅ Concluída   | Lifecycle + observabilidade                                                                      |
-| F1-E                  | ✅ Concluída   | Gates técnicos + APK                                                                             |
-| F1-F                  | ✅ Concluída   | Gate físico aprovado no Moto G06                                                                 |
-| F1-F-FIX              | ✅ Concluída   | Botões React revalidados fisicamente                                                             |
-| F2                    | ✅ Concluída   | Endurecimento do runtime e integração, com gates técnicos e revalidação física curta no Moto G06 |
-| F3                    | ✅ Concluída   | Câmera e interação mobile                                                                        |
-| F3-A                  | ✅ Concluída   | Contrato e baseline da câmera                                                                    |
-| F3-B                  | ✅ Concluída   | Modelo de câmera, framing e limites                                                              |
-| F3-C                  | ✅ Concluída   | Pan, wheel focal e pinch ancorado                                                                |
-| F3-D                  | ✅ Concluída   | Tap, seleção e arbitragem de gestos                                                              |
-| F3-E                  | ✅ Concluída   | Viewport, orientação, safe areas e integração mobile                                             |
-| F3-F1                 | ✅ Técnico     | Gate consolidado e APK                                                                           |
-| Fechamento F3         | ✅ Concluído   | Evidência humana ampla e correção técnica de bounds; sem revalidação física específica do fix    |
-| F4                    | ▶ Em andamento | F4-A/B/C concluídas experimentalmente; F4-D é a próxima etapa autorizada; E–F planejadas         |
-| F5                    | ⏳ Planejada   | Baseline de performance Android                                                                  |
-| F6                    | ⏳ Planejada   | Acessibilidade e fechamento                                                                      |
-| Pipeline 3D           | 🔒 Futuro      | Produção sistemática de assets                                                                   |
-| Primeiro recorte      | 🔒 Futuro      | Construção inicial da Biblioteca real                                                            |
-| Persistência espacial | 🔒 Futuro      | Salvar estado real do mundo                                                                      |
-| Sistemas maiores      | 🔒 Futuro      | Personagens, progressão, IA etc.                                                                 |
+| Etapa                 | Estado         | Função principal                                                                                   |
+| --------------------- | -------------- | -------------------------------------------------------------------------------------------------- |
+| F0                    | ✅ Concluída   | Definir e contratar a Fundação                                                                     |
+| F0-A                  | ✅ Concluída   | Requisitos e não negociáveis                                                                       |
+| F0-B                  | ✅ Concluída   | Protocolo de prova                                                                                 |
+| F0-C                  | ✅ Concluída   | Escolha tecnológica                                                                                |
+| F0-D                  | ✅ Concluída   | Contrato executável da F1                                                                          |
+| F1                    | ✅ Concluída   | Three.js provado e aprovado como renderer da Fundação                                              |
+| F1-A                  | ✅ Concluída   | Bootstrap do runtime                                                                               |
+| F1-A-FIX              | ✅ Concluída   | Tipagem sustentável e mapa operacional                                                             |
+| F1-B                  | ✅ Concluída   | Cena técnica + GLB                                                                                 |
+| F1-C                  | ✅ Concluída   | Interação + ponte React ↔ Three                                                                    |
+| F1-D                  | ✅ Concluída   | Lifecycle + observabilidade                                                                        |
+| F1-E                  | ✅ Concluída   | Gates técnicos + APK                                                                               |
+| F1-F                  | ✅ Concluída   | Gate físico aprovado no Moto G06                                                                   |
+| F1-F-FIX              | ✅ Concluída   | Botões React revalidados fisicamente                                                               |
+| F2                    | ✅ Concluída   | Endurecimento do runtime e integração, com gates técnicos e revalidação física curta no Moto G06   |
+| F3                    | ✅ Concluída   | Câmera e interação mobile                                                                          |
+| F3-A                  | ✅ Concluída   | Contrato e baseline da câmera                                                                      |
+| F3-B                  | ✅ Concluída   | Modelo de câmera, framing e limites                                                                |
+| F3-C                  | ✅ Concluída   | Pan, wheel focal e pinch ancorado                                                                  |
+| F3-D                  | ✅ Concluída   | Tap, seleção e arbitragem de gestos                                                                |
+| F3-E                  | ✅ Concluída   | Viewport, orientação, safe areas e integração mobile                                               |
+| F3-F1                 | ✅ Técnico     | Gate consolidado e APK                                                                             |
+| Fechamento F3         | ✅ Concluído   | Evidência humana ampla e correção técnica de bounds; sem revalidação física específica do fix      |
+| F4                    | ▶ Em andamento | F4-A/B/C, D1 e D2 concluídas experimentalmente; F4-D3 é a próxima etapa autorizada; E–F planejadas |
+| F5                    | ⏳ Planejada   | Baseline de performance Android                                                                    |
+| F6                    | ⏳ Planejada   | Acessibilidade e fechamento                                                                        |
+| Pipeline 3D           | 🔒 Futuro      | Produção sistemática de assets                                                                     |
+| Primeiro recorte      | 🔒 Futuro      | Construção inicial da Biblioteca real                                                              |
+| Persistência espacial | 🔒 Futuro      | Salvar estado real do mundo                                                                        |
+| Sistemas maiores      | 🔒 Futuro      | Personagens, progressão, IA etc.                                                                   |
 
 ---
 
@@ -936,6 +936,6 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 
 O projeto deve ser considerado neste estado:
 
-> **F0, F1, F2 e F3 estão concluídas. F4 está em andamento: F4-A auditou o fixture, definiu o contrato experimental e aprovou Blender 3.3.21 apenas como ferramenta experimental; F4-B comprovou no `GLTFLoader` instalado o contrato experimental de eixos, chão, escala, pivô e root sem correções individuais; F4-C comprovou experimentalmente materiais, UV e texturas por diagnóstico, prova estrutural e gate humano visual, sem patches por asset no runtime. F4-D é o próximo trabalho autorizado. Three.js está aprovado como renderer da Fundação. F3 estabeleceu o contrato de câmera e interação runtime-only, viewport real e bounds convexos da fixture; a validação humana ampla foi positiva. A correção final dos bounds não foi revalidada especificamente no aparelho, limitação aceita como não bloqueante no fechamento.**
+> **F0, F1, F2 e F3 estão concluídas. F4 está em andamento: F4-A auditou o fixture, definiu o contrato experimental e aprovou Blender 3.3.21 apenas como ferramenta experimental; F4-B comprovou no `GLTFLoader` instalado o contrato experimental de eixos, chão, escala, pivô e root sem correções individuais; F4-C comprovou experimentalmente materiais, UV e texturas por diagnóstico, prova estrutural e gate humano visual, sem patches por asset no runtime; F4-D1 auditou ownership/loading/unload e F4-D2 comprovou load, attach, unload e novo load com host vivo em harness isolado. F4-D3 é o próximo trabalho autorizado. Three.js está aprovado como renderer da Fundação. F3 estabeleceu o contrato de câmera e interação runtime-only, viewport real e bounds convexos da fixture; a validação humana ampla foi positiva. A correção final dos bounds não foi revalidada especificamente no aparelho, limitação aceita como não bloqueante no fechamento.**
 
-A FUNDAÇÃO inteira ainda não está concluída: F4–F6 permanecem abertas. F4-D é o próximo trabalho autorizado. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.
+A FUNDAÇÃO inteira ainda não está concluída: F4–F6 permanecem abertas. F4-D3 é o próximo trabalho autorizado. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.

@@ -23,8 +23,8 @@ F4 ▶ EM ANDAMENTO
   F4-C ✅ CONCLUÍDA
   F4-D ▶ EM ANDAMENTO
     D1 ✅ auditoria e contrato experimental
-    D2 ▶ PRÓXIMA
-    D3 ⏳
+    D2 ✅ load → attach → unload com host vivo
+    D3 ▶ PRÓXIMA
     D4 ⏳
   F4-E ⏳
   F4-F ⏳
@@ -96,7 +96,9 @@ F4-C1 inventariou materiais, UVs e imagens dos quatro espécimes F4-B; F4-C2 reg
 
 D1 mapeou o fixture F1 real: a montagem terminal é seu único owner registrado, `disposeObjectTree()` deduplica recursos dentro de uma árvore e não existe unload mantendo host vivo. O contrato experimental exige um owner único depois do attach, cancelamento lógico de intenção durante loading, descarte do resultado tardio, unload idempotente que remove/libera somente o root alvo e falha individual separada da falha do host. Não escolhe API, `AssetManager`, cache, abort físico ou gerenciamento global.
 
-D2 é a próxima prova: em harness isolado com `THREE.Scene`/`Group`, `GLTFLoader`, fixture KayKit e `disposeObjectTree()`, provar load → attach → unload com host vivo e novo load possível. D3 cobrirá repetição, A/B simultâneos e deduplicação intrárvore com Poly Haven e Kenney; D4 cobrirá abandono, callbacks tardios, erro e owner encerrado com async controlado e root Quaternius real. `ThreeWorldRuntime` permanece inalterado até que alguma propriedade demonstre que o harness não basta.
+D2 comprovou em harness isolado o ciclo KayKit real `GLTFLoader` → owner local → `THREE.Scene` → `disposeObjectTree()`: geometry, material e texture emitiram disposal, o sentinel e a mesma instância de host permaneceram, e novo parse/attach funcionou. O owner existe somente no teste; não há API, manager, cache ou mudança de `ThreeWorldRuntime`.
+
+D3 é a próxima prova e cobrirá repetição, A/B simultâneos e deduplicação intrárvore com Poly Haven e Kenney; D4 cobrirá abandono, callbacks tardios, erro e owner encerrado com async controlado e root Quaternius real. `ThreeWorldRuntime` permanece inalterado até que alguma propriedade demonstre que o harness não basta.
 
 #### F4-E — Custo e compressão experimental — planejada
 

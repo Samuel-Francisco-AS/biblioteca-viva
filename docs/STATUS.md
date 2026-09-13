@@ -18,7 +18,8 @@
 - A auditoria F4-A1 confirmou um único caminho de fixture GLB técnico, importado pelo build e carregado por `GLTFLoader` dentro de `ThreeWorldRuntime`; a montagem é dona do modelo e o libera com a cena. Não há cache, unload com runtime vivo, registry de runtime ou asset manager. Esse caminho F1 é evidência de baseline, não arquitetura de asset management permanente.
 - F4-A foi concluída: a auditoria e o contrato experimental preservam GLTF/GLB no runtime e exigirão fonte editável e procedência em cada prova futura. O preflight técnico confirmou que Blender 3.3.21 executa via CLI, salva `.blend`, exporta GLB 2.0 e reimporta o arquivo produzido; o gate humano no Fedora confirmou viewport e operações básicas utilizáveis, sem crash, travamento, tela preta, corrupção visual, flickering ou lentidão persistente relevante. Blender 3.3.21 está aprovado somente como ferramenta experimental de autoria durante F4; continua substituível, não é dependência do projeto nem ferramenta definitiva do Pipeline 3D.
 - F4-B foi concluída experimentalmente: quatro GLBs normalizados de fontes externas com proveniência suficiente foram carregados pelo `GLTFLoader` instalado e têm roots sem scale, rotação ou offset corretivos, chão no `Y=0` e dimensões Three `[largura, altura, profundidade]`. O mapeamento observado é Blender `X →` Three `X`, Blender `Y →` Three `-Z` e Blender `Z →` Three `Y`; Azrael também foi carregado no diagnóstico com nove meshes sob root lógico, mas não entrou no checkout porque a licença/proveniência local disponível não é suficiente. O contrato continua experimental, não formaliza frente visual/funcional nem Pipeline 3D definitivo.
-- F4-D1 auditou loading, ownership e disposal sem alterar produção ou assets. O fixture F1 ainda é possuído somente pela montagem terminal; `disposeObjectTree()` deduplica geometry/material/texture por árvore e remove sua raiz. Não há unload com host vivo, token de intenção ou abort no baseline. O contrato D1 separa semanticamente host, root, owner e loading, exige um único owner após attach, unload idempotente que preserva o host e descarte de sucesso tardio já não desejado. D2 provará isso em harness isolado, antes de qualquer mudança no runtime.
+- F4-D1 auditou loading, ownership e disposal sem alterar produção ou assets. O fixture F1 ainda é possuído somente pela montagem terminal; `disposeObjectTree()` deduplica geometry/material/texture por árvore e remove sua raiz. Não há unload com host vivo, token de intenção ou abort no baseline. O contrato D1 separa semanticamente host, root, owner e loading, exige um único owner após attach, unload idempotente que preserva o host e descarte de sucesso tardio já não desejado. D2 realizou a primeira prova em harness isolado, sem mudança no runtime.
+- F4-D2 comprovou em harness isolado que KayKit real, carregado pelo `GLTFLoader` instalado após SHA-256, pode ser aceito por owner experimental local, anexado a `Scene`, removido por `disposeObjectTree()` com eventos reais de disposal de geometry/material/texture e substituído por nova root no mesmo host. O sentinel permaneceu; não houve mudança de runtime, produção ou asset, nem criação de API, manager ou cache.
 - A cena atual é um spike técnico com fixture, não a Biblioteca final nem arquitetura permanente de conteúdo. Não existe persistência espacial, pipeline 3D formal, catálogo real, `PlacedObject`, `WorldStructureState` ou tabela espacial.
 - R3F e WebGPU não estão aprovados; renderers alternativos só voltam a ser considerados diante de evidência estrutural futura.
 
@@ -30,7 +31,7 @@
 
 ## Próximo trabalho
 
-**F4 — Contrato experimental de assets 3D está em andamento. F4-A, F4-B, F4-C e F4-D1 estão concluídas experimentalmente.** D1 auditou o ownership real e definiu apenas o contrato mínimo para a prova; não houve alteração de runtime ou asset. F4-D2 — Load → attach → unload mantendo o host vivo — é o próximo checkpoint, sem iniciar pipeline definitivo, Biblioteca real ou persistência espacial.
+**F4 — Contrato experimental de assets 3D está em andamento. F4-A, F4-B, F4-C, F4-D1 e F4-D2 estão concluídas experimentalmente.** D2 comprovou load → attach → unload com host vivo em harness isolado, sem alterar runtime ou asset. F4-D3 — repetição, isolamento e disposal — é o próximo checkpoint, sem iniciar pipeline definitivo, Biblioteca real ou persistência espacial.
 
 ```text
 F0 ✅
@@ -52,8 +53,8 @@ F4 ▶ EM ANDAMENTO
     C6 ✅ consolidação e limpeza
   F4-D ▶ EM ANDAMENTO
     D1 ✅ auditoria e contrato experimental de loading/unload/ownership
-    D2 ▶ PRÓXIMA — load → attach → unload com host vivo
-    D3 ⏳ repetição, dois assets e idempotência
+    D2 ✅ load → attach → unload com host vivo
+    D3 ▶ PRÓXIMA — repetição, isolamento e disposal
     D4 ⏳ abandono, callbacks tardios e erro
   F4-E ⏳
   F4-F ⏳

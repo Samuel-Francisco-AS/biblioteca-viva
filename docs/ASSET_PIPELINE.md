@@ -138,7 +138,7 @@ Os termos abaixo são semânticos para as provas D2–D4, não nomes de classes,
 - **Host** é o ambiente vivo que pode receber e perder roots sem ser destruído; a prova não presume que ele seja `ThreeWorldRuntime`.
 - **Asset root** é o root lógico carregado e potencialmente anexado, inclusive quando contém múltiplos meshes.
 - **Owner** mantém a intenção de possuir um asset. Ao aceitar o sucesso, torna-se o único responsável pelo root, por removê-lo do host e por iniciar a liberação da árvore. Não há owner global nem propriedade compartilhada entre assets neste contrato.
-- **Loading** ainda não transfere a posse do root: enquanto a operação está em voo, o owner precisa saber se ainda aceita seu resultado. A prova exigirá cancelamento lógico, não abort físico de request.
+- **Loading** ainda não transfere a posse do root: enquanto a operação está em voo, o owner precisa saber se ainda aceita seu resultado. As provas posteriores exigem cancelamento lógico, não abort físico de request.
 - **Loaded/attached** só ocorre quando um resultado ainda desejado é anexado ao host e passa a ter exatamente um owner. Cada operação só pode transferir uma root uma vez; resultado posterior já não desejado, inclusive sucesso adicional da mesma operação, nunca é anexado e quem o recebe o libera imediatamente pela estratégia existente.
 - **Unload** deve primeiro tornar o asset não pertencente ao owner, depois destacá-lo do host e liberar os recursos de sua árvore uma única vez. Ele não pode destruir o host, reanexar o root nem tocar outro asset; o host precisa continuar apto a receber uma nova carga.
 - **Idempotência** significa que repetir unload ou encerrar o owner não duplica disposal nem altera outros roots. Um callback posterior não pode restaurar o vínculo nem voltar o estado conceitual a loaded.
@@ -154,7 +154,13 @@ Assim, `unload` de asset **não é** `dispose` de host/runtime: o primeiro ating
 
 Essas provas podem ficar fora de produção: um harness de teste com `THREE.Scene`/`Group`, `GLTFLoader`, os fixtures F4-B e `disposeObjectTree()` já isola a propriedade em questão. Nenhuma propriedade identificada exige mudar `ThreeWorldRuntime`; alterar a produção antes dessa evidência ampliaria indevidamente a arquitetura.
 
-F4-D2 é o próximo checkpoint e provará load → attach → unload mantendo o host vivo. F4-E continua responsável por custo e compressão; F5 por densidade, desempenho e Android físico.
+## F4-D2 — load, attach e unload com host vivo — concluída
+
+`f4dAssetLifecycle.test.ts` prova o ciclo em harness isolado sem alterar `ThreeWorldRuntime`: lê o GLB KayKit F4-B, confere seu SHA-256 registrado e faz `GLTFLoader.parseAsync()` pelo `three@0.185.1` instalado. O adaptador jsdom só permite concluir o parse da imagem Base Color embutida; ele não simula renderer nem declara prova visual. Um owner mínimo definido apenas no teste aceita a root em uma `Scene` real, conserva sua referência e usa exclusivamente `disposeObjectTree()` ao unload.
+
+No primeiro ciclo, listeners de `dispose` nos objetos Three reais da root KayKit confirmam uma liberação de geometry, material e texture usada pelo material. A root deixa o owner e a `Scene`, enquanto um `Group` sentinela e a mesma instância de host permanecem. No segundo ciclo, novo parse real produz nova root, que o mesmo owner anexa ao mesmo host; a liberação final serve somente de cleanup do teste. A prova não aprovou API, owner de produção, `AssetManager`, cache, unload definitivo, renderer ou arquitetura permanente.
+
+F4-D3 é o próximo checkpoint e tratará repetição, isolamento e disposal. F4-E continua responsável por custo e compressão; F5 por densidade, desempenho e Android físico.
 
 ## Limites
 

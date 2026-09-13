@@ -230,6 +230,13 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - no gate humano C5, o usuário orbitou, aproximou e afastou os quatro espécimes no harness Three temporário: Poly Haven exibiu Base Color, UV, normal e metallic/roughness plausíveis, sem fallback ou discrepância perceptível; KayKit exibiu Base Color texture e UV corretos sem artefato; Kenney exibiu material simples normal; e Quaternius apareceu claro/cinza de modo coerente com seus fatores, não como textura ausente;
 - não houve comparação pixel a pixel, medição colorimétrica nem comparação humana com Blender para Quaternius. O harness foi removido após esse gate e não se tornou página, rota ou ferramenta permanente.
 
+## F4-D2 — load, attach e unload com host vivo
+
+- `f4dAssetLifecycle.test.ts` lê o GLB KayKit F4-B real, confere o SHA-256 registrado e usa `GLTFLoader.parseAsync()` do `three@0.185.1` instalado; o adaptador jsdom permite somente o parse estrutural da imagem embutida;
+- um owner experimental local ao teste aceita a root em `THREE.Scene` real e chama o `disposeObjectTree()` real ao unload; listeners `dispose` nos recursos KayKit confirmam geometry, material e texture usados uma vez no primeiro ciclo;
+- um `Group` sentinela confirma que o unload remove somente a root alvo: a mesma `Scene`, o sentinel e a possibilidade de carregar/anexar nova root real permanecem após o unload;
+- o gate dirigido `npm run test:run -- f4dAssetLifecycle referenceScene` aprovou 2 arquivos e 4 testes. Não prova idempotência repetida, A/B simultâneos, isolamento entre assets, callbacks/erros tardios, cancelamento lógico, cache, manager, renderer, performance ou Android.
+
 ## Comandos
 
 ```bash
