@@ -121,7 +121,7 @@ A prova estrutural pode verificar por parsing e `GLTFLoader`: associação primi
 | Poly Haven | Base Color, normal e metallic/roughness combinado chegam nos maps correspondentes; quatro imagens-fonte para três GLB preservam o significado material. |
 | Quaternius | Material por fatores, sem UV nem imagem usada, permanece válido; imagem solta não exige exportação.                                                     |
 
-F4-C3 deverá implementar a prova automatizada fonte/GLB → `GLTFLoader`/Three deste contrato, sem reexportar fixtures, alterar o runtime ou concluir fidelidade visual. F4-D continua responsável por loading/unload/ownership; F4-E por custo e compressão; F5 por densidade, desempenho e Android físico.
+F4-C3 comprovou este contrato em `f4cMaterialContract.test.ts` pelos quatro GLBs F4-B e pelo `GLTFLoader` de `three@0.185.1`: KayKit chega com Base Color texturizado e UV; Kenney por fatores sem maps; Poly Haven com Base Color, normal e o mesmo objeto `Texture` para metallic/roughness; Quaternius por fatores sem maps ou UV. O gate confere os SHA-256 registrados antes do parse e não modifica o resultado do loader. O adaptador jsdom permite somente a criação estrutural dos maps de imagens embutidas, não fidelidade visual, pixels, colorimetria ou orientação visual da textura. F4-C4 é o próximo checkpoint de F4-C; F4-D continua responsável por loading/unload/ownership; F4-E por custo e compressão; F5 por densidade, desempenho e Android físico.
 
 ## Limites
 

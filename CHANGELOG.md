@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F4-C3 — Prova automatizada de materiais, UV e texturas — 2026-09-13
+
+- adicionado gate Vitest estrutural para os quatro GLBs F4-B, com SHA-256 registrado e `GLTFLoader` de `three@0.185.1`, sem alterar assets, runtime ou materiais após o parse;
+- comprovados Base Color texturizado + UV no KayKit, material por fatores sem maps no Kenney, maps PBR e texture metallic-roughness compartilhada no Poly Haven e ausência legítima de maps/UV no Quaternius;
+- registrado que o adaptador jsdom permite somente observar o parse e os maps estruturais: não declara fidelidade visual, equivalência de pixels, orientação visual, colorimetria, qualidade de conversão, custo, performance, loading/unload ou Android;
+- F4-C permanece em andamento; F4-C4 é o próximo checkpoint.
+
 ### F4-C2 — Contrato técnico mínimo experimental de materiais, UV e texturas — 2026-09-13
 
 - registrado o contrato experimental que exige preservar somente o significado material efetivamente usado — fatores, texturas, maps e UV necessário — entre fonte editável conhecida, GLB e `GLTFLoader`, sem correções por asset no runtime;

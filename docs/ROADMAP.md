@@ -86,7 +86,7 @@ O `GLTFLoader` instalado confirmou quatro GLBs normalizados com procedência suf
 
 #### F4-C — Materiais, UV e texturas — em andamento
 
-F4-C1 inventariou materiais, UVs e imagens dos quatro espécimes F4-B; F4-C2 registrou o contrato técnico mínimo experimental para material glTF simples/interoperável, UV quando a textura o exigir e equivalências estruturais como metallic-roughness combinado. F4-C3 é o próximo checkpoint: prova automatizada fonte/GLB → `GLTFLoader`/Three. F4-C não antecipa especificação artística ou técnica permanente, nem fidelidade visual sem gate apropriado.
+F4-C1 inventariou materiais, UVs e imagens dos quatro espécimes F4-B; F4-C2 registrou o contrato técnico mínimo experimental para material glTF simples/interoperável, UV quando a textura o exigir e equivalências estruturais como metallic-roughness combinado; F4-C3 comprovou estruturalmente o caminho dos quatro GLBs pelo `GLTFLoader` instalado. F4-C4 é o próximo checkpoint. F4-C não antecipa especificação artística ou técnica permanente, nem fidelidade visual sem gate apropriado.
 
 #### F4-D — Loading, unload e ownership/disposal — planejada
 
