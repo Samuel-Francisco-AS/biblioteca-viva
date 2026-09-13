@@ -21,3 +21,39 @@ O baseline ativo possui dois assets de áudio e um fixture 3D técnico da F1, to
 - **estado:** experimental/técnico/F1; não é asset artístico ou oficial da Biblioteca final.
 
 Antes de release, todo asset do bundle deve constar aqui com origem, autoria, licença, modificações e estado. Assets futuros do mundo só entram no registro depois de existirem no checkout.
+
+## Fixtures F4-B — geometria, escala, eixos e pivô
+
+Os itens abaixo são espécimes externos normalizados para o gate F4-B, não assets artísticos aprovados, não catálogo da Biblioteca e não um pipeline 3D permanente. A fonte editável e os originais preservados permanecem fora do checkout, no laboratório F4; os hashes identificam exatamente os GLBs incluídos.
+
+### `f4-b-kaykit-shelf-b-large-decorated`
+
+- **arquivo de fixture:** `src/features/library/three/fixtures/f4-b/kaykit-shelf-b-large-decorated.glb` — GLB 2.0, 44.780 bytes, SHA-256 `03e0b1af929de0a81795aea965b6cc5fbd8ac6e896e1047acef9f5d93b9debbe`;
+- **origem/fonte:** pacote externo `KayKit Furniture Bits 1.0 FREE`; candidato `shelf_B_large_decorated.gltf` com binário e textura associados;
+- **autoria/licença:** Kay Lousberg; CC0 1.0, conforme `License.txt` do pacote original preservado;
+- **modificações:** centralização do footprint, base em `Z=0`, root `F4_KayKit_ShelfBLargeDecorated` em identidade e export GLB normalizado;
+- **finalidade/estado:** prova experimental F4-B; não-final, sem uso pela cena técnica.
+
+### `f4-b-kenney-bookcase-open`
+
+- **arquivo de fixture:** `src/features/library/three/fixtures/f4-b/kenney-bookcase-open.glb` — GLB 2.0, 20.460 bytes, SHA-256 `6704751f18b91a68ad9689c24ea59e029c09d584264b7f089439e79683c71900`;
+- **origem/fonte:** pacote externo `Furniture Kit 2.0`; candidato `bookcaseOpen.glb` extraído do pacote, com fonte editável disponível no corpus F4;
+- **autoria/licença:** Kenney; CC0 1.0, conforme `License.txt` do pacote original preservado;
+- **modificações:** origem positiva da fonte recentralizada em `X/Y`, base em `Z=0`, root `F4_Kenney_BookcaseOpen` em identidade e export GLB normalizado;
+- **finalidade/estado:** prova experimental F4-B; não-final, sem uso pela cena técnica.
+
+### `f4-b-polyhaven-shelf-01`
+
+- **arquivo de fixture:** `src/features/library/three/fixtures/f4-b/polyhaven-shelf-01.glb` — GLB 2.0, 5.828.612 bytes, SHA-256 `33d55c107ea5afd314aad197f7753c64bacc88ea554df3f7e57fc8e7c81415b1`;
+- **origem/fonte:** [Poly Haven — Shelf 01](https://polyhaven.com/a/Shelf_01); candidato editável `Shelf_01_1k.blend` e texturas da fonte preservados no corpus F4;
+- **autoria/licença:** Gabriel Radić; CC0 1.0, declarada pela página oficial do asset;
+- **modificações:** profundidade centralizada, base em `Z=0`, root `F4_PolyHaven_Shelf01` em identidade e export GLB normalizado;
+- **finalidade/estado:** prova experimental F4-B; não-final, sem uso pela cena técnica. A verificação de material/imagens permanece F4-C.
+
+### `f4-b-quaternius-bookshelf`
+
+- **arquivo de fixture:** `src/features/library/three/fixtures/f4-b/quaternius-bookshelf.glb` — GLB 2.0, 7.572 bytes, SHA-256 `aabe7de0adf6b0e3aaf651acbb5704680e44df3180ffa98aa0cb7d19d389f265`;
+- **origem/fonte:** pacote externo `Quaternius Blends`; fonte editável candidata `Bookshelf.blend`;
+- **autoria/licença:** Quaternius; CC0 1.0, conforme `Quaternius-License.txt` original preservado;
+- **modificações:** escala `0,5` incorporada ao asset, footprint centralizado, base em `Z=0`, root `F4_Quaternius_Bookshelf` em identidade e export GLB normalizado;
+- **finalidade/estado:** prova experimental F4-B; não-final, sem uso pela cena técnica. A ausência de imagem no GLB é pendência F4-C.

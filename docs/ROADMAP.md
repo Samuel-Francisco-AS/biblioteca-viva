@@ -1,6 +1,6 @@
 # Roadmap
 
-> Atualizado em 2026-09-09.
+> Atualizado em 2026-09-13.
 
 ## Baseline concluído
 
@@ -17,7 +17,13 @@ F0 ✅
 F1 ✅
 F2 ✅
 F3 ✅ CONCLUÍDA
-F4 ▶ PRÓXIMA
+F4 ▶ EM ANDAMENTO
+  F4-A ✅ CONCLUÍDA (preflight técnico + humano)
+  F4-B ✅ CONCLUÍDA
+  F4-C ▶ PRÓXIMO
+  F4-D ⏳
+  F4-E ⏳
+  F4-F ⏳
 F5 ⏳
 F6 ⏳
 ```
@@ -66,9 +72,33 @@ A validação humana ampla no Moto G06 foi positiva para abertura, framing, pan,
 
 Durante essa validação, os limites superiores esquerdo/direito ainda podiam mostrar somente fundo. A correção F3-F2-FIX substituiu o AABB da projeção por região convexa válida de centros de câmera e preserva um patch do piso técnico de 15% dos spans projetados, limitado pelo espaço disponível. Ela preservou `CameraNavigation`, gestos, zoom, lifecycle e renderer; passou 3 arquivos/61 testes dirigidos, `format:check`, `typecheck`, `git diff --check`, build, sync Android e debug build, com novo APK. Não houve revalidação física específica desse fix no Moto G06; a ausência foi aceita como risco residual não bloqueante porque a falha era localizada, a correção é matemática e coberta, os contratos não mudaram e a fixture é descartável. F3 está encerrada.
 
-### F4 — Contrato experimental de assets 3D — próxima fase autorizada
+### F4 — Contrato experimental de assets 3D — em andamento
 
-Provar escala, eixos, pivôs, materiais, texturas, carregamento, descarregamento e custo de GLTF/GLB sem congelar o pipeline artístico completo.
+F4 produz evidência experimental para um pipeline 3D posterior; não o formaliza. GLTF/GLB continua o caminho de runtime da Fundação. Não há persistência espacial, catálogo real, asset manager definitivo ou pipeline artístico aprovado nesta fase.
+
+#### F4-A — Contrato + preflight de autoria — concluída
+
+Auditoria do caminho atual, contrato experimental e preflight da ferramenta de autoria foram concluídos. Blender 3.3.21 passou no preflight técnico (CLI, save `.blend`, export GLB 2.0 e reimport) e no gate humano no Fedora (viewport e operações básicas utilizáveis, sem falha visual ou de estabilidade relevante). Ele está aprovado somente como ferramenta experimental de autoria durante F4, continua substituível e não se torna dependência nem ferramenta definitiva do Pipeline 3D.
+
+#### F4-B — Geometria, escala, eixos e pivô — concluída
+
+O `GLTFLoader` instalado confirmou quatro GLBs normalizados com procedência suficiente sem correções individuais: root lógico em identidade, chão no `Y=0` e bounds `[largura, altura, profundidade]`. O mapeamento observado é Blender `X →` Three `X`, `Y → -Z` e `Z → Y`. O diagnóstico do Azrael confirmou root lógico utilizável com nove meshes, mas a ausência de evidência local suficiente de licença/proveniência impede sua promoção ao checkout. O contrato permanece experimental; frente visual/funcional, materiais/texturas, custo e pipeline definitivo não foram congelados.
+
+#### F4-C — Materiais, UV e texturas — próximo checkpoint autorizado
+
+Testar material simples, UV, Base Color, roughness e texturas, buscando fidelidade previsível entre fonte e runtime. Não antecipa especificação artística ou técnica permanente.
+
+#### F4-D — Loading, unload e ownership/disposal — planejada
+
+Carregar e remover asset mantendo o runtime vivo, testar ownership, liberação, repetição, callbacks tardios e erros recuperáveis. Não cria antecipadamente um `AssetManager` definitivo.
+
+#### F4-E — Custo e compressão experimental — planejada
+
+Observar por asset tamanho, triângulos, meshes, materiais, texturas, draw calls, geometrias e loading; comparar ao menos uma hipótese de otimização ou compressão somente se ela for tecnicamente útil à prova. Não é stress test de mundo nem define budget artístico.
+
+#### F4-F — Regressão, consolidação e handoff F5 — planejada
+
+Consolidar a evidência, registrar convenções experimentais que sobreviverem, preparar assets conhecidos para F5 e manter explícito que o Pipeline 3D permanente é posterior à FUNDAÇÃO.
 
 ### F5 — Performance e Android físico — planejada
 

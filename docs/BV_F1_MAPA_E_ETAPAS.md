@@ -1,8 +1,8 @@
 # Biblioteca Viva — Mapa da FUNDAÇÃO e detalhamento da F1
 
-**Data de referência:** 2026-09-09
+**Data de referência:** 2026-09-13
 
-**Estado geral:** F0, F1, F2 e F3 concluídos; Three.js aprovado como renderer da Fundação; F4 — Contrato experimental de assets 3D é a próxima fase autorizada
+**Estado geral:** F0, F1, F2 e F3 concluídos; Three.js aprovado como renderer da Fundação; F4 — Contrato experimental de assets 3D — está em andamento (F4-A/B concluídas; F4-C é a próxima)
 
 **Escopo:** Fundação técnica do novo mundo 3D da Biblioteca Viva
 
@@ -90,7 +90,17 @@ F3 — Câmera e interação mobile                       ✅ CONCLUÍDA
  └─ Fechamento: bounds, gates e evidência humana        ✅ CONCLUÍDO
  │
  ▼
-F4 — Contrato experimental de assets 3D              ▶ PRÓXIMA
+F4 — Contrato experimental de assets 3D              ▶ EM ANDAMENTO
+ │
+ ├─ F4-A Contrato + preflight de autoria              ✅ CONCLUÍDA
+ │   ├─ A1 Auditoria do caminho atual                 ✅ CONCLUÍDA
+ │   ├─ A2 Contrato experimental v0                  ✅ CONCLUÍDA
+ │   └─ A3 Preflight real de autoria                 ✅ CONCLUÍDA
+ ├─ F4-B Geometria, escala, eixos e pivô             ✅ CONCLUÍDA
+ ├─ F4-C Materiais, UV e texturas                     ▶ PRÓXIMA
+ ├─ F4-D Loading, unload e ownership/disposal         ⏳ PLANEJADA
+ ├─ F4-E Custo e compressão experimental              ⏳ PLANEJADA
+ └─ F4-F Regressão, consolidação e handoff F5         ⏳ PLANEJADA
  │
  ▼
 F5 — Performance e Android físico                    ⏳ PLANEJADA
@@ -641,38 +651,41 @@ A validação humana ampla no Moto G06 foi positiva para abertura, framing, pan,
 ---
 
 # 13. F4 — Contrato experimental de assets 3D
-**Estado: ▶ PRÓXIMA FASE AUTORIZADA**
+**Estado: ▶ EM ANDAMENTO — F4-A/B concluídas; F4-C é a próxima etapa autorizada**
 
-Esta será a primeira fase em que começaremos a trabalhar seriamente com objetos 3D.
+F4 produz evidência para formalizar um Pipeline 3D somente depois da FUNDAÇÃO. Ela não inicia catálogo da Biblioteca, arte definitiva, persistência espacial ou gestão permanente de assets. GLTF/GLB continua o caminho experimental de runtime; a ferramenta de autoria permanece substituível. Blender 3.3.21 está aprovado somente como ferramenta experimental de autoria durante F4, não como obrigação arquitetural, dependência ou ferramenta definitiva.
 
-O objetivo não será ainda produzir todo o catálogo da Biblioteca, mas aprender e formalizar como um asset precisa ser preparado para o runtime.
+### F4-A — Contrato + preflight de autoria
+**Estado: ✅ CONCLUÍDA**
 
-Escopo previsto:
+- **A1 — Auditoria do caminho atual: ✅ concluída.** Mapeou o fixture F1 desde o import de URL até o `GLTFLoader`, a cena, ownership da montagem, tratamento de erro, callback tardio e disposal deduplicado. Não há cache, unload com runtime vivo ou asset manager no baseline.
+- **A2 — Contrato experimental v0: ✅ concluída.** Exige fonte editável/proveniência para cada prova futura, preserva GLTF/GLB no runtime e deixa escala, eixos, pivô, materiais, texturas, compressão e arquitetura de assets como hipóteses abertas.
+- **A3 — Preflight real da ferramenta de autoria: ✅ concluída.** Blender 3.3.21 executou via CLI, salvou `.blend`, exportou e reimportou GLB 2.0 em prova descartável. No gate humano no Fedora, viewport, seleção, órbita, transformações, Object/Edit Mode, edição geométrica, save e export GLB foram utilizáveis por alguns minutos, sem crash, travamento, tela preta, flickering, corrupção visual ou lentidão persistente relevante. O resultado aprova Blender somente como ferramenta experimental durante F4; não fixa o Pipeline 3D futuro.
 
-- busca ou criação de assets de teste;
-- origem;
-- autoria;
-- licença;
-- fonte editável;
-- Blender ou ferramenta equivalente;
-- escala;
-- pivô;
-- eixos;
-- orientação;
-- materiais;
-- texturas;
-- normalização;
-- exportação;
-- GLTF/GLB;
-- compressão;
-- loading;
-- unload;
-- custo de GPU;
-- validação no runtime.
+### F4-B — Geometria, escala, eixos e pivô
+**Estado: ✅ CONCLUÍDA EXPERIMENTALMENTE**
 
-O processo será conduzido de forma didática, assumindo **zero conhecimento prévio de Blender ou modelagem 3D**.
+Quatro GLBs normalizados de fontes externas com proveniência suficiente foram testados diretamente pelo `GLTFLoader` instalado. Sem transformação corretiva no runtime, seus roots lógicos chegam em identidade, os bounds encostam no chão Three `Y=0` e as dimensões chegam como `[largura, altura, profundidade]`; o mapeamento observado é Blender `X →` Three `X`, `Y → -Z`, `Z → Y`. Azrael também confirmou root lógico com nove meshes no diagnóstico, mas ficou fora do checkout porque a evidência local de licença/proveniência não permite promovê-lo. O contrato de autoria é experimental: não fixa frente visual/funcional nem antecipa materiais, custo, ownership/load/unload ou Pipeline 3D.
 
-A F4 não é ainda o pipeline 3D definitivo.
+### F4-C — Materiais, UV e texturas
+**Estado: ▶ PRÓXIMA ETAPA AUTORIZADA**
+
+Material simples, UV, Base Color, roughness, texturas e fidelidade previsível entre fonte e runtime. Não estabelece material artístico, shader ou formato definitivo.
+
+### F4-D — Loading, unload e ownership/disposal
+**Estado: ⏳ PLANEJADA**
+
+Carregar asset no runtime, removê-lo mantendo o runtime vivo, verificar ownership, liberação, repetição, callbacks tardios e erros recuperáveis. Não presume `AssetManager`, cache ou unload final.
+
+### F4-E — Custo e compressão experimental
+**Estado: ⏳ PLANEJADA**
+
+Observar tamanho, triângulos, meshes, materiais, texturas, draw calls, geometrias e loading por asset; comparar uma hipótese relevante de otimização/compressão se a prova justificar. Não é stress test de mundo nem budget artístico.
+
+### F4-F — Regressão, consolidação e handoff F5
+**Estado: ⏳ PLANEJADA**
+
+Consolidar a evidência, registrar convenções experimentais que sobreviverem, preparar assets conhecidos para F5 e preservar o Pipeline 3D permanente como trabalho posterior à FUNDAÇÃO.
 
 ---
 
@@ -875,7 +888,7 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | F3-E | ✅ Concluída | Viewport, orientação, safe areas e integração mobile |
 | F3-F1 | ✅ Técnico | Gate consolidado e APK |
 | Fechamento F3 | ✅ Concluído | Evidência humana ampla e correção técnica de bounds; sem revalidação física específica do fix |
-| F4 | ▶ Próxima autorizada | Contrato experimental de assets 3D |
+| F4 | ▶ Em andamento | F4-A/B concluídas; F4-C é a próxima etapa autorizada; D–F planejadas |
 | F5 | ⏳ Planejada | Baseline de performance Android |
 | F6 | ⏳ Planejada | Acessibilidade e fechamento |
 | Pipeline 3D | 🔒 Futuro | Produção sistemática de assets |
@@ -889,6 +902,6 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 
 O projeto deve ser considerado neste estado:
 
-> **F0, F1, F2 e F3 estão concluídas. Three.js está aprovado como renderer da Fundação. F3 estabeleceu o contrato de câmera e interação runtime-only, viewport real e bounds convexos da fixture; a validação humana ampla foi positiva. A correção final dos bounds não foi revalidada especificamente no aparelho, limitação aceita como não bloqueante no fechamento.**
+> **F0, F1, F2 e F3 estão concluídas. F4 está em andamento: F4-A auditou o fixture, definiu o contrato experimental e aprovou Blender 3.3.21 apenas como ferramenta experimental; F4-B comprovou no `GLTFLoader` instalado o contrato experimental de eixos, chão, escala, pivô e root sem correções individuais. F4-C é o próximo trabalho autorizado. Three.js está aprovado como renderer da Fundação. F3 estabeleceu o contrato de câmera e interação runtime-only, viewport real e bounds convexos da fixture; a validação humana ampla foi positiva. A correção final dos bounds não foi revalidada especificamente no aparelho, limitação aceita como não bloqueante no fechamento.**
 
-A FUNDAÇÃO inteira ainda não está concluída: F4–F6 permanecem futuras. F4 é a próxima fase autorizada. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.
+A FUNDAÇÃO inteira ainda não está concluída: F4–F6 permanecem abertas. F4-C é o próximo trabalho autorizado. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.

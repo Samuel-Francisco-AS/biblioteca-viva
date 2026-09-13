@@ -8,6 +8,12 @@ O objetivo atual é manter o aplicativo convencional responsivo e estável em na
 
 Ainda não existe budget definitivo de mundo. A F1 — Three.js Foundation Spike criou o primeiro baseline identificado para uma cena mínima.
 
+### Fronteira F4/F5
+
+F4 observará apenas provas controladas por asset: tamanho de arquivo, triângulos, meshes, materiais, texturas, geometrias, draw calls e loading observado, sempre com a configuração da medição. Não há valor novo, benchmark ou budget registrado neste checkpoint.
+
+F5 continua responsável por densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo; custo individual de asset não aprova esses aspectos.
+
 ### Web
 
 #### Baseline da F1-A

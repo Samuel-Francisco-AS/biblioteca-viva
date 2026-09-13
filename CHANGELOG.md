@@ -4,6 +4,28 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F4-B-RUNTIME-AXIS-GATE — Geometria, escala, eixos e pivô concluídos — 2026-09-13
+
+- comprovado com o `GLTFLoader` de `three@0.185.1` instalado que quatro GLBs normalizados e registrados chegam ao Three sem scale, rotação ou offset corretivos individuais: root em identidade, chão no plano `Y=0` e dimensões `[largura, altura, profundidade]`;
+- registrado o mapeamento experimental observado Blender `X →` Three `X`, Blender `Y →` Three `-Z` e Blender `Z →` Three `Y`; uma frente visual/funcional não foi congelada;
+- adicionadas quatro fixtures F4-B com hash, fonte, autoria, licença CC0, transformações e estado não-final registrados; materiais/texturas continuam pendentes para F4-C e custo/vertex splitting para F4-E;
+- o diagnóstico Azrael confirmou nove meshes sob `F4_Azrael_Estanteria9`, mas o GLB não foi promovido ao checkout porque a evidência local disponível não comprova licença/proveniência suficiente;
+- não foram alterados `ThreeWorldRuntime`, a cena técnica, câmera/interação, schema, persistência espacial, loading/unload, otimização ou compressão; F4-C passa a ser o próximo checkpoint autorizado.
+
+### F4-A-CLOSE — Contrato e preflight de autoria concluídos — 2026-09-09
+
+- concluída a F4-A: Blender 3.3.21 passou no preflight técnico por CLI, com save `.blend`, export GLB 2.0, validação estrutural e reimport do arquivo descartável;
+- registrada a validação humana no Fedora: viewport, seleção, órbita, transformações, Object/Edit Mode, edição geométrica, save e export GLB foram utilizáveis, sem crash, travamento, tela preta, flickering, corrupção visual ou lentidão persistente relevante após alguns minutos de manipulação;
+- Blender 3.3.21 está aprovado somente como ferramenta experimental de autoria durante F4; permanece substituível, não entra como dependência e não define o Pipeline 3D permanente;
+- nenhum código, asset do projeto, arquivo humano de preflight ou infraestrutura de pipeline foi adicionado; F4-B passa a ser o próximo checkpoint autorizado.
+
+### F4-A1/A2 — Auditoria e contrato experimental de assets 3D — 2026-09-09
+
+- iniciada formalmente a F4: a auditoria registrou o caminho atual do fixture GLTF/GLB, seu ownership pela montagem Three e o disposal deduplicado, sem promover o fixture F1 a asset oficial ou criar código novo;
+- criado o contrato experimental de assets e decomposta a F4 em A–F; F4-A permanece em andamento até o preflight de autoria A3;
+- mantida a ferramenta de autoria substituível: Blender 3.3 é somente candidato atual e não foi aprovado, executado ou transformado em dependência;
+- mantidos o Pipeline 3D permanente, persistência espacial, unload final e avaliação de compressão para trabalho posterior baseado em evidência.
+
 ### F3-CLOSE — Câmera e interação mobile concluída — 2026-09-09
 
 - encerrada a F3 com contrato runtime-only de câmera/framing/bounds, pan no plano X/Z, wheel e pinch focais, tap monotônico, viewport real por `ResizeObserver` e preservação de exploração/seleção em orientação;
