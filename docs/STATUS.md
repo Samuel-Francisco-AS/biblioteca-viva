@@ -29,7 +29,7 @@
 
 ## Próximo trabalho
 
-**F4 — Contrato experimental de assets 3D está em andamento. F4-A e F4-B — Geometria, escala, eixos e pivô — estão concluídas; F4-C — Materiais, UV e texturas — está em andamento.** F4-C1 diagnosticou os quatro espécimes, F4-C2 registrou o contrato técnico mínimo experimental e F4-C3 comprovou estruturalmente os quatro GLBs por `GLTFLoader`; F4-C4 é o próximo checkpoint, sem iniciar pipeline definitivo, Biblioteca real ou persistência espacial.
+**F4 — Contrato experimental de assets 3D está em andamento. F4-A, F4-B e F4-C — Materiais, UV e texturas — estão concluídas experimentalmente.** F4-C consolidou diagnóstico, contrato, prova estrutural com `GLTFLoader`, gate humano visual e remoção do harness temporário, sem alterar assets ou runtime. F4-D — Loading, unload e ownership/disposal — é o próximo checkpoint, sem iniciar pipeline definitivo, Biblioteca real ou persistência espacial.
 
 ```text
 F0 ✅
@@ -42,12 +42,14 @@ F4 ▶ EM ANDAMENTO
     A2 ✅ contrato experimental v0
     A3 ✅ preflight técnico + humano
   F4-B ✅ CONCLUÍDA
-  F4-C ▶ EM ANDAMENTO
+  F4-C ✅ CONCLUÍDA
     C1 ✅ inventário e diagnóstico
     C2 ✅ contrato técnico mínimo experimental
     C3 ✅ prova automatizada GLB → GLTFLoader/Three
-    C4 ▶ PRÓXIMO
-  F4-D ⏳
+    C4 ✅ preparação temporária do gate visual
+    C5 ✅ gate visual humano
+    C6 ✅ consolidação e limpeza
+  F4-D ▶ PRÓXIMA
   F4-E ⏳
   F4-F ⏳
 F5 ⏳

@@ -219,14 +219,16 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - a correção posterior dos bounds passou 3 arquivos/61 testes dirigidos, `format:check`, `typecheck`, `git diff --check`, build, sync e debug build Android, com novo APK;
 - **o fix final dos bounds não recebeu revalidação física específica no Moto G06.** A ausência foi aceita como risco residual não bloqueante: a evidência humana ampla da F3 já era positiva, a falha era localizada, a correção matemática tem regressão dirigida, os contratos de câmera/input/lifecycle/renderer não mudaram e a fixture é descartável. Não é evidência física inexistente.
 
-## F4-C3 — materiais, UV e texturas estruturais
+## F4-C — materiais, UV e texturas
 
 - `f4cMaterialContract.test.ts` usa os quatro GLBs F4-B reais, confere seus SHA-256 registrados e faz `parseAsync()` com o `GLTFLoader` de `three@0.185.1` instalado;
 - KayKit prova `MeshStandardMaterial`, `map`, UV, Base Color branco multiplicador, roughness `0,5` e metalness `0`;
 - Kenney prova material por fatores sem maps, UV presente mas não necessário ao material, Base Color numérico, roughness `1` e metalness `0`, sem inferir comportamento da lista global `extensionsUsed`;
 - Poly Haven prova UV, `map`, `normalMap`, `metalnessMap` e `roughnessMap`, incluindo a identidade do mesmo objeto `Texture` para metallic e roughness combinados;
 - Quaternius prova material por fatores sem maps nem UV, Base Color numérico, roughness `0,5` e metalness `0`;
-- o adaptador jsdom só permite concluir o parse e observar criação/referência estrutural dos maps de imagens embutidas. O gate não prova fidelidade visual, equivalência pixel a pixel, orientação visual de UV/textura, colorimetria percebida, qualidade EXR → PNG, performance, custo, loading/unload ou Android.
+- o adaptador jsdom só permite concluir o parse e observar criação/referência estrutural dos maps de imagens embutidas; ele não prova fidelidade visual, equivalência pixel a pixel, orientação visual de UV/textura, colorimetria percebida, qualidade EXR → PNG, performance, custo, loading/unload ou Android;
+- no gate humano C5, o usuário orbitou, aproximou e afastou os quatro espécimes no harness Three temporário: Poly Haven exibiu Base Color, UV, normal e metallic/roughness plausíveis, sem fallback ou discrepância perceptível; KayKit exibiu Base Color texture e UV corretos sem artefato; Kenney exibiu material simples normal; e Quaternius apareceu claro/cinza de modo coerente com seus fatores, não como textura ausente;
+- não houve comparação pixel a pixel, medição colorimétrica nem comparação humana com Blender para Quaternius. O harness foi removido após esse gate e não se tornou página, rota ou ferramenta permanente.
 
 ## Comandos
 

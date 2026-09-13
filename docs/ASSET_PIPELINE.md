@@ -62,9 +62,9 @@ O contrato experimental resultante é: uma unidade física normalizada equivale 
 
 O diagnóstico F4-C1 confirmou que as quatro imagens conectadas do Poly Haven chegam como três no GLB porque metallic e roughness são combinados na `metallicRoughnessTexture` glTF; não é perda demonstrada. Também confirmou que a única imagem listada no `.blend` Quaternius não está ligada ao material nem possui UV correspondente, portanto sua ausência no GLB é legítima. O aumento de vertex count após reexport, com posições únicas e triângulos preservados, continua assunto de custo para F4-E. Este resultado não introduz otimização, compressão, loading/unload formal, cache, `AssetManager`, mundo real ou persistência espacial.
 
-## F4-C — contrato técnico mínimo experimental de materiais, UV e texturas
+## F4-C — materiais, UV e texturas — concluída experimentalmente
 
-F4-C transforma o diagnóstico F4-C1 em uma regra verificável para os espécimes F4 atuais. É um contrato experimental limitado, não um Pipeline 3D permanente, uma especificação artística ou uma garantia de fidelidade visual. Ele responde somente se um material necessário sai de fonte editável conhecida, é preparado/exportado como GLB e chega naturalmente pelo `GLTFLoader` ao Three sem correção específica no runtime.
+F4-C consolidou o diagnóstico C1, o contrato mínimo C2, o gate estrutural C3, o harness visual temporário C4 e a observação humana C5. O resultado é um contrato experimental limitado, não um Pipeline 3D permanente, especificação artística ou garantia de fidelidade científica: para o corpus F4-B, o significado material necessário sai de fonte editável conhecida, é exportado como GLB e chega naturalmente pelo `GLTFLoader` ao Three sem correção específica no runtime.
 
 ### Dados materiais necessários
 
@@ -108,20 +108,22 @@ Toda correção real de UV, material, ligação de textura, fator ou preparaçã
 
 No corpus F4-C atual, `GLTFLoader` de `three@0.185.1` produz `MeshStandardMaterial` para os materiais PBR metálico-rugosidade observados. Isso é resultado do baseline atual, não uma exigência arquitetural eterna nem autorização para shader customizado.
 
-### Limite da prova
+### Evidência consolidada C1–C5
 
-A prova estrutural pode verificar por parsing e `GLTFLoader`: associação primitive → material, fatores, referências de textura, UV exigido e maps materializados no Three. Ela não prova fidelidade visual. Em especial, o adaptador mínimo de imagem do jsdom empregado pelos gates só permite terminar o parse estrutural de imagens embutidas; não prova decodificação, canais, color space, aparência ou equivalência pixel a pixel. Fidelidade visual exige gate posterior apropriado e, se necessário, evidência humana.
+| Espécime   | Evidência que sustenta o contrato                                                                                                                                                                                                                                                       |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| KayKit     | Base Color PNG e UV chegam como `map` e `uv`; o gate humano observou textura e UV coerentes, sem fallback ou artefato material evidente.                                                                                                                                                |
+| Kenney     | Material por fator, sem imagem usada, chega sem maps; UV presente não é requisito de consumo e a observação humana encontrou cor/material simples normal.                                                                                                                               |
+| Poly Haven | Base Color, normal e metallic/roughness combinado chegam nos maps correspondentes; quatro imagens-fonte para três GLB preservam o significado material. A observação humana encontrou Base Color, UV, normal e metallic/roughness plausíveis, sem discrepância ou fallback perceptível. |
+| Quaternius | Material por fatores, sem UV nem imagem usada, permanece válido; a aparência clara/cinza observada é coerente com seus fatores, roughness `0,5` e metalness `0`, não evidência de textura perdida.                                                                                      |
 
-### Evidência F4-C1 e próximo gate
+`f4cMaterialContract.test.ts` comprovou C3 pelos quatro GLBs reais, seus SHA-256 registrados e o `GLTFLoader` de `three@0.185.1`: KayKit chega texturizado; Kenney por fatores sem maps; Poly Haven com Base Color, normal e o mesmo objeto `Texture` para metallic/roughness; Quaternius por fatores sem maps ou UV. O gate não modifica o resultado do loader. C5 foi a observação humana no harness temporário: o usuário orbitou, aproximou e afastou os quatro espécimes; não encontrou defeito material relevante. O harness foi removido após cumprir exclusivamente essa prova.
 
-| Espécime   | Evidência que sustenta o contrato                                                                                                                       |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| KayKit     | Base Color PNG e UV chegam como `map` e `uv`; controle texturizado simples.                                                                             |
-| Kenney     | Material por fator, sem imagem usada, chega sem maps; UV presente não é requisito de consumo.                                                           |
-| Poly Haven | Base Color, normal e metallic/roughness combinado chegam nos maps correspondentes; quatro imagens-fonte para três GLB preservam o significado material. |
-| Quaternius | Material por fatores, sem UV nem imagem usada, permanece válido; imagem solta não exige exportação.                                                     |
+### Limites da evidência
 
-F4-C3 comprovou este contrato em `f4cMaterialContract.test.ts` pelos quatro GLBs F4-B e pelo `GLTFLoader` de `three@0.185.1`: KayKit chega com Base Color texturizado e UV; Kenney por fatores sem maps; Poly Haven com Base Color, normal e o mesmo objeto `Texture` para metallic/roughness; Quaternius por fatores sem maps ou UV. O gate confere os SHA-256 registrados antes do parse e não modifica o resultado do loader. O adaptador jsdom permite somente a criação estrutural dos maps de imagens embutidas, não fidelidade visual, pixels, colorimetria ou orientação visual da textura. F4-C4 é o próximo checkpoint de F4-C; F4-D continua responsável por loading/unload/ownership; F4-E por custo e compressão; F5 por densidade, desempenho e Android físico.
+A prova estrutural verifica associação primitive → material, fatores, referências de textura, UV exigido e maps materializados no Three. O adaptador jsdom só permite terminar esse parse de imagens embutidas. A observação humana acrescenta coerência visual qualitativa, mas F4-C não provou equivalência pixel a pixel, colorimetria científica, precisão numérica da conversão EXR → PNG, qualidade artística, shader definitivo, resolução/formato definitivo de imagem, compressão, KTX2/Basis, Draco, Meshopt, atlas, LOD, instancing, merge, performance, custo de memória, loading/unload, cache, `AssetManager`, densidade de cena, Android físico ou Pipeline 3D permanente.
+
+F4-D é o próximo checkpoint e tratará loading, unload e ownership/disposal. F4-E continua responsável por custo e compressão; F5 por densidade, desempenho e Android físico.
 
 ## Limites
 

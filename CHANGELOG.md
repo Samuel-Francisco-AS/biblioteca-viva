@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F4-C-CLOSE — Materiais, UV e texturas concluídos experimentalmente — 2026-09-13
+
+- consolidado o contrato experimental de materiais por fatores ou texturas, UV somente quando necessário, Base Color por fator/textura, normal map e metallic-roughness compartilhado permitido pelo glTF, sem patches por asset no runtime;
+- a prova estrutural com os quatro GLBs F4-B, SHA-256 registrado e `GLTFLoader` de `three@0.185.1` confirmou KayKit texturizado, Kenney por fatores, Poly Haven com Base Color/normal/metallic-roughness combinado e Quaternius por fatores sem UV ou imagem;
+- gate humano visual registrou Poly Haven e KayKit coerentes, Kenney sem artefato e Quaternius claro/cinza coerente com seu material por fatores, não como textura perdida; não houve comparação pixel a pixel, colorimetria ou benchmark;
+- removido o harness visual temporário após cumprir o gate, sem alteração de produção, `ThreeWorldRuntime`, fixtures, fontes, materiais, UVs, imagens, loading/unload ou otimização; F4-D passa a ser o próximo checkpoint.
+
 ### F4-C3 — Prova automatizada de materiais, UV e texturas — 2026-09-13
 
 - adicionado gate Vitest estrutural para os quatro GLBs F4-B, com SHA-256 registrado e `GLTFLoader` de `three@0.185.1`, sem alterar assets, runtime ou materiais após o parse;

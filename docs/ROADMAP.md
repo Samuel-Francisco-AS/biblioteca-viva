@@ -84,11 +84,11 @@ Auditoria do caminho atual, contrato experimental e preflight da ferramenta de a
 
 O `GLTFLoader` instalado confirmou quatro GLBs normalizados com procedência suficiente sem correções individuais: root lógico em identidade, chão no `Y=0` e bounds `[largura, altura, profundidade]`. O mapeamento observado é Blender `X →` Three `X`, `Y → -Z` e `Z → Y`. O diagnóstico do Azrael confirmou root lógico utilizável com nove meshes, mas a ausência de evidência local suficiente de licença/proveniência impede sua promoção ao checkout. O contrato permanece experimental; frente visual/funcional, materiais/texturas, custo e pipeline definitivo não foram congelados.
 
-#### F4-C — Materiais, UV e texturas — em andamento
+#### F4-C — Materiais, UV e texturas — concluída experimentalmente
 
-F4-C1 inventariou materiais, UVs e imagens dos quatro espécimes F4-B; F4-C2 registrou o contrato técnico mínimo experimental para material glTF simples/interoperável, UV quando a textura o exigir e equivalências estruturais como metallic-roughness combinado; F4-C3 comprovou estruturalmente o caminho dos quatro GLBs pelo `GLTFLoader` instalado. F4-C4 é o próximo checkpoint. F4-C não antecipa especificação artística ou técnica permanente, nem fidelidade visual sem gate apropriado.
+F4-C1 inventariou materiais, UVs e imagens dos quatro espécimes F4-B; F4-C2 registrou o contrato técnico mínimo experimental; F4-C3 comprovou os quatro GLBs pelo `GLTFLoader` instalado; C4 preparou um harness isolado e temporário; C5 registrou observação humana visual coerente; e C6 consolidou o contrato e removeu o harness. F4-C não estabelece especificação artística ou técnica permanente, equivalência pixel a pixel ou fidelidade científica.
 
-#### F4-D — Loading, unload e ownership/disposal — planejada
+#### F4-D — Loading, unload e ownership/disposal — próxima
 
 Carregar e remover asset mantendo o runtime vivo, testar ownership, liberação, repetição, callbacks tardios e erros recuperáveis. Não cria antecipadamente um `AssetManager` definitivo.
 
