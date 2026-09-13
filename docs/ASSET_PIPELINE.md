@@ -41,10 +41,10 @@ O laboratório também carregou Azrael pelo mesmo `GLTFLoader`: o root `F4_Azrae
 Para os modelos normalizados, a conversão observada entre autoria Blender e a cena devolvida pelo `GLTFLoader` é:
 
 | Autoria Blender | glTF / Three carregado | Papel experimental |
-|---|---|---|
-| `X` | `X` | largura |
-| `Y` | `-Z` | profundidade |
-| `Z` | `Y` | altura/vertical |
+| --------------- | ---------------------- | ------------------ |
+| `X`             | `X`                    | largura            |
+| `Y`             | `-Z`                   | profundidade       |
+| `Z`             | `Y`                    | altura/vertical    |
 
 Os bounds de todos os espécimes têm mínimo `Y` runtime igual a zero (dentro da precisão float), portanto o chão é o plano `Y=0` do Three. A evidência inclui dimensões `[X, Y, Z]` runtime iguais a `[largura, altura, profundidade]`; os centroides geométricos de KayKit e Poly Haven, comparados entre o `.blend` normalizado e a cena carregada, também confirmaram os sinais `X → X`, `Y → -Z` e `Z → Y`. Nenhum dos cinco espécimes formaliza uma frente visual/funcional; a convenção de frente continua deliberadamente aberta.
 
@@ -52,15 +52,76 @@ O contrato experimental resultante é: uma unidade física normalizada equivale 
 
 ### Estratégias verificadas no laboratório
 
-| Fonte / espécime | Estratégia de normalização experimental | Estado neste checkout |
-|---|---|---|
-| Azrael / `Estanteria_9` | isolou os nove componentes do pack, reuniu-os sob `F4_Azrael_Estanteria9`, centralizou o footprint e levou a base a `Z=0` | não incluído: licença/proveniência local insuficiente |
-| KayKit / `shelf_B_large_decorated` | centralizou o footprint e levou a base para `Z=0` sob root lógico único | fixture F4-B registrada |
-| Kenney / `bookcaseOpen` | recenterizou a origem positiva da fonte em `X/Y` e preservou a base em `Z=0` | fixture F4-B registrada |
-| Poly Haven / `Shelf_01` | centralizou a profundidade da fonte, preservou a escala métrica e levou a base a `Z=0` | fixture F4-B registrada |
-| Quaternius / `Bookshelf` | incorporou a escala corretiva da fonte (`0,5`), centralizou o footprint e levou a base a `Z=0` | fixture F4-B registrada |
+| Fonte / espécime                   | Estratégia de normalização experimental                                                                                   | Estado neste checkout                                 |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Azrael / `Estanteria_9`            | isolou os nove componentes do pack, reuniu-os sob `F4_Azrael_Estanteria9`, centralizou o footprint e levou a base a `Z=0` | não incluído: licença/proveniência local insuficiente |
+| KayKit / `shelf_B_large_decorated` | centralizou o footprint e levou a base para `Z=0` sob root lógico único                                                   | fixture F4-B registrada                               |
+| Kenney / `bookcaseOpen`            | recenterizou a origem positiva da fonte em `X/Y` e preservou a base em `Z=0`                                              | fixture F4-B registrada                               |
+| Poly Haven / `Shelf_01`            | centralizou a profundidade da fonte, preservou a escala métrica e levou a base a `Z=0`                                    | fixture F4-B registrada                               |
+| Quaternius / `Bookshelf`           | incorporou a escala corretiva da fonte (`0,5`), centralizou o footprint e levou a base a `Z=0`                            | fixture F4-B registrada                               |
 
-As observações de imagens/material do Poly Haven (quatro na fonte, três no GLB) e Quaternius (uma na fonte, nenhuma no GLB) permanecem pendentes de F4-C. O aumento de vertex count após reexport, com posições únicas e triângulos preservados, continua assunto de custo para F4-E. Este resultado não introduz otimização, compressão, loading/unload formal, cache, `AssetManager`, mundo real ou persistência espacial.
+O diagnóstico F4-C1 confirmou que as quatro imagens conectadas do Poly Haven chegam como três no GLB porque metallic e roughness são combinados na `metallicRoughnessTexture` glTF; não é perda demonstrada. Também confirmou que a única imagem listada no `.blend` Quaternius não está ligada ao material nem possui UV correspondente, portanto sua ausência no GLB é legítima. O aumento de vertex count após reexport, com posições únicas e triângulos preservados, continua assunto de custo para F4-E. Este resultado não introduz otimização, compressão, loading/unload formal, cache, `AssetManager`, mundo real ou persistência espacial.
+
+## F4-C — contrato técnico mínimo experimental de materiais, UV e texturas
+
+F4-C transforma o diagnóstico F4-C1 em uma regra verificável para os espécimes F4 atuais. É um contrato experimental limitado, não um Pipeline 3D permanente, uma especificação artística ou uma garantia de fidelidade visual. Ele responde somente se um material necessário sai de fonte editável conhecida, é preparado/exportado como GLB e chega naturalmente pelo `GLTFLoader` ao Three sem correção específica no runtime.
+
+### Dados materiais necessários
+
+- Cada primitive deve apontar para o material glTF que representa seu material efetivamente utilizado; cada mesh pode ter a quantidade de primitives e materiais que o asset exigir.
+- Base Color deve chegar por fator, textura, ou ambos conforme o material glTF simples exportado. Roughness e metallic seguem a mesma regra quando utilizados; normal map deve chegar quando for utilizado.
+- Propriedades glTF simples relevantes ao material, como alpha/transparência e `doubleSided`, devem ser preservadas quando forem necessárias ao material efetivamente utilizado. Elas não se tornam requisitos universais.
+- Se o material utiliza textura mapeada, a primitive correspondente deve fornecer a coordenada UV referenciada pelo material, e ela deve chegar à geometria do Three. Nos espécimes atuais, esse caminho é `TEXCOORD_0`/`geometry.attributes.uv`; o contrato não torna esse índice uma regra permanente.
+- Material puramente baseado em fatores não exige textura nem UV. UV existente mas não consumido pelo material continua válido.
+- Imagem ou propriedade presente na fonte, mas não ligada ao material efetivamente utilizado, não precisa ser exportada para o GLB.
+
+### Representações equivalentes permitidas
+
+A prova compara significado material necessário, e não identidade de arquivos, nomes ou contagem de imagens. São aceitáveis, quando a estrutura GLB e o material carregado preservam esse significado:
+
+- Base Color por fator no lugar de uma textura inexistente ou não utilizada;
+- metallic e roughness separados na fonte combinados em uma `metallicRoughnessTexture` glTF;
+- uma mesma textura alimentando mais de uma propriedade do material Three;
+- conversão para formato de imagem compatível com o GLB/runtime;
+- ausência de textura para material por fatores; e
+- ausência de imagem solta/não utilizada na fonte.
+
+Em particular, a prova não deve esperar arquivos independentes de metallic e roughness nem depender do nome físico da imagem gerada. A relação válida é a referência material → textura → imagem no GLB e os maps entregues pelo loader.
+
+### Fronteira de preparação e runtime
+
+O caminho experimental esperado é:
+
+```text
+fonte editável conhecida
+        ↓
+preparação/exportação comprovada no asset
+        ↓
+GLB
+        ↓
+GLTFLoader instalado
+        ↓
+material Three resultante
+```
+
+Toda correção real de UV, material, ligação de textura, fator ou preparação de exportação pertence à fonte editável ou ao processo de preparação comprovado do asset. `ThreeWorldRuntime` não deve, por asset, substituir material, injetar textura, corrigir roughness/metalness, rotacionar/deslocar UV, alterar imagem ou usar branch por nome/ID.
+
+No corpus F4-C atual, `GLTFLoader` de `three@0.185.1` produz `MeshStandardMaterial` para os materiais PBR metálico-rugosidade observados. Isso é resultado do baseline atual, não uma exigência arquitetural eterna nem autorização para shader customizado.
+
+### Limite da prova
+
+A prova estrutural pode verificar por parsing e `GLTFLoader`: associação primitive → material, fatores, referências de textura, UV exigido e maps materializados no Three. Ela não prova fidelidade visual. Em especial, o adaptador mínimo de imagem do jsdom empregado pelos gates só permite terminar o parse estrutural de imagens embutidas; não prova decodificação, canais, color space, aparência ou equivalência pixel a pixel. Fidelidade visual exige gate posterior apropriado e, se necessário, evidência humana.
+
+### Evidência F4-C1 e próximo gate
+
+| Espécime   | Evidência que sustenta o contrato                                                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| KayKit     | Base Color PNG e UV chegam como `map` e `uv`; controle texturizado simples.                                                                             |
+| Kenney     | Material por fator, sem imagem usada, chega sem maps; UV presente não é requisito de consumo.                                                           |
+| Poly Haven | Base Color, normal e metallic/roughness combinado chegam nos maps correspondentes; quatro imagens-fonte para três GLB preservam o significado material. |
+| Quaternius | Material por fatores, sem UV nem imagem usada, permanece válido; imagem solta não exige exportação.                                                     |
+
+F4-C3 deverá implementar a prova automatizada fonte/GLB → `GLTFLoader`/Three deste contrato, sem reexportar fixtures, alterar o runtime ou concluir fidelidade visual. F4-D continua responsável por loading/unload/ownership; F4-E por custo e compressão; F5 por densidade, desempenho e Android físico.
 
 ## Limites
 

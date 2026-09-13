@@ -84,9 +84,9 @@ Auditoria do caminho atual, contrato experimental e preflight da ferramenta de a
 
 O `GLTFLoader` instalado confirmou quatro GLBs normalizados com procedência suficiente sem correções individuais: root lógico em identidade, chão no `Y=0` e bounds `[largura, altura, profundidade]`. O mapeamento observado é Blender `X →` Three `X`, `Y → -Z` e `Z → Y`. O diagnóstico do Azrael confirmou root lógico utilizável com nove meshes, mas a ausência de evidência local suficiente de licença/proveniência impede sua promoção ao checkout. O contrato permanece experimental; frente visual/funcional, materiais/texturas, custo e pipeline definitivo não foram congelados.
 
-#### F4-C — Materiais, UV e texturas — próximo checkpoint autorizado
+#### F4-C — Materiais, UV e texturas — em andamento
 
-Testar material simples, UV, Base Color, roughness e texturas, buscando fidelidade previsível entre fonte e runtime. Não antecipa especificação artística ou técnica permanente.
+F4-C1 inventariou materiais, UVs e imagens dos quatro espécimes F4-B; F4-C2 registrou o contrato técnico mínimo experimental para material glTF simples/interoperável, UV quando a textura o exigir e equivalências estruturais como metallic-roughness combinado. F4-C3 é o próximo checkpoint: prova automatizada fonte/GLB → `GLTFLoader`/Three. F4-C não antecipa especificação artística ou técnica permanente, nem fidelidade visual sem gate apropriado.
 
 #### F4-D — Loading, unload e ownership/disposal — planejada
 

@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F4-C2 — Contrato técnico mínimo experimental de materiais, UV e texturas — 2026-09-13
+
+- registrado o contrato experimental que exige preservar somente o significado material efetivamente usado — fatores, texturas, maps e UV necessário — entre fonte editável conhecida, GLB e `GLTFLoader`, sem correções por asset no runtime;
+- formalizadas equivalências estruturais legítimas: metallic e roughness podem chegar combinados, formatos de imagem podem mudar, materiais por fatores não exigem textura/UV e imagens não utilizadas não exigem exportação;
+- separada a prova estrutural automatizável da fidelidade visual, que não é demonstrada pelo adaptador jsdom nem foi declarada concluída; F4-C permanece em andamento e F4-C3 passa a ser a próxima etapa;
+- não foram alterados fixtures, materiais, UVs, imagens, `ThreeWorldRuntime`, loading/unload, custo, compressão ou arquitetura de assets.
+
 ### F4-B-RUNTIME-AXIS-GATE — Geometria, escala, eixos e pivô concluídos — 2026-09-13
 
 - comprovado com o `GLTFLoader` de `three@0.185.1` instalado que quatro GLBs normalizados e registrados chegam ao Three sem scale, rotação ou offset corretivos individuais: root em identidade, chão no plano `Y=0` e dimensões `[largura, altura, profundidade]`;
