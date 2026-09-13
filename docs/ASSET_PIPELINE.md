@@ -160,7 +160,13 @@ Essas provas podem ficar fora de produção: um harness de teste com `THREE.Scen
 
 No primeiro ciclo, listeners de `dispose` nos objetos Three reais da root KayKit confirmam uma liberação de geometry, material e texture usada pelo material. A root deixa o owner e a `Scene`, enquanto um `Group` sentinela e a mesma instância de host permanecem. No segundo ciclo, novo parse real produz nova root, que o mesmo owner anexa ao mesmo host; a liberação final serve somente de cleanup do teste. A prova não aprovou API, owner de produção, `AssetManager`, cache, unload definitivo, renderer ou arquitetura permanente.
 
-F4-D3 é o próximo checkpoint e tratará repetição, isolamento e disposal. F4-E continua responsável por custo e compressão; F5 por densidade, desempenho e Android físico.
+## F4-D3 — repetição, isolamento e disposal — concluída
+
+`f4dAssetLifecycle.test.ts` estende o mesmo harness local sem alterar `ThreeWorldRuntime`. Para KayKit, o unload repetido fica inerte depois da primeira liberação: geometry, material e texture reais emitem um único `dispose`. Três ciclos determinísticos de parse, attach e unload produzem roots, geometries, materiais e textures distintos, terminam com o owner vazio e não acumulam roots de asset no mesmo host ou removem seu sentinel.
+
+Dois owners experimentais independentes anexam Poly Haven e Kenney à mesma `Scene`. O unload de Poly Haven libera somente seus recursos e preserva a root, o owner e os contadores de disposal de Kenney até seu unload próprio. No Poly Haven, `metalnessMap` e `roughnessMap` são a mesma `Texture`, observada uma única vez e descartada uma única vez. A cobertura complementar de `referenceScene.test.ts` continua demonstrando a deduplicação geral de geometry, material e texture compartilhados dentro de uma árvore. Isto não aprova política de compartilhamento entre assets independentes, referência contada, cache, manager ou API de produção.
+
+F4-D4 é o próximo checkpoint e tratará assíncrono em voo, abandono, callbacks tardios e erros. F4-E continua responsável por custo e compressão; F5 por densidade, desempenho e Android físico.
 
 ## Limites
 

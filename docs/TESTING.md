@@ -237,6 +237,15 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - um `Group` sentinela confirma que o unload remove somente a root alvo: a mesma `Scene`, o sentinel e a possibilidade de carregar/anexar nova root real permanecem após o unload;
 - o gate dirigido `npm run test:run -- f4dAssetLifecycle referenceScene` aprovou 2 arquivos e 4 testes. Não prova idempotência repetida, A/B simultâneos, isolamento entre assets, callbacks/erros tardios, cancelamento lógico, cache, manager, renderer, performance ou Android.
 
+## F4-D3 — repetição, isolamento e disposal
+
+- `f4dAssetLifecycle.test.ts` mantém o owner somente como mecanismo local de prova e exercita `GLTFLoader.parseAsync()` real com KayKit, Poly Haven e Kenney F4-B, após conferir os SHA-256 registrados;
+- um caso KayKit comprova que o segundo unload é inerte: os eventos reais de `dispose` de geometry, material e texture permanecem em um, e host/sentinel ficam intactos;
+- três ciclos KayKit comprovam roots, geometries, materiais e textures distintos por parse, liberação única por conjunto e ausência de acúmulo de roots de asset, com o mesmo host e sentinel durante toda a sequência;
+- dois owners independentes anexam Poly Haven e Kenney à mesma `Scene`; o unload seletivo de Poly Haven libera seus recursos sem remover Kenney nem disparar seus eventos de disposal, e o unload posterior de Kenney encerra seu próprio cleanup;
+- no Poly Haven, Base Color, normal e a `Texture` única compartilhada por metallic/roughness são observadas por eventos reais de `dispose`; a texture compartilhada recebe um único evento. `referenceScene.test.ts` preserva a cobertura complementar da deduplicação geral de geometry/material/texture compartilhados dentro de uma árvore;
+- o gate dirigido `npm run test:run -- f4dAssetLifecycle referenceScene` aprovou 2 arquivos e 7 testes. Ainda não prova operação em voo, abandono, callbacks ou erros tardios, cancelamento lógico, abort físico, cache, preload, registry, sharing entre assets, referência contada, renderer, performance ou Android.
+
 ## Comandos
 
 ```bash

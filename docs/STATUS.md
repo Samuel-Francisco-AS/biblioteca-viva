@@ -20,6 +20,7 @@
 - F4-B foi concluída experimentalmente: quatro GLBs normalizados de fontes externas com proveniência suficiente foram carregados pelo `GLTFLoader` instalado e têm roots sem scale, rotação ou offset corretivos, chão no `Y=0` e dimensões Three `[largura, altura, profundidade]`. O mapeamento observado é Blender `X →` Three `X`, Blender `Y →` Three `-Z` e Blender `Z →` Three `Y`; Azrael também foi carregado no diagnóstico com nove meshes sob root lógico, mas não entrou no checkout porque a licença/proveniência local disponível não é suficiente. O contrato continua experimental, não formaliza frente visual/funcional nem Pipeline 3D definitivo.
 - F4-D1 auditou loading, ownership e disposal sem alterar produção ou assets. O fixture F1 ainda é possuído somente pela montagem terminal; `disposeObjectTree()` deduplica geometry/material/texture por árvore e remove sua raiz. Não há unload com host vivo, token de intenção ou abort no baseline. O contrato D1 separa semanticamente host, root, owner e loading, exige um único owner após attach, unload idempotente que preserva o host e descarte de sucesso tardio já não desejado. D2 realizou a primeira prova em harness isolado, sem mudança no runtime.
 - F4-D2 comprovou em harness isolado que KayKit real, carregado pelo `GLTFLoader` instalado após SHA-256, pode ser aceito por owner experimental local, anexado a `Scene`, removido por `disposeObjectTree()` com eventos reais de disposal de geometry/material/texture e substituído por nova root no mesmo host. O sentinel permaneceu; não houve mudança de runtime, produção ou asset, nem criação de API, manager ou cache.
+- F4-D3 estendeu esse harness sem alterar produção, runtime ou assets: unload repetido de KayKit é inerte depois da liberação única; três ciclos usam roots e recursos distintos sem acumular ownership; e owners locais independentes permitem descarregar Poly Haven sem tocar Kenney. A `Texture` compartilhada por metallic/roughness no Poly Haven emitiu um único `dispose`; a cobertura complementar de `referenceScene.test.ts` mantém a deduplicação geral intrárvore. Não foi aprovada política de sharing entre assets, referência contada, manager ou cache.
 - A cena atual é um spike técnico com fixture, não a Biblioteca final nem arquitetura permanente de conteúdo. Não existe persistência espacial, pipeline 3D formal, catálogo real, `PlacedObject`, `WorldStructureState` ou tabela espacial.
 - R3F e WebGPU não estão aprovados; renderers alternativos só voltam a ser considerados diante de evidência estrutural futura.
 
@@ -31,7 +32,7 @@
 
 ## Próximo trabalho
 
-**F4 — Contrato experimental de assets 3D está em andamento. F4-A, F4-B, F4-C, F4-D1 e F4-D2 estão concluídas experimentalmente.** D2 comprovou load → attach → unload com host vivo em harness isolado, sem alterar runtime ou asset. F4-D3 — repetição, isolamento e disposal — é o próximo checkpoint, sem iniciar pipeline definitivo, Biblioteca real ou persistência espacial.
+**F4 — Contrato experimental de assets 3D está em andamento. F4-A, F4-B, F4-C e F4-D1–D3 estão concluídas experimentalmente.** D3 comprovou unload idempotente, ciclos repetidos, isolamento seletivo entre Poly Haven e Kenney e deduplicação intrárvore, sem alterar runtime ou asset. F4-D4 — assíncrono em voo, abandono, callbacks tardios e erros — é o próximo checkpoint, sem iniciar pipeline definitivo, Biblioteca real ou persistência espacial.
 
 ```text
 F0 ✅
@@ -54,8 +55,8 @@ F4 ▶ EM ANDAMENTO
   F4-D ▶ EM ANDAMENTO
     D1 ✅ auditoria e contrato experimental de loading/unload/ownership
     D2 ✅ load → attach → unload com host vivo
-    D3 ▶ PRÓXIMA — repetição, isolamento e disposal
-    D4 ⏳ abandono, callbacks tardios e erro
+    D3 ✅ repetição, isolamento e disposal
+    D4 ▶ PRÓXIMA — assíncrono em voo, abandono, callbacks tardios e erros
   F4-E ⏳
   F4-F ⏳
 F5 ⏳

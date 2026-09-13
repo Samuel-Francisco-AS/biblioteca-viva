@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F4-D3 — repetição, isolamento e disposal — 2026-09-13
+
+- estendida a prova isolada com `GLTFLoader` de `three@0.185.1`, `THREE.Scene` e `disposeObjectTree()` reais: unload repetido de KayKit ficou inerte depois de uma única liberação, e três ciclos com roots e recursos distintos não acumularam ownership ou children de asset;
+- comprovados owners experimentais locais independentes para Poly Haven e Kenney no mesmo host: descarregar Poly Haven libera somente seus recursos e preserva Kenney até seu unload próprio; a `Texture` compartilhada por metallic/roughness no Poly Haven emitiu um único evento `dispose`;
+- não foram alterados `ThreeWorldRuntime`, produção ou assets, nem criados API permanente, `AssetManager`, cache, sharing interasset ou referência contada; F4-D4 passa a ser o próximo checkpoint para assíncrono em voo, abandono, callbacks tardios e erros.
+
 ### F4-D2 — Load, attach e unload mantendo o host vivo — 2026-09-13
 
 - adicionada prova isolada com KayKit F4-B real, SHA-256 registrado, `GLTFLoader` de `three@0.185.1`, `THREE.Scene` e `disposeObjectTree()` reais;

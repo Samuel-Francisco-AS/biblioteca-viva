@@ -24,8 +24,8 @@ F4 ▶ EM ANDAMENTO
   F4-D ▶ EM ANDAMENTO
     D1 ✅ auditoria e contrato experimental
     D2 ✅ load → attach → unload com host vivo
-    D3 ▶ PRÓXIMA
-    D4 ⏳
+    D3 ✅ repetição, isolamento e disposal
+    D4 ▶ PRÓXIMA
   F4-E ⏳
   F4-F ⏳
 F5 ⏳
@@ -98,7 +98,9 @@ D1 mapeou o fixture F1 real: a montagem terminal é seu único owner registrado,
 
 D2 comprovou em harness isolado o ciclo KayKit real `GLTFLoader` → owner local → `THREE.Scene` → `disposeObjectTree()`: geometry, material e texture emitiram disposal, o sentinel e a mesma instância de host permaneceram, e novo parse/attach funcionou. O owner existe somente no teste; não há API, manager, cache ou mudança de `ThreeWorldRuntime`.
 
-D3 é a próxima prova e cobrirá repetição, A/B simultâneos e deduplicação intrárvore com Poly Haven e Kenney; D4 cobrirá abandono, callbacks tardios, erro e owner encerrado com async controlado e root Quaternius real. `ThreeWorldRuntime` permanece inalterado até que alguma propriedade demonstre que o harness não basta.
+D3 comprovou unload repetido inerte, três ciclos KayKit sem acúmulo, owners independentes para Poly Haven e Kenney no mesmo host e unload seletivo de A sem disposal de B. A `Texture` compartilhada por metallic/roughness no Poly Haven emitiu um único `dispose`; `referenceScene.test.ts` mantém a cobertura complementar da deduplicação geral intrárvore. Não há política de sharing entre assets, referência contada, cache, manager ou API de produção.
+
+D4 é a próxima prova e cobrirá assíncrono em voo, abandono, callbacks tardios, erro e owner encerrado com async controlado e root Quaternius real. `ThreeWorldRuntime` permanece inalterado até que alguma propriedade demonstre que o harness não basta.
 
 #### F4-E — Custo e compressão experimental — planejada
 
