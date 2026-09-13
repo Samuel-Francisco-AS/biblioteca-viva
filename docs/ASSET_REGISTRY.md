@@ -2,10 +2,10 @@
 
 O baseline ativo possui dois assets de áudio e um fixture 3D técnico da F1, todos de autoria interna:
 
-| ID | Arquivo | Uso | Origem/licença | Estado |
-|---|---|---|---|---|
-| `ui-page-provisional-v1` | `public/audio/ui-page.wav` | navegação | autoria interna, gerado por `scripts/generate-audio-assets.mjs`; licença do projeto | gerado |
-| `book-completed-provisional-v1` | `public/audio/book-completed.wav` | conclusão de livro | autoria interna, gerado pelo mesmo script; licença do projeto | gerado |
+| ID                              | Arquivo                           | Uso                | Origem/licença                                                                      | Estado |
+| ------------------------------- | --------------------------------- | ------------------ | ----------------------------------------------------------------------------------- | ------ |
+| `ui-page-provisional-v1`        | `public/audio/ui-page.wav`        | navegação          | autoria interna, gerado por `scripts/generate-audio-assets.mjs`; licença do projeto | gerado |
+| `book-completed-provisional-v1` | `public/audio/book-completed.wav` | conclusão de livro | autoria interna, gerado pelo mesmo script; licença do projeto                       | gerado |
 
 ## Fixture 3D experimental
 
@@ -48,7 +48,7 @@ Os itens abaixo são espécimes externos normalizados para o gate F4-B, não ass
 - **origem/fonte:** [Poly Haven — Shelf 01](https://polyhaven.com/a/Shelf_01); candidato editável `Shelf_01_1k.blend` e texturas da fonte preservados no corpus F4;
 - **autoria/licença:** Gabriel Radić; CC0 1.0, declarada pela página oficial do asset;
 - **modificações:** profundidade centralizada, base em `Z=0`, root `F4_PolyHaven_Shelf01` em identidade e export GLB normalizado;
-- **finalidade/estado:** prova experimental F4-B; não-final, sem uso pela cena técnica. A verificação de material/imagens permanece F4-C.
+- **finalidade/estado:** prova experimental F4-B; não-final, sem uso pela cena técnica. F4-C confirmou estruturalmente Base Color, normal e metallic/roughness; metallic e roughness chegam em representação compartilhada válida, e o gate humano visual não encontrou discrepância material relevante.
 
 ### `f4-b-quaternius-bookshelf`
 
@@ -56,4 +56,4 @@ Os itens abaixo são espécimes externos normalizados para o gate F4-B, não ass
 - **origem/fonte:** pacote externo `Quaternius Blends`; fonte editável candidata `Bookshelf.blend`;
 - **autoria/licença:** Quaternius; CC0 1.0, conforme `Quaternius-License.txt` original preservado;
 - **modificações:** escala `0,5` incorporada ao asset, footprint centralizado, base em `Z=0`, root `F4_Quaternius_Bookshelf` em identidade e export GLB normalizado;
-- **finalidade/estado:** prova experimental F4-B; não-final, sem uso pela cena técnica. A ausência de imagem no GLB é pendência F4-C.
+- **finalidade/estado:** prova experimental F4-B; não-final, sem uso pela cena técnica. F4-C confirmou material efetivo por fatores: a imagem da fonte não participa dele, o mesh não requer UV e a ausência de imagem no GLB é legítima, não perda material.

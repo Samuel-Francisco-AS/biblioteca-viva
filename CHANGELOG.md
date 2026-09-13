@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F4-D1 — Auditoria e contrato experimental de loading/unload/ownership — 2026-09-13
+
+- auditado o caminho real do fixture F1: `GLTFLoader` entrega o root ao runtime, a montagem é seu único owner registrado até o disposal terminal e não existe unload de asset com host vivo, token de intenção ou abort de load;
+- registrado o comportamento de callbacks tardios, pausa, falha terminal e `webglcontextlost`, além dos limites comprovados de `disposeObjectTree()` para meshes, geometry/material/texture deduplicados por árvore;
+- definido somente o contrato experimental mínimo de host, root, owner, loading, unload idempotente, descarte de sucesso tardio e falha individual recuperável, sem introduzir API, `AssetManager`, cache, registry, streaming ou mudança de produção;
+- decompostas as provas isoladas D2–D4; D2 passa a ser o próximo checkpoint para load → attach → unload mantendo o host vivo. Nenhum código ou asset foi alterado.
+
 ### F4-C-CLOSE — Materiais, UV e texturas concluídos experimentalmente — 2026-09-13
 
 - consolidado o contrato experimental de materiais por fatores ou texturas, UV somente quando necessário, Base Color por fator/textura, normal map e metallic-roughness compartilhado permitido pelo glTF, sem patches por asset no runtime;

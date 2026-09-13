@@ -123,7 +123,38 @@ No corpus F4-C atual, `GLTFLoader` de `three@0.185.1` produz `MeshStandardMateri
 
 A prova estrutural verifica associação primitive → material, fatores, referências de textura, UV exigido e maps materializados no Three. O adaptador jsdom só permite terminar esse parse de imagens embutidas. A observação humana acrescenta coerência visual qualitativa, mas F4-C não provou equivalência pixel a pixel, colorimetria científica, precisão numérica da conversão EXR → PNG, qualidade artística, shader definitivo, resolução/formato definitivo de imagem, compressão, KTX2/Basis, Draco, Meshopt, atlas, LOD, instancing, merge, performance, custo de memória, loading/unload, cache, `AssetManager`, densidade de cena, Android físico ou Pipeline 3D permanente.
 
-F4-D é o próximo checkpoint e tratará loading, unload e ownership/disposal. F4-E continua responsável por custo e compressão; F5 por densidade, desempenho e Android físico.
+## F4-D1 — auditoria e contrato experimental de loading, unload e ownership — concluída
+
+Esta auditoria não alterou `ThreeWorldRuntime`, assets ou a cena técnica. Ela confirma no checkout que `createFixtureLoader()` cria um `GLTFLoader` e entrega somente `gltf.scene` a `ThreeWorldRuntime`; `loadFixture()` inicia uma única carga do fixture F1, sem guardar operação, token de intenção, abort físico ou cancelamento lógico. No sucesso aceito, `handleFixtureLoaded()` posiciona o root, o adiciona à `Scene` e o entrega a `ThreeWorldMount.addFixture()`: a montagem passa a ser o único owner registrado desse root até seu encerramento terminal.
+
+`ThreeWorldMount.dispose()` libera primeiro o fixture que ainda referencia, depois a raiz da cena de referência, limpa a `Scene`, descarta renderer e remove canvas. `disposeObjectTree()` percorre somente `Mesh` (incluindo os meshes em subárvores), coleta `BufferGeometry`, material único ou array de materiais e `Texture` encontradas nos valores próprios de cada material; `Set`s eliminam repetição dentro daquela chamada. Em seguida descarta texturas, materiais e geometrias, remove a raiz do parent e limpa seus filhos. O teste de `referenceScene` prova a deduplicação de uma geometry, material e texture compartilhados por dois meshes e que a raiz fica sem filhos. O código prova a remoção do parent; múltiplas chamadas sobre a mesma árvore, todos os slots/estruturas possíveis de textura e compartilhamento entre árvores distintas não são garantias cobertas por teste.
+
+O callback de sucesso só é rejeitado quando o runtime já é terminal (`failed` ou `disposed`) ou a montagem não existe; nesse caso o root recebido é liberado sem anexação, render ou reativação. Durante `paused`, ele ainda é aceito, anexado e marcado `ready`, mas `renderCurrentFrame()` não renderiza até a retomada. Erro normal de fixture enquanto a montagem existe marca `fixtureStatus = error`, registra diagnóstico e mantém o host/runtime vivo; erro depois de terminalidade não produz efeito. Perda de contexto WebGL, erro estrutural de render ou resize tornam o runtime terminal e acionam a mesma liberação da montagem; sucesso tardio após isso é descartado. O baseline não guarda uma operação por asset: portanto não representa “não mais desejado”, não tem política para callbacks mutuamente contraditórios de uma mesma operação e não prova unload com host vivo.
+
+### Contrato experimental mínimo D1
+
+Os termos abaixo são semânticos para as provas D2–D4, não nomes de classes, enumerações ou API futura:
+
+- **Host** é o ambiente vivo que pode receber e perder roots sem ser destruído; a prova não presume que ele seja `ThreeWorldRuntime`.
+- **Asset root** é o root lógico carregado e potencialmente anexado, inclusive quando contém múltiplos meshes.
+- **Owner** mantém a intenção de possuir um asset. Ao aceitar o sucesso, torna-se o único responsável pelo root, por removê-lo do host e por iniciar a liberação da árvore. Não há owner global nem propriedade compartilhada entre assets neste contrato.
+- **Loading** ainda não transfere a posse do root: enquanto a operação está em voo, o owner precisa saber se ainda aceita seu resultado. A prova exigirá cancelamento lógico, não abort físico de request.
+- **Loaded/attached** só ocorre quando um resultado ainda desejado é anexado ao host e passa a ter exatamente um owner. Cada operação só pode transferir uma root uma vez; resultado posterior já não desejado, inclusive sucesso adicional da mesma operação, nunca é anexado e quem o recebe o libera imediatamente pela estratégia existente.
+- **Unload** deve primeiro tornar o asset não pertencente ao owner, depois destacá-lo do host e liberar os recursos de sua árvore uma única vez. Ele não pode destruir o host, reanexar o root nem tocar outro asset; o host precisa continuar apto a receber uma nova carga.
+- **Idempotência** significa que repetir unload ou encerrar o owner não duplica disposal nem altera outros roots. Um callback posterior não pode restaurar o vínculo nem voltar o estado conceitual a loaded.
+- **Falha individual** deixa o host separado e utilizável; ela não é falha estrutural do host sem evidência concreta. Depois de uma falha ou abandono que encerre a operação conceitual, qualquer sucesso tardio deve ser descartado e qualquer erro tardio deve ser inerte. Política definitiva de retry permanece aberta.
+
+Assim, `unload` de asset **não é** `dispose` de host/runtime: o primeiro atinge somente o root pertencente ao owner; o segundo continua a ser o lifecycle terminal já existente da montagem. O contrato reutiliza somente a estratégia local comprovada de `disposeObjectTree()` e não pressupõe cache, registry, preload, streaming, pooling, bundles, prioridades, deduplicação global, compartilhamento entre assets, contagem de referências, `AbortController` ou gerenciador definitivo.
+
+### Sequência de provas D2–D4
+
+- **D2:** em harness isolado, `Scene` ou `Group` vivo + `GLTFLoader` instalado e fixture KayKit real: load/attach, unload, host ainda íntegro e novo load/attach possível. KayKit exercita geometry, material e texture/UV reais.
+- **D3:** duas roots reais simultâneas no mesmo harness — Poly Haven como A, para maps ricos e a textura metallic/roughness compartilhada dentro da própria árvore, e Kenney como B simples. Provar repetição/idempotência, unload de A sem atingir B e a deduplicação interna já oferecida pela estratégia de disposal; não inferir compartilhamento de recursos entre A e B.
+- **D4:** usar root Quaternius real, pequeno e sem textura, entregue por double assíncrono controlado para testar abandono durante loading, sucesso tardio, erro, erro tardio e owner encerrado. A double controla somente a ordem temporal; os roots e sua liberação continuam Three reais. KayKit permanece disponível como variante texturizada se a prova precisar confirmar que o caminho tardio não depende de root simples.
+
+Essas provas podem ficar fora de produção: um harness de teste com `THREE.Scene`/`Group`, `GLTFLoader`, os fixtures F4-B e `disposeObjectTree()` já isola a propriedade em questão. Nenhuma propriedade identificada exige mudar `ThreeWorldRuntime`; alterar a produção antes dessa evidência ampliaria indevidamente a arquitetura.
+
+F4-D2 é o próximo checkpoint e provará load → attach → unload mantendo o host vivo. F4-E continua responsável por custo e compressão; F5 por densidade, desempenho e Android físico.
 
 ## Limites
 

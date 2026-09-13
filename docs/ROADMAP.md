@@ -20,8 +20,12 @@ F3 ✅ CONCLUÍDA
 F4 ▶ EM ANDAMENTO
   F4-A ✅ CONCLUÍDA (preflight técnico + humano)
   F4-B ✅ CONCLUÍDA
-  F4-C ▶ PRÓXIMO
-  F4-D ⏳
+  F4-C ✅ CONCLUÍDA
+  F4-D ▶ EM ANDAMENTO
+    D1 ✅ auditoria e contrato experimental
+    D2 ▶ PRÓXIMA
+    D3 ⏳
+    D4 ⏳
   F4-E ⏳
   F4-F ⏳
 F5 ⏳
@@ -88,9 +92,11 @@ O `GLTFLoader` instalado confirmou quatro GLBs normalizados com procedência suf
 
 F4-C1 inventariou materiais, UVs e imagens dos quatro espécimes F4-B; F4-C2 registrou o contrato técnico mínimo experimental; F4-C3 comprovou os quatro GLBs pelo `GLTFLoader` instalado; C4 preparou um harness isolado e temporário; C5 registrou observação humana visual coerente; e C6 consolidou o contrato e removeu o harness. F4-C não estabelece especificação artística ou técnica permanente, equivalência pixel a pixel ou fidelidade científica.
 
-#### F4-D — Loading, unload e ownership/disposal — próxima
+#### F4-D — Loading, unload e ownership/disposal — em andamento
 
-Carregar e remover asset mantendo o runtime vivo, testar ownership, liberação, repetição, callbacks tardios e erros recuperáveis. Não cria antecipadamente um `AssetManager` definitivo.
+D1 mapeou o fixture F1 real: a montagem terminal é seu único owner registrado, `disposeObjectTree()` deduplica recursos dentro de uma árvore e não existe unload mantendo host vivo. O contrato experimental exige um owner único depois do attach, cancelamento lógico de intenção durante loading, descarte do resultado tardio, unload idempotente que remove/libera somente o root alvo e falha individual separada da falha do host. Não escolhe API, `AssetManager`, cache, abort físico ou gerenciamento global.
+
+D2 é a próxima prova: em harness isolado com `THREE.Scene`/`Group`, `GLTFLoader`, fixture KayKit e `disposeObjectTree()`, provar load → attach → unload com host vivo e novo load possível. D3 cobrirá repetição, A/B simultâneos e deduplicação intrárvore com Poly Haven e Kenney; D4 cobrirá abandono, callbacks tardios, erro e owner encerrado com async controlado e root Quaternius real. `ThreeWorldRuntime` permanece inalterado até que alguma propriedade demonstre que o harness não basta.
 
 #### F4-E — Custo e compressão experimental — planejada
 
