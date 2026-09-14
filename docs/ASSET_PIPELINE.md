@@ -180,6 +180,104 @@ Se a intenção é abandonada ou o owner é encerrado durante loading, callback 
 
 F4-D não aprovou `AssetManager`, registry, cache, preload, streaming, pooling, queue global, retry automático, abort físico, `AbortController`, cancelamento de rede, sharing entre assets, referência contada, garbage collector, bundles, prioridades, loading screen, persistência, renderer em cena complexa, performance, memória total, Android físico, pressão real de rede/memória ou arquitetura final de loading. F4-E — custo e compressão experimental — é o próximo trabalho e deve medir os assets antes de escolher qualquer hipótese de otimização/compressão.
 
+## F4-E1 — baseline estrutural de custo — concluída
+
+Em 2026-09-14, a análise leu diretamente os quatro GLBs F4-B registrados, sem parse que mutasse o resultado, reexportação, conversão ou alteração de fixture. SHA-256, caminhos e tamanhos conferem com `ASSET_REGISTRY.md`:
+
+| Asset | Caminho | SHA-256 | Correspondência |
+| --- | --- | --- | --- |
+| KayKit | `fixtures/f4-b/kaykit-shelf-b-large-decorated.glb` | `03e0b1af929de0a81795aea965b6cc5fbd8ac6e896e1047acef9f5d93b9debbe` | sim |
+| Kenney | `fixtures/f4-b/kenney-bookcase-open.glb` | `6704751f18b91a68ad9689c24ea59e029c09d584264b7f089439e79683c71900` | sim |
+| Poly Haven | `fixtures/f4-b/polyhaven-shelf-01.glb` | `33d55c107ea5afd314aad197f7753c64bacc88ea554df3f7e57fc8e7c81415b1` | sim |
+| Quaternius | `fixtures/f4-b/quaternius-bookshelf.glb` | `aabe7de0adf6b0e3aaf651acbb5704680e44df3180ffa98aa0cb7d19d389f265` | sim |
+
+### Método e classificação das métricas
+
+- **Medida exata:** bytes/chunks do container, objetos glTF, accessors, `bufferViews`, materiais, imagens, MIME, dimensões lidas nos bytes de PNG/JPEG e extensões vieram da estrutura GLB 2.0 real.
+- **Métrica derivada:** triângulos saem de índices em `TRIANGLES` dividido por três; bytes lógicos de accessor são `count × componentes do type × bytes do componentType`. Esses bytes não duplicam `bufferView` compartilhado e não representam padding, interleaving ou alocação física; neste corpus não há `byteStride`, sparse accessor ou `bufferView` compartilhado entre accessors.
+- **Estimativa:** `largura × altura × 4` é apenas referência de imagem RGBA8 no nível base. Não mede memória de GPU, heap/browser, representação interna WebGL nem Moto G06; não supõe mipmaps.
+
+### Tabela consolidada
+
+| Asset | GLB bytes | Meshes | Primitives | Vertices | Triangles | Materials | Images | Encoded image bytes | Image dimensions | RGBA8 base estimate |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: |
+| KayKit | 44.780 (43,73 KiB) | 1 | 1 | 778 | 482 | 1 | 1 | 15.605 | PNG 1024×1024 | 4.194.304 (4 MiB) |
+| Kenney | 20.460 (19,98 KiB) | 1 | 1 | 543 | 320 | 1 | 0 | 0 | — | 0 |
+| Poly Haven | 5.828.612 (5,559 MiB) | 1 | 1 | 362 | 182 | 1 | 3 | 5.814.197 | PNG/JPEG/PNG, cada uma 1024×1024 | 12.582.912 (12 MiB) |
+| Quaternius | 7.572 (7,39 KiB) | 1 | 1 | 240 | 120 | 1 | 0 | 0 | — | 0 |
+
+Todos os primitives são indexed, `mode=TRIANGLES`, têm um material e são um **proxy estrutural** de uma submissão; não são uma contagem exata de draw calls do renderer. Não há animações, skins, joints/bones, morph targets, cameras, lights incorporadas ou extensões glTF em nenhum dos quatro assets (`extensionsUsed` e `extensionsRequired` vazios). Portanto não há neste corpus extensão glTF declarada de compressão geométrica, transcodificação/compressão de textura, quantização ou material; PNG e JPEG continuam sendo os encodings de imagem efetivamente medidos.
+
+### Container, geometria e atributos
+
+Cada GLB tem cabeçalho de 12 bytes, um chunk JSON e um BIN; não há chunks adicionais. JSON/BIN abaixo são bytes exatos dos chunks, e o restante são os 28 bytes dos cabeçalhos de container/chunk.
+
+| Asset | JSON bytes (% GLB) | BIN bytes (% GLB) | Observação de alinhamento | Índices | Atributos e bytes lógicos |
+| --- | ---: | ---: | --- | ---: | --- |
+| KayKit | 1.356 (3,028%) | 43.396 (96,909%) | 3 bytes finais de padding após a PNG | 1.446 `UNSIGNED_SHORT` | `POSITION` 9.336; `NORMAL` 9.336; `TEXCOORD_0` 6.224; índices 2.892 (total 27.788) |
+| Kenney | 1.136 (5,552%) | 19.296 (94,311%) | sem padding interno adicional observado | 960 `UNSIGNED_SHORT` | `POSITION` 6.516; `NORMAL` 6.516; `TEXCOORD_0` 4.344; índices 1.920 (total 19.296) |
+| Poly Haven | 1.708 (0,029%) | 5.826.876 (99,970%) | 3 bytes entre imagens para alinhamento de `bufferView` | 546 `UNSIGNED_SHORT` | `POSITION` 4.344; `NORMAL` 4.344; `TEXCOORD_0` 2.896; índices 1.092 (total 12.676) |
+| Quaternius | 1.064 (14,052%) | 6.480 (85,578%) | sem padding interno adicional observado | 360 `UNSIGNED_SHORT` | `POSITION` 2.880; `NORMAL` 2.880; índices 720 (total 6.480) |
+
+Há uma scene, um node, um mesh e um primitive por fixture. Accessors/bufferViews são respectivamente KayKit 4/5, Kenney 4/4, Poly Haven 4/7 e Quaternius 3/3. Os totais lógicos de geometria do corpus são `POSITION` 23.076 bytes, `NORMAL` 23.076, UV 13.464 e índices 6.624: 66.240 bytes. Isso explica o BIN simples de Kenney e Quaternius e deixa claro que o BIN de Poly Haven é majoritariamente imagem, não malha.
+
+### Materiais e imagens
+
+| Asset | Material PBR efetivo | Imagem/textura e papel | Bytes codificados |
+| --- | --- | --- | ---: |
+| KayKit | `furniture_texture`; Base Color texture, metallic 0, roughness 0,5; opaco, uma face | PNG 1024×1024 em `baseColorTexture` | 15.605 |
+| Kenney | `wood`; Base Color factor `[0,8962264, 0,6015712, 0,3931559, 1]`, metallic 0; opaco, uma face | nenhuma; UV existe mas o material por fator não a consome | 0 |
+| Poly Haven | `Shelf_01`; Base Color, normal e `metallicRoughnessTexture`; opaco, `doubleSided` | normal PNG 1024×1024; Base Color JPEG 1024×1024; PNG 1024×1024 de metallic/roughness combinado | 4.594.197; 153.220; 1.066.780 |
+| Quaternius | `White`; Base Color factor `[0,4479754, 0,4432907, 0,4294085, 1]`, metallic 0, roughness 0,5; opaco, `doubleSided` | nenhuma e sem UV; ausência continua legítima pelo contrato F4-C | 0 |
+
+No Poly Haven, cada imagem é referida por uma textura distinta; a textura de metallic/roughness representa os dois canais PBR pela única `metallicRoughnessTexture` válida. Como já observado em F4-C/D, `GLTFLoader` materializa esse recurso como o mesmo objeto `Texture` nos maps de metalness e roughness; não há nova imagem ausente ou duplicada. KayKit não compartilha sua única textura com outro papel.
+
+### Corpus inteiro
+
+O corpus soma **5.901.424 bytes** (5.763,11 KiB; 5,628 MiB), quatro primitives, 1.923 vertices, 3.312 índices, 1.104 triângulos, quatro materiais, quatro texturas/imagens e 5.829.802 bytes de imagens codificadas. As estimativas RGBA8 base somam 16.777.216 bytes (16 MiB): 4 MiB de KayKit e 12 MiB de Poly Haven.
+
+| Asset | Participação no GLB corpus | Principal parcela observada |
+| --- | ---: | --- |
+| KayKit | 0,759% | PNG de 15.605 bytes e geometria de 27.788 bytes lógicos |
+| Kenney | 0,347% | geometria de 19.296 bytes lógicos |
+| Poly Haven | 98,766% | imagens: 5.814.197 bytes, 99,753% do próprio GLB |
+| Quaternius | 0,128% | geometria de 6.480 bytes lógicos |
+
+## F4-E2 — diagnóstico e hipóteses — concluída
+
+### Diagnóstico por asset
+
+- **KayKit:** arquivo pequeno. A imagem PNG ocupa 34,848% do GLB, mas são só 15.605 bytes de payload; a estimativa de 4 MiB RGBA8 decorre exclusivamente de sua dimensão 1024×1024. Geometria (482 triângulos) também é pequena. Não há base medida para experimento individual.
+- **Kenney:** o custo observado é a geometria descomprimida de 19.296 bytes lógicos, 320 triângulos e UV não consumida pelo material atual; porém o GLB inteiro tem apenas 20.460 bytes. Remover ou comprimir dados aqui não se justifica sem uma pergunta futura mais concreta.
+- **Poly Haven:** é o único custo dominante de storage/payload: 5.814.197 bytes de imagens, em especial normal PNG (4.594.197 bytes), respondem por 99,753% do GLB e o asset por 98,766% do corpus. Estruturalmente, três imagens 1024×1024 dão estimativa RGBA8 base de 12 MiB, apesar de a geometria ter somente 182 triângulos e 12.676 bytes lógicos. Isso é prioridade de experimento de asset, não prova de gargalo físico.
+- **Quaternius:** arquivo e geometria são mínimos (7.572 bytes, 120 triângulos); não há textura/UV ausente a recuperar. Não há hipótese útil neste checkpoint.
+
+Logo, storage/payload e custo estrutural potencial estão separados: JPEG Base Color de Poly Haven tem apenas 153.220 bytes codificados, mas entra na estimativa de 4 MiB RGBA8 base como as outras imagens 1024². Em sentido inverso, compressão de geometria reduziria poucos bytes neste corpus e pode introduzir trabalho de decoder. Nenhuma dessas estimativas equivale a uso real de GPU, RAM, frame time, loading físico ou desempenho no Moto G06.
+
+### Hipóteses avaliadas
+
+| Hipótese | Problema medido / alvo | Ganho a investigar | Complexidade e risco | Decisão |
+| --- | --- | --- | --- | --- |
+| Reduzir resolução das três texturas Poly Haven de 1024² em variante isolada | 5.814.197 bytes codificados e estimativa base de 12 MiB; apenas Poly Haven | comparar bytes do GLB/imagens e a estimativa base contra a variante; se 512², a fórmula de referência cai de 12 para 3 MiB, sem promessa de memória real | transformação offline e novo gate visual/material/UV; pode degradar normal, detalhes e leitura artística; não requer decoder no runtime | **avançar como hipótese principal** |
+| KTX2/Basis para as texturas Poly Haven | mesmo alvo de imagens, mas visando encoding/transcodificação | possível redução de payload e mudança de representação, a medir somente se a primeira hipótese demonstrar necessidade | exige `KHR_texture_basisu`, `KTX2Loader`, transcoder WASM/configuração e compatibilidade WebGL/Android; maior superfície de manutenção e risco de decoder | não avançar em E3/E4 |
+| Quantização/meshopt/Draco para geometria | 66.240 bytes lógicos de geometria no corpus; Poly Haven tem só 12.676 | redução potencial pequena frente a 5,901 MiB totais | requer transformação e, para meshopt/Draco, decoder/configuração; pode reduzir arquivo sem provar benefício de runtime | não avançar |
+
+O checkout de `three@0.185.1` contém `DRACOLoader`, `KTX2Loader` e `meshopt_decoder.module.js`; o `GLTFLoader` instalado reconhece `KHR_draco_mesh_compression`, `EXT_meshopt_compression`, `KHR_mesh_quantization` e `KHR_texture_basisu`, mas requer explicitamente configurar o loader/decoder apropriado. Essa disponibilidade local não aprova sua adoção nem elimina payload, worker/transcoder, Android/WebView e manutenção a validar.
+
+### Seleção para F4-E3 + F4-E4
+
+**Hipótese principal:** variante isolada de Poly Haven com resolução de texturas reduzida, mantendo o significado PBR atual (Base Color, normal e metallic/roughness combinado).
+
+**Problema medido que ela ataca:** 5.814.197 bytes de imagens codificadas (99,753% do GLB Poly Haven), com três imagens 1024×1024 e estimativa RGBA8 base de 12 MiB.
+
+**Asset alvo:** somente `polyhaven-shelf-01.glb`; KayKit, Kenney e Quaternius não entram no experimento.
+
+**Por que merece experimento:** ataca quase todo o payload atual com transformação offline isolável, preserva a geometria já pequena e permite comparação original × variante sem adicionar decoder ao runtime.
+
+**Comparação exigida em E3/E4:** hashes/proveniência da variante, container, imagens/bytes/dimensões, geometria e contratos materiais/UV, inspeção visual humana da variante e diferença documentada contra o original. A decisão sobre manter, reverter ou investigar encoding adicional continua dependente dessa evidência.
+
+Não foi definido formato definitivo, compressão obrigatória, budget, limite de polígonos, limite de textura nem Pipeline 3D permanente.
+
 ## Limites
 
-F4 não cria a Biblioteca final, arte definitiva, persistência espacial, `PlacedObject`, `WorldStructureState`, tabela espacial, backup espacial, catálogo final ou pipeline artístico definitivo. F4 mede provas controladas por asset; F5 tratará densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo. O Pipeline 3D permanente só poderá ser formalizado depois da FUNDAÇÃO, com evidência sobrevivente de F4–F6.
+F4-E1/E2 não medem FPS, frame time, loading real, memória real de GPU, heap/RAM, VRAM, temperatura, bateria, Android/Moto G06, fidelidade visual de variante, impacto real de decoder ou arquitetura final. F4 não cria a Biblioteca final, arte definitiva, persistência espacial, `PlacedObject`, `WorldStructureState`, tabela espacial, backup espacial, catálogo final ou pipeline artístico definitivo. F5 tratará densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo; o Pipeline 3D permanente só poderá ser formalizado depois da FUNDAÇÃO, com evidência sobrevivente de F4–F6.

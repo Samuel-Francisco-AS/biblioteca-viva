@@ -23,6 +23,7 @@
 - F4-D3 estendeu esse harness sem alterar produção, runtime ou assets: unload repetido de KayKit é inerte depois da liberação única; três ciclos usam roots e recursos distintos sem acumular ownership; e owners locais independentes permitem descarregar Poly Haven sem tocar Kenney. A `Texture` compartilhada por metallic/roughness no Poly Haven emitiu um único `dispose`; a cobertura complementar de `referenceScene.test.ts` mantém a deduplicação geral intrárvore. Não foi aprovada política de sharing entre assets, referência contada, manager ou cache.
 - F4-D4 usou roots Quaternius reais parseadas pelo `GLTFLoader` instalado e um double local somente para ordenar callbacks: abandono lógico, segundo sucesso, erro recuperável, erro tardio e owner encerrado não ressuscitam ownership nem host. Roots rejeitadas emitiram um único disposal de geometry/material; nova tentativa após erro foi aceita. Não houve abort físico, cancelamento de rede, API, manager, cache ou mudança de runtime/asset.
 - F4-D foi concluída experimentalmente após D5: o gate F4-B/C/D dirigido aprovou 4 arquivos/20 testes e a suíte unitária integral aprovou 67 arquivos/510 testes, sem retries ou falhas. O contrato sobrevivente cobre ownership único, transferência única, unload seletivo/idempotente, repetição, isolamento, deduplicação intrárvore, cancelamento lógico e falha recuperável; permanece somente em harness de teste e não altera runtime, produção ou assets.
+- F4-E1/E2 concluíram o baseline estrutural e o diagnóstico dos quatro GLBs F4-B sem alterar assets: hashes conferem, o corpus soma 5.901.424 bytes e Poly Haven concentra 98,766% dele, quase todo em três imagens 1024×1024 (5.814.197 bytes codificados; estimativa RGBA8 base de 12 MiB). A geometria inteira do corpus é 66.240 bytes lógicos e não sustenta experimento de compressão geométrica. A hipótese selecionada para E3/E4 é somente uma variante offline de resolução de texturas de Poly Haven, comparada ao original e submetida a contrato material/UV e gate visual; KTX2/Basis, Meshopt e Draco não foram adotados. Essas métricas não medem FPS, GPU, RAM, Android nem Moto G06.
 - A cena atual é um spike técnico com fixture, não a Biblioteca final nem arquitetura permanente de conteúdo. Não existe persistência espacial, pipeline 3D formal, catálogo real, `PlacedObject`, `WorldStructureState` ou tabela espacial.
 - R3F e WebGPU não estão aprovados; renderers alternativos só voltam a ser considerados diante de evidência estrutural futura.
 
@@ -34,7 +35,7 @@
 
 ## Próximo trabalho
 
-**F4 — Contrato experimental de assets 3D está em andamento. F4-A, F4-B, F4-C e F4-D estão concluídas experimentalmente.** F4-D consolidou ownership, unload com host vivo, disposal, isolamento e segurança contra callbacks stale sem alterar runtime ou asset. F4-E — Custo e compressão experimental — é o próximo checkpoint, sem iniciar pipeline definitivo, Biblioteca real ou persistência espacial.
+**F4 — Contrato experimental de assets 3D está em andamento. F4-A, F4-B, F4-C, F4-D e F4-E1/E2 estão concluídas experimentalmente.** E1/E2 mediram o corpus e selecionaram uma única hipótese de variante de resolução de texturas para Poly Haven, sem iniciar compressão, mudar runtime ou asset. F4-E3 + F4-E4 são os próximos checkpoints, sem iniciar pipeline definitivo, Biblioteca real ou persistência espacial.
 
 ```text
 F0 ✅
@@ -60,7 +61,11 @@ F4 ▶ EM ANDAMENTO
     D3 ✅ repetição, isolamento e disposal
     D4 ✅ assíncrono em voo, abandono, callbacks tardios e erros
     D5 ✅ regressão, consolidação e fechamento
-  F4-E ▶ PRÓXIMA — custo e compressão experimental
+  F4-E ▶ EM ANDAMENTO — custo e compressão experimental
+    E1 ✅ baseline de custo
+    E2 ✅ diagnóstico e seleção de hipótese
+    E3 + E4 ▶ PRÓXIMAS — variante experimental + comparação objetiva
+    E5 ⏳ fechamento
   F4-F ⏳
 F5 ⏳
 F6 ⏳

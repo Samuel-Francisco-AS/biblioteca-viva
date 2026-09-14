@@ -27,7 +27,11 @@ F4 ▶ EM ANDAMENTO
     D3 ✅ repetição, isolamento e disposal
     D4 ✅ assíncrono, abandono, callbacks tardios e erros
     D5 ✅ regressão, consolidação e fechamento
-  F4-E ▶ PRÓXIMA
+  F4-E ▶ EM ANDAMENTO
+    E1 ✅ baseline de custo
+    E2 ✅ diagnóstico e seleção de hipótese
+    E3 + E4 ▶ PRÓXIMAS — variante experimental + comparação objetiva
+    E5 ⏳ fechamento
   F4-F ⏳
 F5 ⏳
 F6 ⏳
@@ -105,9 +109,9 @@ D4 comprovou com roots Quaternius reais e callbacks controlados somente no teste
 
 D5 reuniu F4-B/C/D em gate dirigido de 4 arquivos/20 testes e confirmou a suíte unitária integral com 67 arquivos/510 testes, sem retries ou falhas. F4-D está concluída experimentalmente: o owner e o double permanecem somente no harness, `ThreeWorldRuntime` não recebeu unload dinâmico e não há API, manager, cache ou abort físico.
 
-#### F4-E — Custo e compressão experimental — próxima
+#### F4-E — Custo e compressão experimental — em andamento
 
-Observar por asset tamanho, triângulos, meshes, materiais, texturas, draw calls, geometrias e loading; comparar ao menos uma hipótese de otimização ou compressão somente se ela for tecnicamente útil à prova. Não é stress test de mundo nem define budget artístico.
+E1/E2 concluíram o baseline estrutural dos quatro GLBs F4-B e o diagnóstico sem alterar assets. O corpus tem 5.901.424 bytes; Poly Haven concentra 98,766%, e suas três imagens 1024×1024 ocupam 5.814.197 bytes codificados, enquanto toda a geometria do corpus soma 66.240 bytes lógicos. Por isso E3/E4 testarão somente uma variante offline de resolução de texturas de Poly Haven, comparada objetivamente ao original e com gate material/UV e visual. KTX2/Basis, Draco, Meshopt e budgets permanentes não foram adotados; E1/E2 não são benchmark de FPS, memória real, GPU ou Android.
 
 #### F4-F — Regressão, consolidação e handoff F5 — planejada
 

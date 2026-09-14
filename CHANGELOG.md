@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F4-E1/E2 — Baseline de custo, diagnóstico e hipótese experimental — 2026-09-14
+
+- medidos diretamente os quatro GLBs F4-B, com SHA-256 confirmado contra o registry: o corpus soma 5.901.424 bytes e Poly Haven concentra 98,766%, dos quais 5.814.197 bytes são suas três imagens 1024×1024; a geometria inteira do corpus soma 66.240 bytes lógicos;
+- separado payload de estrutura/estimativa: as imagens de Poly Haven somam estimativa RGBA8 base de 12 MiB, que não é medição de GPU, heap, RAM, Android ou performance física;
+- selecionada somente a hipótese de variante offline de resolução das texturas Poly Haven para F4-E3/E4, mantendo material/UV e comparação objetiva com o original. KTX2/Basis, Draco, Meshopt, budgets ou pipeline final não foram adotados;
+- não houve alteração de asset, runtime, produção, dependência, arquitetura ou benchmark físico.
+
 ### F4-D-CLOSE — Loading, unload e ownership/disposal concluídos experimentalmente — 2026-09-14
 
 - consolidada a evidência experimental de ownership único, transferência única, unload seletivo/idempotente com host vivo, disposal real, repetição, isolamento A/B e deduplicação intrárvore;

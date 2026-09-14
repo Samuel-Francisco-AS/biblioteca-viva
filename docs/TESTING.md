@@ -261,6 +261,14 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - a suíte unitária integral `npm run test:run` aprovou 67 arquivos e 510 testes, sem retries ou falhas;
 - o fechamento preserva a separação de evidência: D2/D3 provam `GLTFLoader` real, enquanto D4 usa double apenas para ordenar callbacks de roots reais. Não prova abort físico/rede, cache, retry automático, preload, registry, sharing interasset, referência contada, renderer, performance, Android ou arquitetura final de loading.
 
+## F4-E1/E2 — baseline estrutural de custo e diagnóstico
+
+- a medição leu os bytes dos quatro GLBs F4-B diretamente, verificou GLB 2.0/chunks e recalculou SHA-256 antes de qualquer interpretação; hashes, nomes e tamanhos coincidiram com `ASSET_REGISTRY.md`;
+- o parser local temporário extraiu JSON/BIN, nodes/meshes/primitives/accessors, atributos, índices, materiais, referências texture→image, bytes/dimensões/MIME de PNG/JPEG, extensões e componentes adicionais. Ele foi removido ao fim do diagnóstico; não houve código de produção, alteração de fixture ou dependência nova;
+- medidas exatas (estrutura e bytes), derivadas (triângulos e bytes lógicos de accessor) e estimativas foram separadas em `ASSET_PIPELINE.md`. A estimativa de imagem é somente `width × height × 4` para RGBA8 no nível base, sem mipmaps e sem alegar memória GPU/heap/RAM;
+- a inspeção local de `three@0.185.1` confirmou a presença de `DRACOLoader`, `KTX2Loader`, decoder meshopt e hooks do `GLTFLoader`, mas nenhuma técnica foi configurada, implementada ou testada em runtime;
+- F4-E1/E2 não executou benchmark de renderer, FPS, frame time, Android, Moto G06, GPU, VRAM, heap, temperatura, bateria ou fidelidade visual de variante. A evidência principal e a hipótese experimental selecionada estão em `ASSET_PIPELINE.md`.
+
 ## Comandos
 
 ```bash
