@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F4-D-CLOSE — Loading, unload e ownership/disposal concluídos experimentalmente — 2026-09-14
+
+- consolidada a evidência experimental de ownership único, transferência única, unload seletivo/idempotente com host vivo, disposal real, repetição, isolamento A/B e deduplicação intrárvore;
+- confirmados cancelamento lógico, descarte/liberação de callbacks stale, falha individual recuperável e owner terminal; o gate F4-B/C/D aprovou 4 arquivos/20 testes e a suíte unitária integral aprovou 67 arquivos/510 testes, sem retries ou falhas;
+- não foram alterados `ThreeWorldRuntime`, produção ou assets, nem criados `AssetManager`, registry, cache, abort físico ou arquitetura definitiva; F4-E — Custo e compressão experimental — passa a ser o próximo checkpoint.
+
 ### F4-D4 — assíncrono em voo, abandono, callbacks tardios e erros — 2026-09-13
 
 - estendida a prova isolada com roots Quaternius F4-B reais, SHA-256 registrado, `GLTFLoader` de `three@0.185.1` e `disposeObjectTree()` reais; um double exclusivo do teste controlou somente a ordem de callbacks;

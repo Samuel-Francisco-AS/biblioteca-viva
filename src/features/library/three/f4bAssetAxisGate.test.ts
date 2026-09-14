@@ -67,10 +67,11 @@ beforeAll(() => {
   );
   Object.defineProperty(HTMLImageElement.prototype, "src", {
     configurable: true,
-    get(this: HTMLImageElement): string {
-      return imageSourceDescriptor?.get?.call(this) ?? "";
+    get(): string {
+      return "";
     },
-    set(this: HTMLImageElement, _value: string): void {
+    set(this: HTMLImageElement, value: string): void {
+      void value;
       queueMicrotask(() => this.dispatchEvent(new Event("load")));
     },
   });

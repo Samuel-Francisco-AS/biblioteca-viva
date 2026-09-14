@@ -43,10 +43,11 @@ beforeAll(() => {
   );
   Object.defineProperty(HTMLImageElement.prototype, "src", {
     configurable: true,
-    get(this: HTMLImageElement): string {
-      return imageSourceDescriptor?.get?.call(this) ?? "";
+    get(): string {
+      return "";
     },
-    set(this: HTMLImageElement, _value: string): void {
+    set(this: HTMLImageElement, value: string): void {
+      void value;
       queueMicrotask(() => this.dispatchEvent(new Event("load")));
     },
   });
@@ -188,13 +189,17 @@ async function loadQuaternius(): Promise<Object3D> {
 function findFixtureMesh(root: Object3D): Mesh {
   const meshes: Mesh[] = [];
   root.traverse((object) => {
-    if (object instanceof Mesh) meshes.push(object);
+    if (isMesh(object)) meshes.push(object);
   });
 
   expect(meshes).toHaveLength(1);
   const mesh = meshes[0];
   if (!mesh) throw new Error("O fixture não contém mesh.");
   return mesh;
+}
+
+function isMesh(object: Object3D): object is Mesh {
+  return object instanceof Mesh;
 }
 
 function expectSingleStandardMaterial(root: Object3D): MeshStandardMaterial {

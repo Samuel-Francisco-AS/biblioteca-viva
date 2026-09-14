@@ -23,10 +23,11 @@ beforeAll(() => {
   );
   Object.defineProperty(HTMLImageElement.prototype, "src", {
     configurable: true,
-    get(this: HTMLImageElement): string {
-      return imageSourceDescriptor?.get?.call(this) ?? "";
+    get(): string {
+      return "";
     },
-    set(this: HTMLImageElement, _value: string): void {
+    set(this: HTMLImageElement, value: string): void {
+      void value;
       queueMicrotask(() => this.dispatchEvent(new Event("load")));
     },
   });
@@ -54,11 +55,15 @@ function findSingleMesh(scene: {
 }): Mesh {
   const meshes: Mesh[] = [];
   scene.traverse((object) => {
-    if (object instanceof Mesh) meshes.push(object);
+    if (isMesh(object)) meshes.push(object);
   });
 
   expect(meshes).toHaveLength(1);
   return meshes[0];
+}
+
+function isMesh(object: unknown): object is Mesh {
+  return object instanceof Mesh;
 }
 
 function expectStandardMaterial(mesh: Mesh): MeshStandardMaterial {

@@ -1,6 +1,6 @@
 # Estado atual
 
-> Referência documental: 2026-09-13.
+> Referência documental: 2026-09-14.
 
 ## Produto
 
@@ -22,6 +22,7 @@
 - F4-D2 comprovou em harness isolado que KayKit real, carregado pelo `GLTFLoader` instalado após SHA-256, pode ser aceito por owner experimental local, anexado a `Scene`, removido por `disposeObjectTree()` com eventos reais de disposal de geometry/material/texture e substituído por nova root no mesmo host. O sentinel permaneceu; não houve mudança de runtime, produção ou asset, nem criação de API, manager ou cache.
 - F4-D3 estendeu esse harness sem alterar produção, runtime ou assets: unload repetido de KayKit é inerte depois da liberação única; três ciclos usam roots e recursos distintos sem acumular ownership; e owners locais independentes permitem descarregar Poly Haven sem tocar Kenney. A `Texture` compartilhada por metallic/roughness no Poly Haven emitiu um único `dispose`; a cobertura complementar de `referenceScene.test.ts` mantém a deduplicação geral intrárvore. Não foi aprovada política de sharing entre assets, referência contada, manager ou cache.
 - F4-D4 usou roots Quaternius reais parseadas pelo `GLTFLoader` instalado e um double local somente para ordenar callbacks: abandono lógico, segundo sucesso, erro recuperável, erro tardio e owner encerrado não ressuscitam ownership nem host. Roots rejeitadas emitiram um único disposal de geometry/material; nova tentativa após erro foi aceita. Não houve abort físico, cancelamento de rede, API, manager, cache ou mudança de runtime/asset.
+- F4-D foi concluída experimentalmente após D5: o gate F4-B/C/D dirigido aprovou 4 arquivos/20 testes e a suíte unitária integral aprovou 67 arquivos/510 testes, sem retries ou falhas. O contrato sobrevivente cobre ownership único, transferência única, unload seletivo/idempotente, repetição, isolamento, deduplicação intrárvore, cancelamento lógico e falha recuperável; permanece somente em harness de teste e não altera runtime, produção ou assets.
 - A cena atual é um spike técnico com fixture, não a Biblioteca final nem arquitetura permanente de conteúdo. Não existe persistência espacial, pipeline 3D formal, catálogo real, `PlacedObject`, `WorldStructureState` ou tabela espacial.
 - R3F e WebGPU não estão aprovados; renderers alternativos só voltam a ser considerados diante de evidência estrutural futura.
 
@@ -33,7 +34,7 @@
 
 ## Próximo trabalho
 
-**F4 — Contrato experimental de assets 3D está em andamento. F4-A, F4-B, F4-C e F4-D1–D4 estão concluídas experimentalmente.** D4 comprovou cancelamento lógico, transferência única, callbacks stale inertes, erro recuperável e owner terminal, sem alterar runtime ou asset. F4-D5 — regressão, consolidação e fechamento da F4-D — é o próximo checkpoint, sem iniciar pipeline definitivo, Biblioteca real ou persistência espacial.
+**F4 — Contrato experimental de assets 3D está em andamento. F4-A, F4-B, F4-C e F4-D estão concluídas experimentalmente.** F4-D consolidou ownership, unload com host vivo, disposal, isolamento e segurança contra callbacks stale sem alterar runtime ou asset. F4-E — Custo e compressão experimental — é o próximo checkpoint, sem iniciar pipeline definitivo, Biblioteca real ou persistência espacial.
 
 ```text
 F0 ✅
@@ -53,13 +54,13 @@ F4 ▶ EM ANDAMENTO
     C4 ✅ preparação temporária do gate visual
     C5 ✅ gate visual humano
     C6 ✅ consolidação e limpeza
-  F4-D ▶ EM ANDAMENTO
+  F4-D ✅ CONCLUÍDA EXPERIMENTALMENTE
     D1 ✅ auditoria e contrato experimental de loading/unload/ownership
     D2 ✅ load → attach → unload com host vivo
     D3 ✅ repetição, isolamento e disposal
     D4 ✅ assíncrono em voo, abandono, callbacks tardios e erros
-    D5 ▶ PRÓXIMA — regressão, consolidação e fechamento da F4-D
-  F4-E ⏳
+    D5 ✅ regressão, consolidação e fechamento
+  F4-E ▶ PRÓXIMA — custo e compressão experimental
   F4-F ⏳
 F5 ⏳
 F6 ⏳

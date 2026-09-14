@@ -1,6 +1,6 @@
 # Roadmap
 
-> Atualizado em 2026-09-13.
+> Atualizado em 2026-09-14.
 
 ## Baseline concluído
 
@@ -21,13 +21,13 @@ F4 ▶ EM ANDAMENTO
   F4-A ✅ CONCLUÍDA (preflight técnico + humano)
   F4-B ✅ CONCLUÍDA
   F4-C ✅ CONCLUÍDA
-  F4-D ▶ EM ANDAMENTO
+  F4-D ✅ CONCLUÍDA EXPERIMENTALMENTE
     D1 ✅ auditoria e contrato experimental
     D2 ✅ load → attach → unload com host vivo
     D3 ✅ repetição, isolamento e disposal
     D4 ✅ assíncrono, abandono, callbacks tardios e erros
-    D5 ▶ PRÓXIMA
-  F4-E ⏳
+    D5 ✅ regressão, consolidação e fechamento
+  F4-E ▶ PRÓXIMA
   F4-F ⏳
 F5 ⏳
 F6 ⏳
@@ -93,7 +93,7 @@ O `GLTFLoader` instalado confirmou quatro GLBs normalizados com procedência suf
 
 F4-C1 inventariou materiais, UVs e imagens dos quatro espécimes F4-B; F4-C2 registrou o contrato técnico mínimo experimental; F4-C3 comprovou os quatro GLBs pelo `GLTFLoader` instalado; C4 preparou um harness isolado e temporário; C5 registrou observação humana visual coerente; e C6 consolidou o contrato e removeu o harness. F4-C não estabelece especificação artística ou técnica permanente, equivalência pixel a pixel ou fidelidade científica.
 
-#### F4-D — Loading, unload e ownership/disposal — em andamento
+#### F4-D — Loading, unload e ownership/disposal — concluída experimentalmente
 
 D1 mapeou o fixture F1 real: a montagem terminal é seu único owner registrado, `disposeObjectTree()` deduplica recursos dentro de uma árvore e não existe unload mantendo host vivo. O contrato experimental exige um owner único depois do attach, cancelamento lógico de intenção durante loading, descarte do resultado tardio, unload idempotente que remove/libera somente o root alvo e falha individual separada da falha do host. Não escolhe API, `AssetManager`, cache, abort físico ou gerenciamento global.
 
@@ -103,9 +103,9 @@ D3 comprovou unload repetido inerte, três ciclos KayKit sem acúmulo, owners in
 
 D4 comprovou com roots Quaternius reais e callbacks controlados somente no teste que abandono lógico, sucesso adicional, erro tardio e encerramento do owner rejeitam resultados stale sem anexá-los; cada resultado rejeitado é liberado uma vez. Erro individual deixa o host utilizável para nova tentativa. Não há abort físico, cancelamento de rede, cache, manager ou API de produção.
 
-D5 é a próxima prova para regressão, consolidação e fechamento da F4-D. `ThreeWorldRuntime` permanece inalterado até que alguma propriedade demonstre que o harness não basta.
+D5 reuniu F4-B/C/D em gate dirigido de 4 arquivos/20 testes e confirmou a suíte unitária integral com 67 arquivos/510 testes, sem retries ou falhas. F4-D está concluída experimentalmente: o owner e o double permanecem somente no harness, `ThreeWorldRuntime` não recebeu unload dinâmico e não há API, manager, cache ou abort físico.
 
-#### F4-E — Custo e compressão experimental — planejada
+#### F4-E — Custo e compressão experimental — próxima
 
 Observar por asset tamanho, triângulos, meshes, materiais, texturas, draw calls, geometrias e loading; comparar ao menos uma hipótese de otimização ou compressão somente se ela for tecnicamente útil à prova. Não é stress test de mundo nem define budget artístico.
 

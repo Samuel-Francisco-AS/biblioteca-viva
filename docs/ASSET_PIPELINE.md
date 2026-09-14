@@ -172,7 +172,13 @@ Dois owners experimentais independentes anexam Poly Haven e Kenney à mesma `Sce
 
 Os casos cobrem abandono antes do sucesso, sucesso adicional da mesma operação, erro individual seguido de nova tentativa, erro tardio após abandono e encerramento do owner com operação em voo. Roots rejeitadas/tardias Quaternius emitem um único `dispose` de geometry e material, nunca são anexadas e não alteram host ou sentinel; a root aceita não é liberada até seu unload normal. Erro individual encerra a operação sem tornar o host terminal. O contrato continua sendo cancelamento lógico da intenção: não há abort físico, cancelamento de rede, `AbortController`, manager, cache, registry, retry automático ou API de produção.
 
-F4-D5 é o próximo checkpoint para regressão, consolidação e fechamento da F4-D. F4-E continua responsável por custo e compressão; F5 por densidade, desempenho e Android físico.
+## F4-D — loading, unload e ownership/disposal — concluída experimentalmente
+
+O contrato sobrevivente é experimental e limitado ao harness: um **host** pode permanecer vivo enquanto roots entram e saem; uma root aceita tem exatamente um **owner**, e uma operação transfere ownership no máximo uma vez. Unload desfaz esse vínculo, remove/libera somente a árvore possuída e preserva host e assets independentes. Repetir unload é inerte; ciclos sucessivos não acumulam roots ou ownership; resources repetidos dentro da mesma árvore são liberados uma vez por `disposeObjectTree()`.
+
+Se a intenção é abandonada ou o owner é encerrado durante loading, callback posterior é stale: não anexa nem ressuscita a root e libera o resultado. Falha individual encerra somente a operação e deixa o host apto a uma nova tentativa. D2/D3 comprovam o caminho real com `GLTFLoader`; D4 usa double somente para controlar a ordem de callbacks. O `ThreeWorldRuntime` continua com ownership terminal da fixture técnica e não recebeu unload dinâmico. O owner experimental, seus tokens e o double vivem somente nos testes; nenhuma API ou arquitetura produtiva foi aprovada.
+
+F4-D não aprovou `AssetManager`, registry, cache, preload, streaming, pooling, queue global, retry automático, abort físico, `AbortController`, cancelamento de rede, sharing entre assets, referência contada, garbage collector, bundles, prioridades, loading screen, persistência, renderer em cena complexa, performance, memória total, Android físico, pressão real de rede/memória ou arquitetura final de loading. F4-E — custo e compressão experimental — é o próximo trabalho e deve medir os assets antes de escolher qualquer hipótese de otimização/compressão.
 
 ## Limites
 

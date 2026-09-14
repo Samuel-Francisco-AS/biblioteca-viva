@@ -254,6 +254,13 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - listeners reais de `dispose` em geometry/material Quaternius comprovam liberação única dos resultados tardios ou adicionais rejeitados; root aceita permanece sem disposal até o unload normal, e host/sentinel não são ressuscitados nem destruídos;
 - o gate dirigido `npm run test:run -- f4dAssetLifecycle referenceScene` aprovou 2 arquivos e 12 testes. Não prova abort físico, cancelamento de rede, cache, retry automático, preload, registry, sharing interasset, referência contada, renderer, performance, Android ou arquitetura final de loading.
 
+## F4-D5 — regressão, consolidação e fechamento
+
+- o gate dirigido `npm run test:run -- f4bAssetAxisGate f4cMaterialContract f4dAssetLifecycle referenceScene` reuniu geometria/eixos, materiais, lifecycle experimental e helper de disposal: 4 arquivos e 20 testes aprovados;
+- `npm run format`, `npm run format:check`, `npm run lint` e `npm run typecheck` passaram. O lint exigiu somente tipagem segura nos adaptadores jsdom e guards locais de `Mesh` dos testes F4-B/C/D; parsing, fixtures, runtime e produção não mudaram;
+- a suíte unitária integral `npm run test:run` aprovou 67 arquivos e 510 testes, sem retries ou falhas;
+- o fechamento preserva a separação de evidência: D2/D3 provam `GLTFLoader` real, enquanto D4 usa double apenas para ordenar callbacks de roots reais. Não prova abort físico/rede, cache, retry automático, preload, registry, sharing interasset, referência contada, renderer, performance, Android ou arquitetura final de loading.
+
 ## Comandos
 
 ```bash
