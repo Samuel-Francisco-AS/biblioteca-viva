@@ -246,6 +246,14 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - no Poly Haven, Base Color, normal e a `Texture` única compartilhada por metallic/roughness são observadas por eventos reais de `dispose`; a texture compartilhada recebe um único evento. `referenceScene.test.ts` preserva a cobertura complementar da deduplicação geral de geometry/material/texture compartilhados dentro de uma árvore;
 - o gate dirigido `npm run test:run -- f4dAssetLifecycle referenceScene` aprovou 2 arquivos e 7 testes. Ainda não prova operação em voo, abandono, callbacks ou erros tardios, cancelamento lógico, abort físico, cache, preload, registry, sharing entre assets, referência contada, renderer, performance ou Android.
 
+## F4-D4 — assíncrono em voo, abandono, callbacks tardios e erros
+
+- `f4dAssetLifecycle.test.ts` usa Quaternius F4-B real, com SHA-256 conferido e `GLTFLoader.parseAsync()` do `three@0.185.1`, para fornecer roots concretas ao harness;
+- um double assíncrono exclusivo do teste retém callbacks e entrega sucesso/erro na ordem escolhida. Ele testa somente a política experimental de aceitação; D2/D3 continuam sendo a evidência de parse/load real, attach e unload com `GLTFLoader`;
+- os cinco casos D4 comprovam abandono lógico antes de sucesso, transferência única com segundo sucesso rejeitado, erro individual recuperável com nova tentativa manual, erro tardio inerte e owner encerrado que rejeita sucesso posterior;
+- listeners reais de `dispose` em geometry/material Quaternius comprovam liberação única dos resultados tardios ou adicionais rejeitados; root aceita permanece sem disposal até o unload normal, e host/sentinel não são ressuscitados nem destruídos;
+- o gate dirigido `npm run test:run -- f4dAssetLifecycle referenceScene` aprovou 2 arquivos e 12 testes. Não prova abort físico, cancelamento de rede, cache, retry automático, preload, registry, sharing interasset, referência contada, renderer, performance, Android ou arquitetura final de loading.
+
 ## Comandos
 
 ```bash

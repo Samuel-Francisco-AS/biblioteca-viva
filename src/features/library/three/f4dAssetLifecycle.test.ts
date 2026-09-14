@@ -26,6 +26,9 @@ const KENNEY_HASH =
 const POLY_HAVEN_FILE = "polyhaven-shelf-01.glb";
 const POLY_HAVEN_HASH =
   "33d55c107ea5afd314aad197f7753c64bacc88ea554df3f7e57fc8e7c81415b1";
+const QUATERNIUS_FILE = "quaternius-bookshelf.glb";
+const QUATERNIUS_HASH =
+  "aabe7de0adf6b0e3aaf651acbb5704680e44df3180ffa98aa0cb7d19d389f265";
 const F4_B_FIXTURES_DIRECTORY = "src/features/library/three/fixtures/f4-b";
 
 let imageSourceDescriptor: PropertyDescriptor | undefined;
@@ -59,12 +62,51 @@ afterAll(() => {
   }
 });
 
+interface ExperimentalLoadCallbacks {
+  fail(error: Error): void;
+  succeed(root: Object3D): void;
+}
+
+class ControlledAsyncLoad {
+  private callbacks: ExperimentalLoadCallbacks | null = null;
+
+  start(callbacks: ExperimentalLoadCallbacks): void {
+    if (this.callbacks !== null) {
+      throw new Error("A operação controlada já foi iniciada.");
+    }
+    this.callbacks = callbacks;
+  }
+
+  succeed(root: Object3D): void {
+    this.callbacks?.succeed(root);
+  }
+
+  fail(error: Error): void {
+    this.callbacks?.fail(error);
+  }
+}
+
 class ExperimentalAssetOwner {
   root: Object3D | null = null;
+  error: Error | null = null;
+
+  private activeOperation: symbol | null = null;
+  private closed = false;
 
   constructor(readonly host: Object3D) {}
 
+  get hasActiveOperation(): boolean {
+    return this.activeOperation !== null;
+  }
+
+  get isClosed(): boolean {
+    return this.closed;
+  }
+
   accept(root: Object3D): void {
+    if (this.closed) {
+      throw new Error("O owner experimental já foi encerrado.");
+    }
     if (this.root !== null) {
       throw new Error("O owner experimental já possui uma root.");
     }
@@ -72,10 +114,55 @@ class ExperimentalAssetOwner {
     this.host.add(root);
   }
 
+  beginLoading(): ExperimentalLoadCallbacks {
+    if (this.closed || this.root !== null || this.activeOperation !== null) {
+      throw new Error("O owner experimental não aceita outra operação.");
+    }
+
+    const operation = Symbol("experimental-asset-load");
+    this.activeOperation = operation;
+    this.error = null;
+    return {
+      succeed: (root) => this.handleSuccess(operation, root),
+      fail: (error) => this.handleError(operation, error),
+    };
+  }
+
+  abandon(): void {
+    this.activeOperation = null;
+  }
+
   unload(): void {
+    this.abandon();
     const root = this.root;
     this.root = null;
     if (root) disposeObjectTree(root);
+  }
+
+  close(): void {
+    if (this.closed) return;
+    this.closed = true;
+    this.unload();
+  }
+
+  private handleSuccess(operation: symbol, root: Object3D): void {
+    if (
+      this.closed ||
+      this.activeOperation !== operation ||
+      this.root !== null
+    ) {
+      disposeObjectTree(root);
+      return;
+    }
+
+    this.activeOperation = null;
+    this.accept(root);
+  }
+
+  private handleError(operation: symbol, error: Error): void {
+    if (this.closed || this.activeOperation !== operation) return;
+    this.activeOperation = null;
+    this.error = error;
   }
 }
 
@@ -94,7 +181,11 @@ async function loadKayKit(): Promise<Object3D> {
   return loadFixture(KAYKIT_FILE, KAYKIT_HASH);
 }
 
-function findKayKitMesh(root: Object3D): Mesh {
+async function loadQuaternius(): Promise<Object3D> {
+  return loadFixture(QUATERNIUS_FILE, QUATERNIUS_HASH);
+}
+
+function findFixtureMesh(root: Object3D): Mesh {
   const meshes: Mesh[] = [];
   root.traverse((object) => {
     if (object instanceof Mesh) meshes.push(object);
@@ -102,12 +193,12 @@ function findKayKitMesh(root: Object3D): Mesh {
 
   expect(meshes).toHaveLength(1);
   const mesh = meshes[0];
-  if (!mesh) throw new Error("O fixture KayKit não contém mesh.");
+  if (!mesh) throw new Error("O fixture não contém mesh.");
   return mesh;
 }
 
 function expectSingleStandardMaterial(root: Object3D): MeshStandardMaterial {
-  const material = findKayKitMesh(root).material;
+  const material = findFixtureMesh(root).material;
   expect(material).not.toBeInstanceOf(Array);
   expect(material).toBeInstanceOf(MeshStandardMaterial);
   if (Array.isArray(material) || !(material instanceof MeshStandardMaterial)) {
@@ -123,7 +214,7 @@ interface KayKitResources {
 }
 
 function identifyKayKitResources(root: Object3D): KayKitResources {
-  const mesh = findKayKitMesh(root);
+  const mesh = findFixtureMesh(root);
   const material = expectSingleStandardMaterial(root);
   const texture = material.map;
   expect(texture).not.toBeNull();
@@ -153,11 +244,11 @@ function observeKayKitDisposal(root: Object3D): {
   return { geometry, material: materialDisposals, texture: textureDisposals };
 }
 
-function observeKenneyDisposal(root: Object3D): {
+function observeSimpleFixtureDisposal(root: Object3D): {
   readonly geometry: { count: number };
   readonly material: { count: number };
 } {
-  const mesh = findKayKitMesh(root);
+  const mesh = findFixtureMesh(root);
   const material = expectSingleStandardMaterial(root);
   const geometry = { count: 0 };
   const materialDisposals = { count: 0 };
@@ -174,7 +265,7 @@ function observePolyHavenDisposal(root: Object3D): {
   readonly metallicRoughness: { count: number };
   readonly normal: { count: number };
 } {
-  const mesh = findKayKitMesh(root);
+  const mesh = findFixtureMesh(root);
   const material = expectSingleStandardMaterial(root);
   const baseColor = material.map;
   const normal = material.normalMap;
@@ -227,7 +318,7 @@ describe("F4-D — lifecycle experimental de asset com host vivo", () => {
     expect(root.parent).toBe(host);
     expect(host.children).toContain(root);
     expect(host.children).toContain(sentinel);
-    expect(findKayKitMesh(root)).toBeInstanceOf(Mesh);
+    expect(findFixtureMesh(root)).toBeInstanceOf(Mesh);
 
     owner.unload();
 
@@ -356,7 +447,7 @@ describe("F4-D — lifecycle experimental de asset com host vivo", () => {
     const polyHavenRoot = await loadFixture(POLY_HAVEN_FILE, POLY_HAVEN_HASH);
     const kenneyRoot = await loadFixture(KENNEY_FILE, KENNEY_HASH);
     const polyHavenDisposals = observePolyHavenDisposal(polyHavenRoot);
-    const kenneyDisposals = observeKenneyDisposal(kenneyRoot);
+    const kenneyDisposals = observeSimpleFixtureDisposal(kenneyRoot);
     let polyHavenUnloaded = false;
     let kenneyUnloaded = false;
 
@@ -410,6 +501,187 @@ describe("F4-D — lifecycle experimental de asset com host vivo", () => {
         if (kenneyOwner.root === kenneyRoot) kenneyOwner.unload();
         else disposeObjectTree(kenneyRoot);
       }
+    }
+  });
+
+  it("descarta sucesso tardio depois do abandono lógico", async () => {
+    const host = new Scene();
+    const originalHost = host;
+    const sentinel = new Group();
+    host.add(sentinel);
+    const owner = new ExperimentalAssetOwner(host);
+    const operation = new ControlledAsyncLoad();
+    const root = await loadQuaternius();
+    const disposals = observeSimpleFixtureDisposal(root);
+    let delivered = false;
+
+    try {
+      operation.start(owner.beginLoading());
+      expect(owner.hasActiveOperation).toBe(true);
+
+      owner.abandon();
+      expect(owner.hasActiveOperation).toBe(false);
+      expect(owner.root).toBeNull();
+
+      operation.succeed(root);
+      delivered = true;
+
+      expect(owner.root).toBeNull();
+      expect(root.parent).toBeNull();
+      expect(root.children).toHaveLength(0);
+      expect(owner.host).toBe(originalHost);
+      expect(host.children).toEqual([sentinel]);
+      expect(disposals.geometry.count).toBe(1);
+      expect(disposals.material.count).toBe(1);
+    } finally {
+      if (!delivered) disposeObjectTree(root);
+    }
+  });
+
+  it("aceita no máximo um sucesso por operação e libera o resultado adicional", async () => {
+    const host = new Scene();
+    const sentinel = new Group();
+    host.add(sentinel);
+    const owner = new ExperimentalAssetOwner(host);
+    const operation = new ControlledAsyncLoad();
+    const firstRoot = await loadQuaternius();
+    const secondRoot = await loadQuaternius();
+    const firstDisposals = observeSimpleFixtureDisposal(firstRoot);
+    const secondDisposals = observeSimpleFixtureDisposal(secondRoot);
+    let firstAccepted = false;
+    let secondDelivered = false;
+
+    try {
+      operation.start(owner.beginLoading());
+      operation.succeed(firstRoot);
+      firstAccepted = true;
+
+      expect(owner.hasActiveOperation).toBe(false);
+      expect(owner.root).toBe(firstRoot);
+      expect(firstRoot.parent).toBe(host);
+      expect(firstDisposals.geometry.count).toBe(0);
+      expect(firstDisposals.material.count).toBe(0);
+
+      operation.succeed(secondRoot);
+      secondDelivered = true;
+
+      expect(owner.root).toBe(firstRoot);
+      expect(firstRoot.parent).toBe(host);
+      expect(host.children).toEqual([sentinel, firstRoot]);
+      expect(secondRoot.parent).toBeNull();
+      expect(secondRoot.children).toHaveLength(0);
+      expect(firstDisposals.geometry.count).toBe(0);
+      expect(firstDisposals.material.count).toBe(0);
+      expect(secondDisposals.geometry.count).toBe(1);
+      expect(secondDisposals.material.count).toBe(1);
+
+      owner.unload();
+
+      expect(owner.root).toBeNull();
+      expect(firstRoot.parent).toBeNull();
+      expect(host.children).toEqual([sentinel]);
+      expect(firstDisposals.geometry.count).toBe(1);
+      expect(firstDisposals.material.count).toBe(1);
+    } finally {
+      if (owner.root) owner.unload();
+      if (!firstAccepted) disposeObjectTree(firstRoot);
+      if (!secondDelivered) disposeObjectTree(secondRoot);
+    }
+  });
+
+  it("mantém erro individual recuperável para uma nova operação", async () => {
+    const host = new Scene();
+    const sentinel = new Group();
+    host.add(sentinel);
+    const owner = new ExperimentalAssetOwner(host);
+    const failedOperation = new ControlledAsyncLoad();
+    const error = new Error("fixture indisponível");
+    const retryOperation = new ControlledAsyncLoad();
+    const retryRoot = await loadQuaternius();
+    const retryDisposals = observeSimpleFixtureDisposal(retryRoot);
+    let retryAccepted = false;
+
+    try {
+      failedOperation.start(owner.beginLoading());
+      failedOperation.fail(error);
+
+      expect(owner.hasActiveOperation).toBe(false);
+      expect(owner.root).toBeNull();
+      expect(owner.error).toBe(error);
+      expect(host.children).toEqual([sentinel]);
+
+      retryOperation.start(owner.beginLoading());
+      expect(owner.error).toBeNull();
+      retryOperation.succeed(retryRoot);
+      retryAccepted = true;
+
+      expect(owner.hasActiveOperation).toBe(false);
+      expect(owner.root).toBe(retryRoot);
+      expect(retryRoot.parent).toBe(host);
+      expect(host.children).toEqual([sentinel, retryRoot]);
+      expect(retryDisposals.geometry.count).toBe(0);
+      expect(retryDisposals.material.count).toBe(0);
+    } finally {
+      if (owner.root) owner.unload();
+      if (!retryAccepted) disposeObjectTree(retryRoot);
+    }
+
+    expect(owner.root).toBeNull();
+    expect(retryRoot.parent).toBeNull();
+    expect(host.children).toEqual([sentinel]);
+    expect(retryDisposals.geometry.count).toBe(1);
+    expect(retryDisposals.material.count).toBe(1);
+  });
+
+  it("mantém erro tardio após abandono inerte", () => {
+    const host = new Scene();
+    const sentinel = new Group();
+    host.add(sentinel);
+    const owner = new ExperimentalAssetOwner(host);
+    const operation = new ControlledAsyncLoad();
+
+    operation.start(owner.beginLoading());
+    owner.abandon();
+    operation.fail(new Error("erro tardio"));
+
+    expect(owner.hasActiveOperation).toBe(false);
+    expect(owner.root).toBeNull();
+    expect(owner.error).toBeNull();
+    expect(host.children).toEqual([sentinel]);
+  });
+
+  it("descarta sucesso tardio quando o owner é encerrado em voo", async () => {
+    const host = new Scene();
+    const originalHost = host;
+    const sentinel = new Group();
+    host.add(sentinel);
+    const owner = new ExperimentalAssetOwner(host);
+    const operation = new ControlledAsyncLoad();
+    const root = await loadQuaternius();
+    const disposals = observeSimpleFixtureDisposal(root);
+    let delivered = false;
+
+    try {
+      operation.start(owner.beginLoading());
+      owner.close();
+
+      expect(owner.isClosed).toBe(true);
+      expect(owner.hasActiveOperation).toBe(false);
+      expect(owner.root).toBeNull();
+
+      operation.succeed(root);
+      delivered = true;
+
+      expect(owner.isClosed).toBe(true);
+      expect(owner.root).toBeNull();
+      expect(root.parent).toBeNull();
+      expect(root.children).toHaveLength(0);
+      expect(owner.host).toBe(originalHost);
+      expect(host.children).toEqual([sentinel]);
+      expect(disposals.geometry.count).toBe(1);
+      expect(disposals.material.count).toBe(1);
+    } finally {
+      if (!delivered) disposeObjectTree(root);
     }
   });
 });

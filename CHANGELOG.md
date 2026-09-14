@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F4-D4 — assíncrono em voo, abandono, callbacks tardios e erros — 2026-09-13
+
+- estendida a prova isolada com roots Quaternius F4-B reais, SHA-256 registrado, `GLTFLoader` de `three@0.185.1` e `disposeObjectTree()` reais; um double exclusivo do teste controlou somente a ordem de callbacks;
+- comprovados abandono lógico, transferência única, descarte/liberação única de sucessos tardios ou adicionais, erro individual recuperável, erro tardio inerte e owner encerrado com operação em voo, preservando host e sentinel;
+- não foram alterados `ThreeWorldRuntime`, produção ou assets, nem criados abort físico, cancelamento de rede, API permanente, `AssetManager`, cache ou registry; F4-D5 passa a ser o próximo checkpoint para regressão, consolidação e fechamento da F4-D.
+
 ### F4-D3 — repetição, isolamento e disposal — 2026-09-13
 
 - estendida a prova isolada com `GLTFLoader` de `three@0.185.1`, `THREE.Scene` e `disposeObjectTree()` reais: unload repetido de KayKit ficou inerte depois de uma única liberação, e três ciclos com roots e recursos distintos não acumularam ownership ou children de asset;

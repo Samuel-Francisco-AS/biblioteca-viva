@@ -166,7 +166,13 @@ No primeiro ciclo, listeners de `dispose` nos objetos Three reais da root KayKit
 
 Dois owners experimentais independentes anexam Poly Haven e Kenney à mesma `Scene`. O unload de Poly Haven libera somente seus recursos e preserva a root, o owner e os contadores de disposal de Kenney até seu unload próprio. No Poly Haven, `metalnessMap` e `roughnessMap` são a mesma `Texture`, observada uma única vez e descartada uma única vez. A cobertura complementar de `referenceScene.test.ts` continua demonstrando a deduplicação geral de geometry, material e texture compartilhados dentro de uma árvore. Isto não aprova política de compartilhamento entre assets independentes, referência contada, cache, manager ou API de produção.
 
-F4-D4 é o próximo checkpoint e tratará assíncrono em voo, abandono, callbacks tardios e erros. F4-E continua responsável por custo e compressão; F5 por densidade, desempenho e Android físico.
+## F4-D4 — assíncrono em voo, abandono, callbacks tardios e erros — concluída
+
+`f4dAssetLifecycle.test.ts` preserva `GLTFLoader.parseAsync()` real e SHA-256 registrado para obter roots Quaternius concretas. Um double definido somente no teste retém e entrega callbacks de sucesso ou erro sob ordem escolhida; ele não substitui parsing, loading real já provado por D2/D3, renderer ou `disposeObjectTree()`. O owner experimental local usa uma identidade de operação apenas para a prova: abandono lógico ou encerramento tornam a operação inaceitável, e somente o primeiro sucesso válido pode transferir uma root ao owner.
+
+Os casos cobrem abandono antes do sucesso, sucesso adicional da mesma operação, erro individual seguido de nova tentativa, erro tardio após abandono e encerramento do owner com operação em voo. Roots rejeitadas/tardias Quaternius emitem um único `dispose` de geometry e material, nunca são anexadas e não alteram host ou sentinel; a root aceita não é liberada até seu unload normal. Erro individual encerra a operação sem tornar o host terminal. O contrato continua sendo cancelamento lógico da intenção: não há abort físico, cancelamento de rede, `AbortController`, manager, cache, registry, retry automático ou API de produção.
+
+F4-D5 é o próximo checkpoint para regressão, consolidação e fechamento da F4-D. F4-E continua responsável por custo e compressão; F5 por densidade, desempenho e Android físico.
 
 ## Limites
 
