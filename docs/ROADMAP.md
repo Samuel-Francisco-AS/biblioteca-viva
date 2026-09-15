@@ -30,8 +30,9 @@ F4 ▶ EM ANDAMENTO
   F4-E ▶ EM ANDAMENTO
     E1 ✅ baseline de custo
     E2 ✅ diagnóstico e seleção de hipótese
-    E3 + E4 ▶ PRÓXIMAS — variante experimental + comparação objetiva
-    E5 ⏳ fechamento
+    E3 ✅ experimento selecionado
+    E4 ✅ comparação objetiva + gate humano PASS
+    E5 ▶ PRÓXIMA — consolidação e fechamento
   F4-F ⏳
 F5 ⏳
 F6 ⏳
@@ -111,7 +112,7 @@ D5 reuniu F4-B/C/D em gate dirigido de 4 arquivos/20 testes e confirmou a suíte
 
 #### F4-E — Custo e compressão experimental — em andamento
 
-E1/E2 concluíram o baseline estrutural dos quatro GLBs F4-B e o diagnóstico sem alterar assets. O corpus tem 5.901.424 bytes; Poly Haven concentra 98,766%, e suas três imagens 1024×1024 ocupam 5.814.197 bytes codificados, enquanto toda a geometria do corpus soma 66.240 bytes lógicos. Por isso E3/E4 testarão somente uma variante offline de resolução de texturas de Poly Haven, comparada objetivamente ao original e com gate material/UV e visual. KTX2/Basis, Draco, Meshopt e budgets permanentes não foram adotados; E1/E2 não são benchmark de FPS, memória real, GPU ou Android.
+E1/E2/E3/E4 concluíram o baseline, diagnóstico, variante e comparação sem alterar o fixture registrado. Para Poly Haven, a variante 512 reduziu o GLB de 5.828.612 para 711.352 bytes (-87,796%), imagens codificadas em -88,013% e a estimativa RGBA8 base de 12 para 3 MiB, preservando geometry/índices/UV/transforms/material e o `GLTFLoader` atual. O gate humano foi PASS: houve leve desfoque em comparação próxima, considerado irrelevante para os objetos menores e distantes da composição ortográfica/2.5D. Isso é evidência deste asset, não budget global, asset final ou Pipeline 3D definitivo. E5 é o próximo checkpoint; KTX2/Basis, Draco e Meshopt não foram adotados.
 
 #### F4-F — Regressão, consolidação e handoff F5 — planejada
 

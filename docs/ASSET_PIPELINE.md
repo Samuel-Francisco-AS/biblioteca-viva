@@ -278,6 +278,31 @@ O checkout de `three@0.185.1` contém `DRACOLoader`, `KTX2Loader` e `meshopt_dec
 
 Não foi definido formato definitivo, compressão obrigatória, budget, limite de polígonos, limite de textura nem Pipeline 3D permanente.
 
+## F4-E3/E4 — variante 512 e comparação objetiva — concluídas experimentalmente
+
+Em 2026-09-14, o GLB registrado Poly Haven foi novamente conferido (`33d55c107ea5afd314aad197f7753c64bacc88ea554df3f7e57fc8e7c81415b1`, 5.828.612 bytes) e permaneceu intocado. A variante laboratorial externa ao checkout é `../bv-f4-lab/experiments/f4-e/polyhaven-shelf-01-512.glb`, SHA-256 `910cdf18f5eca657e0204ede8279608ad1d9b15341f8f9c8be8cbad4131f39f4`. Ela não é fixture registrada, asset final ou decisão de pipeline.
+
+A transformação temporária leu o JSON/BIN do GLB atual, copiou sem alteração os `bufferViews` de geometria e substituiu somente os três payloads de imagem incorporados; então reempacotou um GLB 2.0 autocontido. Pillow 12.3.0 aplicou `LANCZOS` de 1024×1024 para 512×512. Base Color manteve JPEG RGB, qualidade 90 e subsampling 4:2:0; o JPEG original reportava qualidade 85 no ImageMagick, portanto a diferença codificada inclui reencoding além da resolução. Normal e metallic/roughness mantiveram PNG RGB com `compress_level=9`, sem inversão de canal G, troca de canal, gamma deliberado, recoloração, sharpening ou renormalização: é downsample convencional documentado para o gate visual. Não houve Blender, mudança de mesh/UV/material, codec novo, extensão glTF, decoder, dependência ou alteração de loader/runtime.
+
+| Métrica | Original 1024 | Variante 512 | Delta | Delta % |
+| --- | ---: | ---: | ---: | ---: |
+| GLB bytes | 5.828.612 | 711.352 | -5.117.260 | -87,796% |
+| JSON chunk | 1.708 | 1.700 | -8 | -0,468% |
+| BIN chunk | 5.826.876 | 709.624 | -5.117.252 | -87,822% |
+| Imagens codificadas | 5.814.197 | 696.943 | -5.117.254 | -88,013% |
+| Normal PNG | 4.594.197 | 418.465 | -4.175.732 | -90,891% |
+| Base Color JPEG | 153.220 | 56.840 | -96.380 | -62,903% |
+| Metallic/Roughness PNG | 1.066.780 | 221.638 | -845.142 | -79,224% |
+| Estimativa RGBA8 base | 12.582.912 (12 MiB) | 3.145.728 (3 MiB) | -9.437.184 | -75,000% |
+| Vertices / índices / triângulos | 362 / 546 / 182 | 362 / 546 / 182 | 0 / 0 / 0 | 0% |
+| Materials / imagens | 1 / 3 | 1 / 3 | 0 / 0 | 0% |
+
+O teste temporário comparou byte a byte os dados lógicos de `POSITION`, `NORMAL`, `TEXCOORD_0` e índices; comparou nodes, hierarchy/scenes, mesh/primitive, accessors, materiais, texturas, samplers e extensões; e confirmou transform/bounding box iguais. O `GLTFLoader` de `three@0.185.1` fez parse real dos dois GLBs: a variante tem UV, `map`, `normalMap`, `metalnessMap` e `roughnessMap`, sendo os dois últimos o mesmo objeto `Texture`. As três imagens permanecem incorporadas e agora têm 512×512, na mesma ordem e MIME `PNG`, `JPEG`, `PNG`.
+
+O gate humano no comparador A/B temporário foi **PASS**. Em comparação próxima, foi percebido apenas leve desfoque nas texturas 512×512 em relação ao original 1024×1024. A diferença foi considerada irrelevante no uso ortográfico/2.5D pretendido, em que os objetos aparecem menores e mais distantes; identidade visual, material e leitura geral foram preservados, sem perda bloqueante. Isto não afirma identidade visual pixel a pixel nem elimina a ressalva de desfoque.
+
+Após o gate, o teste, o comparador HTML, a cópia Vite da variante e seus arquivos de suporte foram removidos do checkout. A variante e o script temporário permanecem somente no laboratório externo como evidência até E5. A conclusão vale exclusivamente para este Poly Haven e este experimento: 512×512 não se torna budget global, outros assets podem exigir outra resolução e a técnica não define Pipeline 3D definitivo. F4-E5 — consolidação e fechamento da F4-E — é o próximo checkpoint.
+
 ## Limites
 
-F4-E1/E2 não medem FPS, frame time, loading real, memória real de GPU, heap/RAM, VRAM, temperatura, bateria, Android/Moto G06, fidelidade visual de variante, impacto real de decoder ou arquitetura final. F4 não cria a Biblioteca final, arte definitiva, persistência espacial, `PlacedObject`, `WorldStructureState`, tabela espacial, backup espacial, catálogo final ou pipeline artístico definitivo. F5 tratará densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo; o Pipeline 3D permanente só poderá ser formalizado depois da FUNDAÇÃO, com evidência sobrevivente de F4–F6.
+F4-E1–E4 não medem FPS, frame time, loading real, memória real de GPU, heap/RAM, VRAM, temperatura, bateria, Android/Moto G06, impacto real de decoder ou arquitetura final. O gate humano aprovou somente a adequação visual desta variante no uso pretendido; não aprovou fidelidade pixel a pixel, formatos/resoluções universais ou qualidade de outros assets. F4 não cria a Biblioteca final, arte definitiva, persistência espacial, `PlacedObject`, `WorldStructureState`, tabela espacial, backup espacial, catálogo final ou pipeline artístico definitivo. F5 tratará densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo; o Pipeline 3D permanente só poderá ser formalizado depois da FUNDAÇÃO, com evidência sobrevivente de F4–F6.

@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F4-E3/E4 — Variante de textura e comparação objetiva concluídas experimentalmente — 2026-09-14
+
+- criada somente no laboratório a variante Poly Haven 512: GLB 5.828.612 → 711.352 bytes (-87,796%), imagens codificadas -88,013% e estimativa RGBA8 base 12 → 3 MiB (-75%);
+- comprovadas geometry, índices, UV, transforms, hierarchy, material e metallic/roughness compartilhado inalterados, com parse real do `GLTFLoader` de `three@0.185.1` e sem extensão, decoder, dependência ou mudança de runtime;
+- gate humano A/B aprovou a variante para o uso ortográfico/2.5D pretendido: houve leve desfoque em comparação próxima, considerado não bloqueante; identidade visual, material e leitura geral foram preservados;
+- removidos o harness, teste e cópia Vite temporários após o gate. Nenhum fixture registrado, produção ou `ASSET_REGISTRY.md` foi alterado; 512×512 não é budget, asset final ou Pipeline 3D definitivo. F4-E5 passa a ser o próximo checkpoint.
+
 ### F4-E1/E2 — Baseline de custo, diagnóstico e hipótese experimental — 2026-09-14
 
 - medidos diretamente os quatro GLBs F4-B, com SHA-256 confirmado contra o registry: o corpus soma 5.901.424 bytes e Poly Haven concentra 98,766%, dos quais 5.814.197 bytes são suas três imagens 1024×1024; a geometria inteira do corpus soma 66.240 bytes lógicos;

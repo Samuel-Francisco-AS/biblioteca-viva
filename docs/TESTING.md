@@ -269,6 +269,13 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - a inspeção local de `three@0.185.1` confirmou a presença de `DRACOLoader`, `KTX2Loader`, decoder meshopt e hooks do `GLTFLoader`, mas nenhuma técnica foi configurada, implementada ou testada em runtime;
 - F4-E1/E2 não executou benchmark de renderer, FPS, frame time, Android, Moto G06, GPU, VRAM, heap, temperatura, bateria ou fidelidade visual de variante. A evidência principal e a hipótese experimental selecionada estão em `ASSET_PIPELINE.md`.
 
+## F4-E3/E4 — variante de textura e comparação objetiva
+
+- um teste temporário leu o original e a variante laboratorial Poly Haven pelo `GLTFLoader` de `three@0.185.1`, confirmou SHA do original, parse, UV, maps PBR e a mesma `Texture` para metallic/roughness;
+- `POSITION`, `NORMAL`, `TEXCOORD_0` e índices foram comparados byte a byte; hierarchy, transforms, accessors, material, samplers, extensões e bounding box permaneceram equivalentes. As três imagens mantiveram MIME/ordem e passaram de 1024×1024 para 512×512;
+- o comparador A/B temporário usou um renderer, câmera, iluminação e controles comuns, alternando somente original/variante. O gate humano foi **PASS**: observou leve desfoque em comparação próxima, considerado irrelevante para objetos menores e mais distantes na composição ortográfica/2.5D; não houve perda bloqueante de identidade visual, material ou leitura geral;
+- o teste, harness e cópia untracked servida por Vite foram removidos após o gate. Não houve mudança no fixture registrado, produção, runtime, dependência, extensão glTF, decoder ou benchmark físico.
+
 ## Comandos
 
 ```bash
