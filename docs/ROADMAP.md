@@ -17,7 +17,7 @@ F0 ✅
 F1 ✅
 F2 ✅
 F3 ✅ CONCLUÍDA
-F4 ▶ EM ANDAMENTO
+F4 ✅ CONTRATO EXPERIMENTAL DE ASSETS 3D CONCLUÍDO
   F4-A ✅ CONCLUÍDA (preflight técnico + humano)
   F4-B ✅ CONCLUÍDA
   F4-C ✅ CONCLUÍDA
@@ -33,8 +33,8 @@ F4 ▶ EM ANDAMENTO
     E3 ✅ experimento selecionado
     E4 ✅ comparação objetiva + gate humano PASS
     E5 ✅ consolidação e fechamento
-  F4-F ▶ PRÓXIMA — consolidação final e handoff para F5
-F5 ⏳
+  F4-F ✅ consolidação final e handoff para F5
+F5 ▶ PRÓXIMA — performance e validação Android física
 F6 ⏳
 ```
 
@@ -82,7 +82,7 @@ A validação humana ampla no Moto G06 foi positiva para abertura, framing, pan,
 
 Durante essa validação, os limites superiores esquerdo/direito ainda podiam mostrar somente fundo. A correção F3-F2-FIX substituiu o AABB da projeção por região convexa válida de centros de câmera e preserva um patch do piso técnico de 15% dos spans projetados, limitado pelo espaço disponível. Ela preservou `CameraNavigation`, gestos, zoom, lifecycle e renderer; passou 3 arquivos/61 testes dirigidos, `format:check`, `typecheck`, `git diff --check`, build, sync Android e debug build, com novo APK. Não houve revalidação física específica desse fix no Moto G06; a ausência foi aceita como risco residual não bloqueante porque a falha era localizada, a correção é matemática e coberta, os contratos não mudaram e a fixture é descartável. F3 está encerrada.
 
-### F4 — Contrato experimental de assets 3D — em andamento
+### F4 — Contrato experimental de assets 3D — concluída
 
 F4 produz evidência experimental para um pipeline 3D posterior; não o formaliza. GLTF/GLB continua o caminho de runtime da Fundação. Não há persistência espacial, catálogo real, asset manager definitivo ou pipeline artístico aprovado nesta fase.
 
@@ -112,13 +112,13 @@ D5 reuniu F4-B/C/D em gate dirigido de 4 arquivos/20 testes e confirmou a suíte
 
 #### F4-E — Custo e compressão experimental — concluída experimentalmente
 
-E1–E5 concluíram baseline, diagnóstico, variante, comparação e consolidação sem alterar o fixture registrado. Poly Haven concentrou o custo do corpus em três imagens 1024×1024; a variante 512 reduziu o GLB de 5.828.612 para 711.352 bytes (-87,796%), as imagens codificadas em -88,013% e a estimativa RGBA8 base de 12 para 3 MiB, preservando geometry/índices/UV/transforms/material e o `GLTFLoader` atual. O gate humano foi PASS, com leve desfoque em comparação próxima considerado irrelevante para objetos menores e mais distantes na composição ortográfica/2.5D. É evidência deste asset/experimento, não budget global, asset final ou Pipeline 3D definitivo. KTX2/Basis, Draco, Meshopt e quantização não foram adotados; F4-F é o próximo checkpoint.
+E1–E5 concluíram baseline, diagnóstico, variante, comparação e consolidação sem alterar o fixture registrado. Poly Haven concentrou o custo do corpus em três imagens 1024×1024; a variante 512 reduziu o GLB de 5.828.612 para 711.352 bytes (-87,796%), as imagens codificadas em -88,013% e a estimativa RGBA8 base de 12 para 3 MiB, preservando geometry/índices/UV/transforms/material e o `GLTFLoader` atual. O gate humano foi PASS, com leve desfoque em comparação próxima considerado irrelevante para objetos menores e mais distantes na composição ortográfica/2.5D. É evidência deste asset/experimento, não budget global, asset final ou Pipeline 3D definitivo. KTX2/Basis, Draco, Meshopt e quantização não foram adotados.
 
-#### F4-F — Regressão, consolidação e handoff F5 — próxima
+#### F4-F — Regressão, consolidação e handoff F5 — concluída
 
-Consolidar a evidência, registrar convenções experimentais que sobreviverem, preparar assets conhecidos para F5 e manter explícito que o Pipeline 3D permanente é posterior à FUNDAÇÃO.
+Consolidou A–E em contrato experimental: autoria editável e substituível, normalização no asset antes do runtime, materiais PBR relevantes, lifecycle/ownership apenas em harness e custo medido antes de otimizar. Confirmou os quatro fixtures registrados, manteve os testes de contrato, excluiu o laboratório externo da dependência de F5 e não criou `AssetManager`, budget, codec, pipeline produtivo, conteúdo ou persistência espacial.
 
-### F5 — Performance e Android físico — planejada
+### F5 — Performance e Android físico — próxima
 
 Aprofundar densidade de cena, frame time, recursos, loading, estabilidade, temperatura e limites iniciais de conteúdo no Moto G06.
 

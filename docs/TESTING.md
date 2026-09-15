@@ -283,6 +283,14 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - o gate humano final foi **PASS** com leve desfoque percebido em comparação próxima, aceito como não bloqueante para objetos menores e mais distantes na apresentação ortográfica/2.5D. Não representa prova de equivalência pixel a pixel, FPS, frame time, RAM, GPU, Android ou performance física;
 - o fechamento E5 aprovou `npm run format`, `npm run format:check`, `npm run lint` e `npm run typecheck`; o gate dirigido F4-B/C/D + `referenceScene` aprovou 4 arquivos e 20 testes, e a suíte unitária integral aprovou 67 arquivos e 510 testes, sem retries ou falhas. Não foram executados E2E, build, Android ou benchmark físico porque não houve mudança de produção, runtime ou fixture.
 
+## F4-F — consolidação final e handoff
+
+- testes permanentes de contrato: `f4bAssetAxisGate.test.ts` confere hash, parse pelo `GLTFLoader`, root/transforms/bounds do corpus; `f4cMaterialContract.test.ts` confere semântica material/UV; `f4dAssetLifecycle.test.ts` prova ownership, unload, disposal e callbacks adversos exclusivamente em harness; `referenceScene.test.ts` preserva a fixture F1 e a deduplicação intrárvore de `disposeObjectTree()`;
+- eles são rápidos e determinísticos, leem somente fixtures versionados no checkout e não dependem de `../bv-f4-lab/`, da variante Poly Haven 512 ou de arquitetura produtiva especulativa;
+- provas temporárias removidas: harness visual F4-C, `f4eTextureVariant.test.ts`, comparador/harness F4-E e cópia Vite da variante 512;
+- evidência humana preservada fora dos testes automatizados: preflight Blender, gate visual F4-C e gate A/B E3/E4. Nenhuma deles equivale a performance física, Android físico ou fidelidade universal.
+- gate de fechamento: `format`, `format:check`, `lint` e `typecheck` passaram; o gate dirigido aprovou 4 arquivos/20 testes, a suíte integral 67 arquivos/510 testes, sem retries ou falhas, e `npm run build` passou. O aviso conhecido de chunks Vite acima de 500 kB não bloqueou; não foram executados Android, E2E, relatório de performance ou F5.
+
 ## Comandos
 
 ```bash

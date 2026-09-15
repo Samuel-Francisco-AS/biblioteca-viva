@@ -1,6 +1,8 @@
 # Contrato experimental de assets 3D
 
-Este documento é a autoridade ativa da F4 para experimentos de asset. Ele não é um pipeline de produção, manual de ferramenta ou catálogo da Biblioteca final. Todo arquivo externo permanece não confiável até passar por validação estrita; todo asset real que entrar em uma prova futura deverá ter procedência registrada.
+> Estado: **F4 concluída.** Este documento preserva o contrato experimental sobrevivente e o handoff para F5; não é um pipeline de produção, manual de ferramenta ou catálogo da Biblioteca final.
+
+Todo arquivo externo permanece não confiável até passar por validação estrita; todo asset real que entrar em uma prova futura deverá ter procedência registrada.
 
 ## Baseline F1 já provado
 
@@ -178,7 +180,7 @@ O contrato sobrevivente é experimental e limitado ao harness: um **host** pode 
 
 Se a intenção é abandonada ou o owner é encerrado durante loading, callback posterior é stale: não anexa nem ressuscita a root e libera o resultado. Falha individual encerra somente a operação e deixa o host apto a uma nova tentativa. D2/D3 comprovam o caminho real com `GLTFLoader`; D4 usa double somente para controlar a ordem de callbacks. O `ThreeWorldRuntime` continua com ownership terminal da fixture técnica e não recebeu unload dinâmico. O owner experimental, seus tokens e o double vivem somente nos testes; nenhuma API ou arquitetura produtiva foi aprovada.
 
-F4-D não aprovou `AssetManager`, registry, cache, preload, streaming, pooling, queue global, retry automático, abort físico, `AbortController`, cancelamento de rede, sharing entre assets, referência contada, garbage collector, bundles, prioridades, loading screen, persistência, renderer em cena complexa, performance, memória total, Android físico, pressão real de rede/memória ou arquitetura final de loading. F4-E — custo e compressão experimental — é o próximo trabalho e deve medir os assets antes de escolher qualquer hipótese de otimização/compressão.
+F4-D não aprovou `AssetManager`, registry, cache, preload, streaming, pooling, queue global, retry automático, abort físico, `AbortController`, cancelamento de rede, sharing entre assets, referência contada, garbage collector, bundles, prioridades, loading screen, persistência, renderer em cena complexa, performance, memória total, Android físico, pressão real de rede/memória ou arquitetura final de loading.
 
 ## F4-E1 — baseline estrutural de custo — concluída
 
@@ -323,8 +325,34 @@ Para assets cujo custo observado esteja concentrado em texturas superdimensionad
 
 F4-E tratou somente payload/storage e custo estrutural decodificado **estimado**. A fórmula RGBA8 base é `largura × altura × 4` e não mede GPU, VRAM, heap/browser, RAM física, Android ou Moto G06. Ela não comprovou FPS, frame time, loading real, benefício físico de memória, temperatura, bateria ou que a variante seja mais rápida. Esses assuntos pertencem sobretudo a F5 quando houver cena e necessidade aplicáveis.
 
-Os princípios experimentais que podem orientar o futuro Pipeline 3D são: medir antes de otimizar; separar payload, estimativa estrutural e performance física; localizar se o custo dominante é geometria ou textura; não adotar tecnologia de compressão por padrão; considerar complexidade de runtime; preservar semântica de geometria/material nas transformações offline; validar visualmente reduções relevantes; e não converter um resultado experimental em budget global. Eles não são API, arquitetura nem especificação final. F4-E está concluída experimentalmente; F4-F — consolidação final da F4 e handoff para F5 — é o próximo checkpoint.
+Os princípios experimentais que podem orientar o futuro Pipeline 3D são: medir antes de otimizar; separar payload, estimativa estrutural e performance física; localizar se o custo dominante é geometria ou textura; não adotar tecnologia de compressão por padrão; considerar complexidade de runtime; preservar semântica de geometria/material nas transformações offline; validar visualmente reduções relevantes; e não converter um resultado experimental em budget global. Eles não são API, arquitetura nem especificação final.
 
 ## Limites
 
 F4-E1–E5 não medem FPS, frame time, loading real, memória real de GPU, heap/RAM, VRAM, temperatura, bateria, Android/Moto G06, impacto real de decoder ou arquitetura final. O gate humano aprovou somente a adequação visual desta variante no uso pretendido; não aprovou fidelidade pixel a pixel, formatos/resoluções universais ou qualidade de outros assets. F4 não cria a Biblioteca final, arte definitiva, persistência espacial, `PlacedObject`, `WorldStructureState`, tabela espacial, backup espacial, catálogo final ou pipeline artístico definitivo. F5 tratará densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo; o Pipeline 3D permanente só poderá ser formalizado depois da FUNDAÇÃO, com evidência sobrevivente de F4–F6.
+
+## Contrato experimental sobrevivente da F4
+
+- **Autoria:** manter fonte editável/confiável e provenance; Blender foi suficiente para o experimento, mas a ferramenta definitiva não foi congelada. Correção específica pertence ao asset/source pipeline, não ao runtime.
+- **Formato/runtime:** GLTF/GLB e o `GLTFLoader` do stack atual carregaram o corpus registrado; nenhuma segunda engine ou pipeline paralelo foi necessário.
+- **Escala/transforms:** normalizar unidades, eixos, pivô e chão antes do runtime. No corpus, uma unidade é tratada como um metro, Blender `X →` Three `X`, Blender `Y →` Three `-Z`, Blender `Z →` Three `Y`, e a base chega ao `Y=0`; roots aceitos não acumulam correções individuais. Isto não congela frente universal, categorias futuras ou layout/persistência espacial.
+- **Materiais:** preservar a semântica PBR relevante; factors sem maps são válidos, UV é exigido apenas quando o material o usa, e maps compartilhados válidos devem manter seu significado. O `MeshStandardMaterial`, número/resolução de maps, shader e estilo atuais não são requisitos universais.
+- **Ownership/lifecycle:** uma root aceita tem responsabilidade explícita de ownership; unload do asset e dispose do host são conceitos distintos. O contrato de harness comprovou unload seletivo/idempotente, transferência única e descarte/liberação de callback stale, mas não criou uma política permanente de manager ou cache.
+- **Custo:** medir antes de otimizar; separar payload, custo estrutural estimado e performance física; atacar o componente dominante observado, considerar a complexidade de runtime e validar fidelity quando a transformação puder afetá-la.
+- **Não-regra:** resultado isolado da F4 não vira budget universal sem evidência posterior.
+
+## Decisões deliberadamente abertas
+
+- ferramenta definitiva de autoria; catálogo, assets e direção de arte detalhada finais;
+- budgets de tris/vertices, texturas e tamanho máximo de GLB;
+- KTX2/Basis, Draco, Meshopt, quantização, LOD, instancing, mesh merge e atlas;
+- `AssetManager`, cache, preload, streaming, pooling, bundles, queue/prioridade, retries automáticos, abort físico e sharing/ref counting entre assets;
+- persistência espacial, pipeline definitivo de loading, performance e memória físicas reais, e comportamento final no Moto G06.
+
+## Handoff F4 → F5
+
+F5 pode assumir que Three.js continua o renderer aprovado da Fundação, que F3 estabeleceu câmera/interação da fixture e que F4 não substituiu `ThreeWorldRuntime` nem a cena técnica por pipeline produtivo. Há quatro fixtures F4 registradas, com hashes e provenance em `ASSET_REGISTRY.md`, que podem servir como corpus experimental de referência. Geometria/eixos, materiais, lifecycle e custo foram explorados, mas nenhuma arquitetura definitiva de asset management foi criada.
+
+F4 não mediu performance física: redução estrutural não comprova ganho de frame time, GPU ou memória física. F5 deverá responder, sem assumir budgets prévios, qual é o custo físico do renderer/cena no Moto G06, como assets representativos afetam estabilidade de frames, se há pressão de memória, se loading/parse/upload é perceptível, se budgets passam a ser necessários e se alguma otimização avançada aberta fica justificada. Nenhuma metodologia, threshold ou cenário de F5 é definido aqui.
+
+O laboratório `../bv-f4-lab/` não é autoridade de produção e F5 não deve depender dele. Ele preserva evidência arquivável (raw, inspect, candidates, normalized, notes e experimentos) e itens temporários disponíveis para limpeza futura sob decisão explícita. A variante externa `experiments/f4-e/polyhaven-shelf-01-512.glb`, SHA-256 `910cdf18f5eca657e0204ede8279608ad1d9b15341f8f9c8be8cbad4131f39f4`, não é registrada, final ou necessária para F5 por padrão.

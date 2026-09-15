@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F4-F — Contrato experimental de assets 3D concluído — 2026-09-15
+
+- consolidada a evidência F4-A–E: autoria/preflight, geometria/eixos, materiais/UV/texturas, lifecycle/ownership/disposal e custo/otimização experimental;
+- preservados quatro fixtures registrados e testes de contrato; confirmados laboratório e variante 512 como evidência externa não autoritativa, sem dependência para F5;
+- nenhum pipeline produtivo, `AssetManager`, asset final, budget, codec ou mudança de runtime foi criado. F5 — performance e validação Android física — passa a ser a próxima fase.
+
 ### F4-E-CLOSE — Custo e compressão experimental concluídos — 2026-09-15
 
 - consolidada a evidência E1–E4: o baseline dos quatro fixtures identificou Poly Haven como outlier de textura, e a variante laboratorial 512 reduziu seu GLB de 5.828.612 para 711.352 bytes (-87,796%) e a estimativa RGBA8 base de 12 para 3 MiB (-75%);

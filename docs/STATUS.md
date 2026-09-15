@@ -9,7 +9,7 @@
 
 ## Mundo
 
-- **F0, F1, F2 e F3 — Câmera e interação mobile — estão concluídas. F4 — Contrato experimental de assets 3D — está em andamento.** Three.js está aprovado como renderer da Fundação do novo mundo.
+- **F0–F4 estão concluídas. F4 — Contrato experimental de assets 3D — foi consolidada sem criar pipeline produtivo definitivo. F5 — performance e validação Android física — é a próxima fase.** Three.js está aprovado como renderer da Fundação do novo mundo.
 - A linha ativa é `React → WorldHost → ThreeWorldRuntime → Three.js`, com `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, lifecycle explícito, integração React ↔ Three e Android/Capacitor.
 - F3 consolidou `CameraNavigation` runtime-only como autoridade de `targetX`, `targetZ` e `zoom`; framing e bounds dependem de projeção, viewport e zoom. Pan, wheel focal e pinch focal navegam no plano X/Z; tap elegível só faz picking no `pointerup`, e o layout entrega ao runtime somente o `world-host` real observado. Resize/orientação preservam exploração e seleção quando possível e cancelam somente o gesto ativo.
 - A correção final dos bounds substituiu o AABB da projeção por uma região convexa válida de centros de câmera, preservando na viewport um patch do piso técnico de largura e altura equivalentes a 15% dos spans projetados, limitado pelo espaço disponível. Ela não alterou `CameraNavigation`, gestos, lifecycle ou renderer.
@@ -25,7 +25,7 @@
 - F4-D foi concluída experimentalmente após D5: o gate F4-B/C/D dirigido aprovou 4 arquivos/20 testes e a suíte unitária integral aprovou 67 arquivos/510 testes, sem retries ou falhas. O contrato sobrevivente cobre ownership único, transferência única, unload seletivo/idempotente, repetição, isolamento, deduplicação intrárvore, cancelamento lógico e falha recuperável; permanece somente em harness de teste e não altera runtime, produção ou assets.
 - F4-E1/E2 concluíram o baseline estrutural e o diagnóstico dos quatro GLBs F4-B sem alterar assets: hashes conferem, o corpus soma 5.901.424 bytes e Poly Haven concentra 98,766% dele, quase todo em três imagens 1024×1024 (5.814.197 bytes codificados; estimativa RGBA8 base de 12 MiB). A geometria inteira do corpus é 66.240 bytes lógicos e não sustenta experimento de compressão geométrica. A hipótese selecionada para E3/E4 é somente uma variante offline de resolução de texturas de Poly Haven, comparada ao original e submetida a contrato material/UV e gate visual; KTX2/Basis, Meshopt e Draco não foram adotados. Essas métricas não medem FPS, GPU, RAM, Android nem Moto G06.
 - F4-E3/E4 concluíram experimentalmente a variante laboratorial Poly Haven 512 sem tocar o fixture registrado: GLB caiu de 5.828.612 para 711.352 bytes (-87,796%), imagens de 5.814.197 para 696.943 bytes (-88,013%) e estimativa RGBA8 base de 12 para 3 MiB. Geometria lógica, UV, transforms, hierarchy, material e metallic/roughness compartilhado passaram por comparação objetiva e `GLTFLoader` real. O gate humano foi PASS com leve desfoque perceptível apenas em comparação próxima, considerado irrelevante no uso ortográfico/2.5D pretendido; não houve perda bloqueante de identidade visual, material ou leitura geral. O harness/teste temporários foram removidos. Isso não cria budget global, asset final ou pipeline definitivo.
-- F4-E foi concluída experimentalmente: a evidência sustenta medir antes de otimizar, separar payload de estimativa estrutural e performance física, e dimensionar texturas conforme necessidade visual e custo observado. Não há budget 512×512, codec adotado, mudança de runtime ou Pipeline 3D definitivo; KTX2/Basis, Draco, Meshopt e quantização permanecem possibilidades futuras dependentes de nova evidência. A variante laboratorial e seu script permanecem fora do checkout/registry até decisão posterior em F4-F.
+- F4-E foi concluída experimentalmente: a evidência sustenta medir antes de otimizar, separar payload de estimativa estrutural e performance física, e dimensionar texturas conforme necessidade visual e custo observado. Não há budget 512×512, codec adotado, mudança de runtime ou Pipeline 3D definitivo; KTX2/Basis, Draco, Meshopt e quantização permanecem possibilidades futuras dependentes de nova evidência. A variante laboratorial e seu script permanecem fora do checkout/registry como evidência não autoritativa.
 - A cena atual é um spike técnico com fixture, não a Biblioteca final nem arquitetura permanente de conteúdo. Não existe persistência espacial, pipeline 3D formal, catálogo real, `PlacedObject`, `WorldStructureState` ou tabela espacial.
 - R3F e WebGPU não estão aprovados; renderers alternativos só voltam a ser considerados diante de evidência estrutural futura.
 
@@ -37,14 +37,14 @@
 
 ## Próximo trabalho
 
-**F4 — Contrato experimental de assets 3D está em andamento. F4-A, F4-B, F4-C, F4-D e F4-E estão concluídas experimentalmente.** F4-E confirmou, somente para o experimento Poly Haven, que reduzir as três texturas para 512×512 pode reduzir payload e estimativa estrutural preservando o contrato técnico e com leve desfoque humano aceito no uso ortográfico/2.5D. Nenhum asset registrado, runtime, codec ou budget foi mudado. F4-F é o próximo checkpoint.
+**F4 — Contrato experimental de assets 3D está concluída.** F4-F reuniu A–E, confirmou os quatro fixtures registrados e seus hashes, preservou os testes de contrato e documentou o handoff. Nenhum asset registrado, runtime, codec, budget ou pipeline produtivo foi criado. F5 — performance e validação Android física — é o próximo trabalho autorizado.
 
 ```text
 F0 ✅
 F1 ✅
 F2 ✅
 F3 ✅ CONCLUÍDA
-F4 ▶ EM ANDAMENTO
+F4 ✅ CONTRATO EXPERIMENTAL DE ASSETS 3D CONCLUÍDO
   F4-A ✅ CONCLUÍDA
     A1 ✅ auditoria do caminho atual
     A2 ✅ contrato experimental v0
@@ -69,7 +69,7 @@ F4 ▶ EM ANDAMENTO
     E3 ✅ experimento selecionado
     E4 ✅ comparação objetiva + gate humano PASS
     E5 ✅ consolidação e fechamento
-  F4-F ▶ PRÓXIMA — consolidação final e handoff para F5
-F5 ⏳
+  F4-F ✅ consolidação final e handoff para F5
+F5 ▶ PRÓXIMA — performance e validação Android física
 F6 ⏳
 ```

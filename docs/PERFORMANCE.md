@@ -10,9 +10,9 @@ Ainda não existe budget definitivo de mundo. A F1 — Three.js Foundation Spike
 
 ### Fronteira F4/F5
 
-F4 observará apenas provas controladas por asset: tamanho de arquivo, triângulos, meshes, materiais, texturas, geometrias, draw calls e loading observado, sempre com a configuração da medição. Não há valor novo, benchmark ou budget registrado neste checkpoint.
+F4 concluiu provas controladas por asset: mediu tamanho, geometria, materiais e texturas dos quatro fixtures e identificou no Poly Haven um custo concentrado nas imagens. A variante externa 512 reduziu payload e a estimativa RGBA8 base daquele único asset, sem medir performance física nem criar budget.
 
-F5 continua responsável por densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo; custo individual de asset não aprova esses aspectos.
+F5 continua responsável por densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo; custo individual de asset e redução estrutural não aprovam esses aspectos.
 
 ### Web
 

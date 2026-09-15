@@ -2,7 +2,7 @@
 
 **Data de referência:** 2026-09-15
 
-**Estado geral:** F0, F1, F2 e F3 concluídos; Three.js aprovado como renderer da Fundação; F4 — Contrato experimental de assets 3D — está em andamento (F4-A/B/C/D/E concluídas experimentalmente; F4-F é a próxima)
+**Estado geral:** F0–F4 concluídos; Three.js aprovado como renderer da Fundação; F4 consolidou somente o contrato experimental de assets 3D; F5 — performance e validação Android física — é a próxima fase
 
 **Escopo:** Fundação técnica do novo mundo 3D da Biblioteca Viva
 
@@ -90,7 +90,7 @@ F3 — Câmera e interação mobile                       ✅ CONCLUÍDA
  └─ Fechamento: bounds, gates e evidência humana        ✅ CONCLUÍDO
  │
  ▼
-F4 — Contrato experimental de assets 3D              ▶ EM ANDAMENTO
+F4 — Contrato experimental de assets 3D              ✅ CONCLUÍDA
  │
  ├─ F4-A Contrato + preflight de autoria              ✅ CONCLUÍDA
  │   ├─ A1 Auditoria do caminho atual                 ✅ CONCLUÍDA
@@ -105,10 +105,10 @@ F4 — Contrato experimental de assets 3D              ▶ EM ANDAMENTO
  │   ├─ E3 Experimento selecionado                    ✅ CONCLUÍDA
  │   ├─ E4 Comparação objetiva + gate humano PASS     ✅ CONCLUÍDA
  │   └─ E5 Fechamento                                 ✅ CONCLUÍDA
- └─ F4-F Regressão, consolidação e handoff F5         ▶ PRÓXIMA
+└─ F4-F Regressão, consolidação e handoff F5         ✅ CONCLUÍDA
  │
  ▼
-F5 — Performance e Android físico                    ⏳ PLANEJADA
+F5 — Performance e Android físico                    ▶ PRÓXIMA
  │
  ▼
 F6 — Acessibilidade + fechamento arquitetural        ⏳ PLANEJADA
@@ -678,7 +678,7 @@ A validação humana ampla no Moto G06 foi positiva para abertura, framing, pan,
 
 # 13. F4 — Contrato experimental de assets 3D
 
-**Estado: ▶ EM ANDAMENTO — F4-A/B/C/D/E concluídas experimentalmente; F4-F é a próxima etapa autorizada**
+**Estado: ✅ CONCLUÍDA — F4-A–F concluídas; o resultado é contrato experimental, não Pipeline 3D definitivo**
 
 F4 produz evidência para formalizar um Pipeline 3D somente depois da FUNDAÇÃO. Ela não inicia catálogo da Biblioteca, arte definitiva, persistência espacial ou gestão permanente de assets. GLTF/GLB continua o caminho experimental de runtime; a ferramenta de autoria permanece substituível. Blender 3.3.21 está aprovado somente como ferramenta experimental de autoria durante F4, não como obrigação arquitetural, dependência ou ferramenta definitiva.
 
@@ -706,7 +706,7 @@ O diagnóstico, o contrato mínimo, a prova estrutural dos quatro GLBs pelo `GLT
 
 **Estado: ✅ CONCLUÍDA EXPERIMENTALMENTE — D1–D5 concluídas**
 
-D1 auditou o fixture F1 e definiu o contrato experimental mínimo sem mudar produção. D2 comprovou em harness isolado que KayKit real pode ser carregado pelo `GLTFLoader`, aceito por owner local de teste, anexado a `THREE.Scene`, removido com `disposeObjectTree()` e substituído por nova root no mesmo host, preservando um sentinel. D3 comprovou unload repetido inerte, três ciclos sem acúmulo e unload seletivo de Poly Haven sem tocar Kenney; geometry, material e texture emitiram disposal, e a texture metallic/roughness compartilhada do Poly Haven foi descartada uma vez. D4 usou roots Quaternius reais e callbacks controlados somente no teste para comprovar abandono lógico, transferência única, erro recuperável, callback stale inerte e owner terminal, sem abort físico. D5 confirmou o conjunto por gate dirigido de 4 arquivos/20 testes e suíte unitária integral de 67 arquivos/510 testes, sem retries ou falhas. Não houve `AssetManager`, cache, API permanente ou alteração de runtime. F4-E é o próximo trabalho autorizado.
+D1 auditou o fixture F1 e definiu o contrato experimental mínimo sem mudar produção. D2 comprovou em harness isolado que KayKit real pode ser carregado pelo `GLTFLoader`, aceito por owner local de teste, anexado a `THREE.Scene`, removido com `disposeObjectTree()` e substituído por nova root no mesmo host, preservando um sentinel. D3 comprovou unload repetido inerte, três ciclos sem acúmulo e unload seletivo de Poly Haven sem tocar Kenney; geometry, material e texture emitiram disposal, e a texture metallic/roughness compartilhada do Poly Haven foi descartada uma vez. D4 usou roots Quaternius reais e callbacks controlados somente no teste para comprovar abandono lógico, transferência única, erro recuperável, callback stale inerte e owner terminal, sem abort físico. D5 confirmou o conjunto por gate dirigido de 4 arquivos/20 testes e suíte unitária integral de 67 arquivos/510 testes, sem retries ou falhas. Não houve `AssetManager`, cache, API permanente ou alteração de runtime.
 
 ### F4-E — Custo e compressão experimental
 
@@ -716,9 +716,9 @@ E1 mediu diretamente os quatro GLBs F4-B e E2 identificou Poly Haven como outlie
 
 ### F4-F — Regressão, consolidação e handoff F5
 
-**Estado: ▶ PRÓXIMA**
+**Estado: ✅ CONCLUÍDA**
 
-Consolidar a evidência, registrar convenções experimentais que sobreviverem, preparar assets conhecidos para F5 e preservar o Pipeline 3D permanente como trabalho posterior à FUNDAÇÃO.
+Consolidou autoria editável e substituível, normalização antes do runtime, semântica material relevante, lifecycle experimental em harness e custo medido. Os quatro fixtures e seus hashes foram reconfirmados; os testes de contrato permanecem; o laboratório externo e a variante 512 não são dependência de F5. Não foram criados assets de produção, `AssetManager`, cache, budget, codec ou Pipeline 3D definitivo.
 
 ---
 
@@ -927,8 +927,8 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | F3-E                  | ✅ Concluída   | Viewport, orientação, safe areas e integração mobile                                             |
 | F3-F1                 | ✅ Técnico     | Gate consolidado e APK                                                                           |
 | Fechamento F3         | ✅ Concluído   | Evidência humana ampla e correção técnica de bounds; sem revalidação física específica do fix    |
-| F4                    | ▶ Em andamento | F4-A/B/C/D/E concluídas experimentalmente; F4-F próxima                                           |
-| F5                    | ⏳ Planejada   | Baseline de performance Android                                                                  |
+| F4                    | ✅ Concluída   | Contrato experimental de assets consolidado; sem pipeline produtivo definitivo                   |
+| F5                    | ▶ Próxima     | Performance e validação Android física                                                           |
 | F6                    | ⏳ Planejada   | Acessibilidade e fechamento                                                                      |
 | Pipeline 3D           | 🔒 Futuro      | Produção sistemática de assets                                                                   |
 | Primeiro recorte      | 🔒 Futuro      | Construção inicial da Biblioteca real                                                            |
@@ -941,6 +941,6 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 
 O projeto deve ser considerado neste estado:
 
-> **F0, F1, F2 e F3 estão concluídas. F4 está em andamento: F4-A auditou o fixture, definiu o contrato experimental e aprovou Blender 3.3.21 apenas como ferramenta experimental; F4-B comprovou eixos, chão, escala, pivô e root; F4-C comprovou materiais, UV e texturas; F4-D consolidou ownership, unload seletivo, disposal e callbacks adversos somente em harness; F4-E mediu o corpus, identificou Poly Haven como outlier de textura e comparou sua variante 512, preservando estrutura/material/loader e com gate humano PASS, ressalvado leve desfoque não bloqueante para o uso ortográfico/2.5D. Não houve asset/runtime registrado, decoder ou budget congelado. Three.js está aprovado como renderer da Fundação. F3 estabeleceu o contrato de câmera e interação runtime-only, viewport real e bounds convexos da fixture; a validação humana ampla foi positiva. A correção final dos bounds não foi revalidada especificamente no aparelho, limitação aceita como não bloqueante no fechamento.**
+> **F0–F4 estão concluídas. F4 consolidou autoria editável/substituível, eixos/chão/pivô normalizados antes do runtime, materiais por factors ou maps PBR relevantes, ownership/unload experimental somente em harness e medição de custo antes de otimizar. Quatro fixtures registrados e seus hashes permanecem como corpus experimental; Azrael não foi promovido; a variante Poly Haven 512 continua externa, não registrada e não final. Não houve asset/runtime de produção, decoder, budget, `AssetManager` ou pipeline definitivo. Three.js está aprovado como renderer da Fundação. F3 estabeleceu o contrato de câmera e interação runtime-only, viewport real e bounds convexos da fixture; a validação humana ampla foi positiva. A correção final dos bounds não foi revalidada especificamente no aparelho, limitação aceita como não bloqueante no fechamento.**
 
-A FUNDAÇÃO inteira ainda não está concluída: F4–F6 permanecem abertas. F4-F é o próximo trabalho autorizado. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.
+A FUNDAÇÃO inteira ainda não está concluída: F5–F6 permanecem abertas. F5 — performance e validação Android física — é o próximo trabalho autorizado. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.
