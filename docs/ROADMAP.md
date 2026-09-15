@@ -1,6 +1,6 @@
 # Roadmap
 
-> Atualizado em 2026-09-14.
+> Atualizado em 2026-09-15.
 
 ## Baseline concluído
 
@@ -27,13 +27,13 @@ F4 ▶ EM ANDAMENTO
     D3 ✅ repetição, isolamento e disposal
     D4 ✅ assíncrono, abandono, callbacks tardios e erros
     D5 ✅ regressão, consolidação e fechamento
-  F4-E ▶ EM ANDAMENTO
+  F4-E ✅ CONCLUÍDA EXPERIMENTALMENTE
     E1 ✅ baseline de custo
     E2 ✅ diagnóstico e seleção de hipótese
     E3 ✅ experimento selecionado
     E4 ✅ comparação objetiva + gate humano PASS
-    E5 ▶ PRÓXIMA — consolidação e fechamento
-  F4-F ⏳
+    E5 ✅ consolidação e fechamento
+  F4-F ▶ PRÓXIMA — consolidação final e handoff para F5
 F5 ⏳
 F6 ⏳
 ```
@@ -110,11 +110,11 @@ D4 comprovou com roots Quaternius reais e callbacks controlados somente no teste
 
 D5 reuniu F4-B/C/D em gate dirigido de 4 arquivos/20 testes e confirmou a suíte unitária integral com 67 arquivos/510 testes, sem retries ou falhas. F4-D está concluída experimentalmente: o owner e o double permanecem somente no harness, `ThreeWorldRuntime` não recebeu unload dinâmico e não há API, manager, cache ou abort físico.
 
-#### F4-E — Custo e compressão experimental — em andamento
+#### F4-E — Custo e compressão experimental — concluída experimentalmente
 
-E1/E2/E3/E4 concluíram o baseline, diagnóstico, variante e comparação sem alterar o fixture registrado. Para Poly Haven, a variante 512 reduziu o GLB de 5.828.612 para 711.352 bytes (-87,796%), imagens codificadas em -88,013% e a estimativa RGBA8 base de 12 para 3 MiB, preservando geometry/índices/UV/transforms/material e o `GLTFLoader` atual. O gate humano foi PASS: houve leve desfoque em comparação próxima, considerado irrelevante para os objetos menores e distantes da composição ortográfica/2.5D. Isso é evidência deste asset, não budget global, asset final ou Pipeline 3D definitivo. E5 é o próximo checkpoint; KTX2/Basis, Draco e Meshopt não foram adotados.
+E1–E5 concluíram baseline, diagnóstico, variante, comparação e consolidação sem alterar o fixture registrado. Poly Haven concentrou o custo do corpus em três imagens 1024×1024; a variante 512 reduziu o GLB de 5.828.612 para 711.352 bytes (-87,796%), as imagens codificadas em -88,013% e a estimativa RGBA8 base de 12 para 3 MiB, preservando geometry/índices/UV/transforms/material e o `GLTFLoader` atual. O gate humano foi PASS, com leve desfoque em comparação próxima considerado irrelevante para objetos menores e mais distantes na composição ortográfica/2.5D. É evidência deste asset/experimento, não budget global, asset final ou Pipeline 3D definitivo. KTX2/Basis, Draco, Meshopt e quantização não foram adotados; F4-F é o próximo checkpoint.
 
-#### F4-F — Regressão, consolidação e handoff F5 — planejada
+#### F4-F — Regressão, consolidação e handoff F5 — próxima
 
 Consolidar a evidência, registrar convenções experimentais que sobreviverem, preparar assets conhecidos para F5 e manter explícito que o Pipeline 3D permanente é posterior à FUNDAÇÃO.
 

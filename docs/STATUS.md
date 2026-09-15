@@ -1,6 +1,6 @@
 # Estado atual
 
-> Referência documental: 2026-09-14.
+> Referência documental: 2026-09-15.
 
 ## Produto
 
@@ -25,6 +25,7 @@
 - F4-D foi concluída experimentalmente após D5: o gate F4-B/C/D dirigido aprovou 4 arquivos/20 testes e a suíte unitária integral aprovou 67 arquivos/510 testes, sem retries ou falhas. O contrato sobrevivente cobre ownership único, transferência única, unload seletivo/idempotente, repetição, isolamento, deduplicação intrárvore, cancelamento lógico e falha recuperável; permanece somente em harness de teste e não altera runtime, produção ou assets.
 - F4-E1/E2 concluíram o baseline estrutural e o diagnóstico dos quatro GLBs F4-B sem alterar assets: hashes conferem, o corpus soma 5.901.424 bytes e Poly Haven concentra 98,766% dele, quase todo em três imagens 1024×1024 (5.814.197 bytes codificados; estimativa RGBA8 base de 12 MiB). A geometria inteira do corpus é 66.240 bytes lógicos e não sustenta experimento de compressão geométrica. A hipótese selecionada para E3/E4 é somente uma variante offline de resolução de texturas de Poly Haven, comparada ao original e submetida a contrato material/UV e gate visual; KTX2/Basis, Meshopt e Draco não foram adotados. Essas métricas não medem FPS, GPU, RAM, Android nem Moto G06.
 - F4-E3/E4 concluíram experimentalmente a variante laboratorial Poly Haven 512 sem tocar o fixture registrado: GLB caiu de 5.828.612 para 711.352 bytes (-87,796%), imagens de 5.814.197 para 696.943 bytes (-88,013%) e estimativa RGBA8 base de 12 para 3 MiB. Geometria lógica, UV, transforms, hierarchy, material e metallic/roughness compartilhado passaram por comparação objetiva e `GLTFLoader` real. O gate humano foi PASS com leve desfoque perceptível apenas em comparação próxima, considerado irrelevante no uso ortográfico/2.5D pretendido; não houve perda bloqueante de identidade visual, material ou leitura geral. O harness/teste temporários foram removidos. Isso não cria budget global, asset final ou pipeline definitivo.
+- F4-E foi concluída experimentalmente: a evidência sustenta medir antes de otimizar, separar payload de estimativa estrutural e performance física, e dimensionar texturas conforme necessidade visual e custo observado. Não há budget 512×512, codec adotado, mudança de runtime ou Pipeline 3D definitivo; KTX2/Basis, Draco, Meshopt e quantização permanecem possibilidades futuras dependentes de nova evidência. A variante laboratorial e seu script permanecem fora do checkout/registry até decisão posterior em F4-F.
 - A cena atual é um spike técnico com fixture, não a Biblioteca final nem arquitetura permanente de conteúdo. Não existe persistência espacial, pipeline 3D formal, catálogo real, `PlacedObject`, `WorldStructureState` ou tabela espacial.
 - R3F e WebGPU não estão aprovados; renderers alternativos só voltam a ser considerados diante de evidência estrutural futura.
 
@@ -36,7 +37,7 @@
 
 ## Próximo trabalho
 
-**F4 — Contrato experimental de assets 3D está em andamento. F4-A, F4-B, F4-C, F4-D e F4-E1/E2/E3/E4 estão concluídas experimentalmente.** E3/E4 confirmaram a variante Poly Haven 512 com gate humano PASS e ressalva de leve desfoque não bloqueante; nenhum asset registrado, runtime ou compressão foi mudado. F4-E5 é o próximo checkpoint.
+**F4 — Contrato experimental de assets 3D está em andamento. F4-A, F4-B, F4-C, F4-D e F4-E estão concluídas experimentalmente.** F4-E confirmou, somente para o experimento Poly Haven, que reduzir as três texturas para 512×512 pode reduzir payload e estimativa estrutural preservando o contrato técnico e com leve desfoque humano aceito no uso ortográfico/2.5D. Nenhum asset registrado, runtime, codec ou budget foi mudado. F4-F é o próximo checkpoint.
 
 ```text
 F0 ✅
@@ -62,13 +63,13 @@ F4 ▶ EM ANDAMENTO
     D3 ✅ repetição, isolamento e disposal
     D4 ✅ assíncrono em voo, abandono, callbacks tardios e erros
     D5 ✅ regressão, consolidação e fechamento
-  F4-E ▶ EM ANDAMENTO — custo e compressão experimental
+  F4-E ✅ CONCLUÍDA EXPERIMENTALMENTE — custo e compressão experimental
     E1 ✅ baseline de custo
     E2 ✅ diagnóstico e seleção de hipótese
     E3 ✅ experimento selecionado
     E4 ✅ comparação objetiva + gate humano PASS
-    E5 ▶ PRÓXIMA — consolidação e fechamento
-  F4-F ⏳
+    E5 ✅ consolidação e fechamento
+  F4-F ▶ PRÓXIMA — consolidação final e handoff para F5
 F5 ⏳
 F6 ⏳
 ```

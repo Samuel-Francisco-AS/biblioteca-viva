@@ -276,6 +276,13 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - o comparador A/B temporário usou um renderer, câmera, iluminação e controles comuns, alternando somente original/variante. O gate humano foi **PASS**: observou leve desfoque em comparação próxima, considerado irrelevante para objetos menores e mais distantes na composição ortográfica/2.5D; não houve perda bloqueante de identidade visual, material ou leitura geral;
 - o teste, harness e cópia untracked servida por Vite foram removidos após o gate. Não houve mudança no fixture registrado, produção, runtime, dependência, extensão glTF, decoder ou benchmark físico.
 
+## F4-E5 — consolidação e fechamento
+
+- a auditoria de fechamento preservou a evidência E1–E4: baseline estrutural dos quatro GLBs, diagnóstico de Poly Haven como outlier de textura, variante 512 isolada, comparação de accessors/material/loader e gate humano A/B; a autoridade detalhada é `ASSET_PIPELINE.md`;
+- `f4eTextureVariant.test.ts` e o comparador visual foram instrumentos temporários de E3/E4 e já foram removidos; não são cobertura permanente da aplicação. A variante continua apenas no laboratório externo, fora do checkout e do registry;
+- o gate humano final foi **PASS** com leve desfoque percebido em comparação próxima, aceito como não bloqueante para objetos menores e mais distantes na apresentação ortográfica/2.5D. Não representa prova de equivalência pixel a pixel, FPS, frame time, RAM, GPU, Android ou performance física;
+- o fechamento E5 aprovou `npm run format`, `npm run format:check`, `npm run lint` e `npm run typecheck`; o gate dirigido F4-B/C/D + `referenceScene` aprovou 4 arquivos e 20 testes, e a suíte unitária integral aprovou 67 arquivos e 510 testes, sem retries ou falhas. Não foram executados E2E, build, Android ou benchmark físico porque não houve mudança de produção, runtime ou fixture.
+
 ## Comandos
 
 ```bash

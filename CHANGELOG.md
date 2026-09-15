@@ -4,12 +4,18 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F4-E-CLOSE — Custo e compressão experimental concluídos — 2026-09-15
+
+- consolidada a evidência E1–E4: o baseline dos quatro fixtures identificou Poly Haven como outlier de textura, e a variante laboratorial 512 reduziu seu GLB de 5.828.612 para 711.352 bytes (-87,796%) e a estimativa RGBA8 base de 12 para 3 MiB (-75%);
+- preservadas geometry, índices, UV, transforms, hierarchy, material e metallic/roughness compartilhado, com `GLTFLoader` real de `three@0.185.1`; o gate humano foi PASS com leve desfoque em comparação próxima, considerado aceitável e não bloqueante para o uso ortográfico/2.5D;
+- nenhum fixture registrado, runtime, dependência, decoder ou extensão foi alterado. Não foram adotados budget 512×512, KTX2/Basis, Draco, Meshopt, quantização ou Pipeline 3D definitivo; F4-F passa a ser o próximo checkpoint.
+
 ### F4-E3/E4 — Variante de textura e comparação objetiva concluídas experimentalmente — 2026-09-14
 
 - criada somente no laboratório a variante Poly Haven 512: GLB 5.828.612 → 711.352 bytes (-87,796%), imagens codificadas -88,013% e estimativa RGBA8 base 12 → 3 MiB (-75%);
 - comprovadas geometry, índices, UV, transforms, hierarchy, material e metallic/roughness compartilhado inalterados, com parse real do `GLTFLoader` de `three@0.185.1` e sem extensão, decoder, dependência ou mudança de runtime;
 - gate humano A/B aprovou a variante para o uso ortográfico/2.5D pretendido: houve leve desfoque em comparação próxima, considerado não bloqueante; identidade visual, material e leitura geral foram preservados;
-- removidos o harness, teste e cópia Vite temporários após o gate. Nenhum fixture registrado, produção ou `ASSET_REGISTRY.md` foi alterado; 512×512 não é budget, asset final ou Pipeline 3D definitivo. F4-E5 passa a ser o próximo checkpoint.
+- removidos o harness, teste e cópia Vite temporários após o gate. Nenhum fixture registrado, produção ou `ASSET_REGISTRY.md` foi alterado; 512×512 não é budget, asset final ou Pipeline 3D definitivo.
 
 ### F4-E1/E2 — Baseline de custo, diagnóstico e hipótese experimental — 2026-09-14
 
