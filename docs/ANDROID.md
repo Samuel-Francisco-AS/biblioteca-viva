@@ -14,6 +14,10 @@ O APK debug é produzido em `android/app/build/outputs/apk/debug/app-debug.apk`.
 
 Playwright e o emulador web não substituem validação em aparelho real. TalkBack, áudio percebido, temperatura e desempenho físico só podem ser aprovados por evidência humana registrada.
 
+## F6-B — APK candidato ao gate humano
+
+Em 2026-09-17, `npm run android:sync` e `npm run android:build:debug` passaram após a regressão F6-B. O APK debug candidato para F6-C está em `android/app/build/outputs/apk/debug/app-debug.apk`, com 10.568.158 bytes. Permaneceram os warnings conhecidos de chunks Vite acima de 500 kB e `flatDir`; não houve instalação, ADB, TalkBack ou outra validação física.
+
 ## F5 — APK de diagnóstico e evidência F5-B
 
 `npm run android:build:diagnostics` gera um APK debug com `VITE_ENABLE_DIAGNOSTICS=true`. Na Biblioteca, ele expõe três botões DOM temporários para `Baseline F1`, `Corpus F4` e `Corpus F4 ×4`; cada troca recria a montagem Three e o diagnóstico informa a conclusão do carregamento. Esse APK é o artefato a instalar no Moto G06 para F5-B. Sua geração não é instalação, execução física, profiling, teste térmico nem aprovação de performance.

@@ -59,3 +59,7 @@ Pan, wheel zoom, pinch, câmera, exploração espacial e tap direto no canvas s�
 | TalkBack no Moto G06, ordem/leitura e anúncios percebidos, ergonomia, contraste, tamanho de texto Android e áudio percebido | GATE HUMANO F6-C |
 
 Não houve lacuna de produção confirmada para F6-B nem teste novo a criar por esta auditoria. A evidência existente inclui `WorldHost.test.tsx`, `ThreeWorldRuntime.test.ts` e os cenários da rota Biblioteca em `e2e/r4-shell.spec.ts`; F6-A executou somente `WorldHost.test.tsx` (10 testes aprovados). F6-C continua necessário para a evidência que código, jsdom e Chromium não podem declarar aprovada.
+
+### F6-B — evidência automatizada consolidada
+
+F6-B encontrou somente uma lacuna de evidência: faltava provar explicitamente a sequência nativa de foco/teclado e os marcos estruturais da superfície React. `WorldHost.test.tsx` agora confirma status `role="status"`, host oculto semanticamente, fallback `role="alert"`, região de seleção `aria-live="polite"`, tabulação que alcança `Anterior` antes do canvas e ativação nativa por Space/Enter. A regressão consolidada passou sem mudança de produção; TalkBack e qualquer percepção humana continuam exclusivamente em F6-C.

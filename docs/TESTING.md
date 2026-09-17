@@ -312,6 +312,13 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - `android:build:diagnostics` passou localmente com sync Capacitor e `assembleDebug`, sem aparelho conectado. Permaneceram somente os warnings conhecidos de chunks Vite acima de 500 kB e `flatDir` Gradle;
 - F5-C não alterou runtime, assets, loading, lifecycle, Android ou o harness e não fez ADB, instalação ou validação física. A regressão não transforma o envelope F5-B em hard budget nem substitui nova medição no Moto G06 quando conteúdo real exceder materialmente o corpus.
 
+## F6-B — evidência automatizada e regressão técnica
+
+- a matriz F6-A encontrou uma única lacuna automatizável: `WorldHost.test.tsx` não provava explicitamente tabulação/ativação nativa nem os marcos semânticos do host; o teste agora cobre `role="status"`, host/canvas semanticamente oculto, `role="alert"`, `aria-live="polite"`, foco em `Anterior` antes do canvas e ativação por Space/Enter;
+- gate dirigido: `npm run test:run -- src/features/library/WorldHost.test.tsx` aprovou 1 arquivo/11 testes; não houve mudança de produção;
+- regressão consolidada: `format:check`, lint, typecheck, Vitest (70 arquivos/517 testes), `audio:check`, build, `performance:report`, E2E (13 testes), sync Capacitor e debug build Android passaram;
+- essa evidência não aprova TalkBack, leitura/anúncios ou foco percebidos, ergonomia, contraste, tamanho de texto Android, áudio percebido ou qualquer validação física de F6-C.
+
 ## Comandos
 
 ```bash

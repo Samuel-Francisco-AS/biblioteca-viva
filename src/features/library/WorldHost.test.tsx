@@ -114,12 +114,20 @@ describe("WorldHost", () => {
     const runtimeFactory = vi.fn(() => Promise.resolve(runtime));
     const view = render(<WorldHost runtimeFactory={runtimeFactory} />);
 
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Preparando o ambiente 3D experimental…",
+    );
+    expect(screen.getByTestId("three-world-host")).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
+    await screen.findByText("Ambiente 3D experimental em execução.");
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Ambiente 3D experimental em execução.",
+    );
     expect(
-      screen.getByText("Preparando o ambiente 3D experimental…"),
-    ).toBeVisible();
-    expect(
-      await screen.findByText("Ambiente 3D experimental em execução."),
-    ).toBeVisible();
+      view.container.querySelectorAll("canvas[data-three-world-canvas='true']"),
+    ).toHaveLength(1);
     expect(runtimeFactory).toHaveBeenCalledOnce();
     expect(runtime.mount).toHaveBeenCalledOnce();
     expect(runtime.start).toHaveBeenCalledOnce();
@@ -127,9 +135,6 @@ describe("WorldHost", () => {
     expect(runtime.onDiagnosticsChange).toHaveBeenCalledOnce();
     expect(runtime.onFailure).toHaveBeenCalledOnce();
     expect(runtime.onSelectionChange).toHaveBeenCalledOnce();
-    expect(
-      view.container.querySelectorAll("canvas[data-three-world-canvas='true']"),
-    ).toHaveLength(1);
     expect(
       screen.getByRole("complementary", {
         name: "Diagnóstico técnico do ambiente 3D",
@@ -140,6 +145,38 @@ describe("WorldHost", () => {
     view.unmount();
 
     expect(runtime.dispose).toHaveBeenCalledOnce();
+  });
+
+  it("permite selecionar por teclado sem uma parada de foco no canvas", async () => {
+    const user = userEvent.setup();
+    const runtime = createRuntime();
+    const view = render(
+      <WorldHost runtimeFactory={() => Promise.resolve(runtime)} />,
+    );
+
+    const previous = await screen.findByRole("button", {
+      name: "← Anterior",
+    });
+    const next = screen.getByRole("button", { name: "Próximo →" });
+    const selectionStatus = screen.getByText(
+      "Objeto selecionado: Nenhum objeto selecionado.",
+    );
+    const canvas = view.container.querySelector("canvas");
+
+    expect(selectionStatus).toHaveAttribute("aria-live", "polite");
+    expect(canvas).not.toBeNull();
+    expect(canvas).toHaveProperty("tabIndex", -1);
+
+    await user.tab();
+    expect(previous).toHaveFocus();
+    expect(document.activeElement).not.toBe(canvas);
+    await user.keyboard(" ");
+    expect(runtime.selectObject).toHaveBeenLastCalledWith("fixture-pyramid");
+
+    await user.tab();
+    expect(next).toHaveFocus();
+    await user.keyboard("{Enter}");
+    expect(runtime.selectObject).toHaveBeenLastCalledWith("bookshelf-01");
   });
 
   it("avança a partir da seleção vazia e percorre o catálogo", async () => {
@@ -249,11 +286,8 @@ describe("WorldHost", () => {
     );
     const view = render(<WorldHost runtimeFactory={runtimeFactory} />);
 
-    expect(
-      await screen.findByRole("heading", {
-        name: "O ambiente 3D não pôde ser iniciado",
-      }),
-    ).toBeVisible();
+    const fallback = await screen.findByRole("alert");
+    expect(fallback).toHaveTextContent("O ambiente 3D não pôde ser iniciado");
     expect(
       screen.getByText(/demais áreas continuam funcionando normalmente/u),
     ).toBeVisible();

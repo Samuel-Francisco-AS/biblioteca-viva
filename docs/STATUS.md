@@ -9,7 +9,7 @@
 
 ## Mundo
 
-- **F0–F5 e F6-A estão concluídas.** F5 consolidou no Moto G06 um envelope diagnóstico físico, guardrails de remedição e a decisão de não adotar otimizações preventivas; não encontrou o teto do aparelho nem criou hard budgets. F4 não criou Pipeline 3D produtivo definitivo. Three.js está aprovado como renderer da Fundação do novo mundo; **F6 permanece aberta: F6-B é o próximo checkpoint, sem TalkBack aprovado.**
+- **F0–F5, F6-A e F6-B estão concluídas.** F5 consolidou no Moto G06 um envelope diagnóstico físico, guardrails de remedição e a decisão de não adotar otimizações preventivas; não encontrou o teto do aparelho nem criou hard budgets. F4 não criou Pipeline 3D produtivo definitivo. Three.js está aprovado como renderer da Fundação do novo mundo; **F6 permanece aberta: F6-C é o próximo e último checkpoint, sem TalkBack aprovado.**
 - A linha ativa é `React → WorldHost → ThreeWorldRuntime → Three.js`, com `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, lifecycle explícito, integração React ↔ Three e Android/Capacitor.
 - F3 consolidou `CameraNavigation` runtime-only como autoridade de `targetX`, `targetZ` e `zoom`; framing e bounds dependem de projeção, viewport e zoom. Pan, wheel focal e pinch focal navegam no plano X/Z; tap elegível só faz picking no `pointerup`, e o layout entrega ao runtime somente o `world-host` real observado. Resize/orientação preservam exploração e seleção quando possível e cancelam somente o gesto ativo.
 - A correção final dos bounds substituiu o AABB da projeção por uma região convexa válida de centros de câmera, preservando na viewport um patch do piso técnico de largura e altura equivalentes a 15% dos spans projetados, limitado pelo espaço disponível. Ela não alterou `CameraNavigation`, gestos, lifecycle ou renderer.
@@ -37,7 +37,7 @@
 
 ## Próximo trabalho
 
-**F6-A está concluída.** A auditoria confirmou que a fronteira React ↔ Three já preserva descrição, status, fallback, seleção textual anunciada e botões nativos bidirecionais; pan/zoom/pinch permanecem exploração não essencial da fixture. Não há lacuna de produção confirmada para F6-B. O próximo checkpoint é **F6-B**, e o gate humano F6-C continua obrigatório para TalkBack no Moto G06, leitura/anúncios percebidos, ergonomia, contraste e tamanho de texto real. A FUNDAÇÃO permanece aberta; F6 não cria Pipeline 3D produtivo, persistência espacial ou mundo final.
+**F6-B está concluída tecnicamente.** A única lacuna automatizável encontrada foi coberta por teste dirigido de semântica/foco/teclado do `WorldHost`; não houve alteração de produção. A regressão integral, E2E, build web, relatório técnico e build Android passaram. O APK debug candidato está em `android/app/build/outputs/apk/debug/app-debug.apk` (10.568.158 bytes). O próximo e último checkpoint é **F6-C**, gate humano obrigatório para TalkBack no Moto G06, leitura/anúncios e foco percebidos, ergonomia, contraste e tamanho de texto real. A FUNDAÇÃO permanece aberta; F6 não cria Pipeline 3D produtivo, persistência espacial ou mundo final.
 
 ```text
 F0 ✅
@@ -76,6 +76,6 @@ F5 ✅ CONCLUÍDA — performance e validação Android física
   F5-C ✅ consolidação, guardrails iniciais e gate final
 F6 ▶ EM ANDAMENTO — acessibilidade e fechamento arquitetural
   F6-A ✅ contrato de acessibilidade e auditoria de lacunas
-  F6-B ▶ próximo checkpoint — sem lacuna de produção confirmada em F6-A
-  F6-C ⏳ gate humano, incluindo TalkBack no Moto G06
+  F6-B ✅ evidência automatizada, regressão técnica e APK candidato
+  F6-C ▶ próximo e último checkpoint — gate humano, incluindo TalkBack no Moto G06
 ```

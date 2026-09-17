@@ -40,8 +40,8 @@ F5 ✅ CONCLUÍDA — performance e validação Android física
   F5-C ✅ consolidação, guardrails iniciais e gate final
 F6 ▶ EM ANDAMENTO — acessibilidade e fechamento arquitetural
   F6-A ✅ contrato de acessibilidade e auditoria de lacunas
-  F6-B ▶ próximo checkpoint — sem lacuna de produção confirmada em F6-A
-  F6-C ⏳ gate humano, incluindo TalkBack no Moto G06
+  F6-B ✅ evidência automatizada, regressão técnica e APK candidato
+  F6-C ▶ próximo e último checkpoint — gate humano, incluindo TalkBack no Moto G06
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída
@@ -132,7 +132,7 @@ F6 é a próxima fase autorizada: acessibilidade e fechamento arquitetural. Ela 
 
 ### F6 — Acessibilidade e fechamento da FUNDAÇÃO — em andamento
 
-F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico: estados textuais, fallback, seleção anunciada, controles nativos, ponte bidirecional e canvas fora da árvore semântica já atendem a Fundação. Pan, zoom, pinch e exploração espacial não exigem alternativa nesta fixture. Não há lacuna de produção confirmada para F6-B; TalkBack e demais provas percebidas continuam reservados ao gate humano F6-C. A FUNDAÇÃO ainda não está concluída.
+F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico. F6-B confirmou a única lacuna automatizável — foco/teclado e marcos semânticos estruturais — sem alteração de produção; a regressão técnica, E2E e build Android aprovaram o APK candidato. Pan, zoom, pinch e exploração espacial não exigem alternativa nesta fixture. TalkBack e demais provas percebidas continuam reservados ao gate humano F6-C. A FUNDAÇÃO ainda não está concluída.
 
 F1 aprovou a viabilidade da base Three.js; não concluiu câmera, interação, assets, performance ou acessibilidade finais.
 
