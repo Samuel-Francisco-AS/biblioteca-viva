@@ -9,7 +9,7 @@
 
 ## Mundo
 
-- **F0–F5 estão concluídas.** F5 consolidou no Moto G06 um envelope diagnóstico físico, guardrails de remedição e a decisão de não adotar otimizações preventivas; não encontrou o teto do aparelho nem criou hard budgets. F4 não criou Pipeline 3D produtivo definitivo. Three.js está aprovado como renderer da Fundação do novo mundo; **F6 — acessibilidade e fechamento arquitetural — é a próxima fase autorizada.**
+- **F0–F5 e F6-A estão concluídas.** F5 consolidou no Moto G06 um envelope diagnóstico físico, guardrails de remedição e a decisão de não adotar otimizações preventivas; não encontrou o teto do aparelho nem criou hard budgets. F4 não criou Pipeline 3D produtivo definitivo. Three.js está aprovado como renderer da Fundação do novo mundo; **F6 permanece aberta: F6-B é o próximo checkpoint, sem TalkBack aprovado.**
 - A linha ativa é `React → WorldHost → ThreeWorldRuntime → Three.js`, com `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, lifecycle explícito, integração React ↔ Three e Android/Capacitor.
 - F3 consolidou `CameraNavigation` runtime-only como autoridade de `targetX`, `targetZ` e `zoom`; framing e bounds dependem de projeção, viewport e zoom. Pan, wheel focal e pinch focal navegam no plano X/Z; tap elegível só faz picking no `pointerup`, e o layout entrega ao runtime somente o `world-host` real observado. Resize/orientação preservam exploração e seleção quando possível e cancelam somente o gesto ativo.
 - A correção final dos bounds substituiu o AABB da projeção por uma região convexa válida de centros de câmera, preservando na viewport um patch do piso técnico de largura e altura equivalentes a 15% dos spans projetados, limitado pelo espaço disponível. Ela não alterou `CameraNavigation`, gestos, lifecycle ou renderer.
@@ -31,13 +31,13 @@
 
 ## Validações abertas
 
-- TalkBack completo e auditoria humana de tecnologias assistivas permanecem pendentes para F6 ou gate humano específico.
+- TalkBack completo e auditoria humana de tecnologias assistivas permanecem pendentes para o gate humano F6-C.
 - R-09 foi parcialmente mitigado pela evidência da cena mínima no Moto G06, mas permanece ativo para densidade, assets, iluminação, personagens e mundo real.
 - F5 mediu somente a fixture/corpus diagnóstico; conteúdo real, iluminação, animação, transparências, personagens, pós-processamento, memória GPU exata e teto de capacidade permanecem fora do envelope. Nova densidade ou mudança material de renderização exige nova medição no Moto G06.
 
 ## Próximo trabalho
 
-**F5 está concluída.** A escada temporária de diagnóstico permanece versionada e exclusiva de `VITE_ENABLE_DIAGNOSTICS=true`: baseline F1 (1 GLB), corpus F4 (5 GLBs) e corpus F4 ×4 (17 GLBs), todos pelo `ThreeWorldRuntime` real. O Moto G06 confirmou o envelope até ×4, com mapas resolvidos após a correção CSP `blob:`, sem falha persistente de renderização, lifecycle ou sessão de aproximadamente 15 minutos. Calls, triângulos, geometrias, texturas, objetos, PSS e Graphics são envelope observado, não máximos; F5-C não definiu hard budgets. Guardrails: medir novamente no aparelho antes de conteúdo que supere materialmente o corpus simultâneo atual, remounts da ordem de um segundo ou novas cargas de renderização. O próximo trabalho é **F6**, limitado a acessibilidade e fechamento arquitetural; não cria Pipeline 3D produtivo, persistência espacial ou mundo final.
+**F6-A está concluída.** A auditoria confirmou que a fronteira React ↔ Three já preserva descrição, status, fallback, seleção textual anunciada e botões nativos bidirecionais; pan/zoom/pinch permanecem exploração não essencial da fixture. Não há lacuna de produção confirmada para F6-B. O próximo checkpoint é **F6-B**, e o gate humano F6-C continua obrigatório para TalkBack no Moto G06, leitura/anúncios percebidos, ergonomia, contraste e tamanho de texto real. A FUNDAÇÃO permanece aberta; F6 não cria Pipeline 3D produtivo, persistência espacial ou mundo final.
 
 ```text
 F0 ✅
@@ -74,5 +74,8 @@ F5 ✅ CONCLUÍDA — performance e validação Android física
   F5-A ✅ baseline e cenário de carga
   F5-B ✅ stress físico, loading e limites
   F5-C ✅ consolidação, guardrails iniciais e gate final
-F6 ▶ PRÓXIMA — acessibilidade e fechamento arquitetural
+F6 ▶ EM ANDAMENTO — acessibilidade e fechamento arquitetural
+  F6-A ✅ contrato de acessibilidade e auditoria de lacunas
+  F6-B ▶ próximo checkpoint — sem lacuna de produção confirmada em F6-A
+  F6-C ⏳ gate humano, incluindo TalkBack no Moto G06
 ```

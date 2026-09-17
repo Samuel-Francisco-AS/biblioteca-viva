@@ -2,7 +2,7 @@
 
 **Data de referência:** 2026-09-17
 
-**Estado geral:** F0–F5 concluídos; Three.js aprovado como renderer da Fundação; F6 — acessibilidade e fechamento arquitetural — é a próxima fase autorizada; somente F6 permanece aberta dentro da FUNDAÇÃO
+**Estado geral:** F0–F5 e F6-A concluídos; Three.js aprovado como renderer da Fundação; F6 permanece aberta, F6-B é o próximo checkpoint e F6-C preserva o gate humano; somente F6 permanece aberta dentro da FUNDAÇÃO
 
 **Escopo:** Fundação técnica do novo mundo 3D da Biblioteca Viva
 
@@ -115,7 +115,11 @@ F5 — Performance e Android físico                    ✅ CONCLUÍDA
  └─ F5-C Consolidação, guardrails e gate final        ✅ CONCLUÍDA
  │
  ▼
-F6 — Acessibilidade + fechamento arquitetural        ▶ PRÓXIMA
+F6 — Acessibilidade + fechamento arquitetural        ▶ EM ANDAMENTO
+ │
+ ├─ F6-A Contrato de acessibilidade e auditoria      ✅ CONCLUÍDA
+ ├─ F6-B Fechamento de lacunas confirmadas           ▶ PRÓXIMO (nenhuma em F6-A)
+ └─ F6-C Gate humano, incluindo TalkBack             ⏳ PENDENTE
  │
  ▼
 FUNDAÇÃO CONCLUÍDA
@@ -776,7 +780,7 @@ F5-C reconciliou F5-A/F5-B sem nova validação física. O ×4 é o maior envelo
 
 # 15. F6 — Acessibilidade e fechamento arquitetural
 
-**Estado: ⏳ PLANEJADA**
+**Estado: ▶ EM ANDAMENTO — F6-A concluída; F6-B próximo; F6-C humano pendente**
 
 Última fase da FUNDAÇÃO.
 
@@ -798,7 +802,9 @@ estado compartilhado
 highlight       React acessível
 ```
 
-Escopo previsto:
+F6-A confirmou a fronteira existente: descrição/status/fallback em React, seleção textual anunciada, botões nativos e ponte bidirecional com o mesmo highlight; canvas fora da árvore semântica. Pan, zoom, pinch, câmera e exploração são não essenciais nesta fixture. Não há lacuna de produção confirmada para F6-B. TalkBack no Moto G06 e a percepção humana de leitura, anúncios, foco, contraste, ergonomia e tamanho de texto permanecem F6-C.
+
+Escopo remanescente:
 
 - semântica React associada ao mundo;
 - alternativas a gestos precisos;
@@ -951,7 +957,7 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | Fechamento F3         | ✅ Concluído   | Evidência humana ampla e correção técnica de bounds; sem revalidação física específica do fix    |
 | F4                    | ✅ Concluída   | Contrato experimental de assets consolidado; sem pipeline produtivo definitivo                   |
 | F5                    | ✅ Concluída   | Envelope Android físico, guardrails de remedição e gate final; sem teto/hard caps                |
-| F6                    | ▶ Próxima      | Acessibilidade e fechamento                                                                      |
+| F6                    | ▶ Em andamento | F6-A concluída; F6-B próximo; TalkBack permanece gate humano F6-C                              |
 | Pipeline 3D           | 🔒 Futuro      | Produção sistemática de assets                                                                   |
 | Primeiro recorte      | 🔒 Futuro      | Construção inicial da Biblioteca real                                                            |
 | Persistência espacial | 🔒 Futuro      | Salvar estado real do mundo                                                                      |
@@ -965,4 +971,4 @@ O projeto deve ser considerado neste estado:
 
 > **F0–F4 estão concluídas. F4 consolidou autoria editável/substituível, eixos/chão/pivô normalizados antes do runtime, materiais por factors ou maps PBR relevantes, ownership/unload experimental somente em harness e medição de custo antes de otimizar. Quatro fixtures registrados e seus hashes permanecem como corpus experimental; Azrael não foi promovido; a variante Poly Haven 512 continua externa, não registrada e não final. Não houve asset/runtime de produção, decoder, budget, `AssetManager` ou pipeline definitivo. Three.js está aprovado como renderer da Fundação. F3 estabeleceu o contrato de câmera e interação runtime-only, viewport real e bounds convexos da fixture; a validação humana ampla foi positiva. A correção final dos bounds não foi revalidada especificamente no aparelho, limitação aceita como não bloqueante no fechamento.**
 
-A FUNDAÇÃO inteira ainda não está concluída: somente F6 permanece aberta. F5 está concluída: F5-A preparou cenários reproduzíveis, F5-B coletou a evidência física no Moto G06 e F5-C consolidou envelope/guardrails sem confundi-los com máximos do aparelho. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.
+A FUNDAÇÃO inteira ainda não está concluída: somente F6 permanece aberta. F6-A auditou o contrato de acessibilidade e não encontrou lacuna de produção; F6-B é o próximo checkpoint e F6-C ainda exige gate humano, incluindo TalkBack no Moto G06. F5 está concluída: F5-A preparou cenários reproduzíveis, F5-B coletou a evidência física no Moto G06 e F5-C consolidou envelope/guardrails sem confundi-los com máximos do aparelho. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.
