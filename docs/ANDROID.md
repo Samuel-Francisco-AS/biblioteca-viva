@@ -14,9 +14,9 @@ O APK debug é produzido em `android/app/build/outputs/apk/debug/app-debug.apk`.
 
 Playwright e o emulador web não substituem validação em aparelho real. TalkBack, áudio percebido, temperatura e desempenho físico só podem ser aprovados por evidência humana registrada.
 
-## F6-B — APK candidato ao gate humano
+## F6-B — APK técnico do fechamento automatizado
 
-Em 2026-09-17, `npm run android:sync` e `npm run android:build:debug` passaram após a regressão F6-B. O APK debug candidato para F6-C está em `android/app/build/outputs/apk/debug/app-debug.apk`, com 10.568.158 bytes. Permaneceram os warnings conhecidos de chunks Vite acima de 500 kB e `flatDir`; não houve instalação, ADB, TalkBack ou outra validação física.
+Em 2026-09-17, `npm run android:sync` e `npm run android:build:debug` passaram após a regressão F6-B. O APK debug técnico está em `android/app/build/outputs/apk/debug/app-debug.apk`, com 10.568.158 bytes. Permaneceram os warnings conhecidos de chunks Vite acima de 500 kB e `flatDir`; não houve instalação, ADB, TalkBack ou outra validação física. F6-C não acrescentou evidência física: a dívida assistiva deve usar um build futuro atual e representativo da superfície que estiver sendo aprovada, não obrigatoriamente este APK.
 
 ## F5 — APK de diagnóstico e evidência F5-B
 

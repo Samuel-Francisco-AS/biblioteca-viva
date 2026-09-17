@@ -56,10 +56,16 @@ Pan, wheel zoom, pinch, câmera, exploração espacial e tap direto no canvas s�
 | seleção sem gesto preciso, cor isolada ou áudio | ATENDIDO |
 | pan/zoom/pinch/exploração e movimento da fixture | NÃO APLICÁVEL À FUNDAÇÃO ATUAL |
 | texto aumentado, safe areas e viewport | ATENDIDO estruturalmente |
-| TalkBack no Moto G06, ordem/leitura e anúncios percebidos, ergonomia, contraste, tamanho de texto Android e áudio percebido | GATE HUMANO F6-C |
+| TalkBack no Moto G06, ordem/leitura e anúncios percebidos, ergonomia, contraste, tamanho de texto Android e áudio percebido | DÍVIDA HUMANA ACEITA EM F6-C |
 
-Não houve lacuna de produção confirmada para F6-B nem teste novo a criar por esta auditoria. A evidência existente inclui `WorldHost.test.tsx`, `ThreeWorldRuntime.test.ts` e os cenários da rota Biblioteca em `e2e/r4-shell.spec.ts`; F6-A executou somente `WorldHost.test.tsx` (10 testes aprovados). F6-C continua necessário para a evidência que código, jsdom e Chromium não podem declarar aprovada.
+Não houve lacuna de produção confirmada para F6-B nem teste novo a criar por esta auditoria. A evidência existente inclui `WorldHost.test.tsx`, `ThreeWorldRuntime.test.ts` e os cenários da rota Biblioteca em `e2e/r4-shell.spec.ts`; F6-A executou somente `WorldHost.test.tsx` (10 testes aprovados). A evidência humana que código, jsdom e Chromium não podem declarar aprovada foi registrada como dívida em F6-C.
 
 ### F6-B — evidência automatizada consolidada
 
-F6-B encontrou somente uma lacuna de evidência: faltava provar explicitamente a sequência nativa de foco/teclado e os marcos estruturais da superfície React. `WorldHost.test.tsx` agora confirma status `role="status"`, host oculto semanticamente, fallback `role="alert"`, região de seleção `aria-live="polite"`, tabulação que alcança `Anterior` antes do canvas e ativação nativa por Space/Enter. A regressão consolidada passou sem mudança de produção; TalkBack e qualquer percepção humana continuam exclusivamente em F6-C.
+F6-B encontrou somente uma lacuna de evidência: faltava provar explicitamente a sequência nativa de foco/teclado e os marcos estruturais da superfície React. `WorldHost.test.tsx` agora confirma status `role="status"`, host oculto semanticamente, fallback `role="alert"`, região de seleção `aria-live="polite"`, tabulação que alcança `Anterior` antes do canvas e ativação nativa por Space/Enter. A regressão consolidada passou sem mudança de produção.
+
+### F6-C — fechamento técnico com dívida assistiva aceita
+
+A FUNDAÇÃO está concluída arquiteturalmente: React conserva a superfície semântica, o canvas não é a única representação de função essencial e a seleção é operável sem gesto preciso. **TalkBack não foi executado nem aprovado**, e não há aprovação de leitura, anúncios, foco, ergonomia, contraste, tamanho de texto Android, áudio percebido ou acessibilidade final da Biblioteca. A indisponibilidade temporária do Moto G06 foi aceita conscientemente como dívida técnica.
+
+Antes de declarar concluído o primeiro recorte real do mundo e antes de beta/release dependente dessa experiência, executar o gate humano assistivo no build então atual e representativo — não necessariamente o APK F6-B — cobrindo TalkBack, ordem/leitura, anúncios, foco percebido, navegação convencional, operação essencial sem canvas, ergonomia, contraste, tamanho de texto Android e áudio quando aplicável.

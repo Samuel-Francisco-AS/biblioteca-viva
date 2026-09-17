@@ -81,7 +81,7 @@ O harness permanece versionado como ferramenta de desenvolvimento: é carregado 
 
 Não há justificativa presente para KTX2/Basis, Draco, Meshopt, LOD, instancing, atlas, merge, streaming, preload/cache avançado ou `AssetManager`. Cada hipótese só reabre diante de gargalo físico correspondente no conteúdo real: respectivamente pressão de textura/loading, payload/parse geométrico, densidade de desenho/triângulos, repetição de objetos, ou necessidade concreta de manter conjuntos grandes fora da cena simultânea. A variante Poly Haven 512 continua externa e experimental.
 
-F6 herda Three.js/WebGL e a prova física F5, mas não um mundo final, Pipeline 3D, persistência espacial ou budget artístico. Seu escopo seguinte é acessibilidade e fechamento arquitetural; TalkBack e a auditoria humana correspondente continuam pendentes. Não houve nova validação física nesta F5-C.
+A FUNDAÇÃO concluída herda Three.js/WebGL e a prova física F5, mas não um mundo final, Pipeline 3D, persistência espacial ou budget artístico. F6 fechou tecnicamente a fronteira acessível sem nova medição; TalkBack e a auditoria humana correspondente não foram aprovados e permanecem dívida obrigatória antes do fechamento do primeiro recorte real e de beta/release aplicável. Não houve nova validação física nesta F5-C.
 
 ### Web
 

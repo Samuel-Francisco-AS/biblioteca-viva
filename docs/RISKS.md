@@ -5,7 +5,7 @@
 | R-01 | documentação divergir do produto | autoridades curtas, histórico separado e revisão junto ao código |
 | R-02 | perda ou evicção de dados locais | backup v6, restore transacional e testes |
 | R-03 | backup malicioso ou incompatível | limite, schema estrito, duplicatas, checksum e rejeição de legado |
-| R-04 | regressão de acessibilidade convencional | HTML semântico, testes, ponte React acessível na F1 e gate humano |
+| R-04 | regressão de acessibilidade convencional | HTML semântico, ponte React acessível, cobertura automatizada F6 e dívida humana TalkBack explícita; validar build atual com TalkBack/ordem/leitura/anúncios/foco/ergonomia/contraste/texto antes do fechamento do primeiro recorte real e de beta/release aplicável |
 | R-05 | asset sem licença/procedência | registro obrigatório antes de release; cada asset real de prova F4 deverá registrar origem, autoria, licença, fonte editável, transformações, finalidade e estado experimental; o fixture F1 já possui procedência interna clara |
 | R-06 | dependência ou plugin quebrar Android | lockfile e plugins mínimos; sync, build Gradle e execução física no Moto G06 passaram na F1 |
 | R-07 | chave de assinatura perdida | guarda e recuperação fora do Git |

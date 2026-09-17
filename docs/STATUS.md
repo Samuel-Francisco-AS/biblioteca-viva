@@ -9,7 +9,7 @@
 
 ## Mundo
 
-- **F0–F5, F6-A e F6-B estão concluídas.** F5 consolidou no Moto G06 um envelope diagnóstico físico, guardrails de remedição e a decisão de não adotar otimizações preventivas; não encontrou o teto do aparelho nem criou hard budgets. F4 não criou Pipeline 3D produtivo definitivo. Three.js está aprovado como renderer da Fundação do novo mundo; **F6 permanece aberta: F6-C é o próximo e último checkpoint, sem TalkBack aprovado.**
+- **F0–F6 estão concluídas no plano técnico/arquitetural; a FUNDAÇÃO está concluída.** F5 consolidou no Moto G06 um envelope diagnóstico físico, guardrails de remedição e a decisão de não adotar otimizações preventivas; não encontrou o teto do aparelho nem criou hard budgets. F4 não criou Pipeline 3D produtivo definitivo. Three.js está aprovado como renderer da Fundação do novo mundo. F6-A fechou o contrato, F6-B a evidência automatizada e F6-C aceitou documentalmente a dívida humana assistiva; **TalkBack não foi aprovado.**
 - A linha ativa é `React → WorldHost → ThreeWorldRuntime → Three.js`, com `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, lifecycle explícito, integração React ↔ Three e Android/Capacitor.
 - F3 consolidou `CameraNavigation` runtime-only como autoridade de `targetX`, `targetZ` e `zoom`; framing e bounds dependem de projeção, viewport e zoom. Pan, wheel focal e pinch focal navegam no plano X/Z; tap elegível só faz picking no `pointerup`, e o layout entrega ao runtime somente o `world-host` real observado. Resize/orientação preservam exploração e seleção quando possível e cancelam somente o gesto ativo.
 - A correção final dos bounds substituiu o AABB da projeção por uma região convexa válida de centros de câmera, preservando na viewport um patch do piso técnico de largura e altura equivalentes a 15% dos spans projetados, limitado pelo espaço disponível. Ela não alterou `CameraNavigation`, gestos, lifecycle ou renderer.
@@ -31,13 +31,13 @@
 
 ## Validações abertas
 
-- TalkBack completo e auditoria humana de tecnologias assistivas permanecem pendentes para o gate humano F6-C.
+- **Dívida assistiva obrigatória:** a validação humana com TalkBack no Moto G06 não foi executada no fechamento da F6 por indisponibilidade temporária do aparelho e não constitui PASS. Antes de declarar concluído o primeiro recorte real do mundo — e antes de beta/release dependente dessa experiência — validar o build então atual e representativo: TalkBack, ordem/leitura, anúncios, foco percebido, navegação convencional, operação essencial sem canvas, ergonomia, contraste, tamanho de texto Android e áudio quando relevante.
 - R-09 foi parcialmente mitigado pela evidência da cena mínima no Moto G06, mas permanece ativo para densidade, assets, iluminação, personagens e mundo real.
 - F5 mediu somente a fixture/corpus diagnóstico; conteúdo real, iluminação, animação, transparências, personagens, pós-processamento, memória GPU exata e teto de capacidade permanecem fora do envelope. Nova densidade ou mudança material de renderização exige nova medição no Moto G06.
 
 ## Próximo trabalho
 
-**F6-B está concluída tecnicamente.** A única lacuna automatizável encontrada foi coberta por teste dirigido de semântica/foco/teclado do `WorldHost`; não houve alteração de produção. A regressão integral, E2E, build web, relatório técnico e build Android passaram. O APK debug candidato está em `android/app/build/outputs/apk/debug/app-debug.apk` (10.568.158 bytes). O próximo e último checkpoint é **F6-C**, gate humano obrigatório para TalkBack no Moto G06, leitura/anúncios e foco percebidos, ergonomia, contraste e tamanho de texto real. A FUNDAÇÃO permanece aberta; F6 não cria Pipeline 3D produtivo, persistência espacial ou mundo final.
+**A FUNDAÇÃO está concluída tecnicamente/arquiteturalmente.** F6-A confirmou a fronteira semântica, F6-B cobriu foco/teclado e aprovou a regressão integral (70 arquivos/517 testes; 13 E2E), e F6-C registrou a ausência humana como dívida aceita, não como aprovação. O APK F6-B é somente evidência binária técnica, não o build obrigatório do gate futuro. O próximo trabalho é **planejar/formalizar o Pipeline 3D** a partir das evidências F4/F5; ele não está implementado. A fixture continua técnica, sem mundo final ou persistência espacial.
 
 ```text
 F0 ✅
@@ -74,8 +74,10 @@ F5 ✅ CONCLUÍDA — performance e validação Android física
   F5-A ✅ baseline e cenário de carga
   F5-B ✅ stress físico, loading e limites
   F5-C ✅ consolidação, guardrails iniciais e gate final
-F6 ▶ EM ANDAMENTO — acessibilidade e fechamento arquitetural
+F6 ✅ CONCLUÍDA — fechamento técnico/arquitetural
   F6-A ✅ contrato de acessibilidade e auditoria de lacunas
   F6-B ✅ evidência automatizada, regressão técnica e APK candidato
-  F6-C ▶ próximo e último checkpoint — gate humano, incluindo TalkBack no Moto G06
+  F6-C ✅ fechamento documental com dívida assistiva aceita; sem PASS humano
+FUNDAÇÃO ✅ CONCLUÍDA
+PRÓXIMO A PLANEJAR: Pipeline 3D
 ```

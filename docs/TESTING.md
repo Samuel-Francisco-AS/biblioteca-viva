@@ -319,6 +319,12 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - regressão consolidada: `format:check`, lint, typecheck, Vitest (70 arquivos/517 testes), `audio:check`, build, `performance:report`, E2E (13 testes), sync Capacitor e debug build Android passaram;
 - essa evidência não aprova TalkBack, leitura/anúncios ou foco percebidos, ergonomia, contraste, tamanho de texto Android, áudio percebido ou qualquer validação física de F6-C.
 
+## F6-C — fechamento documental e dívida humana
+
+- F6-C não executou teste, APK, instalação, ADB ou validação física; apenas reconciliou a evidência F6-A/F6-B;
+- os gates técnicos já aprovados permanecem: 70 arquivos/517 testes Vitest, 13 E2E, `format:check`, lint, typecheck, `audio:check`, build, `performance:report`, sync e debug build Android;
+- automação não substitui TalkBack ou percepção humana. O gate assistivo obrigatório deve usar o build atual e representativo do primeiro recorte real antes de seu fechamento e antes de beta/release aplicável.
+
 ## Comandos
 
 ```bash
