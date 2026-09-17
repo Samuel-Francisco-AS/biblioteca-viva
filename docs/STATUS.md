@@ -1,6 +1,6 @@
 # Estado atual
 
-> Referência documental: 2026-09-15.
+> Referência documental: 2026-09-17.
 
 ## Produto
 
@@ -9,7 +9,7 @@
 
 ## Mundo
 
-- **F0–F4 estão concluídas. F5 — performance e validação Android física — está em execução: F5-A concluiu a preparação técnica de baseline/cenários; F5-B continua responsável pela evidência física no Moto G06.** F4 não criou Pipeline 3D produtivo definitivo. Three.js está aprovado como renderer da Fundação do novo mundo.
+- **F0–F4 estão concluídas. F5 — performance e validação Android física — está em execução: F5-A preparou os cenários e F5-B concluiu a coleta física no Moto G06; F5-C permanece para consolidar evidências e, somente então, propor budgets iniciais.** F4 não criou Pipeline 3D produtivo definitivo. Three.js está aprovado como renderer da Fundação do novo mundo.
 - A linha ativa é `React → WorldHost → ThreeWorldRuntime → Three.js`, com `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, lifecycle explícito, integração React ↔ Three e Android/Capacitor.
 - F3 consolidou `CameraNavigation` runtime-only como autoridade de `targetX`, `targetZ` e `zoom`; framing e bounds dependem de projeção, viewport e zoom. Pan, wheel focal e pinch focal navegam no plano X/Z; tap elegível só faz picking no `pointerup`, e o layout entrega ao runtime somente o `world-host` real observado. Resize/orientação preservam exploração e seleção quando possível e cancelam somente o gesto ativo.
 - A correção final dos bounds substituiu o AABB da projeção por uma região convexa válida de centros de câmera, preservando na viewport um patch do piso técnico de largura e altura equivalentes a 15% dos spans projetados, limitado pelo espaço disponível. Ela não alterou `CameraNavigation`, gestos, lifecycle ou renderer.
@@ -33,11 +33,11 @@
 
 - TalkBack completo e auditoria humana de tecnologias assistivas permanecem pendentes para F6 ou gate humano específico.
 - R-09 foi parcialmente mitigado pela evidência da cena mínima no Moto G06, mas permanece ativo para densidade, assets, iluminação, personagens e mundo real.
-- Teste térmico prolongado e performance de cenas complexas permanecem futuros.
+- F5-B mediu uma sessão diagnóstica de aproximadamente 15 minutos no cenário mais denso, sem degradação humana percebida ou status térmico Android acima de `0`; a validade para conteúdo real e budgets permanece aberta para F5-C.
 
 ## Próximo trabalho
 
-**F5 está em execução.** F5-A reutilizou somente os quatro fixtures F4 registrados e criou uma escada temporária de diagnóstico que recria o `ThreeWorldRuntime` real: baseline F1 (1 GLB), corpus F4 (5 GLBs) e corpus F4 ×4 (17 GLBs). A primeira abertura física do APK de diagnóstico no Moto G06 encontrou somente um defeito do picker nativo do `<select>` da WebView: a superfície branca ocultava os rótulos, enquanto app/runtime continuavam ativos. O fix F5-A substituiu-o por três botões DOM com estado ativo, preservando a troca/remount; não coletou métricas, não valida o fix fisicamente e não inicia F5-B. O diagnóstico continua a expor FPS/frame médio por RAF, `renderer.info` (calls, triangles, geometries, textures), meshes/objetos e progresso de assets; não houve cache, manager, persistência espacial, otimização avançada ou budget físico.
+**F5 está em execução.** F5-A reutilizou somente os quatro fixtures F4 registrados e criou a escada temporária que recria o `ThreeWorldRuntime` real: baseline F1 (1 GLB), corpus F4 (5 GLBs) e corpus F4 ×4 (17 GLBs). F5-B executou o APK de diagnóstico no Moto G06 (Android 15/API 35), confirmou mapas dos GLBs após corrigir a CSP para `blob:`, e registrou loading, FPS/frame médio em repouso, memória por `dumpsys meminfo`, estado térmico, remounts, interação humana, orientação, background/resume e sessão de aproximadamente 15 minutos. Não houve crash, kill do processo, perda funcional, degradação humana percebida ou threshold/budget definido. O próximo trabalho é **F5-C**, que interpretará esta evidência sem promover o harness, assets ou otimizações a arquitetura produtiva.
 
 ```text
 F0 ✅
@@ -72,7 +72,7 @@ F4 ✅ CONTRATO EXPERIMENTAL DE ASSETS 3D CONCLUÍDO
   F4-F ✅ consolidação final e handoff para F5
 F5 ▶ EM EXECUÇÃO — performance e validação Android física
   F5-A ✅ baseline e cenário de carga
-  F5-B ⏳ stress físico, loading e limites
+  F5-B ✅ stress físico, loading e limites
   F5-C ⏳ consolidação, budgets iniciais e gate final
 F6 ⏳
 ```

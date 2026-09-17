@@ -298,6 +298,13 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - `PerformanceScenarioHarness.test.tsx` confirma que os três cenários são escolhidos por botões DOM, sem `combobox`, e que `aria-pressed` e o texto ativo acompanham a mesma configuração entregue ao `WorldHost`;
 - não há teste de FPS em CI. A verificação local de Chromium serve apenas para confirmar o harness e a composição; medição, stress, loading percebido, temperatura e limites físicos pertencem à F5-B no Moto G06.
 
+## F5-B — instrumentos e gates físicos
+
+- `sceneTextureMetrics.test.ts` fixa a contagem estrutural de referências de textura e instâncias únicas em materiais Three; ela não mede recursos WebGL ou memória;
+- `securityPolicy.test.ts` fixa a permissão explícita de `blob:` em `connect-src`, necessária ao `GLTFLoader` para resolver imagens embutidas dos GLBs no WebView Android sem abrir origem remota;
+- o gate dirigido aprovou 5 arquivos/45 testes: CSP, métricas de textura, runtime, `WorldHost`, cenários e harness. `format:check`, `lint`, `typecheck`, build diagnóstico, sync Capacitor, `assembleDebug` e `git diff --check` passaram; o warning conhecido de chunks Vite acima de 500 kB e os avisos Gradle `flatDir` não bloquearam;
+- FPS, frame pacing, `dumpsys meminfo`, estado térmico, loading percebido, pan, pinch, picking, orientação, background/resume e aquecimento foram coletados no Moto G06 por instrumentação local/ADB e confirmação humana. Não há teste CI que possa substituí-los.
+
 ## Comandos
 
 ```bash

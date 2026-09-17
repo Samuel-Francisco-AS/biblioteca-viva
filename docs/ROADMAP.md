@@ -1,6 +1,6 @@
 # Roadmap
 
-> Atualizado em 2026-09-15.
+> Atualizado em 2026-09-17.
 
 ## Baseline concluído
 
@@ -36,7 +36,7 @@ F4 ✅ CONTRATO EXPERIMENTAL DE ASSETS 3D CONCLUÍDO
   F4-F ✅ consolidação final e handoff para F5
 F5 ▶ EM EXECUÇÃO — performance e validação Android física
   F5-A ✅ baseline e cenário de carga
-  F5-B ⏳ stress físico, loading e limites
+  F5-B ✅ stress físico, loading e limites
   F5-C ⏳ consolidação, budgets iniciais e gate final
 F6 ⏳
 ```
@@ -123,7 +123,7 @@ Consolidou A–E em contrato experimental: autoria editável e substituível, no
 
 ### F5 — Performance e Android físico — em execução
 
-F5-A preparou o build de diagnóstico para o Moto G06: baseline F1, corpus F4 uma vez e corpus F4 ×4, todos pelo `ThreeWorldRuntime`/`WebGLRenderer` reais. A F5-B ainda precisa registrar loading, stress, estabilidade e limites no aparelho; nenhum budget físico foi definido.
+F5-A preparou o build de diagnóstico para o Moto G06: baseline F1, corpus F4 uma vez e corpus F4 ×4, todos pelo `ThreeWorldRuntime`/`WebGLRenderer` reais. F5-B mediu os três cenários no aparelho, inclusive loading, repouso, memória, remount, interação, orientação, background/resume e sessão de aproximadamente 15 minutos no corpus ×4. Nenhum budget físico foi definido; **F5-C** deve consolidar a evidência e decidir se há limites iniciais justificáveis.
 
 Aprofundar densidade de cena, frame time, recursos, loading, estabilidade, temperatura e limites iniciais de conteúdo no Moto G06.
 

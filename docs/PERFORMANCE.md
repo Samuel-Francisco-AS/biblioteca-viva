@@ -38,6 +38,32 @@ Como verificação do harness, Chromium headless local (viewport 390×844, DPR 1
 
 O `textures=1` acima é a contagem observada naquele renderer/execução, não estimativa de memória, declaração sobre as imagens do corpus nem valor a ser transformado em limite.
 
+### F5-B — evidência física no Moto G06, sem budget
+
+Em 2026-09-17, F5-B usou o APK de diagnóstico no Moto G06 (`motorola moto g06`, Android 15/API 35, build `VVOB35.78-202`, pacote `com.samuelfrancisco.bibliotecaviva`, `versionName 1.0`/`versionCode 1`). O USB permaneceu conectado e carregando; a bateria variou de 91% a 94% e de 30,0°C a 33,0°C. Essa condição pode afetar a temperatura e não representa operação desconectada.
+
+Antes da coleta, o log da WebView mostrou que a CSP bloqueava `blob:` em `connect-src`. O `GLTFLoader` cria esses URLs para imagens embutidas dos GLBs; as malhas eram anexadas, mas os maps não carregavam. A correção mínima permite `blob:` somente nessa diretiva e foi revalidada humanamente. Portanto, os dados abaixo são do APK corrigido, com os maps visíveis.
+
+`renderer.info.memory.textures` é lido depois de renderizações contínuas e também após cada asset carregado; não estava stale. No Three r185, ele conta recursos WebGL criados, não bytes de GPU/RAM nem imagens/maps declarados. Para tornar isso explícito somente no diagnóstico, o runtime também conta referências de `Texture` em materiais e instâncias `Texture` únicas na cena após o load. São medidas complementares, não equivalentes. O cenário F4 confirmou 5 referências/4 instâncias únicas e 5 recursos reportados; F4 ×4, 20/16/17 respectivamente. A diferença de um recurso em cada caso é compatível com o recurso já presente no baseline e não deve ser interpretada como memória total.
+
+As amostras comparáveis em repouso usaram a janela RAF existente de 750 ms, já estabilizada, com cenário sem seleção/highlight. `frame médio` é o intervalo entre RAFs, não duração de `renderer.render()`. Calls/triângulos/geometrias de `renderer.info` são valores do frame atual e podem variar com visibilidade/câmera/highlight; meshes/objetos são contagens da cena naquele estado.
+
+| Cenário | GLBs | FPS médio (min–max) | Frame médio | Calls | Triângulos | Geometrias | Texturas renderer | Maps / Texturas únicas | Meshes / Objetos | GLB interno | Primeiro frame |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Baseline F1 | 1 | 60,06 (60,0–60,1) | 16,65 ms | 46 | 546 | 46 | 1 | 0 / 0 | 46 / 57 | 28,0 ms | 118,1 ms |
+| Corpus F4 | 5 | 60,07 (60,0–60,1) | 16,65 ms | 50 | 1.650 | 50 | 5 | 5 / 4 | 50 / 65 | 579,1 ms | 257,7 ms |
+| Corpus F4 ×4 | 17 | 60,07 (60,0–60,1) | 16,65 ms | 62 | 4.962 | 62 | 17 | 20 / 16 | 62 / 89 | 1.039,8 ms | 164,1 ms |
+
+`GLB interno` mede da abertura dos loads do cenário até todos os callbacks terminarem. Corpus F4 e ×4 foram trocas/remounts no processo já vivo; não são transferências de payload quatro vezes nem comparação de cache frio. Uma segunda troca para ×4 marcou 924,9 ms. A abertura via `am start -W` teve 2.727 ms de tempo total da Activity, medida diferente e não diretamente comparável ao tempo interno do runtime.
+
+`dumpsys meminfo` após estabilização inicial cresceu de 483.004 KiB PSS/304.910 KiB Graphics no baseline para 547.230/342.942 no corpus e 648.377/439.914 no ×4. Remounts repetidos atingiram transitoriamente 731.891 KiB PSS/525.590 KiB Graphics no segundo ×4; depois de background/resume, o mesmo cenário voltou a 313.705/182.454 KiB e a sessão prolongada ficou entre 307.369–318.349 KiB PSS e 182.006–191.326 KiB Graphics. `meminfo` não mede VRAM/GPU com exatidão; o padrão observado inclui caches/allocator/WebView e não sustenta diagnóstico de leak, embora a pressão transitória de remount deva ser considerada em F5-C.
+
+`dumpsys thermalservice` permaneceu em `Thermal Status: 0`. O serviço expôs entradas de sensores rotuladas CPU/GPU/SOC entre 44,6°C e 52,2°C, além de entradas estáveis de 48,8°C; não é seguro convertê-las em temperatura exata de GPU/SoC. A temperatura de bateria foi 31,0–33,0°C durante a coleta. Não houve aquecimento percebido pelo avaliador, throttling declarado pelo Android, crash, kill, WebView instável ou perda persistente de responsividade.
+
+O avaliador humano confirmou os três cenários, pan, pinch/extremos de zoom, picking somente dos objetos F1, portrait/landscape/portrait, background/resume antes e depois da sessão e aproximadamente 15 minutos no F4 ×4 em blocos de repouso e navegação. Em ~5/~10/~15 minutos, FPS médio foi 59,95/59,94/59,94 e frame médio 16,69/16,69/16,69 ms, sem travamento, tela preta, recarregamento, artefato, queda de fluidez ou aquecimento percebido. Os assets F4 diagnósticos não são selecionáveis por design e isso não foi objetivo da F5-B.
+
+Essa evidência não fixa 30/60 FPS, máximo de draw calls, triângulos, texturas, tamanho de GLB ou resolução. Não foram criados cenários extras porque o ×4 já diferiu em loading e memória; não foram adotados KTX2/Basis, Draco, Meshopt, LOD, instancing, atlas, streaming ou `AssetManager`. F5-C é a autoridade para interpretar esta curva e, se justificável, propor budgets iniciais.
+
 ### Web
 
 #### Baseline da F1-A

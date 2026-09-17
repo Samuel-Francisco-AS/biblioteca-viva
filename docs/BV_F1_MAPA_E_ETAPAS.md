@@ -726,7 +726,7 @@ Consolidou autoria editável e substituível, normalização antes do runtime, s
 
 # 14. F5 — Performance e Android físico
 
-**Estado: ▶ EM EXECUÇÃO — F5-A concluída; F5-B/F5-C pendentes**
+**Estado: ▶ EM EXECUÇÃO — F5-A/F5-B concluídas; F5-C pendente**
 
 F1 produziu o primeiro baseline.
 
@@ -760,7 +760,11 @@ O build de diagnóstico (`VITE_ENABLE_DIAGNOSTICS=true`) expõe um seletor tempo
 - **Corpus F4:** baseline mais uma cópia de KayKit, Kenney, Poly Haven e Quaternius: 5 GLBs no total, quatro meshes F4/1.104 triângulos adicionais conhecidos pelo corpus.
 - **Corpus F4 ×4:** baseline mais quatro cópias determinísticas do mesmo corpus: 17 GLBs no total, 16 meshes F4/4.416 triângulos adicionais conhecidos pelo corpus.
 
-O diagnóstico reutiliza FPS/frame médio por RAF e `renderer.info` para draw calls, triângulos, geometrias e texturas, além de contar meshes/objetos visíveis e exibir o progresso de assets do cenário. Estes números devem ser lidos no aparelho depois de todos os assets carregarem; a F5-A não define budget, threshold, FPS aceitável ou limite de conteúdo. F5-B levará o APK debug de diagnóstico ao Moto G06 para coletar a evidência física.
+O diagnóstico reutiliza FPS/frame médio por RAF e `renderer.info` para draw calls, triângulos, geometrias e texturas, além de contar meshes/objetos visíveis e exibir o progresso de assets do cenário. Estes números devem ser lidos no aparelho depois de todos os assets carregarem; a F5-A não define budget, threshold, FPS aceitável ou limite de conteúdo.
+
+### F5-B — Stress físico, loading e limites — concluída
+
+No Moto G06 (Android 15/API 35), F5-B mediu os três cenários no `ThreeWorldRuntime`/`WebGLRenderer` reais, após corrigir a CSP que bloqueava os URLs `blob:` usados pelo `GLTFLoader` para imagens embutidas. O corpus confirmou mapas materiais/texturas no aparelho e o cenário ×4 sustentou observações de repouso, loading/remount, memória por ADB, orientação, background/resume, pan, pinch, picking somente dos objetos F1 e sessão humana de aproximadamente 15 minutos. Não houve crash, kill, tela preta, recarregamento, artefato, perda humana de fluidez ou aquecimento percebido; `dumpsys thermalservice` permaneceu em status `0`. `renderer.info.memory.textures` foi registrado como recursos WebGL contabilizados, não como contagem de imagens nem memória GPU total; as contagens diagnósticas de referências/`Texture` únicas dos materiais são complementares. A variação de memória entre remounts e resume não permite declarar leak. Nenhum cenário adicional, otimização, asset novo, manager, streaming ou budget foi adotado. F5-C permanece responsável por consolidar limites iniciais sem promover esta fixture a mundo produtivo.
 
 ---
 
@@ -940,7 +944,7 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | F3-F1                 | ✅ Técnico     | Gate consolidado e APK                                                                           |
 | Fechamento F3         | ✅ Concluído   | Evidência humana ampla e correção técnica de bounds; sem revalidação física específica do fix    |
 | F4                    | ✅ Concluída   | Contrato experimental de assets consolidado; sem pipeline produtivo definitivo                   |
-| F5                    | ▶ Em execução | Performance e validação Android física; F5-A concluída tecnicamente                             |
+| F5                    | ▶ Em execução | Performance e validação Android física; F5-A/F5-B concluídas, F5-C pendente                     |
 | F6                    | ⏳ Planejada   | Acessibilidade e fechamento                                                                      |
 | Pipeline 3D           | 🔒 Futuro      | Produção sistemática de assets                                                                   |
 | Primeiro recorte      | 🔒 Futuro      | Construção inicial da Biblioteca real                                                            |
@@ -955,4 +959,4 @@ O projeto deve ser considerado neste estado:
 
 > **F0–F4 estão concluídas. F4 consolidou autoria editável/substituível, eixos/chão/pivô normalizados antes do runtime, materiais por factors ou maps PBR relevantes, ownership/unload experimental somente em harness e medição de custo antes de otimizar. Quatro fixtures registrados e seus hashes permanecem como corpus experimental; Azrael não foi promovido; a variante Poly Haven 512 continua externa, não registrada e não final. Não houve asset/runtime de produção, decoder, budget, `AssetManager` ou pipeline definitivo. Three.js está aprovado como renderer da Fundação. F3 estabeleceu o contrato de câmera e interação runtime-only, viewport real e bounds convexos da fixture; a validação humana ampla foi positiva. A correção final dos bounds não foi revalidada especificamente no aparelho, limitação aceita como não bloqueante no fechamento.**
 
-A FUNDAÇÃO inteira ainda não está concluída: F5–F6 permanecem abertas. F5 está em execução: F5-A preparou cenários reproduzíveis e F5-B continua como autoridade física no Moto G06. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.
+A FUNDAÇÃO inteira ainda não está concluída: F5–F6 permanecem abertas. F5 está em execução: F5-A preparou cenários reproduzíveis e F5-B coletou a evidência física no Moto G06; F5-C consolidará essa evidência e poderá propor budgets iniciais. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.

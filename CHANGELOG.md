@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F5-B — Stress físico, loading e limites — 2026-09-17
+
+- coletada evidência física no Moto G06 para os três cenários diagnósticos, incluindo loading/remount, FPS/frame médio em repouso, memória ADB, estado térmico, interação humana, orientação, background/resume e sessão de aproximadamente 15 minutos no corpus ×4;
+- corrigida a CSP para permitir `blob:` em `connect-src`, pois o `GLTFLoader` usa URLs blob para as imagens embutidas dos GLBs; após o fix, os mapas F4 aparecem no aparelho e as métricas distinguem mapas materiais de recursos WebGL reportados por `renderer.info`;
+- nenhum budget, otimização avançada, asset novo, manager, streaming, catálogo ou arquitetura produtiva foi adotado. F5 continua em execução: F5-C consolidará as evidências e definirá limites iniciais somente se justificáveis.
+
 ### F5-A — Baseline e cenário de carga — 2026-09-15
 
 - adicionado somente ao build de diagnóstico um seletor temporário que recria o `ThreeWorldRuntime` real com baseline F1, corpus F4 e corpus F4 ×4; o build normal mantém a fixture técnica;

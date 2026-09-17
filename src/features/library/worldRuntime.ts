@@ -33,6 +33,7 @@ export interface WorldRuntimeDiagnostics {
   readonly frameTimeMs: number | null;
   readonly geometries: number;
   readonly meshes: number;
+  readonly materialTextureReferences: number;
   readonly performanceScenarioAssetsLoaded: number;
   readonly performanceScenarioAssetsTotal: number;
   readonly performanceScenarioId: string;
@@ -44,6 +45,7 @@ export interface WorldRuntimeDiagnostics {
   readonly textures: number;
   readonly timeToFirstUsableFrameMs: number | null;
   readonly triangles: number;
+  readonly uniqueMaterialTextures: number;
 }
 
 export type WorldDiagnosticsListener = (

@@ -51,6 +51,7 @@ function createRuntime(): TestWorldRuntime {
     fps: 60,
     frameTimeMs: 16.67,
     geometries: 46,
+    materialTextureReferences: 0,
     meshes: 46,
     performanceScenarioAssetsLoaded: 1,
     performanceScenarioAssetsTotal: 1,
@@ -63,6 +64,7 @@ function createRuntime(): TestWorldRuntime {
     textures: 1,
     timeToFirstUsableFrameMs: 4,
     triangles: 546,
+    uniqueMaterialTextures: 0,
   };
   const unsubscribe = vi.fn(() => {
     selectionListener = undefined;

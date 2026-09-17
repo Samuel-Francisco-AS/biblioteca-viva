@@ -14,15 +14,17 @@ O APK debug é produzido em `android/app/build/outputs/apk/debug/app-debug.apk`.
 
 Playwright e o emulador web não substituem validação em aparelho real. TalkBack, áudio percebido, temperatura e desempenho físico só podem ser aprovados por evidência humana registrada.
 
-## F5-A — APK de diagnóstico para F5-B
+## F5 — APK de diagnóstico e evidência F5-B
 
 `npm run android:build:diagnostics` gera um APK debug com `VITE_ENABLE_DIAGNOSTICS=true`. Na Biblioteca, ele expõe três botões DOM temporários para `Baseline F1`, `Corpus F4` e `Corpus F4 ×4`; cada troca recria a montagem Three e o diagnóstico informa a conclusão do carregamento. Esse APK é o artefato a instalar no Moto G06 para F5-B. Sua geração não é instalação, execução física, profiling, teste térmico nem aprovação de performance.
 
-Na primeira abertura física do APK F5-A, o antigo `<select>` abriu o picker da WebView como uma superfície branca sem rótulos legíveis/utilizáveis. O app e o runtime continuaram ativos atrás desse diálogo, portanto o defeito ficou restrito ao controle. O fix F5-A removeu o `<select>` em favor dos botões DOM; o novo APK ainda não recebeu validação física e essa observação não inicia F5-B.
+Na primeira abertura física do APK F5-A, o antigo `<select>` abriu o picker da WebView como uma superfície branca sem rótulos legíveis/utilizáveis. O app e o runtime continuaram ativos atrás desse diálogo, portanto o defeito ficou restrito ao controle. O fix F5-A removeu o `<select>` em favor dos botões DOM e foi revalidado fisicamente antes da coleta F5-B.
 
 Em 2026-09-15, `android:sync:diagnostics` encontrou os mesmos três plugins Capacitor e `assembleDebug` concluiu com sucesso. O APK de diagnóstico está em `android/app/build/outputs/apk/debug/app-debug.apk` com 13.346.535 bytes. Os warnings conhecidos de `flatDir` persistem. Nenhum aparelho foi conectado, instalado ou avaliado nesta F5-A.
 
-Em 2026-09-16, o rebuild do fix do seletor repetiu `android:sync:diagnostics` e `assembleDebug` com sucesso, mantendo o APK de 13.346.535 bytes no mesmo caminho. O APK corrigido ainda não foi instalado ou revalidado fisicamente.
+Em 2026-09-17, F5-B gerou o APK de diagnóstico, sincronizou Capacitor e executou `assembleDebug`; o APK final instalado e smoke-testado foi `android/app/build/outputs/apk/debug/app-debug.apk`, com 10.781.761 bytes e SHA-256 `8864ab9f4cf8935cf56b7eea6caaa2318b07a7e250c6cb73d9ee45c0195ce9cd`. A instalação por ADB foi conferida extraindo e comparando o `base.apk` instalado. O pacote/Activity usados foram `com.samuelfrancisco.bibliotecaviva` e `.MainActivity`; o Moto G06 executou Android 15/API 35, build `VVOB35.78-202`.
+
+Durante F5-B, logs da WebView mostraram `GLTFLoader: Couldn't load texture blob:...`: a CSP tinha `img-src blob:`, mas não `connect-src blob:`. Como o loader busca URLs blob para as imagens embutidas, a correção mínima incluiu `blob:` em `connect-src`; ela foi coberta pelo teste de CSP e validada fisicamente com maps visíveis. Não houve mudança Android nativa, novo plugin ou dependência.
 
 ## Evidência técnica da F1-E
 

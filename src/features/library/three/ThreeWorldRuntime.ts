@@ -33,6 +33,7 @@ import {
   REFERENCE_SCENE_PROXY_TYPES,
   type ReferenceScene,
 } from "./referenceScene";
+import { collectSceneTextureMetrics } from "./sceneTextureMetrics";
 import { ThreeWorldInteraction } from "./ThreeWorldInteraction";
 
 interface RendererInfo {
@@ -309,6 +310,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly frameMetrics = new FrameMetricsWindow();
   private geometries = 0;
   private lastDiagnosticsPublishedAt: number | undefined;
+  private materialTextureReferences = 0;
   private meshes = 0;
   private mountStartedAt: number | undefined;
   private mountedWorld: ThreeWorldMount | undefined;
@@ -317,6 +319,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private performanceScenarioFailed = false;
   private performanceScenarioPendingAssets = 0;
   private readonly performanceScenario: PerformanceScenario;
+  private readonly performanceScenarioDiagnosticsEnabled: boolean;
   private pausedByVisibility = false;
   private renderedFrames = 0;
   private sceneObjects = 0;
@@ -327,6 +330,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private textures = 0;
   private timeToFirstUsableFrameMs: number | null = null;
   private triangles = 0;
+  private uniqueMaterialTextures = 0;
   private lastValidViewport:
     { readonly height: number; readonly width: number } | undefined;
   private viewportReady = false;
@@ -345,6 +349,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.performanceScenario =
       dependencies.performanceScenario ??
       createDefaultPerformanceScenario(this.fixtureUrl);
+    this.performanceScenarioDiagnosticsEnabled =
+      dependencies.performanceScenario !== undefined;
     this.frameScheduler = dependencies.frameScheduler ?? defaultFrameScheduler;
     this.now = dependencies.now ?? (() => performance.now());
   }
@@ -361,6 +367,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       frameTimeMs: this.state === "running" ? frameMetrics.frameTimeMs : null,
       geometries: this.geometries,
       meshes: this.meshes,
+      materialTextureReferences: this.materialTextureReferences,
       performanceScenarioAssetsLoaded: this.performanceScenarioAssetsLoaded,
       performanceScenarioAssetsTotal: this.performanceScenario.assets.length,
       performanceScenarioId: this.performanceScenario.id,
@@ -372,6 +379,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       textures: this.textures,
       timeToFirstUsableFrameMs: this.timeToFirstUsableFrameMs,
       triangles: this.triangles,
+      uniqueMaterialTextures: this.uniqueMaterialTextures,
     });
   }
 
@@ -670,6 +678,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (asset.id === "f1-technical-pyramid") model.scale.setScalar(1.35);
     mountedWorld.scene.add(model);
     mountedWorld.addFixture(model);
+    this.updateMaterialTextureMetrics(mountedWorld.scene);
     if (asset.id === "f1-technical-pyramid") {
       mountedWorld.getInteraction()?.addSelectable(FIXTURE_SELECTABLE, model);
     }
@@ -834,6 +843,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.drawCalls = 0;
     this.geometries = 0;
     this.meshes = 0;
+    this.materialTextureReferences = 0;
     this.performanceScenarioAssetsLoaded = 0;
     this.performanceScenarioFailed = false;
     this.performanceScenarioPendingAssets = 0;
@@ -842,6 +852,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.selection = null;
     this.textures = 0;
     this.triangles = 0;
+    this.uniqueMaterialTextures = 0;
     this.pausedByVisibility = false;
     this.lastValidViewport = undefined;
     this.viewportReady = false;
@@ -894,6 +905,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
     canvas.dataset.frameTimeMs = diagnostics.frameTimeMs?.toFixed(2) ?? "";
     canvas.dataset.geometries = String(diagnostics.geometries);
     canvas.dataset.meshes = String(diagnostics.meshes);
+    canvas.dataset.materialTextureReferences = String(
+      diagnostics.materialTextureReferences,
+    );
     canvas.dataset.performanceScenario = diagnostics.performanceScenarioId;
     canvas.dataset.performanceScenarioAssetsLoaded = String(
       diagnostics.performanceScenarioAssetsLoaded,
@@ -906,6 +920,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
     canvas.dataset.sceneObjects = String(diagnostics.sceneObjects);
     canvas.dataset.textures = String(diagnostics.textures);
     canvas.dataset.triangles = String(diagnostics.triangles);
+    canvas.dataset.uniqueMaterialTextures = String(
+      diagnostics.uniqueMaterialTextures,
+    );
   }
 
   private updateObjectCounts(scene: Scene): void {
@@ -918,6 +935,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
     });
     this.meshes = meshes;
     this.sceneObjects = sceneObjects;
+  }
+
+  private updateMaterialTextureMetrics(scene: Scene): void {
+    if (!this.performanceScenarioDiagnosticsEnabled) return;
+    const metrics = collectSceneTextureMetrics(scene);
+    this.materialTextureReferences = metrics.materialTextureReferences;
+    this.uniqueMaterialTextures = metrics.uniqueMaterialTextures;
   }
 }
 

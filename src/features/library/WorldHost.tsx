@@ -20,6 +20,7 @@ const EMPTY_DIAGNOSTICS: WorldRuntimeDiagnostics = {
   fps: null,
   frameTimeMs: null,
   geometries: 0,
+  materialTextureReferences: 0,
   meshes: 0,
   performanceScenarioAssetsLoaded: 0,
   performanceScenarioAssetsTotal: 0,
@@ -32,6 +33,7 @@ const EMPTY_DIAGNOSTICS: WorldRuntimeDiagnostics = {
   textures: 0,
   timeToFirstUsableFrameMs: null,
   triangles: 0,
+  uniqueMaterialTextures: 0,
 };
 
 function metric(value: number | null, suffix = ""): string {
@@ -225,6 +227,18 @@ export function WorldHost({
                   {diagnostics.performanceScenarioAssetsTotal}
                 </dd>
               </div>
+              {performanceScenario && (
+                <>
+                  <div>
+                    <dt>Maps declarados</dt>
+                    <dd>{diagnostics.materialTextureReferences}</dd>
+                  </div>
+                  <div>
+                    <dt>Texturas únicas declaradas</dt>
+                    <dd>{diagnostics.uniqueMaterialTextures}</dd>
+                  </div>
+                </>
+              )}
               <div>
                 <dt>FPS</dt>
                 <dd>{metric(diagnostics.fps)}</dd>
