@@ -1,6 +1,6 @@
 # Contrato experimental de assets 3D
 
-> Estado: **F4 concluída.** Este documento preserva o contrato experimental sobrevivente e o handoff para F5; não é um pipeline de produção, manual de ferramenta ou catálogo da Biblioteca final.
+> Estado: **F4 concluída; handoff F4 → F5 concluído.** Este documento preserva o contrato experimental sobrevivente; não é um pipeline de produção, manual de ferramenta ou catálogo da Biblioteca final.
 
 Todo arquivo externo permanece não confiável até passar por validação estrita; todo asset real que entrar em uma prova futura deverá ter procedência registrada.
 
@@ -323,13 +323,13 @@ Para assets cujo custo observado esteja concentrado em texturas superdimensionad
 
 ### Limites e próximos passos
 
-F4-E tratou somente payload/storage e custo estrutural decodificado **estimado**. A fórmula RGBA8 base é `largura × altura × 4` e não mede GPU, VRAM, heap/browser, RAM física, Android ou Moto G06. Ela não comprovou FPS, frame time, loading real, benefício físico de memória, temperatura, bateria ou que a variante seja mais rápida. Esses assuntos pertencem sobretudo a F5 quando houver cena e necessidade aplicáveis.
+F4-E tratou somente payload/storage e custo estrutural decodificado **estimado**. A fórmula RGBA8 base é `largura × altura × 4` e não mede GPU, VRAM, heap/browser, RAM física, Android ou Moto G06. Ela não comprovou FPS, frame time, loading real, benefício físico de memória, temperatura, bateria ou que a variante seja mais rápida. F5 executou a validação física aplicável; sua autoridade detalhada está em `PERFORMANCE.md`, `ANDROID.md`, `TESTING.md` e `STATUS.md`.
 
 Os princípios experimentais que podem orientar o futuro Pipeline 3D são: medir antes de otimizar; separar payload, estimativa estrutural e performance física; localizar se o custo dominante é geometria ou textura; não adotar tecnologia de compressão por padrão; considerar complexidade de runtime; preservar semântica de geometria/material nas transformações offline; validar visualmente reduções relevantes; e não converter um resultado experimental em budget global. Eles não são API, arquitetura nem especificação final.
 
 ## Limites
 
-F4-E1–E5 não medem FPS, frame time, loading real, memória real de GPU, heap/RAM, VRAM, temperatura, bateria, Android/Moto G06, impacto real de decoder ou arquitetura final. O gate humano aprovou somente a adequação visual desta variante no uso pretendido; não aprovou fidelidade pixel a pixel, formatos/resoluções universais ou qualidade de outros assets. F4 não cria a Biblioteca final, arte definitiva, persistência espacial, `PlacedObject`, `WorldStructureState`, tabela espacial, backup espacial, catálogo final ou pipeline artístico definitivo. F5 tratará densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo; o Pipeline 3D permanente só poderá ser formalizado depois da FUNDAÇÃO, com evidência sobrevivente de F4–F6.
+F4-E1–E5 não medem FPS, frame time, loading real, memória real de GPU, heap/RAM, VRAM, temperatura, bateria, Android/Moto G06, impacto real de decoder ou arquitetura final. O gate humano aprovou somente a adequação visual desta variante no uso pretendido; não aprovou fidelidade pixel a pixel, formatos/resoluções universais ou qualidade de outros assets. F4 não cria a Biblioteca final, arte definitiva, persistência espacial, `PlacedObject`, `WorldStructureState`, tabela espacial, backup espacial, catálogo final ou pipeline artístico definitivo. F5 aprofundou densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo sem criar budgets universais; o Pipeline 3D permanente só poderá ser formalizado depois da FUNDAÇÃO, com evidência sobrevivente de F4–F6.
 
 ## Contrato experimental sobrevivente da F4
 
@@ -349,10 +349,10 @@ F4-E1–E5 não medem FPS, frame time, loading real, memória real de GPU, heap/
 - `AssetManager`, cache, preload, streaming, pooling, bundles, queue/prioridade, retries automáticos, abort físico e sharing/ref counting entre assets;
 - persistência espacial, pipeline definitivo de loading, performance e memória físicas reais, e comportamento final no Moto G06.
 
-## Handoff F4 → F5
+## Handoff F4 → F5 — concluído
 
-F5 pode assumir que Three.js continua o renderer aprovado da Fundação, que F3 estabeleceu câmera/interação da fixture e que F4 não substituiu `ThreeWorldRuntime` nem a cena técnica por pipeline produtivo. Há quatro fixtures F4 registradas, com hashes e provenance em `ASSET_REGISTRY.md`, que podem servir como corpus experimental de referência. Geometria/eixos, materiais, lifecycle e custo foram explorados, mas nenhuma arquitetura definitiva de asset management foi criada.
+O handoff concluído estabeleceu que Three.js continua o renderer aprovado da Fundação, F3 estabeleceu câmera/interação da fixture e F4 não substituiu `ThreeWorldRuntime` nem a cena técnica por pipeline produtivo. Há quatro fixtures F4 registradas, com hashes e provenance em `ASSET_REGISTRY.md`, que serviram como corpus experimental de referência. Geometria/eixos, materiais, lifecycle e custo foram explorados, mas nenhuma arquitetura definitiva de asset management foi criada.
 
-F4 não mediu performance física: redução estrutural não comprova ganho de frame time, GPU ou memória física. F5 deverá responder, sem assumir budgets prévios, qual é o custo físico do renderer/cena no Moto G06, como assets representativos afetam estabilidade de frames, se há pressão de memória, se loading/parse/upload é perceptível, se budgets passam a ser necessários e se alguma otimização avançada aberta fica justificada. Nenhuma metodologia, threshold ou cenário de F5 é definido aqui.
+F4 não mediu performance física: redução estrutural não comprova ganho de frame time, GPU ou memória física. F5 respondeu a esse aprofundamento no Moto G06 sem assumir budgets prévios e consolidou envelope físico observado e guardrails de remedição; não encontrou teto nem justificou otimização avançada. A autoridade detalhada desses resultados está em `PERFORMANCE.md`, `ANDROID.md`, `TESTING.md` e `STATUS.md`.
 
-O laboratório `../bv-f4-lab/` não é autoridade de produção e F5 não deve depender dele. Ele preserva evidência arquivável (raw, inspect, candidates, normalized, notes e experimentos) e itens temporários disponíveis para limpeza futura sob decisão explícita. A variante externa `experiments/f4-e/polyhaven-shelf-01-512.glb`, SHA-256 `910cdf18f5eca657e0204ede8279608ad1d9b15341f8f9c8be8cbad4131f39f4`, não é registrada, final ou necessária para F5 por padrão.
+O laboratório `../bv-f4-lab/` não é autoridade de produção e F5 não dependeu dele. Ele preserva evidência arquivável (raw, inspect, candidates, normalized, notes e experimentos) e itens temporários disponíveis para limpeza futura sob decisão explícita. A variante externa `experiments/f4-e/polyhaven-shelf-01-512.glb`, SHA-256 `910cdf18f5eca657e0204ede8279608ad1d9b15341f8f9c8be8cbad4131f39f4`, não é registrada, final ou necessária por padrão.

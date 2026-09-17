@@ -1,8 +1,8 @@
 # Biblioteca Viva — Mapa da FUNDAÇÃO e detalhamento da F1
 
-**Data de referência:** 2026-09-15
+**Data de referência:** 2026-09-17
 
-**Estado geral:** F0–F4 concluídos; Three.js aprovado como renderer da Fundação; F5 — performance e validação Android física — está em execução, com F5-A concluída tecnicamente
+**Estado geral:** F0–F5 concluídos; Three.js aprovado como renderer da Fundação; F6 — acessibilidade e fechamento arquitetural — é a próxima fase autorizada; somente F6 permanece aberta dentro da FUNDAÇÃO
 
 **Escopo:** Fundação técnica do novo mundo 3D da Biblioteca Viva
 
@@ -47,7 +47,7 @@ com:
 - nenhum reaproveitamento da antiga W3-A;
 - nenhuma persistência espacial prematura.
 
-A F1 aprovou a viabilidade da base Three.js, F2 concluiu a integração e o endurecimento do runtime, F3 concluiu o contrato de câmera e interação mobile e F4 concluiu o contrato experimental de assets. A FUNDAÇÃO inteira termina somente depois de F5–F6; F5 está em execução, F6 permanece futura e o Pipeline 3D produtivo será formalizado posteriormente, não foi criado pela F4.
+A F1 aprovou a viabilidade da base Three.js, F2 concluiu a integração e o endurecimento do runtime, F3 concluiu o contrato de câmera e interação mobile, F4 concluiu o contrato experimental de assets e F5 consolidou o envelope físico e os guardrails no Moto G06. A FUNDAÇÃO inteira termina somente depois de F6, a próxima fase autorizada; o Pipeline 3D produtivo será formalizado posteriormente e não foi criado pela F4 ou F5.
 
 ---
 
@@ -115,7 +115,7 @@ F5 — Performance e Android físico                    ✅ CONCLUÍDA
  └─ F5-C Consolidação, guardrails e gate final        ✅ CONCLUÍDA
  │
  ▼
-F6 — Acessibilidade + fechamento arquitetural        ⏳ PLANEJADA
+F6 — Acessibilidade + fechamento arquitetural        ▶ PRÓXIMA
  │
  ▼
 FUNDAÇÃO CONCLUÍDA
@@ -732,7 +732,7 @@ Consolidou autoria editável e substituível, normalização antes do runtime, s
 
 F1 produziu o primeiro baseline.
 
-F5 deverá transformar essa evidência inicial em um baseline mais confiável para o mundo.
+F5 transformou essa evidência inicial em um envelope físico observado e guardrails de remedição, sem definir hard budgets para o mundo.
 
 Escopo previsto:
 

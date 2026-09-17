@@ -12,7 +12,7 @@ Ainda não existe budget definitivo de mundo. A F1 — Three.js Foundation Spike
 
 F4 concluiu provas controladas por asset: mediu tamanho, geometria, materiais e texturas dos quatro fixtures e identificou no Poly Haven um custo concentrado nas imagens. A variante externa 512 reduziu payload e a estimativa RGBA8 base daquele único asset, sem medir performance física nem criar budget.
 
-F5 continua responsável por densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo; custo individual de asset e redução estrutural não aprovam esses aspectos.
+F5 foi responsável pelo aprofundamento de densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo; seus resultados sobreviventes são o envelope físico observado e os guardrails documentados, sem hard budgets. Custo individual de asset e redução estrutural não aprovam esses aspectos.
 
 ### F5-A — cenário reproduzível, sem budget físico
 
@@ -272,6 +272,6 @@ O baseline físico reduz a incerteza da cena mínima, mas o desempenho 3D no Mot
 
 ### Fechamento da F3 — observação humana no Moto G06
 
-Na validação humana ampla da F3, o FPS permaneceu aproximadamente em 60 ou muito próximo durante as interações de câmera e também durante rotação. Pan e pinch foram percebidos como fluidos, sem crash, travamento ou regressão funcional perceptível. É uma observação da fixture técnica em uso humano: não é benchmark científico, budget definitivo nem garantia de desempenho para o mundo final. F5 continua responsável pelo aprofundamento de performance e Android físico.
+Na validação humana ampla da F3, o FPS permaneceu aproximadamente em 60 ou muito próximo durante as interações de câmera e também durante rotação. Pan e pinch foram percebidos como fluidos, sem crash, travamento ou regressão funcional perceptível. É uma observação da fixture técnica em uso humano: não é benchmark científico, budget definitivo nem garantia de desempenho para o mundo final. Naquele checkpoint, o aprofundamento de performance e Android físico permanecia reservado à F5.
 
 O APK gerado após o fix final dos bounds não recebeu revalidação física específica; portanto, esta observação não comprova fisicamente aquele fix.
