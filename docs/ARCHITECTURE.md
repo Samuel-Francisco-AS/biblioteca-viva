@@ -45,4 +45,4 @@ Three.js
 
 O baseline vigente usa Three.js direto, `WebGLRenderer`, `OrthographicCamera` e GLTF/GLB. R3F não foi adotado e WebGPU não substitui o baseline WebGL. Alternativas não serão implementadas em paralelo e só serão reabertas diante de evidência estrutural futura.
 
-A cena técnica da F1 prova o runtime e a F3 concluiu seu contrato de câmera/interação, mas ela não constitui arquitetura permanente de conteúdo, UX do mundo real, pipeline de assets ou Biblioteca final.
+A cena técnica da F1 prova o runtime e a F3 concluiu seu contrato de câmera/interação, mas ela não constitui arquitetura permanente de conteúdo, UX do mundo real ou Biblioteca final. A ADR-010 definiu o contrato documental do Pipeline 3D v1; ingestão produtiva, `AssetManager`/cache, catálogo e persistência espacial continuam fora da arquitetura implementada.

@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### P3D-A — Contrato produtivo e estrutura do Pipeline 3D v1 — 2026-09-17
+
+- criada a ADR-010 e promovido `ASSET_PIPELINE.md` à autoridade técnica do Pipeline 3D v1: GLB 2.0 autocontido, `GLTFLoader`/Three.js, fonte editável rastreável, normalização no asset, estados documentais e invariantes bloqueantes de promoção;
+- definida somente como estrutura planejada para P3D-B a separação entre `assets/3d/source/<asset-id>/` e `src/features/library/three/assets/`; fixtures continuam técnicos e nenhum asset F1/F4 foi promovido;
+- mantidos sem implementação assets produtivos, diretórios, scripts, automação de checker/export, loader/ownership produtivos, `AssetManager`, cache, codecs, budgets, catálogo, mundo real ou persistência espacial. P3D-B passa a ser o próximo checkpoint com um único asset canônico manual ponta a ponta.
+
 ### F5-C — Consolidação, guardrails iniciais e gate final — 2026-09-17
 
 - consolidado o envelope físico F5 no Moto G06: o corpus diagnóstico até F4 ×4 é capacidade observada, não teto de calls, triângulos, geometrias, texturas, objetos, PSS ou Graphics;

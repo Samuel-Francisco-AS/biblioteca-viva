@@ -8,7 +8,20 @@
 - Mundo anterior, Phaser e contratos espaciais legados removidos pelo WORLD RESET.
 - **F0 — Definição da Fundação concluída.**
 - **F1 — Three.js Foundation Spike concluída:** Three.js aprovado como renderer da Fundação com host React próprio, `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, interação bidirecional, lifecycle explícito e prova física no Moto G06.
-- A cena vigente continua técnica e descartável; a Biblioteca final, o pipeline 3D formal e a persistência espacial ainda não existem.
+- A cena vigente continua técnica e descartável; P3D-A formalizou o contrato e a estrutura planejada do Pipeline 3D v1, mas a Biblioteca final, assets produtivos e persistência espacial ainda não existem.
+
+## Pipeline 3D v1
+
+```text
+P3D-A ✅ contrato produtivo e estrutura
+P3D-B ⏭ primeiro asset canônico ponta a ponta
+P3D-C ⏳ validação e relatório automatizados
+P3D-D ⏳ preparação/exportação reproduzível
+P3D-E ⏳ ingestão produtiva, ownership e unload
+P3D-F ⏳ gate integrado e fechamento
+```
+
+P3D-B atravessará manualmente o contrato com um único asset canônico, sem automação geral. A preferência inicial é usar a fonte Quaternius Bookshelf estudada na F4, sem promover seu fixture; se a fonte editável não estiver no checkout, a dependência é recuperá-la do laboratório F4.
 
 ## FUNDAÇÃO
 
@@ -43,7 +56,8 @@ F6 ✅ CONCLUÍDA — fechamento técnico/arquitetural
   F6-B ✅ evidência automatizada, regressão técnica e APK candidato
   F6-C ✅ fechamento documental com dívida assistiva aceita; sem PASS humano
 FUNDAÇÃO ✅ CONCLUÍDA
-PRÓXIMO A PLANEJAR: Pipeline 3D
+P3D-A ✅ contrato produtivo e estrutura
+PRÓXIMO: P3D-B — primeiro asset canônico ponta a ponta
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída
@@ -130,17 +144,17 @@ Consolidou A–E em contrato experimental: autoria editável e substituível, no
 
 F5-A preparou o build de diagnóstico para o Moto G06: baseline F1, corpus F4 uma vez e corpus F4 ×4, todos pelo `ThreeWorldRuntime`/`WebGLRenderer` reais. F5-B mediu os três cenários no aparelho, inclusive loading, repouso, memória, remount, interação, orientação, background/resume e sessão de aproximadamente 15 minutos no corpus ×4. F5-C consolidou isso como envelope observado e gatilhos de remedição, não como hard caps: o teto do aparelho não foi encontrado e nenhuma otimização avançada foi justificada.
 
-F6 foi concluída tecnicamente/arquiteturalmente sem criar mundo, Pipeline 3D produtivo ou persistência espacial. A dívida de validação humana assistiva permanece obrigatória antes do fechamento do primeiro recorte real e de beta/release dependente da experiência acessível; ela deve usar o build então vigente, não necessariamente o APK F6-B.
+F6 foi concluída tecnicamente/arquiteturalmente sem criar mundo ou persistência espacial. P3D-A posterior formalizou o contrato produtivo do Pipeline 3D v1, sem criar assets, ingestão produtiva ou implementação de mundo. A dívida de validação humana assistiva permanece obrigatória antes do fechamento do primeiro recorte real e de beta/release dependente da experiência acessível; ela deve usar o build então vigente, não necessariamente o APK F6-B.
 
 ### F6 — Acessibilidade e fechamento da FUNDAÇÃO — concluída tecnicamente
 
-F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico. F6-B confirmou a única lacuna automatizável — foco/teclado e marcos semânticos estruturais — sem alteração de produção; a regressão técnica, E2E e build Android aprovaram o APK candidato. F6-C aceitou documentalmente a indisponibilidade temporária do Moto G06 como dívida assistiva, sem declarar TalkBack ou acessibilidade humana Android aprovados. A FUNDAÇÃO está concluída no plano técnico/arquitetural. O Pipeline 3D é a próxima etapa a planejar/formalizar, não uma implementação autorizada.
+F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico. F6-B confirmou a única lacuna automatizável — foco/teclado e marcos semânticos estruturais — sem alteração de produção; a regressão técnica, E2E e build Android aprovaram o APK candidato. F6-C aceitou documentalmente a indisponibilidade temporária do Moto G06 como dívida assistiva, sem declarar TalkBack ou acessibilidade humana Android aprovados. A FUNDAÇÃO está concluída no plano técnico/arquitetural. P3D-A já formalizou o Pipeline 3D v1; P3D-B é a próxima etapa autorizada e continua sem implementação de mundo.
 
 F1 aprovou a viabilidade da base Three.js; não concluiu câmera, interação, assets, performance ou acessibilidade finais.
 
 ## Depois da FUNDAÇÃO
 
-1. Formalizar o pipeline de assets 3D a partir da evidência acumulada.
-2. Projetar e implementar o primeiro recorte real do novo mundo.
-3. Projetar persistência espacial nova somente quando esse recorte demonstrar o que precisa ser salvo.
-4. Planejar sistemas maiores em fases próprias.
+1. P3D-B: atravessar manualmente o Pipeline 3D v1 com um único asset canônico.
+2. P3D-C–F: automatizar validação/relatório, consolidar preparação/exportação, projetar ingestão/ownership/unload e fechar o gate integrado, nessa ordem autorizada.
+3. Projetar e implementar o primeiro recorte real do novo mundo após os checkpoints necessários.
+4. Projetar persistência espacial nova somente quando esse recorte demonstrar o que precisa ser salvo.

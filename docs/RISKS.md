@@ -6,7 +6,7 @@
 | R-02 | perda ou evicção de dados locais | backup v6, restore transacional e testes |
 | R-03 | backup malicioso ou incompatível | limite, schema estrito, duplicatas, checksum e rejeição de legado |
 | R-04 | regressão de acessibilidade convencional | HTML semântico, ponte React acessível, cobertura automatizada F6 e dívida humana TalkBack explícita; validar build atual com TalkBack/ordem/leitura/anúncios/foco/ergonomia/contraste/texto antes do fechamento do primeiro recorte real e de beta/release aplicável |
-| R-05 | asset sem licença/procedência | registro obrigatório antes de release; cada asset real de prova F4 deverá registrar origem, autoria, licença, fonte editável, transformações, finalidade e estado experimental; o fixture F1 já possui procedência interna clara |
+| R-05 | asset sem licença/procedência | bloqueio de promoção pela ADR-010: todo asset produtivo deve registrar origem, autoria, licença compatível, fonte editável normalizada e transformações; fonte e GLB só entram nas áreas produtivas em P3D-B. Fixtures F1/F4 não são promoção implícita |
 | R-06 | dependência ou plugin quebrar Android | lockfile e plugins mínimos; sync, build Gradle e execução física no Moto G06 passaram na F1 |
 | R-07 | chave de assinatura perdida | guarda e recuperação fora do Git |
 | R-08 | escopo crescer antes de uma fatia aprovada | roadmap progressivo, STATUS e ADR-009 limitam a aprovação ao renderer da Fundação; F4 fechou somente contrato experimental de assets, F5 foi concluída e F6, bem como as fases posteriores, continuam exigindo escopo próprio |

@@ -1,8 +1,24 @@
-# Contrato experimental de assets 3D
+# Pipeline 3D v1
 
-> Estado: **F4 concluída; handoff F4 → F5 concluído.** Este documento preserva o contrato experimental sobrevivente; não é um pipeline de produção, manual de ferramenta ou catálogo da Biblioteca final.
+> Estado: **P3D-A concluída.** Este é o documento técnico ativo do Pipeline 3D v1. A evidência F4/F5 abaixo permanece como base histórica/experimental sobrevivente; ela não é, por si só, promoção de fixture ou implementação de pipeline.
 
-Todo arquivo externo permanece não confiável até passar por validação estrita; todo asset real que entrar em uma prova futura deverá ter procedência registrada.
+Todo arquivo externo permanece não confiável até passar por validação estrita. A decisão arquitetural vigente é a [`ADR-010`](decisions/ADR-010-3d-pipeline-v1.md).
+
+## Contrato produtivo v1
+
+O Pipeline 3D v1 começa por assets rígidos/estáticos no perfil `grounded/static`. O runtime aceita GLB 2.0 autocontido pelo Three.js/`GLTFLoader` já instalado. Blender 3.3.21 é a ferramenta de autoria de referência/suportada com base no preflight F4, mas continua substituível e fora das dependências arquiteturais do aplicativo. A receita exata de CLI, flags e exportação aguarda P3D-B/P3D-D.
+
+Não fazem parte da v1: skinned meshes/personagens, animação, morph targets, shader customizado, partículas, persistência espacial, streaming, catálogo do mundo, LOD, atlas, instancing/merge como política, Draco, Meshopt, KTX2/Basis, `AssetManager` ou cache global. Não são proibições permanentes; exigem necessidade e evidência futuras. `ThreeWorldRuntime` não muda nesta P3D-A e o seu caminho F1/F4 continua técnico/diagnóstico, não loading produtivo.
+
+Quando o primeiro asset produtivo entrar em P3D-B, sua fonte ficará em `assets/3d/source/<asset-id>/` e o GLB aprovado em `src/features/library/three/assets/`. A fonte guarda o editável normalizado/reproduzível e evidências pertinentes, fica fora do bundle/runtime e deve permitir rastrear origem, autoria, licença e transformações; pacotes brutos completos de fornecedor não são exigidos por padrão. `fixtures/` permanece exclusivamente técnico/teste e nenhum fixture F1/F4 é promovido implicitamente. P3D-A não cria esses diretórios vazios, Git LFS ou repositório separado.
+
+O `asset-id` é estável, único, semântico e em kebab-case; fornecedor/origem não integra o ID consumido pelo mundo. Os estados documentais mínimos são `candidate`, `validated` e `production`; fixtures técnicos/experimentais ficam fora deles. Ainda não há schema, enum ou código de produção para esses estados.
+
+Para promoção, é bloqueante: origem, autoria e licença compatível conhecidas; fonte editável preservada; transformações registradas; GLB 2.0 válido/autocontido; parse pelo `GLTFLoader` instalado; root lógico previsível sem scale/rotação/offset corretivo de runtime; bounds finitos/positivos; uma unidade de autoria normalizada igual a um metro; e, para `grounded/static`, apoio no chão runtime `Y=0` e footprint normalizado. Também é bloqueante preservar a semântica material relevante no caminho glTF/Three, ter UV quando material texturizado o requer, não faltar textura/referência necessária, não exigir branch/patch por asset no runtime nem decoder/extensão não configurado. Um root lógico pode conter múltiplos meshes. A convenção universal de frente permanece aberta até o primeiro uso real em P3D-B/P3D.
+
+Tooling posterior poderá apenas relatar tamanho do GLB, nodes, meshes, primitives, vértices, triângulos, materiais, texturas/imagens, dimensões/MIME das imagens, bounds/dimensões físicas e estimativas estruturais de custo separadas de RAM/GPU real. Não há hard budget de meshes, materiais, triângulos, resolução ou outras métricas: medir antes de otimizar continua o princípio F4/F5.
+
+## Evidência histórica/experimental sobrevivente F4
 
 ## Baseline F1 já provado
 
@@ -325,11 +341,11 @@ Para assets cujo custo observado esteja concentrado em texturas superdimensionad
 
 F4-E tratou somente payload/storage e custo estrutural decodificado **estimado**. A fórmula RGBA8 base é `largura × altura × 4` e não mede GPU, VRAM, heap/browser, RAM física, Android ou Moto G06. Ela não comprovou FPS, frame time, loading real, benefício físico de memória, temperatura, bateria ou que a variante seja mais rápida. F5 executou a validação física aplicável; sua autoridade detalhada está em `PERFORMANCE.md`, `ANDROID.md`, `TESTING.md` e `STATUS.md`.
 
-Os princípios experimentais que podem orientar o futuro Pipeline 3D são: medir antes de otimizar; separar payload, estimativa estrutural e performance física; localizar se o custo dominante é geometria ou textura; não adotar tecnologia de compressão por padrão; considerar complexidade de runtime; preservar semântica de geometria/material nas transformações offline; validar visualmente reduções relevantes; e não converter um resultado experimental em budget global. Eles não são API, arquitetura nem especificação final.
+Os princípios experimentais que orientaram o Pipeline 3D v1 são: medir antes de otimizar; separar payload, estimativa estrutural e performance física; localizar se o custo dominante é geometria ou textura; não adotar tecnologia de compressão por padrão; considerar complexidade de runtime; preservar semântica de geometria/material nas transformações offline; validar visualmente reduções relevantes; e não converter um resultado experimental em budget global. Eles não são API, arquitetura de loading nem especificação artística final.
 
 ## Limites
 
-F4-E1–E5 não medem FPS, frame time, loading real, memória real de GPU, heap/RAM, VRAM, temperatura, bateria, Android/Moto G06, impacto real de decoder ou arquitetura final. O gate humano aprovou somente a adequação visual desta variante no uso pretendido; não aprovou fidelidade pixel a pixel, formatos/resoluções universais ou qualidade de outros assets. F4 não cria a Biblioteca final, arte definitiva, persistência espacial, `PlacedObject`, `WorldStructureState`, tabela espacial, backup espacial, catálogo final ou pipeline artístico definitivo. F5 aprofundou densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo sem criar budgets universais; o Pipeline 3D permanente só poderá ser formalizado depois da FUNDAÇÃO, com evidência sobrevivente de F4–F6.
+F4-E1–E5 não medem FPS, frame time, loading real, memória real de GPU, heap/RAM, VRAM, temperatura, bateria, Android/Moto G06, impacto real de decoder ou arquitetura final. O gate humano aprovou somente a adequação visual desta variante no uso pretendido; não aprovou fidelidade pixel a pixel, formatos/resoluções universais ou qualidade de outros assets. F4 não cria a Biblioteca final, arte definitiva, persistência espacial, `PlacedObject`, `WorldStructureState`, tabela espacial, backup espacial, catálogo final ou pipeline artístico definitivo. F5 aprofundou densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo sem criar budgets universais; P3D-A posterior formalizou o contrato produtivo v1 a partir da evidência sobrevivente, sem transformar essas métricas em budgets ou implementar loading produtivo.
 
 ## Contrato experimental sobrevivente da F4
 
@@ -343,7 +359,7 @@ F4-E1–E5 não medem FPS, frame time, loading real, memória real de GPU, heap/
 
 ## Decisões deliberadamente abertas
 
-- ferramenta definitiva de autoria; catálogo, assets e direção de arte detalhada finais;
+- receita exata de autoria/exportação; catálogo, assets e direção de arte detalhada finais;
 - budgets de tris/vertices, texturas e tamanho máximo de GLB;
 - KTX2/Basis, Draco, Meshopt, quantização, LOD, instancing, mesh merge e atlas;
 - `AssetManager`, cache, preload, streaming, pooling, bundles, queue/prioridade, retries automáticos, abort físico e sharing/ref counting entre assets;
