@@ -26,6 +26,7 @@ import {
 } from "./cameraMath";
 import { CameraNavigation } from "./CameraNavigation";
 import fixtureUrl from "./fixtures/f1-technical-pyramid.glb?url&no-inline";
+import type { PerformanceScenario } from "./performanceScenarios";
 import {
   createReferenceScene,
   disposeObjectTree,
@@ -74,6 +75,7 @@ export interface ThreeWorldRuntimeDependencies {
   readonly fixtureUrl?: string;
   readonly frameScheduler?: FrameScheduler;
   readonly now?: () => number;
+  readonly performanceScenario?: PerformanceScenario;
 }
 
 const defaultFrameScheduler: FrameScheduler = {
@@ -85,6 +87,21 @@ const FIXTURE_SELECTABLE: WorldSelectableObject = Object.freeze({
   id: "fixture-pyramid",
   label: "Pirâmide técnica",
 });
+
+function createDefaultPerformanceScenario(url: string): PerformanceScenario {
+  return Object.freeze({
+    assets: Object.freeze([
+      Object.freeze({
+        id: "f1-technical-pyramid",
+        position: [0.4, 0.1, 2.6] as const,
+        url,
+      }),
+    ]),
+    description: "Fixture técnica F1 atual, sem asset F4.",
+    id: "f1-baseline",
+    label: "Baseline F1",
+  });
+}
 
 const DIAGNOSTICS_PUBLISH_INTERVAL_MS = 250;
 
@@ -100,7 +117,7 @@ function createFixtureLoader(): FixtureModelLoader {
 /** Resources that live and are released together for one runtime mount. */
 class ThreeWorldMount {
   private disposed = false;
-  private fixture: Object3D | undefined;
+  private readonly fixtures: Object3D[] = [];
   private interaction: ThreeWorldInteraction | undefined;
   private referenceScene: ReferenceScene | undefined;
   private resizeObserver: ResizeObserver | undefined;
@@ -155,7 +172,7 @@ class ThreeWorldMount {
   }
 
   addFixture(fixture: Object3D): void {
-    this.fixture = fixture;
+    this.fixtures.push(fixture);
   }
 
   appendCanvas(): void {
@@ -257,10 +274,9 @@ class ThreeWorldMount {
     const interaction = this.interaction;
     this.interaction = undefined;
     this.safely(() => interaction?.dispose());
-    const fixture = this.fixture;
-    this.fixture = undefined;
+    const fixtures = this.fixtures.splice(0);
     this.safely(() => {
-      if (fixture) disposeObjectTree(fixture);
+      for (const fixture of fixtures) disposeObjectTree(fixture);
     });
     const referenceScene = this.referenceScene;
     this.referenceScene = undefined;
@@ -297,6 +313,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private mountStartedAt: number | undefined;
   private mountedWorld: ThreeWorldMount | undefined;
   private navigation: CameraNavigation | undefined;
+  private performanceScenarioAssetsLoaded = 0;
+  private performanceScenarioFailed = false;
+  private performanceScenarioPendingAssets = 0;
+  private readonly performanceScenario: PerformanceScenario;
   private pausedByVisibility = false;
   private renderedFrames = 0;
   private sceneObjects = 0;
@@ -322,6 +342,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       (() => new WebGLRenderer({ antialias: true, alpha: false }));
     this.fixtureLoader = dependencies.fixtureLoader ?? createFixtureLoader();
     this.fixtureUrl = dependencies.fixtureUrl ?? fixtureUrl;
+    this.performanceScenario =
+      dependencies.performanceScenario ??
+      createDefaultPerformanceScenario(this.fixtureUrl);
     this.frameScheduler = dependencies.frameScheduler ?? defaultFrameScheduler;
     this.now = dependencies.now ?? (() => performance.now());
   }
@@ -338,6 +361,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
       frameTimeMs: this.state === "running" ? frameMetrics.frameTimeMs : null,
       geometries: this.geometries,
       meshes: this.meshes,
+      performanceScenarioAssetsLoaded: this.performanceScenarioAssetsLoaded,
+      performanceScenarioAssetsTotal: this.performanceScenario.assets.length,
+      performanceScenarioId: this.performanceScenario.id,
+      performanceScenarioLabel: this.performanceScenario.label,
       renderedFrames: this.renderedFrames,
       runtimeState: this.state,
       sceneObjects: this.sceneObjects,
@@ -385,6 +412,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
       renderer.domElement.dataset.referenceProxyTypes = String(
         REFERENCE_SCENE_PROXY_TYPES,
       );
+      renderer.domElement.dataset.performanceScenario =
+        this.performanceScenario.id;
       renderer.domElement.dataset.threeWorldCanvas = "true";
       renderer.domElement.setAttribute("aria-hidden", "true");
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -418,7 +447,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       if (!this.mountedWorld) {
         throw new Error("ThreeWorldRuntime renderer failed while mounting.");
       }
-      this.loadFixture();
+      this.loadScenarioFixtures();
       mountedWorld.watchResize(this.handleWindowResize);
       mountedWorld.watchVisibility(this.handleVisibilityChange);
       this.publishDiagnostics(true);
@@ -598,55 +627,82 @@ export class ThreeWorldRuntime implements WorldRuntime {
     for (const listener of this.selectionListeners) listener(selection);
   };
 
-  private loadFixture(): void {
+  private loadScenarioFixtures(): void {
     this.fixtureLoadStartedAt = this.now();
     this.fixtureLoadMs = null;
     this.fixtureStatus = "loading";
+    this.performanceScenarioAssetsLoaded = 0;
+    this.performanceScenarioFailed = false;
+    this.performanceScenarioPendingAssets =
+      this.performanceScenario.assets.length;
     const mountedWorld = this.mountedWorld;
     if (mountedWorld)
       mountedWorld.renderer.domElement.dataset.fixtureStatus = "loading";
-    try {
-      this.fixtureLoader.load(
-        this.fixtureUrl,
-        this.handleFixtureLoaded,
-        this.handleFixtureError,
-      );
-    } catch {
-      this.handleFixtureError();
+
+    for (const asset of this.performanceScenario.assets) {
+      try {
+        this.fixtureLoader.load(
+          asset.url,
+          (model) => this.handleScenarioAssetLoaded(asset, model),
+          () => this.handleScenarioAssetError(),
+        );
+      } catch {
+        this.handleScenarioAssetError();
+      }
     }
   }
 
-  private readonly handleFixtureLoaded = (model: Object3D): void => {
+  private handleScenarioAssetLoaded(
+    asset: PerformanceScenario["assets"][number],
+    model: Object3D,
+  ): void {
     const mountedWorld = this.mountedWorld;
     if (this.isTerminal() || !mountedWorld) {
       disposeObjectTree(model);
       return;
     }
 
-    model.name = "f1-technical-gltf-fixture";
-    model.position.set(0.4, 0.1, 2.6);
-    model.scale.setScalar(1.35);
+    model.name =
+      asset.id === "f1-technical-pyramid"
+        ? "f1-technical-gltf-fixture"
+        : `performance-${asset.id}`;
+    model.position.set(...asset.position);
+    if (asset.id === "f1-technical-pyramid") model.scale.setScalar(1.35);
     mountedWorld.scene.add(model);
     mountedWorld.addFixture(model);
-    mountedWorld.getInteraction()?.addSelectable(FIXTURE_SELECTABLE, model);
+    if (asset.id === "f1-technical-pyramid") {
+      mountedWorld.getInteraction()?.addSelectable(FIXTURE_SELECTABLE, model);
+    }
     if (this.isTerminal() || this.mountedWorld !== mountedWorld) return;
-    const elapsed = Math.max(0, this.now() - (this.fixtureLoadStartedAt ?? 0));
-    this.fixtureLoadMs = elapsed;
-    this.fixtureStatus = "ready";
-    mountedWorld.renderer.domElement.dataset.fixtureLoadMs = elapsed.toFixed(1);
-    mountedWorld.renderer.domElement.dataset.fixtureStatus = "ready";
+    this.performanceScenarioAssetsLoaded += 1;
+    this.performanceScenarioPendingAssets -= 1;
+    this.finalizeScenarioFixtureLoading(mountedWorld);
     if (!this.renderCurrentFrame()) return;
     this.publishDiagnostics(true);
-  };
+  }
 
-  private readonly handleFixtureError = (): void => {
+  private handleScenarioAssetError(): void {
     const mountedWorld = this.mountedWorld;
     if (this.isTerminal() || !mountedWorld) return;
-    this.fixtureStatus = "error";
-    mountedWorld.renderer.domElement.dataset.fixtureStatus = "error";
+    this.performanceScenarioFailed = true;
+    this.performanceScenarioPendingAssets -= 1;
+    this.finalizeScenarioFixtureLoading(mountedWorld);
     this.publishDiagnostics(true);
-    console.error("[Biblioteca Viva] f1-technical-fixture-load-failed");
-  };
+    console.error(
+      this.performanceScenario.id === "f1-baseline"
+        ? "[Biblioteca Viva] f1-technical-fixture-load-failed"
+        : "[Biblioteca Viva] performance-scenario-asset-load-failed",
+    );
+  }
+
+  private finalizeScenarioFixtureLoading(mountedWorld: ThreeWorldMount): void {
+    if (this.performanceScenarioPendingAssets > 0) return;
+    const elapsed = Math.max(0, this.now() - (this.fixtureLoadStartedAt ?? 0));
+    this.fixtureLoadMs = elapsed;
+    this.fixtureStatus = this.performanceScenarioFailed ? "error" : "ready";
+    mountedWorld.renderer.domElement.dataset.fixtureLoadMs = elapsed.toFixed(1);
+    mountedWorld.renderer.domElement.dataset.fixtureStatus = this.fixtureStatus;
+  }
 
   private readonly renderFrame = (timestamp: number): void => {
     if (this.state !== "running") return;
@@ -778,6 +834,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.drawCalls = 0;
     this.geometries = 0;
     this.meshes = 0;
+    this.performanceScenarioAssetsLoaded = 0;
+    this.performanceScenarioFailed = false;
+    this.performanceScenarioPendingAssets = 0;
     this.sceneObjects = 0;
     this.selectableObjects = [];
     this.selection = null;
@@ -835,6 +894,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
     canvas.dataset.frameTimeMs = diagnostics.frameTimeMs?.toFixed(2) ?? "";
     canvas.dataset.geometries = String(diagnostics.geometries);
     canvas.dataset.meshes = String(diagnostics.meshes);
+    canvas.dataset.performanceScenario = diagnostics.performanceScenarioId;
+    canvas.dataset.performanceScenarioAssetsLoaded = String(
+      diagnostics.performanceScenarioAssetsLoaded,
+    );
+    canvas.dataset.performanceScenarioAssetsTotal = String(
+      diagnostics.performanceScenarioAssetsTotal,
+    );
     canvas.dataset.renderedFrames = String(diagnostics.renderedFrames);
     canvas.dataset.runtimeState = diagnostics.runtimeState;
     canvas.dataset.sceneObjects = String(diagnostics.sceneObjects);
@@ -855,6 +921,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
   }
 }
 
-export function createThreeWorldRuntime(): WorldRuntime {
-  return new ThreeWorldRuntime();
+export function createThreeWorldRuntime(
+  dependencies?: ThreeWorldRuntimeDependencies,
+): WorldRuntime {
+  return new ThreeWorldRuntime(dependencies);
 }

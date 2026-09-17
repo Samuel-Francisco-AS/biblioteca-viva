@@ -33,6 +33,10 @@ export interface WorldRuntimeDiagnostics {
   readonly frameTimeMs: number | null;
   readonly geometries: number;
   readonly meshes: number;
+  readonly performanceScenarioAssetsLoaded: number;
+  readonly performanceScenarioAssetsTotal: number;
+  readonly performanceScenarioId: string;
+  readonly performanceScenarioLabel: string;
   readonly renderedFrames: number;
   readonly runtimeState: WorldRuntimeState;
   readonly sceneObjects: number;

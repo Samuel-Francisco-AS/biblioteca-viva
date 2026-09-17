@@ -14,6 +14,30 @@ F4 concluiu provas controladas por asset: mediu tamanho, geometria, materiais e 
 
 F5 continua responsável por densidade de cena, frame time, estabilidade, Android físico, temperatura e limites de conteúdo; custo individual de asset e redução estrutural não aprovam esses aspectos.
 
+### F5-A — cenário reproduzível, sem budget físico
+
+F5-A reutiliza a instrumentação F1-D: FPS e frame médio são a janela móvel de RAF, e draw calls, triângulos, geometrias e texturas vêm de `renderer.info`; meshes e objetos visíveis são contados na cena. O diagnóstico também informa o cenário e `assets carregados/total`. Nada disso representa RAM/GPU totais nem substitui uma medição física.
+
+O seletor temporário existe somente no build de diagnóstico (`npm run android:build:diagnostics`) e remonta o runtime real ao trocar de carga. A composição estática é:
+
+| Cenário | GLBs totais | Corpus F4 | Incremento estrutural conhecido sobre F1 |
+| --- | ---: | ---: | --- |
+| Baseline F1 | 1 | 0 | referência atual: 46 meshes e 546 triângulos |
+| Corpus F4 | 5 | 1× KayKit, Kenney, Poly Haven, Quaternius | +4 meshes, +1.104 triângulos do corpus |
+| Corpus F4 ×4 | 17 | 4× o mesmo corpus | +16 meshes, +4.416 triângulos do corpus |
+
+As contagens finais de draw calls, geometrias e texturas são observadas após o carregamento pelo renderer do ambiente medido — não são estimadas nesta tabela. A F5-A não estabelece FPS mínimo, orçamento de draw calls/triângulos/texturas, resolução máxima nem conclusão sobre densidade aceitável. O Moto G06 na F5-B é a autoridade para esses resultados.
+
+Como verificação do harness, Chromium headless local (viewport 390×844, DPR 1, após `assets carregados/total`) observou os valores abaixo. São somente confirmação de composição e de `renderer.info`; FPS/frame médio locais não são evidência do Moto G06.
+
+| Cenário | Calls | Triângulos | Geometrias | Texturas | Meshes | Objetos | FPS / frame médio local |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Baseline F1 | 46 | 546 | 46 | 1 | 46 | 57 | 60,0 / 16,67 ms |
+| Corpus F4 | 50 | 1.650 | 50 | 1 | 50 | 65 | 60,0 / 16,67 ms |
+| Corpus F4 ×4 | 62 | 4.962 | 62 | 1 | 62 | 89 | 51,9 / 19,26 ms |
+
+O `textures=1` acima é a contagem observada naquele renderer/execução, não estimativa de memória, declaração sobre as imagens do corpus nem valor a ser transformado em limite.
+
 ### Web
 
 #### Baseline da F1-A

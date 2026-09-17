@@ -4,6 +4,18 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F5-A — Baseline e cenário de carga — 2026-09-15
+
+- adicionado somente ao build de diagnóstico um seletor temporário que recria o `ThreeWorldRuntime` real com baseline F1, corpus F4 e corpus F4 ×4; o build normal mantém a fixture técnica;
+- reutilizadas métricas de RAF e `renderer.info`, com identificação e progresso do cenário; os quatro fixtures registrados são a única fonte de assets, sem dependência do laboratório F4 ou da variante Poly Haven 512;
+- nenhum budget físico, otimização avançada, asset manager, cache, catálogo, persistência espacial ou Pipeline 3D produtivo foi criado. O APK debug de diagnóstico segue para a validação física F5-B no Moto G06.
+
+### F5-A-FIX — seletor diagnóstico Android — 2026-09-16
+
+- substituído o `<select>` cujo picker WebView ocultava as opções no Moto G06 por três botões DOM com `aria-pressed` e estado ativo anunciado; a troca preserva o mesmo remount do runtime;
+- o harness permanece exclusivo de `VITE_ENABLE_DIAGNOSTICS=true`; nenhuma métrica, asset, budget ou arquitetura produtiva mudou;
+- o APK corrigido ainda não recebeu validação física e esta correção não inicia F5-B.
+
 ### F4-F — Contrato experimental de assets 3D concluído — 2026-09-15
 
 - consolidada a evidência F4-A–E: autoria/preflight, geometria/eixos, materiais/UV/texturas, lifecycle/ownership/disposal e custo/otimização experimental;

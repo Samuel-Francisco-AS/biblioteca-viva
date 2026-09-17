@@ -9,7 +9,7 @@
 
 ## Mundo
 
-- **F0–F4 estão concluídas. F4 — Contrato experimental de assets 3D — foi consolidada sem criar pipeline produtivo definitivo. F5 — performance e validação Android física — é a próxima fase.** Three.js está aprovado como renderer da Fundação do novo mundo.
+- **F0–F4 estão concluídas. F5 — performance e validação Android física — está em execução: F5-A concluiu a preparação técnica de baseline/cenários; F5-B continua responsável pela evidência física no Moto G06.** F4 não criou Pipeline 3D produtivo definitivo. Three.js está aprovado como renderer da Fundação do novo mundo.
 - A linha ativa é `React → WorldHost → ThreeWorldRuntime → Three.js`, com `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, lifecycle explícito, integração React ↔ Three e Android/Capacitor.
 - F3 consolidou `CameraNavigation` runtime-only como autoridade de `targetX`, `targetZ` e `zoom`; framing e bounds dependem de projeção, viewport e zoom. Pan, wheel focal e pinch focal navegam no plano X/Z; tap elegível só faz picking no `pointerup`, e o layout entrega ao runtime somente o `world-host` real observado. Resize/orientação preservam exploração e seleção quando possível e cancelam somente o gesto ativo.
 - A correção final dos bounds substituiu o AABB da projeção por uma região convexa válida de centros de câmera, preservando na viewport um patch do piso técnico de largura e altura equivalentes a 15% dos spans projetados, limitado pelo espaço disponível. Ela não alterou `CameraNavigation`, gestos, lifecycle ou renderer.
@@ -37,7 +37,7 @@
 
 ## Próximo trabalho
 
-**F4 — Contrato experimental de assets 3D está concluída.** F4-F reuniu A–E, confirmou os quatro fixtures registrados e seus hashes, preservou os testes de contrato e documentou o handoff. Nenhum asset registrado, runtime, codec, budget ou pipeline produtivo foi criado. F5 — performance e validação Android física — é o próximo trabalho autorizado.
+**F5 está em execução.** F5-A reutilizou somente os quatro fixtures F4 registrados e criou uma escada temporária de diagnóstico que recria o `ThreeWorldRuntime` real: baseline F1 (1 GLB), corpus F4 (5 GLBs) e corpus F4 ×4 (17 GLBs). A primeira abertura física do APK de diagnóstico no Moto G06 encontrou somente um defeito do picker nativo do `<select>` da WebView: a superfície branca ocultava os rótulos, enquanto app/runtime continuavam ativos. O fix F5-A substituiu-o por três botões DOM com estado ativo, preservando a troca/remount; não coletou métricas, não valida o fix fisicamente e não inicia F5-B. O diagnóstico continua a expor FPS/frame médio por RAF, `renderer.info` (calls, triangles, geometries, textures), meshes/objetos e progresso de assets; não houve cache, manager, persistência espacial, otimização avançada ou budget físico.
 
 ```text
 F0 ✅
@@ -70,6 +70,9 @@ F4 ✅ CONTRATO EXPERIMENTAL DE ASSETS 3D CONCLUÍDO
     E4 ✅ comparação objetiva + gate humano PASS
     E5 ✅ consolidação e fechamento
   F4-F ✅ consolidação final e handoff para F5
-F5 ▶ PRÓXIMA — performance e validação Android física
+F5 ▶ EM EXECUÇÃO — performance e validação Android física
+  F5-A ✅ baseline e cenário de carga
+  F5-B ⏳ stress físico, loading e limites
+  F5-C ⏳ consolidação, budgets iniciais e gate final
 F6 ⏳
 ```

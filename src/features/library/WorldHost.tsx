@@ -8,6 +8,7 @@ import type {
   WorldSelectableObject,
   WorldSelection,
 } from "./worldRuntime";
+import type { PerformanceScenario } from "./three/performanceScenarios";
 
 type WorldHostStatus = "initializing" | "ready" | "failed";
 
@@ -20,6 +21,10 @@ const EMPTY_DIAGNOSTICS: WorldRuntimeDiagnostics = {
   frameTimeMs: null,
   geometries: 0,
   meshes: 0,
+  performanceScenarioAssetsLoaded: 0,
+  performanceScenarioAssetsTotal: 0,
+  performanceScenarioId: "f1-baseline",
+  performanceScenarioLabel: "Baseline F1",
   renderedFrames: 0,
   runtimeState: "created",
   sceneObjects: 0,
@@ -39,6 +44,7 @@ const createRuntime: WorldRuntimeFactory = async () => {
 };
 
 interface WorldHostProps {
+  readonly performanceScenario?: PerformanceScenario;
   readonly runtimeFactory?: WorldRuntimeFactory;
 }
 
@@ -66,7 +72,10 @@ function adjacentSelectionId(
   return selectableObjects[nextIndex]?.id ?? null;
 }
 
-export function WorldHost({ runtimeFactory = createRuntime }: WorldHostProps) {
+export function WorldHost({
+  performanceScenario,
+  runtimeFactory,
+}: WorldHostProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const runtimeRef = useRef<WorldRuntime | null>(null);
   const [selectableObjects, setSelectableObjects] = useState<
@@ -100,7 +109,17 @@ export function WorldHost({ runtimeFactory = createRuntime }: WorldHostProps) {
     setFailure(null);
     setStatus("initializing");
 
-    void runtimeFactory()
+    const effectiveRuntimeFactory =
+      runtimeFactory ??
+      (performanceScenario
+        ? async () => {
+            const { createThreeWorldRuntime } =
+              await import("./three/ThreeWorldRuntime");
+            return createThreeWorldRuntime({ performanceScenario });
+          }
+        : createRuntime);
+
+    void effectiveRuntimeFactory()
       .then((createdRuntime) => {
         if (!active) {
           createdRuntime.dispose();
@@ -163,7 +182,7 @@ export function WorldHost({ runtimeFactory = createRuntime }: WorldHostProps) {
       runtime = undefined;
       runtimeRef.current = null;
     };
-  }, [runtimeFactory]);
+  }, [performanceScenario, runtimeFactory]);
 
   return (
     <div className="world-surface" data-status={status}>
@@ -194,6 +213,17 @@ export function WorldHost({ runtimeFactory = createRuntime }: WorldHostProps) {
               <div>
                 <dt>Runtime</dt>
                 <dd>{diagnostics.runtimeState}</dd>
+              </div>
+              <div>
+                <dt>Cenário</dt>
+                <dd>{diagnostics.performanceScenarioLabel}</dd>
+              </div>
+              <div>
+                <dt>Assets do cenário</dt>
+                <dd>
+                  {diagnostics.performanceScenarioAssetsLoaded}/
+                  {diagnostics.performanceScenarioAssetsTotal}
+                </dd>
               </div>
               <div>
                 <dt>FPS</dt>

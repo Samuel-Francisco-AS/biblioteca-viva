@@ -291,6 +291,13 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - evidência humana preservada fora dos testes automatizados: preflight Blender, gate visual F4-C e gate A/B E3/E4. Nenhuma deles equivale a performance física, Android físico ou fidelidade universal.
 - gate de fechamento: `format`, `format:check`, `lint` e `typecheck` passaram; o gate dirigido aprovou 4 arquivos/20 testes, a suíte integral 67 arquivos/510 testes, sem retries ou falhas, e `npm run build` passou. O aviso conhecido de chunks Vite acima de 500 kB não bloqueou; não foram executados Android, E2E, relatório de performance ou F5.
 
+## F5-A — baseline e cenários de carga
+
+- `performanceScenarios.test.ts` fixa os três IDs, a escada de 1/5/17 GLBs, o uso exclusivo do fixture F1 e dos quatro fixtures F4 registrados e as posições determinísticas do cenário de stress;
+- `ThreeWorldRuntime.test.ts` cobre o carregamento agregado do corpus, metadados de progresso e liberação de todas as roots ao disposal da montagem; o contrato existente de lifecycle continua coberto;
+- `PerformanceScenarioHarness.test.tsx` confirma que os três cenários são escolhidos por botões DOM, sem `combobox`, e que `aria-pressed` e o texto ativo acompanham a mesma configuração entregue ao `WorldHost`;
+- não há teste de FPS em CI. A verificação local de Chromium serve apenas para confirmar o harness e a composição; medição, stress, loading percebido, temperatura e limites físicos pertencem à F5-B no Moto G06.
+
 ## Comandos
 
 ```bash

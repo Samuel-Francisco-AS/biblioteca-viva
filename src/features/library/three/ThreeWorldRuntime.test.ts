@@ -18,6 +18,7 @@ import {
   type ThreeWorldRenderer,
 } from "./ThreeWorldRuntime";
 import { CAMERA_REFERENCE_HALF_HEIGHT } from "./cameraMath";
+import { PERFORMANCE_SCENARIOS } from "./performanceScenarios";
 
 class TestRenderer implements ThreeWorldRenderer {
   readonly domElement = document.createElement("canvas");
@@ -47,8 +48,8 @@ class TestRenderer implements ThreeWorldRenderer {
 }
 
 class TestFixtureLoader implements FixtureModelLoader {
-  private onError: ((error: unknown) => void) | undefined;
-  private onLoad: ((model: Object3D) => void) | undefined;
+  private readonly errors: ((error: unknown) => void)[] = [];
+  private readonly successes: ((model: Object3D) => void)[] = [];
 
   readonly load = vi.fn(
     (
@@ -56,17 +57,17 @@ class TestFixtureLoader implements FixtureModelLoader {
       onLoad: (model: Object3D) => void,
       onError: (error: unknown) => void,
     ) => {
-      this.onLoad = onLoad;
-      this.onError = onError;
+      this.successes.push(onLoad);
+      this.errors.push(onError);
     },
   );
 
-  fail(error: unknown): void {
-    this.onError?.(error);
+  fail(error: unknown, index = 0): void {
+    this.errors[index]?.(error);
   }
 
-  succeed(model: Object3D): void {
-    this.onLoad?.(model);
+  succeed(model: Object3D, index = 0): void {
+    this.successes[index]?.(model);
   }
 }
 
@@ -316,6 +317,40 @@ describe("ThreeWorldRuntime", () => {
 
     expect(disposeGeometry).toHaveBeenCalledOnce();
     expect(disposeMaterial).toHaveBeenCalledOnce();
+  });
+
+  it("agrega o corpus F4 determinístico e libera todas as roots da montagem", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const fixtureLoader = new TestFixtureLoader();
+    const scenario = PERFORMANCE_SCENARIOS[1];
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader,
+      performanceScenario: scenario,
+    });
+
+    runtime.mount(createHost());
+    expect(fixtureLoader.load).toHaveBeenCalledTimes(scenario.assets.length);
+    expect(runtime.getDiagnostics()).toMatchObject({
+      fixtureStatus: "loading",
+      performanceScenarioAssetsLoaded: 0,
+      performanceScenarioAssetsTotal: 5,
+      performanceScenarioId: "f4-corpus",
+    });
+
+    const roots = scenario.assets.map(() => new Group());
+    roots.forEach((root, index) => fixtureLoader.succeed(root, index));
+
+    expect(runtime.getDiagnostics()).toMatchObject({
+      fixtureStatus: "ready",
+      performanceScenarioAssetsLoaded: 5,
+      performanceScenarioAssetsTotal: 5,
+    });
+    expect(roots[3]?.position.toArray()).toEqual([1.5, 0.1, 2.6]);
+
+    runtime.dispose();
+    expect(roots.every((root) => root.parent === null)).toBe(true);
   });
 
   it("não reenquadra a câmera quando o GLB técnico termina de carregar", () => {

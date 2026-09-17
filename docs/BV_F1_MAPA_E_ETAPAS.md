@@ -2,7 +2,7 @@
 
 **Data de referência:** 2026-09-15
 
-**Estado geral:** F0–F4 concluídos; Three.js aprovado como renderer da Fundação; F4 consolidou somente o contrato experimental de assets 3D; F5 — performance e validação Android física — é a próxima fase
+**Estado geral:** F0–F4 concluídos; Three.js aprovado como renderer da Fundação; F5 — performance e validação Android física — está em execução, com F5-A concluída tecnicamente
 
 **Escopo:** Fundação técnica do novo mundo 3D da Biblioteca Viva
 
@@ -47,7 +47,7 @@ com:
 - nenhum reaproveitamento da antiga W3-A;
 - nenhuma persistência espacial prematura.
 
-A F1 aprovou a viabilidade da base Three.js, F2 concluiu a integração e o endurecimento do runtime, e F3 concluiu o contrato de câmera e interação mobile. A FUNDAÇÃO inteira termina somente depois de F4–F6; assets, performance e acessibilidade ainda possuem trabalho futuro.
+A F1 aprovou a viabilidade da base Three.js, F2 concluiu a integração e o endurecimento do runtime, F3 concluiu o contrato de câmera e interação mobile e F4 concluiu o contrato experimental de assets. A FUNDAÇÃO inteira termina somente depois de F5–F6; F5 está em execução, F6 permanece futura e o Pipeline 3D produtivo será formalizado posteriormente, não foi criado pela F4.
 
 ---
 
@@ -108,7 +108,9 @@ F4 — Contrato experimental de assets 3D              ✅ CONCLUÍDA
 └─ F4-F Regressão, consolidação e handoff F5         ✅ CONCLUÍDA
  │
  ▼
-F5 — Performance e Android físico                    ▶ PRÓXIMA
+F5 — Performance e Android físico                    ▶ EM EXECUÇÃO
+ │
+ └─ F5-A Baseline e cenário de carga                 ✅ CONCLUÍDA
  │
  ▼
 F6 — Acessibilidade + fechamento arquitetural        ⏳ PLANEJADA
@@ -724,7 +726,7 @@ Consolidou autoria editável e substituível, normalização antes do runtime, s
 
 # 14. F5 — Performance e Android físico
 
-**Estado: ⏳ PLANEJADA**
+**Estado: ▶ EM EXECUÇÃO — F5-A concluída; F5-B/F5-C pendentes**
 
 F1 produziu o primeiro baseline.
 
@@ -749,6 +751,16 @@ Escopo previsto:
 O Moto G06 permanece autoridade física.
 
 O objetivo é descobrir o que o mundo pode sustentar antes de aumentar significativamente sua complexidade.
+
+### F5-A — Baseline e cenário de carga — concluída tecnicamente
+
+O build de diagnóstico (`VITE_ENABLE_DIAGNOSTICS=true`) expõe um seletor temporário que recria o `ThreeWorldRuntime` real e seu `WebGLRenderer`; o build normal mantém somente a fixture F1. Não há manager, cache, catálogo, persistência espacial ou otimização preventiva.
+
+- **Baseline F1:** fixture técnica atual, 1 GLB e nenhum asset F4; referência estrutural anterior: 46 meshes e 546 triângulos.
+- **Corpus F4:** baseline mais uma cópia de KayKit, Kenney, Poly Haven e Quaternius: 5 GLBs no total, quatro meshes F4/1.104 triângulos adicionais conhecidos pelo corpus.
+- **Corpus F4 ×4:** baseline mais quatro cópias determinísticas do mesmo corpus: 17 GLBs no total, 16 meshes F4/4.416 triângulos adicionais conhecidos pelo corpus.
+
+O diagnóstico reutiliza FPS/frame médio por RAF e `renderer.info` para draw calls, triângulos, geometrias e texturas, além de contar meshes/objetos visíveis e exibir o progresso de assets do cenário. Estes números devem ser lidos no aparelho depois de todos os assets carregarem; a F5-A não define budget, threshold, FPS aceitável ou limite de conteúdo. F5-B levará o APK debug de diagnóstico ao Moto G06 para coletar a evidência física.
 
 ---
 
@@ -928,7 +940,7 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | F3-F1                 | ✅ Técnico     | Gate consolidado e APK                                                                           |
 | Fechamento F3         | ✅ Concluído   | Evidência humana ampla e correção técnica de bounds; sem revalidação física específica do fix    |
 | F4                    | ✅ Concluída   | Contrato experimental de assets consolidado; sem pipeline produtivo definitivo                   |
-| F5                    | ▶ Próxima     | Performance e validação Android física                                                           |
+| F5                    | ▶ Em execução | Performance e validação Android física; F5-A concluída tecnicamente                             |
 | F6                    | ⏳ Planejada   | Acessibilidade e fechamento                                                                      |
 | Pipeline 3D           | 🔒 Futuro      | Produção sistemática de assets                                                                   |
 | Primeiro recorte      | 🔒 Futuro      | Construção inicial da Biblioteca real                                                            |
@@ -943,4 +955,4 @@ O projeto deve ser considerado neste estado:
 
 > **F0–F4 estão concluídas. F4 consolidou autoria editável/substituível, eixos/chão/pivô normalizados antes do runtime, materiais por factors ou maps PBR relevantes, ownership/unload experimental somente em harness e medição de custo antes de otimizar. Quatro fixtures registrados e seus hashes permanecem como corpus experimental; Azrael não foi promovido; a variante Poly Haven 512 continua externa, não registrada e não final. Não houve asset/runtime de produção, decoder, budget, `AssetManager` ou pipeline definitivo. Three.js está aprovado como renderer da Fundação. F3 estabeleceu o contrato de câmera e interação runtime-only, viewport real e bounds convexos da fixture; a validação humana ampla foi positiva. A correção final dos bounds não foi revalidada especificamente no aparelho, limitação aceita como não bloqueante no fechamento.**
 
-A FUNDAÇÃO inteira ainda não está concluída: F5–F6 permanecem abertas. F5 — performance e validação Android física — é o próximo trabalho autorizado. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.
+A FUNDAÇÃO inteira ainda não está concluída: F5–F6 permanecem abertas. F5 está em execução: F5-A preparou cenários reproduzíveis e F5-B continua como autoridade física no Moto G06. A cena da F1 continua uma fixture técnica, sem pipeline formal ou persistência espacial.

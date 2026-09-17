@@ -7,11 +7,22 @@ O aplicativo web é empacotado com Capacitor. O projeto Android permanece em `an
 ```bash
 npm run android:sync
 npm run android:build:debug
+npm run android:build:diagnostics
 ```
 
 O APK debug é produzido em `android/app/build/outputs/apk/debug/app-debug.apk`.
 
 Playwright e o emulador web não substituem validação em aparelho real. TalkBack, áudio percebido, temperatura e desempenho físico só podem ser aprovados por evidência humana registrada.
+
+## F5-A — APK de diagnóstico para F5-B
+
+`npm run android:build:diagnostics` gera um APK debug com `VITE_ENABLE_DIAGNOSTICS=true`. Na Biblioteca, ele expõe três botões DOM temporários para `Baseline F1`, `Corpus F4` e `Corpus F4 ×4`; cada troca recria a montagem Three e o diagnóstico informa a conclusão do carregamento. Esse APK é o artefato a instalar no Moto G06 para F5-B. Sua geração não é instalação, execução física, profiling, teste térmico nem aprovação de performance.
+
+Na primeira abertura física do APK F5-A, o antigo `<select>` abriu o picker da WebView como uma superfície branca sem rótulos legíveis/utilizáveis. O app e o runtime continuaram ativos atrás desse diálogo, portanto o defeito ficou restrito ao controle. O fix F5-A removeu o `<select>` em favor dos botões DOM; o novo APK ainda não recebeu validação física e essa observação não inicia F5-B.
+
+Em 2026-09-15, `android:sync:diagnostics` encontrou os mesmos três plugins Capacitor e `assembleDebug` concluiu com sucesso. O APK de diagnóstico está em `android/app/build/outputs/apk/debug/app-debug.apk` com 13.346.535 bytes. Os warnings conhecidos de `flatDir` persistem. Nenhum aparelho foi conectado, instalado ou avaliado nesta F5-A.
+
+Em 2026-09-16, o rebuild do fix do seletor repetiu `android:sync:diagnostics` e `assembleDebug` com sucesso, mantendo o APK de 13.346.535 bytes no mesmo caminho. O APK corrigido ainda não foi instalado ou revalidado fisicamente.
 
 ## Evidência técnica da F1-E
 
