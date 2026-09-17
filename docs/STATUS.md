@@ -9,7 +9,7 @@
 
 ## Mundo
 
-- **F0–F4 estão concluídas. F5 — performance e validação Android física — está em execução: F5-A preparou os cenários e F5-B concluiu a coleta física no Moto G06; F5-C permanece para consolidar evidências e, somente então, propor budgets iniciais.** F4 não criou Pipeline 3D produtivo definitivo. Three.js está aprovado como renderer da Fundação do novo mundo.
+- **F0–F5 estão concluídas.** F5 consolidou no Moto G06 um envelope diagnóstico físico, guardrails de remedição e a decisão de não adotar otimizações preventivas; não encontrou o teto do aparelho nem criou hard budgets. F4 não criou Pipeline 3D produtivo definitivo. Three.js está aprovado como renderer da Fundação do novo mundo; **F6 — acessibilidade e fechamento arquitetural — é a próxima fase autorizada.**
 - A linha ativa é `React → WorldHost → ThreeWorldRuntime → Three.js`, com `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, lifecycle explícito, integração React ↔ Three e Android/Capacitor.
 - F3 consolidou `CameraNavigation` runtime-only como autoridade de `targetX`, `targetZ` e `zoom`; framing e bounds dependem de projeção, viewport e zoom. Pan, wheel focal e pinch focal navegam no plano X/Z; tap elegível só faz picking no `pointerup`, e o layout entrega ao runtime somente o `world-host` real observado. Resize/orientação preservam exploração e seleção quando possível e cancelam somente o gesto ativo.
 - A correção final dos bounds substituiu o AABB da projeção por uma região convexa válida de centros de câmera, preservando na viewport um patch do piso técnico de largura e altura equivalentes a 15% dos spans projetados, limitado pelo espaço disponível. Ela não alterou `CameraNavigation`, gestos, lifecycle ou renderer.
@@ -33,11 +33,11 @@
 
 - TalkBack completo e auditoria humana de tecnologias assistivas permanecem pendentes para F6 ou gate humano específico.
 - R-09 foi parcialmente mitigado pela evidência da cena mínima no Moto G06, mas permanece ativo para densidade, assets, iluminação, personagens e mundo real.
-- F5-B mediu uma sessão diagnóstica de aproximadamente 15 minutos no cenário mais denso, sem degradação humana percebida ou status térmico Android acima de `0`; a validade para conteúdo real e budgets permanece aberta para F5-C.
+- F5 mediu somente a fixture/corpus diagnóstico; conteúdo real, iluminação, animação, transparências, personagens, pós-processamento, memória GPU exata e teto de capacidade permanecem fora do envelope. Nova densidade ou mudança material de renderização exige nova medição no Moto G06.
 
 ## Próximo trabalho
 
-**F5 está em execução.** F5-A reutilizou somente os quatro fixtures F4 registrados e criou a escada temporária que recria o `ThreeWorldRuntime` real: baseline F1 (1 GLB), corpus F4 (5 GLBs) e corpus F4 ×4 (17 GLBs). F5-B executou o APK de diagnóstico no Moto G06 (Android 15/API 35), confirmou mapas dos GLBs após corrigir a CSP para `blob:`, e registrou loading, FPS/frame médio em repouso, memória por `dumpsys meminfo`, estado térmico, remounts, interação humana, orientação, background/resume e sessão de aproximadamente 15 minutos. Não houve crash, kill do processo, perda funcional, degradação humana percebida ou threshold/budget definido. O próximo trabalho é **F5-C**, que interpretará esta evidência sem promover o harness, assets ou otimizações a arquitetura produtiva.
+**F5 está concluída.** A escada temporária de diagnóstico permanece versionada e exclusiva de `VITE_ENABLE_DIAGNOSTICS=true`: baseline F1 (1 GLB), corpus F4 (5 GLBs) e corpus F4 ×4 (17 GLBs), todos pelo `ThreeWorldRuntime` real. O Moto G06 confirmou o envelope até ×4, com mapas resolvidos após a correção CSP `blob:`, sem falha persistente de renderização, lifecycle ou sessão de aproximadamente 15 minutos. Calls, triângulos, geometrias, texturas, objetos, PSS e Graphics são envelope observado, não máximos; F5-C não definiu hard budgets. Guardrails: medir novamente no aparelho antes de conteúdo que supere materialmente o corpus simultâneo atual, remounts da ordem de um segundo ou novas cargas de renderização. O próximo trabalho é **F6**, limitado a acessibilidade e fechamento arquitetural; não cria Pipeline 3D produtivo, persistência espacial ou mundo final.
 
 ```text
 F0 ✅
@@ -70,9 +70,9 @@ F4 ✅ CONTRATO EXPERIMENTAL DE ASSETS 3D CONCLUÍDO
     E4 ✅ comparação objetiva + gate humano PASS
     E5 ✅ consolidação e fechamento
   F4-F ✅ consolidação final e handoff para F5
-F5 ▶ EM EXECUÇÃO — performance e validação Android física
+F5 ✅ CONCLUÍDA — performance e validação Android física
   F5-A ✅ baseline e cenário de carga
   F5-B ✅ stress físico, loading e limites
-  F5-C ⏳ consolidação, budgets iniciais e gate final
-F6 ⏳
+  F5-C ✅ consolidação, guardrails iniciais e gate final
+F6 ▶ PRÓXIMA — acessibilidade e fechamento arquitetural
 ```

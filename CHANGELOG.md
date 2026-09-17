@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### F5-C — Consolidação, guardrails iniciais e gate final — 2026-09-17
+
+- consolidado o envelope físico F5 no Moto G06: o corpus diagnóstico até F4 ×4 é capacidade observada, não teto de calls, triângulos, geometrias, texturas, objetos, PSS ou Graphics;
+- definidos apenas gatilhos provisórios de remedição — conteúdo simultâneo materialmente além do corpus, remount interno na ordem de um segundo ou nova carga de renderização — sem hard budget numérico, otimização avançada, Pipeline 3D, `AssetManager` ou persistência espacial;
+- mantido o harness versionado e exclusivo de `VITE_ENABLE_DIAGNOSTICS=true` para regressão futura; F6 passa a ser a próxima fase autorizada. Não houve nova validação física nesta consolidação.
+
 ### F5-B — Stress físico, loading e limites — 2026-09-17
 
 - coletada evidência física no Moto G06 para os três cenários diagnósticos, incluindo loading/remount, FPS/frame médio em repouso, memória ADB, estado térmico, interação humana, orientação, background/resume e sessão de aproximadamente 15 minutos no corpus ×4;

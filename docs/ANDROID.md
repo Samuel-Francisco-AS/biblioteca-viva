@@ -26,6 +26,8 @@ Em 2026-09-17, F5-B gerou o APK de diagnóstico, sincronizou Capacitor e executo
 
 Durante F5-B, logs da WebView mostraram `GLTFLoader: Couldn't load texture blob:...`: a CSP tinha `img-src blob:`, mas não `connect-src blob:`. Como o loader busca URLs blob para as imagens embutidas, a correção mínima incluiu `blob:` em `connect-src`; ela foi coberta pelo teste de CSP e validada fisicamente com maps visíveis. Não houve mudança Android nativa, novo plugin ou dependência.
 
+F5-C não conectou, instalou ou validou aparelho: apenas consolidou a evidência F5-B e executou gates locais. O Moto G06 permanece a referência física; novo APK só exige sessão no aparelho se uma mudança futura alterar comportamento que dependa de renderização, loading, lifecycle, assets ou diagnóstico físico.
+
 ## Evidência técnica da F1-E
 
 Em 2026-09-09, `npm run android:sync` concluiu com os plugins existentes `@capacitor/app@8.1.1`, `@capacitor/filesystem@8.1.2` e `@capacitor/share@8.0.1`. `npm run android:build:debug` concluiu `assembleDebug` com sucesso e gerou:

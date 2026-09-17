@@ -62,7 +62,26 @@ As amostras comparáveis em repouso usaram a janela RAF existente de 750 ms, já
 
 O avaliador humano confirmou os três cenários, pan, pinch/extremos de zoom, picking somente dos objetos F1, portrait/landscape/portrait, background/resume antes e depois da sessão e aproximadamente 15 minutos no F4 ×4 em blocos de repouso e navegação. Em ~5/~10/~15 minutos, FPS médio foi 59,95/59,94/59,94 e frame médio 16,69/16,69/16,69 ms, sem travamento, tela preta, recarregamento, artefato, queda de fluidez ou aquecimento percebido. Os assets F4 diagnósticos não são selecionáveis por design e isso não foi objetivo da F5-B.
 
-Essa evidência não fixa 30/60 FPS, máximo de draw calls, triângulos, texturas, tamanho de GLB ou resolução. Não foram criados cenários extras porque o ×4 já diferiu em loading e memória; não foram adotados KTX2/Basis, Draco, Meshopt, LOD, instancing, atlas, streaming ou `AssetManager`. F5-C é a autoridade para interpretar esta curva e, se justificável, propor budgets iniciais.
+Essa evidência não fixa 30/60 FPS, máximo de draw calls, triângulos, texturas, tamanho de GLB ou resolução. Não foram criados cenários extras porque o ×4 já diferiu em loading e memória; não foram adotados KTX2/Basis, Draco, Meshopt, LOD, instancing, atlas, streaming ou `AssetManager`. F5-C consolidou a curva abaixo como envelope e guardrails de remedição, sem promover budgets numéricos.
+
+### F5-C — consolidação: envelope, não teto
+
+F5-C encerra a interpretação sem nova sessão física. O maior cenário observado — 62 calls, 4.962 triângulos, 62 geometrias, 17 recursos WebGL de textura, 62 meshes e 89 objetos sem seleção — é um **envelope físico validado**, não a capacidade máxima do Moto G06. A ausência de queda até esse ponto demonstra que não foi identificado gargalo de renderização neste corpus; ela não extrapola para personagens, skinned meshes, animação, transparência intensa, sombras/iluminação mais caras, partículas, pós-processamento ou Biblioteca real.
+
+| Categoria | Classificação F5-C | Decisão operacional |
+| --- | --- | --- |
+| Renderização | Envelope observado sem teto conhecido | Não há hard cap de FPS, calls, triângulos, geometrias, meshes ou objetos. Remedir no Moto G06 antes de carga materialmente maior ou qualitativamente diferente. |
+| Loading | Guardrail provisório | Os ~1.040 ms internos do ×4 são ordem de grandeza que dispara remedição quando um fluxo real de montagem/remount a alcançar ou superar; não são SLA, limite UX ou medida de cache frio. |
+| Memória | Guardrail provisório | Não há cap de PSS/Graphics. Evitar multiplicar recursos simultâneos sem necessidade e capturar `meminfo` ao superar materialmente 17 GLBs/16 `Texture` únicas ou se remounts mostrarem picos recorrentes. |
+| Texturas | Envelope observado sem teto conhecido | Manter separadas as três métricas: recursos WebGL de `renderer.info`, referências de map e `Texture` únicas. Nenhuma é bytes de GPU; não há resolução, formato ou quantidade global aprovada. |
+| Estabilidade/lifecycle | Envelope observado sem teto conhecido | O ×4 passou interação, orientação, background/resume e ~15 min sem falha. Alterações de lifecycle, carregamento ou renderização exigem nova prova física. |
+| Térmica | Dado insuficiente para limite | `Thermal Status: 0` e ausência de aquecimento percebido somente descrevem a sessão USB/carregando; não definem temperatura segura, throttling ou duração máxima. |
+
+O harness permanece versionado como ferramenta de desenvolvimento: é carregado apenas quando `VITE_ENABLE_DIAGNOSTICS=true`, mantém o build normal na fixture F1 e fornece uma escada reproduzível sem criar catálogo, `AssetManager`, cache ou contrato espacial. Não foi removido/refatorado porque isso alteraria uma ferramenta fisicamente aprovada sem ganho proporcional; sua revisão cabe quando o primeiro conteúdo real precisar de outro experimento.
+
+Não há justificativa presente para KTX2/Basis, Draco, Meshopt, LOD, instancing, atlas, merge, streaming, preload/cache avançado ou `AssetManager`. Cada hipótese só reabre diante de gargalo físico correspondente no conteúdo real: respectivamente pressão de textura/loading, payload/parse geométrico, densidade de desenho/triângulos, repetição de objetos, ou necessidade concreta de manter conjuntos grandes fora da cena simultânea. A variante Poly Haven 512 continua externa e experimental.
+
+F6 herda Three.js/WebGL e a prova física F5, mas não um mundo final, Pipeline 3D, persistência espacial ou budget artístico. Seu escopo seguinte é acessibilidade e fechamento arquitetural; TalkBack e a auditoria humana correspondente continuam pendentes. Não houve nova validação física nesta F5-C.
 
 ### Web
 

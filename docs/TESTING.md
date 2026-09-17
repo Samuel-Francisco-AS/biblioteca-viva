@@ -305,6 +305,13 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - o gate dirigido aprovou 5 arquivos/45 testes: CSP, métricas de textura, runtime, `WorldHost`, cenários e harness. `format:check`, `lint`, `typecheck`, build diagnóstico, sync Capacitor, `assembleDebug` e `git diff --check` passaram; o warning conhecido de chunks Vite acima de 500 kB e os avisos Gradle `flatDir` não bloquearam;
 - FPS, frame pacing, `dumpsys meminfo`, estado térmico, loading percebido, pan, pinch, picking, orientação, background/resume e aquecimento foram coletados no Moto G06 por instrumentação local/ADB e confirmação humana. Não há teste CI que possa substituí-los.
 
+## F5-C — regressão final e isolamento do diagnóstico
+
+- o gate dirigido F5 aprovou 5 arquivos/45 testes; a regressão unitária ampla aprovou 70 arquivos/516 testes, sem retry ou falha;
+- `format:check`, lint e typecheck passaram. O build normal e o diagnóstico passaram; a inspeção do `dist` normal confirmou ausência de `PerformanceScenarioHarness` e dos quatro GLBs F4, enquanto o build diagnóstico emite o harness e o corpus somente sob `VITE_ENABLE_DIAGNOSTICS=true`;
+- `android:build:diagnostics` passou localmente com sync Capacitor e `assembleDebug`, sem aparelho conectado. Permaneceram somente os warnings conhecidos de chunks Vite acima de 500 kB e `flatDir` Gradle;
+- F5-C não alterou runtime, assets, loading, lifecycle, Android ou o harness e não fez ADB, instalação ou validação física. A regressão não transforma o envelope F5-B em hard budget nem substitui nova medição no Moto G06 quando conteúdo real exceder materialmente o corpus.
+
 ## Comandos
 
 ```bash

@@ -34,11 +34,11 @@ F4 ✅ CONTRATO EXPERIMENTAL DE ASSETS 3D CONCLUÍDO
     E4 ✅ comparação objetiva + gate humano PASS
     E5 ✅ consolidação e fechamento
   F4-F ✅ consolidação final e handoff para F5
-F5 ▶ EM EXECUÇÃO — performance e validação Android física
+F5 ✅ CONCLUÍDA — performance e validação Android física
   F5-A ✅ baseline e cenário de carga
   F5-B ✅ stress físico, loading e limites
-  F5-C ⏳ consolidação, budgets iniciais e gate final
-F6 ⏳
+  F5-C ✅ consolidação, guardrails iniciais e gate final
+F6 ▶ PRÓXIMA — acessibilidade e fechamento arquitetural
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída
@@ -121,11 +121,11 @@ E1–E5 concluíram baseline, diagnóstico, variante, comparação e consolidaç
 
 Consolidou A–E em contrato experimental: autoria editável e substituível, normalização no asset antes do runtime, materiais PBR relevantes, lifecycle/ownership apenas em harness e custo medido antes de otimizar. Confirmou os quatro fixtures registrados, manteve os testes de contrato, excluiu o laboratório externo da dependência de F5 e não criou `AssetManager`, budget, codec, pipeline produtivo, conteúdo ou persistência espacial.
 
-### F5 — Performance e Android físico — em execução
+### F5 — Performance e Android físico — concluída
 
-F5-A preparou o build de diagnóstico para o Moto G06: baseline F1, corpus F4 uma vez e corpus F4 ×4, todos pelo `ThreeWorldRuntime`/`WebGLRenderer` reais. F5-B mediu os três cenários no aparelho, inclusive loading, repouso, memória, remount, interação, orientação, background/resume e sessão de aproximadamente 15 minutos no corpus ×4. Nenhum budget físico foi definido; **F5-C** deve consolidar a evidência e decidir se há limites iniciais justificáveis.
+F5-A preparou o build de diagnóstico para o Moto G06: baseline F1, corpus F4 uma vez e corpus F4 ×4, todos pelo `ThreeWorldRuntime`/`WebGLRenderer` reais. F5-B mediu os três cenários no aparelho, inclusive loading, repouso, memória, remount, interação, orientação, background/resume e sessão de aproximadamente 15 minutos no corpus ×4. F5-C consolidou isso como envelope observado e gatilhos de remedição, não como hard caps: o teto do aparelho não foi encontrado e nenhuma otimização avançada foi justificada.
 
-Aprofundar densidade de cena, frame time, recursos, loading, estabilidade, temperatura e limites iniciais de conteúdo no Moto G06.
+F6 é a próxima fase autorizada: acessibilidade e fechamento arquitetural. Ela herda renderer aprovado, fixture ainda técnica, harness diagnóstico opcional de desenvolvimento e a necessidade de remedir no Moto G06 quando conteúdo real ultrapassar materialmente o envelope F5; não herda budget artístico, Pipeline 3D produtivo ou persistência espacial.
 
 ### F6 — Acessibilidade e fechamento da FUNDAÇÃO — planejada
 
