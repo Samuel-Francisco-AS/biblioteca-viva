@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-2B — Livro procedural e layout determinístico da área de leitura — 2026-09-21
+
+- ampliado o contrato procedural com `book-volume` e uma fábrica isolada de volume vertical, com quatro variantes discretas determinísticas, associação convencional `entryId` obrigatória e recursos próprios por chamada liberáveis por `disposeObjectTree()`;
+- adicionados slots locais derivados das três estantes atuais: 89 posições em ordem declarativa, níveis de baixo para cima e esquerda para direita, com capacidade derivada, duplicidade explícita e overflow que preserva a ordem;
+- slots futuros pertencem semanticamente ao wrapper estável da estante, não à root descartável da representação BF-1D. Não houve integração com runtime, seleção, React/aplicação, schema, backup, persistência espacial, GLB, loader, cache ou outra categoria de registro; BF-2C–E permanecem não iniciadas.
+
 ### BF-2A — Contrato e projeção dos livros reais — 2026-09-21
 
 - adicionada a projeção neutra e determinística de `BookEntry` para ocorrências futuras `ReadingAreaBook`, com tipo visual `book-volume`, `entryId` preservado, `instanceId` estável `reading-book:${entryId}`, título, autor opcional e progresso de leitura disponível;

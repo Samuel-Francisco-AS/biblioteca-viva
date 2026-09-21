@@ -22,7 +22,10 @@ BF-1 ✅ camada mínima de conteúdo procedural — encerramento técnico
   BF-1D ✅ substituição, descarte e gate integrado
 BF-2 ⏳ primeira área de leitura integrada a registros reais
   BF-2A ✅ contrato e projeção neutra dos livros reais
-  BF-2B ⏳ integração futura não iniciada
+  BF-2B ✅ livro procedural e layout determinístico
+  BF-2C ⏳ integração com runtime e seleção
+  BF-2D ⏳ ponte React/aplicação e fluxo funcional
+  BF-2E ⏳ gate integrado e fechamento da BF-2
 BF-3 ⏳ integração dos seis tipos de registro
 BF-4 ⏳ ambiente habitável, mobília e personagens provisórios
 BF-5 ⏳ consolidação do marco funcional
@@ -62,7 +65,23 @@ Integrará registros reais de livros ao mundo, mantendo os casos de uso existent
 
 #### BF-2A — Contrato e projeção dos livros reais — concluída
 
-Criou a projeção neutra `BookEntry → ReadingAreaBook` para ocorrências futuras `book-volume` da área de leitura. Ela preserva `entryId`, deriva `instanceId` estável como `reading-book:${entryId}`, ordena deterministicamente por `createdAt` e `id`, inclui título, autor opcional e progresso de leitura disponível, e rejeita `entryId` duplicado. Não há geometria procedural de livros, integração com `ThreeWorldRuntime`, layout em slots, seleção, carregamento na rota Biblioteca, persistência espacial ou integração de outra categoria. BF-2B permanece não iniciada.
+Criou a projeção neutra `BookEntry → ReadingAreaBook` para ocorrências futuras `book-volume` da área de leitura. Ela preserva `entryId`, deriva `instanceId` estável como `reading-book:${entryId}`, ordena deterministicamente por `createdAt` e `id`, inclui título, autor opcional e progresso de leitura disponível, e rejeita `entryId` duplicado. A projeção permanece sem integração com `ThreeWorldRuntime`, seleção, carregamento na rota Biblioteca, persistência espacial ou outra categoria de registro.
+
+#### BF-2B — Livro procedural e layout determinístico — concluída
+
+Criou a representação procedural isolada `book-volume` e o contrato determinístico de slots das três estantes existentes. A fábrica exige `entryId` por um contrato mais estreito, escolhe entre quatro variantes discretas a partir da identidade estável e mantém recursos próprios por criação. O layout puro consome a ordem recebida, preenche as estantes declaradas, depois níveis internos de baixo para cima e slots da esquerda para a direita; sua capacidade deriva dos 89 slots e qualquer excedente é devolvido como overflow ordenado. As posições são locais ao wrapper estável da estante, não à root descartável de sua representação BF-1D. Não há attach ao runtime, livro real visível, seleção, React/aplicação, schema, backup ou persistência espacial.
+
+#### BF-2C — Integração com runtime e seleção — futura, não iniciada
+
+Conectará `ReadingAreaBook` ao runtime Three, à composição, lifecycle e picking/seleção, preservando os wrappers estáveis das estantes.
+
+#### BF-2D — Ponte React/aplicação e fluxo funcional — futura, não iniciada
+
+Carregará registros reais pela camada React/aplicação e conectará a seleção visual à operação semântica e ao registro convencional.
+
+#### BF-2E — Gate integrado e fechamento da BF-2 — futura, não iniciada
+
+Executará regressão integrada, E2E, gate visual/humano aplicável e o fechamento da BF-2.
 
 ### BF-3 — Integração dos seis tipos de registro
 
@@ -138,8 +157,11 @@ BF-1C-FIX ✅ técnico + gate visual humano no navegador PASS
 BF-1D ✅ substituição procedural, descarte seletivo e gate integrado
 BF-1 ✅ tecnicamente concluída
 BF-2A ✅ contrato e projeção neutra dos livros reais
-BF-2B ⏳ não iniciada
-PRÓXIMO AUTORIZÁVEL: planejamento e implementação autorizada da BF-2B; sem integração automática ao runtime
+BF-2B ✅ livro procedural e layout determinístico isolados
+BF-2C ⏳ integração com runtime e seleção — não iniciada
+BF-2D ⏳ ponte React/aplicação e fluxo funcional — não iniciada
+BF-2E ⏳ gate integrado e fechamento — não iniciada
+PRÓXIMO AUTORIZÁVEL: planejamento e implementação autorizada da BF-2C; sem integração automática ao runtime
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída

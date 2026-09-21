@@ -12,7 +12,11 @@ import { describe, expect, it, vi } from "vitest";
 
 import { disposeObjectTree } from "./referenceScene";
 import {
+  createProceduralBookVolume,
   createProceduralBookshelf,
+  getProceduralBookVolumeDimensions,
+  getProceduralBookVolumeVariant,
+  type ProceduralBookVolumeIdentity,
   type ProceduralContentIdentity,
   type ProceduralBookshelfVariant,
 } from "./proceduralContent";
@@ -238,5 +242,130 @@ describe("fábrica procedural de estante BF-1A", () => {
     expect(disposeGeometry).toHaveBeenCalledOnce();
     expect(disposeMaterial).toHaveBeenCalledOnce();
     expect(bookshelf.root.children).toHaveLength(0);
+  });
+});
+
+function createBookIdentity(
+  instanceId = "reading-book:book-01",
+  entryId = "book-01",
+): ProceduralBookVolumeIdentity {
+  return { entryId, instanceId, modelTypeId: "book-volume" };
+}
+
+describe("fábrica procedural de livro BF-2B", () => {
+  it("cria um volume válido com identidade convencional obrigatória", () => {
+    const identity = createBookIdentity();
+    const book = createProceduralBookVolume(identity);
+
+    expect(book.root).toBeInstanceOf(Group);
+    expect(book.identity).toEqual(identity);
+    expect(book.identity.modelTypeId).toBe("book-volume");
+    expect(book.root.name).toBe("procedural-book-volume");
+    disposeObjectTree(book.root);
+  });
+
+  it("rejeita entryId ausente ou vazio e modelTypeId inadequado", () => {
+    expect(() =>
+      createProceduralBookVolume({
+        instanceId: "reading-book:missing",
+        modelTypeId: "book-volume",
+      } as unknown as ProceduralBookVolumeIdentity),
+    ).toThrow("entryId não vazio");
+    expect(() =>
+      createProceduralBookVolume(createBookIdentity("reading-book:blank", " ")),
+    ).toThrow("entryId não vazio");
+    expect(() =>
+      createProceduralBookVolume({
+        entryId: "book-wrong-type",
+        instanceId: "reading-book:book-wrong-type",
+        modelTypeId: "bookshelf",
+      } as unknown as ProceduralBookVolumeIdentity),
+    ).toThrow("modelTypeId: book-volume");
+  });
+
+  it("tem bounds finitos, positivos, localmente apoiados e compatíveis com sua variante", () => {
+    const book = createProceduralBookVolume(createBookIdentity());
+    const bounds = new Box3().setFromObject(book.root);
+    const size = bounds.getSize(new Vector3());
+    const dimensions = getProceduralBookVolumeDimensions(book.variant);
+
+    expect([size.x, size.y, size.z, bounds.min.y]).toSatisfy(
+      (values: number[]) => values.every(Number.isFinite),
+    );
+    expect([size.x, size.y, size.z]).toEqual([
+      expect.closeTo(dimensions.width, 6),
+      expect.closeTo(dimensions.height, 6),
+      expect.closeTo(dimensions.depth, 6),
+    ]);
+    expect(bounds.min.y).toBeCloseTo(0, 6);
+    expect(book.root.position).toEqual(new Vector3(0, 0, 0));
+    expect(book.root.rotation.x).toBe(0);
+    expect(book.root.rotation.y).toBe(0);
+    expect(book.root.rotation.z).toBe(0);
+    expect(book.root.scale).toEqual(new Vector3(1, 1, 1));
+    disposeObjectTree(book.root);
+  });
+
+  it("escolhe a variante sem aleatoriedade e a mantém para a mesma identidade", () => {
+    const random = vi.spyOn(Math, "random");
+    const identity = createBookIdentity("reading-book:stable", "stable");
+    const variant = getProceduralBookVolumeVariant(identity);
+    expect(random).not.toHaveBeenCalled();
+    random.mockRestore();
+
+    const first = createProceduralBookVolume(identity);
+    const second = createProceduralBookVolume(identity);
+    expect(first.variant).toBe(variant);
+    expect(second.variant).toBe(first.variant);
+    disposeObjectTree(first.root);
+    disposeObjectTree(second.root);
+  });
+
+  it("permite variações entre identidades estáveis", () => {
+    const variants = ["alpha", "beta", "gamma", "delta"].map((entryId) =>
+      getProceduralBookVolumeVariant(
+        createBookIdentity(`reading-book:${entryId}`, entryId),
+      ),
+    );
+
+    expect(new Set(variants).size).toBeGreaterThan(1);
+  });
+
+  it("isola recursos entre criações e é descartável por disposeObjectTree", () => {
+    const first = createProceduralBookVolume(createBookIdentity());
+    const second = createProceduralBookVolume(
+      createBookIdentity("reading-book:book-02", "book-02"),
+    );
+    const firstParts = meshes(first.root);
+    const secondParts = meshes(second.root);
+    const firstGeometries = new Set(firstParts.map(({ geometry }) => geometry));
+    const secondGeometries = new Set(
+      secondParts.map(({ geometry }) => geometry),
+    );
+    const firstMaterials = materials(firstParts);
+    const secondMaterials = materials(secondParts);
+    const secondPart = secondParts[0];
+    if (!secondPart || Array.isArray(secondPart.material)) {
+      throw new Error("O volume deve conter material simples descartável.");
+    }
+    const disposeGeometry = vi.spyOn(secondPart.geometry, "dispose");
+    const disposeMaterial = vi.spyOn(secondPart.material, "dispose");
+
+    expect(first.root).not.toBe(second.root);
+    expect(
+      [...firstGeometries].every((geometry) => !secondGeometries.has(geometry)),
+    ).toBe(true);
+    expect(
+      [...firstMaterials].every((material) => !secondMaterials.has(material)),
+    ).toBe(true);
+    disposeObjectTree(first.root);
+
+    expect(first.root.children).toHaveLength(0);
+    expect(second.root.children).not.toHaveLength(0);
+    expect(disposeGeometry).not.toHaveBeenCalled();
+    expect(disposeMaterial).not.toHaveBeenCalled();
+    disposeObjectTree(second.root);
+    expect(disposeGeometry).toHaveBeenCalledOnce();
+    expect(disposeMaterial).toHaveBeenCalledOnce();
   });
 });
