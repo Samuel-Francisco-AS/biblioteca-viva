@@ -203,6 +203,70 @@ describe("Página Biblioteca", () => {
     ).toHaveAttribute("aria-pressed", "true");
   });
 
+  it("ressolicita um livro após seleção do canvas e sincroniza seleção técnica ou vazia", async () => {
+    const user = userEvent.setup();
+    renderLibrary(Promise.resolve([firstBook, secondBook]));
+    const host = await screen.findByTestId("world-host-stub");
+    act(() => {
+      worldHostProps().onStatusChange?.("ready");
+      worldHostProps().onSelectableObjectsChange?.([
+        {
+          entryId: firstBook.id,
+          id: "reading-book:book-1",
+          label: firstBook.title,
+        },
+        {
+          entryId: secondBook.id,
+          id: "reading-book:book-2",
+          label: secondBook.title,
+        },
+      ]);
+    });
+
+    const selectionButtons = screen.getAllByRole("button", {
+      name: "Selecionar no ambiente",
+    });
+    await user.click(selectionButtons[0]);
+    expect(worldHostProps().selectedObjectId).toBe("reading-book:book-1");
+
+    act(() => {
+      worldHostProps().onSelectionChange?.({
+        entryId: secondBook.id,
+        id: "reading-book:book-2",
+        label: secondBook.title,
+      });
+    });
+    expect(
+      screen.getByText(`Livro selecionado: ${secondBook.title}.`),
+    ).toBeVisible();
+    expect(worldHostProps().selectedObjectId).toBe("reading-book:book-2");
+    expect(selectionButtons[0]).toHaveAttribute("aria-pressed", "false");
+    expect(selectionButtons[1]).toHaveAttribute("aria-pressed", "true");
+
+    await user.click(selectionButtons[0]);
+    expect(worldHostProps().selectedObjectId).toBe("reading-book:book-1");
+    expect(screen.getByTestId("world-host-stub")).toBe(host);
+
+    act(() => {
+      worldHostProps().onSelectionChange?.({
+        id: "reading-shelf-01",
+        label: "Estante de leitura 1",
+      });
+    });
+    expect(worldHostProps().selectedObjectId).toBe("reading-shelf-01");
+    expect(
+      screen.queryByRole("link", { name: "Abrir registro" }),
+    ).not.toBeInTheDocument();
+
+    act(() => {
+      worldHostProps().onSelectionChange?.(null);
+    });
+    expect(worldHostProps().selectedObjectId).toBeNull();
+
+    await user.click(selectionButtons[1]);
+    expect(worldHostProps().selectedObjectId).toBe("reading-book:book-2");
+  });
+
   it("não oferece registro convencional para seleção técnica sem entryId", async () => {
     renderLibrary(Promise.resolve([firstBook]));
     await screen.findByTestId("world-host-stub");

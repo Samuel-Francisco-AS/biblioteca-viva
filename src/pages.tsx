@@ -60,14 +60,14 @@ export function LibraryPage({
   const [worldStatus, setWorldStatus] =
     useState<WorldHostStatus>("initializing");
 
+  function handleWorldSelection(nextSelection: WorldSelection): void {
+    setSelection(nextSelection);
+    setRequestedSelectionId(nextSelection?.id ?? null);
+  }
+
   useEffect(() => {
     if (!application || diagnosticsActive) return;
     let active = true;
-    setReadingAreaBooks(undefined);
-    setError(undefined);
-    setSelectableObjects([]);
-    setSelection(null);
-    setRequestedSelectionId(null);
     void application.queries.listBookEntries.execute().then(
       (entries) => {
         if (!active) return;
@@ -130,7 +130,7 @@ export function LibraryPage({
         <>
           <WorldHost
             onSelectableObjectsChange={setSelectableObjects}
-            onSelectionChange={setSelection}
+            onSelectionChange={handleWorldSelection}
             onStatusChange={setWorldStatus}
             readingAreaBooks={readingAreaBooks}
             selectedObjectId={requestedSelectionId}
