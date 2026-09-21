@@ -137,7 +137,10 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           </p>
         )}
         <Routes>
-          <Route path={APP_ROUTE_PATHS.library} element={<LibraryPage />} />
+          <Route
+            path={APP_ROUTE_PATHS.library}
+            element={<LibraryPage application={application} />}
+          />
           <Route
             path={APP_ROUTE_PATHS.collection}
             element={<CollectionPage application={application} />}

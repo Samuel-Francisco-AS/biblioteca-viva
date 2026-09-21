@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-2D — Ponte React/aplicação e fluxo funcional — 2026-09-21
+
+- a rota Biblioteca agora recebe somente o contrato estreito de `listBookEntries`, carrega um snapshot por montagem, reutiliza `projectReadingAreaBooks()` e o entrega ao `WorldHost`; carregamento, armazenamento indisponível e falha pública segura não são apresentados como coleção vazia;
+- a lista React mantém todos os livros acessíveis por `entryId`, inclusive overflow, e oferece seleção no ambiente apenas para ocorrências confirmadas pelo catálogo do runtime. Seleção canvas → React preserva `entryId` e permite abrir o registro convencional sem mover foco;
+- `WorldHost` ganhou ponte neutra para snapshot, seleção, catálogo e status, sem remontar o mundo em mudança de seleção. Falha WebGL mantém os links convencionais; não houve query no renderer, atualização live, schema, backup ou persistência espacial;
+- F5 agora ignora também a validação do snapshot BF quando `performanceScenario` está presente, preservando o corpus diagnóstico mesmo diante de entrada BF estruturalmente inválida. BF-2E continua necessária para o gate integrado e fechamento.
+
 ### BF-2C — Integração com runtime, lifecycle e seleção — 2026-09-21
 
 - extraído `ReadingAreaBook` para contrato neutro e injetável no `ThreeWorldRuntime`; Three recebe somente o snapshot lógico, sem `BookEntry`, application, Dexie, query ou React, e BF-2D continua responsável por fornecer registros reais;

@@ -8,9 +8,10 @@ import type {
   WorldSelectableObject,
   WorldSelection,
 } from "./worldRuntime";
+import type { ReadingAreaBook } from "./readingAreaBookContract";
 import type { PerformanceScenario } from "./three/performanceScenarios";
 
-type WorldHostStatus = "initializing" | "ready" | "failed";
+export type WorldHostStatus = "initializing" | "ready" | "failed";
 
 const EMPTY_DIAGNOSTICS: WorldRuntimeDiagnostics = {
   activeFrameLoops: 0,
@@ -40,14 +41,23 @@ function metric(value: number | null, suffix = ""): string {
   return value === null ? "Aguardando" : `${value.toFixed(1)}${suffix}`;
 }
 
-const createRuntime: WorldRuntimeFactory = async () => {
+const createRuntime = async (
+  readingAreaBooks: readonly ReadingAreaBook[] | undefined,
+): Promise<WorldRuntime> => {
   const { createThreeWorldRuntime } = await import("./three/ThreeWorldRuntime");
-  return createThreeWorldRuntime();
+  return createThreeWorldRuntime({ readingAreaBooks });
 };
 
-interface WorldHostProps {
+export interface WorldHostProps {
+  readonly onSelectableObjectsChange?: (
+    objects: readonly WorldSelectableObject[],
+  ) => void;
+  readonly onSelectionChange?: (selection: WorldSelection) => void;
+  readonly onStatusChange?: (status: WorldHostStatus) => void;
   readonly performanceScenario?: PerformanceScenario;
+  readonly readingAreaBooks?: readonly ReadingAreaBook[];
   readonly runtimeFactory?: WorldRuntimeFactory;
+  readonly selectedObjectId?: string | null;
 }
 
 type SelectionDirection = -1 | 1;
@@ -75,8 +85,13 @@ function adjacentSelectionId(
 }
 
 export function WorldHost({
+  onSelectableObjectsChange,
+  onSelectionChange,
+  onStatusChange,
   performanceScenario,
+  readingAreaBooks,
   runtimeFactory,
+  selectedObjectId,
 }: WorldHostProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const runtimeRef = useRef<WorldRuntime | null>(null);
@@ -88,6 +103,32 @@ export function WorldHost({
     useState<WorldRuntimeDiagnostics>(EMPTY_DIAGNOSTICS);
   const [failure, setFailure] = useState<WorldRuntimeFailure | null>(null);
   const [status, setStatus] = useState<WorldHostStatus>("initializing");
+  const selectionChangeRef = useRef(onSelectionChange);
+  const selectableObjectsChangeRef = useRef(onSelectableObjectsChange);
+  const statusChangeRef = useRef(onStatusChange);
+
+  useEffect(() => {
+    selectionChangeRef.current = onSelectionChange;
+    selectableObjectsChangeRef.current = onSelectableObjectsChange;
+    statusChangeRef.current = onStatusChange;
+  }, [onSelectableObjectsChange, onSelectionChange, onStatusChange]);
+
+  const publishSelectableObjects = (
+    objects: readonly WorldSelectableObject[],
+  ): void => {
+    setSelectableObjects(objects);
+    selectableObjectsChangeRef.current?.(objects);
+  };
+
+  const publishSelection = (nextSelection: WorldSelection): void => {
+    setSelection(nextSelection);
+    selectionChangeRef.current?.(nextSelection);
+  };
+
+  const publishStatus = (nextStatus: WorldHostStatus): void => {
+    setStatus(nextStatus);
+    statusChangeRef.current?.(nextStatus);
+  };
 
   const selectAdjacentObject = (direction: SelectionDirection): void => {
     const id = adjacentSelectionId(selectableObjects, selection, direction);
@@ -105,11 +146,11 @@ export function WorldHost({
 
     if (!host) return;
 
-    setSelectableObjects([]);
-    setSelection(null);
+    publishSelectableObjects([]);
+    publishSelection(null);
     setDiagnostics(EMPTY_DIAGNOSTICS);
     setFailure(null);
-    setStatus("initializing");
+    publishStatus("initializing");
 
     const effectiveRuntimeFactory =
       runtimeFactory ??
@@ -119,7 +160,7 @@ export function WorldHost({
               await import("./three/ThreeWorldRuntime");
             return createThreeWorldRuntime({ performanceScenario });
           }
-        : createRuntime);
+        : () => createRuntime(readingAreaBooks));
 
     void effectiveRuntimeFactory()
       .then((createdRuntime) => {
@@ -131,14 +172,14 @@ export function WorldHost({
         runtime = createdRuntime;
         runtime.mount(host);
         runtimeRef.current = runtime;
-        setSelectableObjects(runtime.getSelectableObjects());
+        publishSelectableObjects(runtime.getSelectableObjects());
         unsubscribeDiagnostics = runtime.onDiagnosticsChange(
           (nextDiagnostics) => {
             if (active) setDiagnostics(nextDiagnostics);
           },
         );
         unsubscribeSelection = runtime.onSelectionChange((nextSelection) => {
-          if (active) setSelection(nextSelection);
+          if (active) publishSelection(nextSelection);
         });
         unsubscribeFailure = runtime.onFailure((nextFailure) => {
           if (!active || runtime !== createdRuntime) return;
@@ -149,11 +190,11 @@ export function WorldHost({
           unsubscribeFailure?.();
           runtimeRef.current = null;
           runtime.dispose();
-          setSelectableObjects([]);
-          setSelection(null);
+          publishSelectableObjects([]);
+          publishSelection(null);
           setDiagnostics(EMPTY_DIAGNOSTICS);
           setFailure(nextFailure);
-          setStatus("failed");
+          publishStatus("failed");
           console.error(
             `[Biblioteca Viva] three-world-runtime-failed:${nextFailure.code}`,
             nextFailure.message,
@@ -162,7 +203,7 @@ export function WorldHost({
         if (terminalFailureReported) return;
         runtime.start();
         if (terminalFailureReported) return;
-        setStatus("ready");
+        publishStatus("ready");
       })
       .catch(() => {
         unsubscribeDiagnostics?.();
@@ -172,7 +213,7 @@ export function WorldHost({
         runtimeRef.current = null;
         if (!active) return;
         console.error("[Biblioteca Viva] three-world-initialization-failed");
-        setStatus("failed");
+        publishStatus("failed");
       });
 
     return () => {
@@ -184,7 +225,12 @@ export function WorldHost({
       runtime = undefined;
       runtimeRef.current = null;
     };
-  }, [performanceScenario, runtimeFactory]);
+  }, [performanceScenario, readingAreaBooks, runtimeFactory]);
+
+  useEffect(() => {
+    if (selectedObjectId === undefined || status !== "ready") return;
+    runtimeRef.current?.selectObject(selectedObjectId);
+  }, [selectedObjectId, status]);
 
   return (
     <div className="world-surface" data-status={status}>
@@ -196,13 +242,13 @@ export function WorldHost({
       />
       {status === "initializing" && (
         <p className="world-status" role="status">
-          Preparando o ambiente 3D experimental…
+          Preparando a área de leitura…
         </p>
       )}
       {status === "ready" && (
         <>
           <p className="world-status" role="status">
-            Ambiente 3D experimental em execução.
+            Ambiente 3D em execução.
           </p>
           <aside
             aria-label="Diagnóstico técnico do ambiente 3D"
@@ -288,8 +334,7 @@ export function WorldHost({
               {selection?.label ?? "Nenhum objeto selecionado"}.
             </p>
             <p className="world-selection-help">
-              Controle experimental da Fundação para selecionar sem usar o
-              canvas.
+              Use estes controles para selecionar sem usar o canvas.
             </p>
             <div className="world-selection-actions">
               <button

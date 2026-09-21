@@ -14,6 +14,12 @@ import type {
 } from "./worldRuntime";
 import { WorldHost } from "./WorldHost";
 
+const { createThreeWorldRuntime } = vi.hoisted(() => ({
+  createThreeWorldRuntime: vi.fn(),
+}));
+
+vi.mock("./three/ThreeWorldRuntime", () => ({ createThreeWorldRuntime }));
+
 interface TestWorldRuntime extends WorldRuntime {
   readonly dispose: Mock<() => void>;
   readonly emitFailure: (failure: WorldRuntimeFailure) => void;
@@ -118,15 +124,15 @@ describe("WorldHost", () => {
     const view = render(<WorldHost runtimeFactory={runtimeFactory} />);
 
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Preparando o ambiente 3D experimental…",
+      "Preparando a área de leitura…",
     );
     expect(screen.getByTestId("three-world-host")).toHaveAttribute(
       "aria-hidden",
       "true",
     );
-    await screen.findByText("Ambiente 3D experimental em execução.");
+    await screen.findByText("Ambiente 3D em execução.");
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Ambiente 3D experimental em execução.",
+      "Ambiente 3D em execução.",
     );
     expect(
       view.container.querySelectorAll("canvas[data-three-world-canvas='true']"),
@@ -334,7 +340,7 @@ describe("WorldHost", () => {
     const runtime = createRuntime();
     render(<WorldHost runtimeFactory={() => Promise.resolve(runtime)} />);
 
-    await screen.findByText("Ambiente 3D experimental em execução.");
+    await screen.findByText("Ambiente 3D em execução.");
     act(() => {
       runtime.emitSelection({ id: "table-01", label: "Mesa técnica 1" });
       runtime.emitFailure({
@@ -381,7 +387,7 @@ describe("WorldHost", () => {
       }),
     ).toBeVisible();
     expect(
-      screen.queryByText("Ambiente 3D experimental em execução."),
+      screen.queryByText("Ambiente 3D em execução."),
     ).not.toBeInTheDocument();
     expect(runtime.dispose).toHaveBeenCalledOnce();
     consoleError.mockRestore();
@@ -394,7 +400,7 @@ describe("WorldHost", () => {
     const secondFactory = vi.fn(() => Promise.resolve(secondRuntime));
     const view = render(<WorldHost runtimeFactory={firstFactory} />);
 
-    await screen.findByText("Ambiente 3D experimental em execução.");
+    await screen.findByText("Ambiente 3D em execução.");
     act(() => {
       firstRuntime.emitSelection({
         id: "table-01",
@@ -438,5 +444,92 @@ describe("WorldHost", () => {
     expect(runtime.mount).not.toHaveBeenCalled();
     expect(runtime.start).not.toHaveBeenCalled();
     expect(runtime.dispose).toHaveBeenCalledOnce();
+  });
+
+  it("entrega o snapshot neutro ao runtime normal e preserva precedência do factory explícito", async () => {
+    const runtime = createRuntime();
+    const books = Object.freeze([
+      Object.freeze({
+        entryId: "book-1",
+        instanceId: "reading-book:book-1",
+        modelTypeId: "book-volume" as const,
+        readingProgress: Object.freeze({ currentPage: 1 }),
+        title: "Livro real",
+      }),
+    ]);
+    createThreeWorldRuntime.mockResolvedValueOnce(runtime);
+    const view = render(<WorldHost readingAreaBooks={books} />);
+
+    await screen.findByText("Ambiente 3D em execução.");
+    expect(createThreeWorldRuntime).toHaveBeenCalledWith({
+      readingAreaBooks: books,
+    });
+
+    const explicitRuntime = createRuntime();
+    const runtimeFactory = vi.fn(() => Promise.resolve(explicitRuntime));
+    view.rerender(
+      <WorldHost readingAreaBooks={books} runtimeFactory={runtimeFactory} />,
+    );
+    await waitFor(() => expect(explicitRuntime.mount).toHaveBeenCalledOnce());
+    expect(runtimeFactory).toHaveBeenCalledOnce();
+    expect(createThreeWorldRuntime).toHaveBeenCalledOnce();
+  });
+
+  it("encaminha seleção externa sem remontar o runtime", async () => {
+    const runtime = createRuntime();
+    const runtimeFactory = vi.fn(() => Promise.resolve(runtime));
+    const view = render(
+      <WorldHost runtimeFactory={runtimeFactory} selectedObjectId={null} />,
+    );
+
+    await screen.findByText("Ambiente 3D em execução.");
+    runtime.selectObject.mockClear();
+    view.rerender(
+      <WorldHost runtimeFactory={runtimeFactory} selectedObjectId="table-01" />,
+    );
+
+    await waitFor(() =>
+      expect(runtime.selectObject).toHaveBeenCalledWith("table-01"),
+    );
+    expect(runtimeFactory).toHaveBeenCalledOnce();
+    expect(runtime.mount).toHaveBeenCalledOnce();
+  });
+
+  it("publica catálogo e seleção ao React e os limpa depois de falha terminal", async () => {
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    const runtime = createRuntime();
+    const onSelectableObjectsChange = vi.fn();
+    const onSelectionChange = vi.fn();
+    render(
+      <WorldHost
+        onSelectableObjectsChange={onSelectableObjectsChange}
+        onSelectionChange={onSelectionChange}
+        runtimeFactory={() => Promise.resolve(runtime)}
+      />,
+    );
+
+    await screen.findByText("Ambiente 3D em execução.");
+    expect(onSelectableObjectsChange).toHaveBeenLastCalledWith(
+      runtime.getSelectableObjects(),
+    );
+    act(() => {
+      runtime.emitSelection({ id: "table-01", label: "Mesa técnica 1" });
+    });
+    expect(onSelectionChange).toHaveBeenLastCalledWith({
+      id: "table-01",
+      label: "Mesa técnica 1",
+    });
+
+    act(() => {
+      runtime.emitFailure({
+        code: "unavailable",
+        message: "O recurso gráfico deixou de estar disponível.",
+      });
+    });
+    expect(onSelectableObjectsChange).toHaveBeenLastCalledWith([]);
+    expect(onSelectionChange).toHaveBeenLastCalledWith(null);
+    consoleError.mockRestore();
   });
 });

@@ -138,7 +138,7 @@ BF-2 ⏳ PRIMEIRA ÁREA DE LEITURA FUNCIONAL
  ├─ BF-2A ✅ CONTRATO E PROJEÇÃO NEUTRA DOS LIVROS REAIS
  ├─ BF-2B ✅ LIVRO PROCEDURAL E LAYOUT DETERMINÍSTICO
  ├─ BF-2C ✅ INTEGRAÇÃO COM RUNTIME E SELEÇÃO
- ├─ BF-2D ⏳ PONTE REACT/APLICAÇÃO E FLUXO FUNCIONAL — NÃO INICIADA
+ ├─ BF-2D ✅ PONTE REACT/APLICAÇÃO E FLUXO FUNCIONAL
  └─ BF-2E ⏳ GATE INTEGRADO E FECHAMENTO — NÃO INICIADA
  │
  ▼
@@ -836,7 +836,7 @@ A **FUNDAÇÃO está concluída** no plano técnico/arquitetural. A dívida huma
 
 # 16. Depois da FUNDAÇÃO
 
-BF-0 aprovou a sequência Biblioteca Funcional Primeiro. BF-1 está tecnicamente concluída; BF-2A concluiu o contrato e a projeção neutra dos livros reais, BF-2B a fábrica/layout isolados e BF-2C a integração de snapshot neutro, lifecycle, relayout por variante e seleção no runtime. BF-2D/E não foram iniciadas. Não existe persistência espacial.
+BF-0 aprovou a sequência Biblioteca Funcional Primeiro. BF-1 está tecnicamente concluída; BF-2A concluiu o contrato e a projeção neutra dos livros reais, BF-2B a fábrica/layout isolados, BF-2C a integração de snapshot neutro e BF-2D a ponte React/aplicação por snapshot de montagem, lista semântica, overflow acessível e seleção bidirecional. BF-2E não foi iniciada. Não existe persistência espacial.
 
 ```text
 FUNDAÇÃO
@@ -852,7 +852,7 @@ PERSISTÊNCIA ESPACIAL, somente se necessária
 
 ## Biblioteca Funcional Primeiro
 
-O conteúdo inicial será procedural/provisório em TypeScript/Three.js. React mantém a superfície semântica e uma seleção visual não pode ser o único caminho para funções essenciais. BF-1A materializou a identidade procedural; BF-2C a corrigiu para que `bookshelf` aceite somente seu contrato estreito, enquanto `book-volume` exige `entryId`. `ReadingAreaBook` foi extraído para contrato neutro e pode entrar no runtime como snapshot: livros visíveis são selecionáveis, carregam `entryId` e são irmãos da representação da estante. Slots são derivados da variante corrente e BF-1D relayouta; overflow não tem representação. Não há query, React/aplicação, schema, tabela, backup ou persistência espacial; BF-2D continua futura.
+O conteúdo inicial será procedural/provisório em TypeScript/Three.js. React mantém a superfície semântica e uma seleção visual não pode ser o único caminho para funções essenciais. BF-1A materializou a identidade procedural; BF-2C a corrigiu para que `bookshelf` aceite somente seu contrato estreito, enquanto `book-volume` exige `entryId`. `ReadingAreaBook` é contrato neutro e entra no runtime como snapshot carregado por montagem pela query estreita da Biblioteca: livros visíveis são selecionáveis, carregam `entryId` e são irmãos da representação da estante; todos, inclusive overflow, continuam na lista React. Slots são derivados da variante corrente e BF-1D relayouta; não há atualização live, schema, tabela, backup ou persistência espacial; BF-2E continua futura.
 
 P3D-B1 preserva `bookshelf` e sua proveniência. P3D-B2–F estão adiados, não concluídos nem cancelados, e só retomam quando houver necessidade demonstrada de ingestão ou substituição por GLB definitivo. ADR-010 continua a regular esse caminho GLB; fixtures F1/F4 e cenários F5 não são promovidos.
 
@@ -899,46 +899,46 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 
 # 17. Situação consolidada
 
-| Etapa                 | Estado       | Função principal                                                                                 |
-| --------------------- | ------------ | ------------------------------------------------------------------------------------------------ |
-| F0                    | ✅ Concluída | Definir e contratar a Fundação                                                                   |
-| F0-A                  | ✅ Concluída | Requisitos e não negociáveis                                                                     |
-| F0-B                  | ✅ Concluída | Protocolo de prova                                                                               |
-| F0-C                  | ✅ Concluída | Escolha tecnológica                                                                              |
-| F0-D                  | ✅ Concluída | Contrato executável da F1                                                                        |
-| F1                    | ✅ Concluída | Three.js provado e aprovado como renderer da Fundação                                            |
-| F1-A                  | ✅ Concluída | Bootstrap do runtime                                                                             |
-| F1-A-FIX              | ✅ Concluída | Tipagem sustentável e mapa operacional                                                           |
-| F1-B                  | ✅ Concluída | Cena técnica + GLB                                                                               |
-| F1-C                  | ✅ Concluída | Interação + ponte React ↔ Three                                                                  |
-| F1-D                  | ✅ Concluída | Lifecycle + observabilidade                                                                      |
-| F1-E                  | ✅ Concluída | Gates técnicos + APK                                                                             |
-| F1-F                  | ✅ Concluída | Gate físico aprovado no Moto G06                                                                 |
-| F1-F-FIX              | ✅ Concluída | Botões React revalidados fisicamente                                                             |
-| F2                    | ✅ Concluída | Endurecimento do runtime e integração, com gates técnicos e revalidação física curta no Moto G06 |
-| F3                    | ✅ Concluída | Câmera e interação mobile                                                                        |
-| F3-A                  | ✅ Concluída | Contrato e baseline da câmera                                                                    |
-| F3-B                  | ✅ Concluída | Modelo de câmera, framing e limites                                                              |
-| F3-C                  | ✅ Concluída | Pan, wheel focal e pinch ancorado                                                                |
-| F3-D                  | ✅ Concluída | Tap, seleção e arbitragem de gestos                                                              |
-| F3-E                  | ✅ Concluída | Viewport, orientação, safe areas e integração mobile                                             |
-| F3-F1                 | ✅ Técnico   | Gate consolidado e APK                                                                           |
-| Fechamento F3         | ✅ Concluído | Evidência humana ampla e correção técnica de bounds; sem revalidação física específica do fix    |
-| F4                    | ✅ Concluída | Contrato experimental de assets consolidado; sem pipeline produtivo definitivo                   |
-| F5                    | ✅ Concluída | Envelope Android físico, guardrails de remedição e gate final; sem teto/hard caps                |
-| F6                    | ✅ Concluída | Fechamento técnico/arquitetural; dívida humana assistiva aceita, sem PASS TalkBack               |
-| Pipeline 3D v1        | ⏸ Adiado     | P3D-B1 documental concluída para `bookshelf`; B2–F dependem de GLB definitivo                    |
-| BF-0                  | ✅ Concluída | Replanejamento e decisão arquitetural                                                            |
-| BF-1A                 | ✅ Concluída | Contrato mínimo e primeira fábrica procedural isolada                                            |
-| BF-1B                 | ✅ Concluída | Composição declarativa e posicionamento determinístico isolados                                  |
-| BF-1C                 | ✅ Técnica  | Integração estática e seleção                                                                     |
-| BF-1C-FIX             | ✅ Concluída | Correção geométrica; gate visual humano no navegador PASS                                         |
-| BF-1D                 | ✅ Técnica  | Substituição procedural, descarte seletivo e gate integrado                                      |
-| BF-2                  | ⏳ Em andamento | BF-2A/B/C concluídas; BF-2D/E não iniciadas                                                        |
-| BF-3–BF-5             | ⏳ Futuro   | Dependem da evolução autorizada da BF-2                                                           |
-| Primeiro recorte      | 🔒 Futuro    | Fechamento condicionado à validação TalkBack humana                                              |
-| Persistência espacial | 🔒 Futuro    | Salvar estado real do mundo                                                                      |
-| Sistemas maiores      | 🔒 Futuro    | Personagens, progressão, IA etc.                                                                 |
+| Etapa                 | Estado          | Função principal                                                                                 |
+| --------------------- | --------------- | ------------------------------------------------------------------------------------------------ |
+| F0                    | ✅ Concluída    | Definir e contratar a Fundação                                                                   |
+| F0-A                  | ✅ Concluída    | Requisitos e não negociáveis                                                                     |
+| F0-B                  | ✅ Concluída    | Protocolo de prova                                                                               |
+| F0-C                  | ✅ Concluída    | Escolha tecnológica                                                                              |
+| F0-D                  | ✅ Concluída    | Contrato executável da F1                                                                        |
+| F1                    | ✅ Concluída    | Three.js provado e aprovado como renderer da Fundação                                            |
+| F1-A                  | ✅ Concluída    | Bootstrap do runtime                                                                             |
+| F1-A-FIX              | ✅ Concluída    | Tipagem sustentável e mapa operacional                                                           |
+| F1-B                  | ✅ Concluída    | Cena técnica + GLB                                                                               |
+| F1-C                  | ✅ Concluída    | Interação + ponte React ↔ Three                                                                  |
+| F1-D                  | ✅ Concluída    | Lifecycle + observabilidade                                                                      |
+| F1-E                  | ✅ Concluída    | Gates técnicos + APK                                                                             |
+| F1-F                  | ✅ Concluída    | Gate físico aprovado no Moto G06                                                                 |
+| F1-F-FIX              | ✅ Concluída    | Botões React revalidados fisicamente                                                             |
+| F2                    | ✅ Concluída    | Endurecimento do runtime e integração, com gates técnicos e revalidação física curta no Moto G06 |
+| F3                    | ✅ Concluída    | Câmera e interação mobile                                                                        |
+| F3-A                  | ✅ Concluída    | Contrato e baseline da câmera                                                                    |
+| F3-B                  | ✅ Concluída    | Modelo de câmera, framing e limites                                                              |
+| F3-C                  | ✅ Concluída    | Pan, wheel focal e pinch ancorado                                                                |
+| F3-D                  | ✅ Concluída    | Tap, seleção e arbitragem de gestos                                                              |
+| F3-E                  | ✅ Concluída    | Viewport, orientação, safe areas e integração mobile                                             |
+| F3-F1                 | ✅ Técnico      | Gate consolidado e APK                                                                           |
+| Fechamento F3         | ✅ Concluído    | Evidência humana ampla e correção técnica de bounds; sem revalidação física específica do fix    |
+| F4                    | ✅ Concluída    | Contrato experimental de assets consolidado; sem pipeline produtivo definitivo                   |
+| F5                    | ✅ Concluída    | Envelope Android físico, guardrails de remedição e gate final; sem teto/hard caps                |
+| F6                    | ✅ Concluída    | Fechamento técnico/arquitetural; dívida humana assistiva aceita, sem PASS TalkBack               |
+| Pipeline 3D v1        | ⏸ Adiado        | P3D-B1 documental concluída para `bookshelf`; B2–F dependem de GLB definitivo                    |
+| BF-0                  | ✅ Concluída    | Replanejamento e decisão arquitetural                                                            |
+| BF-1A                 | ✅ Concluída    | Contrato mínimo e primeira fábrica procedural isolada                                            |
+| BF-1B                 | ✅ Concluída    | Composição declarativa e posicionamento determinístico isolados                                  |
+| BF-1C                 | ✅ Técnica      | Integração estática e seleção                                                                    |
+| BF-1C-FIX             | ✅ Concluída    | Correção geométrica; gate visual humano no navegador PASS                                        |
+| BF-1D                 | ✅ Técnica      | Substituição procedural, descarte seletivo e gate integrado                                      |
+| BF-2                  | ⏳ Em andamento | BF-2A/B/C/D concluídas; BF-2E não iniciada                                                       |
+| BF-3–BF-5             | ⏳ Futuro       | Dependem da evolução autorizada da BF-2                                                          |
+| Primeiro recorte      | 🔒 Futuro       | Fechamento condicionado à validação TalkBack humana                                              |
+| Persistência espacial | 🔒 Futuro       | Salvar estado real do mundo                                                                      |
+| Sistemas maiores      | 🔒 Futuro       | Personagens, progressão, IA etc.                                                                 |
 
 ---
 

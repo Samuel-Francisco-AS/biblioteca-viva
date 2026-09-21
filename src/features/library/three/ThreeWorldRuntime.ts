@@ -399,8 +399,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
       createDefaultPerformanceScenario(this.fixtureUrl);
     this.performanceScenarioDiagnosticsEnabled =
       dependencies.performanceScenario !== undefined;
-    const readingAreaBooks = dependencies.readingAreaBooks ?? [];
-    validateReadingAreaBookSnapshot(readingAreaBooks);
+    // F5 is a self-contained diagnostic corpus. A BF snapshot must not affect
+    // its scene, catalog, or even its construction validation.
+    const readingAreaBooks = this.performanceScenarioDiagnosticsEnabled
+      ? []
+      : (dependencies.readingAreaBooks ?? []);
+    if (!this.performanceScenarioDiagnosticsEnabled)
+      validateReadingAreaBookSnapshot(readingAreaBooks);
     this.readingAreaBooks = Object.freeze([...readingAreaBooks]);
     this.frameScheduler = dependencies.frameScheduler ?? defaultFrameScheduler;
     this.now = dependencies.now ?? (() => performance.now());

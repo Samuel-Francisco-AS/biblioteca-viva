@@ -33,10 +33,13 @@ describe("App", () => {
     ).toHaveLength(5);
     expect(
       container.querySelector("[data-testid='world-host-stub']"),
-    ).toBeInTheDocument();
+    ).toBeNull();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Não foi possível iniciar o armazenamento local.",
+    );
   });
 
-  it("mantém a fundação e o acesso à Coleção", () => {
+  it("mantém a área de leitura e o acesso à Coleção", () => {
     render(
       <MemoryRouter>
         <App />
@@ -44,7 +47,7 @@ describe("App", () => {
     );
     expect(
       screen.getByRole("heading", {
-        name: "Fundação 3D experimental",
+        name: "Área de leitura",
       }),
     ).toBeVisible();
     expect(screen.getByRole("link", { name: "Abrir Coleção" })).toHaveAttribute(

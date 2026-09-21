@@ -24,7 +24,7 @@ BF-2 ⏳ primeira área de leitura integrada a registros reais
   BF-2A ✅ contrato e projeção neutra dos livros reais
   BF-2B ✅ livro procedural e layout determinístico
   BF-2C ✅ integração com runtime e seleção
-  BF-2D ⏳ ponte React/aplicação e fluxo funcional
+  BF-2D ✅ ponte React/aplicação e fluxo funcional
   BF-2E ⏳ gate integrado e fechamento da BF-2
 BF-3 ⏳ integração dos seis tipos de registro
 BF-4 ⏳ ambiente habitável, mobília e personagens provisórios
@@ -75,9 +75,9 @@ Criou a representação procedural isolada `book-volume` e o contrato determiní
 
 `ReadingAreaBook` agora chega ao `ThreeWorldRuntime` por contrato neutro e snapshot imutável, sem query, `BookEntry`, application, Dexie ou React. Cada livro colocado é wrapper selecionável irmão da representação substituível da estante; o catálogo e `WorldSelection` preservam `entryId`. Slots são regenerados pelas variantes atuais e BF-1D relayouta sem recriar livros ainda visíveis; overflow não tem root ou seleção e pode retornar após aumento de capacidade. A configuração inicial continua derivando 89 slots, mas 89 não é capacidade universal. F5 ignora o snapshot. Não houve persistência espacial, navegação nem integração da rota; BF-2D permanece responsável por trazer registros reais.
 
-#### BF-2D — Ponte React/aplicação e fluxo funcional — futura, não iniciada
+#### BF-2D — Ponte React/aplicação e fluxo funcional — concluída tecnicamente
 
-Carregará registros reais pela camada React/aplicação e conectará a seleção visual à operação semântica e ao registro convencional.
+A Biblioteca consulta `listBookEntries` por um contrato React/aplicação estreito, projeta um snapshot imutável com `projectReadingAreaBooks()` e o entrega ao `WorldHost` na montagem. Loading, indisponibilidade e erro público não se confundem com vazio; o vazio real mantém estantes sem livros e ação convencional para criar livro. A lista React preserva todos os livros e seus links por `entryId`, inclusive overflow; o catálogo neutro do host informa quais livros estão visíveis e permite seleção React → canvas, enquanto a seleção do canvas retorna `entryId` para abrir o registro sem foco forçado. F5 continua sem query ou livros reais e agora ignora inclusive snapshot inválido. Não há sincronização live, schema, backup ou persistência espacial.
 
 #### BF-2E — Gate integrado e fechamento da BF-2 — futura, não iniciada
 
@@ -159,9 +159,9 @@ BF-1 ✅ tecnicamente concluída
 BF-2A ✅ contrato e projeção neutra dos livros reais
 BF-2B ✅ livro procedural e layout determinístico isolados
 BF-2C ✅ integração com runtime e seleção
-BF-2D ⏳ ponte React/aplicação e fluxo funcional — não iniciada
+BF-2D ✅ ponte React/aplicação e fluxo funcional
 BF-2E ⏳ gate integrado e fechamento — não iniciada
-PRÓXIMO AUTORIZÁVEL: planejamento e implementação autorizada da BF-2D; sem integração automática React/aplicação nesta etapa
+PRÓXIMO AUTORIZÁVEL: BF-2E — gate integrado e fechamento; sem persistência espacial ou sincronização live nesta etapa
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída

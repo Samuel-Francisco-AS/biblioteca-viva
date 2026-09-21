@@ -1041,6 +1041,57 @@ blockquote {
   margin-top: var(--space-5);
 }
 
+.reading-area-summary,
+.reading-area-selection {
+  margin-top: var(--space-3);
+  color: var(--color-text-secondary);
+}
+
+.reading-area-selection {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.reading-area-selection p {
+  margin: 0;
+}
+
+.reading-area-empty,
+.reading-area-books {
+  margin-top: var(--space-5);
+}
+
+.reading-area-books h3 {
+  margin-bottom: var(--space-3);
+}
+
+.reading-area-books ul {
+  display: grid;
+  gap: var(--space-3);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.reading-area-books li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border-subtle);
+  border-radius: var(--radius-medium);
+}
+
+.reading-area-books p {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+}
+
 @media (min-width: 36rem) {
   .book-form__numbers,
   .book-grid,

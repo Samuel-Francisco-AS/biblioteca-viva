@@ -602,6 +602,41 @@ describe("ThreeWorldRuntime", () => {
     runtime.dispose();
   });
 
+  it("ignora snapshot estruturalmente inválido em F5, mas o runtime normal continua validando", () => {
+    const invalidSnapshot = [readingBook(1)];
+    Object.defineProperty(invalidSnapshot[0], "modelTypeId", {
+      value: "invalid-book-volume",
+    });
+
+    expect(
+      () =>
+        new ThreeWorldRuntime({
+          createRenderer: () => new TestRenderer(),
+          fixtureLoader: new TestFixtureLoader(),
+          readingAreaBooks: invalidSnapshot,
+        }),
+    ).toThrow("ReadingAreaBook.modelTypeId");
+
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+      performanceScenario: PERFORMANCE_SCENARIOS[0],
+      readingAreaBooks: invalidSnapshot,
+    });
+    runtime.mount(createHost());
+    expect(
+      renderer.render.mock.calls
+        .at(-1)?.[0]
+        .getObjectByName("procedural-content-composition"),
+    ).toBeUndefined();
+    expect(runtime.getSelectableObjects()).not.toContainEqual(
+      expect.objectContaining({ id: invalidSnapshot[0]?.instanceId }),
+    );
+    runtime.dispose();
+  });
+
   it("BF-1D substitui a representação selecionada sem trocar wrapper, catálogo ou ownership da montagem", () => {
     vi.stubGlobal("ResizeObserver", TestResizeObserver);
     const renderer = new TestRenderer();
