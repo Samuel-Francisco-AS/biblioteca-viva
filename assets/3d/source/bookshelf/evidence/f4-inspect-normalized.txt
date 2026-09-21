@@ -1,0 +1,30 @@
+Data are loaded, start creating Blender stuff
+glTF import finished in 0.00s
+
+=== BV F4 ASSET INSPECTION ===
+arquivo=/home/sam/Projetos/bv-f4-lab/normalized/quaternius/Bookshelf-normalized.glb
+prefixo=(nenhum)
+objetos_selecionados=1
+meshes=1
+bounds_min=(-0.579581, -0.189000, 0.000000)
+bounds_max=(0.579581, 0.189000, 2.219040)
+dimensoes_totais=(1.159162, 0.377999, 2.219040)
+vertices=240
+poligonos=120
+triangulos=120
+materiais=1
+imagens=0
+roots=['F4_Quaternius_Bookshelf']
+
+=== MESHES ===
+'F4_Quaternius_Bookshelf' | dim=(1.159162,0.377999,2.219040) | loc=(0.000000,0.000000,0.000000) | rot=(0.000000,0.000000,0.000000) | scale=(1.000000,1.000000,1.000000) | verts=240 | polys=120
+
+=== MATERIAIS ===
+White
+
+=== IMAGENS ===
+=== FIM BV F4 ASSET INSPECTION ===
+
+Blender 3.3.21 (hash e016c21db151 built 2024-07-15 10:26:47)
+
+Blender quit

@@ -1,6 +1,6 @@
 # Estado atual
 
-> Referência documental: 2026-09-17.
+> Referência documental: 2026-09-20.
 
 ## Produto
 
@@ -9,7 +9,7 @@
 
 ## Mundo
 
-- **F0–F6 estão concluídas no plano técnico/arquitetural; a FUNDAÇÃO está concluída.** F5 consolidou no Moto G06 um envelope diagnóstico físico, guardrails de remedição e a decisão de não adotar otimizações preventivas; não encontrou o teto do aparelho nem criou hard budgets. P3D-A formalizou o contrato produtivo e a estrutura planejada do Pipeline 3D v1, sem criar implementação ou asset produtivo. Three.js está aprovado como renderer da Fundação do novo mundo. F6-A fechou o contrato, F6-B a evidência automatizada e F6-C aceitou documentalmente a dívida humana assistiva; **TalkBack não foi aprovado.**
+- **F0–F6 estão concluídas no plano técnico/arquitetural; a FUNDAÇÃO está concluída.** F5 consolidou no Moto G06 um envelope diagnóstico físico, guardrails de remedição e a decisão de não adotar otimizações preventivas; não encontrou o teto do aparelho nem criou hard budgets. P3D-A formalizou o contrato produtivo; P3D-B está em andamento e B1 registrou documentalmente o candidato `bookshelf`, sem criar fonte canônica normalizada ou asset produtivo. Three.js está aprovado como renderer da Fundação do novo mundo. F6-A fechou o contrato, F6-B a evidência automatizada e F6-C aceitou documentalmente a dívida humana assistiva; **TalkBack não foi aprovado.**
 - A linha ativa é `React → WorldHost → ThreeWorldRuntime → Three.js`, com `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, lifecycle explícito, integração React ↔ Three e Android/Capacitor.
 - F3 consolidou `CameraNavigation` runtime-only como autoridade de `targetX`, `targetZ` e `zoom`; framing e bounds dependem de projeção, viewport e zoom. Pan, wheel focal e pinch focal navegam no plano X/Z; tap elegível só faz picking no `pointerup`, e o layout entrega ao runtime somente o `world-host` real observado. Resize/orientação preservam exploração e seleção quando possível e cancelam somente o gesto ativo.
 - A correção final dos bounds substituiu o AABB da projeção por uma região convexa válida de centros de câmera, preservando na viewport um patch do piso técnico de largura e altura equivalentes a 15% dos spans projetados, limitado pelo espaço disponível. Ela não alterou `CameraNavigation`, gestos, lifecycle ou renderer.
@@ -26,7 +26,7 @@
 - F4-E1/E2 concluíram o baseline estrutural e o diagnóstico dos quatro GLBs F4-B sem alterar assets: hashes conferem, o corpus soma 5.901.424 bytes e Poly Haven concentra 98,766% dele, quase todo em três imagens 1024×1024 (5.814.197 bytes codificados; estimativa RGBA8 base de 12 MiB). A geometria inteira do corpus é 66.240 bytes lógicos e não sustenta experimento de compressão geométrica. A hipótese selecionada para E3/E4 é somente uma variante offline de resolução de texturas de Poly Haven, comparada ao original e submetida a contrato material/UV e gate visual; KTX2/Basis, Meshopt e Draco não foram adotados. Essas métricas não medem FPS, GPU, RAM, Android nem Moto G06.
 - F4-E3/E4 concluíram experimentalmente a variante laboratorial Poly Haven 512 sem tocar o fixture registrado: GLB caiu de 5.828.612 para 711.352 bytes (-87,796%), imagens de 5.814.197 para 696.943 bytes (-88,013%) e estimativa RGBA8 base de 12 para 3 MiB. Geometria lógica, UV, transforms, hierarchy, material e metallic/roughness compartilhado passaram por comparação objetiva e `GLTFLoader` real. O gate humano foi PASS com leve desfoque perceptível apenas em comparação próxima, considerado irrelevante no uso ortográfico/2.5D pretendido; não houve perda bloqueante de identidade visual, material ou leitura geral. O harness/teste temporários foram removidos. Isso não cria budget global, asset final ou pipeline definitivo.
 - F4-E foi concluída experimentalmente: a evidência sustenta medir antes de otimizar, separar payload de estimativa estrutural e performance física, e dimensionar texturas conforme necessidade visual e custo observado. Não há budget 512×512, codec adotado, mudança de runtime ou Pipeline 3D definitivo; KTX2/Basis, Draco, Meshopt e quantização permanecem possibilidades futuras dependentes de nova evidência. A variante laboratorial e seu script permanecem fora do checkout/registry como evidência não autoritativa.
-- A cena atual é um spike técnico com fixture, não a Biblioteca final nem arquitetura permanente de conteúdo. O Pipeline 3D v1 possui contrato documental, mas ainda não há asset produtivo, loader produtivo, catálogo real, persistência espacial, `PlacedObject`, `WorldStructureState` ou tabela espacial.
+- A cena atual é um spike técnico com fixture, não a Biblioteca final nem arquitetura permanente de conteúdo. O Pipeline 3D v1 possui contrato documental e o candidato `bookshelf` tem proveniência preservada, mas ainda não há fonte canônica normalizada, GLB ou asset produtivo, loader produtivo, catálogo real, persistência espacial, `PlacedObject`, `WorldStructureState` ou tabela espacial.
 - R3F e WebGPU não estão aprovados; renderers alternativos só voltam a ser considerados diante de evidência estrutural futura.
 
 ## Validações abertas
@@ -37,7 +37,7 @@
 
 ## Próximo trabalho
 
-**P3D-A está concluída.** A FUNDAÇÃO permanece concluída tecnicamente/arquiteturalmente; a dívida humana de TalkBack continua obrigatória antes do fechamento do primeiro recorte real e de beta/release aplicável. O próximo checkpoint é **P3D-B — primeiro asset canônico ponta a ponta**: atravessar manualmente o contrato com um único asset, preferencialmente a fonte Quaternius Bookshelf conhecida da F4, sem promover o fixture. Se a fonte `.blend` esperada não estiver no checkout, recuperar do laboratório F4; não inventar ou baixar arquivos nesta etapa. A fixture continua técnica, sem mundo final ou persistência espacial.
+**P3D-A está concluída e P3D-B está em andamento.** B1 concluiu documentalmente a proveniência e a organização inicial de `bookshelf` como `candidate`, sem promover o fixture F4-B, normalizar fonte canônica ou criar GLB produtivo. A FUNDAÇÃO permanece concluída tecnicamente/arquiteturalmente; a dívida humana de TalkBack continua obrigatória antes do fechamento do primeiro recorte real e de beta/release aplicável. O próximo checkpoint é **P3D-B2 — fonte canônica editável normalizada**: prepará-la manualmente a partir do upstream preservado, usando a referência F4 somente como evidência histórica. A fixture continua técnica, sem mundo final ou persistência espacial.
 
 ```text
 F0 ✅
@@ -80,5 +80,7 @@ F6 ✅ CONCLUÍDA — fechamento técnico/arquitetural
   F6-C ✅ fechamento documental com dívida assistiva aceita; sem PASS humano
 FUNDAÇÃO ✅ CONCLUÍDA
 P3D-A ✅ contrato produtivo e estrutura
-PRÓXIMO: P3D-B — primeiro asset canônico ponta a ponta
+P3D-B ▶ em andamento — primeiro asset canônico ponta a ponta
+  B1 ✅ proveniência e organização documental de `bookshelf`
+PRÓXIMO: P3D-B2 — fonte canônica editável normalizada
 ```

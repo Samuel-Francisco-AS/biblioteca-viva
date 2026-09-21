@@ -22,6 +22,19 @@ O baseline ativo possui dois assets de áudio e um fixture 3D técnico da F1, to
 
 Antes de release, todo asset do bundle deve constar aqui com origem, autoria, licença, modificações e estado. Assets futuros do mundo só entram no registro depois de existirem no checkout.
 
+## Candidato produtivo P3D-B
+
+Este candidato documental não é o fixture experimental F4-B de nome semelhante e não possui GLB no bundle/runtime.
+
+### `bookshelf`
+
+- **perfil/estado:** `grounded/static`; `candidate` (P3D-B1 concluída documentalmente), ainda não `validated` nem `production`;
+- **origem/autoria/licença:** Quaternius, pacote `Quaternius Blends`; CC0 1.0 Universal, preservada em `assets/3d/source/bookshelf/upstream/Quaternius-License.txt` — SHA-256 `83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c`;
+- **fonte upstream preservada de partida:** `assets/3d/source/bookshelf/upstream/Bookshelf.original.blend` — SHA-256 `43b31c1c6fdb4d3c08bf9d9b1950e2f152d5e4797efb9b89bf32f23f51ab5a4d`;
+- **referência histórica F4:** `assets/3d/source/bookshelf/evidence/Bookshelf-f4-work-reference.blend` — SHA-256 `20cb9b2897962cafd5412aa4c43ef6acac789bd059e41767d6e2df07b8a6dc1b`; não é a fonte produtiva final;
+- **evidências preservadas:** `evidence/f4-inspect-original.txt` e `evidence/f4-inspect-normalized.txt`;
+- **limite de B1:** não há fonte canônica editável normalizada, GLB produtivo, carga de runtime, catálogo ou promoção de fixture. B2 criará a fonte canônica a partir do upstream; B3 exportará e validará; B4 fará a promoção final.
+
 ## Fixtures F4-B — geometria, escala, eixos e pivô
 
 Os itens abaixo são espécimes externos normalizados para o gate F4-B, não assets artísticos aprovados, não catálogo da Biblioteca e não um pipeline 3D permanente. A fonte editável e os originais preservados permanecem fora do checkout, no laboratório F4; os hashes identificam exatamente os GLBs incluídos.

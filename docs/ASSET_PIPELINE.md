@@ -1,6 +1,6 @@
 # Pipeline 3D v1
 
-> Estado: **P3D-A concluída.** Este é o documento técnico ativo do Pipeline 3D v1. A evidência F4/F5 abaixo permanece como base histórica/experimental sobrevivente; ela não é, por si só, promoção de fixture ou implementação de pipeline.
+> Estado: **P3D-B em andamento; B1 concluída documentalmente.** Este é o documento técnico ativo do Pipeline 3D v1. A evidência F4/F5 abaixo permanece como base histórica/experimental sobrevivente; ela não é, por si só, promoção de fixture ou implementação de pipeline.
 
 Todo arquivo externo permanece não confiável até passar por validação estrita. A decisão arquitetural vigente é a [`ADR-010`](decisions/ADR-010-3d-pipeline-v1.md).
 
@@ -10,13 +10,19 @@ O Pipeline 3D v1 começa por assets rígidos/estáticos no perfil `grounded/stat
 
 Não fazem parte da v1: skinned meshes/personagens, animação, morph targets, shader customizado, partículas, persistência espacial, streaming, catálogo do mundo, LOD, atlas, instancing/merge como política, Draco, Meshopt, KTX2/Basis, `AssetManager` ou cache global. Não são proibições permanentes; exigem necessidade e evidência futuras. `ThreeWorldRuntime` não muda nesta P3D-A e o seu caminho F1/F4 continua técnico/diagnóstico, não loading produtivo.
 
-Quando o primeiro asset produtivo entrar em P3D-B, sua fonte ficará em `assets/3d/source/<asset-id>/` e o GLB aprovado em `src/features/library/three/assets/`. A fonte guarda o editável normalizado/reproduzível e evidências pertinentes, fica fora do bundle/runtime e deve permitir rastrear origem, autoria, licença e transformações; pacotes brutos completos de fornecedor não são exigidos por padrão. `fixtures/` permanece exclusivamente técnico/teste e nenhum fixture F1/F4 é promovido implicitamente. P3D-A não cria esses diretórios vazios, Git LFS ou repositório separado.
+Em P3D-B, a fonte de cada candidato fica em `assets/3d/source/<asset-id>/` e o GLB somente depois de aprovado ficará em `src/features/library/three/assets/`. A fonte canônica guarda o editável normalizado/reproduzível e evidências pertinentes, fica fora do bundle/runtime e deve permitir rastrear origem, autoria, licença e transformações; pacotes brutos completos de fornecedor não são exigidos por padrão. `fixtures/` permanece exclusivamente técnico/teste e nenhum fixture F1/F4 é promovido implicitamente. B1 materializou somente a área documental do primeiro candidato; não criou fonte canônica normalizada nem GLB produtivo. Git LFS e repositório separado continuam fora do escopo.
 
 O `asset-id` é estável, único, semântico e em kebab-case; fornecedor/origem não integra o ID consumido pelo mundo. Os estados documentais mínimos são `candidate`, `validated` e `production`; fixtures técnicos/experimentais ficam fora deles. Ainda não há schema, enum ou código de produção para esses estados.
 
 Para promoção, é bloqueante: origem, autoria e licença compatível conhecidas; fonte editável preservada; transformações registradas; GLB 2.0 válido/autocontido; parse pelo `GLTFLoader` instalado; root lógico previsível sem scale/rotação/offset corretivo de runtime; bounds finitos/positivos; uma unidade de autoria normalizada igual a um metro; e, para `grounded/static`, apoio no chão runtime `Y=0` e footprint normalizado. Também é bloqueante preservar a semântica material relevante no caminho glTF/Three, ter UV quando material texturizado o requer, não faltar textura/referência necessária, não exigir branch/patch por asset no runtime nem decoder/extensão não configurado. Um root lógico pode conter múltiplos meshes. A convenção universal de frente permanece aberta até o primeiro uso real em P3D-B/P3D.
 
 Tooling posterior poderá apenas relatar tamanho do GLB, nodes, meshes, primitives, vértices, triângulos, materiais, texturas/imagens, dimensões/MIME das imagens, bounds/dimensões físicas e estimativas estruturais de custo separadas de RAM/GPU real. Não há hard budget de meshes, materiais, triângulos, resolução ou outras métricas: medir antes de otimizar continua o princípio F4/F5.
+
+## Primeiro candidato — `bookshelf` (P3D-B1 concluída documentalmente)
+
+`bookshelf` é o primeiro candidato no perfil `grounded/static`, registrado como `candidate` e distinto do fixture experimental `f4-b-quaternius-bookshelf`. A origem é Quaternius, do pacote Quaternius Blends, sob CC0 1.0 Universal. O diretório `assets/3d/source/bookshelf/` preserva o `.blend` upstream original, a licença e evidências F4; seus hashes e a proveniência constam em `ASSET_REGISTRY.md`.
+
+O `.blend` em `upstream/` é apenas a fonte de partida preservada. O `.blend` em `evidence/` é referência histórica normalizada da F4, não fonte produtiva final. B1 não normalizou a fonte canônica, não exportou GLB e não promoveu o asset. B2 criará manualmente a fonte canônica editável normalizada a partir do upstream; B3 fará a exportação e validação; B4 fará a promoção final.
 
 ## Evidência histórica/experimental sobrevivente F4
 

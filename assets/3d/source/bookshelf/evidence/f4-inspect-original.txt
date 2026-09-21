@@ -1,0 +1,30 @@
+
+=== BV F4 ASSET INSPECTION ===
+arquivo=/home/sam/Projetos/bv-f4-lab/candidates/quaternius/Bookshelf.blend
+prefixo=(nenhum)
+objetos_selecionados=1
+meshes=1
+bounds_min=(-1.159162, -0.377999, -0.023517)
+bounds_max=(1.159162, 0.377999, 4.414563)
+dimensoes_totais=(2.318324, 0.755999, 4.438079)
+vertices=80
+poligonos=60
+triangulos=120
+materiais=1
+imagens=1
+roots=['Bookshelf']
+
+=== MESHES ===
+'Bookshelf' | dim=(2.318324,0.755999,4.438079) | loc=(0.000000,0.000000,0.000000) | rot=(0.000000,0.000000,0.000000) | scale=(1.000000,1.000000,1.000000) | verts=80 | polys=60
+
+=== MATERIAIS ===
+White
+
+=== IMAGENS ===
+Texture.png
+=== FIM BV F4 ASSET INSPECTION ===
+
+Blender 3.3.21 (hash e016c21db151 built 2024-07-15 10:26:47)
+Read blend: /home/sam/Projetos/bv-f4-lab/candidates/quaternius/Bookshelf.blend
+
+Blender quit

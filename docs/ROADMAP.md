@@ -1,6 +1,6 @@
 # Roadmap
 
-> Atualizado em 2026-09-17.
+> Atualizado em 2026-09-20.
 
 ## Baseline concluído
 
@@ -8,20 +8,24 @@
 - Mundo anterior, Phaser e contratos espaciais legados removidos pelo WORLD RESET.
 - **F0 — Definição da Fundação concluída.**
 - **F1 — Three.js Foundation Spike concluída:** Three.js aprovado como renderer da Fundação com host React próprio, `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, interação bidirecional, lifecycle explícito e prova física no Moto G06.
-- A cena vigente continua técnica e descartável; P3D-A formalizou o contrato e a estrutura planejada do Pipeline 3D v1, mas a Biblioteca final, assets produtivos e persistência espacial ainda não existem.
+- A cena vigente continua técnica e descartável; P3D-A formalizou o contrato e P3D-B1 registrou a proveniência do candidato `bookshelf`, mas a Biblioteca final, fonte canônica normalizada, assets produtivos e persistência espacial ainda não existem.
 
 ## Pipeline 3D v1
 
 ```text
 P3D-A ✅ contrato produtivo e estrutura
-P3D-B ⏭ primeiro asset canônico ponta a ponta
+P3D-B ▶ em andamento — primeiro asset canônico ponta a ponta
+  B1 ✅ proveniência e organização documental de `bookshelf`
+  B2 ⏭ fonte canônica editável normalizada
+  B3 ⏳ exportação e validação
+  B4 ⏳ promoção final
 P3D-C ⏳ validação e relatório automatizados
 P3D-D ⏳ preparação/exportação reproduzível
 P3D-E ⏳ ingestão produtiva, ownership e unload
 P3D-F ⏳ gate integrado e fechamento
 ```
 
-P3D-B atravessará manualmente o contrato com um único asset canônico, sem automação geral. A preferência inicial é usar a fonte Quaternius Bookshelf estudada na F4, sem promover seu fixture; se a fonte editável não estiver no checkout, a dependência é recuperá-la do laboratório F4.
+P3D-B atravessa manualmente o contrato com um único asset canônico, sem automação geral. B1 preservou a proveniência de `bookshelf`: o upstream Quaternius é a fonte de partida, enquanto o `.blend` normalizado da F4 permanece apenas evidência histórica; o fixture F4-B não foi promovido. B2 criará a fonte canônica editável normalizada; não há GLB produtivo nesta etapa.
 
 ## FUNDAÇÃO
 
@@ -57,7 +61,9 @@ F6 ✅ CONCLUÍDA — fechamento técnico/arquitetural
   F6-C ✅ fechamento documental com dívida assistiva aceita; sem PASS humano
 FUNDAÇÃO ✅ CONCLUÍDA
 P3D-A ✅ contrato produtivo e estrutura
-PRÓXIMO: P3D-B — primeiro asset canônico ponta a ponta
+P3D-B ▶ em andamento
+  B1 ✅ proveniência e organização documental de `bookshelf`
+PRÓXIMO: P3D-B2 — fonte canônica editável normalizada
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída
@@ -144,17 +150,17 @@ Consolidou A–E em contrato experimental: autoria editável e substituível, no
 
 F5-A preparou o build de diagnóstico para o Moto G06: baseline F1, corpus F4 uma vez e corpus F4 ×4, todos pelo `ThreeWorldRuntime`/`WebGLRenderer` reais. F5-B mediu os três cenários no aparelho, inclusive loading, repouso, memória, remount, interação, orientação, background/resume e sessão de aproximadamente 15 minutos no corpus ×4. F5-C consolidou isso como envelope observado e gatilhos de remedição, não como hard caps: o teto do aparelho não foi encontrado e nenhuma otimização avançada foi justificada.
 
-F6 foi concluída tecnicamente/arquiteturalmente sem criar mundo ou persistência espacial. P3D-A posterior formalizou o contrato produtivo do Pipeline 3D v1, sem criar assets, ingestão produtiva ou implementação de mundo. A dívida de validação humana assistiva permanece obrigatória antes do fechamento do primeiro recorte real e de beta/release dependente da experiência acessível; ela deve usar o build então vigente, não necessariamente o APK F6-B.
+F6 foi concluída tecnicamente/arquiteturalmente sem criar mundo ou persistência espacial. P3D-A posterior formalizou o contrato produtivo do Pipeline 3D v1; P3D-B1 preservou documentalmente o candidato `bookshelf`, sem criar fonte canônica normalizada, GLB, ingestão produtiva ou implementação de mundo. A dívida de validação humana assistiva permanece obrigatória antes do fechamento do primeiro recorte real e de beta/release dependente da experiência acessível; ela deve usar o build então vigente, não necessariamente o APK F6-B.
 
 ### F6 — Acessibilidade e fechamento da FUNDAÇÃO — concluída tecnicamente
 
-F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico. F6-B confirmou a única lacuna automatizável — foco/teclado e marcos semânticos estruturais — sem alteração de produção; a regressão técnica, E2E e build Android aprovaram o APK candidato. F6-C aceitou documentalmente a indisponibilidade temporária do Moto G06 como dívida assistiva, sem declarar TalkBack ou acessibilidade humana Android aprovados. A FUNDAÇÃO está concluída no plano técnico/arquitetural. P3D-A já formalizou o Pipeline 3D v1; P3D-B é a próxima etapa autorizada e continua sem implementação de mundo.
+F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico. F6-B confirmou a única lacuna automatizável — foco/teclado e marcos semânticos estruturais — sem alteração de produção; a regressão técnica, E2E e build Android aprovaram o APK candidato. F6-C aceitou documentalmente a indisponibilidade temporária do Moto G06 como dívida assistiva, sem declarar TalkBack ou acessibilidade humana Android aprovados. A FUNDAÇÃO está concluída no plano técnico/arquitetural. P3D-A formalizou o Pipeline 3D v1 e P3D-B está em andamento; B1 concluiu a proveniência documental de `bookshelf`, e B2 é a próxima etapa autorizada. Continua sem implementação de mundo.
 
 F1 aprovou a viabilidade da base Three.js; não concluiu câmera, interação, assets, performance ou acessibilidade finais.
 
 ## Depois da FUNDAÇÃO
 
-1. P3D-B: atravessar manualmente o Pipeline 3D v1 com um único asset canônico.
+1. P3D-B2: criar manualmente a fonte canônica editável normalizada de `bookshelf`; B3 exportará e validará, e B4 tratará a promoção final.
 2. P3D-C–F: automatizar validação/relatório, consolidar preparação/exportação, projetar ingestão/ownership/unload e fechar o gate integrado, nessa ordem autorizada.
 3. Projetar e implementar o primeiro recorte real do novo mundo após os checkpoints necessários.
 4. Projetar persistência espacial nova somente quando esse recorte demonstrar o que precisa ser salvo.

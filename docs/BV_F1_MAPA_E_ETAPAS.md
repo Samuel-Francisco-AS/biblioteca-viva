@@ -1,6 +1,6 @@
 # Biblioteca Viva — Mapa da FUNDAÇÃO e detalhamento da F1
 
-**Data de referência:** 2026-09-17
+**Data de referência:** 2026-09-20
 
 **Estado geral:** F0–F6 concluídos no plano técnico/arquitetural; Three.js aprovado como renderer da Fundação; a FUNDAÇÃO está concluída. A dívida humana assistiva permanece obrigatória antes do fechamento do primeiro recorte real e de beta/release aplicável.
 
@@ -47,7 +47,7 @@ com:
 - nenhum reaproveitamento da antiga W3-A;
 - nenhuma persistência espacial prematura.
 
-A F1 aprovou a viabilidade da base Three.js, F2 concluiu a integração e o endurecimento do runtime, F3 concluiu o contrato de câmera e interação mobile, F4 concluiu o contrato experimental de assets, F5 consolidou o envelope físico e os guardrails no Moto G06, e F6 fechou a fronteira técnica/arquitetural de acessibilidade. O Pipeline 3D produtivo continua futuro e será formalizado somente em etapa própria.
+A F1 aprovou a viabilidade da base Three.js, F2 concluiu a integração e o endurecimento do runtime, F3 concluiu o contrato de câmera e interação mobile, F4 concluiu o contrato experimental de assets, F5 consolidou o envelope físico e os guardrails no Moto G06, e F6 fechou a fronteira técnica/arquitetural de acessibilidade. A ADR-010 já formalizou o Pipeline 3D v1; P3D-B está em andamento, com B1 documentalmente concluída e B2 como próximo trabalho.
 
 ---
 
@@ -125,7 +125,10 @@ F6 — Acessibilidade + fechamento arquitetural        ✅ CONCLUÍDA TECNICAMEN
 FUNDAÇÃO ✅ CONCLUÍDA
  │
  ▼
-PIPELINE 3D — PRÓXIMO A PLANEJAR
+PIPELINE 3D v1 — P3D-B EM ANDAMENTO
+ │
+ ├─ B1 Proveniência e organização documental de `bookshelf` ✅
+ └─ B2 Fonte canônica editável normalizada               ⏭
  │
  ▼
 PRIMEIRO RECORTE REAL
@@ -961,7 +964,7 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | F4                    | ✅ Concluída   | Contrato experimental de assets consolidado; sem pipeline produtivo definitivo                   |
 | F5                    | ✅ Concluída   | Envelope Android físico, guardrails de remedição e gate final; sem teto/hard caps                |
 | F6                    | ✅ Concluída   | Fechamento técnico/arquitetural; dívida humana assistiva aceita, sem PASS TalkBack              |
-| Pipeline 3D           | ▶ A planejar  | Produção sistemática de assets; ainda não iniciada                                               |
+| Pipeline 3D v1        | ▶ Em andamento | P3D-B1 documental concluída para `bookshelf`; B2 normalizará a fonte canônica                 |
 | Primeiro recorte      | 🔒 Futuro      | Construção inicial da Biblioteca real                                                            |
 | Persistência espacial | 🔒 Futuro      | Salvar estado real do mundo                                                                      |
 | Sistemas maiores      | 🔒 Futuro      | Personagens, progressão, IA etc.                                                                 |

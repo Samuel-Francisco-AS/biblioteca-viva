@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### P3D-B1 — Proveniência e organização documental de `bookshelf` — 2026-09-20
+
+- registrado `bookshelf` como candidato `grounded/static` distinto do fixture experimental `f4-b-quaternius-bookshelf`, com origem/autoria Quaternius, licença CC0 1.0 Universal e hashes da fonte upstream, licença e referência F4 preservadas;
+- documentado que `upstream/Bookshelf.original.blend` é a fonte de partida e que a referência normalizada da F4 é somente histórica; B1 não criou fonte canônica normalizada, GLB produtivo, loader, catálogo, cache ou alteração de runtime;
+- P3D-B permanece em andamento: B2 criará a fonte canônica editável normalizada, B3 fará exportação e validação, e B4 fará a promoção final.
+
 ### P3D-A — Contrato produtivo e estrutura do Pipeline 3D v1 — 2026-09-17
 
 - criada a ADR-010 e promovido `ASSET_PIPELINE.md` à autoridade técnica do Pipeline 3D v1: GLB 2.0 autocontido, `GLTFLoader`/Three.js, fonte editável rastreável, normalização no asset, estados documentais e invariantes bloqueantes de promoção;
