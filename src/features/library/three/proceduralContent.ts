@@ -138,27 +138,27 @@ const BOOK_VOLUME_VARIANTS: Readonly<
 > = Object.freeze({
   "book-amber": Object.freeze({
     coverColor: 0xb86e35,
-    depth: 0.22,
-    height: 0.31,
-    width: 0.13,
+    depth: 0.33,
+    height: 0.38,
+    width: 0.2,
   }),
   "book-blue": Object.freeze({
     coverColor: 0x426e96,
-    depth: 0.24,
-    height: 0.34,
-    width: 0.16,
+    depth: 0.36,
+    height: 0.4,
+    width: 0.225,
   }),
   "book-green": Object.freeze({
     coverColor: 0x527b59,
-    depth: 0.2,
-    height: 0.29,
-    width: 0.12,
+    depth: 0.32,
+    height: 0.37,
+    width: 0.19,
   }),
   "book-red": Object.freeze({
     coverColor: 0x9a4a42,
-    depth: 0.23,
-    height: 0.33,
-    width: 0.15,
+    depth: 0.35,
+    height: 0.39,
+    width: 0.215,
   }),
 });
 

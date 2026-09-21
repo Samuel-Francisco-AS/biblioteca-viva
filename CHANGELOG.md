@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-2D-BOOK-VIS-FIX — Volumes de leitura mais legíveis — 2026-09-21
+
+- ampliadas as quatro variantes procedurais de `book-volume` para reforçar sua leitura no enquadramento normal, preservando cores, estrutura simples, identidade determinística e recursos próprios;
+- o envelope máximo agora é 0,225 × 0,400 × 0,360 m (largura × altura × profundidade). As estantes derivam 24 + 25 + 21 = 70 slots iniciais; relayout BF-1D, ordem determinística e overflow continuam derivados da configuração vigente;
+- a geometria real das três estantes e das quatro variantes passou por testes de bounds e de slots adjacentes. A confirmação visual humana no navegador continua pendente; câmera, composição da sala, seleção, query e persistência não foram alteradas.
+
 ### BF-2D-VIS-FIX — Área de leitura desobstruída — 2026-09-21
 
 - removida a fixture visual F1 da área de leitura normal, preservando-a exclusivamente nos cenários diagnósticos F5;

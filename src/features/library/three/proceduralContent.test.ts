@@ -16,7 +16,9 @@ import {
   createProceduralBookshelf,
   getProceduralBookVolumeDimensions,
   getProceduralBookVolumeVariant,
+  PROCEDURAL_BOOK_VOLUME_MAX_DIMENSIONS,
   type ProceduralBookVolumeIdentity,
+  type ProceduralBookVolumeVariant,
   type ProceduralBookshelfIdentity,
   type ProceduralBookshelfVariant,
 } from "./proceduralContent";
@@ -264,6 +266,31 @@ function createBookIdentity(
 }
 
 describe("fábrica procedural de livro BF-2B", () => {
+  it("expõe as quatro dimensões ampliadas e deriva seu envelope máximo", () => {
+    const expectedDimensions = {
+      "book-amber": { depth: 0.33, height: 0.38, width: 0.2 },
+      "book-blue": { depth: 0.36, height: 0.4, width: 0.225 },
+      "book-green": { depth: 0.32, height: 0.37, width: 0.19 },
+      "book-red": { depth: 0.35, height: 0.39, width: 0.215 },
+    } satisfies Record<
+      ProceduralBookVolumeVariant,
+      Readonly<{ depth: number; height: number; width: number }>
+    >;
+
+    for (const [variant, dimensions] of Object.entries(expectedDimensions)) {
+      expect(
+        getProceduralBookVolumeDimensions(
+          variant as ProceduralBookVolumeVariant,
+        ),
+      ).toEqual(dimensions);
+    }
+    expect(PROCEDURAL_BOOK_VOLUME_MAX_DIMENSIONS).toEqual({
+      depth: 0.36,
+      height: 0.4,
+      width: 0.225,
+    });
+  });
+
   it("cria um volume válido com identidade convencional obrigatória", () => {
     const identity = createBookIdentity();
     const book = createProceduralBookVolume(identity);

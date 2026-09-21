@@ -1,9 +1,21 @@
-import { Box3, Vector3 } from "three";
+import {
+  Box3,
+  Mesh,
+  Vector3,
+  type BufferGeometry,
+  type Material,
+  type Object3D,
+} from "three";
 import { describe, expect, it } from "vitest";
 
 import { READING_SHELF_COMPOSITION_DEFINITIONS } from "./proceduralComposition";
 import {
+  createProceduralBookVolume,
+  createProceduralBookshelf,
+  getProceduralBookVolumeVariant,
   PROCEDURAL_BOOK_VOLUME_MAX_DIMENSIONS,
+  type ProceduralBookVolume,
+  type ProceduralBookVolumeVariant,
   type ProceduralBookshelfVariant,
 } from "./proceduralContent";
 import {
@@ -14,6 +26,7 @@ import {
   type ReadingAreaBookLayoutItem,
   type ReadingAreaBookSlot,
 } from "./readingAreaBookLayout";
+import { disposeObjectTree } from "./referenceScene";
 
 function items(count: number): readonly ReadingAreaBookLayoutItem[] {
   return Array.from({ length: count }, (_, index) => ({
@@ -37,6 +50,60 @@ function maximumBookBounds(slot: ReadingAreaBookSlot): Box3 {
   );
 }
 
+function hasPositiveVolumeOverlap(first: Box3, second: Box3): boolean {
+  const intersection = first.clone().intersect(second);
+  const size = intersection.getSize(new Vector3());
+  const tolerance = 0.000_001;
+  return size.x > tolerance && size.y > tolerance && size.z > tolerance;
+}
+
+function createBookForVariant(
+  variant: ProceduralBookVolumeVariant,
+): ProceduralBookVolume {
+  for (let attempt = 0; attempt < 100; attempt += 1) {
+    const entryId = `geometry-${variant}-${attempt}`;
+    const instanceId = "reading-book:geometry-slot";
+    if (getProceduralBookVolumeVariant({ entryId, instanceId }) !== variant) {
+      continue;
+    }
+    return createProceduralBookVolume({
+      entryId,
+      instanceId,
+      modelTypeId: "book-volume",
+    });
+  }
+  throw new Error(`Não foi encontrada identidade para a variante ${variant}.`);
+}
+
+type DisposableMesh = Mesh<BufferGeometry, Material | Material[]>;
+
+function isDisposableMesh(object: Object3D): object is DisposableMesh {
+  return object instanceof Mesh;
+}
+
+function meshes(root: Object3D): readonly DisposableMesh[] {
+  const result: DisposableMesh[] = [];
+  root.traverse((object) => {
+    if (isDisposableMesh(object)) result.push(object);
+  });
+  return result;
+}
+
+const BOOK_VARIANTS: readonly ProceduralBookVolumeVariant[] = [
+  "book-amber",
+  "book-blue",
+  "book-green",
+  "book-red",
+];
+
+const GEOMETRY_TOLERANCE = 0.000_001;
+
+const SHELF_VARIANTS: readonly ProceduralBookshelfVariant[] = [
+  "reading-balanced",
+  "reading-dark-tall",
+  "reading-light-wide",
+];
+
 describe("layout determinístico de livros BF-2B", () => {
   it("reproduz o layout inicial e deriva cada configuração a partir da variante atual", () => {
     const initial = READING_SHELF_COMPOSITION_DEFINITIONS.map(
@@ -52,13 +119,8 @@ describe("layout determinístico de livros BF-2B", () => {
       createReadingAreaBookSlots(initial),
     );
 
-    const variants: readonly ProceduralBookshelfVariant[] = [
-      "reading-balanced",
-      "reading-dark-tall",
-      "reading-light-wide",
-    ];
-    for (const current of variants) {
-      for (const next of variants) {
+    for (const current of SHELF_VARIANTS) {
+      for (const next of SHELF_VARIANTS) {
         if (current === next) continue;
         const slots = createReadingAreaBookSlots([
           { hostInstanceId: "shelf", variant: next },
@@ -101,9 +163,9 @@ describe("layout determinístico de livros BF-2B", () => {
     expect(
       [...slotsByHost.entries()].map(([host, slots]) => [host, slots.length]),
     ).toEqual([
-      ["reading-shelf-01", 32],
-      ["reading-shelf-02", 30],
-      ["reading-shelf-03", 27],
+      ["reading-shelf-01", 24],
+      ["reading-shelf-02", 25],
+      ["reading-shelf-03", 21],
     ]);
     expect(
       [...slotsByHost.values()].map((slots) => [
@@ -114,6 +176,54 @@ describe("layout determinístico de livros BF-2B", () => {
       [1, 2, 3, 4, 5],
       [1, 2, 3],
     ]);
+  });
+
+  it("deriva a capacidade de cada variante e de toda troca unitária BF-1D", () => {
+    const capacities = new Map(
+      SHELF_VARIANTS.map((variant) => [
+        variant,
+        createReadingAreaBookSlots([{ hostInstanceId: "shelf", variant }])
+          .length,
+      ]),
+    );
+
+    expect([...capacities.entries()]).toEqual([
+      ["reading-balanced", 24],
+      ["reading-dark-tall", 25],
+      ["reading-light-wide", 21],
+    ]);
+    const capacitiesAfterReplacement = [
+      ["reading-shelf-01", "reading-balanced", 70],
+      ["reading-shelf-01", "reading-dark-tall", 71],
+      ["reading-shelf-01", "reading-light-wide", 67],
+      ["reading-shelf-02", "reading-balanced", 69],
+      ["reading-shelf-02", "reading-dark-tall", 70],
+      ["reading-shelf-02", "reading-light-wide", 66],
+      ["reading-shelf-03", "reading-balanced", 73],
+      ["reading-shelf-03", "reading-dark-tall", 74],
+      ["reading-shelf-03", "reading-light-wide", 70],
+    ] satisfies readonly (readonly [
+      string,
+      ProceduralBookshelfVariant,
+      number,
+    ])[];
+
+    for (const [
+      hostInstanceId,
+      replacement,
+      expectedCapacity,
+    ] of capacitiesAfterReplacement) {
+      const configuration = READING_SHELF_COMPOSITION_DEFINITIONS.map(
+        ({ identity, variant }) => ({
+          hostInstanceId: identity.instanceId,
+          variant:
+            identity.instanceId === hostInstanceId ? replacement : variant,
+        }),
+      );
+      expect(createReadingAreaBookSlots(configuration)).toHaveLength(
+        expectedCapacity,
+      );
+    }
   });
 
   it("tem IDs únicos, hosts conhecidos e posições finitas", () => {
@@ -163,6 +273,87 @@ describe("layout determinístico de livros BF-2B", () => {
     }
   });
 
+  it("acomoda os bounds reais das quatro variantes sem atravessar a geometria das três estantes", () => {
+    for (const shelfVariant of SHELF_VARIANTS) {
+      const shelf = createProceduralBookshelf(
+        { instanceId: `geometry-${shelfVariant}`, modelTypeId: "bookshelf" },
+        shelfVariant,
+      );
+      shelf.root.updateMatrixWorld(true);
+      const shelfPartBounds = meshes(shelf.root).map((part) =>
+        new Box3().setFromObject(part),
+      );
+      const slots = createReadingAreaBookSlots([
+        { hostInstanceId: "shelf", variant: shelfVariant },
+      ]);
+
+      for (const slot of slots) {
+        for (const bookVariant of BOOK_VARIANTS) {
+          const book = createBookForVariant(bookVariant);
+          book.root.position.set(...slot.position);
+          book.root.updateMatrixWorld(true);
+          const bounds = new Box3().setFromObject(book.root);
+
+          expect(bounds.min.x).toBeGreaterThanOrEqual(
+            slot.bounds.minX - GEOMETRY_TOLERANCE,
+          );
+          expect(bounds.max.x).toBeLessThanOrEqual(
+            slot.bounds.maxX + GEOMETRY_TOLERANCE,
+          );
+          expect(bounds.min.y).toBeGreaterThanOrEqual(
+            slot.bounds.minY - GEOMETRY_TOLERANCE,
+          );
+          expect(bounds.max.y).toBeLessThanOrEqual(
+            slot.bounds.maxY + GEOMETRY_TOLERANCE,
+          );
+          expect(bounds.min.z).toBeGreaterThanOrEqual(
+            slot.bounds.minZ - GEOMETRY_TOLERANCE,
+          );
+          expect(bounds.max.z).toBeLessThanOrEqual(
+            slot.bounds.maxZ + GEOMETRY_TOLERANCE,
+          );
+          for (const partBounds of shelfPartBounds) {
+            expect(hasPositiveVolumeOverlap(bounds, partBounds)).toBe(false);
+          }
+          disposeObjectTree(book.root);
+        }
+      }
+      disposeObjectTree(shelf.root);
+    }
+  });
+
+  it("mantém volumes reais de slots adjacentes sem interseção", () => {
+    for (const shelfVariant of SHELF_VARIANTS) {
+      const slots = createReadingAreaBookSlots([
+        { hostInstanceId: "shelf", variant: shelfVariant },
+      ]);
+      const left = slots[0];
+      const right = slots[1];
+      if (!left || !right)
+        throw new Error("A estante precisa de slots adjacentes.");
+
+      for (const leftVariant of BOOK_VARIANTS) {
+        for (const rightVariant of BOOK_VARIANTS) {
+          const leftBook = createBookForVariant(leftVariant);
+          const rightBook = createBookForVariant(rightVariant);
+          leftBook.root.position.set(...left.position);
+          rightBook.root.position.set(...right.position);
+          leftBook.root.updateMatrixWorld(true);
+          rightBook.root.updateMatrixWorld(true);
+
+          expect(
+            hasPositiveVolumeOverlap(
+              new Box3().setFromObject(leftBook.root),
+              new Box3().setFromObject(rightBook.root),
+            ),
+          ).toBe(false);
+          disposeObjectTree(leftBook.root);
+          disposeObjectTree(rightBook.root);
+        }
+      }
+    }
+  });
+
   it("atribui zero, um e vários itens na ordem recebida", () => {
     expect(assignReadingAreaBooksToSlots([])).toEqual({
       overflow: [],
@@ -182,7 +373,7 @@ describe("layout determinístico de livros BF-2B", () => {
 
   it("deriva capacidade dos slots e preserva overflow sem perda ou duplicidade", () => {
     expect(READING_AREA_BOOK_CAPACITY).toBe(READING_AREA_BOOK_SLOTS.length);
-    expect(READING_AREA_BOOK_CAPACITY).toBe(89);
+    expect(READING_AREA_BOOK_CAPACITY).toBe(70);
 
     const atCapacity = items(READING_AREA_BOOK_CAPACITY);
     const full = assignReadingAreaBooksToSlots(atCapacity);
