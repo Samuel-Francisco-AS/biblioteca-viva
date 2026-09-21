@@ -4,6 +4,11 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-2D-VIS-FIX — Área de leitura desobstruída — 2026-09-21
+
+- removida a fixture visual F1 da área de leitura normal, preservando-a exclusivamente nos cenários diagnósticos F5;
+- mesas e bancos foram deslocados para as laterais da sala, deixando a frente das estantes e os primeiros níveis de livros livres no enquadramento atual. Câmera, slots, seleção, query e persistência não foram alterados.
+
 ### BF-2D — Ponte React/aplicação e fluxo funcional — 2026-09-21
 
 - a rota Biblioteca agora recebe somente o contrato estreito de `listBookEntries`, carrega um snapshot por montagem, reutiliza `projectReadingAreaBooks()` e o entrega ao `WorldHost`; carregamento, armazenamento indisponível e falha pública segura não são apresentados como coleção vazia;

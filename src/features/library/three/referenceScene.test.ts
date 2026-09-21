@@ -66,6 +66,21 @@ describe("cena de referência F1-B", () => {
     ]);
   });
 
+  it("mantém as mesas e bancos nas laterais, fora da frente das estantes de leitura", () => {
+    const reference = createReferenceScene();
+    const tables = reference.root.getObjectsByProperty("name", "table-proxy");
+    const benches = reference.root.getObjectsByProperty("name", "bench-proxy");
+
+    expect(tables.map(({ position }) => position.toArray())).toEqual([
+      [-5.2, 0.1, 1.4],
+      [5.1, 0.1, 1.5],
+    ]);
+    expect(benches.map(({ position }) => position.toArray())).toEqual([
+      [-5.2, 0.1, 2.8],
+      [5.1, 0.1, 0.1],
+    ]);
+  });
+
   it("descarta uma única vez recursos compartilhados", () => {
     const root = new Group();
     const geometry = new BoxGeometry();

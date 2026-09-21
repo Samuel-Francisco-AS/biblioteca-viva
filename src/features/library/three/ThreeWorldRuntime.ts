@@ -26,7 +26,6 @@ import {
   CAMERA_REFERENCE_HALF_WIDTH,
 } from "./cameraMath";
 import { CameraNavigation } from "./CameraNavigation";
-import fixtureUrl from "./fixtures/f1-technical-pyramid.glb?url&no-inline";
 import type { PerformanceScenario } from "./performanceScenarios";
 import {
   createReferenceScene,
@@ -86,7 +85,6 @@ export interface FixtureModelLoader {
 export interface ThreeWorldRuntimeDependencies {
   readonly createRenderer?: () => ThreeWorldRenderer;
   readonly fixtureLoader?: FixtureModelLoader;
-  readonly fixtureUrl?: string;
   readonly frameScheduler?: FrameScheduler;
   readonly now?: () => number;
   readonly performanceScenario?: PerformanceScenario;
@@ -120,18 +118,12 @@ function readingShelfLabel(instanceId: string): string {
   return label;
 }
 
-function createDefaultPerformanceScenario(url: string): PerformanceScenario {
+function createFunctionalAreaScenario(): PerformanceScenario {
   return Object.freeze({
-    assets: Object.freeze([
-      Object.freeze({
-        id: "f1-technical-pyramid",
-        position: [0.4, 0.1, 2.6] as const,
-        url,
-      }),
-    ]),
-    description: "Fixture técnica F1 atual, sem asset F4.",
+    assets: Object.freeze([]),
+    description: "Área de leitura procedural sem fixture diagnóstica F1.",
     id: "f1-baseline",
-    label: "Baseline F1",
+    label: "Área de leitura",
   });
 }
 
@@ -384,7 +376,6 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private viewportReady = false;
   private readonly createRenderer: () => ThreeWorldRenderer;
   private readonly fixtureLoader: FixtureModelLoader;
-  private readonly fixtureUrl: string;
   private readonly frameScheduler: FrameScheduler;
   private readonly now: () => number;
 
@@ -393,10 +384,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
       dependencies.createRenderer ??
       (() => new WebGLRenderer({ antialias: true, alpha: false }));
     this.fixtureLoader = dependencies.fixtureLoader ?? createFixtureLoader();
-    this.fixtureUrl = dependencies.fixtureUrl ?? fixtureUrl;
     this.performanceScenario =
-      dependencies.performanceScenario ??
-      createDefaultPerformanceScenario(this.fixtureUrl);
+      dependencies.performanceScenario ?? createFunctionalAreaScenario();
     this.performanceScenarioDiagnosticsEnabled =
       dependencies.performanceScenario !== undefined;
     // F5 is a self-contained diagnostic corpus. A BF snapshot must not affect
@@ -521,7 +510,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.baseSelectableObjects = Object.freeze([
         ...referenceScene.selectables.map(({ descriptor }) => descriptor),
         ...proceduralSelectables.map(({ descriptor }) => descriptor),
-        FIXTURE_SELECTABLE,
+        ...(this.performanceScenarioDiagnosticsEnabled
+          ? [FIXTURE_SELECTABLE]
+          : []),
       ]);
       this.refreshSelectableObjects();
       const interaction = new ThreeWorldInteraction({
@@ -827,6 +818,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         this.handleScenarioAssetError();
       }
     }
+    if (mountedWorld) this.finalizeScenarioFixtureLoading(mountedWorld);
   }
 
   private handleScenarioAssetLoaded(
@@ -1109,8 +1101,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
   }
 
   private refreshSelectableObjects(): void {
-    const fixture = this.baseSelectableObjects.at(-1);
-    const beforeFixture = fixture
+    const fixture = this.performanceScenarioDiagnosticsEnabled
+      ? this.baseSelectableObjects.at(-1)
+      : undefined;
+    const beforeFixture = this.performanceScenarioDiagnosticsEnabled
       ? this.baseSelectableObjects.slice(0, -1)
       : this.baseSelectableObjects;
     this.selectableObjects = Object.freeze([

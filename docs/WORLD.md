@@ -65,7 +65,7 @@ Assim, identidade lógica (`modelTypeId`, `instanceId`, `entryId` opcional), pos
 
 O wrapper selecionável também permanece registrado. Se a instância ativa é trocada, `ThreeWorldInteraction` descarta o `Box3Helper` anterior e cria outro com os bounds do wrapper atualizado; `instanceId`, rótulo, datasets, catálogo React, controles React e picking por canvas continuam os mesmos. Selecionáveis F1 e o fixture GLB técnico não são alterados.
 
-Quando há `performanceScenario`, o runtime mantém exclusivamente o caminho F5: não constrói nem anexa a composição, a operação de troca é indisponível, e não muda catálogo, corpus, payload, métricas ou resultados comparáveis. A fixture F1 continua visível na experiência normal. O gate humano posterior à BF-1C-FIX foi PASS no navegador para as três variantes; não conclui TalkBack, Android físico ou arte final.
+Quando há `performanceScenario`, o runtime mantém exclusivamente o caminho F5: não constrói nem anexa a composição, a operação de troca é indisponível, e não muda catálogo, corpus, payload, métricas ou resultados comparáveis. A fixture F1 permanece exclusiva dos cenários diagnósticos; a área de leitura normal não a monta. O gate humano posterior à BF-1C-FIX foi PASS no navegador para as três variantes; não conclui TalkBack, Android físico ou arte final.
 
 ### Correção visual BF-1C-FIX
 

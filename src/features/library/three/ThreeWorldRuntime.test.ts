@@ -190,7 +190,6 @@ describe("ThreeWorldRuntime", () => {
     const runtime = new ThreeWorldRuntime({
       createRenderer: () => renderer,
       fixtureLoader,
-      fixtureUrl: "/fixture.gltf",
       frameScheduler: { cancel, request },
     });
 
@@ -202,7 +201,7 @@ describe("ThreeWorldRuntime", () => {
       geometries: 46,
       meshes: 75,
       runtimeState: "mounted",
-      selectableObjects: 14,
+      selectableObjects: 13,
       textures: 0,
       triangles: 546,
     });
@@ -222,7 +221,7 @@ describe("ThreeWorldRuntime", () => {
     const expectedLookDirection = new Vector3(-12, -9.9, -14).normalize();
     const cameraLookDirection = mountedCamera?.getWorldDirection(new Vector3());
     expect(cameraLookDirection?.angleTo(expectedLookDirection)).toBeCloseTo(0);
-    expect(renderer.domElement.dataset.fixtureStatus).toBe("loading");
+    expect(renderer.domElement.dataset.fixtureStatus).toBe("ready");
     expect(renderer.domElement.dataset.referenceMeshes).toBe("45");
     expect(renderer.domElement.dataset.referenceObjects).toBe("46");
     expect(renderer.domElement.dataset.referenceProxyTypes).toBe("4");
@@ -240,11 +239,10 @@ describe("ThreeWorldRuntime", () => {
       [0, 0, -2],
       [3, 0, -2.1],
     ]);
-    expect(fixtureLoader.load).toHaveBeenCalledWith(
-      "/fixture.gltf",
-      expect.any(Function),
-      expect.any(Function),
-    );
+    expect(fixtureLoader.load).not.toHaveBeenCalled();
+    expect(
+      mountedScene?.getObjectByName("f1-technical-gltf-fixture"),
+    ).toBeUndefined();
     expect(request).toHaveBeenCalledOnce();
     expect(TestResizeObserver.instances).toHaveLength(1);
     expect(TestResizeObserver.instances[0]?.observe).toHaveBeenCalledWith(host);
@@ -375,7 +373,7 @@ describe("ThreeWorldRuntime", () => {
       readingAreaBooks: [],
     });
     runtime.mount(createHost());
-    expect(runtime.getSelectableObjects()).toHaveLength(14);
+    expect(runtime.getSelectableObjects()).toHaveLength(13);
     expect(
       renderer.render.mock.calls
         .at(-1)?.[0]
@@ -833,6 +831,7 @@ describe("ThreeWorldRuntime", () => {
       createRenderer: () => renderer,
       fixtureLoader,
       now: () => timestamp,
+      performanceScenario: PERFORMANCE_SCENARIOS[0],
     });
 
     runtime.mount(host);
@@ -1034,6 +1033,7 @@ describe("ThreeWorldRuntime", () => {
       createRenderer: () => renderer,
       fixtureLoader,
       frameScheduler: { cancel, request },
+      performanceScenario: PERFORMANCE_SCENARIOS[0],
     });
     const failureListener = vi.fn();
 
@@ -1107,6 +1107,7 @@ describe("ThreeWorldRuntime", () => {
       createRenderer: () => renderer,
       fixtureLoader,
       frameScheduler: { cancel, request },
+      performanceScenario: PERFORMANCE_SCENARIOS[0],
     });
     const failureListener = vi.fn();
 
@@ -2184,12 +2185,10 @@ describe("ThreeWorldRuntime", () => {
       { id: "reading-shelf-01", label: "Estante de leitura 1" },
       { id: "reading-shelf-02", label: "Estante de leitura 2" },
       { id: "reading-shelf-03", label: "Estante de leitura 3" },
-      { id: "fixture-pyramid", label: "Pirâmide técnica" },
     ]);
-    expect(runtime.getSelectableObjects().at(-1)).toEqual({
-      id: "fixture-pyramid",
-      label: "Pirâmide técnica",
-    });
+    expect(runtime.getSelectableObjects()).not.toContainEqual(
+      expect.objectContaining({ id: "fixture-pyramid" }),
+    );
     expect(listener).toHaveBeenLastCalledWith(null);
 
     runtime.selectObject("bookshelf-01");
@@ -2354,6 +2353,7 @@ describe("ThreeWorldRuntime", () => {
     const runtime = new ThreeWorldRuntime({
       createRenderer: () => renderer,
       fixtureLoader,
+      performanceScenario: PERFORMANCE_SCENARIOS[0],
     });
     runtime.mount(createHost());
     fixtureLoader.succeed(fixture);
@@ -2614,6 +2614,7 @@ describe("ThreeWorldRuntime", () => {
     const runtime = new ThreeWorldRuntime({
       createRenderer: () => renderer,
       fixtureLoader,
+      performanceScenario: PERFORMANCE_SCENARIOS[0],
     });
     const failureListener = vi.fn();
 
@@ -2646,6 +2647,7 @@ describe("ThreeWorldRuntime", () => {
     const runtime = new ThreeWorldRuntime({
       createRenderer: () => renderer,
       fixtureLoader,
+      performanceScenario: PERFORMANCE_SCENARIOS[0],
     });
 
     runtime.mount(createHost());

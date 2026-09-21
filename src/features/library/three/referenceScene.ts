@@ -170,12 +170,12 @@ export function createReferenceScene(): ReferenceScene {
     createBookcase(materials, 4.65, -4.65),
   ] as const;
   const tables = [
-    createTable(materials, -2.2, -0.9),
-    createTable(materials, 2.7, 1.75),
+    createTable(materials, -5.2, 1.4),
+    createTable(materials, 5.1, 1.5),
   ] as const;
   const benches = [
-    createBench(materials, -3.8, 2.65),
-    createBench(materials, 3.6, -1.35),
+    createBench(materials, -5.2, 2.8),
+    createBench(materials, 5.1, 0.1),
   ] as const;
   root.add(...bookcases, ...tables, ...benches);
 
