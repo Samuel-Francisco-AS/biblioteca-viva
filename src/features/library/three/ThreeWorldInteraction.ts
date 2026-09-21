@@ -161,6 +161,17 @@ export class ThreeWorldInteraction {
     this.updateDiagnostics();
   }
 
+  /** Rebuilds only the active helper after a stable selectable root changes. */
+  refreshHighlightForSelectedObject(id: string): void {
+    if (this.disposed || this.selectedId !== id) return;
+    const root = this.selectableRoots.get(id);
+    if (!root) return;
+    this.clearHighlight();
+    this.applyHighlight(root);
+    this.render();
+    this.updateDiagnostics();
+  }
+
   setViewport(width: number, height: number): void {
     this.viewportWidth = Math.max(1, width);
     this.viewportHeight = Math.max(1, height);

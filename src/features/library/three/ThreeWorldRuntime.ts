@@ -36,7 +36,9 @@ import {
 import {
   createProceduralComposition,
   READING_SHELF_COMPOSITION_DEFINITIONS,
+  replaceProceduralBookshelfRepresentation,
   type ProceduralComposition,
+  type ProceduralRepresentationReplacement,
 } from "./proceduralComposition";
 import { collectSceneTextureMetrics } from "./sceneTextureMetrics";
 import { ThreeWorldInteraction } from "./ThreeWorldInteraction";
@@ -215,6 +217,10 @@ class ThreeWorldMount {
 
   getInteraction(): ThreeWorldInteraction | undefined {
     return this.interaction;
+  }
+
+  getProceduralComposition(): ProceduralComposition | undefined {
+    return this.proceduralComposition;
   }
 
   hasActiveFrame(): boolean {
@@ -630,6 +636,37 @@ export class ThreeWorldRuntime implements WorldRuntime {
   selectObject(id: string | null): void {
     if (this.isTerminal()) return;
     this.mountedWorld?.getInteraction()?.selectObject(id);
+  }
+
+  /**
+   * BF-1D's intentionally narrow, synchronous replacement proof.
+   *
+   * It is unavailable for F5 diagnostic scenarios, which do not mount the
+   * procedural composition. It is deliberately absent from `WorldRuntime`:
+   * React has no variant-switching control in this checkpoint.
+   */
+  replaceProceduralBookshelfRepresentation(
+    instanceId: string,
+    variant: string,
+  ): ProceduralRepresentationReplacement | "unavailable" {
+    if (this.isTerminal()) return "unavailable";
+    const mountedWorld = this.mountedWorld;
+    const composition = mountedWorld?.getProceduralComposition();
+    if (!mountedWorld || !composition) return "unavailable";
+
+    const result = replaceProceduralBookshelfRepresentation(
+      composition,
+      instanceId,
+      variant,
+    );
+    if (result === "unchanged") return result;
+
+    mountedWorld
+      .getInteraction()
+      ?.refreshHighlightForSelectedObject(instanceId);
+    if (!this.renderCurrentFrame()) return result;
+    this.publishDiagnostics(true);
+    return result;
   }
 
   dispose(): void {

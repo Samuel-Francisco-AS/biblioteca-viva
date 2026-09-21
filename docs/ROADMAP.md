@@ -14,12 +14,12 @@
 
 ```text
 BF-0 ✅ replanejamento e decisão arquitetural
-BF-1 ▶ camada mínima de conteúdo procedural
+BF-1 ✅ camada mínima de conteúdo procedural — encerramento técnico
   BF-1A ✅ contrato mínimo e primeira fábrica procedural
   BF-1B ✅ composição declarativa e posicionamento determinístico
   BF-1C ✅ integração estática com runtime e seleção
-  BF-1C-FIX ✅ correção geométrica e variantes — gate visual pendente
-  BF-1D ⏳ substituição, descarte e gate — condicionado ao gate corretivo
+  BF-1C-FIX ✅ correção geométrica e variantes — gate visual humano no navegador PASS
+  BF-1D ✅ substituição, descarte e gate integrado
 BF-2 ⏳ primeira área de leitura integrada a registros reais
 BF-3 ⏳ integração dos seis tipos de registro
 BF-4 ⏳ ambiente habitável, mobília e personagens provisórios
@@ -44,15 +44,15 @@ Definiu instâncias declarativas, posicionamento determinístico e uma pequena c
 
 #### BF-1C — Integração com runtime e seleção — concluída tecnicamente
 
-Integra estaticamente a composição BF-1B somente na experiência normal, distinguida da diagnóstica pela ausência de `performanceScenario`. As três instâncias preservam `instanceId`, posição e root local; entram no catálogo de `WorldRuntime` já em `mount()` como `reading-shelf-01`–`03`, com rótulos distintos, roots selecionáveis por wrapper e destaque/picking existentes. Em sobreposição com um proxy F1, a interseção procedural recebe prioridade para que a estante continue selecionável; fora dela, a regra técnica existente permanece. Os controles React, anúncio acessível, foco, teclado e fallback continuam sendo o caminho semântico complementar ao canvas. A montagem possui a root da composição e a libera por `disposeObjectTree()` em descarte terminal ou falha; novas montagens usam recursos independentes. F5 não recebe a composição, nem tem seus counts, catálogo, payload ou resultados alterados. Foram acrescentadas somente as validações de `instanceId` vazio e coordenadas não finitas. A fixture F1 permanece visível; há observação técnica de possível oclusão projetada por proxy F1 a validar visualmente, sem reforma de layout. BF-1D é o próximo checkpoint; BF-1 não está concluída.
+Integra estaticamente a composição BF-1B somente na experiência normal, distinguida da diagnóstica pela ausência de `performanceScenario`. As três instâncias preservam `instanceId`, posição e root local; entram no catálogo de `WorldRuntime` já em `mount()` como `reading-shelf-01`–`03`, com rótulos distintos, roots selecionáveis por wrapper e destaque/picking existentes. Em sobreposição com um proxy F1, a interseção procedural recebe prioridade para que a estante continue selecionável; fora dela, a regra técnica existente permanece. Os controles React, anúncio acessível, foco, teclado e fallback continuam sendo o caminho semântico complementar ao canvas. A montagem possui a root da composição e a libera por `disposeObjectTree()` em descarte terminal ou falha; novas montagens usam recursos independentes. F5 não recebe a composição, nem tem seus counts, catálogo, payload ou resultados alterados. Foram acrescentadas somente as validações de `instanceId` vazio e coordenadas não finitas. A fixture F1 permanece visível; a oclusão projetada anterior foi tratada pela BF-1C-FIX e seu gate humano PASS; BF-1D fecha a troca de representação sem reforma de layout.
 
-#### BF-1C-FIX — Correção geométrica e apresentação — concluída tecnicamente, gate visual pendente
+#### BF-1C-FIX — Correção geométrica e apresentação — concluída, gate visual humano aprovado
 
-Sem reescrever a BF-1C versionada em `34015b6`, corrige a fábrica após a inspeção humana identificar linhas, massa visual pouco legível e variação aparente por enquadramento. A causa comprovada foi a coincidência da face frontal do fundo com as prateleiras e interseções internas; a inspeção de código não encontrou mudança de câmera/projeção/viewport pela rolagem. A nova família evita essas sobreposições, cria três variantes moderadas e determinísticas e desloca somente a variante larga para `[3, 0, -2.1]` após demonstrar a colisão com banco F1. A seleção, lifecycle, fallback e F5 permanecem preservados. O usuário deve aprovar a apresentação no navegador; somente então BF-1D poderá iniciar.
+Sem reescrever a BF-1C versionada em `34015b6`, corrige a fábrica após a inspeção humana identificar linhas, massa visual pouco legível e variação aparente por enquadramento. A causa comprovada foi a coincidência da face frontal do fundo com as prateleiras e interseções internas; a inspeção de código não encontrou mudança de câmera/projeção/viewport pela rolagem. A nova família evita essas sobreposições, cria três variantes moderadas e determinísticas e desloca somente a variante larga para `[3, 0, -2.1]` após demonstrar a colisão com banco F1. A seleção, lifecycle, fallback e F5 permanecem preservados. Após `493c887`, o usuário aprovou no navegador as três estantes, as variantes e a leitura das prateleiras, sem as deformidades, linhas ou perdas de definição reportadas; este PASS não aprova TalkBack, Android físico nem arte final.
 
-#### BF-1D — Substituição, descarte e gate — planejada
+#### BF-1D — Substituição, descarte e gate — concluída tecnicamente
 
-Validará substituição de representação, ownership, unload, disposal, seleção, isolamento, remontagens e ausência de vazamento de recursos. Executará regressão integrada e validações proporcionais; BF-1 só poderá ser encerrada após seus gates pertinentes. Seu contrato detalhado será definido antes da execução.
+Implementou uma operação síncrona e estreita da composição para trocar uma instância `bookshelf` existente por outra variante procedural. `reading-shelf-02: reading-dark-tall → reading-balanced` preserva `modelTypeId`, `instanceId`, `entryId` quando houver, posição e o wrapper selecionável; a representação nova é preparada e anexada antes de a antiga ser liberada uma única vez. Pedir a variante já ativa retorna inerte; `instanceId`/variante inválidos ou falha de preparação/attach preservam a representação anterior. A montagem terminal libera somente as roots ainda possuídas. Se a estante selecionada troca, o helper anterior é descartado e o novo acompanha os bounds atualizados sem reconstruir catálogo, ID ou seleção React. F5 permanece sem composição e responde explicitamente que a operação está indisponível. Passaram testes de fábrica/composição/runtime/interação/host/fronteiras, format, lint, typecheck, 546 testes Vitest, build e 6 E2E da rota Biblioteca. Não houve API nova em `WorldRuntime`, controle React, GLB, cache, persistência espacial ou remoção pública de estantes. BF-1 está encerrada somente no plano técnico desta camada; a dívida TalkBack ainda impede declarar fechado o primeiro recorte real.
 
 ### BF-2 — Primeira área de leitura funcional
 
@@ -128,8 +128,9 @@ BF-0 ✅ replanejamento e decisão arquitetural
 BF-1A ✅ contrato mínimo e primeira fábrica procedural isolada
 BF-1B ✅ composição declarativa e posicionamento determinístico
 BF-1C ✅ integração estática com runtime e seleção
-BF-1C-FIX ✅ técnico — gate visual humano PENDENTE
-PRÓXIMO CONDICIONADO: BF-1D — substituição, descarte e gate
+BF-1C-FIX ✅ técnico + gate visual humano no navegador PASS
+BF-1D ✅ substituição procedural, descarte seletivo e gate integrado
+PRÓXIMO AUTORIZÁVEL: encerrar BF-1 tecnicamente; BF-2 não iniciada
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída
@@ -220,13 +221,13 @@ F6 foi concluída tecnicamente/arquiteturalmente sem criar mundo ou persistênci
 
 ### F6 — Acessibilidade e fechamento da FUNDAÇÃO — concluída tecnicamente
 
-F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico. F6-B confirmou a única lacuna automatizável — foco/teclado e marcos semânticos estruturais — sem alteração de produção; a regressão técnica, E2E e build Android aprovaram o APK candidato. F6-C aceitou documentalmente a indisponibilidade temporária do Moto G06 como dívida assistiva, sem declarar TalkBack ou acessibilidade humana Android aprovados. A FUNDAÇÃO está concluída no plano técnico/arquitetural. P3D-A continua regulando GLBs, P3D-B1 preserva a proveniência de `bookshelf` e P3D-B2–F estão adiados; BF-1A/B concluíram fábrica e composição, BF-1C a integrou estaticamente ao runtime normal e BF-1C-FIX aguarda gate visual antes de BF-1D.
+F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico. F6-B confirmou a única lacuna automatizável — foco/teclado e marcos semânticos estruturais — sem alteração de produção; a regressão técnica, E2E e build Android aprovaram o APK candidato. F6-C aceitou documentalmente a indisponibilidade temporária do Moto G06 como dívida assistiva, sem declarar TalkBack ou acessibilidade humana Android aprovados. A FUNDAÇÃO está concluída no plano técnico/arquitetural. P3D-A continua regulando GLBs, P3D-B1 preserva a proveniência de `bookshelf` e P3D-B2–F estão adiados; BF-1A/B concluíram fábrica e composição, BF-1C a integrou estaticamente ao runtime normal, BF-1C-FIX recebeu PASS visual humano no navegador e BF-1D concluiu a troca procedural e seu gate integrado.
 
 F1 aprovou a viabilidade da base Three.js; não concluiu câmera, interação, assets, performance ou acessibilidade finais.
 
 ## Depois da FUNDAÇÃO
 
-1. Repetir o gate visual humano da BF-1C-FIX; somente após aprovação iniciar BF-1D para substituição, descarte e gate integrado.
-2. BF-2–BF-5: integrar progressivamente leitura, os seis tipos de registro e o ambiente provisório, preservando a operação essencial em React.
+1. Registrar o encerramento técnico da BF-1 somente junto da evidência assistiva humana aplicável; TalkBack no Moto G06 continua pendente e bloqueia o primeiro recorte real.
+2. BF-2–BF-5 só avançam com autorização explícita: integrar progressivamente leitura, os seis tipos de registro e o ambiente provisório, preservando a operação essencial em React.
 3. Retomar P3D-B2–F somente se a ingestão ou substituição por GLB definitivo se tornar necessária.
 4. Projetar persistência espacial nova somente quando uma necessidade funcional demonstrar o que deve ser salvo.

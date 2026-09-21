@@ -12,9 +12,14 @@ import { describe, expect, it, vi } from "vitest";
 import {
   createProceduralComposition,
   READING_SHELF_COMPOSITION_DEFINITIONS,
+  replaceProceduralBookshelfRepresentation,
   type ProceduralContentDefinition,
 } from "./proceduralComposition";
-import type { ProceduralBookshelfVariant } from "./proceduralContent";
+import * as proceduralContent from "./proceduralContent";
+import {
+  createProceduralBookshelf,
+  type ProceduralBookshelfVariant,
+} from "./proceduralContent";
 import { createReferenceScene, disposeObjectTree } from "./referenceScene";
 
 type DisposableMesh = Mesh<BufferGeometry, Material | Material[]>;
@@ -242,5 +247,190 @@ describe("composição procedural BF-1B", () => {
     expect(disposeGeometry).toHaveBeenCalledOnce();
     expect(disposeMaterial).toHaveBeenCalledOnce();
     expect(composition.root.children).toHaveLength(0);
+  });
+
+  it("BF-1D substitui somente a representação, preservando identidade, posição e wrapper", () => {
+    const composition = createProceduralComposition([
+      {
+        identity: {
+          entryId: "book-02",
+          instanceId: "reading-shelf-02",
+          modelTypeId: "bookshelf",
+        },
+        position: [0, 0, -2],
+        variant: "reading-dark-tall",
+      },
+      definition("reading-shelf-03", [3, 0, -2.1], "reading-light-wide"),
+    ]);
+    const target = composition.instances[0];
+    const untouched = composition.instances[1];
+    if (!target || !untouched)
+      throw new Error("A composição deve ter estantes.");
+    const previous = target.representation;
+    const node = target.node;
+    const previousPart = meshes(previous.root)[0];
+    if (!previousPart || Array.isArray(previousPart.material)) {
+      throw new Error("A estante deve conter recursos descartáveis.");
+    }
+    const disposePreviousGeometry = vi.spyOn(previousPart.geometry, "dispose");
+    const disposePreviousMaterial = vi.spyOn(previousPart.material, "dispose");
+
+    expect(
+      replaceProceduralBookshelfRepresentation(
+        composition,
+        "reading-shelf-02",
+        "reading-balanced",
+      ),
+    ).toBe("replaced");
+
+    expect(target.identity).toEqual({
+      entryId: "book-02",
+      instanceId: "reading-shelf-02",
+      modelTypeId: "bookshelf",
+    });
+    expect(target.position).toEqual([0, 0, -2]);
+    expect(target.node).toBe(node);
+    expect(target.node.position).toEqual(new Vector3(0, 0, -2));
+    expect(target.variant).toBe("reading-balanced");
+    expect(target.representation).not.toBe(previous);
+    expect(target.node.children).toEqual([target.representation.root]);
+    expect(previous.root.parent).toBeNull();
+    expect(previous.root.children).toHaveLength(0);
+    expect(disposePreviousGeometry).toHaveBeenCalledOnce();
+    expect(disposePreviousMaterial).toHaveBeenCalledOnce();
+    expect(untouched.variant).toBe("reading-light-wide");
+    expect(untouched.node.children).toEqual([untouched.representation.root]);
+
+    const replacementPart = meshes(target.representation.root)[0];
+    if (!replacementPart || Array.isArray(replacementPart.material)) {
+      throw new Error("A substituta deve conter recursos descartáveis.");
+    }
+    const disposeReplacementGeometry = vi.spyOn(
+      replacementPart.geometry,
+      "dispose",
+    );
+    expect(disposeReplacementGeometry).not.toHaveBeenCalled();
+    disposeObjectTree(composition.root);
+    expect(disposeReplacementGeometry).toHaveBeenCalledOnce();
+  });
+
+  it("BF-1D repete trocas sem acumular roots e torna a variante ativa inerte", () => {
+    const composition = createProceduralComposition([
+      definition("reading-shelf-02", [0, 0, -2], "reading-dark-tall"),
+    ]);
+    const instance = composition.instances[0];
+    if (!instance) throw new Error("A composição deve ter uma estante.");
+    const initial = instance.representation;
+
+    expect(
+      replaceProceduralBookshelfRepresentation(
+        composition,
+        "reading-shelf-02",
+        "reading-dark-tall",
+      ),
+    ).toBe("unchanged");
+    expect(instance.representation).toBe(initial);
+    expect(instance.node.children).toEqual([initial.root]);
+
+    for (const variant of [
+      "reading-balanced",
+      "reading-light-wide",
+      "reading-dark-tall",
+    ] as const) {
+      expect(
+        replaceProceduralBookshelfRepresentation(
+          composition,
+          "reading-shelf-02",
+          variant,
+        ),
+      ).toBe("replaced");
+      expect(instance.node.children).toEqual([instance.representation.root]);
+    }
+    disposeObjectTree(composition.root);
+  });
+
+  it("BF-1D rejeita entrada e falha de preparação sem corromper a representação atual", () => {
+    const composition = createProceduralComposition([
+      definition("reading-shelf-02", [0, 0, -2], "reading-dark-tall"),
+    ]);
+    const instance = composition.instances[0];
+    if (!instance) throw new Error("A composição deve ter uma estante.");
+    const previous = instance.representation;
+
+    expect(() =>
+      replaceProceduralBookshelfRepresentation(
+        composition,
+        "missing-shelf",
+        "reading-balanced",
+      ),
+    ).toThrow("não possui instanceId: missing-shelf");
+    expect(() =>
+      replaceProceduralBookshelfRepresentation(
+        composition,
+        "reading-shelf-02",
+        "unknown-variant",
+      ),
+    ).toThrow("Variante procedural de estante desconhecida: unknown-variant");
+    expect(instance.representation).toBe(previous);
+
+    const factory = vi
+      .spyOn(proceduralContent, "createProceduralBookshelf")
+      .mockImplementation(() => {
+        throw new Error("factory unavailable");
+      });
+    expect(() =>
+      replaceProceduralBookshelfRepresentation(
+        composition,
+        "reading-shelf-02",
+        "reading-balanced",
+      ),
+    ).toThrow("factory unavailable");
+    expect(instance.representation).toBe(previous);
+    expect(instance.node.children).toEqual([previous.root]);
+    factory.mockRestore();
+    disposeObjectTree(composition.root);
+  });
+
+  it("BF-1D libera uma substituta preparada se o attach ao wrapper falhar", () => {
+    const composition = createProceduralComposition([
+      definition("reading-shelf-02", [0, 0, -2], "reading-dark-tall"),
+    ]);
+    const instance = composition.instances[0];
+    if (!instance) throw new Error("A composição deve ter uma estante.");
+    const previous = instance.representation;
+    const replacement = createProceduralBookshelf(
+      previous.identity,
+      "reading-balanced",
+    );
+    const replacementPart = meshes(replacement.root)[0];
+    if (!replacementPart || Array.isArray(replacementPart.material)) {
+      throw new Error("A substituta deve conter recursos descartáveis.");
+    }
+    const disposeReplacementGeometry = vi.spyOn(
+      replacementPart.geometry,
+      "dispose",
+    );
+    const factory = vi
+      .spyOn(proceduralContent, "createProceduralBookshelf")
+      .mockReturnValue(replacement);
+    const attach = vi.spyOn(instance.node, "add").mockImplementation(() => {
+      throw new Error("attach unavailable");
+    });
+
+    expect(() =>
+      replaceProceduralBookshelfRepresentation(
+        composition,
+        "reading-shelf-02",
+        "reading-balanced",
+      ),
+    ).toThrow("attach unavailable");
+    expect(instance.representation).toBe(previous);
+    expect(instance.node.children).toEqual([previous.root]);
+    expect(replacement.root.parent).toBeNull();
+    expect(replacement.root.children).toHaveLength(0);
+    expect(disposeReplacementGeometry).toHaveBeenCalledOnce();
+    attach.mockRestore();
+    factory.mockRestore();
+    disposeObjectTree(composition.root);
   });
 });

@@ -89,6 +89,13 @@ const BOOKSHELF_VARIANTS: Readonly<
   }),
 });
 
+/** Returns whether an external replacement request names a supported variant. */
+export function isProceduralBookshelfVariant(
+  value: string,
+): value is ProceduralBookshelfVariant {
+  return Object.hasOwn(BOOKSHELF_VARIANTS, value);
+}
+
 /**
  * Creates an unattached, locally grounded bookshelf representation.
  *
@@ -99,8 +106,11 @@ const BOOKSHELF_VARIANTS: Readonly<
  */
 export function createProceduralBookshelf(
   identity: ProceduralContentIdentity,
-  variant: ProceduralBookshelfVariant = "reading-balanced",
+  variant: string = "reading-balanced",
 ): ProceduralBookshelf {
+  if (!isProceduralBookshelfVariant(variant)) {
+    throw new Error(`Variante procedural de estante desconhecida: ${variant}.`);
+  }
   const root = new Group();
   root.name = "procedural-bookshelf";
 

@@ -1,11 +1,12 @@
 import { Group } from "three";
 
+import * as proceduralContent from "./proceduralContent";
 import {
-  createProceduralBookshelf,
   type ProceduralBookshelf,
   type ProceduralBookshelfVariant,
   type ProceduralContentIdentity,
 } from "./proceduralContent";
+import { disposeObjectTree } from "./referenceScene";
 
 export type ProceduralContentPosition = readonly [
   x: number,
@@ -24,14 +25,16 @@ export interface ProceduralCompositionInstance {
   readonly identity: ProceduralContentIdentity;
   readonly node: Group;
   readonly position: ProceduralContentPosition;
-  readonly representation: ProceduralBookshelf;
-  readonly variant: ProceduralBookshelfVariant;
+  representation: ProceduralBookshelf;
+  variant: ProceduralBookshelfVariant;
 }
 
 export interface ProceduralComposition {
   readonly instances: readonly ProceduralCompositionInstance[];
   readonly root: Group;
 }
+
+export type ProceduralRepresentationReplacement = "replaced" | "unchanged";
 
 export const READING_SHELF_COMPOSITION_DEFINITIONS: readonly ProceduralContentDefinition[] =
   Object.freeze([
@@ -100,7 +103,7 @@ export function createProceduralComposition(
   const instances: ProceduralCompositionInstance[] = [];
 
   for (const definition of definitions) {
-    const representation = createProceduralBookshelf(
+    const representation = proceduralContent.createProceduralBookshelf(
       definition.identity,
       definition.variant,
     );
@@ -119,4 +122,49 @@ export function createProceduralComposition(
   }
 
   return { instances, root };
+}
+
+/**
+ * Replaces one attached bookshelf representation while retaining its stable
+ * composition wrapper and logical identity.
+ *
+ * The composition owns each representation root. The successor is created
+ * before the current root is touched; after attaching it to the same wrapper,
+ * ownership is updated and only then is the predecessor released.
+ */
+export function replaceProceduralBookshelfRepresentation(
+  composition: ProceduralComposition,
+  instanceId: string,
+  variant: string,
+): ProceduralRepresentationReplacement {
+  const instance = composition.instances.find(
+    ({ identity }) => identity.instanceId === instanceId,
+  );
+  if (!instance) {
+    throw new Error(
+      `A composição procedural não possui instanceId: ${instanceId}.`,
+    );
+  }
+  if (!proceduralContent.isProceduralBookshelfVariant(variant)) {
+    throw new Error(`Variante procedural de estante desconhecida: ${variant}.`);
+  }
+  if (instance.variant === variant) return "unchanged";
+
+  // Factory failures leave the attached representation as the sole owner.
+  const replacement = proceduralContent.createProceduralBookshelf(
+    instance.identity,
+    variant,
+  );
+  try {
+    instance.node.add(replacement.root);
+  } catch (error) {
+    disposeObjectTree(replacement.root);
+    throw error;
+  }
+
+  const previous = instance.representation;
+  instance.representation = replacement;
+  instance.variant = replacement.variant;
+  disposeObjectTree(previous.root);
+  return "replaced";
 }

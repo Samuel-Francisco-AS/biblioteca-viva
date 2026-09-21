@@ -355,6 +355,139 @@ describe("ThreeWorldRuntime", () => {
     second.dispose();
   });
 
+  it("BF-1D substitui a representação selecionada sem trocar wrapper, catálogo ou ownership da montagem", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+    const host = createHost();
+    runtime.mount(host);
+    const selectionListener = vi.fn();
+    runtime.onSelectionChange(selectionListener);
+    const scene = renderer.render.mock.calls.at(-1)?.[0];
+    const camera = renderer.render.mock.calls.at(-1)?.[1];
+    const composition = scene?.getObjectByName(
+      "procedural-content-composition",
+    );
+    const targetWrapper = composition?.children[1];
+    const untouchedWrapper = composition?.children[2];
+    const previousRoot = targetWrapper?.children[0];
+    const untouchedRoot = untouchedWrapper?.children[0];
+    expect(scene).toBeDefined();
+    expect(camera).toBeDefined();
+    expect(targetWrapper).toBeDefined();
+    expect(previousRoot).toBeDefined();
+    if (!scene || !camera || !targetWrapper || !previousRoot) return;
+
+    runtime.selectObject("reading-shelf-02");
+    const previousHighlight = scene.getObjectByName("f1-c-selection-highlight");
+    expect(previousHighlight).toBeInstanceOf(Box3Helper);
+    if (!(previousHighlight instanceof Box3Helper)) return;
+    const disposeHighlightGeometry = vi.spyOn(
+      previousHighlight.geometry,
+      "dispose",
+    );
+    const previousMesh = previousRoot.getObjectByName("bookshelf-shelf");
+    expect(isDisposableMesh(previousMesh)).toBe(true);
+    if (!isDisposableMesh(previousMesh)) return;
+    const disposePreviousGeometry = vi.spyOn(previousMesh.geometry, "dispose");
+    const catalogBefore = runtime.getSelectableObjects();
+    const selectionCallsBeforeReplacement = selectionListener.mock.calls.length;
+
+    expect(
+      runtime.replaceProceduralBookshelfRepresentation(
+        "reading-shelf-02",
+        "reading-balanced",
+      ),
+    ).toBe("replaced");
+
+    const replacementRoot = targetWrapper.children[0];
+    expect(targetWrapper).toBe(composition.children[1]);
+    expect(targetWrapper.position.toArray()).toEqual([0, 0, -2]);
+    expect(targetWrapper.children).toHaveLength(1);
+    expect(replacementRoot).not.toBe(previousRoot);
+    expect(previousRoot.parent).toBeNull();
+    expect(previousRoot.children).toHaveLength(0);
+    expect(disposePreviousGeometry).toHaveBeenCalledOnce();
+    expect(untouchedWrapper?.children[0]).toBe(untouchedRoot);
+    expect(runtime.getSelectableObjects()).toBe(catalogBefore);
+    expect(runtime.getSelectableObjects()).toContainEqual({
+      id: "reading-shelf-02",
+      label: "Estante de leitura 2",
+    });
+    expect(selectionListener).toHaveBeenCalledTimes(
+      selectionCallsBeforeReplacement,
+    );
+    expect(renderer.domElement.dataset.selectedObject).toBe("reading-shelf-02");
+    expect(renderer.domElement.dataset.highlightedObject).toBe(
+      "reading-shelf-02",
+    );
+    expect(disposeHighlightGeometry).toHaveBeenCalledOnce();
+    const replacementHighlight = scene.getObjectByName(
+      "f1-c-selection-highlight",
+    );
+    expect(replacementHighlight).toBeInstanceOf(Box3Helper);
+    if (!(replacementHighlight instanceof Box3Helper)) return;
+    expect(replacementHighlight).not.toBe(previousHighlight);
+    expect(replacementHighlight.box.max.y).toBeCloseTo(3.1, 6);
+
+    scene.updateMatrixWorld(true);
+    camera.updateMatrixWorld();
+    const replacementPart = replacementRoot?.getObjectByName("bookshelf-back");
+    expect(replacementPart).toBeDefined();
+    if (!replacementPart) return;
+    const point = screenPositionForPoint(
+      camera,
+      new Box3().setFromObject(replacementPart).getCenter(new Vector3()),
+    );
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: point.x,
+      clientY: point.y,
+      pointerId: 91,
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: point.x,
+      clientY: point.y,
+      pointerId: 91,
+    });
+    expect(renderer.domElement.dataset.selectedObject).toBe("reading-shelf-02");
+
+    runtime.selectObject("bookshelf-01");
+    expect(renderer.domElement.dataset.selectedObject).toBe("bookshelf-01");
+    const replacementMesh = replacementRoot?.getObjectByName("bookshelf-shelf");
+    expect(isDisposableMesh(replacementMesh)).toBe(true);
+    if (!isDisposableMesh(replacementMesh)) return;
+    const disposeReplacementGeometry = vi.spyOn(
+      replacementMesh.geometry,
+      "dispose",
+    );
+    renderer.render.mockImplementation(() => {
+      throw new Error("terminal renderer failure");
+    });
+    runtime.selectObject("reading-shelf-02");
+    expect(runtime.getDiagnostics().runtimeState).toBe("failed");
+    expect(host.querySelector("canvas")).not.toBeInTheDocument();
+    expect(disposeReplacementGeometry).toHaveBeenCalledOnce();
+
+    const remountedRenderer = new TestRenderer();
+    const remountedRuntime = new ThreeWorldRuntime({
+      createRenderer: () => remountedRenderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+    remountedRuntime.mount(host);
+    const remountedComposition = remountedRenderer.render.mock.calls
+      .at(-1)?.[0]
+      .getObjectByName("procedural-content-composition");
+    const remountedMesh =
+      remountedComposition?.children[1]?.getObjectByName("bookshelf-shelf");
+    expect(isDisposableMesh(remountedMesh)).toBe(true);
+    if (!isDisposableMesh(remountedMesh)) return;
+    expect(remountedMesh.geometry).not.toBe(replacementMesh.geometry);
+    remountedRuntime.dispose();
+  });
+
   it("libera a composição antes de concluir a montagem que falha e permite uma nova instância", () => {
     vi.stubGlobal("ResizeObserver", TestResizeObserver);
     const composition = proceduralComposition.createProceduralComposition(
@@ -463,6 +596,13 @@ describe("ThreeWorldRuntime", () => {
     expect(
       initialScene?.getObjectByName("procedural-content-composition"),
     ).toBeUndefined();
+    expect(
+      runtime.replaceProceduralBookshelfRepresentation(
+        "reading-shelf-02",
+        "reading-balanced",
+      ),
+    ).toBe("unavailable");
+    expect(runtime.getSelectableObjects()).toHaveLength(11);
 
     const roots = scenario.assets.map(() => new Group());
     roots.forEach((root, index) => fixtureLoader.succeed(root, index));

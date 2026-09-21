@@ -4,11 +4,18 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-1D — Substituição procedural, descarte e gate integrado — 2026-09-21
+
+- adicionada troca síncrona e específica de uma representação `bookshelf` em montagem viva, preservando identidade lógica, posição, wrapper selecionável, catálogo, rótulo e demais estantes; a variante ativa é inerte e entradas/falhas inválidas preservam a representação válida;
+- a nova root é preparada, anexada e assumida antes do descarte único da anterior; o unmount descarta somente a substituta ainda possuída, sem acumular roots em trocas repetidas ou remontagens;
+- a seleção ativa preserva ID, datasets, controles React e picking, enquanto o `Box3Helper` anterior é liberado e recriado para os novos bounds; F5 continua sem composição e sem operação de troca;
+- passaram o gate integrado técnico: format, lint, typecheck, 546 testes Vitest, build e 6 E2E da rota Biblioteca. Não foram adicionados GLB, `AssetManager`, cache, persistência espacial, remoção pública de estantes ou controles React de variante.
+
 ### BF-1C-FIX — Correção geométrica e variantes visuais — 2026-09-21
 
 - corrigidas faces coincidentes e interseções internas das estantes BF-1C, reconstruindo fundo recuado, prateleiras legíveis, laterais, base e moldura sem mascaramento por renderer;
 - adicionadas as variantes determinísticas equilibrada, alta/escura e larga/clara, preservando `modelTypeId` e os três IDs lógicos; `reading-shelf-03` passou para `[3, 0, -2.1]` após a prova de colisão com banco F1;
-- preservados catálogo, seleção, lifecycle e F5. A aprovação visual humana da correção está pendente; BF-1D não foi iniciada.
+- preservados catálogo, seleção, lifecycle e F5. Após `493c887`, o gate visual humano no navegador aprovou as três estantes e variantes sem as deformidades, linhas ou perdas de definição antes reportadas; isto não aprova TalkBack, Android físico ou arte final.
 
 ### BF-1C — Integração estática com runtime e seleção — 2026-09-21
 
