@@ -1,6 +1,6 @@
 # Biblioteca Viva — Mapa da FUNDAÇÃO e detalhamento da F1
 
-**Data de referência:** 2026-09-20
+**Data de referência:** 2026-09-21
 
 **Estado geral:** F0–F6 concluídos no plano técnico/arquitetural; Three.js aprovado como renderer da Fundação; a FUNDAÇÃO está concluída. A dívida humana assistiva permanece obrigatória antes do fechamento do primeiro recorte real e de beta/release aplicável.
 
@@ -131,7 +131,11 @@ PIPELINE 3D v1 — P3D-B1 CONCLUÍDA; B2–F ADIADOS
  └─ B2–F Retomada condicionada a GLB definitivo          ⏸
  │
  ▼
-BF-0 ✅ → BF-1 CAMADA MÍNIMA PROCEDURAL (A SUBDIVIDIR)
+BF-0 ✅ → BF-1 ✅ CAMADA MÍNIMA PROCEDURAL
+ │
+ ▼
+BF-2 ⏳ PRIMEIRA ÁREA DE LEITURA FUNCIONAL
+ └─ BF-2A ✅ CONTRATO E PROJEÇÃO NEUTRA DOS LIVROS REAIS
  │
  ▼
 PRIMEIRO RECORTE REAL + VALIDAÇÃO TALKBACK
@@ -828,7 +832,7 @@ A **FUNDAÇÃO está concluída** no plano técnico/arquitetural. A dívida huma
 
 # 16. Depois da FUNDAÇÃO
 
-BF-0 aprovou a sequência Biblioteca Funcional Primeiro. BF-1 está tecnicamente concluída; BF-2 permanece não iniciada e só poderá avançar após auditoria, planejamento, decomposição e nova autorização. Não existe persistência espacial.
+BF-0 aprovou a sequência Biblioteca Funcional Primeiro. BF-1 está tecnicamente concluída; BF-2A concluiu o contrato e a projeção neutra dos livros reais, sem reabrir BF-1; BF-2B não foi iniciada. Não existe persistência espacial.
 
 ```text
 FUNDAÇÃO
@@ -844,7 +848,7 @@ PERSISTÊNCIA ESPACIAL, somente se necessária
 
 ## Biblioteca Funcional Primeiro
 
-O conteúdo inicial será procedural/provisório em TypeScript/Three.js. React mantém a superfície semântica e uma seleção visual não pode ser o único caminho para funções essenciais. A identidade lógica futura separará tipo de modelo, instância no mundo e ID de registro convencional associado quando houver, sem criar agora tipo de código, schema, tabela, backup ou persistência espacial.
+O conteúdo inicial será procedural/provisório em TypeScript/Three.js. React mantém a superfície semântica e uma seleção visual não pode ser o único caminho para funções essenciais. BF-1A já materializou em TypeScript o contrato mínimo de identidade procedural, com conceitos `ProceduralModelTypeId` e `ProceduralContentIdentity`: tipo de modelo, instância no mundo e `entryId` opcional. BF-1 não associou produtivamente esses conceitos a registros convencionais reais; BF-2A criou a projeção neutra inicial dessa associação, ainda sem conectá-la ao runtime. Não há schema, tabela, backup ou persistência espacial.
 
 P3D-B1 preserva `bookshelf` e sua proveniência. P3D-B2–F estão adiados, não concluídos nem cancelados, e só retomam quando houver necessidade demonstrada de ingestão ou substituição por GLB definitivo. ADR-010 continua a regular esse caminho GLB; fixtures F1/F4 e cenários F5 não são promovidos.
 
@@ -926,7 +930,8 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | BF-1C                 | ✅ Técnica  | Integração estática e seleção                                                                     |
 | BF-1C-FIX             | ✅ Concluída | Correção geométrica; gate visual humano no navegador PASS                                         |
 | BF-1D                 | ✅ Técnica  | Substituição procedural, descarte seletivo e gate integrado                                      |
-| BF-2–BF-5             | ⏳ Futuro   | BF-2 não iniciada; depende de auditoria, planejamento, decomposição e nova autorização          |
+| BF-2                  | ⏳ Em andamento | BF-2A concluiu a projeção neutra de livros reais; BF-2B permanece não iniciada                   |
+| BF-3–BF-5             | ⏳ Futuro   | Dependem da evolução autorizada da BF-2                                                           |
 | Primeiro recorte      | 🔒 Futuro    | Fechamento condicionado à validação TalkBack humana                                              |
 | Persistência espacial | 🔒 Futuro    | Salvar estado real do mundo                                                                      |
 | Sistemas maiores      | 🔒 Futuro    | Personagens, progressão, IA etc.                                                                 |

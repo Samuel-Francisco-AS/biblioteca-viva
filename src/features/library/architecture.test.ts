@@ -20,6 +20,11 @@ const runtimeSources = import.meta.glob<string>(
   { eager: true, import: "default", query: "?raw" },
 );
 
+const readingAreaProjectionSources = import.meta.glob<string>(
+  ["./readingAreaBooks.ts"],
+  { eager: true, import: "default", query: "?raw" },
+);
+
 describe("fronteiras da fundação Three.js", () => {
   it("mantém Three.js fora de domain e application", () => {
     for (const [path, source] of Object.entries(coreSources)) {
@@ -40,6 +45,15 @@ describe("fronteiras da fundação Three.js", () => {
     for (const [path, source] of Object.entries(runtimeSources)) {
       expect(source, path).not.toMatch(
         /dexie|infrastructure|application|\.\.\/\.\.\/\.\.\/domain/iu,
+      );
+    }
+  });
+
+  it("mantém a projeção de livros neutra de renderer e infraestrutura", () => {
+    for (const [path, source] of Object.entries(readingAreaProjectionSources)) {
+      expect(source, path).not.toMatch(/from\s+["']three(?:\/[^"']*)?["']/u);
+      expect(source, path).not.toMatch(
+        /from\s+["'][^"']*(?:application|dexie|infrastructure|three)[^"']*["']/u,
       );
     }
   });

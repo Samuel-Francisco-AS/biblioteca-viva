@@ -23,7 +23,11 @@ Identidade, posição da câmera e seleção permanecem efêmeras. Na fixture, a
 
 BF-0 aprovou construir primeiro uma Biblioteca funcional com conteúdo procedural/provisório em TypeScript/Three.js. Esse caminho pode representar visualmente um tipo de modelo sem depender de GLB; não promove a fixture F1, os cenários diagnósticos F5 ou qualquer fixture F4 à arquitetura produtiva. React continua a superfície semântica das funções essenciais: seleção visual é complementar e nunca o único caminho de operação.
 
-A ADR-011 registrou originalmente a identidade lógica como contrato de significado, sem materializá-la em schema, tabela, backup, posição persistida ou contrato espacial. BF-1A passou a materializar somente os tipos TypeScript mínimos `ProceduralModelTypeId` e `ProceduralContentIdentity`, distinguindo tipo de modelo, instância e `entryId` opcional. Eles continuam independentes de representação visual, mesh, root Three, URL e posição; não existe schema persistido, tabela espacial, backup espacial ou associação funcional a registros reais, e os contratos espaciais anteriores não retornam.
+A ADR-011 registrou originalmente a identidade lógica como contrato de significado, sem materializá-la em schema, tabela, backup, posição persistida ou contrato espacial. BF-1A passou a materializar somente os tipos TypeScript mínimos `ProceduralModelTypeId` e `ProceduralContentIdentity`, distinguindo tipo de modelo, instância e `entryId` opcional. Eles continuam independentes de representação visual, mesh, root Three, URL e posição; BF-1 não associou produtivamente conteúdo a registros reais, e os contratos espaciais anteriores não retornam.
+
+### Projeção neutra BF-2A
+
+BF-2A projeta `BookEntry[]` em ocorrências `ReadingAreaBook` sem depender de Three.js, Dexie, infraestrutura ou runtime. Cada ocorrência futura de livro usa `modelTypeId: "book-volume"`, `instanceId: "reading-book:${entryId}"` e o `entryId` convencional preservado, além de título, autor opcional e progresso de leitura disponível. A projeção ordena por `createdAt` e `id` porque `ListBookEntries` preserva a ordem delegada pelo repositório, sem contratá-la; IDs duplicados falham explicitamente. Esta é apenas a fronteira Application/registro → projeção neutra: não existe geometria de livro, slots, posição, seleção, integração com `WorldHost`/`ThreeWorldRuntime`, persistência espacial ou outra categoria de registro.
 
 ### Contrato mínimo procedural BF-1A
 

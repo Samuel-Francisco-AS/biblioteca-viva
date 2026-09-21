@@ -21,6 +21,8 @@ BF-1 ✅ camada mínima de conteúdo procedural — encerramento técnico
   BF-1C-FIX ✅ correção geométrica e variantes — gate visual humano no navegador PASS
   BF-1D ✅ substituição, descarte e gate integrado
 BF-2 ⏳ primeira área de leitura integrada a registros reais
+  BF-2A ✅ contrato e projeção neutra dos livros reais
+  BF-2B ⏳ integração futura não iniciada
 BF-3 ⏳ integração dos seis tipos de registro
 BF-4 ⏳ ambiente habitável, mobília e personagens provisórios
 BF-5 ⏳ consolidação do marco funcional
@@ -57,6 +59,10 @@ Implementou uma operação síncrona e estreita da composição para trocar uma 
 ### BF-2 — Primeira área de leitura funcional
 
 Integrará registros reais de livros ao mundo, mantendo os casos de uso existentes e a operação essencial pela interface React.
+
+#### BF-2A — Contrato e projeção dos livros reais — concluída
+
+Criou a projeção neutra `BookEntry → ReadingAreaBook` para ocorrências futuras `book-volume` da área de leitura. Ela preserva `entryId`, deriva `instanceId` estável como `reading-book:${entryId}`, ordena deterministicamente por `createdAt` e `id`, inclui título, autor opcional e progresso de leitura disponível, e rejeita `entryId` duplicado. Não há geometria procedural de livros, integração com `ThreeWorldRuntime`, layout em slots, seleção, carregamento na rota Biblioteca, persistência espacial ou integração de outra categoria. BF-2B permanece não iniciada.
 
 ### BF-3 — Integração dos seis tipos de registro
 
@@ -131,7 +137,9 @@ BF-1C ✅ integração estática com runtime e seleção
 BF-1C-FIX ✅ técnico + gate visual humano no navegador PASS
 BF-1D ✅ substituição procedural, descarte seletivo e gate integrado
 BF-1 ✅ tecnicamente concluída
-PRÓXIMO AUTORIZÁVEL: auditoria, planejamento e decomposição da BF-2; BF-2 não iniciada
+BF-2A ✅ contrato e projeção neutra dos livros reais
+BF-2B ⏳ não iniciada
+PRÓXIMO AUTORIZÁVEL: planejamento e implementação autorizada da BF-2B; sem integração automática ao runtime
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída

@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-2A — Contrato e projeção dos livros reais — 2026-09-21
+
+- adicionada a projeção neutra e determinística de `BookEntry` para ocorrências futuras `ReadingAreaBook`, com tipo visual `book-volume`, `entryId` preservado, `instanceId` estável `reading-book:${entryId}`, título, autor opcional e progresso de leitura disponível;
+- a projeção ordena por `createdAt` e `id`, não muta os livros de origem e rejeita `entryId` duplicado antes de produzir ocorrências com o mesmo `instanceId`;
+- não foram adicionados geometria procedural de livros, slots/layout, integração com `WorldHost`/`ThreeWorldRuntime`, seleção, carregamento da rota Biblioteca, schema, backup, persistência espacial ou outra categoria de registro. BF-2B permanece não iniciada.
+
 ### BF-1D — Substituição procedural, descarte e gate integrado — 2026-09-21
 
 - adicionada troca síncrona e específica de uma representação `bookshelf` em montagem viva, preservando identidade lógica, posição, wrapper selecionável, catálogo, rótulo e demais estantes; a variante ativa é inerte e entradas/falhas inválidas preservam a representação válida;
