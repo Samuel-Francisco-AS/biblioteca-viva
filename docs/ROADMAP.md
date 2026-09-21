@@ -1,6 +1,6 @@
 # Roadmap
 
-> Atualizado em 2026-09-20.
+> Atualizado em 2026-09-21.
 
 ## Baseline concluído
 
@@ -14,14 +14,56 @@
 
 ```text
 BF-0 ✅ replanejamento e decisão arquitetural
-BF-1 ⏳ camada mínima de conteúdo procedural
+BF-1 ▶ camada mínima de conteúdo procedural
+  BF-1A ✅ contrato mínimo e primeira fábrica procedural
+  BF-1B ⏳ composição do conteúdo
+  BF-1C ⏳ integração com runtime e seleção
+  BF-1D ⏳ substituição, descarte e gate
 BF-2 ⏳ primeira área de leitura integrada a registros reais
 BF-3 ⏳ integração dos seis tipos de registro
 BF-4 ⏳ ambiente habitável, mobília e personagens provisórios
 BF-5 ⏳ consolidação do marco funcional
 ```
 
-BF-1 será decomposta posteriormente em checkpoints pequenos; esta previsão não autoriza sua implementação. O caminho BF começa com conteúdo procedural/provisório em TypeScript/Three.js e mantém React como superfície semântica das funções essenciais. A identidade lógica futura separará tipo de modelo, instância do mundo e ID de registro convencional associado quando houver; a representação visual poderá ser procedural agora e GLB definitivo depois, sem alterar essa identidade. Não há persistência espacial produtiva, tabela nova ou mudança de backup neste plano.
+O caminho BF usa conteúdo procedural/provisório em TypeScript/Three.js e mantém React como superfície semântica das funções essenciais. A identidade lógica separa tipo de modelo, instância do mundo e ID de registro convencional associado quando houver; a representação visual poderá ser procedural agora e GLB definitivo depois, sem alterar essa identidade. Não há persistência espacial produtiva, tabela nova ou mudança de backup neste plano.
+
+### BF-0 — Replanejamento — concluída
+
+ADR-011 está aceita e estabeleceu a prioridade funcional, preservando P3D-B1 e adiando P3D-B2–F.
+
+### BF-1 — Camada mínima de conteúdo procedural
+
+#### BF-1A — Contrato mínimo e primeira fábrica — concluída
+
+Definiu a identidade lógica mínima e implementou uma fábrica procedural isolada de `bookshelf`, com testes dirigidos de geometria, transforms, isolamento e recursos. A fábrica não está integrada ao runtime, seleção ou composição; a documentação desta decomposição foi atualizada.
+
+#### BF-1B — Composição do conteúdo — próxima etapa
+
+Definirá instâncias declarativas, posicionamento determinístico e uma pequena composição procedural, separando definições de conteúdo da criação de objetos Three.js. Este checkpoint ainda não foi implementado.
+
+#### BF-1C — Integração com runtime e seleção — planejada
+
+Integrará a composição ao runtime produtivo e conectará instâncias à seleção Three ↔ React, preservando câmera, gestos, lifecycle, diagnósticos e fallback sem promover fixtures técnicas. Seu contrato detalhado será definido antes da execução.
+
+#### BF-1D — Substituição, descarte e gate — planejada
+
+Validará substituição de representação, ownership, unload, disposal, seleção, isolamento, remontagens e ausência de vazamento de recursos. Executará regressão integrada e validações proporcionais; BF-1 só poderá ser encerrada após seus gates pertinentes. Seu contrato detalhado será definido antes da execução.
+
+### BF-2 — Primeira área de leitura funcional
+
+Integrará registros reais de livros ao mundo, mantendo os casos de uso existentes e a operação essencial pela interface React.
+
+### BF-3 — Integração dos seis tipos de registro
+
+Representará os seis tipos e sincronizará suas alterações convencionais com o mundo, sem duplicar lógica de negócio.
+
+### BF-4 — Mundo habitável
+
+Expandirá mobília, organização espacial, objetos e personagens provisórios, com comportamentos definidos conforme necessidade funcional.
+
+### BF-5 — Consolidação funcional
+
+Executará regressão, validação Android, acessibilidade e fechamento do marco funcional aprovado.
 
 O fechamento do primeiro recorte real continua bloqueado pela dívida de TalkBack: a remediação e a validação física incremental no Moto G06 usarão builds representativos então vigentes. Não há budget preventivo; mudanças materiais de densidade ou renderização exigem nova medição conforme a necessidade observada.
 

@@ -18,6 +18,8 @@
 - Eventos saem somente após o commit da transação correspondente.
 - A rota Biblioteca hospeda a Fundação Three.js por `WorldHost` e `ThreeWorldRuntime`; Three.js é o renderer aprovado.
 - A cena atual é uma fixture técnica descartável: não existe ainda Biblioteca final nem persistência espacial. Não crie contratos espaciais especulativos antes das fases autorizadas.
+- BF é a trilha funcional prioritária sob a ADR-011; P3D-B2–F estão adiados até necessidade demonstrada de GLB definitivo.
+- Conteúdo procedural produtivo não promove fixtures F1/F4 ou cenários F5. Execute checkpoints BF pequenos, com testes proporcionais, antes de integrar conteúdo ao runtime.
 
 ## Escopo e qualidade
 

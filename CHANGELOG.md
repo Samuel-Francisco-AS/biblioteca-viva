@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-1A — Contrato mínimo e primeira fábrica procedural — 2026-09-21
+
+- adicionada fábrica TypeScript/Three.js isolada para `bookshelf`, com identidade lógica de tipo de modelo, instância e associação convencional opcional; cada chamada cria uma root própria, em identidade, com geometria local apoiada em `Y=0` e materiais simples;
+- cobertos por testes dirigidos a geometria reconhecível, bounds, transforms, isolamento entre roots e descarte deduplicado de recursos compartilhados dentro da mesma root via `disposeObjectTree()`;
+- não foram alterados runtime, `referenceScene`, interação, fixtures F1/F4, cenários F5, GLB, Dexie, backup, persistência espacial, seleção produtiva, composição ou substituição dinâmica. BF-1B passa a ser a próxima etapa.
+
 ### BF-0 — Biblioteca Funcional Primeiro — 2026-09-20
 
 - registrada a ADR-011 e replanejada a sequência para BF-1–BF-5: conteúdo procedural/provisório primeiro, integração progressiva à Biblioteca funcional e possibilidade futura de substituição por GLB definitivo;
