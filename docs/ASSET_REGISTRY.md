@@ -33,7 +33,7 @@ Este candidato documental não é o fixture experimental F4-B de nome semelhante
 - **fonte upstream preservada de partida:** `assets/3d/source/bookshelf/upstream/Bookshelf.original.blend` — SHA-256 `43b31c1c6fdb4d3c08bf9d9b1950e2f152d5e4797efb9b89bf32f23f51ab5a4d`;
 - **referência histórica F4:** `assets/3d/source/bookshelf/evidence/Bookshelf-f4-work-reference.blend` — SHA-256 `20cb9b2897962cafd5412aa4c43ef6acac789bd059e41767d6e2df07b8a6dc1b`; não é a fonte produtiva final;
 - **evidências preservadas:** `evidence/f4-inspect-original.txt` e `evidence/f4-inspect-normalized.txt`;
-- **limite de B1:** não há fonte canônica editável normalizada, GLB produtivo, carga de runtime, catálogo ou promoção de fixture. B2 criará a fonte canônica a partir do upstream; B3 exportará e validará; B4 fará a promoção final.
+- **limite de B1:** não há fonte canônica editável normalizada, GLB produtivo, carga de runtime, catálogo ou promoção de fixture. B2–B4 estão adiados, não concluídos nem cancelados; a retomada depende de necessidade demonstrada de ingestão ou substituição por GLB definitivo. Esta mudança não altera o estado `candidate`, os arquivos nem a proveniência preservada.
 
 ## Fixtures F4-B — geometria, escala, eixos e pivô
 

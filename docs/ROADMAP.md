@@ -10,22 +10,36 @@
 - **F1 — Three.js Foundation Spike concluída:** Three.js aprovado como renderer da Fundação com host React próprio, `WebGLRenderer`, `OrthographicCamera`, GLTF/GLB, interação bidirecional, lifecycle explícito e prova física no Moto G06.
 - A cena vigente continua técnica e descartável; P3D-A formalizou o contrato e P3D-B1 registrou a proveniência do candidato `bookshelf`, mas a Biblioteca final, fonte canônica normalizada, assets produtivos e persistência espacial ainda não existem.
 
-## Pipeline 3D v1
+## Biblioteca Funcional Primeiro
+
+```text
+BF-0 ✅ replanejamento e decisão arquitetural
+BF-1 ⏳ camada mínima de conteúdo procedural
+BF-2 ⏳ primeira área de leitura integrada a registros reais
+BF-3 ⏳ integração dos seis tipos de registro
+BF-4 ⏳ ambiente habitável, mobília e personagens provisórios
+BF-5 ⏳ consolidação do marco funcional
+```
+
+BF-1 será decomposta posteriormente em checkpoints pequenos; esta previsão não autoriza sua implementação. O caminho BF começa com conteúdo procedural/provisório em TypeScript/Three.js e mantém React como superfície semântica das funções essenciais. A identidade lógica futura separará tipo de modelo, instância do mundo e ID de registro convencional associado quando houver; a representação visual poderá ser procedural agora e GLB definitivo depois, sem alterar essa identidade. Não há persistência espacial produtiva, tabela nova ou mudança de backup neste plano.
+
+O fechamento do primeiro recorte real continua bloqueado pela dívida de TalkBack: a remediação e a validação física incremental no Moto G06 usarão builds representativos então vigentes. Não há budget preventivo; mudanças materiais de densidade ou renderização exigem nova medição conforme a necessidade observada.
+
+## Pipeline 3D v1 — adiado após P3D-B1
 
 ```text
 P3D-A ✅ contrato produtivo e estrutura
-P3D-B ▶ em andamento — primeiro asset canônico ponta a ponta
-  B1 ✅ proveniência e organização documental de `bookshelf`
-  B2 ⏭ fonte canônica editável normalizada
-  B3 ⏳ exportação e validação
-  B4 ⏳ promoção final
-P3D-C ⏳ validação e relatório automatizados
-P3D-D ⏳ preparação/exportação reproduzível
-P3D-E ⏳ ingestão produtiva, ownership e unload
-P3D-F ⏳ gate integrado e fechamento
+P3D-B1 ✅ proveniência e organização documental de `bookshelf`
+P3D-B2 ⏸ ADIADO — fonte canônica editável normalizada
+P3D-B3 ⏸ ADIADO — exportação e validação
+P3D-B4 ⏸ ADIADO — promoção final
+P3D-C ⏸ ADIADO — validação e relatório automatizados
+P3D-D ⏸ ADIADO — preparação/exportação reproduzível
+P3D-E ⏸ ADIADO — ingestão produtiva, ownership e unload
+P3D-F ⏸ ADIADO — gate integrado e fechamento
 ```
 
-P3D-B atravessa manualmente o contrato com um único asset canônico, sem automação geral. B1 preservou a proveniência de `bookshelf`: o upstream Quaternius é a fonte de partida, enquanto o `.blend` normalizado da F4 permanece apenas evidência histórica; o fixture F4-B não foi promovido. B2 criará a fonte canônica editável normalizada; não há GLB produtivo nesta etapa.
+ADR-010 continua regulando assets GLB produtivos. B1 preservou integralmente a proveniência de `bookshelf`: o upstream Quaternius é a fonte de partida, enquanto o `.blend` normalizado da F4 permanece apenas evidência histórica; o fixture F4-B não foi promovido. Os checkpoints adiados não foram concluídos nem cancelados e só retomam quando houver necessidade demonstrada de ingestão ou substituição por assets GLB definitivos.
 
 ## FUNDAÇÃO
 
@@ -61,9 +75,10 @@ F6 ✅ CONCLUÍDA — fechamento técnico/arquitetural
   F6-C ✅ fechamento documental com dívida assistiva aceita; sem PASS humano
 FUNDAÇÃO ✅ CONCLUÍDA
 P3D-A ✅ contrato produtivo e estrutura
-P3D-B ▶ em andamento
-  B1 ✅ proveniência e organização documental de `bookshelf`
-PRÓXIMO: P3D-B2 — fonte canônica editável normalizada
+P3D-B1 ✅ proveniência e organização documental de `bookshelf`
+P3D-B2–F ⏸ ADIADOS
+BF-0 ✅ replanejamento e decisão arquitetural
+PRÓXIMO: BF-1 — camada mínima de conteúdo procedural (a subdividir)
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída
@@ -150,17 +165,17 @@ Consolidou A–E em contrato experimental: autoria editável e substituível, no
 
 F5-A preparou o build de diagnóstico para o Moto G06: baseline F1, corpus F4 uma vez e corpus F4 ×4, todos pelo `ThreeWorldRuntime`/`WebGLRenderer` reais. F5-B mediu os três cenários no aparelho, inclusive loading, repouso, memória, remount, interação, orientação, background/resume e sessão de aproximadamente 15 minutos no corpus ×4. F5-C consolidou isso como envelope observado e gatilhos de remedição, não como hard caps: o teto do aparelho não foi encontrado e nenhuma otimização avançada foi justificada.
 
-F6 foi concluída tecnicamente/arquiteturalmente sem criar mundo ou persistência espacial. P3D-A posterior formalizou o contrato produtivo do Pipeline 3D v1; P3D-B1 preservou documentalmente o candidato `bookshelf`, sem criar fonte canônica normalizada, GLB, ingestão produtiva ou implementação de mundo. A dívida de validação humana assistiva permanece obrigatória antes do fechamento do primeiro recorte real e de beta/release dependente da experiência acessível; ela deve usar o build então vigente, não necessariamente o APK F6-B.
+F6 foi concluída tecnicamente/arquiteturalmente sem criar mundo ou persistência espacial. P3D-A posterior formalizou o contrato produtivo do Pipeline 3D v1; P3D-B1 preservou documentalmente o candidato `bookshelf`, sem criar fonte canônica normalizada, GLB, ingestão produtiva ou implementação de mundo. BF-0 adiou P3D-B2–F e priorizou a trilha funcional com conteúdo procedural/provisório. A dívida de validação humana assistiva permanece obrigatória antes do fechamento do primeiro recorte real e de beta/release dependente da experiência acessível; ela deve usar o build então vigente, não necessariamente o APK F6-B.
 
 ### F6 — Acessibilidade e fechamento da FUNDAÇÃO — concluída tecnicamente
 
-F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico. F6-B confirmou a única lacuna automatizável — foco/teclado e marcos semânticos estruturais — sem alteração de produção; a regressão técnica, E2E e build Android aprovaram o APK candidato. F6-C aceitou documentalmente a indisponibilidade temporária do Moto G06 como dívida assistiva, sem declarar TalkBack ou acessibilidade humana Android aprovados. A FUNDAÇÃO está concluída no plano técnico/arquitetural. P3D-A formalizou o Pipeline 3D v1 e P3D-B está em andamento; B1 concluiu a proveniência documental de `bookshelf`, e B2 é a próxima etapa autorizada. Continua sem implementação de mundo.
+F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico. F6-B confirmou a única lacuna automatizável — foco/teclado e marcos semânticos estruturais — sem alteração de produção; a regressão técnica, E2E e build Android aprovaram o APK candidato. F6-C aceitou documentalmente a indisponibilidade temporária do Moto G06 como dívida assistiva, sem declarar TalkBack ou acessibilidade humana Android aprovados. A FUNDAÇÃO está concluída no plano técnico/arquitetural. P3D-A continua regulando GLBs, P3D-B1 preserva a proveniência de `bookshelf` e P3D-B2–F estão adiados; BF-1 é o próximo planejamento funcional, ainda sem implementação de mundo.
 
 F1 aprovou a viabilidade da base Three.js; não concluiu câmera, interação, assets, performance ou acessibilidade finais.
 
 ## Depois da FUNDAÇÃO
 
-1. P3D-B2: criar manualmente a fonte canônica editável normalizada de `bookshelf`; B3 exportará e validará, e B4 tratará a promoção final.
-2. P3D-C–F: automatizar validação/relatório, consolidar preparação/exportação, projetar ingestão/ownership/unload e fechar o gate integrado, nessa ordem autorizada.
-3. Projetar e implementar o primeiro recorte real do novo mundo após os checkpoints necessários.
-4. Projetar persistência espacial nova somente quando esse recorte demonstrar o que precisa ser salvo.
+1. BF-1: decompor e então implementar a camada mínima de conteúdo procedural.
+2. BF-2–BF-5: integrar progressivamente leitura, os seis tipos de registro e o ambiente provisório, preservando a operação essencial em React.
+3. Retomar P3D-B2–F somente se a ingestão ou substituição por GLB definitivo se tornar necessária.
+4. Projetar persistência espacial nova somente quando uma necessidade funcional demonstrar o que deve ser salvo.

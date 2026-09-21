@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-0 — Biblioteca Funcional Primeiro — 2026-09-20
+
+- registrada a ADR-011 e replanejada a sequência para BF-1–BF-5: conteúdo procedural/provisório primeiro, integração progressiva à Biblioteca funcional e possibilidade futura de substituição por GLB definitivo;
+- preservados a conclusão técnica F0–F6, P3D-A, P3D-B1 e a proveniência do candidato `bookshelf`; P3D-B2–F ficaram adiados, não concluídos nem cancelados, condicionados à necessidade de ingestão/substituição GLB;
+- mantidos React como superfície semântica de operações essenciais, Dexie v8 e backup v6 sem estado espacial; não houve mudança de runtime, assets, fixtures, domínio, aplicação, persistência, dependências ou testes de produção;
+- mantida como bloqueante a dívida humana de TalkBack para o fechamento do primeiro recorte real, com remediação e validação física incremental futura no Moto G06, sem budgets preventivos.
+
 ### P3D-B1 — Proveniência e organização documental de `bookshelf` — 2026-09-20
 
 - registrado `bookshelf` como candidato `grounded/static` distinto do fixture experimental `f4-b-quaternius-bookshelf`, com origem/autoria Quaternius, licença CC0 1.0 Universal e hashes da fonte upstream, licença e referência F4 preservadas;

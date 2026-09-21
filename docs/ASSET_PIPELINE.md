@@ -1,16 +1,16 @@
 # Pipeline 3D v1
 
-> Estado: **P3D-B em andamento; B1 concluída documentalmente.** Este é o documento técnico ativo do Pipeline 3D v1. A evidência F4/F5 abaixo permanece como base histórica/experimental sobrevivente; ela não é, por si só, promoção de fixture ou implementação de pipeline.
+> Estado: **P3D-B1 concluída documentalmente; P3D-B2–F adiados.** Este é o documento técnico ativo do Pipeline 3D v1. A evidência F4/F5 abaixo permanece como base histórica/experimental sobrevivente; ela não é, por si só, promoção de fixture ou implementação de pipeline.
 
 Todo arquivo externo permanece não confiável até passar por validação estrita. A decisão arquitetural vigente é a [`ADR-010`](decisions/ADR-010-3d-pipeline-v1.md).
 
 ## Contrato produtivo v1
 
-O Pipeline 3D v1 começa por assets rígidos/estáticos no perfil `grounded/static`. O runtime aceita GLB 2.0 autocontido pelo Three.js/`GLTFLoader` já instalado. Blender 3.3.21 é a ferramenta de autoria de referência/suportada com base no preflight F4, mas continua substituível e fora das dependências arquiteturais do aplicativo. A receita exata de CLI, flags e exportação aguarda P3D-B/P3D-D.
+O Pipeline 3D v1 regula assets rígidos/estáticos no perfil `grounded/static`. O runtime aprovado para esse caminho é GLB 2.0 autocontido pelo Three.js/`GLTFLoader` já instalado. Blender 3.3.21 é a ferramenta de autoria de referência/suportada com base no preflight F4, mas continua substituível e fora das dependências arquiteturais do aplicativo. A receita exata de CLI, flags e exportação permanece futura e está adiada com P3D-B2–F.
 
 Não fazem parte da v1: skinned meshes/personagens, animação, morph targets, shader customizado, partículas, persistência espacial, streaming, catálogo do mundo, LOD, atlas, instancing/merge como política, Draco, Meshopt, KTX2/Basis, `AssetManager` ou cache global. Não são proibições permanentes; exigem necessidade e evidência futuras. `ThreeWorldRuntime` não muda nesta P3D-A e o seu caminho F1/F4 continua técnico/diagnóstico, não loading produtivo.
 
-Em P3D-B, a fonte de cada candidato fica em `assets/3d/source/<asset-id>/` e o GLB somente depois de aprovado ficará em `src/features/library/three/assets/`. A fonte canônica guarda o editável normalizado/reproduzível e evidências pertinentes, fica fora do bundle/runtime e deve permitir rastrear origem, autoria, licença e transformações; pacotes brutos completos de fornecedor não são exigidos por padrão. `fixtures/` permanece exclusivamente técnico/teste e nenhum fixture F1/F4 é promovido implicitamente. B1 materializou somente a área documental do primeiro candidato; não criou fonte canônica normalizada nem GLB produtivo. Git LFS e repositório separado continuam fora do escopo.
+Quando P3D-B for retomada, a fonte de cada candidato fica em `assets/3d/source/<asset-id>/` e o GLB somente depois de aprovado ficará em `src/features/library/three/assets/`. A fonte canônica guarda o editável normalizado/reproduzível e evidências pertinentes, fica fora do bundle/runtime e deve permitir rastrear origem, autoria, licença e transformações; pacotes brutos completos de fornecedor não são exigidos por padrão. `fixtures/` permanece exclusivamente técnico/teste e nenhum fixture F1/F4 é promovido implicitamente. B1 materializou somente a área documental do primeiro candidato; não criou fonte canônica normalizada nem GLB produtivo. Git LFS e repositório separado continuam fora do escopo.
 
 O `asset-id` é estável, único, semântico e em kebab-case; fornecedor/origem não integra o ID consumido pelo mundo. Os estados documentais mínimos são `candidate`, `validated` e `production`; fixtures técnicos/experimentais ficam fora deles. Ainda não há schema, enum ou código de produção para esses estados.
 
@@ -22,7 +22,11 @@ Tooling posterior poderá apenas relatar tamanho do GLB, nodes, meshes, primitiv
 
 `bookshelf` é o primeiro candidato no perfil `grounded/static`, registrado como `candidate` e distinto do fixture experimental `f4-b-quaternius-bookshelf`. A origem é Quaternius, do pacote Quaternius Blends, sob CC0 1.0 Universal. O diretório `assets/3d/source/bookshelf/` preserva o `.blend` upstream original, a licença e evidências F4; seus hashes e a proveniência constam em `ASSET_REGISTRY.md`.
 
-O `.blend` em `upstream/` é apenas a fonte de partida preservada. O `.blend` em `evidence/` é referência histórica normalizada da F4, não fonte produtiva final. B1 não normalizou a fonte canônica, não exportou GLB e não promoveu o asset. B2 criará manualmente a fonte canônica editável normalizada a partir do upstream; B3 fará a exportação e validação; B4 fará a promoção final.
+O `.blend` em `upstream/` é apenas a fonte de partida preservada. O `.blend` em `evidence/` é referência histórica normalizada da F4, não fonte produtiva final. B1 não normalizou a fonte canônica, não exportou GLB e não promoveu o asset. B2–B4 estão adiados, não concluídos nem cancelados, e voltarão somente se a trilha funcional precisar de ingestão ou substituição por GLB definitivo.
+
+## Relação com Biblioteca Funcional Primeiro
+
+ADR-011 separa o caminho produtivo de GLB regulado aqui do conteúdo procedural/provisório em TypeScript/Three.js da trilha BF. O segundo não promove fixtures F1/F4, não libera formatos externos e não altera os invariantes de promoção deste documento. O candidato `bookshelf`, suas fontes e sua proveniência permanecem preservados durante o adiamento.
 
 ## Evidência histórica/experimental sobrevivente F4
 
@@ -208,12 +212,12 @@ F4-D não aprovou `AssetManager`, registry, cache, preload, streaming, pooling, 
 
 Em 2026-09-14, a análise leu diretamente os quatro GLBs F4-B registrados, sem parse que mutasse o resultado, reexportação, conversão ou alteração de fixture. SHA-256, caminhos e tamanhos conferem com `ASSET_REGISTRY.md`:
 
-| Asset | Caminho | SHA-256 | Correspondência |
-| --- | --- | --- | --- |
-| KayKit | `fixtures/f4-b/kaykit-shelf-b-large-decorated.glb` | `03e0b1af929de0a81795aea965b6cc5fbd8ac6e896e1047acef9f5d93b9debbe` | sim |
-| Kenney | `fixtures/f4-b/kenney-bookcase-open.glb` | `6704751f18b91a68ad9689c24ea59e029c09d584264b7f089439e79683c71900` | sim |
-| Poly Haven | `fixtures/f4-b/polyhaven-shelf-01.glb` | `33d55c107ea5afd314aad197f7753c64bacc88ea554df3f7e57fc8e7c81415b1` | sim |
-| Quaternius | `fixtures/f4-b/quaternius-bookshelf.glb` | `aabe7de0adf6b0e3aaf651acbb5704680e44df3180ffa98aa0cb7d19d389f265` | sim |
+| Asset      | Caminho                                            | SHA-256                                                            | Correspondência |
+| ---------- | -------------------------------------------------- | ------------------------------------------------------------------ | --------------- |
+| KayKit     | `fixtures/f4-b/kaykit-shelf-b-large-decorated.glb` | `03e0b1af929de0a81795aea965b6cc5fbd8ac6e896e1047acef9f5d93b9debbe` | sim             |
+| Kenney     | `fixtures/f4-b/kenney-bookcase-open.glb`           | `6704751f18b91a68ad9689c24ea59e029c09d584264b7f089439e79683c71900` | sim             |
+| Poly Haven | `fixtures/f4-b/polyhaven-shelf-01.glb`             | `33d55c107ea5afd314aad197f7753c64bacc88ea554df3f7e57fc8e7c81415b1` | sim             |
+| Quaternius | `fixtures/f4-b/quaternius-bookshelf.glb`           | `aabe7de0adf6b0e3aaf651acbb5704680e44df3180ffa98aa0cb7d19d389f265` | sim             |
 
 ### Método e classificação das métricas
 
@@ -223,12 +227,12 @@ Em 2026-09-14, a análise leu diretamente os quatro GLBs F4-B registrados, sem p
 
 ### Tabela consolidada
 
-| Asset | GLB bytes | Meshes | Primitives | Vertices | Triangles | Materials | Images | Encoded image bytes | Image dimensions | RGBA8 base estimate |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: |
-| KayKit | 44.780 (43,73 KiB) | 1 | 1 | 778 | 482 | 1 | 1 | 15.605 | PNG 1024×1024 | 4.194.304 (4 MiB) |
-| Kenney | 20.460 (19,98 KiB) | 1 | 1 | 543 | 320 | 1 | 0 | 0 | — | 0 |
-| Poly Haven | 5.828.612 (5,559 MiB) | 1 | 1 | 362 | 182 | 1 | 3 | 5.814.197 | PNG/JPEG/PNG, cada uma 1024×1024 | 12.582.912 (12 MiB) |
-| Quaternius | 7.572 (7,39 KiB) | 1 | 1 | 240 | 120 | 1 | 0 | 0 | — | 0 |
+| Asset      |             GLB bytes | Meshes | Primitives | Vertices | Triangles | Materials | Images | Encoded image bytes | Image dimensions                 | RGBA8 base estimate |
+| ---------- | --------------------: | -----: | ---------: | -------: | --------: | --------: | -----: | ------------------: | -------------------------------- | ------------------: |
+| KayKit     |    44.780 (43,73 KiB) |      1 |          1 |      778 |       482 |         1 |      1 |              15.605 | PNG 1024×1024                    |   4.194.304 (4 MiB) |
+| Kenney     |    20.460 (19,98 KiB) |      1 |          1 |      543 |       320 |         1 |      0 |                   0 | —                                |                   0 |
+| Poly Haven | 5.828.612 (5,559 MiB) |      1 |          1 |      362 |       182 |         1 |      3 |           5.814.197 | PNG/JPEG/PNG, cada uma 1024×1024 | 12.582.912 (12 MiB) |
+| Quaternius |      7.572 (7,39 KiB) |      1 |          1 |      240 |       120 |         1 |      0 |                   0 | —                                |                   0 |
 
 Todos os primitives são indexed, `mode=TRIANGLES`, têm um material e são um **proxy estrutural** de uma submissão; não são uma contagem exata de draw calls do renderer. Não há animações, skins, joints/bones, morph targets, cameras, lights incorporadas ou extensões glTF em nenhum dos quatro assets (`extensionsUsed` e `extensionsRequired` vazios). Portanto não há neste corpus extensão glTF declarada de compressão geométrica, transcodificação/compressão de textura, quantização ou material; PNG e JPEG continuam sendo os encodings de imagem efetivamente medidos.
 
@@ -236,23 +240,23 @@ Todos os primitives são indexed, `mode=TRIANGLES`, têm um material e são um *
 
 Cada GLB tem cabeçalho de 12 bytes, um chunk JSON e um BIN; não há chunks adicionais. JSON/BIN abaixo são bytes exatos dos chunks, e o restante são os 28 bytes dos cabeçalhos de container/chunk.
 
-| Asset | JSON bytes (% GLB) | BIN bytes (% GLB) | Observação de alinhamento | Índices | Atributos e bytes lógicos |
-| --- | ---: | ---: | --- | ---: | --- |
-| KayKit | 1.356 (3,028%) | 43.396 (96,909%) | 3 bytes finais de padding após a PNG | 1.446 `UNSIGNED_SHORT` | `POSITION` 9.336; `NORMAL` 9.336; `TEXCOORD_0` 6.224; índices 2.892 (total 27.788) |
-| Kenney | 1.136 (5,552%) | 19.296 (94,311%) | sem padding interno adicional observado | 960 `UNSIGNED_SHORT` | `POSITION` 6.516; `NORMAL` 6.516; `TEXCOORD_0` 4.344; índices 1.920 (total 19.296) |
-| Poly Haven | 1.708 (0,029%) | 5.826.876 (99,970%) | 3 bytes entre imagens para alinhamento de `bufferView` | 546 `UNSIGNED_SHORT` | `POSITION` 4.344; `NORMAL` 4.344; `TEXCOORD_0` 2.896; índices 1.092 (total 12.676) |
-| Quaternius | 1.064 (14,052%) | 6.480 (85,578%) | sem padding interno adicional observado | 360 `UNSIGNED_SHORT` | `POSITION` 2.880; `NORMAL` 2.880; índices 720 (total 6.480) |
+| Asset      | JSON bytes (% GLB) |   BIN bytes (% GLB) | Observação de alinhamento                              |                Índices | Atributos e bytes lógicos                                                          |
+| ---------- | -----------------: | ------------------: | ------------------------------------------------------ | ---------------------: | ---------------------------------------------------------------------------------- |
+| KayKit     |     1.356 (3,028%) |    43.396 (96,909%) | 3 bytes finais de padding após a PNG                   | 1.446 `UNSIGNED_SHORT` | `POSITION` 9.336; `NORMAL` 9.336; `TEXCOORD_0` 6.224; índices 2.892 (total 27.788) |
+| Kenney     |     1.136 (5,552%) |    19.296 (94,311%) | sem padding interno adicional observado                |   960 `UNSIGNED_SHORT` | `POSITION` 6.516; `NORMAL` 6.516; `TEXCOORD_0` 4.344; índices 1.920 (total 19.296) |
+| Poly Haven |     1.708 (0,029%) | 5.826.876 (99,970%) | 3 bytes entre imagens para alinhamento de `bufferView` |   546 `UNSIGNED_SHORT` | `POSITION` 4.344; `NORMAL` 4.344; `TEXCOORD_0` 2.896; índices 1.092 (total 12.676) |
+| Quaternius |    1.064 (14,052%) |     6.480 (85,578%) | sem padding interno adicional observado                |   360 `UNSIGNED_SHORT` | `POSITION` 2.880; `NORMAL` 2.880; índices 720 (total 6.480)                        |
 
 Há uma scene, um node, um mesh e um primitive por fixture. Accessors/bufferViews são respectivamente KayKit 4/5, Kenney 4/4, Poly Haven 4/7 e Quaternius 3/3. Os totais lógicos de geometria do corpus são `POSITION` 23.076 bytes, `NORMAL` 23.076, UV 13.464 e índices 6.624: 66.240 bytes. Isso explica o BIN simples de Kenney e Quaternius e deixa claro que o BIN de Poly Haven é majoritariamente imagem, não malha.
 
 ### Materiais e imagens
 
-| Asset | Material PBR efetivo | Imagem/textura e papel | Bytes codificados |
-| --- | --- | --- | ---: |
-| KayKit | `furniture_texture`; Base Color texture, metallic 0, roughness 0,5; opaco, uma face | PNG 1024×1024 em `baseColorTexture` | 15.605 |
-| Kenney | `wood`; Base Color factor `[0,8962264, 0,6015712, 0,3931559, 1]`, metallic 0; opaco, uma face | nenhuma; UV existe mas o material por fator não a consome | 0 |
-| Poly Haven | `Shelf_01`; Base Color, normal e `metallicRoughnessTexture`; opaco, `doubleSided` | normal PNG 1024×1024; Base Color JPEG 1024×1024; PNG 1024×1024 de metallic/roughness combinado | 4.594.197; 153.220; 1.066.780 |
-| Quaternius | `White`; Base Color factor `[0,4479754, 0,4432907, 0,4294085, 1]`, metallic 0, roughness 0,5; opaco, `doubleSided` | nenhuma e sem UV; ausência continua legítima pelo contrato F4-C | 0 |
+| Asset      | Material PBR efetivo                                                                                               | Imagem/textura e papel                                                                         |             Bytes codificados |
+| ---------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- | ----------------------------: |
+| KayKit     | `furniture_texture`; Base Color texture, metallic 0, roughness 0,5; opaco, uma face                                | PNG 1024×1024 em `baseColorTexture`                                                            |                        15.605 |
+| Kenney     | `wood`; Base Color factor `[0,8962264, 0,6015712, 0,3931559, 1]`, metallic 0; opaco, uma face                      | nenhuma; UV existe mas o material por fator não a consome                                      |                             0 |
+| Poly Haven | `Shelf_01`; Base Color, normal e `metallicRoughnessTexture`; opaco, `doubleSided`                                  | normal PNG 1024×1024; Base Color JPEG 1024×1024; PNG 1024×1024 de metallic/roughness combinado | 4.594.197; 153.220; 1.066.780 |
+| Quaternius | `White`; Base Color factor `[0,4479754, 0,4432907, 0,4294085, 1]`, metallic 0, roughness 0,5; opaco, `doubleSided` | nenhuma e sem UV; ausência continua legítima pelo contrato F4-C                                |                             0 |
 
 No Poly Haven, cada imagem é referida por uma textura distinta; a textura de metallic/roughness representa os dois canais PBR pela única `metallicRoughnessTexture` válida. Como já observado em F4-C/D, `GLTFLoader` materializa esse recurso como o mesmo objeto `Texture` nos maps de metalness e roughness; não há nova imagem ausente ou duplicada. KayKit não compartilha sua única textura com outro papel.
 
@@ -260,12 +264,12 @@ No Poly Haven, cada imagem é referida por uma textura distinta; a textura de me
 
 O corpus soma **5.901.424 bytes** (5.763,11 KiB; 5,628 MiB), quatro primitives, 1.923 vertices, 3.312 índices, 1.104 triângulos, quatro materiais, quatro texturas/imagens e 5.829.802 bytes de imagens codificadas. As estimativas RGBA8 base somam 16.777.216 bytes (16 MiB): 4 MiB de KayKit e 12 MiB de Poly Haven.
 
-| Asset | Participação no GLB corpus | Principal parcela observada |
-| --- | ---: | --- |
-| KayKit | 0,759% | PNG de 15.605 bytes e geometria de 27.788 bytes lógicos |
-| Kenney | 0,347% | geometria de 19.296 bytes lógicos |
-| Poly Haven | 98,766% | imagens: 5.814.197 bytes, 99,753% do próprio GLB |
-| Quaternius | 0,128% | geometria de 6.480 bytes lógicos |
+| Asset      | Participação no GLB corpus | Principal parcela observada                             |
+| ---------- | -------------------------: | ------------------------------------------------------- |
+| KayKit     |                     0,759% | PNG de 15.605 bytes e geometria de 27.788 bytes lógicos |
+| Kenney     |                     0,347% | geometria de 19.296 bytes lógicos                       |
+| Poly Haven |                    98,766% | imagens: 5.814.197 bytes, 99,753% do próprio GLB        |
+| Quaternius |                     0,128% | geometria de 6.480 bytes lógicos                        |
 
 ## F4-E2 — diagnóstico e hipóteses — concluída
 
@@ -280,11 +284,11 @@ Logo, storage/payload e custo estrutural potencial estão separados: JPEG Base C
 
 ### Hipóteses avaliadas
 
-| Hipótese | Problema medido / alvo | Ganho a investigar | Complexidade e risco | Decisão |
-| --- | --- | --- | --- | --- |
-| Reduzir resolução das três texturas Poly Haven de 1024² em variante isolada | 5.814.197 bytes codificados e estimativa base de 12 MiB; apenas Poly Haven | comparar bytes do GLB/imagens e a estimativa base contra a variante; se 512², a fórmula de referência cai de 12 para 3 MiB, sem promessa de memória real | transformação offline e novo gate visual/material/UV; pode degradar normal, detalhes e leitura artística; não requer decoder no runtime | **avançar como hipótese principal** |
-| KTX2/Basis para as texturas Poly Haven | mesmo alvo de imagens, mas visando encoding/transcodificação | possível redução de payload e mudança de representação, a medir somente se a primeira hipótese demonstrar necessidade | exige `KHR_texture_basisu`, `KTX2Loader`, transcoder WASM/configuração e compatibilidade WebGL/Android; maior superfície de manutenção e risco de decoder | não avançar em E3/E4 |
-| Quantização/meshopt/Draco para geometria | 66.240 bytes lógicos de geometria no corpus; Poly Haven tem só 12.676 | redução potencial pequena frente a 5,901 MiB totais | requer transformação e, para meshopt/Draco, decoder/configuração; pode reduzir arquivo sem provar benefício de runtime | não avançar |
+| Hipótese                                                                    | Problema medido / alvo                                                     | Ganho a investigar                                                                                                                                       | Complexidade e risco                                                                                                                                      | Decisão                             |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| Reduzir resolução das três texturas Poly Haven de 1024² em variante isolada | 5.814.197 bytes codificados e estimativa base de 12 MiB; apenas Poly Haven | comparar bytes do GLB/imagens e a estimativa base contra a variante; se 512², a fórmula de referência cai de 12 para 3 MiB, sem promessa de memória real | transformação offline e novo gate visual/material/UV; pode degradar normal, detalhes e leitura artística; não requer decoder no runtime                   | **avançar como hipótese principal** |
+| KTX2/Basis para as texturas Poly Haven                                      | mesmo alvo de imagens, mas visando encoding/transcodificação               | possível redução de payload e mudança de representação, a medir somente se a primeira hipótese demonstrar necessidade                                    | exige `KHR_texture_basisu`, `KTX2Loader`, transcoder WASM/configuração e compatibilidade WebGL/Android; maior superfície de manutenção e risco de decoder | não avançar em E3/E4                |
+| Quantização/meshopt/Draco para geometria                                    | 66.240 bytes lógicos de geometria no corpus; Poly Haven tem só 12.676      | redução potencial pequena frente a 5,901 MiB totais                                                                                                      | requer transformação e, para meshopt/Draco, decoder/configuração; pode reduzir arquivo sem provar benefício de runtime                                    | não avançar                         |
 
 O checkout de `three@0.185.1` contém `DRACOLoader`, `KTX2Loader` e `meshopt_decoder.module.js`; o `GLTFLoader` instalado reconhece `KHR_draco_mesh_compression`, `EXT_meshopt_compression`, `KHR_mesh_quantization` e `KHR_texture_basisu`, mas requer explicitamente configurar o loader/decoder apropriado. Essa disponibilidade local não aprova sua adoção nem elimina payload, worker/transcoder, Android/WebView e manutenção a validar.
 
@@ -308,18 +312,18 @@ Em 2026-09-14, o GLB registrado Poly Haven foi novamente conferido (`33d55c107ea
 
 A transformação temporária leu o JSON/BIN do GLB atual, copiou sem alteração os `bufferViews` de geometria e substituiu somente os três payloads de imagem incorporados; então reempacotou um GLB 2.0 autocontido. Pillow 12.3.0 aplicou `LANCZOS` de 1024×1024 para 512×512. Base Color manteve JPEG RGB, qualidade 90 e subsampling 4:2:0; o JPEG original reportava qualidade 85 no ImageMagick, portanto a diferença codificada inclui reencoding além da resolução. Normal e metallic/roughness mantiveram PNG RGB com `compress_level=9`, sem inversão de canal G, troca de canal, gamma deliberado, recoloração, sharpening ou renormalização: é downsample convencional documentado para o gate visual. Não houve Blender, mudança de mesh/UV/material, codec novo, extensão glTF, decoder, dependência ou alteração de loader/runtime.
 
-| Métrica | Original 1024 | Variante 512 | Delta | Delta % |
-| --- | ---: | ---: | ---: | ---: |
-| GLB bytes | 5.828.612 | 711.352 | -5.117.260 | -87,796% |
-| JSON chunk | 1.708 | 1.700 | -8 | -0,468% |
-| BIN chunk | 5.826.876 | 709.624 | -5.117.252 | -87,822% |
-| Imagens codificadas | 5.814.197 | 696.943 | -5.117.254 | -88,013% |
-| Normal PNG | 4.594.197 | 418.465 | -4.175.732 | -90,891% |
-| Base Color JPEG | 153.220 | 56.840 | -96.380 | -62,903% |
-| Metallic/Roughness PNG | 1.066.780 | 221.638 | -845.142 | -79,224% |
-| Estimativa RGBA8 base | 12.582.912 (12 MiB) | 3.145.728 (3 MiB) | -9.437.184 | -75,000% |
-| Vertices / índices / triângulos | 362 / 546 / 182 | 362 / 546 / 182 | 0 / 0 / 0 | 0% |
-| Materials / imagens | 1 / 3 | 1 / 3 | 0 / 0 | 0% |
+| Métrica                         |       Original 1024 |      Variante 512 |      Delta |  Delta % |
+| ------------------------------- | ------------------: | ----------------: | ---------: | -------: |
+| GLB bytes                       |           5.828.612 |           711.352 | -5.117.260 | -87,796% |
+| JSON chunk                      |               1.708 |             1.700 |         -8 |  -0,468% |
+| BIN chunk                       |           5.826.876 |           709.624 | -5.117.252 | -87,822% |
+| Imagens codificadas             |           5.814.197 |           696.943 | -5.117.254 | -88,013% |
+| Normal PNG                      |           4.594.197 |           418.465 | -4.175.732 | -90,891% |
+| Base Color JPEG                 |             153.220 |            56.840 |    -96.380 | -62,903% |
+| Metallic/Roughness PNG          |           1.066.780 |           221.638 |   -845.142 | -79,224% |
+| Estimativa RGBA8 base           | 12.582.912 (12 MiB) | 3.145.728 (3 MiB) | -9.437.184 | -75,000% |
+| Vertices / índices / triângulos |     362 / 546 / 182 |   362 / 546 / 182 |  0 / 0 / 0 |       0% |
+| Materials / imagens             |               1 / 3 |             1 / 3 |      0 / 0 |       0% |
 
 O teste temporário comparou byte a byte os dados lógicos de `POSITION`, `NORMAL`, `TEXCOORD_0` e índices; comparou nodes, hierarchy/scenes, mesh/primitive, accessors, materiais, texturas, samplers e extensões; e confirmou transform/bounding box iguais. O `GLTFLoader` de `three@0.185.1` fez parse real dos dois GLBs: a variante tem UV, `map`, `normalMap`, `metalnessMap` e `roughnessMap`, sendo os dois últimos o mesmo objeto `Texture`. As três imagens permanecem incorporadas e agora têm 512×512, na mesma ordem e MIME `PNG`, `JPEG`, `PNG`.
 
