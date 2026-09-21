@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-1C — Integração estática com runtime e seleção — 2026-09-21
+
+- a experiência normal da Biblioteca agora anexa a composição procedural de três estantes nas posições provisórias aprovadas; cada uma preserva seu `instanceId`, recebe rótulo legível, seleção por toque/clique e pelos controles React e o destaque visual existente;
+- a montagem Three possui a root da composição e a libera por `disposeObjectTree()` no descarte ou falha de montagem; raízes e recursos continuam isolados em novas montagens;
+- cenários F5 reconhecidos por `performanceScenario` continuam sem a composição e sem mudança de corpus, catálogo ou métricas diagnósticas; a fixture F1 técnica permanece visível na experiência normal. Não houve associação a registros, persistência espacial, substituição dinâmica, GLB produtivo, cache ou `AssetManager`; BF-1D passa a ser a próxima etapa.
+
 ### BF-1B — Composição declarativa e posicionamento determinístico — 2026-09-21
 
 - adicionadas definições declarativas Three-independentes e a primeira composição de três estantes `bookshelf`, nas posições provisórias `[-3, 0, -2]`, `[0, 0, -2]` e `[3, 0, -2]`;

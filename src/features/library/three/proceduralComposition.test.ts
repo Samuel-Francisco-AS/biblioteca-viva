@@ -134,6 +134,26 @@ describe("composição procedural BF-1B", () => {
     ).toThrow("instanceId duplicado: duplicated");
   });
 
+  it.each(["", "   "])(
+    "rejeita instanceId vazio antes de construir uma composição: %j",
+    (instanceId) => {
+      expect(() =>
+        createProceduralComposition([definition(instanceId, [0, 0, 0])]),
+      ).toThrow("instanceId vazio");
+    },
+  );
+
+  it.each([Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
+    "rejeita coordenada não finita antes de construir uma composição: %s",
+    (coordinate) => {
+      expect(() =>
+        createProceduralComposition([
+          definition("invalid-position", [coordinate, 0, 0]),
+        ]),
+      ).toThrow("posição não finita: invalid-position");
+    },
+  );
+
   it("isola recursos entre composições e mantém a outra utilizável", () => {
     const first = createProceduralComposition(
       READING_SHELF_COMPOSITION_DEFINITIONS,

@@ -59,10 +59,18 @@ function validateDefinitions(
   definitions: readonly ProceduralContentDefinition[],
 ): void {
   const instanceIds = new Set<string>();
-  for (const { identity } of definitions) {
+  for (const { identity, position } of definitions) {
+    if (identity.instanceId.trim().length === 0) {
+      throw new Error("A composição procedural contém instanceId vazio.");
+    }
     if (instanceIds.has(identity.instanceId)) {
       throw new Error(
         `A composição procedural contém instanceId duplicado: ${identity.instanceId}.`,
+      );
+    }
+    if (!position.every(Number.isFinite)) {
+      throw new Error(
+        `A composição procedural contém posição não finita: ${identity.instanceId}.`,
       );
     }
     instanceIds.add(identity.instanceId);

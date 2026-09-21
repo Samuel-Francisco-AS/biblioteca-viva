@@ -37,6 +37,7 @@ interface ThreeWorldInteractionOptions {
   readonly catalog: readonly WorldSelectableObject[];
   readonly navigation: CameraNavigation;
   readonly onSelectionChange: (selection: WorldSelection) => void;
+  readonly pickingPriorityRoots?: readonly Object3D[];
   readonly render: () => void;
   readonly scene: Scene;
   readonly selectables: readonly ReferenceSelectableObject[];
@@ -56,6 +57,7 @@ export class ThreeWorldInteraction {
   private readonly raycaster = new Raycaster();
   private readonly render: () => void;
   private readonly scene: Scene;
+  private readonly pickingPriorityRoots: readonly Object3D[];
   private selectedId: string | null = null;
   private readonly selectableDescriptors = new Map<
     string,
@@ -78,6 +80,7 @@ export class ThreeWorldInteraction {
     this.canvas = options.canvas;
     this.navigation = options.navigation;
     this.onSelectionChange = options.onSelectionChange;
+    this.pickingPriorityRoots = options.pickingPriorityRoots ?? [];
     this.render = options.render;
     this.scene = options.scene;
     for (const descriptor of options.catalog) {
@@ -391,10 +394,17 @@ export class ThreeWorldInteraction {
     this.camera.updateMatrixWorld();
     this.scene.updateMatrixWorld(true);
     this.raycaster.setFromCamera(pointer, this.camera);
-    const intersections = this.raycaster.intersectObjects(
-      [...this.selectableRoots.values()],
+    const prioritizedIntersections = this.raycaster.intersectObjects(
+      [...this.pickingPriorityRoots],
       true,
     );
+    const intersections =
+      prioritizedIntersections.length > 0
+        ? prioritizedIntersections
+        : this.raycaster.intersectObjects(
+            [...this.selectableRoots.values()],
+            true,
+          );
     const selectedId = intersections
       .map((intersection) => this.findSelectableId(intersection.object))
       .find((id) => id !== undefined);

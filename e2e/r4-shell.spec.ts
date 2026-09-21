@@ -21,12 +21,12 @@ test("shell abre a Biblioteca com uma única superfície Three.js", async ({
   await expect(canvas).toHaveAttribute("data-fixture-status", "ready");
   await expect(canvas).toHaveAttribute("data-reference-objects", "46");
   await expect(canvas).toHaveAttribute("data-reference-proxy-types", "4");
-  await expect(canvas).toHaveAttribute("data-selectable-objects", "11");
+  await expect(canvas).toHaveAttribute("data-selectable-objects", "14");
   await expect(canvas).toHaveAttribute("data-draw-calls", /^\d+$/u);
   await expect(canvas).toHaveAttribute("data-triangles", /^\d+$/u);
   await expect(canvas).toHaveAttribute("data-runtime-state", "running");
   await expect(canvas).toHaveAttribute("data-active-frame-loops", "1");
-  await expect(canvas).toHaveAttribute("data-meshes", "46");
+  await expect(canvas).toHaveAttribute("data-meshes", "67");
   await expect
     .poll(async () => Number(await canvas.getAttribute("data-fps")))
     .toBeGreaterThan(0);

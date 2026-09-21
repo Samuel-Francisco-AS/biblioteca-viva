@@ -17,8 +17,8 @@ BF-0 ✅ replanejamento e decisão arquitetural
 BF-1 ▶ camada mínima de conteúdo procedural
   BF-1A ✅ contrato mínimo e primeira fábrica procedural
   BF-1B ✅ composição declarativa e posicionamento determinístico
-  BF-1C ⏳ integração com runtime e seleção — próximo
-  BF-1D ⏳ substituição, descarte e gate
+  BF-1C ✅ integração estática com runtime e seleção
+  BF-1D ⏳ substituição, descarte e gate — próximo
 BF-2 ⏳ primeira área de leitura integrada a registros reais
 BF-3 ⏳ integração dos seis tipos de registro
 BF-4 ⏳ ambiente habitável, mobília e personagens provisórios
@@ -41,9 +41,9 @@ Definiu a identidade lógica mínima e implementou uma fábrica procedural isola
 
 Definiu instâncias declarativas, posicionamento determinístico e uma pequena composição de três estantes procedurais, separando definições de conteúdo da criação de objetos Three.js. A composição valida `instanceId` duplicado antes de criar recursos, mantém a root local da fábrica em identidade, aplica layout em wrapper de instância e cobre determinismo, isolamento e descarte; ela ainda não está integrada ao runtime ou à seleção.
 
-#### BF-1C — Integração com runtime e seleção — planejada
+#### BF-1C — Integração com runtime e seleção — concluída tecnicamente
 
-Integrará a composição ao runtime produtivo e conectará instâncias à seleção Three ↔ React, preservando câmera, gestos, lifecycle, diagnósticos e fallback sem promover fixtures técnicas. Seu contrato detalhado será definido antes da execução.
+Integra estaticamente a composição BF-1B somente na experiência normal, distinguida da diagnóstica pela ausência de `performanceScenario`. As três instâncias preservam `instanceId`, posição e root local; entram no catálogo de `WorldRuntime` já em `mount()` como `reading-shelf-01`–`03`, com rótulos distintos, roots selecionáveis por wrapper e destaque/picking existentes. Em sobreposição com um proxy F1, a interseção procedural recebe prioridade para que a estante continue selecionável; fora dela, a regra técnica existente permanece. Os controles React, anúncio acessível, foco, teclado e fallback continuam sendo o caminho semântico complementar ao canvas. A montagem possui a root da composição e a libera por `disposeObjectTree()` em descarte terminal ou falha; novas montagens usam recursos independentes. F5 não recebe a composição, nem tem seus counts, catálogo, payload ou resultados alterados. Foram acrescentadas somente as validações de `instanceId` vazio e coordenadas não finitas. A fixture F1 permanece visível; há observação técnica de possível oclusão projetada por proxy F1 a validar visualmente, sem reforma de layout. BF-1D é o próximo checkpoint; BF-1 não está concluída.
 
 #### BF-1D — Substituição, descarte e gate — planejada
 
@@ -122,7 +122,8 @@ P3D-B2–F ⏸ ADIADOS
 BF-0 ✅ replanejamento e decisão arquitetural
 BF-1A ✅ contrato mínimo e primeira fábrica procedural isolada
 BF-1B ✅ composição declarativa e posicionamento determinístico
-PRÓXIMO: BF-1C — integração com runtime e seleção
+BF-1C ✅ integração estática com runtime e seleção
+PRÓXIMO: BF-1D — substituição, descarte e gate
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída
@@ -213,13 +214,13 @@ F6 foi concluída tecnicamente/arquiteturalmente sem criar mundo ou persistênci
 
 ### F6 — Acessibilidade e fechamento da FUNDAÇÃO — concluída tecnicamente
 
-F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico. F6-B confirmou a única lacuna automatizável — foco/teclado e marcos semânticos estruturais — sem alteração de produção; a regressão técnica, E2E e build Android aprovaram o APK candidato. F6-C aceitou documentalmente a indisponibilidade temporária do Moto G06 como dívida assistiva, sem declarar TalkBack ou acessibilidade humana Android aprovados. A FUNDAÇÃO está concluída no plano técnico/arquitetural. P3D-A continua regulando GLBs, P3D-B1 preserva a proveniência de `bookshelf` e P3D-B2–F estão adiados; BF-1A/B concluíram fábrica e composição isoladas, e BF-1C é a próxima etapa, ainda sem conteúdo no runtime.
+F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico. F6-B confirmou a única lacuna automatizável — foco/teclado e marcos semânticos estruturais — sem alteração de produção; a regressão técnica, E2E e build Android aprovaram o APK candidato. F6-C aceitou documentalmente a indisponibilidade temporária do Moto G06 como dívida assistiva, sem declarar TalkBack ou acessibilidade humana Android aprovados. A FUNDAÇÃO está concluída no plano técnico/arquitetural. P3D-A continua regulando GLBs, P3D-B1 preserva a proveniência de `bookshelf` e P3D-B2–F estão adiados; BF-1A/B concluíram fábrica e composição, BF-1C a integrou estaticamente ao runtime normal, e BF-1D é a próxima etapa.
 
 F1 aprovou a viabilidade da base Three.js; não concluiu câmera, interação, assets, performance ou acessibilidade finais.
 
 ## Depois da FUNDAÇÃO
 
-1. BF-1C: integrar a composição procedural ao runtime e à seleção, após definir seu contrato detalhado.
+1. BF-1D: validar substituição, descarte e gate integrado da composição procedural.
 2. BF-2–BF-5: integrar progressivamente leitura, os seis tipos de registro e o ambiente provisório, preservando a operação essencial em React.
 3. Retomar P3D-B2–F somente se a ingestão ou substituição por GLB definitivo se tornar necessária.
 4. Projetar persistência espacial nova somente quando uma necessidade funcional demonstrar o que deve ser salvo.

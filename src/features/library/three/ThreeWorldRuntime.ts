@@ -33,6 +33,11 @@ import {
   REFERENCE_SCENE_PROXY_TYPES,
   type ReferenceScene,
 } from "./referenceScene";
+import {
+  createProceduralComposition,
+  READING_SHELF_COMPOSITION_DEFINITIONS,
+  type ProceduralComposition,
+} from "./proceduralComposition";
 import { collectSceneTextureMetrics } from "./sceneTextureMetrics";
 import { ThreeWorldInteraction } from "./ThreeWorldInteraction";
 
@@ -89,6 +94,22 @@ const FIXTURE_SELECTABLE: WorldSelectableObject = Object.freeze({
   label: "Pirâmide técnica",
 });
 
+const READING_SHELF_LABELS: Readonly<Record<string, string>> = Object.freeze({
+  "reading-shelf-01": "Estante de leitura 1",
+  "reading-shelf-02": "Estante de leitura 2",
+  "reading-shelf-03": "Estante de leitura 3",
+});
+
+function readingShelfLabel(instanceId: string): string {
+  const label = READING_SHELF_LABELS[instanceId];
+  if (!label) {
+    throw new Error(
+      `A composição procedural não possui rótulo para instanceId: ${instanceId}.`,
+    );
+  }
+  return label;
+}
+
 function createDefaultPerformanceScenario(url: string): PerformanceScenario {
   return Object.freeze({
     assets: Object.freeze([
@@ -120,6 +141,7 @@ class ThreeWorldMount {
   private disposed = false;
   private readonly fixtures: Object3D[] = [];
   private interaction: ThreeWorldInteraction | undefined;
+  private proceduralComposition: ProceduralComposition | undefined;
   private referenceScene: ReferenceScene | undefined;
   private resizeObserver: ResizeObserver | undefined;
   private webglContextLostListener: ((event: Event) => void) | undefined;
@@ -170,6 +192,10 @@ class ThreeWorldMount {
 
   addInteraction(interaction: ThreeWorldInteraction): void {
     this.interaction = interaction;
+  }
+
+  addProceduralComposition(composition: ProceduralComposition): void {
+    this.proceduralComposition = composition;
   }
 
   addFixture(fixture: Object3D): void {
@@ -278,6 +304,11 @@ class ThreeWorldMount {
     const fixtures = this.fixtures.splice(0);
     this.safely(() => {
       for (const fixture of fixtures) disposeObjectTree(fixture);
+    });
+    const proceduralComposition = this.proceduralComposition;
+    this.proceduralComposition = undefined;
+    this.safely(() => {
+      if (proceduralComposition) disposeObjectTree(proceduralComposition.root);
     });
     const referenceScene = this.referenceScene;
     this.referenceScene = undefined;
@@ -393,6 +424,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     }
 
     this.mountStartedAt = this.now();
+    let unattachedProceduralComposition: ProceduralComposition | undefined;
     try {
       const mountedWorld = ThreeWorldMount.create(
         host,
@@ -406,6 +438,24 @@ export class ThreeWorldRuntime implements WorldRuntime {
       scene.background = new Color(0x18342d);
       scene.add(referenceScene.root);
       mountedWorld.addReferenceScene(referenceScene);
+      const proceduralSelectables = this.performanceScenarioDiagnosticsEnabled
+        ? []
+        : (() => {
+            const composition = createProceduralComposition(
+              READING_SHELF_COMPOSITION_DEFINITIONS,
+            );
+            unattachedProceduralComposition = composition;
+            scene.add(composition.root);
+            mountedWorld.addProceduralComposition(composition);
+            unattachedProceduralComposition = undefined;
+            return composition.instances.map(({ identity, node }) => ({
+              descriptor: {
+                id: identity.instanceId,
+                label: readingShelfLabel(identity.instanceId),
+              },
+              root: node,
+            }));
+          })();
       this.navigation = new CameraNavigation(camera);
 
       renderer.shadowMap.enabled = false;
@@ -428,6 +478,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
 
       this.selectableObjects = Object.freeze([
         ...referenceScene.selectables.map(({ descriptor }) => descriptor),
+        ...proceduralSelectables.map(({ descriptor }) => descriptor),
         FIXTURE_SELECTABLE,
       ]);
       const interaction = new ThreeWorldInteraction({
@@ -436,12 +487,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
         catalog: this.selectableObjects,
         navigation: this.navigation,
         onSelectionChange: this.handleSelectionChange,
+        pickingPriorityRoots: proceduralSelectables.map(({ root }) => root),
         render: () => {
           if (!this.renderCurrentFrame()) return;
           this.publishDiagnostics(false);
         },
         scene,
-        selectables: referenceScene.selectables,
+        selectables: [...referenceScene.selectables, ...proceduralSelectables],
       });
       mountedWorld.addInteraction(interaction);
       this.state = "mounted";
@@ -460,6 +512,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       mountedWorld.watchVisibility(this.handleVisibilityChange);
       this.publishDiagnostics(true);
     } catch (error) {
+      if (unattachedProceduralComposition) {
+        disposeObjectTree(unattachedProceduralComposition.root);
+      }
       this.dispose();
       throw error;
     }

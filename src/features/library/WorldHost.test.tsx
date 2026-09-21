@@ -38,6 +38,9 @@ function createRuntime(): TestWorldRuntime {
   const selectables = [
     { id: "bookshelf-01", label: "Estante técnica 1" },
     { id: "table-01", label: "Mesa técnica 1" },
+    { id: "reading-shelf-01", label: "Estante de leitura 1" },
+    { id: "reading-shelf-02", label: "Estante de leitura 2" },
+    { id: "reading-shelf-03", label: "Estante de leitura 3" },
     { id: "fixture-pyramid", label: "Pirâmide técnica" },
   ] as const;
   let canvas: HTMLCanvasElement | undefined;
@@ -60,7 +63,7 @@ function createRuntime(): TestWorldRuntime {
     renderedFrames: 20,
     runtimeState: "running",
     sceneObjects: 59,
-    selectableObjects: 11,
+    selectableObjects: 14,
     textures: 1,
     timeToFirstUsableFrameMs: 4,
     triangles: 546,
@@ -206,6 +209,29 @@ describe("WorldHost", () => {
     ).toBeVisible();
   });
 
+  it("alcança as três estantes procedurais pelos controles React", async () => {
+    const user = userEvent.setup();
+    const runtime = createRuntime();
+    render(<WorldHost runtimeFactory={() => Promise.resolve(runtime)} />);
+
+    const next = await screen.findByRole("button", { name: "Próximo →" });
+    await user.click(next);
+    await user.click(next);
+    for (const [index, instanceId] of [
+      "reading-shelf-01",
+      "reading-shelf-02",
+      "reading-shelf-03",
+    ].entries()) {
+      await user.click(next);
+      expect(runtime.selectObject).toHaveBeenLastCalledWith(instanceId);
+      expect(
+        screen.getByText(
+          `Objeto selecionado: Estante de leitura ${index + 1}.`,
+        ),
+      ).toBeVisible();
+    }
+  });
+
   it("recua a partir da seleção vazia e percorre o catálogo", async () => {
     const user = userEvent.setup();
     const runtime = createRuntime();
@@ -221,9 +247,9 @@ describe("WorldHost", () => {
     ).toBeVisible();
 
     await user.click(previous);
-    expect(runtime.selectObject).toHaveBeenLastCalledWith("table-01");
+    expect(runtime.selectObject).toHaveBeenLastCalledWith("reading-shelf-03");
     expect(
-      screen.getByText("Objeto selecionado: Mesa técnica 1."),
+      screen.getByText("Objeto selecionado: Estante de leitura 3."),
     ).toBeVisible();
   });
 
@@ -262,9 +288,9 @@ describe("WorldHost", () => {
     ).toBeVisible();
 
     await user.click(next);
-    expect(runtime.selectObject).toHaveBeenLastCalledWith("fixture-pyramid");
+    expect(runtime.selectObject).toHaveBeenLastCalledWith("reading-shelf-01");
     expect(
-      screen.getByText("Objeto selecionado: Pirâmide técnica."),
+      screen.getByText("Objeto selecionado: Estante de leitura 1."),
     ).toBeVisible();
 
     act(() => {

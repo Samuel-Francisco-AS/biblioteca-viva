@@ -9,6 +9,8 @@ import {
   OrthographicCamera,
   Scene,
   Vector3,
+  type BufferGeometry,
+  type Material,
 } from "three";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -19,6 +21,7 @@ import {
 } from "./ThreeWorldRuntime";
 import { CAMERA_REFERENCE_HALF_HEIGHT } from "./cameraMath";
 import { PERFORMANCE_SCENARIOS } from "./performanceScenarios";
+import * as proceduralComposition from "./proceduralComposition";
 
 class TestRenderer implements ThreeWorldRenderer {
   readonly domElement = document.createElement("canvas");
@@ -81,6 +84,12 @@ class TestResizeObserver implements ResizeObserver {
   constructor(readonly callback: ResizeObserverCallback) {
     TestResizeObserver.instances.push(this);
   }
+}
+
+function isDisposableMesh(
+  object: Object3D | undefined,
+): object is Mesh<BufferGeometry, Material | Material[]> {
+  return object instanceof Mesh;
 }
 
 function createHost(width = 640, height = 360): HTMLDivElement {
@@ -180,9 +189,9 @@ describe("ThreeWorldRuntime", () => {
       activeFrameLoops: 0,
       drawCalls: 46,
       geometries: 46,
-      meshes: 45,
+      meshes: 66,
       runtimeState: "mounted",
-      selectableObjects: 11,
+      selectableObjects: 14,
       textures: 0,
       triangles: 546,
     });
@@ -208,6 +217,18 @@ describe("ThreeWorldRuntime", () => {
     expect(renderer.domElement.dataset.referenceProxyTypes).toBe("4");
     expect(renderer.domElement.dataset.drawCalls).toBe("46");
     expect(renderer.domElement.dataset.triangles).toBe("546");
+    const mountedScene = renderer.render.mock.calls.at(-1)?.[0];
+    const composition = mountedScene?.getObjectByName(
+      "procedural-content-composition",
+    );
+    expect(composition?.children).toHaveLength(3);
+    expect(
+      composition?.children.map(({ position }) => position.toArray()),
+    ).toEqual([
+      [-3, 0, -2],
+      [0, 0, -2],
+      [3, 0, -2],
+    ]);
     expect(fixtureLoader.load).toHaveBeenCalledWith(
       "/fixture.gltf",
       expect.any(Function),
@@ -283,6 +304,104 @@ describe("ThreeWorldRuntime", () => {
     expect(host.querySelector("canvas")).not.toBeInTheDocument();
   });
 
+  it("possui e libera a composição procedural por montagem, sem compartilhar recursos ao remontar", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const host = createHost();
+    const firstRenderer = new TestRenderer();
+    const first = new ThreeWorldRuntime({
+      createRenderer: () => firstRenderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+
+    first.mount(host);
+    const firstScene = firstRenderer.render.mock.calls.at(-1)?.[0];
+    const firstComposition = firstScene?.getObjectByName(
+      "procedural-content-composition",
+    );
+    const firstMesh = firstComposition?.getObjectByName("bookshelf-shelf");
+    expect(firstComposition).toBeDefined();
+    expect(firstMesh).toBeInstanceOf(Mesh);
+    if (!isDisposableMesh(firstMesh)) return;
+    const disposeGeometry = vi.spyOn(firstMesh.geometry, "dispose");
+    const firstMaterial = Array.isArray(firstMesh.material)
+      ? firstMesh.material[0]
+      : firstMesh.material;
+    expect(firstMaterial).toBeDefined();
+    if (!firstMaterial) return;
+    const disposeMaterial = vi.spyOn(firstMaterial, "dispose");
+
+    first.dispose();
+
+    expect(disposeGeometry).toHaveBeenCalledOnce();
+    expect(disposeMaterial).toHaveBeenCalledOnce();
+    expect(firstComposition?.parent).toBeNull();
+    expect(firstComposition?.children).toHaveLength(0);
+
+    const secondRenderer = new TestRenderer();
+    const second = new ThreeWorldRuntime({
+      createRenderer: () => secondRenderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+    second.mount(host);
+    const secondScene = secondRenderer.render.mock.calls.at(-1)?.[0];
+    const secondComposition = secondScene?.getObjectByName(
+      "procedural-content-composition",
+    );
+    const secondMesh = secondComposition?.getObjectByName("bookshelf-shelf");
+    expect(secondComposition).not.toBe(firstComposition);
+    expect(secondMesh).toBeInstanceOf(Mesh);
+    if (!(secondMesh instanceof Mesh)) return;
+    expect(secondMesh.geometry).not.toBe(firstMesh.geometry);
+    second.dispose();
+  });
+
+  it("libera a composição antes de concluir a montagem que falha e permite uma nova instância", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const composition = proceduralComposition.createProceduralComposition(
+      proceduralComposition.READING_SHELF_COMPOSITION_DEFINITIONS,
+    );
+    const shelf = composition.root.getObjectByName("bookshelf-shelf");
+    expect(isDisposableMesh(shelf)).toBe(true);
+    if (!isDisposableMesh(shelf)) return;
+    const disposeGeometry = vi.spyOn(shelf.geometry, "dispose");
+    const shelfMaterial = Array.isArray(shelf.material)
+      ? shelf.material[0]
+      : shelf.material;
+    expect(shelfMaterial).toBeDefined();
+    if (!shelfMaterial) return;
+    const disposeMaterial = vi.spyOn(shelfMaterial, "dispose");
+    vi.spyOn(
+      proceduralComposition,
+      "createProceduralComposition",
+    ).mockReturnValue(composition);
+    const renderer = new TestRenderer();
+    renderer.setSize.mockImplementation(() => {
+      throw new Error("resize unavailable");
+    });
+    const host = createHost();
+    const first = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+
+    expect(() => first.mount(host)).toThrow(
+      "ThreeWorldRuntime renderer failed while mounting.",
+    );
+    expect(disposeGeometry).toHaveBeenCalledOnce();
+    expect(disposeMaterial).toHaveBeenCalledOnce();
+    expect(composition.root.parent).toBeNull();
+    expect(composition.root.children).toHaveLength(0);
+    expect(host.querySelector("canvas")).not.toBeInTheDocument();
+
+    const second = new ThreeWorldRuntime({
+      createRenderer: () => new TestRenderer(),
+      fixtureLoader: new TestFixtureLoader(),
+    });
+    second.mount(host);
+    expect(host.querySelectorAll("canvas")).toHaveLength(1);
+    second.dispose();
+  });
+
   it("insere o fixture carregado, registra o tempo e descarta seus recursos", () => {
     vi.stubGlobal("ResizeObserver", TestResizeObserver);
     const renderer = new TestRenderer();
@@ -337,7 +456,13 @@ describe("ThreeWorldRuntime", () => {
       performanceScenarioAssetsLoaded: 0,
       performanceScenarioAssetsTotal: 5,
       performanceScenarioId: "f4-corpus",
+      meshes: 45,
+      selectableObjects: 11,
     });
+    const initialScene = renderer.render.mock.calls.at(-1)?.[0];
+    expect(
+      initialScene?.getObjectByName("procedural-content-composition"),
+    ).toBeUndefined();
 
     const roots = scenario.assets.map(() => new Group());
     roots.forEach((root, index) => fixtureLoader.succeed(root, index));
@@ -1623,7 +1748,22 @@ describe("ThreeWorldRuntime", () => {
     const listener = vi.fn();
     runtime.onSelectionChange(listener);
 
-    expect(runtime.getSelectableObjects()).toHaveLength(11);
+    expect(runtime.getSelectableObjects()).toEqual([
+      { id: "bookshelf-01", label: "Estante técnica 1" },
+      { id: "bookshelf-02", label: "Estante técnica 2" },
+      { id: "bookshelf-03", label: "Estante técnica 3" },
+      { id: "table-01", label: "Mesa técnica 1" },
+      { id: "table-02", label: "Mesa técnica 2" },
+      { id: "bench-01", label: "Banco técnico 1" },
+      { id: "bench-02", label: "Banco técnico 2" },
+      { id: "crate-01", label: "Caixa técnica 1" },
+      { id: "crate-02", label: "Caixa técnica 2" },
+      { id: "crate-03", label: "Caixa técnica 3" },
+      { id: "reading-shelf-01", label: "Estante de leitura 1" },
+      { id: "reading-shelf-02", label: "Estante de leitura 2" },
+      { id: "reading-shelf-03", label: "Estante de leitura 3" },
+      { id: "fixture-pyramid", label: "Pirâmide técnica" },
+    ]);
     expect(runtime.getSelectableObjects().at(-1)).toEqual({
       id: "fixture-pyramid",
       label: "Pirâmide técnica",
@@ -1662,6 +1802,15 @@ describe("ThreeWorldRuntime", () => {
     expect(disposeHighlightMaterial).toHaveBeenCalledOnce();
     expect(renderer.domElement.dataset.highlightedObject).toBe("table-02");
 
+    runtime.selectObject("reading-shelf-02");
+    expect(listener).toHaveBeenLastCalledWith({
+      id: "reading-shelf-02",
+      label: "Estante de leitura 2",
+    });
+    expect(renderer.domElement.dataset.highlightedObject).toBe(
+      "reading-shelf-02",
+    );
+
     runtime.selectObject("missing-object");
     expect(listener).toHaveBeenLastCalledWith(null);
     expect(renderer.domElement.dataset.selectedObject).toBe("");
@@ -1669,7 +1818,96 @@ describe("ThreeWorldRuntime", () => {
 
     runtime.dispose();
     runtime.selectObject("bookshelf-02");
-    expect(listener).toHaveBeenCalledTimes(4);
+    expect(listener).toHaveBeenCalledTimes(5);
+  });
+
+  it("resolve partes internas de cada estante procedural no picking Three → host", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    vi.spyOn(renderer.domElement, "getBoundingClientRect").mockReturnValue({
+      bottom: 360,
+      height: 360,
+      left: 0,
+      right: 640,
+      top: 0,
+      width: 640,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    });
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+    });
+    runtime.mount(createHost());
+    const listener = vi.fn();
+    runtime.onSelectionChange(listener);
+    const latestRender = renderer.render.mock.calls.at(-1);
+    const scene = latestRender?.[0];
+    const camera = latestRender?.[1];
+    const composition = scene?.getObjectByName(
+      "procedural-content-composition",
+    );
+    expect(scene).toBeDefined();
+    expect(camera).toBeDefined();
+    expect(composition?.children).toHaveLength(3);
+    if (!scene || !camera || !composition) return;
+    const partNames = ["bookshelf-shelf", "bookshelf-side", "bookshelf-back"];
+    for (const [index, partName] of partNames.entries()) {
+      const instance = composition.children[index];
+      const part = instance?.getObjectByName(partName);
+      expect(part).toBeInstanceOf(Mesh);
+      if (!part) continue;
+      scene.updateMatrixWorld(true);
+      camera.updateMatrixWorld();
+      const bounds = new Box3().setFromObject(part);
+      const projected = [
+        new Vector3(bounds.min.x, bounds.min.y, bounds.min.z),
+        new Vector3(bounds.min.x, bounds.min.y, bounds.max.z),
+        new Vector3(bounds.min.x, bounds.max.y, bounds.min.z),
+        new Vector3(bounds.min.x, bounds.max.y, bounds.max.z),
+        new Vector3(bounds.max.x, bounds.min.y, bounds.min.z),
+        new Vector3(bounds.max.x, bounds.min.y, bounds.max.z),
+        new Vector3(bounds.max.x, bounds.max.y, bounds.min.z),
+        new Vector3(bounds.max.x, bounds.max.y, bounds.max.z),
+      ].map((point) => point.project(camera));
+      const xValues = projected.map(({ x }) => x);
+      const yValues = projected.map(({ y }) => y);
+      const minimumX = Math.min(...xValues);
+      const maximumX = Math.max(...xValues);
+      const minimumY = Math.min(...yValues);
+      const maximumY = Math.max(...yValues);
+      const expected = {
+        id: `reading-shelf-0${index + 1}`,
+        label: `Estante de leitura ${index + 1}`,
+      };
+      let selected = false;
+      for (const xFactor of [0.15, 0.5, 0.85]) {
+        for (const yFactor of [0.15, 0.5, 0.85]) {
+          const x =
+            ((minimumX + (maximumX - minimumX) * xFactor + 1) * 640) / 2;
+          const y =
+            ((1 - (minimumY + (maximumY - minimumY) * yFactor)) * 360) / 2;
+          dispatchPointer(renderer.domElement, "pointerdown", {
+            clientX: x,
+            clientY: y,
+            pointerId: index + 1,
+          });
+          dispatchPointer(renderer.domElement, "pointerup", {
+            clientX: x,
+            clientY: y,
+            pointerId: index + 1,
+          });
+          if (renderer.domElement.dataset.selectedObject === expected.id) {
+            selected = true;
+            break;
+          }
+        }
+        if (selected) break;
+      }
+      expect(selected, `${partName} da instância ${index + 1}`).toBe(true);
+    }
+    runtime.dispose();
   });
 
   it("resolve um mesh filho do fixture no picking Three → host", () => {
