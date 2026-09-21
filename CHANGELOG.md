@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-1C-FIX — Correção geométrica e variantes visuais — 2026-09-21
+
+- corrigidas faces coincidentes e interseções internas das estantes BF-1C, reconstruindo fundo recuado, prateleiras legíveis, laterais, base e moldura sem mascaramento por renderer;
+- adicionadas as variantes determinísticas equilibrada, alta/escura e larga/clara, preservando `modelTypeId` e os três IDs lógicos; `reading-shelf-03` passou para `[3, 0, -2.1]` após a prova de colisão com banco F1;
+- preservados catálogo, seleção, lifecycle e F5. A aprovação visual humana da correção está pendente; BF-1D não foi iniciada.
+
 ### BF-1C — Integração estática com runtime e seleção — 2026-09-21
 
 - a experiência normal da Biblioteca agora anexa a composição procedural de três estantes nas posições provisórias aprovadas; cada uma preserva seu `instanceId`, recebe rótulo legível, seleção por toque/clique e pelos controles React e o destaque visual existente;

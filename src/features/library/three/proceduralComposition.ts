@@ -3,6 +3,7 @@ import { Group } from "three";
 import {
   createProceduralBookshelf,
   type ProceduralBookshelf,
+  type ProceduralBookshelfVariant,
   type ProceduralContentIdentity,
 } from "./proceduralContent";
 
@@ -16,6 +17,7 @@ export type ProceduralContentPosition = readonly [
 export interface ProceduralContentDefinition {
   readonly identity: ProceduralContentIdentity;
   readonly position: ProceduralContentPosition;
+  readonly variant: ProceduralBookshelfVariant;
 }
 
 export interface ProceduralCompositionInstance {
@@ -23,6 +25,7 @@ export interface ProceduralCompositionInstance {
   readonly node: Group;
   readonly position: ProceduralContentPosition;
   readonly representation: ProceduralBookshelf;
+  readonly variant: ProceduralBookshelfVariant;
 }
 
 export interface ProceduralComposition {
@@ -38,6 +41,7 @@ export const READING_SHELF_COMPOSITION_DEFINITIONS: readonly ProceduralContentDe
         modelTypeId: "bookshelf" as const,
       }),
       position: Object.freeze([-3, 0, -2] as [number, number, number]),
+      variant: "reading-balanced",
     }),
     Object.freeze({
       identity: Object.freeze({
@@ -45,13 +49,15 @@ export const READING_SHELF_COMPOSITION_DEFINITIONS: readonly ProceduralContentDe
         modelTypeId: "bookshelf" as const,
       }),
       position: Object.freeze([0, 0, -2] as [number, number, number]),
+      variant: "reading-dark-tall",
     }),
     Object.freeze({
       identity: Object.freeze({
         instanceId: "reading-shelf-03",
         modelTypeId: "bookshelf" as const,
       }),
-      position: Object.freeze([3, 0, -2] as [number, number, number]),
+      position: Object.freeze([3, 0, -2.1] as [number, number, number]),
+      variant: "reading-light-wide",
     }),
   ]);
 
@@ -94,7 +100,10 @@ export function createProceduralComposition(
   const instances: ProceduralCompositionInstance[] = [];
 
   for (const definition of definitions) {
-    const representation = createProceduralBookshelf(definition.identity);
+    const representation = createProceduralBookshelf(
+      definition.identity,
+      definition.variant,
+    );
     const node = new Group();
     node.name = "procedural-content-instance";
     node.position.set(...definition.position);
@@ -105,6 +114,7 @@ export function createProceduralComposition(
       node,
       position: [...definition.position],
       representation,
+      variant: definition.variant,
     });
   }
 

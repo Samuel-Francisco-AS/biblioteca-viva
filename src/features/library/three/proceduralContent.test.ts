@@ -2,6 +2,7 @@ import {
   Box3,
   Group,
   Mesh,
+  MeshStandardMaterial,
   Vector3,
   type BufferGeometry,
   type Material,
@@ -13,6 +14,7 @@ import { disposeObjectTree } from "./referenceScene";
 import {
   createProceduralBookshelf,
   type ProceduralContentIdentity,
+  type ProceduralBookshelfVariant,
 } from "./proceduralContent";
 
 function createIdentity(
@@ -44,6 +46,13 @@ function materials(parts: readonly DisposableMesh[]): Set<Material> {
   );
 }
 
+function hasPositiveVolumeOverlap(first: Box3, second: Box3): boolean {
+  const intersection = first.clone().intersect(second);
+  const size = intersection.getSize(new Vector3());
+  const tolerance = 0.000_001;
+  return size.x > tolerance && size.y > tolerance && size.z > tolerance;
+}
+
 describe("fábrica procedural de estante BF-1A", () => {
   it("cria uma root válida com a identidade lógica separada", () => {
     const identity = createIdentity("shelf-reading-01", "book-01");
@@ -63,7 +72,10 @@ describe("fábrica procedural de estante BF-1A", () => {
     const bookshelf = createProceduralBookshelf(createIdentity("shelf-01"));
     const parts = meshes(bookshelf.root);
 
-    expect(parts).toHaveLength(7);
+    expect(parts).toHaveLength(10);
+    expect(parts.filter(({ name }) => name === "bookshelf-base")).toHaveLength(
+      1,
+    );
     expect(parts.filter(({ name }) => name === "bookshelf-back")).toHaveLength(
       1,
     );
@@ -71,8 +83,75 @@ describe("fábrica procedural de estante BF-1A", () => {
       2,
     );
     expect(parts.filter(({ name }) => name === "bookshelf-shelf")).toHaveLength(
-      4,
+      5,
     );
+    expect(
+      parts.filter(({ name }) => name === "bookshelf-top-trim"),
+    ).toHaveLength(1);
+  });
+
+  it("distingue deterministicamente as três variantes da mesma família", () => {
+    const variants: readonly ProceduralBookshelfVariant[] = [
+      "reading-balanced",
+      "reading-dark-tall",
+      "reading-light-wide",
+    ];
+    const bookshelves = variants.map((variant, index) =>
+      createProceduralBookshelf(createIdentity(`shelf-${index + 1}`), variant),
+    );
+    const sizes = bookshelves.map(({ root }) =>
+      new Box3().setFromObject(root).getSize(new Vector3()),
+    );
+
+    expect(bookshelves.map(({ variant }) => variant)).toEqual(variants);
+    expect(sizes.map(({ x }) => x)).toEqual([
+      expect.closeTo(2.18, 6),
+      expect.closeTo(2.06, 6),
+      expect.closeTo(2.5, 6),
+    ]);
+    expect(sizes.map(({ y }) => y)).toEqual([
+      expect.closeTo(3.1, 6),
+      expect.closeTo(3.38, 6),
+      expect.closeTo(2.86, 6),
+    ]);
+    expect(sizes.map(({ z }) => z)).toEqual([
+      expect.closeTo(0.62, 6),
+      expect.closeTo(0.6, 6),
+      expect.closeTo(0.66, 6),
+    ]);
+    expect(
+      bookshelves.map(
+        ({ root }) =>
+          meshes(root).filter(({ name }) => name === "bookshelf-shelf").length,
+      ),
+    ).toEqual([5, 6, 4]);
+    const frameColors = bookshelves.map(({ root }) => {
+      const back = meshes(root).find(({ name }) => name === "bookshelf-back");
+      if (
+        !back ||
+        Array.isArray(back.material) ||
+        !(back.material instanceof MeshStandardMaterial)
+      ) {
+        throw new Error("A variante deve expor material de madeira no fundo.");
+      }
+      return back.material.color.getHex();
+    });
+    expect(new Set(frameColors)).toHaveLength(3);
+
+    for (const { root } of bookshelves) disposeObjectTree(root);
+  });
+
+  it("separa fundo, prateleiras e moldura sem sobreposição de volume", () => {
+    const bookshelf = createProceduralBookshelf(createIdentity("shelf-01"));
+    const parts = meshes(bookshelf.root);
+    const bounds = parts.map((part) => new Box3().setFromObject(part));
+
+    for (const [index, first] of bounds.entries()) {
+      for (const second of bounds.slice(index + 1)) {
+        expect(hasPositiveVolumeOverlap(first, second)).toBe(false);
+      }
+    }
+    disposeObjectTree(bookshelf.root);
   });
 
   it("tem bounds físicos finitos, positivos e apoiados em Y=0", () => {
@@ -141,7 +220,7 @@ describe("fábrica procedural de estante BF-1A", () => {
     const shelfGeometry = shelves[0]?.geometry;
     const shelfMaterial = shelves[0]?.material;
 
-    expect(shelves).toHaveLength(4);
+    expect(shelves).toHaveLength(5);
     expect(shelves.every(({ geometry }) => geometry === shelfGeometry)).toBe(
       true,
     );

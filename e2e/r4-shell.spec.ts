@@ -26,7 +26,7 @@ test("shell abre a Biblioteca com uma única superfície Three.js", async ({
   await expect(canvas).toHaveAttribute("data-triangles", /^\d+$/u);
   await expect(canvas).toHaveAttribute("data-runtime-state", "running");
   await expect(canvas).toHaveAttribute("data-active-frame-loops", "1");
-  await expect(canvas).toHaveAttribute("data-meshes", "67");
+  await expect(canvas).toHaveAttribute("data-meshes", "76");
   await expect
     .poll(async () => Number(await canvas.getAttribute("data-fps")))
     .toBeGreaterThan(0);

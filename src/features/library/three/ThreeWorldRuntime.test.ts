@@ -189,7 +189,7 @@ describe("ThreeWorldRuntime", () => {
       activeFrameLoops: 0,
       drawCalls: 46,
       geometries: 46,
-      meshes: 66,
+      meshes: 75,
       runtimeState: "mounted",
       selectableObjects: 14,
       textures: 0,
@@ -227,7 +227,7 @@ describe("ThreeWorldRuntime", () => {
     ).toEqual([
       [-3, 0, -2],
       [0, 0, -2],
-      [3, 0, -2],
+      [3, 0, -2.1],
     ]);
     expect(fixtureLoader.load).toHaveBeenCalledWith(
       "/fixture.gltf",

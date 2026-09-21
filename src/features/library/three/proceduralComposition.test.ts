@@ -1,4 +1,5 @@
 import {
+  Box3,
   Group,
   Mesh,
   Vector3,
@@ -13,7 +14,8 @@ import {
   READING_SHELF_COMPOSITION_DEFINITIONS,
   type ProceduralContentDefinition,
 } from "./proceduralComposition";
-import { disposeObjectTree } from "./referenceScene";
+import type { ProceduralBookshelfVariant } from "./proceduralContent";
+import { createReferenceScene, disposeObjectTree } from "./referenceScene";
 
 type DisposableMesh = Mesh<BufferGeometry, Material | Material[]>;
 
@@ -40,10 +42,12 @@ function materials(parts: readonly DisposableMesh[]): Set<Material> {
 function definition(
   instanceId: string,
   position: readonly [number, number, number],
+  variant: ProceduralBookshelfVariant = "reading-balanced",
 ): ProceduralContentDefinition {
   return {
     identity: { instanceId, modelTypeId: "bookshelf" },
     position,
+    variant,
   };
 }
 
@@ -68,14 +72,39 @@ describe("composição procedural BF-1B", () => {
     expect(composition.instances.map(({ position }) => position)).toEqual([
       [-3, 0, -2],
       [0, 0, -2],
-      [3, 0, -2],
+      [3, 0, -2.1],
+    ]);
+    expect(composition.instances.map(({ variant }) => variant)).toEqual([
+      "reading-balanced",
+      "reading-dark-tall",
+      "reading-light-wide",
     ]);
     expect(composition.instances.map(({ node }) => node.position)).toEqual([
       new Vector3(-3, 0, -2),
       new Vector3(0, 0, -2),
-      new Vector3(3, 0, -2),
+      new Vector3(3, 0, -2.1),
     ]);
     disposeObjectTree(composition.root);
+  });
+
+  it("mantém as variantes separadas dos proxies selecionáveis da fixture F1", () => {
+    const composition = createProceduralComposition(
+      READING_SHELF_COMPOSITION_DEFINITIONS,
+    );
+    const referenceScene = createReferenceScene();
+
+    for (const instance of composition.instances) {
+      const instanceBounds = new Box3().setFromObject(instance.node);
+      for (const selectable of referenceScene.selectables) {
+        expect(
+          instanceBounds.intersectsBox(
+            new Box3().setFromObject(selectable.root),
+          ),
+        ).toBe(false);
+      }
+    }
+    disposeObjectTree(composition.root);
+    disposeObjectTree(referenceScene.root);
   });
 
   it("posiciona pelo wrapper sem alterar a representação local da fábrica", () => {
@@ -201,7 +230,7 @@ describe("composição procedural BF-1B", () => {
     const shelfGeometry = shelves[0]?.geometry;
     const shelfMaterial = shelves[0]?.material;
 
-    expect(shelves).toHaveLength(4);
+    expect(shelves).toHaveLength(5);
     if (!shelfGeometry || Array.isArray(shelfMaterial)) {
       throw new Error("A composição deve conter recursos de prateleira.");
     }

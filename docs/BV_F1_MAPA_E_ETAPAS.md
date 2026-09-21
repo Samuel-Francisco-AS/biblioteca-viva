@@ -923,7 +923,8 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | BF-0                  | ✅ Concluída | Replanejamento e decisão arquitetural                                                            |
 | BF-1A                 | ✅ Concluída | Contrato mínimo e primeira fábrica procedural isolada                                            |
 | BF-1B                 | ✅ Concluída | Composição declarativa e posicionamento determinístico isolados                                  |
-| BF-1C–BF-5            | ⏳ Futuro    | Integração, Biblioteca funcional e consolidação em checkpoints posteriores                       |
+| BF-1C                 | ✅ Técnica  | Integração estática e seleção; BF-1C-FIX técnico aguarda gate visual humano                     |
+| BF-1D–BF-5            | ⏳ Futuro   | BF-1D condicionado ao gate visual corretivo; demais checkpoints posteriores                     |
 | Primeiro recorte      | 🔒 Futuro    | Fechamento condicionado à validação TalkBack humana                                              |
 | Persistência espacial | 🔒 Futuro    | Salvar estado real do mundo                                                                      |
 | Sistemas maiores      | 🔒 Futuro    | Personagens, progressão, IA etc.                                                                 |
