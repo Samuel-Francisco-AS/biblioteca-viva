@@ -16,8 +16,8 @@
 BF-0 ✅ replanejamento e decisão arquitetural
 BF-1 ▶ camada mínima de conteúdo procedural
   BF-1A ✅ contrato mínimo e primeira fábrica procedural
-  BF-1B ⏳ composição do conteúdo
-  BF-1C ⏳ integração com runtime e seleção
+  BF-1B ✅ composição declarativa e posicionamento determinístico
+  BF-1C ⏳ integração com runtime e seleção — próximo
   BF-1D ⏳ substituição, descarte e gate
 BF-2 ⏳ primeira área de leitura integrada a registros reais
 BF-3 ⏳ integração dos seis tipos de registro
@@ -37,9 +37,9 @@ ADR-011 está aceita e estabeleceu a prioridade funcional, preservando P3D-B1 e 
 
 Definiu a identidade lógica mínima e implementou uma fábrica procedural isolada de `bookshelf`, com testes dirigidos de geometria, transforms, isolamento e recursos. A fábrica não está integrada ao runtime, seleção ou composição; a documentação desta decomposição foi atualizada.
 
-#### BF-1B — Composição do conteúdo — próxima etapa
+#### BF-1B — Composição do conteúdo — concluída
 
-Definirá instâncias declarativas, posicionamento determinístico e uma pequena composição procedural, separando definições de conteúdo da criação de objetos Three.js. Este checkpoint ainda não foi implementado.
+Definiu instâncias declarativas, posicionamento determinístico e uma pequena composição de três estantes procedurais, separando definições de conteúdo da criação de objetos Three.js. A composição valida `instanceId` duplicado antes de criar recursos, mantém a root local da fábrica em identidade, aplica layout em wrapper de instância e cobre determinismo, isolamento e descarte; ela ainda não está integrada ao runtime ou à seleção.
 
 #### BF-1C — Integração com runtime e seleção — planejada
 
@@ -120,7 +120,9 @@ P3D-A ✅ contrato produtivo e estrutura
 P3D-B1 ✅ proveniência e organização documental de `bookshelf`
 P3D-B2–F ⏸ ADIADOS
 BF-0 ✅ replanejamento e decisão arquitetural
-PRÓXIMO: BF-1 — camada mínima de conteúdo procedural (a subdividir)
+BF-1A ✅ contrato mínimo e primeira fábrica procedural isolada
+BF-1B ✅ composição declarativa e posicionamento determinístico
+PRÓXIMO: BF-1C — integração com runtime e seleção
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída
@@ -211,13 +213,13 @@ F6 foi concluída tecnicamente/arquiteturalmente sem criar mundo ou persistênci
 
 ### F6 — Acessibilidade e fechamento da FUNDAÇÃO — concluída tecnicamente
 
-F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico. F6-B confirmou a única lacuna automatizável — foco/teclado e marcos semânticos estruturais — sem alteração de produção; a regressão técnica, E2E e build Android aprovaram o APK candidato. F6-C aceitou documentalmente a indisponibilidade temporária do Moto G06 como dívida assistiva, sem declarar TalkBack ou acessibilidade humana Android aprovados. A FUNDAÇÃO está concluída no plano técnico/arquitetural. P3D-A continua regulando GLBs, P3D-B1 preserva a proveniência de `bookshelf` e P3D-B2–F estão adiados; BF-1 é o próximo planejamento funcional, ainda sem implementação de mundo.
+F6-A concluiu a auditoria do contrato entre a superfície 3D e React semântico. F6-B confirmou a única lacuna automatizável — foco/teclado e marcos semânticos estruturais — sem alteração de produção; a regressão técnica, E2E e build Android aprovaram o APK candidato. F6-C aceitou documentalmente a indisponibilidade temporária do Moto G06 como dívida assistiva, sem declarar TalkBack ou acessibilidade humana Android aprovados. A FUNDAÇÃO está concluída no plano técnico/arquitetural. P3D-A continua regulando GLBs, P3D-B1 preserva a proveniência de `bookshelf` e P3D-B2–F estão adiados; BF-1A/B concluíram fábrica e composição isoladas, e BF-1C é a próxima etapa, ainda sem conteúdo no runtime.
 
 F1 aprovou a viabilidade da base Three.js; não concluiu câmera, interação, assets, performance ou acessibilidade finais.
 
 ## Depois da FUNDAÇÃO
 
-1. BF-1: decompor e então implementar a camada mínima de conteúdo procedural.
+1. BF-1C: integrar a composição procedural ao runtime e à seleção, após definir seu contrato detalhado.
 2. BF-2–BF-5: integrar progressivamente leitura, os seis tipos de registro e o ambiente provisório, preservando a operação essencial em React.
 3. Retomar P3D-B2–F somente se a ingestão ou substituição por GLB definitivo se tornar necessária.
 4. Projetar persistência espacial nova somente quando uma necessidade funcional demonstrar o que deve ser salvo.

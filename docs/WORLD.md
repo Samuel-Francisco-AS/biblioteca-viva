@@ -23,13 +23,19 @@ Identidade, posição da câmera e seleção permanecem efêmeras. Na fixture, a
 
 BF-0 aprovou construir primeiro uma Biblioteca funcional com conteúdo procedural/provisório em TypeScript/Three.js. Esse caminho pode representar visualmente um tipo de modelo sem depender de GLB; não promove a fixture F1, os cenários diagnósticos F5 ou qualquer fixture F4 à arquitetura produtiva. React continua a superfície semântica das funções essenciais: seleção visual é complementar e nunca o único caminho de operação.
 
-A identidade lógica futura é independente da representação visual e distingue: o tipo de modelo estável, a instância desse tipo no mundo e, quando aplicável, o ID do registro convencional associado. Esta distinção é um contrato de significado, não cria schema, tipo TypeScript, tabela, backup, posição persistida ou contrato espacial. A posição e demais estado espacial produtivo continuam inexistentes; contratos anteriores não retornam.
+A ADR-011 registrou originalmente a identidade lógica como contrato de significado, sem materializá-la em schema, tabela, backup, posição persistida ou contrato espacial. BF-1A passou a materializar somente os tipos TypeScript mínimos `ProceduralModelTypeId` e `ProceduralContentIdentity`, distinguindo tipo de modelo, instância e `entryId` opcional. Eles continuam independentes de representação visual, mesh, root Three, URL e posição; não existe schema persistido, tabela espacial, backup espacial ou associação funcional a registros reais, e os contratos espaciais anteriores não retornam.
 
 ### Contrato mínimo procedural BF-1A
 
 BF-1A implementa `createProceduralBookshelf()` em módulo próprio, sem importar `referenceScene.ts` ou alterar a fixture. A fábrica recebe e devolve separadamente a identidade lógica com `modelTypeId` (`bookshelf`), `instanceId` e `entryId` opcional; esses valores não derivam de nome de mesh, root Three, URL ou posição. Cada chamada cria root `Group` em identidade, dimensões finitas e positivas, geometria apoiada localmente em `Y=0` e uma estante de corpo, laterais e prateleiras com materiais `MeshStandardMaterial` simples.
 
-Quem anexar a root será seu owner e a liberará por `disposeObjectTree()`. Materiais e geometrias são independentes entre chamadas; prateleiras repetidas podem compartilhar recursos somente dentro da mesma root, cujo descarte já é deduplicado. Não há cache, pooling, ref counting, `AssetManager`, composição, integração ao runtime, seleção produtiva, substituição dinâmica ou persistência espacial nesta etapa. BF-1B é a próxima etapa autorizada.
+Quem anexar a root será seu owner e a liberará por `disposeObjectTree()`. Materiais e geometrias são independentes entre chamadas; prateleiras repetidas podem compartilhar recursos somente dentro da mesma root, cujo descarte já é deduplicado.
+
+### Composição declarativa BF-1B
+
+BF-1B adiciona definições Three-independentes de identidade e posição `[x, y, z]`. A primeira composição contém somente `bookshelf`: `reading-shelf-01` em `[-3, 0, -2]`, `reading-shelf-02` em `[0, 0, -2]` e `reading-shelf-03` em `[3, 0, -2]`. A composição valida `instanceId` duplicado antes de criar recursos e devolve a root, cada wrapper de instância e sua representação. A posição vive no wrapper, nunca na root local da fábrica; as definições recebidas não são mutadas e chamadas sucessivas são logicamente equivalentes.
+
+A root de composição é owner de todas as representações que constrói e pode ser liberada por `disposeObjectTree()`. Composições distintas não compartilham geometria ou material, e o descarte mantém a deduplicação intrárvore. Não há cache, pooling, ref counting, `AssetManager`, integração ao runtime, seleção produtiva, substituição dinâmica ou persistência espacial nesta etapa. BF-1C é a próxima etapa autorizada.
 
 P3D-B1 preserva o candidato `bookshelf` e a sua proveniência. P3D-B2–F estão adiados e só retomam se a ingestão ou substituição por assets GLB definitivos se tornar necessária. A dívida de TalkBack continua bloqueante para o fechamento do primeiro recorte real: prever remediação e validações físicas incrementais no Moto G06, sem impor budgets preventivos.
 

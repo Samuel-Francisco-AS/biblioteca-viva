@@ -921,7 +921,9 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | F6                    | ✅ Concluída | Fechamento técnico/arquitetural; dívida humana assistiva aceita, sem PASS TalkBack               |
 | Pipeline 3D v1        | ⏸ Adiado     | P3D-B1 documental concluída para `bookshelf`; B2–F dependem de GLB definitivo                    |
 | BF-0                  | ✅ Concluída | Replanejamento e decisão arquitetural                                                            |
-| BF-1–BF-5             | ⏳ Futuro    | Biblioteca funcional com conteúdo procedural/provisório e integração aos registros               |
+| BF-1A                 | ✅ Concluída | Contrato mínimo e primeira fábrica procedural isolada                                            |
+| BF-1B                 | ✅ Concluída | Composição declarativa e posicionamento determinístico isolados                                  |
+| BF-1C–BF-5            | ⏳ Futuro    | Integração, Biblioteca funcional e consolidação em checkpoints posteriores                       |
 | Primeiro recorte      | 🔒 Futuro    | Fechamento condicionado à validação TalkBack humana                                              |
 | Persistência espacial | 🔒 Futuro    | Salvar estado real do mundo                                                                      |
 | Sistemas maiores      | 🔒 Futuro    | Personagens, progressão, IA etc.                                                                 |

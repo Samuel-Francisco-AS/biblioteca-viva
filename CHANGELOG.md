@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-1B — Composição declarativa e posicionamento determinístico — 2026-09-21
+
+- adicionadas definições declarativas Three-independentes e a primeira composição de três estantes `bookshelf`, nas posições provisórias `[-3, 0, -2]`, `[0, 0, -2]` e `[3, 0, -2]`;
+- separadas a root local da fábrica e o wrapper de instância que recebe posição; a composição valida `instanceId` duplicado antes de criar recursos e é liberada integralmente por `disposeObjectTree()`;
+- cobertos por testes determinismo, ausência de mutação das definições, isolamento de recursos entre composições e descarte deduplicado. Não houve integração ao runtime, à rota Biblioteca, à seleção, a registros reais ou à persistência espacial; BF-1C passa a ser a próxima etapa.
+
 ### BF-1A — Contrato mínimo e primeira fábrica procedural — 2026-09-21
 
 - adicionada fábrica TypeScript/Three.js isolada para `bookshelf`, com identidade lógica de tipo de modelo, instância e associação convencional opcional; cada chamada cria uma root própria, em identidade, com geometria local apoiada em `Y=0` e materiais simples;
