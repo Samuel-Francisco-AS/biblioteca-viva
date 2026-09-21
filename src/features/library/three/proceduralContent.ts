@@ -28,8 +28,13 @@ export interface ProceduralBookVolumeIdentity extends ProceduralContentIdentity 
   readonly modelTypeId: "book-volume";
 }
 
+/** Identity valid exclusively for a procedural bookshelf representation. */
+export interface ProceduralBookshelfIdentity extends ProceduralContentIdentity {
+  readonly modelTypeId: "bookshelf";
+}
+
 export interface ProceduralBookshelf {
-  readonly identity: ProceduralContentIdentity;
+  readonly identity: ProceduralBookshelfIdentity;
   readonly root: Group;
   readonly variant: ProceduralBookshelfVariant;
 }
@@ -238,7 +243,7 @@ export function getProceduralBookVolumeDimensions(
  * returned root.
  */
 export function createProceduralBookshelf(
-  identity: ProceduralContentIdentity,
+  identity: ProceduralBookshelfIdentity,
   variant: string = "reading-balanced",
 ): ProceduralBookshelf {
   if (!isProceduralBookshelfVariant(variant)) {

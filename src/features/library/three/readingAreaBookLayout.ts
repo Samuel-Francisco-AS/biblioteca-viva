@@ -49,6 +49,12 @@ export interface ReadingAreaBookSlotAssignment {
   readonly placements: readonly ReadingAreaBookPlacement[];
 }
 
+/** The renderer-free current configuration required to derive shelf slots. */
+export interface ReadingAreaBookShelfConfiguration {
+  readonly hostInstanceId: string;
+  readonly variant: ProceduralBookshelfVariant;
+}
+
 const HORIZONTAL_GAP = 0.035;
 const SIDE_MARGIN = 0.06;
 const VERTICAL_MARGIN = 0.01;
@@ -106,14 +112,49 @@ function createSlotsForShelf(
   return Object.freeze(slots);
 }
 
+function validateShelfConfiguration(
+  shelves: readonly ReadingAreaBookShelfConfiguration[],
+): void {
+  const hostIds = new Set<string>();
+  for (const { hostInstanceId } of shelves) {
+    if (hostInstanceId.trim().length === 0) {
+      throw new Error(
+        "A configuração de estantes contém hostInstanceId vazio.",
+      );
+    }
+    if (hostIds.has(hostInstanceId)) {
+      throw new Error(
+        `A configuração de estantes contém hostInstanceId duplicado: ${hostInstanceId}.`,
+      );
+    }
+    hostIds.add(hostInstanceId);
+  }
+}
+
+/**
+ * Derives local reading-area slots from the current declarative shelf variants.
+ * Ordering is the supplied logical shelf order, then bottom-to-top and left-to-
+ * right inside each shelf. No Three object or persisted spatial state is used.
+ */
+export function createReadingAreaBookSlots(
+  shelves: readonly ReadingAreaBookShelfConfiguration[],
+): readonly ReadingAreaBookSlot[] {
+  validateShelfConfiguration(shelves);
+  return Object.freeze(
+    shelves.flatMap(({ hostInstanceId, variant }) =>
+      createSlotsForShelf(hostInstanceId, variant),
+    ),
+  );
+}
+
 /**
  * Slots fill shelves in declared composition order, then bottom-to-top levels,
  * then left-to-right positions. The capacity is their derived length.
  */
 export const READING_AREA_BOOK_SLOTS: readonly ReadingAreaBookSlot[] =
-  Object.freeze(
-    READING_SHELF_COMPOSITION_DEFINITIONS.flatMap(({ identity, variant }) =>
-      createSlotsForShelf(identity.instanceId, variant),
+  createReadingAreaBookSlots(
+    READING_SHELF_COMPOSITION_DEFINITIONS.map(({ identity, variant }) =>
+      Object.freeze({ hostInstanceId: identity.instanceId, variant }),
     ),
   );
 
@@ -144,12 +185,13 @@ function validateDistinctInstanceIds(
  */
 export function assignReadingAreaBooksToSlots(
   items: readonly ReadingAreaBookLayoutItem[],
+  slots: readonly ReadingAreaBookSlot[] = READING_AREA_BOOK_SLOTS,
 ): ReadingAreaBookSlotAssignment {
   validateDistinctInstanceIds(items);
   const placements = items
-    .slice(0, READING_AREA_BOOK_SLOTS.length)
+    .slice(0, slots.length)
     .map(({ instanceId }, index) => {
-      const slot = READING_AREA_BOOK_SLOTS[index];
+      const slot = slots[index];
       if (!slot)
         throw new Error("Slot de leitura ausente para placement válido.");
       return Object.freeze({
@@ -162,7 +204,7 @@ export function assignReadingAreaBooksToSlots(
     });
 
   return Object.freeze({
-    overflow: Object.freeze(items.slice(READING_AREA_BOOK_SLOTS.length)),
+    overflow: Object.freeze(items.slice(slots.length)),
     placements: Object.freeze(placements),
   });
 }

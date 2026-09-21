@@ -19,6 +19,7 @@ import type {
   WorldSelection,
   WorldSelectionListener,
 } from "../worldRuntime";
+import type { ReadingAreaBook } from "../readingAreaBookContract";
 import { FrameMetricsWindow } from "./frameMetrics";
 import {
   CAMERA_REFERENCE_HALF_HEIGHT,
@@ -42,6 +43,11 @@ import {
 } from "./proceduralComposition";
 import { collectSceneTextureMetrics } from "./sceneTextureMetrics";
 import { ThreeWorldInteraction } from "./ThreeWorldInteraction";
+import {
+  reconcileReadingAreaBookVisuals,
+  validateReadingAreaBookSnapshot,
+  type ReadingAreaBookVisual,
+} from "./readingAreaBookVisuals";
 
 interface RendererInfo {
   readonly memory: {
@@ -84,6 +90,8 @@ export interface ThreeWorldRuntimeDependencies {
   readonly frameScheduler?: FrameScheduler;
   readonly now?: () => number;
   readonly performanceScenario?: PerformanceScenario;
+  /** Optional immutable logical snapshot; no query or domain object enters Three. */
+  readonly readingAreaBooks?: readonly ReadingAreaBook[];
 }
 
 const defaultFrameScheduler: FrameScheduler = {
@@ -339,6 +347,7 @@ class ThreeWorldMount {
 export class ThreeWorldRuntime implements WorldRuntime {
   private readonly diagnosticsListeners = new Set<WorldDiagnosticsListener>();
   private readonly failureListeners = new Set<WorldRuntimeFailureListener>();
+  private baseSelectableObjects: readonly WorldSelectableObject[] = [];
   private drawCalls = 0;
   private fixtureLoadMs: number | null = null;
   private fixtureLoadStartedAt: number | undefined;
@@ -357,6 +366,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private performanceScenarioPendingAssets = 0;
   private readonly performanceScenario: PerformanceScenario;
   private readonly performanceScenarioDiagnosticsEnabled: boolean;
+  private readonly readingAreaBooks: readonly ReadingAreaBook[];
+  private readingAreaBookVisuals = new Map<string, ReadingAreaBookVisual>();
   private pausedByVisibility = false;
   private renderedFrames = 0;
   private sceneObjects = 0;
@@ -388,6 +399,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       createDefaultPerformanceScenario(this.fixtureUrl);
     this.performanceScenarioDiagnosticsEnabled =
       dependencies.performanceScenario !== undefined;
+    const readingAreaBooks = dependencies.readingAreaBooks ?? [];
+    validateReadingAreaBookSnapshot(readingAreaBooks);
+    this.readingAreaBooks = Object.freeze([...readingAreaBooks]);
     this.frameScheduler = dependencies.frameScheduler ?? defaultFrameScheduler;
     this.now = dependencies.now ?? (() => performance.now());
   }
@@ -462,6 +476,23 @@ export class ThreeWorldRuntime implements WorldRuntime {
               root: node,
             }));
           })();
+      const readingAreaBookVisuals =
+        this.performanceScenarioDiagnosticsEnabled || !this.mountedWorld
+          ? []
+          : reconcileReadingAreaBookVisuals(
+              this.mountedWorld.getProceduralComposition() ??
+                (() => {
+                  throw new Error("Composição procedural ausente para livros.");
+                })(),
+              this.readingAreaBooks,
+              this.readingAreaBookVisuals,
+            ).visible;
+      this.readingAreaBookVisuals = new Map(
+        readingAreaBookVisuals.map((visual) => [
+          visual.book.instanceId,
+          visual,
+        ]),
+      );
       this.navigation = new CameraNavigation(camera);
 
       renderer.shadowMap.enabled = false;
@@ -482,11 +513,12 @@ export class ThreeWorldRuntime implements WorldRuntime {
       renderer.domElement.setAttribute("aria-hidden", "true");
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-      this.selectableObjects = Object.freeze([
+      this.baseSelectableObjects = Object.freeze([
         ...referenceScene.selectables.map(({ descriptor }) => descriptor),
         ...proceduralSelectables.map(({ descriptor }) => descriptor),
         FIXTURE_SELECTABLE,
       ]);
+      this.refreshSelectableObjects();
       const interaction = new ThreeWorldInteraction({
         camera,
         canvas: renderer.domElement,
@@ -499,7 +531,18 @@ export class ThreeWorldRuntime implements WorldRuntime {
           this.publishDiagnostics(false);
         },
         scene,
-        selectables: [...referenceScene.selectables, ...proceduralSelectables],
+        selectables: [
+          ...referenceScene.selectables,
+          ...proceduralSelectables,
+          ...readingAreaBookVisuals.map(({ book, node }) => ({
+            descriptor: {
+              entryId: book.entryId,
+              id: book.instanceId,
+              label: book.title,
+            },
+            root: node,
+          })),
+        ],
       });
       mountedWorld.addInteraction(interaction);
       this.state = "mounted";
@@ -661,9 +704,38 @@ export class ThreeWorldRuntime implements WorldRuntime {
     );
     if (result === "unchanged") return result;
 
-    mountedWorld
-      .getInteraction()
-      ?.refreshHighlightForSelectedObject(instanceId);
+    const reconciliation = reconcileReadingAreaBookVisuals(
+      composition,
+      this.readingAreaBooks,
+      this.readingAreaBookVisuals,
+    );
+    const interaction = mountedWorld.getInteraction();
+    for (const visual of reconciliation.removed) {
+      interaction?.removeSelectable(visual.book.instanceId);
+      visual.node.removeFromParent();
+      disposeObjectTree(visual.node);
+    }
+    for (const visual of reconciliation.added) {
+      interaction?.addSelectable(
+        {
+          entryId: visual.book.entryId,
+          id: visual.book.instanceId,
+          label: visual.book.title,
+        },
+        visual.node,
+      );
+    }
+    this.readingAreaBookVisuals = new Map(
+      reconciliation.visible.map((visual) => [visual.book.instanceId, visual]),
+    );
+    if (reconciliation.added.length > 0 || reconciliation.removed.length > 0) {
+      this.refreshSelectableObjects();
+    }
+    for (const visual of reconciliation.visible) {
+      interaction?.refreshHighlightForSelectedObject(visual.book.instanceId);
+    }
+
+    interaction?.refreshHighlightForSelectedObject(instanceId);
     if (!this.renderCurrentFrame()) return result;
     this.publishDiagnostics(true);
     return result;
@@ -941,6 +1013,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.performanceScenarioPendingAssets = 0;
     this.sceneObjects = 0;
     this.selectableObjects = [];
+    this.baseSelectableObjects = [];
+    this.readingAreaBookVisuals.clear();
     this.selection = null;
     this.textures = 0;
     this.triangles = 0;
@@ -1027,6 +1101,24 @@ export class ThreeWorldRuntime implements WorldRuntime {
     });
     this.meshes = meshes;
     this.sceneObjects = sceneObjects;
+  }
+
+  private refreshSelectableObjects(): void {
+    const fixture = this.baseSelectableObjects.at(-1);
+    const beforeFixture = fixture
+      ? this.baseSelectableObjects.slice(0, -1)
+      : this.baseSelectableObjects;
+    this.selectableObjects = Object.freeze([
+      ...beforeFixture,
+      ...[...this.readingAreaBookVisuals.values()].map(({ book }) =>
+        Object.freeze({
+          entryId: book.entryId,
+          id: book.instanceId,
+          label: book.title,
+        }),
+      ),
+      ...(fixture ? [fixture] : []),
+    ]);
   }
 
   private updateMaterialTextureMetrics(scene: Scene): void {

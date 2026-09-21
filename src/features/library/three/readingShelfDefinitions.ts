@@ -1,6 +1,6 @@
 import type {
   ProceduralBookshelfVariant,
-  ProceduralContentIdentity,
+  ProceduralBookshelfIdentity,
 } from "./proceduralContent";
 
 export type ProceduralContentPosition = readonly [
@@ -11,7 +11,7 @@ export type ProceduralContentPosition = readonly [
 
 /** A Three-independent declaration of one procedural world occurrence. */
 export interface ProceduralContentDefinition {
-  readonly identity: ProceduralContentIdentity;
+  readonly identity: ProceduralBookshelfIdentity;
   readonly position: ProceduralContentPosition;
   readonly variant: ProceduralBookshelfVariant;
 }

@@ -1,4 +1,5 @@
 export interface WorldSelectableObject {
+  readonly entryId?: string;
   readonly id: string;
   readonly label: string;
 }

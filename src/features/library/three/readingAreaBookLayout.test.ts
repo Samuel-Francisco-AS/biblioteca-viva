@@ -1,18 +1,14 @@
 import { Box3, Vector3 } from "three";
 import { describe, expect, it } from "vitest";
 
-import {
-  createProceduralComposition,
-  READING_SHELF_COMPOSITION_DEFINITIONS,
-  replaceProceduralBookshelfRepresentation,
-} from "./proceduralComposition";
+import { READING_SHELF_COMPOSITION_DEFINITIONS } from "./proceduralComposition";
 import {
   PROCEDURAL_BOOK_VOLUME_MAX_DIMENSIONS,
   type ProceduralBookshelfVariant,
 } from "./proceduralContent";
-import { disposeObjectTree } from "./referenceScene";
 import {
   assignReadingAreaBooksToSlots,
+  createReadingAreaBookSlots,
   READING_AREA_BOOK_CAPACITY,
   READING_AREA_BOOK_SLOTS,
   type ReadingAreaBookLayoutItem,
@@ -42,6 +38,47 @@ function maximumBookBounds(slot: ReadingAreaBookSlot): Box3 {
 }
 
 describe("layout determinístico de livros BF-2B", () => {
+  it("reproduz o layout inicial e deriva cada configuração a partir da variante atual", () => {
+    const initial = READING_SHELF_COMPOSITION_DEFINITIONS.map(
+      ({ identity, variant }) => ({
+        hostInstanceId: identity.instanceId,
+        variant,
+      }),
+    );
+    expect(createReadingAreaBookSlots(initial)).toEqual(
+      READING_AREA_BOOK_SLOTS,
+    );
+    expect(createReadingAreaBookSlots(initial)).toEqual(
+      createReadingAreaBookSlots(initial),
+    );
+
+    const variants: readonly ProceduralBookshelfVariant[] = [
+      "reading-balanced",
+      "reading-dark-tall",
+      "reading-light-wide",
+    ];
+    for (const current of variants) {
+      for (const next of variants) {
+        if (current === next) continue;
+        const slots = createReadingAreaBookSlots([
+          { hostInstanceId: "shelf", variant: next },
+        ]);
+        expect(slots).not.toHaveLength(0);
+        expect(new Set(slots.map(({ slotId }) => slotId)).size).toBe(
+          slots.length,
+        );
+        for (const slot of slots) {
+          const bounds = maximumBookBounds(slot);
+          expect(bounds.min.x).toBeGreaterThanOrEqual(slot.bounds.minX);
+          expect(bounds.max.x).toBeLessThanOrEqual(slot.bounds.maxX);
+          expect(bounds.min.y).toBeGreaterThanOrEqual(slot.bounds.minY);
+          expect(bounds.max.y).toBeLessThanOrEqual(slot.bounds.maxY);
+          expect(bounds.min.z).toBeGreaterThanOrEqual(slot.bounds.minZ);
+          expect(bounds.max.z).toBeLessThanOrEqual(slot.bounds.maxZ);
+        }
+      }
+    }
+  });
   it("declara slots para as três variantes e somente níveis internos utilizáveis", () => {
     const slotsByHost = new Map<string, readonly ReadingAreaBookSlot[]>();
     for (const definition of READING_SHELF_COMPOSITION_DEFINITIONS) {
@@ -124,35 +161,6 @@ describe("layout determinístico de livros BF-2B", () => {
         }
       }
     }
-  });
-
-  it("mantém slots locais ao wrapper estável quando BF-1D troca a representação", () => {
-    const before = structuredClone(
-      READING_AREA_BOOK_SLOTS.filter(
-        ({ hostInstanceId }) => hostInstanceId === "reading-shelf-02",
-      ),
-    );
-    const composition = createProceduralComposition(
-      READING_SHELF_COMPOSITION_DEFINITIONS,
-    );
-    const shelf = composition.instances[1];
-    if (!shelf) throw new Error("A segunda estante deve existir.");
-    const previousRepresentation = shelf.representation.root;
-
-    expect(
-      replaceProceduralBookshelfRepresentation(
-        composition,
-        "reading-shelf-02",
-        "reading-balanced",
-      ),
-    ).toBe("replaced");
-    expect(shelf.representation.root).not.toBe(previousRepresentation);
-    expect(
-      READING_AREA_BOOK_SLOTS.filter(
-        ({ hostInstanceId }) => hostInstanceId === "reading-shelf-02",
-      ),
-    ).toEqual(before);
-    disposeObjectTree(composition.root);
   });
 
   it("atribui zero, um e vários itens na ordem recebida", () => {

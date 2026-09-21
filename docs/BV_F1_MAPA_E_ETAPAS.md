@@ -137,7 +137,7 @@ BF-0 ✅ → BF-1 ✅ CAMADA MÍNIMA PROCEDURAL
 BF-2 ⏳ PRIMEIRA ÁREA DE LEITURA FUNCIONAL
  ├─ BF-2A ✅ CONTRATO E PROJEÇÃO NEUTRA DOS LIVROS REAIS
  ├─ BF-2B ✅ LIVRO PROCEDURAL E LAYOUT DETERMINÍSTICO
- ├─ BF-2C ⏳ INTEGRAÇÃO COM RUNTIME E SELEÇÃO — NÃO INICIADA
+ ├─ BF-2C ✅ INTEGRAÇÃO COM RUNTIME E SELEÇÃO
  ├─ BF-2D ⏳ PONTE REACT/APLICAÇÃO E FLUXO FUNCIONAL — NÃO INICIADA
  └─ BF-2E ⏳ GATE INTEGRADO E FECHAMENTO — NÃO INICIADA
  │
@@ -836,7 +836,7 @@ A **FUNDAÇÃO está concluída** no plano técnico/arquitetural. A dívida huma
 
 # 16. Depois da FUNDAÇÃO
 
-BF-0 aprovou a sequência Biblioteca Funcional Primeiro. BF-1 está tecnicamente concluída; BF-2A concluiu o contrato e a projeção neutra dos livros reais, e BF-2B concluiu a fábrica procedural isolada e o layout determinístico de slots/capacidade/overflow, sem reabrir BF-1. BF-2C–E não foram iniciadas. Não existe persistência espacial.
+BF-0 aprovou a sequência Biblioteca Funcional Primeiro. BF-1 está tecnicamente concluída; BF-2A concluiu o contrato e a projeção neutra dos livros reais, BF-2B a fábrica/layout isolados e BF-2C a integração de snapshot neutro, lifecycle, relayout por variante e seleção no runtime. BF-2D/E não foram iniciadas. Não existe persistência espacial.
 
 ```text
 FUNDAÇÃO
@@ -852,7 +852,7 @@ PERSISTÊNCIA ESPACIAL, somente se necessária
 
 ## Biblioteca Funcional Primeiro
 
-O conteúdo inicial será procedural/provisório em TypeScript/Three.js. React mantém a superfície semântica e uma seleção visual não pode ser o único caminho para funções essenciais. BF-1A já materializou em TypeScript o contrato mínimo de identidade procedural, com conceitos `ProceduralModelTypeId` e `ProceduralContentIdentity`: tipo de modelo, instância no mundo e `entryId` opcional para ocorrências como `bookshelf` que não representam registros convencionais. BF-2A criou a projeção neutra inicial da associação de livros; BF-2B acrescentou `book-volume`, que exige `entryId` no contrato estreito, e slots locais aos wrappers estáveis das três estantes. A fábrica e o layout continuam isolados: não há livro real no runtime, seleção canvas, schema, tabela, backup ou persistência espacial.
+O conteúdo inicial será procedural/provisório em TypeScript/Three.js. React mantém a superfície semântica e uma seleção visual não pode ser o único caminho para funções essenciais. BF-1A materializou a identidade procedural; BF-2C a corrigiu para que `bookshelf` aceite somente seu contrato estreito, enquanto `book-volume` exige `entryId`. `ReadingAreaBook` foi extraído para contrato neutro e pode entrar no runtime como snapshot: livros visíveis são selecionáveis, carregam `entryId` e são irmãos da representação da estante. Slots são derivados da variante corrente e BF-1D relayouta; overflow não tem representação. Não há query, React/aplicação, schema, tabela, backup ou persistência espacial; BF-2D continua futura.
 
 P3D-B1 preserva `bookshelf` e sua proveniência. P3D-B2–F estão adiados, não concluídos nem cancelados, e só retomam quando houver necessidade demonstrada de ingestão ou substituição por GLB definitivo. ADR-010 continua a regular esse caminho GLB; fixtures F1/F4 e cenários F5 não são promovidos.
 
@@ -934,7 +934,7 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | BF-1C                 | ✅ Técnica  | Integração estática e seleção                                                                     |
 | BF-1C-FIX             | ✅ Concluída | Correção geométrica; gate visual humano no navegador PASS                                         |
 | BF-1D                 | ✅ Técnica  | Substituição procedural, descarte seletivo e gate integrado                                      |
-| BF-2                  | ⏳ Em andamento | BF-2A projetou livros reais e BF-2B concluiu fábrica/layout isolados; BF-2C–E não iniciadas      |
+| BF-2                  | ⏳ Em andamento | BF-2A/B/C concluídas; BF-2D/E não iniciadas                                                        |
 | BF-3–BF-5             | ⏳ Futuro   | Dependem da evolução autorizada da BF-2                                                           |
 | Primeiro recorte      | 🔒 Futuro    | Fechamento condicionado à validação TalkBack humana                                              |
 | Persistência espacial | 🔒 Futuro    | Salvar estado real do mundo                                                                      |

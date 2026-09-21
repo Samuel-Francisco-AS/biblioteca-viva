@@ -8,7 +8,7 @@ import {
   type Material,
   type Object3D,
 } from "three";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, expectTypeOf, it, vi } from "vitest";
 
 import { disposeObjectTree } from "./referenceScene";
 import {
@@ -17,14 +17,14 @@ import {
   getProceduralBookVolumeDimensions,
   getProceduralBookVolumeVariant,
   type ProceduralBookVolumeIdentity,
-  type ProceduralContentIdentity,
+  type ProceduralBookshelfIdentity,
   type ProceduralBookshelfVariant,
 } from "./proceduralContent";
 
 function createIdentity(
   instanceId: string,
   entryId?: string,
-): ProceduralContentIdentity {
+): ProceduralBookshelfIdentity {
   return { entryId, instanceId, modelTypeId: "bookshelf" };
 }
 
@@ -58,6 +58,17 @@ function hasPositiveVolumeOverlap(first: Box3, second: Box3): boolean {
 }
 
 describe("fábrica procedural de estante BF-1A", () => {
+  it("estreita estante para bookshelf e não aceita o contrato de livro", () => {
+    expectTypeOf<ProceduralBookshelfIdentity>().toMatchTypeOf<{
+      readonly instanceId: string;
+      readonly modelTypeId: "bookshelf";
+    }>();
+    expectTypeOf<ProceduralBookVolumeIdentity>().not.toMatchTypeOf<ProceduralBookshelfIdentity>();
+    expectTypeOf(createProceduralBookshelf)
+      .parameter(0)
+      .toEqualTypeOf<ProceduralBookshelfIdentity>();
+  });
+
   it("cria uma root válida com a identidade lógica separada", () => {
     const identity = createIdentity("shelf-reading-01", "book-01");
     const bookshelf = createProceduralBookshelf(identity);

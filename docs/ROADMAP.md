@@ -23,7 +23,7 @@ BF-1 ✅ camada mínima de conteúdo procedural — encerramento técnico
 BF-2 ⏳ primeira área de leitura integrada a registros reais
   BF-2A ✅ contrato e projeção neutra dos livros reais
   BF-2B ✅ livro procedural e layout determinístico
-  BF-2C ⏳ integração com runtime e seleção
+  BF-2C ✅ integração com runtime e seleção
   BF-2D ⏳ ponte React/aplicação e fluxo funcional
   BF-2E ⏳ gate integrado e fechamento da BF-2
 BF-3 ⏳ integração dos seis tipos de registro
@@ -71,9 +71,9 @@ Criou a projeção neutra `BookEntry → ReadingAreaBook` para ocorrências futu
 
 Criou a representação procedural isolada `book-volume` e o contrato determinístico de slots das três estantes existentes. A fábrica exige `entryId` por um contrato mais estreito, escolhe entre quatro variantes discretas a partir da identidade estável e mantém recursos próprios por criação. O layout puro consome a ordem recebida, preenche as estantes declaradas, depois níveis internos de baixo para cima e slots da esquerda para a direita; sua capacidade deriva dos 89 slots e qualquer excedente é devolvido como overflow ordenado. As posições são locais ao wrapper estável da estante, não à root descartável de sua representação BF-1D. Não há attach ao runtime, livro real visível, seleção, React/aplicação, schema, backup ou persistência espacial.
 
-#### BF-2C — Integração com runtime e seleção — futura, não iniciada
+#### BF-2C — Integração com runtime e seleção — concluída tecnicamente
 
-Conectará `ReadingAreaBook` ao runtime Three, à composição, lifecycle e picking/seleção, preservando os wrappers estáveis das estantes.
+`ReadingAreaBook` agora chega ao `ThreeWorldRuntime` por contrato neutro e snapshot imutável, sem query, `BookEntry`, application, Dexie ou React. Cada livro colocado é wrapper selecionável irmão da representação substituível da estante; o catálogo e `WorldSelection` preservam `entryId`. Slots são regenerados pelas variantes atuais e BF-1D relayouta sem recriar livros ainda visíveis; overflow não tem root ou seleção e pode retornar após aumento de capacidade. A configuração inicial continua derivando 89 slots, mas 89 não é capacidade universal. F5 ignora o snapshot. Não houve persistência espacial, navegação nem integração da rota; BF-2D permanece responsável por trazer registros reais.
 
 #### BF-2D — Ponte React/aplicação e fluxo funcional — futura, não iniciada
 
@@ -158,10 +158,10 @@ BF-1D ✅ substituição procedural, descarte seletivo e gate integrado
 BF-1 ✅ tecnicamente concluída
 BF-2A ✅ contrato e projeção neutra dos livros reais
 BF-2B ✅ livro procedural e layout determinístico isolados
-BF-2C ⏳ integração com runtime e seleção — não iniciada
+BF-2C ✅ integração com runtime e seleção
 BF-2D ⏳ ponte React/aplicação e fluxo funcional — não iniciada
 BF-2E ⏳ gate integrado e fechamento — não iniciada
-PRÓXIMO AUTORIZÁVEL: planejamento e implementação autorizada da BF-2C; sem integração automática ao runtime
+PRÓXIMO AUTORIZÁVEL: planejamento e implementação autorizada da BF-2D; sem integração automática React/aplicação nesta etapa
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída

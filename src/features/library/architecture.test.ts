@@ -21,7 +21,7 @@ const runtimeSources = import.meta.glob<string>(
 );
 
 const readingAreaProjectionSources = import.meta.glob<string>(
-  ["./readingAreaBooks.ts"],
+  ["./readingAreaBookContract.ts", "./readingAreaBooks.ts"],
   { eager: true, import: "default", query: "?raw" },
 );
 
@@ -55,6 +55,22 @@ describe("fronteiras da fundação Three.js", () => {
       expect(source, path).not.toMatch(
         /from\s+["'][^"']*(?:application|dexie|infrastructure|three)[^"']*["']/u,
       );
+    }
+  });
+
+  it("permite ao projector conhecer o domínio, mas não ao contrato nem ao renderer", () => {
+    const contract = Object.entries(readingAreaProjectionSources).find(
+      ([path]) => path.endsWith("/readingAreaBookContract.ts"),
+    )?.[1];
+    expect(contract).toBeDefined();
+    expect(contract).not.toMatch(
+      /from\s+["'][^"']*(?:domain|application|three|dexie|infrastructure)[^"']*["']/iu,
+    );
+    for (const [path, source] of Object.entries(runtimeSources)) {
+      expect(source, path).not.toMatch(
+        /from\s+["'][^"']*readingAreaBooks[^"']*["']/u,
+      );
+      expect(source, path).not.toMatch(/\bBookEntry\b/u);
     }
   });
 });

@@ -22,6 +22,17 @@ import {
 import { CAMERA_REFERENCE_HALF_HEIGHT } from "./cameraMath";
 import { PERFORMANCE_SCENARIOS } from "./performanceScenarios";
 import * as proceduralComposition from "./proceduralComposition";
+import { READING_AREA_BOOK_CAPACITY } from "./readingAreaBookLayout";
+
+function readingBook(index: number, title = `Livro ${index}`) {
+  return {
+    entryId: `book-${String(index).padStart(3, "0")}`,
+    instanceId: `reading-book:book-${String(index).padStart(3, "0")}`,
+    modelTypeId: "book-volume" as const,
+    readingProgress: { currentPage: 0 },
+    title,
+  };
+}
 
 class TestRenderer implements ThreeWorldRenderer {
   readonly domElement = document.createElement("canvas");
@@ -353,6 +364,242 @@ describe("ThreeWorldRuntime", () => {
     if (!(secondMesh instanceof Mesh)) return;
     expect(secondMesh.geometry).not.toBe(firstMesh.geometry);
     second.dispose();
+  });
+
+  it("preserva o comportamento anterior com snapshot vazio", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+      readingAreaBooks: [],
+    });
+    runtime.mount(createHost());
+    expect(runtime.getSelectableObjects()).toHaveLength(14);
+    expect(
+      renderer.render.mock.calls
+        .at(-1)?.[0]
+        .getObjectByName("procedural-reading-area-book"),
+    ).toBeUndefined();
+    runtime.dispose();
+  });
+
+  it("monta livros neutros como irmãos da representação, preserva título duplicado e entryId na seleção", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const first = readingBook(1, "Mesmo título");
+    const second = readingBook(2, "Mesmo título");
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+      readingAreaBooks: [first, second],
+    });
+
+    runtime.mount(createHost());
+    const scene = renderer.render.mock.calls.at(-1)?.[0];
+    const camera = renderer.render.mock.calls.at(-1)?.[1];
+    const composition = scene?.getObjectByName(
+      "procedural-content-composition",
+    );
+    const firstShelf = composition?.children[0];
+    const books = firstShelf?.children.filter(
+      ({ name }) => name === "procedural-reading-area-book",
+    );
+    expect(books).toHaveLength(2);
+    expect(books?.every((book) => book.parent === firstShelf)).toBe(true);
+    expect(runtime.getSelectableObjects()).toContainEqual({
+      entryId: first.entryId,
+      id: first.instanceId,
+      label: "Mesmo título",
+    });
+    expect(runtime.getSelectableObjects()).toContainEqual({
+      entryId: second.entryId,
+      id: second.instanceId,
+      label: "Mesmo título",
+    });
+    const listener = vi.fn();
+    runtime.onSelectionChange(listener);
+    runtime.selectObject(second.instanceId);
+    expect(listener).toHaveBeenLastCalledWith({
+      entryId: second.entryId,
+      id: second.instanceId,
+      label: "Mesmo título",
+    });
+    expect(renderer.domElement.dataset.highlightedObject).toBe(
+      second.instanceId,
+    );
+    const bookPart = books?.[0]?.getObjectByName("book-cover");
+    expect(bookPart).toBeDefined();
+    if (!scene || !camera || !bookPart) return;
+    scene.updateMatrixWorld(true);
+    camera.updateMatrixWorld();
+    const bookPoint = screenPositionForPoint(
+      camera,
+      new Box3().setFromObject(bookPart).getCenter(new Vector3()),
+    );
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: bookPoint.x,
+      clientY: bookPoint.y,
+      pointerId: 201,
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: bookPoint.x,
+      clientY: bookPoint.y,
+      pointerId: 201,
+    });
+    expect([first.instanceId, second.instanceId]).toContain(
+      renderer.domElement.dataset.selectedObject,
+    );
+    const freeShelf =
+      composition?.children[2]?.getObjectByName("bookshelf-back");
+    expect(freeShelf).toBeDefined();
+    if (!freeShelf) return;
+    const shelfPoint = screenPositionForPoint(
+      camera,
+      new Box3().setFromObject(freeShelf).getCenter(new Vector3()),
+    );
+    dispatchPointer(renderer.domElement, "pointerdown", {
+      clientX: shelfPoint.x,
+      clientY: shelfPoint.y,
+      pointerId: 202,
+    });
+    dispatchPointer(renderer.domElement, "pointerup", {
+      clientX: shelfPoint.x,
+      clientY: shelfPoint.y,
+      pointerId: 202,
+    });
+    expect(listener).toHaveBeenLastCalledWith({
+      id: "reading-shelf-03",
+      label: "Estante de leitura 3",
+    });
+    runtime.dispose();
+  });
+
+  it("relayouta livro selecionado, remove overflow e o recria quando a capacidade retorna", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const books = Array.from(
+      { length: READING_AREA_BOOK_CAPACITY },
+      (_, index) => readingBook(index + 1),
+    );
+    const finalBook = books.at(-1);
+    if (!finalBook)
+      throw new Error("A capacidade inicial precisa ser positiva.");
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+      readingAreaBooks: books,
+    });
+    runtime.mount(createHost());
+    const listener = vi.fn();
+    runtime.onSelectionChange(listener);
+    runtime.selectObject(finalBook.instanceId);
+    const scene = renderer.render.mock.calls.at(-1)?.[0];
+    let before: Object3D | undefined;
+    scene?.traverse((object) => {
+      if (object.userData.readingAreaBookInstanceId === finalBook.instanceId) {
+        before = object;
+      }
+    });
+    const beforeMesh = before?.getObjectByName("book-cover");
+    expect(isDisposableMesh(beforeMesh)).toBe(true);
+    if (!isDisposableMesh(beforeMesh)) return;
+    const disposeBookGeometry = vi.spyOn(beforeMesh.geometry, "dispose");
+
+    expect(
+      runtime.replaceProceduralBookshelfRepresentation(
+        "reading-shelf-01",
+        "reading-light-wide",
+      ),
+    ).toBe("replaced");
+    expect(runtime.getSelectableObjects()).not.toContainEqual(
+      expect.objectContaining({ id: finalBook.instanceId }),
+    );
+    expect(listener).toHaveBeenLastCalledWith(null);
+    expect(disposeBookGeometry).toHaveBeenCalledOnce();
+
+    expect(
+      runtime.replaceProceduralBookshelfRepresentation(
+        "reading-shelf-01",
+        "reading-balanced",
+      ),
+    ).toBe("replaced");
+    expect(runtime.getSelectableObjects()).toContainEqual({
+      entryId: finalBook.entryId,
+      id: finalBook.instanceId,
+      label: finalBook.title,
+    });
+    expect(renderer.domElement.dataset.selectedObject).toBe("");
+    runtime.dispose();
+    expect(disposeBookGeometry).toHaveBeenCalledOnce();
+  });
+
+  it("preserva wrapper, recursos, seleção e highlight do livro ainda visível no relayout", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const book = readingBook(1);
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+      readingAreaBooks: [book],
+    });
+    runtime.mount(createHost());
+    const scene = renderer.render.mock.calls.at(-1)?.[0];
+    let wrapper: Object3D | undefined;
+    scene?.traverse((object) => {
+      if (object.userData.readingAreaBookInstanceId === book.instanceId) {
+        wrapper = object;
+      }
+    });
+    const mesh = wrapper?.getObjectByName("book-cover");
+    expect(isDisposableMesh(mesh)).toBe(true);
+    if (!wrapper || !isDisposableMesh(mesh)) return;
+    const previousPosition = wrapper.position.clone();
+    const disposeGeometry = vi.spyOn(mesh.geometry, "dispose");
+    runtime.selectObject(book.instanceId);
+
+    expect(
+      runtime.replaceProceduralBookshelfRepresentation(
+        "reading-shelf-01",
+        "reading-light-wide",
+      ),
+    ).toBe("replaced");
+    let movedWrapper: Object3D | undefined;
+    scene?.traverse((object) => {
+      if (object.userData.readingAreaBookInstanceId === book.instanceId) {
+        movedWrapper = object;
+      }
+    });
+    expect(movedWrapper).toBe(wrapper);
+    expect(movedWrapper?.position).not.toEqual(previousPosition);
+    expect(disposeGeometry).not.toHaveBeenCalled();
+    expect(renderer.domElement.dataset.selectedObject).toBe(book.instanceId);
+    expect(renderer.domElement.dataset.highlightedObject).toBe(book.instanceId);
+    expect(scene?.getObjectByName("f1-c-selection-highlight")).toBeInstanceOf(
+      Box3Helper,
+    );
+    runtime.dispose();
+    expect(disposeGeometry).toHaveBeenCalledOnce();
+  });
+
+  it("mantém F5 isolado mesmo quando recebe snapshot de livros", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+      performanceScenario: PERFORMANCE_SCENARIOS[0],
+      readingAreaBooks: [readingBook(1)],
+    });
+    runtime.mount(createHost());
+    const scene = renderer.render.mock.calls.at(-1)?.[0];
+    expect(
+      scene?.getObjectByName("procedural-content-composition"),
+    ).toBeUndefined();
+    expect(runtime.getSelectableObjects()).not.toContainEqual(
+      expect.objectContaining({ id: "reading-book:book-001" }),
+    );
+    runtime.dispose();
   });
 
   it("BF-1D substitui a representação selecionada sem trocar wrapper, catálogo ou ownership da montagem", () => {

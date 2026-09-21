@@ -115,6 +115,19 @@ export class ThreeWorldInteraction {
     this.updateDiagnostics();
   }
 
+  /** Removes one dynamic root without disturbing other selectable objects. */
+  removeSelectable(id: string): void {
+    if (this.disposed || !this.selectableDescriptors.has(id)) return;
+    const root = this.selectableRoots.get(id);
+    this.selectableDescriptors.delete(id);
+    if (root) {
+      this.selectableRoots.delete(id);
+      this.selectableRootIds.delete(root);
+    }
+    if (this.selectedId === id) this.selectObject(null);
+    this.updateDiagnostics();
+  }
+
   cancelActiveGestures(): void {
     if (this.disposed) return;
     for (const pointerId of this.activePointers.keys()) {

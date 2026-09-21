@@ -3,8 +3,8 @@ import { Group } from "three";
 import * as proceduralContent from "./proceduralContent";
 import {
   type ProceduralBookshelf,
+  type ProceduralBookshelfIdentity,
   type ProceduralBookshelfVariant,
-  type ProceduralContentIdentity,
 } from "./proceduralContent";
 import { disposeObjectTree } from "./referenceScene";
 import {
@@ -19,7 +19,7 @@ export {
 } from "./readingShelfDefinitions";
 
 export interface ProceduralCompositionInstance {
-  readonly identity: ProceduralContentIdentity;
+  readonly identity: ProceduralBookshelfIdentity;
   readonly node: Group;
   readonly position: ProceduralContentPosition;
   representation: ProceduralBookshelf;

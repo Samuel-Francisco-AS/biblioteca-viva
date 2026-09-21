@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-2C — Integração com runtime, lifecycle e seleção — 2026-09-21
+
+- extraído `ReadingAreaBook` para contrato neutro e injetável no `ThreeWorldRuntime`; Three recebe somente o snapshot lógico, sem `BookEntry`, application, Dexie, query ou React, e BF-2D continua responsável por fornecer registros reais;
+- estreitada a identidade de `bookshelf` para `ProceduralBookshelfIdentity`; `book-volume` continua exigindo `entryId`, enquanto estantes não o exigem;
+- slots agora são derivados da configuração atual de variantes. BF-1D reconcilia deterministicamente wrappers de livros, catálogo, picking e highlight; overflow não mantém root nem seleção e pode retornar quando a capacidade cresce;
+- livros visíveis são irmãos da representação substituível da estante, selecionáveis pelo próprio `instanceId` e notificam `entryId`. Não houve persistência espacial, schema, backup, GLB, cache, instancing, navegação ou alteração funcional da página Biblioteca; F5 continua isolado.
+
 ### BF-2B — Livro procedural e layout determinístico da área de leitura — 2026-09-21
 
 - ampliado o contrato procedural com `book-volume` e uma fábrica isolada de volume vertical, com quatro variantes discretas determinísticas, associação convencional `entryId` obrigatória e recursos próprios por chamada liberáveis por `disposeObjectTree()`;
