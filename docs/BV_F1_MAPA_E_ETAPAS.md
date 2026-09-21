@@ -828,7 +828,7 @@ A **FUNDAÇÃO está concluída** no plano técnico/arquitetural. A dívida huma
 
 # 16. Depois da FUNDAÇÃO
 
-BF-0 aprovou a sequência Biblioteca Funcional Primeiro. O próximo trabalho autorizado é decompor BF-1 antes de implementá-la; nenhum conteúdo, geometria ou contrato espacial foi criado por este mapa.
+BF-0 aprovou a sequência Biblioteca Funcional Primeiro. BF-1 está tecnicamente concluída; BF-2 permanece não iniciada e só poderá avançar após auditoria, planejamento, decomposição e nova autorização. Não existe persistência espacial.
 
 ```text
 FUNDAÇÃO
@@ -923,8 +923,10 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | BF-0                  | ✅ Concluída | Replanejamento e decisão arquitetural                                                            |
 | BF-1A                 | ✅ Concluída | Contrato mínimo e primeira fábrica procedural isolada                                            |
 | BF-1B                 | ✅ Concluída | Composição declarativa e posicionamento determinístico isolados                                  |
-| BF-1C                 | ✅ Técnica  | Integração estática e seleção; BF-1C-FIX técnico aguarda gate visual humano                     |
-| BF-1D–BF-5            | ⏳ Futuro   | BF-1D condicionado ao gate visual corretivo; demais checkpoints posteriores                     |
+| BF-1C                 | ✅ Técnica  | Integração estática e seleção                                                                     |
+| BF-1C-FIX             | ✅ Concluída | Correção geométrica; gate visual humano no navegador PASS                                         |
+| BF-1D                 | ✅ Técnica  | Substituição procedural, descarte seletivo e gate integrado                                      |
+| BF-2–BF-5             | ⏳ Futuro   | BF-2 não iniciada; depende de auditoria, planejamento, decomposição e nova autorização          |
 | Primeiro recorte      | 🔒 Futuro    | Fechamento condicionado à validação TalkBack humana                                              |
 | Persistência espacial | 🔒 Futuro    | Salvar estado real do mundo                                                                      |
 | Sistemas maiores      | 🔒 Futuro    | Personagens, progressão, IA etc.                                                                 |

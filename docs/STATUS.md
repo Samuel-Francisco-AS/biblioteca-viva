@@ -37,7 +37,7 @@
 
 ## Próximo trabalho
 
-**BF-1D está concluída tecnicamente.** O gate visual humano da BF-1C-FIX foi aprovado posteriormente a `493c887`; o gate técnico integrado da BF-1D também passou. BF-1 pode encerrar tecnicamente sua camada mínima procedural, mas não encerra o primeiro recorte real: a validação humana assistiva com TalkBack no Moto G06 continua obrigatória antes desse marco e de beta/release aplicável. **BF-2 não foi iniciada.** P3D-B1 permanece registro documental de `bookshelf`; P3D-B2–F seguem adiados até necessidade concreta de GLB definitivo. A fixture continua técnica, sem mundo final ou persistência espacial.
+**BF-1 está tecnicamente concluída.** BF-1A, BF-1B, BF-1C, BF-1C-FIX — incluindo o gate visual humano no navegador — e BF-1D estão concluídas conforme registrado. **BF-2 não foi iniciada:** o próximo trabalho autorizável é sua auditoria, planejamento e decomposição, antes de qualquer implementação e mediante nova autorização. A validação humana assistiva com TalkBack no Moto G06 continua obrigatória antes do fechamento do primeiro recorte real e de beta/release aplicável; ela não reabre nem invalida o encerramento técnico da BF-1. P3D-B1 permanece registro documental de `bookshelf`; P3D-B2–F seguem adiados até necessidade concreta de GLB definitivo. A fixture continua técnica, sem mundo final ou persistência espacial.
 
 ```text
 F0 ✅
@@ -83,10 +83,12 @@ P3D-A ✅ contrato produtivo e estrutura
 P3D-B1 ✅ proveniência e organização documental de `bookshelf`
 P3D-B2–F ⏸ ADIADOS — retomada condicionada a GLB definitivo
 BF-0 ✅ replanejamento e decisão arquitetural
-BF-1A ✅ contrato mínimo e primeira fábrica procedural isolada
-BF-1B ✅ composição declarativa e posicionamento determinístico
-BF-1C ✅ integração estática com runtime e seleção
-BF-1C-FIX ✅ técnico + gate visual humano no navegador PASS
-BF-1D ✅ substituição procedural, descarte seletivo e gate integrado
-PRÓXIMO AUTORIZÁVEL: encerramento técnico de BF-1; BF-2 permanece não iniciada e depende de nova autorização
+BF-1 ✅ TECNICAMENTE CONCLUÍDA
+  BF-1A ✅ contrato mínimo e primeira fábrica procedural isolada
+  BF-1B ✅ composição declarativa e posicionamento determinístico
+  BF-1C ✅ integração estática com runtime e seleção
+  BF-1C-FIX ✅ técnico + gate visual humano no navegador PASS
+  BF-1D ✅ substituição procedural, descarte seletivo e gate integrado
+BF-2 ⏳ NÃO INICIADA
+PRÓXIMO AUTORIZÁVEL: auditoria, planejamento e decomposição da BF-2; nenhuma implementação automática
 ```

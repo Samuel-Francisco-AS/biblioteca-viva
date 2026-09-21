@@ -130,7 +130,8 @@ BF-1B ✅ composição declarativa e posicionamento determinístico
 BF-1C ✅ integração estática com runtime e seleção
 BF-1C-FIX ✅ técnico + gate visual humano no navegador PASS
 BF-1D ✅ substituição procedural, descarte seletivo e gate integrado
-PRÓXIMO AUTORIZÁVEL: encerrar BF-1 tecnicamente; BF-2 não iniciada
+BF-1 ✅ tecnicamente concluída
+PRÓXIMO AUTORIZÁVEL: auditoria, planejamento e decomposição da BF-2; BF-2 não iniciada
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída
@@ -227,7 +228,7 @@ F1 aprovou a viabilidade da base Three.js; não concluiu câmera, interação, a
 
 ## Depois da FUNDAÇÃO
 
-1. Registrar o encerramento técnico da BF-1 somente junto da evidência assistiva humana aplicável; TalkBack no Moto G06 continua pendente e bloqueia o primeiro recorte real.
+1. Antes do fechamento do primeiro recorte real e de beta/release aplicável, validar TalkBack no Moto G06; essa dívida humana continua pendente e não reabre o encerramento técnico da BF-1.
 2. BF-2–BF-5 só avançam com autorização explícita: integrar progressivamente leitura, os seis tipos de registro e o ambiente provisório, preservando a operação essencial em React.
 3. Retomar P3D-B2–F somente se a ingestão ou substituição por GLB definitivo se tornar necessária.
 4. Projetar persistência espacial nova somente quando uma necessidade funcional demonstrar o que deve ser salvo.
