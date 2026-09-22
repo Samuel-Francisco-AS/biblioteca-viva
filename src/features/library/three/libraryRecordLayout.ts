@@ -225,7 +225,9 @@ function validateConfiguration(
         `A área complementar ${areaId} não corresponde ao tipo semântico ${layoutArea.categoryType}.`,
       );
     }
-    if (REQUIRED_LAYOUT_AREA_PAIRS[areaIndex]?.[0] !== layoutArea.categoryType) {
+    if (
+      REQUIRED_LAYOUT_AREA_PAIRS[areaIndex]?.[0] !== layoutArea.categoryType
+    ) {
       throw new Error(
         `A configuração complementar exige a ordem lógica das categorias: ${REQUIRED_LAYOUT_AREA_PAIRS.map(([type]) => type).join(", ")}.`,
       );
