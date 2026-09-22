@@ -1,6 +1,6 @@
 # Estado atual
 
-> Referência documental: 2026-09-21.
+> Referência documental: 2026-09-22.
 
 ## Produto
 
@@ -38,7 +38,9 @@
 
 ## Próximo trabalho
 
-**BF-2E está concluída no escopo acordado, e BF-2 está concluída no escopo técnico-funcional e físico dirigido.** Próxima etapa de planejamento: **BF-3 — integração dos demais tipos de registro.** BF-3 não foi iniciada nem autorizada para implementação nesta consolidação. TalkBack continua obrigatório antes do fechamento do primeiro recorte real e de beta/release aplicável; isso não equivale a PASS automatizado. P3D-B1 permanece registro documental de `bookshelf`; P3D-B2–F seguem adiados até necessidade concreta de GLB definitivo. A fixture continua técnica, sem mundo final ou persistência espacial.
+**BF-2E está concluída no escopo acordado, e BF-2 está concluída no escopo técnico-funcional e físico dirigido.** O planejamento BF-3 foi documentado em `docs/ROADMAP.md` com BF-3A–F; **nenhuma subfase foi iniciada ou autorizada para implementação por este commit documental**. A próxima execução autorizável é **BF-3A — contrato e fronteiras, exclusivamente documental**: conferir o baseline BF-2, fixar representação/identidade/ordenamento e limites dos cinco tipos restantes, estratégia de consulta, disposição provisória, overflow, fluxo React e isolamento F5. O planejamento não aprova geometria final, sala por categoria, query escolhida, nova dependência ou persistência espacial. Após o gate A, atualizar este ponto de retomada e detalhar o menor checkpoint B.
+
+A sequência proposta é BF-3B (projeção neutra dos cinco tipos), C (geometria/layout isolados e inspeção visual), D (runtime/seleção), E (React/aplicação e fluxo funcional) e F (regressão, APK, validação física dirigida e fechamento), com subdivisões pequenas conforme necessidade e cota. Preservar o livro e a capacidade derivada atual de 70 slots, a lista semântica e seleção por `entryId`; não promover fixture/diagnóstico a produção. TalkBack continua obrigatório antes do fechamento do primeiro recorte real e de beta/release aplicável e não recebeu PASS. P3D-B1 permanece registro documental de `bookshelf`; P3D-B2–F seguem adiados até necessidade concreta de GLB definitivo. A cena continua provisória, sem mundo final ou persistência espacial.
 
 ```text
 F0 ✅
@@ -96,5 +98,11 @@ BF-2 ✅ CONCLUÍDA — escopo técnico-funcional e físico dirigido
   BF-2C ✅ integração com runtime e seleção
   BF-2D ✅ ponte React/aplicação e fluxo funcional
   BF-2E ✅ gate técnico e validação física dirigida positiva
-PRÓXIMA ETAPA DE PLANEJAMENTO: BF-3 — integração dos demais tipos de registro
+BF-3 📋 DECOMPOSIÇÃO DOCUMENTADA — IMPLEMENTAÇÃO NÃO INICIADA
+  BF-3A ⏳ contrato e fronteiras — PRÓXIMA EXECUÇÃO AUTORIZÁVEL
+  BF-3B ⏳ projeção neutra dos cinco tipos restantes
+  BF-3C ⏳ procedural e layout isolados
+  BF-3D ⏳ runtime e seleção
+  BF-3E ⏳ React/aplicação e fluxo funcional
+  BF-3F ⏳ gate integrado, físico dirigido e fechamento
 ```
