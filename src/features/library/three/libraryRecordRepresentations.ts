@@ -14,6 +14,16 @@ import type {
   StudyWorldEntry,
   WorkWorldEntry,
 } from "../libraryWorldEntryContract";
+import {
+  getProceduralLibraryRecordDimensions,
+  type LibraryRecordModelTypeId,
+  type ProceduralLibraryRecordDimensions,
+} from "./libraryRecordDimensions";
+
+export {
+  getProceduralLibraryRecordDimensions,
+  type ProceduralLibraryRecordDimensions,
+} from "./libraryRecordDimensions";
 
 export type ProceduralMovieRecordIdentity = Pick<
   MovieWorldEntry,
@@ -43,13 +53,6 @@ export type ProceduralLibraryRecordIdentity =
   | ProceduralPhysicalActivityRecordIdentity
   | ProceduralWorkRecordIdentity;
 
-/** Measured local envelope of an isolated procedural representation. */
-export interface ProceduralLibraryRecordDimensions {
-  readonly depth: number;
-  readonly height: number;
-  readonly width: number;
-}
-
 interface ProceduralLibraryRecordRepresentation<
   TIdentity extends ProceduralLibraryRecordIdentity,
 > {
@@ -69,7 +72,7 @@ export type ProceduralPhysicalActivityRecord =
 export type ProceduralWorkRecord =
   ProceduralLibraryRecordRepresentation<ProceduralWorkRecordIdentity>;
 
-type RecordModelTypeId = ProceduralLibraryRecordIdentity["modelTypeId"];
+type RecordModelTypeId = LibraryRecordModelTypeId;
 type RecordGeometry = BoxGeometry | CylinderGeometry;
 
 interface BoxPart {
@@ -87,23 +90,25 @@ interface RecordSpec {
 const RECORD_SPECS: Readonly<Record<RecordModelTypeId, RecordSpec>> =
   Object.freeze({
     "movie-record": Object.freeze({
-      dimensions: Object.freeze({ depth: 0.24, height: 0.48, width: 0.72 }),
+      dimensions: getProceduralLibraryRecordDimensions("movie-record"),
       rootName: "procedural-movie-record",
     }),
     "physical-activity-record": Object.freeze({
-      dimensions: Object.freeze({ depth: 0.4, height: 0.59, width: 0.46 }),
+      dimensions: getProceduralLibraryRecordDimensions(
+        "physical-activity-record",
+      ),
       rootName: "procedural-physical-activity-record",
     }),
     "series-record": Object.freeze({
-      dimensions: Object.freeze({ depth: 0.2, height: 0.5, width: 0.66 }),
+      dimensions: getProceduralLibraryRecordDimensions("series-record"),
       rootName: "procedural-series-record",
     }),
     "study-record": Object.freeze({
-      dimensions: Object.freeze({ depth: 0.4, height: 0.132, width: 0.56 }),
+      dimensions: getProceduralLibraryRecordDimensions("study-record"),
       rootName: "procedural-study-record",
     }),
     "work-record": Object.freeze({
-      dimensions: Object.freeze({ depth: 0.4, height: 0.3, width: 0.6 }),
+      dimensions: getProceduralLibraryRecordDimensions("work-record"),
       rootName: "procedural-work-record",
     }),
   });
@@ -152,14 +157,6 @@ function createRoot<TIdentity extends ProceduralLibraryRecordIdentity>(
   const root = new Group();
   root.name = spec.rootName;
   return { dimensions: spec.dimensions, identity, root };
-}
-
-/** Returns a copy of the measured envelope for a semantic model type. */
-export function getProceduralLibraryRecordDimensions(
-  modelTypeId: RecordModelTypeId,
-): Readonly<ProceduralLibraryRecordDimensions> {
-  const { depth, height, width } = RECORD_SPECS[modelTypeId].dimensions;
-  return Object.freeze({ depth, height, width });
 }
 
 /**

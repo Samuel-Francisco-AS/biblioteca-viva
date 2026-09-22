@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3C2 — Layout determinístico, bounds e overflow — 2026-09-22
+
+- adicionados contrato puro de slots/placements/overflow e zona complementar provisória para os cinco `modelTypeId` BF-3B. A capacidade é derivada de 37 slots: filme 6, série 7, estudo 8, atividade física 9 e trabalho 7; os 70 slots de livros permanecem exclusivos da área BF-2;
+- a distribuição preserva ordem lógica e identidade (`modelTypeId`, `instanceId`, `entryId`), rejeita configuração/IDs inválidos e devolve excedentes ordenados sem root, geometria, material, catálogo, picking ou posição fictícia. As dimensões C1 foram extraídas para uma única autoridade renderer-free compartilhada com o layout;
+- testes `Box3` cobrem os envelopes reais das cinco fábricas, limites da zona, não interseção entre ocorrências e contra estantes, 70 livros e proxies técnicos efetivamente modelados. Não houve integração com runtime, React, consulta, câmera, cena, Dexie, schema, backup ou persistência espacial; BF-3C3 passa a ser o próximo checkpoint e o gate visual humano continua pendente.
+
 ### BF-3C1 — Contrato breve e cinco representações isoladas — 2026-09-22
 
 - adicionadas fábricas Three.js isoladas para os cinco `modelTypeId` semânticos BF-3B: painel audiovisual (`movie-record`), três casos de mídia (`series-record`), caderno (`study-record`), marcador neutro de percurso (`physical-activity-record`) e pasta/arquivos (`work-record`); cada uma preserva exatamente `entryId` e `instanceId`, retorna root local não anexada e usa recursos próprios por chamada;

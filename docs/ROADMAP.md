@@ -123,7 +123,7 @@ Implementou e testou a projeção renderer-independent `projectLibraryWorldEntri
 
 #### BF-3C — Representação procedural e layout isolados — decomposição em três checkpoints
 
-**Estado:** BF-3C1 está tecnicamente concluída; C2 e C3 permanecem pendentes. O resultado da BF-3C será uma fábrica procedural leve para os cinco novos tipos e uma composição/layout provisórios que consumam a projeção neutra BF-3B, sem conectá-los ao runtime produtivo, React ou consultas. A BF-3D só poderá começar após o gate final da C3, que inclui aprovação visual humana explícita.
+**Estado:** BF-3C1 e BF-3C2 estão tecnicamente concluídas; C3 permanece pendente. O resultado da BF-3C será uma fábrica procedural leve para os cinco novos tipos e uma composição/layout provisórios que consumam a projeção neutra BF-3B, sem conectá-los ao runtime produtivo, React ou consultas. A BF-3D só poderá começar após o gate final da C3, que inclui aprovação visual humana explícita.
 
 ##### BF-3C1 — Contrato breve e cinco representações procedurais
 
@@ -131,11 +131,11 @@ Concluiu a auditoria dirigida da composição vigente — estantes e livros no p
 
 **Gate C1: PASS técnico.** Testes dirigidos cobrem geometria, dimensões por `Box3`, identidade, raiz local, componentes, distinção filme/série, determinismo estrutural, isolamento de recursos, descarte deduplicado/repetido e entrada inválida antes de anexar recursos. Não houve montagem na cena produtiva, alteração do snapshot BF-3B, runtime, React, Dexie ou integração de consulta.
 
-##### BF-3C2 — Layout determinístico e overflow
+##### BF-3C2 — Layout determinístico e overflow — concluída tecnicamente
 
 Medir os bounds reais das cinco representações da C1 e derivar a zona complementar provisória e seus slots, sem propor cinco cômodos ou estado espacial persistente. Implementar atribuição pura que consuma as ocorrências na ordem lógica do snapshot BF-3B, preserve `entryId`/`instanceId`, derive a capacidade a partir dos slots efetivos e devolva overflow ordenado, sem criar representação para excedentes. Garantir posições finitas, espaçamento positivo e ausência de interseção positiva com a área de leitura, os livros colocados e os proxies técnicos relevantes; considerar também enquadramento, navegação e selecionabilidade da câmera atual. Os **70 slots de livros** são exclusivos das estantes BF-2 e não integram a capacidade dos novos tipos.
 
-**Gate C2:** testes dirigidos de distribuição, bounds, colisões, determinismo, duplicatas, overflow, entradas inválidas e ausência de mutação. Ainda não anexar os cinco tipos ao `ThreeWorldRuntime` ou à rota Biblioteca.
+**Gate C2: PASS técnico.** A zona complementar central/frontal, cinco faixas e 37 slots derivados (6 filme, 7 série, 8 estudo, 9 atividade física, 7 trabalho) foram declarados e testados contra bounds reais C1, área de leitura com 70 livros e proxies técnicos modelados. A atribuição é pura, imutável e retorna placement/overflow ordenado sem roots. Ainda não foram anexados tipos ao `ThreeWorldRuntime` ou à rota Biblioteca; C3 é o próximo checkpoint.
 
 ##### BF-3C3 — Prévia visual isolada, decisão humana e fechamento
 
@@ -163,7 +163,7 @@ Executar `format:check`, lint, typecheck, Vitest, `audio:check`, build, `perform
 
 **Gate F:** só declarar BF-3 concluída no escopo técnico-funcional e físico dirigido após os resultados correspondentes; isso **não** encerra por implicação o primeiro recorte real nem aprova TalkBack, arte final, GLB produtivo ou a BF-4. Prosseguir para BF-4 somente após autorização própria.
 
-**Ponto de retomada:** BF-3C1 está tecnicamente concluída. BF-3C2 é o próximo checkpoint autorizável: derivar a zona complementar, os slots e a capacidade a partir dos bounds reais das cinco fábricas, provar ausência de colisões e devolver overflow ordenado sem criar roots para excedentes. Depois vem BF-3C3 (prévia isolada, aprovação visual humana explícita e fechamento); D → E → F permanecem posteriores e não iniciados. Não tocar em runtime, React, consulta ou Dexie na BF-3C.
+**Ponto de retomada:** BF-3C1/C2 estão tecnicamente concluídas. BF-3C3 é o próximo checkpoint autorizável: preparar prévia isolada com conteúdo fictício, submeter proporções/oclusões/legibilidade ao gate visual humano explícito e limpar o instrumento temporário. D → E → F permanecem posteriores e não iniciados. Não tocar em runtime, React, consulta ou Dexie na BF-3C.
 
 ### BF-4 — Mundo habitável
 
