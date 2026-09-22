@@ -26,9 +26,9 @@ BF-2 ✅ primeira área de leitura integrada a registros reais
   BF-2C ✅ integração com runtime e seleção
   BF-2D ✅ ponte React/aplicação e fluxo funcional
   BF-2E ✅ gate técnico e validação física dirigida positiva
-BF-3 📋 planejamento documental registrado — integração dos demais tipos de registro; implementação não iniciada
-  BF-3A ⏳ contrato e fronteiras
-  BF-3B ⏳ projeção neutra dos cinco tipos restantes
+BF-3 📋 contrato documentado — integração dos demais tipos de registro; implementação não iniciada
+  BF-3A ✅ contrato e fronteiras — documental
+  BF-3B ⏳ projeção neutra dos cinco tipos restantes — próxima execução autorizável
   BF-3C ⏳ representação procedural e layout isolados
   BF-3D ⏳ integração com runtime e seleção
   BF-3E ⏳ ponte React/aplicação e fluxo funcional
@@ -89,30 +89,32 @@ A Biblioteca consulta `listBookEntries` por um contrato React/aplicação estrei
 
 Consolidou regressão integrada com base convencional real: criação, projeção, representação, seleção bidirecional, abertura por `entryId`, edição/retorno, vazio, overflow 70 + 1, fallback e lifecycle. O gate técnico e a validação física dirigida no Moto G06 foram positivos; BF-2E está concluída no escopo acordado e BF-2 no escopo técnico-funcional e físico dirigido. Os volumes procedurais permanecem pequenos no enquadramento geral, mas são selecionáveis e foram aceitos pelo usuário para o escopo funcional atual. A observação humana é qualitativa, sem estabelecer benchmark, FPS, teto de carga ou aprovação da arte definitiva. TalkBack continua obrigatório antes do fechamento do primeiro recorte real e de beta/release aplicável.
 
-### BF-3 — Integração dos seis tipos de registro — planejamento documental registrado
+### BF-3 — Integração dos seis tipos de registro — contrato documental estabelecido
 
-**Estado:** decomposição planejada; **nenhuma subfase de implementação iniciada**. A BF-2 já integra `book` na área de leitura; BF-3 deve adicionar `movie`, `series`, `study`, `physical_activity` e `work` à experiência funcional do mundo sem regredir os livros. A autorização desta documentação não autoriza execução de BF-3A–F por si só; cada checkpoint requer escopo e gate antes de avançar. `docs/STATUS.md` permanece a autoridade sobre o presente.
+**Estado:** BF-3A documental concluída; **nenhuma subfase de implementação foi iniciada**. A BF-2 já integra `book` na área de leitura; BF-3 deve adicionar `movie`, `series`, `study`, `physical_activity` e `work` à experiência funcional do mundo sem regredir os livros. A próxima execução autorizável é BF-3B; cada checkpoint posterior requer escopo e gate próprios. `docs/STATUS.md` permanece a autoridade sobre o presente.
 
 **Resultado funcional pretendido:** cada registro convencional existente pode ser encontrado, identificado pelo seu tipo, selecionado quando houver representação 3D e aberto pelo `entryId`; todos continuam acessíveis por uma superfície React semântica mesmo sem WebGL ou quando não couberem visualmente. Não se exige uma sala definitiva por categoria: composição, formas e capacidade devem ser proporcionais à prova funcional, não uma antecipação da BF-4. O layout provisório deve preservar legibilidade e interação no Moto G06.
 
 **Invariantes comuns e limites:**
 
 - Preservar a identidade lógica da ADR-011: `modelTypeId` (tipo visual), `instanceId` (ocorrência estável e única no mundo) e `entryId` (registro convencional) são distintos. Não derivar identidade de mesh, posição, título ou URL; IDs entre categorias não podem colidir. `book-volume` e a área de leitura BF-2 permanecem válidos.
-- Projetar dados convencionais em contratos neutros, imutáveis e determinísticos; domínio/aplicação não conhecem Three.js, e runtime não consulta Dexie nem casos de uso. Investigar o reuso de `listLibraryEntries` antes de multiplicar consultas, sem quebrar a consulta estreita `listBookEntries` já aprovada ou prometer sincronização live.
+- Projetar dados convencionais em contratos neutros, imutáveis e determinísticos; domínio/aplicação não conhecem Three.js, e runtime não consulta Dexie nem casos de uso. Na Biblioteca, reutilizar `listLibraryEntries` uma vez por montagem normal, sem quebrar a consulta estreita `listBookEntries` já aprovada fora dessa rota ou prometer sincronização live.
 - Procedural leve, geometria e posicionamento isolados, ownership único após attach, disposal idempotente e proteção a callbacks tardios. F5 continua diagnóstico e não recebe snapshots funcionais; não promover fixture F1/F4, GLB de laboratório ou candidato P3D-B1 a asset produtivo.
 - Sem `PlacedObject`, `WorldStructureState`, persistência espacial, tabela/schema Dexie, alteração de backup, `AssetManager`, cache, novos loaders, dependências ou refatoração ampla não justificados. Os 70 slots atuais são capacidade derivada **apenas dos livros**, não limite global de BF-3. Sem novas mecânicas ou personagens de BF-4.
 - React permanece o caminho convencional de busca/abertura/edição, lista integral e alternativa de seleção. Distinguir vazio real, loading, armazenamento indisponível, erro de consulta, erro WebGL e overflow. Seleção não força foco, não recria o mundo e não inventa objeto 3D para excedentes. TalkBack humano permanece obrigatório para fechar o primeiro recorte real e beta/release aplicável.
 - Usar checkpoints pequenos e retomáveis: testes dirigidos durante cada implementação e regressão ampla somente no gate integrado ou em mudança que a justifique. Não declarar benchmark/FPS medido por CI; gatilhos de densidade ou renderização nova exigem medição proporcional no Moto G06.
 
-#### BF-3A — Contrato e fronteiras — próxima execução autorizável, somente documental
+#### BF-3A — Contrato e fronteiras — concluída documentalmente
 
-Auditar o baseline BF-2 real e fechar um contrato escrito para os cinco tipos novos: campos mínimos e opcionais da projeção; `modelTypeId` e namespace de `instanceId` por categoria; ordenação e duplicidade; lugar/área provisória e regra de overflow; seleção/abertura por `entryId`; estados de loading, vazio e falha; integração semântica React e isolamento F5. Decidir a estratégia de consulta após confrontar `listLibraryEntries` com `listBookEntries`, registrando o menor caminho seguro. Definir quais geometrias são apenas hipóteses visuais antes de implementá-las, sem assumir cinco cômodos finais. Verificar os documentos ativos correspondentes; a reconciliação geral pós-BF-2 do README, mapa, UX e TESTING já foi feita em `0430b2a` e não deve ser repetida sem divergência nova.
+O baseline real confirmou que `ListBookEntries` chama `ListLibraryEntries` e filtra `book`. Assim, BF-3E fará uma única chamada a `listLibraryEntries` por montagem normal da Biblioteca e projetará os seis tipos do mesmo resultado; `listBookEntries` e a projeção BF-2 permanecem intactos fora dessa rota. O contrato detalhado vigente está em `WORLD.md`: fixa campos, metadados disponíveis, `modelTypeId` semântico, namespaces de `instanceId`, ordenação `createdAt`/`id`, duplicidade, snapshot imutável, vazio e overflow; reserva uma zona complementar provisória sem coordenadas, capacidades ou salas finais; e fecha a fronteira de runtime, React, lifecycle, WebGL e F5.
 
-**Gate A:** contrato consistente com ADR-011, BF-2, tipos reais e testes existentes; limites explícitos, riscos e ponto de retomada atualizados. Nenhum runtime, código, teste, asset, schema, dependência ou APK alterado.
+Os tipos novos usarão `movie-record`/`library-movie:${entryId}`, `series-record`/`library-series:${entryId}`, `study-record`/`library-study:${entryId}`, `physical-activity-record`/`library-physical-activity:${entryId}` e `work-record`/`library-work:${entryId}`. Esses identificadores não descrevem a geometria provisória. Mídia, caderno, marcador e pasta permanecem hipóteses a inspecionar no navegador em BF-3C, não uma obrigação visual. A reconciliação geral pós-BF-2 de README, mapa, UX e TESTING já foi feita em `0430b2a`; como BF-3A não alterou comportamento vigente, ela não a repetiu.
+
+**Gate A: PASS documental.** Contrato conferido contra ADR-011, BF-2, tipos e testes existentes; limites, riscos e ponto de retomada atualizados. Nenhum runtime, código, teste, asset, schema, dependência ou APK foi alterado.
 
 #### BF-3B — Projeção neutra dos cinco tipos restantes — contrato puro
 
-Implementar e testar projeções renderer-independent a partir dos registros convencionais de `movie`, `series`, `study`, `physical_activity` e `work`. Preservar `entryId`, tipo, título e apenas metadados úteis e seguros de cada categoria; tratar opcionais sem fabricar valores. Produzir ordenação determinística (por exemplo, `createdAt` e `id` onde aplicável), `instanceId` estável por categoria, rejeição de duplicados e snapshots imutáveis. Escolher, no contrato A, se a nova consulta agregada coexiste com ou substitui a consulta BF-2 na página; não acoplar projeção a Three, React ou Dexie.
+Implementar e testar projeções renderer-independent a partir dos registros convencionais de `movie`, `series`, `study`, `physical_activity` e `work`, conforme o contrato BF-3A. Preservar `entryId`, tipo, título e apenas metadados úteis e seguros de cada categoria; tratar opcionais sem fabricar valores. Produzir ordenação `createdAt`/`id`, `instanceId` e `modelTypeId` já definidos, rejeição de duplicados e snapshots imutáveis. A decisão de consulta já está fechada: BF-3E usará `listLibraryEntries` uma vez por montagem normal, sem coexistência de uma segunda consulta a `listBookEntries` nessa página. Não acoplar projeção a Three, React ou Dexie.
 
 **Gate B:** testes puros de seis tipos, identidade sem colisão, ordenação, opcionais, duplicidade e não mutação; nenhuma representação no runtime e nenhuma regressão nos livros.
 
@@ -140,7 +142,7 @@ Executar `format:check`, lint, typecheck, Vitest, `audio:check`, build, `perform
 
 **Gate F:** só declarar BF-3 concluída no escopo técnico-funcional e físico dirigido após os resultados correspondentes; isso **não** encerra por implicação o primeiro recorte real nem aprova TalkBack, arte final, GLB produtivo ou a BF-4. Prosseguir para BF-4 somente após autorização própria.
 
-**Ponto de retomada:** iniciar pela BF-3A documental; ao encerrá-la, atualizar `STATUS.md` e detalhar o menor checkpoint BF-3B autorizável. A sequência B → C → D → E → F é proposta como ordem de gates, sujeita a subdivisões documentadas para economia de cota e achados reais, sem execução implícita.
+**Ponto de retomada:** BF-3B é a próxima execução autorizável: implementar somente as projeções puras e seus testes dirigidos para os cinco tipos, recebendo `LibraryEntry[]` já consultados e sem tocar em representação, layout, runtime, React ou Dexie. A sequência B → C → D → E → F é proposta como ordem de gates, sujeita a subdivisões documentadas para economia de cota e achados reais, sem execução implícita.
 
 ### BF-4 — Mundo habitável
 
@@ -217,9 +219,9 @@ BF-2 ✅ primeira área de leitura integrada a registros reais
   BF-2C ✅ integração com runtime e seleção
   BF-2D ✅ ponte React/aplicação e fluxo funcional
   BF-2E ✅ gate técnico e validação física dirigida positiva
-BF-3 📋 DECOMPOSIÇÃO DOCUMENTADA — IMPLEMENTAÇÃO NÃO INICIADA
-  BF-3A ⏳ contrato e fronteiras — PRÓXIMA EXECUÇÃO AUTORIZÁVEL
-  BF-3B ⏳ projeção neutra dos cinco tipos restantes
+BF-3 📋 CONTRATO DOCUMENTADO — IMPLEMENTAÇÃO NÃO INICIADA
+  BF-3A ✅ contrato e fronteiras — CONCLUÍDA DOCUMENTALMENTE
+  BF-3B ⏳ projeção neutra dos cinco tipos restantes — PRÓXIMA EXECUÇÃO AUTORIZÁVEL
   BF-3C ⏳ procedural e layout isolados
   BF-3D ⏳ runtime e seleção
   BF-3E ⏳ React/aplicação e fluxo funcional
