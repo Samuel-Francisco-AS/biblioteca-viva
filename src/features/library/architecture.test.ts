@@ -21,7 +21,12 @@ const runtimeSources = import.meta.glob<string>(
 );
 
 const readingAreaProjectionSources = import.meta.glob<string>(
-  ["./readingAreaBookContract.ts", "./readingAreaBooks.ts"],
+  [
+    "./readingAreaBookContract.ts",
+    "./readingAreaBooks.ts",
+    "./libraryWorldEntryContract.ts",
+    "./libraryWorldEntries.ts",
+  ],
   { eager: true, import: "default", query: "?raw" },
 );
 
@@ -49,7 +54,7 @@ describe("fronteiras da fundação Three.js", () => {
     }
   });
 
-  it("mantém a projeção de livros neutra de renderer e infraestrutura", () => {
+  it("mantém as projeções neutras de renderer e infraestrutura", () => {
     for (const [path, source] of Object.entries(readingAreaProjectionSources)) {
       expect(source, path).not.toMatch(/from\s+["']three(?:\/[^"']*)?["']/u);
       expect(source, path).not.toMatch(
@@ -58,14 +63,16 @@ describe("fronteiras da fundação Three.js", () => {
     }
   });
 
-  it("permite ao projector conhecer o domínio, mas não ao contrato nem ao renderer", () => {
-    const contract = Object.entries(readingAreaProjectionSources).find(
-      ([path]) => path.endsWith("/readingAreaBookContract.ts"),
-    )?.[1];
-    expect(contract).toBeDefined();
-    expect(contract).not.toMatch(
-      /from\s+["'][^"']*(?:domain|application|three|dexie|infrastructure)[^"']*["']/iu,
+  it("permite aos projectors conhecer o domínio, mas não aos contratos nem ao renderer", () => {
+    const contracts = Object.entries(readingAreaProjectionSources).filter(
+      ([path]) => path.endsWith("Contract.ts"),
     );
+    expect(contracts).toHaveLength(2);
+    for (const [path, source] of contracts) {
+      expect(source, path).not.toMatch(
+        /from\s+["'][^"']*(?:domain|application|three|dexie|infrastructure)[^"']*["']/iu,
+      );
+    }
     for (const [path, source] of Object.entries(runtimeSources)) {
       expect(source, path).not.toMatch(
         /from\s+["'][^"']*readingAreaBooks[^"']*["']/u,

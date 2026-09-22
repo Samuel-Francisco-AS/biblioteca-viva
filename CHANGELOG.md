@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3B — Projeção neutra dos cinco tipos restantes — 2026-09-22
+
+- adicionado o snapshot TypeScript puro e imutável das seis categorias convencionais, ordenadas por `ENTRY_TYPES`; `book` reutiliza sem alteração a projeção BF-2, enquanto os cinco tipos restantes expõem somente os metadados documentados, `modelTypeId` e `instanceId` semânticos;
+- a projeção ordena cada categoria por `createdAt` e `id`, rejeita `entryId` duplicado no conjunto completo e confirma unicidade de `instanceId`, sem mutar os registros de entrada;
+- não foram alterados runtime, layout, geometria, `LibraryPage`, consultas, Dexie, schema, backup, dependências, persistência espacial ou cenários F5. BF-3C passa a ser a próxima etapa autorizável.
+
 ### BF-2E/BF-2 — Fechamento da primeira área de leitura — 2026-09-21
 
 - encerradas BF-2E e BF-2 no escopo técnico-funcional e físico dirigido: o roteiro humano no Moto G06 confirmou a Biblioteca com livros reais, seleção alternada por canvas e React, abertura/edição/retorno, pan, pinch, zoom, rotação e background/resume com responsividade adequada; é observação qualitativa, não benchmark ou teto de capacidade;
