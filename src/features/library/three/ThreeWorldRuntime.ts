@@ -1,5 +1,8 @@
 import {
   Color,
+  DirectionalLight,
+  Group,
+  HemisphereLight,
   Mesh,
   Object3D,
   OrthographicCamera,
@@ -20,6 +23,10 @@ import type {
   WorldSelectionListener,
 } from "../worldRuntime";
 import type { ReadingAreaBook } from "../readingAreaBookContract";
+import type { LibraryWorldSnapshot } from "../libraryWorldEntryContract";
+import { assignLibraryRecordSlots, type LibraryRecordPlacement } from "../libraryRecordLayout";
+import { createProceduralLibraryBuilding } from "./proceduralLibraryBuilding";
+import { createLibraryRecordComposition } from "./libraryRecordComposition";
 import { FrameMetricsWindow } from "./frameMetrics";
 import {
   CAMERA_REFERENCE_HALF_HEIGHT,
@@ -90,6 +97,8 @@ export interface ThreeWorldRuntimeDependencies {
   readonly performanceScenario?: PerformanceScenario;
   /** Optional immutable logical snapshot; no query or domain object enters Three. */
   readonly readingAreaBooks?: readonly ReadingAreaBook[];
+  /** Optional BF-3B snapshot; mutually exclusive with readingAreaBooks. */
+  readonly libraryWorldSnapshot?: LibraryWorldSnapshot;
 }
 
 const defaultFrameScheduler: FrameScheduler = {
@@ -144,6 +153,8 @@ class ThreeWorldMount {
   private readonly fixtures: Object3D[] = [];
   private interaction: ThreeWorldInteraction | undefined;
   private proceduralComposition: ProceduralComposition | undefined;
+  private libraryBuilding: Group | undefined;
+  private libraryRecords: Group | undefined;
   private referenceScene: ReferenceScene | undefined;
   private resizeObserver: ResizeObserver | undefined;
   private webglContextLostListener: ((event: Event) => void) | undefined;
@@ -198,6 +209,14 @@ class ThreeWorldMount {
 
   addProceduralComposition(composition: ProceduralComposition): void {
     this.proceduralComposition = composition;
+  }
+
+  addLibraryBuilding(root: Group): void {
+    this.libraryBuilding = root;
+  }
+
+  addLibraryRecords(root: Group): void {
+    this.libraryRecords = root;
   }
 
   addFixture(fixture: Object3D): void {
@@ -316,6 +335,16 @@ class ThreeWorldMount {
     this.safely(() => {
       if (proceduralComposition) disposeObjectTree(proceduralComposition.root);
     });
+    const libraryRecords = this.libraryRecords;
+    this.libraryRecords = undefined;
+    this.safely(() => {
+      if (libraryRecords) disposeObjectTree(libraryRecords);
+    });
+    const libraryBuilding = this.libraryBuilding;
+    this.libraryBuilding = undefined;
+    this.safely(() => {
+      if (libraryBuilding) disposeObjectTree(libraryBuilding);
+    });
     const referenceScene = this.referenceScene;
     this.referenceScene = undefined;
     this.safely(() => {
@@ -359,6 +388,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly performanceScenario: PerformanceScenario;
   private readonly performanceScenarioDiagnosticsEnabled: boolean;
   private readonly readingAreaBooks: readonly ReadingAreaBook[];
+  private readonly libraryRecordPlacements: readonly LibraryRecordPlacement[] | undefined;
   private readingAreaBookVisuals = new Map<string, ReadingAreaBookVisual>();
   private pausedByVisibility = false;
   private renderedFrames = 0;
@@ -388,14 +418,38 @@ export class ThreeWorldRuntime implements WorldRuntime {
       dependencies.performanceScenario ?? createFunctionalAreaScenario();
     this.performanceScenarioDiagnosticsEnabled =
       dependencies.performanceScenario !== undefined;
-    // F5 is a self-contained diagnostic corpus. A BF snapshot must not affect
-    // its scene, catalog, or even its construction validation.
-    const readingAreaBooks = this.performanceScenarioDiagnosticsEnabled
-      ? []
-      : (dependencies.readingAreaBooks ?? []);
-    if (!this.performanceScenarioDiagnosticsEnabled)
-      validateReadingAreaBookSnapshot(readingAreaBooks);
-    this.readingAreaBooks = Object.freeze([...readingAreaBooks]);
+    // F5 ignores even malformed BF snapshots; its diagnostic corpus is fixed.
+    const worldSnapshot = this.performanceScenarioDiagnosticsEnabled
+      ? undefined
+      : dependencies.libraryWorldSnapshot;
+    if (worldSnapshot !== undefined && dependencies.readingAreaBooks !== undefined) {
+      throw new Error("Use somente um snapshot BF por montagem.");
+    }
+    if (worldSnapshot !== undefined) {
+      const assignment = assignLibraryRecordSlots(worldSnapshot);
+      const books = worldSnapshot.categories[0];
+      if (books.type !== "book") {
+        throw new Error("A primeira categoria do snapshot BF deve ser book.");
+      }
+      validateReadingAreaBookSnapshot(books.entries);
+      const ids = new Set(books.entries.map(({ instanceId }) => instanceId));
+      const entryIds = new Set(books.entries.map(({ entryId }) => entryId));
+      for (const entry of [...assignment.placements, ...assignment.overflow]) {
+        if (ids.has(entry.instanceId) || entryIds.has(entry.entryId)) {
+          throw new Error("Identidade duplicada entre livros e outros registros.");
+        }
+      }
+      this.readingAreaBooks = Object.freeze([...books.entries]);
+      this.libraryRecordPlacements = assignment.placements;
+    } else {
+      const books = this.performanceScenarioDiagnosticsEnabled
+        ? []
+        : (dependencies.readingAreaBooks ?? []);
+      if (!this.performanceScenarioDiagnosticsEnabled)
+        validateReadingAreaBookSnapshot(books);
+      this.readingAreaBooks = Object.freeze([...books]);
+      this.libraryRecordPlacements = undefined;
+    }
     this.frameScheduler = dependencies.frameScheduler ?? defaultFrameScheduler;
     this.now = dependencies.now ?? (() => performance.now());
   }
@@ -446,12 +500,22 @@ export class ThreeWorldRuntime implements WorldRuntime {
         this.frameScheduler,
       );
       this.mountedWorld = mountedWorld;
-      const referenceScene = createReferenceScene();
       const { camera, renderer, scene } = mountedWorld;
+      const composedWorld = this.libraryRecordPlacements !== undefined;
+      // F1 floor/walls/proxies overlap the BF-3C building; preserve the
+      // unmodified reference scene for legacy BF-2 and F5 only.
+      const referenceScene = composedWorld ? undefined : createReferenceScene();
 
       scene.background = new Color(0x18342d);
-      scene.add(referenceScene.root);
-      mountedWorld.addReferenceScene(referenceScene);
+      if (referenceScene) {
+        mountedWorld.addReferenceScene(referenceScene);
+        scene.add(referenceScene.root);
+      } else {
+        scene.add(new HemisphereLight(0xffffff, 0x526553, 2));
+        const sunlight = new DirectionalLight(0xffffff, 1.5);
+        sunlight.position.set(-4, 12, 7);
+        scene.add(sunlight);
+      }
       const proceduralSelectables = this.performanceScenarioDiagnosticsEnabled
         ? []
         : (() => {
@@ -487,16 +551,24 @@ export class ThreeWorldRuntime implements WorldRuntime {
           visual,
         ]),
       );
+      if (composedWorld) {
+        const building = createProceduralLibraryBuilding();
+        mountedWorld.addLibraryBuilding(building);
+        scene.add(building);
+        const records = createLibraryRecordComposition(this.libraryRecordPlacements ?? []);
+        mountedWorld.addLibraryRecords(records.root);
+        scene.add(records.root);
+      }
       this.navigation = new CameraNavigation(camera);
 
       renderer.shadowMap.enabled = false;
       renderer.domElement.className = "three-world-canvas";
       renderer.domElement.dataset.fixtureStatus = "loading";
       renderer.domElement.dataset.referenceMeshes = String(
-        referenceScene.meshCount,
+        referenceScene?.meshCount ?? 0,
       );
       renderer.domElement.dataset.referenceObjects = String(
-        referenceScene.meshCount + 1,
+        referenceScene ? referenceScene.meshCount + 1 : 0,
       );
       renderer.domElement.dataset.referenceProxyTypes = String(
         REFERENCE_SCENE_PROXY_TYPES,
@@ -508,7 +580,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
       this.baseSelectableObjects = Object.freeze([
-        ...referenceScene.selectables.map(({ descriptor }) => descriptor),
+        ...(referenceScene?.selectables ?? []).map(({ descriptor }) => descriptor),
         ...proceduralSelectables.map(({ descriptor }) => descriptor),
         ...(this.performanceScenarioDiagnosticsEnabled
           ? [FIXTURE_SELECTABLE]
@@ -528,7 +600,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         },
         scene,
         selectables: [
-          ...referenceScene.selectables,
+          ...(referenceScene?.selectables ?? []),
           ...proceduralSelectables,
           ...readingAreaBookVisuals.map(({ book, node }) => ({
             descriptor: {
@@ -549,6 +621,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
       );
       mountedWorld.appendCanvas();
       this.resize();
+      if (composedWorld && this.mountedWorld) {
+        // Approved C3 overview; F3 navigation bounds still target the old floor.
+        this.navigation.setZoom(0.7);
+      }
       if (!this.mountedWorld) {
         throw new Error("ThreeWorldRuntime renderer failed while mounting.");
       }
