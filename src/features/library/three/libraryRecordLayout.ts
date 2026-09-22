@@ -160,6 +160,17 @@ function hasPositiveVolume(bounds: LibraryRecordLayoutBounds): boolean {
   );
 }
 
+function hasPositiveVolumeOverlap(
+  first: LibraryRecordLayoutBounds,
+  second: LibraryRecordLayoutBounds,
+): boolean {
+  return (
+    Math.min(first.maxX, second.maxX) > Math.max(first.minX, second.minX) &&
+    Math.min(first.maxY, second.maxY) > Math.max(first.minY, second.minY) &&
+    Math.min(first.maxZ, second.maxZ) > Math.max(first.minZ, second.minZ)
+  );
+}
+
 function validateConfiguration(
   configuration: LibraryRecordLayoutConfiguration,
 ): void {
@@ -172,7 +183,7 @@ function validateConfiguration(
   const areaIds = new Set<string>();
   const categories = new Set<LibraryRecordLayoutCategoryType>();
   const modelTypes = new Set<LibraryRecordModelTypeId>();
-  for (const layoutArea of configuration.areas) {
+  for (const [areaIndex, layoutArea] of configuration.areas.entries()) {
     const { areaId, bounds, horizontalGap, horizontalMargin, modelTypeId } =
       layoutArea;
     if (typeof areaId !== "string" || areaId.trim().length === 0) {
@@ -213,6 +224,18 @@ function validateConfiguration(
       throw new Error(
         `A área complementar ${areaId} não corresponde ao tipo semântico ${layoutArea.categoryType}.`,
       );
+    }
+    if (REQUIRED_LAYOUT_AREA_PAIRS[areaIndex]?.[0] !== layoutArea.categoryType) {
+      throw new Error(
+        `A configuração complementar exige a ordem lógica das categorias: ${REQUIRED_LAYOUT_AREA_PAIRS.map(([type]) => type).join(", ")}.`,
+      );
+    }
+    for (const precedingArea of configuration.areas.slice(0, areaIndex)) {
+      if (hasPositiveVolumeOverlap(bounds, precedingArea.bounds)) {
+        throw new Error(
+          `As áreas complementares ${precedingArea.areaId} e ${areaId} possuem interseção positiva.`,
+        );
+      }
     }
     const dimensions = getProceduralLibraryRecordDimensions(modelTypeId);
     if (

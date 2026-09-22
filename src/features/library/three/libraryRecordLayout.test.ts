@@ -419,6 +419,48 @@ describe("layout complementar BF-3C2", () => {
     disposeObjectTree(world);
   });
 
+  it("rejeita configuração alternativa que reordena as categorias", () => {
+    const [first, second, ...remaining] =
+      COMPLEMENTARY_LIBRARY_RECORD_LAYOUT_CONFIGURATION.areas;
+    if (!first || !second) throw new Error("Áreas complementares ausentes.");
+
+    const configuration: LibraryRecordLayoutConfiguration = {
+      ...COMPLEMENTARY_LIBRARY_RECORD_LAYOUT_CONFIGURATION,
+      areas: [second, first, ...remaining],
+    };
+
+    expect(() => createComplementaryLibraryRecordSlots(configuration)).toThrow(
+      "ordem lógica das categorias",
+    );
+    expect(() =>
+      assignLibraryWorldRecordsToSlots(snapshot({ movie: 1 }), configuration),
+    ).toThrow("ordem lógica das categorias");
+  });
+
+  it("rejeita áreas alternativas com interseção positiva, mesmo sem registros", () => {
+    const [movie, series] =
+      COMPLEMENTARY_LIBRARY_RECORD_LAYOUT_CONFIGURATION.areas;
+    if (!movie || !series) throw new Error("Áreas complementares ausentes.");
+
+    const configuration: LibraryRecordLayoutConfiguration = {
+      ...COMPLEMENTARY_LIBRARY_RECORD_LAYOUT_CONFIGURATION,
+      areas: [
+        {
+          ...movie,
+          bounds: { ...movie.bounds, minZ: 1.95, maxZ: 2.35 },
+        },
+        ...COMPLEMENTARY_LIBRARY_RECORD_LAYOUT_CONFIGURATION.areas.slice(1),
+      ],
+    };
+
+    expect(() => createComplementaryLibraryRecordSlots(configuration)).toThrow(
+      `As áreas complementares ${movie.areaId} e ${series.areaId} possuem interseção positiva.`,
+    );
+    expect(() =>
+      assignLibraryWorldRecordsToSlots(snapshot({}), configuration),
+    ).toThrow("interseção positiva");
+  });
+
   it("rejeita duplicatas e configuração inválida sem mutar entradas", () => {
     expect(() =>
       assignLibraryWorldRecordsToSlots(

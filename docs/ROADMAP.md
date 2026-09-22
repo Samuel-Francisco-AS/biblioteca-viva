@@ -31,8 +31,8 @@ BF-3 📋 contrato documentado — integração dos demais tipos de registro; pr
   BF-3B ✅ projeção neutra dos cinco tipos restantes — contratos e testes puros
   BF-3C ⏳ representação procedural e layout isolados — C1 concluída, dois checkpoints restantes
     BF-3C1 ✅ auditoria curta, contrato e cinco fábricas procedurais
-    BF-3C2 ⏳ layout determinístico, bounds e overflow — próximo checkpoint
-    BF-3C3 ⏳ prévia isolada, gate visual humano e fechamento
+    BF-3C2 ✅ layout determinístico, bounds e overflow — CONCLUÍDA TECNICAMENTE
+    BF-3C3 ⏳ prévia isolada, gate visual humano e fechamento — próximo checkpoint
   BF-3D ⏳ integração com runtime e seleção
   BF-3E ⏳ ponte React/aplicação e fluxo funcional
   BF-3F ⏳ gate integrado, validação física dirigida e fechamento
@@ -245,8 +245,8 @@ BF-3 📋 CONTRATO DOCUMENTADO — PROJEÇÃO PURA CONCLUÍDA
   BF-3B ✅ projeção neutra dos cinco tipos restantes — CONTRATOS E TESTES PUROS
   BF-3C ⏳ procedural e layout isolados — TRÊS CHECKPOINTS PLANEJADOS
     BF-3C1 ✅ contrato breve e cinco fábricas — CONCLUÍDA TECNICAMENTE
-    BF-3C2 ⏳ layout determinístico e overflow — PRÓXIMA EXECUÇÃO AUTORIZÁVEL
-    BF-3C3 ⏳ prévia, gate humano e fechamento
+    BF-3C2 ✅ layout determinístico e overflow — CONCLUÍDA TECNICAMENTE
+    BF-3C3 ⏳ prévia, gate humano e fechamento — PRÓXIMA EXECUÇÃO AUTORIZÁVEL
   BF-3D ⏳ runtime e seleção
   BF-3E ⏳ React/aplicação e fluxo funcional
   BF-3F ⏳ gate integrado, físico dirigido e fechamento
