@@ -39,7 +39,7 @@
 
 ## Próximo trabalho
 
-**BF-2E/BF-2, BF-3A, BF-3B e BF-3C1/C2/C3 passaram seus gates aplicáveis. BF-3C está concluída no escopo aprovado.** BF-3D está planejada em três checkpoints e **não iniciada**: **D1 (próxima execução)** recebe snapshot neutro opcional, monta construção e cinco representações sob ownership único, preserva a entrada BF-2 e impede qualquer conteúdo BF no F5; D2 acrescenta catálogo, picking, seleção e highlight sem regredir livros/estantes; D3 endurece falhas/lifecycle e fecha a regressão técnica. Antes da montagem normal, conferir colisão, oclusão e enquadramento do edifício com `referenceScene` produtiva, ausente da prévia C3; nenhuma alteração de F5 ou da composição visual aprovada será presumida. BF-3E/3F e BF-4 continuam posteriores. TalkBack continua obrigatório antes do fechamento do primeiro recorte real e de beta/release aplicável e não recebeu PASS. P3D-B1 permanece registro documental de `bookshelf`; P3D-B2–F seguem adiados até necessidade concreta de GLB definitivo. A cena continua provisória, sem mundo final ou persistência espacial.
+**BF-2E/BF-2, BF-3A, BF-3B e BF-3C1/C2/C3 passaram seus gates aplicáveis. BF-3C está concluída no escopo aprovado.** BF-3D tem implementação experimental da D1 na branch `experiment/bf-3d1-luna`, ainda sem PASS independente e sem merge na `main`; seu planejamento segue em três checkpoints: **D1 (próxima execução)** recebe snapshot neutro opcional, monta construção e cinco representações sob ownership único, preserva a entrada BF-2 e impede qualquer conteúdo BF no F5; D2 acrescenta catálogo, picking, seleção e highlight sem regredir livros/estantes; D3 endurece falhas/lifecycle e fecha a regressão técnica. Antes da montagem normal, conferir colisão, oclusão e enquadramento do edifício com `referenceScene` produtiva, ausente da prévia C3; nenhuma alteração de F5 ou da composição visual aprovada será presumida. BF-3E/3F e BF-4 continuam posteriores. TalkBack continua obrigatório antes do fechamento do primeiro recorte real e de beta/release aplicável e não recebeu PASS. P3D-B1 permanece registro documental de `bookshelf`; P3D-B2–F seguem adiados até necessidade concreta de GLB definitivo. A cena continua provisória, sem mundo final ou persistência espacial.
 
 ```text
 F0 ✅
@@ -105,7 +105,7 @@ BF-3 ⏳ CONTRATO, PROJEÇÃO E C CONCLUÍDOS; D/E/F PENDENTES
     BF-3C2 ✅ layout determinístico, bounds e overflow — PASS TÉCNICO
     BF-3C3 ✅ hipótese 3 com PASS humano e técnico; prévia removida
   BF-3D ⏳ runtime e seleção — PLANEJADA; NÃO INICIADA
-    BF-3D1 ⏳ snapshot, montagem e ownership — PRÓXIMA EXECUÇÃO
+    BF-3D1 ⏳ implementação experimental na branch; gate independente pendente
     BF-3D2 ⏳ catálogo, picking e seleção
     BF-3D3 ⏳ robustez, regressão e fechamento
   BF-3E ⏳ React/aplicação e fluxo funcional

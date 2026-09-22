@@ -34,7 +34,7 @@ BF-3 ⏳ contrato, projeção e C concluídos; D/E/F pendentes
     BF-3C2 ✅ layout determinístico, bounds e overflow — CONCLUÍDA TECNICAMENTE
     BF-3C3 ✅ hipótese 3 PASS visual humano e técnico; prévia removida
   BF-3D ⏳ runtime e seleção — plano D1/D2/D3 aprovado; não iniciada
-    BF-3D1 ⏳ snapshot, montagem e ownership — PRÓXIMA EXECUÇÃO
+    BF-3D1 ⏳ implementação experimental na branch; gate independente pendente
     BF-3D2 ⏳ catálogo, picking e seleção
     BF-3D3 ⏳ robustez, regressão e fechamento
   BF-3E ⏳ ponte React/aplicação e fluxo funcional
@@ -257,7 +257,7 @@ BF-3 ⏳ CONTRATO, PROJEÇÃO E C CONCLUÍDOS; D/E/F PENDENTES
     BF-3C2 ✅ layout determinístico e overflow — CONCLUÍDA TECNICAMENTE
     BF-3C3 ✅ hipótese 3 PASS humano e técnico; prévia removida
   BF-3D ⏳ runtime e seleção — PLANEJADA; NÃO INICIADA
-    BF-3D1 ⏳ snapshot, montagem e ownership — PRÓXIMA EXECUÇÃO
+    BF-3D1 ⏳ implementação experimental na branch; gate independente pendente
     BF-3D2 ⏳ catálogo, picking e seleção
     BF-3D3 ⏳ robustez, regressão e fechamento
   BF-3E ⏳ React/aplicação e fluxo funcional
