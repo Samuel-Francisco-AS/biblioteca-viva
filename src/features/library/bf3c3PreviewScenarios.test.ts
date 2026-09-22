@@ -29,7 +29,7 @@ describe("cenários sintéticos da prévia BF-3C3", () => {
           0,
         ),
       ),
-    ).toEqual([5, 37, 37]);
+    ).toEqual([5, 13, 13]);
     expect(
       results.map(({ overflowByCategory }) =>
         Object.values(overflowByCategory).reduce(

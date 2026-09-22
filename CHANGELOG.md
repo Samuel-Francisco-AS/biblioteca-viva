@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3C3 — Segunda hipótese multiambiente isolada — 2026-09-22
+
+- substituída a prévia de sala única por construção procedural com cinco cômodos conectados e semanticamente neutros, piso, paredes baixas e passagens. A composição BF-2 segue na prévia sem alteração produtiva;
+- ampliadas as cinco fábricas reais e a autoridade de dimensões. O layout puro temporário deriva 13 slots (2 filme, 2 série, 3 estudo, 3 atividade física, 3 trabalho), com distribuição descartável por cômodo, determinismo e overflow sem root;
+- cenários A/B/C agora exibem 5/13/13 placements e 0/0/4 excedentes. O instrumento mantém pan, wheel focal e pinch/pan, cleanup de roots, observer, interação e renderer; não há seleção, integração produtiva ou persistência espacial. Novo gate humano pendente, sem concluir BF-3C3/BF-3C.
+
 ### BF-3C3 — Prévia visual temporária isolada — 2026-09-22
 
 - adicionada somente para inspeção humana a entrada Vite `bf3c3-preview.html`, separada da rota Biblioteca e do build produtivo corrente. Ela projeta registros convencionais fictícios e determinísticos pela BF-3B, usa as cinco fábricas C1 e os placements C2 reais, e mostra cena de referência, estantes BF-1 e 18 livros fictícios BF-2;

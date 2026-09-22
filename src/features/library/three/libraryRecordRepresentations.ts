@@ -113,10 +113,30 @@ const RECORD_SPECS: Readonly<Record<RecordModelTypeId, RecordSpec>> =
     }),
   });
 
-function addPart(root: Group, part: BoxPart): Mesh<BufferGeometry> {
+const VISUAL_SCALE: Readonly<
+  Record<RecordModelTypeId, readonly [number, number, number]>
+> = Object.freeze({
+  "movie-record": [1.8, 2.5, 2],
+  "series-record": [1.8, 2.5, 2],
+  "study-record": [2.2, 8, 2],
+  "physical-activity-record": [2, 2, 2],
+  "work-record": [2, 3.5, 2],
+});
+
+function addPart(
+  root: Group,
+  part: BoxPart,
+  modelTypeId: RecordModelTypeId,
+): Mesh<BufferGeometry> {
+  const [sx, sy, sz] = VISUAL_SCALE[modelTypeId];
+  part.geometry.scale(sx, sy, sz);
   const mesh = new Mesh(part.geometry, part.material);
   mesh.name = part.name;
-  mesh.position.set(...part.position);
+  mesh.position.set(
+    part.position[0] * sx,
+    part.position[1] * sy,
+    part.position[2] * sz,
+  );
   root.add(mesh);
   return mesh;
 }
@@ -170,24 +190,36 @@ export function createProceduralMovieRecord(
   const representation = createRoot(identity, "movie-record");
   const housing = createMaterial(0x29363d);
   const screen = createMaterial(0x5d8da0);
-  addPart(representation.root, {
-    geometry: new BoxGeometry(0.56, 0.06, 0.24),
-    material: housing,
-    name: "movie-media-base",
-    position: [0, 0.03, 0],
-  });
-  addPart(representation.root, {
-    geometry: new BoxGeometry(0.72, 0.42, 0.12),
-    material: housing,
-    name: "movie-media-panel",
-    position: [0, 0.27, 0],
-  });
-  addPart(representation.root, {
-    geometry: new BoxGeometry(0.58, 0.28, 0.016),
-    material: screen,
-    name: "movie-screen-inset",
-    position: [0, 0.27, 0.068],
-  });
+  addPart(
+    representation.root,
+    {
+      geometry: new BoxGeometry(0.56, 0.06, 0.24),
+      material: housing,
+      name: "movie-media-base",
+      position: [0, 0.03, 0],
+    },
+    representation.identity.modelTypeId,
+  );
+  addPart(
+    representation.root,
+    {
+      geometry: new BoxGeometry(0.72, 0.42, 0.12),
+      material: housing,
+      name: "movie-media-panel",
+      position: [0, 0.27, 0],
+    },
+    representation.identity.modelTypeId,
+  );
+  addPart(
+    representation.root,
+    {
+      geometry: new BoxGeometry(0.58, 0.28, 0.016),
+      material: screen,
+      name: "movie-screen-inset",
+      position: [0, 0.27, 0.068],
+    },
+    representation.identity.modelTypeId,
+  );
   return representation;
 }
 
@@ -201,25 +233,37 @@ export function createProceduralSeriesRecord(
   const representation = createRoot(identity, "series-record");
   const caseMaterial = createMaterial(0x445770);
   const stripeMaterial = createMaterial(0xa8bb8b);
-  addPart(representation.root, {
-    geometry: new BoxGeometry(0.66, 0.06, 0.2),
-    material: caseMaterial,
-    name: "series-media-base",
-    position: [0, 0.03, 0],
-  });
-  for (const x of [-0.22, 0, 0.22]) {
-    addPart(representation.root, {
-      geometry: new BoxGeometry(0.18, 0.44, 0.13),
+  addPart(
+    representation.root,
+    {
+      geometry: new BoxGeometry(0.66, 0.06, 0.2),
       material: caseMaterial,
-      name: "series-media-case",
-      position: [x, 0.28, 0],
-    });
-    addPart(representation.root, {
-      geometry: new BoxGeometry(0.13, 0.07, 0.012),
-      material: stripeMaterial,
-      name: "series-episode-marker",
-      position: [x, 0.28, 0.071],
-    });
+      name: "series-media-base",
+      position: [0, 0.03, 0],
+    },
+    representation.identity.modelTypeId,
+  );
+  for (const x of [-0.22, 0, 0.22]) {
+    addPart(
+      representation.root,
+      {
+        geometry: new BoxGeometry(0.18, 0.44, 0.13),
+        material: caseMaterial,
+        name: "series-media-case",
+        position: [x, 0.28, 0],
+      },
+      representation.identity.modelTypeId,
+    );
+    addPart(
+      representation.root,
+      {
+        geometry: new BoxGeometry(0.13, 0.07, 0.012),
+        material: stripeMaterial,
+        name: "series-episode-marker",
+        position: [x, 0.28, 0.071],
+      },
+      representation.identity.modelTypeId,
+    );
   }
   return representation;
 }
@@ -231,30 +275,46 @@ export function createProceduralStudyRecord(
   const representation = createRoot(identity, "study-record");
   const cover = createMaterial(0x587c69);
   const pages = createMaterial(0xd9ceb4);
-  addPart(representation.root, {
-    geometry: new BoxGeometry(0.52, 0.016, 0.4),
-    material: cover,
-    name: "study-notebook-bottom-cover",
-    position: [0, 0.008, 0],
-  });
-  addPart(representation.root, {
-    geometry: new BoxGeometry(0.48, 0.1, 0.34),
-    material: pages,
-    name: "study-notebook-pages",
-    position: [0, 0.066, 0],
-  });
-  addPart(representation.root, {
-    geometry: new BoxGeometry(0.52, 0.016, 0.4),
-    material: cover,
-    name: "study-notebook-top-cover",
-    position: [0, 0.124, 0],
-  });
-  addPart(representation.root, {
-    geometry: new BoxGeometry(0.04, 0.132, 0.4),
-    material: cover,
-    name: "study-notebook-spine",
-    position: [-0.28, 0.066, 0],
-  });
+  addPart(
+    representation.root,
+    {
+      geometry: new BoxGeometry(0.52, 0.016, 0.4),
+      material: cover,
+      name: "study-notebook-bottom-cover",
+      position: [0, 0.008, 0],
+    },
+    representation.identity.modelTypeId,
+  );
+  addPart(
+    representation.root,
+    {
+      geometry: new BoxGeometry(0.48, 0.1, 0.34),
+      material: pages,
+      name: "study-notebook-pages",
+      position: [0, 0.066, 0],
+    },
+    representation.identity.modelTypeId,
+  );
+  addPart(
+    representation.root,
+    {
+      geometry: new BoxGeometry(0.52, 0.016, 0.4),
+      material: cover,
+      name: "study-notebook-top-cover",
+      position: [0, 0.124, 0],
+    },
+    representation.identity.modelTypeId,
+  );
+  addPart(
+    representation.root,
+    {
+      geometry: new BoxGeometry(0.04, 0.132, 0.4),
+      material: cover,
+      name: "study-notebook-spine",
+      position: [-0.28, 0.066, 0],
+    },
+    representation.identity.modelTypeId,
+  );
   return representation;
 }
 
@@ -269,24 +329,36 @@ export function createProceduralPhysicalActivityRecord(
   const representation = createRoot(identity, "physical-activity-record");
   const post = createMaterial(0x8c6246);
   const marker = createMaterial(0xc28d45);
-  addPart(representation.root, {
-    geometry: new CylinderGeometry(0.2, 0.2, 0.05, 12),
-    material: post,
-    name: "activity-marker-base",
-    position: [0, 0.025, 0],
-  });
-  addPart(representation.root, {
-    geometry: new CylinderGeometry(0.05, 0.05, 0.42, 10),
-    material: post,
-    name: "activity-marker-post",
-    position: [0, 0.26, 0],
-  });
-  addPart(representation.root, {
-    geometry: new BoxGeometry(0.46, 0.12, 0.1),
-    material: marker,
-    name: "activity-direction-marker",
-    position: [0, 0.53, 0],
-  });
+  addPart(
+    representation.root,
+    {
+      geometry: new CylinderGeometry(0.2, 0.2, 0.05, 12),
+      material: post,
+      name: "activity-marker-base",
+      position: [0, 0.025, 0],
+    },
+    representation.identity.modelTypeId,
+  );
+  addPart(
+    representation.root,
+    {
+      geometry: new CylinderGeometry(0.05, 0.05, 0.42, 10),
+      material: post,
+      name: "activity-marker-post",
+      position: [0, 0.26, 0],
+    },
+    representation.identity.modelTypeId,
+  );
+  addPart(
+    representation.root,
+    {
+      geometry: new BoxGeometry(0.46, 0.12, 0.1),
+      material: marker,
+      name: "activity-direction-marker",
+      position: [0, 0.53, 0],
+    },
+    representation.identity.modelTypeId,
+  );
   return representation;
 }
 
@@ -297,29 +369,45 @@ export function createProceduralWorkRecord(
   const representation = createRoot(identity, "work-record");
   const folder = createMaterial(0x9a7143);
   const papers = createMaterial(0xd8cbb0);
-  addPart(representation.root, {
-    geometry: new BoxGeometry(0.6, 0.05, 0.4),
-    material: folder,
-    name: "work-folder-base",
-    position: [0, 0.025, 0],
-  });
-  addPart(representation.root, {
-    geometry: new BoxGeometry(0.52, 0.18, 0.32),
-    material: papers,
-    name: "work-file-stack",
-    position: [0, 0.14, 0],
-  });
-  addPart(representation.root, {
-    geometry: new BoxGeometry(0.6, 0.1, 0.025),
-    material: folder,
-    name: "work-folder-front",
-    position: [0, 0.1, 0.1875],
-  });
-  addPart(representation.root, {
-    geometry: new BoxGeometry(0.16, 0.07, 0.05),
-    material: folder,
-    name: "work-folder-tab",
-    position: [0.12, 0.265, -0.05],
-  });
+  addPart(
+    representation.root,
+    {
+      geometry: new BoxGeometry(0.6, 0.05, 0.4),
+      material: folder,
+      name: "work-folder-base",
+      position: [0, 0.025, 0],
+    },
+    representation.identity.modelTypeId,
+  );
+  addPart(
+    representation.root,
+    {
+      geometry: new BoxGeometry(0.52, 0.18, 0.32),
+      material: papers,
+      name: "work-file-stack",
+      position: [0, 0.14, 0],
+    },
+    representation.identity.modelTypeId,
+  );
+  addPart(
+    representation.root,
+    {
+      geometry: new BoxGeometry(0.6, 0.1, 0.025),
+      material: folder,
+      name: "work-folder-front",
+      position: [0, 0.1, 0.1875],
+    },
+    representation.identity.modelTypeId,
+  );
+  addPart(
+    representation.root,
+    {
+      geometry: new BoxGeometry(0.16, 0.07, 0.05),
+      material: folder,
+      name: "work-folder-tab",
+      position: [0.12, 0.265, -0.05],
+    },
+    representation.identity.modelTypeId,
+  );
   return representation;
 }

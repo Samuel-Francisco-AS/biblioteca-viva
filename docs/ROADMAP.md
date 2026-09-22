@@ -32,7 +32,7 @@ BF-3 📋 contrato documentado — integração dos demais tipos de registro; pr
   BF-3C ⏳ representação procedural e layout isolados — C1 concluída, dois checkpoints restantes
     BF-3C1 ✅ auditoria curta, contrato e cinco fábricas procedurais
     BF-3C2 ✅ layout determinístico, bounds e overflow — CONCLUÍDA TECNICAMENTE
-    BF-3C3 ⏳ primeiro gate visual FAIL; hipótese multiambiente neutra autorizada
+    BF-3C3 ⏳ primeiro gate visual FAIL; nova prévia multiambiente pronta, gate humano pendente
   BF-3D ⏳ integração com runtime e seleção
   BF-3E ⏳ ponte React/aplicação e fluxo funcional
   BF-3F ⏳ gate integrado, validação física dirigida e fechamento
@@ -143,7 +143,7 @@ Preparar uma prévia temporária no navegador com registros fictícios que mostr
 
 **Primeira prévia e gate humano:** `bf3c3-preview.html` comprovou o instrumento isolado e os cenários A/B/C sobre as fábricas C1 e placements C2. O usuário confirmou pan e pinch operando normalmente nos três cenários, mas reprovou a escala/reconhecibilidade das novas representações: no enquadramento normal, os objetos ficaram pequenos demais para comunicar com clareza filme, série, estudo, atividade física ou trabalho. A falta de seleção não é defeito desta prévia: picking/seleção dos novos tipos continuam fora de C3 e pertencem à BF-3D. O layout de 37 slots continua válido como evidência geométrica da hipótese C2, mas **não é meta visual nem capacidade a preservar a qualquer custo**.
 
-**Replanejamento multiambiente autorizado:** a continuação de C3 deve substituir a hipótese visual de sala única por uma pequena construção procedural conectada, inicialmente com cinco cômodos neutros. Os cômodos NÃO possuem categoria, etiqueta, identidade semântica ou regra de domínio: use identificadores posicionais/neutros e trate a distribuição atual dos registros apenas como configuração da prévia. Para o próximo experimento, uma sala pode conter a composição de leitura BF-2, outra filme+série e as demais estudo, atividade física e trabalho, mas esse arranjo não cria vínculo permanente entre tipo e cômodo. A arquitetura não pode impedir que, em fases futuras, o usuário mova objetos e reorganize quais registros ocupam cada ambiente.
+**Replanejamento multiambiente autorizado:** a continuação de C3 substituiu na prévia a hipótese visual de sala única por uma pequena construção procedural conectada, inicialmente com cinco cômodos neutros. Os cômodos NÃO possuem categoria, etiqueta, identidade semântica ou regra de domínio: use identificadores posicionais/neutros e trate a distribuição atual dos registros apenas como configuração da prévia. Para o próximo experimento, uma sala pode conter a composição de leitura BF-2, outra filme+série e as demais estudo, atividade física e trabalho, mas esse arranjo não cria vínculo permanente entre tipo e cômodo. A arquitetura não pode impedir que, em fases futuras, o usuário mova objetos e reorganize quais registros ocupam cada ambiente.
 
 O novo experimento pode ampliar ou redesenhar as cinco representações para legibilidade, criar pisos/paredes/aberturas simples e derivar capacidade/slots novamente por ambiente. Os **37 slots não são requisito**; é preferível menos objetos legíveis com overflow correto do que preservar densidade ilegível. Continuam fora de C3: persistência espacial, ferramenta de mover objetos, edição de planta pelo usuário, seleção/picking BF-3D, integração produtiva, decoração rica, personagens, GLB, animações e ambientes temáticos definitivos.
 
@@ -169,7 +169,7 @@ Executar `format:check`, lint, typecheck, Vitest, `audio:check`, build, `perform
 
 **Gate F:** só declarar BF-3 concluída no escopo técnico-funcional e físico dirigido após os resultados correspondentes; isso **não** encerra por implicação o primeiro recorte real nem aprova TalkBack, arte final, GLB produtivo ou a BF-4. Prosseguir para BF-4 somente após autorização própria.
 
-**Ponto de retomada:** BF-3C1/C2 permanecem tecnicamente concluídas e a primeira hipótese visual da C3 foi reprovada por escala/reconhecibilidade. A próxima execução deve implementar a hipótese multiambiente neutra: construção procedural conectada, distribuição provisória dos tipos sem etiquetar cômodos, representações legíveis e capacidade novamente derivada; depois preparar nova prévia para o gate humano. Somente após aprovação explícita: limpar instrumentos temporários, executar regressão proporcional e fechar C3/C. D → E → F permanecem posteriores e não iniciados. Não tocar em integração produtiva, React, consulta, Dexie ou persistência espacial na BF-3C.
+**Ponto de retomada:** a prévia multiambiente está pronta em `bf3c3-preview.html` (`npm run dev`, `http://localhost:5173/bf3c3-preview.html`). O novo gate humano deve avaliar reconhecibilidade, escala, oclusões, enquadramento e passagens. Os 13 placements derivados substituem os 37 da hipótese anterior na prévia; os cômodos continuam semanticamente neutros. Só após aprovação explícita: limpar instrumentos temporários, executar regressão proporcional e fechar C3/C. D → E → F permanecem posteriores e não iniciados.
 
 ### BF-4 — Mundo habitável
 

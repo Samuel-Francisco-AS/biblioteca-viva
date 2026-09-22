@@ -10,7 +10,7 @@ import {
 import { projectLibraryWorldEntries } from "./libraryWorldEntries";
 import type { LibraryWorldSnapshot } from "./libraryWorldEntryContract";
 import type { LibraryRecordModelTypeId } from "./three/libraryRecordDimensions";
-import { assignLibraryWorldRecordsToSlots } from "./three/libraryRecordLayout";
+import { assignBf3c3PreviewSlots } from "./bf3c3PreviewLayout";
 
 export type Bf3c3PreviewScenarioId =
   "low-density" | "full-capacity" | "overflow";
@@ -56,33 +56,33 @@ export const BF3C3_PREVIEW_SCENARIOS: readonly Bf3c3PreviewScenario[] =
         work: 1,
       }),
       description:
-        "Uma ocorrência de cada faixa para examinar as cinco hipóteses visuais.",
+        "Uma ocorrência de cada tipo para examinar os cinco cômodos neutros.",
       id: "low-density",
       label: "A — baixa densidade",
     }),
     Object.freeze({
       counts: Object.freeze({
-        movie: 6,
-        series: 7,
-        study: 8,
-        physical_activity: 9,
-        work: 7,
+        movie: 2,
+        series: 2,
+        study: 3,
+        physical_activity: 3,
+        work: 3,
       }),
       description:
-        "Preenche exatamente os 37 slots derivados pela C2, sem overflow.",
+        "Preenche os 13 slots da construção multiambiente, sem overflow.",
       id: "full-capacity",
       label: "B — capacidade completa",
     }),
     Object.freeze({
       counts: Object.freeze({
-        movie: 8,
-        series: 7,
-        study: 10,
-        physical_activity: 9,
-        work: 7,
+        movie: 4,
+        series: 2,
+        study: 5,
+        physical_activity: 3,
+        work: 3,
       }),
       description:
-        "Excede filme e estudo; apenas os 37 slots reais recebem representações.",
+        "Excede filme e estudo; apenas os 13 slots reais recebem representações.",
       id: "overflow",
       label: "C — overflow",
     }),
@@ -186,12 +186,12 @@ export interface Bf3c3PreviewScenarioResult {
   readonly snapshot: LibraryWorldSnapshot;
 }
 
-/** Uses the actual C2 assignment; overflow remains data only. */
+/** Uses the temporary multiroom assignment; overflow remains data only. */
 export function createBf3c3PreviewScenarioResult(
   scenario: Bf3c3PreviewScenario,
 ): Bf3c3PreviewScenarioResult {
   const snapshot = createBf3c3PreviewSnapshot(scenario);
-  const assignment = assignLibraryWorldRecordsToSlots(snapshot);
+  const assignment = assignBf3c3PreviewSlots(snapshot);
   const placementsByCategory = Object.fromEntries(
     CATEGORY_TYPES.map((type) => [type, 0]),
   ) as Record<(typeof CATEGORY_TYPES)[number], number>;

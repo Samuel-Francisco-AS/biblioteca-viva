@@ -20,15 +20,15 @@ export interface ProceduralLibraryRecordDimensions {
 export const PROCEDURAL_LIBRARY_RECORD_DIMENSIONS: Readonly<
   Record<LibraryRecordModelTypeId, Readonly<ProceduralLibraryRecordDimensions>>
 > = Object.freeze({
-  "movie-record": Object.freeze({ depth: 0.24, height: 0.48, width: 0.72 }),
+  "movie-record": Object.freeze({ depth: 0.48, height: 1.2, width: 1.296 }),
   "physical-activity-record": Object.freeze({
-    depth: 0.4,
-    height: 0.59,
-    width: 0.46,
+    depth: 0.8,
+    height: 1.18,
+    width: 0.92,
   }),
-  "series-record": Object.freeze({ depth: 0.2, height: 0.5, width: 0.66 }),
-  "study-record": Object.freeze({ depth: 0.4, height: 0.132, width: 0.56 }),
-  "work-record": Object.freeze({ depth: 0.4, height: 0.3, width: 0.6 }),
+  "series-record": Object.freeze({ depth: 0.4, height: 1.25, width: 1.188 }),
+  "study-record": Object.freeze({ depth: 0.8, height: 1.056, width: 1.232 }),
+  "work-record": Object.freeze({ depth: 0.8, height: 1.05, width: 1.2 }),
 });
 
 /** Returns a frozen value object so callers cannot change the authority. */

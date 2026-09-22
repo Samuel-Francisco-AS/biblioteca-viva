@@ -1,6 +1,16 @@
-import { Color, Group, OrthographicCamera, Scene, WebGLRenderer } from "three";
+import {
+  Color,
+  DirectionalLight,
+  Group,
+  HemisphereLight,
+  OrthographicCamera,
+  Scene,
+  WebGLRenderer,
+} from "three";
 
 import type { LibraryWorldSnapshot } from "../libraryWorldEntryContract";
+import { assignBf3c3PreviewSlots } from "../bf3c3PreviewLayout";
+import { createBf3c3PreviewBuilding } from "./bf3c3PreviewBuilding";
 import {
   CAMERA_REFERENCE_HALF_HEIGHT,
   CAMERA_REFERENCE_HALF_WIDTH,
@@ -13,13 +23,12 @@ import {
   createProceduralStudyRecord,
   createProceduralWorkRecord,
 } from "./libraryRecordRepresentations";
-import { assignLibraryWorldRecordsToSlots } from "./libraryRecordLayout";
 import {
   createProceduralComposition,
   READING_SHELF_COMPOSITION_DEFINITIONS,
 } from "./proceduralComposition";
 import { reconcileReadingAreaBookVisuals } from "./readingAreaBookVisuals";
-import { createReferenceScene, disposeObjectTree } from "./referenceScene";
+import { disposeObjectTree } from "./referenceScene";
 import { ThreeWorldInteraction } from "./ThreeWorldInteraction";
 const CATEGORY_LABELS = Object.freeze({
   movie: "Filme",
@@ -51,9 +60,7 @@ export interface Bf3c3PreviewMount {
 }
 
 function createRepresentation(
-  placement: ReturnType<
-    typeof assignLibraryWorldRecordsToSlots
-  >["placements"][number],
+  placement: ReturnType<typeof assignBf3c3PreviewSlots>["placements"][number],
 ) {
   switch (placement.modelTypeId) {
     case "movie-record":
@@ -105,7 +112,7 @@ class Bf3c3Preview {
   private readonly interaction: ThreeWorldInteraction;
   private readonly navigation = new CameraNavigation(this.camera);
   private recordRoot: Group | undefined;
-  private readonly referenceScene = createReferenceScene();
+  private readonly building = createBf3c3PreviewBuilding();
   private readonly renderer = new WebGLRenderer({ antialias: true });
   private readonly resizeObserver: ResizeObserver;
   private readonly scene = new Scene();
@@ -115,7 +122,11 @@ class Bf3c3Preview {
     initialSnapshot: LibraryWorldSnapshot,
   ) {
     this.scene.background = new Color(0x18342d);
-    this.scene.add(this.referenceScene.root, this.composition.root);
+    this.scene.add(this.building, this.composition.root);
+    this.scene.add(new HemisphereLight(0xffffff, 0x526553, 2));
+    const sunlight = new DirectionalLight(0xffffff, 1.5);
+    sunlight.position.set(-4, 12, 7);
+    this.scene.add(sunlight);
     reconcileReadingAreaBookVisuals(
       this.composition,
       initialSnapshot.categories[0].entries,
@@ -142,7 +153,7 @@ class Bf3c3Preview {
   }
 
   setScenario(snapshot: LibraryWorldSnapshot): void {
-    const assignment = assignLibraryWorldRecordsToSlots(snapshot);
+    const assignment = assignBf3c3PreviewSlots(snapshot);
     const replacement = new Group();
     replacement.name = "bf3c3-preview-record-root";
     try {
@@ -172,7 +183,7 @@ class Bf3c3Preview {
     this.interaction.dispose();
     if (this.recordRoot) disposeObjectTree(this.recordRoot);
     disposeObjectTree(this.composition.root);
-    disposeObjectTree(this.referenceScene.root);
+    disposeObjectTree(this.building);
     this.renderer.dispose();
     this.renderer.domElement.remove();
   }
