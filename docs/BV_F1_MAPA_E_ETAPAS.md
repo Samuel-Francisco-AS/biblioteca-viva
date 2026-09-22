@@ -134,12 +134,12 @@ PIPELINE 3D v1 — P3D-B1 CONCLUÍDA; B2–F ADIADOS
 BF-0 ✅ → BF-1 ✅ CAMADA MÍNIMA PROCEDURAL
  │
  ▼
-BF-2 ⏳ PRIMEIRA ÁREA DE LEITURA FUNCIONAL
+BF-2 ✅ PRIMEIRA ÁREA DE LEITURA FUNCIONAL — CONCLUÍDA NO ESCOPO TÉCNICO-FUNCIONAL E FÍSICO DIRIGIDO
  ├─ BF-2A ✅ CONTRATO E PROJEÇÃO NEUTRA DOS LIVROS REAIS
  ├─ BF-2B ✅ LIVRO PROCEDURAL E LAYOUT DETERMINÍSTICO
  ├─ BF-2C ✅ INTEGRAÇÃO COM RUNTIME E SELEÇÃO
  ├─ BF-2D ✅ PONTE REACT/APLICAÇÃO E FLUXO FUNCIONAL
- └─ BF-2E 🟡 GATE TÉCNICO APROVADO — FÍSICO DIRIGIDO PENDENTE
+ └─ BF-2E ✅ GATE TÉCNICO E VALIDAÇÃO FÍSICA DIRIGIDA POSITIVA
  │
  ▼
 PRIMEIRO RECORTE REAL + VALIDAÇÃO TALKBACK
@@ -836,7 +836,7 @@ A **FUNDAÇÃO está concluída** no plano técnico/arquitetural. A dívida huma
 
 # 16. Depois da FUNDAÇÃO
 
-BF-0 aprovou a sequência Biblioteca Funcional Primeiro. BF-1 está tecnicamente concluída; BF-2A concluiu o contrato e a projeção neutra dos livros reais, BF-2B a fábrica/layout isolados, BF-2C a integração de snapshot neutro e BF-2D a ponte React/aplicação por snapshot de montagem, lista semântica, overflow acessível e seleção bidirecional. BF-2E aprovou o gate técnico com base convencional real, overflow 70 + 1 e lifecycle; aguarda a validação física dirigida no Moto G06. Não existe persistência espacial.
+BF-0 aprovou a sequência Biblioteca Funcional Primeiro. BF-1 está tecnicamente concluída; BF-2A concluiu o contrato e a projeção neutra dos livros reais, BF-2B a fábrica/layout isolados, BF-2C a integração de snapshot neutro e BF-2D a ponte React/aplicação por snapshot de montagem, lista semântica, overflow acessível e seleção bidirecional. BF-2E concluiu o gate técnico e recebeu validação física dirigida positiva no Moto G06; BF-2 está concluída no escopo técnico-funcional e físico dirigido. TalkBack continua bloqueante para o primeiro recorte real e beta/release aplicável. Não existe persistência espacial.
 
 ```text
 FUNDAÇÃO
@@ -852,7 +852,7 @@ PERSISTÊNCIA ESPACIAL, somente se necessária
 
 ## Biblioteca Funcional Primeiro
 
-O conteúdo inicial será procedural/provisório em TypeScript/Three.js. React mantém a superfície semântica e uma seleção visual não pode ser o único caminho para funções essenciais. BF-1A materializou a identidade procedural; BF-2C a corrigiu para que `bookshelf` aceite somente seu contrato estreito, enquanto `book-volume` exige `entryId`. `ReadingAreaBook` é contrato neutro e entra no runtime como snapshot carregado por montagem pela query estreita da Biblioteca: livros visíveis são selecionáveis, carregam `entryId` e são irmãos da representação da estante; todos, inclusive overflow, continuam na lista React. Slots são derivados da variante corrente e BF-1D relayouta; a capacidade inicial atual é 70, não 89. Não há atualização live, schema, tabela, backup ou persistência espacial; BF-2E tem gate técnico aprovado e aguarda físico dirigido.
+O conteúdo inicial será procedural/provisório em TypeScript/Three.js. React mantém a superfície semântica e uma seleção visual não pode ser o único caminho para funções essenciais. BF-1A materializou a identidade procedural; BF-2C a corrigiu para que `bookshelf` aceite somente seu contrato estreito, enquanto `book-volume` exige `entryId`. `ReadingAreaBook` é contrato neutro e entra no runtime como snapshot carregado por montagem pela query estreita da Biblioteca: livros visíveis são selecionáveis, carregam `entryId` e são irmãos da representação da estante; todos, inclusive overflow, continuam na lista React. Slots são derivados da variante corrente e BF-1D relayouta; a capacidade inicial atual é 70, não 89. A validação humana dirigida positiva no Moto G06 aceitou a representação provisória: os volumes procedurais permanecem pequenos no enquadramento geral, mas são selecionáveis e foram aceitos pelo usuário para o escopo funcional atual. Não há atualização live, schema, tabela, backup ou persistência espacial; BF-2E e BF-2 estão concluídas nos respectivos escopos, sem aprovar arte definitiva, capacidade futura ou TalkBack.
 
 P3D-B1 preserva `bookshelf` e sua proveniência. P3D-B2–F estão adiados, não concluídos nem cancelados, e só retomam quando houver necessidade demonstrada de ingestão ou substituição por GLB definitivo. ADR-010 continua a regular esse caminho GLB; fixtures F1/F4 e cenários F5 não são promovidos.
 
@@ -934,8 +934,9 @@ Esses sistemas não pertencem à FUNDAÇÃO e não devem ser antecipados.
 | BF-1C                 | ✅ Técnica      | Integração estática e seleção                                                                    |
 | BF-1C-FIX             | ✅ Concluída    | Correção geométrica; gate visual humano no navegador PASS                                        |
 | BF-1D                 | ✅ Técnica      | Substituição procedural, descarte seletivo e gate integrado                                      |
-| BF-2                  | 🟡 Em andamento | BF-2A/B/C/D concluídas; BF-2E com gate técnico aprovado e físico dirigido pendente              |
-| BF-3–BF-5             | ⏳ Futuro       | Dependem da evolução autorizada da BF-2                                                          |
+| BF-2                  | ✅ Concluída    | BF-2E concluída: gate técnico e validação física dirigida positiva no Moto G06                  |
+| BF-3                  | ⏳ Planejamento | Próxima etapa de planejamento; não iniciada nesta consolidação                                   |
+| BF-4–BF-5             | ⏳ Futuro       | Permanecem posteriores, conforme decisões vigentes                                                |
 | Primeiro recorte      | 🔒 Futuro       | Fechamento condicionado à validação TalkBack humana                                              |
 | Persistência espacial | 🔒 Futuro       | Salvar estado real do mundo                                                                      |
 | Sistemas maiores      | 🔒 Futuro       | Personagens, progressão, IA etc.                                                                 |

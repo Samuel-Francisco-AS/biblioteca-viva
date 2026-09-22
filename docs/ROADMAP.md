@@ -20,13 +20,13 @@ BF-1 ✅ camada mínima de conteúdo procedural — encerramento técnico
   BF-1C ✅ integração estática com runtime e seleção
   BF-1C-FIX ✅ correção geométrica e variantes — gate visual humano no navegador PASS
   BF-1D ✅ substituição, descarte e gate integrado
-BF-2 ⏳ primeira área de leitura integrada a registros reais
+BF-2 ✅ primeira área de leitura integrada a registros reais
   BF-2A ✅ contrato e projeção neutra dos livros reais
   BF-2B ✅ livro procedural e layout determinístico
   BF-2C ✅ integração com runtime e seleção
   BF-2D ✅ ponte React/aplicação e fluxo funcional
-  BF-2E 🟡 gate técnico aprovado; validação física dirigida pendente
-BF-3 ⏳ integração dos seis tipos de registro
+  BF-2E ✅ gate técnico e validação física dirigida positiva
+BF-3 ⏳ próxima etapa de planejamento — integração dos demais tipos de registro
 BF-4 ⏳ ambiente habitável, mobília e personagens provisórios
 BF-5 ⏳ consolidação do marco funcional
 ```
@@ -79,13 +79,13 @@ Criou a representação procedural isolada `book-volume` e o contrato determiní
 
 A Biblioteca consulta `listBookEntries` por um contrato React/aplicação estreito, projeta um snapshot imutável com `projectReadingAreaBooks()` e o entrega ao `WorldHost` na montagem. Loading, indisponibilidade e erro público não se confundem com vazio; o vazio real mantém estantes sem livros e ação convencional para criar livro. A lista React preserva todos os livros e seus links por `entryId`, inclusive overflow; o catálogo neutro do host informa quais livros estão visíveis e permite seleção React → canvas, enquanto a seleção do canvas retorna `entryId` para abrir o registro sem foco forçado. F5 continua sem query ou livros reais e agora ignora inclusive snapshot inválido. Não há sincronização live, schema, backup ou persistência espacial.
 
-#### BF-2E — Gate integrado e fechamento da BF-2 — gate técnico aprovado
+#### BF-2E — Gate integrado e fechamento da BF-2 — concluída no escopo acordado
 
-Consolidou regressão integrada com base convencional real: criação, projeção, representação, seleção bidirecional, abertura por `entryId`, edição/retorno, vazio, overflow 70 + 1, fallback e lifecycle. O APK debug funcional está pronto para o roteiro dirigido no Moto G06. Permanecem pendentes somente a validação física dirigida e a dívida humana obrigatória de TalkBack; não há PASS humano nem fechamento integral da BF-2.
+Consolidou regressão integrada com base convencional real: criação, projeção, representação, seleção bidirecional, abertura por `entryId`, edição/retorno, vazio, overflow 70 + 1, fallback e lifecycle. O gate técnico e a validação física dirigida no Moto G06 foram positivos; BF-2E está concluída no escopo acordado e BF-2 no escopo técnico-funcional e físico dirigido. Os volumes procedurais permanecem pequenos no enquadramento geral, mas são selecionáveis e foram aceitos pelo usuário para o escopo funcional atual. A observação humana é qualitativa, sem estabelecer benchmark, FPS, teto de carga ou aprovação da arte definitiva. TalkBack continua obrigatório antes do fechamento do primeiro recorte real e de beta/release aplicável.
 
 ### BF-3 — Integração dos seis tipos de registro
 
-Representará os seis tipos e sincronizará suas alterações convencionais com o mundo, sem duplicar lógica de negócio.
+É a próxima etapa de planejamento; seu escopo será definido e autorizado separadamente. Esta consolidação não a inicia.
 
 ### BF-4 — Mundo habitável
 
@@ -156,12 +156,13 @@ BF-1C ✅ integração estática com runtime e seleção
 BF-1C-FIX ✅ técnico + gate visual humano no navegador PASS
 BF-1D ✅ substituição procedural, descarte seletivo e gate integrado
 BF-1 ✅ tecnicamente concluída
-BF-2A ✅ contrato e projeção neutra dos livros reais
-BF-2B ✅ livro procedural e layout determinístico isolados
-BF-2C ✅ integração com runtime e seleção
-BF-2D ✅ ponte React/aplicação e fluxo funcional
-BF-2E 🟡 gate técnico aprovado; físico dirigido pendente
-PRÓXIMO: validação humana dirigida no Moto G06; sem persistência espacial ou sincronização live nesta etapa
+BF-2 ✅ primeira área de leitura integrada a registros reais
+  BF-2A ✅ contrato e projeção neutra dos livros reais
+  BF-2B ✅ livro procedural e layout determinístico isolados
+  BF-2C ✅ integração com runtime e seleção
+  BF-2D ✅ ponte React/aplicação e fluxo funcional
+  BF-2E ✅ gate técnico e validação física dirigida positiva
+PRÓXIMA ETAPA DE PLANEJAMENTO: BF-3 — integração dos demais tipos de registro
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída

@@ -4,6 +4,11 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-2E/BF-2 — Fechamento da primeira área de leitura — 2026-09-21
+
+- encerradas BF-2E e BF-2 no escopo técnico-funcional e físico dirigido: o roteiro humano no Moto G06 confirmou a Biblioteca com livros reais, seleção alternada por canvas e React, abertura/edição/retorno, pan, pinch, zoom, rotação e background/resume com responsividade adequada; é observação qualitativa, não benchmark ou teto de capacidade;
+- os volumes procedurais permanecem pequenos no enquadramento geral, mas são selecionáveis e foram aceitos pelo usuário para o escopo funcional atual. TalkBack humano continua como dívida obrigatória antes do fechamento do primeiro recorte real e de beta/release aplicável.
+
 ### BF-2E — Gate integrado da primeira área de leitura — 2026-09-21
 
 - corrigido o ciclo de `LibraryPage` para associar snapshot, erro, catálogo e seleção à instância vigente de `application`; uma consulta antiga não pode sobrescrever a próxima montagem nem expor estado anterior durante o carregamento;
