@@ -163,7 +163,7 @@ Executar `format:check`, lint, typecheck, Vitest, `audio:check`, build, `perform
 
 **Gate F:** só declarar BF-3 concluída no escopo técnico-funcional e físico dirigido após os resultados correspondentes; isso **não** encerra por implicação o primeiro recorte real nem aprova TalkBack, arte final, GLB produtivo ou a BF-4. Prosseguir para BF-4 somente após autorização própria.
 
-**Ponto de retomada:** BF-3C1 é o próximo checkpoint autorizável: auditoria espacial breve, contrato de fábrica e criação/testes das cinco representações procedurais isoladas. Depois vêm C2 (layout/overflow) e C3 (prévia, decisão humana e fechamento), sempre com gate próprio; D → E → F permanecem posteriores e não iniciados. Não tocar em runtime, React, consulta ou Dexie na BF-3C.
+**Ponto de retomada:** BF-3C1 está tecnicamente concluída. BF-3C2 é o próximo checkpoint autorizável: derivar a zona complementar, os slots e a capacidade a partir dos bounds reais das cinco fábricas, provar ausência de colisões e devolver overflow ordenado sem criar roots para excedentes. Depois vem BF-3C3 (prévia isolada, aprovação visual humana explícita e fechamento); D → E → F permanecem posteriores e não iniciados. Não tocar em runtime, React, consulta ou Dexie na BF-3C.
 
 ### BF-4 — Mundo habitável
 
@@ -244,8 +244,8 @@ BF-3 📋 CONTRATO DOCUMENTADO — PROJEÇÃO PURA CONCLUÍDA
   BF-3A ✅ contrato e fronteiras — CONCLUÍDA DOCUMENTALMENTE
   BF-3B ✅ projeção neutra dos cinco tipos restantes — CONTRATOS E TESTES PUROS
   BF-3C ⏳ procedural e layout isolados — TRÊS CHECKPOINTS PLANEJADOS
-    BF-3C1 ⏳ contrato breve e cinco fábricas — PRÓXIMA EXECUÇÃO AUTORIZÁVEL
-    BF-3C2 ⏳ layout determinístico e overflow
+    BF-3C1 ✅ contrato breve e cinco fábricas — CONCLUÍDA TECNICAMENTE
+    BF-3C2 ⏳ layout determinístico e overflow — PRÓXIMA EXECUÇÃO AUTORIZÁVEL
     BF-3C3 ⏳ prévia, gate humano e fechamento
   BF-3D ⏳ runtime e seleção
   BF-3E ⏳ React/aplicação e fluxo funcional
