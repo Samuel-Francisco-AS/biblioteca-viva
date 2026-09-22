@@ -39,6 +39,8 @@ function makeRepresentation(placement: LibraryRecordPlacement): Group {
       return createProceduralPhysicalActivityRecord({ ...identity, modelTypeId: "physical-activity-record" }).root;
     case "work-record":
       return createProceduralWorkRecord({ ...identity, modelTypeId: "work-record" }).root;
+    default:
+      throw new Error("Modelo BF-3 desconhecido.");
   }
 }
 
