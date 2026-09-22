@@ -39,9 +39,9 @@
 
 ## Próximo trabalho
 
-**BF-2E está concluída no escopo acordado, BF-2 está concluída no escopo técnico-funcional e físico dirigido, BF-3A passou o gate documental e BF-3B passou o gate de projeção pura.** A próxima execução autorizável é **BF-3C — representação procedural e layout isolados**: deverá consumir o snapshot BF-3B sem alterar sua ordem ou identidade e antes de runtime, React ou consulta na página. Não autoriza integração com `ThreeWorldRuntime`, interface React, `listLibraryEntries`, nova dependência ou persistência espacial. A estratégia de consulta para BF-3E permanece decidida, mas não deve ser implementada antecipadamente: uma `listLibraryEntries` por montagem normal da Biblioteca, sem sincronização live e sem F5.
+**BF-2E está concluída no escopo acordado, BF-2 está concluída no escopo técnico-funcional e físico dirigido, BF-3A passou o gate documental e BF-3B passou o gate de projeção pura.** A BF-3C foi decomposta documentalmente em **três checkpoints, nenhum iniciado**. O próximo autorizável é **BF-3C1 — auditoria espacial breve, contrato e cinco representações procedurais isoladas**, com testes de identidade, geometria e descarte. BF-3C2 fará layout/bounds/overflow, e BF-3C3 preparará prévia isolada, obterá a decisão visual humana explícita e fechará a etapa somente após PASS. O contrato integral está em `docs/ROADMAP.md`. Não autoriza integração com `ThreeWorldRuntime`, interface React, `listLibraryEntries`, nova dependência ou persistência espacial. A estratégia de consulta para BF-3E permanece decidida, mas não deve ser implementada antecipadamente: uma `listLibraryEntries` por montagem normal da Biblioteca, sem sincronização live e sem F5.
 
-A sequência proposta é BF-3B (projeção neutra dos cinco tipos), C (geometria/layout isolados e inspeção visual), D (runtime/seleção), E (React/aplicação e fluxo funcional) e F (regressão, APK, validação física dirigida e fechamento), com subdivisões pequenas conforme necessidade e cota. Preservar o livro e a capacidade derivada atual de 70 slots, a lista semântica e seleção por `entryId`; não promover fixture/diagnóstico a produção. TalkBack continua obrigatório antes do fechamento do primeiro recorte real e de beta/release aplicável e não recebeu PASS. P3D-B1 permanece registro documental de `bookshelf`; P3D-B2–F seguem adiados até necessidade concreta de GLB definitivo. A cena continua provisória, sem mundo final ou persistência espacial.
+A sequência vigente é BF-3C1 (cinco fábricas procedurais), C2 (layout e overflow), C3 (prévia, gate visual humano e fechamento), D (runtime/seleção), E (React/aplicação e fluxo funcional) e F (regressão, APK, validação física dirigida e fechamento). A aprovação visual humana na C3 é ponto de decisão obrigatório, sem checkpoint adicional por padrão; os testes C1/C2 devem ser dirigidos e a regressão consolidada fica na C3. Preservar o livro e a capacidade derivada atual de 70 slots, a lista semântica e seleção por `entryId`; não promover fixture/diagnóstico a produção. TalkBack continua obrigatório antes do fechamento do primeiro recorte real e de beta/release aplicável e não recebeu PASS. P3D-B1 permanece registro documental de `bookshelf`; P3D-B2–F seguem adiados até necessidade concreta de GLB definitivo. A cena continua provisória, sem mundo final ou persistência espacial.
 
 ```text
 F0 ✅
@@ -102,7 +102,10 @@ BF-2 ✅ CONCLUÍDA — escopo técnico-funcional e físico dirigido
 BF-3 📋 CONTRATO DOCUMENTADO — PROJEÇÃO PURA CONCLUÍDA
   BF-3A ✅ contrato e fronteiras — CONCLUÍDA DOCUMENTALMENTE
   BF-3B ✅ projeção neutra dos cinco tipos restantes — CONTRATOS E TESTES PUROS
-  BF-3C ⏳ procedural e layout isolados — PRÓXIMA EXECUÇÃO AUTORIZÁVEL
+  BF-3C ⏳ procedural e layout isolados — TRÊS CHECKPOINTS PLANEJADOS
+    BF-3C1 ⏳ contrato breve e cinco fábricas — PRÓXIMA EXECUÇÃO AUTORIZÁVEL
+    BF-3C2 ⏳ layout determinístico e overflow
+    BF-3C3 ⏳ prévia, gate humano e fechamento
   BF-3D ⏳ runtime e seleção
   BF-3E ⏳ React/aplicação e fluxo funcional
   BF-3F ⏳ gate integrado, físico dirigido e fechamento
