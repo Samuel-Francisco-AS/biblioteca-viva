@@ -32,9 +32,7 @@ const CATEGORY_LABELS = Object.freeze({
 export type Bf3c3PreviewCategoryType = keyof typeof CATEGORY_LABELS;
 
 export type Bf3c3PreviewScenarioId =
-  | "low-density"
-  | "full-capacity"
-  | "overflow";
+  "low-density" | "full-capacity" | "overflow";
 
 export interface Bf3c3PreviewScenarioView {
   readonly description: string;
