@@ -32,6 +32,17 @@ export interface LibraryApplication {
   };
 }
 
+interface ReadingAreaSnapshot {
+  readonly application: LibraryApplication;
+  readonly books?: readonly ReadingAreaBook[];
+  readonly error?: string;
+}
+
+interface ApplicationBound<Value> {
+  readonly application: LibraryApplication;
+  readonly value: Value;
+}
+
 function entryPath(entryId: string): string {
   return `/registros/${encodeURIComponent(entryId)}`;
 }
@@ -47,22 +58,56 @@ export function LibraryPage({
   );
   const diagnosticsActive = diagnosticsEnabled && PerformanceScenarioHarness;
   const location = useLocation();
-  const [readingAreaBooks, setReadingAreaBooks] =
-    useState<readonly ReadingAreaBook[]>();
-  const [error, setError] = useState<string>();
-  const [selectableObjects, setSelectableObjects] = useState<
-    readonly WorldSelectableObject[]
-  >([]);
-  const [selection, setSelection] = useState<WorldSelection>(null);
-  const [requestedSelectionId, setRequestedSelectionId] = useState<
-    string | null
-  >(null);
-  const [worldStatus, setWorldStatus] =
-    useState<WorldHostStatus>("initializing");
+  const [snapshot, setSnapshot] = useState<ReadingAreaSnapshot>();
+  const [selectableObjectsState, setSelectableObjectsState] =
+    useState<ApplicationBound<readonly WorldSelectableObject[]>>();
+  const [selectionState, setSelectionState] =
+    useState<ApplicationBound<WorldSelection>>();
+  const [requestedSelectionState, setRequestedSelectionState] =
+    useState<ApplicationBound<string | null>>();
+  const [worldStatusState, setWorldStatusState] =
+    useState<ApplicationBound<WorldHostStatus>>();
+
+  // Do not let a previous application instance lend its data, error, catalog
+  // or selected entry to the next one during the render before its effect runs.
+  const currentSnapshot =
+    snapshot?.application === application ? snapshot : undefined;
+  const readingAreaBooks = currentSnapshot?.books;
+  const error = currentSnapshot?.error;
+  const selectableObjects =
+    application && selectableObjectsState?.application === application
+      ? selectableObjectsState.value
+      : [];
+  const selection =
+    application && selectionState?.application === application
+      ? selectionState.value
+      : null;
+  const requestedSelectionId =
+    application && requestedSelectionState?.application === application
+      ? requestedSelectionState.value
+      : null;
+  const worldStatus =
+    application && worldStatusState?.application === application
+      ? worldStatusState.value
+      : "initializing";
 
   function handleWorldSelection(nextSelection: WorldSelection): void {
-    setSelection(nextSelection);
-    setRequestedSelectionId(nextSelection?.id ?? null);
+    if (!application) return;
+    setSelectionState({ application, value: nextSelection });
+    setRequestedSelectionState({
+      application,
+      value: nextSelection?.id ?? null,
+    });
+  }
+
+  function handleSelectableObjects(
+    objects: readonly WorldSelectableObject[],
+  ): void {
+    if (application) setSelectableObjectsState({ application, value: objects });
+  }
+
+  function handleWorldStatus(status: WorldHostStatus): void {
+    if (application) setWorldStatusState({ application, value: status });
   }
 
   useEffect(() => {
@@ -72,15 +117,24 @@ export function LibraryPage({
       (entries) => {
         if (!active) return;
         try {
-          setReadingAreaBooks(
-            Object.freeze([...projectReadingAreaBooks(entries)]),
-          );
+          setSnapshot({
+            application,
+            books: Object.freeze([...projectReadingAreaBooks(entries)]),
+          });
         } catch (failure: unknown) {
-          setError(presentApplicationError(failure).message);
+          setSnapshot({
+            application,
+            error: presentApplicationError(failure).message,
+          });
         }
       },
-      (failure: unknown) =>
-        active && setError(presentApplicationError(failure).message),
+      (failure: unknown) => {
+        if (!active) return;
+        setSnapshot({
+          application,
+          error: presentApplicationError(failure).message,
+        });
+      },
     );
     return () => {
       active = false;
@@ -129,9 +183,9 @@ export function LibraryPage({
       ) : (
         <>
           <WorldHost
-            onSelectableObjectsChange={setSelectableObjects}
+            onSelectableObjectsChange={handleSelectableObjects}
             onSelectionChange={handleWorldSelection}
-            onStatusChange={setWorldStatus}
+            onStatusChange={handleWorldStatus}
             readingAreaBooks={readingAreaBooks}
             selectedObjectId={requestedSelectionId}
           />
@@ -147,7 +201,7 @@ export function LibraryPage({
                 : `${readingAreaBooks.length - (representedBooks?.length ?? 0)} livros fora da capacidade visual atual.`}
             </p>
           )}
-          {selection?.entryId && (
+          {readingAreaBooks && selection?.entryId && (
             <section className="reading-area-selection" aria-live="polite">
               <p>
                 Livro selecionado: {selectedBook?.title ?? selection.label}.
@@ -206,7 +260,11 @@ export function LibraryPage({
                           aria-pressed={selection?.id === book.instanceId}
                           className="button button--secondary"
                           onClick={() =>
-                            setRequestedSelectionId(book.instanceId)
+                            application &&
+                            setRequestedSelectionState({
+                              application,
+                              value: book.instanceId,
+                            })
                           }
                           type="button"
                         >

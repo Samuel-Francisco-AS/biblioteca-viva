@@ -25,7 +25,7 @@ BF-2 ⏳ primeira área de leitura integrada a registros reais
   BF-2B ✅ livro procedural e layout determinístico
   BF-2C ✅ integração com runtime e seleção
   BF-2D ✅ ponte React/aplicação e fluxo funcional
-  BF-2E ⏳ gate integrado e fechamento da BF-2
+  BF-2E 🟡 gate técnico aprovado; validação física dirigida pendente
 BF-3 ⏳ integração dos seis tipos de registro
 BF-4 ⏳ ambiente habitável, mobília e personagens provisórios
 BF-5 ⏳ consolidação do marco funcional
@@ -73,15 +73,15 @@ Criou a representação procedural isolada `book-volume` e o contrato determiní
 
 #### BF-2C — Integração com runtime e seleção — concluída tecnicamente
 
-`ReadingAreaBook` agora chega ao `ThreeWorldRuntime` por contrato neutro e snapshot imutável, sem query, `BookEntry`, application, Dexie ou React. Cada livro colocado é wrapper selecionável irmão da representação substituível da estante; o catálogo e `WorldSelection` preservam `entryId`. Slots são regenerados pelas variantes atuais e BF-1D relayouta sem recriar livros ainda visíveis; overflow não tem root ou seleção e pode retornar após aumento de capacidade. A configuração inicial continua derivando 89 slots, mas 89 não é capacidade universal. F5 ignora o snapshot. Não houve persistência espacial, navegação nem integração da rota; BF-2D permanece responsável por trazer registros reais.
+`ReadingAreaBook` agora chega ao `ThreeWorldRuntime` por contrato neutro e snapshot imutável, sem query, `BookEntry`, application, Dexie ou React. Cada livro colocado é wrapper selecionável irmão da representação substituível da estante; o catálogo e `WorldSelection` preservam `entryId`. Slots são regenerados pelas variantes atuais e BF-1D relayouta sem recriar livros ainda visíveis; overflow não tem root ou seleção e pode retornar após aumento de capacidade. A configuração inicial deriva 70 slots (24 + 25 + 21), sem transformar esse número em capacidade universal. F5 ignora o snapshot. Não houve persistência espacial, navegação nem integração da rota; BF-2D permanece responsável por trazer registros reais.
 
 #### BF-2D — Ponte React/aplicação e fluxo funcional — concluída tecnicamente
 
 A Biblioteca consulta `listBookEntries` por um contrato React/aplicação estreito, projeta um snapshot imutável com `projectReadingAreaBooks()` e o entrega ao `WorldHost` na montagem. Loading, indisponibilidade e erro público não se confundem com vazio; o vazio real mantém estantes sem livros e ação convencional para criar livro. A lista React preserva todos os livros e seus links por `entryId`, inclusive overflow; o catálogo neutro do host informa quais livros estão visíveis e permite seleção React → canvas, enquanto a seleção do canvas retorna `entryId` para abrir o registro sem foco forçado. F5 continua sem query ou livros reais e agora ignora inclusive snapshot inválido. Não há sincronização live, schema, backup ou persistência espacial.
 
-#### BF-2E — Gate integrado e fechamento da BF-2 — futura, não iniciada
+#### BF-2E — Gate integrado e fechamento da BF-2 — gate técnico aprovado
 
-Executará regressão integrada, E2E, gate visual/humano aplicável e o fechamento da BF-2.
+Consolidou regressão integrada com base convencional real: criação, projeção, representação, seleção bidirecional, abertura por `entryId`, edição/retorno, vazio, overflow 70 + 1, fallback e lifecycle. O APK debug funcional está pronto para o roteiro dirigido no Moto G06. Permanecem pendentes somente a validação física dirigida e a dívida humana obrigatória de TalkBack; não há PASS humano nem fechamento integral da BF-2.
 
 ### BF-3 — Integração dos seis tipos de registro
 
@@ -160,8 +160,8 @@ BF-2A ✅ contrato e projeção neutra dos livros reais
 BF-2B ✅ livro procedural e layout determinístico isolados
 BF-2C ✅ integração com runtime e seleção
 BF-2D ✅ ponte React/aplicação e fluxo funcional
-BF-2E ⏳ gate integrado e fechamento — não iniciada
-PRÓXIMO AUTORIZÁVEL: BF-2E — gate integrado e fechamento; sem persistência espacial ou sincronização live nesta etapa
+BF-2E 🟡 gate técnico aprovado; físico dirigido pendente
+PRÓXIMO: validação humana dirigida no Moto G06; sem persistência espacial ou sincronização live nesta etapa
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída

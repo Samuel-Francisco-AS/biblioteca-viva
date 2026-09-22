@@ -102,7 +102,8 @@ test("rotas inexistentes e livro ausente degradam para caminhos convencionais", 
   await page.getByRole("link", { name: "Voltar para a Biblioteca" }).click();
   await expect(
     page.getByRole("heading", {
-      name: "Fundação 3D experimental",
+      name: "Área de leitura",
+      exact: true,
     }),
   ).toBeVisible();
 

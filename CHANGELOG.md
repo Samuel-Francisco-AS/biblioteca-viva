@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-2E — Gate integrado da primeira área de leitura — 2026-09-21
+
+- corrigido o ciclo de `LibraryPage` para associar snapshot, erro, catálogo e seleção à instância vigente de `application`; uma consulta antiga não pode sobrescrever a próxima montagem nem expor estado anterior durante o carregamento;
+- atualizado o corpus E2E para a Área de leitura funcional e criado fluxo real com cadastro convencional, projeção, seleção React → runtime → controles, abertura pelo `entryId`, edição, retorno, overflow de 71 livros e ciclos de rota. O seed de 70 livros é exclusivo do contexto Playwright descartável `127.0.0.1:4173`; o reuso de servidor agora é opt-in;
+- a cena normal não contém F1, enquanto F5 continua isolado e validado pelos testes de runtime. A capacidade inicial vigente é 70 (24 + 25 + 21), com 70 representados e um excedente acessível somente pela lista no cenário dirigido;
+- confirmado o gate técnico web e gerado APK debug funcional para validação humana dirigida no Moto G06. A aceitação humana anterior no navegador cobre a escala procedural, a retirada da mesa oclusiva, a organização da sala, a ausência da pirâmide funcional e a visibilidade de livros reais; ela não aprova Android físico, TalkBack, arte final ou GLBs produtivos.
+
 ### BF-2D-BOOK-VIS-FIX — Volumes de leitura mais legíveis — 2026-09-21
 
 - ampliadas as quatro variantes procedurais de `book-volume` para reforçar sua leitura no enquadramento normal, preservando cores, estrutura simples, identidade determinística e recursos próprios;

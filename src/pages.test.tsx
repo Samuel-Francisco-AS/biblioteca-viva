@@ -281,4 +281,99 @@ describe("Página Biblioteca", () => {
       screen.queryByRole("link", { name: "Abrir registro" }),
     ).not.toBeInTheDocument();
   });
+
+  it("troca de application sem vazar snapshot, erro, catálogo ou seleção", async () => {
+    let resolveBooks!: (books: readonly BookEntry[]) => void;
+    const pendingBooks = new Promise<readonly BookEntry[]>((resolve) => {
+      resolveBooks = resolve;
+    });
+    const applicationA: LibraryApplication = {
+      queries: { listBookEntries: { execute: vi.fn(() => pendingBooks) } },
+    };
+    const applicationB: LibraryApplication = {
+      queries: {
+        listBookEntries: {
+          execute: vi.fn(() => Promise.resolve([secondBook])),
+        },
+      },
+    };
+    const view = render(
+      <MemoryRouter>
+        <LibraryPage application={applicationA} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Carregando área de leitura…",
+    );
+    view.rerender(
+      <MemoryRouter>
+        <LibraryPage application={applicationB} />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Carregando área de leitura…",
+    );
+    expect(screen.queryByText(firstBook.title)).not.toBeInTheDocument();
+    expect(screen.queryByTestId("world-host-stub")).not.toBeInTheDocument();
+
+    await screen.findByRole("link", { name: secondBook.title });
+    expect(screen.queryByText(firstBook.title)).not.toBeInTheDocument();
+    expect(worldHostProps().readingAreaBooks).toEqual([
+      expect.objectContaining({ entryId: secondBook.id }),
+    ]);
+
+    act(() => resolveBooks([firstBook]));
+    expect(screen.getByRole("link", { name: secondBook.title })).toBeVisible();
+    expect(screen.queryByText(firstBook.title)).not.toBeInTheDocument();
+  });
+
+  it("limpa erro da application anterior enquanto a próxima consulta conclui", async () => {
+    const applicationA: LibraryApplication = {
+      queries: {
+        listBookEntries: {
+          execute: vi.fn(() =>
+            Promise.reject(
+              new ApplicationError("PERSISTENCE_FAILED", "detalhe interno"),
+            ),
+          ),
+        },
+      },
+    };
+    let resolveBooks!: (books: readonly BookEntry[]) => void;
+    const applicationB: LibraryApplication = {
+      queries: {
+        listBookEntries: {
+          execute: vi.fn(
+            () =>
+              new Promise<readonly BookEntry[]>((resolve) => {
+                resolveBooks = resolve;
+              }),
+          ),
+        },
+      },
+    };
+    const view = render(
+      <MemoryRouter>
+        <LibraryPage application={applicationA} />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("alert");
+
+    view.rerender(
+      <MemoryRouter>
+        <LibraryPage application={applicationB} />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Carregando área de leitura…",
+    );
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+
+    act(() => resolveBooks([secondBook]));
+    expect(
+      await screen.findByRole("link", { name: secondBook.title }),
+    ).toBeVisible();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
 });

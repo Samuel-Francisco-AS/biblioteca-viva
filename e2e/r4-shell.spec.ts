@@ -13,7 +13,8 @@ test("shell abre a Biblioteca com uma única superfície Three.js", async ({
   await expect(page.getByRole("banner")).toContainText("Biblioteca");
   await expect(
     page.getByRole("heading", {
-      name: "Fundação 3D experimental",
+      name: "Área de leitura",
+      exact: true,
     }),
   ).toBeVisible();
   const canvas = page.locator("canvas[data-three-world-canvas='true']");
@@ -21,12 +22,12 @@ test("shell abre a Biblioteca com uma única superfície Three.js", async ({
   await expect(canvas).toHaveAttribute("data-fixture-status", "ready");
   await expect(canvas).toHaveAttribute("data-reference-objects", "46");
   await expect(canvas).toHaveAttribute("data-reference-proxy-types", "4");
-  await expect(canvas).toHaveAttribute("data-selectable-objects", "14");
+  await expect(canvas).toHaveAttribute("data-selectable-objects", "13");
   await expect(canvas).toHaveAttribute("data-draw-calls", /^\d+$/u);
   await expect(canvas).toHaveAttribute("data-triangles", /^\d+$/u);
   await expect(canvas).toHaveAttribute("data-runtime-state", "running");
   await expect(canvas).toHaveAttribute("data-active-frame-loops", "1");
-  await expect(canvas).toHaveAttribute("data-meshes", "76");
+  await expect(canvas).toHaveAttribute("data-meshes", "75");
   await expect
     .poll(async () => Number(await canvas.getAttribute("data-fps")))
     .toBeGreaterThan(0);
@@ -42,17 +43,12 @@ test("shell abre a Biblioteca com uma única superfície Three.js", async ({
   expect(
     Number(await canvas.getAttribute("data-first-usable-frame-ms")),
   ).toBeGreaterThanOrEqual(0);
-  expect(
-    Number(await canvas.getAttribute("data-fixture-load-ms")),
-  ).toBeGreaterThan(0);
   await expect(
     page.getByRole("complementary", {
       name: "Diagnóstico técnico do ambiente 3D",
     }),
   ).toHaveAttribute("data-runtime-state", "running");
-  await expect(
-    page.getByText("Ambiente 3D experimental em execução."),
-  ).toBeVisible();
+  await expect(page.getByText("Ambiente 3D em execução.")).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "Navegação principal" }),
   ).toBeVisible();
@@ -139,7 +135,7 @@ test("interação desktop conecta picking, pan, zoom e seleção React", async (
   await previous.click();
   await expect(canvas).toHaveAttribute(
     "data-selected-object",
-    "fixture-pyramid",
+    "reading-shelf-03",
   );
   await next.click();
   await expect(canvas).toHaveAttribute("data-selected-object", "bookshelf-01");

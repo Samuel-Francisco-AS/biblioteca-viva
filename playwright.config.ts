@@ -2,7 +2,10 @@ import { defineConfig, devices } from "@playwright/test";
 
 const port = 4_173;
 const b2DevelopmentPort = 4_174;
-const reuseExistingServer = !process.env.CI;
+// E2E clears IndexedDB as part of its fixture. Reusing an arbitrary local
+// server would make that destructive operation target an unknown browser
+// origin, so reuse is opt-in even outside CI.
+const reuseExistingServer = process.env.PLAYWRIGHT_REUSE_SERVER === "true";
 
 export default defineConfig({
   expect: { timeout: 10_000 },
