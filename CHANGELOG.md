@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3C1 — Contrato breve e cinco representações isoladas — 2026-09-22
+
+- adicionadas fábricas Three.js isoladas para os cinco `modelTypeId` semânticos BF-3B: painel audiovisual (`movie-record`), três casos de mídia (`series-record`), caderno (`study-record`), marcador neutro de percurso (`physical-activity-record`) e pasta/arquivos (`work-record`); cada uma preserva exatamente `entryId` e `instanceId`, retorna root local não anexada e usa recursos próprios por chamada;
+- os bounds reais, testados por `Box3`, são respectivamente 0,720 × 0,480 × 0,240 m; 0,660 × 0,500 × 0,200 m; 0,560 × 0,132 × 0,400 m; 0,460 × 0,590 × 0,400 m; e 0,600 × 0,300 × 0,400 m (largura × altura × profundidade). O descarte por `disposeObjectTree()` é deduplicado e isolado;
+- não foram alterados snapshot BF-3B, livros/estantes BF-2, runtime, cena, câmera, layout, slots, capacidade, overflow, React, consulta, Dexie, schema, backup, fixtures F1/F4, F5, dependências ou persistência espacial. BF-3C2 passa a ser o próximo checkpoint; o gate visual humano permanece exclusivamente na C3.
+
 ### BF-3B — Projeção neutra dos cinco tipos restantes — 2026-09-22
 
 - adicionado o snapshot TypeScript puro e imutável das seis categorias convencionais, ordenadas por `ENTRY_TYPES`; `book` reutiliza sem alteração a projeção BF-2, enquanto os cinco tipos restantes expõem somente os metadados documentados, `modelTypeId` e `instanceId` semânticos;

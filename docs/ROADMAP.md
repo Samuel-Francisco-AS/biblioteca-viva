@@ -26,12 +26,12 @@ BF-2 ✅ primeira área de leitura integrada a registros reais
   BF-2C ✅ integração com runtime e seleção
   BF-2D ✅ ponte React/aplicação e fluxo funcional
   BF-2E ✅ gate técnico e validação física dirigida positiva
-BF-3 📋 contrato documentado — integração dos demais tipos de registro; projeção pura iniciada
+BF-3 📋 contrato documentado — integração dos demais tipos de registro; projeção pura e C1 concluídas
   BF-3A ✅ contrato e fronteiras — documental
   BF-3B ✅ projeção neutra dos cinco tipos restantes — contratos e testes puros
-  BF-3C ⏳ representação procedural e layout isolados — três checkpoints planejados
-    BF-3C1 ⏳ auditoria curta, contrato e cinco fábricas procedurais — próximo checkpoint
-    BF-3C2 ⏳ layout determinístico, bounds e overflow
+  BF-3C ⏳ representação procedural e layout isolados — C1 concluída, dois checkpoints restantes
+    BF-3C1 ✅ auditoria curta, contrato e cinco fábricas procedurais
+    BF-3C2 ⏳ layout determinístico, bounds e overflow — próximo checkpoint
     BF-3C3 ⏳ prévia isolada, gate visual humano e fechamento
   BF-3D ⏳ integração com runtime e seleção
   BF-3E ⏳ ponte React/aplicação e fluxo funcional
@@ -123,13 +123,13 @@ Implementou e testou a projeção renderer-independent `projectLibraryWorldEntri
 
 #### BF-3C — Representação procedural e layout isolados — decomposição em três checkpoints
 
-**Estado:** BF-3C1–C3 planejados, ainda não iniciados. O resultado da BF-3C será uma fábrica procedural leve para os cinco novos tipos e uma composição/layout provisórios que consumam a projeção neutra BF-3B, sem conectá-los ao runtime produtivo, React ou consultas. A BF-3D só poderá começar após o gate final da C3, que inclui aprovação visual humana explícita.
+**Estado:** BF-3C1 está tecnicamente concluída; C2 e C3 permanecem pendentes. O resultado da BF-3C será uma fábrica procedural leve para os cinco novos tipos e uma composição/layout provisórios que consumam a projeção neutra BF-3B, sem conectá-los ao runtime produtivo, React ou consultas. A BF-3D só poderá começar após o gate final da C3, que inclui aprovação visual humana explícita.
 
 ##### BF-3C1 — Contrato breve e cinco representações procedurais
 
-Inspecionar de forma dirigida a composição vigente, bounds das três estantes, livros, piso, câmera e proxies relevantes; fixar contratos mínimos de fábrica, identidade, recursos e dimensões-alvo proporcionais ao mundo atual. Na **mesma execução**, criar representações isoladas para `movie-record`, `series-record`, `study-record`, `physical-activity-record` e `work-record`. Mídia para filme/série, caderno para estudo, marcador neutro para atividade física e pasta para trabalho são hipóteses visuais, não formas obrigatórias ou arte final. É permitido compartilhar a implementação de uma família geométrica, desde que as categorias permaneçam distinguíveis e seus `modelTypeId`/`instanceId` não sejam alterados. Evitar um símbolo exclusivo de musculação para todas as atividades físicas. Manter raízes locais, materiais simples, recursos próprios por criação, descarte seguro e variantes determinísticas somente se agregarem leitura. Não fixar capacidade ou coordenadas de layout sem medir as representações.
+Concluiu a auditoria dirigida da composição vigente — estantes e livros no plano local `Y=0`, piso técnico de 14 × 10 m, proxies já ocupados e câmera ortográfica/2.5D — sem alterar essa cena. Criou raízes isoladas para `movie-record`, `series-record`, `study-record`, `physical-activity-record` e `work-record`, usando os identificadores estreitos da projeção BF-3B. As formas são, respectivamente, painel audiovisual, três casos de mídia, caderno, marcador de percurso neutro e pasta de trabalho; são hipóteses provisórias, não arte final. Cada chamada cria recursos próprios, mantidos apenas dentro de sua root e liberáveis por `disposeObjectTree()`; não há cache, pooling, coordenada global, capacidade ou slot. Os envelopes reais medidos (largura × altura × profundidade) são 0,720 × 0,480 × 0,240 m, 0,660 × 0,500 × 0,200 m, 0,560 × 0,132 × 0,400 m, 0,460 × 0,590 × 0,400 m e 0,600 × 0,300 × 0,400 m.
 
-**Gate C1:** testes dirigidos de geometria, dimensões, identidade, isolamento de recursos, variantes quando houver e ownership/disposal. Nenhuma montagem na cena produtiva, alteração do snapshot BF-3B, runtime, React, Dexie ou integração de consulta.
+**Gate C1: PASS técnico.** Testes dirigidos cobrem geometria, dimensões por `Box3`, identidade, raiz local, componentes, distinção filme/série, determinismo estrutural, isolamento de recursos, descarte deduplicado/repetido e entrada inválida antes de anexar recursos. Não houve montagem na cena produtiva, alteração do snapshot BF-3B, runtime, React, Dexie ou integração de consulta.
 
 ##### BF-3C2 — Layout determinístico e overflow
 
