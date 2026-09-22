@@ -26,7 +26,7 @@ function bounds(
 }
 
 describe("prévia multiambiente BF-3C3", () => {
-  it("mantém cinco cômodos com identidade apenas posicional e passagens no volume compartilhado", () => {
+  it("forma um núcleo e quatro salas periféricas separados por passagens reais", () => {
     expect(PREVIEW_ROOMS.map(({ id }) => id)).toEqual([
       "room-a",
       "room-b",
@@ -39,14 +39,47 @@ describe("prévia multiambiente BF-3C3", () => {
     ).toBe(true);
     const building = createBf3c3PreviewBuilding();
     expect(
-      building.children.filter(({ name }) => name.endsWith("-floor")),
+      building.children.filter(
+        ({ name }) => name.endsWith("-floor") && name !== "passage-floor",
+      ),
     ).toHaveLength(5);
     expect(
-      building.children.filter(({ name }) => name === "cross-wall-segment"),
-    ).toHaveLength(5);
-    expect(
-      building.children.filter(({ name }) => name === "partition-segment"),
-    ).toHaveLength(6);
+      building.children.filter(({ name }) => name === "passage-floor"),
+    ).toHaveLength(4);
+    const walls = building.children.filter(({ name }) => name.endsWith("wall"));
+    for (const x of [-5.4, 5.4]) {
+      for (const z of [-2.7, 2.7]) {
+        const route = new Box3(
+          new Vector3(x - 0.5, 0.2, z - 0.3),
+          new Vector3(x + 0.5, 0.7, z + 0.3),
+        );
+        expect(
+          walls.some((wall) =>
+            route.intersectsBox(new Box3().setFromObject(wall)),
+          ),
+        ).toBe(false);
+      }
+    }
+    const center = PREVIEW_ROOMS[0];
+    expect(center).toBeDefined();
+    for (const room of PREVIEW_ROOMS.slice(1)) {
+      expect(room.maxX < center.minX || room.minX > center.maxX).toBe(true);
+      expect(room.minZ < center.maxZ && room.maxZ > center.minZ).toBe(true);
+    }
+    for (const [index, floor] of building.children
+      .filter(({ name }) => name.endsWith("-floor") && name !== "passage-floor")
+      .entries()) {
+      const floorBounds = new Box3().setFromObject(floor);
+      for (const other of building.children
+        .filter(
+          ({ name }) => name.endsWith("-floor") && name !== "passage-floor",
+        )
+        .slice(index + 1)) {
+        expect(floorBounds.intersectsBox(new Box3().setFromObject(other))).toBe(
+          false,
+        );
+      }
+    }
     disposeObjectTree(building);
   });
 

@@ -11,11 +11,11 @@ export type PreviewCategory =
 
 /** Positional geometry only. The category distribution below belongs solely to this preview. */
 export const PREVIEW_ROOMS = Object.freeze([
-  { id: "room-a", minX: -7, maxX: 7, minZ: -5, maxZ: 0 },
-  { id: "room-b", minX: -7, maxX: -3.5, minZ: 0, maxZ: 5 },
-  { id: "room-c", minX: -3.5, maxX: 0, minZ: 0, maxZ: 5 },
-  { id: "room-d", minX: 0, maxX: 3.5, minZ: 0, maxZ: 5 },
-  { id: "room-e", minX: 3.5, maxX: 7, minZ: 0, maxZ: 5 },
+  { id: "room-a", minX: -5, maxX: 5, minZ: -4.5, maxZ: 4.5 },
+  { id: "room-b", minX: -10.6, maxX: -5.8, minZ: -7.8, maxZ: -1.5 },
+  { id: "room-c", minX: 5.8, maxX: 10.6, minZ: -7.8, maxZ: -1.5 },
+  { id: "room-d", minX: -10.6, maxX: -5.8, minZ: 1.5, maxZ: 7.8 },
+  { id: "room-e", minX: 5.8, maxX: 10.6, minZ: 1.5, maxZ: 7.8 },
 ] as const);
 
 interface PreviewSlot {
@@ -36,8 +36,8 @@ const TEMPORARY_DISTRIBUTION: readonly {
     modelTypeId: "movie-record",
     roomId: "room-b",
     centers: [
-      [-6, 1.35],
-      [-6, 3.45],
+      [-9.1, -5.7],
+      [-9.1, -3.3],
     ],
   },
   {
@@ -45,8 +45,8 @@ const TEMPORARY_DISTRIBUTION: readonly {
     modelTypeId: "series-record",
     roomId: "room-b",
     centers: [
-      [-4.5, 1.35],
-      [-4.5, 3.45],
+      [-7.1, -5.7],
+      [-7.1, -3.3],
     ],
   },
   {
@@ -54,9 +54,9 @@ const TEMPORARY_DISTRIBUTION: readonly {
     modelTypeId: "study-record",
     roomId: "room-c",
     centers: [
-      [-2.65, 1.2],
-      [-0.85, 1.2],
-      [-1.75, 3.5],
+      [7.1, -5.7],
+      [9.1, -5.7],
+      [8.1, -3.3],
     ],
   },
   {
@@ -64,9 +64,9 @@ const TEMPORARY_DISTRIBUTION: readonly {
     modelTypeId: "physical-activity-record",
     roomId: "room-d",
     centers: [
-      [0.8, 1.2],
-      [2.65, 1.2],
-      [1.75, 3.5],
+      [-9.1, 3.3],
+      [-7.1, 3.3],
+      [-8.1, 5.7],
     ],
   },
   {
@@ -74,9 +74,9 @@ const TEMPORARY_DISTRIBUTION: readonly {
     modelTypeId: "work-record",
     roomId: "room-e",
     centers: [
-      [4.35, 1.2],
-      [6.15, 1.2],
-      [5.25, 3.5],
+      [7.1, 3.3],
+      [9.1, 3.3],
+      [8.1, 5.7],
     ],
   },
 ];

@@ -29,10 +29,10 @@ BF-2 ✅ primeira área de leitura integrada a registros reais
 BF-3 📋 contrato documentado — integração dos demais tipos de registro; projeção pura e C1 concluídas
   BF-3A ✅ contrato e fronteiras — documental
   BF-3B ✅ projeção neutra dos cinco tipos restantes — contratos e testes puros
-  BF-3C ⏳ representação procedural e layout isolados — C1 concluída, dois checkpoints restantes
+  BF-3C ⏳ representação procedural e layout isolados — C1/C2 concluídas, C3 em andamento
     BF-3C1 ✅ auditoria curta, contrato e cinco fábricas procedurais
     BF-3C2 ✅ layout determinístico, bounds e overflow — CONCLUÍDA TECNICAMENTE
-    BF-3C3 ⏳ primeiro gate visual FAIL; nova prévia multiambiente pronta, gate humano pendente
+    BF-3C3 ⏳ hipóteses 1/2 FAIL; hipótese 3 pronta, gate humano pendente
   BF-3D ⏳ integração com runtime e seleção
   BF-3E ⏳ ponte React/aplicação e fluxo funcional
   BF-3F ⏳ gate integrado, validação física dirigida e fechamento
@@ -94,7 +94,7 @@ Consolidou regressão integrada com base convencional real: criação, projeçã
 
 ### BF-3 — Integração dos seis tipos de registro — contrato e projeção pura estabelecidos
 
-**Estado:** BF-3A documental e BF-3B de projeção pura concluídas. A BF-2 já integra `book` na área de leitura; BF-3 deverá adicionar `movie`, `series`, `study`, `physical_activity` e `work` à experiência funcional do mundo sem regredir os livros. A próxima execução autorizável é BF-3C; cada checkpoint posterior requer escopo e gate próprios. `docs/STATUS.md` permanece a autoridade sobre o presente.
+**Estado:** BF-3A documental e BF-3B de projeção pura concluídas. A BF-2 já integra `book` na área de leitura; BF-3 deverá adicionar `movie`, `series`, `study`, `physical_activity` e `work` à experiência funcional do mundo sem regredir os livros. A execução atual permanece em BF-3C3; cada checkpoint posterior requer escopo e gate próprios. `docs/STATUS.md` permanece a autoridade sobre o presente.
 
 **Resultado funcional pretendido:** cada registro convencional existente pode ser encontrado, identificado pelo seu tipo, selecionado quando houver representação 3D e aberto pelo `entryId`; todos continuam acessíveis por uma superfície React semântica mesmo sem WebGL ou quando não couberem visualmente. Não se exige uma sala definitiva por categoria: composição, formas e capacidade devem ser proporcionais à prova funcional, não uma antecipação da BF-4. O layout provisório deve preservar legibilidade e interação no Moto G06.
 
@@ -123,7 +123,7 @@ Implementou e testou a projeção renderer-independent `projectLibraryWorldEntri
 
 #### BF-3C — Representação procedural e layout isolados — decomposição em três checkpoints
 
-**Estado:** BF-3C1 e BF-3C2 estão tecnicamente concluídas; C3 continua em andamento. A primeira prévia em sala única recebeu **FAIL visual dirigido**: pan e pinch funcionaram normalmente, mas as cinco novas representações ficaram pequenas demais no enquadramento normal e não foram reconhecíveis com segurança. A ausência de seleção/picking é esperada neste checkpoint e permanece reservada à BF-3D. Como resposta ao achado, foi autorizada uma segunda hipótese: uma construção procedural simples com cômodos conectados e semanticamente neutros. A BF-3D só poderá começar após nova prévia e aprovação visual humana explícita.
+**Estado:** BF-3C1 e BF-3C2 estão tecnicamente concluídas; C3 continua em andamento. A primeira prévia em sala única recebeu **FAIL visual dirigido**: pan e pinch funcionaram normalmente, mas as cinco novas representações ficaram pequenas demais no enquadramento normal e não foram reconhecíveis com segurança. A ausência de seleção/picking é esperada neste checkpoint e permanece reservada à BF-3D. A segunda hipótese melhorou as representações, mas seu gate humano reprovou a planta retangular subdividida. A hipótese 3 usa a topologia da referência 2D em uma construção procedural de núcleo e quatro salas conectadas, ainda semanticamente neutras. A BF-3D só poderá começar após nova prévia e aprovação visual humana explícita.
 
 ##### BF-3C1 — Contrato breve e cinco representações procedurais
 
@@ -147,6 +147,8 @@ Preparar uma prévia temporária no navegador com registros fictícios que mostr
 
 O novo experimento pode ampliar ou redesenhar as cinco representações para legibilidade, criar pisos/paredes/aberturas simples e derivar capacidade/slots novamente por ambiente. Os **37 slots não são requisito**; é preferível menos objetos legíveis com overflow correto do que preservar densidade ilegível. Continuam fora de C3: persistência espacial, ferramenta de mover objetos, edição de planta pelo usuário, seleção/picking BF-3D, integração produtiva, decoração rica, personagens, GLB, animações e ambientes temáticos definitivos.
 
+**Correção da planta, hipótese 3:** o gate humano da hipótese 2 reprovou a construção como retângulo subdividido, embora as cinco representações tenham melhorado. A nova prévia usa `docs/references/bf3c3/planta-referencia-2d.png` somente para topologia: núcleo central, quatro salas periféricas, passagens e hierarquia espacial. Nomes e temas de cômodos da imagem são vestígios superados da fase 2D e não constituem contrato. IDs, geometria e regras dos cômodos permanecem semanticamente neutros; a distribuição dos registros é configuração temporária de inspeção.
+
 **Gate C3 / fechamento C:** PASS somente após a nova construção multiambiente passar pelos testes técnicos aplicáveis e por nova aprovação visual humana explícita quanto a escala, reconhecibilidade, enquadramento, conexão entre ambientes e oclusões. Depois do PASS, limpar instrumentos temporários, executar regressão proporcional e consolidar a documentação. Sem Android físico, benchmark, PASS TalkBack, arte final, GLB produtivo ou integração BF-3D.
 
 **Economia de cota:** C1 e C2 usam testes focados; C3 concentra a regressão consolidada. Correções visuais são dirigidas, sem abrir automaticamente outro checkpoint. Os três checkpoints são retomáveis, com atualização do ponto de retomada após cada gate.
@@ -169,7 +171,7 @@ Executar `format:check`, lint, typecheck, Vitest, `audio:check`, build, `perform
 
 **Gate F:** só declarar BF-3 concluída no escopo técnico-funcional e físico dirigido após os resultados correspondentes; isso **não** encerra por implicação o primeiro recorte real nem aprova TalkBack, arte final, GLB produtivo ou a BF-4. Prosseguir para BF-4 somente após autorização própria.
 
-**Ponto de retomada:** a prévia multiambiente está pronta em `bf3c3-preview.html` (`npm run dev`, `http://localhost:5173/bf3c3-preview.html`). O novo gate humano deve avaliar reconhecibilidade, escala, oclusões, enquadramento e passagens. Os 13 placements derivados substituem os 37 da hipótese anterior na prévia; os cômodos continuam semanticamente neutros. Só após aprovação explícita: limpar instrumentos temporários, executar regressão proporcional e fechar C3/C. D → E → F permanecem posteriores e não iniciados.
+**Ponto de retomada:** a prévia da hipótese 3 está pronta em `bf3c3-preview.html` (`npm run dev`, `http://localhost:5173/bf3c3-preview.html`). O novo gate humano deve avaliar sobretudo planta, núcleo, salas periféricas e circulação, além de escala, oclusões e enquadramento. Os 13 placements derivados da hipótese 2 permanecem na hipótese 3 em novas posições, ante os 37 da primeira hipótese; os cômodos continuam semanticamente neutros. Só após aprovação explícita: limpar instrumentos temporários, executar regressão proporcional e fechar C3/C. D → E → F permanecem posteriores e não iniciados.
 
 ### BF-4 — Mundo habitável
 
@@ -252,7 +254,7 @@ BF-3 📋 CONTRATO DOCUMENTADO — PROJEÇÃO PURA CONCLUÍDA
   BF-3C ⏳ procedural e layout isolados — TRÊS CHECKPOINTS PLANEJADOS
     BF-3C1 ✅ contrato breve e cinco fábricas — CONCLUÍDA TECNICAMENTE
     BF-3C2 ✅ layout determinístico e overflow — CONCLUÍDA TECNICAMENTE
-    BF-3C3 ⏳ primeira prévia FAIL; multiambiente neutro é a próxima hipótese
+    BF-3C3 ⏳ hipóteses 1/2 FAIL; hipótese 3 aguarda gate humano
   BF-3D ⏳ runtime e seleção
   BF-3E ⏳ React/aplicação e fluxo funcional
   BF-3F ⏳ gate integrado, físico dirigido e fechamento

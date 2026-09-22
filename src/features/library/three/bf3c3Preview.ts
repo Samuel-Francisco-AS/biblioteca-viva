@@ -150,6 +150,8 @@ class Bf3c3Preview {
     this.resizeObserver = new ResizeObserver(this.resize);
     this.resizeObserver.observe(this.host);
     this.resize();
+    this.navigation.setZoom(0.7);
+    this.render();
   }
 
   setScenario(snapshot: LibraryWorldSnapshot): void {

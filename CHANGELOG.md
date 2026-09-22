@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3C3 — Hipótese 3, correção dirigida da planta — 2026-09-22
+
+- registrado o FAIL visual da hipótese 2 especificamente na planta retangular subdividida; a legibilidade das representações foi preservada;
+- refeita a construção procedural da prévia como núcleo central BF-2 e quatro salas periféricas deslocadas, com pisos separados e quatro passagens abertas. A imagem 2D orienta somente topologia e hierarquia; seus nomes/temas não são contrato e os cômodos continuam semanticamente neutros;
+- redistribuídos os 13 placements determinísticos nos novos volumes, mantendo A/B/C em 5/13/13 e overflow 0/0/4, sem representação 3D para excedentes. Ajustado o zoom inicial da prévia; pan, wheel focal, pinch/pan e ownership/cleanup permanecem. Novo gate humano pendente; BF-3C3/BF-3C seguem em andamento.
+
 ### BF-3C3 — Segunda hipótese multiambiente isolada — 2026-09-22
 
 - substituída a prévia de sala única por construção procedural com cinco cômodos conectados e semanticamente neutros, piso, paredes baixas e passagens. A composição BF-2 segue na prévia sem alteração produtiva;
