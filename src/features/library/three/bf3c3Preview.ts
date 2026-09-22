@@ -210,7 +210,10 @@ export function mountBf3c3Preview(
     throw new Error("A prévia BF-3C3 exige ao menos um cenário.");
   }
 
-  const scenariosById = new Map<Bf3c3PreviewScenarioId, Bf3c3PreviewScenarioView>();
+  const scenariosById = new Map<
+    Bf3c3PreviewScenarioId,
+    Bf3c3PreviewScenarioView
+  >();
   for (const scenario of scenarios) {
     if (scenariosById.has(scenario.id)) {
       throw new Error(`Cenário BF-3C3 duplicado: ${scenario.id}.`);
