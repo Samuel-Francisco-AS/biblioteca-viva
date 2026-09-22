@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3C3/BF-3C — Consolidação e fechamento — 2026-09-22
+
+- registrado PASS humano da hipótese 3 nos cenários A/B/C, com ressalva de fidelidade à referência 2D; hipóteses 1 e 2 permaneceram FAIL visual dirigido;
+- promovidos os cinco cômodos neutros, a construção procedural com quatro passagens e o layout inicial de 13 slots derivados a contratos reutilizáveis independentes da prévia. Overflow permanece ordenado e sem root;
+- acrescidas provas com Box3 real para construção, fábricas, passagens, paredes, 13 representações, três estantes e 70 livros BF-2, além de ordem, identidade, imutabilidade, ownership e descarte. Gate local: 77 arquivos/616 testes, format:check, lint, typecheck, audio:check e build;
+- removidos HTML, bootstrap, renderer, cenários sintéticos e módulos BF-3C3 temporários; preservada a referência PNG documental. BF-3D permanece não iniciada; Android, TalkBack, ergonomia, seleção e arte final não foram aprovados.
+
 ### BF-3C3 — Hipótese 3, correção dirigida da planta — 2026-09-22
 
 - registrado o FAIL visual da hipótese 2 especificamente na planta retangular subdividida; a legibilidade das representações foi preservada;

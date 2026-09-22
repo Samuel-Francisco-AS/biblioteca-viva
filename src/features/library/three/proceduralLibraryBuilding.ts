@@ -1,10 +1,10 @@
 import { BoxGeometry, Group, Mesh, MeshStandardMaterial } from "three";
-import { PREVIEW_ROOMS } from "../bf3c3PreviewLayout";
+import { LIBRARY_ROOMS } from "../libraryBuildingGeometry";
 
-/** Disposable preview structure. Geometry and passages carry positional meaning only. */
-export function createBf3c3PreviewBuilding(): Group {
+/** Unattached local root. Its eventual owner releases it with disposeObjectTree(). */
+export function createProceduralLibraryBuilding(): Group {
   const root = new Group();
-  root.name = "bf3c3-preview-building";
+  root.name = "procedural-library-building";
   const floor = new MeshStandardMaterial({ color: 0x9b9d83, roughness: 1 });
   const wall = new MeshStandardMaterial({ color: 0xb8b59c, roughness: 1 });
   const passage = new MeshStandardMaterial({ color: 0xaca991, roughness: 1 });
@@ -54,7 +54,7 @@ export function createBf3c3PreviewBuilding(): Group {
     }
   }
 
-  for (const room of PREVIEW_ROOMS) {
+  for (const room of LIBRARY_ROOMS) {
     const centerX = (room.minX + room.maxX) / 2;
     const centerZ = (room.minZ + room.maxZ) / 2;
     box(

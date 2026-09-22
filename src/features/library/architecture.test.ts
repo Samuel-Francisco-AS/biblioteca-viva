@@ -30,6 +30,15 @@ const readingAreaProjectionSources = import.meta.glob<string>(
   { eager: true, import: "default", query: "?raw" },
 );
 
+const buildingAndLayoutSources = import.meta.glob<string>(
+  [
+    "./libraryBuildingGeometry.ts",
+    "./libraryRecordLayout.ts",
+    "./three/proceduralLibraryBuilding.ts",
+  ],
+  { eager: true, import: "default", query: "?raw" },
+);
+
 describe("fronteiras da fundação Three.js", () => {
   it("mantém Three.js fora de domain e application", () => {
     for (const [path, source] of Object.entries(coreSources)) {
@@ -60,6 +69,20 @@ describe("fronteiras da fundação Three.js", () => {
       expect(source, path).not.toMatch(
         /from\s+["'][^"']*(?:application|dexie|infrastructure|three)[^"']*["']/u,
       );
+    }
+  });
+
+  it("mantém layout puro e construção fora da prévia e das camadas convencionais", () => {
+    expect(Object.keys(buildingAndLayoutSources)).toHaveLength(3);
+    for (const [path, source] of Object.entries(buildingAndLayoutSources)) {
+      expect(source, path).not.toMatch(
+        /bf3c3|Preview|react|dexie|application|domain/iu,
+      );
+      expect(source, path).not.toMatch(
+        /from\s+["'][^"']*(?:infrastructure|pages|WorldHost)[^"']*["']/u,
+      );
+      if (!path.includes("/three/"))
+        expect(source, path).not.toMatch(/from\s+["']three["']/u);
     }
   });
 

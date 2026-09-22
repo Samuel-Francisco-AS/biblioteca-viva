@@ -4,31 +4,23 @@ import {
   type LibraryRecordModelTypeId,
 } from "./three/libraryRecordDimensions";
 
-export type PreviewRoomId =
-  "room-a" | "room-b" | "room-c" | "room-d" | "room-e";
-export type PreviewCategory =
+import { LIBRARY_ROOMS, type LibraryRoomId } from "./libraryBuildingGeometry";
+
+type LibraryCategory =
   "movie" | "series" | "study" | "physical_activity" | "work";
 
-/** Positional geometry only. The category distribution below belongs solely to this preview. */
-export const PREVIEW_ROOMS = Object.freeze([
-  { id: "room-a", minX: -5, maxX: 5, minZ: -4.5, maxZ: 4.5 },
-  { id: "room-b", minX: -10.6, maxX: -5.8, minZ: -7.8, maxZ: -1.5 },
-  { id: "room-c", minX: 5.8, maxX: 10.6, minZ: -7.8, maxZ: -1.5 },
-  { id: "room-d", minX: -10.6, maxX: -5.8, minZ: 1.5, maxZ: 7.8 },
-  { id: "room-e", minX: 5.8, maxX: 10.6, minZ: 1.5, maxZ: 7.8 },
-] as const);
-
-interface PreviewSlot {
-  readonly roomId: PreviewRoomId;
+export interface LibraryRecordSlot {
+  readonly roomId: LibraryRoomId;
   readonly slotId: string;
   readonly modelTypeId: LibraryRecordModelTypeId;
   readonly position: readonly [number, number, number];
 }
 
-const TEMPORARY_DISTRIBUTION: readonly {
-  category: PreviewCategory;
+/** Initial content arrangement only; rooms retain no category restriction. */
+const INITIAL_LIBRARY_RECORD_DISTRIBUTION: readonly {
+  category: LibraryCategory;
   modelTypeId: LibraryRecordModelTypeId;
-  roomId: PreviewRoomId;
+  roomId: LibraryRoomId;
   centers: readonly (readonly [number, number])[];
 }[] = [
   {
@@ -81,66 +73,81 @@ const TEMPORARY_DISTRIBUTION: readonly {
   },
 ];
 
-export const BF3C3_PREVIEW_SLOTS: readonly PreviewSlot[] = Object.freeze(
-  TEMPORARY_DISTRIBUTION.flatMap(
-    ({ category, modelTypeId, roomId, centers }) => {
-      const room = PREVIEW_ROOMS.find(({ id }) => id === roomId);
-      if (!room) throw new Error(`Cômodo ausente: ${roomId}`);
-      const dimensions = getProceduralLibraryRecordDimensions(modelTypeId);
-      return centers.map(([x, z], index) => {
-        if (
-          x - dimensions.width / 2 <= room.minX ||
-          x + dimensions.width / 2 >= room.maxX ||
-          z - dimensions.depth / 2 <= room.minZ ||
-          z + dimensions.depth / 2 >= room.maxZ
-        ) {
-          throw new Error(`Slot fora do cômodo ${roomId}.`);
-        }
-        return Object.freeze({
-          roomId,
-          slotId: `${category}-${index + 1}`,
-          modelTypeId,
-          position: Object.freeze([x, 0, z] as const),
+export const INITIAL_LIBRARY_RECORD_SLOTS: readonly LibraryRecordSlot[] =
+  Object.freeze(
+    INITIAL_LIBRARY_RECORD_DISTRIBUTION.flatMap(
+      ({ category, modelTypeId, roomId, centers }) => {
+        const room = LIBRARY_ROOMS.find(({ id }) => id === roomId);
+        if (!room) throw new Error(`Cômodo ausente: ${roomId}`);
+        const dimensions = getProceduralLibraryRecordDimensions(modelTypeId);
+        return centers.map(([x, z], index) => {
+          if (
+            x - dimensions.width / 2 <= room.minX ||
+            x + dimensions.width / 2 >= room.maxX ||
+            z - dimensions.depth / 2 <= room.minZ ||
+            z + dimensions.depth / 2 >= room.maxZ
+          ) {
+            throw new Error(`Slot fora do cômodo ${roomId}.`);
+          }
+          return Object.freeze({
+            roomId,
+            slotId: `${category}-${index + 1}`,
+            modelTypeId,
+            position: Object.freeze([x, 0, z] as const),
+          });
         });
-      });
-    },
-  ),
-);
+      },
+    ),
+  );
 
-export interface PreviewPlacement {
+export interface LibraryRecordPlacement {
   readonly entryId: string;
   readonly instanceId: string;
   readonly modelTypeId: LibraryRecordModelTypeId;
-  readonly roomId: PreviewRoomId;
+  readonly roomId: LibraryRoomId;
   readonly slotId: string;
   readonly position: readonly [number, number, number];
 }
 
-export function assignBf3c3PreviewSlots(snapshot: LibraryWorldSnapshot) {
-  const placements: PreviewPlacement[] = [];
+export function assignLibraryRecordSlots(snapshot: LibraryWorldSnapshot) {
+  const placements: LibraryRecordPlacement[] = [];
   const overflow: {
     readonly entryId: string;
     readonly instanceId: string;
     readonly modelTypeId: LibraryRecordModelTypeId;
   }[] = [];
   const instanceIds = new Set<string>();
-  for (const { category, modelTypeId } of TEMPORARY_DISTRIBUTION) {
+  const entryIds = new Set<string>();
+  if (
+    !snapshot ||
+    !Array.isArray(snapshot.categories) ||
+    snapshot.categories.length !== 6 ||
+    new Set(snapshot.categories.map(({ type }) => type)).size !== 6
+  )
+    throw new Error("Snapshot inválido.");
+  for (const { category, modelTypeId } of INITIAL_LIBRARY_RECORD_DISTRIBUTION) {
     const entries = snapshot.categories.find(
       ({ type }) => type === category,
     )?.entries;
     if (!entries) throw new Error(`Categoria ausente: ${category}`);
-    const slots = BF3C3_PREVIEW_SLOTS.filter(
+    const slots = INITIAL_LIBRARY_RECORD_SLOTS.filter(
       (slot) => slot.modelTypeId === modelTypeId,
     );
     for (const [index, entry] of entries.entries()) {
       if (
+        !("type" in entry) ||
+        entry.type !== category ||
         entry.modelTypeId !== modelTypeId ||
-        !entry.entryId ||
-        !entry.instanceId ||
-        instanceIds.has(entry.instanceId)
+        typeof entry.entryId !== "string" ||
+        entry.entryId.trim() === "" ||
+        typeof entry.instanceId !== "string" ||
+        entry.instanceId.trim() === "" ||
+        instanceIds.has(entry.instanceId) ||
+        entryIds.has(entry.entryId)
       )
         throw new Error(`Identidade inválida: ${category}`);
       instanceIds.add(entry.instanceId);
+      entryIds.add(entry.entryId);
       const identity = {
         entryId: entry.entryId,
         instanceId: entry.instanceId,
