@@ -325,6 +325,14 @@ Este gate confirma a regressão automatizada e o empacotamento. A validação hu
 - os gates técnicos já aprovados permanecem: 70 arquivos/517 testes Vitest, 13 E2E, `format:check`, lint, typecheck, `audio:check`, build, `performance:report`, sync e debug build Android;
 - automação não substitui TalkBack ou percepção humana. O gate assistivo obrigatório deve usar o build atual e representativo do primeiro recorte real antes de seu fechamento e antes de beta/release aplicável.
 
+## BF-2 — primeira área de leitura funcional (evidência consolidada)
+
+- BF-2A/B: `readingAreaBooks.test.ts`, `proceduralContent.test.ts` e `readingAreaBookLayout.test.ts` cobrem projeção neutra e ordenação por `createdAt`/`id`, identidade `entryId`/`instanceId`, duplicidade, variantes procedurais, slots derivados das estantes, limites geométricos e overflow ordenado. O ajuste BF-2D-BOOK-VIS-FIX deixou os quatro volumes dentro do envelope máximo de 0,225 × 0,400 × 0,360 m e reduziu a capacidade inicial para 70 (24 + 25 + 21), sem estabelecer teto universal;
+- BF-2C/D: `ThreeWorldRuntime.test.ts`, `WorldHost.test.tsx` e `pages.test.tsx` cobrem snapshot neutro, ownership/relayout, seleção bidirecional e highlight, lista React de livros visíveis e excedentes, carregamento/vazio/erro/fallback, abertura pelo `entryId`, isolamento F5 e ausência de remount por seleção;
+- BF-2E: `pages.test.tsx` cobre também a troca de instância de `application` sem vazamento de snapshot, erro, catálogo ou seleção. `e2e/reading-area.spec.ts` executa cenários de vazio real, criação e leitura de livros convencionais, seleção React → runtime e navegação pelos controles, abertura/edição/retorno, overflow com 71 livros (70 representados + 1 excedente) e três ciclos de saída/retorno com canvas único;
+- o seed de 70 livros é exclusivo do contexto Playwright descartável servido em `127.0.0.1:4173`; o reuso de servidor Playwright é opt-in. A BF-2E registrou gate técnico web e APK debug funcional, e a CI do commit de fechamento BF-2-FINAL (`2e71264`) passou `npm ci`, `format:check`, lint, typecheck, Vitest, `audio:check`, build, `performance:report` e E2E. Isso não prova instalação nem desempenho Android;
+- a validação humana dirigida no Moto G06 foi positiva para livros reais, seleção alternada por canvas e React, abertura/edição/retorno, pan, pinch, zoom, rotação e background/resume, sem travamentos ou quedas de FPS percebidos. É evidência qualitativa do recorte atual, não benchmark, garantia do mundo futuro, aprovação de arte final ou PASS TalkBack. A validação assistiva humana continua obrigatória antes do fechamento do primeiro recorte real e de beta/release aplicável.
+
 ## Comandos
 
 ```bash

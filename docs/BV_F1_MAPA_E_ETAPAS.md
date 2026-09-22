@@ -47,7 +47,7 @@ com:
 - nenhum reaproveitamento da antiga W3-A;
 - nenhuma persistência espacial prematura.
 
-A F1 aprovou a viabilidade da base Three.js, F2 concluiu a integração e o endurecimento do runtime, F3 concluiu o contrato de câmera e interação mobile, F4 concluiu o contrato experimental de assets, F5 consolidou o envelope físico e os guardrails no Moto G06, e F6 fechou a fronteira técnica/arquitetural de acessibilidade. A ADR-010 continua formalizando o Pipeline 3D v1; P3D-B1 está concluída documentalmente e P3D-B2–F estão adiados. BF-0 replanejou a próxima trilha para Biblioteca Funcional Primeiro.
+A F1 aprovou a viabilidade da base Three.js, F2 concluiu a integração e o endurecimento do runtime, F3 concluiu o contrato de câmera e interação mobile, F4 concluiu o contrato experimental de assets, F5 consolidou o envelope físico e os guardrails no Moto G06, e F6 fechou a fronteira técnica/arquitetural de acessibilidade. A ADR-010 continua formalizando o Pipeline 3D v1; P3D-B1 está concluída documentalmente e P3D-B2–F estão adiados. BF-0 replanejou a próxima trilha para Biblioteca Funcional Primeiro. BF-1 foi concluída tecnicamente, BF-2 foi concluída no escopo técnico-funcional e físico dirigido e BF-3 é a próxima etapa de planejamento, sem implementação iniciada.
 
 ---
 
@@ -142,7 +142,16 @@ BF-2 ✅ PRIMEIRA ÁREA DE LEITURA FUNCIONAL — CONCLUÍDA NO ESCOPO TÉCNICO-F
  └─ BF-2E ✅ GATE TÉCNICO E VALIDAÇÃO FÍSICA DIRIGIDA POSITIVA
  │
  ▼
-PRIMEIRO RECORTE REAL + VALIDAÇÃO TALKBACK
+BF-3 ⏳ INTEGRAÇÃO DOS DEMAIS TIPOS DE REGISTRO — PRÓXIMA ETAPA DE PLANEJAMENTO
+ │
+ ▼
+BF-4 ⏳ AMBIENTE HABITÁVEL, MOBÍLIA E PERSONAGENS PROVISÓRIOS — FUTURO
+ │
+ ▼
+BF-5 ⏳ CONSOLIDAÇÃO DO MARCO FUNCIONAL — FUTURO
+ │
+ ▼
+PRIMEIRO RECORTE REAL + VALIDAÇÃO TALKBACK OBRIGATÓRIA
 ```
 
 ---
