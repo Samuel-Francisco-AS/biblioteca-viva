@@ -9,6 +9,7 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 - adicionada somente para inspeção humana a entrada Vite `bf3c3-preview.html`, separada da rota Biblioteca e do build produtivo corrente. Ela projeta registros convencionais fictícios e determinísticos pela BF-3B, usa as cinco fábricas C1 e os placements C2 reais, e mostra cena de referência, estantes BF-1 e 18 livros fictícios BF-2;
 - os cenários são baixa densidade (5 placements), capacidade completa (37: 6/7/8/9/7) e overflow (37 placements, excedentes somente filme 2 e estudo 2). O painel de desenvolvimento expõe contagens e excedentes não recebem root, mesh, slot ou posição;
 - a prévia reutiliza câmera/navegação Three vigentes para pan, zoom focal e pinch, sem integrar `LibraryPage`, `WorldHost`, `ThreeWorldRuntime`, consultas, Dexie, F1, F5, picking ou seleção BF-3D. Sua root de registros é descartada na troca de cenário e todo o instrumento libera roots, interação, observer e renderer no unload. O gate visual humano continua pendente; BF-3C3 e BF-3 não estão concluídas.
+- correção de fronteira: geração/projeção dos registros sintéticos e o bootstrap temporário ficam fora de `three/`; o renderer da prévia recebe somente snapshots/resultados neutros. O teste arquitetural permanece inalterado e continua impedindo dependência do renderer em domínio, application, infraestrutura ou Dexie.
 
 ### BF-3C2 — Layout determinístico, bounds e overflow — 2026-09-22
 

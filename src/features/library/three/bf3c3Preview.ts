@@ -1,5 +1,6 @@
 import { Color, Group, OrthographicCamera, Scene, WebGLRenderer } from "three";
 
+import type { LibraryWorldSnapshot } from "../libraryWorldEntryContract";
 import {
   CAMERA_REFERENCE_HALF_HEIGHT,
   CAMERA_REFERENCE_HALF_WIDTH,
@@ -20,13 +21,6 @@ import {
 import { reconcileReadingAreaBookVisuals } from "./readingAreaBookVisuals";
 import { createReferenceScene, disposeObjectTree } from "./referenceScene";
 import { ThreeWorldInteraction } from "./ThreeWorldInteraction";
-import {
-  createBf3c3PreviewScenarioResult,
-  getBf3c3PreviewScenario,
-  type Bf3c3PreviewScenario,
-  type Bf3c3PreviewScenarioId,
-} from "./bf3c3PreviewScenarios";
-
 const CATEGORY_LABELS = Object.freeze({
   movie: "Filme",
   series: "Série",
@@ -35,7 +29,28 @@ const CATEGORY_LABELS = Object.freeze({
   work: "Trabalho",
 });
 
-type CategoryType = keyof typeof CATEGORY_LABELS;
+export type Bf3c3PreviewCategoryType = keyof typeof CATEGORY_LABELS;
+
+export type Bf3c3PreviewScenarioId =
+  | "low-density"
+  | "full-capacity"
+  | "overflow";
+
+export interface Bf3c3PreviewScenarioView {
+  readonly description: string;
+  readonly id: Bf3c3PreviewScenarioId;
+  readonly overflowByCategory: Readonly<
+    Record<Bf3c3PreviewCategoryType, number>
+  >;
+  readonly placementsByCategory: Readonly<
+    Record<Bf3c3PreviewCategoryType, number>
+  >;
+  readonly snapshot: LibraryWorldSnapshot;
+}
+
+export interface Bf3c3PreviewMount {
+  dispose(): void;
+}
 
 function createRepresentation(
   placement: ReturnType<
@@ -97,15 +112,15 @@ class Bf3c3Preview {
   private readonly resizeObserver: ResizeObserver;
   private readonly scene = new Scene();
 
-  constructor(private readonly host: HTMLElement) {
+  constructor(
+    private readonly host: HTMLElement,
+    initialSnapshot: LibraryWorldSnapshot,
+  ) {
     this.scene.background = new Color(0x18342d);
     this.scene.add(this.referenceScene.root, this.composition.root);
-    const initial = createBf3c3PreviewScenarioResult(
-      getBf3c3PreviewScenario("low-density"),
-    );
     reconcileReadingAreaBookVisuals(
       this.composition,
-      initial.snapshot.categories[0].entries,
+      initialSnapshot.categories[0].entries,
       new Map(),
     );
 
@@ -128,9 +143,8 @@ class Bf3c3Preview {
     this.resize();
   }
 
-  setScenario(scenario: Bf3c3PreviewScenario): void {
-    const result = createBf3c3PreviewScenarioResult(scenario);
-    const assignment = assignLibraryWorldRecordsToSlots(result.snapshot);
+  setScenario(snapshot: LibraryWorldSnapshot): void {
+    const assignment = assignLibraryWorldRecordsToSlots(snapshot);
     const replacement = new Group();
     replacement.name = "bf3c3-preview-record-root";
     try {
@@ -188,63 +202,98 @@ function requiredElement<TElement extends HTMLElement>(id: string): TElement {
   return element as TElement;
 }
 
-const host = requiredElement<HTMLDivElement>("bf3c3-preview-canvas-host");
-const description = requiredElement<HTMLParagraphElement>(
-  "bf3c3-preview-description",
-);
-const counts = requiredElement<HTMLDivElement>("bf3c3-preview-counts");
-const summary = requiredElement<HTMLParagraphElement>("bf3c3-preview-summary");
-const preview = new Bf3c3Preview(host);
+export function mountBf3c3Preview(
+  scenarios: readonly Bf3c3PreviewScenarioView[],
+): Bf3c3PreviewMount {
+  const initialScenario = scenarios[0];
+  if (!initialScenario) {
+    throw new Error("A prévia BF-3C3 exige ao menos um cenário.");
+  }
 
-function updatePanel(scenario: Bf3c3PreviewScenario): void {
-  const result = createBf3c3PreviewScenarioResult(scenario);
-  description.textContent = scenario.description;
-  counts.replaceChildren(
-    ...Object.entries(CATEGORY_LABELS).map(([type, label]) => {
-      const category = type as CategoryType;
-      const row = document.createElement("div");
-      row.className = "count-row";
-      const placed = result.placementsByCategory[category];
-      const overflow = result.overflowByCategory[category];
-      row.innerHTML = `<span>${label}</span><strong>${placed} / ${overflow}</strong>`;
-      return row;
-    }),
-  );
-  const totalPlaced = Object.values(result.placementsByCategory).reduce(
-    (total, value) => total + value,
-    0,
-  );
-  const totalOverflow = Object.values(result.overflowByCategory).reduce(
-    (total, value) => total + value,
-    0,
-  );
-  summary.textContent = `${totalPlaced} placement(s) em slots reais; ${totalOverflow} ocorrência(s) somente no overflow.`;
-}
+  const scenariosById = new Map<Bf3c3PreviewScenarioId, Bf3c3PreviewScenarioView>();
+  for (const scenario of scenarios) {
+    if (scenariosById.has(scenario.id)) {
+      throw new Error(`Cenário BF-3C3 duplicado: ${scenario.id}.`);
+    }
+    scenariosById.set(scenario.id, scenario);
+  }
 
-function activateScenario(id: Bf3c3PreviewScenarioId): void {
-  const scenario = getBf3c3PreviewScenario(id);
-  preview.setScenario(scenario);
-  updatePanel(scenario);
+  const host = requiredElement<HTMLDivElement>("bf3c3-preview-canvas-host");
+  const description = requiredElement<HTMLParagraphElement>(
+    "bf3c3-preview-description",
+  );
+  const counts = requiredElement<HTMLDivElement>("bf3c3-preview-counts");
+  const summary = requiredElement<HTMLParagraphElement>(
+    "bf3c3-preview-summary",
+  );
+  const preview = new Bf3c3Preview(host, initialScenario.snapshot);
+  const buttonListeners = new Map<HTMLButtonElement, () => void>();
+  let disposed = false;
+
+  function updatePanel(scenario: Bf3c3PreviewScenarioView): void {
+    description.textContent = scenario.description;
+    counts.replaceChildren(
+      ...Object.entries(CATEGORY_LABELS).map(([type, label]) => {
+        const category = type as Bf3c3PreviewCategoryType;
+        const row = document.createElement("div");
+        row.className = "count-row";
+        const placed = scenario.placementsByCategory[category];
+        const overflow = scenario.overflowByCategory[category];
+        row.innerHTML = `<span>${label}</span><strong>${placed} / ${overflow}</strong>`;
+        return row;
+      }),
+    );
+    const totalPlaced = Object.values(scenario.placementsByCategory).reduce(
+      (total, value) => total + value,
+      0,
+    );
+    const totalOverflow = Object.values(scenario.overflowByCategory).reduce(
+      (total, value) => total + value,
+      0,
+    );
+    summary.textContent = `${totalPlaced} placement(s) em slots reais; ${totalOverflow} ocorrência(s) somente no overflow.`;
+  }
+
+  function activateScenario(id: Bf3c3PreviewScenarioId): void {
+    const scenario = scenariosById.get(id);
+    if (!scenario) throw new Error(`Cenário BF-3C3 desconhecido: ${id}.`);
+    preview.setScenario(scenario.snapshot);
+    updatePanel(scenario);
+    for (const button of buttonListeners.keys()) {
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.bf3c3Scenario === scenario.id),
+      );
+    }
+  }
+
+  function dispose(): void {
+    if (disposed) return;
+    disposed = true;
+    for (const [button, listener] of buttonListeners) {
+      button.removeEventListener("click", listener);
+    }
+    buttonListeners.clear();
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+    preview.dispose();
+  }
+
+  function handleBeforeUnload(): void {
+    dispose();
+  }
+
   for (const button of document.querySelectorAll<HTMLButtonElement>(
     "[data-bf3c3-scenario]",
   )) {
-    button.setAttribute(
-      "aria-pressed",
-      String(button.dataset.bf3c3Scenario === scenario.id),
-    );
+    const listener = () => {
+      const id = button.dataset.bf3c3Scenario as Bf3c3PreviewScenarioId;
+      activateScenario(id);
+    };
+    buttonListeners.set(button, listener);
+    button.addEventListener("click", listener);
   }
-}
 
-for (const button of document.querySelectorAll<HTMLButtonElement>(
-  "[data-bf3c3-scenario]",
-)) {
-  button.addEventListener("click", () => {
-    const id = button.dataset.bf3c3Scenario as Bf3c3PreviewScenarioId;
-    activateScenario(id);
-  });
+  window.addEventListener("beforeunload", handleBeforeUnload, { once: true });
+  activateScenario(initialScenario.id);
+  return Object.freeze({ dispose });
 }
-
-window.addEventListener("beforeunload", () => preview.dispose(), {
-  once: true,
-});
-activateScenario("low-density");

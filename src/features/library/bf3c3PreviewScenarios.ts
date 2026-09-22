@@ -6,11 +6,11 @@ import {
   createStudy,
   createWork,
   type LibraryEntry,
-} from "../../../domain";
-import { projectLibraryWorldEntries } from "../libraryWorldEntries";
-import type { LibraryWorldSnapshot } from "../libraryWorldEntryContract";
-import type { LibraryRecordModelTypeId } from "./libraryRecordDimensions";
-import { assignLibraryWorldRecordsToSlots } from "./libraryRecordLayout";
+} from "../../domain";
+import { projectLibraryWorldEntries } from "./libraryWorldEntries";
+import type { LibraryWorldSnapshot } from "./libraryWorldEntryContract";
+import type { LibraryRecordModelTypeId } from "./three/libraryRecordDimensions";
+import { assignLibraryWorldRecordsToSlots } from "./three/libraryRecordLayout";
 
 export type Bf3c3PreviewScenarioId =
   "low-density" | "full-capacity" | "overflow";
