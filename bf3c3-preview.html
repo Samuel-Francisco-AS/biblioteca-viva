@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BF-3C3 — Prévia isolada</title>
+    <style>
+      :root {
+        color: #f4efe5;
+        background: #132720;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+        min-height: 100dvh;
+      }
+
+      #bf3c3-preview-canvas-host {
+        min-height: 68dvh;
+        position: relative;
+      }
+
+      #bf3c3-preview-canvas-host canvas {
+        display: block;
+        height: 100%;
+        touch-action: none;
+        width: 100%;
+      }
+
+      aside {
+        background: #1d3930;
+        border-left: 1px solid #557062;
+        padding: 1.25rem;
+      }
+
+      h1 {
+        font-size: 1.1rem;
+        margin: 0 0 0.5rem;
+      }
+      h2 {
+        font-size: 0.95rem;
+        margin: 1.25rem 0 0.5rem;
+      }
+      p,
+      li {
+        font-size: 0.88rem;
+        line-height: 1.45;
+      }
+      p {
+        margin: 0.4rem 0;
+      }
+      ul {
+        margin: 0.4rem 0;
+        padding-left: 1.2rem;
+      }
+
+      .scenario-controls {
+        display: grid;
+        gap: 0.5rem;
+      }
+      button {
+        background: #e0d7c4;
+        border: 1px solid #f5efe2;
+        border-radius: 0.35rem;
+        color: #1a2a24;
+        cursor: pointer;
+        font: inherit;
+        padding: 0.55rem 0.65rem;
+        text-align: left;
+      }
+      button[aria-pressed="true"] {
+        background: #a8bb8b;
+        font-weight: 700;
+      }
+      button:focus-visible {
+        outline: 3px solid #45d9ff;
+        outline-offset: 2px;
+      }
+
+      #bf3c3-preview-counts {
+        display: grid;
+        gap: 0.35rem;
+      }
+      .count-row {
+        border-bottom: 1px solid #496456;
+        display: flex;
+        font-size: 0.85rem;
+        justify-content: space-between;
+        padding: 0.35rem 0;
+      }
+      .count-row strong {
+        color: #dfeec7;
+      }
+
+      @media (max-width: 760px) {
+        main {
+          display: flex;
+          flex-direction: column;
+        }
+        #bf3c3-preview-canvas-host {
+          height: 64dvh;
+          min-height: 420px;
+        }
+        aside {
+          border-left: 0;
+          border-top: 1px solid #557062;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div
+        id="bf3c3-preview-canvas-host"
+        aria-label="Prévia visual Three.js BF-3C3"
+      ></div>
+      <aside aria-live="polite">
+        <h1>BF-3C3 — prévia isolada</h1>
+        <p id="bf3c3-preview-description"></p>
+        <div class="scenario-controls" aria-label="Cenários de inspeção">
+          <button data-bf3c3-scenario="low-density" type="button">
+            A — baixa densidade
+          </button>
+          <button data-bf3c3-scenario="full-capacity" type="button">
+            B — capacidade completa
+          </button>
+          <button data-bf3c3-scenario="overflow" type="button">
+            C — overflow
+          </button>
+        </div>
+        <h2>Colocados / overflow</h2>
+        <div id="bf3c3-preview-counts"></div>
+        <p id="bf3c3-preview-summary"></p>
+        <h2>Navegação</h2>
+        <ul>
+          <li>Arraste para pan.</li>
+          <li>Use a roda para zoom focal.</li>
+          <li>Use dois dedos para pinch e pan.</li>
+        </ul>
+        <p>
+          Dados são sintéticos e não usam Dexie, consultas, rota Biblioteca ou
+          runtime produtivo. O painel mostra overflow sem criar objetos para
+          ele.
+        </p>
+      </aside>
+    </main>
+    <script
+      type="module"
+      src="/src/features/library/three/bf3c3Preview.ts"
+    ></script>
+  </body>
+</html>

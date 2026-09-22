@@ -32,7 +32,7 @@ BF-3 📋 contrato documentado — integração dos demais tipos de registro; pr
   BF-3C ⏳ representação procedural e layout isolados — C1 concluída, dois checkpoints restantes
     BF-3C1 ✅ auditoria curta, contrato e cinco fábricas procedurais
     BF-3C2 ✅ layout determinístico, bounds e overflow — CONCLUÍDA TECNICAMENTE
-    BF-3C3 ⏳ prévia isolada, gate visual humano e fechamento — próximo checkpoint
+    BF-3C3 ⏳ prévia isolada pronta; aguardando gate visual humano
   BF-3D ⏳ integração com runtime e seleção
   BF-3E ⏳ ponte React/aplicação e fluxo funcional
   BF-3F ⏳ gate integrado, validação física dirigida e fechamento
@@ -123,7 +123,7 @@ Implementou e testou a projeção renderer-independent `projectLibraryWorldEntri
 
 #### BF-3C — Representação procedural e layout isolados — decomposição em três checkpoints
 
-**Estado:** BF-3C1 e BF-3C2 estão tecnicamente concluídas; C3 permanece pendente. O resultado da BF-3C será uma fábrica procedural leve para os cinco novos tipos e uma composição/layout provisórios que consumam a projeção neutra BF-3B, sem conectá-los ao runtime produtivo, React ou consultas. A BF-3D só poderá começar após o gate final da C3, que inclui aprovação visual humana explícita.
+**Estado:** BF-3C1 e BF-3C2 estão tecnicamente concluídas; C3 está em andamento, com a prévia temporária pronta e o gate humano pendente. O resultado da BF-3C será uma fábrica procedural leve para os cinco novos tipos e uma composição/layout provisórios que consumam a projeção neutra BF-3B, sem conectá-los ao runtime produtivo, React ou consultas. A BF-3D só poderá começar após o gate final da C3, que inclui aprovação visual humana explícita.
 
 ##### BF-3C1 — Contrato breve e cinco representações procedurais
 
@@ -140,6 +140,8 @@ Medir os bounds reais das cinco representações da C1 e derivar a zona compleme
 ##### BF-3C3 — Prévia visual isolada, decisão humana e fechamento
 
 Preparar uma prévia temporária no navegador com registros fictícios que mostre os cinco tipos, casos pouco e muito preenchidos e overflow; usar renderer/câmera existentes como referência sem conectar os novos registros a `LibraryPage`, `WorldHost` ou `ThreeWorldRuntime` produtivos. Submeter ao usuário a distinção entre categorias, proporções, legibilidade, enquadramento, oclusões e operação visual. **A aprovação humana explícita é condição para fechar BF-3C.** Se o usuário apontar um problema, registrar o achado, corrigir de maneira dirigida e repetir a inspeção afetada; não interpretar testes automatizados como aprovação visual. Após a aprovação, remover instrumentos temporários, executar regressão proporcional das fábricas/layout e das invariantes BF-2 pertinentes, validar formatação/lint/tipagem e consolidar evidências, limites, capacidades derivadas e handoff em documentação ativa.
+
+**Prévia preparada — aguardando gate humano:** `bf3c3-preview.html` é uma entrada Vite isolada, fora do fluxo da rota Biblioteca e do input produtivo corrente. Ela usa entradas convencionais fictícias e determinísticas, projetadas por BF-3B, as cinco fábricas reais C1, slots/placements C2, a cena de referência, composição das estantes BF-1 e 18 livros fictícios alocados pela BF-2. Os botões oferecem A: 5 placements (um de cada tipo), B: 37 placements (6/7/8/9/7) e C: 37 placements com overflow somente de filme 2 e estudo 2; o painel informa `colocados / overflow` e nenhum excedente cria root, mesh ou posição. A abertura é `npm run dev` seguido de `http://localhost:5173/bf3c3-preview.html`. A prévia usa `CameraNavigation` e `ThreeWorldInteraction` para pan, wheel focal e pinch, sem criar picking/seleção BF-3D. Ao trocar cenário, a root anterior dos registros é removida por `disposeObjectTree()`; no unload, as roots de registros, estantes/livros e referência, listeners da interação, observer e renderer são liberados. Ela permanece temporária até a aprovação humana e sua remoção posterior.
 
 **Gate C3 / fechamento C:** PASS somente com testes técnicos aplicáveis, documentação coerente, prévia temporária limpa e aprovação visual humana identificada. Sem Android físico, benchmark, PASS TalkBack, arte final, GLB produtivo ou integração BF-3D. Não declarar C3 nem BF-3C concluídas enquanto o gate humano estiver pendente.
 
@@ -163,7 +165,7 @@ Executar `format:check`, lint, typecheck, Vitest, `audio:check`, build, `perform
 
 **Gate F:** só declarar BF-3 concluída no escopo técnico-funcional e físico dirigido após os resultados correspondentes; isso **não** encerra por implicação o primeiro recorte real nem aprova TalkBack, arte final, GLB produtivo ou a BF-4. Prosseguir para BF-4 somente após autorização própria.
 
-**Ponto de retomada:** BF-3C1/C2 estão tecnicamente concluídas. BF-3C3 é o próximo checkpoint autorizável: preparar prévia isolada com conteúdo fictício, submeter proporções/oclusões/legibilidade ao gate visual humano explícito e limpar o instrumento temporário. D → E → F permanecem posteriores e não iniciados. Não tocar em runtime, React, consulta ou Dexie na BF-3C.
+**Ponto de retomada:** BF-3C1/C2 estão tecnicamente concluídas e a primeira parte da BF-3C3 deixou a prévia isolada utilizável. Aguardar o roteiro de inspeção humana em `bf3c3-preview.html`; se houver achado, corrigi-lo de forma dirigida e repetir a inspeção afetada. Somente após aprovação explícita: remover a prévia, executar regressão proporcional e fechar C3/C. D → E → F permanecem posteriores e não iniciados. Não tocar em runtime, React, consulta ou Dexie na BF-3C.
 
 ### BF-4 — Mundo habitável
 
@@ -246,7 +248,7 @@ BF-3 📋 CONTRATO DOCUMENTADO — PROJEÇÃO PURA CONCLUÍDA
   BF-3C ⏳ procedural e layout isolados — TRÊS CHECKPOINTS PLANEJADOS
     BF-3C1 ✅ contrato breve e cinco fábricas — CONCLUÍDA TECNICAMENTE
     BF-3C2 ✅ layout determinístico e overflow — CONCLUÍDA TECNICAMENTE
-    BF-3C3 ⏳ prévia, gate humano e fechamento — PRÓXIMA EXECUÇÃO AUTORIZÁVEL
+    BF-3C3 ⏳ prévia pronta; aguardando gate humano
   BF-3D ⏳ runtime e seleção
   BF-3E ⏳ React/aplicação e fluxo funcional
   BF-3F ⏳ gate integrado, físico dirigido e fechamento
