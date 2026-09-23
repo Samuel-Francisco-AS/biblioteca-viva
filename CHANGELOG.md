@@ -4,11 +4,11 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
-### BF-3D1 — Experimento remoto de montagem (branch isolada; revisão pendente) — 2026-09-22
+### BF-3D1 — Integração por squash do PR #1 e PASS técnico dirigido — 2026-09-23
 
 - entrada opcional de `LibraryWorldSnapshot` no runtime normal, exclusiva da entrada legada `readingAreaBooks`; a categoria `book` reutiliza BF-2 e F5 ignora inclusive snapshots inválidos;
 - construção e wrappers procedurais para os placements BF-3C anexados somente no caminho composto, com ownership da montagem, descarte terminal, rollback de criação parcial e ausência de roots para overflow. A geometria técnica F1 não é empilhada sobre o edifício quando o snapshot composto está presente; BF-2 legado e F5 conservam o caminho anterior;
-- novos registros seguem não selecionáveis até BF-3D2. O overview usa zoom 0,7, mas os limites de navegação F3 permanecem referenciados ao piso técnico: há dívida de enquadramento/exploração para avaliação separada. A branch exige CI e auditoria independente no Fedora; não há aprovação Android, TalkBack nem merge na `main`.
+- os novos registros seguem não selecionáveis até BF-3D2. As correções dirigidas cobriram indicadores de proxies, primeiro quadro com zoom 0,7 e provas de identidade, rollback de geometria/material e montagens independentes. Duas auditorias Codex e microverificação final aprovaram tecnicamente a D1; a CI do HEAD aprovado passou integralmente, inclusive E2E. A `main` recebeu o squash `6b613e2`; D2 é a próxima execução, D3 segue pendente. Bounds F3 do piso técnico, apresentação visual/oclusão/ergonomia, Android e TalkBack permanecem sem PASS.
 
 ### BF-3C3/BF-3C — Consolidação e fechamento — 2026-09-22
 
