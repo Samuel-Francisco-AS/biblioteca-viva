@@ -1,4 +1,11 @@
-import { Mesh, OrthographicCamera, Scene, type Object3D } from "three";
+import {
+  BoxGeometry,
+  Mesh,
+  MeshStandardMaterial,
+  OrthographicCamera,
+  Scene,
+  type Object3D,
+} from "three";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -15,7 +22,6 @@ import { projectLibraryWorldEntries } from "../libraryWorldEntries";
 import { assignLibraryRecordSlots } from "../libraryRecordLayout";
 import { disposeObjectTree } from "./referenceScene";
 import { createLibraryRecordComposition } from "./libraryRecordComposition";
-import * as recordFactories from "./libraryRecordRepresentations";
 import { PERFORMANCE_SCENARIOS } from "./performanceScenarios";
 import {
   ThreeWorldRuntime,
@@ -281,37 +287,19 @@ describe("BF-3D1: snapshot composto e ownership", () => {
       firstMesh(independent.root).geometry,
       "dispose",
     );
-    let rolledBackGeometryDisposals = 0;
-    let rolledBackMaterialDisposals = 0;
-    const createMovie = recordFactories.createProceduralMovieRecord;
-    vi.spyOn(
-      recordFactories,
-      "createProceduralMovieRecord",
-    ).mockImplementationOnce((identity) => {
-      const result = createMovie(identity);
-      const mesh = firstMesh(result.root);
-      vi.spyOn(mesh.geometry, "dispose").mockImplementation(() => {
-        rolledBackGeometryDisposals += 1;
-      });
-      const material = Array.isArray(mesh.material)
-        ? mesh.material[0]
-        : mesh.material;
-      vi.spyOn(material, "dispose").mockImplementation(() => {
-        rolledBackMaterialDisposals += 1;
-      });
-      return result;
-    });
-    vi.spyOn(
-      recordFactories,
-      "createProceduralSeriesRecord",
-    ).mockImplementationOnce(() => {
-      throw new Error("Falha simulada durante a segunda fábrica");
-    });
+    // Observe the actual resource types used by a movie representation.
+    // A second invalid model throws after the first valid movie was built.
+    const geometryDisposals = vi.spyOn(BoxGeometry.prototype, "dispose");
+    const materialDisposals = vi.spyOn(MeshStandardMaterial.prototype, "dispose");
+    const invalid = {
+      ...placements[1],
+      modelTypeId: "invalid-record",
+    } as unknown as (typeof placements)[number];
     expect(() =>
-      createLibraryRecordComposition(placements.slice(0, 2)),
-    ).toThrow("Falha simulada");
-    expect(rolledBackGeometryDisposals).toBe(1);
-    expect(rolledBackMaterialDisposals).toBe(1);
+      createLibraryRecordComposition([placements[0], invalid]),
+    ).toThrow("Modelo BF-3 desconhecido");
+    expect(geometryDisposals).toHaveBeenCalledTimes(3);
+    expect(materialDisposals).toHaveBeenCalledTimes(2);
     expect(disposeIndependent).not.toHaveBeenCalled();
     const mesh = firstMesh(independent.root);
     expect(mesh.geometry).toBeDefined();
