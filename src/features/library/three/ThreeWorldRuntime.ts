@@ -120,6 +120,16 @@ const READING_SHELF_LABELS: Readonly<Record<string, string>> = Object.freeze({
   "reading-shelf-03": "Estante de leitura 3",
 });
 
+const LIBRARY_RECORD_LABELS: Readonly<
+  Record<LibraryRecordPlacement["modelTypeId"], string>
+> = Object.freeze({
+  "movie-record": "Filme",
+  "series-record": "Série",
+  "study-record": "Estudo",
+  "physical-activity-record": "Atividade física",
+  "work-record": "Trabalho",
+});
+
 function readingShelfLabel(instanceId: string): string {
   const label = READING_SHELF_LABELS[instanceId];
   if (!label) {
@@ -560,6 +570,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
           visual,
         ]),
       );
+      let libraryRecordSelectables: readonly {
+        readonly descriptor: WorldSelectableObject;
+        readonly root: Object3D;
+      }[] = [];
       if (composedWorld) {
         const building = createProceduralLibraryBuilding();
         mountedWorld.addLibraryBuilding(building);
@@ -569,6 +583,19 @@ export class ThreeWorldRuntime implements WorldRuntime {
         );
         mountedWorld.addLibraryRecords(records.root);
         scene.add(records.root);
+        libraryRecordSelectables = records.instances
+          .filter(
+            ({ node }) =>
+              node.parent === records.root && node.children.length > 0,
+          )
+          .map(({ entryId, instanceId, modelTypeId, node }) => ({
+            descriptor: Object.freeze({
+              entryId,
+              id: instanceId,
+              label: `${LIBRARY_RECORD_LABELS[modelTypeId]}: ${entryId}`,
+            }),
+            root: node,
+          }));
       }
       this.navigation = new CameraNavigation(camera, composedWorld ? 0.7 : 1);
 
@@ -595,6 +622,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
           ({ descriptor }) => descriptor,
         ),
         ...proceduralSelectables.map(({ descriptor }) => descriptor),
+        ...libraryRecordSelectables.map(({ descriptor }) => descriptor),
         ...(this.performanceScenarioDiagnosticsEnabled
           ? [FIXTURE_SELECTABLE]
           : []),
@@ -606,7 +634,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
         catalog: this.selectableObjects,
         navigation: this.navigation,
         onSelectionChange: this.handleSelectionChange,
-        pickingPriorityRoots: proceduralSelectables.map(({ root }) => root),
+        pickingPriorityRoots: [
+          ...proceduralSelectables.map(({ root }) => root),
+          ...libraryRecordSelectables.map(({ root }) => root),
+        ],
         render: () => {
           if (!this.renderCurrentFrame()) return;
           this.publishDiagnostics(false);
@@ -615,6 +646,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         selectables: [
           ...(referenceScene?.selectables ?? []),
           ...proceduralSelectables,
+          ...libraryRecordSelectables,
           ...readingAreaBookVisuals.map(({ book, node }) => ({
             descriptor: {
               entryId: book.entryId,

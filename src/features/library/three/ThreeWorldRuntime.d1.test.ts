@@ -4,6 +4,7 @@ import {
   MeshStandardMaterial,
   OrthographicCamera,
   Scene,
+  Vector3,
   type Object3D,
 } from "three";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -40,6 +41,34 @@ class TestRenderer implements ThreeWorldRenderer {
   );
   readonly setPixelRatio = vi.fn();
   readonly setSize = vi.fn();
+
+  constructor() {
+    this.domElement.getBoundingClientRect = () => ({
+      width: 640,
+      height: 360,
+      left: 0,
+      top: 0,
+      right: 640,
+      bottom: 360,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    });
+  }
+}
+
+function tap(canvas: HTMLCanvasElement, x: number, y: number): void {
+  for (const type of ["pointerdown", "pointerup"]) {
+    const event = new Event(type, { bubbles: true, cancelable: true });
+    Object.defineProperties(event, {
+      button: { value: 0 },
+      clientX: { value: x },
+      clientY: { value: y },
+      pointerId: { value: 1 },
+      pointerType: { value: "mouse" },
+    });
+    canvas.dispatchEvent(event);
+  }
 }
 
 class TestResizeObserver implements ResizeObserver {
@@ -143,7 +172,7 @@ afterEach(() => {
   document.body.replaceChildren();
 });
 
-describe("BF-3D1: snapshot composto e ownership", () => {
+describe("BF-3D1/D2: montagem, catálogo e seleção", () => {
   it("anexa edifício e 13 wrappers, conserva 70 livros e não materializa overflow nem fixture F1", () => {
     vi.stubGlobal("ResizeObserver", TestResizeObserver);
     const source = snapshot();
@@ -179,12 +208,17 @@ describe("BF-3D1: snapshot composto e ownership", () => {
       runtime
         .getSelectableObjects()
         .filter(({ id }) => id.startsWith("library-")),
-    ).toHaveLength(0);
+    ).toHaveLength(13);
     expect(
       runtime
         .getSelectableObjects()
         .filter(({ id }) => id.startsWith("reading-book:")),
     ).toHaveLength(70);
+    expect(
+      runtime
+        .getSelectableObjects()
+        .filter(({ id }) => id.startsWith("reading-shelf-")),
+    ).toHaveLength(3);
     expect(renderer.domElement.dataset.referenceMeshes).toBe("0");
     expect(renderer.domElement.dataset.referenceObjects).toBe("0");
     expect(renderer.domElement.dataset.referenceProxyTypes).toBe("0");
@@ -244,6 +278,121 @@ describe("BF-3D1: snapshot composto e ownership", () => {
     expect(renderer.domElement.isConnected).toBe(false);
   });
 
+  it("cataloga apenas placements anexados e alterna ID, highlight e picking entre categorias BF-1/BF-2/BF-3", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const source = snapshot();
+    const assignment = assignLibraryRecordSlots(source);
+    const renderer = new TestRenderer();
+    const runtime = new ThreeWorldRuntime({
+      libraryWorldSnapshot: source,
+      createRenderer: () => renderer,
+    });
+    const selections: (string | null)[] = [];
+    const selectedEntries: (string | undefined)[] = [];
+    runtime.onSelectionChange((selection) => {
+      selections.push(selection?.id ?? null);
+      selectedEntries.push(selection?.entryId);
+    });
+    runtime.mount(host());
+    const scene = renderer.render.mock.calls.at(-1)?.[0];
+    const camera = renderer.render.mock.calls.at(-1)?.[1];
+    const catalog = runtime.getSelectableObjects();
+    expect(catalog).toHaveLength(86);
+    expect(new Set(catalog.map(({ id }) => id)).size).toBe(catalog.length);
+    for (const placement of assignment.placements) {
+      const descriptor = catalog.find(({ id }) => id === placement.instanceId);
+      expect(descriptor).toMatchObject({
+        entryId: placement.entryId,
+        id: placement.instanceId,
+      });
+      expect(descriptor?.label).toContain(placement.entryId);
+      runtime.selectObject(placement.instanceId);
+      expect(selections.at(-1)).toBe(placement.instanceId);
+      expect(selectedEntries.at(-1)).toBe(placement.entryId);
+      expect(renderer.domElement.dataset.highlightedObject).toBe(
+        placement.instanceId,
+      );
+      expect(
+        scene?.getObjectsByProperty("name", "f1-c-selection-highlight"),
+      ).toHaveLength(1);
+    }
+    for (const overflow of assignment.overflow) {
+      expect(catalog.some(({ id }) => id === overflow.instanceId)).toBe(false);
+      runtime.selectObject(overflow.instanceId);
+      expect(selections.at(-1)).toBeNull();
+      expect(renderer.domElement.dataset.highlightedObject).toBe("");
+    }
+    for (const id of [
+      "reading-book:book-0",
+      "reading-shelf-01",
+      assignment.placements[0].instanceId,
+    ]) {
+      runtime.selectObject(id);
+      expect(selections.at(-1)).toBe(id);
+      expect(renderer.domElement.dataset.highlightedObject).toBe(id);
+      expect(
+        scene?.getObjectsByProperty("name", "f1-c-selection-highlight"),
+      ).toHaveLength(1);
+    }
+    runtime.selectObject("missing-id");
+    expect(selections.at(-1)).toBeNull();
+    expect(scene?.getObjectByName("f1-c-selection-highlight")).toBeUndefined();
+    expect(renderer.domElement.dataset.highlightedObject).toBe("");
+
+    if (!scene || !camera) throw new Error("Cena ausente.");
+    camera.updateMatrixWorld();
+    for (const modelTypeId of [
+      "movie-record",
+      "series-record",
+      "study-record",
+      "physical-activity-record",
+      "work-record",
+    ] as const) {
+      const placement = assignment.placements.find(
+        (item) => item.modelTypeId === modelTypeId,
+      );
+      if (!placement) throw new Error("Placement ausente.");
+      if (modelTypeId === "series-record") {
+        const overlappingCenter = new Vector3(
+          placement.position[0],
+          0.6,
+          placement.position[2],
+        ).project(camera);
+        tap(
+          renderer.domElement,
+          (overlappingCenter.x + 1) * 320,
+          (1 - overlappingCenter.y) * 180,
+        );
+        expect(selections.at(-1)).toBe("reading-shelf-01");
+      }
+      for (const y of [0.6, 1, 0.25]) {
+        for (const x of [0, -0.4, 0.4]) {
+          const projected = new Vector3(
+            placement.position[0] + x,
+            y,
+            placement.position[2],
+          ).project(camera);
+          tap(
+            renderer.domElement,
+            (projected.x + 1) * 320,
+            (1 - projected.y) * 180,
+          );
+          if (selections.at(-1) === placement.instanceId) break;
+        }
+        if (selections.at(-1) === placement.instanceId) break;
+      }
+      expect(selections.at(-1)).toBe(placement.instanceId);
+      expect(selectedEntries.at(-1)).toBe(placement.entryId);
+      expect(renderer.domElement.dataset.highlightedObject).toBe(
+        placement.instanceId,
+      );
+    }
+    runtime.dispose();
+    expect(runtime.getSelectableObjects()).toHaveLength(0);
+    expect(scene.getObjectByName("f1-c-selection-highlight")).toBeUndefined();
+    expect(renderer.domElement.dataset.highlightedObject).toBe("");
+  });
+
   it("preserva caminho legado BF-2 e rejeita fontes duplicadas", () => {
     vi.stubGlobal("ResizeObserver", TestResizeObserver);
     const source = snapshot();
@@ -295,6 +444,11 @@ describe("BF-3D1: snapshot composto e ownership", () => {
         .getSelectableObjects()
         .some(({ id }) => id.startsWith("reading-book:")),
     ).toBe(false);
+    expect(
+      runtime
+        .getSelectableObjects()
+        .some(({ id }) => id.startsWith("library-")),
+    ).toBe(false);
     runtime.dispose();
   });
 
@@ -344,6 +498,14 @@ describe("BF-3D1: snapshot composto e ownership", () => {
     });
     first.mount(host());
     second.mount(host());
+    first.selectObject("library-movie:movie-0");
+    second.selectObject("library-series:series-0");
+    expect(firstRenderer.domElement.dataset.highlightedObject).toBe(
+      "library-movie:movie-0",
+    );
+    expect(secondRenderer.domElement.dataset.highlightedObject).toBe(
+      "library-series:series-0",
+    );
     const firstRoot = firstRenderer.render.mock.calls
       .at(-1)?.[0]
       .getObjectByName("library-record-composition");
@@ -375,6 +537,9 @@ describe("BF-3D1: snapshot composto e ownership", () => {
     expect(secondGeometryDisposed).not.toHaveBeenCalled();
     expect(secondMaterialDisposed).not.toHaveBeenCalled();
     expect(secondRoot?.children).toHaveLength(13);
+    expect(secondRenderer.domElement.dataset.highlightedObject).toBe(
+      "library-series:series-0",
+    );
     second.dispose();
     second.dispose();
     expect(secondGeometryDisposed).toHaveBeenCalledOnce();

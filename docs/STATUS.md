@@ -1,6 +1,6 @@
 # Estado atual
 
-> Referência documental: 2026-09-22.
+> Referência documental: 2026-09-23.
 
 ## Produto
 
@@ -39,7 +39,9 @@
 
 ## Próximo trabalho
 
-**BF-2E/BF-2, BF-3A, BF-3B e BF-3C1/C2/C3 passaram seus gates aplicáveis. BF-3C está concluída no escopo aprovado. BF-3D1 recebeu PASS TÉCNICO DIRIGIDO e foi integrada à `main` via squash do PR #1 (`6b613e2`).** Snapshot neutro opcional, edifício e wrappers dos cinco tipos montam no caminho composto com ownership único; a categoria `book` reutiliza BF-2, overflow não cria roots e F5 permanece isolado. Duas auditorias independentes do Codex, microverificação final e CI remota integral verde comprovaram descarte/rollback, identidade, indicadores, primeiro quadro e regressões aplicáveis. **BF-3D2 é a PRÓXIMA EXECUÇÃO:** catálogo, picking, seleção e highlight; D3 permanece responsável por robustez/regressão consolidada. A D1 não integra React nem aprova visual/ergonomia: iluminação e oclusão combinadas, bounds F3 do piso técnico e exploração do edifício exigem avaliação dirigida, sem redesenhar unilateralmente a planta. BF-3E/3F e BF-4 continuam posteriores; Android e TalkBack não receberam PASS. TalkBack continua obrigatório antes do fechamento do primeiro recorte real e de beta/release aplicável. P3D-B1 permanece registro documental de `bookshelf`; P3D-B2–F seguem adiados até necessidade concreta de GLB definitivo. A cena continua provisória, sem mundo final ou persistência espacial.
+**Gate BF-3D2 (2026-09-23): PASS técnico local.** Os 13 wrappers anexados dos cinco tipos entraram no catálogo e no picking com `instanceId`/`entryId`, seleção por ID e canvas, destaque único e limpeza em seleção inválida/descarte. Testes dirigidos cobriram overflow, 70 livros, três estantes, caminho legado, F5 e montagens independentes. Passaram format:check, lint, typecheck, 78 arquivos/622 testes Vitest, build e 17 E2E da rota vigente. O centro projetado de uma série sobrepõe uma estante; um ponto visível da série é selecionável. D3 permanece pendente; BF-3E ainda precisa conectar os novos tipos à superfície React. Não há aprovação visual integrada, Android ou TalkBack.
+
+**BF-2E/BF-2, BF-3A, BF-3B e BF-3C1/C2/C3 passaram seus gates aplicáveis. BF-3C está concluída no escopo aprovado. BF-3D1 recebeu PASS TÉCNICO DIRIGIDO e foi integrada à `main` via squash do PR #1 (`6b613e2`).** Snapshot neutro opcional, edifício e wrappers dos cinco tipos montam no caminho composto com ownership único; a categoria `book` reutiliza BF-2, overflow não cria roots e F5 permanece isolado. Duas auditorias independentes do Codex, microverificação final e CI remota integral verde comprovaram descarte/rollback, identidade, indicadores, primeiro quadro e regressões aplicáveis. **BF-3D2 recebeu PASS TÉCNICO LOCAL no runtime composto:** catálogo, picking, seleção e highlight; D3 permanece responsável por robustez/regressão consolidada. A D1 não integra React nem aprova visual/ergonomia: iluminação e oclusão combinadas, bounds F3 do piso técnico e exploração do edifício exigem avaliação dirigida, sem redesenhar unilateralmente a planta. BF-3E/3F e BF-4 continuam posteriores; Android e TalkBack não receberam PASS. TalkBack continua obrigatório antes do fechamento do primeiro recorte real e de beta/release aplicável. P3D-B1 permanece registro documental de `bookshelf`; P3D-B2–F seguem adiados até necessidade concreta de GLB definitivo. A cena continua provisória, sem mundo final ou persistência espacial.
 
 ```text
 F0 ✅
@@ -106,7 +108,7 @@ BF-3 ⏳ CONTRATO, PROJEÇÃO E C CONCLUÍDOS; D/E/F PENDENTES
     BF-3C3 ✅ hipótese 3 com PASS humano e técnico; prévia removida
   BF-3D ⏳ runtime e seleção — D1 CONCLUÍDA; D2/D3 PENDENTES
     BF-3D1 ✅ montagem e ownership — PASS TÉCNICO DIRIGIDO
-    BF-3D2 ⏳ catálogo, picking e seleção — PRÓXIMA EXECUÇÃO
+    BF-3D2 ✅ catálogo, picking e seleção — PASS TÉCNICO LOCAL
     BF-3D3 ⏳ robustez, regressão e fechamento
   BF-3E ⏳ React/aplicação e fluxo funcional
   BF-3F ⏳ gate integrado, físico dirigido e fechamento

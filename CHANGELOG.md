@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3D2 — Catálogo, picking e seleção — 2026-09-23
+
+- wrappers anexados dos cinco novos tipos entram no catálogo e no raycast com `instanceId`, `entryId` e rótulo textual identificável; seleção por canvas ou ID recebe highlight e limpa o anterior ao trocar ou invalidar a seleção;
+- preservados os 70 livros e três estantes BF-2, o caminho legado, overflow sem root/seleção, descarte isolado e F5 sem conteúdo BF. A ponte React e a alternativa convencional dos novos tipos seguem para BF-3E; robustez consolidada e fechamento D seguem para BF-3D3;
+- a sobreposição projetada entre uma série e estante exige toque na parte visível; apresentação integrada, ergonomia, Android e TalkBack não foram aprovados.
+- gate técnico local: format:check, lint, typecheck, 78 arquivos/622 testes Vitest, build e 17 E2E passaram; os E2E cobrem a rota BF-2 atual, pois a ponte React dos cinco tipos ainda pertence à BF-3E.
+
 ### BF-3D1 — Integração por squash do PR #1 e PASS técnico dirigido — 2026-09-23
 
 - entrada opcional de `LibraryWorldSnapshot` no runtime normal, exclusiva da entrada legada `readingAreaBooks`; a categoria `book` reutiliza BF-2 e F5 ignora inclusive snapshots inválidos;

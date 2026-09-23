@@ -35,7 +35,7 @@ BF-3 ⏳ contrato, projeção e C concluídos; D/E/F pendentes
     BF-3C3 ✅ hipótese 3 PASS visual humano e técnico; prévia removida
   BF-3D ⏳ runtime e seleção — D1 concluída; D2 próxima
     BF-3D1 ✅ montagem e ownership — PASS TÉCNICO DIRIGIDO
-    BF-3D2 ⏳ catálogo, picking e seleção — PRÓXIMA EXECUÇÃO
+    BF-3D2 ✅ catálogo, picking e seleção — PASS TÉCNICO LOCAL
     BF-3D3 ⏳ robustez, regressão e fechamento
   BF-3E ⏳ ponte React/aplicação e fluxo funcional
   BF-3F ⏳ gate integrado, validação física dirigida e fechamento
@@ -97,7 +97,7 @@ Consolidou regressão integrada com base convencional real: criação, projeçã
 
 ### BF-3 — Integração dos seis tipos de registro — contrato e projeção pura estabelecidos
 
-**Estado:** BF-3A documental e BF-3B de projeção pura concluídas. A BF-2 já integra `book` na área de leitura; BF-3 deverá adicionar `movie`, `series`, `study`, `physical_activity` e `work` à experiência funcional do mundo sem regredir os livros. BF-3C3/BF-3C estão concluídas no escopo provisório aprovado; BF-3D1 passou no gate técnico dirigido e foi integrada à main via squash do PR #1; BF-3D2 é o próximo checkpoint, ainda não iniciado. Cada checkpoint posterior requer escopo e gate próprios. `docs/STATUS.md` permanece a autoridade sobre o presente.
+**Estado:** BF-3A documental e BF-3B de projeção pura concluídas. A BF-2 já integra `book` na área de leitura; BF-3 deverá adicionar `movie`, `series`, `study`, `physical_activity` e `work` à experiência funcional do mundo sem regredir os livros. BF-3C3/BF-3C estão concluídas no escopo provisório aprovado; BF-3D1 passou no gate técnico dirigido e foi integrada à main via squash do PR #1; BF-3D2 recebeu PASS técnico local para catálogo e seleção no runtime composto. Cada checkpoint posterior requer escopo e gate próprios. `docs/STATUS.md` permanece a autoridade sobre o presente.
 
 **Resultado funcional pretendido:** cada registro convencional existente pode ser encontrado, identificado pelo seu tipo, selecionado quando houver representação 3D e aberto pelo `entryId`; todos continuam acessíveis por uma superfície React semântica mesmo sem WebGL ou quando não couberem visualmente. Não se exige uma sala definitiva por categoria: composição, formas e capacidade devem ser proporcionais à prova funcional, não uma antecipação da BF-4. O layout provisório deve preservar legibilidade e interação no Moto G06.
 
@@ -126,7 +126,7 @@ Implementou e testou a projeção renderer-independent `projectLibraryWorldEntri
 
 #### BF-3C — Representação procedural e layout isolados — decomposição em três checkpoints
 
-**Estado:** BF-3C1/C2/C3 e BF-3C concluídas no escopo procedural provisório. A hipótese 1 recebeu FAIL visual por escala/reconhecibilidade; a hipótese 2 melhorou os objetos mas recebeu FAIL na planta. A hipótese 3 recebeu PASS humano explícito, com ressalva de que a planta não reproduz fielmente a referência 2D e não é definitiva. O gate técnico consolidou construção, layout, geometria real e descarte; BF-3D1 integrou a montagem runtime e passou no gate técnico dirigido. BF-3D2 ainda não começou.
+**Estado:** BF-3C1/C2/C3 e BF-3C concluídas no escopo procedural provisório. A hipótese 1 recebeu FAIL visual por escala/reconhecibilidade; a hipótese 2 melhorou os objetos mas recebeu FAIL na planta. A hipótese 3 recebeu PASS humano explícito, com ressalva de que a planta não reproduz fielmente a referência 2D e não é definitiva. O gate técnico consolidou construção, layout, geometria real e descarte; BF-3D1 integrou a montagem runtime e passou no gate técnico dirigido. BF-3D2 recebeu PASS técnico local.
 
 ##### BF-3C1 — Contrato breve e cinco representações procedurais
 
@@ -156,6 +156,8 @@ O fechamento promoveu construção e layout a módulos independentes da prévia,
 
 **BF-3D2 — Catálogo, picking e seleção:** registrar apenas wrappers efetivamente anexados como selecionáveis com `id: instanceId`, `entryId` e rótulo seguro; incorporar `getSelectableObjects()`, `ThreeWorldInteraction`, raycast, `selectObject(id)`, `WorldSelection` e destaque sem duplicar catálogo nem alterar a identidade BF-2. A seleção de um tipo não pode interferir em livros/estantes ou outros tipos. Overflow e falha de representação não são selecionáveis; o caminho React convencional, anunciado/alternativo, continua sob BF-3E. **Gate D2:** testes dirigidos das cinco categorias, seleção por canvas e ID, highlight, prioridade de picking com objetos já existentes, seleção inválida, isolamento BF-1/BF-2 e F5 sem conteúdo BF. Não criar controles React de novos tipos.
 
+**Resultado D2 (2026-09-23):** PASS técnico local para os wrappers anexados. O catálogo único entrega 13 registros BF-3, três estantes e 70 livros no snapshot de teste composto; `WorldSelection` conserva `instanceId`/`entryId`, e o helper de highlight é trocado ou removido nas seleções inválidas e no descarte. Raycast dirigido selecionou representantes das cinco categorias em pontos visíveis, e os testes cobriram overflow, montagens independentes, caminho legado e F5 inválido. O centro projetado de uma série incidiu sobre uma estante: o teste usa parte visível, sem mudança global de prioridade, planta ou câmera. Gate: format:check, lint, typecheck, 78 arquivos/622 testes Vitest, build e 17 E2E passaram. Os E2E exercitam BF-2/rota atual; a ponte React BF-3E ainda não existe. D3 e validações visuais/físicas permanecem pendentes.
+
 **BF-3D3 — Robustez, regressão e fechamento:** testar falhas de preparação/attach, rollback sem wrappers, catálogo ou highlight órfãos, dispose repetido, mounts independentes, WebGL indisponível, seleção obsoleta e proteção dos callbacks tardios já existentes. Não inventar sincronização live, reconciliação de snapshots após montagem ou mecanismo assíncrono para as fábricas síncronas; qualquer callback realmente diferido deve respeitar o owner e descartar resultado stale. Executar testes dirigidos durante correções e regressão consolidada proporcional no gate (BF-1/BF-2/F5, arquitetura, format, lint, typecheck, Vitest, build e E2E aplicáveis), com documentação e riscos reconciliados. **Gate D3/D:** PASS somente com montagem, catálogo, picking, seleção, falha/lifecycle, ownership e F5 demonstrados em conjunto. BF-3E passa a próxima execução ainda não iniciada.
 
 **Limites de toda a D:** sem `listLibraryEntries`, consulta de registros reais, alterações de schema/backup, persistência ou drag/drop espacial, editor de cômodos, novos GLBs/dependências, redecoração, alteração de fixture F1/F4 ou benchmark/APK Android. Não declarar BF-3 completa, desempenho físico, TalkBack ou planta definitiva. Preservar a decisão visual C3 aprovada para o escopo provisório; se houver alteração material, gate humano dirigido fica pendente até nova aprovação.
@@ -174,7 +176,7 @@ Executar `format:check`, lint, typecheck, Vitest, `audio:check`, build, `perform
 
 **Fechamento C3/C:** `libraryBuildingGeometry.ts` e `proceduralLibraryBuilding.ts` preservam os cinco cômodos neutros, núcleo e quatro passagens; `libraryRecordLayout.ts` contém somente a distribuição inicial, 13 slots derivados (2/2/3/3/3), placements e overflow imutáveis. A/B/C foram 5/13/13 placements e 0/0/4 overflow na inspeção aprovada. Testes `Box3` reais cobrem as fábricas, passagens, colisões e convivência com três estantes e 70 livros BF-2; 77 arquivos/616 testes passaram, junto de format:check, lint, typecheck, audio:check e build. A prévia temporária foi removida; a referência PNG 2D permanece documental. Não houve gate físico, assistivo, de ergonomia ou seleção.
 
-**Ponto de retomada BF-3D2:** consumir os wrappers não selecionáveis já montados pela D1 e integrar catálogo, picking e seleção com IDs e `entryId` estáveis. Preservar BF-2, F5, ownership e fallback, sem antecipar a consulta React da BF-3E. D3 ainda concentra robustez/regressão final; avaliação visual integrada e dívidas de bounds/oclusão permanecem explicitamente abertas, sem redefinir a planta aprovada por iniciativa própria. BF-3E/3F e BF-4 não foram iniciadas.
+**Ponto de retomada BF-3D3:** consolidar falha/lifecycle e regressão sobre catálogo, picking e seleção dos wrappers montados, com IDs e `entryId` estáveis. Preservar BF-2, F5, ownership e fallback, sem antecipar a consulta React da BF-3E. D3 ainda concentra robustez/regressão final; avaliação visual integrada e dívidas de bounds/oclusão permanecem explicitamente abertas, sem redefinir a planta aprovada por iniciativa própria. BF-3E/3F e BF-4 não foram iniciadas.
 
 ### BF-4 — Mundo habitável
 
@@ -260,7 +262,7 @@ BF-3 ⏳ CONTRATO, PROJEÇÃO E C CONCLUÍDOS; D/E/F PENDENTES
     BF-3C3 ✅ hipótese 3 PASS humano e técnico; prévia removida
   BF-3D ⏳ runtime e seleção — D1 CONCLUÍDA; D2/D3 PENDENTES
     BF-3D1 ✅ montagem e ownership — PASS TÉCNICO DIRIGIDO
-    BF-3D2 ⏳ catálogo, picking e seleção — PRÓXIMA EXECUÇÃO
+    BF-3D2 ✅ catálogo, picking e seleção — PASS TÉCNICO LOCAL
     BF-3D3 ⏳ robustez, regressão e fechamento
   BF-3E ⏳ React/aplicação e fluxo funcional
   BF-3F ⏳ gate integrado, físico dirigido e fechamento

@@ -14,7 +14,7 @@ export interface LibraryRecordVisual {
   readonly entryId: string;
   readonly instanceId: string;
   readonly modelTypeId: LibraryRecordPlacement["modelTypeId"];
-  /** Stable per-mount wrapper; BF-3D2 will add catalog and picking. */
+  /** Stable per-mount wrapper used by the runtime catalog and picking. */
   readonly node: Group;
 }
 
@@ -61,7 +61,7 @@ function makeRepresentation(placement: LibraryRecordPlacement): Group {
 
 /**
  * Builds a detached and disposable root from approved BF-3B placements.
- * Overflow is absent by construction. Selection belongs to BF-3D2.
+ * Overflow is absent by construction; the runtime registers attached wrappers.
  */
 export function createLibraryRecordComposition(
   placements: readonly LibraryRecordPlacement[],
