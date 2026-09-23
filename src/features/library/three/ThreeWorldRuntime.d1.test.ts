@@ -1,9 +1,12 @@
 import {
+  Box3,
   BoxGeometry,
   Mesh,
   MeshStandardMaterial,
   OrthographicCamera,
+  Raycaster,
   Scene,
+  Vector2,
   Vector3,
   type Object3D,
 } from "three";
@@ -391,6 +394,143 @@ describe("BF-3D1/D2: montagem, catálogo e seleção", () => {
     expect(runtime.getSelectableObjects()).toHaveLength(0);
     expect(scene.getObjectByName("f1-c-selection-highlight")).toBeUndefined();
     expect(renderer.domElement.dataset.highlightedObject).toBe("");
+  });
+
+  it("preserva picking por canvas dos livros e das três estantes no mundo composto", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const source = snapshot();
+    const assignment = assignLibraryRecordSlots(source);
+    expect(source.categories[0].entries).toHaveLength(70);
+    expect(assignment.placements).toHaveLength(13);
+    expect(assignment.overflow).toHaveLength(4);
+    const renderer = new TestRenderer();
+    const runtime = new ThreeWorldRuntime({
+      libraryWorldSnapshot: source,
+      createRenderer: () => renderer,
+    });
+    runtime.mount(host());
+    const scene = renderer.render.mock.calls.at(-1)?.[0];
+    const camera = renderer.render.mock.calls.at(-1)?.[1];
+    const shelves = scene?.getObjectByName("procedural-content-composition");
+    const records = scene?.getObjectByName("library-record-composition");
+    if (!scene || !camera || !shelves || !records)
+      throw new Error("Cena composta ausente.");
+    expect(shelves.children).toHaveLength(3);
+    expect(records.children).toHaveLength(13);
+    const priorityRoots = [...shelves.children, ...records.children];
+    const selectableRoots: Object3D[] = [...priorityRoots];
+    const rootIds = new Map<Object3D, string>();
+    for (const [index, shelf] of shelves.children.entries()) {
+      rootIds.set(shelf, `reading-shelf-0${index + 1}`);
+      shelf.traverse((part) => {
+        if (part.name !== "procedural-reading-area-book") return;
+        const id: unknown = part.userData.readingAreaBookInstanceId;
+        if (typeof id !== "string") throw new Error("Livro sem instanceId.");
+        rootIds.set(part, id);
+        selectableRoots.push(part);
+      });
+    }
+    for (const [index, record] of records.children.entries()) {
+      rootIds.set(record, assignment.placements[index].instanceId);
+    }
+    expect(selectableRoots).toHaveLength(86);
+    const idOf = (object: Object3D): string | undefined => {
+      let part: Object3D | null = object;
+      while (part) {
+        const id = rootIds.get(part);
+        if (id) return id;
+        part = part.parent;
+      }
+      return undefined;
+    };
+    const raycaster = new Raycaster();
+    scene.updateMatrixWorld(true);
+    camera.updateMatrixWorld();
+    const inspect = (x: number, y: number) => {
+      raycaster.setFromCamera(new Vector2(x / 320 - 1, 1 - y / 180), camera);
+      const first = (roots: readonly Object3D[]) =>
+        raycaster.intersectObjects([...roots], true).map((hit) => ({
+          distance: hit.distance,
+          id: idOf(hit.object),
+          name: hit.object.name,
+        }));
+      return {
+        scene: first(scene.children),
+        priority: first(priorityRoots),
+        all: first(selectableRoots),
+      };
+    };
+    const visiblePoint = (target: Object3D, expectedId: string) => {
+      const bounds = new Box3().setFromObject(target);
+      const corners = [bounds.min.x, bounds.max.x].flatMap((x) =>
+        [bounds.min.y, bounds.max.y].flatMap((y) =>
+          [bounds.min.z, bounds.max.z].map((z) =>
+            new Vector3(x, y, z).project(camera),
+          ),
+        ),
+      );
+      const minX = Math.min(...corners.map(({ x }) => x));
+      const maxX = Math.max(...corners.map(({ x }) => x));
+      const minY = Math.min(...corners.map(({ y }) => y));
+      const maxY = Math.max(...corners.map(({ y }) => y));
+      for (const xFactor of [0.1, 0.25, 0.4, 0.5, 0.6, 0.75, 0.9]) {
+        for (const yFactor of [0.1, 0.25, 0.4, 0.5, 0.6, 0.75, 0.9]) {
+          const x = ((minX + (maxX - minX) * xFactor + 1) * 640) / 2;
+          const y = ((1 - (minY + (maxY - minY) * yFactor)) * 360) / 2;
+          if (x < 0 || x > 640 || y < 0 || y > 360) continue;
+          const hits = inspect(x, y);
+          if (
+            hits.scene[0]?.id !== expectedId ||
+            hits.all[0]?.id !== expectedId
+          )
+            continue;
+          expect(hits.priority[0]?.id, `${expectedId} em ${x}, ${y}`).toBe(
+            expectedId,
+          );
+          return { x, y, hits };
+        }
+      }
+      return undefined;
+    };
+    const selected: { id: string; entryId?: string }[] = [];
+    runtime.onSelectionChange((selection) => {
+      if (selection) selected.push(selection);
+    });
+    for (const [index, shelf] of shelves.children.entries()) {
+      const shelfId = `reading-shelf-0${index + 1}`;
+      const bookNodes = selectableRoots.filter(
+        (node) =>
+          node.name === "procedural-reading-area-book" && node.parent === shelf,
+      );
+      expect(bookNodes.length).toBeGreaterThan(0);
+      const bookPoint = bookNodes
+        .map((node) => {
+          const id = rootIds.get(node);
+          return id ? visiblePoint(node, id) : undefined;
+        })
+        .find((point) => point !== undefined);
+      expect(bookPoint, `Livro visível na estante ${shelfId}`).toBeDefined();
+      if (!bookPoint) throw new Error("Livro não atingível.");
+      const bookId = bookPoint.hits.all[0].id;
+      if (!bookId) throw new Error("Livro sem hit.");
+      tap(renderer.domElement, bookPoint.x, bookPoint.y);
+      expect(selected.at(-1)).toMatchObject({
+        id: bookId,
+        entryId: bookId.slice("reading-book:".length),
+      });
+      expect(renderer.domElement.dataset.highlightedObject).toBe(bookId);
+      const shelfPoint = visiblePoint(shelf, shelfId);
+      expect(shelfPoint, `Estante ${shelfId} visível`).toBeDefined();
+      if (!shelfPoint) throw new Error("Estante não atingível.");
+      tap(renderer.domElement, shelfPoint.x, shelfPoint.y);
+      expect(selected.at(-1)).toMatchObject({ id: shelfId });
+      expect(selected.at(-1)?.entryId).toBeUndefined();
+      expect(renderer.domElement.dataset.highlightedObject).toBe(shelfId);
+      expect(
+        scene.getObjectsByProperty("name", "f1-c-selection-highlight"),
+      ).toHaveLength(1);
+    }
+    runtime.dispose();
   });
 
   it("preserva caminho legado BF-2 e rejeita fontes duplicadas", () => {
