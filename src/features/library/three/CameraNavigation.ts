@@ -14,11 +14,20 @@ import {
 
 /** Single runtime authority for logical target/zoom and its camera projection. */
 export class CameraNavigation {
-  private state = initialCameraNavigationState();
+  private state: CameraNavigationState;
   private viewport: { readonly height: number; readonly width: number } | null =
     null;
 
-  constructor(private readonly camera: OrthographicCamera) {
+  constructor(
+    private readonly camera: OrthographicCamera,
+    initialZoom = 1,
+  ) {
+    // Initial framing must exist before the first viewport-triggered render.
+    // The legacy F3/F5 path retains zoom 1.
+    this.state = Object.freeze({
+      ...initialCameraNavigationState(),
+      zoom: clampCameraZoom(initialZoom),
+    });
     this.applyState();
   }
 

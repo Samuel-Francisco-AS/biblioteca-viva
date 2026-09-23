@@ -570,7 +570,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         mountedWorld.addLibraryRecords(records.root);
         scene.add(records.root);
       }
-      this.navigation = new CameraNavigation(camera);
+      this.navigation = new CameraNavigation(camera, composedWorld ? 0.7 : 1);
 
       renderer.shadowMap.enabled = false;
       renderer.domElement.className = "three-world-canvas";
@@ -582,7 +582,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         referenceScene ? referenceScene.meshCount + 1 : 0,
       );
       renderer.domElement.dataset.referenceProxyTypes = String(
-        REFERENCE_SCENE_PROXY_TYPES,
+        referenceScene ? REFERENCE_SCENE_PROXY_TYPES : 0,
       );
       renderer.domElement.dataset.performanceScenario =
         this.performanceScenario.id;
@@ -634,10 +634,6 @@ export class ThreeWorldRuntime implements WorldRuntime {
       );
       mountedWorld.appendCanvas();
       this.resize();
-      if (composedWorld && this.mountedWorld) {
-        // Approved C3 overview; F3 navigation bounds still target the old floor.
-        this.navigation.setZoom(0.7);
-      }
       if (!this.mountedWorld) {
         throw new Error("ThreeWorldRuntime renderer failed while mounting.");
       }
