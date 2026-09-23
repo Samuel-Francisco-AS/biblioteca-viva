@@ -187,7 +187,9 @@ describe("BF-3D1: snapshot composto e ownership", () => {
     const disposed = vi.spyOn(mesh.geometry, "dispose");
     const record = firstMesh(records as Object3D);
     const recordGeometryDisposed = vi.spyOn(record.geometry, "dispose");
-    const recordMaterial = Array.isArray(record.material) ? record.material[0] : record.material;
+    const recordMaterial = Array.isArray(record.material)
+      ? record.material[0]
+      : record.material;
     const recordMaterialDisposed = vi.spyOn(recordMaterial, "dispose");
     const expectedNames = {
       "movie-record": "procedural-movie-record",
@@ -198,9 +200,15 @@ describe("BF-3D1: snapshot composto e ownership", () => {
     } as const;
     for (const [index, placement] of assigned.placements.entries()) {
       const wrapper = records?.children[index];
-      expect(wrapper?.name).toBe("library-record-instance:" + placement.instanceId);
-      expect(wrapper?.userData.libraryRecordInstanceId).toBe(placement.instanceId);
-      expect(wrapper?.children[0]?.name).toBe(expectedNames[placement.modelTypeId]);
+      expect(wrapper?.name).toBe(
+        "library-record-instance:" + placement.instanceId,
+      );
+      expect(wrapper?.userData.libraryRecordInstanceId).toBe(
+        placement.instanceId,
+      );
+      expect(wrapper?.children[0]?.name).toBe(
+        expectedNames[placement.modelTypeId],
+      );
     }
     runtime.dispose();
     runtime.dispose();
@@ -273,25 +281,37 @@ describe("BF-3D1: snapshot composto e ownership", () => {
       firstMesh(independent.root).geometry,
       "dispose",
     );
-    let rolledBackGeometry: ReturnType<typeof vi.spyOn> | undefined;
-    let rolledBackMaterial: ReturnType<typeof vi.spyOn> | undefined;
+    let rolledBackGeometryDisposals = 0;
+    let rolledBackMaterialDisposals = 0;
     const createMovie = recordFactories.createProceduralMovieRecord;
-    vi.spyOn(recordFactories, "createProceduralMovieRecord").mockImplementationOnce((identity) => {
+    vi.spyOn(
+      recordFactories,
+      "createProceduralMovieRecord",
+    ).mockImplementationOnce((identity) => {
       const result = createMovie(identity);
       const mesh = firstMesh(result.root);
-      rolledBackGeometry = vi.spyOn(mesh.geometry, "dispose");
-      const material = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
-      rolledBackMaterial = vi.spyOn(material, "dispose");
+      vi.spyOn(mesh.geometry, "dispose").mockImplementation(() => {
+        rolledBackGeometryDisposals += 1;
+      });
+      const material = Array.isArray(mesh.material)
+        ? mesh.material[0]
+        : mesh.material;
+      vi.spyOn(material, "dispose").mockImplementation(() => {
+        rolledBackMaterialDisposals += 1;
+      });
       return result;
     });
-    vi.spyOn(recordFactories, "createProceduralSeriesRecord").mockImplementationOnce(() => {
+    vi.spyOn(
+      recordFactories,
+      "createProceduralSeriesRecord",
+    ).mockImplementationOnce(() => {
       throw new Error("Falha simulada durante a segunda fábrica");
     });
     expect(() =>
       createLibraryRecordComposition(placements.slice(0, 2)),
     ).toThrow("Falha simulada");
-    expect(rolledBackGeometry).toHaveBeenCalledOnce();
-    expect(rolledBackMaterial).toHaveBeenCalledOnce();
+    expect(rolledBackGeometryDisposals).toBe(1);
+    expect(rolledBackMaterialDisposals).toBe(1);
     expect(disposeIndependent).not.toHaveBeenCalled();
     const mesh = firstMesh(independent.root);
     expect(mesh.geometry).toBeDefined();
@@ -314,20 +334,30 @@ describe("BF-3D1: snapshot composto e ownership", () => {
     });
     first.mount(host());
     second.mount(host());
-    const firstRoot = firstRenderer.render.mock.calls.at(-1)?.[0].getObjectByName(
-      "library-record-composition",
-    );
-    const secondRoot = secondRenderer.render.mock.calls.at(-1)?.[0].getObjectByName(
-      "library-record-composition",
-    );
+    const firstRoot = firstRenderer.render.mock.calls
+      .at(-1)?.[0]
+      .getObjectByName("library-record-composition");
+    const secondRoot = secondRenderer.render.mock.calls
+      .at(-1)?.[0]
+      .getObjectByName("library-record-composition");
     const firstMeshInstance = firstMesh(firstRoot as Object3D);
     const secondMeshInstance = firstMesh(secondRoot as Object3D);
     expect(firstMeshInstance.geometry).not.toBe(secondMeshInstance.geometry);
-    const firstMaterial = Array.isArray(firstMeshInstance.material) ? firstMeshInstance.material[0] : firstMeshInstance.material;
-    const secondMaterial = Array.isArray(secondMeshInstance.material) ? secondMeshInstance.material[0] : secondMeshInstance.material;
+    const firstMaterial = Array.isArray(firstMeshInstance.material)
+      ? firstMeshInstance.material[0]
+      : firstMeshInstance.material;
+    const secondMaterial = Array.isArray(secondMeshInstance.material)
+      ? secondMeshInstance.material[0]
+      : secondMeshInstance.material;
     expect(firstMaterial).not.toBe(secondMaterial);
-    const firstGeometryDisposed = vi.spyOn(firstMeshInstance.geometry, "dispose");
-    const secondGeometryDisposed = vi.spyOn(secondMeshInstance.geometry, "dispose");
+    const firstGeometryDisposed = vi.spyOn(
+      firstMeshInstance.geometry,
+      "dispose",
+    );
+    const secondGeometryDisposed = vi.spyOn(
+      secondMeshInstance.geometry,
+      "dispose",
+    );
     const secondMaterialDisposed = vi.spyOn(secondMaterial, "dispose");
     first.dispose();
     first.dispose();
@@ -342,5 +372,4 @@ describe("BF-3D1: snapshot composto e ownership", () => {
     expect(firstRenderer.dispose).toHaveBeenCalledOnce();
     expect(secondRenderer.dispose).toHaveBeenCalledOnce();
   });
-
 });
