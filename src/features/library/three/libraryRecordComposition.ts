@@ -30,15 +30,30 @@ function makeRepresentation(placement: LibraryRecordPlacement): Group {
   };
   switch (placement.modelTypeId) {
     case "movie-record":
-      return createProceduralMovieRecord({ ...identity, modelTypeId: "movie-record" }).root;
+      return createProceduralMovieRecord({
+        ...identity,
+        modelTypeId: "movie-record",
+      }).root;
     case "series-record":
-      return createProceduralSeriesRecord({ ...identity, modelTypeId: "series-record" }).root;
+      return createProceduralSeriesRecord({
+        ...identity,
+        modelTypeId: "series-record",
+      }).root;
     case "study-record":
-      return createProceduralStudyRecord({ ...identity, modelTypeId: "study-record" }).root;
+      return createProceduralStudyRecord({
+        ...identity,
+        modelTypeId: "study-record",
+      }).root;
     case "physical-activity-record":
-      return createProceduralPhysicalActivityRecord({ ...identity, modelTypeId: "physical-activity-record" }).root;
+      return createProceduralPhysicalActivityRecord({
+        ...identity,
+        modelTypeId: "physical-activity-record",
+      }).root;
     case "work-record":
-      return createProceduralWorkRecord({ ...identity, modelTypeId: "work-record" }).root;
+      return createProceduralWorkRecord({
+        ...identity,
+        modelTypeId: "work-record",
+      }).root;
     default:
       throw new Error("Modelo BF-3 desconhecido.");
   }
@@ -71,12 +86,14 @@ export function createLibraryRecordComposition(
       node.position.set(...placement.position);
       root.add(node);
       node.add(makeRepresentation(placement));
-      instances.push(Object.freeze({
-        entryId: placement.entryId,
-        instanceId: placement.instanceId,
-        modelTypeId: placement.modelTypeId,
-        node,
-      }));
+      instances.push(
+        Object.freeze({
+          entryId: placement.entryId,
+          instanceId: placement.instanceId,
+          modelTypeId: placement.modelTypeId,
+          node,
+        }),
+      );
     }
   } catch (error) {
     disposeObjectTree(root);

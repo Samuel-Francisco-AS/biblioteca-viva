@@ -24,7 +24,10 @@ import type {
 } from "../worldRuntime";
 import type { ReadingAreaBook } from "../readingAreaBookContract";
 import type { LibraryWorldSnapshot } from "../libraryWorldEntryContract";
-import { assignLibraryRecordSlots, type LibraryRecordPlacement } from "../libraryRecordLayout";
+import {
+  assignLibraryRecordSlots,
+  type LibraryRecordPlacement,
+} from "../libraryRecordLayout";
 import { createProceduralLibraryBuilding } from "./proceduralLibraryBuilding";
 import { createLibraryRecordComposition } from "./libraryRecordComposition";
 import { FrameMetricsWindow } from "./frameMetrics";
@@ -388,7 +391,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly performanceScenario: PerformanceScenario;
   private readonly performanceScenarioDiagnosticsEnabled: boolean;
   private readonly readingAreaBooks: readonly ReadingAreaBook[];
-  private readonly libraryRecordPlacements: readonly LibraryRecordPlacement[] | undefined;
+  private readonly libraryRecordPlacements:
+    readonly LibraryRecordPlacement[] | undefined;
   private readingAreaBookVisuals = new Map<string, ReadingAreaBookVisual>();
   private pausedByVisibility = false;
   private renderedFrames = 0;
@@ -422,7 +426,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const worldSnapshot = this.performanceScenarioDiagnosticsEnabled
       ? undefined
       : dependencies.libraryWorldSnapshot;
-    if (worldSnapshot !== undefined && dependencies.readingAreaBooks !== undefined) {
+    if (
+      worldSnapshot !== undefined &&
+      dependencies.readingAreaBooks !== undefined
+    ) {
       throw new Error("Use somente um snapshot BF por montagem.");
     }
     if (worldSnapshot !== undefined) {
@@ -436,7 +443,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       const entryIds = new Set(books.entries.map(({ entryId }) => entryId));
       for (const entry of [...assignment.placements, ...assignment.overflow]) {
         if (ids.has(entry.instanceId) || entryIds.has(entry.entryId)) {
-          throw new Error("Identidade duplicada entre livros e outros registros.");
+          throw new Error(
+            "Identidade duplicada entre livros e outros registros.",
+          );
         }
       }
       this.readingAreaBooks = Object.freeze([...books.entries]);
@@ -555,7 +564,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
         const building = createProceduralLibraryBuilding();
         mountedWorld.addLibraryBuilding(building);
         scene.add(building);
-        const records = createLibraryRecordComposition(this.libraryRecordPlacements ?? []);
+        const records = createLibraryRecordComposition(
+          this.libraryRecordPlacements ?? [],
+        );
         mountedWorld.addLibraryRecords(records.root);
         scene.add(records.root);
       }
@@ -580,7 +591,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
       this.baseSelectableObjects = Object.freeze([
-        ...(referenceScene?.selectables ?? []).map(({ descriptor }) => descriptor),
+        ...(referenceScene?.selectables ?? []).map(
+          ({ descriptor }) => descriptor,
+        ),
         ...proceduralSelectables.map(({ descriptor }) => descriptor),
         ...(this.performanceScenarioDiagnosticsEnabled
           ? [FIXTURE_SELECTABLE]

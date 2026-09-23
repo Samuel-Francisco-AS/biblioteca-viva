@@ -21,7 +21,7 @@
     "audio:check": "node scripts/generate-audio-assets.mjs --check",
     "performance:report": "node scripts/report-build-performance.mjs",
     "format": "prettier --write src e2e scripts .github index.html package.json capacitor.config.ts playwright.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json tsconfig.test.json vite.config.ts vitest.config.ts eslint.config.js",
-    "format:check": "prettier --write src/features/library/three/ThreeWorldRuntime.ts src/features/library/three/ThreeWorldRuntime.d1.test.ts src/features/library/three/libraryRecordComposition.ts && git diff -- src/features/library/three/ThreeWorldRuntime.ts src/features/library/three/ThreeWorldRuntime.d1.test.ts src/features/library/three/libraryRecordComposition.ts && prettier --check src e2e scripts .github index.html package.json capacitor.config.ts playwright.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json tsconfig.test.json vite.config.ts vitest.config.ts eslint.config.js",
+    "format:check": "prettier --check src e2e scripts .github index.html package.json capacitor.config.ts playwright.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json tsconfig.test.json vite.config.ts vitest.config.ts eslint.config.js",
     "android:sync": "npm run build && cap sync android",
     "android:sync:diagnostics": "npm run build:diagnostics && cap sync android",
     "android:open": "cap open android",
