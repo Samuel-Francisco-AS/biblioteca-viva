@@ -290,7 +290,10 @@ describe("BF-3D1: snapshot composto e ownership", () => {
     // Observe the actual resource types used by a movie representation.
     // A second invalid model throws after the first valid movie was built.
     const geometryDisposals = vi.spyOn(BoxGeometry.prototype, "dispose");
-    const materialDisposals = vi.spyOn(MeshStandardMaterial.prototype, "dispose");
+    const materialDisposals = vi.spyOn(
+      MeshStandardMaterial.prototype,
+      "dispose",
+    );
     const invalid = {
       ...placements[1],
       modelTypeId: "invalid-record",
