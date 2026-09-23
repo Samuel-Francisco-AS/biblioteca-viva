@@ -216,6 +216,25 @@ describe("BF-3D1: snapshot composto e ownership", () => {
         expectedNames[placement.modelTypeId],
       );
     }
+    const contractComposition = createLibraryRecordComposition(
+      assigned.placements,
+    );
+    expect(
+      contractComposition.instances.map(
+        ({ entryId, instanceId, modelTypeId }) => ({
+          entryId,
+          instanceId,
+          modelTypeId,
+        }),
+      ),
+    ).toEqual(
+      assigned.placements.map(({ entryId, instanceId, modelTypeId }) => ({
+        entryId,
+        instanceId,
+        modelTypeId,
+      })),
+    );
+    disposeObjectTree(contractComposition.root);
     runtime.dispose();
     runtime.dispose();
     expect(disposed).toHaveBeenCalledOnce();
