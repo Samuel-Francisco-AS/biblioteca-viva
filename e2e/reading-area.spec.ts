@@ -6,20 +6,19 @@ test("coleção vazia mantém estantes sem livros artificiais e caminho convenci
   await page.goto("/");
 
   await expect(
-    page.getByRole("heading", { name: "Área de leitura", exact: true }),
+    page.getByRole("heading", { name: "Registros da Biblioteca", exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
-      name: "Ainda não há livros na área de leitura",
+      name: "Ainda não há registros na Biblioteca",
     }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Selecionar no ambiente" }),
+    page.getByRole("button", { name: /Selecionar no ambiente:/u }),
   ).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "Criar livro" })).toHaveAttribute(
-    "href",
-    "/novo-registro",
-  );
+  await expect(
+    page.getByRole("link", { name: "Criar registro" }),
+  ).toHaveAttribute("href", "/novo-registro");
   await expect(
     page.locator("canvas[data-three-world-canvas='true']"),
   ).toHaveCount(1);
@@ -54,13 +53,13 @@ test("livros convencionais preservam identidade entre lista, runtime, seleção 
     has: page.getByRole("link", { name: "Livro real B", exact: true }),
   });
   const selectA = bookA.getByRole("button", {
-    name: "Selecionar no ambiente",
+    name: /Selecionar no ambiente:/u,
   });
   const selectB = bookB.getByRole("button", {
-    name: "Selecionar no ambiente",
+    name: /Selecionar no ambiente:/u,
   });
   const selectionButtons = page.getByRole("button", {
-    name: "Selecionar no ambiente",
+    name: /Selecionar no ambiente:/u,
   });
   await expect(selectionButtons).toHaveCount(2);
   await selectA.click();
@@ -108,7 +107,7 @@ test("livros convencionais preservam identidade entre lista, runtime, seleção 
     page.getByRole("link", { name: "Livro real A", exact: true }),
   ).toHaveCount(0);
   await expect(
-    page.getByRole("button", { name: "Selecionar no ambiente" }),
+    page.getByRole("button", { name: /Selecionar no ambiente:/u }),
   ).toHaveCount(2);
 });
 
@@ -133,7 +132,7 @@ test("overflow mantém 71 livros convencionais sem criar selecionável para o ex
     page.getByText("Fora da capacidade visual atual.", { exact: true }),
   ).toHaveCount(1);
   await expect(
-    page.getByRole("button", { name: "Selecionar no ambiente" }),
+    page.getByRole("button", { name: /Selecionar no ambiente:/u }),
   ).toHaveCount(70);
   await expect(page.locator(".reading-area-books li")).toHaveCount(71);
 });
@@ -150,7 +149,7 @@ test("retornos da Biblioteca removem o canvas anterior e reconstruem um único s
     await expect(canvas, `canvas único no ciclo ${cycle}`).toHaveCount(1);
     await expect(canvas).toHaveAttribute("data-active-frame-loops", "1");
     await expect(
-      page.getByRole("button", { name: "Selecionar no ambiente" }),
+      page.getByRole("button", { name: /Selecionar no ambiente:/u }),
     ).toHaveCount(1);
     await page.getByRole("link", { name: "Coleção", exact: true }).click();
     await expect(canvas, `canvas removido no ciclo ${cycle}`).toHaveCount(0);
@@ -159,6 +158,70 @@ test("retornos da Biblioteca removem o canvas anterior e reconstruem um único s
 
   await expect(canvas).toHaveCount(1);
   await expect(
-    page.getByRole("button", { name: "Selecionar no ambiente" }),
+    page.getByRole("button", { name: /Selecionar no ambiente:/u }),
   ).toHaveCount(1);
+});
+
+test("seis tipos abrem pela Biblioteca e filme preserva edição e retorno", async ({
+  createBook,
+  page,
+}) => {
+  await createBook({ title: "Livro BF3 fictício" });
+  const records = [
+    { type: "Filme", title: "Filme BF3 fictício" },
+    { type: "Série", title: "Série BF3 fictícia" },
+    { type: "Estudo", title: "Estudo BF3 fictício" },
+    { type: "Atividade física", title: "Atividade BF3 fictícia" },
+    { type: "Trabalho", title: "Trabalho BF3 fictício" },
+  ];
+  for (const record of records) {
+    await page.goto("/novo-registro");
+    await page
+      .getByRole("button", { name: new RegExp(record.type, "u") })
+      .click();
+    await page.getByLabel("Título").fill(record.title);
+    await page.getByRole("button", { name: "Salvar registro" }).click();
+    await expect(
+      page.getByRole("heading", { name: record.title }),
+    ).toBeVisible();
+  }
+
+  await page.goto("/");
+  const canvas = page.locator("canvas[data-three-world-canvas='true']");
+  await expect(canvas).toHaveAttribute("data-fixture-status", "ready");
+  for (const title of [
+    "Livro BF3 fictício",
+    ...records.map(({ title }) => title),
+  ]) {
+    await expect(
+      page.getByRole("link", { name: title, exact: true }),
+    ).toBeVisible();
+  }
+  await page
+    .getByRole("button", {
+      name: "Selecionar no ambiente: Filme Filme BF3 fictício",
+    })
+    .click();
+  await expect(canvas).toHaveAttribute(
+    "data-selected-object",
+    /^library-movie:/u,
+  );
+  await expect(
+    page.getByText("Filme selecionado: Filme BF3 fictício."),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "Abrir registro" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Filme BF3 fictício" }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "Editar" }).click();
+  await page.getByLabel("Título").fill("Filme BF3 editado");
+  await page.getByRole("button", { name: "Salvar" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Filme BF3 editado" }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "Voltar à Biblioteca" }).click();
+  await expect(
+    page.getByRole("link", { name: "Filme BF3 editado" }),
+  ).toBeVisible();
+  await expect(canvas).toHaveCount(1);
 });

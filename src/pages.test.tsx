@@ -66,6 +66,45 @@ function worldHostProps(): WorldHostProps {
   return latestWorldHostProps;
 }
 
+function selectionButton(title: string): HTMLButtonElement {
+  return screen.getByRole("button", {
+    name: new RegExp(`Selecionar no ambiente: .* ${title}$`),
+  });
+}
+
+const sixEntries: LibraryEntry[] = [
+  firstBook,
+  createMovie({
+    createdAt: firstBook.createdAt,
+    id: "movie-1",
+    title: "Filme fictício",
+  }),
+  createSeries({
+    createdAt: firstBook.createdAt,
+    id: "series-1",
+    title: "Série fictícia",
+    episodesWatched: 2,
+  }),
+  createStudy({
+    createdAt: firstBook.createdAt,
+    id: "study-1",
+    title: "Estudo fictício",
+    progressUnit: "modules",
+    progressCurrent: 1,
+  }),
+  createPhysicalActivity({
+    createdAt: firstBook.createdAt,
+    id: "activity-1",
+    title: "Atividade fictícia",
+    category: "cardio",
+  }),
+  createWork({
+    createdAt: firstBook.createdAt,
+    id: "work-1",
+    title: "Trabalho fictício",
+  }),
+];
+
 describe("Página Biblioteca", () => {
   it("apresenta fallback seguro quando a aplicação não está disponível", () => {
     render(
@@ -84,7 +123,7 @@ describe("Página Biblioteca", () => {
     const execute = renderLibrary(new Promise(() => undefined));
 
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Carregando área de leitura…",
+      "Carregando Biblioteca…",
     );
     expect(screen.queryByTestId("world-host-stub")).not.toBeInTheDocument();
     expect(execute).toHaveBeenCalledOnce();
@@ -112,13 +151,12 @@ describe("Página Biblioteca", () => {
     ).toEqual([]);
     expect(
       screen.getByRole("heading", {
-        name: "Ainda não há livros na área de leitura",
+        name: "Ainda não há registros na Biblioteca",
       }),
     ).toBeVisible();
-    expect(screen.getByRole("link", { name: "Criar livro" })).toHaveAttribute(
-      "href",
-      "/novo-registro",
-    );
+    expect(
+      screen.getByRole("link", { name: "Criar registro" }),
+    ).toHaveAttribute("href", "/novo-registro");
   });
 
   it("usa a projeção neutra, preserva autor e abre pelo entryId", async () => {
@@ -203,6 +241,144 @@ describe("Página Biblioteca", () => {
     expect(worldHostProps().readingAreaBooks).toBeUndefined();
   });
 
+  it("organiza os seis tipos, mantém categorias vazias e abre cada registro pelo entryId", async () => {
+    const execute = renderLibrary(Promise.resolve(sixEntries), "/?q=ficticio");
+    await screen.findByTestId("world-host-stub");
+    expect(execute).toHaveBeenCalledOnce();
+    expect(
+      screen
+        .getAllByRole("heading", { level: 3 })
+        .map((heading) => heading.textContent),
+    ).toEqual([
+      "Livros da área de leitura",
+      "Filmes",
+      "Séries",
+      "Estudos",
+      "Atividades físicas",
+      "Trabalhos",
+    ]);
+    for (const entry of sixEntries) {
+      expect(screen.getByRole("link", { name: entry.title })).toHaveAttribute(
+        "href",
+        `/registros/${entry.id}?from=%2F%3Fq%3Dficticio`,
+      );
+    }
+    expect(
+      screen.queryByText("Ainda não há registros na Biblioteca"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("Eça de Queirós")).toBeVisible();
+  });
+
+  it("não considera a coleção vazia quando só há filme", async () => {
+    renderLibrary(Promise.resolve([sixEntries[1]]));
+    await screen.findByTestId("world-host-stub");
+    expect(screen.getByRole("heading", { name: "Filmes" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "Filme fictício" })).toBeVisible();
+    expect(
+      screen.getAllByText("Nenhum registro nesta categoria."),
+    ).toHaveLength(5);
+    expect(
+      screen.queryByText("Ainda não há registros na Biblioteca"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("seleciona entre tipos pelo catálogo real e rejeita identidade inválida", async () => {
+    const user = userEvent.setup();
+    renderLibrary(Promise.resolve(sixEntries));
+    const host = await screen.findByTestId("world-host-stub");
+    const catalog = [
+      { id: "reading-book:book-1", entryId: "book-1", label: "Livro" },
+      { id: "library-movie:movie-1", entryId: "movie-1", label: "Filme" },
+      { id: "library-series:series-1", entryId: "series-1", label: "Série" },
+    ];
+    act(() => {
+      worldHostProps().onSelectableObjectsChange?.(catalog);
+      worldHostProps().onStatusChange?.("ready");
+    });
+    expect(selectionButton("Filme fictício")).toBeVisible();
+    expect(
+      screen.queryByRole("button", { name: /Estudo fictício/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getAllByText("Fora da capacidade visual atual."),
+    ).toHaveLength(3);
+
+    await user.click(selectionButton("Filme fictício"));
+    expect(worldHostProps().selectedObjectId).toBe("library-movie:movie-1");
+    act(() =>
+      worldHostProps().onSelectionChange?.({ ...catalog[1], label: "Filme" }),
+    );
+    expect(
+      screen.getByText("Filme selecionado: Filme fictício."),
+    ).toBeVisible();
+    expect(selectionButton("Filme fictício")).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(
+      screen.getByRole("link", { name: "Abrir registro" }),
+    ).toHaveAttribute("href", "/registros/movie-1?from=%2F");
+
+    act(() =>
+      worldHostProps().onSelectionChange?.({ ...catalog[2], label: "Série" }),
+    );
+    expect(
+      screen.getByText("Série selecionada: Série fictícia."),
+    ).toBeVisible();
+    expect(selectionButton("Filme fictício")).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+    expect(selectionButton("Série fictícia")).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByTestId("world-host-stub")).toBe(host);
+
+    act(() =>
+      worldHostProps().onSelectionChange?.({
+        id: "library-movie:movie-1",
+        entryId: "work-1",
+        label: "Obsoleto",
+      }),
+    );
+    expect(
+      screen.queryByRole("link", { name: "Abrir registro" }),
+    ).not.toBeInTheDocument();
+    act(() =>
+      worldHostProps().onSelectionChange?.({
+        id: "reading-shelf-01",
+        label: "Estante",
+      }),
+    );
+    expect(
+      screen.queryByRole("link", { name: "Abrir registro" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("mantém abertura convencional após falha do ambiente sem rotular tudo como overflow", async () => {
+    renderLibrary(Promise.resolve(sixEntries));
+    await screen.findByTestId("world-host-stub");
+    act(() => {
+      worldHostProps().onSelectableObjectsChange?.([
+        { id: "library-movie:movie-1", entryId: "movie-1", label: "Filme" },
+      ]);
+      worldHostProps().onStatusChange?.("failed");
+    });
+    expect(
+      screen.getByRole("link", { name: "Trabalho fictício" }),
+    ).toHaveAttribute("href", "/registros/work-1?from=%2F");
+    expect(
+      screen.queryByRole("button", { name: /Selecionar no ambiente:/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Fora da capacidade visual atual."),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getAllByText("Representação visual indisponível."),
+    ).toHaveLength(6);
+  });
+
   it("trata falha da projeção sem publicar host ou vazio", async () => {
     renderLibrary(Promise.resolve([firstBook, firstBook]));
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -238,7 +414,7 @@ describe("Página Biblioteca", () => {
       screen.getAllByText("Fora da capacidade visual atual."),
     ).toHaveLength(1);
     expect(
-      screen.getAllByRole("button", { name: "Selecionar no ambiente" }),
+      screen.getAllByRole("button", { name: /Selecionar no ambiente:/ }),
     ).toHaveLength(1);
   });
 
@@ -257,9 +433,7 @@ describe("Página Biblioteca", () => {
       ]);
     });
 
-    await user.click(
-      screen.getByRole("button", { name: "Selecionar no ambiente" }),
-    );
+    await user.click(selectionButton(firstBook.title));
     expect(worldHostProps().selectedObjectId).toBe("reading-book:book-1");
     act(() => {
       worldHostProps().onSelectionChange?.({
@@ -275,9 +449,10 @@ describe("Página Biblioteca", () => {
     expect(
       screen.getByRole("link", { name: "Abrir registro" }),
     ).toHaveAttribute("href", "/registros/book-1?from=%2F");
-    expect(
-      screen.getByRole("button", { name: "Selecionar no ambiente" }),
-    ).toHaveAttribute("aria-pressed", "true");
+    expect(selectionButton(firstBook.title)).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
   });
 
   it("ressolicita um livro após seleção do canvas e sincroniza seleção técnica ou vazia", async () => {
@@ -301,7 +476,7 @@ describe("Página Biblioteca", () => {
     });
 
     const selectionButtons = screen.getAllByRole("button", {
-      name: "Selecionar no ambiente",
+      name: /Selecionar no ambiente:/,
     });
     await user.click(selectionButtons[0]);
     expect(worldHostProps().selectedObjectId).toBe("reading-book:book-1");
@@ -381,7 +556,7 @@ describe("Página Biblioteca", () => {
     );
 
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Carregando área de leitura…",
+      "Carregando Biblioteca…",
     );
     view.rerender(
       <MemoryRouter>
@@ -389,7 +564,7 @@ describe("Página Biblioteca", () => {
       </MemoryRouter>,
     );
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Carregando área de leitura…",
+      "Carregando Biblioteca…",
     );
     expect(screen.queryByText(firstBook.title)).not.toBeInTheDocument();
     expect(screen.queryByTestId("world-host-stub")).not.toBeInTheDocument();
@@ -403,6 +578,87 @@ describe("Página Biblioteca", () => {
     act(() => resolveBooks([firstBook]));
     expect(screen.getByRole("link", { name: secondBook.title })).toBeVisible();
     expect(screen.queryByText(firstBook.title)).not.toBeInTheDocument();
+  });
+
+  it("remonta ao voltar à mesma application sem reaproveitar snapshot ou seleção antigos", async () => {
+    let resolveReturn!: (entries: readonly LibraryEntry[]) => void;
+    const executeA = vi
+      .fn()
+      .mockResolvedValueOnce([firstBook])
+      .mockImplementationOnce(
+        () =>
+          new Promise<readonly LibraryEntry[]>((resolve) => {
+            resolveReturn = resolve;
+          }),
+      );
+    const applicationA: LibraryApplication = {
+      queries: { listLibraryEntries: { execute: executeA } },
+    };
+    const applicationB: LibraryApplication = {
+      queries: {
+        listLibraryEntries: {
+          execute: vi.fn(() => Promise.resolve([secondBook])),
+        },
+      },
+    };
+    const view = render(
+      <MemoryRouter>
+        <LibraryPage application={applicationA} />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("link", { name: firstBook.title });
+    const oldHostProps = worldHostProps();
+    act(() => {
+      oldHostProps.onSelectableObjectsChange?.([
+        {
+          id: "reading-book:book-1",
+          entryId: "book-1",
+          label: firstBook.title,
+        },
+      ]);
+      oldHostProps.onStatusChange?.("ready");
+      oldHostProps.onSelectionChange?.({
+        id: "reading-book:book-1",
+        entryId: "book-1",
+        label: firstBook.title,
+      });
+    });
+    view.rerender(
+      <MemoryRouter>
+        <LibraryPage application={applicationB} />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("link", { name: secondBook.title });
+    view.rerender(
+      <MemoryRouter>
+        <LibraryPage application={applicationA} />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Carregando Biblioteca…",
+    );
+    expect(
+      screen.queryByRole("link", { name: firstBook.title }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Abrir registro" }),
+    ).not.toBeInTheDocument();
+    expect(executeA).toHaveBeenCalledTimes(2);
+    act(() =>
+      oldHostProps.onSelectionChange?.({
+        id: "reading-book:book-1",
+        entryId: "book-1",
+        label: firstBook.title,
+      }),
+    );
+    await act(async () => {
+      resolveReturn([sixEntries[1]]);
+      await Promise.resolve();
+    });
+    expect(screen.getByRole("link", { name: "Filme fictício" })).toBeVisible();
+    expect(
+      screen.queryByRole("link", { name: "Abrir registro" }),
+    ).not.toBeInTheDocument();
   });
 
   it("limpa erro da application anterior enquanto a próxima consulta conclui", async () => {
@@ -443,7 +699,7 @@ describe("Página Biblioteca", () => {
       </MemoryRouter>,
     );
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Carregando área de leitura…",
+      "Carregando Biblioteca…",
     );
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
 

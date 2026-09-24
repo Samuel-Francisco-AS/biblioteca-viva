@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3E2 — Interface dos seis tipos e seleção bidirecional — 2026-09-24
+
+- Biblioteca organiza os seis tipos do snapshot E1 em listas semânticas, com título, tipo, link de abertura e indicação de representação; mantém autor e fluxo dos livros BF-2.
+- Seleção visual só é oferecida para instâncias do catálogo real com runtime pronto; canvas → React valida identidade contra catálogo e snapshot. Overflow mantém acesso convencional e falha 3D não é apresentada como overflow.
+- Detalhe e edição preservam a origem Biblioteca (`/`) para retorno; corrigida a perda da origem na edição dos cinco tipos não livro. E2E dirigido com dados fictícios comprova seis tipos, seleção React, abertura, edição e retorno.
+- Validação local: 10 arquivos/149 testes Vitest dirigidos, `reading-area` 5/5 E2E, `r4-shell` 6/6 E2E, format:check, lint, typecheck e build passaram. O aviso de chunks acima de 500 kB permanece. E3, auditoria independente, BF-3F, Android físico, TalkBack e avaliação visual integrada seguem pendentes.
+
 ### BF-3E1 — Consulta agregada e ponte React → runtime — 2026-09-23
 
 - Biblioteca consulta os seis tipos uma vez por montagem e entrega o snapshot neutro ao runtime normal; a lista, seleção, abertura e fallback dos livros permanecem disponíveis.

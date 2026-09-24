@@ -158,7 +158,11 @@ export function EntryDetailPage({
         <h2>Não foi possível abrir o registro</h2>
         <p>{error}</p>
         <Link className="text-link" to={returnPath}>
-          Voltar à Coleção
+          {returnPath.startsWith("/arquivo")
+            ? "Voltar ao Arquivo"
+            : returnPath.startsWith("/colecao")
+              ? "Voltar à Coleção"
+              : "Voltar à Biblioteca"}
         </Link>
       </section>
     );
@@ -261,7 +265,11 @@ export function EntryDetailPage({
   return (
     <section aria-labelledby="entry-title">
       <Link className="text-link" to={returnPath}>
-        Voltar à Coleção
+        {returnPath.startsWith("/arquivo")
+          ? "Voltar ao Arquivo"
+          : returnPath.startsWith("/colecao")
+            ? "Voltar à Coleção"
+            : "Voltar à Biblioteca"}
       </Link>
       <div className="section-heading">
         <div>
@@ -271,7 +279,7 @@ export function EntryDetailPage({
         </div>
         <Link
           className="button button--secondary"
-          to={`/registros/${encodeURIComponent(id)}/editar`}
+          to={`/registros/${encodeURIComponent(id)}/editar?from=${encodeURIComponent(returnPath)}`}
         >
           Editar
         </Link>

@@ -249,7 +249,9 @@ export function BookDetailPage({
         <Link className="text-link" to={returnPath}>
           {returnPath.startsWith("/arquivo")
             ? "Voltar ao Arquivo"
-            : "Voltar à Coleção"}
+            : returnPath.startsWith("/colecao")
+              ? "Voltar à Coleção"
+              : "Voltar à Biblioteca"}
         </Link>
       </section>
     );
@@ -360,7 +362,9 @@ export function BookDetailPage({
         <Link className="text-link" to={returnPath}>
           {returnPath.startsWith("/arquivo")
             ? "Voltar ao Arquivo"
-            : "Voltar à Coleção"}
+            : returnPath.startsWith("/colecao")
+              ? "Voltar à Coleção"
+              : "Voltar à Biblioteca"}
         </Link>
       </section>
 
