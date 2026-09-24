@@ -4,7 +4,14 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
 import { ApplicationError } from "./application";
-import type { BookEntry } from "./domain";
+import type { BookEntry, LibraryEntry } from "./domain";
+import {
+  createMovie,
+  createPhysicalActivity,
+  createSeries,
+  createStudy,
+  createWork,
+} from "./domain";
 import type { WorldHostProps } from "./features/library/WorldHost";
 import { LibraryPage, type LibraryApplication } from "./pages";
 
@@ -40,11 +47,11 @@ const secondBook: BookEntry = {
   title: "Memórias póstumas",
 };
 
-function renderLibrary(result: Promise<readonly BookEntry[]>, entry = "/") {
+function renderLibrary(result: Promise<readonly LibraryEntry[]>, entry = "/") {
   latestWorldHostProps = undefined;
   const execute = vi.fn(() => result);
   const application: LibraryApplication = {
-    queries: { listBookEntries: { execute } },
+    queries: { listLibraryEntries: { execute } },
   };
   render(
     <MemoryRouter initialEntries={[entry]}>
@@ -100,7 +107,9 @@ describe("Página Biblioteca", () => {
     renderLibrary(Promise.resolve([]));
 
     await screen.findByTestId("world-host-stub");
-    expect(worldHostProps().readingAreaBooks).toEqual([]);
+    expect(
+      worldHostProps().libraryWorldSnapshot?.categories[0].entries,
+    ).toEqual([]);
     expect(
       screen.getByRole("heading", {
         name: "Ainda não há livros na área de leitura",
@@ -116,7 +125,9 @@ describe("Página Biblioteca", () => {
     const execute = renderLibrary(Promise.resolve([firstBook]), "/");
 
     await screen.findByTestId("world-host-stub");
-    expect(worldHostProps().readingAreaBooks).toEqual([
+    expect(
+      worldHostProps().libraryWorldSnapshot?.categories[0].entries,
+    ).toEqual([
       expect.objectContaining({
         author: firstBook.author,
         entryId: firstBook.id,
@@ -132,6 +143,72 @@ describe("Página Biblioteca", () => {
     );
     expect(screen.getByText(firstBook.author ?? "")).toBeVisible();
     expect(execute).toHaveBeenCalledOnce();
+  });
+
+  it("consulta os seis tipos uma vez e entrega o snapshot composto ordenado", async () => {
+    const entries: LibraryEntry[] = [
+      createWork({
+        createdAt: firstBook.createdAt,
+        id: "work-1",
+        title: "Trabalho fictício",
+      }),
+      createPhysicalActivity({
+        createdAt: firstBook.createdAt,
+        id: "activity-1",
+        title: "Atividade fictícia",
+        category: "cardio",
+      }),
+      createStudy({
+        createdAt: firstBook.createdAt,
+        id: "study-1",
+        title: "Estudo fictício",
+        progressUnit: "modules",
+        progressCurrent: 1,
+      }),
+      createSeries({
+        createdAt: firstBook.createdAt,
+        id: "series-1",
+        title: "Série fictícia",
+        episodesWatched: 2,
+      }),
+      createMovie({
+        createdAt: firstBook.createdAt,
+        id: "movie-1",
+        title: "Filme fictício",
+      }),
+      firstBook,
+    ];
+    const execute = renderLibrary(Promise.resolve(entries));
+    await screen.findByTestId("world-host-stub");
+    const world = worldHostProps().libraryWorldSnapshot;
+    expect(execute).toHaveBeenCalledOnce();
+    expect(world?.categories.map(({ type }) => type)).toEqual([
+      "book",
+      "movie",
+      "series",
+      "study",
+      "physical_activity",
+      "work",
+    ]);
+    expect(
+      world?.categories.map(
+        ({ entries: categoryEntries }) => categoryEntries.length,
+      ),
+    ).toEqual([1, 1, 1, 1, 1, 1]);
+    expect(world?.categories[0].entries[0]?.entryId).toBe(firstBook.id);
+    expect(world?.categories[1].entries[0]?.instanceId).toBe(
+      "library-movie:movie-1",
+    );
+    expect(Object.isFrozen(world)).toBe(true);
+    expect(worldHostProps().readingAreaBooks).toBeUndefined();
+  });
+
+  it("trata falha da projeção sem publicar host ou vazio", async () => {
+    renderLibrary(Promise.resolve([firstBook, firstBook]));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Algo inesperado aconteceu",
+    );
+    expect(screen.queryByTestId("world-host-stub")).not.toBeInTheDocument();
   });
 
   it("mantém overflow acessível sem oferecer seleção visual inexistente", async () => {
@@ -283,16 +360,16 @@ describe("Página Biblioteca", () => {
   });
 
   it("troca de application sem vazar snapshot, erro, catálogo ou seleção", async () => {
-    let resolveBooks!: (books: readonly BookEntry[]) => void;
-    const pendingBooks = new Promise<readonly BookEntry[]>((resolve) => {
+    let resolveBooks!: (books: readonly LibraryEntry[]) => void;
+    const pendingBooks = new Promise<readonly LibraryEntry[]>((resolve) => {
       resolveBooks = resolve;
     });
     const applicationA: LibraryApplication = {
-      queries: { listBookEntries: { execute: vi.fn(() => pendingBooks) } },
+      queries: { listLibraryEntries: { execute: vi.fn(() => pendingBooks) } },
     };
     const applicationB: LibraryApplication = {
       queries: {
-        listBookEntries: {
+        listLibraryEntries: {
           execute: vi.fn(() => Promise.resolve([secondBook])),
         },
       },
@@ -319,9 +396,9 @@ describe("Página Biblioteca", () => {
 
     await screen.findByRole("link", { name: secondBook.title });
     expect(screen.queryByText(firstBook.title)).not.toBeInTheDocument();
-    expect(worldHostProps().readingAreaBooks).toEqual([
-      expect.objectContaining({ entryId: secondBook.id }),
-    ]);
+    expect(
+      worldHostProps().libraryWorldSnapshot?.categories[0].entries,
+    ).toEqual([expect.objectContaining({ entryId: secondBook.id })]);
 
     act(() => resolveBooks([firstBook]));
     expect(screen.getByRole("link", { name: secondBook.title })).toBeVisible();
@@ -331,7 +408,7 @@ describe("Página Biblioteca", () => {
   it("limpa erro da application anterior enquanto a próxima consulta conclui", async () => {
     const applicationA: LibraryApplication = {
       queries: {
-        listBookEntries: {
+        listLibraryEntries: {
           execute: vi.fn(() =>
             Promise.reject(
               new ApplicationError("PERSISTENCE_FAILED", "detalhe interno"),
@@ -340,13 +417,13 @@ describe("Página Biblioteca", () => {
         },
       },
     };
-    let resolveBooks!: (books: readonly BookEntry[]) => void;
+    let resolveBooks!: (books: readonly LibraryEntry[]) => void;
     const applicationB: LibraryApplication = {
       queries: {
-        listBookEntries: {
+        listLibraryEntries: {
           execute: vi.fn(
             () =>
-              new Promise<readonly BookEntry[]>((resolve) => {
+              new Promise<readonly LibraryEntry[]>((resolve) => {
                 resolveBooks = resolve;
               }),
           ),
@@ -375,5 +452,47 @@ describe("Página Biblioteca", () => {
       await screen.findByRole("link", { name: secondBook.title }),
     ).toBeVisible();
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("descarta erro tardio da application anterior", async () => {
+    let rejectPrevious!: (reason: Error) => void;
+    const applicationA: LibraryApplication = {
+      queries: {
+        listLibraryEntries: {
+          execute: vi.fn(
+            () =>
+              new Promise<readonly LibraryEntry[]>((_resolve, reject) => {
+                rejectPrevious = reject;
+              }),
+          ),
+        },
+      },
+    };
+    const applicationB: LibraryApplication = {
+      queries: {
+        listLibraryEntries: {
+          execute: vi.fn(() => Promise.resolve([secondBook])),
+        },
+      },
+    };
+    const view = render(
+      <MemoryRouter>
+        <LibraryPage application={applicationA} />
+      </MemoryRouter>,
+    );
+    view.rerender(
+      <MemoryRouter>
+        <LibraryPage application={applicationB} />
+      </MemoryRouter>,
+    );
+    await screen.findByRole("link", { name: secondBook.title });
+    await act(async () => {
+      rejectPrevious(new Error("erro anterior"));
+      await Promise.resolve();
+    });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(
+      worldHostProps().libraryWorldSnapshot?.categories[0].entries[0]?.entryId,
+    ).toBe(secondBook.id);
   });
 });

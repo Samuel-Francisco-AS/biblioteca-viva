@@ -4,6 +4,11 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3E1 — Consulta agregada e ponte React → runtime — 2026-09-23
+
+- Biblioteca consulta os seis tipos uma vez por montagem e entrega o snapshot neutro ao runtime normal; a lista, seleção, abertura e fallback dos livros permanecem disponíveis.
+- Gate local: 6 arquivos/93 testes dirigidos, 78 arquivos/630 testes Vitest, format:check, lint, typecheck e build passaram; o aviso de chunks acima de 500 kB permanece. E2/E3 e as validações humanas continuam pendentes.
+
 ### BF-3D3 — Robustez e fechamento técnico da D — 2026-09-23
 
 - testes dirigidos consolidam rollback da composição, falha após criar edifício e registros, attach parcial da interação, falha WebGL terminal, descarte repetido, isolamento de montagens, seleção obsoleta, callbacks tardios, 13 registros, 70 livros, três estantes, overflow, caminho legado e F5; a prova pós-auditoria D2 de picking BF-2 no mundo composto integra a regressão;

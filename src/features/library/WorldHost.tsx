@@ -9,6 +9,7 @@ import type {
   WorldSelection,
 } from "./worldRuntime";
 import type { ReadingAreaBook } from "./readingAreaBookContract";
+import type { LibraryWorldSnapshot } from "./libraryWorldEntryContract";
 import type { PerformanceScenario } from "./three/performanceScenarios";
 
 export type WorldHostStatus = "initializing" | "ready" | "failed";
@@ -43,12 +44,19 @@ function metric(value: number | null, suffix = ""): string {
 
 const createRuntime = async (
   readingAreaBooks: readonly ReadingAreaBook[] | undefined,
+  libraryWorldSnapshot: LibraryWorldSnapshot | undefined,
 ): Promise<WorldRuntime> => {
+  if (libraryWorldSnapshot && readingAreaBooks) {
+    throw new Error("Use somente um snapshot BF por montagem.");
+  }
   const { createThreeWorldRuntime } = await import("./three/ThreeWorldRuntime");
-  return createThreeWorldRuntime({ readingAreaBooks });
+  return createThreeWorldRuntime(
+    libraryWorldSnapshot ? { libraryWorldSnapshot } : { readingAreaBooks },
+  );
 };
 
 export interface WorldHostProps {
+  readonly libraryWorldSnapshot?: LibraryWorldSnapshot;
   readonly onSelectableObjectsChange?: (
     objects: readonly WorldSelectableObject[],
   ) => void;
@@ -85,6 +93,7 @@ function adjacentSelectionId(
 }
 
 export function WorldHost({
+  libraryWorldSnapshot,
   onSelectableObjectsChange,
   onSelectionChange,
   onStatusChange,
@@ -160,7 +169,7 @@ export function WorldHost({
               await import("./three/ThreeWorldRuntime");
             return createThreeWorldRuntime({ performanceScenario });
           }
-        : () => createRuntime(readingAreaBooks));
+        : () => createRuntime(readingAreaBooks, libraryWorldSnapshot));
 
     void effectiveRuntimeFactory()
       .then((createdRuntime) => {
@@ -225,7 +234,12 @@ export function WorldHost({
       runtime = undefined;
       runtimeRef.current = null;
     };
-  }, [performanceScenario, readingAreaBooks, runtimeFactory]);
+  }, [
+    performanceScenario,
+    readingAreaBooks,
+    libraryWorldSnapshot,
+    runtimeFactory,
+  ]);
 
   useEffect(() => {
     if (selectedObjectId === undefined || status !== "ready") return;

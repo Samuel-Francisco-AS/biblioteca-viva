@@ -41,7 +41,7 @@
 
 ## Próximo trabalho
 
-**BF-3E é o próximo checkpoint.** Conectar uma consulta agregada dos seis tipos à superfície React convencional e ao snapshot composto, preservando o runtime neutro e o isolamento F5. BF-3F permanece responsável pelo gate integrado e físico dirigido. A validação visual integrada, a dívida de bounds F3/oclusão, Android físico e TalkBack seguem abertas; a aprovação C3 da planta provisória não as encerra. BF-4 e P3D-B2–F continuam adiados.
+**BF-3E1 está concluída no escopo operacional local.** A Biblioteca consulta os seis tipos uma vez por montagem vigente, projeta o snapshot neutro e o entrega pelo `WorldHost` ao runtime normal. A lista e os controles React dos livros BF-2 permanecem; E2 implementará a superfície funcional dos seis tipos e E3 consolidará o gate. BF-3F permanece responsável pelo gate integrado e físico dirigido. A validação visual integrada, a dívida de bounds F3/oclusão, Android físico e TalkBack seguem abertas; a aprovação C3 da planta provisória não as encerra. BF-4 e P3D-B2–F continuam adiados.
 
 **Evidência separada:** D1 aprovou montagem e ownership após auditorias independentes e CI; D2 aprovou catálogo, picking e seleção e recebeu prova adicional dirigida do canvas BF-2 após auditoria; D3 corrigiu o attach parcial de listeners e concluiu a regressão consolidada local. A auditoria independente da D3 por Luna ainda ocorrerá após publicação externa do trabalho. Nenhuma evidência D3 representa PASS humano visual, ergonomia, FPS físico, Android ou TalkBack.
 
@@ -113,5 +113,8 @@ BF-3 ⏳ CONTRATO, PROJEÇÃO, C E D CONCLUÍDOS; E/F PENDENTES
     BF-3D2 ✅ catálogo, picking e seleção — PASS TÉCNICO LOCAL
     BF-3D3 ✅ robustez, regressão e fechamento — PASS TÉCNICO LOCAL
   BF-3E ⏳ React/aplicação e fluxo funcional
+    BF-3E1 ✅ consulta agregada e ponte React → runtime — escopo operacional local
+    BF-3E2 ⏳ interface funcional dos seis tipos
+    BF-3E3 ⏳ gate consolidado da E
   BF-3F ⏳ gate integrado, físico dirigido e fechamento
 ```

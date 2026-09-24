@@ -1,13 +1,13 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import type { BookEntry } from "./domain";
+import type { LibraryEntry } from "./domain";
 import { presentApplicationError } from "./features/entry-editor/errorMessages";
 import { WorldHost, type WorldHostStatus } from "./features/library/WorldHost";
 import {
-  projectReadingAreaBooks,
-  type ReadingAreaBook,
-} from "./features/library/readingAreaBooks";
+  projectLibraryWorldEntries,
+  type LibraryWorldSnapshot,
+} from "./features/library/libraryWorldEntries";
 import type {
   WorldSelectableObject,
   WorldSelection,
@@ -26,15 +26,15 @@ const PerformanceScenarioHarness = diagnosticsBuildEnabled
 
 export interface LibraryApplication {
   readonly queries: {
-    readonly listBookEntries: {
-      execute(): Promise<readonly BookEntry[]>;
+    readonly listLibraryEntries: {
+      execute(): Promise<readonly LibraryEntry[]>;
     };
   };
 }
 
-interface ReadingAreaSnapshot {
+interface LibraryPageSnapshot {
   readonly application: LibraryApplication;
-  readonly books?: readonly ReadingAreaBook[];
+  readonly world?: LibraryWorldSnapshot;
   readonly error?: string;
 }
 
@@ -58,7 +58,7 @@ export function LibraryPage({
   );
   const diagnosticsActive = diagnosticsEnabled && PerformanceScenarioHarness;
   const location = useLocation();
-  const [snapshot, setSnapshot] = useState<ReadingAreaSnapshot>();
+  const [snapshot, setSnapshot] = useState<LibraryPageSnapshot>();
   const [selectableObjectsState, setSelectableObjectsState] =
     useState<ApplicationBound<readonly WorldSelectableObject[]>>();
   const [selectionState, setSelectionState] =
@@ -72,7 +72,8 @@ export function LibraryPage({
   // or selected entry to the next one during the render before its effect runs.
   const currentSnapshot =
     snapshot?.application === application ? snapshot : undefined;
-  const readingAreaBooks = currentSnapshot?.books;
+  const libraryWorldSnapshot = currentSnapshot?.world;
+  const readingAreaBooks = libraryWorldSnapshot?.categories[0].entries;
   const error = currentSnapshot?.error;
   const selectableObjects =
     application && selectableObjectsState?.application === application
@@ -113,29 +114,23 @@ export function LibraryPage({
   useEffect(() => {
     if (!application || diagnosticsActive) return;
     let active = true;
-    void application.queries.listBookEntries.execute().then(
-      (entries) => {
+    const loadSnapshot = async (): Promise<void> => {
+      try {
+        const entries = await application.queries.listLibraryEntries.execute();
         if (!active) return;
-        try {
-          setSnapshot({
-            application,
-            books: Object.freeze([...projectReadingAreaBooks(entries)]),
-          });
-        } catch (failure: unknown) {
-          setSnapshot({
-            application,
-            error: presentApplicationError(failure).message,
-          });
-        }
-      },
-      (failure: unknown) => {
+        setSnapshot({
+          application,
+          world: projectLibraryWorldEntries(entries),
+        });
+      } catch (failure: unknown) {
         if (!active) return;
         setSnapshot({
           application,
           error: presentApplicationError(failure).message,
         });
-      },
-    );
+      }
+    };
+    void loadSnapshot();
     return () => {
       active = false;
     };
@@ -183,10 +178,10 @@ export function LibraryPage({
       ) : (
         <>
           <WorldHost
+            libraryWorldSnapshot={libraryWorldSnapshot}
             onSelectableObjectsChange={handleSelectableObjects}
             onSelectionChange={handleWorldSelection}
             onStatusChange={handleWorldStatus}
-            readingAreaBooks={readingAreaBooks}
             selectedObjectId={requestedSelectionId}
           />
           {worldStatus === "ready" && (

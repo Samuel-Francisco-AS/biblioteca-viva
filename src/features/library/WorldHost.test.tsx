@@ -13,6 +13,7 @@ import type {
   WorldSelectionListener,
 } from "./worldRuntime";
 import { WorldHost } from "./WorldHost";
+import { projectLibraryWorldEntries } from "./libraryWorldEntries";
 
 const { createThreeWorldRuntime } = vi.hoisted(() => ({
   createThreeWorldRuntime: vi.fn(),
@@ -473,6 +474,48 @@ describe("WorldHost", () => {
     await waitFor(() => expect(explicitRuntime.mount).toHaveBeenCalledOnce());
     expect(runtimeFactory).toHaveBeenCalledOnce();
     expect(createThreeWorldRuntime).toHaveBeenCalledOnce();
+  });
+
+  it("entrega o snapshot composto sem remount por seleção e preserva o caminho F5", async () => {
+    createThreeWorldRuntime.mockClear();
+    const snapshot = projectLibraryWorldEntries([]);
+    const runtime = createRuntime();
+    createThreeWorldRuntime.mockResolvedValue(runtime);
+    const view = render(<WorldHost libraryWorldSnapshot={snapshot} />);
+    await screen.findByText("Ambiente 3D em execução.");
+    expect(createThreeWorldRuntime).toHaveBeenCalledWith({
+      libraryWorldSnapshot: snapshot,
+    });
+    view.rerender(
+      <WorldHost
+        libraryWorldSnapshot={snapshot}
+        selectedObjectId="reading-shelf-01"
+      />,
+    );
+    expect(runtime.selectObject).toHaveBeenCalledWith("reading-shelf-01");
+    expect(createThreeWorldRuntime).toHaveBeenCalledOnce();
+
+    const diagnosticRuntime = createRuntime();
+    createThreeWorldRuntime.mockResolvedValueOnce(diagnosticRuntime);
+    const performanceScenario = {
+      id: "f1-baseline" as const,
+      label: "Diagnóstico",
+      description: "Fixture",
+      assets: [],
+    };
+    view.rerender(
+      <WorldHost
+        libraryWorldSnapshot={snapshot}
+        performanceScenario={performanceScenario}
+      />,
+    );
+    await waitFor(() => expect(diagnosticRuntime.mount).toHaveBeenCalledOnce());
+    expect(createThreeWorldRuntime).toHaveBeenLastCalledWith({
+      performanceScenario,
+    });
+    expect(runtime.dispose).toHaveBeenCalledOnce();
+    view.unmount();
+    expect(diagnosticRuntime.dispose).toHaveBeenCalledOnce();
   });
 
   it("encaminha seleção externa sem remontar o runtime", async () => {
