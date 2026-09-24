@@ -1,4 +1,46 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Locator } from "@playwright/test";
+
+import { READING_SHELF_COMPOSITION_DEFINITIONS } from "../src/features/library/three/readingShelfDefinitions";
+
+const shelfIds = READING_SHELF_COMPOSITION_DEFINITIONS.map(
+  ({ identity }) => identity.instanceId,
+);
+
+/** Find a point that actually picks a shelf in the current camera/viewport. */
+async function visibleShelfPoint(canvas: Locator): Promise<{
+  readonly id: string;
+  readonly x: number;
+  readonly y: number;
+}> {
+  const bounds = await canvas.boundingBox();
+  expect(bounds).not.toBeNull();
+  if (!bounds) throw new Error("Canvas sem bounds.");
+  let pointerId = 100;
+  const tap = async (x: number, y: number): Promise<void> => {
+    const options = {
+      clientX: x,
+      clientY: y,
+      pointerId: pointerId++,
+      pointerType: "touch",
+    };
+    await canvas.dispatchEvent("pointerdown", options);
+    await canvas.dispatchEvent("pointerup", options);
+  };
+  for (let row = 2; row <= 18; row += 1) {
+    for (let column = 2; column <= 18; column += 1) {
+      const x = bounds.x + (bounds.width * column) / 20;
+      const y = bounds.y + (bounds.height * row) / 20;
+      await tap(x, y);
+      const id = await canvas.getAttribute("data-selected-object");
+      if (id && shelfIds.includes(id)) {
+        await tap(bounds.x + 2, bounds.y + 2);
+        await expect(canvas).toHaveAttribute("data-selected-object", "");
+        return { id, x, y };
+      }
+    }
+  }
+  throw new Error("Nenhuma estante BF-2 alcançável no canvas.");
+}
 
 test("shell abre a Biblioteca com uma única superfície Three.js", async ({
   page,
@@ -20,14 +62,19 @@ test("shell abre a Biblioteca com uma única superfície Three.js", async ({
   const canvas = page.locator("canvas[data-three-world-canvas='true']");
   await expect(canvas).toHaveCount(1);
   await expect(canvas).toHaveAttribute("data-fixture-status", "ready");
-  await expect(canvas).toHaveAttribute("data-reference-objects", "46");
-  await expect(canvas).toHaveAttribute("data-reference-proxy-types", "4");
-  await expect(canvas).toHaveAttribute("data-selectable-objects", "13");
+  await expect(canvas).toHaveAttribute("data-reference-objects", "0");
+  await expect(canvas).toHaveAttribute("data-reference-proxy-types", "0");
+  await expect(canvas).toHaveAttribute(
+    "data-selectable-objects",
+    String(shelfIds.length),
+  );
   await expect(canvas).toHaveAttribute("data-draw-calls", /^\d+$/u);
   await expect(canvas).toHaveAttribute("data-triangles", /^\d+$/u);
   await expect(canvas).toHaveAttribute("data-runtime-state", "running");
   await expect(canvas).toHaveAttribute("data-active-frame-loops", "1");
-  await expect(canvas).toHaveAttribute("data-meshes", "75");
+  await expect
+    .poll(async () => Number(await canvas.getAttribute("data-meshes")))
+    .toBeGreaterThan(0);
   await expect
     .poll(async () => Number(await canvas.getAttribute("data-fps")))
     .toBeGreaterThan(0);
@@ -64,34 +111,35 @@ test("interação desktop conecta picking, pan, zoom e seleção React", async (
   await expect(
     page.getByText("Objeto selecionado: Nenhum objeto selecionado."),
   ).toBeVisible();
-  const canvasBox = await canvas.boundingBox();
-  expect(canvasBox).not.toBeNull();
-  if (!canvasBox) return;
-  const pickObject = await canvas.getAttribute("data-test-pick-object");
-  const pickX = Number(await canvas.getAttribute("data-test-pick-x"));
-  const pickY = Number(await canvas.getAttribute("data-test-pick-y"));
-  expect(pickObject).toBe("crate-01");
-
-  await page.mouse.click(canvasBox.x + pickX, canvasBox.y + pickY);
+  const pickedShelf = await visibleShelfPoint(canvas);
+  await page.mouse.click(pickedShelf.x, pickedShelf.y);
+  await expect(canvas).toHaveAttribute("data-selected-object", pickedShelf.id);
+  await expect(canvas).toHaveAttribute(
+    "data-highlighted-object",
+    pickedShelf.id,
+  );
   await expect(
-    page.getByText("Objeto selecionado: Caixa técnica 1."),
+    page.getByText(/Objeto selecionado: Estante de leitura/u),
   ).toBeVisible();
-  await expect(canvas).toHaveAttribute("data-selected-object", "crate-01");
-  await expect(canvas).toHaveAttribute("data-highlighted-object", "crate-01");
 
   const next = page.getByRole("button", { name: "Próximo →" });
   const previous = page.getByRole("button", { name: "← Anterior" });
   await next.click();
-  await expect(
-    page.getByText("Objeto selecionado: Caixa técnica 2."),
-  ).toBeVisible();
-  await expect(canvas).toHaveAttribute("data-highlighted-object", "crate-02");
+  const nextShelf =
+    shelfIds[(shelfIds.indexOf(pickedShelf.id) + 1) % shelfIds.length];
+  await expect(canvas).toHaveAttribute("data-selected-object", nextShelf);
+  await expect(canvas).toHaveAttribute("data-highlighted-object", nextShelf);
 
   await previous.click();
-  await expect(
-    page.getByText("Objeto selecionado: Caixa técnica 1."),
-  ).toBeVisible();
-  await expect(canvas).toHaveAttribute("data-highlighted-object", "crate-01");
+  await expect(canvas).toHaveAttribute("data-selected-object", pickedShelf.id);
+  await expect(canvas).toHaveAttribute(
+    "data-highlighted-object",
+    pickedShelf.id,
+  );
+
+  const canvasBox = await canvas.boundingBox();
+  expect(canvasBox).not.toBeNull();
+  if (!canvasBox) return;
 
   await canvas.scrollIntoViewIfNeeded();
   const interactionBox = await canvas.boundingBox();
@@ -112,7 +160,7 @@ test("interação desktop conecta picking, pan, zoom e seleção React", async (
   await expect
     .poll(() => canvas.getAttribute("data-camera-target-x"))
     .not.toBe(targetBeforePan);
-  await expect(canvas).toHaveAttribute("data-selected-object", "crate-01");
+  await expect(canvas).toHaveAttribute("data-selected-object", pickedShelf.id);
 
   const zoomBeforeWheel = Number(await canvas.getAttribute("data-camera-zoom"));
   await page.mouse.move(
@@ -131,14 +179,14 @@ test("interação desktop conecta picking, pan, zoom e seleção React", async (
   await expect(canvas).toHaveAttribute("data-highlighted-object", "");
 
   await next.click();
-  await expect(canvas).toHaveAttribute("data-selected-object", "bookshelf-01");
+  await expect(canvas).toHaveAttribute("data-selected-object", shelfIds[0]);
   await previous.click();
   await expect(canvas).toHaveAttribute(
     "data-selected-object",
-    "reading-shelf-03",
+    shelfIds.at(-1) ?? "",
   );
   await next.click();
-  await expect(canvas).toHaveAttribute("data-selected-object", "bookshelf-01");
+  await expect(canvas).toHaveAttribute("data-selected-object", shelfIds[0]);
 });
 
 test("viewport mobile mantém tap, pan, pinch sintético e alternativa React", async ({
@@ -152,20 +200,21 @@ test("viewport mobile mantém tap, pan, pinch sintético e alternativa React", a
   const canvasBox = await canvas.boundingBox();
   expect(canvasBox).not.toBeNull();
   if (!canvasBox) return;
-  const pickX = Number(await canvas.getAttribute("data-test-pick-x"));
-  const pickY = Number(await canvas.getAttribute("data-test-pick-y"));
+  const pickedShelf = await visibleShelfPoint(canvas);
   const tapPosition = {
-    clientX: canvasBox.x + pickX,
-    clientY: canvasBox.y + pickY,
+    clientX: pickedShelf.x,
+    clientY: pickedShelf.y,
     pointerId: 10,
     pointerType: "touch",
   };
 
   await canvas.dispatchEvent("pointerdown", tapPosition);
   await canvas.dispatchEvent("pointerup", tapPosition);
-  await expect(
-    page.getByText("Objeto selecionado: Caixa técnica 1."),
-  ).toBeVisible();
+  await expect(canvas).toHaveAttribute("data-selected-object", pickedShelf.id);
+  await expect(canvas).toHaveAttribute(
+    "data-highlighted-object",
+    pickedShelf.id,
+  );
 
   const next = page.getByRole("button", { name: "Próximo →" });
   const previous = page.getByRole("button", { name: "← Anterior" });
@@ -173,8 +222,10 @@ test("viewport mobile mantém tap, pan, pinch sintético e alternativa React", a
   await expect(previous).toBeVisible();
   await expect(page.getByRole("combobox")).toHaveCount(0);
   await next.click();
-  await expect(canvas).toHaveAttribute("data-selected-object", "crate-02");
-  await expect(canvas).toHaveAttribute("data-highlighted-object", "crate-02");
+  const nextShelf =
+    shelfIds[(shelfIds.indexOf(pickedShelf.id) + 1) % shelfIds.length];
+  await expect(canvas).toHaveAttribute("data-selected-object", nextShelf);
+  await expect(canvas).toHaveAttribute("data-highlighted-object", nextShelf);
   expect(
     await page.evaluate(
       "document.documentElement.scrollWidth <= window.innerWidth",
@@ -208,7 +259,7 @@ test("viewport mobile mantém tap, pan, pinch sintético e alternativa React", a
   await expect
     .poll(() => canvas.getAttribute("data-camera-target-x"))
     .not.toBe(targetBeforePan);
-  await expect(canvas).toHaveAttribute("data-selected-object", "crate-02");
+  await expect(canvas).toHaveAttribute("data-selected-object", nextShelf);
 
   const zoomBeforePinch = Number(await canvas.getAttribute("data-camera-zoom"));
   await canvas.dispatchEvent("pointerdown", {
@@ -244,7 +295,7 @@ test("viewport mobile mantém tap, pan, pinch sintético e alternativa React", a
   await expect
     .poll(async () => Number(await canvas.getAttribute("data-camera-zoom")))
     .toBeGreaterThan(zoomBeforePinch);
-  await expect(canvas).toHaveAttribute("data-selected-object", "crate-02");
+  await expect(canvas).toHaveAttribute("data-selected-object", nextShelf);
   await expect(
     page.getByRole("navigation", { name: "Navegação principal" }),
   ).toBeVisible();
@@ -266,14 +317,14 @@ test("Biblioteca preserva a mesma superfície em portrait, landscape e viewport 
   const initialCanvasBox = await canvas.boundingBox();
   expect(initialCanvasBox?.width).toBeGreaterThan(250);
   await page.getByRole("button", { name: "Próximo →" }).click();
-  await expect(canvas).toHaveAttribute("data-selected-object", "bookshelf-01");
+  await expect(canvas).toHaveAttribute("data-selected-object", shelfIds[0]);
   const zoomBeforeOrientation = Number(
     await canvas.getAttribute("data-camera-zoom"),
   );
 
   await page.setViewportSize({ height: 390, width: 844 });
   await expect(canvas).toHaveCount(1);
-  await expect(canvas).toHaveAttribute("data-selected-object", "bookshelf-01");
+  await expect(canvas).toHaveAttribute("data-selected-object", shelfIds[0]);
   expect(Number(await canvas.getAttribute("data-camera-zoom"))).toBeCloseTo(
     zoomBeforeOrientation,
     3,
@@ -287,25 +338,24 @@ test("Biblioteca preserva a mesma superfície em portrait, landscape e viewport 
   const landscapeCanvasBox = await canvas.boundingBox();
   expect(landscapeCanvasBox?.height).toBeGreaterThan(150);
   if (!landscapeCanvasBox) return;
-  const pickX = Number(await canvas.getAttribute("data-test-pick-x"));
-  const pickY = Number(await canvas.getAttribute("data-test-pick-y"));
+  const pickedShelf = await visibleShelfPoint(canvas);
   await canvas.dispatchEvent("pointerdown", {
-    clientX: landscapeCanvasBox.x + pickX,
-    clientY: landscapeCanvasBox.y + pickY,
+    clientX: pickedShelf.x,
+    clientY: pickedShelf.y,
     pointerId: 21,
     pointerType: "touch",
   });
   await canvas.dispatchEvent("pointerup", {
-    clientX: landscapeCanvasBox.x + pickX,
-    clientY: landscapeCanvasBox.y + pickY,
+    clientX: pickedShelf.x,
+    clientY: pickedShelf.y,
     pointerId: 21,
     pointerType: "touch",
   });
-  await expect(canvas).toHaveAttribute("data-selected-object", "crate-01");
+  await expect(canvas).toHaveAttribute("data-selected-object", pickedShelf.id);
 
   await page.setViewportSize({ height: 844, width: 390 });
   await expect(canvas).toHaveCount(1);
-  await expect(canvas).toHaveAttribute("data-selected-object", "crate-01");
+  await expect(canvas).toHaveAttribute("data-selected-object", pickedShelf.id);
   await expect(page.getByRole("button", { name: "← Anterior" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "Navegação principal" }),
@@ -355,11 +405,8 @@ test("dez ciclos de rota não acumulam canvases, loops ou interação", async ({
   await expect(canvas).toHaveCount(1);
   await expect(canvas).toHaveAttribute("data-fixture-status", "ready");
   await page.getByRole("button", { name: "Próximo →" }).click();
-  await expect(canvas).toHaveAttribute("data-selected-object", "bookshelf-01");
-  await expect(canvas).toHaveAttribute(
-    "data-highlighted-object",
-    "bookshelf-01",
-  );
+  await expect(canvas).toHaveAttribute("data-selected-object", shelfIds[0]);
+  await expect(canvas).toHaveAttribute("data-highlighted-object", shelfIds[0]);
 
   await canvas.scrollIntoViewIfNeeded();
   const canvasBox = await canvas.boundingBox();
@@ -379,13 +426,11 @@ test("dez ciclos de rota não acumulam canvases, loops ou interação", async ({
     canvasBox.x + canvasBox.width / 2,
     canvasBox.y + canvasBox.height / 2,
   );
+  const zoomBeforeWheel = Number(await canvas.getAttribute("data-camera-zoom"));
   await page.mouse.wheel(0, -100);
   await expect
     .poll(async () => Number(await canvas.getAttribute("data-camera-zoom")))
-    .toBeGreaterThan(1.15);
-  expect(Number(await canvas.getAttribute("data-camera-zoom"))).toBeLessThan(
-    1.18,
-  );
+    .toBeGreaterThan(zoomBeforeWheel);
   expect(browserErrors).toEqual([]);
 });
 

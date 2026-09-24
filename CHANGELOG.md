@@ -8,6 +8,8 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 - Biblioteca consulta os seis tipos uma vez por montagem e entrega o snapshot neutro ao runtime normal; a lista, seleção, abertura e fallback dos livros permanecem disponíveis.
 - Gate local: 6 arquivos/93 testes dirigidos, 78 arquivos/630 testes Vitest, format:check, lint, typecheck e build passaram; o aviso de chunks acima de 500 kB permanece. E2/E3 e as validações humanas continuam pendentes.
+- Correção pós-auditoria: os E2E `r4-shell` agora verificam a rota composta vazia, catálogo das três estantes e um ponto de picking realmente alcançável na viewport, mantendo seleção, highlight, gestos, orientação e dez remontagens. O teste `p1-memory` passou isolado após a falha oscilante observada na CI remota; sessões e persistência não foram alteradas.
+- Revalidação local da correção: `r4-shell` 6/6, `p1-memory` isolado 1/1, E2E completo 17/17, format:check, lint e typecheck passaram. A nova CI remota e a microauditoria do diff ainda dependem de publicação externa.
 
 ### BF-3D3 — Robustez e fechamento técnico da D — 2026-09-23
 
