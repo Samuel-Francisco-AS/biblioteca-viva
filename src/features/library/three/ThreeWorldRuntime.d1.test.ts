@@ -175,7 +175,7 @@ afterEach(() => {
   document.body.replaceChildren();
 });
 
-describe("BF-3D1/D2: montagem, catálogo e seleção", () => {
+describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
   it("anexa edifício e 13 wrappers, conserva 70 livros e não materializa overflow nem fixture F1", () => {
     vi.stubGlobal("ResizeObserver", TestResizeObserver);
     const source = snapshot();
@@ -686,5 +686,121 @@ describe("BF-3D1/D2: montagem, catálogo e seleção", () => {
     expect(secondMaterialDisposed).toHaveBeenCalledOnce();
     expect(firstRenderer.dispose).toHaveBeenCalledOnce();
     expect(secondRenderer.dispose).toHaveBeenCalledOnce();
+  });
+
+  it("reverte edifício e registros quando a preparação falha antes do attach", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const sceneAdds = vi.spyOn(Scene.prototype, "add");
+    const geometryDisposals = vi.spyOn(BoxGeometry.prototype, "dispose");
+    const materialDisposals = vi.spyOn(
+      MeshStandardMaterial.prototype,
+      "dispose",
+    );
+    renderer.setPixelRatio.mockImplementation(() => {
+      throw new Error("pixel ratio unavailable");
+    });
+    const container = host();
+    const runtime = new ThreeWorldRuntime({
+      libraryWorldSnapshot: snapshot(),
+      createRenderer: () => renderer,
+    });
+    const failure = vi.fn();
+    runtime.onFailure(failure);
+
+    expect(() => runtime.mount(container)).toThrow("pixel ratio unavailable");
+    expect(geometryDisposals.mock.calls.length).toBeGreaterThan(13);
+    expect(materialDisposals.mock.calls.length).toBeGreaterThan(13);
+    const records = sceneAdds.mock.calls
+      .flat()
+      .find(({ name }) => name === "library-record-composition");
+    const building = sceneAdds.mock.calls
+      .flat()
+      .find(({ name }) => name === "procedural-library-building");
+    expect(records?.children).toHaveLength(0);
+    expect(records?.parent).toBeNull();
+    expect(building?.parent).toBeNull();
+    expect(container.querySelector("canvas")).toBeNull();
+    expect(renderer.dispose).toHaveBeenCalledOnce();
+    expect(runtime.getDiagnostics().runtimeState).toBe("disposed");
+    expect(runtime.getSelectableObjects()).toHaveLength(0);
+    expect(failure).not.toHaveBeenCalled();
+    runtime.selectObject("library-movie:movie-0");
+    expect(renderer.domElement.dataset.highlightedObject).toBeUndefined();
+    expect(() => runtime.mount(container)).toThrow(/only be mounted once/u);
+  });
+
+  it("remove listeners parciais quando a interação falha durante attach", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const add = renderer.domElement.addEventListener.bind(renderer.domElement);
+    const remove = vi.spyOn(renderer.domElement, "removeEventListener");
+    vi.spyOn(renderer.domElement, "addEventListener").mockImplementation(
+      (type, listener, options) => {
+        if (type === "pointermove") throw new Error("listener unavailable");
+        add(type, listener, options);
+      },
+    );
+    const geometryDisposals = vi.spyOn(BoxGeometry.prototype, "dispose");
+    const container = host();
+    const runtime = new ThreeWorldRuntime({
+      libraryWorldSnapshot: snapshot(),
+      createRenderer: () => renderer,
+    });
+
+    expect(() => runtime.mount(container)).toThrow("listener unavailable");
+    expect(remove).toHaveBeenCalledWith("pointerdown", expect.any(Function));
+    expect(geometryDisposals.mock.calls.length).toBeGreaterThan(13);
+    expect(renderer.dispose).toHaveBeenCalledOnce();
+    expect(container.querySelector("canvas")).toBeNull();
+    expect(runtime.getDiagnostics().runtimeState).toBe("disposed");
+    expect(runtime.getSelectableObjects()).toHaveLength(0);
+    expect(renderer.domElement.dataset.selectedObject).toBeUndefined();
+    expect(renderer.domElement.dataset.highlightedObject).toBeUndefined();
+  });
+
+  it("encerra seleção composta após falha WebGL sem callbacks tardios efetivos", () => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const runtime = new ThreeWorldRuntime({
+      libraryWorldSnapshot: snapshot(),
+      createRenderer: () => renderer,
+    });
+    const container = host();
+    runtime.mount(container);
+    runtime.selectObject("library-movie:movie-0");
+    const scene = renderer.render.mock.calls.at(-1)?.[0];
+    const record = scene?.getObjectByName("library-record-composition");
+    if (!scene || !record) throw new Error("Cena composta ausente.");
+    const disposed = vi.spyOn(firstMesh(record).geometry, "dispose");
+    const highlight = scene.getObjectByName("f1-c-selection-highlight");
+    expect(highlight).toBeDefined();
+    const failure = vi.fn();
+    const selection = vi.fn();
+    runtime.onFailure(failure);
+    runtime.onSelectionChange(selection);
+    const selectionCalls = selection.mock.calls.length;
+
+    renderer.domElement.dispatchEvent(
+      new Event("webglcontextlost", { cancelable: true }),
+    );
+    expect(failure).toHaveBeenCalledOnce();
+    expect(failure).toHaveBeenCalledWith(
+      expect.objectContaining({ code: "unavailable" }),
+    );
+    expect(runtime.getDiagnostics().runtimeState).toBe("failed");
+    expect(runtime.getSelectableObjects()).toHaveLength(0);
+    expect(container.querySelector("canvas")).toBeNull();
+    expect(scene.getObjectByName("f1-c-selection-highlight")).toBeUndefined();
+    expect(disposed).toHaveBeenCalledOnce();
+    runtime.selectObject("library-movie:movie-0");
+    runtime.resize();
+    runtime.resume();
+    renderer.domElement.dispatchEvent(new Event("webglcontextrestored"));
+    tap(renderer.domElement, 320, 180);
+    expect(selection).toHaveBeenCalledTimes(selectionCalls);
+    expect(failure).toHaveBeenCalledOnce();
+    runtime.dispose();
+    expect(disposed).toHaveBeenCalledOnce();
   });
 });

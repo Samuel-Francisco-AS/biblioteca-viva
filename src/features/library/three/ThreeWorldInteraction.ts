@@ -90,18 +90,25 @@ export class ThreeWorldInteraction {
       this.registerSelectableRoot(selectable.descriptor.id, selectable.root);
     }
 
-    this.canvas.addEventListener("pointerdown", this.handlePointerDown);
-    this.canvas.addEventListener("pointermove", this.handlePointerMove);
-    this.canvas.addEventListener("pointerup", this.handlePointerUp);
-    this.canvas.addEventListener("pointercancel", this.handlePointerCancel);
-    this.canvas.addEventListener(
-      "lostpointercapture",
-      this.handlePointerCancel,
-    );
-    this.canvas.addEventListener("wheel", this.handleWheel, { passive: false });
-    this.canvas.dataset.highlightedObject = "";
-    this.canvas.dataset.selectedObject = "";
-    this.updateDiagnostics();
+    try {
+      this.canvas.addEventListener("pointerdown", this.handlePointerDown);
+      this.canvas.addEventListener("pointermove", this.handlePointerMove);
+      this.canvas.addEventListener("pointerup", this.handlePointerUp);
+      this.canvas.addEventListener("pointercancel", this.handlePointerCancel);
+      this.canvas.addEventListener(
+        "lostpointercapture",
+        this.handlePointerCancel,
+      );
+      this.canvas.addEventListener("wheel", this.handleWheel, {
+        passive: false,
+      });
+      this.canvas.dataset.highlightedObject = "";
+      this.canvas.dataset.selectedObject = "";
+      this.updateDiagnostics();
+    } catch (error) {
+      this.dispose();
+      throw error;
+    }
   }
 
   addSelectable(descriptor: WorldSelectableObject, root: Object3D): void {

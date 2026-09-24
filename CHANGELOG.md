@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3D3 — Robustez e fechamento técnico da D — 2026-09-23
+
+- testes dirigidos consolidam rollback da composição, falha após criar edifício e registros, attach parcial da interação, falha WebGL terminal, descarte repetido, isolamento de montagens, seleção obsoleta, callbacks tardios, 13 registros, 70 livros, três estantes, overflow, caminho legado e F5; a prova pós-auditoria D2 de picking BF-2 no mundo composto integra a regressão;
+- corrigido vazamento de listener no canvas quando o construtor de `ThreeWorldInteraction` falha durante o attach; a própria interação agora remove listeners já registrados antes de propagar o erro, e o runtime preserva a falha de mount pública e o descarte terminal;
+- gate local: 6 arquivos/85 testes dirigidos, 78 arquivos/626 testes Vitest, format:check, lint, typecheck, audio:check, build, performance:report e 17 E2E passaram. O build mantém aviso de chunks acima de 500 kB; o relatório mostra 634.053 bytes iniciais e 659.439 bytes no chunk dinâmico Three. Não são medidas físicas;
+- D3/D recebem PASS técnico local. A apresentação visual integrada, bounds F3/oclusão, BF-3E/3F, Android físico e TalkBack permanecem pendentes; BF-3 não está concluída.
+
 ### BF-3D2 — Catálogo, picking e seleção — 2026-09-23
 
 - wrappers anexados dos cinco novos tipos entram no catálogo e no raycast com `instanceId`, `entryId` e rótulo textual identificável; seleção por canvas ou ID recebe highlight e limpa o anterior ao trocar ou invalidar a seleção;
