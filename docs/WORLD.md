@@ -165,7 +165,6 @@ R3F não foi aprovado e só poderá ser reconsiderado diante de um problema conc
 
 A FUNDAÇÃO estabelece a base técnica/arquitetural Three.js e sua fronteira semântica React. Ela não aprova o mundo real, performance de cenas complexas, TalkBack, acessibilidade humana Android ou temperatura de longo prazo. A validação assistiva humana permanece obrigatória antes do fechamento do primeiro recorte real e de beta/release aplicável.
 
-
 ## BF-4 — Contrato do Mundo Vivo e Habitável (planejamento, 2026-11-01)
 
 A [BF-4A](BF-4_PLANO_CONTRATO.md) concluiu apenas a auditoria/planejamento: BF-4B trabalha **os cinco cômodos inteiros**, BF-4C mobília todos eles, BF-4D organiza passagens e atividades, BF-4E integra objetos/interações e BF-4F desenvolve personagens distintos, animações, agentes locais e conversação contextual. BF-4G valida. A [ADR-012](decisions/ADR-012-bf-4-mundo-vivo.md) fixa o escopo; **nada disso existe em produção por força deste registro**.

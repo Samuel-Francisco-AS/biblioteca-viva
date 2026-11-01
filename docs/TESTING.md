@@ -10,6 +10,10 @@
 - Runtime 3D: contratos de lifecycle, resize, ponte React ↔ Three e fallback; performance gráfica não é provada por mocks.
 - Android: build técnico automatizado; instalação, toque, ergonomia e desempenho exigem evidência humana separada.
 
+## BF-4A — Revisão documental e CI da candidata (2026-11-01)
+
+A PR #7 contém somente mudanças de documentação; não houve implementação BF-4 nem novo teste Android físico. No commit inicial `057ca943`, a [CI 41330596100](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41330596100) aprovou `format:check`, lint, typecheck, 635 testes Vitest (78 arquivos), áudio, build e performance report; a suíte E2E concluiu **17 PASS e 1 FAIL** em `r4-shell.spec.ts` (timeout no `boundingBox` / `scrollIntoViewIfNeeded` do canvas, inclusive retry). Trata-se do cenário já rastreado na [issue #4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4); a causa permanece inconclusiva, sem PASS CI integral. Nenhuma remediação de runtime ou de E2E está incluída nesta PR documental.
+
 ## BF-3F/BF-3 — Evidência humana e fechamento dirigido (2026-11-01)
 
 **Motorola Moto G06, APK debug atualizado pelo usuário.** A [issue #5](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/5) registra duas rodadas humanas: **5/5 PASS** na rodada 1 (três estantes e highlight, Próximo/Anterior, pan/pinch/zoom, retrato/paisagem e background/resume) e **6/6 PASS** na rodada 2 (seis categorias e registros, representações procedurais, seleção pelo canvas e React, abertura/edição/retorno e inspeção visual/fluidez). Total **11/11 procedimentos PASS** por relato humano; sem anomalias específicas reportadas. Captura do diagnóstico na rodada 2: runtime `running`, 12 selecionáveis, 100 meshes, 1.264 triângulos, ~60,0 FPS / 16,7 ms instantâneos e ~200,4 ms para o primeiro frame. Os números não constituem benchmark sustentado; o SHA incorporado ao APK não foi verificado. Isso não aprova todos os cenários, ângulos de oclusão, bounds finais ou TalkBack.
