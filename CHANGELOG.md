@@ -8,7 +8,7 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 - A sondagem de picking no E2E `r4-shell` agrupa os eventos e a leitura por ponto, preservando as verificações posteriores e sem alterar runtime, timeout ou retries. Cinco repetições isoladas e cinco da suíte passaram sem retries; a suíte também passou nas cinco repetições anteriores à mudança.
 - Gate local: format:check, lint, typecheck, 78 arquivos/635 testes Vitest, audio:check, build, performance:report e 18 E2E passaram; o aviso de chunks acima de 500 kB permanece.
-- Timeouts históricos após BF-3E permanecem de causa inconclusiva. A redução medida no trace local não comprova eliminação da intermitência no GitHub Actions. Auditoria independente e CI da candidata permanecem pendentes; BF-3F não foi iniciada.
+- Timeouts históricos após BF-3E permanecem de causa inconclusiva. A redução medida no trace local não comprova eliminação da intermitência no GitHub Actions. CI da candidata [41279210481](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41279210481): job verde, 17 E2E aprovados e o desktop intermitente após timeout na primeira tentativa e PASS no retry. Auditoria independente pendente; BF-3F não foi iniciada.
 
 ### BF-3E3/BF-3E — Gate técnico aprovado — 2026-11-01
 
