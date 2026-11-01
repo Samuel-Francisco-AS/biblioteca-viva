@@ -162,7 +162,7 @@ test("retornos da Biblioteca removem o canvas anterior e reconstruem um único s
   ).toHaveCount(1);
 });
 
-test("seis tipos abrem pela Biblioteca e filme preserva edição e retorno", async ({
+test("seis tipos abrem pela Biblioteca e preservam edição e retorno", async ({
   createBook,
   page,
 }) => {
@@ -224,4 +224,19 @@ test("seis tipos abrem pela Biblioteca e filme preserva edição e retorno", asy
     page.getByRole("link", { name: "Filme BF3 editado" }),
   ).toBeVisible();
   await expect(canvas).toHaveCount(1);
+
+  for (const { title } of records.slice(1)) {
+    await page.getByRole("link", { name: title, exact: true }).click();
+    await expect(page.getByRole("heading", { name: title })).toBeVisible();
+    await page.getByRole("link", { name: "Editar" }).click();
+    await page.getByLabel("Título").fill(`${title} editado`);
+    await page.getByRole("button", { name: "Salvar" }).click();
+    await expect(
+      page.getByRole("heading", { name: `${title} editado` }),
+    ).toBeVisible();
+    await page.getByRole("link", { name: "Voltar à Biblioteca" }).click();
+    await expect(
+      page.getByRole("link", { name: `${title} editado`, exact: true }),
+    ).toBeVisible();
+  }
 });

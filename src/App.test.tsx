@@ -39,7 +39,7 @@ describe("App", () => {
     );
   });
 
-  it("mantém a área de leitura e o acesso à Coleção", () => {
+  it("mantém os registros da Biblioteca e o acesso à Coleção", () => {
     render(
       <MemoryRouter>
         <App />
@@ -47,7 +47,7 @@ describe("App", () => {
     );
     expect(
       screen.getByRole("heading", {
-        name: "Área de leitura",
+        name: "Registros da Biblioteca",
       }),
     ).toBeVisible();
     expect(screen.getByRole("link", { name: "Abrir Coleção" })).toHaveAttribute(

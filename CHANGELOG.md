@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3E3/BF-3E — Gate técnico aprovado — 2026-11-01
+
+- A suíte E2E da Biblioteca verifica abertura, edição e retorno dos seis tipos: livros no fluxo BF-2 já existente e os outros cinco tipos no cenário ampliado da E3. O teste do shell acompanha o título semântico vigente e preserva o acesso à Coleção.
+- O E2E de memória espera a confirmação observável da pausa antes de recarregar, mantendo a verificação de persistência. A corrida anterior é possível; a causa específica das falhas históricas remotas permanece incerta.
+- Gate local e CI remota do PR #2 confirmados: format:check, lint, typecheck, 78 arquivos/635 testes Vitest, audio:check, build, performance:report e 18 E2E aprovados. GitHub Actions `41272609003` passou no commit `4aef4088df4944cedab2f80551dc52c5be379a25`. O aviso de chunks acima de 500 kB permanece; o relatório é estático, não um benchmark Android.
+- Auditoria independente da Luna concluída com PASS técnico em 2026-11-01, sem bloqueantes no PR #2; BF-3E fechada no escopo técnico. BF-3F segue aberta para validação integrada e física. Não houve novo APK, aprovação visual integrada, Android físico ou TalkBack neste checkpoint; BF-3 não está concluída.
+
 ### BF-3E2 — Interface dos seis tipos e seleção bidirecional — 2026-09-24
 
 - Biblioteca organiza os seis tipos do snapshot E1 em listas semânticas, com título, tipo, link de abertura e indicação de representação; mantém autor e fluxo dos livros BF-2.

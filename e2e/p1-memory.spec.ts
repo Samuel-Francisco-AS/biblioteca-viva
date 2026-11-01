@@ -20,6 +20,7 @@ test("tag, favorito, sessão persistente e estatísticas formam memória unifica
   await expect(page.getByRole("link", { name: "Abrir sessão" })).toBeVisible();
   await page.getByRole("link", { name: "Abrir sessão" }).click();
   await page.getByRole("button", { name: "Pausar" }).click();
+  await expect(page.getByText(/Sessão pausada/u).first()).toBeVisible();
   await page.reload();
   await expect(page.getByText(/Sessão pausada/u).first()).toBeVisible();
   await page.getByRole("button", { name: "Retomar" }).click();
