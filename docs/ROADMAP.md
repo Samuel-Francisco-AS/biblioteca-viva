@@ -1,6 +1,6 @@
 # Roadmap
 
-> Atualizado em 2026-09-24.
+> Atualizado em 2026-11-01.
 
 ## Baseline concluído
 
@@ -26,7 +26,7 @@ BF-2 ✅ primeira área de leitura integrada a registros reais
   BF-2C ✅ integração com runtime e seleção
   BF-2D ✅ ponte React/aplicação e fluxo funcional
   BF-2E ✅ gate técnico e validação física dirigida positiva
-BF-3 ⏳ contrato, projeção, C, D e E concluídos; F pendente
+BF-3 ✅ concluída no escopo funcional/físico dirigido; dívida CI E2E aberta
   BF-3A ✅ contrato e fronteiras — documental
   BF-3B ✅ projeção neutra dos cinco tipos restantes — contratos e testes puros
   BF-3C ✅ representação procedural e layout isolados — concluída no escopo aprovado
@@ -41,7 +41,7 @@ BF-3 ⏳ contrato, projeção, C, D e E concluídos; F pendente
     BF-3E1 ✅ consulta agregada e ponte React → runtime
     BF-3E2 ✅ interface funcional dos seis tipos — implementação local
     BF-3E3 ✅ gate consolidado — auditoria independente e CI PASS
-  BF-3F ⏳ gate integrado, validação física dirigida e fechamento
+  BF-3F ✅ gate físico dirigido 11/11 PASS; exceção CI documentada (#4)
 BF-4 ⏳ ambiente habitável, mobília e personagens provisórios
 BF-5 ⏳ consolidação do marco funcional
 ```
@@ -98,9 +98,9 @@ A Biblioteca consulta `listBookEntries` por um contrato React/aplicação estrei
 
 Consolidou regressão integrada com base convencional real: criação, projeção, representação, seleção bidirecional, abertura por `entryId`, edição/retorno, vazio, overflow 70 + 1, fallback e lifecycle. O gate técnico e a validação física dirigida no Moto G06 foram positivos; BF-2E está concluída no escopo acordado e BF-2 no escopo técnico-funcional e físico dirigido. Os volumes procedurais permanecem pequenos no enquadramento geral, mas são selecionáveis e foram aceitos pelo usuário para o escopo funcional atual. A observação humana é qualitativa, sem estabelecer benchmark, FPS, teto de carga ou aprovação da arte definitiva. TalkBack continua obrigatório antes do fechamento do primeiro recorte real e de beta/release aplicável.
 
-### BF-3 — Integração dos seis tipos de registro — D/E concluídas tecnicamente; F pendente
+### BF-3 — Integração dos seis tipos de registro — encerrada no escopo físico-funcional, com dívida CI
 
-**Estado:** BF-3A/B/C estão concluídas nos escopos aprovados, e BF-3D1/D2/D3 receberam PASS técnico local conjunto. A BF-2 já integra `book` na área de leitura; a D monta e seleciona `movie`, `series`, `study`, `physical_activity` e `work` no runtime composto. BF-3E1 conectou a consulta real e a ponte React → runtime; E2 implementou a interface dos seis tipos; E3 recebeu PASS técnico após auditoria independente e CI verde em 2026-11-01. BF-3F permanece pendente. BF-3 não está concluída. `docs/STATUS.md` permanece a autoridade sobre o presente.
+**Estado:** BF-3A/B/C estão concluídas nos escopos aprovados, e BF-3D1/D2/D3 receberam PASS técnico local conjunto. A BF-2 já integra `book` na área de leitura; a D monta e seleciona `movie`, `series`, `study`, `physical_activity` e `work` no runtime composto. BF-3E1 conectou a consulta real e a ponte React → runtime; E2 implementou a interface dos seis tipos; E3 recebeu PASS técnico após auditoria independente e CI verde em 2026-11-01. BF-3F recebeu PASS humano em duas rodadas no Moto G06 (11/11 procedimentos). BF-3 está concluída no escopo técnico-funcional e físico dirigido por exceção expressa: a CI remota do E2E `r4-shell` permanece falhando/intermitente (issue #4), sem gate CI integral aprovado. `docs/STATUS.md` permanece a autoridade sobre o presente.
 
 **Resultado funcional pretendido:** cada registro convencional existente pode ser encontrado, identificado pelo seu tipo, selecionado quando houver representação 3D e aberto pelo `entryId`; todos continuam acessíveis por uma superfície React semântica mesmo sem WebGL ou quando não couberem visualmente. Não se exige uma sala definitiva por categoria: composição, formas e capacidade devem ser proporcionais à prova funcional, não uma antecipação da BF-4. O layout provisório deve preservar legibilidade e interação no Moto G06.
 
@@ -179,15 +179,15 @@ Consultar os seis tipos pelo caminho aprovado em A/B e entregar snapshot neutro 
 
 **Gate E: PASS técnico.** Testes React/host e E2E com registros fictícios dos seis tipos, seleção bidirecional, overflow, erro, criação/edição/retorno e múltiplas montagens, preservando operação essencial sem canvas.
 
-#### BF-3F — Gate integrado, físico dirigido e fechamento
+#### BF-3F — Gate físico dirigido e fechamento — concluída com exceção CI (2026-11-01)
 
-Executar `format:check`, lint, typecheck, Vitest, `audio:check`, build, `performance:report` e E2E; gerar APK debug representativo, se o gate web passar. Validar no Moto G06 o conjunto de seis tipos: leitura de rótulos, toque/seleção, React alternativo, abertura/retorno, pan, pinch, zoom, rotação, background/resume, ergonomia e densidade relevante. Registrar separadamente evidência automatizada, observação humana, limites, regressões e riscos, e reconciliar documentação de acordo com o comportamento efetivamente aprovado. Se houver falha, abrir correção dirigida antes de fechar.
+O APK debug atualizado foi instalado e testado pelo usuário no Moto G06. **Rodada 1: 5/5 PASS**, abrangendo seleção das três estantes, Próximo/Anterior, pan/pinch/zoom, orientação e segundo plano/retorno. **Rodada 2: 6/6 PASS**, abrangendo seis tipos/categorias, representações procedurais, seleção canvas/React, abertura/edição/retorno e inspeção visual e fluidez. Evidência humana e diagnóstico pontual registrados na [issue #5](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/5); nenhum defeito específico relatado, mas não houve benchmark prolongado, prova de todos os ângulos de oclusão, nem hash de proveniência do APK.
 
-**Gate F:** só declarar BF-3 concluída no escopo técnico-funcional e físico dirigido após os resultados correspondentes; isso **não** encerra por implicação o primeiro recorte real nem aprova TalkBack, arte final, GLB produtivo ou a BF-4. Prosseguir para BF-4 somente após autorização própria.
+**Gate F: fechamento no escopo aprovado com ressalva CI.** A BF-3E teve gate automatizado aprovado previamente; a CI da `main` pós-merge falhou no E2E gráfico `r4-shell` (17/18), com causa inconclusiva, e a correção candidata do PR #3 não foi integrada. Por decisão explícita, a dívida fica na [issue #4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4) e **não** recebe PASS fictício. BF-3 é concluída somente no escopo funcional/técnico e físico dirigido, não no critério de CI estável, nem como primeiro recorte real, beta/release, aprovação TalkBack, mundo/arte finais ou GLB produtivo. BF-4 requer autorização própria.
 
 **Fechamento C3/C:** `libraryBuildingGeometry.ts` e `proceduralLibraryBuilding.ts` preservam os cinco cômodos neutros, núcleo e quatro passagens; `libraryRecordLayout.ts` contém somente a distribuição inicial, 13 slots derivados (2/2/3/3/3), placements e overflow imutáveis. A/B/C foram 5/13/13 placements e 0/0/4 overflow na inspeção aprovada. Testes `Box3` reais cobrem as fábricas, passagens, colisões e convivência com três estantes e 70 livros BF-2; 77 arquivos/616 testes passaram, junto de format:check, lint, typecheck, audio:check e build. A prévia temporária foi removida; a referência PNG 2D permanece documental. Não houve gate físico, assistivo, de ergonomia ou seleção.
 
-**Próximo passo após BF-3E:** planejar BF-3F por autorização própria, com gate automatizado e validação física no Moto G06. Avaliação visual integrada, bounds F3, oclusão, iluminação e ergonomia Android continuam abertas; TalkBack segue dívida obrigatória antes do primeiro recorte real/beta, sem PASS implícito na BF-3F. Não redefinir a planta C3 aprovada por iniciativa própria.
+**Próximo passo após o fechamento dirigido da BF-3:** decidir separadamente o planejamento BF-4; não iniciá-la automaticamente. O risco de oclusão/bounds e novos cenários de densidade/iluminação permanece para a evolução do mundo; TalkBack continua obrigatório antes do primeiro recorte real/beta. A intermitência CI `r4-shell` segue rastreada na issue #4, sem gate verde.
 
 ### BF-4 — Mundo habitável
 
@@ -264,7 +264,7 @@ BF-2 ✅ primeira área de leitura integrada a registros reais
   BF-2C ✅ integração com runtime e seleção
   BF-2D ✅ ponte React/aplicação e fluxo funcional
   BF-2E ✅ gate técnico e validação física dirigida positiva
-BF-3 ⏳ CONTRATO, PROJEÇÃO, C, D E E CONCLUÍDOS; F PENDENTE
+BF-3 ✅ CONCLUÍDA NO ESCOPO TÉCNICO-FUNCIONAL E FÍSICO DIRIGIDO; CI PENDENTE
   BF-3A ✅ contrato e fronteiras — CONCLUÍDA DOCUMENTALMENTE
   BF-3B ✅ projeção neutra dos cinco tipos restantes — CONTRATOS E TESTES PUROS
   BF-3C ✅ procedural e layout isolados — CONCLUÍDA NO ESCOPO APROVADO
@@ -279,7 +279,7 @@ BF-3 ⏳ CONTRATO, PROJEÇÃO, C, D E E CONCLUÍDOS; F PENDENTE
     BF-3E1 ✅ consulta agregada e ponte React → runtime
     BF-3E2 ✅ interface funcional dos seis tipos — implementação local
     BF-3E3 ✅ gate consolidado — auditoria independente e CI PASS
-  BF-3F ⏳ gate integrado, físico dirigido e fechamento
+  BF-3F ✅ gate físico dirigido 11/11 PASS; exceção CI documentada (#4)
 ```
 
 ### F2 — Integração e endurecimento da Fundação Three.js — concluída
