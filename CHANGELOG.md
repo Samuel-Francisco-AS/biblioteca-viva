@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3F/BF-3 — Fechamento físico-funcional dirigido, com exceção CI — 2026-11-01
+
+- BF-3F finalizada em duas rodadas no Moto G06: 5/5 PASS para toque nas três estantes/destaque, controles Próximo/Anterior, pan/pinch/zoom, rotação e background/resume; 6/6 PASS para seis categorias e representações, seleção canvas/React, abertura/edição/retorno e inspeção visual/fluidez. Evidência humana registrada na [issue #5](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/5); sem falhas relatadas.
+- A captura física mostra runtime `running`, 12 selecionáveis, aproximadamente 60,0 FPS e 16,7 ms de frame médio no instante da coleta. Observação qualitativa/pontual, sem benchmark sustentado, stress, aprovação de arte final ou comprovação do SHA exato embutido no APK.
+- BF-3 encerrada **somente no escopo técnico-funcional e físico dirigido**, por decisão de aceitar a CI intermitente como dívida separada. A CI da `main` [41277733624](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41277733624) falhou no E2E `r4-shell` (17/18); PR experimental #3 fechado sem merge, causa inconclusiva e [issue #4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4) permanece aberta. Não declarar gate CI verde nem release/beta aprovado.
+- Sem alteração de código, runtime, dados, schema, dependências ou assets no fechamento. TalkBack segue obrigatório antes do primeiro recorte real/beta; BF-4 e P3D-B2–F continuam fora do escopo até decisão própria.
+
 ### BF-3E3/BF-3E — Gate técnico aprovado — 2026-11-01
 
 - A suíte E2E da Biblioteca verifica abertura, edição e retorno dos seis tipos: livros no fluxo BF-2 já existente e os outros cinco tipos no cenário ampliado da E3. O teste do shell acompanha o título semântico vigente e preserva o acesso à Coleção.
