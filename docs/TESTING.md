@@ -10,9 +10,11 @@
 - Runtime 3D: contratos de lifecycle, resize, ponte React ↔ Three e fallback; performance gráfica não é provada por mocks.
 - Android: build técnico automatizado; instalação, toque, ergonomia e desempenho exigem evidência humana separada.
 
-## BF-3E3 — candidata para auditoria
+## BF-3E3/BF-3E — Gate técnico aprovado (2026-11-01)
 
-As suítes de projeção, página, host e runtime mantêm cobertura da consulta única, seis categorias, identidade, catálogo efetivo, seleção, overflow, fallback, montagens isoladas, BF-2 e diagnóstico F5. O E2E `reading-area` percorre abertura, edição e retorno dos seis tipos com dados fictícios; `r4-shell` preserva picking, gestos e remontagens. `p1-memory` espera o estado pausado antes do reload e continua verificando sua recuperação, favoritos, etiquetas e estatísticas. Cinco repetições dirigidas sem retries passaram; a causa específica da falha histórica no CI não foi comprovada por seus logs. O gate local passou em format:check, lint, typecheck, 78 arquivos/635 testes Vitest, audio:check, build, performance:report e 18 E2E; CI remota exige confirmação separada. A evidência automatizada não substitui inspeção visual, Android físico ou TalkBack.
+A cobertura de projeção, página, host e runtime verifica consulta única, seis categorias, identidade, catálogo efetivo, seleção bidirecional, overflow, fallback, montagens isoladas, BF-2 e diagnóstico F5. O E2E `reading-area` comprova abertura, edição e retorno dos seis tipos no conjunto: o livro no cenário BF-2 já existente e os cinco demais tipos no cenário ampliado E3, com dados fictícios. `r4-shell` preserva picking, gestos e remontagens. Em `p1-memory`, o reload espera a apresentação observável da sessão pausada e continua verificando recuperação, favoritos, etiquetas e estatísticas. Cinco repetições locais dirigidas passaram sem retries; os logs antigos não comprovam que a corrida foi a única causa da falha remota.
+
+Gate local e CI do PR #2 aprovados no commit `4aef4088df4944cedab2f80551dc52c5be379a25`, execução [41272609003](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41272609003): format:check, lint, typecheck, 78 arquivos/635 testes Vitest, audio:check, build, performance:report e 18 E2E. Auditoria independente da Luna: PASS técnico sem bloqueantes. Aviso de chunks acima de 500 kB permanece; relatório de tamanho de bundle não mede FPS, GPU, ergonomia, legibilidade nem comportamento físico Android. BF-3F e validação humana/assistiva continuam abertas.
 
 ## F1 — cobertura concluída
 
