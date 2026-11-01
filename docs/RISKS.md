@@ -19,4 +19,17 @@
 
 **Risco CI ativo e aceito por exceção:** CI `main` [41277733624](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41277733624) falhou em `r4-shell` (17/18 E2E). PR #3 não integrado (uma CI flaky e outra FAIL); a causa da intermitência não foi comprovada. Evidência e plano de investigação estão na [issue #4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4), ainda aberta. O PASS físico BF-3F não significa CI estável; novos merges, releases e decisões dependentes de gate automatizado devem considerar essa pendência.
 
+## Riscos adicionais da BF-4 (planejamento; não mitigados)
+
+| ID | Risco | Mitigação pretendida |
+| --- | --- | --- |
+| R-13 | Densidade, iluminação e animações excederem o envelope observado no Moto G06 | Medir incrementalmente o mundo completo, sem presumir budget de FPS ou de GPU |
+| R-14 | Mobília/NPCs bloquearem passagens, visibilidade ou picking dos registros | Validar Box3, zonas de atividade, rotas, viewport e operação alternativa pelo React |
+| R-15 | Agentes/diálogos gerarem loops, callbacks tardios, memória indevida ou ações não autorizadas | Estados e comandos permitidos, cancelamento, ownership e testes de sessão |
+| R-16 | GLB animado/skinning contrariar o perfil rígido/estático da ADR-010 | Exigir extensão e prova técnica do pipeline, descarte, licença e procedência antes de uso produtivo |
+| R-17 | Conversação generativa introduzir custo, rede ou exposição de dados | Manter diálogo contextual offline e exigir decisão explícita para LLM/provedor |
+| R-18 | UI conversacional ampliar dívida de acessibilidade | Controles React semânticos, redução de movimento e gate humano TalkBack em build representativo |
+
+Detalhes e critérios: [BF-4 — Plano e contrato](BF-4_PLANO_CONTRATO.md) e [ADR-012](decisions/ADR-012-bf-4-mundo-vivo.md).
+
 Revisar ao iniciar uma fatia, alterar dados, adicionar dependência ou preparar release.

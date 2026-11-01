@@ -7,6 +7,7 @@ Este é o único índice da documentação ativa.
 | [`../README.md`](../README.md) | O que é a Biblioteca Viva? |
 | [`STATUS.md`](STATUS.md) | Onde estamos? |
 | [`ROADMAP.md`](ROADMAP.md) | Qual é o próximo trabalho? |
+| [`BF-4_PLANO_CONTRATO.md`](BF-4_PLANO_CONTRATO.md) | Quais entregas, arquitetura, gates e critérios da BF-4? |
 | [`PRODUCT.md`](PRODUCT.md) | Qual é o produto? |
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | Como o aplicativo atual funciona? |
 | [`DATA_MODEL.md`](DATA_MODEL.md) | O que persistimos? |
