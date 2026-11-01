@@ -17,4 +17,6 @@
 
 **Risco BF-3 ativo:** o teste automatizado comprova picking em pontos visíveis, mas não aprova a apresentação integrada; centro de série e estante se sobrepõem em projeção, e os bounds F3 ainda derivam do piso técnico. Avaliar oclusão, iluminação, exploração e bounds no gate dirigido sem remodelar a planta C3 preventivamente. O build ainda avisa sobre chunks acima de 500 kB; o relatório estático não mede memória, FPS ou Android físico. TalkBack permanece dívida humana obrigatória.
 
+**Risco de CI:** a `main` apresentou timeout intermitente no E2E gráfico desktop ([41277733624](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41277733624)). A candidata BF-3F-PRE reduz o custo mensurado de sondagem, mas a causa específica e a estabilidade remota continuada não estão comprovadas. Auditoria independente e CI da candidata são necessárias.
+
 Revisar ao iniciar uma fatia, alterar dados, adicionar dependência ou preparar release.

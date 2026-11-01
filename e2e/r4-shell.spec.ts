@@ -1,3 +1,5 @@
+/// <reference lib="dom" />
+
 import { expect, test, type Locator } from "@playwright/test";
 
 import { READING_SHELF_COMPOSITION_DEFINITIONS } from "../src/features/library/three/readingShelfDefinitions";
@@ -16,22 +18,31 @@ async function visibleShelfPoint(canvas: Locator): Promise<{
   expect(bounds).not.toBeNull();
   if (!bounds) throw new Error("Canvas sem bounds.");
   let pointerId = 100;
-  const tap = async (x: number, y: number): Promise<void> => {
-    const options = {
-      clientX: x,
-      clientY: y,
-      pointerId: pointerId++,
-      pointerType: "touch",
-    };
-    await canvas.dispatchEvent("pointerdown", options);
-    await canvas.dispatchEvent("pointerup", options);
-  };
+  // Keep each synthetic probe and its result together in the browser. The
+  // tests still verify the selected point through their own pointer inputs.
+  const tap = async (x: number, y: number): Promise<string | null> =>
+    canvas.evaluate(
+      (element, point) => {
+        const options: PointerEventInit = {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          clientX: point.x,
+          clientY: point.y,
+          pointerId: point.pointerId,
+          pointerType: "touch",
+        };
+        element.dispatchEvent(new PointerEvent("pointerdown", options));
+        element.dispatchEvent(new PointerEvent("pointerup", options));
+        return element.getAttribute("data-selected-object");
+      },
+      { x, y, pointerId: pointerId++ },
+    );
   for (let row = 2; row <= 18; row += 1) {
     for (let column = 2; column <= 18; column += 1) {
       const x = bounds.x + (bounds.width * column) / 20;
       const y = bounds.y + (bounds.height * row) / 20;
-      await tap(x, y);
-      const id = await canvas.getAttribute("data-selected-object");
+      const id = await tap(x, y);
       if (id && shelfIds.includes(id)) {
         await tap(bounds.x + 2, bounds.y + 2);
         await expect(canvas).toHaveAttribute("data-selected-object", "");

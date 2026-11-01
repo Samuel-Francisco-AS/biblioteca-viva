@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3F-PRE — Candidata de mitigação da CI — 2026-11-01
+
+- A sondagem de picking no E2E `r4-shell` agrupa os eventos e a leitura por ponto, preservando as verificações posteriores e sem alterar runtime, timeout ou retries. Cinco repetições isoladas e cinco da suíte passaram sem retries; a suíte também passou nas cinco repetições anteriores à mudança.
+- Gate local: format:check, lint, typecheck, 78 arquivos/635 testes Vitest, audio:check, build, performance:report e 18 E2E passaram; o aviso de chunks acima de 500 kB permanece.
+- Timeouts históricos após BF-3E permanecem de causa inconclusiva. A redução medida no trace local não comprova eliminação da intermitência no GitHub Actions. Auditoria independente e CI da candidata permanecem pendentes; BF-3F não foi iniciada.
+
 ### BF-3E3/BF-3E — Gate técnico aprovado — 2026-11-01
 
 - A suíte E2E da Biblioteca verifica abertura, edição e retorno dos seis tipos: livros no fluxo BF-2 já existente e os outros cinco tipos no cenário ampliado da E3. O teste do shell acompanha o título semântico vigente e preserva o acesso à Coleção.
