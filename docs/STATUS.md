@@ -1,6 +1,6 @@
 # Estado atual
 
-> Referência documental: 2026-09-24.
+> Referência documental: 2026-11-01.
 
 ## Produto
 
@@ -39,9 +39,13 @@
 - F5 mediu somente a fixture/corpus diagnóstico; conteúdo real, iluminação, animação, transparências, personagens, pós-processamento, memória GPU exata e teto de capacidade permanecem fora do envelope. Nova densidade ou mudança material de renderização exige nova medição no Moto G06.
 - A apresentação visual BF-3 integrada ainda não recebeu PASS humano. A sobreposição projetada série × estante, a oclusão/iluminação combinadas e os bounds F3 derivados do piso técnico exigem avaliação dirigida. Android físico e TalkBack no build BF-3 também não foram validados.
 
+## Candidata BF-3E3
+
+A consolidação preserva a implementação E1/E2 e amplia o E2E existente para edição e retorno dos seis tipos. O teste do shell passou a esperar o título vigente, `Registros da Biblioteca`, mantendo a verificação do acesso à Coleção. Em `p1-memory`, o reload agora aguarda a apresentação da sessão pausada, posterior ao commit; a corrida entre clique e gravação é demonstrável no código, mas os logs históricos não estabelecem que ela seja a única causa da falha remota. Cinco repetições dirigidas passaram sem retries. O gate local passou: format:check, lint, typecheck, 78 arquivos/635 testes Vitest, audio:check, build, performance:report e 18 E2E; o relatório estático registra 638.489 bytes iniciais e 659.439 bytes no chunk dinâmico Three, com aviso de chunks acima de 500 kB. CI remota ainda requer confirmação. A auditoria independente da Luna precede qualquer merge. Não há validação humana nova, APK ou aprovação BF-3F.
+
 ## Próximo trabalho
 
-**BF-3E2 está implementada localmente; BF-3E3 é o próximo gate.** A ponte E1 continua sendo a única consulta e o único snapshot por montagem. A página agora organiza os seis tipos por categoria, com tipo, título, abertura convencional, autor dos livros e indicação de representação baseada no catálogo real do `WorldHost`. Somente ocorrências publicadas e runtime pronto oferecem seleção no ambiente; overflow mantém abertura sem root fictícia, e falha 3D mantém a lista utilizável sem classificar tudo como overflow. Seleção recebida do canvas só apresenta registro quando `instanceId` e `entryId` coincidem com catálogo e snapshot vigentes; troca A → B → A remonta o conteúdo sem reutilizar estado anterior. O fluxo de detalhe/edição preserva a origem Biblioteca. O E2E dirigido de cinco casos passou localmente, inclusive seis tipos e edição/retorno de filme; 10 arquivos/149 testes Vitest dirigidos, `reading-area` 5/5 E2E, `r4-shell` 6/6 E2E, format:check, lint, typecheck e build passaram localmente. A falha remota recorrente de `p1-memory` após reload permanece independente e não motivou mudança de sessões ou persistência. E3 consolidará o gate da E; BF-3F fará validação integrada e física. Avaliação visual, bounds F3/oclusão, Android físico e TalkBack permanecem abertos. BF-4 e P3D-B2–F continuam adiados.
+**BF-3E3 é candidata ao gate técnico, sujeita à auditoria independente antes do merge; BF-3F permanece pendente.** A ponte E1 continua sendo a única consulta e o único snapshot por montagem. A página agora organiza os seis tipos por categoria, com tipo, título, abertura convencional, autor dos livros e indicação de representação baseada no catálogo real do `WorldHost`. Somente ocorrências publicadas e runtime pronto oferecem seleção no ambiente; overflow mantém abertura sem root fictícia, e falha 3D mantém a lista utilizável sem classificar tudo como overflow. Seleção recebida do canvas só apresenta registro quando `instanceId` e `entryId` coincidem com catálogo e snapshot vigentes; troca A → B → A remonta o conteúdo sem reutilizar estado anterior. O fluxo de detalhe/edição preserva a origem Biblioteca. O E2E dirigido de cinco casos passou localmente, inclusive seis tipos e edição/retorno de filme; 10 arquivos/149 testes Vitest dirigidos, `reading-area` 5/5 E2E, `r4-shell` 6/6 E2E, format:check, lint, typecheck e build passaram localmente. A falha remota recorrente de `p1-memory` após reload permanece independente e não motivou mudança de sessões ou persistência. E3 apresenta esta candidata ao gate da E; BF-3F fará validação integrada e física. Avaliação visual, bounds F3/oclusão, Android físico e TalkBack permanecem abertos. BF-4 e P3D-B2–F continuam adiados.
 
 **Evidência separada:** D1 aprovou montagem e ownership após auditorias independentes e CI; D2 aprovou catálogo, picking e seleção e recebeu prova adicional dirigida do canvas BF-2 após auditoria; D3 corrigiu o attach parcial de listeners e concluiu a regressão consolidada local. Luna concluiu a auditoria independente da D3 com PASS técnico dirigido no commit `2cb4c9d`. A CI remota da BF-3E1 no commit `ae606e0` aprovou formato, lint, tipos, 630 testes Vitest, áudio, build e relatório estático de performance, mas falhou em cinco E2E `r4-shell` que ainda esperavam a fixture F1 na rota composta e em `p1-memory` após reload. A correção E2E local preserva as provas funcionais; `p1-memory` passou isolado nesta revalidação, e seu histórico de oscilação permanece registrado. Nenhuma dessas evidências representa PASS humano visual, ergonomia, FPS físico, Android ou TalkBack.
 
@@ -115,6 +119,6 @@ BF-3 ⏳ CONTRATO, PROJEÇÃO, C E D CONCLUÍDOS; E/F PENDENTES
   BF-3E ⏳ React/aplicação e fluxo funcional
     BF-3E1 ✅ consulta agregada e ponte React → runtime — escopo operacional local
     BF-3E2 ✅ interface funcional dos seis tipos — implementação local; auditoria independente pendente
-    BF-3E3 ⏳ gate consolidado da E
+    BF-3E3 ⏳ candidata ao gate consolidado; auditoria independente pendente
   BF-3F ⏳ gate integrado, físico dirigido e fechamento
 ```

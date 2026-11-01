@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-3E3 — Candidata ao gate técnico — 2026-11-01
+
+- O E2E da Biblioteca verifica abertura, edição e retorno dos seis tipos; o teste do shell acompanha o título semântico vigente e preserva o acesso à Coleção.
+- O E2E de memória espera a confirmação observável da pausa antes de recarregar, mantendo a verificação de persistência. A corrida anterior é possível; a causa específica das falhas históricas remotas permanece incerta.
+- Gate local: format:check, lint, typecheck, 78 arquivos/635 testes Vitest, audio:check, build, performance:report e 18 E2E passaram. O build mantém aviso de chunks acima de 500 kB; CI remota requer confirmação separada.
+- Auditoria independente antes do merge e validação integrada/física BF-3F permanecem pendentes. Não houve aprovação visual integrada, TalkBack ou Android físico neste checkpoint.
+
 ### BF-3E2 — Interface dos seis tipos e seleção bidirecional — 2026-09-24
 
 - Biblioteca organiza os seis tipos do snapshot E1 em listas semânticas, com título, tipo, link de abertura e indicação de representação; mantém autor e fluxo dos livros BF-2.

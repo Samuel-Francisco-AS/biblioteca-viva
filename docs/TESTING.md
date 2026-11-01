@@ -10,6 +10,10 @@
 - Runtime 3D: contratos de lifecycle, resize, ponte React ↔ Three e fallback; performance gráfica não é provada por mocks.
 - Android: build técnico automatizado; instalação, toque, ergonomia e desempenho exigem evidência humana separada.
 
+## BF-3E3 — candidata para auditoria
+
+As suítes de projeção, página, host e runtime mantêm cobertura da consulta única, seis categorias, identidade, catálogo efetivo, seleção, overflow, fallback, montagens isoladas, BF-2 e diagnóstico F5. O E2E `reading-area` percorre abertura, edição e retorno dos seis tipos com dados fictícios; `r4-shell` preserva picking, gestos e remontagens. `p1-memory` espera o estado pausado antes do reload e continua verificando sua recuperação, favoritos, etiquetas e estatísticas. Cinco repetições dirigidas sem retries passaram; a causa específica da falha histórica no CI não foi comprovada por seus logs. O gate local passou em format:check, lint, typecheck, 78 arquivos/635 testes Vitest, audio:check, build, performance:report e 18 E2E; CI remota exige confirmação separada. A evidência automatizada não substitui inspeção visual, Android físico ou TalkBack.
+
 ## F1 — cobertura concluída
 
 A F1 cobriu:
