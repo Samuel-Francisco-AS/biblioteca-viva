@@ -498,6 +498,37 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
       if (selection) selected.push(selection);
     });
     for (const [index, shelf] of shelves.children.entries()) {
+      // BF-4D shelves span three rooms: explore with the real pointer pan path.
+      const projectedShelf = new Vector3(
+        shelf.position.x,
+        1.1,
+        shelf.position.z,
+      ).project(camera);
+      for (const [type, x, y] of [
+        ["pointerdown", 320, 180],
+        ["pointermove", 330, 180],
+        [
+          "pointermove",
+          330 - projectedShelf.x * 320,
+          180 + projectedShelf.y * 180,
+        ],
+        [
+          "pointerup",
+          330 - projectedShelf.x * 320,
+          180 + projectedShelf.y * 180,
+        ],
+      ] as const) {
+        const event = new Event(type, { bubbles: true, cancelable: true });
+        Object.defineProperties(event, {
+          button: { value: 0 },
+          clientX: { value: x },
+          clientY: { value: y },
+          pointerId: { value: 2 },
+          pointerType: { value: "mouse" },
+        });
+        renderer.domElement.dispatchEvent(event);
+      }
+      camera.updateMatrixWorld(true);
       const shelfId = `reading-shelf-0${index + 1}`;
       const bookNodes = selectableRoots.filter(
         (node) =>

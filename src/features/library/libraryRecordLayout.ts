@@ -20,55 +20,49 @@ export interface LibraryRecordSlot {
 const INITIAL_LIBRARY_RECORD_DISTRIBUTION: readonly {
   category: LibraryCategory;
   modelTypeId: LibraryRecordModelTypeId;
-  roomId: LibraryRoomId;
-  centers: readonly (readonly [number, number])[];
+  spots: readonly (readonly [LibraryRoomId, number, number])[];
 }[] = [
   {
     category: "movie",
     modelTypeId: "movie-record",
-    roomId: "room-b",
-    centers: [
-      [-9.1, -5.7],
-      [-9.1, -3.3],
+    spots: [
+      ["room-b", -16.5, -10.8],
+      ["room-a", 5.6, -7.2],
     ],
   },
   {
     category: "series",
     modelTypeId: "series-record",
-    roomId: "room-b",
-    centers: [
-      [-7.1, -5.7],
-      [-7.1, -3.3],
+    spots: [
+      ["room-b", -14.1, -10.8],
+      ["room-e", 16.1, 3.6],
     ],
   },
   {
     category: "study",
     modelTypeId: "study-record",
-    roomId: "room-c",
-    centers: [
-      [7.1, -5.7],
-      [9.1, -5.7],
-      [8.1, -3.3],
+    spots: [
+      ["room-c", 14.1, -8.3],
+      ["room-c", 16, -8.3],
+      ["room-a", 3, -7.2],
     ],
   },
   {
     category: "physical_activity",
     modelTypeId: "physical-activity-record",
-    roomId: "room-d",
-    centers: [
-      [-9.1, 3.3],
-      [-7.1, 3.3],
-      [-8.1, 5.7],
+    spots: [
+      ["room-d", -17.1, 10.8],
+      ["room-d", -15.3, 10.8],
+      ["room-e", 17, 10.8],
     ],
   },
   {
     category: "work",
     modelTypeId: "work-record",
-    roomId: "room-e",
-    centers: [
-      [7.1, 3.3],
-      [9.1, 3.3],
-      [8.1, 5.7],
+    spots: [
+      ["room-e", 14.1, 10.8],
+      ["room-e", 15.6, 10.8],
+      ["room-b", -16.7, -8.2],
     ],
   },
 ];
@@ -76,14 +70,11 @@ const INITIAL_LIBRARY_RECORD_DISTRIBUTION: readonly {
 export const INITIAL_LIBRARY_RECORD_SLOTS: readonly LibraryRecordSlot[] =
   Object.freeze(
     INITIAL_LIBRARY_RECORD_DISTRIBUTION.flatMap(
-      ({ category, modelTypeId, roomId, centers }) => {
-        const room = LIBRARY_ROOMS.find(({ id }) => id === roomId);
-        if (!room) throw new Error(`Cômodo ausente: ${roomId}`);
+      ({ category, modelTypeId, spots }) => {
         const dimensions = getProceduralLibraryRecordDimensions(modelTypeId);
-        return centers.map(([oldX, oldZ], index) => {
-          // Translate the original arrangement into the outer half; object scale is unchanged.
-          const x = oldX + Math.sign(oldX) * 6.3;
-          const z = oldZ + Math.sign(oldZ) * 3.5;
+        return spots.map(([roomId, x, z], index) => {
+          const room = LIBRARY_ROOMS.find(({ id }) => id === roomId);
+          if (!room) throw new Error(`Cômodo ausente: ${roomId}`);
           if (
             x - dimensions.width / 2 <= room.minX ||
             x + dimensions.width / 2 >= room.maxX ||

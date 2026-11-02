@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-4D — Organização espacial candidata à auditoria (2026-11-02)
+
+- Distribui as três estantes em três cômodos, reorganiza os 13 slots de registros nos cinco ambientes e compõe os mesmos 18 conjuntos de mobília junto às áreas de leitura, estudo e descanso.
+- Reserva circulação e aproximações livres, preservando passagens, seleção canvas/React, 70 livros, overflow e navegação. Define zonas/pontos declarativos para futuras atividades, sem executá-las.
+- Candidata à auditoria independente e ao Moto G06; sem encerramento, aprovação humana, merge ou release. [Evidência e limitações](docs/BF-4D_RELATORIO.md).
+
 ### BF-4C — ampliação, mobília e fechamento dirigido com exceção CI (2026-11-02)
 
 - Amplia os cinco cômodos e as quatro passagens, com exploração por pan/zoom sobre os pisos reais.

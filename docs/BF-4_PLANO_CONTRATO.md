@@ -1,8 +1,8 @@
 # BF-4 — Mundo Vivo e Habitável: plano e contrato
 
-> **Estado atual (2026-11-02):** BF-4A documental PASS, BF-4B concluída com PASS dirigido; **BF-4C concluída no escopo técnico e físico/visual dirigido mediante exceção explícita ao gate E2E da CI**. BF-4D–G pendentes. Issue #4, R-19 e TalkBack continuam abertos; sem beta/release. Os trechos BF-4A preservam planejamento histórico.
+> **Estado atual (2026-11-02):** BF-4A documental PASS, BF-4B concluída com PASS dirigido; **BF-4C concluída no escopo técnico e físico/visual dirigido mediante exceção explícita ao gate E2E da CI**. BF-4D implementada como candidata à auditoria/gates humanos; BF-4E–G pendentes. Issue #4, R-19 e TalkBack continuam abertos; sem beta/release. Os trechos BF-4A preservam planejamento histórico.
 >
-> **Baseline auditado:** `main` `a702f897f6db5903c0becb61df54bc9f18be455a` (fechamento BF-3), sob ADR-008–012. Este documento prescreve trabalho **futuro**, não descreve recursos já existentes.
+> **Baseline auditado:** `main` `a702f897f6db5903c0becb61df54bc9f18be455a` (fechamento BF-3), sob ADR-008–012. As seções identificadas como planejamento prescrevem trabalho futuro; os estados B/C/D registram a evolução autorizada posterior.
 
 ## Objetivo e decisão de escopo
 
@@ -62,11 +62,13 @@ Autorização específica de 2026-11-02 acrescentou C1 (salão 1,8–2× e later
 - Produção por conjuntos e fábricas/representações com owner, descarte e dimensões confiáveis; reutilização de geometria/material somente com regra explícita de ownership.
 - **Gate C:** cenas completas observáveis e testes de construção, escala, Box3, integridade, descarte e regressões de BF-2/BF-3; sem asset externo sem origem/licença.
 
-### BF-4D — Organização espacial (PENDENTE)
+### BF-4D — Organização espacial (CANDIDATA À AUDITORIA)
 
 - Organizar mobília, decoração, zonas de atividade e pontos de parada/caminho pela planta inteira. Tratar acessos, encontros, oclusão, distância visual e colisão com os registros reais.
 - Layout declarativo/determinístico; validadores de dimensões e interseções proporcionais, sem transformar tudo em grid persistido ou simulação física geral.
 - **Gate D:** placements reproduzíveis, quatro passagens livres, registros alcançáveis via canvas/React, sem clipping impeditivo; cenário com densidade representativa e inspeção humana.
+
+Autorização de 2026-11-02 implementa D1–D4 na branch própria, sobre o merge BF-4C `6804fee4`. Três estantes em A/C/D, 13 slots explícitos nos cinco cômodos e 18 conjuntos ambientais preservados. Reservas de circulação de 1,2 m, dez zonas de atividade e oito de entrada, com pontos/raios/orientações e validação geométrica independente do renderer. [Relatório BF-4D](BF-4D_RELATORIO.md) registra as provas reais e os gates. **Não encerrada:** auditoria Luna e Moto G06 pendentes. Os pontos são aproximações, sem animação, pose de assento, pathfinding, editor, persistência ou interações E. Não altera ADR-012 nem amplia o escopo futuro autorizado.
 
 ### BF-4E — Integração e objetos interativos (PENDENTE)
 

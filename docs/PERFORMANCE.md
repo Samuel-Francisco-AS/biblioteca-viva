@@ -292,3 +292,11 @@ Coleção vazia, três estantes, viewport 1280×900, DPR 1, Chromium headless: 6
 Build BF-4C: 638.489 bytes iniciais, igual à BF-4B; chunk Three 669.201 bytes, +5.986 sobre 663.215. Warning >500 kB permanece.
 
 **Moto G06 BF-4C:** nove capturas do APK atualizado mostram leituras pontuais de **58,7–60,1 FPS** e **16,6–17,0 ms/frame** durante exploração de alas e salão; o usuário não relatou travamentos ou regressões em pan, zoom, seleção, rotação e segundo plano. Não há amostra de sessão prolongada, medição térmica ou memória GPU; não assumir 60 FPS sustentados. O usuário aceitou a posição provisória das representações dos registros para BF-4D. R-19 continua sem diagnóstico definitivo.
+
+## BF-4D — Organização espacial candidata (2026-11-02)
+
+Sem nova fábrica, material, mesh de zona ou loop. Build: 638.489 bytes iniciais, igual à BF-4C; Three dinâmico 669.387 bytes (+186 sobre 669.201). Aviso >500 kB mantido. Circulação/zonas são declarações para uso futuro, sem renderização ou comportamento nesta etapa.
+
+Chromium headless/SwiftShader, DPR 1, viewport 1280×900, zoom 0,7, target 0/0, sem highlight: vazio tem 60 meshes na cena, 49 calls/22.452 triângulos no frame, 32 geometrias reportadas; 70 livros + 13 registros têm 323 meshes, 227 calls/24.652 triângulos e 165 geometrias reportadas. Ambos: um loop, uma textura renderer, zero referências de textura nos materiais. Culling e inicialização de recursos dependem da nova distribuição; redução de calls num enquadramento não é otimização/custo total da cena. As mesmas 18 ilhas mantêm 13 batches ambientais.
+
+FPS, primeiro frame e frame time headless sob testes não representam Android. Não há medição de RAM/GPU/temperatura ou desempenho sustentado nova. Gate Moto G06 pendente; [relatório e reprodução](BF-4D_RELATORIO.md).
