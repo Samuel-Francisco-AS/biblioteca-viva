@@ -26,6 +26,21 @@ describe("LivingFeedback", () => {
     session.dispose();
   });
 
+  it("does not replay an old hint when the clock changes atmosphere", () => {
+    vi.useFakeTimers();
+    let current = new Date(2026, 10, 2, 21);
+    const session = new LivingSession(() => current);
+    const view = render(<LivingFeedback session={session} />);
+    act(() => session.actPrimary("living:lamp"));
+    act(() => vi.advanceTimersByTime(4000));
+    expect(screen.queryByTestId("living-feedback")).toBeNull();
+    current = new Date(2026, 10, 3, 10);
+    act(() => session.refreshContext());
+    expect(screen.queryByTestId("living-feedback")).toBeNull();
+    view.unmount();
+    session.dispose();
+  });
+
   it("restarts its timer after a subsequent touch", () => {
     vi.useFakeTimers();
     const session = new LivingSession();

@@ -1,4 +1,4 @@
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   LIVING_OBJECTS,
   type LivingSession,
@@ -29,13 +29,14 @@ const actionLabels: Record<string, Partial<Record<LivingAction, string>>> = {
 
 export function LivingFeedback({ session }: { session: LivingSession }) {
   const state = useSyncExternalStore(session.subscribe, session.getSnapshot);
+  const previousObjects = useRef(state.objects);
   const [visible, setVisible] = useState(false);
   const [fading, setFading] = useState(false);
 
   useEffect(() => {
-    if (state.revision === 0 || state.message === "Explore os cinco cômodos.") {
-      return;
-    }
+    // Context-only clock updates preserve the objects map: no stale toast.
+    if (state.objects === previousObjects.current) return;
+    previousObjects.current = state.objects;
     setVisible(true);
     setFading(false);
     const fade = window.setTimeout(() => setFading(true), 3600);
@@ -44,7 +45,7 @@ export function LivingFeedback({ session }: { session: LivingSession }) {
       window.clearTimeout(fade);
       window.clearTimeout(hide);
     };
-  }, [state.message, state.revision]);
+  }, [state.objects, state.message]);
 
   if (!visible) return null;
   return (

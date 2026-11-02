@@ -75,4 +75,4 @@ describe("small living tap targets", () => {
       "living:table",
     );
   });
-}
+});
