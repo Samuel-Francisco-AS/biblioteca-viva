@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import { expect, test, type Locator } from "@playwright/test";
 
 import { READING_SHELF_COMPOSITION_DEFINITIONS } from "../src/features/library/three/readingShelfDefinitions";
@@ -12,34 +13,42 @@ async function visibleShelfPoint(canvas: Locator): Promise<{
   readonly x: number;
   readonly y: number;
 }> {
-  const bounds = await canvas.boundingBox();
-  expect(bounds).not.toBeNull();
-  if (!bounds) throw new Error("Canvas sem bounds.");
-  let pointerId = 100;
-  const tap = async (x: number, y: number): Promise<void> => {
-    const options = {
-      clientX: x,
-      clientY: y,
-      pointerId: pointerId++,
-      pointerType: "touch",
+  // Keep the same real raycast grid, but avoid hundreds of protocol round trips.
+  // The old per-event dispatch/getAttribute loop exhausted the 30s test budget
+  // before reaching the shelves on software-rendered Chromium (BF-4B trace).
+  const point = await canvas.evaluate((element, ids) => {
+    const bounds = element.getBoundingClientRect();
+    let pointerId = 100;
+    const tap = (x: number, y: number) => {
+      const options = {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+        clientX: x,
+        clientY: y,
+        pointerId: pointerId++,
+        pointerType: "touch",
+      };
+      element.dispatchEvent(new PointerEvent("pointerdown", options));
+      element.dispatchEvent(new PointerEvent("pointerup", options));
     };
-    await canvas.dispatchEvent("pointerdown", options);
-    await canvas.dispatchEvent("pointerup", options);
-  };
-  for (let row = 2; row <= 18; row += 1) {
-    for (let column = 2; column <= 18; column += 1) {
-      const x = bounds.x + (bounds.width * column) / 20;
-      const y = bounds.y + (bounds.height * row) / 20;
-      await tap(x, y);
-      const id = await canvas.getAttribute("data-selected-object");
-      if (id && shelfIds.includes(id)) {
-        await tap(bounds.x + 2, bounds.y + 2);
-        await expect(canvas).toHaveAttribute("data-selected-object", "");
-        return { id, x, y };
+    for (let row = 2; row <= 18; row++) {
+      for (let column = 2; column <= 18; column++) {
+        const x = bounds.x + (bounds.width * column) / 20;
+        const y = bounds.y + (bounds.height * row) / 20;
+        tap(x, y);
+        const id = element.getAttribute("data-selected-object");
+        if (id && ids.includes(id)) {
+          tap(bounds.x + 2, bounds.y + 2);
+          return { id, x, y };
+        }
       }
     }
-  }
-  throw new Error("Nenhuma estante BF-2 alcançável no canvas.");
+    return null;
+  }, shelfIds);
+  if (!point) throw new Error("Nenhuma estante BF-2 alcançável no canvas.");
+  await expect(canvas).toHaveAttribute("data-selected-object", "");
+  return point;
 }
 
 test("shell abre a Biblioteca com uma única superfície Three.js", async ({

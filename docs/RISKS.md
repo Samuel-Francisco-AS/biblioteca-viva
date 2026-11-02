@@ -17,9 +17,9 @@
 
 **Risco visual residual após BF-3F:** a inspeção física dirigida no Moto G06 recebeu PASS (6/6 rodada 2), sem defeito específico relatado; a sobreposição projetada série × estante conhecida dos testes, os bounds ainda baseados no piso técnico e a legibilidade sob maior densidade não foram eliminados nem medidos exaustivamente. Não remodelar a planta C3 preventivamente. O aviso de chunks >500 kB permanece, sem benchmark sustentado de FPS/GPU/RAM. TalkBack ainda é dívida obrigatória antes do primeiro recorte real/beta.
 
-**Risco CI ativo e aceito por exceção:** CI `main` [41277733624](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41277733624) falhou em `r4-shell` (17/18 E2E). PR #3 não integrado (uma CI flaky e outra FAIL); a causa da intermitência não foi comprovada. Evidência e plano de investigação estão na [issue #4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4), ainda aberta. O PASS físico BF-3F não significa CI estável; novos merges, releases e decisões dependentes de gate automatizado devem considerar essa pendência.
+**Risco CI ativo e aceito por exceção:** a `main` histórica [41277733624](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41277733624) falhou no E2E `r4-shell` (17/18). PR experimental #3 não integrado; causa histórica inconclusiva. A [CI da PR #8, run 41379918451](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41379918451), **PASS integral** após otimização do harness sem suprimir assertivas. A [issue #4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4) permanece aberta até evidência de estabilidade repetida/pós-merge; CI verde isolada não comprova causa resolvida.
 
-## Riscos adicionais da BF-4 (planejamento; não mitigados)
+## Riscos adicionais da BF-4 (R-13 parcialmente mitigado pela BF-4B; demais acompanhados)
 
 | ID | Risco | Mitigação pretendida |
 | --- | --- | --- |
@@ -29,6 +29,7 @@
 | R-16 | GLB animado/skinning contrariar o perfil rígido/estático da ADR-010 | Exigir extensão e prova técnica do pipeline, descarte, licença e procedência antes de uso produtivo |
 | R-17 | Conversação generativa introduzir custo, rede ou exposição de dados | Manter diálogo contextual offline e exigir decisão explícita para LLM/provedor |
 | R-18 | UI conversacional ampliar dívida de acessibilidade | Controles React semânticos, redução de movimento e gate humano TalkBack em build representativo |
+| R-19 | Tremulação/borramento leve das malhas das paredes ao mover câmera, percebida no Moto G06 na BF-4B | Aceito explicitamente como **não bloqueante** no gate BF-4B; reproduzir/diagnosticar em refinamento visual futuro sem presumir causa ou ampliar automaticamente BF-4C |
 
 Detalhes e critérios: [BF-4 — Plano e contrato](BF-4_PLANO_CONTRATO.md) e [ADR-012](decisions/ADR-012-bf-4-mundo-vivo.md).
 

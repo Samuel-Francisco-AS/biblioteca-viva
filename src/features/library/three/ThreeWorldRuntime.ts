@@ -530,8 +530,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
         mountedWorld.addReferenceScene(referenceScene);
         scene.add(referenceScene.root);
       } else {
-        scene.add(new HemisphereLight(0xffffff, 0x526553, 2));
-        const sunlight = new DirectionalLight(0xffffff, 1.5);
+        scene.add(new HemisphereLight(0xffedd2, 0x58665b, 2));
+        const sunlight = new DirectionalLight(0xffdfac, 1.5);
         sunlight.position.set(-4, 12, 7);
         scene.add(sunlight);
       }

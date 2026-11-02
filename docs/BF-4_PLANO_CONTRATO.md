@@ -1,6 +1,6 @@
 # BF-4 — Mundo Vivo e Habitável: plano e contrato
 
-> **Estado:** BF-4A concluída **documentalmente** em 2026-11-01; BF-4B–G planejadas, sem implementação autorizada neste registro.
+> **Estado atual (2026-11-02):** BF-4A aprovada documentalmente; **BF-4B encerrada com PASS técnico, visual e físico dirigido**, ressalva visual R-19 e issue #4 em acompanhamento; **BF-4C–G pendentes**. Os trechos BF-4A preservam o planejamento histórico.
 >
 > **Baseline auditado:** `main` `a702f897f6db5903c0becb61df54bc9f18be455a` (fechamento BF-3), sob ADR-008–012. Este documento prescreve trabalho **futuro**, não descreve recursos já existentes.
 
@@ -46,7 +46,9 @@ A BF-4 deve entregar **personagens visualmente distintos**, **animações variad
 - Formalizar arquitetura-alvo, BF-4B–G, riscos, critérios de aceite e decisões ainda condicionais.
 - **Entrega:** este documento, ADR-012, roadmap/status/índice/riscos coerentes. **Sem código de produção, dependências, assets, mudanças de dados ou testes alegados.**
 
-### BF-4B — Ambiente completo dos cinco cômodos (PENDENTE)
+### BF-4B — Ambiente completo dos cinco cômodos (CONCLUÍDA; PASS dirigido)
+
+Evidência de auditoria, CI, gate físico e ressalva R-19: [fechamento BF-4B](BF-4B_RELATORIO.md). Não equivale a benchmark sustentado, TalkBack ou arte final.
 
 - Evoluir **simultaneamente os cinco cômodos**: piso, paredes, paleta, materiais, iluminação, detalhes arquitetônicos e leitura global; manter passagens e leitura mobile. Sem protótipo descartável limitado a um cômodo.
 - Escolher solução visual econômica e compatível com Three.js atual; corrigir colisões e oclusões efetivamente observadas, sem reabrir a planta inteira por precaução.
@@ -96,8 +98,8 @@ A BF-4 deve entregar **personagens visualmente distintos**, **animações variad
 - **Navegação:** começar por pontos/rotas e obstáculos derivados da planta aprovada; não assumir navmesh complexa, pathfinding universal ou simulação física.
 - **Aparência final:** material e composição devem ser verificáveis no mundo integral; direção estilizada ortográfica/2.5D de `ART_DIRECTION.md` permanece referência, não congelamento de asset final.
 
-## Handoff para BF-4B
+## Handoff histórico BF-4A → BF-4B
 
 O próximo executor deve inspecionar o checkout real e seus testes, propor o recorte **integrado dos cinco cômodos**, listar arquivos e riscos antes de modificar, produzir um ambiente visivelmente mais rico e executável, e registrar os testes efetivamente realizados. **Sem commit, push ou merge pelo Codex sem autorização de Git específica.**
 
-A BF-4A documental não produz autorização automática para o código da BF-4B nem validação de entrega futura.
+A BF-4A documental não produzia autorização automática para o código da BF-4B nem validação de entrega futura. A BF-4B foi posteriormente autorizada, implementada e fechada no escopo dirigido em 2026-11-02; BF-4C requer autorização e gate próprios.
