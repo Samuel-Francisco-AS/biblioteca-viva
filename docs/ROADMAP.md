@@ -42,12 +42,12 @@ BF-3 ✅ concluída no escopo funcional/físico dirigido; dívida CI E2E aberta
     BF-3E2 ✅ interface funcional dos seis tipos — implementação local
     BF-3E3 ✅ gate consolidado — auditoria independente e CI PASS
   BF-3F ✅ gate físico dirigido 11/11 PASS; exceção CI documentada (#4)
-BF-4 🔄 mundo vivo e habitável — BF-4B/C/D concluídas, exceções CI #4/#11; BF-4E próxima
+BF-4 🔄 mundo vivo e habitável — BF-4B/C/D/E concluídas no escopo dirigido, exceções CI #4/#11; BF-4F próxima
   BF-4A ✅ auditoria dirigida, decisões e contrato (documental)
   BF-4B ✅ cinco cômodos; auditoria, CI e Moto G06 PASS dirigido (R-19)
   BF-4C ✅ ampliação e mobília concluídas com PASS dirigido, exceção CI (#4)
   BF-4D ✅ organização espacial, passagens e zonas — PASS dirigido, CI FAIL aceita (#4/#11)
-  BF-4E ⏳ visão de objetos vivos aprovada — contrato de 10 famílias, atmosferas e descobertas; implementação pendente
+  BF-4E ✅ dez famílias e três atmosferas contextuais, interação canvas e Segredo do Pergaminho 4/4 — Moto G06 PASS; CI E2E FAIL aceita (#4/#11)
   BF-4F ⏳ personagens detalhados, animação, IA local e conversação contextual
     BF-4F1 ⏳ identidade visual de três personagens (alvo inicial)
     BF-4F2 ⏳ animações variadas e transições
@@ -57,7 +57,7 @@ BF-4 🔄 mundo vivo e habitável — BF-4B/C/D concluídas, exceções CI #4/#1
 BF-5 ⏳ consolidação do marco funcional
 ```
 
-**BF-4E — escopo criativo autorizado para planejamento:** [visão e contrato dos objetos vivos](BF-4E_VISAO_CONTRATO.md). Dez famílias-alvo, interações entre objetos, modos ambientais e uma descoberta encadeada nos cinco cômodos; nenhum código BF-4E implementado por essa decisão documental. Próximo passo: prompt de execução e gates independentes, sem antecipar personagens BF-4F.
+**BF-4E — registro histórico de autorização criativa (implementação e fechamento ocorreram posteriormente):** [visão e contrato dos objetos vivos](BF-4E_VISAO_CONTRATO.md). Dez famílias-alvo, interações entre objetos, modos ambientais e uma descoberta encadeada nos cinco cômodos; nenhum código BF-4E implementado por essa decisão documental. Próximo passo: prompt de execução e gates independentes, sem antecipar personagens BF-4F.
 
 O caminho BF usa conteúdo procedural/provisório em TypeScript/Three.js e mantém React como superfície semântica das funções essenciais. A identidade lógica separa tipo de modelo, instância do mundo e ID de registro convencional associado quando houver; a representação visual poderá ser procedural agora e GLB definitivo depois, sem alterar essa identidade. Não há persistência espacial produtiva, tabela nova ou mudança de backup neste plano.
 
@@ -200,7 +200,7 @@ O APK debug atualizado foi instalado e testado pelo usuário no Moto G06. **Roda
 
 **Fechamento C3/C:** `libraryBuildingGeometry.ts` e `proceduralLibraryBuilding.ts` preservam os cinco cômodos neutros, núcleo e quatro passagens; `libraryRecordLayout.ts` contém somente a distribuição inicial, 13 slots derivados (2/2/3/3/3), placements e overflow imutáveis. A/B/C foram 5/13/13 placements e 0/0/4 overflow na inspeção aprovada. Testes `Box3` reais cobrem as fábricas, passagens, colisões e convivência com três estantes e 70 livros BF-2; 77 arquivos/616 testes passaram, junto de format:check, lint, typecheck, audio:check e build. A prévia temporária foi removida; a referência PNG 2D permanece documental. Não houve gate físico, assistivo, de ergonomia ou seleção.
 
-**Handoff BF-3 → BF-4:** planejamento e BF-4A documental autorizados e registrados em 2026-11-01; BF-4B foi implementada e encerrada com CI e gate humano dirigido PASS sob autorização posterior; BF-4C foi implementada, auditada e fechada no escopo dirigido por exceção expressa ao gate CI (PR #9: 18/19 E2E); BF-4D foi auditada, aceita no Moto G06 e encerrada por exceção explícita às falhas E2E remotas (#4 e #11); BF-4E–G permanecem pendentes. O risco de oclusão/bounds e novos cenários de densidade/iluminação permanece para a evolução do mundo; TalkBack continua obrigatório antes do primeiro recorte real/beta. A intermitência CI `r4-shell` segue rastreada na issue #4, sem gate verde.
+**Handoff BF-3 → BF-4:** planejamento e BF-4A documental autorizados e registrados em 2026-11-01; BF-4B foi implementada e encerrada com CI e gate humano dirigido PASS sob autorização posterior; BF-4C foi implementada, auditada e fechada no escopo dirigido por exceção expressa ao gate CI (PR #9: 18/19 E2E); BF-4D foi auditada, aceita no Moto G06 e encerrada por exceção explícita às falhas E2E remotas (#4 e #11); BF-4E foi fechada posteriormente no escopo dirigido; BF-4F–G permanecem pendentes. O risco de oclusão/bounds e novos cenários de densidade/iluminação permanece para a evolução do mundo; TalkBack continua obrigatório antes do primeiro recorte real/beta. A intermitência CI `r4-shell` segue rastreada na issue #4, sem gate verde.
 
 ### BF-4 — Mundo Vivo e Habitável — BF-4B/BF-4C concluídas (2026-11-02)
 
@@ -403,3 +403,11 @@ F1 aprovou a viabilidade da base Three.js; não concluiu câmera, interação, a
 D1–D4 implementadas e avaliadas: organização dos cinco cômodos, circulação de 1,2 m, 18 zonas/pontos, regressões. **Auditoria estática e gate físico/visual dirigido no Moto G06 aprovados** (quatro capturas; pan/zoom/seleção/orientação sem regressões relatadas). **CI [PR #10/41405622312](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41405622312) FAIL**, 19/21 E2E PASS: `r4-shell` histórico ([#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4)) e E2E BF-4D novo com coleção cheia 1280px ([#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11)). Usuário autorizou explicitamente concluir e integrar apesar das duas dívidas, sem falso PASS de CI; BF-4D fechada no escopo dirigido. [Relatório final](BF-4D_RELATORIO.md).
 
 BF-4E e BF-4F poderão consumir as reservas geométricas após autorização própria. Precisarão validar dimensões dos personagens, destinos/poses, ocupação simultânea e comportamento; dados BF-4D não são navmesh, ações ou rotas fisicamente aprovadas. Editor de arraste livre/persistência de mobília continuam fora do escopo aprovado. BF-4G conserva o gate integrado/físico; TalkBack e issue #4 permanecem.
+
+## BF-4E — checkpoint histórico de implementação (2026-11-02)
+
+BF-4E: implementação integrada em verificação. Próximos gates autorizados: regressão, revisão independente da Luna e validação humana Moto G06. BF-4F permanece futura; nenhuma entidade/autonomia de personagem foi criada. [Relatório técnico](BF-4E_RELATORIO.md).
+
+## BF-4E — Encerrada no escopo dirigido com dívida CI (2026-11-02)
+
+[PR #12](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/12) autorizada para merge após validação física no Moto G06: dez famílias ambientais, interação direta, atmosfera pelo horário/atividade/descoberta, três modos, Segredo do Pergaminho concluído 4/4 e hotfix dos alvos pequenos, gaveta E e mensagens temporárias confirmados. [CI 41438324911](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41438324911): 661 Vitest PASS, gates estáticos/build PASS, mas **20/24 E2E PASS / CI FAIL**; coleção cheia (#11) e shell (#4) permanecem dívidas não resolvidas. Sem benchmark sustentado, TalkBack PASS, beta/release, edição persistente de móveis ou NPCs. O próximo planejamento é **BF-4F1–F4**, visando três habitantes visualmente distintos, animações, atividades, reações e conversação contextual local; BF-4G fará gate integrado. [Relatório final](BF-4E_RELATORIO.md).

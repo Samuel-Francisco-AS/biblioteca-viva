@@ -1,5 +1,7 @@
+import { LivingSession } from "../livingObjects";
 import {
   Box3,
+  Box3Helper,
   BoxGeometry,
   Mesh,
   MeshStandardMaterial,
@@ -834,5 +836,71 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
     expect(failure).toHaveBeenCalledOnce();
     runtime.dispose();
     expect(disposed).toHaveBeenCalledOnce();
+  });
+});
+
+describe("BF-4E integrated lifecycle", () => {
+  it("owns environmental pieces with full density, pauses and rejects late frames after context loss", () => {
+    const renderer = new TestRenderer();
+    const session = new LivingSession();
+    const request = vi
+      .fn<(callback: FrameRequestCallback) => number>()
+      .mockReturnValue(1);
+    const cancel = vi.fn<(id: number) => void>();
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      libraryWorldSnapshot: snapshot(),
+      livingSession: session,
+      frameScheduler: { request, cancel },
+    });
+    runtime.mount(host());
+    runtime.start();
+    expect(runtime.getSelectableObjects()).toHaveLength(96);
+    const beforeSelection = renderer.render.mock.calls.length;
+    runtime.selectObject("living:lamp");
+    expect(renderer.domElement.dataset.selectedObject).toBe("living:lamp");
+    expect(renderer.render).toHaveBeenCalledTimes(beforeSelection);
+    const scene = renderer.render.mock.calls[0]?.[0];
+    if (!scene) throw new Error("scene");
+    const drawer = scene
+      .getObjectByName("living:cabinet")
+      ?.children.find((o) => o.type === "Group");
+    if (!drawer) throw new Error("drawer");
+    runtime.selectObject("living:cabinet");
+    session.act("living:cabinet", "toggle");
+    const frame = request.mock.calls.at(-1)?.[0];
+    if (!frame) throw new Error("frame");
+    frame(0);
+    frame(50);
+    expect(drawer.position.z).toBeGreaterThan(0);
+    const highlight = scene.getObjectByName("f1-c-selection-highlight");
+    expect(highlight).toBeInstanceOf(Box3Helper);
+    if (highlight instanceof Box3Helper && drawer.parent)
+      expect(highlight.box.min.z).toBeCloseTo(
+        new Box3().setFromObject(drawer.parent).min.z,
+      );
+    const position = drawer.position.z;
+    runtime.pause();
+    frame(10000);
+    expect(drawer.position.z).toBe(position);
+    runtime.resume();
+    frame(10050);
+    expect(drawer.position.z).toBe(position);
+    frame(10100);
+    expect(drawer.position.z).toBeGreaterThan(position);
+    const failure = vi.fn();
+    runtime.onFailure(failure);
+    renderer.domElement.dispatchEvent(
+      new Event("webglcontextlost", { cancelable: true }),
+    );
+    expect(failure).toHaveBeenCalledOnce();
+    const renders = renderer.render.mock.calls.length;
+    frame(20000);
+    session.act("living:lamp", "toggle");
+    expect(renderer.render).toHaveBeenCalledTimes(renders);
+    expect(runtime.getDiagnostics().activeFrameLoops).toBe(0);
+    runtime.dispose();
+    runtime.dispose();
+    expect(renderer.dispose).toHaveBeenCalledOnce();
   });
 });

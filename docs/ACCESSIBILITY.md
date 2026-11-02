@@ -69,3 +69,7 @@ F6-B encontrou somente uma lacuna de evidência: faltava provar explicitamente a
 A FUNDAÇÃO está concluída arquiteturalmente: React conserva a superfície semântica, o canvas não é a única representação de função essencial e a seleção é operável sem gesto preciso. **TalkBack não foi executado nem aprovado**, e não há aprovação de leitura, anúncios, foco, ergonomia, contraste, tamanho de texto Android, áudio percebido ou acessibilidade final da Biblioteca. A indisponibilidade temporária do Moto G06 foi aceita conscientemente como dívida técnica.
 
 Antes de declarar concluído o primeiro recorte real do mundo e antes de beta/release dependente dessa experiência, executar o gate humano assistivo no build então atual e representativo — não necessariamente o APK F6-B — cobrindo TalkBack, ordem/leitura, anúncios, foco percebido, navegação convencional, operação essencial sem canvas, ergonomia, contraste, tamanho de texto Android e áudio quando aplicável.
+
+## BF-4E — checkpoint de implementação (2026-11-02)
+
+Ações ambientais e descoberta funcionam por botões semânticos mesmo sem WebGL. Detalhes agrupam cômodos; resultado usa role=status. Redução de movimento aplica transforms imediatamente e desliga oscilações decorativas. Não houve validação humana de foco, TalkBack, contraste ou ergonomia dos novos controles. [Relatório técnico](BF-4E_RELATORIO.md).

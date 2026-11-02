@@ -22,7 +22,7 @@ function isBuildingBox(
 }
 
 /** Unattached local root. Its eventual owner releases it with disposeObjectTree(). */
-export function createProceduralLibraryBuilding(): Group {
+export function createProceduralLibraryBuilding(interactive = false): Group {
   const root = new Group();
   root.name = "procedural-library-building";
   const materials = createLibraryBuildingMaterials();
@@ -328,6 +328,6 @@ export function createProceduralLibraryBuilding(): Group {
     batch.computeBoundingSphere();
     root.add(batch);
   }
-  root.add(createLibraryFurnishing());
+  root.add(createLibraryFurnishing(interactive));
   return root;
 }

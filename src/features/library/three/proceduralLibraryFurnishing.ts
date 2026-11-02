@@ -22,7 +22,7 @@ function isFurnitureMesh(
 }
 
 /** All shared resources belong exclusively to this returned root; no cross-mount cache. */
-export function createLibraryFurnishing(): Group {
+export function createLibraryFurnishing(interactive = false): Group {
   const root = new Group();
   root.name = "bf4-furnishing";
   const m = createLibraryBuildingMaterials();
@@ -81,7 +81,9 @@ export function createLibraryFurnishing(): Group {
       const w = soft ? 0.9 : 0.55;
       legs(x, z, w, 0.65, 0.42);
       part("box", m.timber, x, 0.44, z, w, 0.12, 0.68);
-      part("box", upholstery, x, 0.53, z, w - 0.08, 0.13, 0.6);
+      const cushion = part("box", upholstery, x, 0.53, z, w - 0.08, 0.13, 0.6);
+      if (interactive && placement.id === "bf4-prop:6" && x === -1)
+        cushion.name = "living-seat-cushion";
       const back = part(
         "box",
         soft ? upholstery : m.oak,
@@ -119,7 +121,9 @@ export function createLibraryFurnishing(): Group {
           chair(x, 1, 1);
           chair(x, -1, -1);
           part("box", m.burgundy, x, 0.92, 0.05, 0.43, 0.04, 0.34);
-          part("box", m.plaster, x, 0.947, 0.05, 0.39, 0.014, 0.3);
+          const page = part("box", m.plaster, x, 0.947, 0.05, 0.39, 0.014, 0.3);
+          if (interactive && placement.id === "bf4-prop:9" && x === -0.65)
+            page.name = "living-book-page";
         }
         lamp(0, 0, 0.9);
         break;
@@ -185,6 +189,8 @@ export function createLibraryFurnishing(): Group {
             0.25,
           );
           leaf.rotation.z = Math.sin(angle) * 0.5;
+          if (interactive && placement.id === "bf4-prop:13")
+            leaf.name = `living-leaf-${i}`;
         }
     }
   }
@@ -195,7 +201,7 @@ export function createLibraryFurnishing(): Group {
     Map<MeshLambertMaterial, Mesh<BufferGeometry, MeshLambertMaterial>[]>
   >();
   root.traverse((object) => {
-    if (!isFurnitureMesh(object)) return;
+    if (!isFurnitureMesh(object) || object.name.startsWith("living-")) return;
     const materials =
       batches.get(object.geometry) ??
       new Map<

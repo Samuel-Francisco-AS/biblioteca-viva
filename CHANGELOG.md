@@ -4,7 +4,14 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
-### BF-4E — Visão aprovada de objetos vivos (planejamento; 2026-11-02)
+### BF-4E — Objetos vivos concluídos no escopo dirigido, exceção CI (2026-11-02)
+
+- Dez famílias de objetos vivos com animações, iluminação, estados de sessão e sequência do Segredo do Pergaminho em quatro etapas nos cinco cômodos. Após rejeição da UX inicial com botões, interação primária por toque direto; atmosfera contextual por horário local/estudo/descoberta; React recolhido como alternativa acessível.
+- **Gate Moto G06:** toque, pan, zoom e seleção sem regressões percebidas; segredo completo 4/4, com imagens do progresso. Após hotfix, o usuário confirmou melhora dos alvos de toque de pergaminho/livro, direção correta da gaveta E e desaparecimento da faixa após 4 segundos. Encerramento e merge da [PR #12](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/12) expressamente autorizados.
+- **Exceção CI:** [41438324911](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41438324911) **FAIL global** com 661/661 Vitest, formato/lint/tipos/áudio/build/performance PASS e **20/24 E2E PASS**; coleção cheia 1280/390 px ([#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11)) e `r4-shell` interação/dez ciclos ([#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4)) seguem abertas. Sem CI verde, TalkBack PASS, benchmark sustentado ou release. [Relatório final](docs/BF-4E_RELATORIO.md).
+
+
+### BF-4E — Registro histórico da visão criativa (2026-11-02)
 
 - Documentada a proposta de dez famílias de objetos interativos, animações de props, iluminação real, eventos interdependentes, três atmosferas e um pequeno segredo encadeado nos cinco cômodos. Sem implementação, teste, APK ou merge de feature; o próximo passo é o prompt Codex sob [contrato BF-4E](docs/BF-4E_VISAO_CONTRATO.md).
 
@@ -700,3 +707,9 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 - Gates G0, G1 e G2 foram aprovados;
 - Blocos de contrato, fundação e prova Android foram encerrados.
+
+## BF-4E — implementação candidata
+
+- Dez famílias de objetos ambientais com ações nos cinco cômodos, animações e iluminação local.
+- Três atmosferas e descoberta ficcional do Pergaminho, com ações React disponíveis sem WebGL.
+- Estado somente de sessão; sem mudanças de dados ou backup. Auditoria e gate humano pendentes.

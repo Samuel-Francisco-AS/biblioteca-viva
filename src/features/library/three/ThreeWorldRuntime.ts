@@ -1,3 +1,5 @@
+import { createLivingVisuals } from "./livingVisuals";
+import type { LivingSession } from "../livingObjects";
 import { LIBRARY_SHELVES } from "../libraryShelfLayout";
 import { LIBRARY_ROOMS } from "../libraryBuildingGeometry";
 import {
@@ -95,6 +97,7 @@ export interface FixtureModelLoader {
 }
 
 export interface ThreeWorldRuntimeDependencies {
+  readonly livingSession?: LivingSession;
   readonly createRenderer?: () => ThreeWorldRenderer;
   readonly fixtureLoader?: FixtureModelLoader;
   readonly frameScheduler?: FrameScheduler;
@@ -425,7 +428,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly frameScheduler: FrameScheduler;
   private readonly now: () => number;
 
+  private readonly livingSession?: LivingSession;
+  private livingVisuals?: ReturnType<typeof createLivingVisuals>;
+  private livingFrameTime: number | undefined;
   constructor(dependencies: ThreeWorldRuntimeDependencies = {}) {
+    this.livingSession = dependencies.performanceScenario
+      ? undefined
+      : dependencies.livingSession;
     this.createRenderer =
       dependencies.createRenderer ??
       (() => new WebGLRenderer({ antialias: true, alpha: false }));
@@ -579,9 +588,17 @@ export class ThreeWorldRuntime implements WorldRuntime {
         readonly root: Object3D;
       }[] = [];
       if (composedWorld) {
-        const building = createProceduralLibraryBuilding();
+        const building = createProceduralLibraryBuilding(
+          Boolean(this.livingSession),
+        );
         mountedWorld.addLibraryBuilding(building);
         scene.add(building);
+        if (this.livingSession)
+          this.livingVisuals = createLivingVisuals(
+            building,
+            scene,
+            this.livingSession,
+          );
         const records = createLibraryRecordComposition(
           this.libraryRecordPlacements ?? [],
         );
@@ -626,6 +643,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
       this.baseSelectableObjects = Object.freeze([
+        ...(this.livingVisuals?.selectables ?? []).map(
+          ({ descriptor }) => descriptor,
+        ),
         ...(referenceScene?.selectables ?? []).map(
           ({ descriptor }) => descriptor,
         ),
@@ -642,16 +662,24 @@ export class ThreeWorldRuntime implements WorldRuntime {
         catalog: this.selectableObjects,
         navigation: this.navigation,
         onSelectionChange: this.handleSelectionChange,
+        onTapObject: (id) => {
+          if (this.isTerminal() || this.state !== "running") return;
+          if (id.startsWith("living:")) this.livingSession?.actPrimary(id);
+        },
         pickingPriorityRoots: [
           ...proceduralSelectables.map(({ root }) => root),
           ...libraryRecordSelectables.map(({ root }) => root),
         ],
         render: () => {
+          // The active RAF presents input changes on its next frame. Avoid
+          // submitting an extra complete scene for every pointer event.
+          if (this.state === "running") return;
           if (!this.renderCurrentFrame()) return;
           this.publishDiagnostics(false);
         },
         scene,
         selectables: [
+          ...(this.livingVisuals?.selectables ?? []),
           ...(referenceScene?.selectables ?? []),
           ...proceduralSelectables,
           ...libraryRecordSelectables,
@@ -699,6 +727,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
 
     if (document.hidden) {
       this.state = "paused";
+      this.livingFrameTime = undefined;
       this.pausedByVisibility = true;
       this.resetFrameMetrics();
       this.mountedWorld?.getInteraction()?.cancelActiveGestures();
@@ -740,6 +769,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (this.state !== "paused" && this.state !== "mounted") return;
     if (document.hidden) {
       this.state = "paused";
+      this.livingFrameTime = undefined;
       this.pausedByVisibility = true;
       this.publishDiagnostics(true);
       return;
@@ -1005,6 +1035,26 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const mountedWorld = this.mountedWorld;
     if (!mountedWorld) return;
     mountedWorld.settleFrame();
+    const delta =
+      this.livingFrameTime === undefined
+        ? 0
+        : Math.min(
+            0.05,
+            Math.max(0, (timestamp - this.livingFrameTime) / 1000),
+          );
+    this.livingFrameTime = timestamp;
+    try {
+      this.livingVisuals?.update(
+        delta,
+        window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
+          false,
+      );
+      if (this.livingVisuals && this.selection?.id.startsWith("living:"))
+        mountedWorld.getInteraction()?.updateHighlightBounds();
+    } catch {
+      this.failRuntime();
+      return;
+    }
     if (!this.renderCurrentFrame()) return;
     if (this.state !== "running") return;
     this.renderedFrames += 1;
@@ -1081,6 +1131,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (this.state !== "running" && this.state !== "mounted") return;
     this.mountedWorld?.cancelFrame();
     this.state = "paused";
+    this.livingFrameTime = undefined;
     this.resetFrameMetrics();
     this.mountedWorld?.getInteraction()?.cancelActiveGestures();
     this.publishDiagnostics(true);
@@ -1116,6 +1167,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const mountedWorld = this.mountedWorld;
     this.mountedWorld = undefined;
     this.navigation = undefined;
+    this.livingVisuals = undefined;
+    this.livingFrameTime = undefined;
     try {
       mountedWorld?.dispose();
     } catch {
