@@ -1,6 +1,6 @@
 # BF-4D — Organização espacial, circulação e atividades
 
-2026-11-02. **Candidata à auditoria independente da Luna e aos gates estético/físicos no Moto G06. BF-4D não encerrada nem integrada por esta execução.** D1–D4 implementadas sob autorização explícita; sem merge, release ou tag.
+2026-11-02. **Candidata em auditoria independente; inspeção visual e gate físico dirigido posteriormente aprovados pelo usuário, mas CI remota da PR #10 com falha adicional no novo E2E de coleção cheia. BF-4D não encerrada nem integrada.** D1–D4 implementadas sob autorização explícita; sem merge, release ou tag. Evidências posteriores detalhadas na seção de acompanhamento ao final deste relatório.
 
 ## Estado inicial e auditoria
 
@@ -182,3 +182,15 @@ Criados: `src/features/library/libraryShelfLayout.ts`, `librarySpatialGeometry.t
 Alterados: `src/features/library/libraryRecordLayout.ts`, `libraryRecordLayout.test.ts`, `three/libraryFurnishingLayout.ts`, `three/ThreeWorldRuntime.ts`, `three/ThreeWorldRuntime.d1.test.ts`; `e2e/bf4-environment.spec.ts`; `CHANGELOG.md`, `docs/README.md`, `docs/STATUS.md`, `docs/ROADMAP.md`, `docs/WORLD.md`, `docs/PERFORMANCE.md`, `docs/TESTING.md`, `docs/RISKS.md`, `docs/BF-4_PLANO_CONTRATO.md`.
 
 Removidos: nenhum. APK, logs, capturas, traces, caches e builds ficam fora do Git. Commit/push/PR são autorizados somente na branch BF-4D; nenhum merge será realizado por esta execução. O SHA publicado e a URL da PR constam da entrega final, evitando referência circular ao próprio commit deste relatório.
+
+## Acompanhamento pós-auditoria — 2026-11-02 (sem encerramento)
+
+**Revisão estática independente:** a Luna examinou a PR #10 (`daf0894b1c8e4dd9af7b72dd59157119c4b1c496`), a integração dos wrappers de estantes ao mundo composto, a reserva declarativa das 18 regiões e das 18 zonas/pontos, os testes de geometria, seleção e navegabilidade. Nenhum bloqueante estático inequívoco foi identificado; testes remotos e físico permanecem evidências distintas.
+
+**Gate humano dirigido — Moto G06:** usuário recompilou/atualizou APK e compartilhou quatro capturas do mundo BF-4D, aprovou a composição espacial para o escopo e relatou PASS em arraste/pan, seleção, zoom e alternância de orientação retrato↔paisagem, sem travamentos ou regressões percebidas. As capturas exibem leituras pontuais de aproximadamente 58,8–60,1 FPS e 16,6–17,0 ms/frame, sem prova de desempenho sustentado, temperatura, consumo GPU/RAM, stress com coleção cheia, TalkBack ou retorno de segundo plano nesta rodada específica.
+
+**CI remota — PR #10:** [run 41405622312](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41405622312), commit `daf0894b1c8e4dd9af7b72dd59157119c4b1c496`, terminou **FAIL**: format:check, lint, typecheck, **645 Vitest**, áudio, build e performance report PASS; **19/21 E2E PASS**, com dois timeouts (incluindo retries): (1) o cenário histórico `e2e/r4-shell.spec.ts` de dez ciclos, já acompanhado na issue #4, e (2) o **novo** `e2e/bf4-environment.spec.ts` 'coleção cheia explora cinco cômodos e quatro conexões em 1280px', durante `canvas.evaluate` na exploração após zoom. O canvas reportou aproximadamente **8,4 FPS / 119,06 ms** naquele instante sob o renderizador de software do CI (SwiftShader), sem comparação direta com o Moto G06. Esse segundo timeout não estava coberto pela exceção histórica à issue #4; não há causa raiz demonstrada, nem é lícito presumir que seja exclusivamente contenção do runner ou regressão do runtime.
+
+**Decisão de gate:** aceite físico dirigido registrado, **mas fechamento/merge suspensos pela condição expressa do usuário de ausência de bloqueantes**, até investigação/correção ou decisão específica fundamentada sobre o novo E2E. Manter PR #10 aberta, preservar assertivas, sem skips, retries adicionais, timeouts arbitrários ou declaração falsa de CI verde. Não confundir a pendência com falta de aprovação estética.
+
+**Próxima intervenção dirigida:** investigar traces e custo do novo teste em runner; discriminar demora de semeadura, renderização SwiftShader, ida/volta Playwright e comportamento do runtime. Buscar reduzir overhead do harness preservando prova de 70 livros/13 registros, navegação pelas cinco salas e captura/seleção, ou corrigir problema real se reproduzido. Reexecutar CI remota antes de nova decisão de integração. Issue #4, R-19 e TalkBack permanecem abertas. Nenhuma nova funcionalidade BF-4E autorizada neste acompanhamento.

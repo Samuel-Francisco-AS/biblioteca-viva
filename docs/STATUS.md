@@ -135,7 +135,7 @@ BF-4 🔄 BF-4B E BF-4C CONCLUÍDAS — BF-4C COM EXCEÇÃO CI; BF-4D CANDIDATA
   BF-4A ✅ auditoria + contrato + decomposição — DOCUMENTAL
   BF-4B ✅ cinco cômodos — CI e Moto G06 PASS dirigido, ressalva R-19
   BF-4C ✅ ampliação e mobília dos cinco cômodos — PASS dirigido; CI E2E FAIL aceita (#4)
-  BF-4D 🔄 organização espacial implementada — AUDITORIA E GATE HUMANO PENDENTES
+  BF-4D 🔄 organização espacial; inspeção/Moto G06 PASS dirigido; CI PR #10 FAIL (19/21 E2E); merge suspenso
   BF-4E–G ⏳ integração, personagens e gate físico PENDENTES
 ```
 
@@ -143,4 +143,4 @@ BF-4 🔄 BF-4B E BF-4C CONCLUÍDAS — BF-4C COM EXCEÇÃO CI; BF-4D CANDIDATA
 
 Base sincronizada em `6804fee4c3fff49f8807c0111bba4e08716639cf`, branch `feat/bf-4d-spatial-organization`. Estantes distribuídas em A/C/D, 13 slots BF-3 reorganizados nos cinco cômodos e 18 conjuntos ambientais preservados. Circulação declarativa de 1,2 m, quatro passagens livres, 18 zonas e 18 pontos (dez atividades e oito entradas), com validação pura e Box3 das instâncias reais. Identidades, 70 livros, overflow, seleção, câmera F3, lifecycle e F5 preservados. Sem agentes, ações BF-4E, editor, persistência, dependências ou alteração de arquitetura.
 
-**Gate local BF-4D PASS:** format:check, lint, tipos, 645 testes/80 arquivos, áudio, build, performance:report, 21/21 E2E sem retries, Android debug e diff --check. CI remota não é inferida desses resultados. Resultados reproduzíveis e limitações: [relatório BF-4D](BF-4D_RELATORIO.md). Auditoria Luna e validação estética/física no Moto G06 pendentes. Nenhum PASS humano novo; R-19, issue #4 e TalkBack permanecem abertos. **BF-4D não encerrada e sem merge nesta execução.**
+**Gate local BF-4D PASS:** formato, lint, tipos, 645 testes/80 arquivos, áudio, build, performance, 21/21 E2E, Android debug e diff --check. **Auditoria estática independente sem bloqueante inequívoco e gate dirigido Moto G06 PASS** (quatro capturas; arraste, zoom, seleção, orientação, sem regressão/travamento relatado; ~58,8–60,1 FPS pontuais). **CI remota PR #10 [41405622312](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41405622312) FAIL**, 19/21 E2E PASS: timeout histórico `r4-shell` e **timeout novo** na coleção cheia BF-4D de 1280px; este último requer investigação específica. **Sem merge/fechamento enquanto o novo gate não for esclarecido**, conforme condição da autorização do usuário. R-19, issue #4 e TalkBack abertos; sem aprovação de estabilidade sustentada. [Relatório BF-4D](BF-4D_RELATORIO.md).
