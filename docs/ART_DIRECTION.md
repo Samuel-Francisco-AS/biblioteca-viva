@@ -9,3 +9,7 @@ Escala, iluminação, materiais, densidade, animação e enquadramento ainda pre
 ## BF-4 (decisão de escopo; não é aprovação visual)
 
 A transformação visual deve alcançar os **cinco cômodos juntos** desde BF-4B, mantendo coesão geral e diferenças intencionais sem reservar cômodos a categorias. BF-4F prevê personagens reconhecíveis individualmente por silhueta, traje, acessórios e expressividade animada. Materiais, densidade, luzes, oclusão e personagens ainda requerem validação visual integrada no Moto G06. Referência: [BF-4 — Plano e contrato](BF-4_PLANO_CONTRATO.md).
+
+## BF-4F — Identidade artística dos quatro habitantes (concepção aprovada)
+
+O usuário adotou quatro personagens fantásticos detalhados: **Samael** (2,00 m, corpo robusto escuro, aura negra/lilás e gesto pesado), **Aryn** (elfa 1,70 m, cabelos escuros, pele clara, óculos e aura luminosa suave, gestos ágeis), **Ytha** (fada 1,70 m, cabelos rosa/lilás, asas de borboleta e luz feérica, atuação leve) e **Lua** (maga imortal 1,60 m, óculos, cadernos e grimório, gestos expressivos de magia instável). **Não** basta recolorir o mesmo modelo; identidade de cada um depende de silhueta, traje, acessórios, rosto, animação e comportamento. Os quatro devem ser legíveis na câmera ortográfica e dialogar visualmente com os cinco cômodos. Decisões de paleta final, rigging, efeitos, rosto e acabamento dependem de prova artística e aceite humano no Moto G06. [Bíblia BF-4F](BF-4F_CONCEPCAO_HABITANTES.md). Planejamento não equivale a asset produzido.

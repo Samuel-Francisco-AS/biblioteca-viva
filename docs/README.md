@@ -7,6 +7,7 @@ Este é o único índice da documentação ativa.
 | [`../README.md`](../README.md) | O que é a Biblioteca Viva? |
 | [`STATUS.md`](STATUS.md) | Onde estamos? |
 | [`ROADMAP.md`](ROADMAP.md) | Qual é o próximo trabalho? |
+| [`BF-4F_CONCEPCAO_HABITANTES.md`](BF-4F_CONCEPCAO_HABITANTES.md) | Quem são os quatro habitantes, como se relacionam, animam, agem e participam de quests com diálogos RPG? |
 | [`BF-4E_RELATORIO.md`](BF-4E_RELATORIO.md) | Como foi a implementação, revisão da experiência, aceite físico e fechamento dirigido da BF-4E com CI FAIL (#4/#11)? |
 | [`BF-4E_VISAO_CONTRATO.md`](BF-4E_VISAO_CONTRATO.md) | Qual é a visão aprovada de objetos vivos, reações, atmosfera e descoberta da BF-4E? |
 | [`BF-4D_RELATORIO.md`](BF-4D_RELATORIO.md) | Qual foi a organização espacial BF-4D, seu fechamento dirigido e as dívidas CI #4/#11? |
@@ -40,4 +41,4 @@ Este é o único índice da documentação ativa.
 
 A F1 encerrou o contrato temporário F0-D. [`ADR-009`](decisions/ADR-009-three-foundation.md) registra Three.js como renderer aprovado da Fundação; o contrato integral foi preservado em [`history/plans/`](history/plans/F0-D_THREE_FOUNDATION_SPIKE_CONTRACT.md).
 
-A [BF-4E](BF-4E_RELATORIO.md) foi concluída no escopo funcional e físico dirigido por autorização do usuário, preservando explicitamente as falhas E2E da CI como dívida técnica (#4/#11). A próxima etapa é BF-4F; não confundir esse fechamento com CI verde, TalkBack aprovado ou beta.
+A [BF-4E](BF-4E_RELATORIO.md) foi concluída no escopo funcional e físico dirigido por autorização do usuário, preservando explicitamente as falhas E2E da CI como dívida técnica (#4/#11). A próxima etapa é BF-4F; sua [concepção de quatro habitantes](BF-4F_CONCEPCAO_HABITANTES.md) e a [ADR-013](decisions/ADR-013-bf-4f-quatro-habitantes-rpg.md) estão aprovadas documentalmente, **sem código implementado**. Não confundir esse planejamento com CI verde, TalkBack aprovado ou beta.

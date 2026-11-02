@@ -48,11 +48,11 @@ BF-4 🔄 mundo vivo e habitável — BF-4B/C/D/E concluídas no escopo dirigido
   BF-4C ✅ ampliação e mobília concluídas com PASS dirigido, exceção CI (#4)
   BF-4D ✅ organização espacial, passagens e zonas — PASS dirigido, CI FAIL aceita (#4/#11)
   BF-4E ✅ dez famílias e três atmosferas contextuais, interação canvas e Segredo do Pergaminho 4/4 — Moto G06 PASS; CI E2E FAIL aceita (#4/#11)
-  BF-4F ⏳ personagens detalhados, animação, IA local e conversação contextual
-    BF-4F1 ⏳ identidade visual de três personagens (alvo inicial)
-    BF-4F2 ⏳ animações variadas e transições
-    BF-4F3 ⏳ comportamento autônomo e interação ambiental
-    BF-4F4 ⏳ conversação textual contextual e integração
+  BF-4F ⏳ concepção de 4 habitantes sobrenaturais aprovada — implementação de animação, IA local e quests RPG pendente
+    BF-4F1 ⏳ identidade visual dos quatro: Samael, Aryn, Ytha e Lua
+    BF-4F2 ⏳ animações variadas e transições individuais
+    BF-4F3 ⏳ comportamento autônomo, relações e interação ambiental
+    BF-4F4 ⏳ diálogos RPG ramificados (3–4 opções), 4 quests individuais e arco coletivo
   BF-4G ⏳ gate integrado, Moto G06 e fechamento
 BF-5 ⏳ consolidação do marco funcional
 ```
@@ -206,7 +206,7 @@ O APK debug atualizado foi instalado e testado pelo usuário no Moto G06. **Roda
 
 **Contrato e gates detalhados:** [BF-4 — Plano e contrato](BF-4_PLANO_CONTRATO.md); decisão de escopo [ADR-012](decisions/ADR-012-bf-4-mundo-vivo.md).
 
-BF-4B evolui **os cinco cômodos como um todo**, sem protótipo isolado de um cômodo; BF-4C os mobília, BF-4D organiza acessos e zonas de atividades, BF-4E integra interações ao runtime. BF-4F entrega três personagens visualmente distintos como alvo inicial, animações variadas, agentes comportamentais locais e conversação textual contextual offline, dividida em F1–F4; BF-4G executa o gate integrado e físico. Há gates proporcionais e resultados observáveis por implementação, sem multiplicar checkpoints administrativos.
+BF-4B evolui **os cinco cômodos como um todo**, sem protótipo isolado de um cômodo; BF-4C os mobília, BF-4D organiza acessos e zonas de atividades, BF-4E integra interações ao runtime. BF-4F entrega **quatro habitantes sobrenaturais individualizados**, animações variadas, agentes comportamentais locais e **conversa RPG com 3–4 escolhas predefinidas por nó**, quests individuais e uma compartilhada (atualização ADR-013), dividida em F1–F4; BF-4G executa o gate integrado e físico. Há gates proporcionais e resultados observáveis por implementação, sem multiplicar checkpoints administrativos.
 
 **BF-4A: PASS apenas documental.** Auditoria do baseline e contrato concluídos; **não** foram implementados ambiente, mobília, animação, agentes, diálogo ou integração, nem executados testes ou build nesta decisão. Posteriormente, BF-4B foi implementada, auditada e aprovada com a correção pontual de faixas de latão, CI verde da PR #8 e gate estético/funcional dirigido no Moto G06. **Fechada com ressalva visual R-19, não bloqueante**. **BF-4C concluída** após auditoria independente e validação física dirigida no Moto G06, aceitando por exceção [CI PR #9 (41387959550)](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41387959550) FAIL em 1/19 E2E `r4-shell` sob issue #4. A organização de estantes/TV/registros foi revisitada e aceita no gate físico dirigido da BF-4D; a [PR #10](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/10) foi autorizada a integrar por exceção CI, preservando [#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4) e [#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11). Editor livre de mobília não está aprovado. Ver [fechamento](BF-4C_RELATORIO.md). Perfil produtivo GLB animado/skinning não é coberto pela ADR-010; conversação generativa aberta depende de nova decisão sobre execução/custo/privacidade. Sem persistência espacial, alteração de dados ou bypass das dívidas CI/TalkBack.
 
@@ -410,4 +410,8 @@ BF-4E: implementação integrada em verificação. Próximos gates autorizados: 
 
 ## BF-4E — Encerrada no escopo dirigido com dívida CI (2026-11-02)
 
-[PR #12](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/12) autorizada para merge após validação física no Moto G06: dez famílias ambientais, interação direta, atmosfera pelo horário/atividade/descoberta, três modos, Segredo do Pergaminho concluído 4/4 e hotfix dos alvos pequenos, gaveta E e mensagens temporárias confirmados. [CI 41438324911](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41438324911): 661 Vitest PASS, gates estáticos/build PASS, mas **20/24 E2E PASS / CI FAIL**; coleção cheia (#11) e shell (#4) permanecem dívidas não resolvidas. Sem benchmark sustentado, TalkBack PASS, beta/release, edição persistente de móveis ou NPCs. O próximo planejamento é **BF-4F1–F4**, visando três habitantes visualmente distintos, animações, atividades, reações e conversação contextual local; BF-4G fará gate integrado. [Relatório final](BF-4E_RELATORIO.md).
+[PR #12](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/12) autorizada para merge após validação física no Moto G06: dez famílias ambientais, interação direta, atmosfera pelo horário/atividade/descoberta, três modos, Segredo do Pergaminho concluído 4/4 e hotfix dos alvos pequenos, gaveta E e mensagens temporárias confirmados. [CI 41438324911](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41438324911): 661 Vitest PASS, gates estáticos/build PASS, mas **20/24 E2E PASS / CI FAIL**; coleção cheia (#11) e shell (#4) permanecem dívidas não resolvidas. Sem benchmark sustentado, TalkBack PASS, beta/release, edição persistente de móveis ou NPCs. O próximo planejamento é **BF-4F1–F4**, visando **quatro** habitantes — Samael, Aryn, Ytha e Lua — com animações, atividades, relações próprias e **quests com diálogo RPG ramificado offline**; BF-4G fará gate integrado. [Relatório final](BF-4E_RELATORIO.md).
+
+## BF-4F — Concepção aprovada dos quatro habitantes (2026-11-02)
+
+O usuário adotou a criação inicial de **Samael (espírito demoníaco), Aryn (elfa), Ytha (fada) e Lua (maga imortal)**, com silhuetas/roupas/expressões distintas, rotinas com preferência de horário, poderes, seis relações mútuas, **quatro quests individuais** e arcos conjuntos, além de **diálogo local por escolhas de três ou quatro botões** no estilo de quests de RPG (sem LLM). **A meta anterior de três foi superada pela decisão expressa mais recente**, formalizada na [ADR-013](decisions/ADR-013-bf-4f-quatro-habitantes-rpg.md) e detalhada na [bíbia de concepção BF-4F](BF-4F_CONCEPCAO_HABITANTES.md). BF-4F1–F4 continuam **não implementadas**; roteiro de Codex, branch, testes, APK, gate físico e merge requerem autorização própria. BF-4G e dívidas #4/#11, R-19 e TalkBack permanecem.

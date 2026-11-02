@@ -138,7 +138,7 @@ BF-4 🔄 BF-4B–E CONCLUÍDAS NO ESCOPO DIRIGIDO — BF-4C/D/E COM EXCEÇÃO C
   BF-4C ✅ ampliação e mobília dos cinco cômodos — PASS dirigido; CI E2E FAIL aceita (#4)
   BF-4D ✅ organização espacial — auditoria e Moto G06 PASS dirigido; CI FAIL 19/21 aceita (#4/#11)
   BF-4E ✅ objetos vivos, interação por toque e atmosfera contextual — Moto G06 PASS dirigido; CI E2E FAIL aceita (#4/#11)
-  BF-4F ⏳ personagens distintos, animações, ações e conversação local — PRÓXIMA
+  BF-4F ⏳ concepção de quatro habitantes sobrenaturais e quests RPG aprovada — IMPLEMENTAÇÃO PENDENTE
   BF-4G ⏳ gate integrado PENDENTE
 ```
 
@@ -163,3 +163,7 @@ Implementação BF-4E em verificação na branch `feat/bf-4e-living-objects`. De
 ## BF-4E — Fechamento dirigido autorizado (2026-11-02)
 
 **BF-4E concluída e integração autorizada via [PR #12](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/12).** O usuário validou no Moto G06 a interação primária por toque sem botões principais, pan/zoom/seleção sem regressões percebidas, Segredo do Pergaminho completo 4/4, e após hotfix: alvos ampliados do pergaminho/livro, gaveta E no sentido correto e faixa temporária de 4 segundos. Dez famílias e três atmosferas implementadas, sem personagens e sem alterar Dexie/backup. A última [CI 41438324911](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41438324911) **FAIL global** apesar de 661/661 Vitest e gates estáticos/build PASS: 20/24 E2E PASS; falhas nos cenários BF-4D coleção cheia 1280/390 px e `r4-shell` interação/dez ciclos. #11/#4 seguem abertas, sem prova causal nem CI verde; TalkBack, R-19 e benchmark sustentado pendentes. **Próxima fase BF-4F**; BF-4G não iniciada. [Relatório final](BF-4E_RELATORIO.md).
+
+## BF-4F — Concepção canônica aprovada, sem código (2026-11-02)
+
+**Escopo de produto confirmado:** quatro habitantes completos, **Samael, Aryn, Ytha e Lua**, em vez dos três historicamente mencionados na BF-4A/ADR-012; personagens fantásticos/sobrenaturais, únicos em silhueta/atuação, hábitos e poderes, relacionamentos mútuos e atividades autônomas nos cinco cômodos. **Conversação offline como quests RPG**, com 3–4 alternativas predefinidas por nó decisório, escolhas consequentes, quatro quests individuais e uma compartilhada inicialmente obrigatória — não LLM/chat livre. Autoridade criativa: [BF-4F_CONCEPCAO_HABITANTES.md](BF-4F_CONCEPCAO_HABITANTES.md), decisão de escopo [ADR-013](decisions/ADR-013-bf-4f-quatro-habitantes-rpg.md). **Somente documentação aprovada:** sem personagens, modelos, quests ou agentes implementados, nenhum teste/CI/APK da BF-4F. Próximo passo: planejamento e prompt de execução autorizados separadamente. BF-4G, issues #4/#11, R-19 e TalkBack pendentes.

@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-4F — Concepção narrativa e quatro habitantes (documental; 2026-11-02)
+
+- Documento canônico dos **quatro habitantes sobrenaturais** (Samael, Aryn, Ytha e Lua): raça/altura, silhuetas, aparências, personalidade, hábitos e horário, poderes, repertório de animações, seis relações mútuas, quatro quests individuais e arcos compartilhados.
+- [ADR-013](docs/decisions/ADR-013-bf-4f-quatro-habitantes-rpg.md) substitui o antigo alvo de três habitantes por quatro e define **conversa offline por três ou quatro respostas predefinidas**, efeitos narrativos/autorizados, desenvolvimento de relações e quests RPG, **sem LLM**. [Concepção completa](docs/BF-4F_CONCEPCAO_HABITANTES.md).
+- Somente documentos alterados: **sem personagem/modelo/IA/quest codificado, build, teste físico ou BF-4F encerrada**.
+
+
 ### BF-4E — Objetos vivos concluídos no escopo dirigido, exceção CI (2026-11-02)
 
 - Dez famílias de objetos vivos com animações, iluminação, estados de sessão e sequência do Segredo do Pergaminho em quatro etapas nos cinco cômodos. Após rejeição da UX inicial com botões, interação primária por toque direto; atmosfera contextual por horário local/estudo/descoberta; React recolhido como alternativa acessível.
