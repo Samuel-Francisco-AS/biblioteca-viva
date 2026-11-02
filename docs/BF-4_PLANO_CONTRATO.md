@@ -109,3 +109,7 @@ Autorização de 2026-11-02 implementa D1–D4 na branch própria, sobre o merge
 O próximo executor deve inspecionar o checkout real e seus testes, propor o recorte **integrado dos cinco cômodos**, listar arquivos e riscos antes de modificar, produzir um ambiente visivelmente mais rico e executável, e registrar os testes efetivamente realizados. **Sem commit, push ou merge pelo Codex sem autorização de Git específica.**
 
 A BF-4A documental não produzia autorização automática para o código da BF-4B nem validação de entrega futura. A BF-4B foi posteriormente autorizada, implementada e fechada no escopo dirigido em 2026-11-02; BF-4C requer autorização e gate próprios.
+
+## BF-4E — checkpoint de implementação (2026-11-02)
+
+E1–E3 têm implementação integrada sob verificação: catálogo ambiental e sessão compartilhados, peças articuladas no loop existente, três atmosferas e descoberta. E4 reúne testes, APK e publicação. A fase permanece aberta para auditoria e gate humano. [Relatório técnico](BF-4E_RELATORIO.md).

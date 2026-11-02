@@ -1,3 +1,5 @@
+import type { ThreeWorldRuntimeDependencies } from "./three/ThreeWorldRuntime";
+import { LivingSession } from "./livingObjects";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi, type Mock } from "vitest";
@@ -16,7 +18,10 @@ import { WorldHost } from "./WorldHost";
 import { projectLibraryWorldEntries } from "./libraryWorldEntries";
 
 const { createThreeWorldRuntime } = vi.hoisted(() => ({
-  createThreeWorldRuntime: vi.fn(),
+  createThreeWorldRuntime:
+    vi.fn<
+      (dependencies?: ThreeWorldRuntimeDependencies) => Promise<WorldRuntime>
+    >(),
 }));
 
 vi.mock("./three/ThreeWorldRuntime", () => ({ createThreeWorldRuntime }));
@@ -483,8 +488,13 @@ describe("WorldHost", () => {
     createThreeWorldRuntime.mockResolvedValue(runtime);
     const view = render(<WorldHost libraryWorldSnapshot={snapshot} />);
     await screen.findByText("Ambiente 3D em execução.");
+    expect(
+      vi.mocked(createThreeWorldRuntime).mock.calls[0]?.[0]?.livingSession,
+    ).toBeInstanceOf(LivingSession);
     expect(createThreeWorldRuntime).toHaveBeenCalledWith({
       libraryWorldSnapshot: snapshot,
+      livingSession: vi.mocked(createThreeWorldRuntime).mock.calls[0]?.[0]
+        ?.livingSession,
     });
     view.rerender(
       <WorldHost

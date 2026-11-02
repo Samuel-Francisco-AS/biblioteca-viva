@@ -700,3 +700,9 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 - Gates G0, G1 e G2 foram aprovados;
 - Blocos de contrato, fundação e prova Android foram encerrados.
+
+## BF-4E — implementação candidata
+
+- Dez famílias de objetos ambientais com ações nos cinco cômodos, animações e iluminação local.
+- Três atmosferas e descoberta ficcional do Pergaminho, com ações React disponíveis sem WebGL.
+- Estado somente de sessão; sem mudanças de dados ou backup. Auditoria e gate humano pendentes.

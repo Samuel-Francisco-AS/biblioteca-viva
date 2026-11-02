@@ -38,3 +38,5 @@ Este é o único índice da documentação ativa.
 `STATUS.md` é a única declaração operacional do presente. Histórico nunca autoriza implementação.
 
 A F1 encerrou o contrato temporário F0-D. [`ADR-009`](decisions/ADR-009-three-foundation.md) registra Three.js como renderer aprovado da Fundação; o contrato integral foi preservado em [`history/plans/`](history/plans/F0-D_THREE_FOUNDATION_SPIKE_CONTRACT.md).
+
+[BF-4E — relatório de implementação e gates](BF-4E_RELATORIO.md).

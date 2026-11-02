@@ -1462,3 +1462,33 @@ blockquote {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
+
+.living-controls {
+  min-width: 0;
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-medium);
+}
+
+.living-controls summary {
+  min-height: var(--touch-target);
+  padding: var(--space-3);
+  cursor: pointer;
+  font-weight: 750;
+}
+
+.living-controls article {
+  padding: var(--space-3) 0;
+  border-top: var(--border-width) solid var(--color-border-strong);
+}
+
+.living-controls .button {
+  max-width: 100%;
+  margin: var(--space-1);
+  overflow-wrap: anywhere;
+}
+
+.living-controls .button[aria-pressed="true"] {
+  border-color: var(--color-accent);
+  background: var(--color-surface-interactive);
+}

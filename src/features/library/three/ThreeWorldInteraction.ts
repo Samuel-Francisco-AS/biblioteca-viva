@@ -192,6 +192,13 @@ export class ThreeWorldInteraction {
     this.updateDiagnostics();
   }
 
+  /** Follow articulated bounds without rebuilding helper resources per frame. */
+  updateHighlightBounds(): void {
+    if (this.disposed || !this.highlight || !this.selectedId) return;
+    const root = this.selectableRoots.get(this.selectedId);
+    if (root) this.highlight.box.setFromObject(root);
+  }
+
   setViewport(width: number, height: number): void {
     this.viewportWidth = Math.max(1, width);
     this.viewportHeight = Math.max(1, height);

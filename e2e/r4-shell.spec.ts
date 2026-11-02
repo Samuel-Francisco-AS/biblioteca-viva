@@ -75,7 +75,7 @@ test("shell abre a Biblioteca com uma única superfície Three.js", async ({
   await expect(canvas).toHaveAttribute("data-reference-proxy-types", "0");
   await expect(canvas).toHaveAttribute(
     "data-selectable-objects",
-    String(shelfIds.length),
+    String(shelfIds.length + 10),
   );
   await expect(canvas).toHaveAttribute("data-draw-calls", /^\d+$/u);
   await expect(canvas).toHaveAttribute("data-triangles", /^\d+$/u);

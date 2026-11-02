@@ -403,3 +403,7 @@ F1 aprovou a viabilidade da base Three.js; não concluiu câmera, interação, a
 D1–D4 implementadas e avaliadas: organização dos cinco cômodos, circulação de 1,2 m, 18 zonas/pontos, regressões. **Auditoria estática e gate físico/visual dirigido no Moto G06 aprovados** (quatro capturas; pan/zoom/seleção/orientação sem regressões relatadas). **CI [PR #10/41405622312](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41405622312) FAIL**, 19/21 E2E PASS: `r4-shell` histórico ([#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4)) e E2E BF-4D novo com coleção cheia 1280px ([#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11)). Usuário autorizou explicitamente concluir e integrar apesar das duas dívidas, sem falso PASS de CI; BF-4D fechada no escopo dirigido. [Relatório final](BF-4D_RELATORIO.md).
 
 BF-4E e BF-4F poderão consumir as reservas geométricas após autorização própria. Precisarão validar dimensões dos personagens, destinos/poses, ocupação simultânea e comportamento; dados BF-4D não são navmesh, ações ou rotas fisicamente aprovadas. Editor de arraste livre/persistência de mobília continuam fora do escopo aprovado. BF-4G conserva o gate integrado/físico; TalkBack e issue #4 permanecem.
+
+## BF-4E — checkpoint de implementação (2026-11-02)
+
+BF-4E: implementação integrada em verificação. Próximos gates autorizados: regressão, revisão independente da Luna e validação humana Moto G06. BF-4F permanece futura; nenhuma entidade/autonomia de personagem foi criada. [Relatório técnico](BF-4E_RELATORIO.md).

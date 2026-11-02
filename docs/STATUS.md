@@ -1,6 +1,7 @@
 # Estado atual
 
 > Referência documental: 2026-11-02.
+> BF-4E: implementação candidata em verificação; veja o checkpoint ao final e o relatório BF-4E. Auditoria e gate humano pendentes.
 
 ## Produto
 
@@ -146,6 +147,10 @@ Base sincronizada em `6804fee4c3fff49f8807c0111bba4e08716639cf`, branch `feat/bf
 
 **Gate local BF-4D PASS:** formato, lint, tipos, 645 testes/80 arquivos, áudio, build, performance, 21/21 E2E, Android debug e diff --check. **Auditoria estática independente sem bloqueante inequívoco e gate dirigido Moto G06 PASS** (quatro capturas; arraste, zoom, seleção, orientação, sem regressão/travamento relatado; ~58,8–60,1 FPS pontuais). **CI remota PR #10 [41405622312](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41405622312) FAIL**, 19/21 E2E PASS: timeout histórico `r4-shell` e **timeout novo** na coleção cheia BF-4D de 1280px; este último requer investigação específica. **Fechamento/merge autorizados expressamente em decisão posterior, mesmo com os dois timeouts, como dívida rastreada em #4 (histórico) e [#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11) (BF-4D novo).** Não declarar CI verde, causa comprovada, desempenho sustentado ou beta. R-19 e TalkBack continuam pendentes. BF-4E é a próxima etapa ainda sem autorização de implementação. [Relatório BF-4D](BF-4D_RELATORIO.md).
 
-## BF-4E — Visão criativa aprovada, sem implementação (2026-11-02)
+## BF-4E — Registro anterior da aprovação criativa (2026-11-02)
 
 O usuário adotou a proposta de transformar os cinco cômodos em ambiente reativo, com **dez famílias-alvo de objetos vivos**, animações de móveis/objetos, luz cênica real, efeitos locais, estados de sessão, três modos ambientais e descoberta ficcional encadeada. Contrato canônico: [BF-4E_VISAO_CONTRATO.md](BF-4E_VISAO_CONTRATO.md). **Ainda não há commit de implementação, APK, CI ou aceite físico da BF-4E.** Próximo passo: prompt técnico Codex, começando por sincronização com a main e terminando em PR sem merge. Preservar seis categorias, BF-4D, F5 e React acessível; BF-4F/objetos persistidos não foram antecipados. Dívidas #4 e #11, R-19 e TalkBack permanecem abertas.
+
+## BF-4E — checkpoint de implementação (2026-11-02)
+
+Implementação BF-4E em verificação na branch `feat/bf-4e-living-objects`. Dez famílias ambientais distribuídas nos cinco cômodos, sessão efêmera, três atmosferas e descoberta encadeada integradas. A autorização posterior do usuário permite implementação/publicação, substituindo as indicações anteriores de ausência de autorização. Não há encerramento nem PASS humano. [Relatório técnico](BF-4E_RELATORIO.md).

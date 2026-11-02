@@ -1,3 +1,5 @@
+import { LivingSession } from "./livingObjects";
+import { LivingControls } from "./LivingControls";
 import { useEffect, useRef, useState } from "react";
 
 import type {
@@ -45,13 +47,16 @@ function metric(value: number | null, suffix = ""): string {
 const createRuntime = async (
   readingAreaBooks: readonly ReadingAreaBook[] | undefined,
   libraryWorldSnapshot: LibraryWorldSnapshot | undefined,
+  livingSession: LivingSession,
 ): Promise<WorldRuntime> => {
   if (libraryWorldSnapshot && readingAreaBooks) {
     throw new Error("Use somente um snapshot BF por montagem.");
   }
   const { createThreeWorldRuntime } = await import("./three/ThreeWorldRuntime");
   return createThreeWorldRuntime(
-    libraryWorldSnapshot ? { libraryWorldSnapshot } : { readingAreaBooks },
+    libraryWorldSnapshot
+      ? { libraryWorldSnapshot, livingSession }
+      : { readingAreaBooks },
   );
 };
 
@@ -102,6 +107,8 @@ export function WorldHost({
   runtimeFactory,
   selectedObjectId,
 }: WorldHostProps) {
+  const [livingSession] = useState(() => new LivingSession());
+  const [livingSelection, setLivingSelection] = useState<string | null>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const runtimeRef = useRef<WorldRuntime | null>(null);
   const [selectableObjects, setSelectableObjects] = useState<
@@ -131,6 +138,9 @@ export function WorldHost({
 
   const publishSelection = (nextSelection: WorldSelection): void => {
     setSelection(nextSelection);
+    setLivingSelection(
+      nextSelection?.id.startsWith("living:") ? nextSelection.id : null,
+    );
     selectionChangeRef.current?.(nextSelection);
   };
 
@@ -140,7 +150,11 @@ export function WorldHost({
   };
 
   const selectAdjacentObject = (direction: SelectionDirection): void => {
-    const id = adjacentSelectionId(selectableObjects, selection, direction);
+    const id = adjacentSelectionId(
+      selectableObjects.filter((object) => !object.id.startsWith("living:")),
+      selection,
+      direction,
+    );
     if (id !== null) runtimeRef.current?.selectObject(id);
   };
 
@@ -169,7 +183,12 @@ export function WorldHost({
               await import("./three/ThreeWorldRuntime");
             return createThreeWorldRuntime({ performanceScenario });
           }
-        : () => createRuntime(readingAreaBooks, libraryWorldSnapshot));
+        : () =>
+            createRuntime(
+              readingAreaBooks,
+              libraryWorldSnapshot,
+              livingSession,
+            ));
 
     void effectiveRuntimeFactory()
       .then((createdRuntime) => {
@@ -235,6 +254,7 @@ export function WorldHost({
       runtimeRef.current = null;
     };
   }, [
+    livingSession,
     performanceScenario,
     readingAreaBooks,
     libraryWorldSnapshot,
@@ -368,6 +388,16 @@ export function WorldHost({
             </div>
           </fieldset>
         </>
+      )}
+      {!performanceScenario && libraryWorldSnapshot && (
+        <LivingControls
+          session={livingSession}
+          selected={livingSelection}
+          onSelect={(id) => {
+            setLivingSelection(id);
+            runtimeRef.current?.selectObject(id);
+          }}
+        />
       )}
       {status === "failed" && (
         <div className="world-fallback" role="alert">
