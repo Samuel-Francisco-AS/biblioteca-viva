@@ -62,3 +62,10 @@ BF-4E exige auditoria visual de legibilidade dos props pequenos e contextualiza�
 O usuário confirmou no Moto G06 reações animadas e ações pelos botões React, sem regressões ou perda de fluidez percebida. Métrica pontual próxima de 60,1 FPS não é benchmark sustentado. A [CI PR #14](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41532160557) foi **FAIL global: 20 E2E PASS, 10 FAIL, 1 flaky**, incluindo **quatro novos testes F2** falhos no runner integrado apesar do PASS local/físico; rastrear na [issue #15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15) separadamente de #4/#11. A autorização do usuário encerra F2 e permite merge com exceção CI documentada, não comprova estabilidade nem corrige essas dívidas. R-19, TalkBack, gate BF-4G e desempenho prolongado permanecem abertos.
 
 **Risco de produto e processo:** empobrecimento artístico por otimização antecipada e consumo da cota Codex em loops de testes/timeouts. Diretriz: ambição criativa primeiro, medir problemas reais e corrigir gargalos localizados; testes dirigidos, sem supressão de asserts. [Arte](ART_DIRECTION.md), [testes](TESTING.md), [desempenho](PERFORMANCE.md).
+
+
+## BF-4F3 — candidata e riscos de convivência (2026-11-02)
+
+R-14/R-15 parcialmente mitigados por rotas com envelopes reais, obstáculos por instância, reservas de destino, reação a bloqueio, estados/cooldowns explícitos, memória limitada e teardown testado. Isso não prova toda oclusão ou expressão física dos encontros. Passagens estreitas podem provocar esperas/cancelamentos seguros; magia manual ampla pode ficar indisponível por falta de espaço. O modo reduzido suspende percursos sem teletransporte; validar compreensão e ergonomia com TalkBack humano.
+
+O novo folio e os encontros precisam de gate artístico no Moto G06 com coleção representativa. Reutilização de clips F2 não constitui aprovação da expressão F3. CI integrada, fluidez sustentada, R-19 e TalkBack permanecem pendentes; dívidas #4/#11/#15 não absorvem falhas novas automaticamente. [Provas e roteiro F3](BF-4F3_RELATORIO.md).

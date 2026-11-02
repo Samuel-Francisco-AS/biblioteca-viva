@@ -1,3 +1,5 @@
+import { InhabitantAgency } from "./inhabitantAgency";
+import { InhabitantNavigation } from "./inhabitantNavigation";
 import { INHABITANTS } from "./inhabitants";
 import type { ThreeWorldRuntimeDependencies } from "./three/ThreeWorldRuntime";
 import { LivingSession } from "./livingObjects";
@@ -641,4 +643,30 @@ describe("WorldHost", () => {
     expect(onSelectionChange).toHaveBeenLastCalledWith(null);
     consoleError.mockRestore();
   });
+});
+
+it("F3 subscribes to the runtime semantic snapshot and releases its listener on unmount", async () => {
+  const runtime = createRuntime(),
+    agency = new InhabitantAgency(new InhabitantNavigation([]));
+  const off = vi.fn();
+  runtime.onInhabitantsChange = vi.fn<
+    NonNullable<WorldRuntime["onInhabitantsChange"]>
+  >((listener) => {
+    listener(agency.getSnapshot());
+    return off;
+  });
+  const view = render(
+    <WorldHost
+      libraryWorldSnapshot={projectLibraryWorldEntries([])}
+      runtimeFactory={() => Promise.resolve(runtime)}
+    />,
+  );
+  await waitFor(() => expect(runtime.start).toHaveBeenCalled());
+  await userEvent.click(screen.getByText("Habitantes da Biblioteca"));
+  expect(
+    screen.getByRole("region", { name: "Convivência dos habitantes" }),
+  ).toHaveTextContent("Convivência pausada");
+  view.unmount();
+  expect(off).toHaveBeenCalledOnce();
+  agency.dispose();
 });

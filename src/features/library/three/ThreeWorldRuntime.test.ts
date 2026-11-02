@@ -1,3 +1,9 @@
+import type { AgencySnapshot } from "../inhabitantAgency";
+import { readFileSync } from "node:fs";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { INHABITANTS } from "../inhabitants";
+import { LivingSession } from "../livingObjects";
+import { projectLibraryWorldEntries } from "../libraryWorldEntries";
 import {
   Box3,
   Box3Helper,
@@ -2724,4 +2730,118 @@ describe("ThreeWorldRuntime", () => {
     expect(() => runtime.dispose()).not.toThrow();
     expect(() => runtime.mount(host)).toThrow(/only be mounted once/u);
   });
+});
+
+it("BF-4F3 drives real models from one runtime loop and preserves semantic state through manual input, pause, reduced motion and WebGL failure", async () => {
+  vi.stubGlobal("ResizeObserver", TestResizeObserver);
+  let reduced = false;
+  vi.stubGlobal("matchMedia", () => ({ matches: reduced }));
+  const renderer = new TestRenderer(),
+    frames = new Map<number, FrameRequestCallback>();
+  let id = 0,
+    time = 0;
+  const models = await Promise.all(
+    INHABITANTS.map(
+      async (a) =>
+        [
+          a.key,
+          await new GLTFLoader().parseAsync(
+            new Uint8Array(
+              readFileSync(`src/features/library/three/assets/${a.key}.glb`),
+            ).buffer,
+            "",
+          ),
+        ] as const,
+    ),
+  );
+  const living = new LivingSession();
+  const runtime = new ThreeWorldRuntime({
+    libraryWorldSnapshot: projectLibraryWorldEntries([]),
+    livingSession: living,
+    createRenderer: () => renderer,
+    now: () => time,
+    inhabitantLoader: (url) => {
+      const model = models.find(([key]) => url.includes(key))?.[1];
+      if (!model) throw new Error("Unknown fictional model");
+      return Promise.resolve(model);
+    },
+    frameScheduler: {
+      request: (cb) => {
+        frames.set(++id, cb);
+        return id;
+      },
+      cancel: (i) => {
+        frames.delete(i);
+      },
+    },
+  });
+  runtime.mount(createHost());
+  await Promise.resolve();
+  await Promise.resolve();
+  runtime.start();
+  const onSnapshot = vi.fn<(snapshot: AgencySnapshot) => void>();
+  runtime.onInhabitantsChange(onSnapshot);
+  const advance = (n: number) => {
+    for (let i = 0; i < n; i++) {
+      time += 50;
+      const entry = frames.entries().next().value;
+      if (!entry) throw new Error("No world frame");
+      frames.delete(entry[0]);
+      entry[1](time);
+      expect(frames.size).toBe(1);
+    }
+  };
+  advance(240);
+  const snapshot = runtime.getInhabitantSnapshot()!;
+  expect(snapshot.agents.every((a) => a.available)).toBe(true);
+  expect(
+    snapshot.agents.some(
+      (a, i) =>
+        Math.hypot(a.x - INHABITANTS[i].x, a.z - INHABITANTS[i].z) > 0.1,
+    ),
+  ).toBe(true);
+  const scene = renderer.render.mock.calls.at(-1)![0];
+  for (const a of snapshot.agents)
+    expect(
+      scene
+        .getObjectByName(a.id)!
+        .position.distanceTo(new Vector3(a.x, 0, a.z)),
+    ).toBeLessThanOrEqual(1.22 * 0.25 + 0.01);
+  const samael = snapshot.agents.find((a) => a.key === "samael")!;
+  const selectedPosition = scene.getObjectByName(samael.id)!.position.clone();
+  runtime.selectObject(samael.id);
+  expect(renderer.domElement.dataset.highlightedObject).toBe(samael.id);
+  advance(40);
+  expect(
+    scene.getObjectByName(samael.id)!.position.equals(selectedPosition),
+  ).toBe(true);
+  runtime.pause();
+  expect(frames.size).toBe(0);
+  expect(runtime.getInhabitantSnapshot()?.mode).toBe("paused");
+  const positions = runtime
+    .getInhabitantSnapshot()!
+    .agents.map((a) => [a.x, a.z]);
+  time += 3_600_000;
+  runtime.resume();
+  advance(1);
+  expect(
+    runtime.getInhabitantSnapshot()!.agents.map((a) => [a.x, a.z]),
+  ).toEqual(positions);
+  reduced = true;
+  advance(2);
+  expect(runtime.getInhabitantSnapshot()?.mode).toBe("reduced");
+  advance(20);
+  expect(
+    runtime.getInhabitantSnapshot()!.agents.map((a) => [a.x, a.z]),
+  ).toEqual(positions);
+  renderer.domElement.dispatchEvent(
+    new Event("webglcontextlost", { cancelable: true }),
+  );
+  expect(onSnapshot.mock.calls.at(-1)![0].mode).toBe("unavailable");
+  expect(frames.size).toBe(0);
+  const calls = onSnapshot.mock.calls.length;
+  living.actPrimary("living:plant");
+  expect(onSnapshot).toHaveBeenCalledTimes(calls);
+  runtime.dispose();
+  living.dispose();
 });

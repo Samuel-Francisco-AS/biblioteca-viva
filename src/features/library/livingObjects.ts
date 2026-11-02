@@ -1,3 +1,4 @@
+import type { InhabitantKey } from "./inhabitants";
 /** Environmental session only: no conventional record identities or persistence. */
 export type LivingFamily =
   | "shelf"
@@ -143,6 +144,37 @@ export class LivingSession {
   private snapshot: LivingSnapshot;
   private readonly listeners = new Set<() => void>();
   private disposed = false;
+  private emitting = false;
+  private readonly eventListeners = new Set<
+    (events: readonly LivingEvent[], source: "user" | InhabitantKey) => void
+  >();
+
+  onEvents(
+    listener: (
+      events: readonly LivingEvent[],
+      source: "user" | InhabitantKey,
+    ) => void,
+  ): () => void {
+    if (this.disposed) return () => {};
+    this.eventListeners.add(listener);
+    return () => {
+      this.eventListeners.delete(listener);
+    };
+  }
+
+  /** Narrow agent capability: excludes all four discovery objects and personal entries. */
+  actFromInhabitant(
+    source: InhabitantKey,
+    objectId: string,
+  ): readonly LivingEvent[] {
+    const actions: Readonly<Record<string, LivingAction>> = {
+      "living:plant": "touch",
+      "living:globe": "turn",
+      "living:clock": "turn",
+    };
+    const action = actions[objectId];
+    return action ? this.act(objectId, action, source) : [];
+  }
   private studyUntil = 0;
   private magicUntil = 0;
 
@@ -210,9 +242,19 @@ export class LivingSession {
       message: `Atmosfera ${atmosphere}.`,
     });
   }
-  act(objectId: string, action: LivingAction): readonly LivingEvent[] {
+  act(
+    objectId: string,
+    action: LivingAction,
+    source: "user" | InhabitantKey = "user",
+  ): readonly LivingEvent[] {
     const object = LIVING_OBJECTS.find((o) => o.objectId === objectId);
-    if (this.disposed || !object || !object.actions.includes(action)) return [];
+    if (
+      this.disposed ||
+      this.emitting ||
+      !object ||
+      !object.actions.includes(action)
+    )
+      return [];
     const previous = this.snapshot.objects[objectId];
     if (!previous) return [];
     const objects = { ...this.snapshot.objects };
@@ -290,18 +332,26 @@ export class LivingSession {
     }
     // Special discoveries override short study context, which overrides local time.
     const atmosphere = this.resolveAtmosphere();
-    this.publish({
-      objects,
-      discovery,
-      atmosphere,
-      message,
-      revision: this.snapshot.revision,
-    });
+    this.emitting = true;
+    try {
+      this.publish({
+        objects,
+        discovery,
+        atmosphere,
+        message,
+        revision: this.snapshot.revision,
+      });
+      // Emission is explicit and follows the snapshot mutation; never inferred from subscribe().
+      for (const listener of this.eventListeners) listener(events, source);
+    } finally {
+      this.emitting = false;
+    }
     return events;
   }
   dispose(): void {
     this.disposed = true;
     this.listeners.clear();
+    this.eventListeners.clear();
   }
   private publish(snapshot: LivingSnapshot): void {
     this.snapshot = { ...snapshot, revision: this.snapshot.revision + 1 };

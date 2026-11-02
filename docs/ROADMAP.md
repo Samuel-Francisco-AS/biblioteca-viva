@@ -1,5 +1,8 @@
 # Roadmap
 
+> **Próximo gate: auditar a candidata BF-4F3 e validar convivência no Moto G06.** A implementação F3 está descrita no [relatório](BF-4F3_RELATORIO.md), com 690 Vitest PASS localmente. Fechar F3 somente após evidência técnica/remota e aceite humano aplicáveis; depois, BF-4F4 (diálogos RPG/quests) exige execução própria. Não iniciar F4/G, editor espacial ou persistência por esta entrega.
+
+
 > **Fechamento BF-4F1 (2026-11-02):** modelos iniciais de Samael, Aryn, Ytha e Lua e seleção por canvas/React **aprovados pelo usuário no Moto G06**. F1 concluída no escopo dirigido; animações corporais ficam para **F2**, autonomia para F3, diálogos/quests para F4. [Relatório final](BF-4F1_RELATORIO.md). A CI não foi declarada verde porque E2E final falhou (20 PASS, 6 FAIL, 1 flaky).
 
 **BF-4F2 concluída no escopo físico/artístico dirigido:** seleção e animações React aprovadas pelo usuário no Moto G06, sem regressões percebidas. Merge da [PR #14](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/14) autorizado por exceção CI; 20 E2E PASS, 10 FAIL, 1 flaky, incluindo quatro casos novos F2 em [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15). **Próxima BF-4F3 — agência e relações.** F4 RPG/quests e BF-4G seguem pendentes. [Relatório](BF-4F2_RELATORIO.md).

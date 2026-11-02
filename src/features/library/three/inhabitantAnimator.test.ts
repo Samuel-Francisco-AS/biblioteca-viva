@@ -2,16 +2,21 @@ import { readFileSync } from "node:fs";
 import { expect, it } from "vitest";
 import {
   BufferGeometry,
+  BufferAttribute,
+  InterleavedBufferAttribute,
   Box3,
   Group,
   InstancedMesh,
   Matrix4,
   Mesh,
+  Vector3,
+  AnimationMixer,
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import {
   INHABITANTS,
   INHABITANT_WALK_DISTANCE,
+  INHABITANT_ENVELOPES,
   type InhabitantAction,
 } from "../inhabitants";
 import { createInhabitantAnimator } from "./inhabitantAnimator";
@@ -160,3 +165,79 @@ for (const actor of INHABITANTS) {
     disposeObjectTree(environment);
   });
 }
+
+it("F3 external navigation owns translation and yaw; body walk loops, manual actions finish and reduced motion never returns to the F1 origin", async () => {
+  const gltf = await model("ytha"),
+    root = new Group();
+  root.position.set(7, 0, -3);
+  root.add(gltf.scene);
+  const animator = createInhabitantAnimator(
+    gltf.scene,
+    gltf.animations,
+    root,
+    0.55,
+    false,
+    true,
+  );
+  animator.play("walk", true);
+  advance(animator, 5);
+  expect(animator.action).toBe("walk");
+  expect(root.position.toArray()).toEqual([7, 0, -3]);
+  expect(gltf.scene.getObjectByName("Facing")!.quaternion.y).toBeCloseTo(0, 5);
+  root.position.set(-11.6, 0, 4.8);
+  root.rotation.y = 1.2;
+  animator.play("work");
+  advance(animator, 6);
+  expect(animator.action).toBe("idle");
+  advance(animator, 2, true);
+  expect(root.position.toArray()).toEqual([-11.6, 0, 4.8]);
+  expect(root.rotation.y).toBe(1.2);
+  advance(animator, 1, false);
+  expect(root.position.toArray()).toEqual([-11.6, 0, 4.8]);
+  animator.dispose();
+  disposeObjectTree(root);
+});
+
+for (const actor of INHABITANTS)
+  it(`F3 ${actor.key}: measured radial envelopes include wings, props and every authored action`, async () => {
+    const gltf = await model(actor.key);
+    const e = INHABITANT_ENVELOPES[actor.key];
+    const excess: string[] = [];
+    for (const clip of gltf.animations) {
+      const mixer = new AnimationMixer(gltf.scene);
+      mixer.clipAction(clip).play();
+      const limit =
+        clip.name === "magic"
+          ? e.magic
+          : clip.name === "work"
+            ? e.work
+            : e.travel;
+      for (let frame = 0; frame <= 32; frame++) {
+        mixer.setTime((clip.duration * frame) / 32);
+        gltf.scene.updateMatrixWorld(true);
+        gltf.scene.traverse((o) => {
+          if (!(o instanceof Mesh)) return;
+          const geometry: unknown = o.geometry;
+          if (!(geometry instanceof BufferGeometry))
+            throw new Error("Unexpected geometry");
+          const positions: unknown = geometry.getAttribute("position");
+          if (
+            !(positions instanceof BufferAttribute) &&
+            !(positions instanceof InterleavedBufferAttribute)
+          )
+            throw new Error("Unexpected vertex attribute");
+          for (let i = 0; i < positions.count; i++) {
+            const p = new Vector3()
+              .fromBufferAttribute(positions, i)
+              .applyMatrix4(o.matrixWorld);
+            if (Math.hypot(p.x, p.z) > limit)
+              excess.push(`${clip.name}:${frame}:${o.name}`);
+          }
+        });
+      }
+      mixer.stopAllAction();
+      mixer.uncacheRoot(gltf.scene);
+    }
+    expect(excess).toEqual([]);
+    disposeObjectTree(gltf.scene);
+  });

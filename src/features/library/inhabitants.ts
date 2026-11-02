@@ -66,3 +66,14 @@ export const INHABITANT_WALK_DISTANCE = {
   ytha: 0.55,
   lua: 0.6,
 } as const;
+
+export type InhabitantKey = (typeof INHABITANTS)[number]["key"];
+export type InhabitantId = (typeof INHABITANTS)[number]["id"];
+/** Measured radial vertex envelopes of the real F2 clips, rounded outward.
+ * Walking includes wings/accessories; magic needs a larger stationary space. */
+export const INHABITANT_ENVELOPES = {
+  samael: { travel: 0.66, work: 0.86, magic: 1.65, speed: 0.95 },
+  aryn: { travel: 0.62, work: 0.66, magic: 1.3, speed: 1.22 },
+  ytha: { travel: 0.92, work: 0.92, magic: 1.3, speed: 1.02 },
+  lua: { travel: 0.58, work: 0.62, magic: 1.24, speed: 1.13 },
+} as const;

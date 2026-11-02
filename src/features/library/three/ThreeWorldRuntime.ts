@@ -1,5 +1,12 @@
+import { InhabitantAgency, type AgencySnapshot } from "../inhabitantAgency";
+import { InhabitantNavigation } from "../inhabitantNavigation";
+import { collectInhabitantObstacles } from "./inhabitantObstacles";
+import { createInhabitantSceneProps } from "./inhabitantSceneProps";
 import type { InhabitantAction } from "../inhabitants";
-import { createInhabitantVisuals } from "./inhabitantVisuals";
+import {
+  createInhabitantVisuals,
+  type InhabitantLoader,
+} from "./inhabitantVisuals";
 import { createLivingVisuals } from "./livingVisuals";
 import type { LivingSession } from "../livingObjects";
 import { LIBRARY_SHELVES } from "../libraryShelfLayout";
@@ -100,6 +107,7 @@ export interface FixtureModelLoader {
 
 export interface ThreeWorldRuntimeDependencies {
   readonly livingSession?: LivingSession;
+  readonly inhabitantLoader?: InhabitantLoader;
   readonly createRenderer?: () => ThreeWorldRenderer;
   readonly fixtureLoader?: FixtureModelLoader;
   readonly frameScheduler?: FrameScheduler;
@@ -434,7 +442,17 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private inhabitants?: ReturnType<typeof createInhabitantVisuals>;
   private livingVisuals?: ReturnType<typeof createLivingVisuals>;
   private livingFrameTime: number | undefined;
+  private readonly inhabitantLoader?: InhabitantLoader;
+  private agency?: InhabitantAgency;
+  private agencyClock = 0;
+  private readonly agencyListeners = new Set<
+    (snapshot: AgencySnapshot) => void
+  >();
+  private unsubscribeAgency?: () => void;
+  private unsubscribeLivingEvents?: () => void;
+  private sceneProps?: ReturnType<typeof createInhabitantSceneProps>;
   constructor(dependencies: ThreeWorldRuntimeDependencies = {}) {
+    this.inhabitantLoader = dependencies.inhabitantLoader;
     this.livingSession = dependencies.performanceScenario
       ? undefined
       : dependencies.livingSession;
@@ -591,14 +609,21 @@ export class ThreeWorldRuntime implements WorldRuntime {
         readonly root: Object3D;
       }[] = [];
       if (composedWorld) {
-        this.inhabitants = createInhabitantVisuals(scene, undefined, (id) => {
-          mountedWorld.getInteraction()?.refreshHighlightForSelectedObject(id);
-          renderer.domElement.dataset.inhabitantsReady = String(
-            this.inhabitants?.selectables.filter(
-              ({ root }) => root.userData.loadState === "ready",
-            ).length ?? 0,
-          );
-        });
+        this.inhabitants = createInhabitantVisuals(
+          scene,
+          this.inhabitantLoader,
+          (id) => {
+            mountedWorld
+              .getInteraction()
+              ?.refreshHighlightForSelectedObject(id);
+            renderer.domElement.dataset.inhabitantsReady = String(
+              this.inhabitants?.selectables.filter(
+                ({ root }) => root.userData.loadState === "ready",
+              ).length ?? 0,
+            );
+          },
+          true,
+        );
         const building = createProceduralLibraryBuilding(
           Boolean(this.livingSession),
         );
@@ -615,6 +640,31 @@ export class ThreeWorldRuntime implements WorldRuntime {
         );
         mountedWorld.addLibraryRecords(records.root);
         scene.add(records.root);
+        this.sceneProps = createInhabitantSceneProps(building);
+        const obstacles = collectInhabitantObstacles([
+          building,
+          records.root,
+          ...proceduralSelectables.map((s) => s.root),
+          ...readingAreaBookVisuals.map((v) => v.node),
+        ]);
+        this.agency = new InhabitantAgency(
+          new InhabitantNavigation(obstacles),
+          {
+            now: () => this.agencyClock,
+            hour: () => new Date().getHours(),
+            onEnvironmentAction: (key, objectId) => {
+              this.livingSession?.actFromInhabitant(key, objectId);
+            },
+          },
+        );
+        this.unsubscribeAgency = this.agency.subscribe(() => {
+          const snapshot = this.agency?.getSnapshot();
+          if (snapshot)
+            for (const listener of this.agencyListeners) listener(snapshot);
+        });
+        this.unsubscribeLivingEvents = this.livingSession?.onEvents(
+          (events, source) => this.agency?.perceive(events, source),
+        );
         libraryRecordSelectables = records.instances
           .filter(
             ({ node }) =>
@@ -849,7 +899,23 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (this.isTerminal() || this.state !== "running") return "unavailable";
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)
       return "reduced";
+    if (this.agency && !this.agency.interrupt(id, action)) return "unavailable";
     return this.inhabitants?.play(id, action) ?? "unavailable";
+  }
+
+  getInhabitantSnapshot(): AgencySnapshot | null {
+    return this.agency?.getSnapshot() ?? null;
+  }
+
+  onInhabitantsChange(
+    listener: (snapshot: AgencySnapshot) => void,
+  ): () => void {
+    if (this.isTerminal()) return () => {};
+    this.agencyListeners.add(listener);
+    if (this.agency) listener(this.agency.getSnapshot());
+    return () => {
+      this.agencyListeners.delete(listener);
+    };
   }
 
   selectObject(id: string | null): void {
@@ -1071,11 +1137,25 @@ export class ThreeWorldRuntime implements WorldRuntime {
           );
     this.livingFrameTime = timestamp;
     try {
-      this.inhabitants?.update(
-        delta,
+      const reduced =
         window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
-          false,
-      );
+        false;
+      this.agency?.setMode(reduced ? "reduced" : "running");
+      for (const actor of this.inhabitants?.selectables ?? [])
+        this.agency?.setAvailable(
+          actor.descriptor.id,
+          actor.root.userData.loadState === "ready",
+        );
+      this.agencyClock += delta * 1000;
+      this.agency?.update();
+      if (this.agency) this.inhabitants?.drive(this.agency.getPoses());
+      this.inhabitants?.update(delta, reduced);
+      if (this.agency)
+        this.sceneProps?.update(
+          this.agency.getSnapshot().cosmetic,
+          delta,
+          reduced,
+        );
       if (this.selection?.id.startsWith("character:"))
         mountedWorld.getInteraction()?.updateHighlightBounds();
       this.livingVisuals?.update(
@@ -1165,6 +1245,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (this.state !== "running" && this.state !== "mounted") return;
     this.mountedWorld?.cancelFrame();
     this.state = "paused";
+    this.agency?.setMode("paused");
     this.livingFrameTime = undefined;
     this.resetFrameMetrics();
     this.mountedWorld?.getInteraction()?.cancelActiveGestures();
@@ -1201,6 +1282,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const mountedWorld = this.mountedWorld;
     this.mountedWorld = undefined;
     this.navigation = undefined;
+    this.agency?.setMode("unavailable");
+    this.unsubscribeAgency?.();
+    this.unsubscribeLivingEvents?.();
+    this.agency?.dispose();
+    this.agency = undefined;
+    this.agencyListeners.clear();
+    this.sceneProps = undefined;
     this.inhabitants?.dispose();
     this.inhabitants = undefined;
     this.livingVisuals = undefined;

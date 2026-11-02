@@ -1,5 +1,8 @@
 # Estado atual
 
+> **BF-4F3 — candidata à auditoria e ao Moto G06 (2026-11-02):** agência local dos quatro habitantes, rotas verificadas entre A–E, seis relações efêmeras, encontros, cooperação, conflito e reparação de folio cenográfico integrados. Gate local: 88 arquivos / 690 Vitest PASS, formato/lint/tipos/áudio/build PASS. Aceite artístico/físico, TalkBack, CI integrada e desempenho sustentado não concedidos. F4/quests e BF-4G permanecem futuras. [Contrato, provas e roteiro F3](BF-4F3_RELATORIO.md). Declarações anteriores de F3 “próxima” são cronologia anterior à candidata.
+
+
 > **Diretriz prioritária do projeto (2026-11-02):** ambição artística e criativa acima de otimização preventiva; não supor que o Moto G06 não aguenta. Construir uma experiência rica, testar proporcionalmente e medir gargalos reais antes de simplificar. Evitar loops de timeout/Playwright consumindo cota sem novo diagnóstico. [Arte](ART_DIRECTION.md), [testes](TESTING.md) e [desempenho](PERFORMANCE.md).
 
 > **BF-4F2 CONCLUÍDA NO ESCOPO DIRIGIDO (2026-11-02):** quatro habitantes animados com reações à seleção e ações pelo React aprovadas no Moto G06, sem regressão/perda de fluidez percebida; animações simples aceitas para F2, sem limitar evolução artística. 676 Vitest PASS, 4 E2E F2 locais PASS. [CI PR #14 / 41532160557](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41532160557): gates não E2E PASS; **E2E 20 PASS, 10 FAIL, 1 flaky — CI global FAIL**, incluindo quatro casos novos F2 [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15) além de #4/#11. **Merge da PR #14 expressamente autorizado por exceção CI.** Próxima BF-4F3. [Fechamento](BF-4F2_RELATORIO.md).

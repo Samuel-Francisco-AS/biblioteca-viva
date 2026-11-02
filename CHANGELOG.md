@@ -1,5 +1,13 @@
 # Changelog
 
+## BF-4F3 — candidata: autonomia e relações (2026-11-02)
+
+- Samael, Aryn, Ytha e Lua escolhem atividades, circulam pelos cinco cômodos, repousam e se aproximam espontaneamente; seis relações mudam por atrito, cooperação e reconhecimento durante a sessão.
+- Lua pode chamuscar um folio de treino fictício e aceitar ajuda para repará-lo; nada altera os seis tipos de registro ou o Segredo do Pergaminho.
+- Habitantes recolhido oferece atividades/localização, acontecimentos e vínculos sem pontuação; controles F2 interrompem e coordenam as rotinas. Pausa, movimento reduzido e falha WebGL possuem texto fiel e não simulam percursos.
+- 690 Vitest e gates locais de código/build PASS. Aceite humano/artístico, TalkBack, CI global e desempenho sustentado pendentes. [Relatório](docs/BF-4F3_RELATORIO.md).
+
+
 ## BF-4F2 — concluída no escopo dirigido (2026-11-02)
 
 - Habitantes articulados: repouso, passos com deslocamento local, giro, reação, cumprimento, atividades e magia cenográfica; Lua recupera postura após conjuração instável.

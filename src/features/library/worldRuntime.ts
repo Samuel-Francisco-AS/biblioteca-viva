@@ -1,3 +1,4 @@
+import type { AgencySnapshot } from "./inhabitantAgency";
 import type { InhabitantAction } from "./inhabitants";
 export interface WorldSelectableObject {
   readonly entryId?: string;
@@ -69,6 +70,10 @@ export interface WorldRuntime {
   pause(): void;
   resume(): void;
   resize(): void;
+  getInhabitantSnapshot?(): AgencySnapshot | null;
+  onInhabitantsChange?(
+    listener: (snapshot: AgencySnapshot) => void,
+  ): () => void;
   playInhabitantAction?(
     id: string,
     action: InhabitantAction,

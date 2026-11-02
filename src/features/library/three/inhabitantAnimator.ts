@@ -15,6 +15,7 @@ export function createInhabitantAnimator(
   wrapper: Object3D,
   walkDistance: number,
   unstableMagic: boolean,
+  externalPosition = false,
 ) {
   const mixer = new AnimationMixer(scene);
   const actions = new Map<InhabitantAction, AnimationAction>();
@@ -30,7 +31,16 @@ export function createInhabitantAnimator(
   ];
   for (const name of names) {
     const clip = clips.find((clip) => clip.name === name);
-    if (clip) actions.set(name, mixer.clipAction(clip));
+    if (clip) {
+      // F2 authored a demonstration yaw in Facing. Navigation owns world facing.
+      const bodyClip =
+        externalPosition && name === "walk" ? clip.clone() : clip;
+      if (bodyClip !== clip)
+        bodyClip.tracks = bodyClip.tracks.filter(
+          (t) => t.name !== "Facing.quaternion",
+        );
+      actions.set(name, mixer.clipAction(bodyClip));
+    }
   }
   let current: InhabitantAction = "idle";
   let elapsed = 0;
@@ -38,9 +48,16 @@ export function createInhabitantAnimator(
   let disposed = false;
   let returnX = wrapper.position.x;
   const startX = wrapper.position.x;
-  function play(name: InhabitantAction) {
+  let repeating = false;
+  function play(name: InhabitantAction, repeat = false) {
     if (disposed || reduced || !actions.has(name)) return false;
-    if (current === name && name !== "idle" && elapsed > 0) return true;
+    if (
+      current === name &&
+      repeating === repeat &&
+      name !== "idle" &&
+      elapsed > 0
+    )
+      return true;
     const previous = actions.get(current);
     const next = actions.get(name)!;
     // Retire old fades before another transition; at most two weighted actions.
@@ -49,10 +66,11 @@ export function createInhabitantAnimator(
     returnX = wrapper.position.x;
     next.reset().setEffectiveTimeScale(1).setEffectiveWeight(1);
     next.setLoop(
-      name === "idle" ? LoopRepeat : LoopOnce,
-      name === "idle" ? Infinity : 1,
+      name === "idle" || repeat ? LoopRepeat : LoopOnce,
+      name === "idle" || repeat ? Infinity : 1,
     );
-    next.clampWhenFinished = name !== "idle";
+    next.clampWhenFinished = name !== "idle" && !repeat;
+    repeating = repeat;
     next.play();
     if (previous && previous !== next)
       next.crossFadeFrom(previous, 0.22, false);
@@ -71,7 +89,7 @@ export function createInhabitantAnimator(
       if (reducedMotion) {
         if (!reduced) {
           mixer.stopAllAction();
-          wrapper.position.x = startX;
+          if (!externalPosition) wrapper.position.x = startX;
           current = "idle";
           elapsed = 0;
         }
@@ -87,16 +105,20 @@ export function createInhabitantAnimator(
       mixer.update(dt);
       const action = actions.get(current);
       if (!action) return;
-      if (current === "walk") {
+      if (!externalPosition && current === "walk") {
         const progress = Math.min(1, action.time / action.getClip().duration);
         // Local out-and-back demonstration; smooth endpoints, no accumulated drift.
         wrapper.position.x =
           startX + walkDistance * Math.sin(progress * Math.PI) ** 2;
       }
-      if (current !== "walk")
+      if (!externalPosition && current !== "walk")
         wrapper.position.x =
           returnX + (startX - returnX) * Math.min(1, elapsed / 0.22);
-      if (current !== "idle" && elapsed >= action.getClip().duration - 0.22)
+      if (
+        !repeating &&
+        current !== "idle" &&
+        elapsed >= action.getClip().duration - 0.22
+      )
         play(current === "magic" && unstableMagic ? "recover" : "idle");
       if (current === "idle" && elapsed > 0.25)
         for (const [name, retired] of actions)
