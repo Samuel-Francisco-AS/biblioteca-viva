@@ -449,8 +449,8 @@ export class ThreeWorldInteraction {
     const priority = prioritizedIntersections.find(
       (hit) => this.findSelectableId(hit.object) !== undefined,
     );
-    const environmental = environmentalIntersections.find(
-      (hit) => this.findSelectableId(hit.object)?.startsWith("living:"),
+    const environmental = environmentalIntersections.find((hit) =>
+      this.findSelectableId(hit.object)?.startsWith("living:"),
     );
     // Nearest genuinely visible prop may win; records/shelves retain precedence
     // for overlapping surfaces at equal depth, preserving conventional selection.

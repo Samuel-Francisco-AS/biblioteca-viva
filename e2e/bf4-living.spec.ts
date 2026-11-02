@@ -53,7 +53,9 @@ for (const fallback of [false, true]) {
     await expect(
       controls.getByText("Segredo do Pergaminho: 4/4"),
     ).toBeVisible();
-    await expect(controls.getByText(/Atmosfera atual: encantada/u)).toBeVisible();
+    await expect(
+      controls.getByText(/Atmosfera atual: encantada/u),
+    ).toBeVisible();
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(controls).toBeVisible();
     await page.reload();
@@ -95,9 +97,7 @@ test("BF-4E: tocar a luminária executa e repete ação sem botões React", asyn
     box.x + ((point.x + 1) * box.width) / 2,
     box.y + ((1 - point.y) * box.height) / 2,
   );
-  await expect(page.getByTestId("living-feedback")).toContainText(
-    "recolhido",
-  );
+  await expect(page.getByTestId("living-feedback")).toContainText("recolhido");
   // No permanent button bar or manual atmosphere toggles in the main experience.
   await expect(
     page.getByRole("button", { name: "tranquila", exact: true }),

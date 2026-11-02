@@ -21,7 +21,9 @@ describe("living environmental session", () => {
         type: "acted",
         objectId: object.objectId,
       });
-      expect(session.getSnapshot().revision, object.objectId).toBe(revision + 1);
+      expect(session.getSnapshot().revision, object.objectId).toBe(
+        revision + 1,
+      );
     }
     expect(new LivingSession().actPrimary("not-present")).toEqual([]);
   });
