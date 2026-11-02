@@ -281,3 +281,6 @@ O APK gerado após o fix final dos bounds não recebeu revalidação física esp
 Na coleção vazia com três estantes, Chromium headless local/DPR 1/viewport 1280×900: baseline limpo `92b78f9` com 67 meshes/calls, 52 geometrias e 804 triângulos; ambiente BF-4B com 47 meshes/calls, 32 geometrias e 5.496 triângulos. Uma versão intermediária sem agrupamento chegou a 458 calls e motivou `InstancedMesh` por material. Meshes contam batches, triângulos incluem suas instâncias. Arquitetura com materiais Lambert difusos após investigação de timeouts locais com Standard. Sem texturas de material, sombras ou pós-processamento.
 
 Build: 638.489 bytes iniciais; chunk Three 663.215 bytes. São custos locais/estruturais, não PASS físico ou FPS sustentado. Requer medição dirigida Moto G06 por alteração de geometria e iluminação. [Relatório e limites](BF-4B_RELATORIO.md).
+
+
+**Moto G06 — BF-4B, gate físico dirigido (2026-11-02):** quatro capturas exibem `60.0–60.1 FPS` pontuais, `16.7 ms` por frame, `40–80` draw calls e `5.476–5.956` triângulos em diferentes visões. Usuário não percebeu regressão de pan/zoom/seleção, e aprovou rotação/retomada e fluxo React. Não é medição sustentada de FPS, RAM/GPU ou temperatura. A leve tremulação/borramento das paredes durante movimento da câmera é pendência visual aceita (R-19).

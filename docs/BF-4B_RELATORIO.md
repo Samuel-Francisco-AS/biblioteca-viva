@@ -1,6 +1,6 @@
-# BF-4B — Implementação e publicação para auditoria
+# BF-4B — Implementação, validação e fechamento
 
-Data: 2026-11-01. Escopo: ambiente integrado dos cinco cômodos, sob ADR-012. Não encerra BF-4 nem aprova estética, TalkBack ou Moto G06.
+Implementação iniciada em 2026-11-01; **fechamento dirigido em 2026-11-02**. Escopo: ambiente integrado dos cinco cômodos, sob ADR-012. **BF-4B: PASS técnico, visual e físico dirigido.** BF-4C–G pendentes; TalkBack, desempenho sustentado e release/beta não aprovados.
 
 ## Git e autorização
 
@@ -72,4 +72,16 @@ Posteriormente, o Codex publicou a implementação integral em `feat/bf-4b-envir
 
 A auditoria independente estática não identificou regressão arquitetural bloqueante, mas detectou a **coincidência do topo das faixas de latão com o topo de pedra** nos quatro limiares, risco localizado de `z-fighting`. Foi aplicado um ajuste de posicionamento vertical: centro das oito faixas de `Y=-0.010` para `Y=-0.004` m (topo `Y=+0.006` m em vez de `Y=0`), mantendo espessura, extensão horizontal, quatro passagens e demais peças. `libraryRecordLayout.test.ts` passou a verificar as oito faixas reais mesmo após agrupamento por `InstancedMesh`, exigindo superfície superior acima da pedra e base embutida, para impedir a regressão.
 
-**Limites da revisão:** essas alterações remotas não equivalem a build local, medição física, aprovação estética ou gate de CI integral; o novo teste exige execução pela CI/checkout. A [issue #4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4) continua aberta até evidência remota consistente. O APK e hash mencionados acima pertencem **à implementação original anterior ao ajuste**, devendo ser regenerados antes do gate físico.
+**Evidência posterior à auditoria:** PR #8 / [CI 41379918451](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41379918451) PASS integral no commit `153dd6ad6ea8dc14cb0179602b3854c7d5c70f28`. O usuário posteriormente instalou o APK recompilado, aprovou o gate visual e os testes físicos dirigidos. O APK/hash da seção anterior pertencem à implementação original, **não** ao APK recompilado (hash novo não informado). A [issue #4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4) continua aberta; uma CI verde não comprova estabilidade histórica.
+
+## Fechamento BF-4B — PASS dirigido (2026-11-02)
+
+**Auditoria:** os 16 arquivos publicados foram inspecionados; arquitetura, materiais Lambert por montagem, instancing, lifecycle/disposal, isolamento F5 e continuidade dos registros BF-2/BF-3 não apresentaram bloqueantes. As oito faixas de latão nas quatro passagens tinham faces superiores coplanares com a pedra; foram elevadas em 6 mm com teste de regressão, commits `68c3dfc` e `153dd6a` (ajuste de formatação).
+
+**Gate remoto:** PR [#8](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/8), [workflow 41379918451](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41379918451), commit `153dd6a`: PASS de `format:check`, lint, typecheck, Vitest, `audio:check`, build, `performance:report` e E2E. A issue #4 permanece aberta para investigar estabilidade histórica e pós-merge; não declará-la resolvida por uma execução verde.
+
+**Gate humano no Moto G06 (declarado pelo usuário):** APK novo instalado; quatro capturas compartilhadas. Avaliação estética dos cinco cômodos aprovada; pan, zoom e seleção sem regressões percebidas. Rotação retrato/paisagem, segundo plano/retorno e abertura de registro pelo React com retorno: **todos PASS**. As capturas mostram FPS pontual `60.0–60.1`, quadro médio `16.7 ms`, draw calls `40–80` e triângulos `5.476–5.956`, com enquadramentos diferentes; **não** representam benchmark sustentado, RAM/GPU/termal ou medição de longo prazo. Pinch não foi revalidado explicitamente nesta rodada; TalkBack ainda exige gate humano específico.
+
+**Ressalva visual aceita (R-19):** leve tremulação e borramento das malhas de paredes **durante movimento da câmera**. Causa desconhecida, sem atribuir prematuramente a z-fighting ou antialiasing. O usuário autorizou adiar a investigação e considerou a ocorrência **não bloqueante para BF-4B**. Rastrear em `RISKS.md` para refinamento visual futuro, sem inflar o escopo da BF-4C. A futura reforma de UI React e viewport Three.js é decisão separada, também não bloqueante aqui.
+
+**Decisão:** BF-4B **CONCLUÍDA no escopo técnico, visual e físico dirigido**, com ressalva R-19. O mundo continua procedural, cinco cômodos neutros e quatro passagens; sem mobília extensiva, NPCs, persistência espacial, schema ou novas dependências. **Próxima etapa: BF-4C — Mobília e decoração em todos os cômodos**, ainda não iniciada. Não equivale a gate BF-4G/BF-5, TalkBack ou release/beta. As seções anteriores são o histórico da implementação e revisão, não o estado final deste fechamento.

@@ -8,7 +8,7 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 - Biblioteca funcional recebe assoalhos com juntas, pedra, painéis bordô/verde, molduras, pilastras, latão e luz quente em todos os cinco ambientes neutros.
 - Mantidos os quatro acessos, três estantes, livros/registros, seleção e navegação ortográfica. Detalhes repetidos usam instâncias por material com descarte por montagem.
-- Implementação local para revisão; aprovação estética e validação física do novo build permanecem pendentes. [Relatório](docs/BF-4B_RELATORIO.md).
+- **Fechamento dirigido (2026-11-02):** auditoria e [CI PR #8](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41379918451) PASS, APK recompilado instalado e avaliação visual/funcional PASS no Moto G06. Faixas de latão coplanares corrigidas com teste. Leve tremulação/borramento de paredes em movimento adiada como ressalva R-19 não bloqueante; reforma UI React/Three.js futura. Issue #4 e TalkBack seguem abertos; sem benchmark sustentado, beta ou release. [Fechamento BF-4B](docs/BF-4B_RELATORIO.md).
 
 
 ### BF-3F/BF-3 — Fechamento físico-funcional dirigido, com exceção CI — 2026-11-01
