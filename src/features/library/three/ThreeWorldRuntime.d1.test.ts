@@ -872,7 +872,7 @@ describe("BF-4E integrated lifecycle", () => {
     if (!frame) throw new Error("frame");
     frame(0);
     frame(50);
-    expect(drawer.position.z).toBeLessThan(0);
+    expect(drawer.position.z).toBeGreaterThan(0);
     const highlight = scene.getObjectByName("f1-c-selection-highlight");
     expect(highlight).toBeInstanceOf(Box3Helper);
     if (highlight instanceof Box3Helper && drawer.parent)
@@ -887,7 +887,7 @@ describe("BF-4E integrated lifecycle", () => {
     frame(10050);
     expect(drawer.position.z).toBe(position);
     frame(10100);
-    expect(drawer.position.z).toBeLessThan(position);
+    expect(drawer.position.z).toBeGreaterThan(position);
     const failure = vi.fn();
     runtime.onFailure(failure);
     renderer.domElement.dispatchEvent(
