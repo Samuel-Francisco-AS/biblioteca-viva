@@ -1,7 +1,6 @@
 # BF-4E — Relatório de implementação
 
-Estado: implementação candidata à auditoria independente; não encerrada. Auditoria independente e
-validação física pendentes. Nenhum PASS humano ou TalkBack é alegado.
+Estado final (2026-11-02): **fechamento funcional e físico dirigido autorizado pelo usuário**, com integração via PR #12 e **CI remota E2E FAIL formalmente aceita como dívida**. TalkBack, R-19, #4/#11 e desempenho sustentado pendentes. Trechos anteriores preservam a cronologia das candidatas, não o estado final.
 
 ## Baseline e Git
 
@@ -202,3 +201,27 @@ Três ajustes autorizados foram implementados nesta candidata:
 3. **Faixa de mensagem:** oculta inicialmente; após cada ação aparece por 4 s, com fade nos 400 ms finais. Nova ação reinicia a contagem; timers de React são cancelados quando não necessários. A mensagem continua disponível na alternativa textual acessível; com redução de movimento, não há fade animado. Testes cobrindo início, desaparecimento e reinício do tempo.
 
 **Estado:** hotfix publicado como candidato na branch BF-4E, sem merge. Nenhum novo PASS físico deste APK foi declarado. A CI desta revisão e as issues #4/#11 devem ser avaliadas separadamente; R-19 e TalkBack permanecem.
+
+## Encerramento BF-4E — aceite físico dirigido com dívida CI (2026-11-02)
+
+**Decisão final:** usuário autorizou expressamente o fechamento e merge da BF-4E após instalar no Moto G06 o APK do hotfix `d6c6fdff4fc3cb7bcb9a1355b55449ac7003b59f`, conferir os três reparos e relatar resultado satisfatório. BF-4E é **concluída no escopo funcional, criativo e físico dirigido**, **não** é uma CI verde, benchmark sustentado, gate TalkBack ou release. Integração autorizada via [PR #12](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/12), sem exigir que os E2E históricos sejam disfarçados como PASS.
+
+### Evidência observada no Moto G06
+
+- Primeira revisão da BF-4E com botões React e atmosfera manual foi rejeitada como pouco orgânica. Nova revisão adotou **ação primária por toque direto no canvas** e **atmosfera contextual** por horário local, atividade e eventos de descoberta; controles React permaneceram recolhidos como alternativa/fallback.
+- O usuário instalou o APK corrigido, testou pan, seleção e zoom sem regressões nem queda perceptível; interagiu diretamente com luminária e planta.
+- **Segredo do Pergaminho completo 4/4** por toques no próprio mundo: luminária A, pergaminho A, livro decorativo C, gaveta/relíquia E; há capturas de pistas e descoberta. Aprovação da ideia como base para refinamento narrativo posterior.
+- Na revisão final (após o hotfix), o usuário confirmou explicitamente que **livro/pergaminho estão mais fáceis de tocar**, **gaveta E abre para o sentido correto** e **faixa de mensagem surge e desaparece corretamente** (4 s com fade), sem relatar novo bloqueio. Capturas anteriores indicaram ~60 FPS pontuais, **não** desempenho sustentado.
+- A avaliação humana foi dirigida: não cobre todas as combinações de densidade, todas as dez famílias com inspeção individual, TalkBack, sessão térmica prolongada ou garantia de ausência de oclusão.
+
+### Gates técnicos no código integrado
+
+- Commit técnico de referência `d6c6fdff4fc3cb7bcb9a1355b55449ac7003b59f`; [GitHub Actions run 41438324911](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41438324911): `format:check`, lint, TypeScript, **661/661 Vitest (84 arquivos)**, `audio:check`, build e `performance:report` **PASS**.
+- **CI global FAIL:** Playwright **20/24 E2E PASS; 4 FAIL**, com timeouts em `bf4-environment.spec.ts:94` coleção cheia **1280 px e 390 px**, e `r4-shell.spec.ts:114` interação desktop + `:384` dez ciclos. A família coleção cheia é rastreada em [#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11) e shell em [#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4). **Não se demonstrou que cada timeout é a mesma causa histórica, que não há regressão, nem que o runner é culpado.** Permanecem dívidas explícitas a investigar, inclusive seu aumento de ocorrências na CI.
+- E2E ambientais da BF-4E constam entre os 20 PASS, sem que isso substitua as avaliações físicas. Não foram desativados testes nem alterados timeouts/retries para fabricar CI verde.
+
+### Limites e continuidade
+
+BF-4E preserva cinco cômodos, 70 slots de livros, 13 BF-3, 18 conjuntos de mobília, seleções convencionais, circulação BF-4D, F5, Dexie/backup sem alterações de schema e estado ambiental efêmero. Entregou dez famílias de objetos vivos, animações/iluminação, três atmosferas e história de quatro etapas, sem NPCs, backend, persistência de mobília ou LLM. Áudio/haptics ambientais opcionais não foram incluídos. A direção artística, legibilidade de pistas, refinamento de narrativa e novos alvos de toque podem ser lapidados em fases posteriores, sem reabrir automaticamente o aceite.
+
+**Dívidas ativas:** #4, #11, R-19 (tremulação de paredes), TalkBack (gate humano assistivo) e medição prolongada real de desempenho. Não declarar BF-4G, BF-5, beta/release ou todo o mundo vivo concluídos. **Próximo recorte: BF-4F**, três personagens distintos como alvo inicial, animações, atividades/comportamento local e conversação contextual offline, com planejamento e autorização específicos; BF-4G permanece gate integrado.

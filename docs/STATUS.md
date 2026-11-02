@@ -1,7 +1,7 @@
 # Estado atual
 
 > Referência documental: 2026-11-02.
-> BF-4E: implementação candidata em verificação; veja o checkpoint ao final e o relatório BF-4E. Auditoria e gate humano pendentes.
+> BF-4E: **concluída no escopo funcional e físico dirigido**, integração autorizada via PR #12 com **CI E2E FAIL assumida como dívida** (#4/#11). BF-4F é a próxima fase; TalkBack, R-19 e medição sustentada permanecem abertos.
 
 ## Produto
 
@@ -132,13 +132,14 @@ BF-3 ✅ CONCLUÍDA NO ESCOPO TÉCNICO-FUNCIONAL E FÍSICO DIRIGIDO — CI PENDE
     BF-3E2 ✅ interface funcional dos seis tipos — coberta pelo gate E3
     BF-3E3 ✅ gate consolidado — auditoria independente e CI PASS
   BF-3F ✅ 11/11 procedimentos físicos PASS — exceção formal: CI E2E instável (issue #4)
-BF-4 🔄 BF-4B–D CONCLUÍDAS — BF-4C/D COM EXCEÇÃO CI; BF-4E PRÓXIMA
+BF-4 🔄 BF-4B–E CONCLUÍDAS NO ESCOPO DIRIGIDO — BF-4C/D/E COM EXCEÇÃO CI; BF-4F PRÓXIMA
   BF-4A ✅ auditoria + contrato + decomposição — DOCUMENTAL
   BF-4B ✅ cinco cômodos — CI e Moto G06 PASS dirigido, ressalva R-19
   BF-4C ✅ ampliação e mobília dos cinco cômodos — PASS dirigido; CI E2E FAIL aceita (#4)
   BF-4D ✅ organização espacial — auditoria e Moto G06 PASS dirigido; CI FAIL 19/21 aceita (#4/#11)
-  BF-4E ⏳ visão/contrato de objetos vivos aprovados; implementação, auditoria e gate físico PENDENTES
-  BF-4F–G ⏳ personagens e gate integrado PENDENTES
+  BF-4E ✅ objetos vivos, interação por toque e atmosfera contextual — Moto G06 PASS dirigido; CI E2E FAIL aceita (#4/#11)
+  BF-4F ⏳ personagens distintos, animações, ações e conversação local — PRÓXIMA
+  BF-4G ⏳ gate integrado PENDENTE
 ```
 
 ## BF-4D — Encerrada por exceção explícita à CI (2026-11-02)
@@ -147,14 +148,18 @@ Base sincronizada em `6804fee4c3fff49f8807c0111bba4e08716639cf`, branch `feat/bf
 
 **Gate local BF-4D PASS:** formato, lint, tipos, 645 testes/80 arquivos, áudio, build, performance, 21/21 E2E, Android debug e diff --check. **Auditoria estática independente sem bloqueante inequívoco e gate dirigido Moto G06 PASS** (quatro capturas; arraste, zoom, seleção, orientação, sem regressão/travamento relatado; ~58,8–60,1 FPS pontuais). **CI remota PR #10 [41405622312](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41405622312) FAIL**, 19/21 E2E PASS: timeout histórico `r4-shell` e **timeout novo** na coleção cheia BF-4D de 1280px; este último requer investigação específica. **Fechamento/merge autorizados expressamente em decisão posterior, mesmo com os dois timeouts, como dívida rastreada em #4 (histórico) e [#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11) (BF-4D novo).** Não declarar CI verde, causa comprovada, desempenho sustentado ou beta. R-19 e TalkBack continuam pendentes. BF-4E é a próxima etapa ainda sem autorização de implementação. [Relatório BF-4D](BF-4D_RELATORIO.md).
 
-## BF-4E — Registro anterior da aprovação criativa (2026-11-02)
+## BF-4E — Registro histórico da aprovação criativa (2026-11-02)
 
-O usuário adotou a proposta de transformar os cinco cômodos em ambiente reativo, com **dez famílias-alvo de objetos vivos**, animações de móveis/objetos, luz cênica real, efeitos locais, estados de sessão, três modos ambientais e descoberta ficcional encadeada. Contrato canônico: [BF-4E_VISAO_CONTRATO.md](BF-4E_VISAO_CONTRATO.md). **Ainda não há commit de implementação, APK, CI ou aceite físico da BF-4E.** Próximo passo: prompt técnico Codex, começando por sincronização com a main e terminando em PR sem merge. Preservar seis categorias, BF-4D, F5 e React acessível; BF-4F/objetos persistidos não foram antecipados. Dívidas #4 e #11, R-19 e TalkBack permanecem abertas.
+O usuário adotou a proposta de transformar os cinco cômodos em ambiente reativo, com **dez famílias-alvo de objetos vivos**, animações de móveis/objetos, luz cênica real, efeitos locais, estados de sessão, três modos ambientais e descoberta ficcional encadeada. Contrato canônico: [BF-4E_VISAO_CONTRATO.md](BF-4E_VISAO_CONTRATO.md). **Registro histórico anterior à implementação e ao gate físico; o fechamento posterior está documentado abaixo.** Preservar seis categorias, BF-4D, F5 e React acessível; BF-4F/objetos persistidos não foram antecipados. Dívidas #4 e #11, R-19 e TalkBack permanecem abertas.
 
-## BF-4E — checkpoint de implementação (2026-11-02)
+## BF-4E — checkpoint histórico de implementação (2026-11-02)
 
 Implementação BF-4E em verificação na branch `feat/bf-4e-living-objects`. Dez famílias ambientais distribuídas nos cinco cômodos, sessão efêmera, três atmosferas e descoberta encadeada integradas. A autorização posterior do usuário permite implementação/publicação, substituindo as indicações anteriores de ausência de autorização. Não há encerramento nem PASS humano. [Relatório técnico](BF-4E_RELATORIO.md).
 
 **BF-4E — correção de UX após teste físico inicial (2026-11-02):** o usuário não aprovou o painel de botões nem os controles manuais de atmosfera. Implementação dirigida na branch da PR #12: ação primária pelo toque, ambiente contextual (hora local e atividade da sessão), React como alternativa recolhida/fallback e mensagens breves junto à cena. **Novo APK ainda requer teste humano; nenhuma aprovação final ou merge.** A CI remota da revisão deverá ser avaliada separadamente; issues #4/#11 permanecem. [Relatório BF-4E](BF-4E_RELATORIO.md).
 
 **BF-4E — novos refinamentos autorizados (2026-11-02):** o usuário concluiu o Segredo do Pergaminho pelo toque no Moto G06. Foram identificadas três melhorias localizadas, agora implementadas na candidata da PR #12: alvos de toque ampliados para livro/pergaminho pequenos, gaveta E movendo-se para o lado acessível e feedback temporário de quatro segundos. Revalidação remota e do APK **pendentes**; sem merge/fechamento da BF-4E. Issues #4/#11, R-19 e TalkBack continuam abertas.
+
+## BF-4E — Fechamento dirigido autorizado (2026-11-02)
+
+**BF-4E concluída e integração autorizada via [PR #12](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/12).** O usuário validou no Moto G06 a interação primária por toque sem botões principais, pan/zoom/seleção sem regressões percebidas, Segredo do Pergaminho completo 4/4, e após hotfix: alvos ampliados do pergaminho/livro, gaveta E no sentido correto e faixa temporária de 4 segundos. Dez famílias e três atmosferas implementadas, sem personagens e sem alterar Dexie/backup. A última [CI 41438324911](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41438324911) **FAIL global** apesar de 661/661 Vitest e gates estáticos/build PASS: 20/24 E2E PASS; falhas nos cenários BF-4D coleção cheia 1280/390 px e `r4-shell` interação/dez ciclos. #11/#4 seguem abertas, sem prova causal nem CI verde; TalkBack, R-19 e benchmark sustentado pendentes. **Próxima fase BF-4F**; BF-4G não iniciada. [Relatório final](BF-4E_RELATORIO.md).

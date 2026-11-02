@@ -50,3 +50,9 @@ R-19 permanece sem correção e sem novo diagnóstico físico: capturas estátic
 ## BF-4E — checkpoint de implementação (2026-11-02)
 
 BF-4E exige auditoria visual de legibilidade dos props pequenos e contextualização mobile. Flores permanecem até reversão explícita; não há expiração temporal automática. Áudio/haptics ambientais não foram incluídos. Timeout de coleção cheia continua sob #11, sem causa comprovada. R-19, TalkBack e #4 permanecem abertos. [Relatório técnico](BF-4E_RELATORIO.md).
+
+## BF-4E — Riscos no fechamento dirigido por exceção (2026-11-02)
+
+**Aceite funcional no Moto G06:** as dez famílias e três atmosferas têm código e testes; no aparelho o usuário confirmou navegação/seleção sem regressão percebida, Segredo do Pergaminho 4/4 por toques, acendimento da luminária, resposta de planta e correções de precisão do livro/pergaminho, orientação da gaveta E e duração de pistas. Outras famílias, tipos de carga e sessões longas não receberam um gate humano exaustivo. Áudio e haptics ambientais opcionais não foram implementados.
+
+**Dívida CI explicitamente aceita para fechamento/merge BF-4E:** [run 41438324911](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41438324911) **FAIL global** apesar de 661 Vitest/gates de build PASS; 20/24 E2E PASS, timeouts nos testes de coleção cheia **1280 e 390** (issue [#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11)) e shell desktop/dez ciclos (issue [#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4)). Não se provou que a causa de cada falha é histórica ou que o mundo esteja livre de regressões de densidade/tempo de resposta. Não suavizar asserts, não fechar issues sem prova e não alegar CI verde. **R-19**, TalkBack, avaliação física sustentada de R-09/R-13 e BF-4G permanecem pendentes. Nenhuma aprovação de beta/release ou editor/persistência espacial foi concedida. [Relatório](BF-4E_RELATORIO.md).

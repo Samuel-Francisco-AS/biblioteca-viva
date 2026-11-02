@@ -1,6 +1,6 @@
 # BF-4 — Mundo Vivo e Habitável: plano e contrato
 
-> **Estado atual (2026-11-02):** BF-4A documental PASS; BF-4B concluída com PASS dirigido; BF-4C e **BF-4D encerradas no escopo técnico e físico/visual dirigido por exceção explícita ao gate de CI remota**. BF-4E–G pendentes. Issues #4 e #11, R-19 e TalkBack continuam abertos; sem beta/release. Trechos BF-4A preservam planejamento histórico.
+> **Estado atual (2026-11-02):** BF-4A documental PASS; BF-4B concluída com PASS dirigido; BF-4C, **BF-4D e BF-4E encerradas no escopo técnico e físico/visual dirigido por exceção explícita ao gate de CI remota**. BF-4F–G pendentes. Issues #4 e #11, R-19 e TalkBack continuam abertos; sem beta/release. Trechos BF-4A preservam planejamento histórico.
 >
 > **Baseline auditado:** `main` `a702f897f6db5903c0becb61df54bc9f18be455a` (fechamento BF-3), sob ADR-008–012. As seções identificadas como planejamento prescrevem trabalho futuro; os estados B/C/D registram a evolução autorizada posterior.
 
@@ -70,13 +70,13 @@ Autorização específica de 2026-11-02 acrescentou C1 (salão 1,8–2× e later
 
 Autorização de 2026-11-02 implementa D1–D4 na branch própria, sobre o merge BF-4C `6804fee4`. Três estantes em A/C/D, 13 slots explícitos nos cinco cômodos e 18 conjuntos ambientais preservados. Reservas de circulação de 1,2 m, dez zonas de atividade e oito de entrada, com pontos/raios/orientações e validação geométrica independente do renderer. [Relatório BF-4D](BF-4D_RELATORIO.md) registra as provas reais e os gates. **Fechamento:** auditoria estática independente e gate físico/visual dirigido no Moto G06 favoráveis; [CI PR #10/41405622312](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41405622312) FAIL em `r4-shell` histórico (#4) e novo E2E de coleção cheia 1280px ([#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11)), 19/21 E2E PASS. Usuário expressamente decidiu aceitar essas dívidas e autorizar o fechamento/merge, sem declarar CI verde ou resolução causal. [Relatório](BF-4D_RELATORIO.md). Pontos são aproximações, sem animação, pose de assento, pathfinding, editor, persistência ou interações E. Não altera ADR-012 nem amplia o escopo futuro autorizado.
 
-### BF-4E — Objetos vivos, interação e atmosfera (VISÃO APROVADA; IMPLEMENTAÇÃO PENDENTE)
+### BF-4E — Objetos vivos, interação e atmosfera (CONCLUÍDA NO ESCOPO DIRIGIDO; EXCEÇÃO CI)
 
 - Integrar a cena habitável, props e zonas de interação ao runtime funcional e host; objetos com ações simples e observáveis, feedback visual + textual, sem comandos arriscados.
 - Garantir falhas, fallback React, montagem/desmontagem, F5 isolado, independência de snapshots BF-3 e interação sem conflito com tap/pan/pinch.
 - **Gate E:** testes de picking e interação, ownership/falhas/lifecycle, regressão dos seis tipos, acesso sem WebGL e build físico intermediário.
 
-**Extensão criativa adotada em 2026-11-02:** a BF-4E evolui de ações isoladas para um ambiente interativo integrado. [Visão e contrato BF-4E](BF-4E_VISAO_CONTRATO.md): dez famílias-alvo de objetos vivos (mínimo de oito plenamente funcionais), animações reais de props, luz cênica dinâmica, efeitos sonoros/táteis opcionais, três atmosferas, estados efêmeros, eventos locais e uma descoberta ficcional encadeada. Cinco cômodos, React acessível e distinção entre interação ambiental e registros convencionais são obrigatórios. Isso é **visão aprovada, não código pronto, não autorização de merge, nem escopo BF-4F**. Gate físico e CI futuros; dívidas #4/#11, R-19 e TalkBack preservadas.
+**Extensão criativa adotada em 2026-11-02 (registro anterior ao fechamento):** a BF-4E evolui de ações isoladas para um ambiente interativo integrado. [Visão e contrato BF-4E](BF-4E_VISAO_CONTRATO.md): dez famílias-alvo de objetos vivos (mínimo de oito plenamente funcionais), animações reais de props, luz cênica dinâmica, efeitos sonoros/táteis opcionais, três atmosferas, estados efêmeros, eventos locais e uma descoberta ficcional encadeada. Cinco cômodos, React acessível e distinção entre interação ambiental e registros convencionais são obrigatórios. Isso é **visão aprovada, não código pronto, não autorização de merge, nem escopo BF-4F**. Gate físico e CI futuros; dívidas #4/#11, R-19 e TalkBack preservadas.
 
 ### BF-4F — Habitantes, animação, comportamento e conversa (PENDENTE)
 
@@ -110,6 +110,10 @@ O próximo executor deve inspecionar o checkout real e seus testes, propor o rec
 
 A BF-4A documental não produzia autorização automática para o código da BF-4B nem validação de entrega futura. A BF-4B foi posteriormente autorizada, implementada e fechada no escopo dirigido em 2026-11-02; BF-4C requer autorização e gate próprios.
 
-## BF-4E — checkpoint de implementação (2026-11-02)
+## BF-4E — checkpoint histórico de implementação (2026-11-02)
 
 E1–E3 têm implementação integrada sob verificação: catálogo ambiental e sessão compartilhados, peças articuladas no loop existente, três atmosferas e descoberta. E4 reúne testes, APK e publicação. A fase permanece aberta para auditoria e gate humano. [Relatório técnico](BF-4E_RELATORIO.md).
+
+## BF-4E — Decisão final de fechamento (2026-11-02)
+
+A BF-4E entregou nos cinco cômodos dez famílias de objetos vivos, animações e estados efêmeros, interação primária pelo toque no canvas, fallback React acessível, atmosfera contextual (horário local, atividade de estudo, descoberta) e sequência completa do Segredo do Pergaminho. O usuário validou em APK no Moto G06 a descoberta 4/4 e correções posteriores de toque dos props pequenos, abertura da gaveta E e faixa de pista de 4 segundos, sem regressão percebida de pan/zoom/seleção. **Fechamento/merge autorizado expressamente após esse gate dirigido.** [CI PR #12/41438324911](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41438324911) **FAIL 20/24 E2E** nos cenários BF-4D coleção cheia (1280/390) e r4-shell (interação/dez ciclos), sob investigação das issues [#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11) e [#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4); 661 Vitest e demais gates técnicos PASS. Isso **não aprova CI, TalkBack, R-19, desempenho sustentado, beta ou release.** BF-4F, com três personagens completos como alvo inicial e sem LLM generativa não autorizada, é o próximo recorte. [Relatório final](BF-4E_RELATORIO.md).
