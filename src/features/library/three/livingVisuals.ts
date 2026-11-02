@@ -241,7 +241,7 @@ export function createLivingVisuals(
           case "cabinet":
             item.moving.position.z = approach(
               item.moving.position.z,
-              -target * 0.42,
+              target * 0.42,
             );
             break;
           case "seat":

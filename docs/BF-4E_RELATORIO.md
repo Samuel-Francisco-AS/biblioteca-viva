@@ -190,3 +190,15 @@ A entrega permanece candidata, com E2E global 22/24 e ressalvas #4/#11.
 **Testes acrescentados/ajustados:** ações primárias de dez famílias, regras de dia/noite/atividade/descoberta e sequência completa por toques na lógica, atualização dos E2E de fallback e prova de dois toques na luminária pelo canvas. **São critérios/testes implementados, não afirmação de execução bem-sucedida:** registrar resultados após CI da nova commit, com falhas diferenciadas de #4/#11.
 
 **Limites:** não há inferência de atividade externa ao aplicativo, leitura de comportamento pessoal ou uso de rede. O gesto principal é toque curto; ações secundárias como intensidade e exame detalhado permanecem na alternativa textual. Gate humano do novo APK, compatibilidade de picking das dez famílias no mundo, TalkBack, desempenho sustentado e o fechamento BF-4E continuam pendentes.
+
+## Reparos de polimento após gate físico do Segredo do Pergaminho (2026-11-02)
+
+O usuário instalou o APK BF-4E corrigido e completou as quatro etapas do Segredo do Pergaminho somente pelo canvas, com capturas das pistas 1/4 a 3/4 e do achado final. Arraste, seleção, zoom e interações com planta e luminária responderam sem perda de desempenho percebida (~60 FPS pontuais). **Gate funcional dirigido positivo**, sem equivaler a performance sustentada ou encerramento BF-4E.
+
+Três ajustes autorizados foram implementados nesta candidata:
+
+1. **Livro e pergaminho pequenos:** alvo complementar de 28 px CSS no centro de bounds projetados para cada um dos dois props. Só é considerado quando raycast físico não selecionou nada, sem alterar mesh, layout, highlight, circulação nem prioridade dos livros/registros convencionais. Testes cobrem alcance próximo, distância, fora da vista e ambos os tipos; verificar novamente em zoom diferente no Android.
+2. **Gaveta no cômodo E:** movimento passou para +0,42 m no Z local, afastando-se da parede traseira, preservando reversibilidade. Teste da transformação atualizado.
+3. **Faixa de mensagem:** oculta inicialmente; após cada ação aparece por 4 s, com fade nos 400 ms finais. Nova ação reinicia a contagem; timers de React são cancelados quando não necessários. A mensagem continua disponível na alternativa textual acessível; com redução de movimento, não há fade animado. Testes cobrindo início, desaparecimento e reinício do tempo.
+
+**Estado:** hotfix publicado como candidato na branch BF-4E, sem merge. Nenhum novo PASS físico deste APK foi declarado. A CI desta revisão e as issues #4/#11 devem ser avaliadas separadamente; R-19 e TalkBack permanecem.

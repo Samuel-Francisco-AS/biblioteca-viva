@@ -21,6 +21,7 @@ import {
 import { CameraNavigation } from "./CameraNavigation";
 import { CAMERA_TARGET_Y } from "./cameraMath";
 import type { ReferenceSelectableObject } from "./referenceScene";
+import { findExpandedLivingTap } from "./smallLivingTapTargets";
 
 type GestureMode = "idle" | "tap" | "pan" | "pinch";
 
@@ -465,7 +466,16 @@ export class ThreeWorldInteraction {
           .intersectObjects([...this.selectableRoots.values()], true)
           .find((hit) => this.findSelectableId(hit.object) !== undefined);
     const hit = chosen ?? fallback;
-    const selectedId = hit ? this.findSelectableId(hit.object) : undefined;
+    // A projected, larger hit target is considered only after 3D geometry misses.
+    // Existing books, shelves and every direct ray hit keep their precedence.
+    const selectedId = hit
+      ? this.findSelectableId(hit.object)
+      : findExpandedLivingTap(
+          this.selectableRoots,
+          this.camera,
+          bounds,
+          position,
+        );
     this.selectObject(selectedId ?? null);
     if (selectedId?.startsWith("living:")) this.onTapObject?.(selectedId);
   }

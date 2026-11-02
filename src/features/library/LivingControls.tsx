@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import {
   LIVING_OBJECTS,
   type LivingSession,
@@ -29,9 +29,28 @@ const actionLabels: Record<string, Partial<Record<LivingAction, string>>> = {
 
 export function LivingFeedback({ session }: { session: LivingSession }) {
   const state = useSyncExternalStore(session.subscribe, session.getSnapshot);
+  const [visible, setVisible] = useState(false);
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    if (state.revision === 0 || state.message === "Explore os cinco cômodos.") {
+      return;
+    }
+    setVisible(true);
+    setFading(false);
+    const fade = window.setTimeout(() => setFading(true), 3600);
+    const hide = window.setTimeout(() => setVisible(false), 4000);
+    return () => {
+      window.clearTimeout(fade);
+      window.clearTimeout(hide);
+    };
+  }, [state.message, state.revision]);
+
+  if (!visible) return null;
   return (
     <p
       className="living-world-feedback"
+      data-fading={fading}
       role="status"
       aria-live="polite"
       data-testid="living-feedback"

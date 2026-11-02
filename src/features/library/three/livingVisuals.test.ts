@@ -41,7 +41,8 @@ describe("living visuals", () => {
     expect(find("living:lamp").light?.intensity).toBeGreaterThan(0);
     session.act("living:cabinet", "toggle");
     visuals.update(0, true);
-    expect(find("living:cabinet").moving.position.z).toBe(-0.42);
+    // Drawer now opens into the accessible room, away from the rear wall.
+    expect(find("living:cabinet").moving.position.z).toBe(0.42);
     session.act("living:cabinet", "toggle");
     visuals.update(0, true);
     expect(find("living:cabinet").moving.position.z).toBeCloseTo(0);
