@@ -11,16 +11,16 @@ describe("LivingFeedback", () => {
     const session = new LivingSession();
     const view = render(<LivingFeedback session={session} />);
     expect(screen.queryByTestId("living-feedback")).toBeNull();
-    act(() => session.actPrimary("living:lamp"));
+    void act(() => session.actPrimary("living:lamp"));
     expect(screen.getByTestId("living-feedback")).toHaveTextContent(
       "A luz revela",
     );
-    act(() => vi.advanceTimersByTime(3600));
+    void act(() => vi.advanceTimersByTime(3600));
     expect(screen.getByTestId("living-feedback")).toHaveAttribute(
       "data-fading",
       "true",
     );
-    act(() => vi.advanceTimersByTime(400));
+    void act(() => vi.advanceTimersByTime(400));
     expect(screen.queryByTestId("living-feedback")).toBeNull();
     view.unmount();
     session.dispose();
@@ -31,11 +31,11 @@ describe("LivingFeedback", () => {
     let current = new Date(2026, 10, 2, 21);
     const session = new LivingSession(() => current);
     const view = render(<LivingFeedback session={session} />);
-    act(() => session.actPrimary("living:lamp"));
-    act(() => vi.advanceTimersByTime(4000));
+    void act(() => session.actPrimary("living:lamp"));
+    void act(() => vi.advanceTimersByTime(4000));
     expect(screen.queryByTestId("living-feedback")).toBeNull();
     current = new Date(2026, 10, 3, 10);
-    act(() => session.refreshContext());
+    void act(() => session.refreshContext());
     expect(screen.queryByTestId("living-feedback")).toBeNull();
     view.unmount();
     session.dispose();
@@ -45,14 +45,14 @@ describe("LivingFeedback", () => {
     vi.useFakeTimers();
     const session = new LivingSession();
     const view = render(<LivingFeedback session={session} />);
-    act(() => session.actPrimary("living:lamp"));
-    act(() => vi.advanceTimersByTime(2500));
-    act(() => session.actPrimary("living:lamp"));
-    act(() => vi.advanceTimersByTime(2000));
+    void act(() => session.actPrimary("living:lamp"));
+    void act(() => vi.advanceTimersByTime(2500));
+    void act(() => session.actPrimary("living:lamp"));
+    void act(() => vi.advanceTimersByTime(2000));
     expect(screen.getByTestId("living-feedback")).toHaveTextContent(
       "recolhido",
     );
-    act(() => vi.advanceTimersByTime(2000));
+    void act(() => vi.advanceTimersByTime(2000));
     expect(screen.queryByTestId("living-feedback")).toBeNull();
     view.unmount();
     session.dispose();
