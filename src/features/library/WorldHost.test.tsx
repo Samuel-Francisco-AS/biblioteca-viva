@@ -1,3 +1,4 @@
+import { INHABITANTS } from "./inhabitants";
 import type { ThreeWorldRuntimeDependencies } from "./three/ThreeWorldRuntime";
 import { LivingSession } from "./livingObjects";
 import { act, render, screen, waitFor } from "@testing-library/react";
@@ -192,6 +193,24 @@ describe("WorldHost", () => {
     expect(next).toHaveFocus();
     await user.keyboard("{Enter}");
     expect(runtime.selectObject).toHaveBeenLastCalledWith("bookshelf-01");
+  });
+
+  it("preserva navegação de objetos quando habitantes precedem o catálogo", async () => {
+    const user = userEvent.setup();
+    const runtime = createRuntime();
+    runtime.getSelectableObjects.mockReturnValue([
+      ...INHABITANTS,
+      ...runtime.getSelectableObjects(),
+    ]);
+    render(<WorldHost runtimeFactory={() => Promise.resolve(runtime)} />);
+    const next = await screen.findByRole("button", { name: "Próximo →" });
+    await user.click(next);
+    expect(runtime.selectObject).toHaveBeenLastCalledWith("bookshelf-01");
+    act(() => runtime.emitSelection(INHABITANTS[0]));
+    await user.click(next);
+    expect(runtime.selectObject).toHaveBeenLastCalledWith("bookshelf-01");
+    await user.click(screen.getByRole("button", { name: "← Anterior" }));
+    expect(runtime.selectObject).toHaveBeenLastCalledWith("fixture-pyramid");
   });
 
   it("avança a partir da seleção vazia e percorre o catálogo", async () => {

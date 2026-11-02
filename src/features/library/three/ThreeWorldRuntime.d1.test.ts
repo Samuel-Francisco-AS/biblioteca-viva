@@ -302,7 +302,10 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
     const scene = renderer.render.mock.calls.at(-1)?.[0];
     const camera = renderer.render.mock.calls.at(-1)?.[1];
     const catalog = runtime.getSelectableObjects();
-    expect(catalog).toHaveLength(86);
+    expect(catalog).toHaveLength(90);
+    expect(
+      catalog.filter(({ id }) => id.startsWith("character:")),
+    ).toHaveLength(4);
     expect(new Set(catalog.map(({ id }) => id)).size).toBe(catalog.length);
     for (const placement of assignment.placements) {
       const descriptor = catalog.find(({ id }) => id === placement.instanceId);
@@ -855,7 +858,7 @@ describe("BF-4E integrated lifecycle", () => {
     });
     runtime.mount(host());
     runtime.start();
-    expect(runtime.getSelectableObjects()).toHaveLength(96);
+    expect(runtime.getSelectableObjects()).toHaveLength(100);
     const beforeSelection = renderer.render.mock.calls.length;
     runtime.selectObject("living:lamp");
     expect(renderer.domElement.dataset.selectedObject).toBe("living:lamp");

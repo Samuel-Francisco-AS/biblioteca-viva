@@ -76,3 +76,7 @@ O tooling posterior poderá relatar, sem reprovar automaticamente: tamanho do GL
 - Se a fonte editável local esperada não estiver disponível no checkout, P3D-B dependerá de recuperá-la do laboratório F4; não deve inventar nem baixar arquivos como substituição.
 - P3D-C tratará validação e relatório automatizados; P3D-D, preparação/exportação reproduzível; P3D-E, ingestão produtiva, ownership e unload; e P3D-F, gate integrado e fechamento.
 
+
+## Extensão localizada BF-4F1 — 2026-11-02
+
+O pedido explícito de BF-4F1 autoriza validar animação durante a produção útil. Os quatro candidatos originais agora exportam GLBs autocontidos com clip de transformação de nó rígido Head, carregado por GLTFLoader/AnimationMixer. Fonte Blender e receita preservadas; testes de parse, alturas, clip e descarte em `inhabitantVisuals.test.ts`. Owner local para a montagem, callback tardio descartado, ações/bindings liberados antes da árvore. Não há skinning, skeletons, texturas ou novos decoders; nenhum suporte geral a esses recursos está sendo aprovado. O agrupamento offline por material/pai responde a lentidão observada no E2E inicial, sem política global. Aceite artístico/físico e revisão independente ainda pendentes: [relatório BF-4F1](../BF-4F1_RELATORIO.md).

@@ -1,5 +1,7 @@
 # BF-4F — Bíblia dos quatro habitantes: concepção, narrativa e interação
 
+> Atualização BF-4F1 (2026-11-02): quatro modelos candidatos implementados e integrados, com fontes Blender, GLB animado por nó e seleção React/canvas. **F1 aberta** para revisão independente, refinamento de aura/asas e aceite artístico/físico. Trechos anteriores sobre ausência de código BF-4F descrevem a situação prévia. [Entrega, testes e pendências](BF-4F1_RELATORIO.md).
+
 > **Estado em 2026-11-02:** **concepção criativa aprovada pelo usuário e documentada**; execução orientada pelo [plano técnico BF-4F](BF-4F_PLANO_TECNICO.md), **sem preflight independente**. Não é implementação. BF-4F1–F4, builds, testes, assets definitivos, auditoria e gate humano ainda estão pendentes. Referência canônica de **produto e narrativa** para o Codex, em conjunto com [BF-4 — Plano e contrato](BF-4_PLANO_CONTRATO.md), [ADR-013](decisions/ADR-013-bf-4f-quatro-habitantes-rpg.md), [ADR-012](decisions/ADR-012-bf-4-mundo-vivo.md), [ART_DIRECTION](ART_DIRECTION.md), [WORLD](WORLD.md) e [BF-4E — Objetos Vivos](BF-4E_VISAO_CONTRATO.md).
 >
 > **Mudança expressa em relação à BF-4A:** o objetivo inicial agora é **QUATRO habitantes** — **Samael, Aryn, Ytha e Lua**, não três. Conversas são **árvores de diálogo de RPG com três ou quatro respostas predefinidas**; **não há LLM**, campo obrigatório de texto livre nem serviço externo. Os detalhes adicionais descritos aqui são orientação criativa para implementação e validação, não prova de que um asset, interação ou quest já existe.

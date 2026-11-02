@@ -441,7 +441,7 @@ export class ThreeWorldInteraction {
       true,
     );
     const environmentalRoots = [...this.selectableRoots]
-      .filter(([id]) => id.startsWith("living:"))
+      .filter(([id]) => id.startsWith("living:") || id.startsWith("character:"))
       .map(([, root]) => root);
     const environmentalIntersections = this.raycaster.intersectObjects(
       environmentalRoots,
@@ -450,8 +450,8 @@ export class ThreeWorldInteraction {
     const priority = prioritizedIntersections.find(
       (hit) => this.findSelectableId(hit.object) !== undefined,
     );
-    const environmental = environmentalIntersections.find((hit) =>
-      this.findSelectableId(hit.object)?.startsWith("living:"),
+    const environmental = environmentalIntersections.find(
+      (hit) => this.findSelectableId(hit.object) !== undefined,
     );
     // Nearest genuinely visible prop may win; records/shelves retain precedence
     // for overlapping surfaces at equal depth, preserving conventional selection.

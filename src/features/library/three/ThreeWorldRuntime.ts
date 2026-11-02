@@ -1,3 +1,4 @@
+import { createInhabitantVisuals } from "./inhabitantVisuals";
 import { createLivingVisuals } from "./livingVisuals";
 import type { LivingSession } from "../livingObjects";
 import { LIBRARY_SHELVES } from "../libraryShelfLayout";
@@ -429,6 +430,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly now: () => number;
 
   private readonly livingSession?: LivingSession;
+  private inhabitants?: ReturnType<typeof createInhabitantVisuals>;
   private livingVisuals?: ReturnType<typeof createLivingVisuals>;
   private livingFrameTime: number | undefined;
   constructor(dependencies: ThreeWorldRuntimeDependencies = {}) {
@@ -588,6 +590,14 @@ export class ThreeWorldRuntime implements WorldRuntime {
         readonly root: Object3D;
       }[] = [];
       if (composedWorld) {
+        this.inhabitants = createInhabitantVisuals(scene, undefined, (id) => {
+          mountedWorld.getInteraction()?.refreshHighlightForSelectedObject(id);
+          renderer.domElement.dataset.inhabitantsReady = String(
+            this.inhabitants?.selectables.filter(
+              ({ root }) => root.userData.loadState === "ready",
+            ).length ?? 0,
+          );
+        });
         const building = createProceduralLibraryBuilding(
           Boolean(this.livingSession),
         );
@@ -643,6 +653,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
       this.baseSelectableObjects = Object.freeze([
+        ...(this.inhabitants?.selectables ?? []).map(
+          ({ descriptor }) => descriptor,
+        ),
         ...(this.livingVisuals?.selectables ?? []).map(
           ({ descriptor }) => descriptor,
         ),
@@ -679,6 +692,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         },
         scene,
         selectables: [
+          ...(this.inhabitants?.selectables ?? []),
           ...(this.livingVisuals?.selectables ?? []),
           ...(referenceScene?.selectables ?? []),
           ...proceduralSelectables,
@@ -1044,6 +1058,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
           );
     this.livingFrameTime = timestamp;
     try {
+      this.inhabitants?.update(
+        delta,
+        window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
+          false,
+      );
+      if (this.selection?.id.startsWith("character:"))
+        mountedWorld.getInteraction()?.updateHighlightBounds();
       this.livingVisuals?.update(
         delta,
         window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
@@ -1167,6 +1188,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const mountedWorld = this.mountedWorld;
     this.mountedWorld = undefined;
     this.navigation = undefined;
+    this.inhabitants?.dispose();
+    this.inhabitants = undefined;
     this.livingVisuals = undefined;
     this.livingFrameTime = undefined;
     try {
