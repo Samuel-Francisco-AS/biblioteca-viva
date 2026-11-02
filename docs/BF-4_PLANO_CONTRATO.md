@@ -80,7 +80,7 @@ Autorização de 2026-11-02 implementa D1–D4 na branch própria, sobre o merge
 
 ### BF-4F — Habitantes, animação, comportamento e conversa (PENDENTE)
 
-**F1 — Identidade visual e personagem:** meta inicial de **quatro habitantes (Samael, Aryn, Ytha e Lua)**, com silhueta, traje/acessórios, escala, expressão visual e papel próprios. Validação do desenho e da construção no mundo inteiro; nada de recoloração superficial do mesmo boneco.
+**F1 — Identidade visual e personagem:** meta inicial de **quatro habitantes (Samael, Aryn, Ytha e Lua)**, com silhueta, traje/acessórios, escala, rosto/expressão visual e papel próprios; todos integrados aos cinco cômodos e selecionáveis via canvas/React. **Não há preflight experimental separado:** validar articulação, GLB/animador, normalização e descarte usando um dos personagens definitivos na própria F1, aproveitando essa implementação nos outros três. Gate visual humano posterior; nenhuma recoloração superficial do mesmo boneco. Ver [plano técnico BF-4F](BF-4F_PLANO_TECNICO.md).
 
 **F2 — Animações:** repertório por personagem, incluindo repouso, caminhada, giro, gestos, atividade com objeto e reação à seleção/conversa, conforme viabilidade real; transições coerentes, controle de velocidade, pausa, limpeza e redução de movimento. Não inferir suporte GLB com rigging do perfil estático ADR-010.
 
@@ -99,7 +99,7 @@ Autorização de 2026-11-02 implementa D1–D4 na branch própria, sobre o merge
 
 ## Questões técnicas condicionais, não bloqueios para B
 
-- **Rigging/GLB animado:** avaliar se personagens procedurais articulados são suficientes; caso negativo, formalizar extensão do pipeline ADR-010 para skinned meshes, animação, fonte, exportação, validação e lifecycle antes de produzir GLB animado. Esta BF-4A **não aprova** essa extensão automaticamente.
+- **Rigging/GLB animado:** a BF-4F prefere personagens 3D estilizados de fonte editável, articulados/animados, com GLB 2.0 e Three.js/AnimationMixer quando viáveis; procedural articulado só é alternativa se a qualidade individual exigida se mantiver. **Verificar o fluxo durante a produção de um personagem definitivo dentro de F1, sem spike/preflight isolado.** Formalizar extensão proporcional da ADR-010 quando houver uso produtivo comprovado de skinned meshes/clips, sem reabrir P3D-B2–F inteiro por formalismo. O perfil v1 não os aprova automaticamente.
 - **Diálogo generativo aberto:** avaliar somente após prova do contrato local; requer aprovação própria de produto e arquitetura.
 - **Navegação:** começar por pontos/rotas e obstáculos derivados da planta aprovada; não assumir navmesh complexa, pathfinding universal ou simulação física.
 - **Aparência final:** material e composição devem ser verificáveis no mundo integral; direção estilizada ortográfica/2.5D de `ART_DIRECTION.md` permanece referência, não congelamento de asset final.
@@ -117,3 +117,7 @@ E1–E3 têm implementação integrada sob verificação: catálogo ambiental e 
 ## BF-4E — Decisão final de fechamento (2026-11-02)
 
 A BF-4E entregou nos cinco cômodos dez famílias de objetos vivos, animações e estados efêmeros, interação primária pelo toque no canvas, fallback React acessível, atmosfera contextual (horário local, atividade de estudo, descoberta) e sequência completa do Segredo do Pergaminho. O usuário validou em APK no Moto G06 a descoberta 4/4 e correções posteriores de toque dos props pequenos, abertura da gaveta E e faixa de pista de 4 segundos, sem regressão percebida de pan/zoom/seleção. **Fechamento/merge autorizado expressamente após esse gate dirigido.** [CI PR #12/41438324911](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41438324911) **FAIL 20/24 E2E** nos cenários BF-4D coleção cheia (1280/390) e r4-shell (interação/dez ciclos), sob investigação das issues [#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11) e [#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4); 661 Vitest e demais gates técnicos PASS. Isso **não aprova CI, TalkBack, R-19, desempenho sustentado, beta ou release.** BF-4F, com **quatro habitantes completos** (Samael, Aryn, Ytha e Lua) e diálogos por **3–4 opções de RPG**, sem LLM, é o próximo recorte de implementação, segundo [ADR-013](decisions/ADR-013-bf-4f-quatro-habitantes-rpg.md) e a [concepção canônica](BF-4F_CONCEPCAO_HABITANTES.md). [Relatório final](BF-4E_RELATORIO.md).
+
+## BF-4F — Diretriz técnica vigente (2026-11-02)
+
+O usuário aprovou executar a BF-4F **diretamente pelos quatro checkpoints F1–F4, sem preflight independente**. As verificações técnicas de modelo, rigging, importação/GLB, animação e descarte serão incorporadas à **produção real dos quatro habitantes na F1**, começando pelo fluxo de um deles como entrega aproveitável, jamais por protótipo isolado. F1 apresenta os quatro com identidade visual convincente no mundo inteiro e seleção; F2 entrega repertórios de animação; F3, rotinas/relações entre os habitantes; F4, diálogos RPG e quests. Critérios objetivos e disciplina Codex/Git: [BF-4F_PLANO_TECNICO.md](BF-4F_PLANO_TECNICO.md). **Planejamento documentado, não autorização de merge nem gate técnico/físico de F1.**

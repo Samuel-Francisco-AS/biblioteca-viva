@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-4F — Plano técnico de F1–F4 sem preflight isolado (documental; 2026-11-02)
+
+- [Plano técnico BF-4F](docs/BF-4F_PLANO_TECNICO.md) aprovado: **F1** produz os quatro habitantes integrados com verificação de GLB/rigging/ownership durante a criação do personagem definitivo, **F2** entrega animações, **F3** autonomia/relações, **F4** diálogos RPG/quests.
+- **Sem spike/preflight de autoria separado**, sem criação de engine de avatares genérica ou benchmark experimental descartável; preservar avaliações visuais e técnicas dentro do trabalho útil. Próxima tarefa autorizável ao Codex é implementar **somente BF-4F1**, com sync seguro, commit, push e PR sem merge.
+- **Documentação apenas:** nenhum modelo, asset, código de produção, teste executado ou PR da BF-4F foi criado nesta atualização.
+
+
 ### BF-4F — Concepção narrativa e quatro habitantes (documental; 2026-11-02)
 
 - Documento canônico dos **quatro habitantes sobrenaturais** (Samael, Aryn, Ytha e Lua): raça/altura, silhuetas, aparências, personalidade, hábitos e horário, poderes, repertório de animações, seis relações mútuas, quatro quests individuais e arcos compartilhados.

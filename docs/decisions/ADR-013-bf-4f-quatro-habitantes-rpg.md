@@ -22,3 +22,7 @@ A ADR-012 e o plano BF-4A citavam **três habitantes iniciais** e conversação 
 Toda referência operacional a “três habitantes” na BF-4F é substituída pelo objetivo de **quatro**. Os trechos anteriores são histórico, não autorização para reduzir escopo sem nova decisão. Em vez de um chatbot, o Codex deverá planejar um **motor pequeno de diálogo/quests tipado e testável**, capaz de acionar animações/objetos e seguir caminhos diferentes, sem escrita arbitrária nem persistência obrigatória. Dados de quest e memória começam efêmeros.
 
 As fichas, seis relações, quests, animações e gates estão detalhados no [documento canônico BF-4F](../BF-4F_CONCEPCAO_HABITANTES.md).
+
+## Complemento de planejamento técnico — 2026-11-02
+
+O usuário decidiu **não criar etapa autônoma de preflight para personagens**, devido ao custo de horas e cota Codex. A BF-4F executará **F1–F4 diretamente**. A validação de autoria, articulação, rigging/GLB, animador, normalização e descarte integra a produção de um dos **quatro personagens definitivos durante F1**, reaproveitando material na entrega. Essa escolha **não dispensa** verificações essenciais de compatibilidade/licença/ownership, nem autoriza promoção de GLB animado fora do perfil ADR-010 sem extensão localizada com evidência. O [plano técnico BF-4F](../BF-4F_PLANO_TECNICO.md) é o guia de implementação; ainda não há código BF-4F produzido por esta decisão.

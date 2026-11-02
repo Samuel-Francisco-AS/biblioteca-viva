@@ -7,6 +7,7 @@ Este é o único índice da documentação ativa.
 | [`../README.md`](../README.md) | O que é a Biblioteca Viva? |
 | [`STATUS.md`](STATUS.md) | Onde estamos? |
 | [`ROADMAP.md`](ROADMAP.md) | Qual é o próximo trabalho? |
+| [`BF-4F_PLANO_TECNICO.md`](BF-4F_PLANO_TECNICO.md) | Como executar BF-4F1–F4, criar os quatro personagens sem preflight separado e realizar gates/PRs? |
 | [`BF-4F_CONCEPCAO_HABITANTES.md`](BF-4F_CONCEPCAO_HABITANTES.md) | Quem são os quatro habitantes, como se relacionam, animam, agem e participam de quests com diálogos RPG? |
 | [`BF-4E_RELATORIO.md`](BF-4E_RELATORIO.md) | Como foi a implementação, revisão da experiência, aceite físico e fechamento dirigido da BF-4E com CI FAIL (#4/#11)? |
 | [`BF-4E_VISAO_CONTRATO.md`](BF-4E_VISAO_CONTRATO.md) | Qual é a visão aprovada de objetos vivos, reações, atmosfera e descoberta da BF-4E? |

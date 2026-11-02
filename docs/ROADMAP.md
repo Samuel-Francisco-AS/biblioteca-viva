@@ -49,7 +49,7 @@ BF-4 🔄 mundo vivo e habitável — BF-4B/C/D/E concluídas no escopo dirigido
   BF-4D ✅ organização espacial, passagens e zonas — PASS dirigido, CI FAIL aceita (#4/#11)
   BF-4E ✅ dez famílias e três atmosferas contextuais, interação canvas e Segredo do Pergaminho 4/4 — Moto G06 PASS; CI E2E FAIL aceita (#4/#11)
   BF-4F ⏳ concepção de 4 habitantes sobrenaturais aprovada — implementação de animação, IA local e quests RPG pendente
-    BF-4F1 ⏳ identidade visual dos quatro: Samael, Aryn, Ytha e Lua
+    BF-4F1 ⏳ produzir os quatro modelos distintos e integrá-los aos cinco cômodos; validar rigging/GLB no trabalho real, sem preflight separado
     BF-4F2 ⏳ animações variadas e transições individuais
     BF-4F3 ⏳ comportamento autônomo, relações e interação ambiental
     BF-4F4 ⏳ diálogos RPG ramificados (3–4 opções), 4 quests individuais e arco coletivo
@@ -415,3 +415,7 @@ BF-4E: implementação integrada em verificação. Próximos gates autorizados: 
 ## BF-4F — Concepção aprovada dos quatro habitantes (2026-11-02)
 
 O usuário adotou a criação inicial de **Samael (espírito demoníaco), Aryn (elfa), Ytha (fada) e Lua (maga imortal)**, com silhuetas/roupas/expressões distintas, rotinas com preferência de horário, poderes, seis relações mútuas, **quatro quests individuais** e arcos conjuntos, além de **diálogo local por escolhas de três ou quatro botões** no estilo de quests de RPG (sem LLM). **A meta anterior de três foi superada pela decisão expressa mais recente**, formalizada na [ADR-013](decisions/ADR-013-bf-4f-quatro-habitantes-rpg.md) e detalhada na [bíbia de concepção BF-4F](BF-4F_CONCEPCAO_HABITANTES.md). BF-4F1–F4 continuam **não implementadas**; roteiro de Codex, branch, testes, APK, gate físico e merge requerem autorização própria. BF-4G e dívidas #4/#11, R-19 e TalkBack permanecem.
+
+## BF-4F — Sequência técnica aprovada sem preflight independente (2026-11-02)
+
+A execução terá **somente F1–F4**, com integração progressiva: **F1** cria/integra no mundo completo os quatro habitantes visualmente distintos (validação embutida de autoria, articulação, GLB/animador e descarte durante a produção de personagem real, **sem spike separado**); **F2** implementa movimentos/gestos/transições; **F3** desenvolve agência local, rotas, vínculos mútuos e eventos; **F4** entrega motor de diálogo por 3–4 botões, quatro quests individuais e uma coletiva. Cada checkpoint terá testes e revisão proporcionais, commit/push e **PR sem merge**; aprovação de PR e gate físico humanos posteriores. Contrato operacional: [BF-4F_PLANO_TECNICO.md](BF-4F_PLANO_TECNICO.md). Nenhuma F1–F4 iniciada por este planejamento. BF-4G e dívidas históricas permanecem.
