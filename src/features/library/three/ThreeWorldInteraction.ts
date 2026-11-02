@@ -37,6 +37,7 @@ interface ThreeWorldInteractionOptions {
   readonly catalog: readonly WorldSelectableObject[];
   readonly navigation: CameraNavigation;
   readonly onSelectionChange: (selection: WorldSelection) => void;
+  readonly onTapObject?: (id: string) => void;
   readonly pickingPriorityRoots?: readonly Object3D[];
   readonly render: () => void;
   readonly scene: Scene;
@@ -73,6 +74,7 @@ export class ThreeWorldInteraction {
   private tapCandidatePointerId: number | undefined;
   private tapEligible = false;
   private readonly onSelectionChange: (selection: WorldSelection) => void;
+  private readonly onTapObject?: (id: string) => void;
   private readonly navigation: CameraNavigation;
 
   constructor(options: ThreeWorldInteractionOptions) {
@@ -80,6 +82,7 @@ export class ThreeWorldInteraction {
     this.canvas = options.canvas;
     this.navigation = options.navigation;
     this.onSelectionChange = options.onSelectionChange;
+    this.onTapObject = options.onTapObject;
     this.pickingPriorityRoots = options.pickingPriorityRoots ?? [];
     this.render = options.render;
     this.scene = options.scene;
@@ -436,17 +439,36 @@ export class ThreeWorldInteraction {
       [...this.pickingPriorityRoots],
       true,
     );
-    const intersections =
-      prioritizedIntersections.length > 0
-        ? prioritizedIntersections
-        : this.raycaster.intersectObjects(
-            [...this.selectableRoots.values()],
-            true,
-          );
-    const selectedId = intersections
-      .map((intersection) => this.findSelectableId(intersection.object))
-      .find((id) => id !== undefined);
+    const environmentalRoots = [...this.selectableRoots]
+      .filter(([id]) => id.startsWith("living:"))
+      .map(([, root]) => root);
+    const environmentalIntersections = this.raycaster.intersectObjects(
+      environmentalRoots,
+      true,
+    );
+    const priority = prioritizedIntersections.find(
+      (hit) => this.findSelectableId(hit.object) !== undefined,
+    );
+    const environmental = environmentalIntersections.find(
+      (hit) => this.findSelectableId(hit.object)?.startsWith("living:"),
+    );
+    // Nearest genuinely visible prop may win; records/shelves retain precedence
+    // for overlapping surfaces at equal depth, preserving conventional selection.
+    const chosen =
+      environmental &&
+      (!priority || environmental.distance + 0.02 < priority.distance)
+        ? environmental
+        : priority;
+    const fallback = chosen
+      ? undefined
+      : this.raycaster
+          .intersectObjects([...this.selectableRoots.values()], true)
+          .find((hit) => this.findSelectableId(hit.object) !== undefined);
+    const selectedId = chosen || fallback
+      ? this.findSelectableId((chosen ?? fallback)?.object as Object3D)
+      : undefined;
     this.selectObject(selectedId ?? null);
+    if (selectedId?.startsWith("living:")) this.onTapObject?.(selectedId);
   }
 
   private findSelectableId(object: Object3D): string | undefined {

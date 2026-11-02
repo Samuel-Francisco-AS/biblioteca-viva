@@ -662,6 +662,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
         catalog: this.selectableObjects,
         navigation: this.navigation,
         onSelectionChange: this.handleSelectionChange,
+        onTapObject: (id) => {
+          if (this.isTerminal() || this.state !== "running") return;
+          if (id.startsWith("living:")) this.livingSession?.actPrimary(id);
+        },
         pickingPriorityRoots: [
           ...proceduralSelectables.map(({ root }) => root),
           ...libraryRecordSelectables.map(({ root }) => root),

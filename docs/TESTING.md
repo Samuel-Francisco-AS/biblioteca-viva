@@ -404,3 +404,5 @@ Gate local BF-4D: **80 arquivos/645 Vitest PASS; 21/21 E2E PASS em 164,15 s**, s
 ## BF-4E — checkpoint de implementação (2026-11-02)
 
 BF-4E acrescenta testes de catálogo, transições inválidas, sequência completa, reversibilidade, isolamento e descarte; provas Three de peças, luz e limites dos cômodos/circulação; E2E do segredo com e sem WebGL. Contagens BF-4D/shell incluem os dez selecionáveis ambientais. Não foram adicionados retries, skips ou timeouts. Evidências e falhas constam no relatório. [Relatório técnico](BF-4E_RELATORIO.md).
+
+**BF-4E — revalidação após crítica de UX (2026-11-02):** testes dirigidos novos cobrem ação primária por família, relógio local e prioridades de atmosfera, descoberta por sequência direta e toque repetido sobre luminária via canvas; E2E de fallback foi adaptado para painel acessível recolhido/aberto em erro. Os testes precisam passar na execução remota antes de serem descritos como PASS; validação manual das dez áreas de toque e aparência dia/noite no Moto G06 continua pendente. Issues #4/#11 não devem ser reclassificadas como resolvidas sem prova.

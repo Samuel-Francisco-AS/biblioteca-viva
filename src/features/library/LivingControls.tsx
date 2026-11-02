@@ -24,35 +24,38 @@ const actionLabels: Record<string, Partial<Record<LivingAction, string>>> = {
   "living:clock": { turn: "Dar corda" },
   "living:hearth": { toggle: "Acender / apagar brasas" },
 };
+export function LivingFeedback({ session }: { session: LivingSession }) {
+  const state = useSyncExternalStore(session.subscribe, session.getSnapshot);
+  return (
+    <p className="living-world-feedback" role="status" aria-live="polite" data-testid="living-feedback">
+      {state.message}
+      {state.discovery > 0 && state.discovery < 4
+        ? ` · Pista ${state.discovery}/4`
+        : ""}
+    </p>
+  );
+}
+
 export function LivingControls({
   session,
   selected,
   onSelect,
+  fallback = false,
 }: {
   session: LivingSession;
   selected: string | null;
   onSelect: (id: string) => void;
+  fallback?: boolean;
 }) {
   const state = useSyncExternalStore(session.subscribe, session.getSnapshot);
   return (
     <section className="living-controls" aria-label="Objetos vivos">
-      <h3>Objetos vivos</h3>
-      <fieldset>
-        <legend>Atmosfera</legend>
-        {(["tranquila", "noturna", "encantada"] as const).map((a) => (
-          <button
-            className="button button--secondary"
-            type="button"
-            key={a}
-            aria-pressed={state.atmosphere === a}
-            onClick={() => session.setAtmosphere(a)}
-          >
-            {a}
-          </button>
-        ))}
-      </fieldset>
-      <p role="status">{state.message}</p>
-      <p>Segredo do Pergaminho: {state.discovery}/4</p>
+      <details open={fallback}>
+        <summary>Explorar objetos sem o canvas (alternativa acessível)</summary>
+        <p>Toque nos objetos do mundo para interagir diretamente. Esta lista oferece ações alternativas por cômodo.</p>
+        <p>Atmosfera atual: {state.atmosphere}. Ela acompanha o horário local, a leitura e descobertas.</p>
+        <p role="status">{state.message}</p>
+        <p>Segredo do Pergaminho: {state.discovery}/4</p>
       {["A", "B", "C", "D", "E"].map((room) => (
         <details
           key={room}
@@ -95,6 +98,7 @@ export function LivingControls({
           ))}
         </details>
       ))}
+      </details>
     </section>
   );
 }

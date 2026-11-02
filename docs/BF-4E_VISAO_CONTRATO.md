@@ -121,3 +121,11 @@ Este documento **aprova a visão de produto da BF-4E**, não prova a implementa�
 A mecânica de **mover livremente móveis e persistir posições** continua uma proposta separada. Personagens visuais, animações de habitantes, comportamento, reação e diálogo pertencem à BF-4F. Não escolher novo provedor de IA, conta externa, serviço pago ou orçamento sem autorização expressa.
 
 **Princípio de aceite criativo:** a Biblioteca deve parecer ter vida própria. O jogador deve poder dizer não só “toquei num móvel”, mas “fiz algo, o mundo reagiu e descobri uma pequena história”.
+
+## Revisão de experiência autorizada pelo usuário — 2026-11-02 (substitui os controles primários manuais)
+
+Após teste do APK BF-4E inicial, o usuário rejeitou explicitamente a experiência centrada em botões. **Direção vigente:** tocar diretamente no prop do mundo executa ação primária, sem etapa obrigatória de painel; toque repetido continua reagindo; pan/pinch/zoom e prioridade legítima de registros continuam intactos. A lista React é alternativa recolhida e fallback acessível, não interface principal. Uma pequena mensagem contextual na cena pode explicar resultados/pistas. As ações secundárias podem ficar na alternativa semântica sem impedir a descoberta completa apenas pelo canvas.
+
+**Atmosfera por contexto:** hora local do dispositivo como base offline; leitura/estudo dentro da sessão pode alterar temporariamente iluminação; descoberta especial provoca clima encantado temporário, com prioridade evento > atividade > horário. Não interpretar registros privados, não acessar GPS/rede e não atualizar lógica de tempo por frame. Transições visuais mantêm legibilidade, redução de movimento e lifecycle. **Retirar botões manuais de atmosfera da UX principal.** Os trechos históricos acima que mencionam alternância manual na interface devem ser interpretados como anteriores a esta decisão.
+
+**Gate:** BF-4E não pode ser fechada com a experiência de painel inicial. Auditar a nova implementação e repetir inspeção no Moto G06, incluindo toques nas dez famílias, segredo por toque, noite/dia/evento, fallback textual, registros reais, orientação e background/retorno.

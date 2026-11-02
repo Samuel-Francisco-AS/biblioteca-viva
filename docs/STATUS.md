@@ -154,3 +154,5 @@ O usuário adotou a proposta de transformar os cinco cômodos em ambiente reativ
 ## BF-4E — checkpoint de implementação (2026-11-02)
 
 Implementação BF-4E em verificação na branch `feat/bf-4e-living-objects`. Dez famílias ambientais distribuídas nos cinco cômodos, sessão efêmera, três atmosferas e descoberta encadeada integradas. A autorização posterior do usuário permite implementação/publicação, substituindo as indicações anteriores de ausência de autorização. Não há encerramento nem PASS humano. [Relatório técnico](BF-4E_RELATORIO.md).
+
+**BF-4E — correção de UX após teste físico inicial (2026-11-02):** o usuário não aprovou o painel de botões nem os controles manuais de atmosfera. Implementação dirigida na branch da PR #12: ação primária pelo toque, ambiente contextual (hora local e atividade da sessão), React como alternativa recolhida/fallback e mensagens breves junto à cena. **Novo APK ainda requer teste humano; nenhuma aprovação final ou merge.** A CI remota da revisão deverá ser avaliada separadamente; issues #4/#11 permanecem. [Relatório BF-4E](BF-4E_RELATORIO.md).

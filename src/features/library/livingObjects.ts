@@ -12,6 +12,15 @@ export type LivingFamily =
   | "hearth";
 export type LivingAction = "examine" | "toggle" | "turn" | "touch";
 export type Atmosphere = "tranquila" | "noturna" | "encantada";
+
+/** Clock is local to the device, with no network or location access. */
+export function atmosphereForHour(hour: number): Atmosphere {
+  return hour >= 6 && hour < 18 ? "tranquila" : "noturna";
+}
+
+const STUDY_CONTEXT_MS = 5 * 60_000;
+const DISCOVERY_MAGIC_MS = 2 * 60_000;
+
 export interface LivingObject {
   readonly objectId: string;
   readonly family: LivingFamily;
@@ -131,17 +140,58 @@ export interface LivingEvent {
   readonly objectId: string;
 }
 export class LivingSession {
-  private snapshot: LivingSnapshot = {
-    objects: Object.fromEntries(
-      LIVING_OBJECTS.map((o) => [o.objectId, { active: false, turns: 0 }]),
-    ),
-    atmosphere: "tranquila",
-    discovery: 0,
-    message: "Explore os cinco cômodos.",
-    revision: 0,
-  };
-  private listeners = new Set<() => void>();
+  private snapshot: LivingSnapshot;
+  private readonly listeners = new Set<() => void>();
   private disposed = false;
+  private studyUntil = 0;
+  private magicUntil = 0;
+
+  constructor(private readonly now: () => Date = () => new Date()) {
+    this.snapshot = {
+      objects: Object.fromEntries(
+        LIVING_OBJECTS.map((o) => [o.objectId, { active: false, turns: 0 }]),
+      ),
+      atmosphere: atmosphereForHour(now().getHours()),
+      discovery: 0,
+      message: "Explore os cinco cômodos.",
+      revision: 0,
+    };
+  }
+
+  /** Avoid a frame-level clock poll: call on mount, visibility return and minute ticks. */
+  refreshContext(): void {
+    if (this.disposed) return;
+    const atmosphere = this.resolveAtmosphere();
+    if (atmosphere !== this.snapshot.atmosphere) {
+      this.publish({ ...this.snapshot, atmosphere });
+    }
+  }
+
+  private resolveAtmosphere(): Atmosphere {
+    const date = this.now();
+    const time = date.getTime();
+    if (time < this.magicUntil) return "encantada";
+    if (time < this.studyUntil) return "tranquila";
+    return atmosphereForHour(date.getHours());
+  }
+
+  /** Primary action is invoked by an eligible canvas tap, never by selection itself. */
+  actPrimary(objectId: string): readonly LivingEvent[] {
+    const object = LIVING_OBJECTS.find((item) => item.objectId === objectId);
+    if (!object) return [];
+    const action: LivingAction =
+      object.family === "table" || object.family === "clock" ||
+      object.family === "globe"
+        ? "turn"
+        : object.family === "seat" || object.family === "shelf"
+          ? "touch"
+          : object.family === "cabinet" &&
+              this.snapshot.discovery >= 3 &&
+              this.snapshot.objects[objectId]?.active
+            ? "examine"
+            : "toggle";
+    return this.act(objectId, action);
+  }
   getSnapshot = (): LivingSnapshot => this.snapshot;
   subscribe = (listener: () => void): (() => void) => {
     this.listeners.add(listener);
@@ -168,6 +218,15 @@ export class LivingSession {
     let discovery = this.snapshot.discovery;
     let atmosphere = this.snapshot.atmosphere;
     let message = object.description;
+    const now = this.now().getTime();
+    // Reading/study is a short-lived ambient context, not a personal-data query.
+    if (
+      (object.family === "table" || object.family === "book" ||
+        object.family === "shelf") &&
+      (action === "examine" || action === "turn" || action === "toggle")
+    ) {
+      this.studyUntil = now + STUDY_CONTEXT_MS;
+    }
     const events: LivingEvent[] = [{ type: "acted", objectId }];
     if (action !== "examine") {
       objects[objectId] = {
@@ -187,7 +246,10 @@ export class LivingSession {
       message = "A luz revela uma estrela e inscrições no pergaminho.";
       events.push({ type: "inscription", objectId: "living:table" });
     }
-    if (objectId === "living:table" && action === "examine") {
+    if (
+      objectId === "living:table" &&
+      (action === "examine" || action === "turn")
+    ) {
       if (discovery >= 1) {
         discovery = discovery === 1 ? 2 : discovery;
         message =
@@ -204,6 +266,7 @@ export class LivingSession {
       if (discovery === 2) {
         discovery = 3;
         objects["living:cabinet"] = { active: true, turns: 0 };
+        this.magicUntil = now + DISCOVERY_MAGIC_MS;
         atmosphere = "encantada";
         message =
           "O livro gira uma chave oculta. No cômodo E, a gaveta se abre e revela uma estrela de latão.";
@@ -219,11 +282,15 @@ export class LivingSession {
       objects[objectId]?.active
     ) {
       discovery = 4;
+      this.magicUntil = now + DISCOVERY_MAGIC_MS;
+      atmosphere = "encantada";
       message =
         "Você encontrou a estrela de latão: “Toda história começa com alguém que acende uma luz.”";
       if (this.snapshot.discovery !== 4)
         events.push({ type: "discovered", objectId });
     }
+    // Special discoveries override short study context, which overrides local time.
+    atmosphere = this.resolveAtmosphere();
     this.publish({
       objects,
       discovery,

@@ -1,5 +1,5 @@
 import { LivingSession } from "./livingObjects";
-import { LivingControls } from "./LivingControls";
+import { LivingControls, LivingFeedback } from "./LivingControls";
 import { useEffect, useRef, useState } from "react";
 
 import type {
@@ -262,18 +262,38 @@ export function WorldHost({
   ]);
 
   useEffect(() => {
+    if (performanceScenario || !libraryWorldSnapshot) return;
+    livingSession.refreshContext();
+    // One timer per host, never one per object or one per animation frame.
+    const interval = window.setInterval(() => livingSession.refreshContext(), 60_000);
+    const onVisible = () => {
+      if (!document.hidden) livingSession.refreshContext();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [livingSession, libraryWorldSnapshot, performanceScenario]);
+
+  useEffect(() => {
     if (selectedObjectId === undefined || status !== "ready") return;
     runtimeRef.current?.selectObject(selectedObjectId);
   }, [selectedObjectId, status]);
 
   return (
     <div className="world-surface" data-status={status}>
-      <div
-        aria-hidden="true"
-        className="world-host"
-        data-testid="three-world-host"
-        ref={hostRef}
-      />
+      <div className="living-world-stage">
+        <div
+          aria-hidden="true"
+          className="world-host"
+          data-testid="three-world-host"
+          ref={hostRef}
+        />
+        {!performanceScenario && libraryWorldSnapshot && (
+          <LivingFeedback session={livingSession} />
+        )}
+      </div>
       {status === "initializing" && (
         <p className="world-status" role="status">
           Preparando a área de leitura…
@@ -393,6 +413,7 @@ export function WorldHost({
         <LivingControls
           session={livingSession}
           selected={livingSelection}
+          fallback={status === "failed"}
           onSelect={(id) => {
             setLivingSelection(id);
             runtimeRef.current?.selectObject(id);

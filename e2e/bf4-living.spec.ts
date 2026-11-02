@@ -13,6 +13,7 @@ for (const fallback of [false, true]) {
     await page.goto("/");
     const controls = page.getByRole("region", { name: "Objetos vivos" });
     await expect(controls).toBeVisible();
+    if (!fallback) await controls.locator("summary").first().click();
     await controls.getByText("Cômodo A", { exact: true }).click();
     await controls
       .getByRole("button", {
@@ -52,24 +53,20 @@ for (const fallback of [false, true]) {
     await expect(
       controls.getByText("Segredo do Pergaminho: 4/4"),
     ).toBeVisible();
-    for (const atmosphere of ["tranquila", "noturna", "encantada"]) {
-      await controls
-        .getByRole("button", { name: atmosphere, exact: true })
-        .click();
-      await expect(
-        controls.getByRole("button", { name: atmosphere, exact: true }),
-      ).toHaveAttribute("aria-pressed", "true");
-    }
+    await expect(
+      controls.getByText(/Atmosfera atual: encantada/u),
+    ).toBeVisible();
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(controls).toBeVisible();
     await page.reload();
+    if (!fallback) await controls.locator("summary").first().click();
     await expect(
       controls.getByText("Segredo do Pergaminho: 0/4"),
     ).toBeVisible();
   });
 }
 
-test("BF-4E: tap ambiental abre contexto sem selecionar registro", async ({
+test("BF-4E: tocar a luminária executa e repete ação sem botões React", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -93,10 +90,18 @@ test("BF-4E: tap ambiental abre contexto sem selecionar registro", async ({
     "data-highlighted-object",
     "living:lamp",
   );
+  await expect(page.getByTestId("living-feedback")).toContainText(
+    "A luz revela uma estrela",
+  );
+  await page.mouse.click(
+    box.x + ((point.x + 1) * box.width) / 2,
+    box.y + ((1 - point.y) * box.height) / 2,
+  );
+  await expect(page.getByTestId("living-feedback")).toContainText(
+    "recolhido",
+  );
+  // No permanent button bar or manual atmosphere toggles in the main experience.
   await expect(
-    page.getByRole("button", {
-      name: "Acender / apagar — Luminária do pergaminho",
-      exact: true,
-    }),
-  ).toBeVisible();
+    page.getByRole("button", { name: "tranquila", exact: true }),
+  ).toHaveCount(0);
 });

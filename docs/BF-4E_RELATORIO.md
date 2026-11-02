@@ -176,3 +176,17 @@ Não confundir contagem estrutural com draw calls ou animações simultâneas.
 Os três E2E ambientais passaram novamente no build final: segredo no mundo,
 segredo sem WebGL e tap ambiental com redução de movimento (**3/3 PASS**).
 A entrega permanece candidata, com E2E global 22/24 e ressalvas #4/#11.
+
+## Correção dirigida de experiência — candidata à revalidação física (2026-11-02)
+
+**Motivo:** após instalar o APK inicial, o usuário relatou que a interação parecia artificial: tocar no objeto exigia procurar botões React distantes e a troca manual de atmosfera não combinava com um mundo vivo. O gate de UX daquela versão não passou. A correção solicitada foi autorizada para implementação remota na branch BF-4E, **sem merge**.
+
+**Mudanças nesta correção:** toques elegíveis no canvas despacham a ação primária da família diretamente, inclusive ao tocar novamente o mesmo objeto. Seleção programática não executa ações, não rouba os controles BF-2/BF-3 e continua sem `entryId` ambiental. Picking ambiental prefere o prop apenas quando realmente está à frente de um registro/estante; em empate preserva o registro. A sequência inteira do Segredo do Pergaminho pode ser operada por quatro ações primárias no mundo: luminária → pergaminho → livro decorativo → armário aberto.
+
+**Atmosfera:** estado-base calculado **offline pela hora local do aparelho** (06:00–17:59 tranquila; 18:00–05:59 noturna), sem acesso a geolocalização ou registros pessoais. Exame de leitura/estudo favorece clima tranquilo por 5 minutos; descoberta ativa clima encantado por 2 minutos, com prioridade especial > estudo > relógio. Transições de estado são recalculadas em montagem, retorno visível e tick único de 60 segundos por host, **nunca por frame**. Animações e luzes usam o RAF vigente. O progresso da descoberta não expira com a atmosfera.
+
+**UI:** a cena 3D passa a ser a superfície principal. A lista de ações React fica recolhida sob `Explorar objetos sem o canvas`; abre automaticamente quando o runtime está em falha. Uma faixa de feedback breve próxima ao canvas comunica reações e pistas, sem capturar gestos; os controles React continuam disponíveis como alternativa de acessibilidade e fallback. Os três botões manuais de atmosfera foram retirados.
+
+**Testes acrescentados/ajustados:** ações primárias de dez famílias, regras de dia/noite/atividade/descoberta e sequência completa por toques na lógica, atualização dos E2E de fallback e prova de dois toques na luminária pelo canvas. **São critérios/testes implementados, não afirmação de execução bem-sucedida:** registrar resultados após CI da nova commit, com falhas diferenciadas de #4/#11.
+
+**Limites:** não há inferência de atividade externa ao aplicativo, leitura de comportamento pessoal ou uso de rede. O gesto principal é toque curto; ações secundárias como intensidade e exame detalhado permanecem na alternativa textual. Gate humano do novo APK, compatibilidade de picking das dez famílias no mundo, TalkBack, desempenho sustentado e o fechamento BF-4E continuam pendentes.

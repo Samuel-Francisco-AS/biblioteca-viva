@@ -4,6 +4,11 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-4E — correção dirigida da experiência de objetos vivos (candidata)
+
+- Após rejeição humana da UX inicial, o toque diretamente no canvas passa a acionar o objeto selecionado. A atmosfera usa horário local, leitura e eventos de descoberta, sem botões manuais principais; React mantém alternativa recolhida/fallback e feedback aparece junto da cena. Gate físico do novo APK, auditoria final e CI pendentes; sem merge BF-4E.
+
+
 ### BF-4E — Visão aprovada de objetos vivos (planejamento; 2026-11-02)
 
 - Documentada a proposta de dez famílias de objetos interativos, animações de props, iluminação real, eventos interdependentes, três atmosferas e um pequeno segredo encadeado nos cinco cômodos. Sem implementação, teste, APK ou merge de feature; o próximo passo é o prompt Codex sob [contrato BF-4E](docs/BF-4E_VISAO_CONTRATO.md).
