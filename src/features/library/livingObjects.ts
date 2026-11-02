@@ -217,7 +217,6 @@ export class LivingSession {
     if (!previous) return [];
     const objects = { ...this.snapshot.objects };
     let discovery = this.snapshot.discovery;
-    let atmosphere = this.snapshot.atmosphere;
     let message = object.description;
     const now = this.now().getTime();
     // Reading/study is a short-lived ambient context, not a personal-data query.
@@ -269,7 +268,6 @@ export class LivingSession {
         discovery = 3;
         objects["living:cabinet"] = { active: true, turns: 0 };
         this.magicUntil = now + DISCOVERY_MAGIC_MS;
-        atmosphere = "encantada";
         message =
           "O livro gira uma chave oculta. No cômodo E, a gaveta se abre e revela uma estrela de latão.";
         events.push({ type: "mechanism", objectId: "living:cabinet" });
@@ -285,14 +283,13 @@ export class LivingSession {
     ) {
       discovery = 4;
       this.magicUntil = now + DISCOVERY_MAGIC_MS;
-      atmosphere = "encantada";
       message =
         "Você encontrou a estrela de latão: “Toda história começa com alguém que acende uma luz.”";
       if (this.snapshot.discovery !== 4)
         events.push({ type: "discovered", objectId });
     }
     // Special discoveries override short study context, which overrides local time.
-    atmosphere = this.resolveAtmosphere();
+    const atmosphere = this.resolveAtmosphere();
     this.publish({
       objects,
       discovery,
