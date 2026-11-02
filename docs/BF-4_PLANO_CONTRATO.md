@@ -1,6 +1,6 @@
 # BF-4 — Mundo Vivo e Habitável: plano e contrato
 
-> **Estado atual (2026-11-02):** BF-4A aprovada documentalmente; **BF-4B encerrada com PASS técnico, visual e físico dirigido**, ressalva visual R-19 e issue #4 em acompanhamento; **BF-4C–G pendentes**. Os trechos BF-4A preservam o planejamento histórico.
+> **Estado atual (2026-11-02):** BF-4A aprovada documentalmente; **BF-4B encerrada com PASS técnico, visual e físico dirigido**, ressalva visual R-19 e issue #4 em acompanhamento; **BF-4C candidata à auditoria; D–G pendentes**. Os trechos BF-4A preservam o planejamento histórico.
 >
 > **Baseline auditado:** `main` `a702f897f6db5903c0becb61df54bc9f18be455a` (fechamento BF-3), sob ADR-008–012. Este documento prescreve trabalho **futuro**, não descreve recursos já existentes.
 
@@ -54,7 +54,9 @@ Evidência de auditoria, CI, gate físico e ressalva R-19: [fechamento BF-4B](BF
 - Escolher solução visual econômica e compatível com Three.js atual; corrigir colisões e oclusões efetivamente observadas, sem reabrir a planta inteira por precaução.
 - **Gate B:** build navegável do mundo inteiro, inspeção visual humana **integrada**, regressões de câmera, picking e BF-3, inspeção de custos e, se mudança material, build físico dirigido Moto G06. Sem alegar aprovação de arte final.
 
-### BF-4C — Mobília e decoração (PENDENTE)
+### BF-4C — Ampliação, mobília e decoração (CANDIDATA À AUDITORIA)
+
+Autorização específica de 2026-11-02 acrescentou C1 (salão 1,8–2× e laterais 1,5–1,7× por eixo horizontal) e C2 (mobília nos cinco cômodos). Implementação e gates em [BF-4C_RELATORIO.md](BF-4C_RELATORIO.md). Disposição ambiental e clearance necessários a C não encerram D nem autorizam agentes.
 
 - Criar variedade útil de mesas, cadeiras, bancos, sofás, luminárias, tapetes e decoração com materiais coerentes; **preencher os cinco cômodos**, não só um.
 - Produção por conjuntos e fábricas/representações com owner, descarte e dimensões confiáveis; reutilização de geometria/material somente com regra explícita de ownership.

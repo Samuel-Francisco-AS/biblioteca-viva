@@ -34,3 +34,7 @@
 Detalhes e critérios: [BF-4 — Plano e contrato](BF-4_PLANO_CONTRATO.md) e [ADR-012](decisions/ADR-012-bf-4-mundo-vivo.md).
 
 Revisar ao iniciar uma fatia, alterar dados, adicionar dependência ou preparar release.
+
+## BF-4C — Candidata (2026-11-02)
+
+BF-4C aumenta a área, a densidade e o alcance da câmera: requer gate visual e medição física representativa no Moto G06. Box3 prova separação geométrica, não legibilidade em toda projeção ou futura navegabilidade de personagens. As regiões de câmera agora seguem pisos reais; transições nos extremos precisam de avaliação tátil humana. R-19 permanece aberta: nenhuma conclusão sobre tremulação em movimento pode ser extraída das capturas estáticas. Issue #4 e TalkBack continuam abertos; sem PASS definitivo, beta/release ou desempenho sustentado. [Relatório BF-4C](BF-4C_RELATORIO.md).

@@ -1,6 +1,6 @@
 # Estado atual
 
-> Referência documental: 2026-11-01.
+> Referência documental: 2026-11-02.
 
 ## Produto
 
@@ -55,7 +55,7 @@ O gate local e a CI do PR #2 (`4aef4088df4944cedab2f80551dc52c5be379a25`, GitHub
 
 ## Próximo trabalho
 
-**BF-4B CONCLUÍDA em 2026-11-02 no escopo técnico, visual e físico dirigido.** A auditoria do código e dos contratos não identificou bloqueantes; oito faixas coplanares de latão foram corrigidas. **CI da PR #8 [41379918451](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41379918451) PASS integral** no commit `153dd6a` (format, lint, tipos, Vitest, áudio, build, performance, E2E). O usuário instalou APK recompilado no Moto G06, aprovou estética dos cinco cômodos e testes dirigidos de pan/zoom/seleção, rotação, background/retorno e abertura/retorno de registro pelo React. Capturas registram ~60 FPS apenas de forma pontual. **Ressalva não bloqueante R-19:** leve tremulação/borramento das paredes durante movimento da câmera, investigação adiada por decisão explícita; reforma da UI React/viewport Three.js também posterior. **BF-4C (mobília/decoração nos cinco cômodos) é o próximo checkpoint, ainda pendente**. A issue #4 e TalkBack continuam abertos; sem aprovação de estabilidade sustentada ou beta/release. [Fechamento](BF-4B_RELATORIO.md). P3D-B2–F adiados.
+**BF-4B CONCLUÍDA em 2026-11-02 no escopo técnico, visual e físico dirigido.** A auditoria do código e dos contratos não identificou bloqueantes; oito faixas coplanares de latão foram corrigidas. **CI da PR #8 [41379918451](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41379918451) PASS integral** no commit `153dd6a` (format, lint, tipos, Vitest, áudio, build, performance, E2E). O usuário instalou APK recompilado no Moto G06, aprovou estética dos cinco cômodos e testes dirigidos de pan/zoom/seleção, rotação, background/retorno e abertura/retorno de registro pelo React. Capturas registram ~60 FPS apenas de forma pontual. **Ressalva não bloqueante R-19:** leve tremulação/borramento das paredes durante movimento da câmera, investigação adiada por decisão explícita; reforma da UI React/viewport Three.js também posterior. **BF-4C1/C2 implementadas como candidata à auditoria independente e gates humanos, sem encerramento**; ver [relatório BF-4C](BF-4C_RELATORIO.md). A issue #4 e TalkBack continuam abertos; sem aprovação de estabilidade sustentada ou beta/release. [Fechamento](BF-4B_RELATORIO.md). P3D-B2–F adiados.
 
 **Evidência separada:** D1 aprovou montagem e ownership após auditorias independentes e CI; D2 aprovou catálogo, picking e seleção e recebeu prova adicional dirigida do canvas BF-2 após auditoria; D3 corrigiu o attach parcial de listeners e concluiu a regressão consolidada local. Luna concluiu a auditoria independente da D3 com PASS técnico dirigido no commit `2cb4c9d`. A CI remota da BF-3E1 no commit `ae606e0` aprovou formato, lint, tipos, 630 testes Vitest, áudio, build e relatório estático de performance, mas falhou em cinco E2E `r4-shell` que ainda esperavam a fixture F1 na rota composta e em `p1-memory` após reload. A correção E2E local preserva as provas funcionais; `p1-memory` passou isolado nesta revalidação, e seu histórico de oscilação permanece registrado. Nenhuma dessas evidências representa PASS humano visual, ergonomia, FPS físico, Android ou TalkBack.
 
@@ -131,8 +131,9 @@ BF-3 ✅ CONCLUÍDA NO ESCOPO TÉCNICO-FUNCIONAL E FÍSICO DIRIGIDO — CI PENDE
     BF-3E2 ✅ interface funcional dos seis tipos — coberta pelo gate E3
     BF-3E3 ✅ gate consolidado — auditoria independente e CI PASS
   BF-3F ✅ 11/11 procedimentos físicos PASS — exceção formal: CI E2E instável (issue #4)
-BF-4 🔄 BF-4B CONCLUÍDA COM PASS DIRIGIDO — BF-4C PRÓXIMA
+BF-4 🔄 BF-4B CONCLUÍDA COM PASS DIRIGIDO — BF-4C CANDIDATA À AUDITORIA
   BF-4A ✅ auditoria + contrato + decomposição — DOCUMENTAL
   BF-4B ✅ cinco cômodos — CI e Moto G06 PASS dirigido, ressalva R-19
-  BF-4C–G ⏳ mobiliário, integração, personagens e gate físico PENDENTES
+  BF-4C 🔄 ampliação e mobília implementadas; auditoria e gates humanos pendentes
+  BF-4D–G ⏳ organização avançada, integração, personagens e gate físico PENDENTES
 ```

@@ -42,10 +42,10 @@ BF-3 ✅ concluída no escopo funcional/físico dirigido; dívida CI E2E aberta
     BF-3E2 ✅ interface funcional dos seis tipos — implementação local
     BF-3E3 ✅ gate consolidado — auditoria independente e CI PASS
   BF-3F ✅ gate físico dirigido 11/11 PASS; exceção CI documentada (#4)
-BF-4 🔄 mundo vivo e habitável — BF-4B concluída; BF-4C próxima
+BF-4 🔄 mundo vivo e habitável — BF-4B concluída; BF-4C candidata à auditoria
   BF-4A ✅ auditoria dirigida, decisões e contrato (documental)
   BF-4B ✅ cinco cômodos; auditoria, CI e Moto G06 PASS dirigido (R-19)
-  BF-4C ⏳ mobília e decoração em todos os cômodos
+  BF-4C 🔄 ampliação, mobília e decoração implementadas; gates pendentes
   BF-4D ⏳ organização espacial, passagens e zonas de atividade
   BF-4E ⏳ integração ao runtime e objetos interativos
   BF-4F ⏳ personagens detalhados, animação, IA local e conversação contextual
@@ -198,7 +198,7 @@ O APK debug atualizado foi instalado e testado pelo usuário no Moto G06. **Roda
 
 **Fechamento C3/C:** `libraryBuildingGeometry.ts` e `proceduralLibraryBuilding.ts` preservam os cinco cômodos neutros, núcleo e quatro passagens; `libraryRecordLayout.ts` contém somente a distribuição inicial, 13 slots derivados (2/2/3/3/3), placements e overflow imutáveis. A/B/C foram 5/13/13 placements e 0/0/4 overflow na inspeção aprovada. Testes `Box3` reais cobrem as fábricas, passagens, colisões e convivência com três estantes e 70 livros BF-2; 77 arquivos/616 testes passaram, junto de format:check, lint, typecheck, audio:check e build. A prévia temporária foi removida; a referência PNG 2D permanece documental. Não houve gate físico, assistivo, de ergonomia ou seleção.
 
-**Handoff BF-3 → BF-4:** planejamento e BF-4A documental autorizados e registrados em 2026-11-01; BF-4B foi implementada e encerrada com CI e gate humano dirigido PASS sob autorização posterior; BF-4C–G permanecem pendentes, sob contrato próprio. O risco de oclusão/bounds e novos cenários de densidade/iluminação permanece para a evolução do mundo; TalkBack continua obrigatório antes do primeiro recorte real/beta. A intermitência CI `r4-shell` segue rastreada na issue #4, sem gate verde.
+**Handoff BF-3 → BF-4:** planejamento e BF-4A documental autorizados e registrados em 2026-11-01; BF-4B foi implementada e encerrada com CI e gate humano dirigido PASS sob autorização posterior; BF-4C foi implementada como candidata sob autorização própria; auditoria/gates de C e BF-4D–G permanecem pendentes. O risco de oclusão/bounds e novos cenários de densidade/iluminação permanece para a evolução do mundo; TalkBack continua obrigatório antes do primeiro recorte real/beta. A intermitência CI `r4-shell` segue rastreada na issue #4, sem gate verde.
 
 ### BF-4 — Mundo Vivo e Habitável — BF-4B concluída (2026-11-02)
 
@@ -206,7 +206,7 @@ O APK debug atualizado foi instalado e testado pelo usuário no Moto G06. **Roda
 
 BF-4B evolui **os cinco cômodos como um todo**, sem protótipo isolado de um cômodo; BF-4C os mobília, BF-4D organiza acessos e zonas de atividades, BF-4E integra interações ao runtime. BF-4F entrega três personagens visualmente distintos como alvo inicial, animações variadas, agentes comportamentais locais e conversação textual contextual offline, dividida em F1–F4; BF-4G executa o gate integrado e físico. Há gates proporcionais e resultados observáveis por implementação, sem multiplicar checkpoints administrativos.
 
-**BF-4A: PASS apenas documental.** Auditoria do baseline e contrato concluídos; **não** foram implementados ambiente, mobília, animação, agentes, diálogo ou integração, nem executados testes ou build nesta decisão. Posteriormente, BF-4B foi implementada, auditada e aprovada com a correção pontual de faixas de latão, CI verde da PR #8 e gate estético/funcional dirigido no Moto G06. **Fechada com ressalva visual R-19, não bloqueante**. BF-4C é a próxima etapa pendente, conforme [fechamento](BF-4B_RELATORIO.md). Perfil produtivo GLB animado/skinning não é coberto pela ADR-010; conversação generativa aberta depende de nova decisão sobre execução/custo/privacidade. Sem persistência espacial, alteração de dados ou bypass das dívidas CI/TalkBack.
+**BF-4A: PASS apenas documental.** Auditoria do baseline e contrato concluídos; **não** foram implementados ambiente, mobília, animação, agentes, diálogo ou integração, nem executados testes ou build nesta decisão. Posteriormente, BF-4B foi implementada, auditada e aprovada com a correção pontual de faixas de latão, CI verde da PR #8 e gate estético/funcional dirigido no Moto G06. **Fechada com ressalva visual R-19, não bloqueante**. BF-4C está implementada e aguarda auditoria/gates conforme [relatório](BF-4C_RELATORIO.md). Perfil produtivo GLB animado/skinning não é coberto pela ADR-010; conversação generativa aberta depende de nova decisão sobre execução/custo/privacidade. Sem persistência espacial, alteração de dados ou bypass das dívidas CI/TalkBack.
 
 ### BF-5 — Consolidação funcional
 
@@ -395,3 +395,7 @@ F1 aprovou a viabilidade da base Three.js; não concluiu câmera, interação, a
 2. BF-2–BF-5 só avançam com autorização explícita: integrar progressivamente leitura, os seis tipos de registro e o ambiente provisório, preservando a operação essencial em React.
 3. Retomar P3D-B2–F somente se a ingestão ou substituição por GLB definitivo se tornar necessária.
 4. Projetar persistência espacial nova somente quando uma necessidade funcional demonstrar o que deve ser salvo.
+
+## BF-4C — Candidata (2026-11-02)
+
+BF-4C1/C2 implementadas como candidata à auditoria independente e gates humanos, sem encerramento. O escopo explicitamente autorizado incluiu ampliação horizontal 1,9× do salão e 1,6× dos laterais, passagens maiores e mobília nos cinco cômodos. Próximo passo: auditoria Luna e inspeção visual/física do usuário; BF-4D–G continuam futuras, sem agentes ou rotas antecipados. [Evidência](BF-4C_RELATORIO.md).

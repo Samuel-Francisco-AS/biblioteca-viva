@@ -382,3 +382,9 @@ Na investigação BF-4B, `visibleShelfPoint` de `r4-shell` passou a executar sua
 CI da PR #8, [run 41379918451](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41379918451), commit `153dd6a`: **PASS** em formato, lint, tipos, Vitest, áudio, build, performance report e E2E. A issue #4 segue aberta até evidência de estabilidade histórica/pós-merge.
 
 **Moto G06 (usuário):** APK atualizado instalado, quatro capturas; estética geral dos cinco cômodos PASS, pan/zoom/seleção sem regressões, rotação retrato/paisagem PASS, background/retorno PASS, abertura de registro React/retorno PASS. Leve tremulação/borramento das malhas de paredes ao mover câmera é ressalva R-19 aceita e adiada. Não afirmar novo gate específico de pinch, TalkBack, FPS sustentado/termal, beta ou BF-4C–G. [Relatório BF-4B](BF-4B_RELATORIO.md).
+
+## BF-4C — Candidata (2026-11-02)
+
+A BF-4C adiciona testes de dimensões, focal zoom nos cinco cômodos, distribuição das 18 ilhas, Box3 de instâncias reais, recursos independentes e descarte único. A regressão de layout verifica passagens livres de 2,2 m × 2 m de altura, paredes, móveis, 13 registros e 70 livros. A antiga expectativa de sobreposição série/estante foi substituída por seleção direta da série, agora afastada. E2E BF-4 captura retrato/paisagem, seleção, zoom, mudança real de target por pan e métricas do renderer. Testes de runtime cobrem falhas, remount, pausa/resume e isolamento F5. [Resultados e roteiro humano pendente](BF-4C_RELATORIO.md).
+
+Gate local BF-4C: 79 arquivos/638 testes unitários PASS; 19/19 E2E PASS final sem retries. Rodada inicial concorrente com builds: 17 PASS e dois timeouts do shell; repetição sem builds concorrentes passou, sem mudar esses testes ou limites. Não prova estabilidade da CI nem resolve issue #4. Formato, lint, tipos, áudio, build, performance report e Android debug PASS técnico; sem gate físico.

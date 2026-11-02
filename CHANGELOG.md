@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-4C — candidata à auditoria (2026-11-02)
+
+- Amplia os cinco cômodos e as quatro passagens, com exploração por pan/zoom sobre os pisos reais.
+- Acrescenta 18 conjuntos de mesas, assentos, tapetes, luminárias, plantas e armários; mantém registros selecionáveis e tamanhos originais.
+- Sem encerramento da BF-4C: auditoria independente e aprovação visual/física pendentes.
+
 ### BF-4B — Ambiente dos cinco cômodos — 2026-11-01
 
 - Biblioteca funcional recebe assoalhos com juntas, pedra, painéis bordô/verde, molduras, pilastras, latão e luz quente em todos os cinco ambientes neutros.

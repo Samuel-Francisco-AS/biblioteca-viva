@@ -284,3 +284,9 @@ Build: 638.489 bytes iniciais; chunk Three 663.215 bytes. São custos locais/est
 
 
 **Moto G06 — BF-4B, gate físico dirigido (2026-11-02):** quatro capturas exibem `60.0–60.1 FPS` pontuais, `16.7 ms` por frame, `40–80` draw calls e `5.476–5.956` triângulos em diferentes visões. Usuário não percebeu regressão de pan/zoom/seleção, e aprovou rotação/retomada e fluxo React. Não é medição sustentada de FPS, RAM/GPU ou temperatura. A leve tremulação/borramento das paredes durante movimento da câmera é pendência visual aceita (R-19).
+
+## BF-4C — candidata (2026-11-02)
+
+Coleção vazia, três estantes, viewport 1280×900, DPR 1, Chromium headless: 60 meshes/calls, 37 geometrias, 22.584 triângulos, 21 materiais únicos estruturais, zero texturas de material e um recurso interno do renderer. BF-4B: 47 meshes/calls, 32 geometrias, 5.496 triângulos. O aumento corresponde à ampliação e mobília; batches compartilham cinco geometrias locais e acrescentam 13 calls. Valores não são benchmark físico. Remedir no Moto G06 e avaliar R-19 durante movimento. [Relatório](BF-4C_RELATORIO.md).
+
+Build BF-4C: 638.489 bytes iniciais, igual à BF-4B; chunk Three 669.201 bytes, +5.986 sobre 663.215. Warning >500 kB permanece.

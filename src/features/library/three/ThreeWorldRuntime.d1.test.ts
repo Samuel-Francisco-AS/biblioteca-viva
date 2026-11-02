@@ -356,6 +356,7 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
       );
       if (!placement) throw new Error("Placement ausente.");
       if (modelTypeId === "series-record") {
+        // BF-4C removes the former projected shelf/series overlap.
         const overlappingCenter = new Vector3(
           placement.position[0],
           0.6,
@@ -366,7 +367,7 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
           (overlappingCenter.x + 1) * 320,
           (1 - overlappingCenter.y) * 180,
         );
-        expect(selections.at(-1)).toBe("reading-shelf-01");
+        expect(selections.at(-1)).toBe(placement.instanceId);
       }
       for (const y of [0.6, 1, 0.25]) {
         for (const x of [0, -0.4, 0.4]) {
