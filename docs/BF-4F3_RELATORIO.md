@@ -2,7 +2,7 @@
 
 Data: 2026-11-02. Branch `feat/bf-4f3-autonomia-relacoes`, base `5671ee6a1efb4338efb07a104526c4b56092000b` (merge BF-4F2). Checkout inicial limpo; `main` verificada, `fetch origin` e `pull --ff-only origin main` executados antes de criar a branch.
 
-**Candidata à auditoria e ao gate artístico/físico no Moto G06. Não é fechamento humano da F3.** F4/quests, BF-4G, TalkBack e desempenho sustentado permanecem pendentes. Sem merge, alteração de versão, instalação ou dados pessoais modificados.
+**Histórico da implementação:** o texto técnico abaixo foi produzido enquanto a F3 era candidata. O aceite dirigido e a autorização posterior de integração constam na seção **Fechamento** ao fim deste documento. F4/quests, BF-4G, TalkBack e desempenho sustentado permanecem pendentes. Nenhuma versão ou dado pessoal foi alterado pelo trabalho da candidata.
 
 ## A — núcleo e navegação efetivos
 
@@ -114,3 +114,15 @@ Riscos residuais: legibilidade dos gestos/folio e distâncias sociais na câmera
 ## Arquivos da entrega
 
 Núcleo: `inhabitantAgency.ts`, `inhabitantEncounters.ts`, `inhabitantNavigation.ts`, `inhabitants.ts`. Mundo: `three/inhabitantObstacles.ts`, `three/inhabitantSceneProps.ts`, `three/inhabitantAnimator.ts`, `three/inhabitantVisuals.ts`, `three/ThreeWorldRuntime.ts`, `livingObjects.ts`. Ponte/React: `worldRuntime.ts`, `WorldHost.tsx`, `InhabitantLife.tsx`. Testes: `inhabitantAgency.test.ts`, `InhabitantLife.test.tsx`, `WorldHost.test.tsx`, `livingObjects.test.ts`, `three/inhabitantAnimator.test.ts`, `three/ThreeWorldRuntime.test.ts`, `e2e/bf4-inhabitants.spec.ts`. Documentação: este relatório, STATUS, ROADMAP, plano técnico BF-4F, direção artística, RISKS, índice e CHANGELOG. Nenhum asset GLB, fonte Blender, dependência, schema ou versão alterado.
+
+## Fechamento — aceite dirigido, CI e autorização de merge (2026-11-02)
+
+**Auditoria independente:** PR #16 revisada estaticamente; estrutura de `InhabitantAgency`, navegação por regiões BF-4D e obstáculos de geometria montada, seis relações, integração restrita BF-4E, transporte do animador F2 e lifecycle avaliados. Não se identificou bloqueante arquitetural inequívoco. A auditoria não substituiu a execução independente dos testes nem a observação física dos eventos.
+
+**Moto G06 — resultados fornecidos pelo usuário:** Autonomia **PASS**, Convivência **PASS**, Integração **PASS**; Acidente de Lua **NÃO TESTADO**. Os três PASS valem para os procedimentos dirigidos realizados, sem afirmar que cada um dos seis pares foi visto separadamente. O ciclo de acidente/reparo de Lua tem cobertura automatizada, mas **o folio danificado, sua legibilidade e o reparo não têm aprovação humana no aparelho**. Essa pendência foi expressamente aceita para o encerramento F3, sem ser apagada ou transformada em PASS.
+
+**CI remota [run 41542040077](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077):** formato, lint, tipos, Vitest (690), áudio, build e relatório de bundle **PASS**; **E2E 21 PASS, 10 FAIL, 1 flaky; CI GLOBAL FAIL**. O novo E2E da BF-4F3 passou remotamente. Os dez cenários FAIL têm os mesmos nomes daqueles que falharam na PR #14: coleção cheia BF-4D (1280/390), quatro E2E BF-4F2, segredo BF-4E, shell desktop e dez ciclos, reading-area de seis tipos. O cenário de orientação BF-4D foi flaky. Isso **não prova causa comum** nem autoriza declarar resolvidas #4/#11/#15. Não houve nova tentativa de CI, aumento de timeouts, retries artificiais ou remoção de asserts neste fechamento.
+
+**Decisão expressa do usuário:** encerrar e realizar merge da [PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/16). **BF-4F3 CONCLUÍDA NO ESCOPO TÉCNICO/FUNCIONAL E HUMANO DIRIGIDO, COM EXCEÇÃO CI E RESSALVA DE NÃO TESTE FÍSICO DO ACIDENTE DE LUA.** Não aprovar automaticamente TalkBack, R-19, benchmark prolongado, BF-4G ou beta/release. BF-4F4 é a próxima fase, **não implementada nem autorizada nesta operação de fechamento**.
+
+**Diretrizes preservadas:** primazia de ambição artística, narrativa e personagens interessantes sobre otimização preventiva; testar proporcionalmente, corrigir gargalos reais e impedir loops de E2E/timeouts que desperdicem cota Codex. Para F4, separar o sistema de diálogos/quests do já extenso núcleo F3, sem engine universal especulativa. O relatório técnico anterior à seção de fechamento conserva evidência da candidata; este fechamento prevalece sobre seus itens datados como NOT RUN.

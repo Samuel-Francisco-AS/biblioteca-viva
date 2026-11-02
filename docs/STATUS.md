@@ -1,6 +1,6 @@
 # Estado atual
 
-> **BF-4F3 — candidata à auditoria e ao Moto G06 (2026-11-02):** agência local dos quatro habitantes, rotas verificadas entre A–E, seis relações efêmeras, encontros, cooperação, conflito e reparação de folio cenográfico integrados. Gate local: 88 arquivos / 690 Vitest PASS, formato/lint/tipos/áudio/build PASS. Aceite artístico/físico, TalkBack, CI integrada e desempenho sustentado não concedidos. F4/quests e BF-4G permanecem futuras. [Contrato, provas e roteiro F3](BF-4F3_RELATORIO.md). Declarações anteriores de F3 “próxima” são cronologia anterior à candidata.
+> **BF-4F3 CONCLUÍDA NO ESCOPO DIRIGIDO (2026-11-02):** usuário aprovou no Moto G06 **Autonomia PASS, Convivência PASS e Integração PASS**. **Acidente/reparação do folio de Lua NÃO TESTADO fisicamente**; sua implementação tem cobertura automatizada, mas não aceite artístico humano. A auditoria estática não identificou bloqueio inequívoco. 690 Vitest PASS e novo E2E F3 PASS na CI. [CI da PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077): **E2E 21 PASS, 10 FAIL, 1 flaky; CI global FAIL**; os dez cenários FAIL têm os mesmos nomes da CI F2, sem prova de causa idêntica. Dívidas #4/#11/#15 permanecem. O usuário autorizou expressamente o fechamento e merge da [PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/16) **com exceção CI e ressalva física de Lua**. Próxima: **BF-4F4 (RPG e quests)**, sem início antecipado. [Fechamento](BF-4F3_RELATORIO.md).
 
 
 > **Diretriz prioritária do projeto (2026-11-02):** ambição artística e criativa acima de otimização preventiva; não supor que o Moto G06 não aguenta. Construir uma experiência rica, testar proporcionalmente e medir gargalos reais antes de simplificar. Evitar loops de timeout/Playwright consumindo cota sem novo diagnóstico. [Arte](ART_DIRECTION.md), [testes](TESTING.md) e [desempenho](PERFORMANCE.md).
@@ -141,17 +141,17 @@ BF-3 ✅ CONCLUÍDA NO ESCOPO TÉCNICO-FUNCIONAL E FÍSICO DIRIGIDO — CI PENDE
     BF-3E2 ✅ interface funcional dos seis tipos — coberta pelo gate E3
     BF-3E3 ✅ gate consolidado — auditoria independente e CI PASS
   BF-3F ✅ 11/11 procedimentos físicos PASS — exceção formal: CI E2E instável (issue #4)
-BF-4 🔄 BF-4B–E e BF-4F1/F2 concluídas no escopo dirigido; BF-4F3 PRÓXIMA
+BF-4 🔄 BF-4B–E e BF-4F1/F2/F3 concluídas no escopo dirigido; BF-4F4 PRÓXIMA
   BF-4A ✅ auditoria + contrato + decomposição — DOCUMENTAL
   BF-4B ✅ cinco cômodos — CI e Moto G06 PASS dirigido, ressalva R-19
   BF-4C ✅ ampliação e mobília dos cinco cômodos — PASS dirigido; CI E2E FAIL aceita (#4)
   BF-4D ✅ organização espacial — auditoria e Moto G06 PASS dirigido; CI FAIL 19/21 aceita (#4/#11)
   BF-4E ✅ objetos vivos, interação por toque e atmosfera contextual — Moto G06 PASS dirigido; CI E2E FAIL aceita (#4/#11)
-  BF-4F 🔄 F1/F2 concluídas por gates dirigidos; F3/F4 pendentes
+  BF-4F 🔄 F1/F2/F3 concluídas por gates dirigidos (F3 com exceções); F4 pendente
     BF-4F1 ✅ quatro habitantes integrados, seleção canvas/React — PASS físico dirigido
     BF-4F2 ✅ animações corporais e expressividade — gate dirigido PASS, CI E2E FAIL (#15)
-    BF-4F3 ⏳ comportamento autônomo e relações — PRÓXIMA
-    BF-4F4 ⏳ diálogo RPG e quests
+    BF-4F3 ✅ comportamento autônomo e relações — 3 gates físicos PASS, Lua não testada, CI E2E FAIL
+    BF-4F4 ⏳ diálogo RPG e quests — PRÓXIMA
   BF-4G ⏳ gate integrado PENDENTE
 ```
 
@@ -192,3 +192,11 @@ Quatro modelos iniciais integrados, fotos do mundo real no Moto G06 e seleção 
 ## BF-4F2 — Fechamento e transição para BF-4F3 (2026-11-02)
 
 O usuário atualizou o APK no Moto G06 e confirmou animações ao selecionar personagens e ao tocar nos botões React. Nenhuma regressão/queda de desempenho foi percebida; animações atuais simples aprovadas no recorte F2. Captura pontual indica 60,1 FPS, 16,7 ms/frame e 73 chamadas, sem prova de estabilidade prolongada. [CI 41532160557](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41532160557) global FAIL com 20 PASS, 10 FAIL, 1 flaky E2E, incluindo quatro **novas falhas F2** em [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15); não atribuir causa histórica. O usuário autorizou fechamento e merge da [PR #14](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/14) com exceção CI, sem declarar testes globais PASS. BF-4F3 é a próxima fase; F4, BF-4G, TalkBack, R-19 e avaliação sustentada pendentes. Menções anteriores a F1/F2 'não implementadas' descrevem planejamento histórico.
+
+## BF-4F3 — fechamento funcional/artístico dirigido (2026-11-02)
+
+**Aceite humano registrado:** o usuário executou no Moto G06 três procedimentos: **Autonomia PASS**, **Convivência PASS** e **Integração PASS**. O quarto procedimento, **Acidente de Lua NÃO TESTADO**, não foi observado no dispositivo; portanto, não há aceite humano da legibilidade do folio, do acidente nem do reparo. O usuário solicitou expressamente fechar e integrar assim mesmo, mantendo a ressalva. O funcionamento lógico desse ciclo foi coberto em testes automatizados; não se presume aprovação visual.
+
+**Auditoria e CI:** revisão estática da PR #16 favorável sem defeito inequívoco, 690 Vitest PASS relatados localmente e confirmados no pipeline. [CI 41542040077](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077) **FAIL global**: E2E 21 PASS, 10 FAIL e 1 flaky; novo cenário F3 passou. Os dez casos com falha correspondem nominalmente aos dez da PR #14 (dois BF-4D coleção cheia, quatro F2, BF-4E, dois shell, reading-area); identidade de causa não comprovada. Issues #4/#11/#15 ainda abertas. Essa exceção CI **não representa gate integrado verde**, nem TalkBack, carga sustentada ou BF-4G concluídos.
+
+**Decisão:** BF-4F3 **concluída no escopo dirigido com ressalva física isolada e exceção CI documentadas**, mediante autorização expressa de merge da [PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/16). A próxima frente planejada é BF-4F4, sob primazia artística e testes proporcionais; só iniciar com checkpoint próprio. Textos históricos sobre F3 “pendente” permanecem cronologia, não autoridade atual.

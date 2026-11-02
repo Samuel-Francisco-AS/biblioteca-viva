@@ -1,11 +1,11 @@
 # Changelog
 
-## BF-4F3 — candidata: autonomia e relações (2026-11-02)
+## BF-4F3 — concluída no escopo dirigido, com exceções CI e Lua (2026-11-02)
 
 - Samael, Aryn, Ytha e Lua escolhem atividades, circulam pelos cinco cômodos, repousam e se aproximam espontaneamente; seis relações mudam por atrito, cooperação e reconhecimento durante a sessão.
 - Lua pode chamuscar um folio de treino fictício e aceitar ajuda para repará-lo; nada altera os seis tipos de registro ou o Segredo do Pergaminho.
 - Habitantes recolhido oferece atividades/localização, acontecimentos e vínculos sem pontuação; controles F2 interrompem e coordenam as rotinas. Pausa, movimento reduzido e falha WebGL possuem texto fiel e não simulam percursos.
-- 690 Vitest e gates locais de código/build PASS. Aceite humano/artístico, TalkBack, CI global e desempenho sustentado pendentes. [Relatório](docs/BF-4F3_RELATORIO.md).
+- 690 Vitest, novo E2E F3 remoto e gates de código/build PASS. Moto G06: Autonomia, Convivência e Integração PASS; **Acidente de Lua NÃO TESTADO** fisicamente. [CI #41542040077](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077) **FAIL global** (21 E2E PASS, 10 FAIL, 1 flaky); ressalva assumida por autorização explícita de encerramento e merge da [PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/16). TalkBack, R-19, cota sustentada, BF-4G e dívida #4/#11/#15 continuam; BF-4F4 é próxima. [Fechamento](docs/BF-4F3_RELATORIO.md).
 
 
 ## BF-4F2 — concluída no escopo dirigido (2026-11-02)

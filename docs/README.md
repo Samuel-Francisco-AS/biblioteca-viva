@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> **Estado vigente BF-4F3 (2026-11-02):** candidata implementada para auditoria e gate humano; autonomia, rotas e convivência dos quatro, sem quests. [Relatório F3](BF-4F3_RELATORIO.md). 690 Vitest PASS; não confundir com CI global, Moto G06 ou TalkBack aprovados nesta fase.
+> **BF-4F3 ENCERRADA no escopo dirigido (2026-11-02):** no Moto G06, Autonomia, Convivência e Integração **PASS**; Acidente de Lua **NÃO TESTADO fisicamente**, com cobertura automatizada e ressalva preservada. [CI PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077) **FAIL**: E2E 21 PASS, 10 FAIL, 1 flaky (novo F3 PASS; falhas remanescentes com mesmos nomes da execução F2). Fechamento e merge da [PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/16) expressamente autorizados com exceções documentadas. **Próxima: BF-4F4, RPG/quests**, ainda não iniciada. [Relatório final](BF-4F3_RELATORIO.md).
 
 
 > **BF-4F2 encerrada no escopo dirigido (2026-11-02):** animações e seleção aprovadas pelo usuário no Moto G06, sem regressões percebidas. Merge da [PR #14](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/14) expressamente autorizado por exceção CI: 20 E2E PASS, 10 FAIL, 1 flaky (quatro falhas novas BF-4F2 em [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15)). **BF-4F3 próxima.** [Fechamento](BF-4F2_RELATORIO.md).
@@ -9,7 +9,7 @@ Este é o único índice da documentação ativa.
 
 | Documento | Pergunta respondida |
 |---|---|
-| [`BF-4F3_RELATORIO.md`](BF-4F3_RELATORIO.md) | Como funcionam rotas, autonomia, seis vínculos, reparação, memória e o gate da candidata F3? |
+| [`BF-4F3_RELATORIO.md`](BF-4F3_RELATORIO.md) | Como ocorreu a entrega de autonomia/relações F3, seu aceite físico dirigido e o fechamento por exceção CI/Lua? |
 | [`BF-4F2_RELATORIO.md`](BF-4F2_RELATORIO.md) | Entrega, gate físico e exceção CI no fechamento BF-4F2. |
 | [`../README.md`](../README.md) | O que é a Biblioteca Viva? |
 | [`STATUS.md`](STATUS.md) | Onde estamos? |

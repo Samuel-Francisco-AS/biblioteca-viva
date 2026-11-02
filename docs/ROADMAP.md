@@ -1,6 +1,6 @@
 # Roadmap
 
-> **Próximo gate: auditar a candidata BF-4F3 e validar convivência no Moto G06.** A implementação F3 está descrita no [relatório](BF-4F3_RELATORIO.md), com 690 Vitest PASS localmente. Fechar F3 somente após evidência técnica/remota e aceite humano aplicáveis; depois, BF-4F4 (diálogos RPG/quests) exige execução própria. Não iniciar F4/G, editor espacial ou persistência por esta entrega.
+> **BF-4F3 ENCERRADA no escopo humano dirigido (2026-11-02), com exceções documentadas.** Moto G06: autonomia, convivência e integração **PASS**; acidente/reparação de Lua **NÃO TESTADO** fisicamente. [CI PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077) **FAIL**: 21 E2E PASS, 10 FAIL, 1 flaky; novo E2E BF-4F3 PASS. O usuário autorizou fechamento e merge apesar das ressalvas. **Próximo checkpoint: BF-4F4 — diálogos RPG e quests**, ainda não implementado, exigindo planejamento e PR próprios. [Relatório](BF-4F3_RELATORIO.md).
 
 
 > **Fechamento BF-4F1 (2026-11-02):** modelos iniciais de Samael, Aryn, Ytha e Lua e seleção por canvas/React **aprovados pelo usuário no Moto G06**. F1 concluída no escopo dirigido; animações corporais ficam para **F2**, autonomia para F3, diálogos/quests para F4. [Relatório final](BF-4F1_RELATORIO.md). A CI não foi declarada verde porque E2E final falhou (20 PASS, 6 FAIL, 1 flaky).
@@ -53,17 +53,17 @@ BF-3 ✅ concluída no escopo funcional/físico dirigido; dívida CI E2E aberta
     BF-3E2 ✅ interface funcional dos seis tipos — implementação local
     BF-3E3 ✅ gate consolidado — auditoria independente e CI PASS
   BF-3F ✅ gate físico dirigido 11/11 PASS; exceção CI documentada (#4)
-BF-4 🔄 mundo vivo e habitável — BF-4B/C/D/E concluídas no escopo dirigido, exceções CI #4/#11; BF-4F próxima
+BF-4 🔄 mundo vivo e habitável — BF-4B/C/D/E e BF-4F1/F2/F3 concluídas no escopo dirigido, com ressalvas CI; BF-4F4 próxima
   BF-4A ✅ auditoria dirigida, decisões e contrato (documental)
   BF-4B ✅ cinco cômodos; auditoria, CI e Moto G06 PASS dirigido (R-19)
   BF-4C ✅ ampliação e mobília concluídas com PASS dirigido, exceção CI (#4)
   BF-4D ✅ organização espacial, passagens e zonas — PASS dirigido, CI FAIL aceita (#4/#11)
   BF-4E ✅ dez famílias e três atmosferas contextuais, interação canvas e Segredo do Pergaminho 4/4 — Moto G06 PASS; CI E2E FAIL aceita (#4/#11)
-  BF-4F 🔄 habitantes e animações F1/F2 concluídos; IA local F3 e quests F4 pendentes
+  BF-4F 🔄 personagens/animações/autonomia F1/F2/F3 concluídos; diálogos e quests F4 pendentes
     BF-4F1 ✅ modelos distintos integrados e seleção por canvas/React — PASS físico dirigido
     BF-4F2 ✅ animações variadas e transições — PASS físico dirigido, CI global FAIL
-    BF-4F3 ⏳ comportamento autônomo, relações e interação ambiental — PRÓXIMA
-    BF-4F4 ⏳ diálogos RPG ramificados (3–4 opções), 4 quests individuais e arco coletivo
+    BF-4F3 ✅ comportamento autônomo, relações e interação ambiental — 3 PASS físicos; folio Lua não testado; CI FAIL
+    BF-4F4 ⏳ diálogos RPG ramificados (3–4 opções), 4 quests individuais e arco coletivo — PRÓXIMA
   BF-4G ⏳ gate integrado, Moto G06 e fechamento
 BF-5 ⏳ consolidação do marco funcional
 ```
@@ -434,3 +434,9 @@ A execução terá **somente F1–F4**, com integração progressiva: **F1** cri
 ## BF-4F1 — Fechamento dirigido (2026-11-02)
 
 Quatro modelos iniciais integrados, fotos do mundo real no Moto G06 e seleção dos quatro pelo toque e React **aprovados pelo usuário**. Commit `de0bea64718ccfb2501a11f1541d8ac4abca3396`, [PR #13](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/13). Formatação, lint, TypeScript, 667 Vitest, áudio, build e relatório de performance PASS na [CI 41520167206](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41520167206); **E2E concluídos com **20 PASS, 6 FAIL e 1 flaky; CI global FAIL****. Microgestos de cabeça não equivalem a animação corporal: **F2 é a próxima etapa**. F3/F4, BF-4G, questões #4/#11, R-19 e TalkBack permanecem. As observações anteriores de F1 “aberta” ou “não implementada” são históricas. [Relatório](BF-4F1_RELATORIO.md).
+
+## BF-4F3 — fechamento e transição para F4 (2026-11-02)
+
+Autonomia, convivência e integração passaram no Moto G06; o acidente de Lua e o reparo do folio não tiveram validação artística física. O usuário autorizou explicitamente encerrar F3 por exceção. O núcleo, a navegação A–E, as seis relações e cenas têm provas de código/testes, mas não há aprovação artística exaustiva de cada par. A CI remota [#16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077) permaneceu **FAIL (21 PASS, 10 FAIL, 1 flaky)**; novo cenário F3 passou, dez FAIL correspondem aos nomes de cenários F2 anteriores. Não mascarar nem reclassificar regressões sem diagnóstico. Dívidas #4/#11/#15, R-19, TalkBack, gate BF-4G, desempenho sustentado e o folio continuam rastreados.
+
+**Próxima F4:** quatro diálogos RPG/quests individuais e arco coletivo, com 3–4 escolhas predefinidas nos nós narrativos, consequências contextuais e progressão de sessão. Priorizar escrita, caracterização e encenação; evitar engine genérica e centralizar F4 em módulos próprios, não acrescentar toda a lógica ao `inhabitantAgency.ts` (~1040 linhas). Preservar a cota Codex com testes dirigidos, sem loops de timeout e sem simplificação artística preventiva. Não iniciar esta etapa durante o fechamento F3.
