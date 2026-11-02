@@ -263,6 +263,34 @@ describe("construção e layout provisórios consolidados", () => {
           ),
         ).toBe(false);
       }
+
+    // BF-4B: brass passage inlays must project slightly above the stone top.
+    // Coplanar top faces previously risked z-fighting on mobile GPUs.
+    const inlays = meshes(building).filter((mesh) => {
+      const dimensions = new Box3()
+        .setFromObject(mesh)
+        .getSize(new Vector3());
+      return (
+        Math.abs(dimensions.x - 0.8) < 0.000001 &&
+        Math.abs(dimensions.y - 0.02) < 0.000001 &&
+        Math.abs(dimensions.z - 0.06) < 0.000001
+      );
+    });
+    expect(inlays).toHaveLength(8);
+    for (const inlay of inlays) {
+      const box = new Box3().setFromObject(inlay);
+      const center = box.getCenter(new Vector3());
+      const bridge = passages.find(
+        (passage) =>
+          Math.abs(passage.position.x - center.x) < 0.001 &&
+          Math.abs(passage.position.z - center.z) < 0.9,
+      );
+      expect(bridge).toBeDefined();
+      if (!bridge) continue;
+      const stoneTop = new Box3().setFromObject(bridge).max.y;
+      expect(box.min.y).toBeLessThan(stoneTop);
+      expect(box.max.y).toBeGreaterThan(stoneTop + 0.001);
+    }
     disposeObjectTree(building);
   });
 

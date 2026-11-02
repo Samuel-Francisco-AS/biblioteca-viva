@@ -55,7 +55,7 @@ O gate local e a CI do PR #2 (`4aef4088df4944cedab2f80551dc52c5be379a25`, GitHub
 
 ## Próximo trabalho
 
-A **BF-4B** recebeu implementação local autorizada em 2026-11-01: os cinco cômodos têm assoalhos, embasamento de pedra, painéis bordô/verde, pilastras, molduras, detalhes de latão e iluminação quente no runtime funcional. Planta, conexões, registros e F3 permanecem preservados. **Candidata técnica à auditoria: 636 testes unitários e 19 E2E PASS local. Aprovação estética integrada e validação física do build atual pendentes.** BF-4A permanece PASS documental; BF-4C–G não foram implementadas. Evidência e limitações: [relatório BF-4B](BF-4B_RELATORIO.md). Issue #4 e TalkBack continuam abertos. P3D-B2–F continuam adiados.
+A **BF-4B** recebeu implementação autorizada em 2026-11-01 e foi publicada na branch de auditoria `feat/bf-4b-environment`: os cinco cômodos têm assoalhos, embasamento de pedra, painéis bordô/verde, pilastras, molduras, detalhes de latão e iluminação quente no runtime funcional. Planta, conexões, registros e F3 permanecem preservados. **Auditoria estática realizada: PASS técnico condicionado; 636 testes unitários e 19 E2E PASS foram relatados na execução original local. Um ajuste localizado das faixas de latão e novo teste de regressão foram incorporados à branch; a CI remota precisa validar o novo commit. Aprovação estética integrada e validação física do novo build pendentes.** BF-4A permanece PASS documental; BF-4C–G não foram implementadas. Evidência e limitações: [relatório BF-4B](BF-4B_RELATORIO.md). Issue #4 e TalkBack continuam abertos. P3D-B2–F continuam adiados.
 
 **Evidência separada:** D1 aprovou montagem e ownership após auditorias independentes e CI; D2 aprovou catálogo, picking e seleção e recebeu prova adicional dirigida do canvas BF-2 após auditoria; D3 corrigiu o attach parcial de listeners e concluiu a regressão consolidada local. Luna concluiu a auditoria independente da D3 com PASS técnico dirigido no commit `2cb4c9d`. A CI remota da BF-3E1 no commit `ae606e0` aprovou formato, lint, tipos, 630 testes Vitest, áudio, build e relatório estático de performance, mas falhou em cinco E2E `r4-shell` que ainda esperavam a fixture F1 na rota composta e em `p1-memory` após reload. A correção E2E local preserva as provas funcionais; `p1-memory` passou isolado nesta revalidação, e seu histórico de oscilação permanece registrado. Nenhuma dessas evidências representa PASS humano visual, ergonomia, FPS físico, Android ou TalkBack.
 
@@ -131,8 +131,8 @@ BF-3 ✅ CONCLUÍDA NO ESCOPO TÉCNICO-FUNCIONAL E FÍSICO DIRIGIDO — CI PENDE
     BF-3E2 ✅ interface funcional dos seis tipos — coberta pelo gate E3
     BF-3E3 ✅ gate consolidado — auditoria independente e CI PASS
   BF-3F ✅ 11/11 procedimentos físicos PASS — exceção formal: CI E2E instável (issue #4)
-BF-4 🔄 AMBIENTE BF-4B IMPLEMENTADO LOCALMENTE — GATES HUMANOS PENDENTES
+BF-4 🔄 AMBIENTE BF-4B PUBLICADO EM BRANCH — CI/GATES HUMANOS PENDENTES
   BF-4A ✅ auditoria + contrato + decomposição — DOCUMENTAL
-  BF-4B 🔄 ambiente dos cinco cômodos — candidata à auditoria
+  BF-4B 🔄 auditoria estática PASS condicionado — PR/CI e gates humanos pendentes
   BF-4C–G ⏳ mobiliário, integração, personagens e gate físico PENDENTES
 ```

@@ -1,4 +1,4 @@
-# BF-4B — Entrega local para auditoria
+# BF-4B — Implementação e publicação para auditoria
 
 Data: 2026-11-01. Escopo: ambiente integrado dos cinco cômodos, sob ADR-012. Não encerra BF-4 nem aprova estética, TalkBack ou Moto G06.
 
@@ -63,3 +63,13 @@ Não houve instalação ou execução física. O gate humano deve usar este buil
 Implementação integrada candidata à auditoria independente: gates técnicos finais aprovados, sem regressão bloqueante identificada nesta execução. A aprovação estética não é presumida. Permanecem avaliação visual humana dos cinco cômodos, legibilidade/oclusões em densidade representativa, medição dirigida Moto G06 e TalkBack obrigatório antes do primeiro recorte real/beta. BF-4C–G continuam futuras. A dívida E2E issue #4 não é encerrada por esta entrega.
 
 Estado Git final: `main`, HEAD e `origin/main` continuam em `92b78f9d8e67dfbf232878d0bc2ef7d118d64bbf`, sem divergência de commits. Há 13 arquivos rastreados modificados e três novos para revisão; nenhum removido. Builds, capturas e traces são locais/ignorados. Nenhum commit ou push realizado.
+
+## Publicação e ajuste posterior à auditoria estática
+
+A seção **Git e autorização** e o estado Git no fim da seção **Prontidão** registram o **checkout no término da execução original do Codex**, antes da publicação; não descrevem o estado remoto atual.
+
+Posteriormente, o Codex publicou a implementação integral em `feat/bf-4b-environment` no commit [`c3628cdd16a3a12da07aa3a6e1f228ddc06c8bd4`](https://github.com/Samuel-Francisco-AS/biblioteca-viva/commit/c3628cdd16a3a12da07aa3a6e1f228ddc06c8bd4), partindo diretamente da `main` `92b78f9d8e67dfbf232878d0bc2ef7d118d64bbf`. A `main` não recebeu a BF-4B. O estado local limpo foi informado pelo Codex; a publicação e o commit foram confirmados pelo GitHub.
+
+A auditoria independente estática não identificou regressão arquitetural bloqueante, mas detectou a **coincidência do topo das faixas de latão com o topo de pedra** nos quatro limiares, risco localizado de `z-fighting`. Foi aplicado um ajuste de posicionamento vertical: centro das oito faixas de `Y=-0.010` para `Y=-0.004` m (topo `Y=+0.006` m em vez de `Y=0`), mantendo espessura, extensão horizontal, quatro passagens e demais peças. `libraryRecordLayout.test.ts` passou a verificar as oito faixas reais mesmo após agrupamento por `InstancedMesh`, exigindo superfície superior acima da pedra e base embutida, para impedir a regressão.
+
+**Limites da revisão:** essas alterações remotas não equivalem a build local, medição física, aprovação estética ou gate de CI integral; o novo teste exige execução pela CI/checkout. A [issue #4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4) continua aberta até evidência remota consistente. O APK e hash mencionados acima pertencem **à implementação original anterior ao ajuste**, devendo ser regenerados antes do gate físico.

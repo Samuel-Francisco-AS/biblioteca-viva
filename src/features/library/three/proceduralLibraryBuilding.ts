@@ -233,7 +233,7 @@ export function createProceduralLibraryBuilding(): Group {
         box(
           "passage-inlay",
           x,
-          -0.01,
+          -0.004, // Top at +0.006 m, above the stone threshold (Y=0): no coplanar top faces.
           z + edge,
           0.8,
           0.02,
