@@ -47,7 +47,7 @@ BF-4 🔄 mundo vivo e habitável — BF-4B/C/D concluídas, exceções CI #4/#1
   BF-4B ✅ cinco cômodos; auditoria, CI e Moto G06 PASS dirigido (R-19)
   BF-4C ✅ ampliação e mobília concluídas com PASS dirigido, exceção CI (#4)
   BF-4D ✅ organização espacial, passagens e zonas — PASS dirigido, CI FAIL aceita (#4/#11)
-  BF-4E ⏳ integração ao runtime e objetos interativos
+  BF-4E ⏳ visão de objetos vivos aprovada — contrato de 10 famílias, atmosferas e descobertas; implementação pendente
   BF-4F ⏳ personagens detalhados, animação, IA local e conversação contextual
     BF-4F1 ⏳ identidade visual de três personagens (alvo inicial)
     BF-4F2 ⏳ animações variadas e transições
@@ -56,6 +56,8 @@ BF-4 🔄 mundo vivo e habitável — BF-4B/C/D concluídas, exceções CI #4/#1
   BF-4G ⏳ gate integrado, Moto G06 e fechamento
 BF-5 ⏳ consolidação do marco funcional
 ```
+
+**BF-4E — escopo criativo autorizado para planejamento:** [visão e contrato dos objetos vivos](BF-4E_VISAO_CONTRATO.md). Dez famílias-alvo, interações entre objetos, modos ambientais e uma descoberta encadeada nos cinco cômodos; nenhum código BF-4E implementado por essa decisão documental. Próximo passo: prompt de execução e gates independentes, sem antecipar personagens BF-4F.
 
 O caminho BF usa conteúdo procedural/provisório em TypeScript/Three.js e mantém React como superfície semântica das funções essenciais. A identidade lógica separa tipo de modelo, instância do mundo e ID de registro convencional associado quando houver; a representação visual poderá ser procedural agora e GLB definitivo depois, sem alterar essa identidade. Não há persistência espacial produtiva, tabela nova ou mudança de backup neste plano.
 

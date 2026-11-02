@@ -7,6 +7,7 @@ Este é o único índice da documentação ativa.
 | [`../README.md`](../README.md) | O que é a Biblioteca Viva? |
 | [`STATUS.md`](STATUS.md) | Onde estamos? |
 | [`ROADMAP.md`](ROADMAP.md) | Qual é o próximo trabalho? |
+| [`BF-4E_VISAO_CONTRATO.md`](BF-4E_VISAO_CONTRATO.md) | Qual é a visão aprovada de objetos vivos, reações, atmosfera e descoberta da BF-4E? |
 | [`BF-4D_RELATORIO.md`](BF-4D_RELATORIO.md) | Qual foi a organização espacial BF-4D, seu fechamento dirigido e as dívidas CI #4/#11? |
 | [`BF-4C_RELATORIO.md`](BF-4C_RELATORIO.md) | Como ocorreu o fechamento dirigido da ampliação e mobília BF-4C? |
 | [`BF-4B_RELATORIO.md`](BF-4B_RELATORIO.md) | O que a implementação BF-4B entregou e como verificá-la? |

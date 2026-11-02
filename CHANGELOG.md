@@ -4,6 +4,11 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-4E — Visão aprovada de objetos vivos (planejamento; 2026-11-02)
+
+- Documentada a proposta de dez famílias de objetos interativos, animações de props, iluminação real, eventos interdependentes, três atmosferas e um pequeno segredo encadeado nos cinco cômodos. Sem implementação, teste, APK ou merge de feature; o próximo passo é o prompt Codex sob [contrato BF-4E](docs/BF-4E_VISAO_CONTRATO.md).
+
+
 ### BF-4D — Organização espacial encerrada com exceção CI (2026-11-02)
 
 - Distribui as três estantes em três cômodos, reorganiza os 13 slots de registros nos cinco ambientes e compõe os mesmos 18 conjuntos de mobília junto às áreas de leitura, estudo e descanso.

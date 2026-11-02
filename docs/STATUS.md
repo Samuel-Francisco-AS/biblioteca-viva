@@ -136,7 +136,8 @@ BF-4 🔄 BF-4B–D CONCLUÍDAS — BF-4C/D COM EXCEÇÃO CI; BF-4E PRÓXIMA
   BF-4B ✅ cinco cômodos — CI e Moto G06 PASS dirigido, ressalva R-19
   BF-4C ✅ ampliação e mobília dos cinco cômodos — PASS dirigido; CI E2E FAIL aceita (#4)
   BF-4D ✅ organização espacial — auditoria e Moto G06 PASS dirigido; CI FAIL 19/21 aceita (#4/#11)
-  BF-4E–G ⏳ integração, personagens e gate físico PENDENTES
+  BF-4E ⏳ visão/contrato de objetos vivos aprovados; implementação, auditoria e gate físico PENDENTES
+  BF-4F–G ⏳ personagens e gate integrado PENDENTES
 ```
 
 ## BF-4D — Encerrada por exceção explícita à CI (2026-11-02)
@@ -144,3 +145,7 @@ BF-4 🔄 BF-4B–D CONCLUÍDAS — BF-4C/D COM EXCEÇÃO CI; BF-4E PRÓXIMA
 Base sincronizada em `6804fee4c3fff49f8807c0111bba4e08716639cf`, branch `feat/bf-4d-spatial-organization`. Estantes distribuídas em A/C/D, 13 slots BF-3 reorganizados nos cinco cômodos e 18 conjuntos ambientais preservados. Circulação declarativa de 1,2 m, quatro passagens livres, 18 zonas e 18 pontos (dez atividades e oito entradas), com validação pura e Box3 das instâncias reais. Identidades, 70 livros, overflow, seleção, câmera F3, lifecycle e F5 preservados. Sem agentes, ações BF-4E, editor, persistência, dependências ou alteração de arquitetura.
 
 **Gate local BF-4D PASS:** formato, lint, tipos, 645 testes/80 arquivos, áudio, build, performance, 21/21 E2E, Android debug e diff --check. **Auditoria estática independente sem bloqueante inequívoco e gate dirigido Moto G06 PASS** (quatro capturas; arraste, zoom, seleção, orientação, sem regressão/travamento relatado; ~58,8–60,1 FPS pontuais). **CI remota PR #10 [41405622312](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41405622312) FAIL**, 19/21 E2E PASS: timeout histórico `r4-shell` e **timeout novo** na coleção cheia BF-4D de 1280px; este último requer investigação específica. **Fechamento/merge autorizados expressamente em decisão posterior, mesmo com os dois timeouts, como dívida rastreada em #4 (histórico) e [#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11) (BF-4D novo).** Não declarar CI verde, causa comprovada, desempenho sustentado ou beta. R-19 e TalkBack continuam pendentes. BF-4E é a próxima etapa ainda sem autorização de implementação. [Relatório BF-4D](BF-4D_RELATORIO.md).
+
+## BF-4E — Visão criativa aprovada, sem implementação (2026-11-02)
+
+O usuário adotou a proposta de transformar os cinco cômodos em ambiente reativo, com **dez famílias-alvo de objetos vivos**, animações de móveis/objetos, luz cênica real, efeitos locais, estados de sessão, três modos ambientais e descoberta ficcional encadeada. Contrato canônico: [BF-4E_VISAO_CONTRATO.md](BF-4E_VISAO_CONTRATO.md). **Ainda não há commit de implementação, APK, CI ou aceite físico da BF-4E.** Próximo passo: prompt técnico Codex, começando por sincronização com a main e terminando em PR sem merge. Preservar seis categorias, BF-4D, F5 e React acessível; BF-4F/objetos persistidos não foram antecipados. Dívidas #4 e #11, R-19 e TalkBack permanecem abertas.
