@@ -289,16 +289,22 @@ export function createLivingVisuals(
             break;
         }
       }
+      // Scene lighting eases toward context; reduced-motion takes the target.
+      const blend = reduced ? 1 : Math.min(1, delta * 3);
       scene.traverse((object) => {
-        if (object instanceof HemisphereLight)
-          object.intensity =
+        if (object instanceof HemisphereLight) {
+          const targetIntensity =
             state.atmosphere === "noturna"
               ? 0.65
               : state.atmosphere === "encantada"
                 ? 1.25
                 : 2;
-        if (object instanceof DirectionalLight)
-          object.intensity = state.atmosphere === "noturna" ? 0.4 : 1.5;
+          object.intensity += (targetIntensity - object.intensity) * blend;
+        }
+        if (object instanceof DirectionalLight) {
+          const targetIntensity = state.atmosphere === "noturna" ? 0.4 : 1.5;
+          object.intensity += (targetIntensity - object.intensity) * blend;
+        }
       });
     },
   };

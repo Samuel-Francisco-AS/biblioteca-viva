@@ -464,9 +464,8 @@ export class ThreeWorldInteraction {
       : this.raycaster
           .intersectObjects([...this.selectableRoots.values()], true)
           .find((hit) => this.findSelectableId(hit.object) !== undefined);
-    const selectedId = chosen || fallback
-      ? this.findSelectableId((chosen ?? fallback)?.object as Object3D)
-      : undefined;
+    const hit = chosen ?? fallback;
+    const selectedId = hit ? this.findSelectableId(hit.object) : undefined;
     this.selectObject(selectedId ?? null);
     if (selectedId?.startsWith("living:")) this.onTapObject?.(selectedId);
   }

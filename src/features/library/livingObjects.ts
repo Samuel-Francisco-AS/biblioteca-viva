@@ -180,13 +180,14 @@ export class LivingSession {
     const object = LIVING_OBJECTS.find((item) => item.objectId === objectId);
     if (!object) return [];
     const action: LivingAction =
-      object.family === "table" || object.family === "clock" ||
+      object.family === "table" ||
+      object.family === "clock" ||
       object.family === "globe"
         ? "turn"
         : object.family === "seat" || object.family === "shelf"
           ? "touch"
           : object.family === "cabinet" &&
-              this.snapshot.discovery >= 3 &&
+              this.snapshot.discovery === 3 &&
               this.snapshot.objects[objectId]?.active
             ? "examine"
             : "toggle";
@@ -221,7 +222,8 @@ export class LivingSession {
     const now = this.now().getTime();
     // Reading/study is a short-lived ambient context, not a personal-data query.
     if (
-      (object.family === "table" || object.family === "book" ||
+      (object.family === "table" ||
+        object.family === "book" ||
         object.family === "shelf") &&
       (action === "examine" || action === "turn" || action === "toggle")
     ) {

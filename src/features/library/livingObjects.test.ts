@@ -14,7 +14,10 @@ describe("living environmental session", () => {
     for (const object of LIVING_OBJECTS) {
       const session = new LivingSession(() => new Date(2026, 10, 2, 10));
       const revision = session.getSnapshot().revision;
-      expect(session.actPrimary(object.objectId), object.objectId).toContainEqual({
+      expect(
+        session.actPrimary(object.objectId),
+        object.objectId,
+      ).toContainEqual({
         type: "acted",
         objectId: object.objectId,
       });
@@ -60,6 +63,8 @@ describe("living environmental session", () => {
       objectId: "living:cabinet",
     });
     expect(session.getSnapshot().discovery).toBe(4);
+    session.actPrimary("living:cabinet");
+    expect(session.getSnapshot().objects["living:cabinet"]?.active).toBe(false);
     current = new Date(2026, 10, 2, 22, 3);
     session.refreshContext();
     expect(session.getSnapshot().atmosphere).toBe("tranquila");

@@ -265,7 +265,10 @@ export function WorldHost({
     if (performanceScenario || !libraryWorldSnapshot) return;
     livingSession.refreshContext();
     // One timer per host, never one per object or one per animation frame.
-    const interval = window.setInterval(() => livingSession.refreshContext(), 60_000);
+    const interval = window.setInterval(
+      () => livingSession.refreshContext(),
+      60_000,
+    );
     const onVisible = () => {
       if (!document.hidden) livingSession.refreshContext();
     };
