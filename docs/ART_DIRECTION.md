@@ -1,5 +1,7 @@
 # Direção artística
 
+> Atualização BF-4F1 (2026-11-02): quatro modelos candidatos implementados e integrados, com fontes Blender, GLB animado por nó e seleção React/canvas. **F1 aberta** para revisão independente, refinamento de aura/asas e aceite artístico/físico. Trechos anteriores sobre ausência de código BF-4F descrevem a situação prévia. [Entrega, testes e pendências](BF-4F1_RELATORIO.md).
+
 O futuro mundo deve parecer íntimo, antigo, acolhedor, mágico e habitado. Madeira, pedra, latão/dourado, pergaminho, bordô e verde profundo formam a linguagem material e cromática inicial. Legibilidade mobile continua prioritária.
 
 A direção aprovada é **3D real estilizado com apresentação ortográfica/2.5D**. O mundo deve ter profundidade real sem perder leitura clara, calor e identidade editorial.

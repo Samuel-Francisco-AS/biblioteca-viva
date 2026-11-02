@@ -1,5 +1,7 @@
 # BF-4 — Mundo Vivo e Habitável: plano e contrato
 
+> Atualização BF-4F1 (2026-11-02): quatro modelos candidatos implementados e integrados, com fontes Blender, GLB animado por nó e seleção React/canvas. **F1 aberta** para revisão independente, refinamento de aura/asas e aceite artístico/físico. Trechos anteriores sobre ausência de código BF-4F descrevem a situação prévia. [Entrega, testes e pendências](BF-4F1_RELATORIO.md).
+
 > **Estado atual (2026-11-02):** BF-4A documental PASS; BF-4B concluída com PASS dirigido; BF-4C, **BF-4D e BF-4E encerradas no escopo técnico e físico/visual dirigido por exceção explícita ao gate de CI remota**. BF-4F–G pendentes. Issues #4 e #11, R-19 e TalkBack continuam abertos; sem beta/release. Trechos BF-4A preservam planejamento histórico. **Atualização de concepção BF-4F (ADR-013): quatro habitantes — Samael, Aryn, Ytha e Lua — e diálogos RPG ramificados com escolhas locais; nenhuma implementação BF-4F iniciada.** [Bíblia dos habitantes](BF-4F_CONCEPCAO_HABITANTES.md).
 >
 > **Baseline auditado:** `main` `a702f897f6db5903c0becb61df54bc9f18be455a` (fechamento BF-3), sob ADR-008–012. As seções identificadas como planejamento prescrevem trabalho futuro; os estados B/C/D registram a evolução autorizada posterior.

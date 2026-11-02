@@ -1,5 +1,11 @@
 # Changelog
 
+## BF-4F1 — candidatos em revisão (2026-11-02)
+
+- Quatro habitantes 3D com fontes editáveis, microgesto e seleção canvas/React no mundo composto.
+- IDs de personagem independentes dos registros; fallback textual sem WebGL.
+- Arte e validação física pendentes, especialmente aura de Samael e asas de Ytha. Sem fechamento F1.
+
 Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog. O registro bruto anterior à reorganização documental, incluindo checkpoints intermediários, está preservado em `docs/history/legacy/CHANGELOG_LEGACY.md`.
 
 ## [Não lançado]

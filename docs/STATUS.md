@@ -1,5 +1,7 @@
 # Estado atual
 
+> Atualização BF-4F1 (2026-11-02): quatro modelos candidatos implementados e integrados, com fontes Blender, GLB animado por nó e seleção React/canvas. **F1 aberta** para revisão independente, refinamento de aura/asas e aceite artístico/físico. Trechos anteriores sobre ausência de código BF-4F descrevem a situação prévia. [Entrega, testes e pendências](BF-4F1_RELATORIO.md).
+
 > Referência documental: 2026-11-02.
 > BF-4E: **concluída no escopo funcional e físico dirigido**, integração autorizada via PR #12 com **CI E2E FAIL assumida como dívida** (#4/#11). BF-4F é a próxima fase; TalkBack, R-19 e medição sustentada permanecem abertos.
 

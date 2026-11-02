@@ -1,5 +1,9 @@
 # Roadmap
 
+> Atualização BF-4F1 (2026-11-02): quatro modelos candidatos implementados e integrados, com fontes Blender, GLB animado por nó e seleção React/canvas. **F1 aberta** para revisão independente, refinamento de aura/asas e aceite artístico/físico. Trechos anteriores sobre ausência de código BF-4F descrevem a situação prévia. [Entrega, testes e pendências](BF-4F1_RELATORIO.md).
+
+Próximo trabalho autorizado: auditar/refinar os candidatos F1 e validar no Moto G06; F2–F4 permanecem futuros, sem implementação antecipada nesta entrega.
+
 > Atualizado em 2026-11-02.
 
 ## Baseline concluído

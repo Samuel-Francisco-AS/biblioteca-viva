@@ -1,5 +1,7 @@
 # BF-4F — Plano técnico de execução dos quatro habitantes
 
+> Atualização BF-4F1 (2026-11-02): quatro modelos candidatos implementados e integrados, com fontes Blender, GLB animado por nó e seleção React/canvas. **F1 aberta** para revisão independente, refinamento de aura/asas e aceite artístico/físico. Trechos anteriores sobre ausência de código BF-4F descrevem a situação prévia. [Entrega, testes e pendências](BF-4F1_RELATORIO.md).
+
 > **Estado em 2026-11-02:** planejamento técnico **aprovado**, sem implementação. Esta é a referência de **execução/checkpoints** para o Codex. Identidades, narrativas e animações desejadas estão na [Bíblia dos quatro habitantes](BF-4F_CONCEPCAO_HABITANTES.md). A autoridade de escopo é [BF-4 — Plano e contrato](BF-4_PLANO_CONTRATO.md), complementada pela [ADR-013](decisions/ADR-013-bf-4f-quatro-habitantes-rpg.md), [ADR-012](decisions/ADR-012-bf-4-mundo-vivo.md) e [ADR-010](decisions/ADR-010-3d-pipeline-v1.md).
 >
 > **Decisão explícita posterior à concepção:** **NÃO realizar preflight, spike, PR ou checkpoint experimental isolado de personagens.** Verificações necessárias de autoria, exportação, articulação, rigging, loading, animador e descarte serão feitas **durante a produção de um dos quatro personagens definitivos**, dentro da BF-4F1, aproveitando toda evidência e todo asset útil no produto. Evitar gasto de cota Codex e horas com demonstrações descartáveis.

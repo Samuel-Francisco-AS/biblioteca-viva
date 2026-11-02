@@ -1,3 +1,4 @@
+import { INHABITANTS } from "./inhabitants";
 import { LivingSession } from "./livingObjects";
 import { LivingControls, LivingFeedback } from "./LivingControls";
 import { useEffect, useRef, useState } from "react";
@@ -151,7 +152,11 @@ export function WorldHost({
 
   const selectAdjacentObject = (direction: SelectionDirection): void => {
     const id = adjacentSelectionId(
-      selectableObjects.filter((object) => !object.id.startsWith("living:")),
+      selectableObjects.filter(
+        (object) =>
+          !object.id.startsWith("living:") &&
+          !object.id.startsWith("character:"),
+      ),
       selection,
       direction,
     );
@@ -293,6 +298,7 @@ export function WorldHost({
           data-testid="three-world-host"
           ref={hostRef}
         />
+
         {!performanceScenario && libraryWorldSnapshot && (
           <LivingFeedback session={livingSession} />
         )}
@@ -411,6 +417,32 @@ export function WorldHost({
             </div>
           </fieldset>
         </>
+      )}
+      {!performanceScenario && libraryWorldSnapshot && (
+        <details aria-label="Habitantes">
+          <summary>Habitantes da Biblioteca</summary>
+          {INHABITANTS.map((inhabitant) => (
+            <div key={inhabitant.id}>
+              <button
+                type="button"
+                aria-pressed={selection?.id === inhabitant.id}
+                onClick={() => {
+                  publishSelection(inhabitant);
+                  if (status === "ready")
+                    runtimeRef.current?.selectObject(inhabitant.id);
+                }}
+              >
+                {inhabitant.label}
+              </button>
+              <p>{inhabitant.description}</p>
+            </div>
+          ))}
+          <p role="status">
+            {selection?.id.startsWith("character:")
+              ? `${selection.label} selecionado`
+              : "Selecione um habitante pelo nome ou pelo mundo."}
+          </p>
+        </details>
       )}
       {!performanceScenario && libraryWorldSnapshot && (
         <LivingControls

@@ -26,7 +26,7 @@ test("BF-4D: ambiente integrado em paisagem/retrato, zoom, pan e seleção", asy
   await page.goto("/");
   const canvas = page.locator("canvas[data-three-world-canvas='true']");
   await expect(canvas).toHaveAttribute("data-fixture-status", "ready");
-  await expect(canvas).toHaveAttribute("data-selectable-objects", "19");
+  await expect(canvas).toHaveAttribute("data-selectable-objects", "23");
   await testInfo.attach("bf4d-renderer-metrics", {
     body: JSON.stringify(
       await canvas.evaluate((element) => ({ ...element.dataset })),
@@ -125,7 +125,7 @@ for (const viewport of [
       }
     }
     await page.goto("/");
-    await expect(canvas).toHaveAttribute("data-selectable-objects", "96");
+    await expect(canvas).toHaveAttribute("data-selectable-objects", "100");
     await expect(
       page.getByRole("button", { name: /Selecionar no ambiente:/u }),
     ).toHaveCount(83);
