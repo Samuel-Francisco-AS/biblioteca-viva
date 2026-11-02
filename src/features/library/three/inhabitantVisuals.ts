@@ -1,11 +1,11 @@
-import {
-  AnimationMixer,
-  Group,
-  type Object3D,
-  type AnimationClip,
-} from "three";
+import { Group, type Object3D, type AnimationClip } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { INHABITANTS } from "../inhabitants";
+import { createInhabitantAnimator } from "./inhabitantAnimator";
+import {
+  INHABITANT_WALK_DISTANCE,
+  type InhabitantAction,
+  INHABITANTS,
+} from "../inhabitants";
 import { disposeObjectTree } from "./referenceScene";
 import samael from "./assets/samael.glb?url&no-inline";
 import aryn from "./assets/aryn.glb?url&no-inline";
@@ -22,7 +22,10 @@ export function createInhabitantVisuals(
   onReady: (id: string) => void = () => {},
 ) {
   let disposed = false;
-  const mixers: AnimationMixer[] = [];
+  const animators = new Map<
+    string,
+    ReturnType<typeof createInhabitantAnimator>
+  >();
   const selectables = INHABITANTS.map((descriptor) => {
     const root = new Group();
     root.name = descriptor.id;
@@ -37,9 +40,16 @@ export function createInhabitantVisuals(
         }
         root.add(scene);
         root.userData.loadState = "ready";
-        const mixer = new AnimationMixer(scene);
-        for (const clip of animations) mixer.clipAction(clip).play();
-        mixers.push(mixer);
+        animators.set(
+          descriptor.id,
+          createInhabitantAnimator(
+            scene,
+            animations,
+            root,
+            INHABITANT_WALK_DISTANCE[descriptor.key],
+            descriptor.key === "lua",
+          ),
+        );
         onReady(descriptor.id);
       })
       .catch(() => {
@@ -49,18 +59,24 @@ export function createInhabitantVisuals(
   });
   return {
     selectables,
+    play(id: string, action: InhabitantAction) {
+      if (disposed) return "unavailable";
+      const actor = selectables.find(({ descriptor }) => descriptor.id === id);
+      if (!actor || actor.root.userData.loadState === "error")
+        return "unavailable";
+      if (actor.root.userData.loadState === "loading") return "loading";
+      return animators.get(id)?.play(action) ? "playing" : "reduced";
+    },
     update(delta: number, reducedMotion: boolean) {
       if (disposed) return;
-      for (const mixer of mixers) mixer.update(reducedMotion ? 0 : delta);
+      for (const animator of animators.values())
+        animator.update(delta, reducedMotion);
     },
     dispose() {
       if (disposed) return;
       disposed = true;
-      for (const mixer of mixers) {
-        mixer.stopAllAction();
-        mixer.uncacheRoot(mixer.getRoot());
-      }
-      mixers.length = 0;
+      for (const animator of animators.values()) animator.dispose();
+      animators.clear();
       for (const { root } of selectables) disposeObjectTree(root);
     },
   };

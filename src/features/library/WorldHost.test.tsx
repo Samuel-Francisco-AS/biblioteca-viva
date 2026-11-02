@@ -195,6 +195,43 @@ describe("WorldHost", () => {
     expect(runtime.selectObject).toHaveBeenLastCalledWith("bookshelf-01");
   });
 
+  it("oferece ações contextuais e feedback semântico, inclusive carga/falha/movimento reduzido", async () => {
+    const runtime = createRuntime();
+    const play = vi.fn<NonNullable<WorldRuntime["playInhabitantAction"]>>(
+      () => "playing",
+    );
+    runtime.playInhabitantAction = play;
+    runtime.selectObject.mockImplementation((id) =>
+      runtime.emitSelection(
+        INHABITANTS.find((actor) => actor.id === id) ?? null,
+      ),
+    );
+    const user = userEvent.setup();
+    render(
+      <WorldHost
+        libraryWorldSnapshot={projectLibraryWorldEntries([])}
+        runtimeFactory={() => Promise.resolve(runtime)}
+      />,
+    );
+    await waitFor(() => expect(runtime.start).toHaveBeenCalled());
+    await user.click(screen.getByText("Habitantes da Biblioteca"));
+    await user.click(screen.getByRole("button", { name: "Lua" }));
+    await user.click(screen.getByRole("button", { name: "Habilidade" }));
+    expect(play).toHaveBeenLastCalledWith("character:lua", "magic");
+    expect(
+      screen.getByText(/Lua: Conjuração instável e recuperação/),
+    ).toBeInTheDocument();
+    for (const [result, text] of [
+      ["loading", "Modelo carregando"],
+      ["unavailable", "Animação indisponível"],
+      ["reduced", "Movimento reduzido ativo"],
+    ] as const) {
+      play.mockReturnValue(result);
+      await user.click(screen.getByRole("button", { name: "Atividade" }));
+      expect(screen.getByText(new RegExp(text))).toBeInTheDocument();
+    }
+  });
+
   it("preserva navegação de objetos quando habitantes precedem o catálogo", async () => {
     const user = userEvent.setup();
     const runtime = createRuntime();

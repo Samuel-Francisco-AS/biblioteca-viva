@@ -4,6 +4,12 @@ O objetivo atual é manter o aplicativo convencional responsivo e estável em na
 
 `npm run performance:report` relata arquivos e tamanho total dos entrypoints do build.
 
+## Otimização reativa, preservando a qualidade artística (2026-11-02)
+
+**Não reduzir preventivamente personagens, movimentos, materiais e cenários por receio do Moto G06.** F5 não encontrou o teto; BF-4F2 teve aceite físico sem degradação percebida. Não extrapolar para FPS sustentado nem para capacidade ilimitada.
+
+Otimizar quando houver travamento, regressão perceptível e reproduzível, erro de lifecycle, custo desproporcional comprovado ou outro sinal físico/funcional real. Medir de modo proporcional e corrigir o gargalo localizado, sem diluir a identidade artística. Contagens de meshes e timeouts Chromium/SwiftShader isolados não provam inviabilidade Android. Evitar loops de E2E e alteração repetida de timeout; preservar testes essenciais, segurança e acessibilidade. [Direção artística](ART_DIRECTION.md), [testes](TESTING.md).
+
 ## Fundação 3D
 
 Ainda não existe budget definitivo de mundo. A F1 — Three.js Foundation Spike criou o primeiro baseline identificado para uma cena mínima.

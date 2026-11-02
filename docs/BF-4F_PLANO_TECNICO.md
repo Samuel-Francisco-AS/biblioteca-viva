@@ -1,10 +1,18 @@
 # BF-4F — Plano técnico de execução dos quatro habitantes
 
+> BF-4F2 (2026-11-02): contrato vigente de animação dirigida implementado na candidata descrita no [relatório F2](BF-4F2_RELATORIO.md). Oito clips por personagem (`idle/walk/turn/react/gesture/work/magic/recover`), pivôs rígidos em hierarquia, uma ação principal com crossfade de 0,22 s; sem skinning. Caminhada local de ida/volta no eixo X (0,55–0,65 m) verificada contra geometria BF-4D, sem navegação autônoma. O painel React descreve demonstrações e falhas; modo reduzido suprime animação e mantém texto. Este contrato não antecipa F3/F4.
+
 > **Fechamento BF-4F1 (2026-11-02):** modelos iniciais de Samael, Aryn, Ytha e Lua e seleção por canvas/React **aprovados pelo usuário no Moto G06**. F1 concluída no escopo dirigido; animações corporais ficam para **F2**, autonomia para F3, diálogos/quests para F4. [Relatório final](BF-4F1_RELATORIO.md). A CI global terminou FAIL: 20 E2E PASS, 6 FAIL, 1 flaky; 667 Vitest e demais gates não E2E PASS.
 
 > **Estado em 2026-11-02:** planejamento técnico **aprovado**, sem implementação. Esta é a referência de **execução/checkpoints** para o Codex. Identidades, narrativas e animações desejadas estão na [Bíblia dos quatro habitantes](BF-4F_CONCEPCAO_HABITANTES.md). A autoridade de escopo é [BF-4 — Plano e contrato](BF-4_PLANO_CONTRATO.md), complementada pela [ADR-013](decisions/ADR-013-bf-4f-quatro-habitantes-rpg.md), [ADR-012](decisions/ADR-012-bf-4-mundo-vivo.md) e [ADR-010](decisions/ADR-010-3d-pipeline-v1.md).
 >
 > **Decisão explícita posterior à concepção:** **NÃO realizar preflight, spike, PR ou checkpoint experimental isolado de personagens.** Verificações necessárias de autoria, exportação, articulação, rigging, loading, animador e descarte serão feitas **durante a produção de um dos quatro personagens definitivos**, dentro da BF-4F1, aproveitando toda evidência e todo asset útil no produto. Evitar gasto de cota Codex e horas com demonstrações descartáveis.
+
+## Diretriz vigente após BF-4F2 — primazia criativa (2026-11-02)
+
+F2 foi **encerrada no escopo dirigido**: usuário confirmou no Moto G06 reações à seleção e ações animadas pelo React, sem regressão de fluidez percebida. CI global FAIL com quatro falhas novas BF-4F2, rastreadas em [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15). Antigas referências a F1/F2 'próximas' abaixo são cronologia de planejamento.
+
+**F3 e F4 devem priorizar ambição artística, personagens interessantes, identidade e narrativa.** Não reduzir efeitos, animações, relações ou cenografia por supor limites do Moto G06. F3 não será mero movimento aleatório de NPCs: exige vida social significativa nos cinco cômodos. F4 exige escolhas, personalidade e consequências do RPG, sem simplificar a história para agradar testes. Reutilizar F1/F2, implementar trabalho real sem preflight descartável, usar testes dirigidos e uma rodada final proporcional, sem loops de timeout. Otimizar apenas gargalos demonstrados, sem negligenciar segurança, dados, acessibilidade e lifecycle. [Arte](ART_DIRECTION.md), [testes](TESTING.md), [desempenho](PERFORMANCE.md).
 
 ## 1. Objetivo e entregas
 

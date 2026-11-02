@@ -1,5 +1,9 @@
 # Estado atual
 
+> **Diretriz prioritária do projeto (2026-11-02):** ambição artística e criativa acima de otimização preventiva; não supor que o Moto G06 não aguenta. Construir uma experiência rica, testar proporcionalmente e medir gargalos reais antes de simplificar. Evitar loops de timeout/Playwright consumindo cota sem novo diagnóstico. [Arte](ART_DIRECTION.md), [testes](TESTING.md) e [desempenho](PERFORMANCE.md).
+
+> **BF-4F2 CONCLUÍDA NO ESCOPO DIRIGIDO (2026-11-02):** quatro habitantes animados com reações à seleção e ações pelo React aprovadas no Moto G06, sem regressão/perda de fluidez percebida; animações simples aceitas para F2, sem limitar evolução artística. 676 Vitest PASS, 4 E2E F2 locais PASS. [CI PR #14 / 41532160557](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41532160557): gates não E2E PASS; **E2E 20 PASS, 10 FAIL, 1 flaky — CI global FAIL**, incluindo quatro casos novos F2 [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15) além de #4/#11. **Merge da PR #14 expressamente autorizado por exceção CI.** Próxima BF-4F3. [Fechamento](BF-4F2_RELATORIO.md).
+
 > **Fechamento BF-4F1 (2026-11-02):** modelos iniciais de Samael, Aryn, Ytha e Lua e seleção por canvas/React **aprovados pelo usuário no Moto G06**. F1 concluída no escopo dirigido; animações corporais ficam para **F2**, autonomia para F3, diálogos/quests para F4. [Relatório final](BF-4F1_RELATORIO.md). A CI não foi declarada verde porque E2E final falhou (20 PASS, 6 FAIL, 1 flaky).
 
 > Referência documental: 2026-11-02.
@@ -134,16 +138,16 @@ BF-3 ✅ CONCLUÍDA NO ESCOPO TÉCNICO-FUNCIONAL E FÍSICO DIRIGIDO — CI PENDE
     BF-3E2 ✅ interface funcional dos seis tipos — coberta pelo gate E3
     BF-3E3 ✅ gate consolidado — auditoria independente e CI PASS
   BF-3F ✅ 11/11 procedimentos físicos PASS — exceção formal: CI E2E instável (issue #4)
-BF-4 🔄 BF-4B–E CONCLUÍDAS NO ESCOPO DIRIGIDO — BF-4C/D/E COM EXCEÇÃO CI; BF-4F PRÓXIMA
+BF-4 🔄 BF-4B–E e BF-4F1/F2 concluídas no escopo dirigido; BF-4F3 PRÓXIMA
   BF-4A ✅ auditoria + contrato + decomposição — DOCUMENTAL
   BF-4B ✅ cinco cômodos — CI e Moto G06 PASS dirigido, ressalva R-19
   BF-4C ✅ ampliação e mobília dos cinco cômodos — PASS dirigido; CI E2E FAIL aceita (#4)
   BF-4D ✅ organização espacial — auditoria e Moto G06 PASS dirigido; CI FAIL 19/21 aceita (#4/#11)
   BF-4E ✅ objetos vivos, interação por toque e atmosfera contextual — Moto G06 PASS dirigido; CI E2E FAIL aceita (#4/#11)
-  BF-4F 🔄 F1 CONCLUÍDA (gate dirigido); F2–F4 PENDENTES
+  BF-4F 🔄 F1/F2 concluídas por gates dirigidos; F3/F4 pendentes
     BF-4F1 ✅ quatro habitantes integrados, seleção canvas/React — PASS físico dirigido
-    BF-4F2 ⏳ animações corporais e expressividade — PRÓXIMA
-    BF-4F3 ⏳ comportamento autônomo e relações
+    BF-4F2 ✅ animações corporais e expressividade — gate dirigido PASS, CI E2E FAIL (#15)
+    BF-4F3 ⏳ comportamento autônomo e relações — PRÓXIMA
     BF-4F4 ⏳ diálogo RPG e quests
   BF-4G ⏳ gate integrado PENDENTE
 ```
@@ -181,3 +185,7 @@ O usuário aprovou os quatro checkpoints **F1 (quatro personagens integrados), F
 ## BF-4F1 — Fechamento dirigido (2026-11-02)
 
 Quatro modelos iniciais integrados, fotos do mundo real no Moto G06 e seleção dos quatro pelo toque e React **aprovados pelo usuário**. Commit `de0bea64718ccfb2501a11f1541d8ac4abca3396`, [PR #13](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/13). Formatação, lint, TypeScript, 667 Vitest, áudio, build e relatório de performance PASS na [CI 41520167206](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41520167206); **E2E concluídos com **20 PASS, 6 FAIL e 1 flaky; CI global FAIL****. Microgestos de cabeça não equivalem a animação corporal: **F2 é a próxima etapa**. F3/F4, BF-4G, questões #4/#11, R-19 e TalkBack permanecem. As observações anteriores de F1 “aberta” ou “não implementada” são históricas. [Relatório](BF-4F1_RELATORIO.md).
+
+## BF-4F2 — Fechamento e transição para BF-4F3 (2026-11-02)
+
+O usuário atualizou o APK no Moto G06 e confirmou animações ao selecionar personagens e ao tocar nos botões React. Nenhuma regressão/queda de desempenho foi percebida; animações atuais simples aprovadas no recorte F2. Captura pontual indica 60,1 FPS, 16,7 ms/frame e 73 chamadas, sem prova de estabilidade prolongada. [CI 41532160557](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41532160557) global FAIL com 20 PASS, 10 FAIL, 1 flaky E2E, incluindo quatro **novas falhas F2** em [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15); não atribuir causa histórica. O usuário autorizou fechamento e merge da [PR #14](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/14) com exceção CI, sem declarar testes globais PASS. BF-4F3 é a próxima fase; F4, BF-4G, TalkBack, R-19 e avaliação sustentada pendentes. Menções anteriores a F1/F2 'não implementadas' descrevem planejamento histórico.

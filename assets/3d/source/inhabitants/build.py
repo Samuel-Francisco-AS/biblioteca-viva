@@ -1,4 +1,4 @@
-"""Original BF-4F1 character sources. Run from repository root with Blender 3.3.
+"""Original BF-4F1 models with BF-4F2 articulated clips. Run from repository root with Blender 3.3.
 No external assets. Coordinates: X width, -Y front, Z up; meters.
 """
 import bpy, math, os
@@ -65,7 +65,8 @@ for who,height in [('samael',2),('aryn',1.7),('ytha',1.7),('lua',1.6)]:
     # Long separate lapels and front piping.
     for s in [-1,1]:
         tube('Lapel',[(s*w*.85,-.12,1.30),(s*w*.5,-.185,1.15),(s*.035,-.145,.94)],.027,ivory if who=='aryn' else trim,root)
-        tube('Sleeve',[(s*w*.95,0,1.24),(s*(w+.10),-.025,1.03),(s*(w+.13),-.11,.86)],.105 if broad else .062,cloth,root)
+        tube('Upper sleeve',[(s*w*.95,0,1.24),(s*(w+.10),-.025,1.03)],.105 if broad else .062,cloth,root)
+        tube('Fore sleeve',[(s*(w+.10),-.025,1.03),(s*(w+.13),-.11,.86)],.10 if broad else .06,cloth,root)
         ell('Hand',(s*(w+.13),-.12,.81),(.075 if broad else .046,.055,.09),skin,root)
         for i in range(3): tube('Finger',[(s*(w+.11)+i*.018,-.155,.82),(s*(w+.11)+i*.018,-.16,.76)],.012,skin,root)
     ell('Neck',(0,0,1.34),(.075,.07,.13),skin,root)
@@ -149,10 +150,125 @@ for who,height in [('samael',2),('aryn',1.7),('ytha',1.7),('lua',1.6)]:
     for o in meshes:
         if o.name.startswith(('Face','Eye','Iris','Nose','Mouth','Brow','Hair','Swept','Spectacles','Bridge','Curved horn','Elven ear','Long rose','Bob hair','Tied hair','Lilac fissure')):
             o.parent=head;o.matrix_parent_inverse=head.matrix_world.inverted()
-    head.rotation_mode='XYZ'
-    for frame,angle in [(1,0),(45,.025),(90,0)]:
-        head.rotation_euler.x=angle;head.keyframe_insert(data_path='rotation_euler',frame=frame)
-    bpy.context.scene.frame_end=90;bpy.context.scene.frame_set(1)
+    # F2: preserve the existing pieces, add anatomical rigid pivots in metric space.
+    def pivot(name, xyz, parent):
+        bpy.ops.object.empty_add(location=Vector(xyz)*factor)
+        o=bpy.context.object;o.name=name
+        matrix=o.matrix_world.copy();o.parent=parent;o.matrix_world=matrix
+        return o
+    def attach(o, parent):
+        matrix=o.matrix_world.copy();o.parent=parent;o.matrix_world=matrix
+    facing=pivot('Facing',(0,0,0),root)
+    body=pivot('Torso',(0,0,.87),facing)
+    attach(head,body)
+    arms={}; elbows={}; legs={}; wings={}
+    for sign,side in [(-1,'L'),(1,'R')]:
+        arms[sign]=pivot('Shoulder'+side,(sign*w*.95,0,1.24),body)
+        elbows[sign]=pivot('Elbow'+side,(sign*(w+.10),-.025,1.03),arms[sign])
+        legs[sign]=pivot('Hip'+side,(sign*w*.5,0,.78),facing)
+        if who=='ytha': wings[sign]=pivot('Wing'+side,(sign*.10,.13,1.13),body)
+    for o in meshes:
+        if o.parent==head: continue
+        center=sum((o.matrix_world@Vector(c) for c in o.bound_box),Vector())/8
+        sign=-1 if center.x<0 else 1
+        name=o.name
+        if name.startswith(('Boot','Trouser')): parent=legs[sign]
+        elif name.startswith('Upper sleeve'): parent=arms[sign]
+        elif name.startswith(('Fore sleeve','Hand','Finger','Coffee','Closed notebook','Notebook sigil','Anatomy folio','Grimoire','Silver crescent','Drawing pencil','Botanical stem','Flower petal')): parent=elbows[sign]
+        elif name.startswith(('Butterfly','Wing rim','Wing vein')): parent=wings[sign]
+        else: parent=body
+        attach(o,parent)
+    fx=pivot('Magic',(0,-.36,.7),body)
+    for o in meshes:
+        if o.name.startswith(('Aura mote','Shadow wisp','Violet wisp')): attach(o,fx)
+    # Every clip keys all pivots: crossfades cannot retain an old arm/wing pose.
+    joints=[facing,body,head,*arms.values(),*elbows.values(),*legs.values(),*wings.values(),fx]
+    durations={'idle':3.6,'walk':3.2,'turn':2.4,'react':1.8,'gesture':2.8,'work':4.0,'magic':3.6,'recover':2.4}
+    bpy.context.scene.render.fps=30
+    for clip,duration in durations.items():
+        end=round(duration*30)+1
+        for o in joints:
+            o.rotation_mode='XYZ'
+            if o.animation_data: o.animation_data.action=None
+        for step in range(17):
+            t=step/16;frame=1+t*(end-1);pulse=math.sin(math.pi*t)**2
+            wave=math.sin(t*math.pi*8);slow=math.sin(t*math.pi*2)
+            for o in joints: o.rotation_euler=(0,0,0)
+            fx.scale=(1,1,1)
+            if clip=='idle':
+                body.rotation_euler.x=(.026 if broad else .018)*slow
+                head.rotation_euler.z=(.04 if who=='aryn' else .025)*slow
+                arms[-1].rotation_euler.y=.05*slow
+            elif clip=='walk':
+                stride={'samael':.28,'aryn':.46,'ytha':.22,'lua':.37}[who]
+                for sign in [-1,1]:
+                    legs[sign].rotation_euler.x=sign*stride*wave
+                    arms[sign].rotation_euler.x=-sign*stride*.6*wave
+                    elbows[sign].rotation_euler.x=-.18*pulse
+                body.rotation_euler.z=(.025 if broad else .05)*wave
+                facing.rotation_euler.z=math.pi/2*math.sin(t*math.pi*2)
+            elif clip=='turn': facing.rotation_euler.z=math.pi*.7*pulse
+            elif clip=='react':
+                body.rotation_euler.x=(-.10 if broad else .16)*pulse
+                arms[-1].rotation_euler.y=-.55*pulse
+                elbows[-1].rotation_euler.x=-.6*pulse
+                head.rotation_euler.x=-.12*pulse
+            elif clip=='gesture':
+                arms[-1].rotation_euler.y=-.9*pulse
+                elbows[-1].rotation_euler.x=(-.8+.22*wave)*pulse
+                head.rotation_euler.z=.16*pulse
+                body.rotation_euler.z=.12*slow
+            elif clip=='work':
+                if who=='samael': # lift coffee, then type on the held notebook
+                    arms[-1].rotation_euler.x=-1.2*pulse
+                    elbows[-1].rotation_euler.x=-1.3*pulse
+                    arms[1].rotation_euler.x=-.35*pulse
+                    elbows[1].rotation_euler.x=(-.55+.12*wave)*pulse
+                    head.rotation_euler.x=.2*pulse
+                elif who=='aryn': # spectacles adjustment and inspection of folio
+                    arms[-1].rotation_euler.y=-.45*pulse
+                    arms[-1].rotation_euler.x=-1.4*pulse
+                    elbows[-1].rotation_euler.x=-1.2*pulse
+                    elbows[1].rotation_euler.x=-.9*pulse
+                    head.rotation_euler.x=.24*pulse
+                elif who=='ytha': # flower lifted for close attention
+                    elbows[1].rotation_euler.x=-1.2*pulse
+                    arms[-1].rotation_euler.y=-.5*pulse
+                    head.rotation_euler.x=.28*pulse
+                    body.rotation_euler.x=.12*pulse
+                else: # pencil across grimoire, alternating wrist/forearm strokes
+                    elbows[1].rotation_euler.x=-.8*pulse
+                    elbows[-1].rotation_euler.x=-1.1*pulse
+                    arms[-1].rotation_euler.y=(-.7+.22*wave)*pulse
+                    head.rotation_euler.x=.25*pulse
+            elif clip=='magic':
+                for sign in [-1,1]:
+                    arms[sign].rotation_euler.y=sign*(-1.1 if broad else (.45 if who=='aryn' else -.65))*pulse
+                    elbows[sign].rotation_euler.x=-.75*pulse
+                body.rotation_euler.x=(-.16 if who!='lua' else .23)*pulse
+                head.rotation_euler.x=-.2*pulse
+                fx.scale=(1+.5*pulse,)*3
+                fx.rotation_euler.z=t*math.pi*2
+                if who=='lua': # overshoot and startled recoil, followed by recover
+                    arms[-1].rotation_euler.x=.7*math.sin(t*math.pi*3)*pulse
+                    body.rotation_euler.z=.2*wave*pulse
+            elif clip=='recover':
+                body.rotation_euler.x=.18*slow
+                arms[-1].rotation_euler.y=-.6*pulse
+                head.rotation_euler.z=-.2*pulse
+            for sign,o in wings.items():
+                o.rotation_euler.z=sign*(.10*slow if clip=='idle' else .48*wave)
+            for o in joints:
+                o.keyframe_insert(data_path='rotation_euler',frame=frame)
+                if o==fx: o.keyframe_insert(data_path='scale',frame=frame)
+        for o in joints:
+            action=o.animation_data.action;action.name=who+'_'+clip+'_'+o.name
+            for curve in action.fcurves:
+                for key in curve.keyframe_points: key.interpolation='LINEAR'
+            track=o.animation_data.nla_tracks.new();track.name=clip
+            strip=track.strips.new(clip,1,action);strip.name=clip
+            o.animation_data.action=None
+    bpy.context.scene.frame_end=121;bpy.context.scene.frame_set(1)
     bpy.context.preferences.filepaths.save_version=0
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT,who+'.blend'))
     # Measured browser slowdown justified batching rigid pieces by material/parent.
@@ -165,8 +281,8 @@ for who,height in [('samael',2),('aryn',1.7),('ytha',1.7),('lua',1.6)]:
         for o in objects: o.select_set(True)
         bpy.context.view_layer.objects.active=objects[0]
         if len(objects)>1: bpy.ops.object.join()
-        bpy.context.object.name=('Head-' if parent==head else 'Body-')+mat.name
-    bpy.ops.export_scene.gltf(filepath=os.path.join(GLB,who+'.glb'),export_format='GLB',export_animations=True,export_force_sampling=True)
+        bpy.context.object.name=parent.name+'-'+mat.name
+    bpy.ops.export_scene.gltf(filepath=os.path.join(GLB,who+'.glb'),export_format='GLB',export_animations=True,export_force_sampling=True,export_nla_strips=True)
 # Keep the audit manifest coupled to the exact exported bytes.
 import hashlib, json, struct
 manifest={}

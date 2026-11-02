@@ -1,5 +1,13 @@
 # Changelog
 
+## BF-4F2 — concluída no escopo dirigido (2026-11-02)
+
+- Habitantes articulados: repouso, passos com deslocamento local, giro, reação, cumprimento, atividades e magia cenográfica; Lua recupera postura após conjuração instável.
+- Controles contextuais no painel Habitantes, feedback textual de ação/carga/indisponibilidade/movimento reduzido.
+- Clips finitos e transições no RAF existente; fontes Blender e GLBs atualizados sem skinning ou dependências novas. **Gate físico/artístico dirigido PASS**: reações e ações React confirmadas no Moto G06 sem regressão/perda de fluidez percebida; simplicidade aceita para F2.
+
+**Integração autorizada:** o usuário aprovou o encerramento e merge da [PR #14](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/14) com [CI 41532160557](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41532160557) **FAIL: 20 E2E PASS, 10 FAIL, 1 flaky**, incluindo quatro casos novos F2 em [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15); #4/#11 continuam abertas. **Diretriz:** primazia artística e criativa, sem restrição preventiva por receio do Moto G06; otimização de gargalos demonstrados, testes proporcionais e sem loops de timeout consumindo cota.
+
 ## BF-4F1 — concluída no escopo dirigido (2026-11-02)
 
 - Quatro habitantes 3D com fontes editáveis, microgesto e seleção canvas/React no mundo composto.

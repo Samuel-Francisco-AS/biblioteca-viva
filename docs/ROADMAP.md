@@ -2,9 +2,13 @@
 
 > **Fechamento BF-4F1 (2026-11-02):** modelos iniciais de Samael, Aryn, Ytha e Lua e seleção por canvas/React **aprovados pelo usuário no Moto G06**. F1 concluída no escopo dirigido; animações corporais ficam para **F2**, autonomia para F3, diálogos/quests para F4. [Relatório final](BF-4F1_RELATORIO.md). A CI não foi declarada verde porque E2E final falhou (20 PASS, 6 FAIL, 1 flaky).
 
-Próximo trabalho autorizado: auditar/refinar os candidatos F1 e validar no Moto G06; F2–F4 permanecem futuros, sem implementação antecipada nesta entrega.
+**BF-4F2 concluída no escopo físico/artístico dirigido:** seleção e animações React aprovadas pelo usuário no Moto G06, sem regressões percebidas. Merge da [PR #14](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/14) autorizado por exceção CI; 20 E2E PASS, 10 FAIL, 1 flaky, incluindo quatro casos novos F2 em [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15). **Próxima BF-4F3 — agência e relações.** F4 RPG/quests e BF-4G seguem pendentes. [Relatório](BF-4F2_RELATORIO.md).
 
 > Atualizado em 2026-11-02.
+
+## Diretriz para os próximos checkpoints
+
+**Ambição artística primeiro.** BF-4F3/F4 devem criar habitantes e relações interessantes, encenações e narrativas expressivas, sem podar qualidade por pressupor limites do Moto G06. O aparelho não teve teto comprovado; o gate F2 foi positivo. Construir resultado visual/funcional útil, validar com o usuário e otimizar somente quando houver problema real. Proteger a cota do Codex com inspeção focada, testes dirigidos, apenas uma rodada final proporcional e sem loops de timeout. Sem mascarar falhas da CI ou abandonar dados, lifecycle e acessibilidade. [Arte](ART_DIRECTION.md), [testes](TESTING.md), [desempenho](PERFORMANCE.md). Notas históricas afirmando F1–F4 não implementadas são do planejamento original.
 
 ## Baseline concluído
 
@@ -52,10 +56,10 @@ BF-4 🔄 mundo vivo e habitável — BF-4B/C/D/E concluídas no escopo dirigido
   BF-4C ✅ ampliação e mobília concluídas com PASS dirigido, exceção CI (#4)
   BF-4D ✅ organização espacial, passagens e zonas — PASS dirigido, CI FAIL aceita (#4/#11)
   BF-4E ✅ dez famílias e três atmosferas contextuais, interação canvas e Segredo do Pergaminho 4/4 — Moto G06 PASS; CI E2E FAIL aceita (#4/#11)
-  BF-4F 🔄 habitantes integrados; animação, IA local e quests RPG pendentes
+  BF-4F 🔄 habitantes e animações F1/F2 concluídos; IA local F3 e quests F4 pendentes
     BF-4F1 ✅ modelos distintos integrados e seleção por canvas/React — PASS físico dirigido
-    BF-4F2 ⏳ animações variadas e transições individuais
-    BF-4F3 ⏳ comportamento autônomo, relações e interação ambiental
+    BF-4F2 ✅ animações variadas e transições — PASS físico dirigido, CI global FAIL
+    BF-4F3 ⏳ comportamento autônomo, relações e interação ambiental — PRÓXIMA
     BF-4F4 ⏳ diálogos RPG ramificados (3–4 opções), 4 quests individuais e arco coletivo
   BF-4G ⏳ gate integrado, Moto G06 e fechamento
 BF-5 ⏳ consolidação do marco funcional

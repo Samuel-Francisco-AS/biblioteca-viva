@@ -12,6 +12,12 @@
 - Runtime 3D: contratos de lifecycle, resize, ponte React ↔ Three e fallback; performance gráfica não é provada por mocks.
 - Android: build técnico automatizado; instalação, toque, ergonomia e desempenho exigem evidência humana separada.
 
+## Testes proporcionais, sem consumo exagerado de cota (2026-11-02)
+
+Inspecionar fontes relevantes, implementar diretamente no trabalho real, rodar testes **dirigidos ao escopo alterado** e uma rodada final proporcional. A suíte integrada roda na CI da PR; não repetir baterias globais ou ciclos de timeout sem novo diagnóstico. Investigar a causa antes de alterar; após até duas tentativas fundamentadas sem progresso, registrar o bloqueio e planejar triagem independente.
+
+Não mascarar defeitos com skips, retries e timeouts artificiais. Falhas novas da CI devem ser rastreadas separadamente das antigas: os quatro testes novos F2 passaram localmente, mas falharam na CI integrada [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15). Chromium/SwiftShader sob carga não equivale a desempenho Android. Gate físico e artístico não significa CI, TalkBack ou benchmark prolongado PASS. Ver [direção artística](ART_DIRECTION.md).
+
 ## BF-4A — Revisão documental e CI da candidata (2026-11-01)
 
 A PR #7 contém somente mudanças de documentação; não houve implementação BF-4 nem novo teste Android físico. No commit inicial `057ca943`, a [CI 41330596100](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41330596100) aprovou `format:check`, lint, typecheck, 635 testes Vitest (78 arquivos), áudio, build e performance report; a suíte E2E concluiu **17 PASS e 1 FAIL** em `r4-shell.spec.ts` (timeout no `boundingBox` / `scrollIntoViewIfNeeded` do canvas, inclusive retry). Trata-se do cenário já rastreado na [issue #4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4); a causa permanece inconclusiva, sem PASS CI integral. Nenhuma remediação de runtime ou de E2E está incluída nesta PR documental.

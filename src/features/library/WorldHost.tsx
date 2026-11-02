@@ -1,4 +1,8 @@
-import { INHABITANTS } from "./inhabitants";
+import {
+  INHABITANT_ACTIONS,
+  INHABITANT_ACTIVITIES,
+  INHABITANTS,
+} from "./inhabitants";
 import { LivingSession } from "./livingObjects";
 import { LivingControls, LivingFeedback } from "./LivingControls";
 import { useEffect, useRef, useState } from "react";
@@ -115,6 +119,7 @@ export function WorldHost({
   const [selectableObjects, setSelectableObjects] = useState<
     readonly WorldSelectableObject[]
   >([]);
+  const [inhabitantFeedback, setInhabitantFeedback] = useState("");
   const [selection, setSelection] = useState<WorldSelection>(null);
   const [diagnostics, setDiagnostics] =
     useState<WorldRuntimeDiagnostics>(EMPTY_DIAGNOSTICS);
@@ -139,6 +144,7 @@ export function WorldHost({
 
   const publishSelection = (nextSelection: WorldSelection): void => {
     setSelection(nextSelection);
+    setInhabitantFeedback("");
     setLivingSelection(
       nextSelection?.id.startsWith("living:") ? nextSelection.id : null,
     );
@@ -435,12 +441,42 @@ export function WorldHost({
                 {inhabitant.label}
               </button>
               <p>{inhabitant.description}</p>
+              {selection?.id === inhabitant.id && (
+                <fieldset>
+                  <legend>Ações de {inhabitant.label}</legend>
+                  {INHABITANT_ACTIONS.map(([action, label]) => (
+                    <button
+                      type="button"
+                      key={action}
+                      onClick={() => {
+                        const result =
+                          runtimeRef.current?.playInhabitantAction?.(
+                            inhabitant.id,
+                            action,
+                          ) ?? "unavailable";
+                        const detail =
+                          action === "work"
+                            ? INHABITANT_ACTIVITIES[inhabitant.key][0]
+                            : action === "magic"
+                              ? INHABITANT_ACTIVITIES[inhabitant.key][1]
+                              : label;
+                        setInhabitantFeedback(
+                          `${inhabitant.label}: ${detail}. ${result === "playing" ? "Demonstração finita com retorno ao repouso." : result === "reduced" ? "Movimento reduzido ativo; demonstração descrita em texto." : result === "loading" ? "Modelo carregando; tente novamente." : "Animação indisponível; descrição preservada."}`,
+                        );
+                      }}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </fieldset>
+              )}
             </div>
           ))}
           <p role="status">
-            {selection?.id.startsWith("character:")
-              ? `${selection.label} selecionado`
-              : "Selecione um habitante pelo nome ou pelo mundo."}
+            {inhabitantFeedback ||
+              (selection?.id.startsWith("character:")
+                ? `${selection.label} selecionado`
+                : "Selecione um habitante pelo nome ou pelo mundo.")}
           </p>
         </details>
       )}

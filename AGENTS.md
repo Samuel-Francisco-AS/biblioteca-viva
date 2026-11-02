@@ -21,6 +21,14 @@
 - BF é a trilha funcional prioritária sob a ADR-011; P3D-B2–F estão adiados até necessidade demonstrada de GLB definitivo.
 - Conteúdo procedural produtivo não promove fixtures F1/F4 ou cenários F5. Execute checkpoints BF pequenos, com testes proporcionais, antes de integrar conteúdo ao runtime.
 
+## Prioridade artística e economia responsável de cota (decisão de 2026-11-02)
+
+**Ambição artística e criativa é requisito central da Biblioteca Viva.** Buscar um mundo fantástico rico, personagens expressivos, identidade própria, relações e narrativas significativas. Não adotar modelos simplórios, efeitos reduzidos ou animações mínimas por supor que o Moto G06 não aguenta: F5 não encontrou teto de capacidade, e BF-4F2 teve aceite físico sem queda de fluidez percebida. Isso não elimina os requisitos de segurança, acessibilidade, lifecycle e estabilidade real.
+
+Produzir **trabalho útil e visualmente convincente primeiro**; medir gargalos reais antes de otimizar. Evitar preflights descartáveis, refatorações preventivas, hard budgets inventados e otimizações por contagem de meshes ou timeout headless isolado.
+
+**Proteger a cota Codex:** leitura focada dos arquivos ativos, checkpoints produtivos, testes dirigidos na implementação e uma rodada final proporcional. Não consumir cota em loops de Playwright/SwiftShader, retries e ajustes de timeouts sem nova hipótese. Após até duas tentativas de correção fundamentadas sem progresso na mesma causa, registrar o bloqueio e preservar o trabalho seguro. Nunca omitir asserts ou testes, e registrar falhas novas da CI separadamente das antigas. Aceite artístico é humano; não implica CI verde. [Arte](docs/ART_DIRECTION.md), [testes](docs/TESTING.md), [desempenho](docs/PERFORMANCE.md).
+
 ## Escopo e qualidade
 
 - Implemente apenas o pedido autorizado e preserve os seis tipos de registro.

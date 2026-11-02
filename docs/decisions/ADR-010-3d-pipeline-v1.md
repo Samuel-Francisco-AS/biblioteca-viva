@@ -80,3 +80,8 @@ O tooling posterior poderá relatar, sem reprovar automaticamente: tamanho do GL
 ## Extensão localizada BF-4F1 — 2026-11-02
 
 O pedido explícito de BF-4F1 autoriza validar animação durante a produção útil. Os quatro candidatos originais agora exportam GLBs autocontidos com clip de transformação de nó rígido Head, carregado por GLTFLoader/AnimationMixer. Fonte Blender e receita preservadas; testes de parse, alturas, clip e descarte em `inhabitantVisuals.test.ts`. Owner local para a montagem, callback tardio descartado, ações/bindings liberados antes da árvore. Não há skinning, skeletons, texturas ou novos decoders; nenhum suporte geral a esses recursos está sendo aprovado. O agrupamento offline por material/pai responde a lentidão observada no E2E inicial, sem política global. Aceite artístico/físico e revisão independente ainda pendentes: [relatório BF-4F1](../BF-4F1_RELATORIO.md).
+
+
+## Extensão localizada BF-4F2 — 2026-11-02
+
+O perfil rígido por nó de F1 passa a incluir pivôs Facing, Torso, ombros, cotovelos, quadris, cabeça, efeito e asas de Ytha, preservando peças editáveis e normalização. Oito trilhas NLA nomeadas exportam oito clips agregados por GLB; apenas uma ação principal e crossfade no AnimationMixer local. Sem armature/skinning, skeleton ou decoder novo. `inhabitantAnimator.test.ts` verifica clips reais, articulação, retorno, repetição, redução de movimento e trajetória contra a geometria BF-4D; ownership tardio e descarte continuam no owner F1. Fonte/receita e manifest vinculam os bytes. A extensão se limita aos quatro habitantes, sem pipeline genérico ou promoção de fixtures. [Evidências e limitações F2](../BF-4F2_RELATORIO.md).

@@ -39,3 +39,30 @@ export const INHABITANTS = [
     description: "Maga de 1,60 m, óculos, capa acadêmica, grimório e lápis.",
   },
 ] as const;
+
+export type InhabitantAction =
+  "idle" | "walk" | "turn" | "react" | "gesture" | "work" | "magic" | "recover";
+export const INHABITANT_ACTIONS = [
+  ["walk", "Caminhar"],
+  ["turn", "Girar"],
+  ["gesture", "Cumprimentar"],
+  ["work", "Atividade"],
+  ["magic", "Habilidade"],
+  ["recover", "Recuperar postura"],
+] as const;
+export const INHABITANT_ACTIVITIES = {
+  samael: ["Café e notebook cenográficos", "Gesto amplo com aura lilás"],
+  aryn: [
+    "Ajustar óculos e inspecionar livro cenográfico",
+    "Luz suave de restauração",
+  ],
+  ytha: ["Cuidar da flor cenográfica", "Magia floral com asas articuladas"],
+  lua: ["Desenhar com lápis e grimório", "Conjuração instável e recuperação"],
+} as const;
+/** Local X displacement, out and back; tested against the BF-4D geometry. */
+export const INHABITANT_WALK_DISTANCE = {
+  samael: 0.65,
+  aryn: 0.65,
+  ytha: 0.55,
+  lua: 0.6,
+} as const;
