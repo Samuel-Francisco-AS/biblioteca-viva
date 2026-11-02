@@ -1,6 +1,6 @@
 # BF-4 — Mundo Vivo e Habitável: plano e contrato
 
-> **Estado atual (2026-11-02):** BF-4A aprovada documentalmente; **BF-4B encerrada com PASS técnico, visual e físico dirigido**, ressalva visual R-19 e issue #4 em acompanhamento; **BF-4C candidata à auditoria; D–G pendentes**. Os trechos BF-4A preservam o planejamento histórico.
+> **Estado atual (2026-11-02):** BF-4A documental PASS, BF-4B concluída com PASS dirigido; **BF-4C concluída no escopo técnico e físico/visual dirigido mediante exceção explícita ao gate E2E da CI**. BF-4D–G pendentes. Issue #4, R-19 e TalkBack continuam abertos; sem beta/release. Os trechos BF-4A preservam planejamento histórico.
 >
 > **Baseline auditado:** `main` `a702f897f6db5903c0becb61df54bc9f18be455a` (fechamento BF-3), sob ADR-008–012. Este documento prescreve trabalho **futuro**, não descreve recursos já existentes.
 
@@ -54,9 +54,9 @@ Evidência de auditoria, CI, gate físico e ressalva R-19: [fechamento BF-4B](BF
 - Escolher solução visual econômica e compatível com Three.js atual; corrigir colisões e oclusões efetivamente observadas, sem reabrir a planta inteira por precaução.
 - **Gate B:** build navegável do mundo inteiro, inspeção visual humana **integrada**, regressões de câmera, picking e BF-3, inspeção de custos e, se mudança material, build físico dirigido Moto G06. Sem alegar aprovação de arte final.
 
-### BF-4C — Ampliação, mobília e decoração (CANDIDATA À AUDITORIA)
+### BF-4C — Ampliação, mobília e decoração (CONCLUÍDA POR EXCEÇÃO CI)
 
-Autorização específica de 2026-11-02 acrescentou C1 (salão 1,8–2× e laterais 1,5–1,7× por eixo horizontal) e C2 (mobília nos cinco cômodos). Implementação e gates em [BF-4C_RELATORIO.md](BF-4C_RELATORIO.md). Disposição ambiental e clearance necessários a C não encerram D nem autorizam agentes.
+Autorização específica de 2026-11-02 acrescentou C1 (salão 1,8–2× e laterais 1,5–1,7× por eixo horizontal) e C2 (mobília nos cinco cômodos). **Fechamento:** auditoria técnica e testes dirigidos no Moto G06 aprovados; [CI PR #9 / 41387959550](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41387959550) **FAIL (18/19 E2E)** no `r4-shell`, exceção expressamente aceita e rastreada na issue #4. [Relatório final](BF-4C_RELATORIO.md). A disposição de registros permanece provisória para organização BF-4D; C não autoriza editor espacial, agentes, TalkBack PASS ou BF-4D.
 
 - Criar variedade útil de mesas, cadeiras, bancos, sofás, luminárias, tapetes e decoração com materiais coerentes; **preencher os cinco cômodos**, não só um.
 - Produção por conjuntos e fábricas/representações com owner, descarte e dimensões confiáveis; reutilização de geometria/material somente com regra explícita de ownership.

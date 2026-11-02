@@ -1,12 +1,12 @@
 # BF-4C — Ampliação, mobília e decoração
 
-2026-11-02. **Implementação candidata à auditoria independente da Luna e aos gates humanos; BF-4C não encerrada.** Escopo C1 e C2 autorizado expressamente nesta execução. Sem merge na main.
+2026-11-02. **BF-4C concluída no escopo técnico, visual e físico dirigido, por exceção explícita ao gate de CI E2E.** C1/C2 foram implementadas e publicadas inicialmente como candidatas à auditoria; a seção de fechamento ao final deste documento consolida a evidência humana, CI remota e decisão posterior. A BF-4D–G, o gate assistivo e release/beta não estão aprovados.
 
 ## Checkout e publicação
 
 Estado inicial limpo em `feat/bf-4b-environment`, HEAD `153dd6a`, sem commits locais à frente do upstream então conhecido. Fetch atualizou a referência BF-4B para `9b5414f` e main para `8e39a63ae06d043f04884a62d1fae3bcb05ff407`. Switch main e pull ff-only concluíram antes de qualquer alteração; HEAD e origin/main conferidos iguais ao merge BF-4B conhecido. Não havia commits posteriores na main remota. Contrato BF-4 e fechamento BF-4B presentes. Nenhum stash, reset ou descarte.
 
-A branch `feat/bf-4c-expanded-furnishing` não existia localmente nem remotamente e foi criada após a sincronização. Commit/push autorizados apenas nela. URL de auditoria: https://github.com/Samuel-Francisco-AS/biblioteca-viva/tree/feat/bf-4c-expanded-furnishing. O SHA publicado é informado na entrega, evitando autorreferência impossível no próprio commit.
+No momento da implementação, a branch `feat/bf-4c-expanded-furnishing` não existia localmente nem remotamente e foi criada após sincronização. Commit/push iniciais ocorreram apenas nela, sem merge naquela execução. Commit inicial `ea8f2f1c84ea6d8f64a4ef8188e4011300ad9d9b`; [PR #9](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/9). A integração posterior foi autorizada durante o fechamento e deve ser comprovada pelo estado da PR.
 
 ## Planta: medidas em metros
 
@@ -75,10 +75,26 @@ Build final: 638.489 bytes iniciais (igual à BF-4B) e chunk dinâmico Three de 
 
 Contagem estrutural independente confirmou 60 meshes, 37 geometrias, 21 materiais e 22.584 triângulos. Meshes contam batches; triângulos incluem instâncias. Não há sombras/texturas/pós-processamento novos. O aumento inclui pisos e acabamentos maiores e a mobília completa. Custo físico precisa ser medido; FPS da execução concorrente com testes/builds em software renderer não é benchmark comparável.
 
-R-19 não foi investigada nem considerada resolvida; capturas estáticas não provam ausência de tremulação em movimento. TalkBack, ergonomia tátil, oclusão em todas as posições, desempenho sustentado/temperatura/memória e aprovação visual/física definitiva permanecem pendentes. A issue #4 não é encerrada por um gate local.
+**Limites no momento da entrega inicial:** R-19 não foi investigada nem considerada resolvida; capturas estáticas não comprovam ausência de tremulação em movimento. TalkBack, ergonomia tátil exaustiva, oclusão em todas as posições, desempenho sustentado/temperatura/memória e validação visual/física humana ainda estavam pendentes nessa execução local. A issue #4 não é encerrada por um gate local. Os resultados humanos posteriores estão descritos no fechamento abaixo.
 
 ## Arquivos
 
 Criados: `libraryFurnishingLayout.ts`, `proceduralLibraryFurnishing.ts`, `libraryFurnishing.test.ts` em `src/features/library/three/`, e este relatório.
 
 Modificados: `libraryBuildingGeometry.ts`, `libraryRecordLayout.ts`, `libraryRecordLayout.test.ts`; `three/CameraNavigation.ts`, `three/cameraMath.ts`, `three/ThreeWorldRuntime.ts`, `three/ThreeWorldRuntime.d1.test.ts`, `three/proceduralLibraryBuilding.ts`; `e2e/bf4-environment.spec.ts`; `CHANGELOG.md`, `docs/README.md`, `STATUS.md`, `ROADMAP.md`, `WORLD.md`, `BF-4_PLANO_CONTRATO.md`, `PERFORMANCE.md`, `TESTING.md`, `RISKS.md`. Nenhum arquivo removido. Nenhum APK/build/captura/log/credencial incluído no commit.
+
+## Fechamento dirigido BF-4C — 2026-11-02
+
+**Decisão autorizada:** **PASS técnico e físico/visual dirigido com exceção formal à CI remota integral**, conforme aceite expresso do usuário após examinar a falha. Não confundir com PASS integral de CI, desempenho sustentado, TalkBack ou beta/release. [PR #9](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/9) recebeu autorização para merge na `main` com a dívida documentada; o estado definitivo da integração é verificável na PR.
+
+**Auditoria independente da implementação `ea8f2f1c`:** ampliação das cinco salas conforme contrato, quatro passagens maiores, registros preservados sem alteração de escala, 18 ilhas de mobília nos cinco cômodos e ownership/descarte locais revisados. Nenhum bloqueante arquitetural identificado na inspeção estática. Os testes automatizados locais foram informados como 79 arquivos/638 Vitest e 19/19 E2E PASS ao fim da execução, mas não substituem CI remota.
+
+**CI remota da PR #9:** [Actions 41387959550](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41387959550), commit `ea8f2f1c`, **FAIL** global: formatação, lint, typecheck, **638/638 Vitest**, áudio, build e relatório de performance PASS; **18/19 Playwright E2E PASS, 1 FAIL** em `e2e/r4-shell.spec.ts`, teste 'dez ciclos de rota não acumulam canvases, loops ou interação'. No primeiro ensaio houve timeout de 30 s na expectativa `page.toHaveURL(/\/colecao$/u)` após clique em 'Coleção' (URL reportada vazia); retry também atingiu timeout e fechamento do browser durante outra operação. Trata-se do mesmo *cenário de teste* já acompanhado na [issue #4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4); a identidade causal não está demonstrada. **Nenhum PASS verde integral é alegado, nem testes foram desativados ou afrouxados.** Exceção específica aceita pelo usuário para concluir esta etapa, sem encerrar #4.
+
+**Gate físico/visual — Moto G06:** o usuário recompilou e instalou o novo APK, compartilhou nove capturas do mundo ampliado e declarou **PASS** dirigido em zoom, arraste/pan, seleção, segundo plano/retorno e alternância retrato ↔ paisagem; não observou travamentos nem regressões. As capturas apresentam **58,7–60,1 FPS** e aproximadamente **16,6–17,0 ms/frame** nos instantes exibidos, não uma medição sustentada nem um orçamento de GPU, memória ou temperatura. Os cinco cômodos e móveis foram visualmente aceitos para o escopo desta fase.
+
+**Ressalva de composição — BF-4D:** as representações dos registros (por exemplo, estantes e televisão) permanecem com posicionamento provisório e aparecem concentradas no salão ou isoladas no espaço ampliado; o usuário aceitou o aspecto nesta BF-4C. Encaminhar **organização espacial/posicionamento declarativo** e revisão de oclusões para a BF-4D. **Uma mecânica de arrastar/mover livremente mobília pelo usuário não existe nem foi aprovada automaticamente**: depende de contrato/decisão próprios, não é pré-requisito implícito desta fase. Móveis BF-4C permanecem ambientais e não selecionáveis como registros.
+
+**Dívidas preservadas:** R-19 (leve tremulação/borramento de paredes em movimento) não resolvida, issue #4 (flakiness/timeout E2E) aberta; TalkBack humano ainda obrigatório antes do primeiro recorte real/beta. A reforma visual de React/viewport Three.js é futura. BF-4D, BF-4E, BF-4F, BF-4G não foram implementadas por este encerramento.
+
+**Handoff:** **BF-4D — Organização espacial, passagens e zonas de atividade**, com decisão explícita posterior sobre qualquer editor de posicionamento interativo. Este fechamento limita-se à BF-4C e não autoriza automaticamente código da BF-4D.
