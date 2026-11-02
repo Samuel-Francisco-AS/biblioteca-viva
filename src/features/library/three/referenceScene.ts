@@ -2,6 +2,7 @@ import {
   BoxGeometry,
   BufferGeometry,
   Group,
+  InstancedMesh,
   HemisphereLight,
   Mesh,
   MeshStandardMaterial,
@@ -256,6 +257,7 @@ export function disposeObjectTree(root: Object3D): void {
   const textures = new Set<Texture>();
 
   root.traverse((object) => {
+    if (object instanceof InstancedMesh) object.dispose();
     if (!isDisposableMesh(object)) return;
     geometries.add(object.geometry);
     const meshMaterials = Array.isArray(object.material)

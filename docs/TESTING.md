@@ -369,3 +369,9 @@ Dados e backup exigem round-trip v6, rejeição segura de formato legado, checks
 A F1 não autoriza mudança de schema ou backup por causa do mundo.
 
 Somente uma pessoa pode aprovar TalkBack, áudio percebido, toque, ergonomia, desempenho físico, instalação e atualização em aparelho real. Three.js foi aprovado como renderer da Fundação pela combinação dos gates automatizados com a evidência humana identificada da F1-F; TalkBack e os limites do mundo complexo não foram aprovados por essa decisão.
+
+## BF-4B — ambiente integrado
+
+`libraryRecordLayout.test.ts` expande as matrizes de cada `InstancedMesh` para conferir Box3 reais dos acabamentos: passagens livres, ausência de colisões com três estantes/70 livros e 13 registros, framing em dois formatos e disposal único dos batches/materiais. `bf4-environment.spec.ts` cria seis tipos fictícios, captura paisagem/retrato e aproximação com seleção, testa zoom, pan e preservação da seleção na orientação. Os testes existentes de runtime, interação e host conservam fallback, falhas e F5. Resultados executados, investigação de `r4-shell` e limitações estão no [relatório BF-4B](BF-4B_RELATORIO.md); não inferir gate físico das capturas.
+
+Na investigação BF-4B, `visibleShelfPoint` de `r4-shell` passou a executar sua grade de taps e leitura imperativa de seleção dentro de uma chamada ao navegador. A grade e a exigência de picking real são preservadas, assim como o clique desktop subsequente e assertivas de interação. Isso elimina o custo de centenas de viagens de protocolo observado nos traces, sem skip, retry adicional ou aumento de timeout. A CI remota/issue #4 ainda requer validação própria.

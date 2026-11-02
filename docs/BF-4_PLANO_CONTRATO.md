@@ -46,7 +46,9 @@ A BF-4 deve entregar **personagens visualmente distintos**, **animações variad
 - Formalizar arquitetura-alvo, BF-4B–G, riscos, critérios de aceite e decisões ainda condicionais.
 - **Entrega:** este documento, ADR-012, roadmap/status/índice/riscos coerentes. **Sem código de produção, dependências, assets, mudanças de dados ou testes alegados.**
 
-### BF-4B — Ambiente completo dos cinco cômodos (PENDENTE)
+### BF-4B — Ambiente completo dos cinco cômodos (implementação local; gates humanos pendentes)
+
+Evidência da execução autorizada: [relatório BF-4B](BF-4B_RELATORIO.md).
 
 - Evoluir **simultaneamente os cinco cômodos**: piso, paredes, paleta, materiais, iluminação, detalhes arquitetônicos e leitura global; manter passagens e leitura mobile. Sem protótipo descartável limitado a um cômodo.
 - Escolher solução visual econômica e compatível com Three.js atual; corrigir colisões e oclusões efetivamente observadas, sem reabrir a planta inteira por precaução.

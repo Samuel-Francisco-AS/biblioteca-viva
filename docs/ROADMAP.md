@@ -42,9 +42,9 @@ BF-3 ✅ concluída no escopo funcional/físico dirigido; dívida CI E2E aberta
     BF-3E2 ✅ interface funcional dos seis tipos — implementação local
     BF-3E3 ✅ gate consolidado — auditoria independente e CI PASS
   BF-3F ✅ gate físico dirigido 11/11 PASS; exceção CI documentada (#4)
-BF-4 🔄 mundo vivo e habitável — BF-4A documental aprovada; implementação pendente
+BF-4 🔄 mundo vivo e habitável — BF-4B implementada localmente; auditoria e gates humanos pendentes
   BF-4A ✅ auditoria dirigida, decisões e contrato (documental)
-  BF-4B ⏳ ambiente completo dos cinco cômodos
+  BF-4B 🔄 ambiente implementado; auditar e validar visualmente/fisicamente
   BF-4C ⏳ mobília e decoração em todos os cômodos
   BF-4D ⏳ organização espacial, passagens e zonas de atividade
   BF-4E ⏳ integração ao runtime e objetos interativos
@@ -198,15 +198,15 @@ O APK debug atualizado foi instalado e testado pelo usuário no Moto G06. **Roda
 
 **Fechamento C3/C:** `libraryBuildingGeometry.ts` e `proceduralLibraryBuilding.ts` preservam os cinco cômodos neutros, núcleo e quatro passagens; `libraryRecordLayout.ts` contém somente a distribuição inicial, 13 slots derivados (2/2/3/3/3), placements e overflow imutáveis. A/B/C foram 5/13/13 placements e 0/0/4 overflow na inspeção aprovada. Testes `Box3` reais cobrem as fábricas, passagens, colisões e convivência com três estantes e 70 livros BF-2; 77 arquivos/616 testes passaram, junto de format:check, lint, typecheck, audio:check e build. A prévia temporária foi removida; a referência PNG 2D permanece documental. Não houve gate físico, assistivo, de ergonomia ou seleção.
 
-**Handoff BF-3 → BF-4:** planejamento e BF-4A documental autorizados e registrados em 2026-11-01; implementação BF-4B–G permanece pendente, sob contrato próprio. O risco de oclusão/bounds e novos cenários de densidade/iluminação permanece para a evolução do mundo; TalkBack continua obrigatório antes do primeiro recorte real/beta. A intermitência CI `r4-shell` segue rastreada na issue #4, sem gate verde.
+**Handoff BF-3 → BF-4:** planejamento e BF-4A documental autorizados e registrados em 2026-11-01; BF-4B foi implementada localmente sob autorização posterior; BF-4C–G permanecem pendentes, sob contrato próprio. O risco de oclusão/bounds e novos cenários de densidade/iluminação permanece para a evolução do mundo; TalkBack continua obrigatório antes do primeiro recorte real/beta. A intermitência CI `r4-shell` segue rastreada na issue #4, sem gate verde.
 
-### BF-4 — Mundo Vivo e Habitável — BF-4A documental concluída (2026-11-01)
+### BF-4 — Mundo Vivo e Habitável — BF-4B local em auditoria (2026-11-01)
 
 **Contrato e gates detalhados:** [BF-4 — Plano e contrato](BF-4_PLANO_CONTRATO.md); decisão de escopo [ADR-012](decisions/ADR-012-bf-4-mundo-vivo.md).
 
 BF-4B evolui **os cinco cômodos como um todo**, sem protótipo isolado de um cômodo; BF-4C os mobília, BF-4D organiza acessos e zonas de atividades, BF-4E integra interações ao runtime. BF-4F entrega três personagens visualmente distintos como alvo inicial, animações variadas, agentes comportamentais locais e conversação textual contextual offline, dividida em F1–F4; BF-4G executa o gate integrado e físico. Há gates proporcionais e resultados observáveis por implementação, sem multiplicar checkpoints administrativos.
 
-**BF-4A: PASS apenas documental.** Auditoria do baseline e contrato concluídos; **não** foram implementados ambiente, mobília, animação, agentes, diálogo ou integração, nem executados testes ou build nesta decisão. BF-4B continua pendente de autorização operacional. Perfil produtivo GLB animado/skinning não é coberto pela ADR-010; conversação generativa aberta depende de nova decisão sobre execução/custo/privacidade. Sem persistência espacial, alteração de dados ou bypass das dívidas CI/TalkBack.
+**BF-4A: PASS apenas documental.** Auditoria do baseline e contrato concluídos; **não** foram implementados ambiente, mobília, animação, agentes, diálogo ou integração, nem executados testes ou build nesta decisão. Posteriormente, BF-4B recebeu autorização operacional e implementação local; faltam auditoria independente e gates humanos, conforme [relatório](BF-4B_RELATORIO.md). Perfil produtivo GLB animado/skinning não é coberto pela ADR-010; conversação generativa aberta depende de nova decisão sobre execução/custo/privacidade. Sem persistência espacial, alteração de dados ou bypass das dívidas CI/TalkBack.
 
 ### BF-5 — Consolidação funcional
 

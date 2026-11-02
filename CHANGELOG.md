@@ -4,6 +4,13 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-4B — Ambiente dos cinco cômodos — 2026-11-01
+
+- Biblioteca funcional recebe assoalhos com juntas, pedra, painéis bordô/verde, molduras, pilastras, latão e luz quente em todos os cinco ambientes neutros.
+- Mantidos os quatro acessos, três estantes, livros/registros, seleção e navegação ortográfica. Detalhes repetidos usam instâncias por material com descarte por montagem.
+- Implementação local para revisão; aprovação estética e validação física do novo build permanecem pendentes. [Relatório](docs/BF-4B_RELATORIO.md).
+
+
 ### BF-3F/BF-3 — Fechamento físico-funcional dirigido, com exceção CI — 2026-11-01
 
 - BF-3F finalizada em duas rodadas no Moto G06: 5/5 PASS para toque nas três estantes/destaque, controles Próximo/Anterior, pan/pinch/zoom, rotação e background/resume; 6/6 PASS para seis categorias e representações, seleção canvas/React, abertura/edição/retorno e inspeção visual/fluidez. Evidência humana registrada na [issue #5](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/5); sem falhas relatadas.

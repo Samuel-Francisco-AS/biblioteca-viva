@@ -1,6 +1,9 @@
 import {
   Box3,
   Group,
+  InstancedMesh,
+  Matrix4,
+  OrthographicCamera,
   Mesh,
   Vector3,
   type BufferGeometry,
@@ -17,6 +20,7 @@ import {
   createWork,
   type LibraryEntry,
 } from "../../domain";
+import { CameraNavigation } from "./three/CameraNavigation";
 import { LIBRARY_ROOMS } from "./libraryBuildingGeometry";
 import { projectLibraryWorldEntries } from "./libraryWorldEntries";
 import {
@@ -137,15 +141,53 @@ type DisposableMesh = Mesh<BufferGeometry, Material | Material[]>;
 function isMesh(object: Object3D): object is DisposableMesh {
   return object instanceof Mesh;
 }
+function isInstancedMesh(
+  object: Object3D,
+): object is InstancedMesh<BufferGeometry, Material | Material[]> {
+  return object instanceof InstancedMesh;
+}
 function meshes(root: Group) {
   const result: DisposableMesh[] = [];
   root.traverse((object) => {
-    if (isMesh(object)) result.push(object);
+    if (isInstancedMesh(object)) {
+      object.updateWorldMatrix(true, false);
+      for (let index = 0; index < object.count; index++) {
+        const matrix = new Matrix4();
+        object.getMatrixAt(index, matrix);
+        const part = new Mesh(object.geometry, object.material);
+        part.applyMatrix4(object.matrixWorld.clone().multiply(matrix));
+        part.name = object.name;
+        result.push(part);
+      }
+    } else if (isMesh(object)) result.push(object);
   });
   return result;
 }
 
 describe("construção e layout provisórios consolidados", () => {
+  it("enquadra todos os acabamentos em retrato e paisagem sem mudar F3", () => {
+    const building = createProceduralLibraryBuilding();
+    for (const [width, height] of [
+      [760, 468],
+      [324, 244],
+    ]) {
+      const camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 100);
+      const navigation = new CameraNavigation(camera, 0.7);
+      navigation.setViewport(width, height);
+      camera.updateMatrixWorld(true);
+      for (const mesh of meshes(building)) {
+        const bounds = new Box3().setFromObject(mesh);
+        for (const x of [bounds.min.x, bounds.max.x])
+          for (const y of [bounds.min.y, bounds.max.y])
+            for (const z of [bounds.min.z, bounds.max.z]) {
+              const projected = new Vector3(x, y, z).project(camera);
+              expect(Math.abs(projected.x)).toBeLessThan(1);
+              expect(Math.abs(projected.y)).toBeLessThan(1);
+            }
+      }
+    }
+    disposeObjectTree(building);
+  });
   it("mantém cinco cômodos neutros, pisos finitos e quatro passagens realmente abertas", () => {
     expect(LIBRARY_ROOMS.map(({ id }) => id)).toEqual([
       "room-a",
@@ -166,7 +208,9 @@ describe("construção e layout provisórios consolidados", () => {
     const passages = meshes(building).filter(
       ({ name }) => name === "passage-floor",
     );
-    const walls = meshes(building).filter(({ name }) => name.endsWith("wall"));
+    const walls = meshes(building).filter(
+      (mesh) => new Box3().setFromObject(mesh).max.y > 0.01,
+    );
     expect(floors).toHaveLength(5);
     expect(passages).toHaveLength(4);
     for (const room of LIBRARY_ROOMS) {
@@ -210,8 +254,8 @@ describe("construção e layout provisórios consolidados", () => {
         expect(box.min.x).toBeCloseTo(x - 0.4);
         expect(box.max.x).toBeCloseTo(x + 0.4);
         const walk = new Box3(
-          new Vector3(x - 0.5, 0.05, z - 0.3),
-          new Vector3(x + 0.5, 0.7, z + 0.3),
+          new Vector3(x - 0.5, 0.05, z - 0.7),
+          new Vector3(x + 0.5, 2, z + 0.7),
         );
         expect(
           walls.some((wall) =>
@@ -255,10 +299,18 @@ describe("construção e layout provisórios consolidados", () => {
     );
     expect(composition.instances).toHaveLength(3);
     expect(books.visible).toHaveLength(70);
-    const structure = meshes(building).filter(({ name }) =>
-      name.endsWith("wall"),
+    const structure = meshes(building).filter(
+      (mesh) => new Box3().setFromObject(mesh).max.y > 0.01,
     );
     const bf2 = meshes(composition.root);
+    for (const part of bf2) {
+      const box = new Box3().setFromObject(part);
+      expect(
+        structure.some((wall) =>
+          positiveOverlap(box, new Box3().setFromObject(wall)),
+        ),
+      ).toBe(false);
+    }
     const recordRoots: Group[] = [];
     const recordBoxes: Box3[] = [];
     for (const placement of assignment.placements) {
@@ -347,11 +399,26 @@ describe("construção e layout provisórios consolidados", () => {
     const secondMesh = meshes(second)[0];
     expect(firstMesh.geometry).not.toBe(secondMesh.geometry);
     expect(firstMesh.material).not.toBe(secondMesh.material);
+    const batches = first.children.filter(
+      (child) => child instanceof InstancedMesh,
+    );
+    expect(batches.length).toBeGreaterThan(0);
+    const batchDisposals = batches.map((batch) => vi.spyOn(batch, "dispose"));
+    const materials = new Set(
+      meshes(first).flatMap((mesh) =>
+        Array.isArray(mesh.material) ? mesh.material : [mesh.material],
+      ),
+    );
+    const materialDisposals = [...materials].map((material) =>
+      vi.spyOn(material, "dispose"),
+    );
     const disposed = vi.spyOn(firstMesh.geometry, "dispose");
     const untouched = vi.spyOn(secondMesh.geometry, "dispose");
     disposeObjectTree(first);
     disposeObjectTree(first);
     expect(disposed).toHaveBeenCalledOnce();
+    for (const spy of [...batchDisposals, ...materialDisposals])
+      expect(spy).toHaveBeenCalledOnce();
     expect(untouched).not.toHaveBeenCalled();
     disposeObjectTree(second);
     expect(untouched).toHaveBeenCalledOnce();
