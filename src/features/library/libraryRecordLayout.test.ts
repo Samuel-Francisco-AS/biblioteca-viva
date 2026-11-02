@@ -165,28 +165,35 @@ function meshes(root: Group) {
 }
 
 describe("construção e layout provisórios consolidados", () => {
-  it("enquadra todos os acabamentos em retrato e paisagem sem mudar F3", () => {
-    const building = createProceduralLibraryBuilding();
+  it("permite explorar cada cômodo ampliado sem reduzir o framing F3", () => {
     for (const [width, height] of [
       [760, 468],
       [324, 244],
     ]) {
-      const camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 100);
-      const navigation = new CameraNavigation(camera, 0.7);
-      navigation.setViewport(width, height);
-      camera.updateMatrixWorld(true);
-      for (const mesh of meshes(building)) {
-        const bounds = new Box3().setFromObject(mesh);
-        for (const x of [bounds.min.x, bounds.max.x])
-          for (const y of [bounds.min.y, bounds.max.y])
-            for (const z of [bounds.min.z, bounds.max.z]) {
-              const projected = new Vector3(x, y, z).project(camera);
-              expect(Math.abs(projected.x)).toBeLessThan(1);
-              expect(Math.abs(projected.y)).toBeLessThan(1);
-            }
+      for (const room of LIBRARY_ROOMS) {
+        const camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 100);
+        const navigation = new CameraNavigation(camera, 2.2, LIBRARY_ROOMS);
+        navigation.setViewport(width, height);
+        camera.updateMatrixWorld(true);
+        const center = new Vector3(
+          (room.minX + room.maxX) / 2,
+          1.1,
+          (room.minZ + room.maxZ) / 2,
+        );
+        const projected = center.clone().project(camera);
+        navigation.panBetweenScreenPoints(
+          {
+            x: ((projected.x + 1) * width) / 2,
+            y: ((1 - projected.y) * height) / 2,
+          },
+          { x: width / 2, y: height / 2 },
+        );
+        camera.updateMatrixWorld(true);
+        const reached = center.clone().project(camera);
+        expect(reached.x).toBeCloseTo(0);
+        expect(reached.y).toBeCloseTo(0);
       }
     }
-    disposeObjectTree(building);
   });
   it("mantém cinco cômodos neutros, pisos finitos e quatro passagens realmente abertas", () => {
     expect(LIBRARY_ROOMS.map(({ id }) => id)).toEqual([
@@ -241,8 +248,8 @@ describe("construção e layout provisórios consolidados", () => {
           .every((value) => value > 0),
       ).toBe(true);
     }
-    for (const x of [-5.4, 5.4])
-      for (const z of [-2.7, 2.7]) {
+    for (const x of [-10.1, 10.1])
+      for (const z of [-4.8, 4.8]) {
         const bridge = passages.find(
           (mesh) =>
             Math.abs(mesh.position.x - x) < 0.001 &&
@@ -251,11 +258,11 @@ describe("construção e layout provisórios consolidados", () => {
         expect(bridge).toBeDefined();
         if (!bridge) continue;
         const box = new Box3().setFromObject(bridge);
-        expect(box.min.x).toBeCloseTo(x - 0.4);
-        expect(box.max.x).toBeCloseTo(x + 0.4);
+        expect(box.min.x).toBeCloseTo(x - 0.6);
+        expect(box.max.x).toBeCloseTo(x + 0.6);
         const walk = new Box3(
-          new Vector3(x - 0.5, 0.05, z - 0.7),
-          new Vector3(x + 0.5, 2, z + 0.7),
+          new Vector3(x - 0.8, 0.05, z - 1.1),
+          new Vector3(x + 0.8, 2, z + 1.1),
         );
         expect(
           walls.some((wall) =>
@@ -269,7 +276,7 @@ describe("construção e layout provisórios consolidados", () => {
     const inlays = meshes(building).filter((mesh) => {
       const dimensions = new Box3().setFromObject(mesh).getSize(new Vector3());
       return (
-        Math.abs(dimensions.x - 0.8) < 0.000001 &&
+        Math.abs(dimensions.x - 1.2) < 0.000001 &&
         Math.abs(dimensions.y - 0.02) < 0.000001 &&
         Math.abs(dimensions.z - 0.06) < 0.000001
       );
@@ -281,7 +288,7 @@ describe("construção e layout provisórios consolidados", () => {
       const bridge = passages.find(
         (passage) =>
           Math.abs(passage.position.x - center.x) < 0.001 &&
-          Math.abs(passage.position.z - center.z) < 0.9,
+          Math.abs(passage.position.z - center.z) < 1.3,
       );
       expect(bridge).toBeDefined();
       if (!bridge) continue;

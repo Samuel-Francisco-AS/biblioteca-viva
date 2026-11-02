@@ -34,3 +34,7 @@
 Detalhes e critérios: [BF-4 — Plano e contrato](BF-4_PLANO_CONTRATO.md) e [ADR-012](decisions/ADR-012-bf-4-mundo-vivo.md).
 
 Revisar ao iniciar uma fatia, alterar dados, adicionar dependência ou preparar release.
+
+## BF-4C — Fechamento dirigido com exceção CI (2026-11-02)
+
+BF-4C ampliou a área, densidade e alcance da câmera; gate visual e físico dirigido no Moto G06 passou por relato humano e nove capturas, sem travamentos ou regressões percebidos. Box3 não comprova todas as oclusões futuras, circulação de NPCs ou desempenho sustentado. **CI PR #9 / [41387959550](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41387959550): FAIL** em `r4-shell` (18/19 E2E PASS), além da dívida histórica da issue #4; o usuário autorizou fechamento/merge **por exceção documentada**, sem desativar testes ou presumir causa comum. **Composição provisória aceita:** estantes, televisão e outras representações dos registros aparentam estar dispersas/centralizadas no ambiente maior; BF-4D deverá rever organização declarativa e oclusão. **Mover mobília livremente pelo usuário** é funcionalidade nova, não implícita nem automaticamente aprovada para BF-4D. R-19 permanece aberta; TalkBack é gate obrigatório para recorte real/beta, e não houve benchmark sustentado ou release. [Relatório BF-4C](BF-4C_RELATORIO.md).

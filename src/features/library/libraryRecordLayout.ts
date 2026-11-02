@@ -80,7 +80,10 @@ export const INITIAL_LIBRARY_RECORD_SLOTS: readonly LibraryRecordSlot[] =
         const room = LIBRARY_ROOMS.find(({ id }) => id === roomId);
         if (!room) throw new Error(`Cômodo ausente: ${roomId}`);
         const dimensions = getProceduralLibraryRecordDimensions(modelTypeId);
-        return centers.map(([x, z], index) => {
+        return centers.map(([oldX, oldZ], index) => {
+          // Translate the original arrangement into the outer half; object scale is unchanged.
+          const x = oldX + Math.sign(oldX) * 6.3;
+          const z = oldZ + Math.sign(oldZ) * 3.5;
           if (
             x - dimensions.width / 2 <= room.minX ||
             x + dimensions.width / 2 >= room.maxX ||

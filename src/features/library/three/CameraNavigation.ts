@@ -1,6 +1,7 @@
 import { OrthographicCamera } from "three";
 
 import {
+  type NavigationFloors,
   CAMERA_INITIAL_OFFSET,
   CAMERA_TARGET_Y,
   clampCameraNavigationState,
@@ -21,6 +22,7 @@ export class CameraNavigation {
   constructor(
     private readonly camera: OrthographicCamera,
     initialZoom = 1,
+    private readonly floors?: NavigationFloors,
   ) {
     // Initial framing must exist before the first viewport-triggered render.
     // The legacy F3/F5 path retains zoom 1.
@@ -50,12 +52,18 @@ export class CameraNavigation {
       current,
       this.viewport.width,
       this.viewport.height,
+      this.floors,
     );
     return this.commit(next);
   }
 
   setViewport(width: number, height: number): boolean {
-    const next = clampCameraNavigationState(this.state, width, height);
+    const next = clampCameraNavigationState(
+      this.state,
+      width,
+      height,
+      this.floors,
+    );
     const frustum = orthographicFrustumForViewport(width, height);
     if (!next || !frustum) return false;
     this.viewport = Object.freeze({ height, width });
@@ -87,6 +95,7 @@ export class CameraNavigation {
         zoom,
         this.viewport.width,
         this.viewport.height,
+        this.floors,
       ),
     );
   }
@@ -97,6 +106,7 @@ export class CameraNavigation {
       candidate,
       this.viewport.width,
       this.viewport.height,
+      this.floors,
     );
     if (!next) return false;
     const changed =

@@ -8,7 +8,8 @@ import {
   type Object3D,
 } from "three";
 import { createLibraryBuildingMaterials } from "./libraryBuildingMaterials";
-import { LIBRARY_ROOMS } from "../libraryBuildingGeometry";
+import { createLibraryFurnishing } from "./proceduralLibraryFurnishing";
+import { LIBRARY_PASSAGES, LIBRARY_ROOMS } from "../libraryBuildingGeometry";
 
 function isBuildingBox(
   object: Object3D,
@@ -28,6 +29,12 @@ export function createProceduralLibraryBuilding(): Group {
   const floor = materials.timber;
   const wall = materials.plaster;
   const passage = materials.stone;
+  const {
+    x: passageX,
+    z: passageZ,
+    length: passageLength,
+    width: passageWidth,
+  } = LIBRARY_PASSAGES;
   const wallHeight = 0.85;
   const wallThickness = 0.14;
 
@@ -210,37 +217,61 @@ export function createProceduralLibraryBuilding(): Group {
     if (room.id === "room-a") {
       for (const x of [room.minX, room.maxX]) {
         // Separate openings toward the two rooms on each side.
-        verticalWall(`${room.id}-passage-wall`, x, room.minZ, -3.6);
-        verticalWall(`${room.id}-passage-wall`, x, -1.8, 1.8);
-        verticalWall(`${room.id}-passage-wall`, x, 3.6, room.maxZ);
+        verticalWall(
+          `${room.id}-passage-wall`,
+          x,
+          room.minZ,
+          -passageZ - passageWidth / 2,
+        );
+        verticalWall(
+          `${room.id}-passage-wall`,
+          x,
+          -passageZ + passageWidth / 2,
+          passageZ - passageWidth / 2,
+        );
+        verticalWall(
+          `${room.id}-passage-wall`,
+          x,
+          passageZ + passageWidth / 2,
+          room.maxZ,
+        );
       }
     } else {
-      const openingZ = centerZ < 0 ? -2.7 : 2.7;
+      const openingZ = centerZ < 0 ? -passageZ : passageZ;
       const innerX = centerX < 0 ? room.maxX : room.minX;
       const outerX = centerX < 0 ? room.minX : room.maxX;
       verticalWall(`${room.id}-outer-wall`, outerX, room.minZ, room.maxZ);
       verticalWall(`${room.id}-passage-wall`, innerX, room.minZ, room.maxZ, [
-        openingZ - 0.9,
-        openingZ + 0.9,
+        openingZ - passageWidth / 2,
+        openingZ + passageWidth / 2,
       ]);
     }
   }
 
-  for (const x of [-5.4, 5.4]) {
-    for (const z of [-2.7, 2.7]) {
-      box("passage-floor", x, -0.08, z, 0.8, 0.16, 1.8, passage);
-      for (const edge of [-0.84, 0.84]) {
+  for (const x of [-passageX, passageX]) {
+    for (const z of [-passageZ, passageZ]) {
+      box(
+        "passage-floor",
+        x,
+        -0.08,
+        z,
+        passageLength,
+        0.16,
+        passageWidth,
+        passage,
+      );
+      for (const edge of [-passageWidth / 2 + 0.06, passageWidth / 2 - 0.06]) {
         box(
           "passage-inlay",
           x,
           -0.004, // Top at +0.006 m, above the stone threshold (Y=0): no coplanar top faces.
           z + edge,
-          0.8,
+          passageLength,
           0.02,
           0.06,
           materials.brass,
         );
-        for (const side of [-0.4, 0.4]) {
+        for (const side of [-passageLength / 2, passageLength / 2]) {
           box(
             "passage-pier",
             x + side,
@@ -297,5 +328,6 @@ export function createProceduralLibraryBuilding(): Group {
     batch.computeBoundingSphere();
     root.add(batch);
   }
+  root.add(createLibraryFurnishing());
   return root;
 }

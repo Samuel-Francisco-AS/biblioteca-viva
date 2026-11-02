@@ -1,3 +1,4 @@
+import { LIBRARY_ROOMS } from "../libraryBuildingGeometry";
 import {
   Color,
   DirectionalLight,
@@ -597,7 +598,11 @@ export class ThreeWorldRuntime implements WorldRuntime {
             root: node,
           }));
       }
-      this.navigation = new CameraNavigation(camera, composedWorld ? 0.7 : 1);
+      this.navigation = new CameraNavigation(
+        camera,
+        composedWorld ? 0.7 : 1,
+        composedWorld ? LIBRARY_ROOMS : undefined,
+      );
 
       renderer.shadowMap.enabled = false;
       renderer.domElement.className = "three-world-canvas";

@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-4C — ampliação, mobília e fechamento dirigido com exceção CI (2026-11-02)
+
+- Amplia os cinco cômodos e as quatro passagens, com exploração por pan/zoom sobre os pisos reais.
+- Acrescenta 18 conjuntos de mesas, assentos, tapetes, luminárias, plantas e armários; mantém registros selecionáveis e tamanhos originais.
+- **Fechamento BF-4C:** auditoria estática sem bloqueantes e aprovação visual/física dirigida no Moto G06 (nove capturas; pan/zoom/seleção, retrato↔paisagem, segundo plano/retorno sem regressões relatadas). A [CI da PR #9, run 41387959550](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41387959550), terminou **FAIL**, com 638 Vitest PASS e **18/19 E2E PASS**, timeout no `r4-shell` histórico; encerramento e merge autorizados **por exceção formal**, mantendo issue #4 aberta. Representações de registros com posições provisórias ficam para organização BF-4D, sem prometer editor livre de móveis. R-19 e TalkBack permanecem pendentes; sem benchmark sustentado, beta ou release. [Relatório final](docs/BF-4C_RELATORIO.md).
+
 ### BF-4B — Ambiente dos cinco cômodos — 2026-11-01
 
 - Biblioteca funcional recebe assoalhos com juntas, pedra, painéis bordô/verde, molduras, pilastras, latão e luz quente em todos os cinco ambientes neutros.

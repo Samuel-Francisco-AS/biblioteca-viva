@@ -2,28 +2,47 @@
 export type LibraryRoomId =
   "room-a" | "room-b" | "room-c" | "room-d" | "room-e";
 
+// BF-4C: central 1.9×; side rooms 1.6× in both horizontal axes.
 export const LIBRARY_ROOMS = Object.freeze([
-  Object.freeze({ id: "room-a", minX: -5, maxX: 5, minZ: -4.5, maxZ: 4.5 }),
+  Object.freeze({
+    id: "room-a",
+    minX: -9.5,
+    maxX: 9.5,
+    minZ: -8.55,
+    maxZ: 8.55,
+  }),
   Object.freeze({
     id: "room-b",
-    minX: -10.6,
-    maxX: -5.8,
-    minZ: -7.8,
-    maxZ: -1.5,
+    minX: -18.38,
+    maxX: -10.7,
+    minZ: -12.48,
+    maxZ: -2.4,
   }),
   Object.freeze({
     id: "room-c",
-    minX: 5.8,
-    maxX: 10.6,
-    minZ: -7.8,
-    maxZ: -1.5,
+    minX: 10.7,
+    maxX: 18.38,
+    minZ: -12.48,
+    maxZ: -2.4,
   }),
   Object.freeze({
     id: "room-d",
-    minX: -10.6,
-    maxX: -5.8,
-    minZ: 1.5,
-    maxZ: 7.8,
+    minX: -18.38,
+    maxX: -10.7,
+    minZ: 2.4,
+    maxZ: 12.48,
   }),
-  Object.freeze({ id: "room-e", minX: 5.8, maxX: 10.6, minZ: 1.5, maxZ: 7.8 }),
+  Object.freeze({
+    id: "room-e",
+    minX: 10.7,
+    maxX: 18.38,
+    minZ: 2.4,
+    maxZ: 12.48,
+  }),
 ] as const);
+export const LIBRARY_PASSAGES = Object.freeze({
+  x: 10.1,
+  z: 4.8,
+  length: 1.2,
+  width: 2.6,
+});

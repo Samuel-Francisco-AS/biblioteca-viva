@@ -1,6 +1,6 @@
 import { expect, test } from "./fixtures";
 
-test("BF-4B: ambiente integrado em paisagem/retrato, zoom, pan e seleção", async ({
+test("BF-4C: ambiente integrado em paisagem/retrato, zoom, pan e seleção", async ({
   page,
   createBook,
 }, testInfo) => {
@@ -24,6 +24,14 @@ test("BF-4B: ambiente integrado em paisagem/retrato, zoom, pan e seleção", asy
   const canvas = page.locator("canvas[data-three-world-canvas='true']");
   await expect(canvas).toHaveAttribute("data-fixture-status", "ready");
   await expect(canvas).toHaveAttribute("data-selectable-objects", "9");
+  await testInfo.attach("bf4c-renderer-metrics", {
+    body: JSON.stringify(
+      await canvas.evaluate((element) => ({ ...element.dataset })),
+      null,
+      2,
+    ),
+    contentType: "application/json",
+  });
   for (const viewport of [
     { width: 1280, height: 900 },
     { width: 390, height: 844 },
@@ -53,10 +61,15 @@ test("BF-4B: ambiente integrado em paisagem/retrato, zoom, pan e seleção", asy
   await page.mouse.move(x, y);
   await page.mouse.wheel(0, -500);
   await expect(canvas).not.toHaveAttribute("data-camera-zoom", "0.700");
+  const targetBeforePan = await canvas.getAttribute("data-camera-target-x");
   await page.mouse.down();
   await page.mouse.move(x + 20, y + 20);
   await page.mouse.move(x + 65, y + 45);
   await page.mouse.up();
+  await expect(canvas).not.toHaveAttribute(
+    "data-camera-target-x",
+    targetBeforePan ?? "",
+  );
   await expect(canvas).toHaveAttribute(
     "data-selected-object",
     /^reading-book:/u,
