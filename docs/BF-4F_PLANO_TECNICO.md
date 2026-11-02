@@ -8,6 +8,12 @@
 >
 > **Decisão explícita posterior à concepção:** **NÃO realizar preflight, spike, PR ou checkpoint experimental isolado de personagens.** Verificações necessárias de autoria, exportação, articulação, rigging, loading, animador e descarte serão feitas **durante a produção de um dos quatro personagens definitivos**, dentro da BF-4F1, aproveitando toda evidência e todo asset útil no produto. Evitar gasto de cota Codex e horas com demonstrações descartáveis.
 
+## Diretriz vigente após BF-4F2 — primazia criativa (2026-11-02)
+
+F2 foi **encerrada no escopo dirigido**: usuário confirmou no Moto G06 reações à seleção e ações animadas pelo React, sem regressão de fluidez percebida. CI global FAIL com quatro falhas novas BF-4F2, rastreadas em [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15). Antigas referências a F1/F2 'próximas' abaixo são cronologia de planejamento.
+
+**F3 e F4 devem priorizar ambição artística, personagens interessantes, identidade e narrativa.** Não reduzir efeitos, animações, relações ou cenografia por supor limites do Moto G06. F3 não será mero movimento aleatório de NPCs: exige vida social significativa nos cinco cômodos. F4 exige escolhas, personalidade e consequências do RPG, sem simplificar a história para agradar testes. Reutilizar F1/F2, implementar trabalho real sem preflight descartável, usar testes dirigidos e uma rodada final proporcional, sem loops de timeout. Otimizar apenas gargalos demonstrados, sem negligenciar segurança, dados, acessibilidade e lifecycle. [Arte](ART_DIRECTION.md), [testes](TESTING.md), [desempenho](PERFORMANCE.md).
+
 ## 1. Objetivo e entregas
 
 Transformar os cinco cômodos reais e integrados em espaço habitado por **Samael, Aryn, Ytha e Lua**, sem reduzir a ambição visual a esferas, caixas, recoloração do mesmo modelo ou ícones estáticos. A BF-4F terá **quatro checkpoints F1–F4**, cada qual com entrega visual/funcional verificável, branch/PR própria, auditoria técnica da Luna e gate humano do usuário no Moto G06 quando pertinente. **Não unir F1–F4 numa implementação única** e não multiplicar checkpoints burocráticos.
