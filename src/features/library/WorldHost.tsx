@@ -1,3 +1,5 @@
+import { InhabitantLife } from "./InhabitantLife";
+import type { AgencySnapshot } from "./inhabitantAgency";
 import {
   INHABITANT_ACTIONS,
   INHABITANT_ACTIVITIES,
@@ -120,6 +122,9 @@ export function WorldHost({
     readonly WorldSelectableObject[]
   >([]);
   const [inhabitantFeedback, setInhabitantFeedback] = useState("");
+  const [agencySnapshot, setAgencySnapshot] = useState<AgencySnapshot | null>(
+    null,
+  );
   const [selection, setSelection] = useState<WorldSelection>(null);
   const [diagnostics, setDiagnostics] =
     useState<WorldRuntimeDiagnostics>(EMPTY_DIAGNOSTICS);
@@ -176,6 +181,7 @@ export function WorldHost({
     let unsubscribeDiagnostics: (() => void) | undefined;
     let unsubscribeFailure: (() => void) | undefined;
     let unsubscribeSelection: (() => void) | undefined;
+    let unsubscribeInhabitants: (() => void) | undefined;
     let terminalFailureReported = false;
 
     if (!host) return;
@@ -183,6 +189,7 @@ export function WorldHost({
     publishSelectableObjects([]);
     publishSelection(null);
     setDiagnostics(EMPTY_DIAGNOSTICS);
+    setAgencySnapshot(null);
     setFailure(null);
     publishStatus("initializing");
 
@@ -211,6 +218,9 @@ export function WorldHost({
         runtime = createdRuntime;
         runtime.mount(host);
         runtimeRef.current = runtime;
+        unsubscribeInhabitants = runtime.onInhabitantsChange?.((snapshot) => {
+          if (active) setAgencySnapshot(snapshot);
+        });
         publishSelectableObjects(runtime.getSelectableObjects());
         unsubscribeDiagnostics = runtime.onDiagnosticsChange(
           (nextDiagnostics) => {
@@ -260,6 +270,7 @@ export function WorldHost({
       unsubscribeDiagnostics?.();
       unsubscribeFailure?.();
       unsubscribeSelection?.();
+      unsubscribeInhabitants?.();
       runtime?.dispose();
       runtime = undefined;
       runtimeRef.current = null;
@@ -427,6 +438,10 @@ export function WorldHost({
       {!performanceScenario && libraryWorldSnapshot && (
         <details aria-label="Habitantes">
           <summary>Habitantes da Biblioteca</summary>
+          <InhabitantLife
+            snapshot={agencySnapshot}
+            failed={status === "failed"}
+          />
           {INHABITANTS.map((inhabitant) => (
             <div key={inhabitant.id}>
               <button
@@ -461,7 +476,7 @@ export function WorldHost({
                               ? INHABITANT_ACTIVITIES[inhabitant.key][1]
                               : label;
                         setInhabitantFeedback(
-                          `${inhabitant.label}: ${detail}. ${result === "playing" ? "Demonstração finita com retorno ao repouso." : result === "reduced" ? "Movimento reduzido ativo; demonstração descrita em texto." : result === "loading" ? "Modelo carregando; tente novamente." : "Animação indisponível; descrição preservada."}`,
+                          `${inhabitant.label}: ${detail}. ${result === "playing" ? "Demonstração finita com retorno ao repouso." : result === "reduced" ? "Movimento reduzido ativo; demonstração descrita em texto." : result === "loading" ? "Modelo carregando; tente novamente." : "Animação indisponível ou sem espaço seguro neste ponto; descrição preservada."}`,
                         );
                       }}
                     >

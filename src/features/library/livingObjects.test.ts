@@ -126,3 +126,36 @@ describe("living environmental session", () => {
     expect(a.getSnapshot()).toBe(snapshot);
   });
 });
+
+it("F3 emits after mutation with explicit origin and rejects recursive actions and discovery capabilities", () => {
+  const session = new LivingSession();
+  const seen: unknown[] = [];
+  session.subscribe(() => {
+    expect(session.actPrimary("living:lamp")).toEqual([]);
+  });
+  const off = session.onEvents((events, source) => {
+    seen.push([
+      source,
+      events,
+      session.getSnapshot().objects["living:plant"]?.active,
+    ]);
+    expect(session.actFromInhabitant("lua", "living:globe")).toEqual([]);
+  });
+  expect(session.actFromInhabitant("ytha", "living:plant")).toHaveLength(1);
+  expect(seen).toEqual([
+    ["ytha", [{ type: "acted", objectId: "living:plant" }], true],
+  ]);
+  for (const id of [
+    "living:lamp",
+    "living:table",
+    "living:book",
+    "living:cabinet",
+    "entry:fictional",
+  ])
+    expect(session.actFromInhabitant("lua", id)).toEqual([]);
+  expect(session.getSnapshot().discovery).toBe(0);
+  expect(session.getSnapshot().revision).toBe(1);
+  off();
+  session.dispose();
+  expect(session.actFromInhabitant("samael", "living:clock")).toEqual([]);
+});

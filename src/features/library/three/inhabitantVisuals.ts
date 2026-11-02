@@ -1,3 +1,4 @@
+import type { AgentView } from "../inhabitantAgency";
 import { Group, type Object3D, type AnimationClip } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { createInhabitantAnimator } from "./inhabitantAnimator";
@@ -20,6 +21,7 @@ export function createInhabitantVisuals(
   parent: Object3D,
   load: InhabitantLoader = (url) => new GLTFLoader().loadAsync(url),
   onReady: (id: string) => void = () => {},
+  externalPosition = false,
 ) {
   let disposed = false;
   const animators = new Map<
@@ -48,6 +50,7 @@ export function createInhabitantVisuals(
             root,
             INHABITANT_WALK_DISTANCE[descriptor.key],
             descriptor.key === "lua",
+            externalPosition,
           ),
         );
         onReady(descriptor.id);
@@ -57,20 +60,65 @@ export function createInhabitantVisuals(
       });
     return { descriptor, root };
   });
+  const driven = new Map<string, string>();
+  const moods = new Map<string, number>();
+  let motionReduced = false;
   return {
     selectables,
+    drive(poses: readonly AgentView[]) {
+      if (disposed) return;
+      for (const p of poses) {
+        const actor = selectables.find((s) => s.descriptor.id === p.id);
+        if (!actor || !p.available) continue;
+        actor.root.position.set(p.x, 0, p.z);
+        actor.root.rotation.y = p.facing;
+        const repeat =
+          p.state === "navigate" || (p.state === "work" && p.action === "work");
+        const token = `${p.action}:${repeat}`;
+        if (driven.get(p.id) !== token) {
+          if (animators.get(p.id)?.play(p.action, repeat))
+            driven.set(p.id, token);
+        }
+        // Keep signature effects inside the measured envelope; never replace gestures.
+        moods.set(
+          p.id,
+          p.state === "react"
+            ? 1
+            : p.state === "socialize"
+              ? 0.75
+              : p.state === "work"
+                ? 0.85
+                : 0.65,
+        );
+      }
+    },
     play(id: string, action: InhabitantAction) {
       if (disposed) return "unavailable";
       const actor = selectables.find(({ descriptor }) => descriptor.id === id);
       if (!actor || actor.root.userData.loadState === "error")
         return "unavailable";
       if (actor.root.userData.loadState === "loading") return "loading";
+      driven.delete(id);
       return animators.get(id)?.play(action) ? "playing" : "reduced";
     },
     update(delta: number, reducedMotion: boolean) {
       if (disposed) return;
-      for (const animator of animators.values())
+      if (motionReduced !== reducedMotion) {
+        driven.clear();
+        motionReduced = reducedMotion;
+      }
+      for (const [id, animator] of animators) {
         animator.update(delta, reducedMotion);
+        const fx = selectables
+          .find((a) => a.descriptor.id === id)
+          ?.root.getObjectByName("Magic");
+        if (fx && externalPosition) {
+          const target = reducedMotion ? 0.65 : (moods.get(id) ?? 0.65);
+          fx.scale.setScalar(
+            fx.scale.x + (target - fx.scale.x) * Math.min(1, delta * 4),
+          );
+        }
+      }
     },
     dispose() {
       if (disposed) return;
