@@ -299,11 +299,15 @@ export function createLivingVisuals(
               : state.atmosphere === "encantada"
                 ? 1.25
                 : 2;
-          object.intensity += (targetIntensity - object.intensity) * blend;
+          object.intensity = reduced
+            ? targetIntensity
+            : object.intensity + (targetIntensity - object.intensity) * blend;
         }
         if (object instanceof DirectionalLight) {
           const targetIntensity = state.atmosphere === "noturna" ? 0.4 : 1.5;
-          object.intensity += (targetIntensity - object.intensity) * blend;
+          object.intensity = reduced
+            ? targetIntensity
+            : object.intensity + (targetIntensity - object.intensity) * blend;
         }
       });
     },
