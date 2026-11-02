@@ -1,6 +1,6 @@
 # Roadmap
 
-> Atualização BF-4F1 (2026-11-02): quatro modelos candidatos implementados e integrados, com fontes Blender, GLB animado por nó e seleção React/canvas. **F1 aberta** para revisão independente, refinamento de aura/asas e aceite artístico/físico. Trechos anteriores sobre ausência de código BF-4F descrevem a situação prévia. [Entrega, testes e pendências](BF-4F1_RELATORIO.md).
+> **Fechamento BF-4F1 (2026-11-02):** modelos iniciais de Samael, Aryn, Ytha e Lua e seleção por canvas/React **aprovados pelo usuário no Moto G06**. F1 concluída no escopo dirigido; animações corporais ficam para **F2**, autonomia para F3, diálogos/quests para F4. [Relatório final](BF-4F1_RELATORIO.md). A CI não foi declarada verde porque E2E final falhou (20 PASS, 6 FAIL, 1 flaky).
 
 Próximo trabalho autorizado: auditar/refinar os candidatos F1 e validar no Moto G06; F2–F4 permanecem futuros, sem implementação antecipada nesta entrega.
 
@@ -52,8 +52,8 @@ BF-4 🔄 mundo vivo e habitável — BF-4B/C/D/E concluídas no escopo dirigido
   BF-4C ✅ ampliação e mobília concluídas com PASS dirigido, exceção CI (#4)
   BF-4D ✅ organização espacial, passagens e zonas — PASS dirigido, CI FAIL aceita (#4/#11)
   BF-4E ✅ dez famílias e três atmosferas contextuais, interação canvas e Segredo do Pergaminho 4/4 — Moto G06 PASS; CI E2E FAIL aceita (#4/#11)
-  BF-4F ⏳ concepção de 4 habitantes sobrenaturais aprovada — implementação de animação, IA local e quests RPG pendente
-    BF-4F1 ⏳ produzir os quatro modelos distintos e integrá-los aos cinco cômodos; validar rigging/GLB no trabalho real, sem preflight separado
+  BF-4F 🔄 habitantes integrados; animação, IA local e quests RPG pendentes
+    BF-4F1 ✅ modelos distintos integrados e seleção por canvas/React — PASS físico dirigido
     BF-4F2 ⏳ animações variadas e transições individuais
     BF-4F3 ⏳ comportamento autônomo, relações e interação ambiental
     BF-4F4 ⏳ diálogos RPG ramificados (3–4 opções), 4 quests individuais e arco coletivo
@@ -423,3 +423,7 @@ O usuário adotou a criação inicial de **Samael (espírito demoníaco), Aryn (
 ## BF-4F — Sequência técnica aprovada sem preflight independente (2026-11-02)
 
 A execução terá **somente F1–F4**, com integração progressiva: **F1** cria/integra no mundo completo os quatro habitantes visualmente distintos (validação embutida de autoria, articulação, GLB/animador e descarte durante a produção de personagem real, **sem spike separado**); **F2** implementa movimentos/gestos/transições; **F3** desenvolve agência local, rotas, vínculos mútuos e eventos; **F4** entrega motor de diálogo por 3–4 botões, quatro quests individuais e uma coletiva. Cada checkpoint terá testes e revisão proporcionais, commit/push e **PR sem merge**; aprovação de PR e gate físico humanos posteriores. Contrato operacional: [BF-4F_PLANO_TECNICO.md](BF-4F_PLANO_TECNICO.md). Nenhuma F1–F4 iniciada por este planejamento. BF-4G e dívidas históricas permanecem.
+
+## BF-4F1 — Fechamento dirigido (2026-11-02)
+
+Quatro modelos iniciais integrados, fotos do mundo real no Moto G06 e seleção dos quatro pelo toque e React **aprovados pelo usuário**. Commit `de0bea64718ccfb2501a11f1541d8ac4abca3396`, [PR #13](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/13). Formatação, lint, TypeScript, 667 Vitest, áudio, build e relatório de performance PASS na [CI 41520167206](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41520167206); **E2E concluídos com **20 PASS, 6 FAIL e 1 flaky; CI global FAIL****. Microgestos de cabeça não equivalem a animação corporal: **F2 é a próxima etapa**. F3/F4, BF-4G, questões #4/#11, R-19 e TalkBack permanecem. As observações anteriores de F1 “aberta” ou “não implementada” são históricas. [Relatório](BF-4F1_RELATORIO.md).

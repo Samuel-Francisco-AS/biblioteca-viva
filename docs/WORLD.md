@@ -1,6 +1,6 @@
 # Mundo
 
-> Atualização BF-4F1 (2026-11-02): quatro modelos candidatos implementados e integrados, com fontes Blender, GLB animado por nó e seleção React/canvas. **F1 aberta** para revisão independente, refinamento de aura/asas e aceite artístico/físico. Trechos anteriores sobre ausência de código BF-4F descrevem a situação prévia. [Entrega, testes e pendências](BF-4F1_RELATORIO.md).
+> **BF-4F1 fechada no escopo dirigido (2026-11-02):** os quatro modelos iniciais e a seleção canvas/React foram aceitos no Moto G06. F2, F3 e F4 seguem pendentes. [Relatório F1](BF-4F1_RELATORIO.md).
 
 O mundo anterior foi encerrado pelo WORLD RESET e não constitui fundação futura. Phaser, `PlacedObject`, `WorldStructureState`, grid 32 e os contratos W3-A permanecem mortos.
 
@@ -210,3 +210,5 @@ Dez famílias ambientais em A–E têm ações locais e visuais, peças articula
 ## BF-4F — Concepção dos quatro habitantes aprovada (sem implementação; 2026-11-02)
 
 A decisão [ADR-013](decisions/ADR-013-bf-4f-quatro-habitantes-rpg.md) define **Samael, Aryn, Ytha e Lua** como quatro habitantes iniciais, com escalas 2,00/1,70/1,70/1,60 m, silhuetas e gestos diferentes, rotinas e vínculos mútuos, quests individuais e compartilhadas e diálogos RPG locais com 3–4 escolhas predefinidas por nó de decisão. O [documento BF-4F](BF-4F_CONCEPCAO_HABITANTES.md) é a autoridade criativa. As zonas/circulação BF-4D e eventos BF-4E são pontos de integração **futuros**, não prova de rotas, animações, quests ou comportamento implementados. Cinco cômodos seguem semanticamente neutros, sem persistência espacial/alteração Dexie; BF-4F aguarda implementação e gate físico. Issues #4/#11, R-19 e TalkBack permanecem.
+
+**Fechamento BF-4F1 (2026-11-02):** quatro habitantes integrados, visual inicial aprovado e seleção pelo canvas e React confirmada no Moto G06. Microgestos de cabeça não representam animação corporal; essa expressividade fica para BF-4F2. Capturas indicaram ~60 FPS pontuais, sem benchmark sustentado. [CI 41520167206](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41520167206) passou os gates não E2E e 667 Vitest; E2E final FAIL (20 PASS, 6 FAIL, 1 flaky), sem CI global PASS. Issues #4/#11, R-19 e TalkBack permanecem. [Relatório](BF-4F1_RELATORIO.md).

@@ -1,6 +1,6 @@
 # Estado atual
 
-> Atualização BF-4F1 (2026-11-02): quatro modelos candidatos implementados e integrados, com fontes Blender, GLB animado por nó e seleção React/canvas. **F1 aberta** para revisão independente, refinamento de aura/asas e aceite artístico/físico. Trechos anteriores sobre ausência de código BF-4F descrevem a situação prévia. [Entrega, testes e pendências](BF-4F1_RELATORIO.md).
+> **Fechamento BF-4F1 (2026-11-02):** modelos iniciais de Samael, Aryn, Ytha e Lua e seleção por canvas/React **aprovados pelo usuário no Moto G06**. F1 concluída no escopo dirigido; animações corporais ficam para **F2**, autonomia para F3, diálogos/quests para F4. [Relatório final](BF-4F1_RELATORIO.md). A CI não foi declarada verde porque E2E final falhou (20 PASS, 6 FAIL, 1 flaky).
 
 > Referência documental: 2026-11-02.
 > BF-4E: **concluída no escopo funcional e físico dirigido**, integração autorizada via PR #12 com **CI E2E FAIL assumida como dívida** (#4/#11). BF-4F é a próxima fase; TalkBack, R-19 e medição sustentada permanecem abertos.
@@ -140,7 +140,11 @@ BF-4 🔄 BF-4B–E CONCLUÍDAS NO ESCOPO DIRIGIDO — BF-4C/D/E COM EXCEÇÃO C
   BF-4C ✅ ampliação e mobília dos cinco cômodos — PASS dirigido; CI E2E FAIL aceita (#4)
   BF-4D ✅ organização espacial — auditoria e Moto G06 PASS dirigido; CI FAIL 19/21 aceita (#4/#11)
   BF-4E ✅ objetos vivos, interação por toque e atmosfera contextual — Moto G06 PASS dirigido; CI E2E FAIL aceita (#4/#11)
-  BF-4F ⏳ concepção de quatro habitantes sobrenaturais e quests RPG aprovada — IMPLEMENTAÇÃO PENDENTE
+  BF-4F 🔄 F1 CONCLUÍDA (gate dirigido); F2–F4 PENDENTES
+    BF-4F1 ✅ quatro habitantes integrados, seleção canvas/React — PASS físico dirigido
+    BF-4F2 ⏳ animações corporais e expressividade — PRÓXIMA
+    BF-4F3 ⏳ comportamento autônomo e relações
+    BF-4F4 ⏳ diálogo RPG e quests
   BF-4G ⏳ gate integrado PENDENTE
 ```
 
@@ -173,3 +177,7 @@ Implementação BF-4E em verificação na branch `feat/bf-4e-living-objects`. De
 ## BF-4F — Plano técnico aprovado, implementação não iniciada (2026-11-02)
 
 O usuário aprovou os quatro checkpoints **F1 (quatro personagens integrados), F2 (animações), F3 (agência/relações), F4 (diálogos RPG/quests)** e **rejeitou um preflight técnico separado por custo de tempo/cota Codex**. Validações de GLB/rigging/importação/animação/ownership serão feitas **dentro da produção de personagem definitivo na F1**, com evidência reaproveitável, sem protótipo descartável. F1 deverá apresentar **Samael, Aryn, Ytha e Lua** visualmente distintos no mundo completo, com seleção/alternativa React, respeitando renderer, BF-4D/E, F5 e Moto G06. Plano operacional: [BF-4F_PLANO_TECNICO.md](BF-4F_PLANO_TECNICO.md). **Ainda nenhuma feature BF-4F executada**; branch/PR, auditoria e gate físico próprios pendentes. Issues #4/#11, R-19 e TalkBack permanecem.
+
+## BF-4F1 — Fechamento dirigido (2026-11-02)
+
+Quatro modelos iniciais integrados, fotos do mundo real no Moto G06 e seleção dos quatro pelo toque e React **aprovados pelo usuário**. Commit `de0bea64718ccfb2501a11f1541d8ac4abca3396`, [PR #13](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/13). Formatação, lint, TypeScript, 667 Vitest, áudio, build e relatório de performance PASS na [CI 41520167206](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41520167206); **E2E concluídos com **20 PASS, 6 FAIL e 1 flaky; CI global FAIL****. Microgestos de cabeça não equivalem a animação corporal: **F2 é a próxima etapa**. F3/F4, BF-4G, questões #4/#11, R-19 e TalkBack permanecem. As observações anteriores de F1 “aberta” ou “não implementada” são históricas. [Relatório](BF-4F1_RELATORIO.md).

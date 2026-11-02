@@ -1,6 +1,6 @@
 # BF-4F — Plano técnico de execução dos quatro habitantes
 
-> Atualização BF-4F1 (2026-11-02): quatro modelos candidatos implementados e integrados, com fontes Blender, GLB animado por nó e seleção React/canvas. **F1 aberta** para revisão independente, refinamento de aura/asas e aceite artístico/físico. Trechos anteriores sobre ausência de código BF-4F descrevem a situação prévia. [Entrega, testes e pendências](BF-4F1_RELATORIO.md).
+> **Fechamento BF-4F1 (2026-11-02):** modelos iniciais de Samael, Aryn, Ytha e Lua e seleção por canvas/React **aprovados pelo usuário no Moto G06**. F1 concluída no escopo dirigido; animações corporais ficam para **F2**, autonomia para F3, diálogos/quests para F4. [Relatório final](BF-4F1_RELATORIO.md). A CI global terminou FAIL: 20 E2E PASS, 6 FAIL, 1 flaky; 667 Vitest e demais gates não E2E PASS.
 
 > **Estado em 2026-11-02:** planejamento técnico **aprovado**, sem implementação. Esta é a referência de **execução/checkpoints** para o Codex. Identidades, narrativas e animações desejadas estão na [Bíblia dos quatro habitantes](BF-4F_CONCEPCAO_HABITANTES.md). A autoridade de escopo é [BF-4 — Plano e contrato](BF-4_PLANO_CONTRATO.md), complementada pela [ADR-013](decisions/ADR-013-bf-4f-quatro-habitantes-rpg.md), [ADR-012](decisions/ADR-012-bf-4-mundo-vivo.md) e [ADR-010](decisions/ADR-010-3d-pipeline-v1.md).
 >
@@ -89,3 +89,7 @@ Cada checkpoint terá um **pedido de implementação específico**. O primeiro p
 | CI remota historicamente falha | Tratar #4/#11 como abertas; não esconder timeouts, separar resultado técnico de aceite físico |
 
 **Estado de referência:** BF-4E concluída em `main`, BF-4F1 **próxima implementação**. Este documento não a inicia, não cria branch/asset nem executa testes. A próxima conversa pode emitir o prompt BF-4F1 baseado neste contrato.
+
+## BF-4F1 — Fechamento dirigido (2026-11-02)
+
+Quatro modelos iniciais integrados, fotos do mundo real no Moto G06 e seleção dos quatro pelo toque e React **aprovados pelo usuário**. Commit `de0bea64718ccfb2501a11f1541d8ac4abca3396`, [PR #13](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/13). Formatação, lint, TypeScript, 667 Vitest, áudio, build e relatório de performance PASS na [CI 41520167206](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41520167206); **E2E final FAIL (20 PASS, 6 FAIL, 1 flaky); CI global FAIL**. Microgestos de cabeça não equivalem a animação corporal: **F2 é a próxima etapa**. F3/F4, BF-4G, questões #4/#11, R-19 e TalkBack permanecem. As observações anteriores de F1 “aberta” ou “não implementada” são históricas. [Relatório](BF-4F1_RELATORIO.md).

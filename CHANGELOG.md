@@ -1,6 +1,6 @@
 # Changelog
 
-## BF-4F1 — candidatos em revisão (2026-11-02)
+## BF-4F1 — concluída no escopo dirigido (2026-11-02)
 
 - Quatro habitantes 3D com fontes editáveis, microgesto e seleção canvas/React no mundo composto.
 - IDs de personagem independentes dos registros; fallback textual sem WebGL.
@@ -9,6 +9,9 @@
 Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog. O registro bruto anterior à reorganização documental, incluindo checkpoints intermediários, está preservado em `docs/history/legacy/CHANGELOG_LEGACY.md`.
 
 ## [Não lançado]
+
+**Fechamento BF-4F1 (2026-11-02):** quatro modelos iniciais de Samael, Aryn, Ytha e Lua aprovados no Moto G06; seleção canvas/React confirmada e [PR #13](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/13) autorizada a merge. Microgestos rígidos de cabeça apenas; **F2** permanece responsável por animação corporal e gestos, F3 por IA local, F4 por quests. [CI 41520167206](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41520167206): gates não E2E PASS, 667 unitários; E2E final FAIL (20 PASS, 6 FAIL, 1 flaky), sem alegação de CI global PASS. [Relatório](docs/BF-4F1_RELATORIO.md).
+
 
 ### BF-4F — Plano técnico de F1–F4 sem preflight isolado (documental; 2026-11-02)
 

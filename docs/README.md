@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> Atualização BF-4F1 (2026-11-02): quatro modelos candidatos implementados e integrados, com fontes Blender, GLB animado por nó e seleção React/canvas. **F1 aberta** para revisão independente, refinamento de aura/asas e aceite artístico/físico. Trechos anteriores sobre ausência de código BF-4F descrevem a situação prévia. [Entrega, testes e pendências](BF-4F1_RELATORIO.md).
+> **BF-4F1 encerrada no escopo dirigido (2026-11-02):** o usuário aprovou os quatro modelos iniciais e sua seleção canvas/React no Moto G06. Próxima fase F2 (animação corporal). [Relatório](BF-4F1_RELATORIO.md). CI global FAIL: 20 E2E PASS, 6 FAIL e 1 flaky.
 
 Este é o único índice da documentação ativa.
 
@@ -9,6 +9,7 @@ Este é o único índice da documentação ativa.
 | [`../README.md`](../README.md) | O que é a Biblioteca Viva? |
 | [`STATUS.md`](STATUS.md) | Onde estamos? |
 | [`ROADMAP.md`](ROADMAP.md) | Qual é o próximo trabalho? |
+| [`BF-4F1_RELATORIO.md`](BF-4F1_RELATORIO.md) | Qual foi o resultado físico, técnico e documental da integração dos quatro habitantes? |
 | [`BF-4F_PLANO_TECNICO.md`](BF-4F_PLANO_TECNICO.md) | Como executar BF-4F1–F4, criar os quatro personagens sem preflight separado e realizar gates/PRs? |
 | [`BF-4F_CONCEPCAO_HABITANTES.md`](BF-4F_CONCEPCAO_HABITANTES.md) | Quem são os quatro habitantes, como se relacionam, animam, agem e participam de quests com diálogos RPG? |
 | [`BF-4E_RELATORIO.md`](BF-4E_RELATORIO.md) | Como foi a implementação, revisão da experiência, aceite físico e fechamento dirigido da BF-4E com CI FAIL (#4/#11)? |
@@ -45,3 +46,5 @@ Este é o único índice da documentação ativa.
 A F1 encerrou o contrato temporário F0-D. [`ADR-009`](decisions/ADR-009-three-foundation.md) registra Three.js como renderer aprovado da Fundação; o contrato integral foi preservado em [`history/plans/`](history/plans/F0-D_THREE_FOUNDATION_SPIKE_CONTRACT.md).
 
 A [BF-4E](BF-4E_RELATORIO.md) foi concluída no escopo funcional e físico dirigido por autorização do usuário, preservando explicitamente as falhas E2E da CI como dívida técnica (#4/#11). A próxima etapa é BF-4F; sua [concepção de quatro habitantes](BF-4F_CONCEPCAO_HABITANTES.md) e a [ADR-013](decisions/ADR-013-bf-4f-quatro-habitantes-rpg.md) estão aprovadas documentalmente, **sem código implementado**. Não confundir esse planejamento com CI verde, TalkBack aprovado ou beta.
+
+**BF-4F1 concluída no escopo dirigido em 2026-11-02:** o usuário aceitou visualmente os quatro primeiros modelos e sua seleção no Moto G06; falta a expressividade da BF-4F2, IA local F3 e quests F4. [Relatório F1](BF-4F1_RELATORIO.md). Notas antigas sobre ausência de implementação são histórico, não estado vigente. E2E finalizou FAIL (20 PASS, 6 FAIL, 1 flaky); TalkBack e desempenho sustentado não foram declarados PASS.

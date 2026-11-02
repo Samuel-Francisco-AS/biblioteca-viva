@@ -1,6 +1,6 @@
-# BF-4F1 — quatro habitantes: implementação candidata
+# BF-4F1 — quatro habitantes: conclusão no escopo dirigido
 
-Data: 2026-11-02. **Fase aberta, sem aceite artístico/físico, sem revisão independente, sem merge.**
+Data: 2026-11-02. **Fase concluída no escopo visual e de integração dirigido, com merge da PR #13 expressamente autorizado pelo usuário.** As seções abaixo registram a situação inicial da candidata; a decisão final e suas ressalvas estão ao fim.
 
 ## Entrega efetiva
 
@@ -69,3 +69,19 @@ Capturas do mundo real integrado (Chromium, dados fictícios): [visão geral/Sam
 ### Regressão investigada durante o gate
 
 A introdução dos habitantes no início do catálogo fez o botão genérico “Próximo” selecionar Samael antes da estante. Isso causou falhas reais nos E2E desktop e orientação, com `character:samael` recebido em lugar de `reading-shelf-01`; **não era dívida histórica**. A correção mantém `character:*` fora da navegação anterior/próximo dos objetos, assim como `living:*` já era separado. Os personagens continuam selecionáveis pelo painel nominal e canvas. `WorldHost.test.tsx` cobre catálogo precedido pelos quatro habitantes e retorno à navegação de objetos após seleção de personagem. Os asserts E2E de estante/orientação foram preservados.
+
+## Fechamento BF-4F1 — gate físico dirigido aprovado (2026-11-02)
+
+**Aceite e autorização:** o usuário instalou no Moto G06 o APK da branch e apresentou quatro capturas reais, com Samael, Aryn, Lua e Ytha em diferentes cômodos. Considerou **os quatro modelos iniciais bons** e confirmou que **todos são selecionáveis diretamente pelo cenário 3D e pelo painel React**, sem regressão de seleção de livros/objetos percebida no teste dirigido. Autorizou expressamente **aprovar a integração, encerrar BF-4F1 e realizar merge da [PR #13](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/13)**. Isso constitui **PASS físico/artístico dirigido**, não teste exaustivo de todas as funcionalidades.
+
+**Escopo aceito:** quatro personagens distintos, arquivos GLB e fontes Blender editáveis, alturas e silhuetas próprias, integração no mundo de cinco cômodos, picking canvas e alternativa textual React; lifecycle próprio e microgestos técnicos. A ausência de **animações corporais perceptíveis** foi observada e aceita porque esses movimentos pertencem à **BF-4F2**. A F1 contém somente clip leve de cabeça via `AnimationMixer`, não caminhada, gestos completos, magia, rotinas autônomas ou quests.
+
+**Desempenho observado:** as quatro capturas do Moto G06 indicam cerca de **60,0–60,1 FPS e 16,7 ms/quadro** pontualmente. **Não** comprovam FPS sustentado, comportamento térmico, RAM/GPU sob carga ou coleção cheia.
+
+**CI remota [run 41520167206](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41520167206):** os gates de formato, ESLint, TypeScript, **667 Vitest**, áudio, build e relatório de performance **PASS**. Os **E2E concluíram com 20 PASS, 6 FAIL e 1 flaky; CI global FAIL**. Falharam: coleção cheia 1280/390px da BF-4D, segredo completo BF-4E, interação desktop e dez ciclos do shell R4, e abertura/edição/retorno dos seis tipos; não atribuir toda falha a problemas antigos sem prova. A regressão de botão “Próximo” que selecionava Samael foi corrigida antes do commit, mas deve permanecer sob auditoria de CI. Issues #4/#11, R-19, TalkBack e testes de estabilidade permanecem abertos.
+
+**Reservas artísticas:** rostos, auras, asas, poses, transições e expressividade podem ser refinados nas etapas próprias. O aceite dos modelos iniciais não implica conclusão de F2/F3/F4, BF-4G, beta ou release. As recomendações de testes ainda pendentes acima são **gates adicionais futuros**, não invalidação do aceite dirigido concedido.
+
+**Próximo checkpoint: BF-4F2 — animações e expressividade dos quatro habitantes**, reaproveitando a modelagem existente sem preflight independente. Não criar automaticamente branch/PR da F2 sem instrução. **F1: CONCLUÍDA por autorização do usuário.**
+
+**CI concluída após o início da documentação:** [run 41520167206](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41520167206) final **FAIL global**. Gates não E2E PASS, **667/667 Vitest em 85 arquivos**; Playwright **20 PASS, 6 FAIL e 1 flaky**. Falhas: BF-4D coleção cheia 1280/390; BF-4E segredo completo; R4 shell interação desktop e dez ciclos; reading-area seis tipos abrindo/editando/retornando. Flaky: BF-4D orientação/zoom/pan/seleção. Causas e regressões ainda não demonstradas. Este resultado não invalida o aceite dirigido do usuário nem autoriza declarar CI verde; todos esses cenários exigem triagem rastreável antes de gate integrado/release.

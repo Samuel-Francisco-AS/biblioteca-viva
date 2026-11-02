@@ -1,6 +1,6 @@
 # BF-4 — Mundo Vivo e Habitável: plano e contrato
 
-> Atualização BF-4F1 (2026-11-02): quatro modelos candidatos implementados e integrados, com fontes Blender, GLB animado por nó e seleção React/canvas. **F1 aberta** para revisão independente, refinamento de aura/asas e aceite artístico/físico. Trechos anteriores sobre ausência de código BF-4F descrevem a situação prévia. [Entrega, testes e pendências](BF-4F1_RELATORIO.md).
+> **BF-4F1 encerrada no escopo dirigido (2026-11-02):** o usuário aprovou os quatro modelos iniciais e sua seleção canvas/React no Moto G06. Próxima fase F2 (animação corporal). [Relatório](BF-4F1_RELATORIO.md). CI global FAIL: 20 E2E PASS, 6 FAIL e 1 flaky.
 
 > **Estado atual (2026-11-02):** BF-4A documental PASS; BF-4B concluída com PASS dirigido; BF-4C, **BF-4D e BF-4E encerradas no escopo técnico e físico/visual dirigido por exceção explícita ao gate de CI remota**. BF-4F–G pendentes. Issues #4 e #11, R-19 e TalkBack continuam abertos; sem beta/release. Trechos BF-4A preservam planejamento histórico. **Atualização de concepção BF-4F (ADR-013): quatro habitantes — Samael, Aryn, Ytha e Lua — e diálogos RPG ramificados com escolhas locais; nenhuma implementação BF-4F iniciada.** [Bíblia dos habitantes](BF-4F_CONCEPCAO_HABITANTES.md).
 >
@@ -123,3 +123,7 @@ A BF-4E entregou nos cinco cômodos dez famílias de objetos vivos, animações 
 ## BF-4F — Diretriz técnica vigente (2026-11-02)
 
 O usuário aprovou executar a BF-4F **diretamente pelos quatro checkpoints F1–F4, sem preflight independente**. As verificações técnicas de modelo, rigging, importação/GLB, animação e descarte serão incorporadas à **produção real dos quatro habitantes na F1**, começando pelo fluxo de um deles como entrega aproveitável, jamais por protótipo isolado. F1 apresenta os quatro com identidade visual convincente no mundo inteiro e seleção; F2 entrega repertórios de animação; F3, rotinas/relações entre os habitantes; F4, diálogos RPG e quests. Critérios objetivos e disciplina Codex/Git: [BF-4F_PLANO_TECNICO.md](BF-4F_PLANO_TECNICO.md). **Planejamento documentado, não autorização de merge nem gate técnico/físico de F1.**
+
+## BF-4F1 — Encerramento dirigido (2026-11-02)
+
+O usuário aprovou no Moto G06 os quatro modelos como primeira versão, confirmou seleção canvas/React e autorizou merge da [PR #13](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/13). F1 **CONCLUÍDA no escopo visual/integração dirigido**. Os microgestos de cabeça não equivalem a movimentos completos: **BF-4F2 é próxima** (animações corporais e expressão); depois F3 agência, F4 diálogo RPG. CI [41520167206](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41520167206): 667 Vitest, build e gates não E2E PASS; E2E final FAIL (20 PASS, 6 FAIL, 1 flaky), sem CI global PASS. #4/#11, R-19, TalkBack, desempenho sustentado e BF-4G pendentes. [Relatório F1](BF-4F1_RELATORIO.md).
