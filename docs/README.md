@@ -6,6 +6,7 @@ Este é o único índice da documentação ativa.
 
 | Documento | Pergunta respondida |
 |---|---|
+| [`BF-4F2_RELATORIO.md`](BF-4F2_RELATORIO.md) | O que a candidata de animações corporais entrega, como reproduzir e validar? |
 | [`../README.md`](../README.md) | O que é a Biblioteca Viva? |
 | [`STATUS.md`](STATUS.md) | Onde estamos? |
 | [`ROADMAP.md`](ROADMAP.md) | Qual é o próximo trabalho? |

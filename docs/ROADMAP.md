@@ -2,7 +2,7 @@
 
 > **Fechamento BF-4F1 (2026-11-02):** modelos iniciais de Samael, Aryn, Ytha e Lua e seleção por canvas/React **aprovados pelo usuário no Moto G06**. F1 concluída no escopo dirigido; animações corporais ficam para **F2**, autonomia para F3, diálogos/quests para F4. [Relatório final](BF-4F1_RELATORIO.md). A CI não foi declarada verde porque E2E final falhou (20 PASS, 6 FAIL, 1 flaky).
 
-Próximo trabalho autorizado: auditar/refinar os candidatos F1 e validar no Moto G06; F2–F4 permanecem futuros, sem implementação antecipada nesta entrega.
+BF-4F2 implementada como candidata: próxima etapa é auditoria independente e validação visual/física no Moto G06, com revisão da legibilidade dos gestos, asas e aura. F3 (agência/relações), F4 (RPG/quests) e BF-4G continuam futuros; esta entrega não os inicia. [Relatório F2](BF-4F2_RELATORIO.md).
 
 > Atualizado em 2026-11-02.
 

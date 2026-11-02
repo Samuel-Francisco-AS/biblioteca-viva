@@ -1,5 +1,11 @@
 # Changelog
 
+## BF-4F2 — candidata para auditoria (2026-11-02)
+
+- Habitantes articulados: repouso, passos com deslocamento local, giro, reação, cumprimento, atividades e magia cenográfica; Lua recupera postura após conjuração instável.
+- Controles contextuais no painel Habitantes, feedback textual de ação/carga/indisponibilidade/movimento reduzido.
+- Clips finitos e transições no RAF existente; fontes Blender e GLBs atualizados sem skinning ou dependências novas. Aceite artístico/físico pendente.
+
 ## BF-4F1 — concluída no escopo dirigido (2026-11-02)
 
 - Quatro habitantes 3D com fontes editáveis, microgesto e seleção canvas/React no mundo composto.

@@ -1,3 +1,4 @@
+import type { InhabitantAction } from "./inhabitants";
 export interface WorldSelectableObject {
   readonly entryId?: string;
   readonly id: string;
@@ -68,6 +69,10 @@ export interface WorldRuntime {
   pause(): void;
   resume(): void;
   resize(): void;
+  playInhabitantAction?(
+    id: string,
+    action: InhabitantAction,
+  ): "playing" | "loading" | "unavailable" | "reduced";
   selectObject(id: string | null): void;
   dispose(): void;
 }

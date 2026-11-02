@@ -63,3 +63,47 @@ test("BF-4F1 canvas selects all four loaded models", async ({ page }) => {
     await expect(canvas).toHaveAttribute("data-highlighted-object", actor.id);
   }
 });
+
+for (const actor of INHABITANTS)
+  test(`BF-4F2 ${actor.key}: directed actions in the five-room world`, async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const canvas = page.locator("canvas[data-three-world-canvas]");
+    await expect(canvas).toHaveAttribute("data-inhabitants-ready", "4");
+    const panel = page.getByLabel("Habitantes", { exact: true });
+    await panel.locator("summary").click();
+    {
+      await panel
+        .getByRole("button", { name: actor.label, exact: true })
+        .click();
+      for (const label of [
+        "Caminhar",
+        "Girar",
+        "Cumprimentar",
+        "Atividade",
+        "Habilidade",
+      ]) {
+        const button = panel.getByRole("button", { name: label, exact: true });
+        await button.focus();
+        await button.press("Enter");
+        await expect(panel.getByRole("status")).toContainText(
+          "Demonstração finita",
+        );
+        await expect(canvas).toHaveAttribute("data-selected-object", actor.id);
+      }
+      await canvas.screenshot({
+        path: `docs/evidence/bf4f2/world-${actor.key}.png`,
+      });
+    }
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const activity = panel.getByRole("button", {
+      name: "Atividade",
+      exact: true,
+    });
+    await activity.focus();
+    await activity.press("Enter");
+    await expect(panel.getByRole("status")).toContainText(
+      "Movimento reduzido ativo",
+    );
+  });

@@ -1,3 +1,4 @@
+import type { InhabitantAction } from "../inhabitants";
 import { createInhabitantVisuals } from "./inhabitantVisuals";
 import { createLivingVisuals } from "./livingVisuals";
 import type { LivingSession } from "../livingObjects";
@@ -841,6 +842,16 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.publishDiagnostics(false);
   }
 
+  playInhabitantAction(
+    id: string,
+    action: InhabitantAction,
+  ): "playing" | "loading" | "unavailable" | "reduced" {
+    if (this.isTerminal() || this.state !== "running") return "unavailable";
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)
+      return "reduced";
+    return this.inhabitants?.play(id, action) ?? "unavailable";
+  }
+
   selectObject(id: string | null): void {
     if (this.isTerminal()) return;
     this.mountedWorld?.getInteraction()?.selectObject(id);
@@ -960,6 +971,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     selection: WorldSelection,
   ): void => {
     if (this.isTerminal()) return;
+    if (selection?.id.startsWith("character:"))
+      this.playInhabitantAction(selection.id, "react");
     this.selection = selection;
     for (const listener of this.selectionListeners) listener(selection);
   };

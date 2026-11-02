@@ -1,5 +1,7 @@
 # Estado atual
 
+> **BF-4F2 candidata (2026-11-02):** quatro modelos F1 reaproveitados com articulação rígida corporal, oito clips por GLB, controlador isolado e ações dirigidas no painel Habitantes. 676 Vitest PASS; quatro E2E F2 e três E2E F1 PASS em rodadas dirigidas, gates estáticos/build/áudio e APK debug PASS. CI remota não avaliada; auditoria e aceite visual/físico no Moto G06 pendentes. [Relatório BF-4F2](BF-4F2_RELATORIO.md). F3/F4/G não implementadas.
+
 > **Fechamento BF-4F1 (2026-11-02):** modelos iniciais de Samael, Aryn, Ytha e Lua e seleção por canvas/React **aprovados pelo usuário no Moto G06**. F1 concluída no escopo dirigido; animações corporais ficam para **F2**, autonomia para F3, diálogos/quests para F4. [Relatório final](BF-4F1_RELATORIO.md). A CI não foi declarada verde porque E2E final falhou (20 PASS, 6 FAIL, 1 flaky).
 
 > Referência documental: 2026-11-02.
