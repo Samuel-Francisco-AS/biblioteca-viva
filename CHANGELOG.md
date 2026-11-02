@@ -4,6 +4,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 ## [Não lançado]
 
+### BF-4D — Organização espacial encerrada com exceção CI (2026-11-02)
+
+- Distribui as três estantes em três cômodos, reorganiza os 13 slots de registros nos cinco ambientes e compõe os mesmos 18 conjuntos de mobília junto às áreas de leitura, estudo e descanso.
+- Reserva circulação e aproximações livres, preservando passagens, seleção canvas/React, 70 livros, overflow e navegação. Define zonas/pontos declarativos para futuras atividades, sem executá-las.
+- **Fechamento BF-4D:** auditoria independente e gate visual/físico dirigido no Moto G06 aprovados (quatro capturas; arraste, zoom, seleção, orientação sem regressões relatadas). [CI PR #10/41405622312](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41405622312) **FAIL** com 645 Vitest PASS e 19/21 E2E PASS, timeouts de `r4-shell` histórico ([#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4)) e E2E novo BF-4D coleção cheia ([#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11)). Usuário aceitou explicitamente ambas as dívidas e autorizou merge; **CI não foi aprovada**. R-19/TalkBack e BF-4E–G pendentes; sem benchmark sustentado ou release. [Relatório final](docs/BF-4D_RELATORIO.md).
+
 ### BF-4C — ampliação, mobília e fechamento dirigido com exceção CI (2026-11-02)
 
 - Amplia os cinco cômodos e as quatro passagens, com exploração por pan/zoom sobre os pisos reais.

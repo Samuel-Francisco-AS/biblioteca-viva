@@ -1,3 +1,4 @@
+import { LIBRARY_SHELVES } from "../libraryShelfLayout";
 import { LIBRARY_ROOMS } from "../libraryBuildingGeometry";
 import {
   Color,
@@ -540,7 +541,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
         ? []
         : (() => {
             const composition = createProceduralComposition(
-              READING_SHELF_COMPOSITION_DEFINITIONS,
+              composedWorld
+                ? LIBRARY_SHELVES
+                : READING_SHELF_COMPOSITION_DEFINITIONS,
             );
             unattachedProceduralComposition = composition;
             scene.add(composition.root);

@@ -1,3 +1,4 @@
+import { LIBRARY_SHELVES } from "./libraryShelfLayout";
 import {
   Box3,
   Group,
@@ -36,10 +37,7 @@ import {
   createProceduralWorkRecord,
 } from "./three/libraryRecordRepresentations";
 import { getProceduralLibraryRecordDimensions } from "./three/libraryRecordDimensions";
-import {
-  createProceduralComposition,
-  READING_SHELF_COMPOSITION_DEFINITIONS,
-} from "./three/proceduralComposition";
+import { createProceduralComposition } from "./three/proceduralComposition";
 import { reconcileReadingAreaBookVisuals } from "./three/readingAreaBookVisuals";
 import { disposeObjectTree } from "./three/referenceScene";
 
@@ -322,9 +320,7 @@ describe("construção e layout provisórios consolidados", () => {
     expect(Object.isFrozen(assignment.placements)).toBe(true);
     expect(Object.isFrozen(assignment.overflow)).toBe(true);
     const building = createProceduralLibraryBuilding();
-    const composition = createProceduralComposition(
-      READING_SHELF_COMPOSITION_DEFINITIONS,
-    );
+    const composition = createProceduralComposition(LIBRARY_SHELVES);
     const books = reconcileReadingAreaBookVisuals(
       composition,
       source.categories[0].entries,
