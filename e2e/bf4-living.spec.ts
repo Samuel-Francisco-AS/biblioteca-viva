@@ -53,9 +53,7 @@ for (const fallback of [false, true]) {
     await expect(
       controls.getByText("Segredo do Pergaminho: 4/4"),
     ).toBeVisible();
-    await expect(
-      controls.getByText(/Atmosfera atual: encantada/u),
-    ).toBeVisible();
+    await expect(controls.getByText(/Atmosfera atual: encantada/u)).toBeVisible();
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(controls).toBeVisible();
     await page.reload();
