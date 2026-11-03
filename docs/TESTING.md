@@ -14,6 +14,8 @@
 
 ## Testes proporcionais, sem consumo exagerado de cota (2026-11-02)
 
+**Aplicação ao replanejamento BF-5 (2026-11-03):** a [ADR-014](decisions/ADR-014-replanejamento-pos-bf4.md) aprova reforma global integrada de UI/UX seguida de refinamentos, **não checkpoints pequenos obrigatórios**. Isso altera a **forma de entregar a interface**, não os critérios de evidência: durante a macroreforma, empregar verificações internas pertinentes, revisão da integração e gate físico no Moto G06 para a entrega substancial; em refinamentos, testar regressões do que for alterado. A CI global continua informativa sobre falhas históricas e novas, sem fabricar PASS.
+
 Inspecionar fontes relevantes, implementar diretamente no trabalho real, rodar testes **dirigidos ao escopo alterado** e uma rodada final proporcional. A suíte integrada roda na CI da PR; não repetir baterias globais ou ciclos de timeout sem novo diagnóstico. Investigar a causa antes de alterar; após até duas tentativas fundamentadas sem progresso, registrar o bloqueio e planejar triagem independente.
 
 Não mascarar defeitos com skips, retries e timeouts artificiais. Falhas novas da CI devem ser rastreadas separadamente das antigas: os quatro testes novos F2 passaram localmente, mas falharam na CI integrada [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15). Chromium/SwiftShader sob carga não equivale a desempenho Android. Gate físico e artístico não significa CI, TalkBack ou benchmark prolongado PASS. Ver [direção artística](ART_DIRECTION.md).
