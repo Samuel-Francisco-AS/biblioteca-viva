@@ -19,7 +19,7 @@
 - A rota Biblioteca hospeda a Fundação Three.js por `WorldHost` e `ThreeWorldRuntime`; Three.js é o renderer aprovado.
 - A cena atual é uma fixture técnica descartável: não existe ainda Biblioteca final nem persistência espacial. Não crie contratos espaciais especulativos antes das fases autorizadas.
 - BF é a trilha funcional prioritária sob a ADR-011; P3D-B2–F estão adiados até necessidade demonstrada de GLB definitivo.
-- Conteúdo procedural produtivo não promove fixtures F1/F4 ou cenários F5. Execute checkpoints BF pequenos, com testes proporcionais, antes de integrar conteúdo ao runtime.
+- Conteúdo procedural produtivo não promove fixtures F1/F4 ou cenários F5. A orientação histórica de checkpoints BF pequenos não se aplica à **BF-5 vigente**: a [ADR-014](docs/decisions/ADR-014-replanejamento-pos-bf4.md) estabelece uma **reforma global integrada de UI/UX**, seguida por rodadas de refinamento, sem subdivisão obrigatória em pequenos checkpoints. Preservar testes proporcionais, gates e segurança em qualquer método.
 
 ## Prioridade artística e economia responsável de cota (decisão de 2026-11-02)
 
@@ -28,6 +28,8 @@
 Produzir **trabalho útil e visualmente convincente primeiro**; medir gargalos reais antes de otimizar. Evitar preflights descartáveis, refatorações preventivas, hard budgets inventados e otimizações por contagem de meshes ou timeout headless isolado.
 
 **Proteger a cota Codex:** leitura focada dos arquivos ativos, checkpoints produtivos, testes dirigidos na implementação e uma rodada final proporcional. Não consumir cota em loops de Playwright/SwiftShader, retries e ajustes de timeouts sem nova hipótese. Após até duas tentativas de correção fundamentadas sem progresso na mesma causa, registrar o bloqueio e preservar o trabalho seguro. Nunca omitir asserts ou testes, e registrar falhas novas da CI separadamente das antigas. Aceite artístico é humano; não implica CI verde. [Arte](docs/ART_DIRECTION.md), [testes](docs/TESTING.md), [desempenho](docs/PERFORMANCE.md).
+
+**Regra pós-BF-4 (2026-11-03):** sequência **BF-5 UI/UX → BF-6 Mundo Vivo/RPG → BF-7 consolidação funcional/assistiva (antiga BF-5)**. Em BF-5, planejar primeiro o design geral e entregar uma reforma de interface substancial e coesa; somente depois refinar com feedback do usuário até o aceite. **Não impor pequenos checkpoints de implementação**, preflights descartáveis ou protótipos em substituição à reforma solicitada. Commits internos, testes dirigidos, validação no Moto G06 e triagem de falhas reais permanecem permitidos/necessários, sem alegação prematura de CI verde. Replanejamento documental **não autoriza execução**, nem altera limites arquiteturais ou gates assistivos. [ADR-014](docs/decisions/ADR-014-replanejamento-pos-bf4.md).
 
 ## Escopo e qualidade
 
