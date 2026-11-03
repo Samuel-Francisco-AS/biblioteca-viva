@@ -414,34 +414,39 @@ export function CollectionPage({
                     {recordSymbols[entry.type]}
                   </span>
                   <div className="record-tile__content">
-                  <p className="eyebrow">
-                    {entryTypeLabels[entry.type]}
-                    {entry.favorite ? " · Favorito" : ""}
-                  </p>
-                  <p className="status-badge">{statusLabels[entry.status]}</p>
-                  <h3 id={`entry-${entry.id}-title`}>{entry.title}</h3>
-                  <p>{secondaryText(entry)}</p>
-                  {entry.type === "book" && (
-                    <>
-                      <p>{progressText(entry)}</p>
-                      {entry.totalPages !== undefined ? (
-                        <progress
-                          aria-label={`Progresso de ${entry.title}`}
-                          max={entry.totalPages}
-                          value={Math.min(entry.currentPage, entry.totalPages)}
-                        />
-                      ) : (
-                        <p className="progress-unknown">
-                          Porcentagem indisponível sem total de páginas.
-                        </p>
-                      )}
-                      <span className="visually-hidden">
-                        {progressPercentage(entry) ?? ""}
-                      </span>
-                    </>
-                  )}
+                    <p className="eyebrow">
+                      {entryTypeLabels[entry.type]}
+                      {entry.favorite ? " · Favorito" : ""}
+                    </p>
+                    <p className="status-badge">{statusLabels[entry.status]}</p>
+                    <h3 id={`entry-${entry.id}-title`}>{entry.title}</h3>
+                    <p>{secondaryText(entry)}</p>
+                    {entry.type === "book" && (
+                      <>
+                        <p>{progressText(entry)}</p>
+                        {entry.totalPages !== undefined ? (
+                          <progress
+                            aria-label={`Progresso de ${entry.title}`}
+                            max={entry.totalPages}
+                            value={Math.min(
+                              entry.currentPage,
+                              entry.totalPages,
+                            )}
+                          />
+                        ) : (
+                          <p className="progress-unknown">
+                            Porcentagem indisponível sem total de páginas.
+                          </p>
+                        )}
+                        <span className="visually-hidden">
+                          {progressPercentage(entry) ?? ""}
+                        </span>
+                      </>
+                    )}
                   </div>
-                  <span className="record-tile__arrow" aria-hidden="true">↗</span>
+                  <span className="record-tile__arrow" aria-hidden="true">
+                    ↗
+                  </span>
                 </article>
               </Link>
             </li>

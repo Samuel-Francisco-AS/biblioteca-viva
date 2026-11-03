@@ -27,9 +27,10 @@ describe("modelo de câmera da F3", () => {
     expect(openingComposedWorldZoom(844, 390)).toBe(CAMERA_MIN_ZOOM);
     expect(openingComposedWorldZoom(0, 844)).toBe(CAMERA_MIN_ZOOM);
     expect(openingComposedWorldZoom(390, Number.NaN)).toBe(CAMERA_MIN_ZOOM);
-    expect(openingComposedWorldZoom(390, 844)).toBeLessThanOrEqual(CAMERA_MAX_ZOOM);
+    expect(openingComposedWorldZoom(390, 844)).toBeLessThanOrEqual(
+      CAMERA_MAX_ZOOM,
+    );
   });
-
 
   it("deriva framing técnico com padding explícito em portrait e landscape", () => {
     expect(CAMERA_FRAMING_PADDING).toBeGreaterThan(1);

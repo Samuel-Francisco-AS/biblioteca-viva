@@ -299,123 +299,123 @@ export function EntryDetailPage({
       </div>
       {error && <p role="alert">{error}</p>}
       <div className="entry-detail-sections">
-      <section className="content-card" aria-labelledby="entry-data-title">
-        <h3 id="entry-data-title">Detalhes</h3>
-        <ul>
-          {details(currentEntry).map((value) => (
-            <li key={value}>{value}</li>
-          ))}
-        </ul>
-        <div className="form-actions">
-          {currentEntry.status === "planned" && (
-            <button
-              disabled={busy}
-              type="button"
-              className="button button--primary"
-              onClick={() => void changeStatus("in_progress")}
-            >
-              Iniciar
-            </button>
-          )}
-          {currentEntry.status !== "completed" &&
-            currentEntry.status !== "abandoned" && (
+        <section className="content-card" aria-labelledby="entry-data-title">
+          <h3 id="entry-data-title">Detalhes</h3>
+          <ul>
+            {details(currentEntry).map((value) => (
+              <li key={value}>{value}</li>
+            ))}
+          </ul>
+          <div className="form-actions">
+            {currentEntry.status === "planned" && (
               <button
                 disabled={busy}
                 type="button"
-                className="button button--secondary"
-                onClick={() => void changeStatus("completed")}
+                className="button button--primary"
+                onClick={() => void changeStatus("in_progress")}
               >
-                Concluir
+                Iniciar
               </button>
             )}
-          <button
-            disabled={busy}
-            type="button"
-            className="button button--danger"
-            onClick={() => void removeEntry()}
-          >
-            Excluir registro
-          </button>
-        </div>
-      </section>
-      {(currentEntry.type === "series" || currentEntry.type === "study") && (
-        <form
-          className="content-card"
-          onSubmit={(event) => void updateProgress(event)}
-        >
-          <h3>Atualizar progresso</h3>
-          <div className="form-field">
-            <label htmlFor="entry-progress">
-              {currentEntry.type === "series"
-                ? "Episódios assistidos"
-                : currentEntry.progressUnit === "hours"
-                  ? "Horas estudadas"
-                  : `Progresso em ${currentEntry.progressUnit}`}
-            </label>
-            <input
-              id="entry-progress"
-              name="progress"
-              type="number"
-              min="0"
-              required
-            />
+            {currentEntry.status !== "completed" &&
+              currentEntry.status !== "abandoned" && (
+                <button
+                  disabled={busy}
+                  type="button"
+                  className="button button--secondary"
+                  onClick={() => void changeStatus("completed")}
+                >
+                  Concluir
+                </button>
+              )}
+            <button
+              disabled={busy}
+              type="button"
+              className="button button--danger"
+              onClick={() => void removeEntry()}
+            >
+              Excluir registro
+            </button>
           </div>
-          <button
-            className="button button--primary"
-            disabled={busy}
-            type="submit"
+        </section>
+        {(currentEntry.type === "series" || currentEntry.type === "study") && (
+          <form
+            className="content-card"
+            onSubmit={(event) => void updateProgress(event)}
           >
-            Salvar progresso
-          </button>
-        </form>
-      )}
-      <section className="content-card" aria-labelledby="entry-notes-title">
-        <h3 id="entry-notes-title">Notas</h3>
-        <form onSubmit={(event) => void addNote(event)}>
-          <div className="form-field">
-            <label htmlFor="entry-note">Nova nota</label>
-            <textarea id="entry-note" name="note" required />
-          </div>
-          <button
-            className="button button--primary"
-            disabled={busy}
-            type="submit"
-          >
-            Adicionar nota
-          </button>
-        </form>
-        {notes.length === 0 ? (
-          <p>Nenhuma nota neste registro.</p>
-        ) : (
-          <ul>
-            {notes.map((note) => (
-              <li key={note.id}>{note.content}</li>
-            ))}
-          </ul>
+            <h3>Atualizar progresso</h3>
+            <div className="form-field">
+              <label htmlFor="entry-progress">
+                {currentEntry.type === "series"
+                  ? "Episódios assistidos"
+                  : currentEntry.progressUnit === "hours"
+                    ? "Horas estudadas"
+                    : `Progresso em ${currentEntry.progressUnit}`}
+              </label>
+              <input
+                id="entry-progress"
+                name="progress"
+                type="number"
+                min="0"
+                required
+              />
+            </div>
+            <button
+              className="button button--primary"
+              disabled={busy}
+              type="submit"
+            >
+              Salvar progresso
+            </button>
+          </form>
         )}
-      </section>
-      {(currentEntry.type === "movie" ||
-        currentEntry.type === "series" ||
-        currentEntry.type === "study") && (
-        <section className="content-card">
-          <h3>Citações</h3>
-          {quotes.length === 0 ? (
-            <p>Nenhuma citação neste registro.</p>
+        <section className="content-card" aria-labelledby="entry-notes-title">
+          <h3 id="entry-notes-title">Notas</h3>
+          <form onSubmit={(event) => void addNote(event)}>
+            <div className="form-field">
+              <label htmlFor="entry-note">Nova nota</label>
+              <textarea id="entry-note" name="note" required />
+            </div>
+            <button
+              className="button button--primary"
+              disabled={busy}
+              type="submit"
+            >
+              Adicionar nota
+            </button>
+          </form>
+          {notes.length === 0 ? (
+            <p>Nenhuma nota neste registro.</p>
           ) : (
             <ul>
-              {quotes.map((quote) => (
-                <li key={quote.id}>{quote.content}</li>
+              {notes.map((note) => (
+                <li key={note.id}>{note.content}</li>
               ))}
             </ul>
           )}
         </section>
-      )}
-      <OrganizationPanel
-        application={availableApplication}
-        entry={currentEntry}
-        onChange={setEntry}
-      />
-      <SessionPanel application={availableApplication} entry={currentEntry} />
+        {(currentEntry.type === "movie" ||
+          currentEntry.type === "series" ||
+          currentEntry.type === "study") && (
+          <section className="content-card">
+            <h3>Citações</h3>
+            {quotes.length === 0 ? (
+              <p>Nenhuma citação neste registro.</p>
+            ) : (
+              <ul>
+                {quotes.map((quote) => (
+                  <li key={quote.id}>{quote.content}</li>
+                ))}
+              </ul>
+            )}
+          </section>
+        )}
+        <OrganizationPanel
+          application={availableApplication}
+          entry={currentEntry}
+          onChange={setEntry}
+        />
+        <SessionPanel application={availableApplication} entry={currentEntry} />
       </div>
     </section>
   );

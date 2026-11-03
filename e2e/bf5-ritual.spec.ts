@@ -18,7 +18,10 @@ test("BF-5R3: a coleção usa fichas de acervo e detalhes ergonômicos", async (
   );
   expect(noHorizontalOverflow).toBe(true);
 
-  await page.getByRole("link", { name: /^Abrir detalhes de /u }).first().click();
+  await page
+    .getByRole("link", { name: /^Abrir detalhes de /u })
+    .first()
+    .click();
   await expect(page.locator(".entry-detail-hero")).toBeVisible();
   await expect(page.locator(".entry-detail-sections")).toBeVisible();
 

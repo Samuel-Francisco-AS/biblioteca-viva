@@ -410,7 +410,8 @@ export function openingComposedWorldZoom(
     !Number.isFinite(height) ||
     width <= 0 ||
     height <= 0
-  ) return CAMERA_MIN_ZOOM;
+  )
+    return CAMERA_MIN_ZOOM;
   const aspect = width / height;
   if (aspect < 0.65) return 2;
   if (aspect < 0.9) return 1.45;
