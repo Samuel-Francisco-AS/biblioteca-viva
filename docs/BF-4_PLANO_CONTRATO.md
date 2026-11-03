@@ -1,5 +1,10 @@
 # BF-4 — Mundo Vivo e Habitável: plano e contrato
 
+> **BF-4G E BF-4 CONCLUÍDAS NO ESCOPO TÉCNICO/FUNCIONAL DIRIGIDO (2026-11-03), com exceção CI explicitamente aceita.** Auditoria independente da candidata documental sem bloqueante inequívoco nem mudança de produção; gate físico Moto G06 fornecido pelo usuário **6/6 PASS**: mundo/navegação, registros/objetos vivos, habitantes, RPG/diário, lifecycle e observações residuais. Esses PASS atestam a rodada representativa, **não** teste de cada variação, do folio F3 de Lua, de R-19 em condições específicas, de TalkBack nem de carga/temperatura sustentadas. [CI PR #18 — run 41570848247](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41570848247) **FAIL global**: 708 Vitest PASS; E2E 30 PASS, 3 FAIL e 1 flaky (busca/Arquivo). FAIL: BF-4D coleção cheia 1280px (#11), BF-4F2 Samael (#15) e dez ciclos shell (#4). Causa do runner versus produto **não demonstrada**; issues [#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4), [#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11) e [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15) seguem abertas. O usuário **autorizou expressamente o fechamento e merge da [PR #18](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/18)** com estas ressalvas, sem CI verde, beta/release ou BF-5 iniciada. Refinamento futuro de **UI/UX** e, separadamente, de **personagens, RPG, diálogos e interatividade** permanece planejado sem numeração/implementação autorizada. [Relatório de fechamento](BF-4G_RELATORIO.md).
+
+As notas datadas abaixo preservam a cronologia; declarações antigas de fase próxima ou não implementada não substituem o estado BF-4G acima.
+
+
 > **Atualização de estado pós-BF-4F4 (2026-11-02):** BF-4F1–F4 concluídas em recorte funcional/físico dirigido. A BF-4F4 recebeu aceite do usuário para as escolhas funcionando no Moto G06 e autorização de merge da [PR #17](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/17), com [CI global FAIL (23 E2E PASS, 11 FAIL)](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41550602711). A PR não comprova todas as cenas/finais fisicamente; ressalva do folio de Lua F3, #4/#11/#15, TalkBack e R-19 permanecem. **BF-4G é próxima: gate integrado ainda não executado.** UI/UX e evolução posterior de personagens/RPG/diálogos/interatividade terão fases distintas futuramente; isso não autoriza implementação nem beta/release. [Fechamento F4](BF-4F4_RELATORIO.md).
 
 > **Estado atual (2026-11-02):** BF-4A documental PASS; BF-4B concluída com PASS dirigido; BF-4C, **BF-4D e BF-4E encerradas no escopo técnico e físico/visual dirigido por exceção explícita ao gate de CI remota**. BF-4F–G pendentes. Issues #4 e #11, R-19 e TalkBack continuam abertos; sem beta/release. Trechos BF-4A preservam planejamento histórico. **Atualização de concepção BF-4F (ADR-013): quatro habitantes — Samael, Aryn, Ytha e Lua — e diálogos RPG ramificados com escolhas locais; nenhuma implementação BF-4F iniciada.** [Bíblia dos habitantes](BF-4F_CONCEPCAO_HABITANTES.md).
@@ -80,7 +85,7 @@ Autorização de 2026-11-02 implementa D1–D4 na branch própria, sobre o merge
 
 **Extensão criativa adotada em 2026-11-02 (registro anterior ao fechamento):** a BF-4E evolui de ações isoladas para um ambiente interativo integrado. [Visão e contrato BF-4E](BF-4E_VISAO_CONTRATO.md): dez famílias-alvo de objetos vivos (mínimo de oito plenamente funcionais), animações reais de props, luz cênica dinâmica, efeitos sonoros/táteis opcionais, três atmosferas, estados efêmeros, eventos locais e uma descoberta ficcional encadeada. Cinco cômodos, React acessível e distinção entre interação ambiental e registros convencionais são obrigatórios. Isso é **visão aprovada, não código pronto, não autorização de merge, nem escopo BF-4F**. Gate físico e CI futuros; dívidas #4/#11, R-19 e TalkBack preservadas.
 
-### BF-4F — Habitantes, animação, comportamento e conversa (PENDENTE)
+### BF-4F — Habitantes, animação, comportamento e conversa (CONCLUÍDA NO ESCOPO DIRIGIDO)
 
 **F1 — Identidade visual e personagem:** meta inicial de **quatro habitantes (Samael, Aryn, Ytha e Lua)**, com silhueta, traje/acessórios, escala, rosto/expressão visual e papel próprios; todos integrados aos cinco cômodos e selecionáveis via canvas/React. **Não há preflight experimental separado:** validar articulação, GLB/animador, normalização e descarte usando um dos personagens definitivos na própria F1, aproveitando essa implementação nos outros três. Gate visual humano posterior; nenhuma recoloração superficial do mesmo boneco. Ver [plano técnico BF-4F](BF-4F_PLANO_TECNICO.md).
 
@@ -92,11 +97,11 @@ Autorização de 2026-11-02 implementa D1–D4 na branch própria, sobre o merge
 
 - **Gate F:** **quatro personagens distintivos** em cenário integrado, várias animações demonstráveis, execução autônoma com rotas/atividades seguras, relações/interações entre os próprios habitantes, objetos e **diálogo RPG com escolhas ramificadas, quatro quests individuais e um arco compartilhado**;  nenhuma regressão dos seis tipos. Provas de cancelamento, estado terminal, memória efêmera, redução de movimento, rotas e interação sob orientação/background, além de validação no Moto G06.
 
-### BF-4G — Integração, gate físico e fechamento (PENDENTE)
+### BF-4G — Integração, gate físico e fechamento (CONCLUÍDA NO ESCOPO DIRIGIDO; EXCEÇÃO CI)
 
 - Regressão proporcional consolidada: `format:check`, `lint`, `typecheck`, Vitest, `audio:check`, build, `performance:report`, E2E aplicáveis, `git diff --check`; build Android e verificações humanas separadas.
 - Moto G06: os cinco cômodos, objetos e personagens; seleção canvas/React, diálogo/interação, fluidez com animações, pan/pinch/zoom, retrato/paisagem, pausa/retomada, runtime/disposal, fallback; memória/termal quando mudança justificar.
-- **Gate G:** classificar PASS/FAIL e limitações sem apagar a dívida CI/issue #4 nem declarar TalkBack aprovado sem evidência humana; atualizar documentação e decidir transição à BF-5.
+- **Gate G:** auditoria independente, gate físico e autorização expressa são necessários para encerrar BF-4G/BF-4. Classificar PASS técnico dirigido, PASS com ressalvas dependente de aceite, FAIL ou NOT RUN e limitações sem apagar a dívida CI/issue #4 nem declarar TalkBack aprovado sem evidência humana; atualizar documentação e decidir transição à BF-5.
 - **BF-5** continua responsável pela consolidação funcional e gate humano assistivo antes do primeiro recorte real/beta.
 
 ## Questões técnicas condicionais, não bloqueios para B
@@ -127,3 +132,9 @@ O usuário aprovou executar a BF-4F **diretamente pelos quatro checkpoints F1–
 ## BF-4F1 — Encerramento dirigido (2026-11-02)
 
 O usuário aprovou no Moto G06 os quatro modelos como primeira versão, confirmou seleção canvas/React e autorizou merge da [PR #13](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/13). F1 **CONCLUÍDA no escopo visual/integração dirigido**. Os microgestos de cabeça não equivalem a movimentos completos: **BF-4F2 é próxima** (animações corporais e expressão); depois F3 agência, F4 diálogo RPG. CI [41520167206](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41520167206): 667 Vitest, build e gates não E2E PASS; E2E final FAIL (20 PASS, 6 FAIL, 1 flaky), sem CI global PASS. #4/#11, R-19, TalkBack, desempenho sustentado e BF-4G pendentes. [Relatório F1](BF-4F1_RELATORIO.md).
+
+## BF-4G / BF-4 — fechamento técnico-funcional dirigido (2026-11-03)
+
+A etapa de integração BF-4G não precisou alterar produção. A auditoria independente considerou coerente a matriz de contratos B–F e não encontrou bloqueante inequívoco. O usuário confirmou **6/6 PASS no Moto G06** (mundo, registros/objetos vivos, habitantes, RPG/diário, lifecycle e observações residuais) e autorizou expressamente o fechamento e merge da [PR #18](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/18). **BF-4G e BF-4: CONCLUÍDAS NO ESCOPO DIRIGIDO COM RESSALVAS.**
+
+O [run CI 41570848247](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41570848247) foi **FAIL global**, com 708 Vitest PASS e E2E **30 PASS/3 FAIL/1 flaky**. Dívidas #4/#11/#15 não resolvidas, busca/Arquivo flaky e causas de timeout não comprovadas. TalkBack humano, folio Lua, R-19, desempenho prolongado, todos os finais e beta/release não foram aprovados. BF-5 e duas frentes futuras de aprimoramento (UI/UX; personagens/RPG/interatividade) exigem planejamento/decisão próprios. Registrar o resultado efetivo no [fechamento BF-4G](BF-4G_RELATORIO.md); declarações anteriores neste plano sobre G pendente descrevem estado histórico.
