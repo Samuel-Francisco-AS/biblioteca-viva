@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import {
   Link,
   Navigate,
@@ -32,6 +33,7 @@ import { useAudioExperience } from "./useAudioExperience";
 import { measureStartupPhase } from "./startupPerformance";
 import "./styles.css";
 import "./styles-arcane.css";
+import "./styles-touch.css";
 
 function NotFoundPage() {
   return (
@@ -73,6 +75,8 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   const location = useLocation();
   const mainRef = useRef<HTMLElement>(null);
   const previousPathRef = useRef(location.pathname);
+  const pressedRef = useRef<HTMLElement | null>(null);
+  const pressedTimeoutRef = useRef<number | null>(null);
   const activeRoute = appRoutes.find(
     (route) => route.path === location.pathname,
   );
@@ -108,9 +112,44 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
     }
   }, [location.pathname]);
 
+  useEffect(
+    () => () => {
+      if (pressedTimeoutRef.current !== null)
+        window.clearTimeout(pressedTimeoutRef.current);
+      pressedRef.current?.removeAttribute("data-tap-active");
+    },
+    [],
+  );
+
+  function revealTap(event: ReactPointerEvent<HTMLDivElement>): void {
+    if (event.pointerType === "mouse") return;
+    if (!(event.target instanceof Element)) return;
+    const control = event.target.closest<HTMLElement>(
+      "button, a, summary, [role='button']",
+    );
+    if (
+      !control ||
+      control.matches(":disabled, [aria-disabled='true']") ||
+      !event.currentTarget.contains(control)
+    )
+      return;
+
+    pressedRef.current?.removeAttribute("data-tap-active");
+    if (pressedTimeoutRef.current !== null)
+      window.clearTimeout(pressedTimeoutRef.current);
+    control.setAttribute("data-tap-active", "true");
+    pressedRef.current = control;
+    pressedTimeoutRef.current = window.setTimeout(() => {
+      control.removeAttribute("data-tap-active");
+      if (pressedRef.current === control) pressedRef.current = null;
+      pressedTimeoutRef.current = null;
+    }, 230);
+  }
+
   return (
     <div
       className="app-shell"
+      onPointerDownCapture={revealTap}
       data-route={
         location.pathname === "/" ? "library" : location.pathname.split("/")[1]
       }

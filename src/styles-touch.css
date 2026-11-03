@@ -1,0 +1,289 @@
+/* BF-5R2 — touch and transition refinements for the mobile APK.
+ * Keep world pixels uncovered, avoid full-screen blur during route changes,
+ * and make tactile responses visible without adding a navigation delay.
+ */
+
+/* The canvas is genuinely edge-to-edge. Only the upper atmosphere is shaded:
+   the previous full-screen bottom-gradient looked like a glass sheet. */
+[data-route="library"] .library-scene-vignette {
+  inset: 0 0 auto;
+  height: clamp(7rem, 25dvh, 13rem);
+  background: linear-gradient(
+    to bottom,
+    rgb(4 17 25 / 63%),
+    rgb(4 17 25 / 16%) 58%,
+    transparent
+  );
+}
+
+[data-route="library"] .library-page .living-world-stage,
+[data-route="library"] .library-page .world-host {
+  bottom: 0;
+  height: 100dvh;
+}
+
+[data-route="library"] .library-page .world-host {
+  min-height: 100dvh;
+}
+
+/* Filtering an entire entering route or blurring several translucent
+   surfaces causes expensive repaints on Android WebView. */
+.app-shell:not([data-route="library"]) .app-content > section,
+.app-shell:not([data-route="library"]) .app-content > article {
+  animation: arc-route-arrive 190ms cubic-bezier(0.22, 0.76, 0.2, 1) both;
+}
+
+.realm-intro {
+  animation: none;
+}
+
+.realm-intro__seal {
+  filter: none;
+  animation: arc-sigil-drift 5s ease-in-out infinite alternate;
+}
+
+.primary-dock,
+.exploration-compass,
+.library-page .rpg-tools button,
+.library-page[data-tools-open="true"] .library-access-panels {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.primary-dock {
+  background:
+    linear-gradient(155deg, rgb(97 73 134 / 16%), transparent 48%),
+    rgb(11 18 36 / 98%);
+}
+
+@keyframes arc-route-arrive {
+  from {
+    opacity: 0.55;
+    transform: translate3d(0, 9px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes arc-sigil-drift {
+  from {
+    opacity: 0.82;
+    transform: rotate(-2deg) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotate(2deg) scale(1.025);
+  }
+}
+
+/* Intentional touch feedback: a short, visible pressed state on mobile.
+   React sets data-tap-active on pointerdown, not after an action completes. */
+.app-shell :is(.button, .primary-dock__link, .category-ribbon button,
+  .book-card__link, .rpg-choices button, .exploration-compass,
+  .library-page .rpg-tools button, summary) {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.app-shell :is(.button, .primary-dock__link, .category-ribbon button,
+  .book-card__link, .rpg-choices button, .exploration-compass,
+  .library-page .rpg-tools button):is(:active, [data-tap-active="true"]) {
+  transform: translate3d(0, 2px, 0) scale(0.972);
+  filter: brightness(1.13);
+  border-color: #eed3fa;
+  box-shadow: 0 0 0 2px rgb(209 169 247 / 35%);
+}
+
+.app-shell .primary-dock__link:is(:active, [data-tap-active="true"]) {
+  background: rgb(134 105 187 / 32%);
+  color: #fff2ff;
+}
+
+.app-shell .category-ribbon button:is(:active, [data-tap-active="true"]) {
+  background: #554267;
+  color: #fff2f7;
+}
+
+.app-shell .book-card__link:is(:active, [data-tap-active="true"]) {
+  border-color: #dcc6fa;
+  background: #293047;
+}
+
+.app-shell summary[data-tap-active="true"] {
+  color: #f9e6ca;
+  background: rgb(185 156 240 / 12%);
+  border-radius: 0.6rem;
+}
+
+.primary-dock__link[aria-current="page"]::after {
+  position: absolute;
+  top: 0.35rem;
+  right: 21%;
+  left: 21%;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: radial-gradient(ellipse, rgb(187 145 248 / 19%), transparent 70%);
+  content: "";
+  pointer-events: none;
+  animation: arc-dock-ignite 250ms ease-out both;
+}
+
+@keyframes arc-dock-ignite {
+  from {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Crafted controls with soft asymmetric silhouettes; no inherited square
+   rectangular form buttons, and no floating, oversized CTAs on narrow screens. */
+.app-shell .button {
+  border-radius: 1.15rem 0.7rem 1.15rem 0.7rem;
+  min-height: 3rem;
+  padding-inline: 1.15rem;
+  position: relative;
+  box-shadow: inset 0 1px 0 rgb(255 242 255 / 14%);
+}
+
+.app-shell .button--primary {
+  border-color: #e9cfe9;
+  background: linear-gradient(125deg, #f3d8b2, #d3b5f6 80%, #bba7ed);
+  color: #24172f;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 68%),
+    0 5px 16px rgb(120 81 156 / 16%);
+}
+
+.app-shell .button--secondary {
+  background: linear-gradient(135deg, #30344e, #1b2738);
+  color: #f6e9e5;
+  border-color: rgb(177 152 207 / 55%);
+}
+
+.app-shell .button--danger {
+  border-color: #ec9da9;
+  background: linear-gradient(135deg, #f6b5ad, #dd8b9f);
+  color: #25101e;
+}
+
+.app-shell .button--danger-outline {
+  background: rgb(119 46 67 / 22%);
+  border-color: #e29aaa;
+  color: #ffc6cd;
+}
+
+.app-shell .button:disabled {
+  filter: none;
+  transform: none;
+  box-shadow: none;
+}
+
+.app-shell .section-heading__actions {
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.app-shell .section-heading__actions .button {
+  min-height: 2.9rem;
+  padding-inline: 1rem;
+}
+
+.app-shell .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.6rem;
+}
+
+.app-shell .form-actions > .button {
+  flex: 1 1 auto;
+}
+
+.app-shell .form-field :is(input, select, textarea),
+.app-shell .archive-search :is(input, select) {
+  min-height: 3rem;
+  border: 1px solid rgb(167 161 198 / 48%);
+  border-radius: 1rem 0.65rem 1rem 0.65rem;
+  background: linear-gradient(155deg, #273249, #202b3e);
+  color: #f7ecde;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.app-shell .form-field :is(input, select, textarea):focus-visible,
+.app-shell .archive-search :is(input, select):focus-visible {
+  border-color: #d9baed;
+  outline: 2px solid rgb(178 150 244 / 32%);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 3px rgb(184 150 239 / 15%);
+}
+
+.app-shell .form-field [aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.app-shell .book-card__link {
+  border-radius: 0.5rem 1.3rem 1.3rem 0.5rem;
+}
+
+.app-shell .book-card article {
+  padding: clamp(1rem, 3.7vw, 1.5rem);
+}
+
+.app-shell .content-card {
+  border-radius: 1.25rem 0.72rem 1.25rem 0.72rem;
+}
+
+@media (max-width: 460px) {
+  .app-shell .section-heading__actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-shell .section-heading__actions .button {
+    min-width: 0;
+    width: 100%;
+    font-size: 0.88rem;
+    white-space: normal;
+  }
+
+  .app-shell .detail-layout .form-actions > .button--danger {
+    flex-basis: 100%;
+  }
+
+  .app-shell .button {
+    padding-inline: 0.95rem;
+  }
+}
+
+@media (hover: none) {
+  .app-shell .book-card:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell:not([data-route="library"]) .app-content > section,
+  .app-shell:not([data-route="library"]) .app-content > article,
+  .realm-intro__seal,
+  .primary-dock__link[aria-current="page"]::after {
+    animation: none;
+  }
+}
+
+.app-shell[data-reduced-motion="true"] .realm-intro__seal,
+.app-shell[data-reduced-motion="true"]
+  .primary-dock__link[aria-current="page"]::after,
+.app-shell[data-reduced-motion="true"] .app-content > section,
+.app-shell[data-reduced-motion="true"] .app-content > article {
+  animation: none;
+}

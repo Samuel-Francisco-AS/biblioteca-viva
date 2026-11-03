@@ -1,5 +1,8 @@
 # Estado atual
 
+> **BF-5R2 — refinamento visual/tátil em candidato (2026-11-03):** com base nas capturas físicas do proprietário, a região inferior do mundo deixa de receber o degradê sombreado; transições de página perdem o filtro `blur`, superfícies deixam de usar `backdrop-filter` pesado, botões/filtros/campos ganham resposta explícita ao toque e ações compactas respeitam a largura do celular. [Relatório BF-5R2](BF-5R2_RELATORIO.md). **Implementação em PR draft #20, sem merge; avaliação física desta revisão pendente.**
+
+
 > **BF-5R1 — intervenção após rejeição artística da PR draft #20 (2026-11-03):** após screenshots reais, o usuário rejeitou o acabamento e o conforto da primeira candidata. Nova implementação diretamente na branch `feat/bf-5-uiux-global-rework`, preservando a PR aberta e sem merge, com biblioteca full-viewport, HUD reduzida, ferramenta acessível por bússola, diálogo RPG revisado, dock de medalhões e sistema visual arcano nas cinco abas. Esta intervenção é **candidata em revisão** — não implica gate Android, CI verde, fechamento da BF-5 nem aceite artístico. [Relatório R1](BF-5R1_RELATORIO.md).
 
 

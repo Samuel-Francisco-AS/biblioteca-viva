@@ -1,5 +1,13 @@
 # Changelog
 
+## BF-5R2 — imersão sem chapa e interações táteis (2026-11-03)
+
+- Retirado gradiente inferior em tela inteira da Biblioteca; mantida apenas vinheta superior com canvas 100dvh.
+- Redesenhados estados de pressão/touch de controles, formulários e filtros, CTAs responsivos em retrato e acentos mágicos discretos.
+- Transições de rota simplificadas para transform/opacidade sem blur de página, removendo backdrops filtrados custosos.
+- Acrescentados teste E2E focalizado e [relatório BF-5R2](docs/BF-5R2_RELATORIO.md). Não há prova física de eliminação de engasgos; código enviado à PR #20 draft, sem merge.
+
+
 ## BF-5R1 — intervenção remota na candidata rejeitada (2026-11-03)
 
 - Proprietário rejeitou o acabamento e a ergonomia da primeira PR #20 no Moto G06. A correção atua na própria branch draft, sem merge.
