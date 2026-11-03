@@ -269,7 +269,7 @@ function LibraryPageContent({
       {worldStatus !== "failed" && (
         <button
           aria-controls="library-access-panels"
-          aria-expanded={toolsOpen || worldStatus === "failed"}
+          aria-expanded={toolsOpen}
           aria-label={
             toolsOpen
               ? "Recolher ferramentas de exploração"
