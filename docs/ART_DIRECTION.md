@@ -2,6 +2,8 @@
 
 > **BF-4F2 concluída por gate dirigido (2026-11-02):** animações por seleção e controles React aceitas no Moto G06, sem regressão/queda de fluidez percebida. Simplicidade artística não é teto futuro. CI global FAIL e novos casos F2 rastreados em [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15). [Fechamento](BF-4F2_RELATORIO.md).
 
+> **BF-5 — direção da identidade visual do aplicativo inteiro (2026-11-03):** [Fantasia Sobrenatural Editorial](BF-5_DIRECAO_VISUAL_GLOBAL.md) é a orientação criativa global para Biblioteca, Coleção, Arquivo, Resumo e Ajustes, compartilhando mistério arcano, presença sobrenatural, fluidez e contenção visual. O mundo 3D mantém seu contrato artístico anterior; a nova direção amplia a atmosfera para navegação e telas convencionais, **sem anular as evidências BF-4, fixar tokens cromáticos finais ou autorizar implementação**.
+
 O futuro mundo deve parecer íntimo, antigo, acolhedor, mágico e habitado. Madeira, pedra, latão/dourado, pergaminho, bordô e verde profundo formam a linguagem material e cromática inicial. Legibilidade mobile continua prioritária.
 
 A direção aprovada é **3D real estilizado com apresentação ortográfica/2.5D**. O mundo deve ter profundidade real sem perder leitura clara, calor e identidade editorial.
