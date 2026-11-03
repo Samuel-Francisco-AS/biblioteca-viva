@@ -1,5 +1,12 @@
 # Changelog
 
+## Candidata BF-4F4 — 2026-11-02
+
+- Quatro histórias individuais completas e A Noite da Fenda Lilás em cinco atos, com escolhas, pistas, colaboração, consequências e epílogos distintos, inteiramente offline.
+- Conversa pelo toque nos habitantes ou React, diário de sessão, adiamento/retomada, teclado/foco e leitura sem WebGL.
+- Gestos coordenados com a autonomia, vínculos narrativos separados dos encontros espontâneos, props restauráveis e atmosfera própria da fenda nos cinco cômodos.
+- Progresso somente nesta visita; nenhum registro, schema, backup, dependência ou versão alterado. Candidata para auditoria e gate artístico, sem merge ou encerramento.
+
 ## BF-4F3 — concluída no escopo dirigido, com exceções CI e Lua (2026-11-02)
 
 - Samael, Aryn, Ytha e Lua escolhem atividades, circulam pelos cinco cômodos, repousam e se aproximam espontaneamente; seis relações mudam por atrito, cooperação e reconhecimento durante a sessão.

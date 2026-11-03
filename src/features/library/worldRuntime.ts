@@ -1,5 +1,6 @@
+import type { NarrativeSnapshot } from "./narrative/contracts";
 import type { AgencySnapshot } from "./inhabitantAgency";
-import type { InhabitantAction } from "./inhabitants";
+import type { InhabitantAction, InhabitantKey } from "./inhabitants";
 export interface WorldSelectableObject {
   readonly entryId?: string;
   readonly id: string;
@@ -78,6 +79,8 @@ export interface WorldRuntime {
     id: string,
     action: InhabitantAction,
   ): "playing" | "loading" | "unavailable" | "reduced";
+  onInhabitantActivate?(listener: (key: InhabitantKey) => void): () => void;
+  applyNarrative?(snapshot: NarrativeSnapshot): void;
   selectObject(id: string | null): void;
   dispose(): void;
 }

@@ -17,10 +17,18 @@ import {
   LIBRARY_ACTIVITY_ZONES,
 } from "./librarySpatialLayout";
 import { ENCOUNTERS, type EncounterScript } from "./inhabitantEncounters";
+import type { NarrativeBond } from "./narrative/contracts";
 import type { LivingEvent } from "./livingObjects";
 
 export type AgencyState =
-  "idle" | "navigate" | "work" | "socialize" | "react" | "recover" | "paused";
+  | "idle"
+  | "navigate"
+  | "work"
+  | "socialize"
+  | "react"
+  | "recover"
+  | "paused"
+  | "converse";
 export type AgencyMode = "running" | "paused" | "reduced" | "unavailable";
 export type CosmeticState = "intact" | "damaged-cosmetic" | "repairing";
 type TaskKind =
@@ -53,6 +61,7 @@ export interface RelationView {
   readonly tension: number;
   readonly description: string;
   readonly history: readonly string[];
+  readonly narrativeHistory?: readonly string[];
 }
 export interface AgencySnapshot {
   readonly mode: AgencyMode;
@@ -217,6 +226,8 @@ export class InhabitantAgency {
   private disposed = false;
   private socialAfter = 12;
   private cooperation = 0;
+  private readonly conversation = new Set<InhabitantKey>();
+  private narrativeBonds: readonly NarrativeBond[] = [];
   private readonly now: () => number;
   private readonly hour: () => number;
   constructor(
@@ -307,13 +318,18 @@ export class InhabitantAgency {
     if (this.mode !== "running" || dt === 0) return;
     this.elapsed += dt;
     for (const a of this.agents)
-      if (a.available && a.state === "navigate") this.move(a, dt);
+      if (
+        a.available &&
+        !this.conversation.has(a.key) &&
+        a.state === "navigate"
+      )
+        this.move(a, dt);
     this.logic += dt;
     if (this.logic < 0.25) return;
     this.logic %= 0.25;
     this.updateMeeting();
     for (const a of this.agents) {
-      if (!a.available || a.encounter) continue;
+      if (!a.available || a.encounter || this.conversation.has(a.key)) continue;
       if (a.state === "work" && a.task) this.face(a, a.task.facing);
       if (a.state === "navigate") {
         if (a.blocked >= 3) this.replan(a);
@@ -342,7 +358,13 @@ export class InhabitantAgency {
   /** Manual controls hold the current position; interrupted work is resumed by a fresh route. */
   interrupt(id: string, action: InhabitantAction): boolean {
     const a = this.agents.find((a) => a.id === id);
-    if (!a?.available || this.mode !== "running" || this.disposed) return false;
+    if (
+      !a?.available ||
+      this.conversation.has(a.key) ||
+      this.mode !== "running" ||
+      this.disposed
+    )
+      return false;
     const e = INHABITANT_ENVELOPES[a.key];
     const radius =
       action === "magic" ? e.magic : action === "work" ? e.work : e.travel;
@@ -357,6 +379,91 @@ export class InhabitantAgency {
     a.destination = null;
     this.publish();
     return true;
+  }
+  /** Explicit narrative lease. Keeps position/yaw and task; release replans safely.
+   * Actions are driven by agency poses, never by repeated manual F2 interruption. */
+  setConversation(
+    speaker: InhabitantKey | null,
+    action: InhabitantAction = "gesture",
+    ensemble = false,
+    companion?: InhabitantKey,
+  ) {
+    if (this.disposed) return;
+    const wanted = new Set<InhabitantKey>(
+      speaker
+        ? ensemble
+          ? INHABITANTS.map((a) => a.key)
+          : companion
+            ? [speaker, companion]
+            : [speaker]
+        : [],
+    );
+    for (const a of this.agents) {
+      if (wanted.has(a.key)) {
+        this.cancelMeeting(
+          "Encontro adiado para uma conversa; a intenção será reconsiderada.",
+          a,
+        );
+        this.conversation.add(a.key);
+        a.state = "converse";
+        const envelope = INHABITANT_ENVELOPES[a.key];
+        const requested = a.key === speaker ? action : "idle";
+        const radius =
+          requested === "magic"
+            ? envelope.magic
+            : requested === "work"
+              ? envelope.work
+              : envelope.travel;
+        a.action = this.navigation.clear(a, a, radius, this.occupied(a))
+          ? requested
+          : "idle";
+        a.activity =
+          a.key === speaker
+            ? "Em conversa: mantém a posição e participa da história."
+            : "Sustenta sua parte da cooperação, aguardando o próximo sinal.";
+        a.route = [];
+        a.destination = null;
+        a.manual = false;
+      } else if (this.conversation.delete(a.key)) {
+        a.state = "recover";
+        a.action = "recover";
+        a.activity =
+          "Conversa encerrada; reconsidera a intenção por uma rota segura.";
+        a.until = this.elapsed + 2;
+      }
+    }
+    this.publish();
+  }
+  /** Replaces only the player-choice channel. Spontaneous relation history stays intact. */
+  setNarrativeBonds(bonds: readonly NarrativeBond[]) {
+    if (this.disposed) return;
+    this.narrativeBonds = bonds;
+    this.publish();
+  }
+  private bondsFor(r: Relation) {
+    return this.narrativeBonds.filter(
+      (b) =>
+        r.script.pair.includes(b.pair[0]) && r.script.pair.includes(b.pair[1]),
+    );
+  }
+  private narrativeScore(r: Relation, metric: "trust" | "tension") {
+    return clamp(
+      r[metric] +
+        this.bondsFor(r).reduce(
+          (total, b) =>
+            total +
+            (metric === "trust"
+              ? b.change === "friction"
+                ? 0
+                : 1
+              : b.change === "friction"
+                ? 1
+                : b.change === "repair"
+                  ? -1
+                  : 0),
+          0,
+        ),
+    );
   }
   perceive(
     events: readonly LivingEvent[],
@@ -380,6 +487,7 @@ export class InhabitantAgency {
           !a.available ||
           a.key === source ||
           a.manual ||
+          this.conversation.has(a.key) ||
           a.encounter ||
           this.elapsed - a.lastEvent < 18
         )
@@ -409,6 +517,8 @@ export class InhabitantAgency {
     if (this.disposed) return;
     this.disposed = true;
     this.listeners.clear();
+    this.conversation.clear();
+    this.narrativeBonds = [];
     this.meeting = null;
     this.recent = [];
     for (const a of this.agents) {
@@ -673,7 +783,8 @@ export class InhabitantAgency {
           b.available &&
           roomAt(b) === roomAt(a) &&
           !b.encounter &&
-          !b.manual
+          !b.manual &&
+          !this.conversation.has(b.key)
         ) {
           b.state = "react";
           b.action = "react";
@@ -707,6 +818,7 @@ export class InhabitantAgency {
     const available = (a: Agent) =>
       a.available &&
       !a.manual &&
+      !this.conversation.has(a.key) &&
       !a.encounter &&
       (a.state === "idle" ||
         (a.state === "work" && this.elapsed - a.started >= 8) ||
@@ -725,8 +837,8 @@ export class InhabitantAgency {
         score:
           (r.count === 0 ? 30 : 0) +
           r.affinity +
-          r.trust -
-          r.tension * 1.4 +
+          this.narrativeScore(r, "trust") -
+          this.narrativeScore(r, "tension") * 1.4 +
           (r.script.pair.includes("aryn") ? this.cooperation * 0.3 : 0) +
           this.random() * 2 +
           (r.script.pair.includes("samael") ? -3 : 2),
@@ -749,7 +861,9 @@ export class InhabitantAgency {
       // Samael usually accepts company rather than initiating it.
       const initiator =
         pair.find((a) => a.key === "aryn") ??
-        (r.trust >= 8 ? pair.find((a) => a.key === "ytha") : undefined) ??
+        (this.narrativeScore(r, "trust") >= 8
+          ? pair.find((a) => a.key === "ytha")
+          : undefined) ??
         pair.find((a) => a.key === "lua") ??
         pair.find((a) => a.key === "ytha") ??
         pair[0];
@@ -1021,11 +1135,14 @@ export class InhabitantAgency {
       relations: this.relations.map((r) => ({
         id: r.script.id,
         pair: r.script.pair,
-        trust: r.trust,
+        trust: this.narrativeScore(r, "trust"),
         affinity: r.affinity,
-        tension: r.tension,
+        tension: this.narrativeScore(r, "tension"),
         description: r.description,
         history: [...r.history],
+        narrativeHistory: this.bondsFor(r)
+          .slice(-5)
+          .map((b) => b.text),
       })),
       recent: [...this.recent],
       cosmetic: this.cosmetic,

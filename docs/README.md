@@ -1,5 +1,7 @@
 # Documentação da Biblioteca Viva
 
+> **BF-4F4 — candidata implementada (2026-11-02):** cinco histórias RPG offline (quatro individuais e A Noite da Fenda Lilás), escolhas consequentes, diário, integração F3/BF-4E e fallback React. **Auditoria e gate artístico Moto G06 pendentes; sem encerramento de F4/BF-4F e sem merge.** Contrato, caminhos, limites e resultados: [relatório F4](BF-4F4_RELATORIO.md). F3 mantém a ressalva física do folio de Lua; issues #4/#11/#15, TalkBack e BF-4G permanecem abertos. Os registros anteriores abaixo são cronologia.
+
 > **BF-4F3 ENCERRADA no escopo dirigido (2026-11-02):** no Moto G06, Autonomia, Convivência e Integração **PASS**; Acidente de Lua **NÃO TESTADO fisicamente**, com cobertura automatizada e ressalva preservada. [CI PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077) **FAIL**: E2E 21 PASS, 10 FAIL, 1 flaky (novo F3 PASS; falhas remanescentes com mesmos nomes da execução F2). Fechamento e merge da [PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/16) expressamente autorizados com exceções documentadas. **Próxima: BF-4F4, RPG/quests**, ainda não iniciada. [Relatório final](BF-4F3_RELATORIO.md).
 
 
@@ -9,6 +11,7 @@ Este é o único índice da documentação ativa.
 
 | Documento | Pergunta respondida |
 |---|---|
+| [`BF-4F4_RELATORIO.md`](BF-4F4_RELATORIO.md) | Quais cinco histórias RPG foram implementadas, com quais trajetórias, consequências, contratos e provas? |
 | [`BF-4F3_RELATORIO.md`](BF-4F3_RELATORIO.md) | Como ocorreu a entrega de autonomia/relações F3, seu aceite físico dirigido e o fechamento por exceção CI/Lua? |
 | [`BF-4F2_RELATORIO.md`](BF-4F2_RELATORIO.md) | Entrega, gate físico e exceção CI no fechamento BF-4F2. |
 | [`../README.md`](../README.md) | O que é a Biblioteca Viva? |
@@ -57,4 +60,4 @@ A [BF-4E](BF-4E_RELATORIO.md) foi concluída no escopo funcional e físico dirig
 
 **BF-4F1 concluída no escopo dirigido em 2026-11-02:** o usuário aceitou visualmente os quatro primeiros modelos e sua seleção no Moto G06; falta a expressividade da BF-4F2, IA local F3 e quests F4. [Relatório F1](BF-4F1_RELATORIO.md). Notas antigas sobre ausência de implementação são histórico, não estado vigente. E2E finalizou FAIL (20 PASS, 6 FAIL, 1 flaky); TalkBack e desempenho sustentado não foram declarados PASS.
 
-**Estado vigente:** F2 encerrada no escopo dirigido com exceção CI; F3 próxima. Notas antigas sobre F1/F2 pendentes ou sem código são cronologia histórica. Agentes seguem [AGENTS](../AGENTS.md), [direção artística](ART_DIRECTION.md), [testes](TESTING.md) e [desempenho](PERFORMANCE.md).
+**Estado vigente:** F1/F2/F3 concluídas no escopo dirigido com ressalvas registradas; F4 candidata implementada, ainda sem auditoria ou aceite físico. Notas antigas sobre F1/F2 pendentes ou sem código são cronologia histórica. Agentes seguem [AGENTS](../AGENTS.md), [direção artística](ART_DIRECTION.md), [testes](TESTING.md) e [desempenho](PERFORMANCE.md).

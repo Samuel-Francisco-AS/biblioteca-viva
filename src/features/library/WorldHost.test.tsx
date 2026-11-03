@@ -670,3 +670,80 @@ it("F3 subscribes to the runtime semantic snapshot and releases its listener on 
   expect(off).toHaveBeenCalledOnce();
   agency.dispose();
 });
+
+it("F4 opens from canvas once, bridges choices, retains progress after terminal failure and unsubscribes on teardown", async () => {
+  const runtime = createRuntime();
+  const applyNarrative = vi.fn<NonNullable<WorldRuntime["applyNarrative"]>>();
+  runtime.applyNarrative = applyNarrative;
+  let activate:
+    | Parameters<NonNullable<WorldRuntime["onInhabitantActivate"]>>[0]
+    | undefined;
+  const offActivation = vi.fn();
+  runtime.onInhabitantActivate = (listener) => {
+    activate = listener;
+    return offActivation;
+  };
+  const changes = vi.fn(),
+    user = userEvent.setup();
+  const view = render(
+    <WorldHost
+      libraryWorldSnapshot={projectLibraryWorldEntries([])}
+      runtimeFactory={() => Promise.resolve(runtime)}
+      onSelectionChange={changes}
+    />,
+  );
+  await waitFor(() => expect(runtime.start).toHaveBeenCalledOnce());
+  changes.mockClear();
+  act(() => runtime.emitSelection(INHABITANTS[0]));
+  expect(changes).toHaveBeenCalledOnce();
+  expect(
+    screen.getByRole("article", { name: "Conversa RPG" }),
+  ).toHaveTextContent("As Cinzas do Caderno");
+  await user.click(
+    screen.getByRole("button", { name: /Investigar com discrição/ }),
+  );
+  expect(applyNarrative).toHaveBeenLastCalledWith(
+    expect.objectContaining({ facts: ["ashes:discreet"] }),
+  );
+  await user.click(
+    screen.getByRole("button", { name: "Adiar conversa e voltar ao mundo" }),
+  );
+  runtime.selectObject.mockImplementation(() => {});
+  await user.click(screen.getByText("Habitantes da Biblioteca"));
+  await user.click(screen.getByRole("button", { name: "Samael" }));
+  expect(
+    screen.getByRole("article", { name: "Conversa RPG" }),
+  ).toHaveTextContent("Comparar a anotação");
+  expect(changes).toHaveBeenCalledOnce();
+  await user.click(
+    screen.getByRole("button", { name: "Adiar conversa e voltar ao mundo" }),
+  );
+  act(() => activate?.("samael"));
+  expect(
+    screen.getByRole("article", { name: "Conversa RPG" }),
+  ).toHaveTextContent("Comparar a anotação");
+  const error = vi.spyOn(console, "error").mockImplementation(() => {});
+  act(() =>
+    runtime.emitFailure({
+      code: "unavailable",
+      message: "Falha gráfica fictícia.",
+    }),
+  );
+  const calls = applyNarrative.mock.calls.length;
+  expect(
+    screen.getByRole("article", { name: "Conversa RPG" }),
+  ).toHaveTextContent("nenhuma animação é confirmada");
+  await user.click(screen.getByRole("button", { name: /Examinar o braseiro/ }));
+  expect(applyNarrative).toHaveBeenCalledTimes(calls);
+  expect(
+    screen.getByRole("article", { name: "Conversa RPG" }),
+  ).toHaveTextContent("Não há um sabotador");
+  view.unmount();
+  expect(offActivation).toHaveBeenCalled();
+  act(() => {
+    runtime.emitSelection(INHABITANTS[1]);
+    activate?.("aryn");
+  });
+  expect(applyNarrative).toHaveBeenCalledTimes(calls);
+  error.mockRestore();
+});

@@ -1538,3 +1538,231 @@ blockquote {
   min-height: var(--touch-target);
   padding: var(--space-3);
 }
+
+/* The story is a reading desk beside the world, with no full-screen input trap. */
+.rpg-shell {
+  position: relative;
+  color: #f7e7c6;
+}
+.rpg-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+.rpg-tools button {
+  background: #203d35;
+  color: #f4dfb1;
+  border: 1px solid #a88a50;
+  border-radius: 0.55rem;
+  min-height: 44px;
+  padding: 0.5rem 0.8rem;
+}
+.rpg-dialogue,
+.rpg-journal {
+  border: 2px solid #b3975e;
+  border-radius: 0.9rem;
+  background: linear-gradient(120deg, #f2dfb6, #e5c99a);
+  color: #30281e;
+  padding: 1rem;
+  box-shadow:
+    0 6px 22px #1b11164d,
+    inset 0 0 0 4px #69453320;
+}
+.rpg-dialogue {
+  border-left: 6px solid #754663;
+  margin: 0.3rem 0 0.8rem;
+}
+.rpg-dialogue--aryn {
+  border-left-color: #ad7930;
+}
+.rpg-dialogue--ytha {
+  border-left-color: #477159;
+}
+.rpg-dialogue--lua {
+  border-left-color: #8061a5;
+}
+.rpg-dialogue header,
+.rpg-journal header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+.rpg-dialogue h3,
+.rpg-journal h3 {
+  margin: 0.2rem 0 0.3rem;
+  font-family: Georgia, serif;
+  font-size: 1.45rem;
+  color: #4e283e;
+}
+.rpg-dialogue small {
+  font-size: 0.82rem;
+  color: #56452f;
+}
+.rpg-voice {
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  max-width: 76ch;
+  margin: 0.7rem 0;
+}
+.rpg-objective {
+  font-size: 0.87rem;
+  font-weight: 650;
+  color: #254738;
+  border-top: 1px solid #8b704952;
+  padding-top: 0.65rem;
+}
+.rpg-choices {
+  display: grid;
+  gap: 0.55rem;
+}
+.rpg-choices button {
+  text-align: left;
+  line-height: 1.45;
+  min-height: 48px;
+  padding: 0.7rem 0.85rem;
+  background: #563245;
+  color: #fff0cf;
+  border: 1px solid #ac864e;
+  border-radius: 0.45rem;
+  font-size: 0.94rem;
+}
+.rpg-choices button:hover {
+  background: #70425a;
+}
+.rpg-choices button span {
+  color: #e7bc6d;
+  padding-right: 0.25rem;
+}
+.rpg-shell button:focus-visible,
+.rpg-shell h3:focus-visible {
+  outline: 3px solid #297b75;
+  outline-offset: 3px;
+}
+.rpg-close,
+.rpg-journal header button {
+  flex-shrink: 0;
+  min-height: 44px;
+  border: 1px solid #92774e;
+  background: transparent;
+  color: #503441;
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.6rem;
+}
+.rpg-feedback {
+  margin: 0.7rem 0 0.2rem;
+  color: #284d3d;
+  font-size: 0.88rem;
+}
+.rpg-fallback {
+  font-size: 0.76rem;
+  color: #64533d;
+  margin-bottom: 0;
+}
+.rpg-journal {
+  margin: 0.5rem 0;
+}
+.rpg-journal ul {
+  list-style: none;
+  padding: 0;
+}
+.rpg-journal li {
+  border-bottom: 1px solid #8d72474d;
+  padding: 0.5rem 0 0.8rem;
+}
+.rpg-journal h4 {
+  margin: 0.35rem 0;
+  font-family: Georgia, serif;
+}
+.rpg-journal button {
+  min-height: 44px;
+  padding: 0.5rem 0.7rem;
+}
+@media (min-width: 760px) {
+  .rpg-choices {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .rpg-dialogue {
+    max-height: 65dvh;
+    overflow-y: auto;
+  }
+  .rpg-voice {
+    font-size: 0.95rem;
+  }
+}
+@media (max-width: 759px) {
+  .world-surface[data-status="ready"]:has(.rpg-shell--open)
+    .living-world-stage {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: var(--color-surface);
+  }
+  .world-surface[data-status="ready"]:has(.rpg-shell--open) .world-host {
+    max-height: 28dvh;
+    min-height: 8rem;
+  }
+}
+@media (max-width: 759px) and (min-height: 521px) {
+  .rpg-dialogue header {
+    position: sticky;
+    top: 28dvh;
+    z-index: 4;
+    background: #efdab0;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid #a98c58;
+  }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .world-surface[data-status="ready"]:has(.rpg-shell--open) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 0.65rem;
+    align-items: start;
+  }
+  .world-surface[data-status="ready"]:has(.rpg-shell--open) > * {
+    grid-column: 1 / -1;
+  }
+  .world-surface[data-status="ready"]:has(.rpg-shell--open)
+    > .living-world-stage {
+    grid-column: 1;
+    grid-row: 1;
+    position: sticky;
+    top: 0.3rem;
+  }
+  .world-surface[data-status="ready"]:has(.rpg-shell--open) > .rpg-shell {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .world-surface[data-status="ready"]:has(.rpg-shell--open) .world-host {
+    max-height: 65dvh;
+    min-height: 8rem;
+  }
+  .rpg-dialogue header {
+    position: sticky;
+    top: -1rem;
+    z-index: 4;
+    background: #efdab0;
+    padding: 0.35rem 0;
+  }
+  .rpg-dialogue h3 {
+    font-size: 1.1rem;
+  }
+  .rpg-dialogue {
+    padding: 0.7rem;
+  }
+  .rpg-choices {
+    grid-template-columns: 1fr;
+  }
+  .rpg-voice {
+    font-size: 0.95rem;
+  }
+}
+
+.world-surface[data-status="failed"] .rpg-dialogue header {
+  top: 0;
+}

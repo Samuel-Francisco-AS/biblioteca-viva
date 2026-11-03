@@ -477,7 +477,11 @@ export class ThreeWorldInteraction {
           position,
         );
     this.selectObject(selectedId ?? null);
-    if (selectedId?.startsWith("living:")) this.onTapObject?.(selectedId);
+    if (
+      selectedId?.startsWith("living:") ||
+      selectedId?.startsWith("character:")
+    )
+      this.onTapObject?.(selectedId);
   }
 
   private findSelectableId(object: Object3D): string | undefined {

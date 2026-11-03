@@ -1,3 +1,5 @@
+import { NarrativePanel } from "./NarrativePanel";
+import { NarrativeSession } from "./narrative/session";
 import { InhabitantLife } from "./InhabitantLife";
 import type { AgencySnapshot } from "./inhabitantAgency";
 import {
@@ -7,7 +9,7 @@ import {
 } from "./inhabitants";
 import { LivingSession } from "./livingObjects";
 import { LivingControls, LivingFeedback } from "./LivingControls";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import type {
   WorldRuntime,
@@ -114,6 +116,7 @@ export function WorldHost({
   runtimeFactory,
   selectedObjectId,
 }: WorldHostProps) {
+  const [narrativeSession] = useState(() => new NarrativeSession());
   const [livingSession] = useState(() => new LivingSession());
   const [livingSelection, setLivingSelection] = useState<string | null>(null);
   const hostRef = useRef<HTMLDivElement>(null);
@@ -147,14 +150,22 @@ export function WorldHost({
     selectableObjectsChangeRef.current?.(objects);
   };
 
-  const publishSelection = (nextSelection: WorldSelection): void => {
-    setSelection(nextSelection);
-    setInhabitantFeedback("");
-    setLivingSelection(
-      nextSelection?.id.startsWith("living:") ? nextSelection.id : null,
-    );
-    selectionChangeRef.current?.(nextSelection);
-  };
+  const publishSelection = useCallback(
+    (nextSelection: WorldSelection): void => {
+      setSelection(nextSelection);
+      setInhabitantFeedback("");
+      setLivingSelection(
+        nextSelection?.id.startsWith("living:") ? nextSelection.id : null,
+      );
+      if (!performanceScenario && libraryWorldSnapshot) {
+        const inhabitant = INHABITANTS.find((a) => a.id === nextSelection?.id);
+        if (inhabitant) narrativeSession.talk(inhabitant.key);
+        else if (nextSelection) narrativeSession.close();
+      }
+      selectionChangeRef.current?.(nextSelection);
+    },
+    [narrativeSession, performanceScenario, libraryWorldSnapshot],
+  );
 
   const publishStatus = (nextStatus: WorldHostStatus): void => {
     setStatus(nextStatus);
@@ -181,6 +192,8 @@ export function WorldHost({
     let unsubscribeDiagnostics: (() => void) | undefined;
     let unsubscribeFailure: (() => void) | undefined;
     let unsubscribeSelection: (() => void) | undefined;
+    let unsubscribeInhabitantActivation: (() => void) | undefined;
+    let unsubscribeNarrative: (() => void) | undefined;
     let unsubscribeInhabitants: (() => void) | undefined;
     let terminalFailureReported = false;
 
@@ -218,6 +231,19 @@ export function WorldHost({
         runtime = createdRuntime;
         runtime.mount(host);
         runtimeRef.current = runtime;
+        if (!performanceScenario && libraryWorldSnapshot) {
+          const applyNarrative = () => {
+            if (active && runtimeRef.current === createdRuntime)
+              createdRuntime.applyNarrative?.(narrativeSession.getSnapshot());
+          };
+          unsubscribeInhabitantActivation = runtime.onInhabitantActivate?.(
+            (key) => {
+              if (active) narrativeSession.talk(key);
+            },
+          );
+          unsubscribeNarrative = narrativeSession.subscribe(applyNarrative);
+          applyNarrative();
+        }
         unsubscribeInhabitants = runtime.onInhabitantsChange?.((snapshot) => {
           if (active) setAgencySnapshot(snapshot);
         });
@@ -237,6 +263,9 @@ export function WorldHost({
           unsubscribeDiagnostics?.();
           unsubscribeSelection?.();
           unsubscribeFailure?.();
+          unsubscribeNarrative?.();
+          unsubscribeInhabitantActivation?.();
+          unsubscribeInhabitants?.();
           runtimeRef.current = null;
           runtime.dispose();
           publishSelectableObjects([]);
@@ -258,6 +287,9 @@ export function WorldHost({
         unsubscribeDiagnostics?.();
         unsubscribeFailure?.();
         unsubscribeSelection?.();
+        unsubscribeNarrative?.();
+        unsubscribeInhabitantActivation?.();
+        unsubscribeInhabitants?.();
         runtime?.dispose();
         runtimeRef.current = null;
         if (!active) return;
@@ -271,12 +303,16 @@ export function WorldHost({
       unsubscribeFailure?.();
       unsubscribeSelection?.();
       unsubscribeInhabitants?.();
+      unsubscribeNarrative?.();
+      unsubscribeInhabitantActivation?.();
       runtime?.dispose();
       runtime = undefined;
       runtimeRef.current = null;
     };
   }, [
     livingSession,
+    narrativeSession,
+    publishSelection,
     performanceScenario,
     readingAreaBooks,
     libraryWorldSnapshot,
@@ -320,6 +356,12 @@ export function WorldHost({
           <LivingFeedback session={livingSession} />
         )}
       </div>
+      {!performanceScenario && libraryWorldSnapshot && (
+        <NarrativePanel
+          session={narrativeSession}
+          failed={status === "failed"}
+        />
+      )}
       {status === "initializing" && (
         <p className="world-status" role="status">
           Preparando a área de leitura…
@@ -448,9 +490,10 @@ export function WorldHost({
                 type="button"
                 aria-pressed={selection?.id === inhabitant.id}
                 onClick={() => {
-                  publishSelection(inhabitant);
                   if (status === "ready")
                     runtimeRef.current?.selectObject(inhabitant.id);
+                  else publishSelection(inhabitant);
+                  narrativeSession.talk(inhabitant.key);
                 }}
               >
                 {inhabitant.label}
@@ -464,6 +507,7 @@ export function WorldHost({
                       type="button"
                       key={action}
                       onClick={() => {
+                        narrativeSession.close();
                         const result =
                           runtimeRef.current?.playInhabitantAction?.(
                             inhabitant.id,

@@ -1,5 +1,7 @@
 # BF-4F — Plano técnico de execução dos quatro habitantes
 
+> **BF-4F4 — candidata implementada (2026-11-02):** cinco histórias RPG offline (quatro individuais e A Noite da Fenda Lilás), escolhas consequentes, diário, integração F3/BF-4E e fallback React. **Auditoria e gate artístico Moto G06 pendentes; sem encerramento de F4/BF-4F e sem merge.** Contrato, caminhos, limites e resultados: [relatório F4](BF-4F4_RELATORIO.md). F3 mantém a ressalva física do folio de Lua; issues #4/#11/#15, TalkBack e BF-4G permanecem abertos. Os registros anteriores abaixo são cronologia.
+
 > **Contrato F3 concluído no escopo dirigido (2026-11-02):** FSM/seleção de utilidade, decisões discretas a 250 ms, navegação contínua por grafo BF-4D e obstáculos reais, seis vínculos independentes, encontros, evento de folio cosmético e ponte BF-4E tipada. A revisão estática foi favorável e o usuário registrou **Autonomia PASS, Convivência PASS, Integração PASS** no Moto G06; **Acidente de Lua NÃO TESTADO fisicamente**. [CI da PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077) FAIL (21 E2E PASS, 10 FAIL, 1 flaky; novo cenário F3 PASS). O usuário autorizou fechamento e merge com ressalvas explícitas. **BF-4F4 é próxima**, não iniciada. [Relatório de fechamento](BF-4F3_RELATORIO.md).
 
 
@@ -104,3 +106,11 @@ Cada checkpoint terá um **pedido de implementação específico**. O primeiro p
 ## BF-4F1 — Fechamento dirigido (2026-11-02)
 
 Quatro modelos iniciais integrados, fotos do mundo real no Moto G06 e seleção dos quatro pelo toque e React **aprovados pelo usuário**. Commit `de0bea64718ccfb2501a11f1541d8ac4abca3396`, [PR #13](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/13). Formatação, lint, TypeScript, 667 Vitest, áudio, build e relatório de performance PASS na [CI 41520167206](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41520167206); **E2E final FAIL (20 PASS, 6 FAIL, 1 flaky); CI global FAIL**. Microgestos de cabeça não equivalem a animação corporal: **F2 é a próxima etapa**. F3/F4, BF-4G, questões #4/#11, R-19 e TalkBack permanecem. As observações anteriores de F1 “aberta” ou “não implementada” são históricas. [Relatório](BF-4F1_RELATORIO.md).
+
+## Contrato vigente BF-4F4 — candidata implementada
+
+Cinco grafos autorais em `narrative/`, separados da agência: condições puras, efeitos enumerados, IDs estáveis, revisão esperada contra duplo acionamento, guard de publicação, memória limitada e nenhuma persistência. `NarrativeSession` pertence ao host React; fechamento/retomada, troca de habitante, rotação e falha WebGL preservam o progresso do mesmo host. Saída da rota/reload/processo novo cria outra sessão.
+
+`setConversation` coordena falante/protagonista e ensemble de cooperação sem teletransporte, mantendo tarefa para reconsideração segura. `setNarrativeBonds` mantém escolhas separadas dos encontros espontâneos e influencia confiança/tensão efetivas na F3. `applyNarrative` recebe snapshots tipados; efeitos visuais e vínculos não dependem de callback de animação. Fallback continua a ficção, sem afirmar uma animação não executada.
+
+O cenário tem owner único no building; investigação só ancora props ambientais permitidos. A noite da fenda é uma sobreposição do renderer, sem alterar horário/discovery BF-4E; nenhum dos quatro objetos do Segredo do Pergaminho recebe ação narrativa. Sem schema, backup, rede, dependência, GLB novo ou segundo RAF. Contratos, rotas narrativas e limitações detalhados no [relatório F4](BF-4F4_RELATORIO.md). Implementação não equivale a aprovação humana.

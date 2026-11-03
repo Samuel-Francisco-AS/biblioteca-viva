@@ -1,5 +1,7 @@
 # Estado atual
 
+> **BF-4F4 — candidata implementada (2026-11-02):** cinco histórias RPG offline (quatro individuais e A Noite da Fenda Lilás), escolhas consequentes, diário, integração F3/BF-4E e fallback React. **Auditoria e gate artístico Moto G06 pendentes; sem encerramento de F4/BF-4F e sem merge.** Contrato, caminhos, limites e resultados: [relatório F4](BF-4F4_RELATORIO.md). F3 mantém a ressalva física do folio de Lua; issues #4/#11/#15, TalkBack e BF-4G permanecem abertos. Os registros anteriores abaixo são cronologia.
+
 > **BF-4F3 CONCLUÍDA NO ESCOPO DIRIGIDO (2026-11-02):** usuário aprovou no Moto G06 **Autonomia PASS, Convivência PASS e Integração PASS**. **Acidente/reparação do folio de Lua NÃO TESTADO fisicamente**; sua implementação tem cobertura automatizada, mas não aceite artístico humano. A auditoria estática não identificou bloqueio inequívoco. 690 Vitest PASS e novo E2E F3 PASS na CI. [CI da PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077): **E2E 21 PASS, 10 FAIL, 1 flaky; CI global FAIL**; os dez cenários FAIL têm os mesmos nomes da CI F2, sem prova de causa idêntica. Dívidas #4/#11/#15 permanecem. O usuário autorizou expressamente o fechamento e merge da [PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/16) **com exceção CI e ressalva física de Lua**. Próxima: **BF-4F4 (RPG e quests)**, sem início antecipado. [Fechamento](BF-4F3_RELATORIO.md).
 
 
@@ -141,7 +143,7 @@ BF-3 ✅ CONCLUÍDA NO ESCOPO TÉCNICO-FUNCIONAL E FÍSICO DIRIGIDO — CI PENDE
     BF-3E2 ✅ interface funcional dos seis tipos — coberta pelo gate E3
     BF-3E3 ✅ gate consolidado — auditoria independente e CI PASS
   BF-3F ✅ 11/11 procedimentos físicos PASS — exceção formal: CI E2E instável (issue #4)
-BF-4 🔄 BF-4B–E e BF-4F1/F2/F3 concluídas no escopo dirigido; BF-4F4 PRÓXIMA
+BF-4 🔄 BF-4B–E e BF-4F1/F2/F3 concluídas no escopo dirigido; BF-4F4 CANDIDATA À AUDITORIA
   BF-4A ✅ auditoria + contrato + decomposição — DOCUMENTAL
   BF-4B ✅ cinco cômodos — CI e Moto G06 PASS dirigido, ressalva R-19
   BF-4C ✅ ampliação e mobília dos cinco cômodos — PASS dirigido; CI E2E FAIL aceita (#4)
@@ -151,7 +153,7 @@ BF-4 🔄 BF-4B–E e BF-4F1/F2/F3 concluídas no escopo dirigido; BF-4F4 PRÓXI
     BF-4F1 ✅ quatro habitantes integrados, seleção canvas/React — PASS físico dirigido
     BF-4F2 ✅ animações corporais e expressividade — gate dirigido PASS, CI E2E FAIL (#15)
     BF-4F3 ✅ comportamento autônomo e relações — 3 gates físicos PASS, Lua não testada, CI E2E FAIL
-    BF-4F4 ⏳ diálogo RPG e quests — PRÓXIMA
+    BF-4F4 🔄 cinco histórias RPG implementadas — candidata à auditoria e ao gate humano
   BF-4G ⏳ gate integrado PENDENTE
 ```
 
