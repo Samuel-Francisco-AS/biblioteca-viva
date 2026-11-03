@@ -1,6 +1,6 @@
 # BF-4F4 — Diálogos RPG, histórias e consequências
 
-Candidata de 2026-11-02, branch `feat/bf-4f4-rpg-quests`, baseline `cf2a463dce30a7bd3eb36d9712a75b6b6e634dbc` (merge BF-4F3). Checkout inicialmente limpo, remoto conferido, `fetch`, `switch main` e `pull --ff-only` executados. Sem merge, release, mudança de versão ou aceite artístico. **BF-4F4 e BF-4F não estão encerradas.**
+Histórico da candidata (2026-11-02), branch `feat/bf-4f4-rpg-quests`, baseline `cf2a463dce30a7bd3eb36d9712a75b6b6e634dbc` (merge BF-4F3). Checkout inicialmente limpo, remoto conferido, `fetch`, `switch main` e `pull --ff-only` executados. Na submissão original, não havia merge, release, mudança de versão nem aceite artístico. **Estado atual: BF-4F4 e BF-4F1–F4 fechadas no escopo dirigido por autorização expressa posterior; ver seção de Fechamento ao final.** Sem beta/release.
 
 ## Histórias entregues
 
@@ -126,3 +126,17 @@ src/features/library/three/narrativeVisuals.ts
 src/features/library/worldRuntime.ts
 src/styles.css
 ```
+
+## Fechamento BF-4F4 e conclusão dirigida da série BF-4F (2026-11-02)
+
+**Revisão técnica independente:** inspeção da PR #17 em `e3d68522da88254f58ffd145de5c4caff827d5f2`, incluindo cinco grafos narrativos separados, sessão tipada, validadores, efeitos de relação/cenografia, integração da agência com conversa, painel React, fallback e testes. Não foi identificado defeito arquitetural inequivocamente bloqueador. A auditoria de código é estática, não equivale a execução independente de toda a suíte nem a revisão literária exaustiva.
+
+**Gate humano recebido:** o usuário instalou a candidata no **Moto G06**, compartilhou **seis capturas** do painel RPG integrado ao mundo 3D com diálogos de Samael e Lua/Fenda Lilás, escolhas navegáveis, objetivos e continuidade de conversa; relatou que **as questões/escolhas estão funcionando** e que o recorte atual é satisfatório. **Não relatou explicitamente conclusão física de cada uma das quatro histórias, comparação final das duas estratégias da Fenda nem avaliação individual do acidente/reparação de Lua F3.** A aprovação funcional dirigida não deve ser inflada para aceite artístico exaustivo dessas cenas, TalkBack ou benchmark sustentado.
+
+**Observação de UI/UX aceita por escopo:** o painel em pergaminho é longo; em retrato, parte do conteúdo/alternativas passa pela região da barra inferior e requer rolagem. O usuário optou por tratar refinamentos de UI/UX numa **fase futura independente**, e melhorias de personagens e aspectos de RPG, diálogos e interatividade noutra frente futura. Não marcar essa decisão como regressão bloqueadora nem declarar design final aprovado.
+
+**CI [run 41550602711](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41550602711):** formatação, lint, tipos, Vitest 708, áudio, build e relatório de bundle **PASS**; os dois novos E2E F4 **PASS na CI**; E2E integrado **23 PASS, 11 FAIL — CI GLOBAL FAIL**. A lista de falhas contém os dez nomes reprovados na PR #16 e o BF-4D orientação, antes `flaky`; identidade de causas **não foi provada**. Preservam-se #4/#11/#15, além de R-19, TalkBack, folio F3, validação sustentada e BF-4G. Não houve alteração de asserts, retries ou timeouts nem campanha de testes repetitivos neste fechamento.
+
+**Decisão expressa do usuário:** **encerrar BF-4F4 e executar merge da [PR #17](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/17)**, com exceção CI e limitações de evidência física documentadas. **BF-4F4 CONCLUÍDA NO ESCOPO FUNCIONAL DIRIGIDO; série BF-4F1–F4 CONCLUÍDA NO ESCOPO DIRIGIDO.** Isso **não conclui BF-4G, BF-4 inteira, beta/release ou refinamentos artísticos futuros**. Nenhuma migração, versão ou dado real foi alterado pelo fechamento. Diretrizes de ambição artística primeiro, otimização diante de problemas demonstrados e testes proporcionais permanecem vigentes.
+
+**Encaminhamento:** próxima etapa prevista BF-4G (validação integrada); depois, mediante planejamento específico, **fase de UI/UX** e **fase de aprimoramento dos personagens e do RPG/diálogos/interatividade**, sem numeração e sem autorização de início por esta decisão. Este fechamento prevalece sobre menções anteriores neste relatório a F4 “candidata” e “Moto G06 NOT RUN”.

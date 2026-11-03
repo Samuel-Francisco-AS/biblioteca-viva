@@ -1,6 +1,6 @@
 # Documentação da Biblioteca Viva
 
-> **BF-4F4 — candidata implementada (2026-11-02):** cinco histórias RPG offline (quatro individuais e A Noite da Fenda Lilás), escolhas consequentes, diário, integração F3/BF-4E e fallback React. **Auditoria e gate artístico Moto G06 pendentes; sem encerramento de F4/BF-4F e sem merge.** Contrato, caminhos, limites e resultados: [relatório F4](BF-4F4_RELATORIO.md). F3 mantém a ressalva física do folio de Lua; issues #4/#11/#15, TalkBack e BF-4G permanecem abertos. Os registros anteriores abaixo são cronologia.
+> **BF-4F4 FECHADA no escopo funcional dirigido (2026-11-02), série BF-4F1–F4 concluída nesse recorte.** O usuário validou no Moto G06 o funcionamento das questões/escolhas narrativas e compartilhou capturas do diálogo de Samael e do início/progresso da Fenda Lilás. Não houve relato de teste físico exaustivo de todas as histórias/finais ou do acidente F3 de Lua. A [CI da PR #17](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41550602711) terminou **FAIL global: 23 E2E PASS, 11 FAIL**; os dois novos E2E F4 PASS. [Merge da PR #17](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/17) e fechamento foram expressamente autorizados com exceção CI. **BF-4G é o próximo gate integrado planejado.** Refinamentos de **UI/UX** e, em outra fase, de **personagens, RPG, diálogos e interatividade** foram reservados pelo usuário para etapas futuras próprias, ainda sem numeração ou autorização de execução. [Relatório F4](BF-4F4_RELATORIO.md).
 
 > **BF-4F3 ENCERRADA no escopo dirigido (2026-11-02):** no Moto G06, Autonomia, Convivência e Integração **PASS**; Acidente de Lua **NÃO TESTADO fisicamente**, com cobertura automatizada e ressalva preservada. [CI PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077) **FAIL**: E2E 21 PASS, 10 FAIL, 1 flaky (novo F3 PASS; falhas remanescentes com mesmos nomes da execução F2). Fechamento e merge da [PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/16) expressamente autorizados com exceções documentadas. **Próxima: BF-4F4, RPG/quests**, ainda não iniciada. [Relatório final](BF-4F3_RELATORIO.md).
 
@@ -11,7 +11,7 @@ Este é o único índice da documentação ativa.
 
 | Documento | Pergunta respondida |
 |---|---|
-| [`BF-4F4_RELATORIO.md`](BF-4F4_RELATORIO.md) | Quais cinco histórias RPG foram implementadas, com quais trajetórias, consequências, contratos e provas? |
+| [`BF-4F4_RELATORIO.md`](BF-4F4_RELATORIO.md) | Quais cinco histórias foram entregues e como a F4 foi encerrada por aceite funcional dirigido e exceção CI? |
 | [`BF-4F3_RELATORIO.md`](BF-4F3_RELATORIO.md) | Como ocorreu a entrega de autonomia/relações F3, seu aceite físico dirigido e o fechamento por exceção CI/Lua? |
 | [`BF-4F2_RELATORIO.md`](BF-4F2_RELATORIO.md) | Entrega, gate físico e exceção CI no fechamento BF-4F2. |
 | [`../README.md`](../README.md) | O que é a Biblioteca Viva? |
