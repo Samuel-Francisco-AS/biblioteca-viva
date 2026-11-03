@@ -17,6 +17,7 @@ Este índice distingue as decisões vigentes das preservadas para contexto. O re
 | ADR-011 | Biblioteca Funcional Primeiro              | aceita                  |
 | ADR-012 | BF-4 — Mundo Vivo e Habitável               | aceita (escopo)         |
 | ADR-013 | BF-4F — 4 habitantes e conversação RPG      | aceita (escopo criativo) |
+| ADR-014 | Pós-BF-4: BF-5 UI/UX → BF-6 Mundo Vivo → BF-7 consolidação | aceita (ordem e estratégia; sem execução) |
 
 ADR-008 permanece a autoridade do WORLD RESET. [`ADR-009`](ADR-009-three-foundation.md) a complementa ao aprovar Three.js como renderer da Fundação depois da evidência técnica e física da F1; não substitui o reset.
 
@@ -27,5 +28,7 @@ ADR-008 permanece a autoridade do WORLD RESET. [`ADR-009`](ADR-009-three-foundat
 [`ADR-012`](ADR-012-bf-4-mundo-vivo.md) especifica o escopo integrado dos cinco cômodos, personagens animados com IA local e conversação contextual, **sem** aprovar automaticamente GLB animado nem LLM externa. O contrato operacional está em [`BF-4_PLANO_CONTRATO.md`](../BF-4_PLANO_CONTRATO.md).
 
 [`ADR-013`](ADR-013-bf-4f-quatro-habitantes-rpg.md) atualiza para **quatro** o número inicial de habitantes e fixa o **diálogo local em árvores de 3–4 escolhas de RPG**, sem LLM; não substitui os demais contratos da ADR-012. A autoridade criativa é a [concepção BF-4F](../BF-4F_CONCEPCAO_HABITANTES.md).
+
+[`ADR-014`](ADR-014-replanejamento-pos-bf4.md) atualiza **somente o plano futuro** da ADR-011/ADR-012: a consolidação chamada anteriormente de BF-5 passa a **BF-7**; a nova BF-5 é reforma ampla de UI/UX, seguida de refinamentos; BF-6 aprofunda personagens/RPG/interatividade. Não altera os fatos nem os aceites históricos da BF-4, não implementa nenhuma fase e não retira a obrigação de TalkBack/gates assistivos.
 
 Uma nova decisão recebe o próximo número. Substituição preserva a decisão anterior com estado e link para a sucessora.
