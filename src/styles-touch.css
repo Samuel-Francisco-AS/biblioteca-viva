@@ -82,16 +82,31 @@
 
 /* Intentional touch feedback: a short, visible pressed state on mobile.
    React sets data-tap-active on pointerdown, not after an action completes. */
-.app-shell :is(.button, .primary-dock__link, .category-ribbon button,
-  .book-card__link, .rpg-choices button, .exploration-compass,
-  .library-page .rpg-tools button, summary) {
+.app-shell
+  :is(
+    .button,
+    .primary-dock__link,
+    .category-ribbon button,
+    .book-card__link,
+    .rpg-choices button,
+    .exploration-compass,
+    .library-page .rpg-tools button,
+    summary
+  ) {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
-.app-shell :is(.button, .primary-dock__link, .category-ribbon button,
-  .book-card__link, .rpg-choices button, .exploration-compass,
-  .library-page .rpg-tools button):is(:active, [data-tap-active="true"]) {
+.app-shell
+  :is(
+    .button,
+    .primary-dock__link,
+    .category-ribbon button,
+    .book-card__link,
+    .rpg-choices button,
+    .exploration-compass,
+    .library-page .rpg-tools button
+  ):is(:active, [data-tap-active="true"]) {
   transform: translate3d(0, 2px, 0) scale(0.972);
   filter: brightness(1.13);
   border-color: #eed3fa;
@@ -215,7 +230,9 @@
   border-radius: 1rem 0.65rem 1rem 0.65rem;
   background: linear-gradient(155deg, #273249, #202b3e);
   color: #f7ecde;
-  transition: border-color 160ms ease, box-shadow 160ms ease;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .app-shell .form-field :is(input, select, textarea):focus-visible,
