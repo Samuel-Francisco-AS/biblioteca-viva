@@ -1,5 +1,11 @@
 # Changelog
 
+## BF-5 — direção visual global (somente documentação; 2026-11-03)
+
+- Publicado [Guia de Direção Visual Global — Fantasia Sobrenatural Editorial](docs/BF-5_DIRECAO_VISUAL_GLOBAL.md), abrangendo as cinco abas com identidade compartilhada, atmosferas distintas, linguagem de materiais/luz, interação ao toque, transições, ergonomia e contenção de efeitos mágicos.
+- Registrado o conceito de fantasia sobrenatural aprovado pelo usuário, mantendo paleta, tipografia, formas, animações e composição específicas como propostas para posterior validação visual.
+- Apenas documentação na `main`, sem PR, alteração de produção, assets, dependências, APK, novo gate físico ou resolução das ressalvas de BF-4.
+
 ## BF-5 — manifesto e contrato conceitual da tela Biblioteca (somente documentação; 2026-11-03)
 
 - Criado [manifesto criativo e contrato funcional](docs/BF-5_BIBLIOTECA_MANIFESTO_CONTRATO.md) para a tela principal: mundo 3D em tela cheia, dock inferior estilizado, HUD contextual, interações/diálogos em linguagem RPG e caminho exploratório rumo a uma experiência com identidade de game.
