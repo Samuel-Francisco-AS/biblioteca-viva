@@ -1,9 +1,22 @@
 import { expect, test } from "./fixtures";
+import type { Page } from "@playwright/test";
+
+async function openLibraryRecords(page: Page) {
+  await page.getByRole("button", { name: "Abrir ferramentas de exploração acessível" }).click();
+  await page.locator(".library-index > summary").click();
+}
+
+async function openSemanticSelection(page: Page) {
+  await page.locator(".world-explore > summary").click();
+  await page.locator(".world-semantic > summary").click();
+}
+
 
 test("coleção vazia mantém estantes sem livros artificiais e caminho convencional", async ({
   page,
 }) => {
   await page.goto("/");
+  await openLibraryRecords(page);
 
   await expect(
     page.getByRole("heading", { name: "Biblioteca Viva", exact: true }),
@@ -17,8 +30,8 @@ test("coleção vazia mantém estantes sem livros artificiais e caminho convenci
     page.getByRole("button", { name: /Selecionar no ambiente:/u }),
   ).toHaveCount(0);
   await expect(
-    page.getByRole("link", { name: "Criar registro" }),
-  ).toHaveAttribute("href", "/novo-registro");
+    page.getByRole("link", { name: "Coleção", exact: true }),
+  ).toHaveAttribute("href", "/colecao");
   await expect(
     page.locator("canvas[data-three-world-canvas='true']"),
   ).toHaveCount(1);
@@ -34,6 +47,7 @@ test("livros convencionais preservam identidade entre lista, runtime, seleção 
   await page.goto("/");
   const canvas = page.locator("canvas[data-three-world-canvas='true']");
   await expect(canvas).toHaveAttribute("data-fixture-status", "ready");
+  await openLibraryRecords(page);
   await expect(
     page.getByRole("link", { name: "Livro real A", exact: true }),
   ).toBeVisible();
@@ -78,6 +92,7 @@ test("livros convencionais preservam identidade entre lista, runtime, seleção 
     page.getByRole("link", { name: "Abrir registro" }),
   ).toHaveAttribute("href", /\/registros\//u);
 
+  await openSemanticSelection(page);
   await page.getByRole("button", { name: "Próximo →" }).click();
   await expect(selectB).toHaveAttribute("aria-pressed", "true");
   await expect(canvas).toHaveAttribute(
@@ -100,6 +115,7 @@ test("livros convencionais preservam identidade entre lista, runtime, seleção 
     page.getByRole("heading", { name: "Livro real A atualizado" }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Biblioteca", exact: true }).click();
+  await openLibraryRecords(page);
   await expect(
     page.getByRole("link", { name: "Livro real A atualizado" }),
   ).toBeVisible();
@@ -120,6 +136,7 @@ test("overflow mantém 71 livros convencionais sem criar selecionável para o ex
   await createBook({ title: "Livro real excedente" });
 
   await page.goto("/");
+  await openLibraryRecords(page);
   await expect(
     page.getByText(
       "70 livros representados; 1 livro fora da capacidade visual atual.",
@@ -146,6 +163,7 @@ test("retornos da Biblioteca removem o canvas anterior e reconstruem um único s
   const canvas = page.locator("canvas[data-three-world-canvas='true']");
 
   for (let cycle = 1; cycle <= 3; cycle += 1) {
+    await openLibraryRecords(page);
     await expect(canvas, `canvas único no ciclo ${cycle}`).toHaveCount(1);
     await expect(canvas).toHaveAttribute("data-active-frame-loops", "1");
     await expect(
@@ -157,6 +175,7 @@ test("retornos da Biblioteca removem o canvas anterior e reconstruem um único s
   }
 
   await expect(canvas).toHaveCount(1);
+  await openLibraryRecords(page);
   await expect(
     page.getByRole("button", { name: /Selecionar no ambiente:/u }),
   ).toHaveCount(1);
@@ -189,6 +208,7 @@ test("seis tipos abrem pela Biblioteca e preservam edição e retorno", async ({
   await page.goto("/");
   const canvas = page.locator("canvas[data-three-world-canvas='true']");
   await expect(canvas).toHaveAttribute("data-fixture-status", "ready");
+  await openLibraryRecords(page);
   for (const title of [
     "Livro BF3 fictício",
     ...records.map(({ title }) => title),
@@ -220,6 +240,7 @@ test("seis tipos abrem pela Biblioteca e preservam edição e retorno", async ({
     page.getByRole("heading", { name: "Filme BF3 editado" }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Voltar à Biblioteca" }).click();
+  await openLibraryRecords(page);
   await expect(
     page.getByRole("link", { name: "Filme BF3 editado" }),
   ).toBeVisible();
@@ -235,6 +256,7 @@ test("seis tipos abrem pela Biblioteca e preservam edição e retorno", async ({
       page.getByRole("heading", { name: `${title} editado` }),
     ).toBeVisible();
     await page.getByRole("link", { name: "Voltar à Biblioteca" }).click();
+    await openLibraryRecords(page);
     await expect(
       page.getByRole("link", { name: `${title} editado`, exact: true }),
     ).toBeVisible();

@@ -1,5 +1,8 @@
 # Estado atual
 
+> **BF-5R1 — intervenção após rejeição artística da PR draft #20 (2026-11-03):** após screenshots reais, o usuário rejeitou o acabamento e o conforto da primeira candidata. Nova implementação diretamente na branch `feat/bf-5-uiux-global-rework`, preservando a PR aberta e sem merge, com biblioteca full-viewport, HUD reduzida, ferramenta acessível por bússola, diálogo RPG revisado, dock de medalhões e sistema visual arcano nas cinco abas. Esta intervenção é **candidata em revisão** — não implica gate Android, CI verde, fechamento da BF-5 nem aceite artístico. [Relatório R1](BF-5R1_RELATORIO.md).
+
+
 > **BF-5 — implementação candidata em revisão (2026-11-03).** Reforma de apresentação nas cinco abas, autorizada pelo proprietário como macroentrega. Biblioteca com canvas ocupando o viewport, superfícies semânticas recolhidas e diálogo sobreposto; Coleção com categorias diretas e densidade; Arquivo, Resumo e Ajustes com composição editorial. **BF-5 não concluída nem aprovada artisticamente.** Gates, limitações e evidências em [BF-5_RELATORIO.md](BF-5_RELATORIO.md). As notas anteriores de ausência de autorização descrevem o planejamento histórico.
 
 

@@ -119,6 +119,7 @@ function LibraryPageContent({
     useState<ApplicationBound<string | null>>();
   const [worldStatusState, setWorldStatusState] =
     useState<ApplicationBound<WorldHostStatus>>();
+  const [toolsOpen, setToolsOpen] = useState(false);
 
   // Do not let a previous application instance lend its data, error, catalog
   // or selected entry to the next one during the render before its effect runs.
@@ -208,7 +209,13 @@ function LibraryPageContent({
         ".library-page details[open]",
       );
       const panel = panels.item(panels.length - 1);
-      if (!panel) return;
+      if (!panel) {
+        if (toolsOpen) {
+          event.preventDefault();
+          setToolsOpen(false);
+        }
+        return;
+      }
       event.preventDefault();
       panel.open = false;
       panel.querySelector<HTMLElement>("summary")?.focus();
@@ -222,7 +229,7 @@ function LibraryPageContent({
         closeExploration,
       );
     };
-  }, []);
+  }, [toolsOpen]);
 
   const returnPath = `${location.pathname}${location.search}`;
   const representedIds = new Set(selectableObjects.map(({ id }) => id));
@@ -243,10 +250,40 @@ function LibraryPageContent({
   );
 
   return (
-    <section className="library-page" aria-labelledby="library-title">
-      <p className="eyebrow">Biblioteca</p>
-      <h2 id="library-title">Biblioteca Viva</h2>
-      <p>Explore, toque e descubra. Cada presença guarda uma história.</p>
+    <section
+      className="library-page"
+      aria-labelledby="library-title"
+      data-tools-open={toolsOpen || worldStatus === "failed"}
+    >
+      <div className="library-scene-vignette" aria-hidden="true" />
+      <header className="exploration-header">
+        <span className="exploration-header__eyebrow">
+          <span className="exploration-header__star" aria-hidden="true">✦</span>
+          MUNDO VIVO
+        </span>
+        <h2 id="library-title">Biblioteca Viva</h2>
+        <p>O santuário das histórias</p>
+      </header>
+      {worldStatus !== "failed" && <button
+        aria-controls="library-access-panels"
+        aria-expanded={toolsOpen || worldStatus === "failed"}
+        aria-label={toolsOpen ? "Recolher ferramentas de exploração" : "Abrir ferramentas de exploração acessível"}
+        className="exploration-compass"
+        onClick={() => setToolsOpen((open) => !open)}
+        type="button"
+      >
+        <svg aria-hidden="true" fill="none" viewBox="0 0 32 32">
+          <circle cx="16" cy="16" r="11.5" stroke="currentColor" strokeWidth="1.2" />
+          <path d="m19.5 12.5-3 7-4-4 7-3Z" fill="currentColor" opacity=".9" />
+          <path d="M16 2v4m0 20v4M2 16h4m20 0h4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+        </svg>
+        <span>{toolsOpen ? "Fechar painel" : "Explorar por lista"}</span>
+      </button>}
+      <div className="exploration-lore" aria-hidden="true">
+        <span className="exploration-lore__line" />
+        <span>TOQUE PARA DESCOBRIR</span>
+      </div>
+      <div className="library-access-panels" id="library-access-panels">
       {diagnosticsActive ? (
         <Suspense
           fallback={
@@ -396,6 +433,7 @@ function LibraryPageContent({
         <Link className="button button--secondary" to="/novo-registro">
           Criar registro
         </Link>
+      </div>
       </div>
     </section>
   );

@@ -1,5 +1,13 @@
 # Changelog
 
+## BF-5R1 — intervenção remota na candidata rejeitada (2026-11-03)
+
+- Proprietário rejeitou o acabamento e a ergonomia da primeira PR #20 no Moto G06. A correção atua na própria branch draft, sem merge.
+- Implantado novo sistema visual arcano em `src/styles-arcane.css`, sigilo SVG editorial, dock flutuante de medalhões, biblioteca full-viewport com bússola para ferramentas acessíveis sob demanda e planos de diálogo RPG mais expressivos.
+- Atualizados teste unitário e E2E para a descoberta das alternativas via hub; acrescentado roteiro de avaliação da candidata em `docs/BF-5R1_RELATORIO.md`.
+- Nenhum schema, dado, motor narrativo, backend ou dependência alterado. Teste físico e novo resultado CI ainda não obtidos nesta alteração.
+
+
 ## BF-5 — candidata de apresentação (2026-11-03)
 
 - Biblioteca com canvas na área do viewport, alternativas recolhidas e narrativa em sobreposição acima do dock.

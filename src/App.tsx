@@ -31,6 +31,7 @@ import { StatisticsPage } from "./features/statistics/StatisticsPage";
 import { useAudioExperience } from "./useAudioExperience";
 import { measureStartupPhase } from "./startupPerformance";
 import "./styles.css";
+import "./styles-arcane.css";
 
 function NotFoundPage() {
   return (
