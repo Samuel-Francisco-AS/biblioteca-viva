@@ -11,6 +11,7 @@ import {
   clampCameraNavigationState,
   clampCameraZoom,
   initialCameraNavigationState,
+  openingComposedWorldZoom,
   navigationPlanePointForScreenPosition,
   orthographicFrustumForViewport,
   panCameraNavigationStateBetweenScreenPoints,
@@ -20,6 +21,16 @@ import {
 } from "./cameraMath";
 
 describe("modelo de câmera da F3", () => {
+  it("BF-5R3: abre o mundo composto perto no retrato sem mudar o panorama em paisagem", () => {
+    expect(openingComposedWorldZoom(390, 844)).toBe(2);
+    expect(openingComposedWorldZoom(768, 1024)).toBe(1.45);
+    expect(openingComposedWorldZoom(844, 390)).toBe(CAMERA_MIN_ZOOM);
+    expect(openingComposedWorldZoom(0, 844)).toBe(CAMERA_MIN_ZOOM);
+    expect(openingComposedWorldZoom(390, Number.NaN)).toBe(CAMERA_MIN_ZOOM);
+    expect(openingComposedWorldZoom(390, 844)).toBeLessThanOrEqual(CAMERA_MAX_ZOOM);
+  });
+
+
   it("deriva framing técnico com padding explícito em portrait e landscape", () => {
     expect(CAMERA_FRAMING_PADDING).toBeGreaterThan(1);
     expect(orthographicFrustumForViewport(640, 360)).toEqual({

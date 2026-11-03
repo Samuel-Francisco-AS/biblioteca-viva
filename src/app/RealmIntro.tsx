@@ -4,15 +4,34 @@ type RealmIntroProps = {
 };
 
 export function RealmIntro({ title, description }: RealmIntroProps) {
+  const realm =
+    title === "Acervo encantado"
+      ? "acervo"
+      : title === "Câmara dos registros"
+        ? "arquivo"
+        : title === "Observatório"
+          ? "observatorio"
+          : title === "Ateliê arcano"
+            ? "atelie"
+            : "biblioteca";
+  const chapter = {
+    acervo: "I · ACERVO",
+    arquivo: "II · MEMÓRIA",
+    observatorio: "III · CONSTELAÇÕES",
+    atelie: "IV · RITUAIS",
+    biblioteca: "COMPÊNDIO",
+  }[realm];
+
   return (
-    <div className="realm-intro">
+    <div className="realm-intro" data-realm={realm}>
       <div className="realm-intro__copy">
         <span className="realm-intro__overtitle">
-          ✧ &nbsp; BIBLIOTECA VIVA / COMPÊNDIO
+          ✧ &nbsp; BIBLIOTECA VIVA / {chapter}
         </span>
         <h1>{title}</h1>
         <small>{description}</small>
       </div>
+      <span className="realm-intro__line" aria-hidden="true" />
       <svg
         aria-hidden="true"
         className="realm-intro__seal"

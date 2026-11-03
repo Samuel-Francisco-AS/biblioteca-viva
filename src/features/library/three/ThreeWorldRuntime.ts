@@ -55,6 +55,7 @@ import { FrameMetricsWindow } from "./frameMetrics";
 import {
   CAMERA_REFERENCE_HALF_HEIGHT,
   CAMERA_REFERENCE_HALF_WIDTH,
+  openingComposedWorldZoom,
 } from "./cameraMath";
 import { CameraNavigation } from "./CameraNavigation";
 import type { PerformanceScenario } from "./performanceScenarios";
@@ -441,6 +442,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private lastValidViewport:
     { readonly height: number; readonly width: number } | undefined;
   private viewportReady = false;
+  private openingFramingPending = false;
   private readonly createRenderer: () => ThreeWorldRenderer;
   private readonly fixtureLoader: FixtureModelLoader;
   private readonly frameScheduler: FrameScheduler;
@@ -698,6 +700,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         composedWorld ? 0.7 : 1,
         composedWorld ? LIBRARY_ROOMS : undefined,
       );
+      this.openingFramingPending = composedWorld;
 
       renderer.shadowMap.enabled = false;
       renderer.domElement.className = "three-world-canvas";
@@ -892,6 +895,12 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (!this.navigation?.setViewport(width, height)) {
       this.invalidateViewport(mountedWorld);
       return;
+    }
+    // Set the initial playable framing once, after a genuine viewport exists.
+    // Orientation changes preserve subsequent user pan/zoom choices.
+    if (this.openingFramingPending) {
+      this.openingFramingPending = false;
+      this.navigation.setZoom(openingComposedWorldZoom(width, height));
     }
     try {
       renderer.setSize(width, height, false);

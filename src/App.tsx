@@ -34,6 +34,7 @@ import { measureStartupPhase } from "./startupPerformance";
 import "./styles.css";
 import "./styles-arcane.css";
 import "./styles-touch.css";
+import "./styles-ritual.css";
 
 function NotFoundPage() {
   return (

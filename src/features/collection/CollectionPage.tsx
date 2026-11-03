@@ -31,6 +31,15 @@ export interface CollectionApplication {
   };
 }
 
+const recordSymbols: Record<LibraryEntry["type"], string> = {
+  book: "✦",
+  movie: "◈",
+  series: "✧",
+  study: "✶",
+  physical_activity: "☀",
+  work: "⌁",
+};
+
 function secondaryText(entry: LibraryEntry): string {
   switch (entry.type) {
     case "book":
@@ -397,7 +406,14 @@ export function CollectionPage({
                   search: `?from=${encodeURIComponent(returnPath)}`,
                 }}
               >
-                <article aria-labelledby={`entry-${entry.id}-title`}>
+                <article
+                  className="record-tile"
+                  aria-labelledby={`entry-${entry.id}-title`}
+                >
+                  <span className="record-tile__emblem" aria-hidden="true">
+                    {recordSymbols[entry.type]}
+                  </span>
+                  <div className="record-tile__content">
                   <p className="eyebrow">
                     {entryTypeLabels[entry.type]}
                     {entry.favorite ? " · Favorito" : ""}
@@ -424,6 +440,8 @@ export function CollectionPage({
                       </span>
                     </>
                   )}
+                  </div>
+                  <span className="record-tile__arrow" aria-hidden="true">↗</span>
                 </article>
               </Link>
             </li>

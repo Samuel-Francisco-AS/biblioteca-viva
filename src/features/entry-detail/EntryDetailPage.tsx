@@ -263,28 +263,42 @@ export function EntryDetailPage({
   }
 
   return (
-    <section aria-labelledby="entry-title">
-      <Link className="text-link" to={returnPath}>
+    <section className="entry-detail-page" aria-labelledby="entry-title">
+      <Link className="text-link entry-detail-return" to={returnPath}>
         {returnPath.startsWith("/arquivo")
           ? "Voltar ao Arquivo"
           : returnPath.startsWith("/colecao")
             ? "Voltar à Coleção"
             : "Voltar à Biblioteca"}
       </Link>
-      <div className="section-heading">
-        <div>
+      <div className="section-heading entry-detail-hero">
+        <span aria-hidden="true" className="entry-detail-hero__emblem">
+          {currentEntry.type === "book"
+            ? "✦"
+            : currentEntry.type === "movie"
+              ? "◈"
+              : currentEntry.type === "series"
+                ? "✧"
+                : currentEntry.type === "study"
+                  ? "✶"
+                  : currentEntry.type === "physical_activity"
+                    ? "☀"
+                    : "⌁"}
+        </span>
+        <div className="entry-detail-hero__body">
           <p className="eyebrow">{entryTypeLabels[currentEntry.type]}</p>
           <h2 id="entry-title">{currentEntry.title}</h2>
           <p className="status-badge">{statusLabels[currentEntry.status]}</p>
         </div>
         <Link
-          className="button button--secondary"
+          className="button button--secondary entry-detail-hero__edit"
           to={`/registros/${encodeURIComponent(id)}/editar?from=${encodeURIComponent(returnPath)}`}
         >
           Editar
         </Link>
       </div>
       {error && <p role="alert">{error}</p>}
+      <div className="entry-detail-sections">
       <section className="content-card" aria-labelledby="entry-data-title">
         <h3 id="entry-data-title">Detalhes</h3>
         <ul>
@@ -402,6 +416,7 @@ export function EntryDetailPage({
         onChange={setEntry}
       />
       <SessionPanel application={availableApplication} entry={currentEntry} />
+      </div>
     </section>
   );
 }

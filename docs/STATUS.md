@@ -1,5 +1,8 @@
 # Estado atual
 
+> **BF-5R3 — câmera e reformulação de composição (2026-11-03):** a análise das novas capturas do Moto G06 mostrou que o cenário composto inicializava em zoom ortográfico 0,7, deixando amplas bordas vazias em retrato (o usuário conseguia fazê-las desaparecer com zoom). Implementada abertura responsiva da câmera, preservando gestos e panorama, além de organização visual mais compacta e responsiva na Coleção, fichas de registro e demais abas. [Relatório R3](BF-5R3_RELATORIO.md). O problema de eventuais engasgos entre rotas **não foi declarado resolvido**, assim como a aprovação física e a BF-5 seguem pendentes. A PR #20 permanece draft e sem merge.
+
+
 > **BF-5R2 — refinamento visual/tátil em candidato (2026-11-03):** com base nas capturas físicas do proprietário, a região inferior do mundo deixa de receber o degradê sombreado; transições de página perdem o filtro `blur`, superfícies deixam de usar `backdrop-filter` pesado, botões/filtros/campos ganham resposta explícita ao toque e ações compactas respeitam a largura do celular. [Relatório BF-5R2](BF-5R2_RELATORIO.md). **Implementação em PR draft #20, sem merge; avaliação física desta revisão pendente.**
 
 

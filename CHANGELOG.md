@@ -1,5 +1,13 @@
 # Changelog
 
+## BF-5R3 — câmera de abertura e composição do compêndio (2026-11-03)
+
+- O mundo composto passou a abrir em enquadramento mais aproximado em retrato, evitando margens excessivas que pareciam uma chapa do canvas; zoom manual, pan, orientação e panorama em paisagem permanecem disponíveis.
+- Reformulação estrutural da Coleção (fichas de artefato compactas e símbolos semânticos apenas decorativos), apresentação do detalhe de registro e identidade contextual das demais abas.
+- Hierarquias e transições leves em `src/styles-ritual.css`, com suporte a redução de movimento, toque e telas estreitas, sem novos dados ou dependências.
+- Adicionados testes de câmera e E2E de Coleção/Detalhes, [relatório](docs/BF-5R3_RELATORIO.md) e documentação de ressalvas. Ainda sem aceite visual físico ou merge da PR #20.
+
+
 ## BF-5R2 — imersão sem chapa e interações táteis (2026-11-03)
 
 - Retirado gradiente inferior em tela inteira da Biblioteca; mantida apenas vinheta superior com canvas 100dvh.
