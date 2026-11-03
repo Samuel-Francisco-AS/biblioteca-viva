@@ -49,6 +49,12 @@ interface TestWorldRuntime extends WorldRuntime {
   readonly start: Mock<() => void>;
 }
 
+async function openWorldControls() {
+  const explore = await screen.findByText("Explorar · habitantes e objetos");
+  if (!explore.closest("details")?.open) await userEvent.click(explore);
+  const selection = await screen.findByText("Selecionar elementos");
+  if (!selection.closest("details")?.open) await userEvent.click(selection);
+}
 function createRuntime(): TestWorldRuntime {
   const selectables = [
     { id: "bookshelf-01", label: "Estante técnica 1" },
@@ -158,6 +164,8 @@ describe("WorldHost", () => {
         name: "Diagnóstico técnico do ambiente 3D",
       }),
     ).toHaveAttribute("data-runtime-state", "running");
+    await openWorldControls();
+    await userEvent.click(screen.getByText("Diagnóstico do mundo"));
     expect(screen.getByText("60.0")).toBeVisible();
 
     view.unmount();
@@ -172,6 +180,7 @@ describe("WorldHost", () => {
       <WorldHost runtimeFactory={() => Promise.resolve(runtime)} />,
     );
 
+    await openWorldControls();
     const previous = await screen.findByRole("button", {
       name: "← Anterior",
     });
@@ -242,6 +251,7 @@ describe("WorldHost", () => {
       ...runtime.getSelectableObjects(),
     ]);
     render(<WorldHost runtimeFactory={() => Promise.resolve(runtime)} />);
+    await openWorldControls();
     const next = await screen.findByRole("button", { name: "Próximo →" });
     await user.click(next);
     expect(runtime.selectObject).toHaveBeenLastCalledWith("bookshelf-01");
@@ -257,6 +267,7 @@ describe("WorldHost", () => {
     const runtime = createRuntime();
     render(<WorldHost runtimeFactory={() => Promise.resolve(runtime)} />);
 
+    await openWorldControls();
     const next = await screen.findByRole("button", {
       name: "Próximo →",
     });
@@ -274,6 +285,7 @@ describe("WorldHost", () => {
 
     await user.click(next);
     expect(runtime.selectObject).toHaveBeenLastCalledWith("table-01");
+    await openWorldControls();
     expect(
       screen.getByText("Objeto selecionado: Mesa técnica 1."),
     ).toBeVisible();
@@ -284,6 +296,7 @@ describe("WorldHost", () => {
     const runtime = createRuntime();
     render(<WorldHost runtimeFactory={() => Promise.resolve(runtime)} />);
 
+    await openWorldControls();
     const next = await screen.findByRole("button", { name: "Próximo →" });
     await user.click(next);
     await user.click(next);
@@ -307,6 +320,7 @@ describe("WorldHost", () => {
     const runtime = createRuntime();
     render(<WorldHost runtimeFactory={() => Promise.resolve(runtime)} />);
 
+    await openWorldControls();
     const previous = await screen.findByRole("button", {
       name: "← Anterior",
     });
@@ -328,6 +342,7 @@ describe("WorldHost", () => {
     const runtime = createRuntime();
     render(<WorldHost runtimeFactory={() => Promise.resolve(runtime)} />);
 
+    await openWorldControls();
     const next = await screen.findByRole("button", { name: "Próximo →" });
     const previous = screen.getByRole("button", { name: "← Anterior" });
     act(() => {
@@ -348,11 +363,13 @@ describe("WorldHost", () => {
     const runtime = createRuntime();
     render(<WorldHost runtimeFactory={() => Promise.resolve(runtime)} />);
 
+    await openWorldControls();
     const next = await screen.findByRole("button", { name: "Próximo →" });
     const previous = screen.getByRole("button", { name: "← Anterior" });
     act(() => {
       runtime.emitSelection({ id: "table-01", label: "Mesa técnica 1" });
     });
+    await openWorldControls();
     expect(
       screen.getByText("Objeto selecionado: Mesa técnica 1."),
     ).toBeVisible();
@@ -471,6 +488,7 @@ describe("WorldHost", () => {
         label: "Mesa técnica 1",
       });
     });
+    await openWorldControls();
     expect(
       screen.getByText("Objeto selecionado: Mesa técnica 1."),
     ).toBeVisible();
@@ -480,6 +498,7 @@ describe("WorldHost", () => {
     await waitFor(() => expect(secondRuntime.mount).toHaveBeenCalledOnce());
     expect(firstRuntime.dispose).toHaveBeenCalledOnce();
     expect(secondRuntime.mount).toHaveBeenCalledAfter(firstRuntime.dispose);
+    await openWorldControls();
     expect(
       screen.getByText("Objeto selecionado: Nenhum objeto selecionado."),
     ).toBeVisible();

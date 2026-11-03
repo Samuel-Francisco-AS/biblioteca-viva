@@ -64,7 +64,7 @@ test("shell abre a Biblioteca com uma única superfície Three.js", async ({
   await expect(page.getByRole("banner")).toContainText("Biblioteca");
   await expect(
     page.getByRole("heading", {
-      name: "Registros da Biblioteca",
+      name: "Biblioteca Viva",
       exact: true,
     }),
   ).toBeVisible();

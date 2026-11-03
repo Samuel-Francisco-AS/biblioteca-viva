@@ -1,5 +1,8 @@
 # Estado atual
 
+> **BF-5 — implementação candidata em revisão (2026-11-03).** Reforma de apresentação nas cinco abas, autorizada pelo proprietário como macroentrega. Biblioteca com canvas ocupando o viewport, superfícies semânticas recolhidas e diálogo sobreposto; Coleção com categorias diretas e densidade; Arquivo, Resumo e Ajustes com composição editorial. **BF-5 não concluída nem aprovada artisticamente.** Gates, limitações e evidências em [BF-5_RELATORIO.md](BF-5_RELATORIO.md). As notas anteriores de ausência de autorização descrevem o planejamento histórico.
+
+
 > **BF-5 — identidade global em planejamento (2026-11-03):** foi escolhida a direção de **fantasia sobrenatural** para todas as abas, com magia nos materiais, respostas ao toque e transições, mantendo ergonomia, organização, fluidez e contenção visual. Criado o [guia global Fantasia Sobrenatural Editorial](BF-5_DIRECAO_VISUAL_GLOBAL.md). O conceito de atmosfera é decisão vigente; cores, fontes, layouts e efeitos definitivos continuam em exploração. **Somente documentação, sem código ou gate novo.**
 
 > **BF-5 — tela Biblioteca em planejamento criativo (2026-11-03):** o usuário escolheu uma interface de exploração full-screen com canvas dominante, dock inferior estilizado e interatividade contextual em linguagem de game/RPG, mirando evolução futura da Biblioteca Viva para um game estilizado. Foram registrados [manifesto e contrato funcional proposto](BF-5_BIBLIOTECA_MANIFESTO_CONTRATO.md) para discussão dos estados e da linguagem visual; **nenhum design final, código ou implementação foi aprovado por esta atualização**. Mantém-se a macroreforma integrada seguida de refinamentos (ADR-014), com pendências históricas inalteradas.

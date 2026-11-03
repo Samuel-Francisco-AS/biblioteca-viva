@@ -102,7 +102,7 @@ test("rotas inexistentes e livro ausente degradam para caminhos convencionais", 
   await page.getByRole("link", { name: "Voltar para a Biblioteca" }).click();
   await expect(
     page.getByRole("heading", {
-      name: "Registros da Biblioteca",
+      name: "Biblioteca Viva",
       exact: true,
     }),
   ).toBeVisible();

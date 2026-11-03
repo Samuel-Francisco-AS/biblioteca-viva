@@ -6,7 +6,7 @@ test("coleção vazia mantém estantes sem livros artificiais e caminho convenci
   await page.goto("/");
 
   await expect(
-    page.getByRole("heading", { name: "Registros da Biblioteca", exact: true }),
+    page.getByRole("heading", { name: "Biblioteca Viva", exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {

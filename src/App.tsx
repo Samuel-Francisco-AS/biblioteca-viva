@@ -110,6 +110,9 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   return (
     <div
       className="app-shell"
+      data-route={
+        location.pathname === "/" ? "library" : location.pathname.split("/")[1]
+      }
       data-high-contrast={effectiveExperience.highContrast}
       data-reduced-motion={effectiveExperience.reducedMotion}
       data-text-size={effectiveExperience.textSize}

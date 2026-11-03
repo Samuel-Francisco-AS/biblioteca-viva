@@ -61,6 +61,11 @@ function renderLibrary(result: Promise<readonly LibraryEntry[]>, entry = "/") {
   return execute;
 }
 
+async function openIndex() {
+  const summary = await screen.findByText("Registros · alternativa acessível");
+  if (!summary.closest("details")?.open) await userEvent.click(summary);
+}
+
 function worldHostProps(): WorldHostProps {
   if (!latestWorldHostProps) throw new Error("WorldHost não foi montado.");
   return latestWorldHostProps;
@@ -146,6 +151,7 @@ describe("Página Biblioteca", () => {
     renderLibrary(Promise.resolve([]));
 
     await screen.findByTestId("world-host-stub");
+    await openIndex();
     expect(
       worldHostProps().libraryWorldSnapshot?.categories[0].entries,
     ).toEqual([]);
@@ -163,6 +169,7 @@ describe("Página Biblioteca", () => {
     const execute = renderLibrary(Promise.resolve([firstBook]), "/");
 
     await screen.findByTestId("world-host-stub");
+    await openIndex();
     expect(
       worldHostProps().libraryWorldSnapshot?.categories[0].entries,
     ).toEqual([
@@ -218,6 +225,7 @@ describe("Página Biblioteca", () => {
     ];
     const execute = renderLibrary(Promise.resolve(entries));
     await screen.findByTestId("world-host-stub");
+    await openIndex();
     const world = worldHostProps().libraryWorldSnapshot;
     expect(execute).toHaveBeenCalledOnce();
     expect(world?.categories.map(({ type }) => type)).toEqual([
@@ -244,6 +252,7 @@ describe("Página Biblioteca", () => {
   it("organiza os seis tipos, mantém categorias vazias e abre cada registro pelo entryId", async () => {
     const execute = renderLibrary(Promise.resolve(sixEntries), "/?q=ficticio");
     await screen.findByTestId("world-host-stub");
+    await openIndex();
     expect(execute).toHaveBeenCalledOnce();
     expect(
       screen
@@ -272,7 +281,9 @@ describe("Página Biblioteca", () => {
   it("não considera a coleção vazia quando só há filme", async () => {
     renderLibrary(Promise.resolve([sixEntries[1]]));
     await screen.findByTestId("world-host-stub");
+    await openIndex();
     expect(screen.getByRole("heading", { name: "Filmes" })).toBeVisible();
+    await openIndex();
     expect(screen.getByRole("link", { name: "Filme fictício" })).toBeVisible();
     expect(
       screen.getAllByText("Nenhum registro nesta categoria."),
@@ -286,6 +297,7 @@ describe("Página Biblioteca", () => {
     const user = userEvent.setup();
     renderLibrary(Promise.resolve(sixEntries));
     const host = await screen.findByTestId("world-host-stub");
+    await openIndex();
     const catalog = [
       { id: "reading-book:book-1", entryId: "book-1", label: "Livro" },
       { id: "library-movie:movie-1", entryId: "movie-1", label: "Filme" },
@@ -359,6 +371,7 @@ describe("Página Biblioteca", () => {
   it("mantém abertura convencional após falha do ambiente sem rotular tudo como overflow", async () => {
     renderLibrary(Promise.resolve(sixEntries));
     await screen.findByTestId("world-host-stub");
+    await openIndex();
     act(() => {
       worldHostProps().onSelectableObjectsChange?.([
         { id: "library-movie:movie-1", entryId: "movie-1", label: "Filme" },
@@ -390,6 +403,7 @@ describe("Página Biblioteca", () => {
   it("mantém overflow acessível sem oferecer seleção visual inexistente", async () => {
     renderLibrary(Promise.resolve([firstBook, secondBook]));
     await screen.findByTestId("world-host-stub");
+    await openIndex();
     act(() => {
       worldHostProps().onStatusChange?.("ready");
       worldHostProps().onSelectableObjectsChange?.([
@@ -422,6 +436,7 @@ describe("Página Biblioteca", () => {
     const user = userEvent.setup();
     renderLibrary(Promise.resolve([firstBook]));
     await screen.findByTestId("world-host-stub");
+    await openIndex();
     act(() => {
       worldHostProps().onStatusChange?.("ready");
       worldHostProps().onSelectableObjectsChange?.([
@@ -459,6 +474,7 @@ describe("Página Biblioteca", () => {
     const user = userEvent.setup();
     renderLibrary(Promise.resolve([firstBook, secondBook]));
     const host = await screen.findByTestId("world-host-stub");
+    await openIndex();
     act(() => {
       worldHostProps().onStatusChange?.("ready");
       worldHostProps().onSelectableObjectsChange?.([
@@ -522,6 +538,7 @@ describe("Página Biblioteca", () => {
   it("não oferece registro convencional para seleção técnica sem entryId", async () => {
     renderLibrary(Promise.resolve([firstBook]));
     await screen.findByTestId("world-host-stub");
+    await openIndex();
     act(() => {
       worldHostProps().onSelectionChange?.({
         id: "reading-shelf-01",
@@ -576,6 +593,7 @@ describe("Página Biblioteca", () => {
     ).toEqual([expect.objectContaining({ entryId: secondBook.id })]);
 
     act(() => resolveBooks([firstBook]));
+    await openIndex();
     expect(screen.getByRole("link", { name: secondBook.title })).toBeVisible();
     expect(screen.queryByText(firstBook.title)).not.toBeInTheDocument();
   });
@@ -655,6 +673,7 @@ describe("Página Biblioteca", () => {
       resolveReturn([sixEntries[1]]);
       await Promise.resolve();
     });
+    await openIndex();
     expect(screen.getByRole("link", { name: "Filme fictício" })).toBeVisible();
     expect(
       screen.queryByRole("link", { name: "Abrir registro" }),
@@ -704,6 +723,7 @@ describe("Página Biblioteca", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
 
     act(() => resolveBooks([secondBook]));
+    await openIndex();
     expect(
       await screen.findByRole("link", { name: secondBook.title }),
     ).toBeVisible();

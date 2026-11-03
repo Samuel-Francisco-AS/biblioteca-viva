@@ -63,7 +63,7 @@ async function resetIndexedDb(page: Page, testInfo: TestInfo): Promise<void> {
   await page.reload();
   await expect(
     page.getByRole("heading", {
-      name: "Registros da Biblioteca",
+      name: "Biblioteca Viva",
       exact: true,
     }),
   ).toBeVisible();

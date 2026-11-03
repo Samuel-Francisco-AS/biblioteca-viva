@@ -1,5 +1,8 @@
 # Roadmap
 
+> **BF-5 — implementação candidata em revisão (2026-11-03).** Reforma de apresentação nas cinco abas, autorizada pelo proprietário como macroentrega. Biblioteca com canvas ocupando o viewport, superfícies semânticas recolhidas e diálogo sobreposto; Coleção com categorias diretas e densidade; Arquivo, Resumo e Ajustes com composição editorial. **BF-5 não concluída nem aprovada artisticamente.** Gates, limitações e evidências em [BF-5_RELATORIO.md](BF-5_RELATORIO.md). As notas anteriores de ausência de autorização descrevem o planejamento histórico.
+
+
 > **DECISÃO VIGENTE — REPLANEJAMENTO PÓS-BF-4 (2026-11-03):** a sequência futura aprovada é **BF-5 — Reforma Global de UI/UX → BF-6 — Aprimoramento do Mundo Vivo (personagens, animações, RPG, diálogos e interatividade) → BF-7 — Consolidação Funcional e Assistiva**. A BF-7 herda a responsabilidade da **antiga BF-5** da ADR-011. A BF-5 será uma **grande reforma integrada**, seguida de **rodadas de refinamento da nova interface até o aceite do usuário**, e **não** uma sequência de pequenos checkpoints de implementação. Planejamento detalhado, direção de design e execução ainda serão definidos separadamente. Nenhuma das três fases foi iniciada. [ADR-014](decisions/ADR-014-replanejamento-pos-bf4.md).
 
 

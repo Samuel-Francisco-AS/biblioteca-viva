@@ -1,5 +1,12 @@
 # Changelog
 
+## BF-5 — candidata de apresentação (2026-11-03)
+
+- Biblioteca com canvas na área do viewport, alternativas recolhidas e narrativa em sobreposição acima do dock.
+- Categorias diretas e lista compacta na Coleção; composição editorial no Arquivo e Resumo; atalhos de seções em Ajustes.
+- Paleta compartilhada, tratamento de toque, movimento reduzido e Back/Escape de narrativa e exploração.
+- Sem mudança de schema, backup, domínio ou motor narrativo. Candidata sem aceite humano; ver relatório BF-5.
+
 ## BF-5 — direção visual global (somente documentação; 2026-11-03)
 
 - Publicado [Guia de Direção Visual Global — Fantasia Sobrenatural Editorial](docs/BF-5_DIRECAO_VISUAL_GLOBAL.md), abrangendo as cinco abas com identidade compartilhada, atmosferas distintas, linguagem de materiais/luz, interação ao toque, transições, ergonomia e contenção de efeitos mágicos.

@@ -37,6 +37,23 @@ export function NarrativePanel({
       opener.current?.focus({ preventScroll: true });
     previousActive.current = Boolean(state.active);
   }, [state.revision, state.active]);
+  useEffect(() => {
+    if (!state.active && !journal) return;
+    const close = (event: Event) => {
+      if (event instanceof KeyboardEvent && event.key !== "Escape") return;
+      event.preventDefault();
+      if (journal) {
+        setJournal(false);
+        setConfirmReset(false);
+      } else session.close();
+    };
+    window.addEventListener("keydown", close);
+    window.addEventListener("biblioteca-viva:native-back", close);
+    return () => {
+      window.removeEventListener("keydown", close);
+      window.removeEventListener("biblioteca-viva:native-back", close);
+    };
+  }, [state.active, journal, session]);
   return (
     <section
       className={`rpg-shell${state.active ? " rpg-shell--open" : ""}`}
@@ -65,11 +82,17 @@ export function NarrativePanel({
         <article
           className={`rpg-dialogue rpg-dialogue--${node.speakerId}`}
           aria-label="Conversa RPG"
-          onKeyDown={(event) => {
-            if (event.key === "Escape") session.close();
-          }}
         >
           <header>
+            <span className="rpg-sigil" aria-hidden="true">
+              {node.speakerId === "lua"
+                ? "☾"
+                : node.speakerId === "ytha"
+                  ? "✧"
+                  : node.speakerId === "aryn"
+                    ? "❧"
+                    : "♜"}
+            </span>
             <div>
               <small>{STORIES[state.active].title}</small>
               <h3 ref={heading} tabIndex={-1}>

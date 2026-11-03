@@ -47,7 +47,7 @@ describe("App", () => {
     );
     expect(
       screen.getByRole("heading", {
-        name: "Registros da Biblioteca",
+        name: "Biblioteca Viva",
       }),
     ).toBeVisible();
     expect(screen.getByRole("link", { name: "Abrir Coleção" })).toHaveAttribute(

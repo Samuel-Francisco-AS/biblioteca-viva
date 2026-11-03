@@ -1,3 +1,4 @@
+import { RealmIntro } from "../../app/RealmIntro";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
@@ -70,6 +71,7 @@ export function CollectionPage({
   const location = useLocation();
   const searchRef = useRef<HTMLInputElement>(null);
   const searchToggleRef = useRef<HTMLButtonElement>(null);
+  const [compact, setCompact] = useState(false);
   const [searchExpanded, setSearchExpanded] = useState(false);
   const query = params.get("q") ?? "";
   const status = parseStatusFilter(params.get("status"));
@@ -175,6 +177,10 @@ export function CollectionPage({
         className="content-card"
         aria-labelledby="empty-collection-title"
       >
+        <RealmIntro
+          title="Acervo encantado"
+          description="Tudo o que você lê, descobre e constrói."
+        />
         <p className="eyebrow">Coleção vazia</p>
         <h2 id="empty-collection-title">Seu primeiro registro começa aqui</h2>
         <p>Registre algo que você lê, assiste, aprende, pratica ou constrói.</p>
@@ -196,6 +202,10 @@ export function CollectionPage({
   const returnPath = `${location.pathname}${location.search}`;
   return (
     <section aria-labelledby="collection-title">
+      <RealmIntro
+        title="Acervo encantado"
+        description="Tudo o que você lê, descobre e constrói."
+      />
       <div className="section-heading">
         <div>
           <p className="eyebrow">Seus registros</p>
@@ -221,6 +231,25 @@ export function CollectionPage({
           </Link>
         </div>
       </div>
+      <nav className="category-ribbon" aria-label="Categorias do acervo">
+        <button
+          type="button"
+          aria-pressed={type === "all"}
+          onClick={() => updateParam("type", "all")}
+        >
+          Todos
+        </button>
+        {ENTRY_TYPES.map((category) => (
+          <button
+            type="button"
+            key={category}
+            aria-pressed={type === category}
+            onClick={() => updateParam("type", category)}
+          >
+            {entryTypeLabels[category]}
+          </button>
+        ))}
+      </nav>
       <div
         aria-hidden={!searchExpanded}
         className="collapsible-controls"
@@ -313,6 +342,14 @@ export function CollectionPage({
         </fieldset>
       </div>
       <div className="result-summary" aria-live="polite">
+        <button
+          type="button"
+          className="button button--secondary"
+          aria-pressed={compact}
+          onClick={() => setCompact(!compact)}
+        >
+          Lista compacta
+        </button>
         <p>
           {visibleEntries.length}{" "}
           {visibleEntries.length === 1
@@ -345,9 +382,13 @@ export function CollectionPage({
           <p>Altere a busca ou os filtros para ver outros registros.</p>
         </section>
       ) : (
-        <ul className="book-grid">
+        <ul className={compact ? "book-grid book-grid--compact" : "book-grid"}>
           {visibleEntries.map((entry) => (
-            <li className="book-card" key={entry.id}>
+            <li
+              className="book-card"
+              data-entry-type={entry.type}
+              key={entry.id}
+            >
               <Link
                 aria-label={`Abrir detalhes de ${entry.title}`}
                 className="book-card__link"

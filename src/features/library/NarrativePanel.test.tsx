@@ -48,3 +48,28 @@ it("supports keyboard choices, focus, interruption, completion and journal with 
   expect(document.querySelector("input, textarea, canvas")).toBeNull();
   session.dispose();
 });
+
+it("consumes native Back for the journal and active conversation", async () => {
+  const session = new NarrativeSession();
+  const user = userEvent.setup();
+  render(<NarrativePanel session={session} failed />);
+  await user.click(screen.getByRole("button", { name: /Diário de histórias/ }));
+  const back = new Event("biblioteca-viva:native-back", { cancelable: true });
+  act(() => {
+    window.dispatchEvent(back);
+  });
+  expect(back.defaultPrevented).toBe(true);
+  expect(
+    screen.queryByRole("complementary", { name: "Diário de quests" }),
+  ).not.toBeInTheDocument();
+  act(() => session.open("ashes"));
+  const dialogueBack = new Event("biblioteca-viva:native-back", {
+    cancelable: true,
+  });
+  act(() => {
+    window.dispatchEvent(dialogueBack);
+  });
+  expect(dialogueBack.defaultPrevented).toBe(true);
+  expect(session.getSnapshot().active).toBeNull();
+  session.dispose();
+});
