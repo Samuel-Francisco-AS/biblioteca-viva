@@ -273,17 +273,15 @@ export function EntryDetailPage({
       </Link>
       <div className="section-heading entry-detail-hero">
         <span aria-hidden="true" className="entry-detail-hero__emblem">
-          {currentEntry.type === "book"
-            ? "✦"
-            : currentEntry.type === "movie"
-              ? "◈"
-              : currentEntry.type === "series"
-                ? "✧"
-                : currentEntry.type === "study"
-                  ? "✶"
-                  : currentEntry.type === "physical_activity"
-                    ? "☀"
-                    : "⌁"}
+          {currentEntry.type === "movie"
+            ? "◈"
+            : currentEntry.type === "series"
+              ? "✧"
+              : currentEntry.type === "study"
+                ? "✶"
+                : currentEntry.type === "physical_activity"
+                  ? "☀"
+                  : "⌁"}
         </span>
         <div className="entry-detail-hero__body">
           <p className="eyebrow">{entryTypeLabels[currentEntry.type]}</p>
