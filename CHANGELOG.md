@@ -1,5 +1,12 @@
 # Changelog
 
+## BF-4F4 — concluída no escopo dirigido, com exceção CI (2026-11-02)
+
+- Quatro histórias individuais completas e A Noite da Fenda Lilás em cinco atos, com escolhas, pistas, colaboração, consequências e epílogos distintos, inteiramente offline.
+- Conversa pelo toque nos habitantes ou React, diário de sessão, adiamento/retomada, teclado/foco e leitura sem WebGL.
+- Gestos coordenados com a autonomia, vínculos narrativos separados dos encontros espontâneos, props restauráveis e atmosfera própria da fenda nos cinco cômodos.
+- Progresso somente nesta visita; nenhum registro, schema, backup, dependência ou versão alterado. **Fechamento dirigido autorizado:** usuário confirmou questões/escolhas funcionais no Moto G06 e apresentou seis capturas do painel RPG e Fenda Lilás; sem confirmação física individual de todos os cinco finais. [CI PR #17](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41550602711) FAIL global (23 E2E PASS, 11 FAIL), novos E2E F4 2/2 PASS. Merge expressamente autorizado por exceção CI; BF-4F1–F4 concluídas no recorte dirigido, BF-4G pendente. UI/UX e refinamento de personagens/RPG/diálogos/interatividade reservados para fases futuras próprias. [Relatório](docs/BF-4F4_RELATORIO.md).
+
 ## BF-4F3 — concluída no escopo dirigido, com exceções CI e Lua (2026-11-02)
 
 - Samael, Aryn, Ytha e Lua escolhem atividades, circulam pelos cinco cômodos, repousam e se aproximam espontaneamente; seis relações mudam por atrito, cooperação e reconhecimento durante a sessão.

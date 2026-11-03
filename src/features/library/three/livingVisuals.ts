@@ -11,7 +11,11 @@ import {
   DirectionalLight,
   type Scene,
 } from "three";
-import { LIVING_OBJECTS, type LivingSession } from "../livingObjects";
+import {
+  LIVING_OBJECTS,
+  type LivingSession,
+  type Atmosphere,
+} from "../livingObjects";
 import { LIBRARY_SHELVES } from "../libraryShelfLayout";
 import { LIBRARY_FURNISHING } from "./libraryFurnishingLayout";
 /** Resources are attached to the building owner before use, and disposed with it. */
@@ -191,11 +195,12 @@ export function createLivingVisuals(
   let elapsed = 0;
   return {
     selectables,
-    update(delta: number, reduced: boolean) {
+    update(delta: number, reduced: boolean, narrativeAtmosphere?: Atmosphere) {
       delta = Number.isFinite(delta) ? Math.min(Math.max(delta, 0), 0.05) : 0;
       elapsed += delta;
       const state = session.getSnapshot();
-      sparks.visible = state.atmosphere === "encantada";
+      const atmosphere = narrativeAtmosphere ?? state.atmosphere;
+      sparks.visible = atmosphere === "encantada";
       sparks.children.forEach((spark, index) => {
         const y: unknown = spark.userData.baseY;
         if (typeof y === "number")
@@ -251,8 +256,7 @@ export function createLivingVisuals(
             );
             break;
           case "plant":
-            item.moving.visible =
-              value.active || state.atmosphere === "encantada";
+            item.moving.visible = value.active || atmosphere === "encantada";
             item.moving.rotation.z = reduced ? 0 : Math.sin(elapsed * 2) * 0.12;
             item.root.children.forEach((child) => {
               if (child.name.startsWith("living-leaf-"))
@@ -294,9 +298,9 @@ export function createLivingVisuals(
       scene.traverse((object) => {
         if (object instanceof HemisphereLight) {
           const targetIntensity =
-            state.atmosphere === "noturna"
+            atmosphere === "noturna"
               ? 0.65
-              : state.atmosphere === "encantada"
+              : atmosphere === "encantada"
                 ? 1.25
                 : 2;
           object.intensity = reduced
@@ -304,7 +308,7 @@ export function createLivingVisuals(
             : object.intensity + (targetIntensity - object.intensity) * blend;
         }
         if (object instanceof DirectionalLight) {
-          const targetIntensity = state.atmosphere === "noturna" ? 0.4 : 1.5;
+          const targetIntensity = atmosphere === "noturna" ? 0.4 : 1.5;
           object.intensity = reduced
             ? targetIntensity
             : object.intensity + (targetIntensity - object.intensity) * blend;

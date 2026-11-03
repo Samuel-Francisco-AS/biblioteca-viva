@@ -1,8 +1,16 @@
+import { createNarrativeVisuals } from "./narrativeVisuals";
+import type { NarrativeSnapshot } from "../narrative/contracts";
+import { STORIES } from "../narrative/stories";
+import { nodeFor } from "../narrative/session";
 import { InhabitantAgency, type AgencySnapshot } from "../inhabitantAgency";
 import { InhabitantNavigation } from "../inhabitantNavigation";
 import { collectInhabitantObstacles } from "./inhabitantObstacles";
 import { createInhabitantSceneProps } from "./inhabitantSceneProps";
-import type { InhabitantAction } from "../inhabitants";
+import {
+  INHABITANTS,
+  type InhabitantAction,
+  type InhabitantKey,
+} from "../inhabitants";
 import {
   createInhabitantVisuals,
   type InhabitantLoader,
@@ -445,6 +453,11 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly inhabitantLoader?: InhabitantLoader;
   private agency?: InhabitantAgency;
   private agencyClock = 0;
+  private readonly inhabitantActivations = new Set<
+    (key: InhabitantKey) => void
+  >();
+  private narrative?: NarrativeSnapshot;
+  private narrativeVisuals?: ReturnType<typeof createNarrativeVisuals>;
   private readonly agencyListeners = new Set<
     (snapshot: AgencySnapshot) => void
   >();
@@ -657,6 +670,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
             },
           },
         );
+        this.narrativeVisuals = createNarrativeVisuals(building);
         this.unsubscribeAgency = this.agency.subscribe(() => {
           const snapshot = this.agency?.getSnapshot();
           if (snapshot)
@@ -729,6 +743,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
         onTapObject: (id) => {
           if (this.isTerminal() || this.state !== "running") return;
           if (id.startsWith("living:")) this.livingSession?.actPrimary(id);
+          const actor = INHABITANTS.find((a) => a.id === id);
+          if (actor)
+            for (const listener of this.inhabitantActivations)
+              listener(actor.key);
         },
         pickingPriorityRoots: [
           ...proceduralSelectables.map(({ root }) => root),
@@ -903,6 +921,37 @@ export class ThreeWorldRuntime implements WorldRuntime {
     return this.inhabitants?.play(id, action) ?? "unavailable";
   }
 
+  onInhabitantActivate(listener: (key: InhabitantKey) => void): () => void {
+    if (this.isTerminal()) return () => {};
+    this.inhabitantActivations.add(listener);
+    return () => {
+      this.inhabitantActivations.delete(listener);
+    };
+  }
+
+  applyNarrative(snapshot: NarrativeSnapshot): void {
+    if (
+      this.isTerminal() ||
+      !this.agency ||
+      (this.narrative && snapshot.revision <= this.narrative.revision)
+    )
+      return;
+    this.narrative = snapshot;
+    const node = nodeFor(snapshot);
+    const ensemble =
+      snapshot.active === "rift" &&
+      ["energy", "structure", "life", "conjure", "check", "surge"].some(
+        (id) => node?.nodeId === `rift:${id}`,
+      );
+    this.agency.setNarrativeBonds(snapshot.bonds);
+    this.agency.setConversation(
+      snapshot.talkingTo,
+      node?.action,
+      ensemble,
+      snapshot.active ? STORIES[snapshot.active].owner : undefined,
+    );
+  }
+
   getInhabitantSnapshot(): AgencySnapshot | null {
     return this.agency?.getSnapshot() ?? null;
   }
@@ -1037,7 +1086,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     selection: WorldSelection,
   ): void => {
     if (this.isTerminal()) return;
-    if (selection?.id.startsWith("character:"))
+    if (selection?.id.startsWith("character:") && !this.narrative?.talkingTo)
       this.playInhabitantAction(selection.id, "react");
     this.selection = selection;
     for (const listener of this.selectionListeners) listener(selection);
@@ -1152,7 +1201,11 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.inhabitants?.update(delta, reduced);
       if (this.agency)
         this.sceneProps?.update(
-          this.agency.getSnapshot().cosmetic,
+          this.narrative?.scenes.spell
+            ? this.narrative.scenes.spell === "restored"
+              ? "intact"
+              : "damaged-cosmetic"
+            : this.agency.getSnapshot().cosmetic,
           delta,
           reduced,
         );
@@ -1160,9 +1213,12 @@ export class ThreeWorldRuntime implements WorldRuntime {
         mountedWorld.getInteraction()?.updateHighlightBounds();
       this.livingVisuals?.update(
         delta,
-        window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
-          false,
+        reduced,
+        this.narrative?.scenes.rift && this.narrative.scenes.rift !== "restored"
+          ? "noturna"
+          : undefined,
       );
+      this.narrativeVisuals?.update(this.narrative, delta, reduced);
       if (this.livingVisuals && this.selection?.id.startsWith("living:"))
         mountedWorld.getInteraction()?.updateHighlightBounds();
     } catch {
@@ -1288,10 +1344,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.agency?.dispose();
     this.agency = undefined;
     this.agencyListeners.clear();
+    this.inhabitantActivations.clear();
     this.sceneProps = undefined;
     this.inhabitants?.dispose();
     this.inhabitants = undefined;
     this.livingVisuals = undefined;
+    this.narrativeVisuals = undefined;
+    this.narrative = undefined;
     this.livingFrameTime = undefined;
     try {
       mountedWorld?.dispose();

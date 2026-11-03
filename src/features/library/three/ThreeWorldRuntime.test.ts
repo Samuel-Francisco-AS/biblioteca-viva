@@ -1,3 +1,4 @@
+import { NarrativeSession } from "../narrative/session";
 import type { AgencySnapshot } from "../inhabitantAgency";
 import { readFileSync } from "node:fs";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -2815,6 +2816,31 @@ it("BF-4F3 drives real models from one runtime loop and preserves semantic state
   expect(
     scene.getObjectByName(samael.id)!.position.equals(selectedPosition),
   ).toBe(true);
+  const narrative = new NarrativeSession();
+  const environment = living.getSnapshot();
+  narrative.open("ashes");
+  const opening = narrative.getSnapshot();
+  runtime.applyNarrative(opening);
+  advance(80);
+  expect(
+    scene.getObjectByName(samael.id)!.position.equals(selectedPosition),
+  ).toBe(true);
+  expect(
+    runtime.getInhabitantSnapshot()?.agents.find((a) => a.key === "samael")
+      ?.state,
+  ).toBe("converse");
+  narrative.choose("ashes:choice:aryn", narrative.getSnapshot().revision);
+  runtime.applyNarrative(narrative.getSnapshot());
+  runtime.applyNarrative(narrative.getSnapshot());
+  runtime.applyNarrative(opening);
+  const relation = runtime
+    .getInhabitantSnapshot()!
+    .relations.find(
+      (r) => r.pair.includes("samael") && r.pair.includes("aryn"),
+    )!;
+  expect(relation.narrativeHistory).toHaveLength(1);
+  expect(renderer.domElement.dataset.highlightedObject).toBe(samael.id);
+  expect(living.getSnapshot()).toBe(environment);
   runtime.pause();
   expect(frames.size).toBe(0);
   expect(runtime.getInhabitantSnapshot()?.mode).toBe("paused");
@@ -2840,8 +2866,11 @@ it("BF-4F3 drives real models from one runtime loop and preserves semantic state
   expect(onSnapshot.mock.calls.at(-1)![0].mode).toBe("unavailable");
   expect(frames.size).toBe(0);
   const calls = onSnapshot.mock.calls.length;
+  narrative.close();
+  runtime.applyNarrative(narrative.getSnapshot());
   living.actPrimary("living:plant");
   expect(onSnapshot).toHaveBeenCalledTimes(calls);
   runtime.dispose();
+  narrative.dispose();
   living.dispose();
 });

@@ -233,3 +233,65 @@ describe("BF-4F3 local agency", () => {
     expect(rooms.size).toBeGreaterThanOrEqual(5);
   });
 });
+
+it("F4 holds a conversation indefinitely at the real position and facing, ignores incompatible attention and resumes safely", () => {
+  const s = session(realNavigation());
+  s.step(4);
+  const before = s.agency.getPoses().find((a) => a.key === "samael")!;
+  s.agency.setConversation("samael", "gesture");
+  s.step(30);
+  const during = s.agency.getPoses().find((a) => a.key === "samael")!;
+  expect([during.x, during.z, during.facing]).toEqual([
+    before.x,
+    before.z,
+    before.facing,
+  ]);
+  expect(during.state).toBe("converse");
+  expect(s.agency.interrupt(during.id, "walk")).toBe(false);
+  s.agency.perceive([{ type: "acted", objectId: "living:hearth" }]);
+  expect(s.agency.getPoses().find((a) => a.key === "samael")?.state).toBe(
+    "converse",
+  );
+  s.agency.setMode("paused");
+  s.jump();
+  s.agency.setMode("running");
+  s.step(0.2);
+  expect(s.agency.getPoses().find((a) => a.key === "samael")?.state).toBe(
+    "converse",
+  );
+  s.agency.setConversation(null);
+  s.step(5);
+  expect(s.agency.getPoses().find((a) => a.key === "samael")?.state).not.toBe(
+    "converse",
+  );
+  s.agency.dispose();
+});
+it("F4 separates narrative bonds from autonomous history and can remove its channel without erasing spontaneous relations", () => {
+  const s = session(realNavigation());
+  const before = s.agency
+    .getSnapshot()
+    .relations.find(
+      (r) => r.pair.includes("samael") && r.pair.includes("aryn"),
+    )!;
+  const bonds = [
+    {
+      eventId: "fiction:consent",
+      pair: ["samael", "aryn"] as const,
+      change: "trust" as const,
+      text: "Reparo consentido na história.",
+    },
+  ];
+  s.agency.setNarrativeBonds(bonds);
+  s.agency.setNarrativeBonds(bonds);
+  const after = s.agency
+    .getSnapshot()
+    .relations.find((r) => r.id === before.id)!;
+  expect(after.trust).toBe(before.trust + 1);
+  expect(after.history).toEqual(before.history);
+  expect(after.narrativeHistory).toEqual(["Reparo consentido na história."]);
+  s.agency.setNarrativeBonds([]);
+  expect(
+    s.agency.getSnapshot().relations.find((r) => r.id === before.id)?.trust,
+  ).toBe(before.trust);
+  s.agency.dispose();
+});

@@ -49,6 +49,9 @@ export function InhabitantLife({
                     {names[r.pair[0]]} e {names[r.pair[1]]}
                   </strong>
                   : {r.description}
+                  {r.narrativeHistory?.map((text, index) => (
+                    <p key={index}>{text}</p>
+                  ))}
                 </li>
               ))}
             </ul>
