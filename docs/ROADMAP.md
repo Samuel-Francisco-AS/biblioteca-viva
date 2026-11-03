@@ -80,6 +80,10 @@ BF-6 ⏳ aprimoramento do Mundo Vivo — personagens, RPG, animações, diálogo
 BF-7 ⏳ consolidação funcional/assistiva — antiga BF-5; gate antes de beta/release
 ```
 
+### BF-5 — planejamento da tela Biblioteca (2026-11-03)
+
+O usuário definiu o **canvas como experiência dominante em tela inteira**, com **dock estilizado como única navegação persistente** e interação contextual com linguagem de **RPG/game mobile**. A Biblioteca Viva deve ser concebida com potencial de evolução para um game, sem abandonar funções essenciais ou decidir antecipadamente novas mecânicas. O [manifesto criativo e contrato funcional da tela Biblioteca](BF-5_BIBLIOTECA_MANIFESTO_CONTRATO.md) registra a visão, estados, gatilhos propostos, destinos dos elementos atuais, ergonomia e fronteiras BF-5/BF-6. **Planejamento documental; implementação e design definitivo não iniciados.** A BF-5 continua uma grande reforma integrada seguida de refinamentos, não checkpoints pequenos obrigatórios.
+
 ### Pós-BF-4 — contrato de sequência e modo de trabalho (ADR-014, 2026-11-03)
 
 **BF-5 — Reforma Global de UI/UX:** revisar em uma **única reforma ampla e coesa** o design e a experiência do aplicativo, inclusive telas convencionais, navegação, hierarquia de informação, componentes, tipografia, interações, painéis de narrativa/RPG, ergonomia mobile, integração React↔mundo 3D, orientações de tela e acessibilidade. O desenho visual detalhado, propostas estéticas, alcance exato e critérios finais serão discutidos e aprovados **antes da implementação**. **Não impor uma série de pequenos checkpoints como modelo de execução da BF-5**: produzir uma nova interface integrada substancial e depois refiná-la em rodadas de feedback visual/físico até o usuário considerá-la satisfatória. Commits técnicos e testes internos não são proibidos; só não constituem entregas fragmentadas obrigatórias. Validação e correções não podem ser suprimidas em nome da amplitude.
