@@ -1,5 +1,11 @@
 # Changelog
 
+## BF-5 — manifesto e contrato conceitual da tela Biblioteca (somente documentação; 2026-11-03)
+
+- Criado [manifesto criativo e contrato funcional](docs/BF-5_BIBLIOTECA_MANIFESTO_CONTRATO.md) para a tela principal: mundo 3D em tela cheia, dock inferior estilizado, HUD contextual, interações/diálogos em linguagem RPG e caminho exploratório rumo a uma experiência com identidade de game.
+- Separados elementos de direção já escolhidos pelo usuário e propostas visuais/interativas ainda sujeitas a discussão; preservadas funções convencionais e alternativas acessíveis, sem antecipar sistemas novos da BF-6.
+- Apenas planejamento/documentação na `main`, sem PR, código de produção, assets, schema, backup, APK ou validação física nova; ressalvas e CI anteriores inalteradas.
+
 ## Replanejamento pós-BF-4 — BF-5, BF-6 e BF-7 (somente documentação; 2026-11-03)
 
 - Aprovada a ordem **BF-5 — reforma global de UI/UX**, **BF-6 — aprimoramento do Mundo Vivo/RPG/animações/interatividade** e **BF-7 — consolidação funcional/assistiva** (responsabilidade da antiga BF-5), conforme [ADR-014](docs/decisions/ADR-014-replanejamento-pos-bf4.md).
