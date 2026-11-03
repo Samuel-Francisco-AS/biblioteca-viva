@@ -1,9 +1,9 @@
 # Changelog
 
-## BF-4G — candidata ao gate integrado (2026-11-03)
+## BF-4G / BF-4 — concluídas no escopo dirigido com exceção CI (2026-11-03)
 
 - Consolidação documental dos contratos B–F, matriz de evidências e roteiro curto Moto G06 em `docs/BF-4G_RELATORIO.md`.
-- Sem alteração de comportamento, arte, versão, schema ou backup. BF-4 não encerrada; CI global, auditoria e aceites humanos têm resultados separados no relatório.
+- Sem alteração de comportamento, arte, versão, schema ou backup. **BF-4G/BF-4 fechadas no escopo funcional dirigido**: auditoria independente favorável; gate Moto G06 **6/6 PASS**; usuário autorizou merge da [PR #18](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/18). [CI 41570848247](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41570848247) **FAIL global** (708 Vitest PASS; 30 E2E PASS, 3 FAIL, 1 flaky). #4/#11/#15, folio Lua, R-19, TalkBack e testes sustentados permanecem pendentes. BF-5 e refinamentos de UI/UX e personagens/RPG seguem futuros; sem beta/release. [Fechamento](docs/BF-4G_RELATORIO.md).
 
 ## BF-4F4 — concluída no escopo dirigido, com exceção CI (2026-11-02)
 

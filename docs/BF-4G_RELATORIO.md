@@ -1,6 +1,6 @@
-# BF-4G — Candidata à integração e ao gate físico
+# BF-4G — Consolidação e fechamento dirigido da BF-4
 
-Data: 2026-11-03. **Relatório de candidata, não fechamento da BF-4.** Auditoria independente, rodada Moto G06 e decisão expressa do usuário permanecem NOT RUN/pendentes. O exame abaixo foi realizado pelo agente executor; não é auditoria independente.
+Data: 2026-11-03. **Estado vigente: BF-4G e BF-4 concluídas no escopo técnico/funcional dirigido, por decisão expressa do usuário, com ressalvas de CI e validações específicas pendentes.** As seções a seguir preservam a evidência original do executor enquanto a etapa era candidata; **o fechamento independente e posterior, com resultados reais, está documentado ao final e prevalece sobre os trechos históricos de NOT RUN**. O exame inicial foi realizado pelo agente executor, não equivalia a auditoria independente.
 
 ## Identificação e escopo
 
@@ -74,7 +74,7 @@ APK: `android/app/build/outputs/apk/debug/app-debug.apk`, **10.568.395 bytes**; 
 
 Não há defeito de produto comprovado por esses logs, tampouco prova de que sejam apenas falhas do runner. Todas permanecem FAIL. Issues [#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4), [#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11) e [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15) foram confirmadas abertas. Orientação, segredo e reading-area ficam explicitamente rastreados aqui, sem alegar cobertura integral nas três issues. Não houve campanha local global, aumento de timeout, skip, supressão de assert ou rerun manual.
 
-CI da PR G: pendente de abertura/execução. Eventual diferença de resultado deve ser registrada como observação nova, sem atribuição causal automática a esta mudança documental.
+**Nota histórica pré-CI:** à época do relatório da candidata, a CI G ainda não tinha resultado. **Resultado definitivo e classificação** documentados no fechamento posterior deste relatório: [run 41570848247](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41570848247), CI global FAIL (30 E2E PASS, 3 FAIL, 1 flaky).
 
 ## Roteiro único Moto G06
 
@@ -94,3 +94,41 @@ Usar o APK identificado abaixo, preservando os dados existentes; não limpar ban
 Gate técnico dirigido: **PASS no recorte inspecionado e nos gates locais acima, sem regressão crítica nova conhecida; não significa BF-4G tecnicamente verde nem CI global PASS.** Gate integrado BF-4G: **NOT RUN/conclusão pendente**, pois faltam auditoria independente e rodada física. Nenhum PASS com ressalvas aceito foi presumido em nome do usuário. CI global anterior **FAIL**.
 
 BF-5 mantém consolidação funcional/assistiva, inclusive TalkBack; sem execução automática. UI/UX futura abrange comprimento/rolagem/hierarquia do painel e integração com navegação inferior. Outra frente futura trata modelos/acabamento, variedade/expressividade, coreografias, relação espacial com acontecimentos, magia, ritmo narrativo, diálogos e consequências. Ambas sem numeração nem implementação autorizada. R-19, folio Lua e desempenho/memória/temperatura sustentados continuam abertos. Nenhuma declaração de beta, release ou BF-4 inteira concluída.
+
+## Fechamento oficial da BF-4G e da BF-4 — 2026-11-03
+
+### Auditoria independente e integridade da candidata
+
+A [PR #18](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/18), HEAD inicial da candidata `c1b3820b23f1740a93e8a20ac9c56a1819ad3fed`, foi conferida independentemente no GitHub contra a `main` `0fba133bc574c2a1e7971c4214e5e03b3fcd6fcb`. A PR modificou **sete arquivos de documentação e nenhum arquivo de produção**. O relatório contém matriz B–F coerente, referências a testes existentes e limites honestos quanto a dados, ownership, fallback, lifecycle e execução física. Não foi demonstrado bloqueante de integração ou necessidade de mudanças de produção. Esta auditoria documental/estática **não é execução independente de 708 testes nem auditoria exaustiva do código**.
+
+Gates executados pelo agente na candidata: formato, lint, tipos, 708 Vitest, áudio, build/bundle, dois E2E RPG dirigidos, Android debug e `git diff --check` **PASS**, conforme evidência técnica do relatório. No [GitHub Actions run 41570848247](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41570848247), 708 Vitest e gates não E2E passaram. **A CI GLOBAL permaneceu FAIL**: **30 E2E PASS, 3 FAIL e 1 flaky**. Os três FAIL são: BF-4D coleção cheia 1280px ([#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11)), ações dirigidas de Samael BF-4F2 ([#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15)) e dez ciclos de rota shell ([#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4)). Busca/filtro/Arquivo foi **flaky**, não PASS estável. A CI anterior tinha 23 PASS/11 FAIL; esta mudança sem código é observação de variabilidade da suíte, não comprovação de causa runner-only, nem resolução de dívidas. Os cenários antes falhos e agora PASS **não** foram declarados permanentemente curados.
+
+### Gate físico dirigido — Moto G06 (usuário)
+
+O usuário confirmou os resultados para o gate conjunto, em uma rodada representativa:
+
+| Procedimento | Resultado |
+| --- | --- |
+| 1. Mundo e navegação | **PASS** |
+| 2. Registros e objetos vivos | **PASS** |
+| 3. Habitantes | **PASS** |
+| 4. RPG e diário | **PASS** |
+| 5. Lifecycle | **PASS** |
+| 6. Observações residuais | **PASS** |
+
+**Resultado: 6/6 procedimentos PASS**, conforme declaração humana; sem regressão funcional relatada nos procedimentos executados. O sexto PASS significa que a inspeção residual foi realizada com aprovação, **não** que o acidente/reparação do folio de Lua foi observado ou que a tremulação R-19 foi medida/erradicada. Não houve relato de avaliação específica de TalkBack, benchmark prolongado de FPS/memória/temperatura ou todos os finais/ramificações narrativas. Preservar `NOT RUN` nessas verificações até prova própria. Não inferir limpeza de banco, acesso a dados reais, teste de todos os seis tipos numa única sessão ou execução de cada evento aleatório além do que o roteiro e os resultados sustentam.
+
+### Decisão, exceções e continuidade
+
+Após auditoria independente favorável e gate físico 6/6 PASS, o usuário autorizou expressamente **merge da PR #18, fechamento documental da BF-4G e encerramento da BF-4**. Classificação:
+
+- **BF-4G: PASS no escopo técnico/funcional dirigido, COM RESSALVAS**;
+- **BF-4 — Mundo Vivo e Habitável: CONCLUÍDA no escopo técnico/funcional dirigido, COM RESSALVAS**;
+- **CI integrada: FAIL**, aceito para esta integração por exceção expressa, sem qualificação de gate verde;
+- **BF-5, TalkBack físico, beta, release, carga/termal sustentada, arte final e refinamentos futuros: NÃO APROVADOS por este fechamento**.
+
+Permanecem as issues #4/#11/#15, variação/flaky de busca/Arquivo, validação artística específica de folio de Lua BF-4F3, R-19 e lacunas de avaliação assistiva e sustentada. Não executar nova campanha de CI neste fechamento, não ocultar asserts, não reclassificar falhas antigas sem diagnóstico e não alterar o código de produção. O APK debug da candidata continua representando o código da `main` BF-4F4, pois BF-4G só modifica documentação.
+
+**Próximos trabalhos, ainda não iniciados:** BF-5 como consolidação funcional e gate assistivo previsto; **fase autônoma de UI/UX mobile**; e **outra fase autônoma de aprimoramento de personagens, animação, RPG, diálogos e interatividade**. A ordem, escopo e numeração desses refinamentos exigem planejamento posterior. A ambição artística continua prioridade, com testes proporcionais e otimizações somente diante de problemas concretos.
+
+O histórico acima, que descrevia gate físico e auditoria como NOT RUN, documenta a situação pré-fechamento e não prevalece sobre esta decisão.
