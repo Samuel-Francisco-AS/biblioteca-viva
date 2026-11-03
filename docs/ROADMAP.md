@@ -1,5 +1,8 @@
 # Roadmap
 
+> **DECISÃO VIGENTE — REPLANEJAMENTO PÓS-BF-4 (2026-11-03):** a sequência futura aprovada é **BF-5 — Reforma Global de UI/UX → BF-6 — Aprimoramento do Mundo Vivo (personagens, animações, RPG, diálogos e interatividade) → BF-7 — Consolidação Funcional e Assistiva**. A BF-7 herda a responsabilidade da **antiga BF-5** da ADR-011. A BF-5 será uma **grande reforma integrada**, seguida de **rodadas de refinamento da nova interface até o aceite do usuário**, e **não** uma sequência de pequenos checkpoints de implementação. Planejamento detalhado, direção de design e execução ainda serão definidos separadamente. Nenhuma das três fases foi iniciada. [ADR-014](decisions/ADR-014-replanejamento-pos-bf4.md).
+
+
 > **BF-4G E BF-4 CONCLUÍDAS NO ESCOPO TÉCNICO/FUNCIONAL DIRIGIDO (2026-11-03), com exceção CI explicitamente aceita.** Auditoria independente da candidata documental sem bloqueante inequívoco nem mudança de produção; gate físico Moto G06 fornecido pelo usuário **6/6 PASS**: mundo/navegação, registros/objetos vivos, habitantes, RPG/diário, lifecycle e observações residuais. Esses PASS atestam a rodada representativa, **não** teste de cada variação, do folio F3 de Lua, de R-19 em condições específicas, de TalkBack nem de carga/temperatura sustentadas. [CI PR #18 — run 41570848247](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41570848247) **FAIL global**: 708 Vitest PASS; E2E 30 PASS, 3 FAIL e 1 flaky (busca/Arquivo). FAIL: BF-4D coleção cheia 1280px (#11), BF-4F2 Samael (#15) e dez ciclos shell (#4). Causa do runner versus produto **não demonstrada**; issues [#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4), [#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11) e [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15) seguem abertas. O usuário **autorizou expressamente o fechamento e merge da [PR #18](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/18)** com estas ressalvas, sem CI verde, beta/release ou BF-5 iniciada. Refinamento futuro de **UI/UX** e, separadamente, de **personagens, RPG, diálogos e interatividade** permanece planejado sem numeração/implementação autorizada. [Relatório de fechamento](BF-4G_RELATORIO.md).
 
 As notas datadas abaixo preservam a cronologia; declarações antigas de fase próxima ou não implementada não substituem o estado BF-4G acima.
@@ -72,8 +75,20 @@ BF-4 ✅ Mundo Vivo e Habitável — BF-4B–G encerradas em escopo dirigido, 6/
     BF-4F3 ✅ comportamento autônomo, relações e interação ambiental — 3 PASS físicos; folio Lua não testado; CI FAIL
     BF-4F4 ✅ diálogos RPG e cinco histórias — aceite funcional Moto G06; CI global FAIL, refinamentos futuros
   BF-4G ✅ integração e gate físico dirigido 6/6 PASS; exceção CI preservada
-BF-5 ⏳ consolidação do marco funcional
+BF-5 ⏳ reforma global de UI/UX — grande entrega integrada, seguida de refinamentos
+BF-6 ⏳ aprimoramento do Mundo Vivo — personagens, RPG, animações, diálogos e interação
+BF-7 ⏳ consolidação funcional/assistiva — antiga BF-5; gate antes de beta/release
 ```
+
+### Pós-BF-4 — contrato de sequência e modo de trabalho (ADR-014, 2026-11-03)
+
+**BF-5 — Reforma Global de UI/UX:** revisar em uma **única reforma ampla e coesa** o design e a experiência do aplicativo, inclusive telas convencionais, navegação, hierarquia de informação, componentes, tipografia, interações, painéis de narrativa/RPG, ergonomia mobile, integração React↔mundo 3D, orientações de tela e acessibilidade. O desenho visual detalhado, propostas estéticas, alcance exato e critérios finais serão discutidos e aprovados **antes da implementação**. **Não impor uma série de pequenos checkpoints como modelo de execução da BF-5**: produzir uma nova interface integrada substancial e depois refiná-la em rodadas de feedback visual/físico até o usuário considerá-la satisfatória. Commits técnicos e testes internos não são proibidos; só não constituem entregas fragmentadas obrigatórias. Validação e correções não podem ser suprimidas em nome da amplitude.
+
+**BF-6 — Aprimoramento do Mundo Vivo:** após a BF-5, evoluir acabamento/expressividade dos quatro habitantes, animações, coreografias, magia/efeitos, encenação espacial, relações sociais, diálogos, histórias, escolhas, feedback e consequências RPG/interativas. O escopo concreto será planejado à parte, sem antecipar decisões de engine, LLM, persistência ou mecânicas novas.
+
+**BF-7 — Consolidação Funcional e Assistiva (antiga BF-5):** estabilizar a experiência integrada, investigar e classificar regressões e dívidas da CI, executar validação assistiva real (incluindo TalkBack) e gates proporcionais de funcionalidade, lifecycle e desempenho sustentado para avaliar o marco funcional. A mudança de ordem **não** declara sanadas as issues #4/#11/#15, flakiness, R-19, folio de Lua, variações narrativas nem os testes ausentes; defeitos bloqueadores observados na BF-5/6 devem ser tratados sem adiá-los artificialmente à BF-7. Não há beta/release automática.
+
+**Fronteiras:** preservam-se a arquitetura local-first, os seis tipos de registro, identidades de seleção, alternativa React semântica, integridade dos dados, Dexie/backup, ownership/lifecycle e a ambição artística. Nenhuma dessas fases está implementada ou tem código autorizado por esta decisão exclusivamente documental. Textos anteriores que chamavam a consolidação de “BF-5” são histórico, não o próximo plano operacional.
 
 **BF-4E — registro histórico de autorização criativa (implementação e fechamento ocorreram posteriormente):** [visão e contrato dos objetos vivos](BF-4E_VISAO_CONTRATO.md). Dez famílias-alvo, interações entre objetos, modos ambientais e uma descoberta encadeada nos cinco cômodos; nenhum código BF-4E implementado por essa decisão documental. Próximo passo: prompt de execução e gates independentes, sem antecipar personagens BF-4F.
 
