@@ -1,5 +1,12 @@
 # Changelog
 
+## Replanejamento pós-BF-4 — BF-5, BF-6 e BF-7 (somente documentação; 2026-11-03)
+
+- Aprovada a ordem **BF-5 — reforma global de UI/UX**, **BF-6 — aprimoramento do Mundo Vivo/RPG/animações/interatividade** e **BF-7 — consolidação funcional/assistiva** (responsabilidade da antiga BF-5), conforme [ADR-014](docs/decisions/ADR-014-replanejamento-pos-bf4.md).
+- **Método BF-5:** uma grande reforma de interface integrada seguida de refinamentos sucessivos com validação humana, **sem exigir implementação em checkpoints pequenos**; design e detalhes técnicos ainda serão planejados, sem autorização de código nesta alteração.
+- Preservadas as exceções da BF-4: CI global FAIL, issues #4/#11/#15, TalkBack, R-19, folio Lua, finais não testados exaustivamente e desempenho sustentado. Nenhum runtime, asset, dependência, schema, backup, teste ou versão modificado.
+
+
 ## BF-4G / BF-4 — concluídas no escopo dirigido com exceção CI (2026-11-03)
 
 - Consolidação documental dos contratos B–F, matriz de evidências e roteiro curto Moto G06 em `docs/BF-4G_RELATORIO.md`.
