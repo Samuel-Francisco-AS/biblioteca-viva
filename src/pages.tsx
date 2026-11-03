@@ -256,7 +256,7 @@ function LibraryPageContent({
       data-tools-open={toolsOpen || worldStatus === "failed"}
     >
       <div className="library-scene-vignette" aria-hidden="true" />
-      <header className="exploration-header">
+      <div className="exploration-header">
         <span className="exploration-header__eyebrow">
           <span className="exploration-header__star" aria-hidden="true">
             ✦
@@ -265,7 +265,7 @@ function LibraryPageContent({
         </span>
         <h2 id="library-title">Biblioteca Viva</h2>
         <p>O santuário das histórias</p>
-      </header>
+      </div>
       {worldStatus !== "failed" && (
         <button
           aria-controls="library-access-panels"

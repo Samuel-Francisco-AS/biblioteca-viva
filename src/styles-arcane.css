@@ -145,7 +145,7 @@ body {
   padding: 0.32rem 0.06rem 0.28rem;
   color: #b6aec6;
   gap: 0.1rem;
-  font-size: clamp(0.59rem, 2.65vw, 0.75rem);
+  font-size: clamp(0.7rem, 2.85vw, 0.83rem);
   letter-spacing: 0.01em;
   transition:
     background 220ms ease,
@@ -640,9 +640,27 @@ button:not(.primary-dock__link),
   position: static;
 }
 [data-route="library"] .world-explore,
-[data-route="library"] .living-controls,
+[data-route="library"] .living-controls > details,
 [data-route="library"] .library-index {
   display: none;
+}
+/* The selected object's action tray must remain alive even when the semantic
+   catalog is hidden. Hiding the whole LivingControls tree removes game actions. */
+[data-route="library"] .living-controls {
+  display: block;
+  position: static;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+}
+.library-page[data-tools-open="true"] .living-controls {
+  width: 100%;
+  height: auto;
+  padding: 0.5rem;
 }
 .library-page[data-tools-open="true"] .library-access-panels {
   position: fixed;
@@ -981,7 +999,7 @@ button:not(.primary-dock__link),
     gap: 0;
   }
   .primary-dock__link {
-    font-size: 0.61rem;
+    font-size: 0.72rem;
   }
   .primary-dock__medallion {
     height: 1.8rem;
@@ -1011,7 +1029,7 @@ button:not(.primary-dock__link),
     max-width: 69vw;
   }
   .library-page .rpg-tools button {
-    font-size: 0.69rem;
+    font-size: 0.74rem;
     padding: 0.48rem 0.65rem;
   }
   .exploration-lore {
@@ -1028,7 +1046,7 @@ button:not(.primary-dock__link),
     display: none;
   }
   .primary-dock__link {
-    font-size: 0.55rem;
+    font-size: 0.65rem;
   }
   .primary-dock__icon {
     width: 1.2rem;

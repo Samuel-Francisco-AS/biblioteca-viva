@@ -5,7 +5,7 @@ type RealmIntroProps = {
 
 export function RealmIntro({ title, description }: RealmIntroProps) {
   return (
-    <header className="realm-intro">
+    <div className="realm-intro">
       <div className="realm-intro__copy">
         <span className="realm-intro__overtitle">
           ✧ &nbsp; BIBLIOTECA VIVA / COMPÊNDIO
@@ -64,6 +64,6 @@ export function RealmIntro({ title, description }: RealmIntroProps) {
         />
         <circle cx="80" cy="80" r="6" fill="#d8b5ff" />
       </svg>
-    </header>
+    </div>
   );
 }
