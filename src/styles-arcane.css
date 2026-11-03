@@ -1185,3 +1185,12 @@ button:not(.primary-dock__link),
   max-width: 100%;
   white-space: normal;
 }
+
+/* Keep the celestial emblem rotating in place, and leave the journal unobstructed. */
+.realm-intro__seal {
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.library-page .rpg-shell:has(.rpg-journal) .rpg-tools {
+  display: none;
+}
