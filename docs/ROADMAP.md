@@ -80,6 +80,10 @@ BF-6 ⏳ aprimoramento do Mundo Vivo — personagens, RPG, animações, diálogo
 BF-7 ⏳ consolidação funcional/assistiva — antiga BF-5; gate antes de beta/release
 ```
 
+### BF-5 — direção visual global (2026-11-03)
+
+O usuário escolheu para **todas as telas** uma identidade de **fantasia sobrenatural**, bonita, mágica, misteriosa, elegante, organizada e confortável ao toque, com transições suaves e efeitos contextuais **sem poluição visual**. O guia [BF-5 — Direção Visual Global: Fantasia Sobrenatural Editorial](BF-5_DIRECAO_VISUAL_GLOBAL.md) estabelece pilares, paleta/materiais/tipografia ainda exploratórios, gramática de movimento/feedback e personalidade coerente para Biblioteca, Coleção, Arquivo, Resumo e Ajustes. O conceito global está aprovado; detalhes finais de aparência e layout serão definidos tela por tela. **Nenhuma implementação ou design system final está aprovado por esta documentação.**
+
 ### BF-5 — planejamento da tela Biblioteca (2026-11-03)
 
 O usuário definiu o **canvas como experiência dominante em tela inteira**, com **dock estilizado como única navegação persistente** e interação contextual com linguagem de **RPG/game mobile**. A Biblioteca Viva deve ser concebida com potencial de evolução para um game, sem abandonar funções essenciais ou decidir antecipadamente novas mecânicas. O [manifesto criativo e contrato funcional da tela Biblioteca](BF-5_BIBLIOTECA_MANIFESTO_CONTRATO.md) registra a visão, estados, gatilhos propostos, destinos dos elementos atuais, ergonomia e fronteiras BF-5/BF-6. **Planejamento documental; implementação e design definitivo não iniciados.** A BF-5 continua uma grande reforma integrada seguida de refinamentos, não checkpoints pequenos obrigatórios.
