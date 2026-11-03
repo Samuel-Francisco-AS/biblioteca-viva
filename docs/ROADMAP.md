@@ -1,5 +1,10 @@
 # Roadmap
 
+> **BF-4G — candidata preparada (2026-11-03).** Baseline `0fba133bc574c2a1e7971c4214e5e03b3fcd6fcb`, branch `feat/bf-4g-integracao-consolidacao`. Integrações B–F inspecionadas sem defeito novo comprovado que exija alterar produção. Gates locais PASS: 708 Vitest, 2 E2E RPG, estáticos, áudio, build/bundle e APK debug. Evidências, resultados e roteiro: [relatório da candidata](BF-4G_RELATORIO.md). **BF-4 permanece aberta:** auditoria independente, gate físico Moto G06 e decisão expressa do usuário pendentes. CI anterior global FAIL; TalkBack, folio F3 de Lua, R-19 e dívidas #4/#11/#15 preservados. UI/UX e refinamentos de personagens/RPG são frentes futuras separadas, sem implementação autorizada.
+
+As notas datadas abaixo preservam a cronologia; declarações antigas de fase próxima ou não implementada não substituem o estado BF-4G acima.
+
+
 > **BF-4F4 ENCERRADA NO ESCOPO DIRIGIDO (2026-11-02), BF-4F1–F4 concluídas por aceite funcional dirigido.** O usuário instalou a candidata no Moto G06, confirmou o funcionamento das questões/escolhas em diálogos e apresentou capturas da conversa de Samael e do início/progressão da Fenda Lilás. **Não foi relatada prova física individual de todos os cinco finais, de todas as ramificações ou do acidente F3 de Lua.** A revisão estática da [PR #17](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/17) não identificou bloqueante inequívoco; 708 Vitest PASS, novos E2E F4 2/2 PASS localmente e na CI. [CI run 41550602711](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41550602711): **23 E2E PASS, 11 FAIL; CI global FAIL**. Os onze cenários são dez nomes já reprovados antes e o BF-4D orientação (antes flaky), sem prova de causa comum. Issues #4/#11/#15, TalkBack, folio F3, R-19 e gate BF-4G permanecem. O usuário **autorizou explicitamente fechar F4 e executar o merge da PR #17 por exceção**, adiando UI/UX e refinamentos de personagens, RPG, diálogos e interatividade para **fases posteriores separadas, ainda sem numeração nem implementação autorizada**. [Fechamento F4](BF-4F4_RELATORIO.md). **Próximo marco previsto: BF-4G, gate integrado**, que ainda não foi executado.
 
 > **BF-4F3 ENCERRADA no escopo humano dirigido (2026-11-02), com exceções documentadas.** Moto G06: autonomia, convivência e integração **PASS**; acidente/reparação de Lua **NÃO TESTADO** fisicamente. [CI PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077) **FAIL**: 21 E2E PASS, 10 FAIL, 1 flaky; novo E2E BF-4F3 PASS. O usuário autorizou fechamento e merge apesar das ressalvas. **Próximo checkpoint: BF-4F4 — diálogos RPG e quests**, ainda não implementado, exigindo planejamento e PR próprios. [Relatório](BF-4F3_RELATORIO.md).
@@ -55,7 +60,7 @@ BF-3 ✅ concluída no escopo funcional/físico dirigido; dívida CI E2E aberta
     BF-3E2 ✅ interface funcional dos seis tipos — implementação local
     BF-3E3 ✅ gate consolidado — auditoria independente e CI PASS
   BF-3F ✅ gate físico dirigido 11/11 PASS; exceção CI documentada (#4)
-BF-4 🔄 mundo vivo e habitável — BF-4B/C/D/E e BF-4F1–F4 concluídas no escopo dirigido (ressalvas CI); BF-4G PRÓXIMA
+BF-4 🔄 mundo vivo e habitável — BF-4B/C/D/E e BF-4F1–F4 concluídas no escopo dirigido (ressalvas CI); BF-4G EM CONSOLIDAÇÃO
   BF-4A ✅ auditoria dirigida, decisões e contrato (documental)
   BF-4B ✅ cinco cômodos; auditoria, CI e Moto G06 PASS dirigido (R-19)
   BF-4C ✅ ampliação e mobília concluídas com PASS dirigido, exceção CI (#4)
@@ -66,7 +71,7 @@ BF-4 🔄 mundo vivo e habitável — BF-4B/C/D/E e BF-4F1–F4 concluídas no e
     BF-4F2 ✅ animações variadas e transições — PASS físico dirigido, CI global FAIL
     BF-4F3 ✅ comportamento autônomo, relações e interação ambiental — 3 PASS físicos; folio Lua não testado; CI FAIL
     BF-4F4 ✅ diálogos RPG e cinco histórias — aceite funcional Moto G06; CI global FAIL, refinamentos futuros
-  BF-4G ⏳ PRÓXIMA: gate integrado, Moto G06 e fechamento BF-4
+  BF-4G 🔄 candidata: auditoria independente, Moto G06 e decisão de fechamento pendentes
 BF-5 ⏳ consolidação do marco funcional
 ```
 
@@ -459,3 +464,7 @@ Auditar a única PR draft da F4 e validar no Moto G06 personalidade, cinco hist�
 2. **Personagens e RPG/diálogos/interatividade:** acabamento e identidade visual, atuação corporal durante conversas, coesão espacial da Fenda, gestos, efeitos, dinamismo social, variedade e profundidade narrativa e consequências perceptíveis. Sem presumir limitação do Moto G06 nem antecipar engine genérica, LLM ou dependências.
 
 Esses eixos são **intenção futura do usuário, não defeitos bloqueadores da entrega F4 nem autorização automática de implementação**. Definir escopo e prioridades posteriormente; priorizar ambição criativa, medir gargalos reais e usar testes proporcionais.
+
+## Próximos passos após a candidata BF-4G
+
+Auditar a candidata e executar uma rodada física representativa conforme o relatório; só então o usuário decide o encerramento da BF-4. BF-5 conserva consolidação funcional e gate assistivo, sem início automático. Reservar planejamento próprio para UI/UX (comprimento, rolagem, hierarquia e navegação inferior) e, separadamente, acabamento/expressividade dos personagens, coreografias, espaço, magia, ritmo, diálogos e consequências. As duas frentes não têm numeração nem autorização de implementação. Beta/release exigem evidências e decisão próprias.

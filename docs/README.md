@@ -1,5 +1,10 @@
 # Documentação da Biblioteca Viva
 
+> **BF-4G — candidata preparada (2026-11-03).** Baseline `0fba133bc574c2a1e7971c4214e5e03b3fcd6fcb`, branch `feat/bf-4g-integracao-consolidacao`. Integrações B–F inspecionadas sem defeito novo comprovado que exija alterar produção. Gates locais PASS: 708 Vitest, 2 E2E RPG, estáticos, áudio, build/bundle e APK debug. Evidências, resultados e roteiro: [relatório da candidata](BF-4G_RELATORIO.md). **BF-4 permanece aberta:** auditoria independente, gate físico Moto G06 e decisão expressa do usuário pendentes. CI anterior global FAIL; TalkBack, folio F3 de Lua, R-19 e dívidas #4/#11/#15 preservados. UI/UX e refinamentos de personagens/RPG são frentes futuras separadas, sem implementação autorizada.
+
+As notas datadas abaixo preservam a cronologia; declarações antigas de fase próxima ou não implementada não substituem o estado BF-4G acima.
+
+
 > **BF-4F4 FECHADA no escopo funcional dirigido (2026-11-02), série BF-4F1–F4 concluída nesse recorte.** O usuário validou no Moto G06 o funcionamento das questões/escolhas narrativas e compartilhou capturas do diálogo de Samael e do início/progresso da Fenda Lilás. Não houve relato de teste físico exaustivo de todas as histórias/finais ou do acidente F3 de Lua. A [CI da PR #17](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41550602711) terminou **FAIL global: 23 E2E PASS, 11 FAIL**; os dois novos E2E F4 PASS. [Merge da PR #17](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/17) e fechamento foram expressamente autorizados com exceção CI. **BF-4G é o próximo gate integrado planejado.** Refinamentos de **UI/UX** e, em outra fase, de **personagens, RPG, diálogos e interatividade** foram reservados pelo usuário para etapas futuras próprias, ainda sem numeração ou autorização de execução. [Relatório F4](BF-4F4_RELATORIO.md).
 
 > **BF-4F3 ENCERRADA no escopo dirigido (2026-11-02):** no Moto G06, Autonomia, Convivência e Integração **PASS**; Acidente de Lua **NÃO TESTADO fisicamente**, com cobertura automatizada e ressalva preservada. [CI PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077) **FAIL**: E2E 21 PASS, 10 FAIL, 1 flaky (novo F3 PASS; falhas remanescentes com mesmos nomes da execução F2). Fechamento e merge da [PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/16) expressamente autorizados com exceções documentadas. **Próxima: BF-4F4, RPG/quests**, ainda não iniciada. [Relatório final](BF-4F3_RELATORIO.md).
@@ -11,6 +16,7 @@ Este é o único índice da documentação ativa.
 
 | Documento | Pergunta respondida |
 |---|---|
+| [`BF-4G_RELATORIO.md`](BF-4G_RELATORIO.md) | Quais contratos foram inspecionados, quais gates passaram e o que falta para o gate integrado BF-4G? |
 | [`BF-4F4_RELATORIO.md`](BF-4F4_RELATORIO.md) | Quais cinco histórias foram entregues e como a F4 foi encerrada por aceite funcional dirigido e exceção CI? |
 | [`BF-4F3_RELATORIO.md`](BF-4F3_RELATORIO.md) | Como ocorreu a entrega de autonomia/relações F3, seu aceite físico dirigido e o fechamento por exceção CI/Lua? |
 | [`BF-4F2_RELATORIO.md`](BF-4F2_RELATORIO.md) | Entrega, gate físico e exceção CI no fechamento BF-4F2. |
@@ -60,4 +66,4 @@ A [BF-4E](BF-4E_RELATORIO.md) foi concluída no escopo funcional e físico dirig
 
 **BF-4F1 concluída no escopo dirigido em 2026-11-02:** o usuário aceitou visualmente os quatro primeiros modelos e sua seleção no Moto G06; falta a expressividade da BF-4F2, IA local F3 e quests F4. [Relatório F1](BF-4F1_RELATORIO.md). Notas antigas sobre ausência de implementação são histórico, não estado vigente. E2E finalizou FAIL (20 PASS, 6 FAIL, 1 flaky); TalkBack e desempenho sustentado não foram declarados PASS.
 
-**Estado vigente:** F1/F2/F3 concluídas no escopo dirigido com ressalvas registradas; F4 candidata implementada, ainda sem auditoria ou aceite físico. Notas antigas sobre F1/F2 pendentes ou sem código são cronologia histórica. Agentes seguem [AGENTS](../AGENTS.md), [direção artística](ART_DIRECTION.md), [testes](TESTING.md) e [desempenho](PERFORMANCE.md).
+**Estado vigente:** F1–F4 concluídas no escopo dirigido com ressalvas; BF-4G candidata para auditoria e gate físico. Notas antigas sobre F1/F2 pendentes ou sem código são cronologia histórica. Agentes seguem [AGENTS](../AGENTS.md), [direção artística](ART_DIRECTION.md), [testes](TESTING.md) e [desempenho](PERFORMANCE.md).

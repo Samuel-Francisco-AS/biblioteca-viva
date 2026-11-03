@@ -81,3 +81,9 @@ As cinco histórias e suas consequências têm cobertura lógica; ritmo, persona
 [CI da PR #17](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41550602711) **FAIL global: 23 E2E PASS, 11 FAIL**, novos BF-4F4 2/2 PASS. Onze casos FAIL incluem os dez nomes da PR #16 e o cenário BF-4D orientação que antes era flaky. Não inferir causa compartilhada, resolução das issues #4/#11/#15 ou teste de regressão global verde. Dívidas R-19, TalkBack, folio F3 e desempenho sustentado seguem até gate próprio. O usuário autorizou integrar por exceção; BF-4G ainda não foi executada.
 
 **Mitigação de produto/processo:** manter separados o aceite funcional dirigido, o julgamento artístico exaustivo e a estabilização técnica. O aprofundamento de UI/UX e das experiências sociais/narrativas será planejado mais tarde, sem empobrecimento artístico preventivo nem loops excessivos de CI. Sem release/beta automático. [Fechamento](BF-4F4_RELATORIO.md).
+
+## BF-4G — candidata integrada (2026-11-03)
+
+A inspeção de interfaces não demonstrou defeito novo de produção. Isso não resolve os onze FAIL da CI F4: orientação BF-4D, segredo BF-4E e reading-area são rastreados separadamente no [relatório G](BF-4G_RELATORIO.md), sem atribuição automática às issues #4/#11/#15. Causas de timeout permanecem inconclusivas; os resultados locais não aprovam CI global. Não houve simplificação artística ou ajuste de timeouts/retries.
+
+Gate físico integrado e auditoria independente ainda pendentes. TalkBack é procedimento físico separado; folio/acidente/reparação de Lua F3 continua sem aceite artístico específico. R-19, densidade representativa e desempenho/memória/aquecimento sustentados seguem sem prova nova. Painel longo, rolagem, hierarquia e proximidade da navegação inferior pertencem à futura UI/UX; refinamentos de personagens/RPG são outra frente. Nenhuma dessas reservas autoriza beta/release.

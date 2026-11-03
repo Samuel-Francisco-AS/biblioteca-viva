@@ -1,5 +1,10 @@
 # Changelog
 
+## BF-4G — candidata ao gate integrado (2026-11-03)
+
+- Consolidação documental dos contratos B–F, matriz de evidências e roteiro curto Moto G06 em `docs/BF-4G_RELATORIO.md`.
+- Sem alteração de comportamento, arte, versão, schema ou backup. BF-4 não encerrada; CI global, auditoria e aceites humanos têm resultados separados no relatório.
+
 ## BF-4F4 — concluída no escopo dirigido, com exceção CI (2026-11-02)
 
 - Quatro histórias individuais completas e A Noite da Fenda Lilás em cinco atos, com escolhas, pistas, colaboração, consequências e epílogos distintos, inteiramente offline.

@@ -1,5 +1,10 @@
 # BF-4 — Mundo Vivo e Habitável: plano e contrato
 
+> **BF-4G — candidata preparada (2026-11-03).** Baseline `0fba133bc574c2a1e7971c4214e5e03b3fcd6fcb`, branch `feat/bf-4g-integracao-consolidacao`. Integrações B–F inspecionadas sem defeito novo comprovado que exija alterar produção. Gates locais PASS: 708 Vitest, 2 E2E RPG, estáticos, áudio, build/bundle e APK debug. Evidências, resultados e roteiro: [relatório da candidata](BF-4G_RELATORIO.md). **BF-4 permanece aberta:** auditoria independente, gate físico Moto G06 e decisão expressa do usuário pendentes. CI anterior global FAIL; TalkBack, folio F3 de Lua, R-19 e dívidas #4/#11/#15 preservados. UI/UX e refinamentos de personagens/RPG são frentes futuras separadas, sem implementação autorizada.
+
+As notas datadas abaixo preservam a cronologia; declarações antigas de fase próxima ou não implementada não substituem o estado BF-4G acima.
+
+
 > **Atualização de estado pós-BF-4F4 (2026-11-02):** BF-4F1–F4 concluídas em recorte funcional/físico dirigido. A BF-4F4 recebeu aceite do usuário para as escolhas funcionando no Moto G06 e autorização de merge da [PR #17](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/17), com [CI global FAIL (23 E2E PASS, 11 FAIL)](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41550602711). A PR não comprova todas as cenas/finais fisicamente; ressalva do folio de Lua F3, #4/#11/#15, TalkBack e R-19 permanecem. **BF-4G é próxima: gate integrado ainda não executado.** UI/UX e evolução posterior de personagens/RPG/diálogos/interatividade terão fases distintas futuramente; isso não autoriza implementação nem beta/release. [Fechamento F4](BF-4F4_RELATORIO.md).
 
 > **Estado atual (2026-11-02):** BF-4A documental PASS; BF-4B concluída com PASS dirigido; BF-4C, **BF-4D e BF-4E encerradas no escopo técnico e físico/visual dirigido por exceção explícita ao gate de CI remota**. BF-4F–G pendentes. Issues #4 e #11, R-19 e TalkBack continuam abertos; sem beta/release. Trechos BF-4A preservam planejamento histórico. **Atualização de concepção BF-4F (ADR-013): quatro habitantes — Samael, Aryn, Ytha e Lua — e diálogos RPG ramificados com escolhas locais; nenhuma implementação BF-4F iniciada.** [Bíblia dos habitantes](BF-4F_CONCEPCAO_HABITANTES.md).
@@ -80,7 +85,7 @@ Autorização de 2026-11-02 implementa D1–D4 na branch própria, sobre o merge
 
 **Extensão criativa adotada em 2026-11-02 (registro anterior ao fechamento):** a BF-4E evolui de ações isoladas para um ambiente interativo integrado. [Visão e contrato BF-4E](BF-4E_VISAO_CONTRATO.md): dez famílias-alvo de objetos vivos (mínimo de oito plenamente funcionais), animações reais de props, luz cênica dinâmica, efeitos sonoros/táteis opcionais, três atmosferas, estados efêmeros, eventos locais e uma descoberta ficcional encadeada. Cinco cômodos, React acessível e distinção entre interação ambiental e registros convencionais são obrigatórios. Isso é **visão aprovada, não código pronto, não autorização de merge, nem escopo BF-4F**. Gate físico e CI futuros; dívidas #4/#11, R-19 e TalkBack preservadas.
 
-### BF-4F — Habitantes, animação, comportamento e conversa (PENDENTE)
+### BF-4F — Habitantes, animação, comportamento e conversa (CONCLUÍDA NO ESCOPO DIRIGIDO)
 
 **F1 — Identidade visual e personagem:** meta inicial de **quatro habitantes (Samael, Aryn, Ytha e Lua)**, com silhueta, traje/acessórios, escala, rosto/expressão visual e papel próprios; todos integrados aos cinco cômodos e selecionáveis via canvas/React. **Não há preflight experimental separado:** validar articulação, GLB/animador, normalização e descarte usando um dos personagens definitivos na própria F1, aproveitando essa implementação nos outros três. Gate visual humano posterior; nenhuma recoloração superficial do mesmo boneco. Ver [plano técnico BF-4F](BF-4F_PLANO_TECNICO.md).
 
@@ -92,11 +97,11 @@ Autorização de 2026-11-02 implementa D1–D4 na branch própria, sobre o merge
 
 - **Gate F:** **quatro personagens distintivos** em cenário integrado, várias animações demonstráveis, execução autônoma com rotas/atividades seguras, relações/interações entre os próprios habitantes, objetos e **diálogo RPG com escolhas ramificadas, quatro quests individuais e um arco compartilhado**;  nenhuma regressão dos seis tipos. Provas de cancelamento, estado terminal, memória efêmera, redução de movimento, rotas e interação sob orientação/background, além de validação no Moto G06.
 
-### BF-4G — Integração, gate físico e fechamento (PENDENTE)
+### BF-4G — Integração, gate físico e fechamento (CANDIDATA; FECHAMENTO PENDENTE)
 
 - Regressão proporcional consolidada: `format:check`, `lint`, `typecheck`, Vitest, `audio:check`, build, `performance:report`, E2E aplicáveis, `git diff --check`; build Android e verificações humanas separadas.
 - Moto G06: os cinco cômodos, objetos e personagens; seleção canvas/React, diálogo/interação, fluidez com animações, pan/pinch/zoom, retrato/paisagem, pausa/retomada, runtime/disposal, fallback; memória/termal quando mudança justificar.
-- **Gate G:** classificar PASS/FAIL e limitações sem apagar a dívida CI/issue #4 nem declarar TalkBack aprovado sem evidência humana; atualizar documentação e decidir transição à BF-5.
+- **Gate G:** auditoria independente, gate físico e autorização expressa são necessários para encerrar BF-4G/BF-4. Classificar PASS técnico dirigido, PASS com ressalvas dependente de aceite, FAIL ou NOT RUN e limitações sem apagar a dívida CI/issue #4 nem declarar TalkBack aprovado sem evidência humana; atualizar documentação e decidir transição à BF-5.
 - **BF-5** continua responsável pela consolidação funcional e gate humano assistivo antes do primeiro recorte real/beta.
 
 ## Questões técnicas condicionais, não bloqueios para B
