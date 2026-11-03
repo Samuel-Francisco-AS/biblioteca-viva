@@ -62,7 +62,9 @@ function renderLibrary(result: Promise<readonly LibraryEntry[]>, entry = "/") {
 }
 
 async function openIndex() {
-  const toggle = screen.queryByRole("button", { name: "Abrir ferramentas de exploração acessível" });
+  const toggle = screen.queryByRole("button", {
+    name: "Abrir ferramentas de exploração acessível",
+  });
   if (toggle) await userEvent.click(toggle);
   const summary = await screen.findByText("Registros · alternativa acessível");
   if (!summary.closest("details")?.open) await userEvent.click(summary);

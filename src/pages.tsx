@@ -258,182 +258,207 @@ function LibraryPageContent({
       <div className="library-scene-vignette" aria-hidden="true" />
       <header className="exploration-header">
         <span className="exploration-header__eyebrow">
-          <span className="exploration-header__star" aria-hidden="true">✦</span>
+          <span className="exploration-header__star" aria-hidden="true">
+            ✦
+          </span>
           MUNDO VIVO
         </span>
         <h2 id="library-title">Biblioteca Viva</h2>
         <p>O santuário das histórias</p>
       </header>
-      {worldStatus !== "failed" && <button
-        aria-controls="library-access-panels"
-        aria-expanded={toolsOpen || worldStatus === "failed"}
-        aria-label={toolsOpen ? "Recolher ferramentas de exploração" : "Abrir ferramentas de exploração acessível"}
-        className="exploration-compass"
-        onClick={() => setToolsOpen((open) => !open)}
-        type="button"
-      >
-        <svg aria-hidden="true" fill="none" viewBox="0 0 32 32">
-          <circle cx="16" cy="16" r="11.5" stroke="currentColor" strokeWidth="1.2" />
-          <path d="m19.5 12.5-3 7-4-4 7-3Z" fill="currentColor" opacity=".9" />
-          <path d="M16 2v4m0 20v4M2 16h4m20 0h4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-        </svg>
-        <span>{toolsOpen ? "Fechar painel" : "Explorar por lista"}</span>
-      </button>}
+      {worldStatus !== "failed" && (
+        <button
+          aria-controls="library-access-panels"
+          aria-expanded={toolsOpen || worldStatus === "failed"}
+          aria-label={
+            toolsOpen
+              ? "Recolher ferramentas de exploração"
+              : "Abrir ferramentas de exploração acessível"
+          }
+          className="exploration-compass"
+          onClick={() => setToolsOpen((open) => !open)}
+          type="button"
+        >
+          <svg aria-hidden="true" fill="none" viewBox="0 0 32 32">
+            <circle
+              cx="16"
+              cy="16"
+              r="11.5"
+              stroke="currentColor"
+              strokeWidth="1.2"
+            />
+            <path
+              d="m19.5 12.5-3 7-4-4 7-3Z"
+              fill="currentColor"
+              opacity=".9"
+            />
+            <path
+              d="M16 2v4m0 20v4M2 16h4m20 0h4"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+            />
+          </svg>
+          <span>{toolsOpen ? "Fechar painel" : "Explorar por lista"}</span>
+        </button>
+      )}
       <div className="exploration-lore" aria-hidden="true">
         <span className="exploration-lore__line" />
         <span>TOQUE PARA DESCOBRIR</span>
       </div>
       <div className="library-access-panels" id="library-access-panels">
-      {diagnosticsActive ? (
-        <Suspense
-          fallback={
-            <p className="world-status">Preparando cenário experimental…</p>
-          }
-        >
-          <PerformanceScenarioHarness />
-        </Suspense>
-      ) : !application ? (
-        <section className="content-card" role="alert">
-          <h3>Biblioteca indisponível</h3>
-          <p>Não foi possível iniciar o armazenamento local.</p>
-        </section>
-      ) : error ? (
-        <section className="content-card" role="alert">
-          <h3>Não foi possível preparar a Biblioteca</h3>
-          <p>{error}</p>
-        </section>
-      ) : !readingAreaBooks ? (
-        <p className="world-status" role="status">
-          Carregando Biblioteca…
-        </p>
-      ) : (
-        <>
-          <WorldHost
-            libraryWorldSnapshot={libraryWorldSnapshot}
-            onSelectableObjectsChange={handleSelectableObjects}
-            onSelectionChange={handleWorldSelection}
-            onStatusChange={handleWorldStatus}
-            selectedObjectId={requestedSelectionId}
-          />
-          <details className="library-index" open={worldStatus === "failed"}>
-            <summary>Registros · alternativa acessível</summary>
-            {worldStatus === "ready" && readingAreaBooks.length > 0 && (
-              <p className="reading-area-summary" aria-live="polite">
-                {representedBooks?.length ?? 0}{" "}
-                {(representedBooks?.length ?? 0) === 1
-                  ? "livro representado"
-                  : "livros representados"}
-                {"; "}
-                {readingAreaBooks.length - (representedBooks?.length ?? 0) === 1
-                  ? "1 livro fora da capacidade visual atual."
-                  : `${readingAreaBooks.length - (representedBooks?.length ?? 0)} livros fora da capacidade visual atual.`}
-              </p>
-            )}
-            {totalEntries === 0 && (
-              <section className="content-card reading-area-empty">
-                <h3>Ainda não há registros na Biblioteca</h3>
-                <p>Crie um registro para começar.</p>
-              </section>
-            )}
-            {libraryWorldSnapshot.categories.map((category) => (
-              <section className="reading-area-books" key={category.type}>
-                <h3>{categoryHeadings[category.type]}</h3>
-                {category.entries.length === 0 ? (
-                  <p>Nenhum registro nesta categoria.</p>
-                ) : (
-                  <ul>
-                    {category.entries.map((entry) => {
-                      const represented =
-                        worldStatus === "ready" &&
-                        representedIds.has(entry.instanceId);
-                      const overflow = worldStatus === "ready" && !represented;
-                      return (
-                        <li key={entry.instanceId}>
-                          <div>
-                            <p>{entryTypeLabels[category.type]}</p>
-                            <Link
-                              to={{
-                                pathname: entryPath(entry.entryId),
-                                search: `?from=${encodeURIComponent(returnPath)}`,
-                              }}
-                            >
-                              {entry.title}
-                            </Link>
-                            {category.type === "book" && (
-                              <p>
-                                {"author" in entry
-                                  ? (entry.author ?? "Autor não informado")
-                                  : "Autor não informado"}
-                              </p>
-                            )}
+        {diagnosticsActive ? (
+          <Suspense
+            fallback={
+              <p className="world-status">Preparando cenário experimental…</p>
+            }
+          >
+            <PerformanceScenarioHarness />
+          </Suspense>
+        ) : !application ? (
+          <section className="content-card" role="alert">
+            <h3>Biblioteca indisponível</h3>
+            <p>Não foi possível iniciar o armazenamento local.</p>
+          </section>
+        ) : error ? (
+          <section className="content-card" role="alert">
+            <h3>Não foi possível preparar a Biblioteca</h3>
+            <p>{error}</p>
+          </section>
+        ) : !readingAreaBooks ? (
+          <p className="world-status" role="status">
+            Carregando Biblioteca…
+          </p>
+        ) : (
+          <>
+            <WorldHost
+              libraryWorldSnapshot={libraryWorldSnapshot}
+              onSelectableObjectsChange={handleSelectableObjects}
+              onSelectionChange={handleWorldSelection}
+              onStatusChange={handleWorldStatus}
+              selectedObjectId={requestedSelectionId}
+            />
+            <details className="library-index" open={worldStatus === "failed"}>
+              <summary>Registros · alternativa acessível</summary>
+              {worldStatus === "ready" && readingAreaBooks.length > 0 && (
+                <p className="reading-area-summary" aria-live="polite">
+                  {representedBooks?.length ?? 0}{" "}
+                  {(representedBooks?.length ?? 0) === 1
+                    ? "livro representado"
+                    : "livros representados"}
+                  {"; "}
+                  {readingAreaBooks.length - (representedBooks?.length ?? 0) ===
+                  1
+                    ? "1 livro fora da capacidade visual atual."
+                    : `${readingAreaBooks.length - (representedBooks?.length ?? 0)} livros fora da capacidade visual atual.`}
+                </p>
+              )}
+              {totalEntries === 0 && (
+                <section className="content-card reading-area-empty">
+                  <h3>Ainda não há registros na Biblioteca</h3>
+                  <p>Crie um registro para começar.</p>
+                </section>
+              )}
+              {libraryWorldSnapshot.categories.map((category) => (
+                <section className="reading-area-books" key={category.type}>
+                  <h3>{categoryHeadings[category.type]}</h3>
+                  {category.entries.length === 0 ? (
+                    <p>Nenhum registro nesta categoria.</p>
+                  ) : (
+                    <ul>
+                      {category.entries.map((entry) => {
+                        const represented =
+                          worldStatus === "ready" &&
+                          representedIds.has(entry.instanceId);
+                        const overflow =
+                          worldStatus === "ready" && !represented;
+                        return (
+                          <li key={entry.instanceId}>
+                            <div>
+                              <p>{entryTypeLabels[category.type]}</p>
+                              <Link
+                                to={{
+                                  pathname: entryPath(entry.entryId),
+                                  search: `?from=${encodeURIComponent(returnPath)}`,
+                                }}
+                              >
+                                {entry.title}
+                              </Link>
+                              {category.type === "book" && (
+                                <p>
+                                  {"author" in entry
+                                    ? (entry.author ?? "Autor não informado")
+                                    : "Autor não informado"}
+                                </p>
+                              )}
+                              {represented && (
+                                <p>
+                                  {category.type === "book"
+                                    ? "Nas estantes visuais."
+                                    : "Representado no ambiente."}
+                                </p>
+                              )}
+                              {overflow && (
+                                <p>Fora da capacidade visual atual.</p>
+                              )}
+                              {worldStatus === "failed" && (
+                                <p>Representação visual indisponível.</p>
+                              )}
+                            </div>
                             {represented && (
-                              <p>
-                                {category.type === "book"
-                                  ? "Nas estantes visuais."
-                                  : "Representado no ambiente."}
-                              </p>
+                              <button
+                                aria-pressed={
+                                  selectedEntry?.instanceId === entry.instanceId
+                                }
+                                aria-label={`Selecionar no ambiente: ${entryTypeLabels[category.type]} ${entry.title}`}
+                                className="button button--secondary"
+                                onClick={() =>
+                                  application &&
+                                  setRequestedSelectionState({
+                                    application,
+                                    value: entry.instanceId,
+                                  })
+                                }
+                                type="button"
+                              >
+                                Selecionar no ambiente
+                              </button>
                             )}
-                            {overflow && (
-                              <p>Fora da capacidade visual atual.</p>
-                            )}
-                            {worldStatus === "failed" && (
-                              <p>Representação visual indisponível.</p>
-                            )}
-                          </div>
-                          {represented && (
-                            <button
-                              aria-pressed={
-                                selectedEntry?.instanceId === entry.instanceId
-                              }
-                              aria-label={`Selecionar no ambiente: ${entryTypeLabels[category.type]} ${entry.title}`}
-                              className="button button--secondary"
-                              onClick={() =>
-                                application &&
-                                setRequestedSelectionState({
-                                  application,
-                                  value: entry.instanceId,
-                                })
-                              }
-                              type="button"
-                            >
-                              Selecionar no ambiente
-                            </button>
-                          )}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                )}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </section>
+              ))}
+            </details>
+            {selectedEntry && (
+              <section className="reading-area-selection" aria-live="polite">
+                <p>
+                  {selectionDescriptions[selectedEntry.type]}:{" "}
+                  {selectedEntry.title}.
+                </p>
+                <Link
+                  className="button button--secondary"
+                  to={{
+                    pathname: entryPath(selectedEntry.entryId),
+                    search: `?from=${encodeURIComponent(returnPath)}`,
+                  }}
+                >
+                  Abrir registro
+                </Link>
               </section>
-            ))}
-          </details>
-          {selectedEntry && (
-            <section className="reading-area-selection" aria-live="polite">
-              <p>
-                {selectionDescriptions[selectedEntry.type]}:{" "}
-                {selectedEntry.title}.
-              </p>
-              <Link
-                className="button button--secondary"
-                to={{
-                  pathname: entryPath(selectedEntry.entryId),
-                  search: `?from=${encodeURIComponent(returnPath)}`,
-                }}
-              >
-                Abrir registro
-              </Link>
-            </section>
-          )}
-        </>
-      )}
-      <div className="placeholder-actions">
-        <Link className="button button--primary" to="/colecao">
-          Abrir Coleção
-        </Link>
-        <Link className="button button--secondary" to="/novo-registro">
-          Criar registro
-        </Link>
-      </div>
+            )}
+          </>
+        )}
+        <div className="placeholder-actions">
+          <Link className="button button--primary" to="/colecao">
+            Abrir Coleção
+          </Link>
+          <Link className="button button--secondary" to="/novo-registro">
+            Criar registro
+          </Link>
+        </div>
       </div>
     </section>
   );

@@ -2,7 +2,9 @@ import { expect, test } from "./fixtures";
 import type { Page } from "@playwright/test";
 
 async function openLibraryRecords(page: Page) {
-  await page.getByRole("button", { name: "Abrir ferramentas de exploração acessível" }).click();
+  await page
+    .getByRole("button", { name: "Abrir ferramentas de exploração acessível" })
+    .click();
   await page.locator(".library-index > summary").click();
 }
 
@@ -10,7 +12,6 @@ async function openSemanticSelection(page: Page) {
   await page.locator(".world-explore > summary").click();
   await page.locator(".world-semantic > summary").click();
 }
-
 
 test("coleção vazia mantém estantes sem livros artificiais e caminho convencional", async ({
   page,
