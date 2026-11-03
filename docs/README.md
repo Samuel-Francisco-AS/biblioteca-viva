@@ -20,6 +20,7 @@ Este é o único índice da documentação ativa.
 | Documento | Pergunta respondida |
 |---|---|
 | [`decisions/ADR-014-replanejamento-pos-bf4.md`](decisions/ADR-014-replanejamento-pos-bf4.md) | Qual a nova ordem BF-5/BF-6/BF-7 e por que a BF-5 será uma reforma ampla seguida de refinamentos? |
+| [`BF-5_BIBLIOTECA_MANIFESTO_CONTRATO.md`](BF-5_BIBLIOTECA_MANIFESTO_CONTRATO.md) | Qual é a visão de game/RPG e como funcionará a tela Biblioteca em exploração full-screen? |
 | [`BF-4G_RELATORIO.md`](BF-4G_RELATORIO.md) | Quais contratos foram inspecionados, quais gates passaram e o que falta para o gate integrado BF-4G? |
 | [`BF-4F4_RELATORIO.md`](BF-4F4_RELATORIO.md) | Quais cinco histórias foram entregues e como a F4 foi encerrada por aceite funcional dirigido e exceção CI? |
 | [`BF-4F3_RELATORIO.md`](BF-4F3_RELATORIO.md) | Como ocorreu a entrega de autonomia/relações F3, seu aceite físico dirigido e o fechamento por exceção CI/Lua? |
