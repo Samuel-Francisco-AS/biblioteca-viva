@@ -11,17 +11,12 @@ const tactile =
     ? registerPlugin<NativeTactileFeedback>("TactileFeedback")
     : undefined;
 
-// Activation feedback only. A short cadence avoids double pulses from nested
-// interactive elements; pan, pinch and keyboard input never invoke this bridge.
-let lastPulse = -Infinity;
-
+// One request per semantic activation; unrelated rapid commands remain valid.
 export function pulseTouch(
   reducedMotion: boolean,
-  now = performance.now(),
   kind: "selection" | "confirm" = "selection",
 ): void {
-  if (reducedMotion || now - lastPulse < 135) return;
-  lastPulse = now;
+  if (reducedMotion) return;
 
   if (tactile) {
     void tactile.pulse({ kind }).catch(() => {

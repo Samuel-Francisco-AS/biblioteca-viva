@@ -43,6 +43,7 @@ test("BF-5R2: canvas intact, route entrance without blur and tactile response", 
       new PointerEvent("pointerdown", {
         bubbles: true,
         pointerType: "touch",
+        isPrimary: true,
       }),
     );
     return element.getAttribute("data-tap-active");

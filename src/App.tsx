@@ -84,7 +84,9 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   const mainRef = useRef<HTMLElement>(null);
   const previousPathRef = useRef(location.pathname);
   const pressedRef = useRef<HTMLElement | null>(null);
-  const pressedTimeoutRef = useRef<number | null>(null);
+  const pressedOriginRef = useRef<{ id: number; x: number; y: number } | null>(
+    null,
+  );
   const activeRoute = appRoutes.find(
     (route) => route.path === location.pathname,
   );
@@ -120,17 +122,22 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
     }
   }, [location.pathname]);
 
+  function clearTap(): void {
+    pressedRef.current?.removeAttribute("data-tap-active");
+    pressedRef.current = null;
+    pressedOriginRef.current = null;
+  }
+
   useEffect(
     () => () => {
-      if (pressedTimeoutRef.current !== null)
-        window.clearTimeout(pressedTimeoutRef.current);
       pressedRef.current?.removeAttribute("data-tap-active");
     },
     [],
   );
 
   function revealTap(event: ReactPointerEvent<HTMLDivElement>): void {
-    if (event.pointerType === "mouse") return;
+    clearTap();
+    if (event.pointerType === "mouse" || !event.isPrimary) return;
     if (!(event.target instanceof Element)) return;
     const control = event.target.closest<HTMLElement>(
       "button, a, summary, [role='button']",
@@ -142,26 +149,35 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
     )
       return;
 
-    pressedRef.current?.removeAttribute("data-tap-active");
-    if (pressedTimeoutRef.current !== null)
-      window.clearTimeout(pressedTimeoutRef.current);
     control.setAttribute("data-tap-active", "true");
     pressedRef.current = control;
-    pressedTimeoutRef.current = window.setTimeout(() => {
-      control.removeAttribute("data-tap-active");
-      if (pressedRef.current === control) pressedRef.current = null;
-      pressedTimeoutRef.current = null;
-    }, 230);
+    pressedOriginRef.current = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+    };
   }
 
   return (
     <div
       className="app-shell"
       onPointerDownCapture={revealTap}
+      onPointerMoveCapture={(event) => {
+        const origin = pressedOriginRef.current;
+        if (
+          origin &&
+          (event.pointerId !== origin.id ||
+            Math.hypot(event.clientX - origin.x, event.clientY - origin.y) > 8)
+        )
+          clearTap();
+      }}
+      onPointerUpCapture={clearTap}
+      onPointerCancelCapture={clearTap}
+      onLostPointerCapture={clearTap}
       onClickCapture={(event) => {
         if (!(event.target instanceof Element)) return;
         const control = event.target.closest<HTMLElement>(
-          "button, summary, a.button, .primary-dock__link, [role='tab'], .exploration-compass",
+          "button, summary, a, [role='button'], [role='tab']",
         );
         if (
           control &&
@@ -171,7 +187,6 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
         )
           pulseTouch(
             effectiveExperience.reducedMotion,
-            performance.now(),
             control.matches(
               ".button--primary, [type='submit'], .rpg-choices button",
             )

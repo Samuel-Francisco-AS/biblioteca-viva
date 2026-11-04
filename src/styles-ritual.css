@@ -199,8 +199,10 @@
 .book-card[data-entry-type="work"] {
   --record-foil: #b8b1d9;
 }
-.book-card:hover {
-  transform: none;
+@media (hover: hover) and (pointer: fine) {
+  .book-card:hover {
+    transform: none;
+  }
 }
 .book-card::before {
   display: none;
@@ -238,9 +240,11 @@
   outline: 2px solid #f1c8f8;
   outline-offset: 2px;
 }
-.book-card__link:hover {
-  border-color: #cbb5d3;
-  transform: translate3d(0, -2px, 0);
+@media (hover: hover) and (pointer: fine) {
+  .book-card__link:hover {
+    border-color: #cbb5d3;
+    transform: translate3d(0, -2px, 0);
+  }
 }
 .book-card .record-tile {
   display: grid;

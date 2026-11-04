@@ -14,7 +14,7 @@ test("BF-5R4: seis rituais criam, reabrem e editam sem perder referências", asy
   ]) {
     await page.goto("/novo-registro");
     await page
-      .getByRole("button", { name: new RegExp(`^${category}`) })
+      .getByRole("button", { name: new RegExp(`^FÓLIO \\d+ ${category} `) })
       .click();
     const title = `${category} do Santuário Fictício`;
     await page

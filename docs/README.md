@@ -22,6 +22,8 @@ As notas datadas abaixo preservam a cronologia; declarações antigas de fase pr
 
 Este é o único índice da documentação ativa.
 
+[BF-5R7 — Performance, Latência e Fluidez](BF-5R7_RELATORIO.md): candidata, comparação visual com a R6 aprovada e limites das medições.
+
 | Documento | Pergunta respondida |
 |---|---|
 | [`decisions/ADR-014-replanejamento-pos-bf4.md`](decisions/ADR-014-replanejamento-pos-bf4.md) | Qual a nova ordem BF-5/BF-6/BF-7 e por que a BF-5 será uma reforma ampla seguida de refinamentos? |

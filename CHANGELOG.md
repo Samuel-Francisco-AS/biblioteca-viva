@@ -1,5 +1,13 @@
 # Changelog
 
+## BF-5R7 — Performance, Latência e Fluidez (2026-11-04)
+
+- Preservado o Códice Iluminado; pan evita projeção redundante e resize ignora dimensões idênticas já válidas.
+- Feedback visual acompanha o gesto e cancela ao rolar; hover das fichas limitado a mouse, mantendo foco e toque.
+- Comandos rápidos não perdem pulso por debounce global; links de fichas também solicitam feedback na ativação. Latência percebida Android ainda requer medição física.
+- Evidências, gates e pendências: [relatório R7](docs/BF-5R7_RELATORIO.md). BF-5 permanece aberta.
+
+
 ## BF-5R6 — Códice Iluminado (2026-11-04)
 
 - Reconstrução de linguagem visual de toda a aplicação com fundo ameixa noturna, fólio claro, tinta, gravuras SVG próprias e superfícies artesanais; substituição de frontispícios, dock, seleção de categorias, listagens, editores e controles visuais de todas as áreas.

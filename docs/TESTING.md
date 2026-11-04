@@ -1,5 +1,10 @@
 # Estratégia de testes
 
+## BF-5R7 — desempenho e preservação
+
+Regressões verificam pan sem reconstrução de projeção, diagnóstico sem atualização global de cena, resize idêntico sem `setSize`, cancelamento/liberação de feedback e pulsos de comandos rápidos independentes. Testes de falha de resize usam dimensão realmente nova, sem retirar asserts. E2E adicional cobre 120 registros fictícios e abertura de detalhes. Capturas antes/depois e limites da instrumentação headless estão no [relatório R7](BF-5R7_RELATORIO.md). Nenhum resultado substitui vibração percebida, teclado, TalkBack ou fluidez física.
+
+
 ## BF-5R5 — regressões proporcionais
 
 Novos testes cobrem residência/pausa/retomada, fábrica assíncrona finalizada fora da rota, tentativa após falha, cadência diagnóstica e haptic com ausência/negação/movimento reduzido. Migração v8→v9 testa preservação de seis tipos e entidades relacionadas, reabertura e backup de fichas/execuções; aplicação verifica cópia imutável das execuções e validação estrita. E2E R5 cobre identidade/câmera/rotação e loops, ficha de força e série/citação sem minutos obrigatórios. Testes de lifecycle antigos passam a exigir um canvas oculto/pausado, em vez de nenhum canvas. Não são removidos asserts de interação ou contagem. [Resultados exatos](BF-5R5_RELATORIO.md).

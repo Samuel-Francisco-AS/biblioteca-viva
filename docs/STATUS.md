@@ -1,5 +1,8 @@
 # Estado atual
 
+> **BF-5R7 — candidata de desempenho (2026-11-04):** proprietário confirmou aprovação artística física da R6. R7 preserva o Códice Iluminado, evita projeções redundantes no pan/resizes idênticos, corrige feedback preso durante scroll, restringe hover ao mouse e remove supressão temporal global de pulsos. **Sem prova de resolução da latência tátil ou fluidez no Moto G06; BF-5 aberta, PR #20 draft.** Gates: 726 unitários PASS/1 timeout; E2E final dirigido 1 PASS, ampla final não executada após pedido de prioridade por cota; APK debug gerado. Evidências e pendências no [relatório R7](BF-5R7_RELATORIO.md).
+
+
 > **BF-5R6 — Códice Iluminado, implementação remota (2026-11-04):** após reprovação artística da R5 pelo proprietário, identidade visual recomposta com fólios, lombadas, tinta e paleta ameixa/marfim; cabeçalhos e seleção de tipo redesenhados, componentes gerais, formulários, fichas, arquivo, resumo, ajustes, RPG e dock receberam um sistema visual próprio; ponte nativa Android de feedback tátil substitui a dependência exclusiva de `navigator.vibrate`. Sem alterações de domínio, Dexie, backup ou cena 3D. [Relatório R6](BF-5R6_RELATORIO.md). **PR #20 draft, sem merge; gate físico e artístico pendente.**
 
 

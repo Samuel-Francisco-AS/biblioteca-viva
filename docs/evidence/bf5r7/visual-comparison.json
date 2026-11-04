@@ -1,0 +1,62 @@
+[
+  {
+    "state": "library",
+    "changed_pixels": 0,
+    "total_pixels": 329160
+  },
+  {
+    "state": "selected",
+    "changed_pixels": 0,
+    "total_pixels": 329160
+  },
+  {
+    "state": "collection",
+    "changed_pixels": 0,
+    "total_pixels": 329160
+  },
+  {
+    "state": "card-pressed",
+    "changed_pixels": 0,
+    "total_pixels": 329160
+  },
+  {
+    "state": "detail",
+    "changed_pixels": 0,
+    "total_pixels": 329160
+  },
+  {
+    "state": "form",
+    "changed_pixels": 0,
+    "total_pixels": 329160
+  },
+  {
+    "state": "book-form",
+    "changed_pixels": 272761,
+    "total_pixels": 329160
+  },
+  {
+    "state": "dialogue",
+    "changed_pixels": 1,
+    "total_pixels": 329160
+  },
+  {
+    "state": "archive",
+    "changed_pixels": 0,
+    "total_pixels": 329160
+  },
+  {
+    "state": "summary",
+    "changed_pixels": 0,
+    "total_pixels": 329160
+  },
+  {
+    "state": "settings",
+    "changed_pixels": 0,
+    "total_pixels": 329160
+  },
+  {
+    "state": "landscape",
+    "changed_pixels": 0,
+    "total_pixels": 329160
+  }
+]

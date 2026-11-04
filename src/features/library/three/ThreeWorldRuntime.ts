@@ -886,6 +886,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const viewportChanged =
       this.lastValidViewport?.width !== width ||
       this.lastValidViewport.height !== height;
+    if (!viewportChanged && this.viewportReady) return;
     // Coordinates captured before a real layout change cannot safely continue
     // through a different screen plane. Selection remains intact; only the
     // active gesture is terminated, so the next gesture starts from the new

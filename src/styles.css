@@ -652,10 +652,12 @@ blockquote {
     background 160ms ease;
 }
 
-.book-card__link:hover {
-  border-color: var(--color-border-strong);
-  background: var(--color-surface-raised);
-  transform: translateY(-0.12rem);
+@media (hover: hover) and (pointer: fine) {
+  .book-card__link:hover {
+    border-color: var(--color-border-strong);
+    background: var(--color-surface-raised);
+    transform: translateY(-0.12rem);
+  }
 }
 
 .book-card article,

@@ -610,7 +610,7 @@ export class ThreeWorldInteraction {
     const root = this.selectableRoots.get(TEST_PICK_OBJECT_ID);
     if (!root) return;
     this.camera.updateMatrixWorld();
-    this.scene.updateMatrixWorld(true);
+    root.updateWorldMatrix(true, true);
     const center = new Box3().setFromObject(root).getCenter(new Vector3());
     center.project(this.camera);
     this.canvas.dataset.testPickObject = TEST_PICK_OBJECT_ID;

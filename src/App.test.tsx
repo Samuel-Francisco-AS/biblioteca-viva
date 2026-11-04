@@ -56,3 +56,34 @@ describe("App", () => {
     );
   });
 });
+
+it("R7 releases touch feedback on scroll, cancellation and release without early navigation", () => {
+  render(
+    <MemoryRouter>
+      <App />
+    </MemoryRouter>,
+  );
+  const link = screen.getByRole("link", { name: "Coleção" });
+  const emit = (type: string, x = 20) =>
+    link.dispatchEvent(
+      new PointerEvent(type, {
+        bubbles: true,
+        pointerType: "touch",
+        isPrimary: true,
+        pointerId: 1,
+        clientX: x,
+        clientY: 20,
+      }),
+    );
+  emit("pointerdown");
+  expect(link).toHaveAttribute("data-tap-active", "true");
+  expect(screen.getByRole("banner")).toHaveTextContent("Biblioteca");
+  emit("pointermove", 40);
+  expect(link).not.toHaveAttribute("data-tap-active");
+  emit("pointerdown");
+  emit("pointercancel");
+  expect(link).not.toHaveAttribute("data-tap-active");
+  emit("pointerdown");
+  emit("pointerup");
+  expect(link).not.toHaveAttribute("data-tap-active");
+});

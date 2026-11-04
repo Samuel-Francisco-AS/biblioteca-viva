@@ -63,7 +63,9 @@ test("BF-5R5: strength is a reusable sheet with dated executions and immutable h
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/novo-registro");
-  await page.getByRole("button", { name: /^Atividade física/ }).click();
+  await page
+    .getByRole("button", { name: /^FÓLIO \d+ Atividade física / })
+    .click();
   await page
     .getByLabel("Título", { exact: true })
     .fill("Peito e tríceps fictício");
@@ -128,7 +130,7 @@ test("BF-5R5: series bookmark, episodes without minutes and contextual quotation
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/novo-registro");
-  await page.getByRole("button", { name: /^Série/ }).click();
+  await page.getByRole("button", { name: /^FÓLIO \d+ Série / }).click();
   await page.getByLabel("Título", { exact: true }).fill("Crônica fictícia");
   await page.getByLabel("Total de episódios (opcional)").fill("12");
   await page.getByLabel("Temporada em que parou (opcional)").fill("2");

@@ -1,5 +1,10 @@
 # Fluxos de experiência
 
+## BF-5R7 — feedback de ativação
+
+O primeiro ponteiro mostra `data-tap-active`; movimento maior que 8 px, cancelamento, liberação ou perda de captura o remove. Ações permanecem em click, inclusive teclado. Vibração é solicitada uma vez na captura da ativação válida, sem debounce global entre comandos independentes; não durante scroll/pan/pinch. Preservam-se movimento reduzido e preferência nativa Android. Hover de cartões é exclusivo de ponteiro fino com hover; foco visível e compressão de toque permanecem. Sensação de sincronia física ainda pendente. [Relatório R7](BF-5R7_RELATORIO.md).
+
+
 ## BF-5R5 — contrato candidato vigente
 
 - A Biblioteca mantém uma única instância pausada entre abas; a primeira visita monta sob demanda. No retorno consulta dados e conserva a cena se sua projeção não mudou. Alterações representadas substituem o runtime; não há persistência espacial. Conteúdo fora da rota fica oculto/inert e não captura Back. Diálogo fecha ao sair, mas histórias/diário da visita sobrevivem às abas; recarregar encerra a visita. Há tentativa explícita após falha WebGL.

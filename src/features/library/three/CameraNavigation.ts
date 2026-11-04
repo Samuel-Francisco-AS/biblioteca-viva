@@ -114,12 +114,13 @@ export class CameraNavigation {
       next.targetX !== this.state.targetX ||
       next.targetZ !== this.state.targetZ ||
       next.zoom !== this.state.zoom;
+    const zoomChanged = next.zoom !== this.state.zoom;
     this.state = next;
-    if (changed) this.applyState();
+    if (changed) this.applyState(zoomChanged);
     return changed;
   }
 
-  private applyState(): void {
+  private applyState(updateProjection = true): void {
     this.camera.position.set(
       this.state.targetX + CAMERA_INITIAL_OFFSET.x * this.distanceScale,
       CAMERA_TARGET_Y + CAMERA_INITIAL_OFFSET.y * this.distanceScale,
@@ -127,6 +128,6 @@ export class CameraNavigation {
     );
     this.camera.zoom = this.state.zoom;
     this.camera.lookAt(this.state.targetX, CAMERA_TARGET_Y, this.state.targetZ);
-    this.camera.updateProjectionMatrix();
+    if (updateProjection) this.camera.updateProjectionMatrix();
   }
 }

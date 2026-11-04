@@ -1,5 +1,10 @@
 # Desempenho e estabilidade
 
+## BF-5R7 — eficiência sem redução visual
+
+Pan altera pose, mas só zoom/viewport exigem recompor projeção. Resize válido de dimensões idênticas é no-op; viewport invalidado continua sendo revalidado. Diagnóstico técnico projeta somente a hierarquia de seu objeto. Hover de fichas exige mouse capaz de hover; feedback de toque é cancelado ao rolar. Não há redução de DPR, cena, conteúdo, animação ou resolução. Métricas, comparação visual e limitações estão no [relatório R7](BF-5R7_RELATORIO.md). A medição local não demonstra ganho consistente de latência nem certifica Android.
+
+
 ## BF-5R5 — custos demonstrados e redução estrutural
 
 A R4 reconstruía WorldHost/renderer/cena a cada retorno de aba. A R5 mantém uma instância sob demanda, com RAF/gestos/simulação pausados fora da Biblioteca e retomada no retorno; dados representados diferentes ainda exigem substituição segura. A cena fica na memória durante a sessão do shell, tradeoff que requer prova Android. Diagnóstico e lista semântica dos habitantes deixaram de recompor o host/dialogue a cada atualização de 250 ms.

@@ -340,11 +340,13 @@ body {
     box-shadow 280ms,
     border-color 280ms;
 }
-.book-card:hover {
-  transform: translateY(-3px);
-  box-shadow:
-    0 12px 32px #0305137a,
-    inset 0 1px 0 #d4bbf329;
+@media (hover: hover) and (pointer: fine) {
+  .book-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 12px 32px #0305137a,
+      inset 0 1px 0 #d4bbf329;
+  }
 }
 .book-card:focus-within {
   border-color: #d3b9ee;
