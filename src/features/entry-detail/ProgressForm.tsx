@@ -24,7 +24,7 @@ export function ProgressForm({
     event.preventDefault();
     if (savingRef.current) return;
     const page = Number(value);
-    if (!Number.isInteger(page) || page < 0) {
+    if (value.trim() === "" || !Number.isSafeInteger(page) || page < 0) {
       setError("Informe uma página inteira, igual ou maior que zero.");
       fieldRef.current?.focus();
       return;
@@ -55,7 +55,7 @@ export function ProgressForm({
 
   return (
     <form
-      className="compact-form"
+      className="folio-progress-form"
       noValidate
       onSubmit={(event) => void submit(event)}
     >
@@ -65,19 +65,52 @@ export function ProgressForm({
           Use um número inteiro a partir de zero
           {book.totalPages === undefined ? "." : ` até ${book.totalPages}.`}
         </p>
-        <input
-          id="detail-current-page"
-          ref={fieldRef}
-          type="number"
-          inputMode="numeric"
-          min="0"
-          max={book.totalPages}
-          step="1"
-          value={value}
-          aria-describedby={`detail-current-page-help${error ? " detail-current-page-error" : ""}`}
-          aria-invalid={error ? "true" : undefined}
-          onChange={(event) => setValue(event.target.value)}
-        />
+        <div className="folio-page-stepper">
+          <button
+            className="folio-step"
+            type="button"
+            aria-label="Diminuir uma página"
+            disabled={
+              isSaving ||
+              value.trim() === "" ||
+              !Number.isSafeInteger(Number(value)) ||
+              Number(value) <= 0
+            }
+            onClick={() => setValue(String(Number(value) - 1))}
+          >
+            −
+          </button>
+          <input
+            id="detail-current-page"
+            ref={fieldRef}
+            type="number"
+            inputMode="numeric"
+            min="0"
+            max={book.totalPages}
+            step="1"
+            value={value}
+            aria-describedby={`detail-current-page-help${error ? " detail-current-page-error" : ""}`}
+            aria-invalid={error ? "true" : undefined}
+            onChange={(event) => setValue(event.target.value)}
+          />
+          <button
+            className="folio-step"
+            type="button"
+            aria-label="Avançar uma página"
+            disabled={
+              isSaving ||
+              value.trim() === "" ||
+              !Number.isSafeInteger(Number(value)) ||
+              Number(value) < 0 ||
+              (book.totalPages !== undefined &&
+                Number(value) >= book.totalPages)
+            }
+            onClick={() => setValue(String(Number(value) + 1))}
+          >
+            +
+          </button>
+          <span className="folio-page-total">de {book.totalPages ?? "—"}</span>
+        </div>
         {error && (
           <p className="field-error" id="detail-current-page-error">
             {error}

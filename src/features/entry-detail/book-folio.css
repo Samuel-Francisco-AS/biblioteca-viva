@@ -1,0 +1,529 @@
+/* Book details own their composition; no content-card/entry-detail legacy cascade. */
+.book-folio {
+  --folio-paper: #f4ead5;
+  --folio-text: #39283d;
+  --folio-muted: #70576a;
+  --folio-rule: #aa896a80;
+  --color-text-primary: var(--folio-text);
+  --color-text-secondary: var(--folio-muted);
+  --color-text-muted: var(--folio-muted);
+  --color-focus: #753e68;
+  position: relative;
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: clamp(1rem, 4vw, 2.8rem);
+  border: 1px solid #b99a79;
+  border-left: 5px solid #84556d;
+  border-radius: 3px 1.8rem 4px 4px;
+  background:
+    url("/ornaments/folio-corners.svg") right top / 12rem auto no-repeat,
+    linear-gradient(
+      100deg,
+      #e7d5ba,
+      var(--folio-paper) 6%,
+      #f7eedc 70%,
+      #eadcc3
+    );
+  color: var(--folio-text);
+  box-shadow:
+    inset 0 0 0 4px #fff7e550,
+    4px 6px 0 #160e2040;
+  overflow-wrap: anywhere;
+  scroll-margin-bottom: 8rem;
+}
+.book-folio :is(h2, h3, h4, p) {
+  margin-top: 0;
+}
+.book-folio :is(a, button, summary, input, select, textarea):focus-visible,
+.book-image-dialog :is(button, select):focus-visible {
+  outline: 3px solid #753e68;
+  outline-offset: 4px;
+}
+.book-folio .text-link {
+  color: #65365b;
+}
+.folio-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.85rem;
+}
+.folio-navigation a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.folio-identity {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: start;
+  padding: 1.3rem 0 1.6rem;
+}
+.folio-emblem {
+  color: #80516a;
+  display: grid;
+  place-items: center;
+  border-block: 1px solid var(--folio-rule);
+  padding-block: 0.7rem;
+}
+.folio-emblem svg {
+  width: 2.8rem;
+  height: 2.8rem;
+}
+.folio-kicker {
+  font-size: 0.67rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #765466;
+  margin-bottom: 0.55rem;
+}
+.book-folio .folio-identity h2 {
+  font:
+    400 clamp(1.7rem, 5vw, 2.7rem)/1.12 Georgia,
+    serif;
+  margin-bottom: 0.6rem;
+  color: #39283d;
+}
+.folio-author {
+  color: var(--folio-muted);
+  line-height: 1.5;
+  margin-bottom: 0.45rem;
+}
+.folio-seal {
+  width: 5.4rem;
+  aspect-ratio: 1;
+  border: 1px solid #a98266;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #6c385b;
+  box-shadow:
+    inset 0 0 0 4px #f7eedc,
+    inset 0 0 0 5px #a9826650;
+}
+.folio-seal strong {
+  font:
+    1.7rem Georgia,
+    serif;
+}
+.folio-seal > span {
+  font-size: 0.65rem;
+}
+.folio-status {
+  margin-top: 0.15rem;
+}
+.folio-status summary {
+  width: fit-content;
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: #6b3658;
+  font-weight: 650;
+}
+.folio-status[open] {
+  grid-column: 1 / -1;
+}
+.folio-status .inline-actions {
+  gap: 0.5rem;
+}
+.folio-chapter {
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--folio-rule);
+}
+.folio-chapter-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+.folio-chapter-heading > span:first-child {
+  color: #8f6a48;
+  font:
+    italic 1.1rem Georgia,
+    serif;
+}
+.book-folio .folio-chapter-heading h3 {
+  margin: 0;
+  font:
+    400 1.45rem Georgia,
+    serif;
+  color: var(--folio-text);
+}
+.folio-count {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: var(--folio-muted);
+}
+.book-folio .reading-progress {
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem 1rem;
+}
+.book-folio .reading-progress label {
+  font-size: 0.86rem;
+  color: var(--folio-muted);
+}
+.book-folio .reading-progress progress {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 0.6rem;
+  border: 0;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #d8c6ac;
+  accent-color: #88526d;
+}
+.book-folio progress::-webkit-progress-bar {
+  background: #d8c6ac;
+}
+.book-folio progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #623455, #a76d7f);
+  border-radius: 1rem;
+}
+.book-folio progress::-moz-progress-bar {
+  background: #88526d;
+}
+.book-folio .reading-progress p {
+  color: var(--folio-muted);
+  font-size: 0.83rem;
+  margin: 0;
+}
+.folio-progress-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: end;
+  margin-block: 1.1rem 0.6rem;
+}
+.folio-progress-form > .form-field {
+  flex: 1 1 15rem;
+  margin: 0;
+}
+.folio-progress-form .field-help {
+  font-size: 0.8rem;
+  color: var(--folio-muted);
+}
+.folio-page-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.app-shell .folio-page-stepper input {
+  width: 5.4rem;
+  min-width: 0;
+  text-align: center;
+  font-size: 1.4rem;
+}
+.app-shell .book-folio .folio-step {
+  border: 1px solid #ad8d84;
+  background: #e8d8c3;
+  color: #663758;
+  border-radius: 50%;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 1.5rem;
+}
+.folio-page-total {
+  font:
+    1.15rem Georgia,
+    serif;
+  color: var(--folio-muted);
+  margin-left: 0.3rem;
+  white-space: nowrap;
+}
+.folio-hint {
+  font-size: 0.83rem;
+  line-height: 1.5;
+}
+.folio-announcement {
+  color: #654159;
+  font-weight: 650;
+  font-size: 0.9rem;
+}
+.folio-announcement:empty {
+  display: none;
+}
+.folio-composer {
+  border-block: 1px dashed var(--folio-rule);
+  margin-bottom: 1.25rem;
+}
+.folio-composer > summary {
+  cursor: pointer;
+  min-height: 48px;
+  padding-block: 0.85rem;
+  color: #6b3658;
+  font-weight: 650;
+}
+.folio-composer[open] {
+  padding-bottom: 1rem;
+}
+.folio-composer > .form-field {
+  max-width: 18rem;
+}
+.book-folio .compact-form {
+  max-width: none;
+}
+.book-folio textarea {
+  resize: vertical;
+}
+.folio-empty {
+  color: var(--folio-muted);
+  font:
+    italic 0.95rem/1.6 Georgia,
+    serif;
+  margin-bottom: 0.25rem;
+}
+.folio-annotations {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.folio-annotations > li {
+  border-bottom: 1px solid #aa896a45;
+  padding: 1.15rem 0;
+}
+.folio-annotation-caption {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  justify-content: space-between;
+  color: var(--folio-muted);
+  font-size: 0.8rem;
+}
+.folio-annotation-caption h4 {
+  font: 600 0.72rem sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 0.8rem;
+}
+.book-folio .folio-annotations blockquote {
+  margin: 0 0 0.8rem;
+  padding-left: 1rem;
+  border-left: 2px solid #a4788b;
+  font:
+    1.2rem/1.65 Georgia,
+    serif;
+  color: var(--folio-text);
+  white-space: pre-wrap;
+}
+.folio-note-content {
+  font-size: 1rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+.book-folio .annotation-date {
+  font-size: 0.72rem;
+  color: var(--folio-muted);
+  margin-bottom: 0.2rem;
+}
+.folio-annotation-tools > summary {
+  width: fit-content;
+  min-height: 44px;
+  padding-block: 0.65rem;
+  cursor: pointer;
+  color: #6b3658;
+  font-size: 0.8rem;
+}
+.folio-share > p {
+  color: var(--folio-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.folio-secondary {
+  border-top: 1px solid var(--folio-rule);
+}
+.folio-secondary > summary {
+  min-height: 52px;
+  padding-block: 1rem;
+  cursor: pointer;
+  font:
+    1.1rem Georgia,
+    serif;
+  color: #6b3658;
+}
+.folio-secondary :is(.folio-metadata, .folio-secondary-flow) {
+  margin-block: 1rem;
+}
+.folio-secondary :is(.folio-metadata, .folio-secondary-flow) > summary {
+  min-height: 44px;
+  padding-block: 0.7rem;
+  cursor: pointer;
+}
+.book-folio .folio-secondary .content-card {
+  background: transparent;
+  color: var(--folio-text);
+  box-shadow: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0.5rem 0;
+}
+.folio-danger {
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--folio-rule);
+}
+.folio-danger p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.book-image-dialog {
+  box-sizing: border-box;
+  width: min(94vw, 42rem);
+  max-height: calc(
+    100dvh - 2rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+  );
+  padding: clamp(1rem, 4vw, 1.8rem);
+  border: 1px solid #b99a79;
+  border-radius: 1rem 0.2rem 1rem 0.2rem;
+  background: #f4ead5;
+  color: #39283d;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.book-image-dialog::backdrop {
+  background: #180f26d9;
+}
+.folio-dialog-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.folio-dialog-heading h2 {
+  font:
+    1.5rem/1.2 Georgia,
+    serif;
+  margin: 0;
+}
+.book-image-dialog .folio-hint {
+  color: #70576a;
+}
+.book-image-preview {
+  display: block;
+  width: min(100%, 23rem);
+  height: auto;
+  margin: 1rem auto;
+}
+.folio-image-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1rem;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.app-shell[data-high-contrast="true"] .book-folio {
+  --folio-text: #fff8e5;
+  --folio-muted: #eddbbb;
+  --folio-rule: #c7a177;
+  background: #24172b;
+}
+.app-shell[data-high-contrast="true"]
+  .book-folio
+  :is(
+    h2,
+    .text-link,
+    summary,
+    .folio-kicker,
+    .folio-seal,
+    .folio-announcement
+  ) {
+  color: #ffe0ae;
+}
+
+/* Keep navigation out of the editor through pointerdown, focus transfer and submit.
+   Field-only focus lets the fixed dock return between blur and click. */
+.app-shell:has(.book-folio form:focus-within) .primary-dock {
+  transform: translate3d(0, calc(125% + env(safe-area-inset-bottom)), 0);
+  pointer-events: none;
+}
+
+/* Local controls sit on the page; the rest of the app keeps its approved skin. */
+.app-shell .book-folio summary {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  padding-inline: 0;
+}
+.app-shell .book-folio .folio-status > summary {
+  background: #87516b0c;
+  border-bottom: 1px solid #aa896a70;
+  width: fit-content;
+  padding-inline: 0.5rem;
+}
+.app-shell .book-folio :is(input, textarea, select) {
+  background: #fff9eb;
+  color: #39283d;
+  border-color: #a88b8b;
+  box-shadow: inset 0 2px 3px #6540560d;
+}
+.app-shell .book-folio .folio-page-stepper input {
+  font-family: Georgia, serif;
+}
+.app-shell .book-folio .delete-confirmation {
+  color: #39283d;
+  background: #f6e3d7;
+}
+.app-shell .book-folio .delete-confirmation :is(h3, p) {
+  color: #39283d;
+}
+.app-shell[data-high-contrast="true"] .book-folio .delete-confirmation {
+  background: #24172b;
+}
+.app-shell[data-high-contrast="true"]
+  .book-folio
+  .delete-confirmation
+  :is(h3, p) {
+  color: #fff8e5;
+}
+.app-shell .book-image-dialog {
+  --color-text-primary: #39283d;
+  --color-text-secondary: #70576a;
+}
+.app-shell .book-image-dialog select {
+  background: #fff9eb;
+  color: #39283d;
+}
+
+@media (max-width: 480px) {
+  .folio-identity {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.7rem;
+  }
+  .folio-emblem {
+    display: none;
+  }
+  .folio-seal {
+    width: 4.4rem;
+  }
+  .folio-seal strong {
+    font-size: 1.4rem;
+  }
+  .folio-progress-form > button {
+    width: 100%;
+  }
+  .folio-navigation {
+    font-size: 0.78rem;
+    gap: 0.4rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .book-folio *,
+  .book-image-dialog * {
+    scroll-behavior: auto;
+    transition: none;
+    animation: none;
+  }
+}

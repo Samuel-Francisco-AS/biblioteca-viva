@@ -22,7 +22,7 @@ test("R7: touch feedback cancels on scroll and preserves semantic activation", a
     clientX: 100,
     clientY: 400,
   });
-  await expect(card).toHaveAttribute("data-tap-active", "true");
+  await expect(card).not.toHaveAttribute("data-tap-active");
   await expect(page).toHaveURL(/\/colecao$/);
   await card.dispatchEvent("pointermove", {
     pointerType: "touch",
@@ -34,5 +34,7 @@ test("R7: touch feedback cancels on scroll and preserves semantic activation", a
   await card.dispatchEvent("pointercancel", { pointerId: 1 });
   await card.click();
   await expect(page).toHaveURL(/\/registros\//);
-  await expect(page.getByRole("link", { name: "Editar dados" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Livro descartável 120" }),
+  ).toBeVisible();
 });

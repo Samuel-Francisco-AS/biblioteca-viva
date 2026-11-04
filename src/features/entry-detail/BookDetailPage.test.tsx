@@ -180,7 +180,29 @@ async function openDisclosure(
   user: ReturnType<typeof userEvent.setup>,
   label: string,
 ) {
-  await user.click(screen.getByText(label, { selector: "summary" }));
+  if (label === "Histórico de leitura") return; // The unified reading area is always visible.
+  if (label === "Adicionar nota" || label === "Adicionar citação") {
+    const composer = screen.getByText("Escrever nas margens", {
+      selector: "summary",
+    });
+    if (!composer.parentElement?.hasAttribute("open"))
+      await user.click(composer);
+    await user.selectOptions(
+      screen.getByLabelText("Tipo de anotação"),
+      label === "Adicionar nota" ? "note" : "quote",
+    );
+    return;
+  }
+  if (label === "Mais informações")
+    await user.click(
+      screen.getByText("Ações do livro", { selector: "summary" }),
+    );
+  const summary =
+    label === "Status da leitura"
+      ? screen.getByText(/Status da leitura:/).closest("summary")
+      : screen.getByText(label, { selector: "summary" });
+  if (!summary) throw new Error("Controle não encontrado");
+  await user.click(summary);
 }
 
 describe("detalhe do livro", () => {
@@ -282,7 +304,18 @@ describe("exclusão permanente", () => {
     const user = userEvent.setup();
     const { calls, facade } = application();
     await loaded(facade);
+    await user.click(
+      screen.getByText("Ações do livro", { selector: "summary" }),
+    );
     expect(screen.getByText(/notas, suas citações/u)).toBeVisible();
+    if (
+      !screen
+        .getByText("Ações do livro", { selector: "summary" })
+        .parentElement?.hasAttribute("open")
+    )
+      await user.click(
+        screen.getByText("Ações do livro", { selector: "summary" }),
+      );
     await user.click(screen.getByRole("button", { name: "Excluir livro" }));
     expect(
       screen.getByRole("heading", {
@@ -305,6 +338,14 @@ describe("exclusão permanente", () => {
     });
     const user = userEvent.setup();
     await loaded(pending.facade);
+    if (
+      !screen
+        .getByText("Ações do livro", { selector: "summary" })
+        .parentElement?.hasAttribute("open")
+    )
+      await user.click(
+        screen.getByText("Ações do livro", { selector: "summary" }),
+      );
     await user.click(screen.getByRole("button", { name: "Excluir livro" }));
     const confirm = screen.getByRole("button", {
       name: "Excluir permanentemente",
@@ -327,6 +368,14 @@ describe("exclusão permanente", () => {
     });
     const user = userEvent.setup();
     await loaded(failed.facade);
+    if (
+      !screen
+        .getByText("Ações do livro", { selector: "summary" })
+        .parentElement?.hasAttribute("open")
+    )
+      await user.click(
+        screen.getByText("Ações do livro", { selector: "summary" }),
+      );
     await user.click(screen.getByRole("button", { name: "Excluir livro" }));
     await user.click(
       screen.getByRole("button", { name: "Excluir permanentemente" }),
@@ -401,7 +450,12 @@ describe("progresso", () => {
         currentPage: 45,
       }),
     );
-    expect(screen.getByText("45 de 200 páginas (23%)")).toBeVisible();
+    expect(
+      screen.getByText("45 de 200 páginas", { exact: true }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("progressbar", { name: "23% concluído" }),
+    ).toHaveValue(45);
   });
 
   it("rejeita página inválida ou acima do total sem chamar o caso de uso", async () => {
@@ -642,4 +696,92 @@ describe("notas e citações", () => {
     );
     expect(pending.calls.addQuote).toHaveBeenCalledOnce();
   });
+});
+
+describe("fólio integrado", () => {
+  it("associa página à nota pelo contrato existente e rejeita páginas fora do livro", async () => {
+    const user = userEvent.setup();
+    const { facade, calls } = application();
+    await loaded(facade);
+    await openDisclosure(user, "Adicionar nota");
+    await user.type(
+      screen.getByLabelText("Nota (obrigatório)"),
+      "Leitura das margens",
+    );
+    await user.type(screen.getByLabelText("Página da nota (opcional)"), "201");
+    await user.click(screen.getByRole("button", { name: "Adicionar nota" }));
+    expect(calls.addNote).not.toHaveBeenCalled();
+    expect(
+      screen.getByText("Informe uma página inteira entre 1 e 200."),
+    ).toBeVisible();
+    await user.clear(screen.getByLabelText("Página da nota (opcional)"));
+    await user.type(screen.getByLabelText("Página da nota (opcional)"), "25");
+    await user.click(screen.getByRole("button", { name: "Adicionar nota" }));
+    expect(calls.addNote).toHaveBeenCalledWith({
+      entryId: book.id,
+      content: "Leitura das margens",
+      location: { type: "book", page: 25 },
+    });
+  });
+  it("não converte campo vazio em progresso zero e oferece passos rápidos nos limites", async () => {
+    const user = userEvent.setup();
+    const { facade, calls } = application();
+    await loaded(facade);
+    const field = screen.getByLabelText(/Página atual/);
+    await user.clear(field);
+    await user.click(screen.getByRole("button", { name: "Salvar progresso" }));
+    expect(calls.progress).not.toHaveBeenCalled();
+    expect(
+      screen.getByText("Informe uma página inteira, igual ou maior que zero."),
+    ).toBeVisible();
+    await user.type(field, "200");
+    expect(
+      screen.getByRole("button", { name: "Avançar uma página" }),
+    ).toBeDisabled();
+    await user.click(
+      screen.getByRole("button", { name: "Diminuir uma página" }),
+    );
+    expect(field).toHaveValue(199);
+  });
+  it("preserva o rascunho ao alternar nota/citação e recolher o editor", async () => {
+    const user = userEvent.setup();
+    await loaded(application().facade);
+    await openDisclosure(user, "Adicionar nota");
+    const content = screen.getByLabelText("Nota (obrigatório)");
+    await user.type(content, "Rascunho pessoal");
+    await openDisclosure(user, "Adicionar citação");
+    await user.type(
+      screen.getByLabelText("Citação (obrigatório)"),
+      "Outro rascunho",
+    );
+    await user.click(
+      screen.getByText("Escrever nas margens", { selector: "summary" }),
+    );
+    await openDisclosure(user, "Adicionar nota");
+    expect(content).toHaveValue("Rascunho pessoal");
+    await openDisclosure(user, "Adicionar citação");
+    expect(screen.getByLabelText("Citação (obrigatório)")).toHaveValue(
+      "Outro rascunho",
+    );
+  });
+});
+
+it("pede confirmação ao sair com marcador ou anotação não salva e mantém o rascunho", async () => {
+  const user = userEvent.setup();
+  const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+  try {
+    await loaded(application().facade);
+    await openDisclosure(user, "Adicionar nota");
+    const content = screen.getByLabelText("Nota (obrigatório)");
+    await user.type(content, "Rascunho que deve permanecer");
+    await user.click(screen.getByRole("link", { name: "Voltar à Coleção" }));
+    expect(confirm).toHaveBeenCalledOnce();
+    expect(content).toHaveValue("Rascunho que deve permanecer");
+    expect(screen.getByRole("heading", { name: book.title })).toBeVisible();
+    const back = new Event("biblioteca-viva:native-back", { cancelable: true });
+    window.dispatchEvent(back);
+    expect(back.defaultPrevented).toBe(true);
+  } finally {
+    confirm.mockRestore();
+  }
 });

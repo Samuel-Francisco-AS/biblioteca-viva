@@ -543,8 +543,8 @@
     transform: translate3d(0, -2px, 0);
   }
 }
-.app-shell .book-card__link:is(:active, [data-tap-active="true"]) {
-  transform: translate3d(0, 2px, 0) scale(0.988);
+.app-shell .book-card__link[data-tap-confirmed="true"] {
+  border-color: var(--record-foil);
 }
 .app-shell .book-card .record-tile {
   display: grid;
@@ -1030,8 +1030,7 @@
 .app-shell:not([data-high-contrast="true"]) .content-card p.eyebrow {
   color: #8f516c;
 }
-.app-shell .entry-detail-page,
-.app-shell .detail-layout {
+.app-shell .entry-detail-page {
   width: min(100%, 60rem);
   margin-inline: auto;
 }
@@ -1215,29 +1214,6 @@
   padding: 0 0.4rem;
   font: 400 1.05rem/1.2 var(--arc-serif);
   color: #664358;
-}
-.app-shell .entry-detail-page .detail-summary {
-  max-width: none;
-}
-.app-shell .detail-layout .detail-summary .entry-detail-hero {
-  background: linear-gradient(120deg, #49314a, #251f35);
-}
-.app-shell .detail-layout .detail-summary .entry-detail-hero h2,
-.app-shell .detail-layout .detail-summary .entry-detail-hero p,
-.app-shell .detail-layout .detail-summary .entry-detail-hero .status-badge {
-  color: #ffedd8;
-}
-.app-shell .detail-layout .detail-summary .entry-detail-hero .status-badge {
-  background: #754562;
-}
-.app-shell .detail-layout .detail-summary {
-  padding: clamp(1rem, 3.4vw, 1.5rem);
-}
-.app-shell .detail-layout .detail-summary .book-facts {
-  margin: 1rem 0;
-}
-.app-shell .detail-layout .detail-summary .book-facts :is(dt, dd) {
-  color: #5c4a59;
 }
 
 /* An archive of memories — strips, marginalia and ink rather than dashboard cards. */
@@ -1943,9 +1919,6 @@
 }
 .app-shell .record-care > summary {
   color: #f5dfca;
-}
-.app-shell .destructive-section {
-  border-left-color: #9b4c60;
 }
 .app-shell .delete-confirmation {
   background: #50283c;

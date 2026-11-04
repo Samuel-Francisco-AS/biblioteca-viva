@@ -1,3 +1,10 @@
+## BF-5 — Parte 2: fólio de leitura (2026-11-04, candidata)
+
+- Cards da Coleção deixam de mudar de cor no início do toque/scroll; abertura e teclado usam ativação confirmada.
+- Livros recebem superfície contínua, estado contextual, marcador com entrada direta/±, notas e citações unificadas com páginas e organização/sessões em ações secundárias.
+- Exportação PNG 4:5 de resumo ou citação escolhida, prévia real, ajuste de trecho sem alterar dados, compartilhamento nativo e alternativa de salvamento. Sem nova dependência, schema ou formato de backup.
+- [Relatório e limites](docs/BF-5_PARTE2_FOLIO.md). BF-5 aberta, sem aceite físico ou merge desta candidata.
+
 ## BF-5 — Integração do Códice Iluminado à main com dívidas (2026-11-04)
 
 - PR #20 integrada por merge commit `f1829919fc54fe2ece62ffe1a82fe7054362a179`, preservando o histórico e sem declarar encerramento da BF-5.
