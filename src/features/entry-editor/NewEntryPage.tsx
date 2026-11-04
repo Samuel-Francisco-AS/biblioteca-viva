@@ -1,3 +1,4 @@
+import { ArtifactGlyph } from "../../app/ArtifactGlyph";
 import { exercisesFromForm } from "./exercisesFromForm";
 import { RitualFields } from "./RitualFields";
 import { ritualCopy } from "./ritualCopy";
@@ -137,22 +138,37 @@ export function NewEntryPage({
   if (!selectedType)
     return (
       <section aria-labelledby="entry-type-title">
-        <p className="eyebrow">Cadastro</p>
-        <h2 id="entry-type-title">Novo registro</h2>
-        <p>O que você quer guardar na Biblioteca Viva?</p>
+        <div className="register-threshold">
+          <span aria-hidden="true" className="register-threshold__sigil">✦</span>
+          <div>
+            <p className="eyebrow">O portal dos registros</p>
+            <h2 id="entry-type-title">Uma nova história encontra lugar</h2>
+            <p>Escolha o que deseja guardar. Cada registro abre uma página diferente do seu mundo.</p>
+          </div>
+        </div>
         <ul className="type-picker">
-          {ENTRY_TYPES.map((type) => (
+          {ENTRY_TYPES.map((type, index) => (
             <li key={type}>
               <button
                 className="content-card type-picker__option"
+                data-craft={type}
                 type="button"
                 onClick={() => {
                   setError(undefined);
                   setSelectedType(type);
                 }}
               >
-                <strong>{entryTypeLabels[type]}</strong>
-                <span>{descriptions[type]}</span>
+                <span className="type-picker__sigil" aria-hidden="true">
+                  <ArtifactGlyph type={type} />
+                </span>
+                <span className="type-picker__copy">
+                  <small>FÓLIO {String(index + 1).padStart(2, "0")}</small>
+                  <strong>{entryTypeLabels[type]}</strong>
+                  <span>{descriptions[type]}</span>
+                </span>
+                <span className="type-picker__invitation" aria-hidden="true">
+                  ↗
+                </span>
               </button>
             </li>
           ))}

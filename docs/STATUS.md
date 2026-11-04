@@ -1,5 +1,8 @@
 # Estado atual
 
+> **BF-5R6 — Códice Iluminado, implementação remota (2026-11-04):** após reprovação artística da R5 pelo proprietário, identidade visual recomposta com fólios, lombadas, tinta e paleta ameixa/marfim; cabeçalhos e seleção de tipo redesenhados, componentes gerais, formulários, fichas, arquivo, resumo, ajustes, RPG e dock receberam um sistema visual próprio; ponte nativa Android de feedback tátil substitui a dependência exclusiva de `navigator.vibrate`. Sem alterações de domínio, Dexie, backup ou cena 3D. [Relatório R6](BF-5R6_RELATORIO.md). **PR #20 draft, sem merge; gate físico e artístico pendente.**
+
+
 > **BF-5R5 — candidata implementada, gate global vermelho (2026-11-04):** preservados pátio/profundidade/gestos da R4; mundo residente e pausado entre abas, diagnósticos isolados, ficha reutilizável de força em Dexie v9 aditiva, sessões e detalhes por categoria, acabamento e toque leve. [Relatório R5](BF-5R5_RELATORIO.md), [ADR-015](decisions/ADR-015-bf5r5-residencia-e-fichas.md). Amplo local: 719 unitários PASS/1 timeout; E2E 19 PASS/25 FAIL. Dirigidos finais: 153 unitários PASS, 10 de anotações/sessões PASS e seis cenários E2E aprovados em duas execuções (4+2). APK gerado. BF-5 aberta; PR #20 draft; sem aceite físico/artístico ou CI verde. Esta nota é a autoridade presente sobre a cronologia abaixo.
 
 

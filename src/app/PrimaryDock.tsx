@@ -61,6 +61,11 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
   return (
     <nav aria-label="Navegação principal" className="primary-dock">
       <div aria-hidden="true" className="primary-dock__aura" />
+      <div aria-hidden="true" className="primary-dock__engraving">
+        <span>✧</span>
+        <span>O LIVRO DAS PASSAGENS</span>
+        <span>✧</span>
+      </div>
       <ul>
         {primaryAppRoutes.map((route) => {
           const active = route.id === activeRouteId;
@@ -73,9 +78,13 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                 to={route.path}
               >
                 <span className="primary-dock__medallion">
+                  <span className="primary-dock__halo" aria-hidden="true" />
                   <DockIcon name={route.primaryNavigation.icon} />
                 </span>
-                <span>{route.primaryNavigation.label}</span>
+                <span className="primary-dock__caption">
+                  {route.primaryNavigation.label}
+                </span>
+                <span className="primary-dock__star" aria-hidden="true">✦</span>
               </Link>
             </li>
           );

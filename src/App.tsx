@@ -37,6 +37,7 @@ import "./styles-touch.css";
 import "./styles-ritual.css";
 import "./styles-sanctuary.css";
 import "./styles-living.css";
+import "./styles-atelier.css";
 import { pulseTouch } from "./app/touchFeedback";
 
 function NotFoundPage() {
@@ -160,7 +161,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
       onClickCapture={(event) => {
         if (!(event.target instanceof Element)) return;
         const control = event.target.closest<HTMLElement>(
-          ".button--primary, .primary-dock__link, .rpg-choices button, .rpg-tools button, .exploration-compass, summary",
+          "button, summary, a.button, .primary-dock__link, [role='tab'], .exploration-compass",
         );
         if (
           control &&
@@ -168,7 +169,13 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
             ":disabled, [aria-disabled='true'], [aria-current='page']",
           )
         )
-          pulseTouch(effectiveExperience.reducedMotion);
+          pulseTouch(
+            effectiveExperience.reducedMotion,
+            performance.now(),
+            control.matches(".button--primary, [type='submit'], .rpg-choices button")
+              ? "confirm"
+              : "selection",
+          );
       }}
       data-route={
         location.pathname === "/" ? "library" : location.pathname.split("/")[1]

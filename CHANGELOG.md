@@ -1,5 +1,13 @@
 # Changelog
 
+## BF-5R6 — Códice Iluminado (2026-11-04)
+
+- Reconstrução de linguagem visual de toda a aplicação com fundo ameixa noturna, fólio claro, tinta, gravuras SVG próprias e superfícies artesanais; substituição de frontispícios, dock, seleção de categorias, listagens, editores e controles visuais de todas as áreas.
+- Bridge Android nativa para toque leve e confirmação, com respeito às preferências do sistema e fallback opcional no browser.
+- Campos e capítulos com ergonomia de manuscrito, contraste, navegação com teclado e reduzido movimento. Contratos de dados, mundo, narrativa e seis categorias preservados.
+- Relatório em [BF-5R6_RELATORIO.md](docs/BF-5R6_RELATORIO.md). Sem aprovação artística/hardware ou merge.
+
+
 ## BF-5R5 — candidata (2026-11-04)
 
 - Biblioteca retém a cena pausada entre abas, preserva câmera sem mudanças de conteúdo representado e permite tentar novamente após falha WebGL. Pátio e gestos R4 preservados.

@@ -20,10 +20,13 @@ export function RitualChapter({
   return (
     <fieldset className="ritual-chapter">
       <legend>
-        <span>{number}</span>
-        {title}
+        <span className="ritual-chapter__number">{number}</span>
+        <span className="ritual-chapter__title">{title}</span>
       </legend>
-      <div className="ritual-chapter__body">{children}</div>
+      <div className="ritual-chapter__body">
+        <span className="ritual-chapter__seal" aria-hidden="true">✦</span>
+        {children}
+      </div>
     </fieldset>
   );
 }
@@ -47,7 +50,10 @@ function Inscription({
   const id = `ritual-${name}`;
   return (
     <div className={`form-field inscription inscription--${name}`}>
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={id}>
+        <span className="inscription__quill" aria-hidden="true">✧</span>
+        {label}
+      </label>
       {multiline ? (
         <textarea id={id} name={name} defaultValue={value} rows={3} />
       ) : (
