@@ -1,7 +1,7 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ApplicationError } from "./application";
 import type { BookEntry, LibraryEntry } from "./domain";
@@ -16,6 +16,11 @@ import type { WorldHostProps } from "./features/library/WorldHost";
 import { LibraryPage, type LibraryApplication } from "./pages";
 
 let latestWorldHostProps: WorldHostProps | undefined;
+
+beforeEach(() => {
+  // Each test must wait for its own WorldHost, not a previous render.
+  latestWorldHostProps = undefined;
+});
 
 vi.mock("./features/library/WorldHost", () => ({
   WorldHost: (props: WorldHostProps) => {

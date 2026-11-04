@@ -35,11 +35,7 @@ import { ActiveSessionIndicator } from "./features/sessions/ActiveSessionIndicat
 import { useAudioExperience } from "./useAudioExperience";
 import { measureStartupPhase } from "./startupPerformance";
 import "./styles.css";
-import "./styles-arcane.css";
-import "./styles-touch.css";
-import "./styles-ritual.css";
-import "./styles-sanctuary.css";
-import "./styles-living.css";
+import "./styles-legacy.css";
 import "./styles-atelier.css";
 import { pulseTouch } from "./app/touchFeedback";
 import {
