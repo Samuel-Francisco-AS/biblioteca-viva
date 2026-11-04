@@ -1,4 +1,4 @@
-# Estado atual
+> **BF-5R8 — candidata de entrada progressiva (2026-11-04):** implementada na PR #20 draft abertura leve antes de Dexie/React, módulos secundários sob demanda com preparação oportunista, Coleção com snapshot visual reutilizável e revalidação, e haptic antecipado para pointerup válido. Base física R7: pan/pinch e rolagem PASS; abertura, vibração, transições e RPG parciais. R8 sem gate físico/CI confirmado nesta documentação, sem alteração de domínio ou visual aprovado. [Relatório R8](BF-5R8_RELATORIO.md).\n\n# Estado atual
 
 > **BF-5R7 — candidata de desempenho (2026-11-04):** proprietário confirmou aprovação artística física da R6. R7 preserva o Códice Iluminado, evita projeções redundantes no pan/resizes idênticos, corrige feedback preso durante scroll, restringe hover ao mouse e remove supressão temporal global de pulsos. **Sem prova de resolução da latência tátil ou fluidez no Moto G06; BF-5 aberta, PR #20 draft.** Gates: 726 unitários PASS/1 timeout; E2E final dirigido 1 PASS, ampla final não executada após pedido de prioridade por cota; APK debug gerado. Evidências e pendências no [relatório R7](BF-5R7_RELATORIO.md).
 

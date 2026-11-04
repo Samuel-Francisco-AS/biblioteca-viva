@@ -1,3 +1,10 @@
+## BF-5R8 — entrada progressiva (candidata, 2026-11-04)
+
+- Capa artesanal mínima antes do bootstrap e remoção condicionada à primeira área utilizável; sem temporizador de navegação.
+- Abas secundárias divididas em chunks, carregamento oportunista e indicação temática apenas em espera real.
+- Retorno à Coleção com snapshot visual recente e reconsulta canônica; toque tátil na liberação válida com prevenção de pulso duplicado.
+- R8 permanece candidata na PR #20 draft, sem merge, sem testes físicos ou aprovação CI nesta entrega.
+
 # Changelog
 
 ## BF-5R7 — Performance, Latência e Fluidez (2026-11-04)

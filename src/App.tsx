@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import {
   Link,
@@ -19,16 +19,16 @@ import type {
   ApplicationRuntime,
 } from "./app/createApplication";
 import { isDiagnosticsEnabled } from "./app/diagnosticsAvailability";
-import { CollectionPage } from "./features/collection/CollectionPage";
-import { ArchivePage } from "./features/archive/ArchivePage";
-import { SettingsPage } from "./features/settings/SettingsPage";
-import { NewEntryPage } from "./features/entry-editor/NewEntryPage";
-import { EditEntryPage } from "./features/entry-editor/EditEntryPage";
-import { EntryDetailPage } from "./features/entry-detail/EntryDetailPage";
+
+
+
+
+
+
 import { LibraryPage } from "./pages";
 import { useExperiencePreferences } from "./useExperiencePreferences";
 import { ActiveSessionIndicator } from "./features/sessions/ActiveSessionIndicator";
-import { StatisticsPage } from "./features/statistics/StatisticsPage";
+
 import { useAudioExperience } from "./useAudioExperience";
 import { measureStartupPhase } from "./startupPerformance";
 import "./styles.css";
@@ -39,6 +39,30 @@ import "./styles-sanctuary.css";
 import "./styles-living.css";
 import "./styles-atelier.css";
 import { pulseTouch } from "./app/touchFeedback";
+import { preloadRoute, routeModules, warmCollectionWhenIdle } from "./app/routeModules";
+import { completeStartupExperience } from "./startupExperience";
+
+const CollectionPage = lazy(async () => ({
+  default: (await routeModules.collection()).CollectionPage,
+}));
+const ArchivePage = lazy(async () => ({
+  default: (await routeModules.archive()).ArchivePage,
+}));
+const StatisticsPage = lazy(async () => ({
+  default: (await routeModules.statistics()).StatisticsPage,
+}));
+const SettingsPage = lazy(async () => ({
+  default: (await routeModules.settings()).SettingsPage,
+}));
+const NewEntryPage = lazy(async () => ({
+  default: (await routeModules.newEntry()).NewEntryPage,
+}));
+const EditEntryPage = lazy(async () => ({
+  default: (await routeModules.editEntry()).EditEntryPage,
+}));
+const EntryDetailPage = lazy(async () => ({
+  default: (await routeModules.detail()).EntryDetailPage,
+}));
 
 function NotFoundPage() {
   return (
@@ -84,6 +108,9 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   const mainRef = useRef<HTMLElement>(null);
   const previousPathRef = useRef(location.pathname);
   const pressedRef = useRef<HTMLElement | null>(null);
+  const lastReleasePulseRef = useRef<{ control: HTMLElement; at: number } | null>(
+    null,
+  );
   const pressedOriginRef = useRef<{ id: number; x: number; y: number } | null>(
     null,
   );
@@ -114,6 +141,23 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
     if (shellStartedAt !== undefined)
       measureStartupPhase("react-shell", shellStartedAt);
   }, [shellStartedAt]);
+
+  useEffect(() => {
+    if (application && !libraryActive) completeStartupExperience();
+  }, [application, libraryActive]);
+
+  useEffect(() => {
+    let cancelWarmup: (() => void) | undefined;
+    const onReady = () => {
+      cancelWarmup?.();
+      cancelWarmup = warmCollectionWhenIdle();
+    };
+    window.addEventListener("biblioteca-viva:startup-ready", onReady);
+    return () => {
+      window.removeEventListener("biblioteca-viva:startup-ready", onReady);
+      cancelWarmup?.();
+    };
+  }, []);
 
   useEffect(() => {
     if (previousPathRef.current !== location.pathname) {
@@ -149,6 +193,8 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
     )
       return;
 
+    if (control instanceof HTMLAnchorElement)
+      preloadRoute(control.getAttribute("href") ?? "");
     control.setAttribute("data-tap-active", "true");
     pressedRef.current = control;
     pressedOriginRef.current = {
@@ -171,7 +217,26 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
         )
           clearTap();
       }}
-      onPointerUpCapture={clearTap}
+      onPointerUpCapture={(event) => {
+        const control = pressedRef.current;
+        const origin = pressedOriginRef.current;
+        if (
+          origin?.id === event.pointerId &&
+          control &&
+          event.target instanceof Element &&
+          control.contains(event.target) &&
+          !control.matches(":disabled, [aria-disabled='true'], [aria-current='page']")
+        ) {
+          pulseTouch(
+            effectiveExperience.reducedMotion,
+            control.matches(".button--primary, [type='submit'], .rpg-choices button")
+              ? "confirm"
+              : "selection",
+          );
+          lastReleasePulseRef.current = { control, at: performance.now() };
+        }
+        clearTap();
+      }
       onPointerCancelCapture={clearTap}
       onLostPointerCapture={clearTap}
       onClickCapture={(event) => {
@@ -179,20 +244,19 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
         const control = event.target.closest<HTMLElement>(
           "button, summary, a, [role='button'], [role='tab']",
         );
-        if (
-          control &&
-          !control.matches(
-            ":disabled, [aria-disabled='true'], [aria-current='page']",
-          )
-        )
-          pulseTouch(
-            effectiveExperience.reducedMotion,
-            control.matches(
-              ".button--primary, [type='submit'], .rpg-choices button",
-            )
-              ? "confirm"
-              : "selection",
-          );
+        if (!control ||
+          control.matches(":disabled, [aria-disabled='true'], [aria-current='page']")
+        ) return;
+        const pulse = lastReleasePulseRef.current;
+        lastReleasePulseRef.current = null;
+        if (pulse?.control === control && performance.now() - pulse.at < 800)
+          return;
+        pulseTouch(
+          effectiveExperience.reducedMotion,
+          control.matches(".button--primary, [type='submit'], .rpg-choices button")
+            ? "confirm"
+            : "selection",
+        );
       }}
       data-route={
         location.pathname === "/" ? "library" : location.pathname.split("/")[1]
@@ -232,6 +296,14 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
             <LibraryPage application={application} active={libraryActive} />
           </div>
         )}
+        <Suspense
+          fallback={
+            <section className="passage-preparing" role="status" aria-live="polite">
+              <span aria-hidden="true">✧</span>
+              <p>Desdobrando as páginas do Códice…</p>
+            </section>
+          }
+        >
         <Routes>
           <Route path={APP_ROUTE_PATHS.library} element={null} />
           <Route
@@ -281,6 +353,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </Suspense>
         {diagnosticsBuildEnabled &&
           isDiagnosticsEnabled(
             import.meta.env.DEV,

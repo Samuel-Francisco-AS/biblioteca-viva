@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { preloadRoute } from "./routeModules";
 
 import {
   primaryAppRoutes,
@@ -76,6 +77,8 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                 aria-label={route.primaryNavigation.accessibleLabel}
                 className="primary-dock__link"
                 to={route.path}
+                onPointerEnter={() => preloadRoute(route.path)}
+                onFocus={() => preloadRoute(route.path)}
               >
                 <span className="primary-dock__medallion">
                   <span className="primary-dock__halo" aria-hidden="true" />

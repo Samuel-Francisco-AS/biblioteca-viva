@@ -10,6 +10,7 @@ import {
 import { LivingSession } from "./livingObjects";
 import { LivingControls, LivingFeedback } from "./LivingControls";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { completeStartupExperience } from "../../startupExperience";
 
 import type {
   WorldRuntime,
@@ -150,6 +151,8 @@ export function WorldHost({
 
   const publishStatus = (nextStatus: WorldHostStatus): void => {
     setStatus(nextStatus);
+    if (nextStatus === "ready" || nextStatus === "failed")
+      completeStartupExperience();
     if (nextStatus !== "ready") setViewRuntime(null);
     statusChangeRef.current?.(nextStatus);
   };

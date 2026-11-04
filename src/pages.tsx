@@ -15,6 +15,7 @@ import type {
   WorldSelection,
 } from "./features/library/worldRuntime";
 import { isDiagnosticsEnabled } from "./app/diagnosticsAvailability";
+import { completeStartupExperience } from "./startupExperience";
 
 const diagnosticsBuildEnabled =
   import.meta.env.VITE_ENABLE_DIAGNOSTICS === "true";
@@ -139,6 +140,9 @@ function LibraryPageContent({
   const libraryWorldSnapshot = currentSnapshot?.world;
   const readingAreaBooks = libraryWorldSnapshot?.categories[0].entries;
   const error = currentSnapshot?.error;
+  useEffect(() => {
+    if (error && active) completeStartupExperience();
+  }, [error, active]);
   const selectableObjects =
     application && selectableObjectsState?.application === application
       ? selectableObjectsState.value

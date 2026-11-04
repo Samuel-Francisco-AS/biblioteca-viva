@@ -1965,3 +1965,23 @@
   border: 1px solid #a77c63;
   transform: rotate(45deg);
 }
+
+/* BF-5R8: a lightweight passage while the next folio's module is fetched.
+   No blur and no forced delay; the ornate destination remains unchanged. */
+.app-shell .passage-preparing {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  min-height: min(45dvh, 21rem);
+  gap: 0.7rem;
+  color: #f0d5b3;
+  font: 1rem/1.5 var(--font-family);
+  text-align: center;
+}
+.app-shell .passage-preparing > span {
+  color: #e1b48c;
+  font: 2rem/1 Georgia, serif;
+}
+.app-shell .passage-preparing p {
+  margin: 0;
+}

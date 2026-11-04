@@ -60,13 +60,24 @@ function secondaryText(entry: LibraryEntry): string {
   }
 }
 
+// Presentation-only warm snapshot. Every mount revalidates from the canonical
+// local database; edits, deletions and restored backups are never written here.
+const recentCollection = new WeakMap<
+  CollectionApplication,
+  { readonly entries: readonly LibraryEntry[]; readonly tags: readonly Tag[] }
+>();
+
 export function CollectionPage({
   application,
 }: {
   readonly application?: CollectionApplication;
 }) {
-  const [entries, setEntries] = useState<readonly LibraryEntry[]>();
-  const [tags, setTags] = useState<readonly Tag[]>([]);
+  const [entries, setEntries] = useState<readonly LibraryEntry[]>(
+    () => (application ? recentCollection.get(application)?.entries : undefined),
+  );
+  const [tags, setTags] = useState<readonly Tag[]>(
+    () => (application ? recentCollection.get(application)?.tags : undefined) ?? [],
+  );
   const [error, setError] = useState<string>();
   const [params, setParams] = useSearchParams();
   const location = useLocation();
@@ -104,6 +115,10 @@ export function CollectionPage({
     ]).then(
       ([loaded, loadedTags]) => {
         if (active) {
+          recentCollection.set(application, {
+            entries: loaded,
+            tags: loadedTags,
+          });
           setEntries(loaded);
           setTags(loadedTags);
         }
