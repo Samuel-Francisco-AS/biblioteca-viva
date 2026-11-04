@@ -1,3 +1,4 @@
+import { chooseRecordType, recordSaveLabel } from "./fixtures";
 import { fillWorkoutPlan, expect, test } from "./fixtures";
 import type { Page } from "@playwright/test";
 
@@ -200,16 +201,16 @@ test("seis tipos abrem pela Biblioteca e preservam edição e retorno", async ({
   ];
   for (const record of records) {
     await page.goto("/novo-registro");
-    await page
-      .getByRole("button", { name: new RegExp(record.type, "u") })
-      .click();
+    await chooseRecordType(page, record.type);
     await page
       .getByLabel(
         record.type === "Atividade física" ? "Nome do treino" : "Título",
       )
       .fill(record.title);
     if (record.type === "Atividade física") await fillWorkoutPlan(page);
-    await page.getByRole("button", { name: "Salvar registro" }).click();
+    await page
+      .getByRole("button", { name: recordSaveLabel(record.type) })
+      .click();
     await expect(
       page.getByRole("heading", { name: record.title }),
     ).toBeVisible();
@@ -243,9 +244,12 @@ test("seis tipos abrem pela Biblioteca e preservam edição e retorno", async ({
   await expect(
     page.getByRole("heading", { name: "Filme BF3 fictício" }),
   ).toBeVisible();
+  await page.locator("#cinema-actions > summary").click();
   await page.getByRole("link", { name: /Editar/ }).click();
   await page.getByLabel("Título").fill("Filme BF3 editado");
-  await page.getByRole("button", { name: "Salvar" }).click();
+  await page
+    .getByRole("button", { name: recordSaveLabel("Filme", true) })
+    .click();
   await expect(
     page.getByRole("heading", { name: "Filme BF3 editado" }),
   ).toBeVisible();
@@ -259,11 +263,15 @@ test("seis tipos abrem pela Biblioteca e preservam edição e retorno", async ({
   for (const { title, type } of records.slice(1)) {
     await page.getByRole("link", { name: title, exact: true }).click();
     await expect(page.getByRole("heading", { name: title })).toBeVisible();
+    if (type === "Série")
+      await page.locator("#cinema-actions > summary").click();
     await page.getByRole("link", { name: /Editar/ }).click();
     await page
       .getByLabel(type === "Atividade física" ? "Nome do treino" : "Título")
       .fill(`${title} editado`);
-    await page.getByRole("button", { name: "Salvar" }).click();
+    await page
+      .getByRole("button", { name: recordSaveLabel(type, true) })
+      .click();
     await expect(
       page.getByRole("heading", { name: `${title} editado` }),
     ).toBeVisible();

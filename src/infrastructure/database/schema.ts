@@ -1,3 +1,4 @@
+import { catalogSchema } from "../../domain/entertainment";
 import {
   workoutScheduleSchema,
   workoutDaysSchema,
@@ -21,7 +22,7 @@ import {
 import { z } from "zod";
 
 export const DATABASE_NAME = "biblioteca-viva";
-export const DATABASE_VERSION = 11;
+export const DATABASE_VERSION = 12;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
 export const DATABASE_SCHEMA_V1 = {
@@ -73,6 +74,11 @@ export const DATABASE_SCHEMA_V9 = { ...DATABASE_SCHEMA_V8 } as const;
 export const DATABASE_SCHEMA_V10 = { ...DATABASE_SCHEMA_V9 } as const;
 
 export const DATABASE_SCHEMA_V11 = { ...DATABASE_SCHEMA_V10 } as const;
+
+export const DATABASE_SCHEMA_V12 = {
+  ...DATABASE_SCHEMA_V11,
+  media: "&entryId",
+} as const;
 
 const isoUtc = z.iso.datetime({ offset: false });
 const entityMetadata = {
@@ -163,6 +169,7 @@ export const persistedBookSchema = z
 const persistedMovieSchema = z.strictObject({
   ...commonEntry,
   type: z.literal("movie"),
+  catalog: catalogSchema.optional(),
   director: z.string().trim().min(1).optional(),
   year: z.int().positive().optional(),
   durationMinutes: z.int().positive().optional(),
@@ -173,6 +180,7 @@ const persistedSeriesSchema = z
   .strictObject({
     ...commonEntry,
     type: z.literal("series"),
+    catalog: catalogSchema.optional(),
     platform: z.string().trim().min(1).optional(),
     episodesWatched: z.int().nonnegative(),
     totalEpisodes: z.int().positive().optional(),
@@ -258,6 +266,15 @@ export const persistedLibraryEntrySchema = z
     persistedWorkSchema,
   ])
   .superRefine((entry, context) => {
+    if (
+      (entry.type === "movie" && entry.catalog?.format === "series") ||
+      (entry.type === "series" && entry.catalog?.format === "film")
+    )
+      context.addIssue({
+        code: "custom",
+        path: ["catalog", "format"],
+        message: "Formato incompatível com a estrutura",
+      });
     if (entry.updatedAt < entry.createdAt)
       context.addIssue({
         code: "custom",

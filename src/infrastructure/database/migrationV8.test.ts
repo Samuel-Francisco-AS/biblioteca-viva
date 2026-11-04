@@ -48,6 +48,7 @@ describe("migração Dexie v7 para v8", () => {
     expect(migrated.tables.map(({ name: table }) => table).sort()).toEqual([
       "activities",
       "libraryEntries",
+      "media",
       "metadata",
       "milestones",
       "notes",
@@ -59,7 +60,7 @@ describe("migração Dexie v7 para v8", () => {
     expect(await migrated.libraryEntries.count()).toBe(0);
     expect(await migrated.settings.count()).toBe(0);
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-      value: "11",
+      value: "12",
     });
 
     const fresh = createBook({

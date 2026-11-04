@@ -1,9 +1,13 @@
+import {
+  VISIBLE_GROUPS,
+  groupLabels,
+  matchesGroup,
+} from "../entertainment/catalogFilters";
 import { RealmIntro } from "../../app/RealmIntro";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
 import {
-  ENTRY_TYPES,
   type LibraryEntry,
   type Note,
   type Quote,
@@ -118,7 +122,7 @@ export function ArchivePage({
         .filter(
           ({ annotation, entry }) =>
             (kind === "all" || kind === "note") &&
-            (entryType === "all" || entry?.type === entryType) &&
+            matchesGroup(entry, entryType) &&
             (!favoritesOnly || annotation.favorite) &&
             (tagId === "all" || annotation.tagIds.includes(tagId)),
         ),
@@ -135,7 +139,7 @@ export function ArchivePage({
         .filter(
           ({ annotation, entry }) =>
             (kind === "all" || kind === "quote") &&
-            (entryType === "all" || entry?.type === entryType) &&
+            matchesGroup(entry, entryType) &&
             (!favoritesOnly || annotation.favorite) &&
             (tagId === "all" || annotation.tagIds.includes(tagId)),
         ),
@@ -268,7 +272,11 @@ export function ArchivePage({
           <label className="form-field">
             Tipo de registro
             <select
-              value={entryType}
+              value={
+                entryType === "movie" || entryType === "series"
+                  ? "entertainment"
+                  : entryType
+              }
               onChange={(event) =>
                 setParams(
                   (current) => {
@@ -282,9 +290,9 @@ export function ArchivePage({
               }
             >
               <option value="all">Todos</option>
-              {ENTRY_TYPES.map((type) => (
+              {VISIBLE_GROUPS.map((type) => (
                 <option key={type} value={type}>
-                  {type}
+                  {groupLabels[type]}
                 </option>
               ))}
             </select>

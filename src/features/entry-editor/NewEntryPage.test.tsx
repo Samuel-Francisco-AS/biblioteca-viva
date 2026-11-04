@@ -32,7 +32,7 @@ function application() {
 }
 
 describe("Novo registro", () => {
-  it("oferece as seis superfícies de tipo", () => {
+  it("oferece cinco grupos visíveis preservando escolha de formato", () => {
     const { facade } = application();
     render(
       <MemoryRouter>
@@ -41,8 +41,7 @@ describe("Novo registro", () => {
     );
     for (const name of [
       "Livro",
-      "Filme",
-      "Série",
+      "Entretenimento",
       "Estudo",
       "Atividade física",
       "Trabalho",
@@ -69,17 +68,31 @@ describe("Novo registro", () => {
         </Routes>
       </MemoryRouter>,
     );
+    await user.click(screen.getByRole("button", { name: /Entretenimento/u }));
     await user.click(screen.getByRole("button", { name: /Filme/u }));
     await user.type(screen.getByLabelText("Título"), "Filme fictício");
     await user.type(
-      screen.getByLabelText("Direção (opcional)"),
+      screen.getByLabelText("Diretor / criador"),
       "Pessoa Fictícia",
     );
-    await user.type(screen.getByLabelText("Ano (opcional)"), "2024");
-    await user.click(screen.getByRole("button", { name: "Salvar registro" }));
+    await user.type(screen.getByLabelText("Ano"), "2024");
+    await user.click(screen.getByRole("button", { name: "Salvar obra" }));
     await waitFor(() => expect(createLibraryEntry).toHaveBeenCalledOnce());
     expect(createLibraryEntry).toHaveBeenCalledWith({
       type: "movie",
+      status: "planned",
+      favorite: false,
+      catalog: {
+        format: "film",
+        genre: undefined,
+        year: 2024,
+        releaseDate: undefined,
+        watchedOn: undefined,
+        rating: undefined,
+        seasonCount: undefined,
+        wishlist: true,
+        intent: undefined,
+      },
       title: "Filme fictício",
       director: "Pessoa Fictícia",
       year: 2024,

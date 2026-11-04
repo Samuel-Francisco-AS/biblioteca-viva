@@ -10,7 +10,7 @@ const ImageDocument = registerPlugin<{
 
 function payload(image: PngArtifact): string {
   if (
-    !/^biblioteca-viva-(leitura|citacao)\.png$/.test(image.name) ||
+    !/^biblioteca-viva-(leitura|citacao|cinema)\.png$/.test(image.name) ||
     !/^data:image\/png;base64,iVBORw0KGgo[A-Za-z0-9+/=]+$/.test(image.dataUrl)
   )
     throw new Error("Imagem PNG inválida.");
@@ -46,7 +46,7 @@ export class PlatformImageFiles implements ImageFilesPort {
         await Share.share({
           files: [uri],
           title: "Biblioteca Viva",
-          dialogTitle: "Compartilhar imagem da leitura",
+          dialogTitle: "Compartilhar imagem",
         });
         return "finished" as const;
       } catch (error: unknown) {

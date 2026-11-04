@@ -18,6 +18,7 @@ Este índice distingue as decisões vigentes das preservadas para contexto. O re
 | ADR-012 | BF-4 — Mundo Vivo e Habitável               | aceita (escopo)         |
 | ADR-013 | BF-4F — 4 habitantes e conversação RPG      | aceita (escopo criativo) |
 | ADR-014 | Pós-BF-4: BF-5 UI/UX → BF-6 Mundo Vivo → BF-7 consolidação | aceita (ordem e estratégia; sem execução) |
+| ADR-018 | [Entretenimento: agrupamento e mídia local](ADR-018-entretenimento-catalogo-midia-local.md) | implementada como candidata Parte 2D |
 | ADR-017 | [Ficha viva e estimativa local](ADR-017-ficha-viva-e-estimativa-local.md) | implementada como candidata Parte 2C |
 | ADR-016 | [Estudo: fólio, foco persistido e cartas locais](ADR-016-estudo-folio-pomodoro-cartas.md) | implementada como candidata Parte 2B |
 | ADR-015 | BF-5R5: residência do mundo e fichas de prática | aceita no escopo R5; candidata |

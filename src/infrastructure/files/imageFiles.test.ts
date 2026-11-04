@@ -98,20 +98,27 @@ describe("entrega local de PNG", () => {
     await expect(files.share(image)).rejects.toThrow("Você pode salvar");
     expect(native.remove).toHaveBeenCalledTimes(2);
   });
-  it("Android salva e cancela pelo seletor de documentos, independentemente de Share", async () => {
-    native.active = true;
-    native.save
-      .mockResolvedValueOnce({ status: "saved" })
-      .mockResolvedValueOnce({ status: "cancelled" });
-    const files = new PlatformImageFiles();
-    expect(await files.save(image)).toBe("finished");
-    expect(await files.save(image)).toBe("cancelled");
-    expect(native.save).toHaveBeenCalledWith({
-      dataBase64: "iVBORw0KGgoAAA==",
-      suggestedName: image.name,
-    });
-    expect(native.share).not.toHaveBeenCalled();
-  });
+  it.each(["leitura", "citacao", "cinema"])(
+    "Android salva e cancela %s pelo seletor de documentos, independentemente de Share",
+    async (kind) => {
+      const image = {
+        name: `biblioteca-viva-${kind}.png`,
+        dataUrl: "data:image/png;base64,iVBORw0KGgoAAA==",
+      };
+      native.active = true;
+      native.save
+        .mockResolvedValueOnce({ status: "saved" })
+        .mockResolvedValueOnce({ status: "cancelled" });
+      const files = new PlatformImageFiles();
+      expect(await files.save(image)).toBe("finished");
+      expect(await files.save(image)).toBe("cancelled");
+      expect(native.save).toHaveBeenCalledWith({
+        dataBase64: "iVBORw0KGgoAAA==",
+        suggestedName: image.name,
+      });
+      expect(native.share).not.toHaveBeenCalled();
+    },
+  );
   it("rejeita artefatos inválidos antes de acessar plugins", async () => {
     await expect(
       new PlatformImageFiles().save({ ...image, name: "../private.png" }),

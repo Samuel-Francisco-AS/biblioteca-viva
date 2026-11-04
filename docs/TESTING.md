@@ -1,3 +1,7 @@
+## BF-5 Parte 2D — evidência dirigida
+
+[Relatório e resultados](BF-5_PARTE2D_ENTRETENIMENTO.md): criação das seis combinações de formato/estrutura, legado, filtros/listas/datas civis, progresso/temporadas/diário, revisão concorrente, poster limitado/ownership, upgrade/reabertura e restore v6 antigo/novo. Playwright valida o PNG binário 1080 × 1350/1920 offline, fundos/mensagem/prévia e ergonomia web; mocks verificam Share/SAF/cancelamento/erro. Preservam-se regressões dos livros/estudo/treinos e seis projeções 3D. Nenhum resultado equivale a aceite físico/artístico, TalkBack ou CI global verde.
+
 # Estratégia de testes
 
 ## BF-5R7 — desempenho e preservação

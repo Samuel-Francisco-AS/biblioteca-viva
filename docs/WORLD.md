@@ -1,3 +1,7 @@
+## BF-5 Parte 2D — preservação audiovisual (2026-11-04)
+
+Entretenimento é apenas agrupamento convencional de UI. O mundo mantém **seis listas técnicas**; `movie → movie-record → library-movie:${entryId}` e `series → series-record → library-series:${entryId}` permanecem intactos. Anime/Animação unitários usam filme; episódicos usam série. Metadados `catalog` e posters não entram nos snapshots, recursos ou objetos do mundo. Não há mudança de seleção, slot, ordenação espacial, posicionamento ou persistência espacial. [ADR-018](decisions/ADR-018-entretenimento-catalogo-midia-local.md).
+
 # Mundo
 
 ## BF-5R5 — residência de visita, sem mudança da composição R4

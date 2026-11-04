@@ -1,3 +1,9 @@
+## 2026-11-04 — BF-5 Parte 2D (candidata)
+
+- Entretenimento reúne filmes/séries visualmente e adiciona Anime/Animação unitários ou episódicos, desejos, favoritos, estreias civis e acompanhamento. Cinco grupos na Coleção/cadastro/Arquivo/Resumo, seis tipos técnicos e mundo preservados.
+- Fólio cinematográfico com poster local, progresso/temporadas, avaliação e diário por minuto/episódio. Compositor offline exporta PNG 4:5/9:16 com mensagem, fundo escolhido, duas composições, prévia real e entrega Android.
+- Dexie v12 aditiva, mídia limitada em tabela separada e backup v6 compatível. Sem nova dependência ou versão de pacote. [Contrato, verificações e limitações](docs/BF-5_PARTE2D_ENTRETENIMENTO.md). BF-5 aberta, sem merge ou aceite físico/artístico.
+
 ## 2026-11-04 — BF-5 Parte 2C (candidata)
 
 - Atividade Física reconstruída como ficha-base reutilizável com período/dias, metas de séries por repetições/tempo e ordenação. Rádios visíveis substituem o seletor nativo de categoria afetado pela tela branca Android.

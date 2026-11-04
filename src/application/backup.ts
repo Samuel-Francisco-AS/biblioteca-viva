@@ -19,6 +19,7 @@ export interface BackupSetting {
 }
 
 export interface BackupData {
+  readonly media?: readonly import("./media").LocalPoster[];
   readonly libraryEntries: readonly LibraryEntry[];
   readonly milestones: readonly ReachedMilestone[];
   readonly notes: readonly Note[];
@@ -35,6 +36,7 @@ export interface BackupSnapshot extends BackupData {
 
 export function hasRelevantRestoreData(data: BackupData): boolean {
   return (
+    (data.media?.length ?? 0) > 0 ||
     data.libraryEntries.length > 0 ||
     data.notes.length > 0 ||
     data.quotes.length > 0 ||
@@ -47,6 +49,7 @@ export function hasRelevantRestoreData(data: BackupData): boolean {
 }
 
 export interface BackupCounts {
+  readonly media?: number;
   readonly libraryEntries: number;
   readonly milestones: number;
   readonly notes: number;

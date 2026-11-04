@@ -1,8 +1,10 @@
+import { VISIBLE_GROUPS, groupLabels } from "../entertainment/catalogFilters";
+import { parseTypeFilter } from "../collection/collectionControls";
 import { RealmIntro } from "../../app/RealmIntro";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
-import { ENTRY_TYPES, type LibraryEntry } from "../../domain";
+import { type LibraryEntry } from "../../domain";
 import { STATISTICS_WINDOWS, type StatisticsSnapshot } from "../../application";
 import { entryTypeLabels } from "../collection/collectionControls";
 import { presentApplicationError } from "../entry-editor/errorMessages";
@@ -323,7 +325,8 @@ export function StatisticsPage({
   const [error, setError] = useState<string>();
   const window =
     STATISTICS_WINDOWS.find((value) => value === params.get("window")) ?? "30d";
-  const entryType = ENTRY_TYPES.find((value) => value === params.get("type"));
+  const filter = parseTypeFilter(params.get("type"));
+  const entryType = filter === "all" ? undefined : filter;
   const category = (Object.keys(categoryLabels) as StatisticsCategory[]).find(
     (value) => value === params.get("category"),
   );
@@ -333,7 +336,11 @@ export function StatisticsPage({
     void Promise.all([
       application.queries.getStatistics.execute({
         window,
-        ...(entryType && { entryType }),
+        ...(entryType === "entertainment"
+          ? { entryGroup: "entertainment" }
+          : entryType
+            ? { entryType }
+            : {}),
         ...(category && { category }),
       }),
       application.queries.listLibraryEntries.execute(),
@@ -426,13 +433,17 @@ export function StatisticsPage({
         <label className="form-field">
           Tipo de registro
           <select
-            value={entryType ?? "all"}
+            value={
+              entryType === "movie" || entryType === "series"
+                ? "entertainment"
+                : (entryType ?? "all")
+            }
             onChange={(event) => update("type", event.target.value)}
           >
             <option value="all">Todos</option>
-            {ENTRY_TYPES.map((type) => (
+            {VISIBLE_GROUPS.map((type) => (
               <option key={type} value={type}>
-                {entryTypeLabels[type]}
+                {groupLabels[type]}
               </option>
             ))}
           </select>
@@ -473,15 +484,34 @@ export function StatisticsPage({
       >
         <h3 id="type-summary">Resumo por tipo</h3>
         <div className="statistics-types">
-          {ENTRY_TYPES.map((type) => {
-            const item = snapshot.byType[type];
+          {VISIBLE_GROUPS.map((type) => {
+            const item =
+              type === "entertainment"
+                ? {
+                    ...snapshot.byType.movie,
+                    entries:
+                      snapshot.byType.movie.entries +
+                      snapshot.byType.series.entries,
+                    completed:
+                      snapshot.byType.movie.completed +
+                      snapshot.byType.series.completed,
+                    sessions:
+                      snapshot.byType.movie.sessions +
+                      snapshot.byType.series.sessions,
+                    duration:
+                      snapshot.byType.movie.duration +
+                      snapshot.byType.series.duration,
+                    episodesRegistered:
+                      snapshot.byType.series.episodesRegistered,
+                  }
+                : snapshot.byType[type];
             const hasData = item.entries > 0 || item.sessions > 0;
             return (
               <article
                 className={`statistics-type${hasData ? " statistics-type--active" : " statistics-type--empty"}`}
                 key={type}
               >
-                <h4>{entryTypeLabels[type]}</h4>
+                <h4>{groupLabels[type]}</h4>
                 {hasData ? (
                   <p>
                     {item.entries} registro{item.entries === 1 ? "" : "s"}
@@ -501,7 +531,7 @@ export function StatisticsPage({
                 {type === "book" && item.pagesRegistered > 0 && (
                   <small>{item.pagesRegistered} páginas em sessões</small>
                 )}
-                {type === "series" && item.episodesRegistered > 0 && (
+                {type === "entertainment" && item.episodesRegistered > 0 && (
                   <small>{item.episodesRegistered} episódios em sessões</small>
                 )}
                 {type === "physical_activity" && item.distanceMeters > 0 && (

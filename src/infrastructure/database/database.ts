@@ -1,3 +1,4 @@
+import type { LocalPoster } from "../../application/media";
 import Dexie, { type EntityTable } from "dexie";
 
 import {
@@ -13,6 +14,7 @@ import {
   DATABASE_SCHEMA_V9,
   DATABASE_SCHEMA_V10,
   DATABASE_SCHEMA_V11,
+  DATABASE_SCHEMA_V12,
   SCHEMA_MARKER_KEY,
   type PersistedActivity,
   type PersistedLibraryEntry,
@@ -28,6 +30,7 @@ import {
 const MIGRATION_TIMESTAMP = "1970-01-01T00:00:00.000Z";
 
 export class BibliotecaDatabase extends Dexie {
+  media!: EntityTable<LocalPoster, "entryId">;
   libraryEntries!: EntityTable<PersistedLibraryEntry, "id">;
   notes!: EntityTable<PersistedNote, "id">;
   quotes!: EntityTable<PersistedQuote, "id">;
@@ -170,6 +173,15 @@ export class BibliotecaDatabase extends Dexie {
         await transaction.table<PersistedMetadata>("metadata").put({
           key: SCHEMA_MARKER_KEY,
           value: "11",
+          updatedAt: MIGRATION_TIMESTAMP,
+        });
+      });
+    this.version(12)
+      .stores(DATABASE_SCHEMA_V12)
+      .upgrade(async (transaction) => {
+        await transaction.table<PersistedMetadata>("metadata").put({
+          key: SCHEMA_MARKER_KEY,
+          value: "12",
           updatedAt: MIGRATION_TIMESTAMP,
         });
       });

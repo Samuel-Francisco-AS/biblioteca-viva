@@ -207,3 +207,23 @@ export async function fillWorkoutPlan(page: Page) {
     .click();
   await page.getByLabel("Nome do exercício").fill("Movimento fictício");
 }
+
+/** Five visible groups; the audiovisual group still persists two technical types. */
+export async function chooseRecordType(page: Page, type: string) {
+  const entertainment = type === "Filme" || type === "Série";
+  await page
+    .getByRole("button", {
+      name: new RegExp(
+        `^FÓLIO \\d+ ${entertainment ? "Entretenimento" : type}`,
+      ),
+    })
+    .click();
+  if (entertainment)
+    await page.getByRole("button", { name: new RegExp(`^${type}`) }).click();
+}
+export function recordSaveLabel(type: string, edit = false): string {
+  if (type === "Livro") return edit ? "Salvar alterações" : "Salvar livro";
+  if (type === "Filme" || type === "Série")
+    return edit ? "Salvar alterações" : "Salvar obra";
+  return edit ? "Salvar" : "Salvar registro";
+}

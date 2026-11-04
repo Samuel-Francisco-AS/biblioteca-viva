@@ -1,3 +1,4 @@
+import { chooseRecordType, recordSaveLabel } from "./fixtures";
 import { fillWorkoutPlan, expect, test } from "./fixtures";
 
 test("Coleção registra e encontra os seis tipos de P1", async ({
@@ -14,16 +15,16 @@ test("Coleção registra e encontra os seis tipos de P1", async ({
     { type: "Trabalho", title: "Projeto P1 Fictício" },
   ]) {
     await page.goto("/novo-registro");
-    await page
-      .getByRole("button", { name: new RegExp(record.type, "u") })
-      .click();
+    await chooseRecordType(page, record.type);
     await page
       .getByLabel(
         record.type === "Atividade física" ? "Nome do treino" : "Título",
       )
       .fill(record.title);
     if (record.type === "Atividade física") await fillWorkoutPlan(page);
-    await page.getByRole("button", { name: "Salvar registro" }).click();
+    await page
+      .getByRole("button", { name: recordSaveLabel(record.type) })
+      .click();
     await expect(
       page.getByRole("heading", { name: record.title }),
     ).toBeVisible();
@@ -40,7 +41,11 @@ test("Coleção registra e encontra os seis tipos de P1", async ({
   ])
     await expect(page.getByRole("heading", { name: title })).toBeVisible();
 
-  await page.getByLabel("Tipo").selectOption("movie");
+  await page
+    .getByRole("button", { name: "Entretenimento", exact: true })
+    .click();
+  await page.getByText(/Explorar catálogo/).click();
+  await page.getByRole("button", { name: "Filme", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Filme P1 Fictício" }),
   ).toBeVisible();

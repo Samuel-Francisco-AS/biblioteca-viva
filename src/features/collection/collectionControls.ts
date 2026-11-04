@@ -1,3 +1,5 @@
+import { matchesGroup, matchesCatalog } from "../entertainment/catalogFilters";
+import { entertainmentFormat, formatLabels } from "../../domain/entertainment";
 import {
   ENTRY_STATUSES,
   ENTRY_TYPES,
@@ -9,7 +11,7 @@ import {
 export const COLLECTION_SORTS = ["recent", "created", "title"] as const;
 export type CollectionSort = (typeof COLLECTION_SORTS)[number];
 export type StatusFilter = EntryStatus | "all";
-export type TypeFilter = EntryType | "all";
+export type TypeFilter = EntryType | "entertainment" | "all";
 
 export const entryTypeLabels: Readonly<Record<EntryType, string>> = {
   book: "Livro",
@@ -38,6 +40,7 @@ export function parseStatusFilter(value: string | null): StatusFilter {
 }
 
 export function parseTypeFilter(value: string | null): TypeFilter {
+  if (value === "entertainment") return value;
   return ENTRY_TYPES.find((type) => type === value) ?? "all";
 }
 
@@ -56,9 +59,9 @@ function searchableFields(entry: LibraryEntry): string {
     case "book":
       return `${entry.title} ${entry.author ?? ""}`;
     case "movie":
-      return `${entry.title} ${entry.director ?? ""} ${entry.platform ?? ""}`;
+      return `${entry.title} ${entry.director ?? ""} ${entry.platform ?? ""} ${formatLabels[entertainmentFormat(entry)]} ${entry.catalog?.genre ?? ""} ${entry.catalog?.releaseDate ?? ""} ${entry.year ?? entry.catalog?.year ?? ""}`;
     case "series":
-      return `${entry.title} ${entry.platform ?? ""}`;
+      return `${entry.title} ${entry.platform ?? ""} ${formatLabels[entertainmentFormat(entry)]} ${entry.catalog?.genre ?? ""} ${entry.catalog?.releaseDate ?? ""} ${entry.catalog?.year ?? ""}`;
     case "study":
       return `${entry.title} ${entry.area ?? ""} ${entry.discipline ?? ""}`;
     case "physical_activity":
@@ -77,12 +80,15 @@ export function deriveCollection(
   favoritesOnly = false,
   tagNames: ReadonlyMap<string, string> = new Map(),
   tagId = "all",
+  catalogFilter = "all",
+  today?: string,
 ): readonly LibraryEntry[] {
   const normalizedQuery = normalizeSearch(query);
   const result = entries.filter(
     (entry) =>
       (status === "all" || entry.status === status) &&
-      (type === "all" || entry.type === type) &&
+      matchesGroup(entry, type) &&
+      matchesCatalog(entry, catalogFilter, today) &&
       (!favoritesOnly || entry.favorite) &&
       (tagId === "all" || entry.tagIds.includes(tagId)) &&
       normalizeSearch(

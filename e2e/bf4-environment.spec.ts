@@ -1,3 +1,4 @@
+import { chooseRecordType, recordSaveLabel } from "./fixtures";
 import { fillWorkoutPlan, expect, openWorldTools, test } from "./fixtures";
 import { OrthographicCamera, Vector3 } from "three";
 import { LIBRARY_ROOMS } from "../src/features/library/libraryBuildingGeometry";
@@ -16,12 +17,12 @@ test("BF-4D: ambiente integrado em paisagem/retrato, zoom, pan e seleção", asy
     "Trabalho",
   ]) {
     await page.goto("/novo-registro");
-    await page.getByRole("button", { name: new RegExp(type, "u") }).click();
+    await chooseRecordType(page, type);
     await page
       .getByLabel(type === "Atividade física" ? "Nome do treino" : "Título")
       .fill(`${type} fictício BF4`);
     if (type === "Atividade física") await fillWorkoutPlan(page);
-    await page.getByRole("button", { name: "Salvar registro" }).click();
+    await page.getByRole("button", { name: recordSaveLabel(type) }).click();
     await expect(
       page.getByRole("heading", { name: `${type} fictício BF4` }),
     ).toBeVisible();
@@ -117,11 +118,11 @@ for (const viewport of [
     ] as const) {
       for (let index = 1; index <= count; index++) {
         await page.goto("/novo-registro");
-        await page.getByRole("button", { name: new RegExp(type, "u") }).click();
+        await chooseRecordType(page, type);
         await page
           .getByLabel("Título")
           .fill(`${type} espacial fictício ${index}`);
-        await page.getByRole("button", { name: "Salvar registro" }).click();
+        await page.getByRole("button", { name: recordSaveLabel(type) }).click();
         await expect(
           page.getByRole("heading", {
             name: `${type} espacial fictício ${index}`,

@@ -1,4 +1,8 @@
 import {
+  EntertainmentDetail,
+  type EntertainmentApplication,
+} from "../entertainment/EntertainmentDetail";
+import {
   WorkoutDetailPage,
   type WorkoutApplication,
 } from "./WorkoutDetailPage";
@@ -8,7 +12,7 @@ import { EntryPortrait } from "./EntryPortrait";
 import { RecordMemories } from "./RecordMemories";
 import { entryExperience } from "./entryExperience";
 import { ArtifactGlyph } from "../../app/ArtifactGlyph";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import {
   Link,
   useNavigate,
@@ -32,9 +36,11 @@ import {
 } from "../tags/OrganizationPanel";
 
 export interface EntryDetailApplication extends BookDetailApplication {
+  readonly posters?: EntertainmentApplication["posters"];
   readonly physicalProfile?: WorkoutApplication["physicalProfile"];
   readonly commands: BookDetailApplication["commands"] &
     FlashCardApplication["commands"] &
+    EntertainmentApplication["commands"] &
     WorkoutApplication["commands"] & {
       readonly changeLibraryEntryStatus: {
         execute(input: unknown): Promise<LibraryEntry>;
@@ -187,6 +193,18 @@ export function EntryDetailPage({
         onChange={setEntry}
       />
     );
+  if (entry.type === "movie" || entry.type === "series")
+    return (
+      <EntertainmentDetail
+        key={id}
+        application={application}
+        entry={entry}
+        notes={notes}
+        quotes={quotes}
+        returnPath={returnPath}
+        onChange={setEntry}
+      />
+    );
   const availableApplication = application;
   const currentEntry = entry;
 
@@ -207,38 +225,6 @@ export function EntryDetailPage({
           id,
           status,
         }),
-      );
-    } catch (failure: unknown) {
-      setError(presentApplicationError(failure).message);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function updateProgress(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setBusy(true);
-    setError(undefined);
-    const form = new FormData(event.currentTarget);
-    const raw = form.get("progress");
-    const value = typeof raw === "string" ? Number(raw) : Number.NaN;
-    try {
-      if (currentEntry.type !== "series") return;
-      const input = {
-        id,
-        type: "series",
-        episodesWatched: value,
-        currentSeason: form.get("season")
-          ? Number(form.get("season"))
-          : undefined,
-        currentEpisode: form.get("episode")
-          ? Number(form.get("episode"))
-          : undefined,
-      };
-      setEntry(
-        await availableApplication.commands.updateLibraryEntryProgress.execute(
-          input,
-        ),
       );
     } catch (failure: unknown) {
       setError(presentApplicationError(failure).message);
@@ -292,15 +278,6 @@ export function EntryDetailPage({
             {entryExperience[currentEntry.type].chapter}
           </h3>
           <EntryPortrait entry={currentEntry} />
-          {currentEntry.type === "series" &&
-            currentEntry.totalEpisodes !== undefined && (
-              <progress
-                className="journey-meter"
-                aria-label="Progresso da série"
-                max={currentEntry.totalEpisodes}
-                value={currentEntry.episodesWatched}
-              />
-            )}
           {currentEntry.completedAt && (
             <p className="completion-memory">
               Concluído em{" "}
@@ -361,55 +338,6 @@ export function EntryDetailPage({
               )}
           </div>
         </section>
-        {currentEntry.type === "series" && (
-          <form
-            className="content-card"
-            onSubmit={(event) => void updateProgress(event)}
-          >
-            <p className="eyebrow">Seu marcador</p>
-            <h3>Retomar a história</h3>
-            <div className="ritual-pair">
-              <label className="form-field">
-                Temporada atual
-                <input
-                  name="season"
-                  type="number"
-                  min="1"
-                  defaultValue={currentEntry.currentSeason}
-                />
-              </label>
-              <label className="form-field">
-                Episódio em que parou
-                <input
-                  name="episode"
-                  type="number"
-                  min="1"
-                  defaultValue={currentEntry.currentEpisode}
-                />
-              </label>
-            </div>
-            <div className="form-field">
-              <label htmlFor="entry-progress">Episódios assistidos</label>
-              <input
-                id="entry-progress"
-                name="progress"
-                type="number"
-                min="0"
-                step="1"
-                max={currentEntry.totalEpisodes}
-                defaultValue={currentEntry.episodesWatched}
-                required
-              />
-            </div>
-            <button
-              className="button button--primary"
-              disabled={busy}
-              type="submit"
-            >
-              Salvar progresso
-            </button>
-          </form>
-        )}
         <SessionPanel
           application={availableApplication}
           entry={currentEntry}

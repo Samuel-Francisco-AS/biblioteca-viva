@@ -1,3 +1,4 @@
+import { posterSchema } from "../database/media";
 import type {
   BackupData,
   BackupSnapshot,
@@ -29,6 +30,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
       milestones,
       tags,
       sessions,
+      media,
     ] = await this.database.transaction(
       "r",
       [
@@ -40,6 +42,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
         this.database.milestones,
         this.database.tags,
         this.database.sessions,
+        this.database.media,
       ],
       () =>
         Promise.all([
@@ -51,9 +54,11 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
           this.database.milestones.toArray(),
           this.database.tags.toArray(),
           this.database.sessions.toArray(),
+          this.database.media.toArray(),
         ]),
     );
     const data: BackupData = {
+      media: Object.freeze(media.map((p) => posterSchema.parse(p))),
       libraryEntries: Object.freeze(
         libraryEntries.map((item) => persistedLibraryEntrySchema.parse(item)),
       ),
@@ -82,6 +87,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
 
   async replace(data: BackupData): Promise<void> {
     const valid = {
+      media: (data.media ?? []).map((p) => posterSchema.parse(p)),
       libraryEntries: data.libraryEntries.map((item) =>
         persistedLibraryEntrySchema.parse(item),
       ),
@@ -108,6 +114,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
         this.database.milestones,
         this.database.tags,
         this.database.sessions,
+        this.database.media,
       ],
       async () => {
         await Promise.all([
@@ -119,6 +126,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
           this.database.milestones.clear(),
           this.database.tags.clear(),
           this.database.sessions.clear(),
+          this.database.media.clear(),
         ]);
         await this.database.libraryEntries.bulkAdd(valid.libraryEntries);
         await this.database.notes.bulkAdd(valid.notes);
@@ -128,6 +136,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
         await this.database.milestones.bulkAdd(valid.milestones);
         await this.database.tags.bulkAdd(valid.tags);
         await this.database.sessions.bulkAdd(valid.sessions);
+        await this.database.media.bulkAdd(valid.media);
       },
     );
   }
