@@ -182,7 +182,9 @@ export async function openWorldTools(page: Page): Promise<void> {
   const library = page.locator(".library-page");
   if ((await library.getAttribute("data-tools-open")) !== "true") {
     await page
-      .getByRole("button", { name: "Abrir ferramentas de exploração acessível" })
+      .getByRole("button", {
+        name: "Abrir ferramentas de exploração acessível",
+      })
       .click();
   }
   await expect(library).toHaveAttribute("data-tools-open", "true");

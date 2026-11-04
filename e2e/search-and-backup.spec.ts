@@ -34,7 +34,6 @@ async function entryTitlesInTestDatabase(page: Page): Promise<string[]> {
   );
 }
 
-
 test("busca, filtro, ordenação e Arquivo preservam navegação", async ({
   createBook,
   navigateFromDock,

@@ -100,8 +100,9 @@ test("BF-5R5: strength is a reusable sheet with dated executions and immutable h
     .click();
   // Surface validation/persistence failures explicitly before relying on a
   // derived count; don't treat a hidden session error as a stale label.
-  await expect(record.getByRole("button", { name: "Registrar execução" }))
-    .toBeEnabled();
+  await expect(
+    record.getByRole("button", { name: "Registrar execução" }),
+  ).toBeEnabled();
   await expect(page.locator(".session-history > li")).toHaveCount(1);
   await expect(page.getByText("1 dia de prática · 1 execução")).toBeVisible();
   await expect(page.getByText("Execução fictícia confortável")).toBeVisible();
