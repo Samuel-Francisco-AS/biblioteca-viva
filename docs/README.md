@@ -1,4 +1,6 @@
-> **Estado atual (04/11/2026):** a PR #20 (O Códice Iluminado) foi integrada à `main` com dívidas rastreadas, **sem fechar a BF-5**. A continuação prioriza formulários/UX e validação de integridade. [Decisão de integração](BF-5_INTEGRACAO_PR20.md) · [Auditoria pré-merge](BF-5_PRE_MERGE_AUDIT.md).\n\n[BF-5R9 — Auditoria Final, Polimento e Identidade Android](BF-5R9_RELATORIO.md): candidata final de implementação; sem fechamento automático da BF-5.
+> **Estado atual (04/11/2026):** a PR #20 (O Códice Iluminado) foi integrada à `main` com dívidas rastreadas, **sem fechar a BF-5**. A continuação prioriza formulários/UX e validação de integridade. [Decisão de integração](BF-5_INTEGRACAO_PR20.md) · [Auditoria pré-merge](BF-5_PRE_MERGE_AUDIT.md).
+
+[BF-5R9 — Auditoria Final, Polimento e Identidade Android](BF-5R9_RELATORIO.md): candidata final de implementação; sem fechamento automático da BF-5.
 
 # Documentação da Biblioteca Viva
 

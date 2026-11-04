@@ -22,9 +22,11 @@ Nenhuma informação de usuário foi modificada para validar o gate. A `main` re
 | Visual | Direção artística R6 aprovada; pan/pinch e rolagem Coleção R7: PASS dirigidos. |
 | Unitários, lint, tipos, áudio, build, performance | PASS; **732/732 unitários** na [CI 41837064636](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41837064636). |
 | E2E amplo | **NÃO APROVADO**: 21 PASS / 27 FAIL (48 casos; shard 2: 11 PASS/13 FAIL; shard 1: 10 PASS/14 FAIL). Falhas mantidas, com logs e traces, sem desativar asserções. |
-| Dados e persistência | Testes unitários de backup existentes verdes; E2E do fluxo real reforçado para ler IndexedDB/reload/Coleção. É necessário comprovar a experiência de backup em ambiente representativo; não há aceite de risco de perda de dados. |
+| Dados e persistência | Testes unitários verdes. Os E2E de backup/restauração e ficha de treino **não figuram nas 27 falhas** da CI final (casos executados no shard 2), embora ainda falte validação dirigida no Android e da experiência real. Não há aceite de risco de perda de dados. |
 | CSS | Sete imports antigos reduzidos a três (base, legado consolidado, atelier). As cinco folhas intermediárias foram preservadas integralmente em ordem, sem provar remoção de regras obsoletas. |
 | Android pós-merge | Não foi realizado um novo gate físico do commit de merge; validação do APK anterior é representativa, não certificação nova. |
+
+**Nota após fechamento da CI:** os 27 casos falhos concentram-se em testes de exploração BF-4, canvas/rotas BF-5R5 e shell/leitura; o teste de backup/reforço de IndexedDB e o histórico de execução não constam entre os casos falhos. Isso é uma melhoria objetiva em relação aos relatórios anteriores, sem certificação física abrangente.
 
 **Importante:** falhas de E2E não devem ser reinterpretadas automaticamente como problemas do Chromium software nem como regressões reais; é necessária classificação por evidência. O resultado verde de testes unitários não substitui teste de integração.
 
