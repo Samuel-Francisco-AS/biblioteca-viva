@@ -23,6 +23,7 @@ export class CameraNavigation {
     private readonly camera: OrthographicCamera,
     initialZoom = 1,
     private readonly floors?: NavigationFloors,
+    private readonly distanceScale = 1,
   ) {
     // Initial framing must exist before the first viewport-triggered render.
     // The legacy F3/F5 path retains zoom 1.
@@ -120,9 +121,9 @@ export class CameraNavigation {
 
   private applyState(): void {
     this.camera.position.set(
-      this.state.targetX + CAMERA_INITIAL_OFFSET.x,
-      CAMERA_TARGET_Y + CAMERA_INITIAL_OFFSET.y,
-      this.state.targetZ + CAMERA_INITIAL_OFFSET.z,
+      this.state.targetX + CAMERA_INITIAL_OFFSET.x * this.distanceScale,
+      CAMERA_TARGET_Y + CAMERA_INITIAL_OFFSET.y * this.distanceScale,
+      this.state.targetZ + CAMERA_INITIAL_OFFSET.z * this.distanceScale,
     );
     this.camera.zoom = this.state.zoom;
     this.camera.lookAt(this.state.targetX, CAMERA_TARGET_Y, this.state.targetZ);

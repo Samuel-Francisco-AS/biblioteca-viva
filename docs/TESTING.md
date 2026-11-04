@@ -1,5 +1,9 @@
 # Estratégia de testes
 
+## BF-5R4
+
+Projeção: `sanctuaryCamera.test.ts` reproduz clipping no retrato afastado e verifica piso nos quatro cantos com zoom mínimo/normal/máximo em três proporções. Interação: regressões do runtime e E2E de arraste de um movimento em retrato/paisagem. Editores: suíte da área, recuperação após falha sem perder dados/prazo e E2E de criação/reabertura/edição dos seis tipos. [Resultados exatos, falhas e roteiro físico](BF-5R4_RELATORIO.md). Screenshots usam somente fixtures; nenhum PASS Android/TalkBack é inferido.
+
 > **BF-4F1 fechada no escopo dirigido (2026-11-02):** os quatro modelos iniciais e a seleção canvas/React foram aceitos no Moto G06. F2, F3 e F4 seguem pendentes. [Relatório F1](BF-4F1_RELATORIO.md).
 
 ## Camadas

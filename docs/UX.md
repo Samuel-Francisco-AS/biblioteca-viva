@@ -1,5 +1,10 @@
 # Fluxos de experiência
 
+## BF-5R4 — contrato de apresentação candidato
+
+Criação e edição compartilham capítulos específicos por categoria, com dados opcionais em referências recolhíveis e título obrigatório explícito. Livro usa folha de rosto/marcador; filme, ficha de cinema; série, fio episódico; estudo, percurso; prática, modalidade/objetivo; trabalho, intenção/próximo passo. Erro de edição preserva campos. Referências antigas continuam acessíveis. Sem alterações de dados/schema. Pan aplica o delta excedente a 8px imediatamente; zoom inicial composto 1, sem regra por proporção. [Limites e testes](BF-5R4_RELATORIO.md).
+
+
 ## BF-5 — contrato da candidata de apresentação
 
 A Biblioteca usa canvas fixo na área acima do dock e dos insets Android. O cabeçalho convencional sai dessa rota. Registros, seleção sem canvas e diagnóstico local ficam recolhidos; o fallback abre as alternativas. Diagnóstico do runtime permanece sob demanda junto ao mundo, pois sua leitura pertence à instância montada; não foi transferido para Ajustes. Os diagnósticos da aplicação continuam em Ajustes.

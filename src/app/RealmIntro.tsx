@@ -26,7 +26,7 @@ export function RealmIntro({ title, description }: RealmIntroProps) {
     <div className="realm-intro" data-realm={realm}>
       <div className="realm-intro__copy">
         <span className="realm-intro__overtitle">
-          ✧ &nbsp; BIBLIOTECA VIVA / {chapter}
+          BIBLIOTECA VIVA / {chapter}
         </span>
         <h1>{title}</h1>
         <small>{description}</small>
@@ -75,11 +75,18 @@ export function RealmIntro({ title, description }: RealmIntroProps) {
           strokeLinecap="round"
         />
         <path
-          d="M80 42 89 71 118 80 89 89 80 118 71 89 42 80 71 71Z"
-          stroke="url(#arcane-foil)"
-          strokeWidth="1.8"
-          fill="url(#arcane-foil)"
-          fillOpacity=".12"
+          d={
+            realm === "acervo"
+              ? "M47 47h66v69H47zM59 47v69M70 60h30M70 70h24M78 86l8 8-8 8-8-8z"
+              : realm === "arquivo"
+                ? "M52 40h46l14 15v65H52zM98 40v18h14M65 72h35M65 83h35M65 94h25M65 105h30"
+                : realm === "observatorio"
+                  ? "M45 103 65 60 91 89 113 48M65 60l48-12M45 103l46-14M80 30v100M30 80h100"
+                  : "M52 110 97 45M49 48l60 62M91 40l16 10-8 17-15-10zM42 101l13 14M46 105l10-15M102 93l12 12-12 12-12-12z"
+          }
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinejoin="round"
         />
         <circle cx="80" cy="80" r="6" fill="#d8b5ff" />
       </svg>

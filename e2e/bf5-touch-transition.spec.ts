@@ -2,7 +2,9 @@ import { expect, test } from "./fixtures";
 
 test("BF-5R2: canvas intact, route entrance without blur and tactile response", async ({
   page,
+  seedBooks,
 }) => {
+  await seedBooks(1);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
@@ -32,7 +34,7 @@ test("BF-5R2: canvas intact, route entrance without blur and tactile response", 
     const style = getComputedStyle(element);
     return { name: style.animationName, filter: style.filter };
   });
-  expect(motion.name).toContain("arc-route-arrive");
+  expect(motion.name).toContain("sanctuary-arrive");
   expect(motion.filter).toBe("none");
 
   const search = page.getByRole("button", { name: "Busca", exact: true });

@@ -1,13 +1,9 @@
+import { RitualFields } from "./RitualFields";
+import { ritualCopy } from "./ritualCopy";
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
-import {
-  ENTRY_TYPES,
-  PHYSICAL_ACTIVITY_CATEGORIES,
-  STUDY_PROGRESS_UNITS,
-  type EntryType,
-  type LibraryEntry,
-} from "../../domain";
+import { ENTRY_TYPES, type EntryType, type LibraryEntry } from "../../domain";
 import { entryTypeLabels } from "../collection/collectionControls";
 import { presentApplicationError } from "./errorMessages";
 import { NewBookPage, type EditorApplication } from "./EntryEditorPages";
@@ -100,23 +96,6 @@ function specificInput(type: Exclude<EntryType, "book">, form: FormData) {
   }
 }
 
-function OptionalField({
-  label,
-  name,
-  type = "text",
-}: {
-  readonly label: string;
-  readonly name: string;
-  readonly type?: string;
-}) {
-  return (
-    <div className="form-field">
-      <label htmlFor={`entry-${name}`}>{label}</label>
-      <input id={`entry-${name}`} name={name} type={type} />
-    </div>
-  );
-}
-
 export function NewEntryPage({
   application,
 }: {
@@ -134,7 +113,22 @@ export function NewEntryPage({
         <p>Não foi possível iniciar o armazenamento local.</p>
       </section>
     );
-  if (selectedType === "book") return <NewBookPage application={application} />;
+  if (selectedType === "book")
+    return (
+      <>
+        <NewBookPage application={application} />
+        <button
+          className="button button--secondary"
+          type="button"
+          onClick={() => {
+            setError(undefined);
+            setSelectedType(undefined);
+          }}
+        >
+          Escolher outro tipo
+        </button>
+      </>
+    );
   if (!selectedType)
     return (
       <section aria-labelledby="entry-type-title">
@@ -147,7 +141,10 @@ export function NewEntryPage({
               <button
                 className="content-card type-picker__option"
                 type="button"
-                onClick={() => setSelectedType(type)}
+                onClick={() => {
+                  setError(undefined);
+                  setSelectedType(type);
+                }}
               >
                 <strong>{entryTypeLabels[type]}</strong>
                 <span>{descriptions[type]}</span>
@@ -176,104 +173,17 @@ export function NewEntryPage({
   }
 
   return (
-    <section className="content-card" aria-labelledby="new-entry-title">
+    <section
+      className="ritual-editor"
+      data-craft={selectedType}
+      aria-labelledby="new-entry-title"
+    >
       <p className="eyebrow">{entryTypeLabels[selectedType]}</p>
-      <h2 id="new-entry-title">Novo registro</h2>
+      <h2 id="new-entry-title">{ritualCopy[selectedType].title}</h2>
+      <p>{ritualCopy[selectedType].invitation}</p>
       {error && <p role="alert">{error}</p>}
       <form onSubmit={(event) => void submit(event)} noValidate>
-        <div className="form-field">
-          <label htmlFor="entry-title">Título</label>
-          <input
-            id="entry-title"
-            name="title"
-            required
-            aria-invalid={error ? true : undefined}
-          />
-        </div>
-        {selectedType === "movie" && (
-          <>
-            <OptionalField label="Direção (opcional)" name="director" />
-            <OptionalField label="Ano (opcional)" name="year" type="number" />
-            <OptionalField
-              label="Duração em minutos (opcional)"
-              name="durationMinutes"
-              type="number"
-            />
-            <OptionalField label="Plataforma (opcional)" name="platform" />
-          </>
-        )}
-        {selectedType === "series" && (
-          <>
-            <OptionalField label="Plataforma (opcional)" name="platform" />
-            <OptionalField
-              label="Total de episódios (opcional)"
-              name="totalEpisodes"
-              type="number"
-            />
-          </>
-        )}
-        {selectedType === "study" && (
-          <>
-            <OptionalField label="Área (opcional)" name="area" />
-            <OptionalField label="Disciplina (opcional)" name="discipline" />
-            <OptionalField label="Objetivo (opcional)" name="objective" />
-            <div className="form-field">
-              <label htmlFor="entry-progressUnit">Unidade de progresso</label>
-              <select id="entry-progressUnit" name="progressUnit">
-                {STUDY_PROGRESS_UNITS.map((unit) => (
-                  <option key={unit} value={unit}>
-                    {unit}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <OptionalField
-              label="Total (opcional)"
-              name="progressTotal"
-              type="number"
-            />
-            <OptionalField
-              label="Prazo (opcional)"
-              name="deadline"
-              type="date"
-            />
-          </>
-        )}
-        {selectedType === "physical_activity" && (
-          <>
-            <div className="form-field">
-              <label htmlFor="entry-category">Categoria</label>
-              <select id="entry-category" name="category">
-                {PHYSICAL_ACTIVITY_CATEGORIES.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <OptionalField label="Modalidade (opcional)" name="modality" />
-            <OptionalField label="Objetivo (opcional)" name="objective" />
-          </>
-        )}
-        {selectedType === "work" && (
-          <>
-            <OptionalField label="Área (opcional)" name="area" />
-            <OptionalField
-              label="Organização ou cliente (opcional)"
-              name="organization"
-            />
-            <div className="form-field">
-              <label htmlFor="entry-description">Descrição (opcional)</label>
-              <textarea id="entry-description" name="description" />
-            </div>
-            <OptionalField
-              label="Prazo (opcional)"
-              name="deadline"
-              type="date"
-            />
-            <OptionalField label="Próxima ação (opcional)" name="nextAction" />
-          </>
-        )}
+        <RitualFields key={selectedType} type={selectedType} />
         <div className="form-actions">
           <button
             className="button button--primary"
@@ -286,7 +196,10 @@ export function NewEntryPage({
             className="button button--secondary"
             type="button"
             disabled={submitting}
-            onClick={() => setSelectedType(undefined)}
+            onClick={() => {
+              setError(undefined);
+              setSelectedType(undefined);
+            }}
           >
             Escolher outro tipo
           </button>

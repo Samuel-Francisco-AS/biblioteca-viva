@@ -1,5 +1,10 @@
 # Direção artística
 
+## Candidata BF-5R4 (2026-11-03)
+
+Papel claro e tinta nos rituais de registro, manuscritos no Arquivo, pedra azul e latão no observatório/ateliê. Gravuras originais dos seis tipos substituem símbolos tipográficos nas fichas. O exterior é um pátio cenográfico real com marcações e lanternas, sem prometer interações. A avaliação artística permanece humana e pendente; [relatório R4](BF-5R4_RELATORIO.md).
+
+
 > **BF-4F2 concluída por gate dirigido (2026-11-02):** animações por seleção e controles React aceitas no Moto G06, sem regressão/queda de fluidez percebida. Simplicidade artística não é teto futuro. CI global FAIL e novos casos F2 rastreados em [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15). [Fechamento](BF-4F2_RELATORIO.md).
 
 > **BF-5 — direção da identidade visual do aplicativo inteiro (2026-11-03):** [Fantasia Sobrenatural Editorial](BF-5_DIRECAO_VISUAL_GLOBAL.md) é a orientação criativa global para Biblioteca, Coleção, Arquivo, Resumo e Ajustes, compartilhando mistério arcano, presença sobrenatural, fluidez e contenção visual. O mundo 3D mantém seu contrato artístico anterior; a nova direção amplia a atmosfera para navegação e telas convencionais, **sem anular as evidências BF-4, fixar tokens cromáticos finais ou autorizar implementação**.

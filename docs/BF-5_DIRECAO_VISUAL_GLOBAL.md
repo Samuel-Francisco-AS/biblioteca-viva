@@ -1,5 +1,7 @@
 # BF-5 — Direção Visual Global: Fantasia Sobrenatural Editorial
 
+> **Candidata implementada BF-5R4:** papel/tinta, gravuras locais e materiais por área substituem a direção roxa das primeiras candidatas. Formulários específicos por capítulos e pátio cenográfico; ver [contrato efetivo, testes e limitações](BF-5R4_RELATORIO.md). Aceite artístico humano pendente.
+
 - **Estado:** direção artística **global aprovada em conceito**; guia de exploração visual e UX, **não** design system final homologado nem autorização de implementação
 - **Data:** 2026-11-03
 - **Abrangência:** Biblioteca, Coleção, Arquivo, Resumo, Ajustes e navegação entre elas, em retrato e paisagem

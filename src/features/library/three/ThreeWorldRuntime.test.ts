@@ -1787,7 +1787,7 @@ describe("ThreeWorldRuntime", () => {
       pointerId: 23,
     });
     expect(renderer.domElement.dataset.gesture).toBe("pan");
-    expect(renderer.domElement.dataset.cameraTargetX).toBe(
+    expect(renderer.domElement.dataset.cameraTargetX).not.toBe(
       targetBeforeThreshold,
     );
     dispatchPointer(renderer.domElement, "pointermove", {
@@ -2490,7 +2490,7 @@ describe("ThreeWorldRuntime", () => {
     expect(renderer.domElement.dataset.gesture).toBe("pan");
     const targetBeforeRemainingPan = renderer.domElement.dataset.cameraTargetX;
     dispatchPointer(renderer.domElement, "pointermove", {
-      clientX: 280,
+      clientX: 240,
       clientY: 100,
       pointerId: 3,
       pointerType: "touch",
@@ -2499,7 +2499,7 @@ describe("ThreeWorldRuntime", () => {
       targetBeforeRemainingPan,
     );
     dispatchPointer(renderer.domElement, "pointerup", {
-      clientX: 280,
+      clientX: 240,
       clientY: 100,
       pointerId: 3,
       pointerType: "touch",

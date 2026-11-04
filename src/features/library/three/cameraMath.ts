@@ -396,28 +396,6 @@ export function initialCameraNavigationState(): CameraNavigationState {
   return Object.freeze({ targetX: 0, targetZ: 0, zoom: 1 });
 }
 
-/**
- * The playable interior needs an engaging opening shot on tall handsets.
- * Wide layouts retain the original overview. Existing gestures can still
- * zoom out to inspect the full building, or pan to neighbouring rooms.
- */
-export function openingComposedWorldZoom(
-  width: number,
-  height: number,
-): number {
-  if (
-    !Number.isFinite(width) ||
-    !Number.isFinite(height) ||
-    width <= 0 ||
-    height <= 0
-  )
-    return CAMERA_MIN_ZOOM;
-  const aspect = width / height;
-  if (aspect < 0.65) return 2;
-  if (aspect < 0.9) return 1.45;
-  return CAMERA_MIN_ZOOM;
-}
-
 export function clampCameraZoom(zoom: number): number {
   if (!Number.isFinite(zoom)) return 1;
   return Math.min(CAMERA_MAX_ZOOM, Math.max(CAMERA_MIN_ZOOM, zoom));

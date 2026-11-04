@@ -35,6 +35,7 @@ import "./styles.css";
 import "./styles-arcane.css";
 import "./styles-touch.css";
 import "./styles-ritual.css";
+import "./styles-sanctuary.css";
 
 function NotFoundPage() {
   return (

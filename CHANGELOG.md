@@ -1,5 +1,14 @@
 # Changelog
 
+## BF-5R4 — reconstrução de experiência candidata (2026-11-03)
+
+- Removido zoom por proporção da R3; pátio exterior real e câmera ortográfica recuada para preservar profundidade durante exploração.
+- Arrastes curtos passam a aplicar o delta que ultrapassa o limiar de tap imediatamente.
+- Reconstruídos os seis editores por capítulos/contexto; erro de edição preserva o preenchimento.
+- Papel/tinta/latão, gravuras locais, superfícies específicas por área e chegada curta sem stagger. Sem schema, dependências ou alterações de backup.
+- [Relatório, limitações e testes](docs/BF-5R4_RELATORIO.md); candidata sem aceite humano e com fluidez entre abas ainda pendente.
+
+
 ## BF-5R3 — câmera de abertura e composição do compêndio (2026-11-03)
 
 - O mundo composto passou a abrir em enquadramento mais aproximado em retrato, evitando margens excessivas que pareciam uma chapa do canvas; zoom manual, pan, orientação e panorama em paisagem permanecem disponíveis.

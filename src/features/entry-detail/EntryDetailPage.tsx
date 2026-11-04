@@ -1,3 +1,4 @@
+import { ArtifactGlyph } from "../../app/ArtifactGlyph";
 import { useEffect, useState, type FormEvent } from "react";
 import {
   Link,
@@ -273,15 +274,7 @@ export function EntryDetailPage({
       </Link>
       <div className="section-heading entry-detail-hero">
         <span aria-hidden="true" className="entry-detail-hero__emblem">
-          {currentEntry.type === "movie"
-            ? "◈"
-            : currentEntry.type === "series"
-              ? "✧"
-              : currentEntry.type === "study"
-                ? "✶"
-                : currentEntry.type === "physical_activity"
-                  ? "☀"
-                  : "⌁"}
+          <ArtifactGlyph type={currentEntry.type} />
         </span>
         <div className="entry-detail-hero__body">
           <p className="eyebrow">{entryTypeLabels[currentEntry.type]}</p>

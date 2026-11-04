@@ -1,3 +1,4 @@
+import { ArtifactGlyph } from "../../app/ArtifactGlyph";
 import { RealmIntro } from "../../app/RealmIntro";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
@@ -30,15 +31,6 @@ export interface CollectionApplication {
     readonly listTags: { execute(): Promise<readonly Tag[]> };
   };
 }
-
-const recordSymbols: Record<LibraryEntry["type"], string> = {
-  book: "✦",
-  movie: "◈",
-  series: "✧",
-  study: "✶",
-  physical_activity: "☀",
-  work: "⌁",
-};
 
 function secondaryText(entry: LibraryEntry): string {
   switch (entry.type) {
@@ -411,7 +403,7 @@ export function CollectionPage({
                   aria-labelledby={`entry-${entry.id}-title`}
                 >
                   <span className="record-tile__emblem" aria-hidden="true">
-                    {recordSymbols[entry.type]}
+                    <ArtifactGlyph type={entry.type} />
                   </span>
                   <div className="record-tile__content">
                     <p className="eyebrow">

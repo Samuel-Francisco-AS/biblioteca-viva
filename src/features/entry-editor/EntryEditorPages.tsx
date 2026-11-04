@@ -72,8 +72,12 @@ export function NewBookPage({
   }
 
   return (
-    <section className="content-card" aria-labelledby="book-editor-title">
-      <p className="eyebrow">Cadastro</p>
+    <section
+      className="ritual-editor"
+      data-craft="book"
+      aria-labelledby="book-editor-title"
+    >
+      <p className="eyebrow">Acervo · folha de rosto</p>
       <h2 id="book-editor-title">Adicionar livro</h2>
       <BookForm
         mode="create"
@@ -170,7 +174,11 @@ export function EditBookPage({
   }
 
   return (
-    <section className="content-card" aria-labelledby="book-editor-title">
+    <section
+      className="ritual-editor"
+      data-craft="book"
+      aria-labelledby="book-editor-title"
+    >
       <p className="eyebrow">Edição</p>
       <h2 id="book-editor-title">Editar livro</h2>
       <BookForm

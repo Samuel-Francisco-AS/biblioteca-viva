@@ -1,3 +1,4 @@
+import { ArtifactGlyph } from "../../app/ArtifactGlyph";
 import { useEffect, useRef, useState } from "react";
 import {
   Link,
@@ -299,12 +300,18 @@ export function BookDetailPage({
   }
 
   return (
-    <article className="detail-layout" aria-labelledby="detail-title">
+    <article
+      className="detail-layout entry-detail-page"
+      aria-labelledby="detail-title"
+    >
       <p className="visually-hidden" aria-live="polite">
         {announcement}
       </p>
       <section className="content-card detail-summary">
-        <div className="section-heading">
+        <div className="section-heading entry-detail-hero">
+          <span className="entry-detail-hero__emblem" aria-hidden="true">
+            <ArtifactGlyph type="book" />
+          </span>
           <div>
             <p className="status-badge">{statusLabels[book.status]}</p>
             <h2 id="detail-title">{book.title}</h2>
@@ -368,154 +375,162 @@ export function BookDetailPage({
         </Link>
       </section>
 
-      <section className="content-card" aria-labelledby="progress-title">
-        <h2 id="progress-title">Progresso</h2>
-        <ProgressSummary book={book} />
-        <ProgressForm
-          key={`${book.id}-${book.revision}`}
-          book={book}
-          updateProgress={(input) =>
-            application.commands.updateBookProgress.execute(input)
-          }
-          onUpdated={updateBook}
-        />
-      </section>
+      <div className="entry-detail-sections">
+        <section className="content-card" aria-labelledby="progress-title">
+          <h2 id="progress-title">Progresso</h2>
+          <ProgressSummary book={book} />
+          <ProgressForm
+            key={`${book.id}-${book.revision}`}
+            book={book}
+            updateProgress={(input) =>
+              application.commands.updateBookProgress.execute(input)
+            }
+            onUpdated={updateBook}
+          />
+        </section>
 
-      <details className="content-card detail-disclosure">
-        <summary id="status-title">Status da leitura</summary>
-        <p>Status atual: {statusLabels[book.status]}.</p>
-        <StatusActions
-          book={book}
-          changeStatus={(input) =>
-            application.commands.changeBookStatus.execute(input)
-          }
-          onUpdated={updateBook}
-        />
-      </details>
+        <details className="content-card detail-disclosure">
+          <summary id="status-title">Status da leitura</summary>
+          <p>Status atual: {statusLabels[book.status]}.</p>
+          <StatusActions
+            book={book}
+            changeStatus={(input) =>
+              application.commands.changeBookStatus.execute(input)
+            }
+            onUpdated={updateBook}
+          />
+        </details>
 
-      <details className="content-card detail-disclosure">
-        <summary id="note-form-title">Adicionar nota</summary>
-        <NoteForm
-          entryId={book.id}
-          addNote={(input) => application.commands.addNote.execute(input)}
-          onAdded={(note, message) => {
-            setNotes((current) => Object.freeze([...(current ?? []), note]));
-            setAnnouncement(message);
-          }}
-        />
-      </details>
+        <details className="content-card detail-disclosure">
+          <summary id="note-form-title">Adicionar nota</summary>
+          <NoteForm
+            entryId={book.id}
+            addNote={(input) => application.commands.addNote.execute(input)}
+            onAdded={(note, message) => {
+              setNotes((current) => Object.freeze([...(current ?? []), note]));
+              setAnnouncement(message);
+            }}
+          />
+        </details>
 
-      <details className="content-card detail-disclosure">
-        <summary id="quote-form-title">Adicionar citação</summary>
-        <QuoteForm
-          entryId={book.id}
-          totalPages={book.totalPages}
-          addQuote={(input) => application.commands.addQuote.execute(input)}
-          onAdded={(quote, message) => {
-            setQuotes((current) => Object.freeze([...(current ?? []), quote]));
-            setAnnouncement(message);
-          }}
-        />
-      </details>
+        <details className="content-card detail-disclosure">
+          <summary id="quote-form-title">Adicionar citação</summary>
+          <QuoteForm
+            entryId={book.id}
+            totalPages={book.totalPages}
+            addQuote={(input) => application.commands.addQuote.execute(input)}
+            onAdded={(quote, message) => {
+              setQuotes((current) =>
+                Object.freeze([...(current ?? []), quote]),
+              );
+              setAnnouncement(message);
+            }}
+          />
+        </details>
 
-      <details className="content-card detail-disclosure">
-        <summary id="history-title">Histórico de leitura</summary>
-        <History
-          notes={notes}
-          quotes={quotes}
-          {...(book.totalPages !== undefined && {
-            totalPages: book.totalPages,
-          })}
-          onDeleteNote={async (noteId) => {
-            await application.commands.deleteNote.execute({ id: noteId });
-            setNotes((current) => current?.filter(({ id }) => id !== noteId));
-            setAnnouncement("Nota excluída.");
-          }}
-          onDeleteQuote={async (quoteId) => {
-            await application.commands.deleteQuote.execute({ id: quoteId });
-            setQuotes((current) => current?.filter(({ id }) => id !== quoteId));
-            setAnnouncement("Citação excluída.");
-          }}
-          onShareNote={(noteId) =>
-            application.commands.shareNote.execute({ id: noteId })
-          }
-          onShareQuote={(quoteId) =>
-            application.commands.shareQuote.execute({ id: quoteId })
-          }
-          onUpdateNote={async (input) => {
-            const updated =
-              await application.commands.updateNote.execute(input);
-            setNotes((current) =>
-              current?.map((note) => (note.id === updated.id ? updated : note)),
-            );
-          }}
-          onUpdateQuote={async (input) => {
-            const updated =
-              await application.commands.updateQuote.execute(input);
-            setQuotes((current) =>
-              current?.map((quote) =>
-                quote.id === updated.id ? updated : quote,
-              ),
-            );
-          }}
-        />
-      </details>
+        <details className="content-card detail-disclosure">
+          <summary id="history-title">Histórico de leitura</summary>
+          <History
+            notes={notes}
+            quotes={quotes}
+            {...(book.totalPages !== undefined && {
+              totalPages: book.totalPages,
+            })}
+            onDeleteNote={async (noteId) => {
+              await application.commands.deleteNote.execute({ id: noteId });
+              setNotes((current) => current?.filter(({ id }) => id !== noteId));
+              setAnnouncement("Nota excluída.");
+            }}
+            onDeleteQuote={async (quoteId) => {
+              await application.commands.deleteQuote.execute({ id: quoteId });
+              setQuotes((current) =>
+                current?.filter(({ id }) => id !== quoteId),
+              );
+              setAnnouncement("Citação excluída.");
+            }}
+            onShareNote={(noteId) =>
+              application.commands.shareNote.execute({ id: noteId })
+            }
+            onShareQuote={(quoteId) =>
+              application.commands.shareQuote.execute({ id: quoteId })
+            }
+            onUpdateNote={async (input) => {
+              const updated =
+                await application.commands.updateNote.execute(input);
+              setNotes((current) =>
+                current?.map((note) =>
+                  note.id === updated.id ? updated : note,
+                ),
+              );
+            }}
+            onUpdateQuote={async (input) => {
+              const updated =
+                await application.commands.updateQuote.execute(input);
+              setQuotes((current) =>
+                current?.map((quote) =>
+                  quote.id === updated.id ? updated : quote,
+                ),
+              );
+            }}
+          />
+        </details>
 
-      <section
-        className="content-card destructive-section"
-        aria-labelledby="delete-book-title"
-      >
-        <p className="eyebrow">Ação permanente</p>
-        <h2 id="delete-book-title">Excluir livro</h2>
-        <p>
-          Esta ação é permanente. O livro, suas notas, suas citações e o
-          histórico de atividades relacionado serão removidos.
-        </p>
-        {!confirmingDeletion ? (
-          <button
-            className="button button--danger-outline"
-            onClick={openDeletionConfirmation}
-            ref={deleteButtonRef}
-            type="button"
-          >
-            Excluir livro
-          </button>
-        ) : (
-          <section
-            aria-labelledby="delete-confirmation-title"
-            className="delete-confirmation"
-            ref={deletionConfirmationRef}
-            tabIndex={-1}
-          >
-            <h3 id="delete-confirmation-title">
-              Excluir permanentemente “{book.title}”?
-            </h3>
-            <p>
-              As notas e citações vinculadas também serão excluídas. Esta ação
-              não pode ser desfeita.
-            </p>
-            {deleteError && <p role="alert">{deleteError}</p>}
-            <div className="inline-actions">
-              <button
-                className="button button--secondary"
-                disabled={deleting}
-                onClick={cancelDeletion}
-                type="button"
-              >
-                Cancelar
-              </button>
-              <button
-                className="button button--danger"
-                disabled={deleting}
-                onClick={() => void deleteBook()}
-                type="button"
-              >
-                {deleting ? "Excluindo…" : "Excluir permanentemente"}
-              </button>
-            </div>
-          </section>
-        )}
-      </section>
+        <section
+          className="content-card destructive-section"
+          aria-labelledby="delete-book-title"
+        >
+          <p className="eyebrow">Ação permanente</p>
+          <h2 id="delete-book-title">Excluir livro</h2>
+          <p>
+            Esta ação é permanente. O livro, suas notas, suas citações e o
+            histórico de atividades relacionado serão removidos.
+          </p>
+          {!confirmingDeletion ? (
+            <button
+              className="button button--danger-outline"
+              onClick={openDeletionConfirmation}
+              ref={deleteButtonRef}
+              type="button"
+            >
+              Excluir livro
+            </button>
+          ) : (
+            <section
+              aria-labelledby="delete-confirmation-title"
+              className="delete-confirmation"
+              ref={deletionConfirmationRef}
+              tabIndex={-1}
+            >
+              <h3 id="delete-confirmation-title">
+                Excluir permanentemente “{book.title}”?
+              </h3>
+              <p>
+                As notas e citações vinculadas também serão excluídas. Esta ação
+                não pode ser desfeita.
+              </p>
+              {deleteError && <p role="alert">{deleteError}</p>}
+              <div className="inline-actions">
+                <button
+                  className="button button--secondary"
+                  disabled={deleting}
+                  onClick={cancelDeletion}
+                  type="button"
+                >
+                  Cancelar
+                </button>
+                <button
+                  className="button button--danger"
+                  disabled={deleting}
+                  onClick={() => void deleteBook()}
+                  type="button"
+                >
+                  {deleting ? "Excluindo…" : "Excluir permanentemente"}
+                </button>
+              </div>
+            </section>
+          )}
+        </section>
+      </div>
     </article>
   );
 }

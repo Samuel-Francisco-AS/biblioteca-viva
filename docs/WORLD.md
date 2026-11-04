@@ -1,5 +1,9 @@
 # Mundo
 
+## Candidata BF-5R4 — viewport e ambiente
+
+O mundo composto abre em zoom ortográfico 1, sem regra por proporção. A câmera recua no mesmo eixo para manter o piso à frente do near plane durante exploração; far=1000 somente no caminho composto. Pátio/lanternas são cenografia exterior pertencente ao edifício descartável, sem seleções, salas ou dados espaciais novos. A transformação de pan/pinch/picking e os limites por pisos continuam runtime-only. O primeiro delta de drag aplica o excedente do limiar de 8px. [Diagnóstico reproduzido e testes](BF-5R4_RELATORIO.md); validação física da candidata pendente.
+
 > **BF-4F1 fechada no escopo dirigido (2026-11-02):** os quatro modelos iniciais e a seleção canvas/React foram aceitos no Moto G06. F2, F3 e F4 seguem pendentes. [Relatório F1](BF-4F1_RELATORIO.md).
 
 O mundo anterior foi encerrado pelo WORLD RESET e não constitui fundação futura. Phaser, `PlacedObject`, `WorldStructureState`, grid 32 e os contratos W3-A permanecem mortos.

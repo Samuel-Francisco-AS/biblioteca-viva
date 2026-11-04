@@ -81,9 +81,12 @@ function renderEdit(facade: EditorApplication) {
 }
 
 describe("cadastro de livro", () => {
-  it("renderiza os campos e associa labels aos controles", () => {
+  it("renderiza os campos e associa labels aos controles", async () => {
     const { facade } = application();
     renderCreate(facade);
+    await userEvent
+      .setup()
+      .click(screen.getByText("Impressões e data de início"));
     for (const label of [
       /título/i,
       /autor/i,
@@ -145,6 +148,7 @@ describe("cadastro de livro", () => {
     const { create, facade } = application();
     renderCreate(facade);
     await user.type(screen.getByLabelText(/título/i), "Leitura antiga");
+    await user.click(screen.getByText("Impressões e data de início"));
     const startedAt = screen.getByLabelText(/data de início/i);
     expect(startedAt).not.toHaveAttribute("min");
     await user.type(startedAt, "2020-01-15");

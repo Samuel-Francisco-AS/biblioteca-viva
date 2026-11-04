@@ -1,5 +1,8 @@
 # Estado atual
 
+> **BF-5R4 — candidata implementada, gate global vermelho (2026-11-03):** substituída a regra de zoom R3 por composição ambiental e profundidade de câmera; corrigido delta inicial do pan, reconstruídos editores dos seis tipos e sistema de papel/tinta/gravuras. [Relatório R4](BF-5R4_RELATORIO.md). Sem aceite físico/artístico; montagem entre rotas e fluidez física ainda pendentes. BF-5 aberta e PR #20 draft.
+
+
 > **BF-5R3 — câmera e reformulação de composição (2026-11-03):** a análise das novas capturas do Moto G06 mostrou que o cenário composto inicializava em zoom ortográfico 0,7, deixando amplas bordas vazias em retrato (o usuário conseguia fazê-las desaparecer com zoom). Implementada abertura responsiva da câmera, preservando gestos e panorama, além de organização visual mais compacta e responsiva na Coleção, fichas de registro e demais abas. [Relatório R3](BF-5R3_RELATORIO.md). O problema de eventuais engasgos entre rotas **não foi declarado resolvido**, assim como a aprovação física e a BF-5 seguem pendentes. A PR #20 permanece draft e sem merge.
 
 
