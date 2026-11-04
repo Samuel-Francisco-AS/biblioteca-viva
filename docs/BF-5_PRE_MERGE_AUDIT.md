@@ -40,3 +40,16 @@ O código do fluxo de restauração usa `DexieBackupSnapshotStore.replace` em tr
 O E2E de ficha de treino mantém as asserções originais e passa a verificar o histórico concreto antes do resumo derivado; a ausência de sessão continua bloqueante. O helper de exploração aguarda estado `ready/failed` antes de abrir bússola/painéis, evitando toggles no meio da montagem. Testes de cena antigos que usam coordenadas, projeção e 30s em Chromium software continuam exigindo classificação individual; não serão silenciados.
 
 **Decisão de merge:** não há autorização para merge; enquanto restauração e histórico não estiverem comprovados, classificar a PR como não pronta. A BF-5 continua aberta após futura integração para refinar formulários.
+
+## Parecer de saneamento final — revisão de integridade (04/11/2026)
+
+- **Código de produção:** nenhuma alteração nesta rodada final. Preservados CSS visual, Dexie, Android, cena 3D e formulários.
+- **Testes e CI:** após sanar o mock de WorldHost, a CI 41832993749 confirmou **732/732 unitários PASS**, format/lint/tipos/áudio/build/performance PASS. E2E amplos continuaram **18 PASS / 30 FAIL**; a maioria dos erros de BF-4 decorre de UI redesenhada ou incompatibilidade dos testes com um navegador WebGL software, mas não podemos generalizar essa causa para todos.
+- **Backup e restauração:** `DexieBackupSnapshotStore.replace` usa transação atômica e os unitários de importação/exportação passaram. O E2E foi reforçado para verificar explicitamente dados do IndexedDB antes e depois de reload, além de renderização na Coleção, evitando usar o mundo 3D como pré-requisito do teste de integridade. **A confirmação E2E desse novo gate ainda é pendente.**
+- **Histórico de treino:** o E2E agora verifica a existência da sessão salva antes do resumo calculado, sem alterar os critérios funcionais de aceite. Resultado E2E dirigido ainda pendente.
+- **Exploração acessível:** helper aguarda estado ready/fallback antes de abrir os controles semanticamente. A UI de produção não foi modificada.
+- **Higiene:** Prettier aplicado automaticamente aos três arquivos E2E, e o workflow temporário de formatação se removeu. A CI do commit final deve concluir para confirmar o resultado.
+- **Classificação de merge:** **bloqueado** até confirmação de integridade de backup, histórico e navegação crítica ou autorização explícita do proprietário para ressalvas não críticas. Os testes legados não devem ser apagados nem contornados silenciosamente.
+- **Após merge:** BF-5 permanece aberta. Refinamento dos formulários e da UX em uma nova PR; a direção artística BF-5R6 permanece aprovada.
+
+**Observação:** esta auditoria é deliberadamente conservadora; não declara o conjunto E2E verde nem reparos em produção sem evidência de defeito de produção.
