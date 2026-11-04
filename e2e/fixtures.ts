@@ -164,4 +164,21 @@ export const test = base.extend<{
   },
 });
 
+/**
+ * BF-5's semantic world controls are deliberately behind the compass.
+ * Reveal them through the same accessible controls a user must activate,
+ * instead of forcing hidden nodes visible in a test.
+ */
+export async function openWorldTools(page: Page): Promise<void> {
+  const compass = page.getByRole("button", {
+    name: "Abrir ferramentas de exploração acessível",
+  });
+  if (await compass.isVisible()) await compass.click();
+
+  const world = page.locator("details.world-explore");
+  await expect(world).toBeVisible();
+  if ((await world.getAttribute("open")) === null)
+    await world.locator(":scope > summary").click();
+}
+
 export { expect } from "@playwright/test";

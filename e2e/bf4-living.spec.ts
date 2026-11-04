@@ -1,7 +1,7 @@
 import { OrthographicCamera, Vector3 } from "three";
 import { CameraNavigation } from "../src/features/library/three/CameraNavigation";
 import { LIBRARY_ROOMS } from "../src/features/library/libraryBuildingGeometry";
-import { expect, test } from "./fixtures";
+import { expect, openWorldTools, test } from "./fixtures";
 for (const fallback of [false, true]) {
   test(`BF-4E: segredo completo ${fallback ? "sem WebGL" : "no mundo"}`, async ({
     page,
@@ -11,6 +11,7 @@ for (const fallback of [false, true]) {
         HTMLCanvasElement.prototype.getContext = () => null;
       });
     await page.goto("/");
+    await openWorldTools(page);
     const controls = page.getByRole("region", { name: "Objetos vivos" });
     await expect(controls).toBeVisible();
     if (!fallback) await controls.locator("summary").first().click();
@@ -59,6 +60,7 @@ for (const fallback of [false, true]) {
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(controls).toBeVisible();
     await page.reload();
+    await openWorldTools(page);
     if (!fallback) await controls.locator("summary").first().click();
     await expect(
       controls.getByText("Segredo do Pergaminho: 0/4"),

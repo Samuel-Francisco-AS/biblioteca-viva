@@ -1,7 +1,7 @@
 import { OrthographicCamera, Vector3 } from "three";
 import { CameraNavigation } from "../src/features/library/three/CameraNavigation";
 import { LIBRARY_ROOMS } from "../src/features/library/libraryBuildingGeometry";
-import { expect, test } from "./fixtures";
+import { expect, openWorldTools, test } from "./fixtures";
 import { INHABITANTS } from "../src/features/library/inhabitants";
 for (const fallback of [false, true]) {
   test(`BF-4F1 four inhabitants ${fallback ? "fallback" : "world"}`, async ({
@@ -12,6 +12,7 @@ for (const fallback of [false, true]) {
         HTMLCanvasElement.prototype.getContext = () => null;
       });
     await page.goto("/");
+    await openWorldTools(page);
     const panel = page.getByLabel("Habitantes", { exact: true });
     await panel.locator(":scope > summary").click();
     for (const actor of INHABITANTS) {
@@ -71,6 +72,7 @@ for (const actor of INHABITANTS)
     await page.goto("/");
     const canvas = page.locator("canvas[data-three-world-canvas]");
     await expect(canvas).toHaveAttribute("data-inhabitants-ready", "4");
+    await openWorldTools(page);
     const panel = page.getByLabel("Habitantes", { exact: true });
     await panel.locator(":scope > summary").click();
     {
@@ -114,6 +116,7 @@ test("BF-4F3 spontaneous life and honest reduced-motion semantics", async ({
   await page.goto("/");
   const canvas = page.locator("canvas[data-three-world-canvas]");
   await expect(canvas).toHaveAttribute("data-inhabitants-ready", "4");
+  await openWorldTools(page);
   const panel = page.getByLabel("Habitantes", { exact: true });
   await panel.locator(":scope > summary").focus();
   await panel.locator(":scope > summary").press("Enter");

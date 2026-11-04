@@ -7,7 +7,7 @@
 - PR #20: 34 commits à frente de main, 215 arquivos modificados, incluindo 50 artefatos em `artifacts/`. Não reescrever histórico nem excluir provas sem classificação de uso.
 - CI atual do commit R9: 731 PASS e 1 FAIL em `src/pages.test.tsx`. O teste tem estado compartilhado `latestWorldHostProps`; a correção abaixo reinicia o mock por caso. A hipótese deve ser confirmada pela nova CI, não considerada comprovada por simples leitura.
 - E2E amplo R9: 20 PASS / 27 FAIL; 14 em BF-4, oito em shell/leitura/seleção 3D, quatro em BF-5 e um em fluxo geral. Falhas históricas **não** são automaticamente aceitas. Alguns fluxos passaram isoladamente, mas ainda podem falhar sob contenção.
-- Sete imports CSS e ~7.405 linhas: `styles.css` (base), seis camadas históricas e `styles-atelier.css` (identidade aprovada). Há repetição de seletores para dock, botões, cartões, editores e diálogo.
+- Sete imports CSS e ~7.405 linhas: `styles.css` (base), cinco camadas históricas e `styles-atelier.css` (identidade aprovada). Há repetição de seletores para dock, botões, cartões, editores e diálogo.
 
 ## Intervenção inicial — sem mudanças visuais pretendidas
 
@@ -18,8 +18,8 @@
 
 ## Próximos gates necessários
 
-- Confirmar format/lint/TS/unit/build em CI e verificar que o único FAIL unitário foi resolvido. Em caso contrário, corrigir causa real, não enfraquecer expectativas.
-- Triar traces E2E por causa: **seletor legado ou área recolhida**, **jogo/runtime**, **fluxo funcional de dados**, **sincronização/timeout de fixture**. Reproduzir dirigidos por grupo; não tocar no runtime sem prova.
+- **Confirmado na CI 41831072924:** format, lint, TS, áudio, build web/performance e **732/732 unitários PASS**. A falha unitária de snapshot não reapareceu após limpar o mock por teste.
+- **Nova leitura E2E na CI 41831072924:** 21 PASS / 27 FAIL em 48 cenários (shard 1: 10/14; shard 2: 11/13), sem timeout global do job. Logs comprovam falhas de painéis acessíveis recolhidos em BF-4, cabeçalho antigo ausente e algumas timeouts de screenshots/software renderer; também mostram falha não classificada de restauração de backup e casos de navegação/teclado que exigem investigação. Nenhum dos 27 FAIL é aceito automaticamente.\n- **Reparo de testes históricos:** helper acessível abre bússola e exploração sem manipular CSS/DOM artificialmente, reaplicado a testes BF-4 de habitantes, objetos vivos e seleção em coleção cheia. A verificação desses ajustes ainda exige novo gate.\n- Triar traces E2E por causa: **seletor legado ou área recolhida**, **jogo/runtime**, **fluxo funcional de dados**, **sincronização/timeout de fixture**. Reproduzir dirigidos por grupo; não tocar no runtime sem prova.
 - Revisar CSS duplicado **por responsabilidade** após capturas equivalentes; qualquer remoção de regra exige equivalência visual/ergonômica em retrato/paisagem e aprovação do proprietário. A compactação estrutural atual preserva a cascata integralmente.
 - Auditar conteúdo dos `artifacts/` para reter capturas de referência e não versionar arquivos transitórios de teste.
 - Antes de merge: pendências classificadas, regressões críticas reparadas, build Android verificado, documentação e PR atualizadas, autorização explícita do proprietário.
