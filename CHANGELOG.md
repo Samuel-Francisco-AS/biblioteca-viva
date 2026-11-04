@@ -1,3 +1,11 @@
+## BF-5 — Integração do Códice Iluminado à main com dívidas (2026-11-04)
+
+- PR #20 integrada por merge commit `f1829919fc54fe2ece62ffe1a82fe7054362a179`, preservando o histórico e sem declarar encerramento da BF-5.
+- Direção artística R6, carga progressiva R8, ícone Android R9, mundo residente e CSS legado reorganizado incorporados à main.
+- Gates estáticos/build e 732 testes unitários PASS; E2E amplo final 21 PASS / 27 FAIL, **não aprovado**, com aceitação expressa de dívida técnica para a integração.
+- Issues abertas: #21 backup/restauração, #22 histórico de sessões, #23 E2E/WebGL/RPG e #24 refinamento dos formulários/UI.
+- Formalização em [docs/BF-5_INTEGRACAO_PR20.md](docs/BF-5_INTEGRACAO_PR20.md). BF-5 permanece aberta para uma segunda parte em nova PR.
+
 ## BF-5R9 — 2026-11-04
 
 - Corrigida recuperação da capa e de rotas sob demanda, preservando navegação e mundo residente.
