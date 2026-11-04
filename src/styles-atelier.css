@@ -1980,7 +1980,9 @@
 }
 .app-shell .passage-preparing > span {
   color: #e1b48c;
-  font: 2rem/1 Georgia, serif;
+  font:
+    2rem/1 Georgia,
+    serif;
 }
 .app-shell .passage-preparing p {
   margin: 0;

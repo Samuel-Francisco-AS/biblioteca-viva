@@ -26,7 +26,12 @@
         place-items: center;
         padding: 2rem;
         padding-bottom: max(2rem, env(safe-area-inset-bottom));
-        background: radial-gradient(ellipse at 50% 35%, #422a40, #201729 69%, #17131f);
+        background: radial-gradient(
+          ellipse at 50% 35%,
+          #422a40,
+          #201729 69%,
+          #17131f
+        );
         color: #f5e2c4;
         font-family: Georgia, "Times New Roman", serif;
         text-align: center;
@@ -45,7 +50,9 @@
         border: 3px double #c7a77d;
         border-radius: 0.25rem 0.9rem 0.25rem 0.65rem;
         background: linear-gradient(135deg, #54334d, #2d2139);
-        box-shadow: inset 0 0 0 6px #261b31, 5px 7px 0 #100e1a77;
+        box-shadow:
+          inset 0 0 0 6px #261b31,
+          5px 7px 0 #100e1a77;
         font-size: 2.3rem;
         color: #dfbd97;
       }
@@ -56,18 +63,29 @@
       }
       .bv-startup-stage {
         color: #dfc8be;
-        font: 0.92rem/1.6 system-ui, sans-serif;
+        font:
+          0.92rem/1.6 system-ui,
+          sans-serif;
       }
       @media (prefers-reduced-motion: reduce) {
-        #bv-startup-veil { transition: none; }
+        #bv-startup-veil {
+          transition: none;
+        }
       }
     </style>
     <div id="root"></div>
-    <div id="bv-startup-veil" role="status" aria-live="polite" aria-label="Preparando a Biblioteca Viva">
+    <div
+      id="bv-startup-veil"
+      role="status"
+      aria-live="polite"
+      aria-label="Preparando a Biblioteca Viva"
+    >
       <div>
         <div class="bv-startup-book" aria-hidden="true">✧</div>
         <p class="bv-startup-title">Biblioteca Viva</p>
-        <p id="bv-startup-stage" class="bv-startup-stage">Abrindo o Códice Iluminado…</p>
+        <p id="bv-startup-stage" class="bv-startup-stage">
+          Abrindo o Códice Iluminado…
+        </p>
       </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>

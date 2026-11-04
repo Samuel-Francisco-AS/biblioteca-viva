@@ -1,4 +1,11 @@
-import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import {
   Link,
@@ -20,11 +27,6 @@ import type {
 } from "./app/createApplication";
 import { isDiagnosticsEnabled } from "./app/diagnosticsAvailability";
 
-
-
-
-
-
 import { LibraryPage } from "./pages";
 import { useExperiencePreferences } from "./useExperiencePreferences";
 import { ActiveSessionIndicator } from "./features/sessions/ActiveSessionIndicator";
@@ -39,7 +41,11 @@ import "./styles-sanctuary.css";
 import "./styles-living.css";
 import "./styles-atelier.css";
 import { pulseTouch } from "./app/touchFeedback";
-import { preloadRoute, routeModules, warmCollectionWhenIdle } from "./app/routeModules";
+import {
+  preloadRoute,
+  routeModules,
+  warmCollectionWhenIdle,
+} from "./app/routeModules";
 import { completeStartupExperience } from "./startupExperience";
 
 const CollectionPage = lazy(async () => ({
@@ -108,9 +114,10 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   const mainRef = useRef<HTMLElement>(null);
   const previousPathRef = useRef(location.pathname);
   const pressedRef = useRef<HTMLElement | null>(null);
-  const lastReleasePulseRef = useRef<{ control: HTMLElement; at: number } | null>(
-    null,
-  );
+  const lastReleasePulseRef = useRef<{
+    control: HTMLElement;
+    at: number;
+  } | null>(null);
   const pressedOriginRef = useRef<{ id: number; x: number; y: number } | null>(
     null,
   );
@@ -225,11 +232,15 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           control &&
           event.target instanceof Element &&
           control.contains(event.target) &&
-          !control.matches(":disabled, [aria-disabled='true'], [aria-current='page']")
+          !control.matches(
+            ":disabled, [aria-disabled='true'], [aria-current='page']",
+          )
         ) {
           pulseTouch(
             effectiveExperience.reducedMotion,
-            control.matches(".button--primary, [type='submit'], .rpg-choices button")
+            control.matches(
+              ".button--primary, [type='submit'], .rpg-choices button",
+            )
               ? "confirm"
               : "selection",
           );
@@ -244,16 +255,22 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
         const control = event.target.closest<HTMLElement>(
           "button, summary, a, [role='button'], [role='tab']",
         );
-        if (!control ||
-          control.matches(":disabled, [aria-disabled='true'], [aria-current='page']")
-        ) return;
+        if (
+          !control ||
+          control.matches(
+            ":disabled, [aria-disabled='true'], [aria-current='page']",
+          )
+        )
+          return;
         const pulse = lastReleasePulseRef.current;
         lastReleasePulseRef.current = null;
         if (pulse?.control === control && performance.now() - pulse.at < 800)
           return;
         pulseTouch(
           effectiveExperience.reducedMotion,
-          control.matches(".button--primary, [type='submit'], .rpg-choices button")
+          control.matches(
+            ".button--primary, [type='submit'], .rpg-choices button",
+          )
             ? "confirm"
             : "selection",
         );
@@ -298,61 +315,65 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
         )}
         <Suspense
           fallback={
-            <section className="passage-preparing" role="status" aria-live="polite">
+            <section
+              className="passage-preparing"
+              role="status"
+              aria-live="polite"
+            >
               <span aria-hidden="true">✧</span>
               <p>Desdobrando as páginas do Códice…</p>
             </section>
           }
         >
-        <Routes>
-          <Route path={APP_ROUTE_PATHS.library} element={null} />
-          <Route
-            path={APP_ROUTE_PATHS.collection}
-            element={<CollectionPage application={application} />}
-          />
-          <Route
-            path={APP_ROUTE_PATHS.archive}
-            element={<ArchivePage application={application} />}
-          />
-          <Route
-            path={APP_ROUTE_PATHS.statistics}
-            element={<StatisticsPage application={application} />}
-          />
-          <Route
-            path={APP_ROUTE_PATHS.settings}
-            element={
-              <SettingsPage
-                application={application}
-                diagnostics={diagnostics}
-              />
-            }
-          />
-          <Route
-            path={APP_ROUTE_PATHS.newEntry}
-            element={<NewEntryPage application={application} />}
-          />
-          <Route
-            path={APP_ROUTE_PATHS.entryEdit}
-            element={<EditEntryPage application={application} />}
-          />
-          <Route
-            path={APP_ROUTE_PATHS.entryDetail}
-            element={<EntryDetailPage application={application} />}
-          />
-          <Route
-            path={APP_ROUTE_PATHS.legacyNewBook}
-            element={<Navigate replace to={APP_ROUTE_PATHS.newEntry} />}
-          />
-          <Route
-            path={APP_ROUTE_PATHS.legacyBookEdit}
-            element={<LegacyEntryRedirect edit />}
-          />
-          <Route
-            path={APP_ROUTE_PATHS.legacyBookDetail}
-            element={<LegacyEntryRedirect />}
-          />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+          <Routes>
+            <Route path={APP_ROUTE_PATHS.library} element={null} />
+            <Route
+              path={APP_ROUTE_PATHS.collection}
+              element={<CollectionPage application={application} />}
+            />
+            <Route
+              path={APP_ROUTE_PATHS.archive}
+              element={<ArchivePage application={application} />}
+            />
+            <Route
+              path={APP_ROUTE_PATHS.statistics}
+              element={<StatisticsPage application={application} />}
+            />
+            <Route
+              path={APP_ROUTE_PATHS.settings}
+              element={
+                <SettingsPage
+                  application={application}
+                  diagnostics={diagnostics}
+                />
+              }
+            />
+            <Route
+              path={APP_ROUTE_PATHS.newEntry}
+              element={<NewEntryPage application={application} />}
+            />
+            <Route
+              path={APP_ROUTE_PATHS.entryEdit}
+              element={<EditEntryPage application={application} />}
+            />
+            <Route
+              path={APP_ROUTE_PATHS.entryDetail}
+              element={<EntryDetailPage application={application} />}
+            />
+            <Route
+              path={APP_ROUTE_PATHS.legacyNewBook}
+              element={<Navigate replace to={APP_ROUTE_PATHS.newEntry} />}
+            />
+            <Route
+              path={APP_ROUTE_PATHS.legacyBookEdit}
+              element={<LegacyEntryRedirect edit />}
+            />
+            <Route
+              path={APP_ROUTE_PATHS.legacyBookDetail}
+              element={<LegacyEntryRedirect />}
+            />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
         </Suspense>
         {diagnosticsBuildEnabled &&
           isDiagnosticsEnabled(
