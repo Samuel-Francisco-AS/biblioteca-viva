@@ -1,0 +1,29 @@
+name: BF-5 final one-time format
+on:
+  push:
+    branches: [feat/bf-5-uiux-global-rework]
+    paths:
+      - .github/workflows/bf5-final-format.yml
+permissions:
+  contents: write
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Format tests and self-remove one-time workflow
+        run: |
+          npx prettier --write e2e/fixtures.ts e2e/search-and-backup.spec.ts e2e/bf5r5-experience.spec.ts
+          git rm .github/workflows/bf5-final-format.yml
+          git diff --check
+          git config user.name "Biblioteca Viva automation"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add e2e/fixtures.ts e2e/search-and-backup.spec.ts e2e/bf5r5-experience.spec.ts
+          git commit -m "style(BF-5): format final integrity gates"
+          git push origin HEAD:feat/bf-5-uiux-global-rework
