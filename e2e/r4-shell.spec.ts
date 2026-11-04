@@ -64,7 +64,7 @@ test("shell abre a Biblioteca com uma única superfície Three.js", async ({
   await expect(page.getByRole("banner")).toContainText("Biblioteca");
   await expect(
     page.getByRole("heading", {
-      name: "Registros da Biblioteca",
+      name: "Biblioteca Viva",
       exact: true,
     }),
   ).toBeVisible();
@@ -404,8 +404,11 @@ test("dez ciclos de rota não acumulam canvases, loops ou interação", async ({
 
     await page.getByRole("link", { name: "Coleção", exact: true }).click();
     await expect(page).toHaveURL(/\/colecao$/u);
-    await expect(canvas, `canvas removido no ciclo ${cycle}`).toHaveCount(0);
-    await expect(diagnostics).toHaveCount(0);
+    await expect(canvas, `canvas residente no ciclo ${cycle}`).toHaveCount(1);
+    await expect(canvas).toBeHidden();
+    await expect(canvas).toHaveAttribute("data-runtime-state", "paused");
+    await expect(canvas).toHaveAttribute("data-active-frame-loops", "0");
+    await expect(diagnostics).toBeHidden();
 
     await page.getByRole("link", { name: "Biblioteca", exact: true }).click();
     await expect(page).toHaveURL(/\/$/u);

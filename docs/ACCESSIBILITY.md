@@ -1,5 +1,10 @@
 # Acessibilidade
 
+## BF-5R5 — toque e residência candidatos
+
+Feedback de ativação solicita vibração leve (8 ms, intervalo mínimo 180 ms) só onde a API existe; erro/negação não bloqueia ações. Movimento reduzido efetivo, do sistema ou da preferência do aplicativo, desliga o haptic e as novas animações de pressão/painel. Não se presume vibração percebida nem se oferece um controle separado nesta candidata. A Biblioteca fora da rota está hidden/inert e pausada; seus listeners de exploração/Back não atuam sobre outras abas. As funções React permanecem e a falha WebGL oferece nova tentativa. Disclosures usam summary nativo; histórico e formulários preservam rótulos e foco. Isso não atesta TalkBack físico, teclado Android ou gate assistivo. [Roteiro e limites R5](BF-5R5_RELATORIO.md).
+
+
 Funções essenciais devem usar HTML semântico e permanecer utilizáveis sem áudio, animação, gesto preciso ou cor isolada.
 
 - ordem de foco previsível e foco visível;

@@ -1,3 +1,7 @@
+## BF-5R9 — contrato vigente
+
+BF-5R9: ícone Android original Códice/Chama Viva, sem fontes externas. Fonte, SVGs e processo reproduzível em `assets/android-icon/README.md`; gerador `scripts/generate-android-icon.py`. Adaptive v26, themed v33 e legados mdpi–xxxhdpi integrados. Aprovação física do ícone pendente. [Relatório](BF-5R9_RELATORIO.md).
+
 # Registro de assets e licenças
 
 O baseline ativo possui dois assets de áudio e um fixture 3D técnico da F1, todos de autoria interna:

@@ -1213,6 +1213,8 @@ describe("ThreeWorldRuntime", () => {
       throw new Error("resize unavailable");
     });
 
+    host.getBoundingClientRect = () =>
+      createHost(800, 600).getBoundingClientRect();
     expect(() => runtime.resize()).not.toThrow();
 
     expect(failureListener).toHaveBeenCalledOnce();
@@ -1787,7 +1789,7 @@ describe("ThreeWorldRuntime", () => {
       pointerId: 23,
     });
     expect(renderer.domElement.dataset.gesture).toBe("pan");
-    expect(renderer.domElement.dataset.cameraTargetX).toBe(
+    expect(renderer.domElement.dataset.cameraTargetX).not.toBe(
       targetBeforeThreshold,
     );
     dispatchPointer(renderer.domElement, "pointermove", {
@@ -2150,13 +2152,16 @@ describe("ThreeWorldRuntime", () => {
       createRenderer: () => renderer,
       fixtureLoader: new TestFixtureLoader(),
     });
-    runtime.mount(createHost());
+    const host = createHost();
+    runtime.mount(host);
 
     expect(addWindowListener).toHaveBeenCalledWith(
       "resize",
       expect.any(Function),
     );
     const resizeCallsBeforeEvent = renderer.setSize.mock.calls.length;
+    host.getBoundingClientRect = () =>
+      createHost(800, 600).getBoundingClientRect();
     window.dispatchEvent(new Event("resize"));
     expect(renderer.setSize).toHaveBeenCalledTimes(resizeCallsBeforeEvent + 1);
 
@@ -2490,7 +2495,7 @@ describe("ThreeWorldRuntime", () => {
     expect(renderer.domElement.dataset.gesture).toBe("pan");
     const targetBeforeRemainingPan = renderer.domElement.dataset.cameraTargetX;
     dispatchPointer(renderer.domElement, "pointermove", {
-      clientX: 280,
+      clientX: 240,
       clientY: 100,
       pointerId: 3,
       pointerType: "touch",
@@ -2499,7 +2504,7 @@ describe("ThreeWorldRuntime", () => {
       targetBeforeRemainingPan,
     );
     dispatchPointer(renderer.domElement, "pointerup", {
-      clientX: 280,
+      clientX: 240,
       clientY: 100,
       pointerId: 3,
       pointerType: "touch",
@@ -2873,4 +2878,79 @@ it("BF-4F3 drives real models from one runtime loop and preserves semantic state
   runtime.dispose();
   narrative.dispose();
   living.dispose();
+});
+
+it("R5 counts the scene at diagnostic cadence rather than on every rendered frame", () => {
+  const renderer = new TestRenderer();
+  let callback: FrameRequestCallback | undefined;
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    fixtureLoader: new TestFixtureLoader(),
+    now: () => 0,
+    frameScheduler: {
+      request: (next) => {
+        callback = next;
+        return 1;
+      },
+      cancel: () => {},
+    },
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  const scene = renderer.render.mock.calls.at(-1)?.[0];
+  if (!scene) throw new Error("Scene did not render");
+  const traversal = vi.spyOn(scene, "traverseVisible");
+  for (let frame = 1; frame <= 60; frame++) callback?.(frame * (1000 / 60));
+  expect(renderer.render.mock.calls.length).toBeGreaterThanOrEqual(60);
+  expect(traversal.mock.calls.length).toBeGreaterThanOrEqual(3);
+  expect(traversal.mock.calls.length).toBeLessThanOrEqual(4);
+  expect(runtime.getDiagnostics().meshes).toBeGreaterThan(0);
+  runtime.dispose();
+});
+
+it("R7 measures gesture diagnostic traversal and redundant resize", () => {
+  const renderer = new TestRenderer();
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    fixtureLoader: new TestFixtureLoader(),
+    frameScheduler: { request: () => 1, cancel: () => {} },
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  const scene = renderer.render.mock.calls.at(-1)?.[0];
+  if (!scene) throw new Error("Scene did not render");
+  const matrices = vi.spyOn(scene, "updateMatrixWorld");
+  const camera = renderer.render.mock.calls.at(-1)![1];
+  const projections = vi.spyOn(camera, "updateProjectionMatrix");
+  const canvas = renderer.domElement;
+  canvas.dispatchEvent(
+    new PointerEvent("pointerdown", {
+      pointerId: 1,
+      clientX: 200,
+      clientY: 180,
+    }),
+  );
+  const start = performance.now();
+  for (let i = 1; i <= 60; i++)
+    canvas.dispatchEvent(
+      new PointerEvent("pointermove", {
+        pointerId: 1,
+        clientX: 200 + i,
+        clientY: 180,
+      }),
+    );
+  process.stdout.write(
+    JSON.stringify({
+      sceneUpdates: matrices.mock.calls.length,
+      projections: projections.mock.calls.length,
+      milliseconds: performance.now() - start,
+    }) + "\n",
+  );
+  expect(matrices).not.toHaveBeenCalled();
+  expect(projections).not.toHaveBeenCalled();
+  const sizes = renderer.setSize.mock.calls.length;
+  runtime.resize();
+  runtime.resize();
+  expect(renderer.setSize).toHaveBeenCalledTimes(sizes);
+  runtime.dispose();
 });

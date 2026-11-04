@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import {
+  exercisePlanSchema,
   ENTRY_STATUSES,
   PHYSICAL_ACTIVITY_CATEGORIES,
   STUDY_PROGRESS_UNITS,
@@ -71,6 +72,7 @@ const physicalActivityInputSchema = z.strictObject({
   ...common,
   type: z.literal("physical_activity"),
   category: z.enum(PHYSICAL_ACTIVITY_CATEGORIES),
+  exercises: exercisePlanSchema.optional(),
   modality: optionalText,
   objective: optionalText,
 });

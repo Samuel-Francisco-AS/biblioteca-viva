@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { preloadRoute } from "./routeModules";
 
 import {
   primaryAppRoutes,
@@ -22,8 +23,9 @@ function DockIcon({ name }: { readonly name: PrimaryNavigationIcon }) {
     case "library":
       return (
         <svg {...common}>
-          <path d="M4 10.5 12 4l8 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5z" />
-          <path d="M9 20v-6h6v6" />
+          <path d="M4 20V8l8-5 8 5v12H4Z" />
+          <path d="M7 20v-9m10 9v-9M8 8.8h8M10 20v-5.5a2 2 0 0 1 4 0V20" />
+          <path d="M12 1v2" />
         </svg>
       );
     case "collection":
@@ -59,6 +61,12 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
 
   return (
     <nav aria-label="Navegação principal" className="primary-dock">
+      <div aria-hidden="true" className="primary-dock__aura" />
+      <div aria-hidden="true" className="primary-dock__engraving">
+        <span>✧</span>
+        <span>O LIVRO DAS PASSAGENS</span>
+        <span>✧</span>
+      </div>
       <ul>
         {primaryAppRoutes.map((route) => {
           const active = route.id === activeRouteId;
@@ -69,9 +77,19 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                 aria-label={route.primaryNavigation.accessibleLabel}
                 className="primary-dock__link"
                 to={route.path}
+                onPointerEnter={() => preloadRoute(route.path)}
+                onFocus={() => preloadRoute(route.path)}
               >
-                <DockIcon name={route.primaryNavigation.icon} />
-                <span>{route.primaryNavigation.label}</span>
+                <span className="primary-dock__medallion">
+                  <span className="primary-dock__halo" aria-hidden="true" />
+                  <DockIcon name={route.primaryNavigation.icon} />
+                </span>
+                <span className="primary-dock__caption">
+                  {route.primaryNavigation.label}
+                </span>
+                <span className="primary-dock__star" aria-hidden="true">
+                  ✦
+                </span>
               </Link>
             </li>
           );

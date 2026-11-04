@@ -1,5 +1,7 @@
 import {
   BoxGeometry,
+  CylinderGeometry,
+  TorusGeometry,
   Group,
   InstancedMesh,
   Matrix4,
@@ -100,6 +102,49 @@ export function createProceduralLibraryBuilding(interactive = false): Group {
         );
       }
     }
+  }
+
+  // Exterior court is scenery only: never included in picking or room bounds.
+  // It continues below the finite timber rooms, so the gaps have real depth.
+  box("sanctuary-bedrock", 0, -1.6, 0, 500, 1, 500, materials.stone);
+  const courtMaterial = new MeshLambertMaterial({ color: 0x293e43 });
+  const court = new Mesh(new CylinderGeometry(34, 36, 0.7, 96), courtMaterial);
+  court.name = "sanctuary-court";
+  court.position.y = -0.7;
+  root.add(court);
+  for (const radius of [23, 28, 33]) {
+    const ring = new Mesh(
+      new TorusGeometry(radius, 0.035, 4, 128),
+      materials.brass,
+    );
+    ring.rotation.x = -Math.PI / 2;
+    ring.position.y = -0.33;
+    root.add(ring);
+  }
+  for (let i = 0; i < 32; i++) {
+    const angle = (i * Math.PI) / 16;
+    const marker = new Mesh(
+      new BoxGeometry(0.09, 0.03, i % 4 === 0 ? 1.2 : 0.4),
+      materials.brass,
+    );
+    marker.position.set(Math.sin(angle) * 30, -0.32, Math.cos(angle) * 30);
+    marker.rotation.y = angle;
+    root.add(marker);
+  }
+
+  const lantern = new MeshLambertMaterial({
+    color: 0xb9e6d7,
+    emissive: 0x477f72,
+    emissiveIntensity: 0.7,
+  });
+  for (let i = 0; i < 12; i++) {
+    const angle = (i * Math.PI) / 6;
+    const x = Math.sin(angle) * 26;
+    const z = Math.cos(angle) * 26;
+    box("court-pedestal", x, -0.1, z, 0.9, 0.5, 0.9, materials.stone);
+    box("court-pillar", x, 0.8, z, 0.4, 1.5, 0.4, materials.stone);
+    box("court-capital", x, 1.6, z, 0.7, 0.15, 0.7, materials.brass);
+    box("court-lantern", x, 1.9, z, 0.3, 0.5, 0.3, lantern);
   }
 
   function verticalWall(
@@ -318,8 +363,11 @@ export function createProceduralLibraryBuilding(interactive = false): Group {
     batch.name = "architectural-details";
     parts.forEach((part, index) => {
       const { width, height, depth } = part.geometry.parameters;
-      const matrix = new Matrix4().makeScale(width, height, depth);
-      matrix.setPosition(part.position);
+      const matrix = new Matrix4().compose(
+        part.position,
+        part.quaternion,
+        part.scale.clone().set(width, height, depth),
+      );
       batch.setMatrixAt(index, matrix);
       part.geometry.dispose();
       root.remove(part);

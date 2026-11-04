@@ -1,0 +1,51 @@
+{
+  "codeCommit": "b2bc0aa65f72f915af4931b4169da807946ebd9a",
+  "format": "PASS",
+  "lint": "PASS (broad then final directed)",
+  "typecheck": "PASS",
+  "audio": "PASS",
+  "webBuild": "PASS",
+  "initialBytes": 631317,
+  "runtimeBytes": 731479,
+  "unitBroad": {
+    "pass": 726,
+    "fail": 1,
+    "failure": "inhabitantAgency encounter test: timeout 5000ms"
+  },
+  "unitFinalDirected": {
+    "pass": 21,
+    "fail": 0,
+    "boundaryFollowupPass": 6
+  },
+  "e2eBroad": {
+    "pass": 20,
+    "fail": 27,
+    "minutes": 15.9
+  },
+  "e2eFinalDirected": {
+    "recoveryAndTransition": {
+      "pass": 2,
+      "seconds": 26.7
+    },
+    "residenceAndInputWithoutConcurrentSuite": {
+      "pass": 2,
+      "seconds": 53.8
+    }
+  },
+  "androidSync": "PASS",
+  "apkBuild": "PASS",
+  "apkSha256": "b00202d224fc12ba098f2a9d453496b7b1cf9917a30a7201f0f5a2bba82b3221",
+  "iconGenerationRepeatHashes": "identical",
+  "physicalR9": "NOT EXECUTED",
+  "talkBack": "NOT EXECUTED",
+  "newOptimizations": 0,
+  "remoteCI": {
+    "sha": "d20d4e39c6acf5011c3b03f166ecea2a840ad36d",
+    "run": "https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41805229003",
+    "conclusion": "cancelled",
+    "unitPass": 732,
+    "unitFiles": 97,
+    "gatesThroughPerformance": "PASS",
+    "e2e": "incomplete, failures logged; no final total"
+  }
+}

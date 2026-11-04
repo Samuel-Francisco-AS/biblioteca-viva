@@ -176,3 +176,40 @@ describe("Coleção", () => {
     expect(screen.getByLabelText("Ordenar por")).toHaveValue("recent");
   });
 });
+
+it("R9 never resurfaces a deleted snapshot while remount revalidates", async () => {
+  const execute = vi
+    .fn<() => Promise<readonly BookEntry[]>>()
+    .mockResolvedValueOnce([book]);
+  const application: CollectionApplication = {
+    queries: {
+      listLibraryEntries: { execute },
+      listTags: { execute: () => Promise.resolve([]) },
+    },
+  };
+  const first = render(
+    <MemoryRouter>
+      <CollectionPage application={application} />
+    </MemoryRouter>,
+  );
+  expect(await screen.findByText(book.title)).toBeVisible();
+  first.unmount();
+  let resolve!: (entries: readonly BookEntry[]) => void;
+  execute.mockImplementationOnce(
+    () =>
+      new Promise((done) => {
+        resolve = done;
+      }),
+  );
+  render(
+    <MemoryRouter>
+      <CollectionPage application={application} />
+    </MemoryRouter>,
+  );
+  expect(screen.queryByText(book.title)).not.toBeInTheDocument();
+  expect(screen.getByText("Carregando Coleção…")).toBeVisible();
+  resolve([]);
+  expect(
+    await screen.findByText("Seu primeiro registro começa aqui"),
+  ).toBeVisible();
+});

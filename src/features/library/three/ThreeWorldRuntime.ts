@@ -693,10 +693,12 @@ export class ThreeWorldRuntime implements WorldRuntime {
             root: node,
           }));
       }
+      if (composedWorld) camera.far = 1000;
       this.navigation = new CameraNavigation(
         camera,
-        composedWorld ? 0.7 : 1,
+        1,
         composedWorld ? LIBRARY_ROOMS : undefined,
+        composedWorld ? 10 : 1,
       );
 
       renderer.shadowMap.enabled = false;
@@ -884,6 +886,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const viewportChanged =
       this.lastValidViewport?.width !== width ||
       this.lastValidViewport.height !== height;
+    if (!viewportChanged && this.viewportReady) return;
     // Coordinates captured before a real layout change cannot safely continue
     // through a different screen plane. Selection remains intact; only the
     // active gesture is terminated, so the next gesture starts from the new
@@ -1273,7 +1276,6 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.textures = info.memory.textures;
       this.triangles = info.render.triangles;
     }
-    this.updateObjectCounts(scene);
     return true;
   }
 
@@ -1406,6 +1408,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       return;
     }
     this.lastDiagnosticsPublishedAt = timestamp;
+    if (this.mountedWorld) this.updateObjectCounts(this.mountedWorld.scene);
     const diagnostics = this.getDiagnostics();
     this.updateCanvasDiagnostics(diagnostics);
     for (const listener of this.diagnosticsListeners) listener(diagnostics);

@@ -4,6 +4,8 @@ import Dexie from "dexie";
 import { afterEach, describe, expect, it } from "vitest";
 
 import {
+  createPhysicalActivity,
+  updateLibraryEntryDetails,
   createBook,
   createSeries,
   createStudy,
@@ -244,4 +246,76 @@ describe("casos de uso de sessão", () => {
     ).toHaveLength(1);
     test.database.close();
   });
+});
+
+it("R5 snapshots each workout execution and accepts an honestly unmeasured duration", async () => {
+  const test = await context();
+  const plan = createPhysicalActivity({
+    id: "plan",
+    title: "Peito fictício",
+    category: "strength",
+    exercises: [
+      { name: "Supino fictício", sets: 3, repetitions: 10, loadKg: 12.5 },
+    ],
+    createdAt: "2026-08-16T09:00:00.000Z",
+  });
+  await test.dependencies.libraryEntries.save(plan);
+  const manual = new CreateManualSession(test.dependencies);
+  const first = await manual.execute({
+    entryId: plan.id,
+    entryType: "physical_activity",
+    duration: 0,
+    perceivedExertion: 6,
+  });
+  expect(first.session).toMatchObject({
+    exercises: plan.exercises,
+    accumulatedDuration: 0,
+    perceivedExertion: 6,
+  });
+  const changed = updateLibraryEntryDetails(
+    plan,
+    { ...plan, exercises: [{ name: "Supino fictício", sets: 4, loadKg: 15 }] },
+    "2026-08-16T10:00:00.000Z",
+  );
+  await test.dependencies.libraryEntries.save(changed);
+  const second = await manual.execute({
+    entryId: plan.id,
+    entryType: "physical_activity",
+    duration: 0,
+  });
+  expect(second.session).toMatchObject({
+    exercises: changed.type === "physical_activity" ? changed.exercises : [],
+  });
+  expect(
+    await test.dependencies.sessions.getById(first.session.id),
+  ).toMatchObject({ exercises: plan.exercises });
+  await expect(
+    manual.execute({
+      entryId: plan.id,
+      entryType: "physical_activity",
+      duration: 0,
+      exercises: [{ name: "x", loadKg: -1 }],
+    }),
+  ).rejects.toMatchObject({ code: "VALIDATION_FAILED" });
+  test.database.close();
+});
+
+it("R5 starts an unmeasured study encounter without inventing minutes", async () => {
+  const test = await context();
+  const study = createStudy({
+    id: "unmeasured-study",
+    title: "Estudo fictício",
+    progressUnit: "hours",
+    createdAt: "2026-08-16T09:00:00.000Z",
+  });
+  await test.dependencies.libraryEntries.save(study);
+  await new CreateManualSession(test.dependencies).execute({
+    entryId: study.id,
+    entryType: "study",
+    duration: 0,
+  });
+  expect(
+    await test.dependencies.libraryEntries.getById(study.id),
+  ).toMatchObject({ status: "in_progress", progressCurrent: 0 });
+  test.database.close();
 });

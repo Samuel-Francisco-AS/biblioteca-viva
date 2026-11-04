@@ -1,3 +1,5 @@
+import { exercisePlanSchema } from "./schemas";
+import type { Exercise } from "./types";
 import {
   InvalidFieldError,
   InvalidProgressError,
@@ -72,6 +74,7 @@ export interface CreateStudyInput extends CommonCreateInput {
 
 export interface CreatePhysicalActivityInput extends CommonCreateInput {
   readonly category: PhysicalActivityCategory;
+  readonly exercises?: readonly Exercise[];
   readonly modality?: string;
   readonly objective?: string;
 }
@@ -113,6 +116,7 @@ export type UpdateLibraryEntryDetailsInput =
       readonly type: "physical_activity";
       readonly title: string;
       readonly category: PhysicalActivityCategory;
+      readonly exercises?: readonly Exercise[];
       readonly modality?: string;
       readonly objective?: string;
     }
@@ -294,6 +298,13 @@ export function createPhysicalActivity(
   return Object.freeze({
     ...common("physical_activity", input),
     category: input.category,
+    ...(input.exercises !== undefined && {
+      exercises: Object.freeze(
+        exercisePlanSchema
+          .parse(input.exercises)
+          .map((exercise) => Object.freeze(exercise)),
+      ),
+    }),
     ...(optionalText(input.modality) && {
       modality: optionalText(input.modality),
     }),
@@ -499,6 +510,13 @@ export function updateLibraryEntryDetails(
         ...metadata,
         title: requireText(input.title, "title"),
         category: input.category,
+        ...(input.exercises !== undefined && {
+          exercises: Object.freeze(
+            exercisePlanSchema
+              .parse(input.exercises)
+              .map((exercise) => Object.freeze(exercise)),
+          ),
+        }),
         modality: optionalText(input.modality),
         objective: optionalText(input.objective),
       });

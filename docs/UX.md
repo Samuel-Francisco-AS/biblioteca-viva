@@ -1,4 +1,46 @@
+## BF-5R9 — contrato vigente
+
+BF-5R9: a Coleção aguarda consulta canônica em cada montagem, sem reapresentar snapshot de conteúdo de visitas anteriores. Feedback tátil acompanha clique confirmado; pointerup encerra apenas pressão visual. Falha de rota fica contida, mantém dock e oferece recarga explícita. Capa secundária termina após commit do destino. Aparência aprovada preservada. [Relatório](BF-5R9_RELATORIO.md).
+
 # Fluxos de experiência
+
+## BF-5R7 — feedback de ativação
+
+O primeiro ponteiro mostra `data-tap-active`; movimento maior que 8 px, cancelamento, liberação ou perda de captura o remove. Ações permanecem em click, inclusive teclado. Vibração é solicitada uma vez na captura da ativação válida, sem debounce global entre comandos independentes; não durante scroll/pan/pinch. Preservam-se movimento reduzido e preferência nativa Android. Hover de cartões é exclusivo de ponteiro fino com hover; foco visível e compressão de toque permanecem. Sensação de sincronia física ainda pendente. [Relatório R7](BF-5R7_RELATORIO.md).
+
+
+## BF-5R5 — contrato candidato vigente
+
+- A Biblioteca mantém uma única instância pausada entre abas; a primeira visita monta sob demanda. No retorno consulta dados e conserva a cena se sua projeção não mudou. Alterações representadas substituem o runtime; não há persistência espacial. Conteúdo fora da rota fica oculto/inert e não captura Back. Diálogo fecha ao sair, mas histórias/diário da visita sobrevivem às abas; recarregar encerra a visita. Há tentativa explícita após falha WebGL.
+- Livro: folha de rosto, marcador de página, estado de leitura, notas/citações e sessões com páginas inicial/final. Tempo é opcional; histórico mostra páginas e nota, não apenas minutos.
+- Série/anime: marcador de temporada/episódio e total assistido; criação admite posição inicial. Episódios concluídos são a ação principal do histórico, sem campo de minutos assistidos na série. Registrar episódios incrementa o total sem inferir limites de temporada. O marcador é explícito e independente. Citações podem apontar temporada/episódio.
+- Filme: obra, direção/ano/duração/plataforma; exibições e reencontros datados, notas de impressão/opinião e citações por minuto opcional. Registrar exibição não infere conclusão: o usuário controla o estado.
+- Estudos: área/disciplina/objetivo/unidade/meta/prazo, progresso em unidades traduzidas e horas apresentadas como horas, mantendo minutos inteiros no armazenamento. Sessões alimentam metas de sessões/horas; outras unidades são atualizadas explicitamente. Caderno recebe materiais/referências em notas.
+- Atividade física: modalidade e categoria contextual; força/mobilidade/mista oferecem ficha de exercícios com séries/repetições/carga/tempo/observação. Editar preserva fichas existentes inclusive ao trocar categoria. Execuções datadas guardam cópia da ficha e esforço, histórico e frequência por dias distintos; distância é campo de cardio, não núcleo de força. Distâncias antigas continuam visíveis no histórico. Exercícios de uma execução são um snapshot da ficha, não um check de cada série.
+- Trabalho: intenção, descrição, área/organização, próxima ação/prazo e estado; passos realizados têm resultado/nota e tempo opcional. Não há progresso percentual ou checklist fictício.
+- Detalhes oferecem notas/citações com edição, exclusão e compartilhamento; organização mantém etiquetas/favoritos. Exclusão genérica fica em “Cuidar deste registro”, com confirmação. Erros de ação mantêm a ficha aberta. Iniciar/concluir segue transições válidas; pausa/retomada de registro e sessão têm nomes distintos.
+- Cronômetro é opcional/recolhido; registro manual aceita dia e duração opcional (zero significa tempo não informado). Datas usam meio-dia local, evitando deslocamento de dia pelo fuso. Não há tempo fictício para satisfazer validação.
+- Controles, fichas, disclosures, HUD, diálogo e dock recebem superfícies com bordas suaves e relevo curto. Resposta de pressão usa transform; navegação mantém chegada de 140 ms, diálogo 120 ms, sem espera artificial/blur. Haptic via capacidade de vibração: 8 ms em ativações importantes, intervalo mínimo 180 ms, sem disparos em pan/pinch, desabilitado com movimento reduzido; ausência/negação degrada sem bloquear.
+
+[ADR-015](decisions/ADR-015-bf5r5-residencia-e-fichas.md), [limites e evidências](BF-5R5_RELATORIO.md). O estado R5 prevalece sobre os contratos históricos de montagem por rota abaixo.
+
+
+## BF-5R4 — contrato de apresentação candidato
+
+Criação e edição compartilham capítulos específicos por categoria, com dados opcionais em referências recolhíveis e título obrigatório explícito. Livro usa folha de rosto/marcador; filme, ficha de cinema; série, fio episódico; estudo, percurso; prática, modalidade/objetivo; trabalho, intenção/próximo passo. Erro de edição preserva campos. Referências antigas continuam acessíveis. Sem alterações de dados/schema. Pan aplica o delta excedente a 8px imediatamente; zoom inicial composto 1, sem regra por proporção. [Limites e testes](BF-5R4_RELATORIO.md).
+
+
+## BF-5 — contrato da candidata de apresentação
+
+A Biblioteca usa canvas fixo na área acima do dock e dos insets Android. O cabeçalho convencional sai dessa rota. Registros, seleção sem canvas e diagnóstico local ficam recolhidos; o fallback abre as alternativas. Diagnóstico do runtime permanece sob demanda junto ao mundo, pois sua leitura pertence à instância montada; não foi transferido para Ajustes. Os diagnósticos da aplicação continuam em Ajustes.
+
+Ações primárias de objetos e conversação por seleção preservam o runtime BF-4. Objetos selecionados oferecem ações adicionais em faixa contextual. Conversa e diário possuem rolagem própria acima do dock, identificação do interlocutor, opções responsivas e saída por Escape/Android Back. Superfícies de exploração também fecham por Back/Escape com retorno ao summary.
+
+Coleção mantém os seis tipos, parâmetros de busca e filtros, adicionando categorias diretas e lista compacta de sessão. Arquivo continua exclusivamente notas e citações, com busca e operações existentes. Resumo mantém métricas e gráficos reais. Ajustes dispõe atalhos para preferências, áudio, informações locais, exportação e restauração; confirmações de dados permanecem.
+
+Tokens de tinta azul, marfim, violeta e luz espectral, tipografia editorial local e transições finitas compartilham a identidade. Nenhuma fonte, dependência ou asset externo foi adicionado. Movimento reduzido desativa animações; alto contraste conserva tokens próprios.
+
+Candidata sem aceite físico ou artístico. O relatório registra limites da inspeção e gates; esta seção substitui descrições antigas da composição de página longa, sem reescrever contratos de domínio.
 
 O dock global contém Biblioteca, Coleção, Arquivo, Resumo e Ajustes. Novo registro é uma ação contextual da Coleção. O destino ativo usa `aria-current`; safe areas e espaço do dock são preservados.
 
@@ -17,3 +59,7 @@ Objetos vivos têm catálogo React por cômodo, descrição, estado, ações esp
 **BF-4E — polimento dirigido (2026-11-02):** livro decorativo e pergaminho recebem expansão **lógica** do alvo de toque em 28 pixels CSS, sem crescer visualmente ou sobrepor o picking prioritário de registros/estantes; gaveta E passa a abrir para dentro da área acessível; mensagens de ação aparecem durante 4 s com fade de 400 ms e somem, mas o texto integral permanece na alternativa React. A inspeção física do novo build deve confirmar usabilidade com vários zooms, direção da gaveta e legibilidade das pistas.
 
 **BF-4E — aceite físico dirigido (2026-11-02):** o usuário aprovou no Moto G06 a nova experiência de ações diretamente no canvas, concluiu o Segredo do Pergaminho 4/4 e, após hotfix, confirmou maior facilidade de tocar no livro/pergaminho, gaveta E abrindo para o lado correto e mensagem temporária funcionando. O grande painel React não é experiência principal: segue alternativa textual recolhida para acessibilidade/fallback. A visibilidade do feedback dura 4 s com fade, sem impedir gesto. Gate físico dirigido concluído com ressalva CI, mas TalkBack e avaliação de outros tamanhos/níveis de zoom continuam pendentes. [Relatório de fechamento](BF-4E_RELATORIO.md).
+
+## BF-5R1 — hub de exploração e sistema visual (candidata sem aceite, 2026-11-03)
+
+A exploração passa a apresentar o canvas no viewport inteiro, com cabeçalho de localização discreto, bússola acionável para expor as alternativas React (objetos, habitantes e registros) e comandos de RPG ancorados acima do dock. A falha WebGL expõe as alternativas sem exigir o botão de bússola. O dock usa tratamento de HUD e as cinco áreas compartilham um sistema visual de sigilo/iluminação editorial, com transições de chegada e foco. Seleção, IDs, dados, motor narrativo e operações permanecem os existentes. **Não presumir aprovação física, TalkBack ou desempenho.** Consulte [BF-5R1](BF-5R1_RELATORIO.md).

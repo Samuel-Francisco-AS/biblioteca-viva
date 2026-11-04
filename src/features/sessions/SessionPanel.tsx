@@ -1,3 +1,5 @@
+import { entryExperience } from "../entry-detail/entryExperience";
+import { ExerciseList } from "../entry-detail/ExerciseList";
 import { useEffect, useState, type FormEvent } from "react";
 
 import {
@@ -80,10 +82,14 @@ function specific(entry: LibraryEntry, form: FormData) {
 export function SessionPanel({
   application,
   entry,
+  onChanged,
 }: {
   readonly application: SessionApplication;
   readonly entry: LibraryEntry;
+  readonly onChanged?: () => void;
 }) {
+  const copy = entryExperience[entry.type];
+  const [editing, setEditing] = useState<string>();
   const [sessions, setSessions] = useState<readonly Session[]>([]);
   const [open, setOpen] = useState<Session>();
   const [error, setError] = useState<string>();
@@ -124,6 +130,7 @@ export function SessionPanel({
     try {
       await operation();
       await reload();
+      onChanged?.();
     } catch (failure: unknown) {
       setError(presentApplicationError(failure).message);
     } finally {
@@ -148,10 +155,13 @@ export function SessionPanel({
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const duration = form.get("duration");
+    const date = form.get("date");
     const note = form.get("note");
     void act(() =>
       application.commands.createManualSession.execute({
         entryId: entry.id,
+        ...(typeof date === "string" &&
+          date && { occurredAt: new Date(`${date}T12:00:00`).toISOString() }),
         ...specific(entry, form),
         duration:
           typeof duration === "string" ? Math.round(Number(duration) * 60) : 0,
@@ -160,26 +170,46 @@ export function SessionPanel({
     );
   }
 
+  const completed = sessions.filter(
+    (session) => session.status === "completed",
+  );
+  const practiceDays = new Set(
+    completed.map((session) =>
+      new Date(session.startedAt).toLocaleDateString("pt-BR"),
+    ),
+  ).size;
   const ownOpen = open?.entryId === entry.id ? open : undefined;
-  function edit(session: Session) {
-    const minutes = window.prompt(
-      "Duração em minutos",
-      String(Math.max(1, Math.round(session.accumulatedDuration / 60))),
-    );
-    if (!minutes) return;
-    void act(() =>
-      application.commands.editSession.execute({
+  function edit(event: FormEvent<HTMLFormElement>, session: Session) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    void act(async () => {
+      await application.commands.editSession.execute({
         id: session.id,
-        duration: Math.round(Number(minutes) * 60),
-        note: session.note,
-      }),
-    );
+        duration: Math.round(Number(form.get("duration")) * 60),
+        note:
+          typeof form.get("note") === "string"
+            ? form.get("note") || undefined
+            : undefined,
+      });
+      setEditing(undefined);
+    });
   }
   return (
     <section className="content-card" aria-labelledby="sessions-title">
-      <h3 id="sessions-title">Sessões</h3>
+      <p className="eyebrow">Seu percurso</p>
+      <h3 id="sessions-title">{copy.sessions}</h3>
       <p>
-        Tempo dedicado fica registrado como memória, sem metas ou pontuação.
+        {entry.type === "series"
+          ? "Registre os episódios que assistiu. Não precisa contar minutos."
+          : entry.type === "physical_activity"
+            ? "Uma mesma ficha, novos dias. Registre a execução e como se sentiu."
+            : entry.type === "movie"
+              ? "Guarde o dia em que assistiu; um reencontro também merece uma lembrança."
+              : entry.type === "book"
+                ? "Da primeira à última página de cada encontro com o livro."
+                : entry.type === "study"
+                  ? "Registre o tempo de estudo e suas descobertas. Sessões e horas alimentam a trilha automaticamente."
+                  : "Guarde o resultado de cada etapa e siga para o próximo passo."}
       </p>
       {error && <p role="alert">{error}</p>}
       {ownOpen ? (
@@ -209,7 +239,7 @@ export function SessionPanel({
                 }
                 type="button"
               >
-                Pausar
+                Pausar sessão
               </button>
             ) : (
               <button
@@ -224,7 +254,7 @@ export function SessionPanel({
                 }
                 type="button"
               >
-                Retomar
+                Retomar sessão
               </button>
             )}
             <button
@@ -259,34 +289,47 @@ export function SessionPanel({
           </div>
         </div>
       ) : (
-        <form onSubmit={start}>
-          <h4>Iniciar cronômetro</h4>
-          <SessionFields entry={entry} />
-          <label className="form-field">
-            Nota opcional
-            <textarea name="note" />
-          </label>
-          <button
-            className="button button--primary"
-            disabled={busy || open !== undefined}
-            type="submit"
-          >
-            Iniciar sessão
-          </button>
-          {open && (
-            <p role="status">
-              Já existe uma sessão em andamento em outro registro.
-            </p>
-          )}
-        </form>
+        <details className="session-clock">
+          <summary>Usar cronômetro (opcional)</summary>
+          <form onSubmit={start}>
+            <h4>Iniciar cronômetro</h4>
+            <SessionFields entry={entry} />
+            <label className="form-field">
+              Nota opcional
+              <textarea name="note" />
+            </label>
+            <button
+              className="button button--primary"
+              disabled={busy || open !== undefined}
+              type="submit"
+            >
+              Iniciar sessão
+            </button>
+            {open && (
+              <p role="status">
+                Já existe uma sessão em andamento em outro registro.
+              </p>
+            )}
+          </form>
+        </details>
       )}
-      <form onSubmit={manual}>
-        <h4>Registrar sessão concluída</h4>
+      <form onSubmit={manual} className="session-record">
+        <h4>{copy.record}</h4>
         <label className="form-field">
-          Duração em minutos
-          <input min="1" name="duration" required type="number" />
+          Dia da experiência
+          <input name="date" type="date" />
         </label>
+        <p className="field-help">
+          Deixe o dia em branco para registrar agora.
+        </p>
         <SessionFields entry={entry} />
+        <details className="session-time">
+          <summary>Guardar tempo (opcional)</summary>
+          <label className="form-field">
+            Duração em minutos (opcional)
+            <input min="0" step="any" name="duration" type="number" />
+          </label>
+        </details>
         <label className="form-field">
           Nota opcional
           <textarea name="note" />
@@ -296,23 +339,102 @@ export function SessionPanel({
           disabled={busy}
           type="submit"
         >
-          Registrar sessão
+          {copy.record}
         </button>
       </form>
       <h4>Histórico</h4>
+      {entry.type === "physical_activity" && (
+        <p className="practice-frequency">
+          {practiceDays} {practiceDays === 1 ? "dia" : "dias"} de prática ·{" "}
+          {completed.length} {completed.length === 1 ? "execução" : "execuções"}
+        </p>
+      )}
       {sessions.filter(({ status }) => status === "completed").length === 0 ? (
-        <p>Nenhuma sessão concluída.</p>
+        <p>O primeiro encontro ainda está por vir.</p>
       ) : (
-        <ul>
+        <ul className="session-history">
           {sessions
             .filter(({ status }) => status === "completed")
             .map((session) => (
               <li key={session.id}>
                 {new Date(session.startedAt).toLocaleDateString("pt-BR")} ·{" "}
-                {formatSessionDuration(session.accumulatedDuration)}{" "}
+                {session.accumulatedDuration > 0
+                  ? formatSessionDuration(session.accumulatedDuration)
+                  : "Tempo não informado"}
+                {session.kind === "reading" && (
+                  <p>
+                    Páginas {session.startPage ?? "—"} →{" "}
+                    {session.endPage ?? "—"}
+                  </p>
+                )}
+                {session.kind === "viewing" &&
+                  session.episodesCompleted !== undefined && (
+                    <p>{session.episodesCompleted} episódios concluídos</p>
+                  )}
+                {session.kind === "physical_activity" && (
+                  <>
+                    <p>
+                      {session.distanceMeters !== undefined
+                        ? `${session.distanceMeters} m · `
+                        : ""}
+                      {session.perceivedExertion !== undefined
+                        ? `Esforço ${session.perceivedExertion}/10`
+                        : ""}
+                    </p>
+                    {session.exercises && session.exercises.length > 0 && (
+                      <details>
+                        <summary>Ficha desta execução</summary>
+                        <ExerciseList exercises={session.exercises} />
+                      </details>
+                    )}
+                  </>
+                )}
+                {session.kind === "work" && session.result && (
+                  <p>{session.result}</p>
+                )}
+                {session.note && (
+                  <p className="session-history__note">{session.note}</p>
+                )}
+                {editing === session.id && (
+                  <form
+                    className="session-edit"
+                    onSubmit={(event) => edit(event, session)}
+                  >
+                    <label className="form-field">
+                      Duração em minutos
+                      <input
+                        name="duration"
+                        type="number"
+                        min="0"
+                        step="any"
+                        defaultValue={session.accumulatedDuration / 60}
+                      />
+                    </label>
+                    <label className="form-field">
+                      Nota da experiência
+                      <textarea name="note" defaultValue={session.note} />
+                    </label>
+                    <div className="form-actions">
+                      <button
+                        className="button button--primary"
+                        type="submit"
+                        disabled={busy}
+                      >
+                        Salvar experiência
+                      </button>
+                      <button
+                        className="button button--secondary"
+                        type="button"
+                        onClick={() => setEditing(undefined)}
+                      >
+                        Cancelar edição
+                      </button>
+                    </div>
+                  </form>
+                )}
                 <button
                   className="text-button"
-                  onClick={() => void edit(session)}
+                  onClick={() => setEditing(session.id)}
                   type="button"
                 >
                   Editar
@@ -356,14 +478,22 @@ function SessionFields({ entry }: { readonly entry: LibraryEntry }) {
   if (entry.type === "movie" || entry.type === "series")
     return (
       <>
-        <label className="form-field">
-          Minutos assistidos
-          <input min="0" name="watchedDuration" type="number" />
-        </label>
+        {entry.type === "movie" && (
+          <label className="form-field">
+            Minutos assistidos (opcional)
+            <input min="0" name="watchedDuration" type="number" />
+          </label>
+        )}
         {entry.type === "series" && (
           <label className="form-field">
             Episódios concluídos
-            <input min="0" name="episodesCompleted" type="number" />
+            <input
+              min="1"
+              name="episodesCompleted"
+              type="number"
+              defaultValue="1"
+              required
+            />
           </label>
         )}
       </>
@@ -371,10 +501,12 @@ function SessionFields({ entry }: { readonly entry: LibraryEntry }) {
   if (entry.type === "physical_activity")
     return (
       <>
-        <label className="form-field">
-          Distância em metros
-          <input min="0" name="distanceMeters" type="number" />
-        </label>
+        {entry.category === "cardio" && (
+          <label className="form-field">
+            Distância em metros (opcional)
+            <input min="0" name="distanceMeters" type="number" />
+          </label>
+        )}
         <label className="form-field">
           Esforço percebido (1–10)
           <input max="10" min="1" name="perceivedExertion" type="number" />

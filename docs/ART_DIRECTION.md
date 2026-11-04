@@ -1,4 +1,18 @@
+## BF-5R9 — preservação do Códice Iluminado
+
+O proprietário confirmou aprovação física da direção R6 no pedido R9 e resultados positivos do canvas/pan/pinch/rolagem. Esta rodada preserva a arte existente e acrescenta apenas o ícone Android original de códice/chama. O novo ícone ainda depende de avaliação humana; não se transfere o aceite R6 automaticamente. [Relatório](BF-5R9_RELATORIO.md).
+
 # Direção artística
+
+## BF-5R5 — acabamento candidato
+
+Continuidade artesanal do papel/tinta/latão R4: superfícies de encadernação, cantos suaves, instrumentos encaixados, hierarquia de percurso e memórias por categoria. Retratos de detalhe mostram cinema, marcador episódico, intenção de estudo, ficha de prática e próximo passo de empreitada. Pressão curta e luz/relevo dão resposta sem reduzir o mundo, suas animações ou habitantes. A composição/pátio R4 é preservada; não há promoção da fixture à Biblioteca definitiva. Aceite artístico depende do proprietário. [Relatório R5](BF-5R5_RELATORIO.md).
+
+
+## Candidata BF-5R4 (2026-11-03)
+
+Papel claro e tinta nos rituais de registro, manuscritos no Arquivo, pedra azul e latão no observatório/ateliê. Gravuras originais dos seis tipos substituem símbolos tipográficos nas fichas. O exterior é um pátio cenográfico real com marcações e lanternas, sem prometer interações. A avaliação artística permanece humana e pendente; [relatório R4](BF-5R4_RELATORIO.md).
+
 
 > **BF-4F2 concluída por gate dirigido (2026-11-02):** animações por seleção e controles React aceitas no Moto G06, sem regressão/queda de fluidez percebida. Simplicidade artística não é teto futuro. CI global FAIL e novos casos F2 rastreados em [#15](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/15). [Fechamento](BF-4F2_RELATORIO.md).
 
@@ -40,3 +54,7 @@ Essa direção foi concretizada no código e nos clips F2 reaproveitados. **Gate
 O painel é uma mesa de leitura em pergaminho quente, contorno de latão e respostas em vinho; identidade do falante permanece visível na leitura móvel. Retrato conserva a cena acima da conversa; paisagem dispõe mundo e leitura lado a lado. As vozes se distinguem por humor seco e responsabilidade de Samael, cuidado/controle e vulnerabilidade de Aryn, imaginação e iniciativa de Ytha, precisão inventiva e orgulho de Lua.
 
 A fenda é uma costura lilás com quatro segmentos de cor, luz local e sinais nos cinco cômodos. Contenção deixa meia-lua fria e inscrição incompleta; experimento deixa círculo de quatro cores e leitura recuperada após um erro reversível corrigido pelos quatro. Páginas, sutura, flor cinza/rosa/verde e glifo tornam consequências legíveis sem alterar registros. O repertório F2/F3 fornece gestos nas posições atuais, sem teletransporte. **As escolhas narrativas foram aceitas funcionalmente pelo usuário no Moto G06**, com capturas do painel e do mundo; a conclusão individual de todas as histórias, os desfechos da Fenda e a cena do folio F3 **não tiveram comprovação física exaustiva**. A aprovação atual não é aceite do acabamento artístico definitivo. O usuário reservou uma **fase própria de UI/UX**, além de outra frente de **aprimoramento dos personagens e experiências de RPG, diálogo e interatividade**. Essa separação permite enriquecer a expressão e corrigir ergonomia sem desqualificar a funcionalidade já integrada nem sacrificar ambição criativa por medo do Moto G06. [Fechamento](BF-4F4_RELATORIO.md).
+
+## BF-5R6 — O Códice Iluminado (candidata, sem aceite, 2026-11-04)
+
+A linguagem anterior de cartões verde-escuros e botões bege foi rejeitada nas capturas reais do Moto G06 por parecer uma coleção industrial de componentes. A candidata R6 busca **editorial de fantasia feito à mão**, com páginas e fichas em marfim/pergaminho, tinta escura, encadernações e selos em cobre, plano de navegação de veludo noturno e acontecimentos espectrais contidos. Marcadores de capítulo e gravuras autorais são proporcionais ao conteúdo; campos devem parecer instrumentos de escrita, nunca boxes hospitalares. Ver [relatório R6](BF-5R6_RELATORIO.md). Esta direção é implementação candidata, não aprovação final.

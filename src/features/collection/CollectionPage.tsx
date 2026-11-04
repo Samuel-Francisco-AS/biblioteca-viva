@@ -1,3 +1,5 @@
+import { ArtifactGlyph } from "../../app/ArtifactGlyph";
+import { RealmIntro } from "../../app/RealmIntro";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
@@ -63,13 +65,21 @@ export function CollectionPage({
 }: {
   readonly application?: CollectionApplication;
 }) {
-  const [entries, setEntries] = useState<readonly LibraryEntry[]>();
-  const [tags, setTags] = useState<readonly Tag[]>([]);
-  const [error, setError] = useState<string>();
+  const [snapshot, setSnapshot] = useState<{
+    application: CollectionApplication;
+    entries?: readonly LibraryEntry[];
+    tags?: readonly Tag[];
+    error?: string;
+  }>();
+  const current = snapshot?.application === application ? snapshot : undefined;
+  const entries = current?.entries;
+  const tags = useMemo(() => current?.tags ?? [], [current?.tags]);
+  const error = current?.error;
   const [params, setParams] = useSearchParams();
   const location = useLocation();
   const searchRef = useRef<HTMLInputElement>(null);
   const searchToggleRef = useRef<HTMLButtonElement>(null);
+  const [compact, setCompact] = useState(false);
   const [searchExpanded, setSearchExpanded] = useState(false);
   const query = params.get("q") ?? "";
   const status = parseStatusFilter(params.get("status"));
@@ -101,12 +111,15 @@ export function CollectionPage({
     ]).then(
       ([loaded, loadedTags]) => {
         if (active) {
-          setEntries(loaded);
-          setTags(loadedTags);
+          setSnapshot({ application, entries: loaded, tags: loadedTags });
         }
       },
       (failure: unknown) =>
-        active && setError(presentApplicationError(failure).message),
+        active &&
+        setSnapshot({
+          application,
+          error: presentApplicationError(failure).message,
+        }),
     );
     return () => {
       active = false;
@@ -175,6 +188,10 @@ export function CollectionPage({
         className="content-card"
         aria-labelledby="empty-collection-title"
       >
+        <RealmIntro
+          title="Acervo encantado"
+          description="Tudo o que você lê, descobre e constrói."
+        />
         <p className="eyebrow">Coleção vazia</p>
         <h2 id="empty-collection-title">Seu primeiro registro começa aqui</h2>
         <p>Registre algo que você lê, assiste, aprende, pratica ou constrói.</p>
@@ -196,6 +213,10 @@ export function CollectionPage({
   const returnPath = `${location.pathname}${location.search}`;
   return (
     <section aria-labelledby="collection-title">
+      <RealmIntro
+        title="Acervo encantado"
+        description="Tudo o que você lê, descobre e constrói."
+      />
       <div className="section-heading">
         <div>
           <p className="eyebrow">Seus registros</p>
@@ -221,6 +242,25 @@ export function CollectionPage({
           </Link>
         </div>
       </div>
+      <nav className="category-ribbon" aria-label="Categorias do acervo">
+        <button
+          type="button"
+          aria-pressed={type === "all"}
+          onClick={() => updateParam("type", "all")}
+        >
+          Todos
+        </button>
+        {ENTRY_TYPES.map((category) => (
+          <button
+            type="button"
+            key={category}
+            aria-pressed={type === category}
+            onClick={() => updateParam("type", category)}
+          >
+            {entryTypeLabels[category]}
+          </button>
+        ))}
+      </nav>
       <div
         aria-hidden={!searchExpanded}
         className="collapsible-controls"
@@ -313,6 +353,14 @@ export function CollectionPage({
         </fieldset>
       </div>
       <div className="result-summary" aria-live="polite">
+        <button
+          type="button"
+          className="button button--secondary"
+          aria-pressed={compact}
+          onClick={() => setCompact(!compact)}
+        >
+          Lista compacta
+        </button>
         <p>
           {visibleEntries.length}{" "}
           {visibleEntries.length === 1
@@ -345,9 +393,13 @@ export function CollectionPage({
           <p>Altere a busca ou os filtros para ver outros registros.</p>
         </section>
       ) : (
-        <ul className="book-grid">
+        <ul className={compact ? "book-grid book-grid--compact" : "book-grid"}>
           {visibleEntries.map((entry) => (
-            <li className="book-card" key={entry.id}>
+            <li
+              className="book-card"
+              data-entry-type={entry.type}
+              key={entry.id}
+            >
               <Link
                 aria-label={`Abrir detalhes de ${entry.title}`}
                 className="book-card__link"
@@ -356,33 +408,47 @@ export function CollectionPage({
                   search: `?from=${encodeURIComponent(returnPath)}`,
                 }}
               >
-                <article aria-labelledby={`entry-${entry.id}-title`}>
-                  <p className="eyebrow">
-                    {entryTypeLabels[entry.type]}
-                    {entry.favorite ? " · Favorito" : ""}
-                  </p>
-                  <p className="status-badge">{statusLabels[entry.status]}</p>
-                  <h3 id={`entry-${entry.id}-title`}>{entry.title}</h3>
-                  <p>{secondaryText(entry)}</p>
-                  {entry.type === "book" && (
-                    <>
-                      <p>{progressText(entry)}</p>
-                      {entry.totalPages !== undefined ? (
-                        <progress
-                          aria-label={`Progresso de ${entry.title}`}
-                          max={entry.totalPages}
-                          value={Math.min(entry.currentPage, entry.totalPages)}
-                        />
-                      ) : (
-                        <p className="progress-unknown">
-                          Porcentagem indisponível sem total de páginas.
-                        </p>
-                      )}
-                      <span className="visually-hidden">
-                        {progressPercentage(entry) ?? ""}
-                      </span>
-                    </>
-                  )}
+                <article
+                  className="record-tile"
+                  aria-labelledby={`entry-${entry.id}-title`}
+                >
+                  <span className="record-tile__emblem" aria-hidden="true">
+                    <ArtifactGlyph type={entry.type} />
+                  </span>
+                  <div className="record-tile__content">
+                    <p className="eyebrow">
+                      {entryTypeLabels[entry.type]}
+                      {entry.favorite ? " · Favorito" : ""}
+                    </p>
+                    <p className="status-badge">{statusLabels[entry.status]}</p>
+                    <h3 id={`entry-${entry.id}-title`}>{entry.title}</h3>
+                    <p>{secondaryText(entry)}</p>
+                    {entry.type === "book" && (
+                      <>
+                        <p>{progressText(entry)}</p>
+                        {entry.totalPages !== undefined ? (
+                          <progress
+                            aria-label={`Progresso de ${entry.title}`}
+                            max={entry.totalPages}
+                            value={Math.min(
+                              entry.currentPage,
+                              entry.totalPages,
+                            )}
+                          />
+                        ) : (
+                          <p className="progress-unknown">
+                            Porcentagem indisponível sem total de páginas.
+                          </p>
+                        )}
+                        <span className="visually-hidden">
+                          {progressPercentage(entry) ?? ""}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  <span className="record-tile__arrow" aria-hidden="true">
+                    ↗
+                  </span>
                 </article>
               </Link>
             </li>

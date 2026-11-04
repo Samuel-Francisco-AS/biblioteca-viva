@@ -1,0 +1,207 @@
+import { useState, type FormEvent } from "react";
+import type { LibraryEntry, Note, Quote } from "../../domain";
+import { AnnotationActions } from "../annotations/AnnotationActions";
+import type { BookDetailApplication } from "./BookDetailPage";
+import { presentApplicationError } from "../entry-editor/errorMessages";
+import { entryExperience } from "./entryExperience";
+
+export function RecordMemories({
+  application,
+  entry,
+  initialNotes,
+  initialQuotes,
+}: {
+  readonly application: BookDetailApplication;
+  readonly entry: LibraryEntry;
+  readonly initialNotes: readonly Note[];
+  readonly initialQuotes: readonly Quote[];
+}) {
+  const [notes, setNotes] = useState(initialNotes),
+    [quotes, setQuotes] = useState(initialQuotes);
+  const [error, setError] = useState<string>(),
+    [busy, setBusy] = useState(false);
+  const [drafts, setDrafts] = useState({ note: "", quote: "" });
+  const [kind, setKind] = useState<"note" | "quote">("note");
+  const copy = entryExperience[entry.type];
+  const allowsQuotes =
+    entry.type === "movie" || entry.type === "series" || entry.type === "study";
+  async function add(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (busy) return;
+    const element = event.currentTarget,
+      form = new FormData(element);
+    setBusy(true);
+    setError(undefined);
+    try {
+      if (kind === "note")
+        setNotes([
+          ...notes,
+          await application.commands.addNote.execute({
+            entryId: entry.id,
+            content: form.get("content"),
+          }),
+        ]);
+      else {
+        const season = form.get("season"),
+          episode = form.get("episode"),
+          minute = form.get("minute");
+        const location =
+          entry.type === "series" && season && episode
+            ? {
+                type: "series",
+                season: Number(season),
+                episode: Number(episode),
+              }
+            : entry.type === "movie" && minute
+              ? { type: "movie", minute: Number(minute) }
+              : undefined;
+        setQuotes([
+          ...quotes,
+          await application.commands.addQuote.execute({
+            entryId: entry.id,
+            content: form.get("content"),
+            ...(location && { location }),
+          }),
+        ]);
+      }
+      element.reset();
+      setDrafts((current) => ({ ...current, [kind]: "" }));
+    } catch (failure: unknown) {
+      setError(presentApplicationError(failure).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <section
+      className="content-card memory-chapter"
+      aria-labelledby="memory-title"
+    >
+      <p className="eyebrow">Memórias</p>
+      <h3 id="memory-title">{copy.memory}</h3>
+      <p>{copy.invitation}</p>
+      <div className="memory-tabs" aria-label="Tipo de anotação">
+        <button
+          type="button"
+          aria-pressed={kind === "note"}
+          onClick={() => setKind("note")}
+        >
+          Notas
+        </button>
+        {allowsQuotes && (
+          <button
+            type="button"
+            aria-pressed={kind === "quote"}
+            onClick={() => setKind("quote")}
+          >
+            Citações
+          </button>
+        )}
+      </div>
+      {error && <p role="alert">{error}</p>}
+      <form onSubmit={(event) => void add(event)}>
+        <label className="form-field">
+          {kind === "note" ? "Nova nota" : "Nova citação"}
+          <textarea
+            name="content"
+            rows={3}
+            required
+            value={drafts[kind]}
+            onChange={(event) =>
+              setDrafts({ ...drafts, [kind]: event.target.value })
+            }
+          />
+        </label>
+        {kind === "quote" && entry.type === "series" && (
+          <div className="ritual-pair">
+            <label className="form-field">
+              Temporada da citação
+              <input name="season" type="number" min="1" required />
+            </label>
+            <label className="form-field">
+              Episódio da citação
+              <input name="episode" type="number" min="1" required />
+            </label>
+          </div>
+        )}
+        {kind === "quote" && entry.type === "movie" && (
+          <label className="form-field">
+            Minuto da cena (opcional)
+            <input name="minute" type="number" min="0" />
+          </label>
+        )}
+        <button
+          type="submit"
+          className="button button--primary"
+          disabled={busy}
+        >
+          {kind === "note" ? "Adicionar nota" : "Adicionar citação"}
+        </button>
+      </form>
+      <ul className="annotation-list">
+        {(kind === "note" ? notes : quotes).map((annotation) => (
+          <li key={annotation.id}>
+            <p>{annotation.content}</p>
+            <small>
+              {new Date(annotation.createdAt).toLocaleDateString("pt-BR")}
+              {annotation.location?.type === "series"
+                ? ` · T${annotation.location.season} E${annotation.location.episode}`
+                : annotation.location?.type === "movie"
+                  ? ` · ${annotation.location.minute} min`
+                  : ""}
+            </small>
+            <AnnotationActions
+              kind={kind}
+              showPageField={false}
+              annotation={annotation}
+              onDelete={async (id) => {
+                if (kind === "note") {
+                  await application.commands.deleteNote.execute({ id });
+                  setNotes(notes.filter((note) => note.id !== id));
+                } else {
+                  await application.commands.deleteQuote.execute({ id });
+                  setQuotes(quotes.filter((quote) => quote.id !== id));
+                }
+              }}
+              onShare={(id) =>
+                kind === "note"
+                  ? application.commands.shareNote.execute({ id })
+                  : application.commands.shareQuote.execute({ id })
+              }
+              onUpdate={async (input) => {
+                if (typeof input !== "object" || input === null) return;
+                if (kind === "note") {
+                  const updated =
+                    await application.commands.updateNote.execute(input);
+                  setNotes(
+                    notes.map((note) =>
+                      note.id === updated.id ? updated : note,
+                    ),
+                  );
+                } else {
+                  const updated =
+                    await application.commands.updateQuote.execute({
+                      ...input,
+                      location: annotation.location,
+                    });
+                  setQuotes(
+                    quotes.map((quote) =>
+                      quote.id === updated.id ? updated : quote,
+                    ),
+                  );
+                }
+              }}
+            />
+          </li>
+        ))}
+      </ul>
+      {(kind === "note" ? notes : quotes).length === 0 && (
+        <p className="field-help">
+          {kind === "note"
+            ? "Seu caderno ainda está em branco."
+            : "Uma fala pode merecer ficar por aqui."}
+        </p>
+      )}
+    </section>
+  );
+}

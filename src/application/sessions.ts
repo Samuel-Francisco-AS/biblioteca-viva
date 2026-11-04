@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import {
+  exercisePlanSchema,
   changeBookStatus,
   changeEntryStatus,
   completeSession,
@@ -53,6 +54,7 @@ const specific = z.discriminatedUnion("entryType", [
   z.strictObject({ entryType: z.literal("study") }),
   z.strictObject({
     entryType: z.literal("physical_activity"),
+    exercises: exercisePlanSchema.optional(),
     distanceMeters: z.int().nonnegative().optional(),
     perceivedExertion: z.int().min(1).max(10).optional(),
   }),
@@ -67,14 +69,14 @@ const manualSchema = z.intersection(
     entryId: id,
     note: optionalText,
     occurredAt: z.iso.datetime({ offset: false }).optional(),
-    duration: z.int().positive(),
+    duration: z.int().nonnegative(),
   }),
   specific,
 );
 const sessionIdSchema = z.strictObject({ id });
 const editSchema = z.strictObject({
   id,
-  duration: z.int().positive(),
+  duration: z.int().nonnegative(),
   note: optionalText,
 });
 
@@ -147,6 +149,8 @@ function applyCompletedSession(
   if (session.kind === "study" && entry.type === "study") {
     if (entry.progressUnit === "sessions")
       return updateStudyProgress(entry, entry.progressCurrent + 1, now);
+    if (entry.progressUnit === "hours" && session.accumulatedDuration === 0)
+      return startEntry(entry, now);
     if (entry.progressUnit === "hours")
       return updateStudyProgress(
         entry,
@@ -214,7 +218,14 @@ export class StartSession {
       currentTime(this.dependencies),
     ]);
     const session = applyDomain(() =>
-      createTimedSession({ id: sessionId, startedAt: now, ...parsed }),
+      createTimedSession({
+        id: sessionId,
+        startedAt: now,
+        ...parsed,
+        ...(entry.type === "physical_activity" &&
+          parsed.entryType === "physical_activity" &&
+          parsed.exercises === undefined && { exercises: entry.exercises }),
+      }),
     );
     const updatedEntry = applyDomain(() => startEntry(entry, now));
     const activity = createActivity({
@@ -389,7 +400,14 @@ export class CreateManualSession {
     ]);
     const occurredAt = parsed.occurredAt ?? now;
     const session = applyDomain(() =>
-      createManualSession({ id: sessionId, ...parsed, occurredAt }),
+      createManualSession({
+        id: sessionId,
+        ...parsed,
+        occurredAt,
+        ...(entry.type === "physical_activity" &&
+          parsed.entryType === "physical_activity" &&
+          parsed.exercises === undefined && { exercises: entry.exercises }),
+      }),
     );
     const updatedEntry = applyDomain(() =>
       applyCompletedSession(entry, session, now),

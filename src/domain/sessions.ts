@@ -1,3 +1,5 @@
+import { exercisePlanSchema } from "./schemas";
+import type { Exercise } from "./types";
 import { InvalidFieldError, InvalidStatusTransitionError } from "./errors";
 import type { EntryType, Session } from "./types";
 import {
@@ -21,6 +23,7 @@ export type SessionSpecificInput =
   | { readonly entryType: "study" }
   | {
       readonly entryType: "physical_activity";
+      readonly exercises?: readonly Exercise[];
       readonly distanceMeters?: number;
       readonly perceivedExertion?: number;
     }
@@ -78,6 +81,13 @@ function specific(input: SessionSpecificInput) {
         );
       return {
         kind: "physical_activity" as const,
+        ...(input.exercises !== undefined && {
+          exercises: Object.freeze(
+            exercisePlanSchema
+              .parse(input.exercises)
+              .map((exercise) => Object.freeze(exercise)),
+          ),
+        }),
         entryType: input.entryType,
         ...(nonnegative(input.distanceMeters, "distanceMeters") !==
           undefined && { distanceMeters: input.distanceMeters }),
@@ -129,7 +139,7 @@ export function createManualSession(
   } & SessionSpecificInput,
 ): Session {
   const occurredAt = requireIsoUtc(input.occurredAt, "occurredAt");
-  const duration = positive(input.duration, "duration");
+  const duration = nonnegative(input.duration, "duration");
   if (duration === undefined)
     throw new InvalidFieldError("duration", "é obrigatória");
   return Object.freeze({
@@ -210,7 +220,7 @@ export function editCompletedSession(
 ): Session {
   if (session.status !== "completed")
     throw new InvalidStatusTransitionError(session.status, "completed");
-  const duration = positive(input.duration, "duration");
+  const duration = nonnegative(input.duration, "duration");
   if (duration === undefined)
     throw new InvalidFieldError("duration", "é obrigatória");
   return Object.freeze({

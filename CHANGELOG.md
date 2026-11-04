@@ -1,4 +1,83 @@
+## BF-5R9 — 2026-11-04
+
+- Corrigida recuperação da capa e de rotas sob demanda, preservando navegação e mundo residente.
+- Coleção consulta dados canônicos sem reapresentar conteúdo antigo; vibração acompanha clique confirmado e tolera falhas da ponte.
+- Novo ícone Android original de códice e chama, adaptive, redondo, monocromático e legado.
+- BF-5 permanece aberta para avaliação física e técnica final.
+
+## BF-5R8 — entrada progressiva (candidata, 2026-11-04)
+
+- Capa artesanal mínima antes do bootstrap e remoção condicionada à primeira área utilizável; sem temporizador de navegação.
+- Abas secundárias divididas em chunks, carregamento oportunista e indicação temática apenas em espera real.
+- Retorno à Coleção com snapshot visual recente e reconsulta canônica; toque tátil na liberação válida com prevenção de pulso duplicado.
+- R8 permanece candidata na PR #20 draft, sem merge, sem testes físicos ou aprovação CI nesta entrega.
+
 # Changelog
+
+## BF-5R7 — Performance, Latência e Fluidez (2026-11-04)
+
+- Preservado o Códice Iluminado; pan evita projeção redundante e resize ignora dimensões idênticas já válidas.
+- Feedback visual acompanha o gesto e cancela ao rolar; hover das fichas limitado a mouse, mantendo foco e toque.
+- Comandos rápidos não perdem pulso por debounce global; links de fichas também solicitam feedback na ativação. Latência percebida Android ainda requer medição física.
+- Evidências, gates e pendências: [relatório R7](docs/BF-5R7_RELATORIO.md). BF-5 permanece aberta.
+
+
+## BF-5R6 — Códice Iluminado (2026-11-04)
+
+- Reconstrução de linguagem visual de toda a aplicação com fundo ameixa noturna, fólio claro, tinta, gravuras SVG próprias e superfícies artesanais; substituição de frontispícios, dock, seleção de categorias, listagens, editores e controles visuais de todas as áreas.
+- Bridge Android nativa para toque leve e confirmação, com respeito às preferências do sistema e fallback opcional no browser.
+- Campos e capítulos com ergonomia de manuscrito, contraste, navegação com teclado e reduzido movimento. Contratos de dados, mundo, narrativa e seis categorias preservados.
+- Relatório em [BF-5R6_RELATORIO.md](docs/BF-5R6_RELATORIO.md). Sem aprovação artística/hardware ou merge.
+
+
+## BF-5R5 — candidata (2026-11-04)
+
+- Biblioteca retém a cena pausada entre abas, preserva câmera sem mudanças de conteúdo representado e permite tentar novamente após falha WebGL. Pátio e gestos R4 preservados.
+- Fichas de força/mobilidade com exercícios, séries/repetições/carga/tempo; execuções datadas guardam o treino realizado. Banco v9 aditivo, compatibilidade de dados v8 e backup v6 preservada.
+- Série prioriza temporada/episódio e histórico de episódios; filme recebe exibições/reencontros, estudo uma trilha e trabalho passos com resultado. Sessões manuais têm tempo opcional; histórico exibe resultados/notas/páginas e frequência de prática.
+- Notas/citações contextuais nos detalhes, controles/disclosures mais suaves, diálogo/HUD/dock coesos e vibração leve opcional por capacidade, respeitando movimento reduzido.
+- Diagnósticos e apresentação de habitantes isolados de React; contagem da cena acompanha diagnósticos em vez de cada frame. Sem alegação de desempenho físico aprovado. BF-5 aberta, PR #20 draft. [Relatório](docs/BF-5R5_RELATORIO.md).
+
+
+## BF-5R4 — reconstrução de experiência candidata (2026-11-03)
+
+- Removido zoom por proporção da R3; pátio exterior real e câmera ortográfica recuada para preservar profundidade durante exploração.
+- Arrastes curtos passam a aplicar o delta que ultrapassa o limiar de tap imediatamente.
+- Reconstruídos os seis editores por capítulos/contexto; erro de edição preserva o preenchimento.
+- Papel/tinta/latão, gravuras locais, superfícies específicas por área e chegada curta sem stagger. Sem schema, dependências ou alterações de backup.
+- [Relatório, limitações e testes](docs/BF-5R4_RELATORIO.md); candidata sem aceite humano e com fluidez entre abas ainda pendente.
+
+
+## BF-5R3 — câmera de abertura e composição do compêndio (2026-11-03)
+
+- O mundo composto passou a abrir em enquadramento mais aproximado em retrato, evitando margens excessivas que pareciam uma chapa do canvas; zoom manual, pan, orientação e panorama em paisagem permanecem disponíveis.
+- Reformulação estrutural da Coleção (fichas de artefato compactas e símbolos semânticos apenas decorativos), apresentação do detalhe de registro e identidade contextual das demais abas.
+- Hierarquias e transições leves em `src/styles-ritual.css`, com suporte a redução de movimento, toque e telas estreitas, sem novos dados ou dependências.
+- Adicionados testes de câmera e E2E de Coleção/Detalhes, [relatório](docs/BF-5R3_RELATORIO.md) e documentação de ressalvas. Ainda sem aceite visual físico ou merge da PR #20.
+
+
+## BF-5R2 — imersão sem chapa e interações táteis (2026-11-03)
+
+- Retirado gradiente inferior em tela inteira da Biblioteca; mantida apenas vinheta superior com canvas 100dvh.
+- Redesenhados estados de pressão/touch de controles, formulários e filtros, CTAs responsivos em retrato e acentos mágicos discretos.
+- Transições de rota simplificadas para transform/opacidade sem blur de página, removendo backdrops filtrados custosos.
+- Acrescentados teste E2E focalizado e [relatório BF-5R2](docs/BF-5R2_RELATORIO.md). Não há prova física de eliminação de engasgos; código enviado à PR #20 draft, sem merge.
+
+
+## BF-5R1 — intervenção remota na candidata rejeitada (2026-11-03)
+
+- Proprietário rejeitou o acabamento e a ergonomia da primeira PR #20 no Moto G06. A correção atua na própria branch draft, sem merge.
+- Implantado novo sistema visual arcano em `src/styles-arcane.css`, sigilo SVG editorial, dock flutuante de medalhões, biblioteca full-viewport com bússola para ferramentas acessíveis sob demanda e planos de diálogo RPG mais expressivos.
+- Atualizados teste unitário e E2E para a descoberta das alternativas via hub; acrescentado roteiro de avaliação da candidata em `docs/BF-5R1_RELATORIO.md`.
+- Nenhum schema, dado, motor narrativo, backend ou dependência alterado. Teste físico e novo resultado CI ainda não obtidos nesta alteração.
+
+
+## BF-5 — candidata de apresentação (2026-11-03)
+
+- Biblioteca com canvas na área do viewport, alternativas recolhidas e narrativa em sobreposição acima do dock.
+- Categorias diretas e lista compacta na Coleção; composição editorial no Arquivo e Resumo; atalhos de seções em Ajustes.
+- Paleta compartilhada, tratamento de toque, movimento reduzido e Back/Escape de narrativa e exploração.
+- Sem mudança de schema, backup, domínio ou motor narrativo. Candidata sem aceite humano; ver relatório BF-5.
 
 ## BF-5 — direção visual global (somente documentação; 2026-11-03)
 

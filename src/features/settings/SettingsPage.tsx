@@ -1,3 +1,4 @@
+import { RealmIntro } from "../../app/RealmIntro";
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 
 import {
@@ -370,6 +371,17 @@ export function SettingsPage({ application, diagnostics }: Props) {
 
   return (
     <div className="settings-stack">
+      <RealmIntro
+        title="Ateliê arcano"
+        description="Conforto, som e cuidado com suas memórias."
+      />
+      <nav className="category-ribbon" aria-label="Seções dos ajustes">
+        <a href="#experience-settings-title">Conforto</a>
+        <a href="#audio-settings-title">Áudio</a>
+        <a href="#local-info-title">Dados</a>
+        <a href="#export-title">Backup</a>
+        <a href="#import-title">Restaurar</a>
+      </nav>
       <section
         className="content-card"
         aria-labelledby="experience-settings-title"

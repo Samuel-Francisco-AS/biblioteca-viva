@@ -63,7 +63,7 @@ async function resetIndexedDb(page: Page, testInfo: TestInfo): Promise<void> {
   await page.reload();
   await expect(
     page.getByRole("heading", {
-      name: "Registros da Biblioteca",
+      name: "Biblioteca Viva",
       exact: true,
     }),
   ).toBeVisible();
@@ -163,5 +163,36 @@ export const test = base.extend<{
     await use((count) => seedBooks(page, count));
   },
 });
+
+/**
+ * BF-5's semantic world controls are deliberately behind the compass.
+ * Reveal them through the same accessible controls a user must activate,
+ * instead of forcing hidden nodes visible in a test.
+ */
+export async function openWorldTools(page: Page): Promise<void> {
+  // Opening the tool drawer while the world is still mounting can detach its
+  // controls, especially in the software-WebGL CI runner. Wait for a stable
+  // ready/fallback state before following the real accessible navigation.
+  const worldSurface = page.locator(".world-surface");
+  await expect(worldSurface).toHaveAttribute(
+    "data-status",
+    /^(ready|failed)$/u,
+    { timeout: 20_000 },
+  );
+  const library = page.locator(".library-page");
+  if ((await library.getAttribute("data-tools-open")) !== "true") {
+    await page
+      .getByRole("button", {
+        name: "Abrir ferramentas de exploração acessível",
+      })
+      .click();
+  }
+  await expect(library).toHaveAttribute("data-tools-open", "true");
+
+  const world = page.locator("details.world-explore");
+  await expect(world).toBeVisible();
+  if ((await world.getAttribute("open")) === null)
+    await world.locator(":scope > summary").click();
+}
 
 export { expect } from "@playwright/test";

@@ -1,3 +1,4 @@
+import { RealmIntro } from "../../app/RealmIntro";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
@@ -206,6 +207,10 @@ export function ArchivePage({
 
   return (
     <section aria-labelledby="archive-title">
+      <RealmIntro
+        title="Câmara dos registros"
+        description="Palavras preservadas. Ideias que merecem ser reencontradas."
+      />
       <div className="section-heading">
         <div>
           <p className="eyebrow">Suas leituras registradas</p>

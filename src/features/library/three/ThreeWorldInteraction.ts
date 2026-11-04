@@ -269,10 +269,19 @@ export class ThreeWorldInteraction {
 
     if (this.gestureMode === "tap" && !this.remainsTapEligible(pointer)) {
       this.gestureMode = "pan";
-      // Consume the slop that classified this as a pan. The following move
-      // starts from the current position, so crossing 8 CSS px does not apply
-      // an abrupt pan delta that includes the finger's natural jitter.
-      pointer.previous = pointer.current;
+      // Consume only the classification slop, preserving the remainder of a
+      // fast first move. A one-move drag must move the world too.
+      const dx = pointer.current.x - pointer.start.x;
+      const dy = pointer.current.y - pointer.start.y;
+      const length = Math.hypot(dx, dy);
+      const ratio = TAP_DRAG_THRESHOLD_PX / length;
+      this.applyPan(
+        {
+          x: pointer.start.x + dx * ratio,
+          y: pointer.start.y + dy * ratio,
+        },
+        pointer.current,
+      );
       this.updateGestureDiagnostic();
       return;
     }
@@ -601,7 +610,7 @@ export class ThreeWorldInteraction {
     const root = this.selectableRoots.get(TEST_PICK_OBJECT_ID);
     if (!root) return;
     this.camera.updateMatrixWorld();
-    this.scene.updateMatrixWorld(true);
+    root.updateWorldMatrix(true, true);
     const center = new Box3().setFromObject(root).getCenter(new Vector3());
     center.project(this.camera);
     this.canvas.dataset.testPickObject = TEST_PICK_OBJECT_ID;

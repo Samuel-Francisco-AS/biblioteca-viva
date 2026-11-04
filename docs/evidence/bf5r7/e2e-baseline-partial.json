@@ -1,0 +1,169 @@
+{
+  "completed": [
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-environment.spec.ts:6:1 › BF-4D: ambiente integrado em paisagem/retrato, zoom, pan e seleção"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-environment.spec.ts:94:3 › BF-4D: coleção cheia explora cinco cômodos e quatro conexões em 1280px"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-environment.spec.ts:94:3 › BF-4D: coleção cheia explora cinco cômodos e quatro conexões em 390px"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-inhabitants.spec.ts:7:3 › BF-4F1 four inhabitants world"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-inhabitants.spec.ts:7:3 › BF-4F1 four inhabitants fallback"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-inhabitants.spec.ts:42:1 › BF-4F1 canvas selects all four loaded models"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-inhabitants.spec.ts:68:3 › BF-4F2 samael: directed actions in the five-room world"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-inhabitants.spec.ts:68:3 › BF-4F2 aryn: directed actions in the five-room world"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-inhabitants.spec.ts:68:3 › BF-4F2 ytha: directed actions in the five-room world"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-inhabitants.spec.ts:68:3 › BF-4F2 lua: directed actions in the five-room world"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-inhabitants.spec.ts:111:1 › BF-4F3 spontaneous life and honest reduced-motion semantics"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-living.spec.ts:6:3 › BF-4E: segredo completo no mundo"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/bf4-living.spec.ts:6:3 › BF-4E: segredo completo sem WebGL"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-living.spec.ts:69:1 › BF-4E: tocar a luminária executa e repete ação sem botões React"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf4-rpg.spec.ts:8:3 › BF-4F4 RPG choices, objective, resume and conclusion from canvas"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/bf4-rpg.spec.ts:8:3 › BF-4F4 RPG choices, objective, resume and conclusion without WebGL"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/bf5-r6-manuscript.spec.ts:3:1 › BF-5R6: o códice oferece capítulos e controles distintos no retrato"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/bf5-ritual.spec.ts:3:1 › BF-5R3: a coleção usa fichas de acervo e detalhes ergonômicos"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/bf5-rpg-hud.spec.ts:3:1 › BF-5R1: immersive canvas layout, accessible command hub and five realms"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf5-touch-transition.spec.ts:3:1 › BF-5R2: canvas intact, route entrance without blur and tactile response"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/bf5-ui.spec.ts:3:1 › BF-5: five realms, density and narrative Back in the semantic fallback"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf5r4-experience.spec.ts:3:1 › BF-5R4: seis rituais criam, reabrem e editam sem perder referências"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/bf5r4-experience.spec.ts:74:1 › BF-5R4: arraste de um movimento responde em retrato e paisagem"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/bf5r4-experience.spec.ts:99:1 › BF-5R4: dock permanece dentro da viewport e navega em desktop e retrato"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/bf5r5-experience.spec.ts:3:1 › BF-5R5: same canvas pauses between tabs, resumes its camera and survives rotation"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf5r5-experience.spec.ts:61:1 › BF-5R5: strength is a reusable sheet with dated executions and immutable history"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/bf5r5-experience.spec.ts:126:1 › BF-5R5: series bookmark, episodes without minutes and contextual quotation"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/bf5r5-world-input.spec.ts:3:1 › BF-5R5: resident input accepts pinch, semantic selection and character dialogue"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/critical-flow.spec.ts:3:1 › ciclo principal persiste livro, edição, anotações e conclusão"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/critical-flow.spec.ts:95:1 › rotas inexistentes e livro ausente degradam para caminhos convencionais"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/p1-entries.spec.ts:3:1 › Coleção registra e encontra os seis tipos de P1"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/p1-memory.spec.ts:3:1 › tag, favorito, sessão persistente e estatísticas formam memória unificada"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/r4-shell.spec.ts:54:1 › shell abre a Biblioteca com uma única superfície Three.js"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/r4-shell.spec.ts:114:1 › interação desktop conecta picking, pan, zoom e seleção React"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/r4-shell.spec.ts:201:1 › viewport mobile mantém tap, pan, pinch sintético e alternativa React"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/r4-shell.spec.ts:313:1 › Biblioteca preserva a mesma superfície em portrait, landscape e viewport estreito"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/r4-shell.spec.ts:384:1 › dez ciclos de rota não acumulam canvases, loops ou interação"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/r4-shell.spec.ts:449:1 › dock navega pelas áreas convencionais"
+    },
+    {
+      "status": "PASS",
+      "test": "e2e/reading-area.spec.ts:16:1 › coleção vazia mantém estantes sem livros artificiais e caminho convencional"
+    },
+    {
+      "status": "FAIL",
+      "test": "e2e/reading-area.spec.ts:41:1 › livros convencionais preservam identidade entre lista, runtime, seleção e retorno"
+    }
+  ],
+  "passed": 15,
+  "failed": 24,
+  "interrupted": 1,
+  "notRun": 6,
+  "reason": "Interrompido após pedido explícito para priorizar empacotamento e entrega por cota."
+}

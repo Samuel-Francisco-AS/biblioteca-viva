@@ -1,3 +1,4 @@
+import { RitualChapter } from "./RitualFields";
 import { useRef, useState, type FormEvent } from "react";
 
 import { ENTRY_STATUSES } from "../../domain";
@@ -51,16 +52,38 @@ export function BookForm({
     }
   }
 
-  const describedBy = (field: BookFormField, help?: boolean) =>
-    [
-      help ? `${field}-help` : undefined,
-      errors[field] ? `${field}-error` : undefined,
-    ]
-      .filter(Boolean)
-      .join(" ") || undefined;
   const hasErrors =
     Object.keys(errors).length > 0 || generalError !== undefined;
-
+  function inscription(
+    field: BookFormField,
+    label: string,
+    type = "text",
+    locked = false,
+  ) {
+    return (
+      <div className="form-field inscription">
+        <label htmlFor={field}>{label}</label>
+        <input
+          id={field}
+          name={field}
+          type={type}
+          inputMode={type === "number" ? "numeric" : undefined}
+          min={type === "number" ? (field === "totalPages" ? 1 : 0) : undefined}
+          step={type === "number" ? 1 : undefined}
+          value={values[field]}
+          disabled={locked}
+          aria-invalid={errors[field] ? true : undefined}
+          aria-describedby={errors[field] ? `${field}-error` : undefined}
+          onChange={(event) => change(field, event.target.value)}
+        />
+        {errors[field] && (
+          <p className="field-error" id={`${field}-error`}>
+            {errors[field]}
+          </p>
+        )}
+      </div>
+    );
+  }
   return (
     <form
       className="book-form"
@@ -79,184 +102,70 @@ export function BookForm({
         </div>
       )}
 
-      <p className="book-form__required">
-        Campos marcados como obrigatório precisam ser preenchidos.
-      </p>
-
-      <div className="form-field">
-        <label htmlFor="title">Título (obrigatório)</label>
-        <input
-          id="title"
-          name="title"
-          autoComplete="off"
-          value={values.title}
-          aria-invalid={errors.title ? "true" : undefined}
-          aria-describedby={describedBy("title")}
-          onChange={(event) => change("title", event.target.value)}
-        />
-        {errors.title && (
-          <p className="field-error" id="title-error">
-            {errors.title}
-          </p>
-        )}
-      </div>
-
-      <div className="form-field">
-        <label htmlFor="author">Autor (opcional)</label>
-        <input
-          id="author"
-          name="author"
-          autoComplete="off"
-          value={values.author}
-          aria-invalid={errors.author ? "true" : undefined}
-          aria-describedby={describedBy("author")}
-          onChange={(event) => change("author", event.target.value)}
-        />
-        {errors.author && (
-          <p className="field-error" id="author-error">
-            {errors.author}
-          </p>
-        )}
-      </div>
-
-      <div className="book-form__numbers">
-        <div className="form-field">
-          <label htmlFor="totalPages">Total de páginas (opcional)</label>
-          <p className="field-help" id="totalPages-help">
-            Use um número inteiro maior que zero.
-          </p>
-          <input
-            id="totalPages"
-            name="totalPages"
-            type="number"
-            inputMode="numeric"
-            min="1"
-            step="1"
-            value={values.totalPages}
-            aria-invalid={errors.totalPages ? "true" : undefined}
-            aria-describedby={describedBy("totalPages", true)}
-            onChange={(event) => change("totalPages", event.target.value)}
-          />
-          {errors.totalPages && (
-            <p className="field-error" id="totalPages-error">
-              {errors.totalPages}
-            </p>
+      <RitualChapter number="I" title="Na folha de rosto">
+        {inscription("title", "Título (obrigatório)")}
+        {inscription("author", "Autor (opcional)")}
+      </RitualChapter>
+      <RitualChapter number="II" title="Um marcador na jornada">
+        <div className="ritual-pair">
+          {inscription(
+            "currentPage",
+            "Página atual (obrigatório)",
+            "number",
+            mode === "edit",
           )}
+          {inscription("totalPages", "Total de páginas (opcional)", "number")}
         </div>
-
         <div className="form-field">
-          <label htmlFor="currentPage">Página atual (obrigatório)</label>
-          <p className="field-help" id="currentPage-help">
-            Use um número inteiro, começando em zero.
-          </p>
-          <input
-            id="currentPage"
-            name="currentPage"
-            type="number"
-            inputMode="numeric"
-            min="0"
-            step="1"
-            value={values.currentPage}
+          <label htmlFor="status">Status (obrigatório)</label>
+          <select
+            id="status"
+            name="status"
+            value={values.status}
             disabled={mode === "edit"}
-            aria-invalid={errors.currentPage ? "true" : undefined}
-            aria-describedby={describedBy("currentPage", true)}
-            onChange={(event) => change("currentPage", event.target.value)}
-          />
+            onChange={(event) => change("status", event.target.value)}
+          >
+            {ENTRY_STATUSES.map((status) => (
+              <option key={status} value={status}>
+                {statusLabels[status]}
+              </option>
+            ))}
+          </select>
           {mode === "edit" && (
             <p className="field-help">
-              O progresso poderá ser alterado no detalhe do livro.
-            </p>
-          )}
-          {errors.currentPage && (
-            <p className="field-error" id="currentPage-error">
-              {errors.currentPage}
+              O progresso e o status podem ser alterados no detalhe do livro.
             </p>
           )}
         </div>
-      </div>
-
-      <div className="form-field">
-        <label htmlFor="status">Status (obrigatório)</label>
-        <select
-          id="status"
-          name="status"
-          value={values.status}
-          disabled={mode === "edit"}
-          aria-invalid={errors.status ? "true" : undefined}
-          aria-describedby={describedBy("status")}
-          onChange={(event) => change("status", event.target.value)}
-        >
-          {ENTRY_STATUSES.map((status) => (
-            <option key={status} value={status}>
-              {statusLabels[status]}
-            </option>
-          ))}
-        </select>
-        {mode === "edit" && (
-          <p className="field-help">
-            O status poderá ser alterado no detalhe do livro.
-          </p>
-        )}
-        {errors.status && (
-          <p className="field-error" id="status-error">
-            {errors.status}
-          </p>
-        )}
-      </div>
-
-      <div className="form-field">
-        <label htmlFor="rating">Avaliação (opcional)</label>
-        <p className="field-help" id="rating-help">
-          Escolha uma nota de 1 a 5.
-        </p>
-        <select
-          id="rating"
-          name="rating"
-          value={values.rating}
-          aria-invalid={errors.rating ? "true" : undefined}
-          aria-describedby={describedBy("rating", true)}
-          onChange={(event) => change("rating", event.target.value)}
-        >
-          <option value="">Sem avaliação</option>
-          {[1, 2, 3, 4, 5].map((rating) => (
-            <option key={rating} value={rating}>
-              {rating}
-            </option>
-          ))}
-        </select>
-        {errors.rating && (
-          <p className="field-error" id="rating-error">
-            {errors.rating}
-          </p>
-        )}
-      </div>
-
-      <div className="form-field">
-        <label htmlFor="startedAt">Data de início (opcional)</label>
-        <p className="field-help" id="startedAt-help">
-          Informe o dia em que a leitura começou.
-        </p>
-        <input
-          id="startedAt"
-          name="startedAt"
-          type="date"
-          value={values.startedAt}
-          disabled={mode === "edit"}
-          aria-invalid={errors.startedAt ? "true" : undefined}
-          aria-describedby={describedBy("startedAt", true)}
-          onChange={(event) => change("startedAt", event.target.value)}
-        />
-        {mode === "edit" && (
-          <p className="field-help">
-            A data de início é preservada nesta edição.
-          </p>
-        )}
-        {errors.startedAt && (
-          <p className="field-error" id="startedAt-error">
-            {errors.startedAt}
-          </p>
-        )}
-      </div>
+      </RitualChapter>
+      <details className="ritual-marginalia">
+        <summary>Impressões e data de início</summary>
+        <div className="ritual-chapter__body">
+          <div className="form-field">
+            <label htmlFor="rating">Avaliação (opcional)</label>
+            <select
+              id="rating"
+              name="rating"
+              value={values.rating}
+              onChange={(event) => change("rating", event.target.value)}
+            >
+              <option value="">Sem avaliação</option>
+              {[1, 2, 3, 4, 5].map((rating) => (
+                <option key={rating} value={rating}>
+                  {rating}
+                </option>
+              ))}
+            </select>
+            {errors.rating && <p className="field-error">{errors.rating}</p>}
+          </div>
+          {inscription(
+            "startedAt",
+            "Data de início (opcional)",
+            "date",
+            mode === "edit",
+          )}
+        </div>
+      </details>
 
       <div className="book-form__actions">
         <button

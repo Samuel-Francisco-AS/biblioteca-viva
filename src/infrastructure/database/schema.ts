@@ -1,4 +1,5 @@
 import {
+  exercisePlanSchema,
   ENTRY_STATUSES,
   MILESTONE_IDS,
   PHYSICAL_ACTIVITY_CATEGORIES,
@@ -14,7 +15,7 @@ import {
 import { z } from "zod";
 
 export const DATABASE_NAME = "biblioteca-viva";
-export const DATABASE_VERSION = 8;
+export const DATABASE_VERSION = 9;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
 export const DATABASE_SCHEMA_V1 = {
@@ -61,6 +62,8 @@ export const DATABASE_SCHEMA_V8 = {
   placedObjects: null,
   worldStructures: null,
 } as const;
+
+export const DATABASE_SCHEMA_V9 = { ...DATABASE_SCHEMA_V8 } as const;
 
 const isoUtc = z.iso.datetime({ offset: false });
 const entityMetadata = {
@@ -217,6 +220,7 @@ const persistedPhysicalActivitySchema = z.strictObject({
   ...commonEntry,
   type: z.literal("physical_activity"),
   category: z.enum(PHYSICAL_ACTIVITY_CATEGORIES),
+  exercises: exercisePlanSchema.optional(),
   modality: z.string().trim().min(1).optional(),
   objective: z.string().trim().min(1).optional(),
 });
@@ -352,6 +356,7 @@ export const persistedSessionSchema = z
     z.strictObject({
       ...sessionMetadata,
       kind: z.literal("physical_activity"),
+      exercises: exercisePlanSchema.optional(),
       entryType: z.literal("physical_activity"),
       distanceMeters: z.int().nonnegative().optional(),
       perceivedExertion: z.int().min(1).max(10).optional(),

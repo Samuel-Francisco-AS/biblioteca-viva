@@ -227,7 +227,7 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
     expect(renderer.domElement.dataset.referenceMeshes).toBe("0");
     expect(renderer.domElement.dataset.referenceObjects).toBe("0");
     expect(renderer.domElement.dataset.referenceProxyTypes).toBe("0");
-    expect(renderer.renderedZooms[0]).toBe(0.7);
+    expect(renderer.renderedZooms[0]).toBe(1);
     const mesh = firstMesh(building as Object3D);
     const disposed = vi.spyOn(mesh.geometry, "dispose");
     const record = firstMesh(records as Object3D);

@@ -1,7 +1,7 @@
+import { WorldDiagnosticPanel } from "./WorldDiagnosticPanel";
 import { NarrativePanel } from "./NarrativePanel";
 import { NarrativeSession } from "./narrative/session";
-import { InhabitantLife } from "./InhabitantLife";
-import type { AgencySnapshot } from "./inhabitantAgency";
+import { InhabitantRuntimeLife } from "./InhabitantRuntimeLife";
 import {
   INHABITANT_ACTIONS,
   INHABITANT_ACTIVITIES,
@@ -10,10 +10,10 @@ import {
 import { LivingSession } from "./livingObjects";
 import { LivingControls, LivingFeedback } from "./LivingControls";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { completeStartupExperience } from "../../startupExperience";
 
 import type {
   WorldRuntime,
-  WorldRuntimeDiagnostics,
   WorldRuntimeFactory,
   WorldRuntimeFailure,
   WorldSelectableObject,
@@ -24,34 +24,6 @@ import type { LibraryWorldSnapshot } from "./libraryWorldEntryContract";
 import type { PerformanceScenario } from "./three/performanceScenarios";
 
 export type WorldHostStatus = "initializing" | "ready" | "failed";
-
-const EMPTY_DIAGNOSTICS: WorldRuntimeDiagnostics = {
-  activeFrameLoops: 0,
-  drawCalls: 0,
-  fixtureLoadMs: null,
-  fixtureStatus: "idle",
-  fps: null,
-  frameTimeMs: null,
-  geometries: 0,
-  materialTextureReferences: 0,
-  meshes: 0,
-  performanceScenarioAssetsLoaded: 0,
-  performanceScenarioAssetsTotal: 0,
-  performanceScenarioId: "f1-baseline",
-  performanceScenarioLabel: "Baseline F1",
-  renderedFrames: 0,
-  runtimeState: "created",
-  sceneObjects: 0,
-  selectableObjects: 0,
-  textures: 0,
-  timeToFirstUsableFrameMs: null,
-  triangles: 0,
-  uniqueMaterialTextures: 0,
-};
-
-function metric(value: number | null, suffix = ""): string {
-  return value === null ? "Aguardando" : `${value.toFixed(1)}${suffix}`;
-}
 
 const createRuntime = async (
   readingAreaBooks: readonly ReadingAreaBook[] | undefined,
@@ -70,6 +42,7 @@ const createRuntime = async (
 };
 
 export interface WorldHostProps {
+  readonly active?: boolean;
   readonly libraryWorldSnapshot?: LibraryWorldSnapshot;
   readonly onSelectableObjectsChange?: (
     objects: readonly WorldSelectableObject[],
@@ -107,6 +80,7 @@ function adjacentSelectionId(
 }
 
 export function WorldHost({
+  active = true,
   libraryWorldSnapshot,
   onSelectableObjectsChange,
   onSelectionChange,
@@ -119,19 +93,27 @@ export function WorldHost({
   const [narrativeSession] = useState(() => new NarrativeSession());
   const [livingSession] = useState(() => new LivingSession());
   const [livingSelection, setLivingSelection] = useState<string | null>(null);
+  const activeRef = useRef(active);
+  useEffect(() => {
+    activeRef.current = active;
+    if (active) {
+      runtimeRef.current?.resize();
+      runtimeRef.current?.resume();
+    } else {
+      runtimeRef.current?.pause();
+      narrativeSession.close();
+    }
+  }, [active, narrativeSession]);
   const hostRef = useRef<HTMLDivElement>(null);
   const runtimeRef = useRef<WorldRuntime | null>(null);
+  const [viewRuntime, setViewRuntime] = useState<WorldRuntime | null>(null);
   const [selectableObjects, setSelectableObjects] = useState<
     readonly WorldSelectableObject[]
   >([]);
   const [inhabitantFeedback, setInhabitantFeedback] = useState("");
-  const [agencySnapshot, setAgencySnapshot] = useState<AgencySnapshot | null>(
-    null,
-  );
   const [selection, setSelection] = useState<WorldSelection>(null);
-  const [diagnostics, setDiagnostics] =
-    useState<WorldRuntimeDiagnostics>(EMPTY_DIAGNOSTICS);
   const [failure, setFailure] = useState<WorldRuntimeFailure | null>(null);
+  const [attempt, setAttempt] = useState(0);
   const [status, setStatus] = useState<WorldHostStatus>("initializing");
   const selectionChangeRef = useRef(onSelectionChange);
   const selectableObjectsChangeRef = useRef(onSelectableObjectsChange);
@@ -169,6 +151,9 @@ export function WorldHost({
 
   const publishStatus = (nextStatus: WorldHostStatus): void => {
     setStatus(nextStatus);
+    if (nextStatus === "ready" || nextStatus === "failed")
+      completeStartupExperience();
+    if (nextStatus !== "ready") setViewRuntime(null);
     statusChangeRef.current?.(nextStatus);
   };
 
@@ -189,20 +174,16 @@ export function WorldHost({
     const host = hostRef.current;
     let active = true;
     let runtime: WorldRuntime | undefined;
-    let unsubscribeDiagnostics: (() => void) | undefined;
     let unsubscribeFailure: (() => void) | undefined;
     let unsubscribeSelection: (() => void) | undefined;
     let unsubscribeInhabitantActivation: (() => void) | undefined;
     let unsubscribeNarrative: (() => void) | undefined;
-    let unsubscribeInhabitants: (() => void) | undefined;
     let terminalFailureReported = false;
 
     if (!host) return;
 
     publishSelectableObjects([]);
     publishSelection(null);
-    setDiagnostics(EMPTY_DIAGNOSTICS);
-    setAgencySnapshot(null);
     setFailure(null);
     publishStatus("initializing");
 
@@ -244,15 +225,7 @@ export function WorldHost({
           unsubscribeNarrative = narrativeSession.subscribe(applyNarrative);
           applyNarrative();
         }
-        unsubscribeInhabitants = runtime.onInhabitantsChange?.((snapshot) => {
-          if (active) setAgencySnapshot(snapshot);
-        });
         publishSelectableObjects(runtime.getSelectableObjects());
-        unsubscribeDiagnostics = runtime.onDiagnosticsChange(
-          (nextDiagnostics) => {
-            if (active) setDiagnostics(nextDiagnostics);
-          },
-        );
         unsubscribeSelection = runtime.onSelectionChange((nextSelection) => {
           if (active) publishSelection(nextSelection);
         });
@@ -260,17 +233,14 @@ export function WorldHost({
           if (!active || runtime !== createdRuntime) return;
 
           terminalFailureReported = true;
-          unsubscribeDiagnostics?.();
           unsubscribeSelection?.();
           unsubscribeFailure?.();
           unsubscribeNarrative?.();
           unsubscribeInhabitantActivation?.();
-          unsubscribeInhabitants?.();
           runtimeRef.current = null;
           runtime.dispose();
           publishSelectableObjects([]);
           publishSelection(null);
-          setDiagnostics(EMPTY_DIAGNOSTICS);
           setFailure(nextFailure);
           publishStatus("failed");
           console.error(
@@ -280,16 +250,16 @@ export function WorldHost({
         });
         if (terminalFailureReported) return;
         runtime.start();
+        if (!activeRef.current) runtime.pause();
         if (terminalFailureReported) return;
+        setViewRuntime(runtime);
         publishStatus("ready");
       })
       .catch(() => {
-        unsubscribeDiagnostics?.();
         unsubscribeFailure?.();
         unsubscribeSelection?.();
         unsubscribeNarrative?.();
         unsubscribeInhabitantActivation?.();
-        unsubscribeInhabitants?.();
         runtime?.dispose();
         runtimeRef.current = null;
         if (!active) return;
@@ -299,10 +269,8 @@ export function WorldHost({
 
     return () => {
       active = false;
-      unsubscribeDiagnostics?.();
       unsubscribeFailure?.();
       unsubscribeSelection?.();
-      unsubscribeInhabitants?.();
       unsubscribeNarrative?.();
       unsubscribeInhabitantActivation?.();
       runtime?.dispose();
@@ -317,6 +285,7 @@ export function WorldHost({
     readingAreaBooks,
     libraryWorldSnapshot,
     runtimeFactory,
+    attempt,
   ]);
 
   useEffect(() => {
@@ -359,6 +328,7 @@ export function WorldHost({
       {!performanceScenario && libraryWorldSnapshot && (
         <NarrativePanel
           session={narrativeSession}
+          enabled={active}
           failed={status === "failed"}
         />
       )}
@@ -367,178 +337,111 @@ export function WorldHost({
           Preparando a área de leitura…
         </p>
       )}
-      {status === "ready" && (
-        <>
-          <p className="world-status" role="status">
-            Ambiente 3D em execução.
-          </p>
-          <aside
-            aria-label="Diagnóstico técnico do ambiente 3D"
-            className="world-diagnostics"
-            data-runtime-state={diagnostics.runtimeState}
-            data-testid="world-diagnostics"
-          >
-            <h3>Diagnóstico local</h3>
-            <dl>
-              <div>
-                <dt>Runtime</dt>
-                <dd>{diagnostics.runtimeState}</dd>
-              </div>
-              <div>
-                <dt>Cenário</dt>
-                <dd>{diagnostics.performanceScenarioLabel}</dd>
-              </div>
-              <div>
-                <dt>Assets do cenário</dt>
-                <dd>
-                  {diagnostics.performanceScenarioAssetsLoaded}/
-                  {diagnostics.performanceScenarioAssetsTotal}
-                </dd>
-              </div>
-              {performanceScenario && (
-                <>
-                  <div>
-                    <dt>Maps declarados</dt>
-                    <dd>{diagnostics.materialTextureReferences}</dd>
-                  </div>
-                  <div>
-                    <dt>Texturas únicas declaradas</dt>
-                    <dd>{diagnostics.uniqueMaterialTextures}</dd>
-                  </div>
-                </>
-              )}
-              <div>
-                <dt>FPS</dt>
-                <dd>{metric(diagnostics.fps)}</dd>
-              </div>
-              <div>
-                <dt>Frame médio</dt>
-                <dd>{metric(diagnostics.frameTimeMs, " ms")}</dd>
-              </div>
-              <div>
-                <dt>Chamadas</dt>
-                <dd>{diagnostics.drawCalls}</dd>
-              </div>
-              <div>
-                <dt>Triângulos</dt>
-                <dd>{diagnostics.triangles}</dd>
-              </div>
-              <div>
-                <dt>Geometrias</dt>
-                <dd>{diagnostics.geometries}</dd>
-              </div>
-              <div>
-                <dt>Texturas</dt>
-                <dd>{diagnostics.textures}</dd>
-              </div>
-              <div>
-                <dt>Malhas</dt>
-                <dd>{diagnostics.meshes}</dd>
-              </div>
-              <div>
-                <dt>Selecionáveis</dt>
-                <dd>{diagnostics.selectableObjects}</dd>
-              </div>
-              <div>
-                <dt>Primeiro frame</dt>
-                <dd>{metric(diagnostics.timeToFirstUsableFrameMs, " ms")}</dd>
-              </div>
-              <div>
-                <dt>GLB</dt>
-                <dd>{metric(diagnostics.fixtureLoadMs, " ms")}</dd>
-              </div>
-            </dl>
-          </aside>
-          <fieldset className="world-selection-controls">
-            <legend>Seleção da cena</legend>
-            <p aria-live="polite" className="world-selection-status">
-              Objeto selecionado:{" "}
-              {selection?.label ?? "Nenhum objeto selecionado"}.
+      <details className="world-explore" open={status === "failed"}>
+        <summary>Explorar · habitantes e objetos</summary>
+        {status === "ready" && (
+          <>
+            <p className="world-status" role="status">
+              Ambiente 3D em execução.
             </p>
-            <p className="world-selection-help">
-              Use estes controles para selecionar sem usar o canvas.
+            <WorldDiagnosticPanel
+              runtime={viewRuntime}
+              performanceScenario={performanceScenario}
+            />
+            <details className="world-semantic">
+              <summary>Selecionar elementos</summary>
+              <fieldset className="world-selection-controls">
+                <legend>Seleção da cena</legend>
+                <p aria-live="polite" className="world-selection-status">
+                  Objeto selecionado:{" "}
+                  {selection?.label ?? "Nenhum objeto selecionado"}.
+                </p>
+                <p className="world-selection-help">
+                  Use estes controles para selecionar sem usar o canvas.
+                </p>
+                <div className="world-selection-actions">
+                  <button
+                    className="button button--secondary"
+                    onClick={() => selectAdjacentObject(-1)}
+                    type="button"
+                  >
+                    ← Anterior
+                  </button>
+                  <button
+                    className="button button--secondary"
+                    onClick={() => selectAdjacentObject(1)}
+                    type="button"
+                  >
+                    Próximo →
+                  </button>
+                </div>
+              </fieldset>
+            </details>
+          </>
+        )}
+        {!performanceScenario && libraryWorldSnapshot && (
+          <details aria-label="Habitantes">
+            <summary>Habitantes da Biblioteca</summary>
+            <InhabitantRuntimeLife
+              runtime={viewRuntime}
+              failed={status === "failed"}
+            />
+            {INHABITANTS.map((inhabitant) => (
+              <div key={inhabitant.id}>
+                <button
+                  type="button"
+                  aria-pressed={selection?.id === inhabitant.id}
+                  onClick={() => {
+                    if (status === "ready")
+                      runtimeRef.current?.selectObject(inhabitant.id);
+                    else publishSelection(inhabitant);
+                    narrativeSession.talk(inhabitant.key);
+                  }}
+                >
+                  {inhabitant.label}
+                </button>
+                <p>{inhabitant.description}</p>
+                {selection?.id === inhabitant.id && (
+                  <fieldset>
+                    <legend>Ações de {inhabitant.label}</legend>
+                    {INHABITANT_ACTIONS.map(([action, label]) => (
+                      <button
+                        type="button"
+                        key={action}
+                        onClick={() => {
+                          narrativeSession.close();
+                          const result =
+                            runtimeRef.current?.playInhabitantAction?.(
+                              inhabitant.id,
+                              action,
+                            ) ?? "unavailable";
+                          const detail =
+                            action === "work"
+                              ? INHABITANT_ACTIVITIES[inhabitant.key][0]
+                              : action === "magic"
+                                ? INHABITANT_ACTIVITIES[inhabitant.key][1]
+                                : label;
+                          setInhabitantFeedback(
+                            `${inhabitant.label}: ${detail}. ${result === "playing" ? "Demonstração finita com retorno ao repouso." : result === "reduced" ? "Movimento reduzido ativo; demonstração descrita em texto." : result === "loading" ? "Modelo carregando; tente novamente." : "Animação indisponível ou sem espaço seguro neste ponto; descrição preservada."}`,
+                          );
+                        }}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </fieldset>
+                )}
+              </div>
+            ))}
+            <p role="status">
+              {inhabitantFeedback ||
+                (selection?.id.startsWith("character:")
+                  ? `${selection.label} selecionado`
+                  : "Selecione um habitante pelo nome ou pelo mundo.")}
             </p>
-            <div className="world-selection-actions">
-              <button
-                className="button button--secondary"
-                onClick={() => selectAdjacentObject(-1)}
-                type="button"
-              >
-                ← Anterior
-              </button>
-              <button
-                className="button button--secondary"
-                onClick={() => selectAdjacentObject(1)}
-                type="button"
-              >
-                Próximo →
-              </button>
-            </div>
-          </fieldset>
-        </>
-      )}
-      {!performanceScenario && libraryWorldSnapshot && (
-        <details aria-label="Habitantes">
-          <summary>Habitantes da Biblioteca</summary>
-          <InhabitantLife
-            snapshot={agencySnapshot}
-            failed={status === "failed"}
-          />
-          {INHABITANTS.map((inhabitant) => (
-            <div key={inhabitant.id}>
-              <button
-                type="button"
-                aria-pressed={selection?.id === inhabitant.id}
-                onClick={() => {
-                  if (status === "ready")
-                    runtimeRef.current?.selectObject(inhabitant.id);
-                  else publishSelection(inhabitant);
-                  narrativeSession.talk(inhabitant.key);
-                }}
-              >
-                {inhabitant.label}
-              </button>
-              <p>{inhabitant.description}</p>
-              {selection?.id === inhabitant.id && (
-                <fieldset>
-                  <legend>Ações de {inhabitant.label}</legend>
-                  {INHABITANT_ACTIONS.map(([action, label]) => (
-                    <button
-                      type="button"
-                      key={action}
-                      onClick={() => {
-                        narrativeSession.close();
-                        const result =
-                          runtimeRef.current?.playInhabitantAction?.(
-                            inhabitant.id,
-                            action,
-                          ) ?? "unavailable";
-                        const detail =
-                          action === "work"
-                            ? INHABITANT_ACTIVITIES[inhabitant.key][0]
-                            : action === "magic"
-                              ? INHABITANT_ACTIVITIES[inhabitant.key][1]
-                              : label;
-                        setInhabitantFeedback(
-                          `${inhabitant.label}: ${detail}. ${result === "playing" ? "Demonstração finita com retorno ao repouso." : result === "reduced" ? "Movimento reduzido ativo; demonstração descrita em texto." : result === "loading" ? "Modelo carregando; tente novamente." : "Animação indisponível ou sem espaço seguro neste ponto; descrição preservada."}`,
-                        );
-                      }}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </fieldset>
-              )}
-            </div>
-          ))}
-          <p role="status">
-            {inhabitantFeedback ||
-              (selection?.id.startsWith("character:")
-                ? `${selection.label} selecionado`
-                : "Selecione um habitante pelo nome ou pelo mundo.")}
-          </p>
-        </details>
-      )}
+          </details>
+        )}
+      </details>
       {!performanceScenario && libraryWorldSnapshot && (
         <LivingControls
           session={livingSession}
@@ -558,6 +461,13 @@ export function WorldHost({
             e as demais áreas continuam funcionando normalmente.
           </p>
           {failure && <p>{failure.message}</p>}
+          <button
+            className="button button--primary"
+            type="button"
+            onClick={() => setAttempt((value) => value + 1)}
+          >
+            Tentar abrir o mundo novamente
+          </button>
         </div>
       )}
     </div>

@@ -1,0 +1,17 @@
+{
+  "environment": "Chromium headless desktop; click-to-ready includes automation; not Android performance",
+  "samples": [
+    {
+      "collectionMs": 34173,
+      "libraryMs": 3263
+    },
+    {
+      "collectionMs": 12810,
+      "libraryMs": 2183
+    },
+    {
+      "collectionMs": 2973,
+      "libraryMs": 2402
+    }
+  ]
+}

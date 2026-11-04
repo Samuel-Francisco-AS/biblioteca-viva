@@ -652,10 +652,12 @@ blockquote {
     background 160ms ease;
 }
 
-.book-card__link:hover {
-  border-color: var(--color-border-strong);
-  background: var(--color-surface-raised);
-  transform: translateY(-0.12rem);
+@media (hover: hover) and (pointer: fine) {
+  .book-card__link:hover {
+    border-color: var(--color-border-strong);
+    background: var(--color-surface-raised);
+    transform: translateY(-0.12rem);
+  }
 }
 
 .book-card article,
@@ -1680,89 +1682,538 @@ blockquote {
   min-height: 44px;
   padding: 0.5rem 0.7rem;
 }
+/* BF-5: ink, spectral light and editorial paper. No external assets. */
+:root {
+  --color-bg-app: #111820;
+  --color-bg-deep: #090e16;
+  --color-surface: #1b2630;
+  --color-surface-raised: #24333d;
+  --color-accent: #b8a6ea;
+  --color-accent-warm: #ded0fc;
+  --color-accent-soft: #39304e;
+  --color-focus: #9de8e0;
+  --color-navigation: #131b27;
+  --color-border-subtle: #41505c;
+  --color-text-primary: #f2ecdf;
+  --color-text-secondary: #c4ced2;
+}
+.app-shell {
+  background:
+    radial-gradient(ellipse at 95% 5%, #42334c55, transparent 45%),
+    radial-gradient(ellipse at 0 65%, #23464144, transparent 55%),
+    var(--color-bg-app);
+}
+.realm-intro {
+  padding: 2rem 0 2.5rem;
+  position: relative;
+  border-bottom: 1px solid var(--color-border-subtle);
+  margin-bottom: 1.5rem;
+}
+.realm-intro > span {
+  float: right;
+  font-size: 4rem;
+  color: var(--color-accent);
+  line-height: 1;
+}
+.realm-intro p {
+  font-family: var(--font-family-editorial);
+  font-size: clamp(2rem, 7vw, 3.7rem);
+  line-height: 1.1;
+  margin: 0 0 1rem;
+  max-width: 85%;
+}
+.realm-intro small {
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+}
+.section-heading h2 {
+  font-size: 1.35rem;
+}
+.content-card,
+.book-card {
+  background:
+    linear-gradient(135deg, #ffffff05, transparent), var(--color-surface);
+  box-shadow: 0 12px 30px #0002;
+}
+.button,
+button,
+summary,
+.book-card__link {
+  transition:
+    background 160ms,
+    border-color 160ms,
+    box-shadow 160ms,
+    transform 160ms;
+}
+button:active,
+.button:active {
+  transform: translateY(1px);
+}
+button:focus-visible,
+.button:focus-visible {
+  box-shadow: 0 0 0 4px #9de8e025;
+}
+.primary-dock {
+  background: #121b29f5;
+  border: 1px solid #69788866;
+  border-radius: 1.5rem 1.5rem 0 0;
+  box-shadow: 0 -8px 40px #0005;
+}
+.primary-dock__link[aria-current="page"] {
+  background: linear-gradient(0deg, #8171b633, transparent);
+  color: #e5dcff;
+}
+.book-card {
+  border-radius: 0.3rem 1.2rem 1.2rem 0.3rem;
+  border-left: 4px solid #aa91ca;
+}
+.book-card[data-entry-type="movie"],
+.book-card[data-entry-type="series"] {
+  border-left-color: #81bfc7;
+}
+.book-card[data-entry-type="study"],
+.book-card[data-entry-type="work"] {
+  border-left-color: #dbb781;
+}
+.book-card h3 {
+  font-family: var(--font-family-editorial);
+  font-size: 1.55rem;
+}
+.book-grid--compact {
+  grid-template-columns: 1fr;
+}
+.book-grid--compact article {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
+}
+.book-grid--compact article h3 {
+  flex: 1 1 14rem;
+}
+[data-route="arquivo"] .annotation-list > li {
+  border-left: 2px solid #bfa681;
+  padding: 1.5rem;
+  background: #e8d7b909;
+}
+[data-route="arquivo"] blockquote {
+  font-family: var(--font-family-editorial);
+  font-size: 1.2rem;
+  line-height: 1.7;
+}
+.statistics-metrics {
+  gap: 1rem;
+}
+.statistics-metrics > * {
+  background:
+    radial-gradient(ellipse at top right, #9b89ca22, transparent 70%),
+    var(--color-surface);
+  padding: 1.5rem;
+  border-radius: 1rem;
+}
+.statistics-chart {
+  background: #0c1521;
+  border: 1px solid #506077;
+  border-radius: 1.5rem;
+  padding: 1rem;
+}
+.settings-stack {
+  display: grid;
+  gap: 1.5rem;
+}
+.settings-stack .content-card {
+  border-top: 2px solid #9386ab;
+}
+.settings-stack > .realm-intro {
+  grid-column: 1 / -1;
+}
+[data-route="library"] .app-header {
+  display: none;
+}
+[data-route="library"] .app-content {
+  max-width: none;
+  padding: 0;
+}
+.library-page {
+  position: relative;
+  min-height: calc(100dvh - var(--dock-height));
+  padding: 1rem;
+  isolation: isolate;
+}
+.library-page > .eyebrow,
+.library-page > h2,
+.library-page > p {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+  text-shadow: 0 2px 8px #000;
+  width: fit-content;
+}
+.library-page > h2 {
+  font-family: var(--font-family-editorial);
+  font-size: 1.8rem;
+  margin: 0.3rem 0;
+}
+.library-page > p {
+  font-size: 0.85rem;
+}
+.library-page .living-world-stage {
+  position: fixed;
+  inset: 0 0 var(--dock-height);
+  z-index: -1;
+}
+.library-page .world-host {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+}
+.library-page .world-surface {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.library-page .world-surface > .world-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.library-page .world-surface > details,
+.library-page .living-controls,
+.library-index {
+  position: relative;
+  width: min(26rem, 100%);
+  margin: 0.5rem 0;
+  background: #14202bef;
+  border: 1px solid #65738277;
+  border-radius: 0.8rem;
+}
+.library-page details > summary {
+  padding: 0.8rem;
+  min-height: 48px;
+  cursor: pointer;
+}
+.library-page details[open] {
+  max-height: 45dvh;
+  overflow: auto;
+  padding: 0.5rem;
+}
+.library-page .world-technical {
+  font-size: 0.8rem;
+}
+.library-page .placeholder-actions {
+  position: relative;
+  margin: 0.5rem 0;
+}
+.library-page .reading-area-selection {
+  position: fixed;
+  bottom: calc(var(--dock-height) + 1rem + env(safe-area-inset-bottom));
+  left: 1rem;
+  right: 1rem;
+  background: #14202bf5;
+  border: 1px solid #b8a6ea;
+  padding: 1rem;
+  border-radius: 1rem;
+  z-index: 3;
+}
+.rpg-tools {
+  justify-content: flex-end;
+}
+.rpg-dialogue,
+.rpg-journal {
+  position: fixed;
+  z-index: 45;
+  bottom: calc(var(--dock-height) + env(safe-area-inset-bottom) + 0.75rem);
+  left: max(1rem, env(safe-area-inset-left));
+  right: max(1rem, env(safe-area-inset-right));
+  width: auto;
+  max-width: 52rem;
+  margin: 0 auto;
+  max-height: calc(
+    100dvh - var(--dock-height) - env(safe-area-inset-top) -
+      env(safe-area-inset-bottom) - 2rem
+  );
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: linear-gradient(135deg, #2b2540f8, #101d29fa);
+  color: #f2ecdf;
+  border: 1px solid #9b89b9;
+  border-radius: 1.2rem;
+  box-shadow: 0 16px 80px #0009;
+}
+.rpg-dialogue header,
+.rpg-journal header {
+  background: transparent;
+  color: inherit;
+}
+.rpg-dialogue h3 {
+  color: #e2cbff;
+}
+.rpg-voice {
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+.rpg-choices button {
+  background: #243340;
+  color: #f2ecdf;
+  border: 1px solid #657585;
+  min-height: 52px;
+  border-radius: 0.7rem;
+  text-align: left;
+}
+.rpg-choices button:hover {
+  background: #384557;
+}
+.rpg-objective,
+.rpg-fallback {
+  color: #c5d3d9;
+}
+.rpg-journal {
+  z-index: 46;
+}
 @media (min-width: 760px) {
+  .settings-stack {
+    grid-template-columns: 1fr 1fr;
+  }
   .rpg-choices {
+    display: grid;
     grid-template-columns: 1fr 1fr;
   }
 }
-@media (max-height: 520px) and (orientation: landscape) {
+@media (prefers-reduced-motion: no-preference) {
+  .realm-intro,
   .rpg-dialogue {
-    max-height: 65dvh;
-    overflow-y: auto;
+    animation: realm-reveal 220ms ease-out;
+  }
+}
+@keyframes realm-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+[data-reduced-motion="true"] *,
+[data-high-contrast="true"] * {
+  animation: none;
+}
+[data-high-contrast="true"] .rpg-dialogue,
+[data-high-contrast="true"] .rpg-journal {
+  background: #000;
+  color: #fff;
+  border-color: #fff;
+}
+.library-page {
+  width: 100%;
+  background: transparent;
+  border-radius: 0;
+}
+.library-page .world-host {
+  max-height: none;
+  aspect-ratio: auto;
+}
+.library-page .world-explore {
+  margin-top: 1rem;
+}
+.library-page .world-explore[open],
+.library-index[open] {
+  background: #15212bf7;
+  max-height: 50dvh;
+}
+.library-page .world-explore .world-technical,
+.library-page .world-explore .world-semantic {
+  width: auto;
+}
+.library-page .rpg-tools {
+  position: fixed;
+  bottom: calc(var(--dock-height) + env(safe-area-inset-bottom) + 0.75rem);
+  right: 1rem;
+  left: 1rem;
+  pointer-events: none;
+}
+.library-page .rpg-tools button {
+  pointer-events: auto;
+  background: #15212bef;
+}
+.library-page .rpg-shell--open .rpg-tools {
+  display: none;
+}
+.library-page .placeholder-actions {
+  display: none;
+}
+.library-page .living-world-feedback {
+  bottom: 5rem;
+}
+@media (orientation: landscape) and (max-height: 550px) {
+  .library-page > p:not(.eyebrow) {
+    display: none;
+  }
+  .rpg-dialogue {
+    max-width: 90%;
   }
   .rpg-voice {
-    font-size: 0.95rem;
+    line-height: 1.45;
   }
 }
-@media (max-width: 759px) {
-  .world-surface[data-status="ready"]:has(.rpg-shell--open)
-    .living-world-stage {
-    position: sticky;
-    top: 0;
-    z-index: 3;
-    background: var(--color-surface);
-  }
-  .world-surface[data-status="ready"]:has(.rpg-shell--open) .world-host {
-    max-height: 28dvh;
-    min-height: 8rem;
+[data-route="library"] .top-bar {
+  display: none;
+}
+.library-page {
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+.rpg-dialogue small,
+.rpg-dialogue .rpg-close {
+  color: #ddd1ed;
+}
+.rpg-sigil {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+  border: 1px solid #ad96c9;
+  border-radius: 50%;
+  font-size: 2rem;
+  background: #71598b33;
+  color: #e1ceff;
+}
+.rpg-dialogue header > div {
+  flex: 1;
+}
+.library-page > .eyebrow {
+  letter-spacing: 0.18em;
+  font-size: 0.65rem;
+}
+.library-page > h2 {
+  font-size: 1.5rem;
+}
+.library-page > p:not(.eyebrow) {
+  max-width: 23rem;
+  font-size: 0.8rem;
+}
+.library-page .world-surface > .world-explore:not([open]),
+.library-index:not([open]) {
+  width: fit-content;
+  border-radius: 2rem;
+  font-size: 0.8rem;
+}
+.library-page .world-explore > summary,
+.library-index > summary {
+  min-height: 44px;
+}
+.library-page .rpg-tools button {
+  border-color: #817491;
+  color: #eee1ff;
+  font-size: 0.8rem;
+  border-radius: 1rem;
+}
+.book-grid--compact .book-card__link {
+  padding: 0.75rem 1rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0s !important;
+    transition-duration: 0s !important;
   }
 }
-@media (max-width: 759px) and (min-height: 521px) {
-  .rpg-dialogue header {
-    position: sticky;
-    top: 28dvh;
-    z-index: 4;
-    background: #efdab0;
-    padding: 0.35rem 0;
-    border-bottom: 1px solid #a98c58;
-  }
+.living-context {
+  padding: 0.75rem;
+  border: 1px solid var(--color-accent);
+  border-radius: 0.75rem;
 }
-@media (max-height: 520px) and (orientation: landscape) {
-  .world-surface[data-status="ready"]:has(.rpg-shell--open) {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-    gap: 0.65rem;
-    align-items: start;
-  }
-  .world-surface[data-status="ready"]:has(.rpg-shell--open) > * {
-    grid-column: 1 / -1;
-  }
-  .world-surface[data-status="ready"]:has(.rpg-shell--open)
-    > .living-world-stage {
-    grid-column: 1;
-    grid-row: 1;
-    position: sticky;
-    top: 0.3rem;
-  }
-  .world-surface[data-status="ready"]:has(.rpg-shell--open) > .rpg-shell {
-    grid-column: 2;
-    grid-row: 1;
-  }
-  .world-surface[data-status="ready"]:has(.rpg-shell--open) .world-host {
-    max-height: 65dvh;
-    min-height: 8rem;
-  }
-  .rpg-dialogue header {
-    position: sticky;
-    top: -1rem;
-    z-index: 4;
-    background: #efdab0;
-    padding: 0.35rem 0;
-  }
-  .rpg-dialogue h3 {
-    font-size: 1.1rem;
-  }
-  .rpg-dialogue {
-    padding: 0.7rem;
-  }
-  .rpg-choices {
-    grid-template-columns: 1fr;
-  }
-  .rpg-voice {
-    font-size: 0.95rem;
-  }
+.living-context button {
+  margin: 0.25rem;
 }
-
-.world-surface[data-status="failed"] .rpg-dialogue header {
-  top: 0;
+.library-page .living-controls {
+  width: fit-content;
+  max-width: 100%;
+  font-size: 0.8rem;
+}
+.library-page .living-context {
+  position: fixed;
+  left: 1rem;
+  right: 1rem;
+  bottom: calc(var(--dock-height) + env(safe-area-inset-bottom) + 6rem);
+  background: #14202bf5;
+  z-index: 4;
+}
+.category-ribbon {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.5rem 0 1rem;
+  margin-bottom: 1rem;
+  grid-column: 1 / -1;
+}
+.category-ribbon button,
+.category-ribbon a {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 2rem;
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  text-decoration: none;
+}
+.category-ribbon [aria-pressed="true"] {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  box-shadow: inset 0 -3px var(--color-accent);
+}
+.settings-stack h2 {
+  scroll-margin-top: 6rem;
+}
+.library-page .living-world-stage {
+  bottom: calc(var(--dock-height) + env(safe-area-inset-bottom));
+}
+[data-route="arquivo"] .archive-search {
+  background: var(--color-surface);
+  padding: 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid var(--color-border-subtle);
+}
+[data-route="arquivo"] .annotation-list {
+  gap: 1rem;
+}
+[data-route="arquivo"] .annotation-date {
+  letter-spacing: 0.04em;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+.library-page .rpg-tools {
+  z-index: 8;
+}
+.library-page .rpg-shell:has(.rpg-journal) .rpg-tools {
+  display: flex;
+  top: max(0.5rem, env(safe-area-inset-top));
+  bottom: auto;
+  z-index: 47;
+}
+.library-page .rpg-journal {
+  max-height: calc(
+    100dvh - var(--dock-height) - env(safe-area-inset-bottom) - 5rem
+  );
+}
+.rpg-dialogue header {
+  position: static;
+}
+.rpg-feedback {
+  color: var(--color-success);
+}
+.rpg-objective {
+  background: #172534;
+}
+.library-page .living-controls > details > summary {
+  font-weight: 400;
 }

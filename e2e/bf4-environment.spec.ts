@@ -1,4 +1,4 @@
-import { expect, test } from "./fixtures";
+import { expect, openWorldTools, test } from "./fixtures";
 import { OrthographicCamera, Vector3 } from "three";
 import { LIBRARY_ROOMS } from "../src/features/library/libraryBuildingGeometry";
 import { CameraNavigation } from "../src/features/library/three/CameraNavigation";
@@ -45,6 +45,8 @@ test("BF-4D: ambiente integrado em paisagem/retrato, zoom, pan e seleção", asy
       path: testInfo.outputPath(`ambiente-${viewport.width}.png`),
     });
   }
+  await openWorldTools(page);
+  await page.locator(".library-index > summary").click();
   await page
     .getByRole("button", {
       name: "Selecionar no ambiente: Livro Atlas fictício BF4",
@@ -126,6 +128,8 @@ for (const viewport of [
     }
     await page.goto("/");
     await expect(canvas).toHaveAttribute("data-selectable-objects", "100");
+    await openWorldTools(page);
+    await page.locator(".library-index > summary").click();
     await expect(
       page.getByRole("button", { name: /Selecionar no ambiente:/u }),
     ).toHaveCount(83);

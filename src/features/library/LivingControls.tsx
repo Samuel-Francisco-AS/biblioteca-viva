@@ -78,6 +78,33 @@ export function LivingControls({
   const state = useSyncExternalStore(session.subscribe, session.getSnapshot);
   return (
     <section className="living-controls" aria-label="Objetos vivos">
+      {!fallback && selected && (
+        <aside
+          className="living-context"
+          aria-label="Ações do objeto selecionado"
+        >
+          {LIVING_OBJECTS.filter((object) => object.objectId === selected).map(
+            (object) => (
+              <div key={object.objectId}>
+                <strong>{object.label}</strong>
+                <div>
+                  {object.actions.map((action) => (
+                    <button
+                      className="button button--secondary"
+                      key={action}
+                      type="button"
+                      onClick={() => session.act(object.objectId, action)}
+                    >
+                      {actionLabels[object.objectId]?.[action] ??
+                        labels[action]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ),
+          )}
+        </aside>
+      )}
       <details open={fallback}>
         <summary>Explorar objetos sem o canvas (alternativa acessível)</summary>
         <p>

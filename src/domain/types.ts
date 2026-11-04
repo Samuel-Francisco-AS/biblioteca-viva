@@ -97,9 +97,19 @@ export interface StudyEntry extends LibraryEntryBase {
   readonly deadline?: string;
 }
 
+export interface Exercise {
+  readonly name: string;
+  readonly sets?: number;
+  readonly repetitions?: number;
+  readonly loadKg?: number;
+  readonly durationSeconds?: number;
+  readonly note?: string;
+}
+
 export interface PhysicalActivityEntry extends LibraryEntryBase {
   readonly type: "physical_activity";
   readonly category: PhysicalActivityCategory;
+  readonly exercises?: readonly Exercise[];
   readonly modality?: string;
   readonly objective?: string;
 }
@@ -153,6 +163,7 @@ export interface StudySession extends SessionBase {
 }
 
 export interface PhysicalActivitySession extends SessionBase {
+  readonly exercises?: readonly Exercise[];
   readonly kind: "physical_activity";
   readonly entryType: "physical_activity";
   readonly distanceMeters?: number;

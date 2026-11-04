@@ -1,3 +1,6 @@
+import { exercisesFromForm } from "./exercisesFromForm";
+import { RitualFields } from "./RitualFields";
+import { ritualCopy } from "./ritualCopy";
 import { useEffect, useState, type FormEvent } from "react";
 import {
   Link,
@@ -37,6 +40,15 @@ function numeric(form: FormData, name: string): number | undefined {
   return item === undefined ? undefined : Number(item);
 }
 
+function deadlineFromForm(
+  form: FormData,
+  previous: string | undefined,
+): string | undefined {
+  const selected = value(form, "deadline");
+  if (selected === previous?.slice(0, 10)) return previous;
+  return selected ? `${selected}T00:00:00.000Z` : undefined;
+}
+
 function updateInput(
   entry: Exclude<LibraryEntry, { readonly type: "book" }>,
   form: FormData,
@@ -68,13 +80,23 @@ function updateInput(
         discipline: value(form, "discipline"),
         objective: value(form, "objective"),
         progressUnit: entry.progressUnit,
-        progressTotal: numeric(form, "progressTotal"),
-        deadline: entry.deadline,
+        progressTotal:
+          entry.progressUnit === "hours" &&
+          numeric(form, "progressTotal") !== undefined
+            ? numeric(form, "progressTotal") ===
+              (entry.progressTotal === undefined
+                ? undefined
+                : entry.progressTotal / 60)
+              ? entry.progressTotal
+              : Number(numeric(form, "progressTotal")) * 60
+            : numeric(form, "progressTotal"),
+        deadline: deadlineFromForm(form, entry.deadline),
       };
     case "physical_activity":
       return {
         ...common,
-        category: entry.category,
+        category: value(form, "category") ?? entry.category,
+        exercises: exercisesFromForm(form),
         modality: value(form, "modality"),
         objective: value(form, "objective"),
       };
@@ -84,34 +106,10 @@ function updateInput(
         area: value(form, "area"),
         organization: value(form, "organization"),
         description: value(form, "description"),
-        deadline: entry.deadline,
+        deadline: deadlineFromForm(form, entry.deadline),
         nextAction: value(form, "nextAction"),
       };
   }
-}
-
-function Input({
-  defaultValue,
-  label,
-  name,
-  type = "text",
-}: {
-  readonly defaultValue?: string | number;
-  readonly label: string;
-  readonly name: string;
-  readonly type?: string;
-}) {
-  return (
-    <div className="form-field">
-      <label htmlFor={`edit-${name}`}>{label}</label>
-      <input
-        defaultValue={defaultValue}
-        id={`edit-${name}`}
-        name={name}
-        type={type}
-      />
-    </div>
-  );
 }
 
 export function EditEntryPage({
@@ -144,7 +142,7 @@ export function EditEntryPage({
         <h2>Edição indisponível</h2>
       </section>
     );
-  if (error)
+  if (error && !entry)
     return (
       <section className="content-card" role="alert">
         <h2>Não foi possível abrir o registro</h2>
@@ -157,6 +155,7 @@ export function EditEntryPage({
   const current = entry;
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (busy) return;
     setBusy(true);
     setError(undefined);
     try {
@@ -173,116 +172,17 @@ export function EditEntryPage({
     }
   }
   return (
-    <section className="content-card" aria-labelledby="edit-entry-title">
+    <section
+      className="ritual-editor"
+      data-craft={current.type}
+      aria-labelledby="edit-entry-title"
+    >
       <p className="eyebrow">{entryTypeLabels[current.type]}</p>
       <h2 id="edit-entry-title">Editar registro</h2>
+      <p>{ritualCopy[current.type].title}</p>
       {error && <p role="alert">{error}</p>}
       <form onSubmit={(event) => void submit(event)}>
-        <Input defaultValue={current.title} label="Título" name="title" />
-        {current.type === "movie" && (
-          <>
-            <Input
-              defaultValue={current.director}
-              label="Direção (opcional)"
-              name="director"
-            />
-            <Input
-              defaultValue={current.year}
-              label="Ano (opcional)"
-              name="year"
-              type="number"
-            />
-            <Input
-              defaultValue={current.durationMinutes}
-              label="Duração em minutos (opcional)"
-              name="durationMinutes"
-              type="number"
-            />
-            <Input
-              defaultValue={current.platform}
-              label="Plataforma (opcional)"
-              name="platform"
-            />
-          </>
-        )}
-        {current.type === "series" && (
-          <>
-            <Input
-              defaultValue={current.platform}
-              label="Plataforma (opcional)"
-              name="platform"
-            />
-            <Input
-              defaultValue={current.totalEpisodes}
-              label="Total de episódios (opcional)"
-              name="totalEpisodes"
-              type="number"
-            />
-          </>
-        )}
-        {current.type === "study" && (
-          <>
-            <Input
-              defaultValue={current.area}
-              label="Área (opcional)"
-              name="area"
-            />
-            <Input
-              defaultValue={current.discipline}
-              label="Disciplina (opcional)"
-              name="discipline"
-            />
-            <Input
-              defaultValue={current.objective}
-              label="Objetivo (opcional)"
-              name="objective"
-            />
-            <Input
-              defaultValue={current.progressTotal}
-              label="Total (opcional)"
-              name="progressTotal"
-              type="number"
-            />
-          </>
-        )}
-        {current.type === "physical_activity" && (
-          <>
-            <Input
-              defaultValue={current.modality}
-              label="Modalidade (opcional)"
-              name="modality"
-            />
-            <Input
-              defaultValue={current.objective}
-              label="Objetivo (opcional)"
-              name="objective"
-            />
-          </>
-        )}
-        {current.type === "work" && (
-          <>
-            <Input
-              defaultValue={current.area}
-              label="Área (opcional)"
-              name="area"
-            />
-            <Input
-              defaultValue={current.organization}
-              label="Organização ou cliente (opcional)"
-              name="organization"
-            />
-            <Input
-              defaultValue={current.description}
-              label="Descrição (opcional)"
-              name="description"
-            />
-            <Input
-              defaultValue={current.nextAction}
-              label="Próxima ação (opcional)"
-              name="nextAction"
-            />
-          </>
-        )}
+        <RitualFields type={current.type} entry={current} />
         <div className="form-actions">
           <button
             className="button button--primary"

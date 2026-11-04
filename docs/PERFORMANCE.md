@@ -1,5 +1,19 @@
 # Desempenho e estabilidade
 
+## BF-5R7 — eficiência sem redução visual
+
+Pan altera pose, mas só zoom/viewport exigem recompor projeção. Resize válido de dimensões idênticas é no-op; viewport invalidado continua sendo revalidado. Diagnóstico técnico projeta somente a hierarquia de seu objeto. Hover de fichas exige mouse capaz de hover; feedback de toque é cancelado ao rolar. Não há redução de DPR, cena, conteúdo, animação ou resolução. Métricas, comparação visual e limitações estão no [relatório R7](BF-5R7_RELATORIO.md). A medição local não demonstra ganho consistente de latência nem certifica Android.
+
+
+## BF-5R5 — custos demonstrados e redução estrutural
+
+A R4 reconstruía WorldHost/renderer/cena a cada retorno de aba. A R5 mantém uma instância sob demanda, com RAF/gestos/simulação pausados fora da Biblioteca e retomada no retorno; dados representados diferentes ainda exigem substituição segura. A cena fica na memória durante a sessão do shell, tradeoff que requer prova Android. Diagnóstico e lista semântica dos habitantes deixaram de recompor o host/dialogue a cada atualização de 250 ms.
+
+A contagem de meshes/objetos fazia `scene.traverseVisible` a cada desenho. Agora acompanha a publicação diagnóstica a cada 250 ms; a taxa de desenho e toda a arte permanecem. O teste simula 60 frames e exige somente 3–4 travessias, mantendo métricas não vazias. Isso comprova redução de trabalho de contagem, não ganho percentual de FPS. Os E2E verificam identidade do canvas, câmera, zero loops fora da aba e um loop ao retornar. Tempos de automação e SwiftShader não são benchmark físico.
+
+Sem blur ou filtro novo de página inteira, sem delays artificiais e sem animações alongadas para mascarar lentidão. Nenhuma declaração de “fluidez resolvida” no Moto G06. [Relatório e roteiro](BF-5R5_RELATORIO.md).
+
+
 O objetivo atual é manter o aplicativo convencional responsivo e estável em navegador e Android. Consultas relacionadas devem ser carregadas em lote, duração de sessão deriva de timestamps e listeners/players precisam respeitar lifecycle.
 
 `npm run performance:report` relata arquivos e tamanho total dos entrypoints do build.

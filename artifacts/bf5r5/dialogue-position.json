@@ -1,0 +1,14 @@
+{
+  "environment": "Chromium 390×844, reduced motion, WebGL fallback, CSS fix injected for diagnosis",
+  "before": {
+    "y": -815.984375,
+    "height": 717.59375,
+    "ancestorBackdrop": "blur(17px)"
+  },
+  "after": {
+    "y": 28.015625,
+    "height": 717.59375,
+    "ancestorBackdrop": "none"
+  },
+  "choiceReached": true
+}

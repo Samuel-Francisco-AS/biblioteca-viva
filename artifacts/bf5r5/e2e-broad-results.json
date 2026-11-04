@@ -1,0 +1,272 @@
+{
+  "stage": "Candidata R5 antes do ajuste final de retratos, campos e posicionamento do diálogo; suíte ampla não repetida",
+  "pass": 19,
+  "fail": 25,
+  "duration": "14.6m",
+  "cases": [
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-environment.spec.ts:6:1",
+      "name": "BF-4D: ambiente integrado em paisagem/retrato, zoom, pan e seleção",
+      "duration": "31.7s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-environment.spec.ts:94:3",
+      "name": "BF-4D: coleção cheia explora cinco cômodos e quatro conexões em 1280px",
+      "duration": "33.1s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-environment.spec.ts:94:3",
+      "name": "BF-4D: coleção cheia explora cinco cômodos e quatro conexões em 390px",
+      "duration": "33.1s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-inhabitants.spec.ts:7:3",
+      "name": "BF-4F1 four inhabitants world",
+      "duration": "31.1s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-inhabitants.spec.ts:7:3",
+      "name": "BF-4F1 four inhabitants fallback",
+      "duration": "14.9s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-inhabitants.spec.ts:42:1",
+      "name": "BF-4F1 canvas selects all four loaded models",
+      "duration": "24.0s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-inhabitants.spec.ts:68:3",
+      "name": "BF-4F2 samael: directed actions in the five-room world",
+      "duration": "31.3s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-inhabitants.spec.ts:68:3",
+      "name": "BF-4F2 aryn: directed actions in the five-room world",
+      "duration": "31.2s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-inhabitants.spec.ts:68:3",
+      "name": "BF-4F2 ytha: directed actions in the five-room world",
+      "duration": "31.3s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-inhabitants.spec.ts:68:3",
+      "name": "BF-4F2 lua: directed actions in the five-room world",
+      "duration": "31.4s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-inhabitants.spec.ts:111:1",
+      "name": "BF-4F3 spontaneous life and honest reduced-motion semantics",
+      "duration": "24.3s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-living.spec.ts:6:3",
+      "name": "BF-4E: segredo completo no mundo",
+      "duration": "13.6s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/bf4-living.spec.ts:6:3",
+      "name": "BF-4E: segredo completo sem WebGL",
+      "duration": "6.3s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-living.spec.ts:69:1",
+      "name": "BF-4E: tocar a luminária executa e repete ação sem botões React",
+      "duration": "26.0s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-rpg.spec.ts:8:3",
+      "name": "BF-4F4 RPG choices, objective, resume and conclusion from canvas",
+      "duration": "25.5s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf4-rpg.spec.ts:8:3",
+      "name": "BF-4F4 RPG choices, objective, resume and conclusion without WebGL",
+      "duration": "30.2s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/bf5-ritual.spec.ts:3:1",
+      "name": "BF-5R3: a coleção usa fichas de acervo e detalhes ergonômicos",
+      "duration": "4.9s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/bf5-rpg-hud.spec.ts:3:1",
+      "name": "BF-5R1: immersive canvas layout, accessible command hub and five realms",
+      "duration": "10.2s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/bf5-touch-transition.spec.ts:3:1",
+      "name": "BF-5R2: canvas intact, route entrance without blur and tactile response",
+      "duration": "8.1s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/bf5-ui.spec.ts:3:1",
+      "name": "BF-5: five realms, density and narrative Back in the semantic fallback",
+      "duration": "30.2s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/bf5r4-experience.spec.ts:3:1",
+      "name": "BF-5R4: seis rituais criam, reabrem e editam sem perder referências",
+      "duration": "10.2s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/bf5r4-experience.spec.ts:74:1",
+      "name": "BF-5R4: arraste de um movimento responde em retrato e paisagem",
+      "duration": "9.9s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/bf5r4-experience.spec.ts:99:1",
+      "name": "BF-5R4: dock permanece dentro da viewport e navega em desktop e retrato",
+      "duration": "2.5s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/bf5r5-experience.spec.ts:3:1",
+      "name": "BF-5R5: same canvas pauses between tabs, resumes its camera and survives rotation",
+      "duration": "23.0s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/bf5r5-experience.spec.ts:61:1",
+      "name": "BF-5R5: strength is a reusable sheet with dated executions and immutable history",
+      "duration": "3.8s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/bf5r5-experience.spec.ts:126:1",
+      "name": "BF-5R5: series bookmark, episodes without minutes and contextual quotation",
+      "duration": "2.3s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/critical-flow.spec.ts:3:1",
+      "name": "ciclo principal persiste livro, edição, anotações e conclusão",
+      "duration": "3.9s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/critical-flow.spec.ts:95:1",
+      "name": "rotas inexistentes e livro ausente degradam para caminhos convencionais",
+      "duration": "1.0s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/p1-entries.spec.ts:3:1",
+      "name": "Coleção registra e encontra os seis tipos de P1",
+      "duration": "4.1s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/p1-memory.spec.ts:3:1",
+      "name": "tag, favorito, sessão persistente e estatísticas formam memória unificada",
+      "duration": "3.0s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/r4-shell.spec.ts:54:1",
+      "name": "shell abre a Biblioteca com uma única superfície Three.js",
+      "duration": "10.9s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/r4-shell.spec.ts:114:1",
+      "name": "interação desktop conecta picking, pan, zoom e seleção React",
+      "duration": "13.5s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/r4-shell.spec.ts:201:1",
+      "name": "viewport mobile mantém tap, pan, pinch sintético e alternativa React",
+      "duration": "16.4s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/r4-shell.spec.ts:313:1",
+      "name": "Biblioteca preserva a mesma superfície em portrait, landscape e viewport estreito",
+      "duration": "30.8s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/r4-shell.spec.ts:384:1",
+      "name": "dez ciclos de rota não acumulam canvases, loops ou interação",
+      "duration": "31.7s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/r4-shell.spec.ts:449:1",
+      "name": "dock navega pelas áreas convencionais",
+      "duration": "27.3s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/reading-area.spec.ts:16:1",
+      "name": "coleção vazia mantém estantes sem livros artificiais e caminho convencional",
+      "duration": "10.0s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/reading-area.spec.ts:41:1",
+      "name": "livros convencionais preservam identidade entre lista, runtime, seleção e retorno",
+      "duration": "31.3s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/reading-area.spec.ts:131:1",
+      "name": "overflow mantém 71 livros convencionais sem criar selecionável para o excedente",
+      "duration": "19.2s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/reading-area.spec.ts:158:1",
+      "name": "retornos da Biblioteca preservam um canvas pausado e um único snapshot",
+      "duration": "31.2s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/reading-area.spec.ts:188:1",
+      "name": "seis tipos abrem pela Biblioteca e preservam edição e retorno",
+      "duration": "31.8s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/search-and-backup.spec.ts:3:1",
+      "name": "busca, filtro, ordenação e Arquivo preservam navegação",
+      "duration": "8.2s"
+    },
+    {
+      "status": "FAIL",
+      "location": "e2e/search-and-backup.spec.ts:48:1",
+      "name": "backup web real é baixado, validado, restaurado e persiste",
+      "duration": "31.4s"
+    },
+    {
+      "status": "PASS",
+      "location": "e2e/search-and-backup.spec.ts:122:1",
+      "name": "restauração em base vazia recupera dados convencionais",
+      "duration": "4.7s"
+    }
+  ]
+}

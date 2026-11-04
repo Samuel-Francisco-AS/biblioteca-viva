@@ -1,3 +1,4 @@
+import { RealmIntro } from "../../app/RealmIntro";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
@@ -382,6 +383,10 @@ export function StatisticsPage({
   if (!snapshot) return <p role="status">Calculando estatísticas…</p>;
   return (
     <section aria-labelledby="statistics-title">
+      <RealmIntro
+        title="Observatório"
+        description="Uma perspectiva sobre o tempo e as histórias que você cultiva."
+      />
       <div className="section-heading">
         <div>
           <p className="eyebrow">Memória derivada dos seus registros</p>
