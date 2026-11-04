@@ -41,7 +41,7 @@ export function warmCollectionWhenIdle(): () => void {
       preloadRoute("/colecao");
   };
   if (window.requestIdleCallback) {
-    const id = window.requestIdleCallback(warm, { timeout: 4000 });
+    const id = window.requestIdleCallback(warm);
     return () => {
       cancelled = true;
       window.cancelIdleCallback(id);

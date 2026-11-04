@@ -236,7 +236,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           lastReleasePulseRef.current = { control, at: performance.now() };
         }
         clearTap();
-      }
+      }}
       onPointerCancelCapture={clearTap}
       onLostPointerCapture={clearTap}
       onClickCapture={(event) => {
