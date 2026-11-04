@@ -170,10 +170,22 @@ export const test = base.extend<{
  * instead of forcing hidden nodes visible in a test.
  */
 export async function openWorldTools(page: Page): Promise<void> {
-  const compass = page.getByRole("button", {
-    name: "Abrir ferramentas de exploração acessível",
-  });
-  if (await compass.isVisible()) await compass.click();
+  // Opening the tool drawer while the world is still mounting can detach its
+  // controls, especially in the software-WebGL CI runner. Wait for a stable
+  // ready/fallback state before following the real accessible navigation.
+  const worldSurface = page.locator(".world-surface");
+  await expect(worldSurface).toHaveAttribute(
+    "data-status",
+    /^(ready|failed)$/u,
+    { timeout: 20_000 },
+  );
+  const library = page.locator(".library-page");
+  if ((await library.getAttribute("data-tools-open")) !== "true") {
+    await page
+      .getByRole("button", { name: "Abrir ferramentas de exploração acessível" })
+      .click();
+  }
+  await expect(library).toHaveAttribute("data-tools-open", "true");
 
   const world = page.locator("details.world-explore");
   await expect(world).toBeVisible();

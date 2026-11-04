@@ -29,3 +29,14 @@
 A integração da PR #20 é independente do encerramento da BF-5. Após autorização de merge, iniciar refino de formulários e UI em nova PR, com escopo e critérios próprios. Nenhuma falha ou dívida técnica é aceita por omissão.
 
 **Sem merge nesta intervenção.**
+
+
+## Gate final dirigido — restauração e histórico (sem aceite antecipado)
+
+A CI 41832993749 fechou em **18 PASS / 30 FAIL** (9/15 em cada shard), enquanto o gate de **732 unitários, lint, tipos, áudio, build e performance passou**. A adaptação inicial de BF-4 não resolveu o conjunto; houve novas esperas por controles durante bootstrap e pelo renderizador WebGL de software.
+
+O código do fluxo de restauração usa `DexieBackupSnapshotStore.replace` em transação `rw` atômica; a interface de sucesso só aparece após `ImportBackup.execute` retornar. Porém, a antiga asserção E2E procurava o livro depois de visitar a Biblioteca WebGL, o que misturava teste de persistência e navegação gráfica. Agora a suíte diferencia **registro restaurado diretamente no IndexedDB**, permanência após `reload` e representação na Coleção, sem uma passagem obrigatória pelo Canvas; o teste ainda valida substituição, preferências e ausência de registro excluído. Resultado ainda a validar em CI. Falha de qualquer um desses três passos é bloqueante.
+
+O E2E de ficha de treino mantém as asserções originais e passa a verificar o histórico concreto antes do resumo derivado; a ausência de sessão continua bloqueante. O helper de exploração aguarda estado `ready/failed` antes de abrir bússola/painéis, evitando toggles no meio da montagem. Testes de cena antigos que usam coordenadas, projeção e 30s em Chromium software continuam exigindo classificação individual; não serão silenciados.
+
+**Decisão de merge:** não há autorização para merge; enquanto restauração e histórico não estiverem comprovados, classificar a PR como não pronta. A BF-5 continua aberta após futura integração para refinar formulários.

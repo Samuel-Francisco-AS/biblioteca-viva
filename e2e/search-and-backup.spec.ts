@@ -1,4 +1,39 @@
 import { expect, test } from "./fixtures";
+import type { Page } from "@playwright/test";
+
+/**
+ * Read the canonical store in the disposable Playwright context. This lets
+ * the backup test distinguish database restoration from a presentation/route
+ * failure; it never modifies data or accesses the user's real database.
+ */
+async function entryTitlesInTestDatabase(page: Page): Promise<string[]> {
+  return page.evaluate(
+    () =>
+      new Promise<string[]>((resolve, reject) => {
+        const request = indexedDB.open("biblioteca-viva");
+        request.onerror = () =>
+          reject(request.error ?? new Error("Falha ao abrir IndexedDB."));
+        request.onsuccess = () => {
+          const db = request.result;
+          const tx = db.transaction("libraryEntries", "readonly");
+          const items = tx.objectStore("libraryEntries").getAll();
+          items.onerror = () =>
+            reject(items.error ?? new Error("Falha ao ler registros."));
+          items.onsuccess = () => {
+            resolve(
+              (items.result as Array<{ title: string }>).map(
+                ({ title }) => title,
+              ),
+            );
+          };
+          tx.oncomplete = () => db.close();
+          tx.onabort = () =>
+            reject(tx.error ?? new Error("Consulta interrompida."));
+        };
+      }),
+  );
+}
+
 
 test("busca, filtro, ordenação e Arquivo preservam navegação", async ({
   createBook,
@@ -100,20 +135,28 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
     page.getByRole("heading", { name: "Restauração concluída" }),
   ).toBeVisible();
 
+  // Confirm the actual persisted state before asking the interface to render.
+  // A restoration must replace the disposable IndexedDB atomically.
+  await expect
+    .poll(() => entryTitlesInTestDatabase(page))
+    .toContain("Backup de Ensaio");
+  await expect
+    .poll(() => entryTitlesInTestDatabase(page))
+    .not.toContain("Registro removido pela restauração");
+
   await page.reload();
   await expect(page.getByLabel("Usar alto contraste")).toBeChecked();
   await expect(page.getByLabel("Tamanho do texto")).toHaveValue("larger");
-  await navigateFromDock("Biblioteca");
-  await expect(
-    page.getByRole("heading", {
-      name: "Biblioteca Viva",
-      exact: true,
-    }),
-  ).toBeVisible();
-  await navigateFromDock("Coleção");
+  await expect
+    .poll(() => entryTitlesInTestDatabase(page))
+    .toContain("Backup de Ensaio");
+
+  // The backup gate must not depend on software-WebGL warm-up. Navigating
+  // through the world is covered separately by the dedicated navigation E2E.
+  await page.goto("/colecao");
   await expect(
     page.getByRole("heading", { name: "Backup de Ensaio" }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 20_000 });
   await expect(
     page.getByRole("heading", { name: "Registro removido pela restauração" }),
   ).toHaveCount(0);
