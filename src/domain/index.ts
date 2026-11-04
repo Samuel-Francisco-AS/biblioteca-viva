@@ -8,3 +8,5 @@ export * from "./sessions";
 export * from "./tags";
 export * from "./schemas";
 export * from "./types";
+
+export * from "./flashCards";

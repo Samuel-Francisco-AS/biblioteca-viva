@@ -1,3 +1,4 @@
+import { SaveFlashCard, DeleteFlashCard } from "../application/flashCards";
 import type { ImageFilesPort } from "../application/imageFiles";
 import { PlatformImageFiles } from "../infrastructure/files/imageFiles";
 import {
@@ -144,6 +145,8 @@ export interface ApplicationRuntime {
     ) => Promise<BackupCounts>;
   };
   readonly commands: {
+    readonly saveFlashCard: SaveFlashCard;
+    readonly deleteFlashCard: DeleteFlashCard;
     readonly addNote: AddNote;
     readonly addQuote: AddQuote;
     readonly changeBookStatus: ChangeBookStatus;
@@ -382,6 +385,8 @@ export async function createApplication(
       },
     },
     commands: {
+      saveFlashCard: new SaveFlashCard(dependencies),
+      deleteFlashCard: new DeleteFlashCard(dependencies),
       addNote: new AddNote(dependencies),
       addQuote: new AddQuote(dependencies),
       changeBookStatus: new ChangeBookStatus(dependencies),

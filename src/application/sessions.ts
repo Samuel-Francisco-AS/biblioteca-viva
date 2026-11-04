@@ -2,7 +2,9 @@ import { z } from "zod";
 
 import {
   exercisePlanSchema,
+  focusDurationSchema,
   changeBookStatus,
+  captureStudyTimeBaseline,
   changeEntryStatus,
   completeSession,
   createManualSession,
@@ -51,7 +53,10 @@ const specific = z.discriminatedUnion("entryType", [
     watchedDuration: z.int().nonnegative().optional(),
     episodesCompleted: z.int().nonnegative().optional(),
   }),
-  z.strictObject({ entryType: z.literal("study") }),
+  z.strictObject({
+    entryType: z.literal("study"),
+    focusDurationSeconds: focusDurationSchema.optional(),
+  }),
   z.strictObject({
     entryType: z.literal("physical_activity"),
     exercises: exercisePlanSchema.optional(),
@@ -124,6 +129,20 @@ function startEntry(entry: LibraryEntry, now: string): LibraryEntry {
     : changeEntryStatus(entry, "in_progress", now);
 }
 
+async function preserveStudyTime(
+  dependencies: SessionDependencies,
+  entry: LibraryEntry,
+  now: string,
+): Promise<LibraryEntry> {
+  if (entry.type !== "study" || entry.studyTimeBaselineSeconds !== undefined)
+    return entry;
+  const history = await dependencies.sessions.listByEntryId(entry.id);
+  const seconds = history
+    .filter((item) => item.status === "completed")
+    .reduce((total, item) => total + item.accumulatedDuration, 0);
+  return applyDomain(() => captureStudyTimeBaseline(entry, seconds, now));
+}
+
 function applyCompletedSession(
   entry: LibraryEntry,
   session: Session,
@@ -147,16 +166,18 @@ function applyCompletedSession(
       now,
     );
   if (session.kind === "study" && entry.type === "study") {
-    if (entry.progressUnit === "sessions")
-      return updateStudyProgress(entry, entry.progressCurrent + 1, now);
-    if (entry.progressUnit === "hours" && session.accumulatedDuration === 0)
-      return startEntry(entry, now);
-    if (entry.progressUnit === "hours")
-      return updateStudyProgress(
-        entry,
-        entry.progressCurrent + Math.ceil(session.accumulatedDuration / 60),
-        now,
-      );
+    const increment =
+      entry.progressUnit === "sessions"
+        ? 1
+        : entry.progressUnit === "hours"
+          ? Math.ceil(session.accumulatedDuration / 60)
+          : 0;
+    const next = Math.min(
+      entry.progressCurrent + increment,
+      entry.progressTotal ?? Infinity,
+    );
+    if (increment > 0 && next !== entry.progressCurrent)
+      return updateStudyProgress(entry, next, now);
   }
   return startEntry(entry, now);
 }
@@ -227,7 +248,6 @@ export class StartSession {
           parsed.exercises === undefined && { exercises: entry.exercises }),
       }),
     );
-    const updatedEntry = applyDomain(() => startEntry(entry, now));
     const activity = createActivity({
       id: activityId,
       type: "session_started",
@@ -246,11 +266,18 @@ export class StartSession {
           "CONFLICT",
           "Já existe uma sessão em andamento.",
         );
+      const currentEntry = await loadEntry(this.dependencies, entry.id);
+      const preserved = await preserveStudyTime(
+        this.dependencies,
+        currentEntry,
+        now,
+      );
+      const updatedEntry = applyDomain(() => startEntry(preserved, now));
       await saveEntity(
         () => this.dependencies.sessions.save(session),
         "save_session",
       );
-      if (updatedEntry !== entry)
+      if (updatedEntry !== currentEntry)
         await saveEntity(
           () => this.dependencies.libraryEntries.save(updatedEntry),
           "save_entry",
@@ -334,38 +361,42 @@ export class CompleteSession {
   }
 
   private async complete(sessionId: string): Promise<SessionCompletionResult> {
-    const existing = await loadSession(this.dependencies, sessionId);
-    const entry = await loadEntry(this.dependencies, existing.entryId);
     const [activityId, now] = await Promise.all([
       generatedId(this.dependencies, "generate_activity_id"),
       currentTime(this.dependencies),
     ]);
-    const completed = applyDomain(() => completeSession(existing, now));
-    const updatedEntry = applyDomain(() =>
-      applyCompletedSession(entry, completed, now),
-    );
-    const activity = createActivity({
-      id: activityId,
-      type: "session_completed",
-      aggregateId: entry.id,
-      occurredAt: now,
-      revision: completed.revision,
-      metadata: {
-        sessionId,
-        entryType: entry.type,
-        duration: completed.accumulatedDuration,
-      },
-    });
-    const event = await sessionEvent(
-      this.dependencies,
-      completed,
-      "completed",
-      now,
-    );
-    let milestoneEvents = Object.freeze(
-      [],
-    ) as readonly import("../domain").DomainEvent[];
-    await runTransaction(this.dependencies, async () => {
+    const result = await runTransaction(this.dependencies, async () => {
+      const existing = await loadSession(this.dependencies, sessionId);
+      if (existing.status === "completed")
+        return { completed: existing, events: [] };
+      const entry = await loadEntry(this.dependencies, existing.entryId);
+      const preservedEntry = await preserveStudyTime(
+        this.dependencies,
+        entry,
+        now,
+      );
+      const completed = applyDomain(() => completeSession(existing, now));
+      const updatedEntry = applyDomain(() =>
+        applyCompletedSession(preservedEntry, completed, now),
+      );
+      const activity = createActivity({
+        id: activityId,
+        type: "session_completed",
+        aggregateId: entry.id,
+        occurredAt: now,
+        revision: completed.revision,
+        metadata: {
+          sessionId,
+          entryType: entry.type,
+          duration: completed.accumulatedDuration,
+        },
+      });
+      const event = await sessionEvent(
+        this.dependencies,
+        completed,
+        "completed",
+        now,
+      );
       await saveEntity(
         () => this.dependencies.sessions.save(completed),
         "save_session",
@@ -376,10 +407,11 @@ export class CompleteSession {
           "save_entry",
         );
       await saveActivity(this.dependencies, activity);
-      milestoneEvents = await processMilestones(this.dependencies, event);
+      const milestoneEvents = await processMilestones(this.dependencies, event);
+      return { completed, events: [event, ...milestoneEvents] };
     });
-    await publishEvents(this.dependencies, [event, ...milestoneEvents]);
-    return completionResult(completed);
+    await publishEvents(this.dependencies, result.events);
+    return completionResult(result.completed);
   }
 }
 
@@ -409,8 +441,13 @@ export class CreateManualSession {
           parsed.exercises === undefined && { exercises: entry.exercises }),
       }),
     );
+    const preservedEntry = await preserveStudyTime(
+      this.dependencies,
+      entry,
+      now,
+    );
     const updatedEntry = applyDomain(() =>
-      applyCompletedSession(entry, session, now),
+      applyCompletedSession(preservedEntry, session, now),
     );
     const activity = createActivity({
       id: activityId,

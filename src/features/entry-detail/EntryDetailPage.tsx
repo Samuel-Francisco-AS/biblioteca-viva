@@ -1,7 +1,9 @@
+import { StudyDetailPage } from "./StudyDetailPage";
+import type { FlashCardApplication } from "./StudyFlashCards";
 import { EntryPortrait } from "./EntryPortrait";
 import { RecordMemories } from "./RecordMemories";
 import { ExerciseList } from "./ExerciseList";
-import { entryExperience, studyUnitLabels } from "./entryExperience";
+import { entryExperience } from "./entryExperience";
 import { ArtifactGlyph } from "../../app/ArtifactGlyph";
 import { useEffect, useState, type FormEvent } from "react";
 import {
@@ -26,29 +28,30 @@ import {
   type OrganizationApplication,
 } from "../tags/OrganizationPanel";
 
-interface EntryDetailApplication extends BookDetailApplication {
-  readonly commands: BookDetailApplication["commands"] & {
-    readonly changeLibraryEntryStatus: {
-      execute(input: unknown): Promise<LibraryEntry>;
+export interface EntryDetailApplication extends BookDetailApplication {
+  readonly commands: BookDetailApplication["commands"] &
+    FlashCardApplication["commands"] & {
+      readonly changeLibraryEntryStatus: {
+        execute(input: unknown): Promise<LibraryEntry>;
+      };
+      readonly deleteLibraryEntry: {
+        execute(input: unknown): Promise<{ readonly deleted: true }>;
+      };
+      readonly updateLibraryEntryProgress: {
+        execute(input: unknown): Promise<LibraryEntry>;
+      };
+      readonly completeSession: SessionApplication["commands"]["completeSession"];
+      readonly createManualSession: SessionApplication["commands"]["createManualSession"];
+      readonly createTag: OrganizationApplication["commands"]["createTag"];
+      readonly deleteTag: OrganizationApplication["commands"]["deleteTag"];
+      readonly deleteSession: SessionApplication["commands"]["deleteSession"];
+      readonly editSession: SessionApplication["commands"]["editSession"];
+      readonly organizeLibraryEntry: OrganizationApplication["commands"]["organizeLibraryEntry"];
+      readonly renameTag: OrganizationApplication["commands"]["renameTag"];
+      readonly pauseSession: SessionApplication["commands"]["pauseSession"];
+      readonly resumeSession: SessionApplication["commands"]["resumeSession"];
+      readonly startSession: SessionApplication["commands"]["startSession"];
     };
-    readonly deleteLibraryEntry: {
-      execute(input: unknown): Promise<{ readonly deleted: true }>;
-    };
-    readonly updateLibraryEntryProgress: {
-      execute(input: unknown): Promise<LibraryEntry>;
-    };
-    readonly completeSession: SessionApplication["commands"]["completeSession"];
-    readonly createManualSession: SessionApplication["commands"]["createManualSession"];
-    readonly createTag: OrganizationApplication["commands"]["createTag"];
-    readonly deleteTag: OrganizationApplication["commands"]["deleteTag"];
-    readonly deleteSession: SessionApplication["commands"]["deleteSession"];
-    readonly editSession: SessionApplication["commands"]["editSession"];
-    readonly organizeLibraryEntry: OrganizationApplication["commands"]["organizeLibraryEntry"];
-    readonly renameTag: OrganizationApplication["commands"]["renameTag"];
-    readonly pauseSession: SessionApplication["commands"]["pauseSession"];
-    readonly resumeSession: SessionApplication["commands"]["resumeSession"];
-    readonly startSession: SessionApplication["commands"]["startSession"];
-  };
   readonly queries: BookDetailApplication["queries"] & {
     readonly getLibraryEntry: {
       execute(input: unknown): Promise<LibraryEntry>;
@@ -155,6 +158,18 @@ export function EntryDetailPage({
         )}
       />
     );
+  if (entry.type === "study")
+    return (
+      <StudyDetailPage
+        key={id}
+        application={application}
+        entry={entry}
+        notes={notes}
+        quotes={quotes}
+        returnPath={returnPath}
+        onChange={setEntry}
+      />
+    );
   const availableApplication = application;
   const currentEntry = entry;
 
@@ -191,28 +206,18 @@ export function EntryDetailPage({
     const raw = form.get("progress");
     const value = typeof raw === "string" ? Number(raw) : Number.NaN;
     try {
-      const input =
-        currentEntry.type === "series"
-          ? {
-              id,
-              type: "series",
-              episodesWatched: value,
-              currentSeason: form.get("season")
-                ? Number(form.get("season"))
-                : undefined,
-              currentEpisode: form.get("episode")
-                ? Number(form.get("episode"))
-                : undefined,
-            }
-          : {
-              id,
-              type: "study",
-              progressCurrent:
-                currentEntry.type === "study" &&
-                currentEntry.progressUnit === "hours"
-                  ? value * 60
-                  : value,
-            };
+      if (currentEntry.type !== "series") return;
+      const input = {
+        id,
+        type: "series",
+        episodesWatched: value,
+        currentSeason: form.get("season")
+          ? Number(form.get("season"))
+          : undefined,
+        currentEpisode: form.get("episode")
+          ? Number(form.get("episode"))
+          : undefined,
+      };
       setEntry(
         await availableApplication.commands.updateLibraryEntryProgress.execute(
           input,
@@ -279,30 +284,20 @@ export function EntryDetailPage({
                 value={currentEntry.episodesWatched}
               />
             )}
-          {currentEntry.type === "study" &&
-            currentEntry.progressTotal !== undefined && (
-              <progress
-                className="journey-meter"
-                aria-label="Progresso do estudo"
-                max={currentEntry.progressTotal}
-                value={currentEntry.progressCurrent}
-              />
-            )}
           {currentEntry.completedAt && (
             <p className="completion-memory">
               Concluído em{" "}
               {new Date(currentEntry.completedAt).toLocaleDateString("pt-BR")}
             </p>
           )}
-          {(currentEntry.type === "work" || currentEntry.type === "study") &&
-            currentEntry.deadline && (
-              <p>
-                Prazo ·{" "}
-                {new Date(currentEntry.deadline).toLocaleDateString("pt-BR", {
-                  timeZone: "UTC",
-                })}
-              </p>
-            )}
+          {currentEntry.type === "work" && currentEntry.deadline && (
+            <p>
+              Prazo ·{" "}
+              {new Date(currentEntry.deadline).toLocaleDateString("pt-BR", {
+                timeZone: "UTC",
+              })}
+            </p>
+          )}
           {currentEntry.type === "physical_activity" &&
             currentEntry.exercises && (
               <ExerciseList exercises={currentEntry.exercises} />
@@ -359,72 +354,43 @@ export function EntryDetailPage({
               )}
           </div>
         </section>
-        {(currentEntry.type === "series" || currentEntry.type === "study") && (
+        {currentEntry.type === "series" && (
           <form
             className="content-card"
             onSubmit={(event) => void updateProgress(event)}
           >
             <p className="eyebrow">Seu marcador</p>
-            <h3>
-              {currentEntry.type === "series"
-                ? "Retomar a história"
-                : "Mais um passo na trilha"}
-            </h3>
-            {currentEntry.type === "series" && (
-              <div className="ritual-pair">
-                <label className="form-field">
-                  Temporada atual
-                  <input
-                    name="season"
-                    type="number"
-                    min="1"
-                    defaultValue={currentEntry.currentSeason}
-                  />
-                </label>
-                <label className="form-field">
-                  Episódio em que parou
-                  <input
-                    name="episode"
-                    type="number"
-                    min="1"
-                    defaultValue={currentEntry.currentEpisode}
-                  />
-                </label>
-              </div>
-            )}
-            <div className="form-field">
-              <label htmlFor="entry-progress">
-                {currentEntry.type === "series"
-                  ? "Episódios assistidos"
-                  : currentEntry.progressUnit === "hours"
-                    ? "Horas estudadas"
-                    : `Progresso em ${studyUnitLabels[currentEntry.progressUnit]}`}
+            <h3>Retomar a história</h3>
+            <div className="ritual-pair">
+              <label className="form-field">
+                Temporada atual
+                <input
+                  name="season"
+                  type="number"
+                  min="1"
+                  defaultValue={currentEntry.currentSeason}
+                />
               </label>
+              <label className="form-field">
+                Episódio em que parou
+                <input
+                  name="episode"
+                  type="number"
+                  min="1"
+                  defaultValue={currentEntry.currentEpisode}
+                />
+              </label>
+            </div>
+            <div className="form-field">
+              <label htmlFor="entry-progress">Episódios assistidos</label>
               <input
                 id="entry-progress"
                 name="progress"
                 type="number"
                 min="0"
-                step={
-                  currentEntry.type === "study" &&
-                  currentEntry.progressUnit === "hours"
-                    ? "any"
-                    : "1"
-                }
-                max={
-                  currentEntry.type === "series"
-                    ? currentEntry.totalEpisodes
-                    : currentEntry.progressTotal === undefined
-                      ? undefined
-                      : currentEntry.progressTotal /
-                        (currentEntry.progressUnit === "hours" ? 60 : 1)
-                }
-                defaultValue={
-                  currentEntry.type === "series"
-                    ? currentEntry.episodesWatched
-                    : currentEntry.progressCurrent /
-                      (currentEntry.progressUnit === "hours" ? 60 : 1)
-                }
+                step="1"
+                max={currentEntry.totalEpisodes}
+                defaultValue={currentEntry.episodesWatched}
                 required
               />
             </div>

@@ -1,3 +1,7 @@
+## BF-5 Parte 2B — contrato aditivo vigente
+
+Dexie **v10**, mesmas tabelas e índices da v9, upgrade sem reescrever linhas. Estudo recebe `flashCards?: readonly {id, front, back}[]` e `studyTimeBaselineSeconds?: number`; sessão de estudo recebe `focusDurationSeconds?: number`. Campos opcionais, com validação estrita, sem mudança da versão do pacote. Backup **v6** inclui esses campos no envelope existente e mantém aceitação dos backups anteriores. Não há downgrade garantido para APK antigo. Baseline preserva tempo anterior ausente do histórico; acumulado soma baseline e segundos das sessões concluídas. Metas mantêm minutos/sessões e saturam no total. [ADR-016: limites, compatibilidade e fórmulas](decisions/ADR-016-estudo-folio-pomodoro-cartas.md). Seções v8/v9 abaixo descrevem os baselines anteriores.
+
 # Modelo de dados
 
 ## BF-5R5 — evolução aditiva vigente

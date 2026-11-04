@@ -68,3 +68,8 @@ Sem instalação ou teste físico nesta entrega. Aceite artístico, TalkBack, co
 6. Repetir em paisagem, teclado aberto, texto ampliado, alto contraste, movimento reduzido, TalkBack e segundo plano/retorno. Rolar até o último controle e conferir dock/barras de sistema.
 
 BF-5 continua aberta para revisão artística e gate físico do proprietário. Não fechar #24 nem realizar merge automaticamente.
+
+
+## Continuação Parte 2B — Estudo
+
+A [Parte 2B](BF-5_PARTE2B_ESTUDO.md) parte desta candidata e preserva o livro. Implementa fólio próprio de Estudo, pomodoro e cartas; introduz Dexie v10 aditiva, mantendo backup v6, conforme [ADR-016](decisions/ADR-016-estudo-folio-pomodoro-cartas.md). As declarações acima de ausência de mudança de schema referem-se exclusivamente à entrega original da Parte 2. BF-5 continua aberta.

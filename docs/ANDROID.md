@@ -1,3 +1,7 @@
+## BF-5 Parte 2B — timer de estudo
+
+A contagem usa timestamps e limite de foco gravados na sessão Dexie v10. O plugin App v8 já instalado sinaliza retorno da Activity; a montagem após término do processo também reconsulta a sessão. JavaScript não precisa executar com tela desligada. Sem novo plugin, serviço, wake lock ou permissão; **sem notificação/alarme em segundo plano**. Ciclo concluído aguarda registro no retorno, com duração limitada. [Justificativa e limitações](decisions/ADR-016-estudo-folio-pomodoro-cartas.md) · [build e roteiro físico](BF-5_PARTE2B_ESTUDO.md). A simulação automatizada não substitui validação no Moto G06.
+
 # Android
 
 ## BF-5R5 — haptic opcional e candidata

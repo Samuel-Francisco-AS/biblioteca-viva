@@ -1,4 +1,4 @@
-import { exercisePlanSchema } from "./schemas";
+import { focusDurationSchema, exercisePlanSchema } from "./schemas";
 import type { Exercise } from "./types";
 import { InvalidFieldError, InvalidStatusTransitionError } from "./errors";
 import type { EntryType, Session } from "./types";
@@ -20,7 +20,7 @@ export type SessionSpecificInput =
       readonly watchedDuration?: number;
       readonly episodesCompleted?: number;
     }
-  | { readonly entryType: "study" }
+  | { readonly entryType: "study"; readonly focusDurationSeconds?: number }
   | {
       readonly entryType: "physical_activity";
       readonly exercises?: readonly Exercise[];
@@ -71,7 +71,15 @@ function specific(input: SessionSpecificInput) {
           undefined && { episodesCompleted: input.episodesCompleted }),
       };
     case "study":
-      return { kind: "study" as const, entryType: input.entryType };
+      return {
+        kind: "study" as const,
+        entryType: input.entryType,
+        ...(input.focusDurationSeconds !== undefined && {
+          focusDurationSeconds: focusDurationSchema.parse(
+            input.focusDurationSeconds,
+          ),
+        }),
+      };
     case "physical_activity": {
       const exertion = positive(input.perceivedExertion, "perceivedExertion");
       if (exertion !== undefined && exertion > 10)
@@ -166,10 +174,14 @@ function elapsedSeconds(from: string, to: string): number {
 
 export function currentSessionDuration(session: Session, now: string): number {
   const timestamp = requireIsoUtc(now, "now");
-  return session.status === "active" && session.activeSince !== undefined
-    ? session.accumulatedDuration +
+  const duration =
+    session.status === "active" && session.activeSince !== undefined
+      ? session.accumulatedDuration +
         elapsedSeconds(session.activeSince, timestamp)
-    : session.accumulatedDuration;
+      : session.accumulatedDuration;
+  return session.kind === "study" && session.focusDurationSeconds !== undefined
+    ? Math.min(duration, session.focusDurationSeconds)
+    : duration;
 }
 
 export function pauseSession(session: Session, pausedAt: string): Session {

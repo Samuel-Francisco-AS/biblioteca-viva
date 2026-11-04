@@ -24,7 +24,7 @@ const names: string[] = [];
 afterEach(async () => {
   await Promise.all(names.splice(0).map((name) => Dexie.delete(name)));
 });
-it("v8 → v9 preserves six types, annotations, sessions, tags, preferences and reopens workout snapshots", async () => {
+it("v8 → current preserves six types, annotations, sessions, tags, preferences and reopens workout snapshots", async () => {
   const name = `r5-upgrade-${crypto.randomUUID()}`;
   names.push(name);
   const createdAt = "2026-11-03T12:00:00.000Z";
@@ -97,7 +97,7 @@ it("v8 → v9 preserves six types, annotations, sessions, tags, preferences and 
   legacy.close();
   const upgraded = new BibliotecaDatabase(name);
   await upgraded.open();
-  expect(upgraded.verno).toBe(9);
+  expect(upgraded.verno).toBe(10);
   expect(await upgraded.libraryEntries.toArray()).toEqual(
     [...entries].sort((a, b) => a.id.localeCompare(b.id)),
   );
@@ -107,7 +107,7 @@ it("v8 → v9 preserves six types, annotations, sessions, tags, preferences and 
   expect(await upgraded.tags.get("tag")).toEqual(tag);
   expect(await upgraded.settings.get(setting.key)).toEqual(setting);
   expect(await upgraded.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-    value: "9",
+    value: "10",
   });
   const exercises = [
     { name: "Supino fictício", sets: 3, repetitions: 10, loadKg: 12.5 },

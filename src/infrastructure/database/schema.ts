@@ -1,5 +1,7 @@
 import {
   exercisePlanSchema,
+  flashCardsSchema,
+  focusDurationSchema,
   ENTRY_STATUSES,
   MILESTONE_IDS,
   PHYSICAL_ACTIVITY_CATEGORIES,
@@ -15,7 +17,7 @@ import {
 import { z } from "zod";
 
 export const DATABASE_NAME = "biblioteca-viva";
-export const DATABASE_VERSION = 9;
+export const DATABASE_VERSION = 10;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
 export const DATABASE_SCHEMA_V1 = {
@@ -64,6 +66,7 @@ export const DATABASE_SCHEMA_V8 = {
 } as const;
 
 export const DATABASE_SCHEMA_V9 = { ...DATABASE_SCHEMA_V8 } as const;
+export const DATABASE_SCHEMA_V10 = { ...DATABASE_SCHEMA_V9 } as const;
 
 const isoUtc = z.iso.datetime({ offset: false });
 const entityMetadata = {
@@ -186,6 +189,8 @@ const persistedStudySchema = z
   .strictObject({
     ...commonEntry,
     type: z.literal("study"),
+    flashCards: flashCardsSchema.optional(),
+    studyTimeBaselineSeconds: z.int().nonnegative().optional(),
     area: z.string().trim().min(1).optional(),
     discipline: z.string().trim().min(1).optional(),
     objective: z.string().trim().min(1).optional(),
@@ -350,6 +355,7 @@ export const persistedSessionSchema = z
     }),
     z.strictObject({
       ...sessionMetadata,
+      focusDurationSeconds: focusDurationSchema.optional(),
       kind: z.literal("study"),
       entryType: z.literal("study"),
     }),
@@ -369,6 +375,16 @@ export const persistedSessionSchema = z
     }),
   ])
   .superRefine((session, context) => {
+    if (
+      session.kind === "study" &&
+      session.focusDurationSeconds !== undefined &&
+      session.accumulatedDuration > session.focusDurationSeconds
+    )
+      context.addIssue({
+        code: "custom",
+        path: ["accumulatedDuration"],
+        message: "focus limit exceeded",
+      });
     if (session.status === "active" && session.activeSince === undefined)
       context.addIssue({
         code: "custom",

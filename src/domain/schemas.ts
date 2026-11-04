@@ -103,3 +103,17 @@ export const exercisePlanSchema = z
     }),
   )
   .max(80);
+
+export const flashCardSchema = z.strictObject({
+  id: z.string().trim().min(1).max(160),
+  front: z.string().trim().min(1).max(4000),
+  back: z.string().trim().min(1).max(8000),
+});
+export const flashCardsSchema = z
+  .array(flashCardSchema)
+  .max(1000)
+  .refine(
+    (cards) => new Set(cards.map((card) => card.id)).size === cards.length,
+    { message: "Identificadores de cartas duplicados" },
+  );
+export const focusDurationSchema = z.int().min(60).max(10800);

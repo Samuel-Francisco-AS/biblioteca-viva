@@ -584,3 +584,21 @@ export function validateCommonEntry(entry: LibraryEntryBase): void {
 export function getCommonAllowedStatusTransitions(status: EntryStatus) {
   return ALLOWED_TRANSITIONS[status];
 }
+
+/** Preserve the old hours marker without rounding each new focus in the cumulative total. */
+export function captureStudyTimeBaseline(
+  entry: StudyEntry,
+  historySeconds: number,
+  now: string,
+): StudyEntry {
+  if (entry.studyTimeBaselineSeconds !== undefined) return entry;
+  const historical = nonnegativeInteger(historySeconds, "historySeconds");
+  return Object.freeze({
+    ...entry,
+    ...nextMetadata(entry, now),
+    studyTimeBaselineSeconds:
+      entry.progressUnit === "hours"
+        ? Math.max(0, entry.progressCurrent * 60 - historical)
+        : 0,
+  });
+}
