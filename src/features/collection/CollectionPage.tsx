@@ -72,8 +72,9 @@ export function CollectionPage({
 }: {
   readonly application?: CollectionApplication;
 }) {
-  const [entries, setEntries] = useState<readonly LibraryEntry[] | undefined>(() =>
-    application ? recentCollection.get(application)?.entries : undefined,
+  const [entries, setEntries] = useState<readonly LibraryEntry[] | undefined>(
+    () =>
+      application ? recentCollection.get(application)?.entries : undefined,
   );
   const [tags, setTags] = useState<readonly Tag[]>(
     () =>
