@@ -4,7 +4,7 @@ import type { AnnotationShareResult } from "../../application";
 import type { Note, Quote } from "../../domain";
 import { presentApplicationError } from "../entry-editor/errorMessages";
 
-type Props =
+type Props = { readonly showPageField?: boolean } & (
   | {
       readonly annotation: Note;
       readonly kind: "note";
@@ -19,7 +19,8 @@ type Props =
       readonly onShare: (id: string) => Promise<AnnotationShareResult>;
       readonly onUpdate: (input: unknown) => Promise<void>;
       readonly totalPages?: number;
-    };
+    }
+);
 
 function label(kind: Props["kind"]): "nota" | "citação" {
   return kind === "note" ? "nota" : "citação";
@@ -173,7 +174,7 @@ export function AnnotationActions(props: Props) {
             onChange={(event) => setContent(event.target.value)}
           />
         </div>
-        {kind === "quote" && (
+        {kind === "quote" && props.showPageField !== false && (
           <div className="form-field">
             <label htmlFor={`annotation-page-${annotation.id}`}>
               Página (opcional)

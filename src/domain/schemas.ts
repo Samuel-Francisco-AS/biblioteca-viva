@@ -89,3 +89,17 @@ export const updateQuoteInputSchema = updateNoteInputSchema.extend({
 });
 
 export type ParsedCreateBookInput = z.output<typeof createBookInputSchema>;
+
+// Shared strict contract for external workout plans and execution snapshots.
+export const exercisePlanSchema = z
+  .array(
+    z.strictObject({
+      name: z.string().trim().min(1).max(160),
+      sets: z.int().positive().max(100).optional(),
+      repetitions: z.int().positive().max(10000).optional(),
+      loadKg: z.number().finite().nonnegative().max(10000).optional(),
+      durationSeconds: z.int().positive().max(86400).optional(),
+      note: z.string().trim().min(1).max(2000).optional(),
+    }),
+  )
+  .max(80);

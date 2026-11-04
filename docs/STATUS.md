@@ -1,5 +1,8 @@
 # Estado atual
 
+> **BF-5R5 — candidata implementada, gate global vermelho (2026-11-04):** preservados pátio/profundidade/gestos da R4; mundo residente e pausado entre abas, diagnósticos isolados, ficha reutilizável de força em Dexie v9 aditiva, sessões e detalhes por categoria, acabamento e toque leve. [Relatório R5](BF-5R5_RELATORIO.md), [ADR-015](decisions/ADR-015-bf5r5-residencia-e-fichas.md). Amplo local: 719 unitários PASS/1 timeout; E2E 19 PASS/25 FAIL. Dirigidos finais: 153 unitários PASS, 10 de anotações/sessões PASS e seis cenários E2E aprovados em duas execuções (4+2). APK gerado. BF-5 aberta; PR #20 draft; sem aceite físico/artístico ou CI verde. Esta nota é a autoridade presente sobre a cronologia abaixo.
+
+
 > **BF-5R4 — candidata implementada, gate global vermelho (2026-11-03):** substituída a regra de zoom R3 por composição ambiental e profundidade de câmera; corrigido delta inicial do pan, reconstruídos editores dos seis tipos e sistema de papel/tinta/gravuras. [Relatório R4](BF-5R4_RELATORIO.md). Sem aceite físico/artístico; montagem entre rotas e fluidez física ainda pendentes. BF-5 aberta e PR #20 draft.
 
 

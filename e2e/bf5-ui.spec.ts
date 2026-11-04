@@ -14,12 +14,21 @@ test("BF-5: five realms, density and narrative Back in the semantic fallback", a
   await expect(
     page.getByRole("heading", { name: "O ambiente 3D não pôde ser iniciado" }),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "A Noite da Fenda Lilás", exact: true })
-    .click();
+  await page.getByRole("button", { name: /A Noite da Fenda Lilás/ }).click();
   await expect(
     page.getByRole("article", { name: "Conversa RPG" }),
   ).toBeVisible();
+  await expect
+    .poll(() =>
+      page
+        .locator(".library-access-panels")
+        .evaluate((element) => getComputedStyle(element).backdropFilter),
+    )
+    .toBe("none");
+  const panelBounds = await page
+    .getByRole("article", { name: "Conversa RPG" })
+    .boundingBox();
+  expect(panelBounds?.y).toBeGreaterThanOrEqual(0);
   await page.keyboard.press("Escape");
   await expect(page.getByRole("article", { name: "Conversa RPG" })).toHaveCount(
     0,

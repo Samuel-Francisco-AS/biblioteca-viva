@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { WorkoutFields } from "./WorkoutFields";
 import type { ReactNode } from "react";
 import {
   PHYSICAL_ACTIVITY_CATEGORIES,
@@ -75,6 +77,8 @@ export function RitualFields({
   const study = entry?.type === "study" ? entry : undefined;
   const activity = entry?.type === "physical_activity" ? entry : undefined;
   const work = entry?.type === "work" ? entry : undefined;
+  const [category, setCategory] = useState(activity?.category ?? "other");
+  const [unit, setUnit] = useState(study?.progressUnit ?? "sessions");
   const detail = (
     <details className="ritual-marginalia">
       <summary>Datas e referências opcionais</summary>
@@ -128,7 +132,11 @@ export function RitualFields({
             ? "A intenção"
             : type === "study"
               ? "A pergunta inicial"
-              : "O nome desta história"
+              : type === "physical_activity"
+                ? "O nome da sua prática"
+                : type === "movie"
+                  ? "Uma obra para lembrar"
+                  : "Uma história em capítulos"
         }
       >
         <Inscription
@@ -177,7 +185,31 @@ export function RitualFields({
       </RitualChapter>
       {type === "series" && (
         <RitualChapter number="II" title="O fio da narrativa">
-          <p>Marque episódios e temporadas na ficha, à medida que assistir.</p>
+          <p>
+            Uma história de cada vez. Seu marcador de temporada e episódio fica
+            na ficha.
+          </p>
+          {!series && (
+            <Inscription
+              name="episodesWatched"
+              label="Episódios já assistidos (opcional)"
+              type="number"
+            />
+          )}
+          {!series && (
+            <div className="ritual-pair">
+              <Inscription
+                name="currentSeason"
+                label="Temporada em que parou (opcional)"
+                type="number"
+              />
+              <Inscription
+                name="currentEpisode"
+                label="Episódio em que parou (opcional)"
+                type="number"
+              />
+            </div>
+          )}
           <div className="ritual-pair">
             <Inscription
               name="totalEpisodes"
@@ -207,7 +239,13 @@ export function RitualFields({
               <select
                 id="ritual-progressUnit"
                 name="progressUnit"
-                defaultValue={study?.progressUnit ?? "sessions"}
+                value={unit}
+                onChange={(event) => {
+                  const selected = STUDY_PROGRESS_UNITS.find(
+                    (value) => value === event.target.value,
+                  );
+                  if (selected) setUnit(selected);
+                }}
                 disabled={Boolean(study)}
               >
                 {STUDY_PROGRESS_UNITS.map((unit) => (
@@ -235,7 +273,7 @@ export function RitualFields({
                   : study.progressTotal /
                     (study.progressUnit === "hours" ? 60 : 1)
               }
-              numericStep={study?.progressUnit === "hours" ? "any" : "1"}
+              numericStep={unit === "hours" ? "any" : "1"}
               type="number"
             />
           </div>
@@ -248,8 +286,13 @@ export function RitualFields({
             <select
               id="ritual-category"
               name="category"
-              defaultValue={activity?.category ?? "other"}
-              disabled={Boolean(activity)}
+              value={category}
+              onChange={(event) => {
+                const selected = PHYSICAL_ACTIVITY_CATEGORIES.find(
+                  (value) => value === event.target.value,
+                );
+                if (selected) setCategory(selected);
+              }}
             >
               {PHYSICAL_ACTIVITY_CATEGORIES.map((category) => (
                 <option key={category} value={category}>
@@ -280,6 +323,15 @@ export function RitualFields({
           />
         </RitualChapter>
       )}
+      {type === "physical_activity" &&
+        (category === "strength" ||
+          category === "mobility" ||
+          category === "mixed" ||
+          Boolean(activity?.exercises?.length)) && (
+          <RitualChapter number="III" title="Sua ficha de exercícios">
+            <WorkoutFields exercises={activity?.exercises} />
+          </RitualChapter>
+        )}
       {type === "work" && (
         <RitualChapter number="II" title="O próximo passo">
           <Inscription

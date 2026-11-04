@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
@@ -775,4 +775,78 @@ describe("Página Biblioteca", () => {
       worldHostProps().libraryWorldSnapshot?.categories[0].entries[0]?.entryId,
     ).toBe(secondBook.id);
   });
+});
+
+it("R5 refreshes records on return but preserves an unchanged projected snapshot", async () => {
+  let entries: readonly LibraryEntry[] = [firstBook];
+  const execute = vi.fn(() => Promise.resolve(entries));
+  const application: LibraryApplication = {
+    queries: { listLibraryEntries: { execute } },
+  };
+  const view = render(
+    <MemoryRouter>
+      <LibraryPage application={application} active />
+    </MemoryRouter>,
+  );
+  await waitFor(() =>
+    expect(worldHostProps().libraryWorldSnapshot).toBeDefined(),
+  );
+  const initial = worldHostProps().libraryWorldSnapshot;
+  view.rerender(
+    <MemoryRouter>
+      <LibraryPage application={application} active={false} />
+    </MemoryRouter>,
+  );
+  expect(execute).toHaveBeenCalledOnce();
+  expect(worldHostProps().active).toBe(false);
+  view.rerender(
+    <MemoryRouter>
+      <LibraryPage application={application} active />
+    </MemoryRouter>,
+  );
+  await waitFor(() => expect(execute).toHaveBeenCalledTimes(2));
+  expect(worldHostProps().libraryWorldSnapshot).toBe(initial);
+  entries = [
+    {
+      ...firstBook,
+      title: "Novo título fictício",
+      currentPage: 75,
+      revision: 3,
+    },
+  ];
+  view.rerender(
+    <MemoryRouter>
+      <LibraryPage application={application} active={false} />
+    </MemoryRouter>,
+  );
+  view.rerender(
+    <MemoryRouter>
+      <LibraryPage application={application} active />
+    </MemoryRouter>,
+  );
+  await waitFor(() =>
+    expect(worldHostProps().libraryWorldSnapshot).not.toBe(initial),
+  );
+  expect(
+    worldHostProps().libraryWorldSnapshot?.categories[0].entries[0],
+  ).toMatchObject({
+    title: "Novo título fictício",
+    readingProgress: { currentPage: 75 },
+  });
+  entries = [];
+  view.rerender(
+    <MemoryRouter>
+      <LibraryPage application={application} active={false} />
+    </MemoryRouter>,
+  );
+  view.rerender(
+    <MemoryRouter>
+      <LibraryPage application={application} active />
+    </MemoryRouter>,
+  );
+  await waitFor(() =>
+    expect(
+      worldHostProps().libraryWorldSnapshot?.categories[0].entries,
+    ).toHaveLength(0),
+  );
 });

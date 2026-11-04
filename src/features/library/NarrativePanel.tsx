@@ -11,9 +11,11 @@ import { QUEST_IDS, STORIES } from "./narrative/stories";
 export function NarrativePanel({
   session,
   failed,
+  enabled = true,
 }: {
   readonly session: NarrativeSession;
   readonly failed: boolean;
+  readonly enabled?: boolean;
 }) {
   const state = useSyncExternalStore(session.subscribe, session.getSnapshot);
   const node = nodeFor(state);
@@ -26,6 +28,7 @@ export function NarrativePanel({
     node?.choices.filter((c) => matches(c.condition, state)) ?? [];
   const speaker = INHABITANTS.find((a) => a.key === node?.speakerId);
   useEffect(() => {
+    if (!enabled) return;
     if (state.active) {
       if (
         !previousActive.current &&
@@ -36,9 +39,9 @@ export function NarrativePanel({
     } else if (previousActive.current)
       opener.current?.focus({ preventScroll: true });
     previousActive.current = Boolean(state.active);
-  }, [state.revision, state.active]);
+  }, [state.revision, state.active, enabled]);
   useEffect(() => {
-    if (!state.active && !journal) return;
+    if (!enabled || (!state.active && !journal)) return;
     const close = (event: Event) => {
       if (event instanceof KeyboardEvent && event.key !== "Escape") return;
       event.preventDefault();
@@ -53,7 +56,8 @@ export function NarrativePanel({
       window.removeEventListener("keydown", close);
       window.removeEventListener("biblioteca-viva:native-back", close);
     };
-  }, [state.active, journal, session]);
+  }, [state.active, journal, session, enabled]);
+  if (!enabled) return null;
   return (
     <section
       className={`rpg-shell${state.active ? " rpg-shell--open" : ""}`}
@@ -166,8 +170,8 @@ export function NarrativePanel({
             </button>
           </header>
           <p>
-            Progresso ficcional desta sessão. Sair da Biblioteca ou recarregar
-            inicia uma nova visita.
+            Progresso ficcional desta sessão. Recarregar o aplicativo inicia uma
+            nova visita. Trocar de aba preserva suas histórias.
           </p>
           <ul>
             {QUEST_IDS.map((q) => {

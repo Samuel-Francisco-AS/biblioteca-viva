@@ -1,3 +1,4 @@
+import { exercisesFromForm } from "./exercisesFromForm";
 import { RitualFields } from "./RitualFields";
 import { ritualCopy } from "./ritualCopy";
 import { useState, type FormEvent } from "react";
@@ -55,6 +56,9 @@ function specificInput(type: Exclude<EntryType, "book">, form: FormData) {
         title,
         platform: field(form, "platform"),
         totalEpisodes: positiveInteger(form, "totalEpisodes"),
+        episodesWatched: positiveInteger(form, "episodesWatched"),
+        currentSeason: positiveInteger(form, "currentSeason"),
+        currentEpisode: positiveInteger(form, "currentEpisode"),
       };
     case "study": {
       const progressUnit = field(form, "progressUnit") ?? "sessions";
@@ -80,6 +84,7 @@ function specificInput(type: Exclude<EntryType, "book">, form: FormData) {
         category: field(form, "category") ?? "other",
         modality: field(form, "modality"),
         objective: field(form, "objective"),
+        exercises: exercisesFromForm(form),
       };
     case "work":
       return {
@@ -182,7 +187,7 @@ export function NewEntryPage({
       <h2 id="new-entry-title">{ritualCopy[selectedType].title}</h2>
       <p>{ritualCopy[selectedType].invitation}</p>
       {error && <p role="alert">{error}</p>}
-      <form onSubmit={(event) => void submit(event)} noValidate>
+      <form onSubmit={(event) => void submit(event)}>
         <RitualFields key={selectedType} type={selectedType} />
         <div className="form-actions">
           <button

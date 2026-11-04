@@ -186,8 +186,10 @@ function ProgressSummary({ book }: { readonly book: BookEntry }) {
 
 export function BookDetailPage({
   application,
+  refreshKey = 0,
 }: {
   readonly application?: BookDetailApplication;
+  readonly refreshKey?: number;
 }) {
   const { id = "" } = useParams();
   const navigate = useNavigate();
@@ -230,7 +232,7 @@ export function BookDetailPage({
     return () => {
       active = false;
     };
-  }, [application, id]);
+  }, [application, id, refreshKey]);
 
   if (!application) {
     return (

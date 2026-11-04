@@ -1,3 +1,7 @@
+import { EntryPortrait } from "./EntryPortrait";
+import { RecordMemories } from "./RecordMemories";
+import { ExerciseList } from "./ExerciseList";
+import { entryExperience, studyUnitLabels } from "./entryExperience";
 import { ArtifactGlyph } from "../../app/ArtifactGlyph";
 import { useEffect, useState, type FormEvent } from "react";
 import {
@@ -61,53 +65,6 @@ interface EntryDetailApplication extends BookDetailApplication {
   };
 }
 
-function details(
-  entry: Exclude<LibraryEntry, { readonly type: "book" }>,
-): readonly string[] {
-  switch (entry.type) {
-    case "movie":
-      return [
-        entry.director,
-        entry.year?.toString(),
-        entry.durationMinutes === undefined
-          ? undefined
-          : `${entry.durationMinutes} min`,
-        entry.platform,
-      ].filter((value): value is string => value !== undefined);
-    case "series":
-      return [
-        entry.platform,
-        `${entry.episodesWatched}${entry.totalEpisodes === undefined ? " episódios" : ` de ${entry.totalEpisodes} episódios`}`,
-        entry.currentSeason === undefined
-          ? undefined
-          : `Temporada ${entry.currentSeason}`,
-        entry.currentEpisode === undefined
-          ? undefined
-          : `Episódio ${entry.currentEpisode}`,
-      ].filter((value): value is string => value !== undefined);
-    case "study":
-      return [
-        entry.area,
-        entry.discipline,
-        entry.objective,
-        `${entry.progressCurrent}${entry.progressTotal === undefined ? "" : ` de ${entry.progressTotal}`} · ${entry.progressUnit}`,
-      ].filter((value): value is string => value !== undefined);
-    case "physical_activity":
-      return [entry.category, entry.modality, entry.objective].filter(
-        (value): value is string => value !== undefined,
-      );
-    case "work":
-      return [
-        entry.area,
-        entry.organization,
-        entry.description,
-        entry.nextAction === undefined
-          ? undefined
-          : `Próxima ação: ${entry.nextAction}`,
-      ].filter((value): value is string => value !== undefined);
-  }
-}
-
 export function EntryDetailPage({
   application,
 }: {
@@ -121,6 +78,7 @@ export function EntryDetailPage({
   const [notes, setNotes] = useState<readonly Note[]>([]);
   const [quotes, setQuotes] = useState<readonly Quote[]>([]);
   const [error, setError] = useState<string>();
+  const [refreshKey, setRefreshKey] = useState(0);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -153,7 +111,7 @@ export function EntryDetailPage({
         <p>Não foi possível iniciar o armazenamento local.</p>
       </section>
     );
-  if (error)
+  if (error && !entry)
     return (
       <section className="content-card" role="alert">
         <h2>Não foi possível abrir o registro</h2>
@@ -171,13 +129,24 @@ export function EntryDetailPage({
   if (entry.type === "book")
     return (
       <>
-        <BookDetailPage application={application} />
+        <BookDetailPage application={application} refreshKey={refreshKey} />
         <OrganizationPanel
           application={application}
           entry={entry}
           onChange={setEntry}
         />
-        <SessionPanel application={application} entry={entry} />
+        <SessionPanel
+          application={application}
+          entry={entry}
+          onChanged={() => {
+            setRefreshKey((value) => value + 1);
+            void application.queries.getLibraryEntry
+              .execute({ id })
+              .then(setEntry, (failure: unknown) =>
+                setError(presentApplicationError(failure).message),
+              );
+          }}
+        />
       </>
     );
   const availableApplication = application;
@@ -187,6 +156,14 @@ export function EntryDetailPage({
     setBusy(true);
     setError(undefined);
     try {
+      if (status === "completed" && currentEntry.status === "planned") {
+        const started =
+          await availableApplication.commands.changeLibraryEntryStatus.execute({
+            id,
+            status: "in_progress",
+          });
+        setEntry(started);
+      }
       setEntry(
         await availableApplication.commands.changeLibraryEntryStatus.execute({
           id,
@@ -210,7 +187,17 @@ export function EntryDetailPage({
     try {
       const input =
         currentEntry.type === "series"
-          ? { id, type: "series", episodesWatched: value }
+          ? {
+              id,
+              type: "series",
+              episodesWatched: value,
+              currentSeason: form.get("season")
+                ? Number(form.get("season"))
+                : undefined,
+              currentEpisode: form.get("episode")
+                ? Number(form.get("episode"))
+                : undefined,
+            }
           : {
               id,
               type: "study",
@@ -225,25 +212,6 @@ export function EntryDetailPage({
           input,
         ),
       );
-    } catch (failure: unknown) {
-      setError(presentApplicationError(failure).message);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function addNote(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setBusy(true);
-    setError(undefined);
-    const content = new FormData(event.currentTarget).get("note");
-    try {
-      const note = await availableApplication.commands.addNote.execute({
-        entryId: id,
-        content,
-      });
-      setNotes((current) => [...current, note]);
-      event.currentTarget.reset();
     } catch (failure: unknown) {
       setError(presentApplicationError(failure).message);
     } finally {
@@ -291,12 +259,54 @@ export function EntryDetailPage({
       {error && <p role="alert">{error}</p>}
       <div className="entry-detail-sections">
         <section className="content-card" aria-labelledby="entry-data-title">
-          <h3 id="entry-data-title">Detalhes</h3>
-          <ul>
-            {details(currentEntry).map((value) => (
-              <li key={value}>{value}</li>
-            ))}
-          </ul>
+          <p className="eyebrow">{entryTypeLabels[currentEntry.type]}</p>
+          <h3 id="entry-data-title">
+            {entryExperience[currentEntry.type].chapter}
+          </h3>
+          <EntryPortrait entry={currentEntry} />
+          {currentEntry.type === "series" &&
+            currentEntry.totalEpisodes !== undefined && (
+              <progress
+                className="journey-meter"
+                aria-label="Progresso da série"
+                max={currentEntry.totalEpisodes}
+                value={currentEntry.episodesWatched}
+              />
+            )}
+          {currentEntry.type === "study" &&
+            currentEntry.progressTotal !== undefined && (
+              <progress
+                className="journey-meter"
+                aria-label="Progresso do estudo"
+                max={currentEntry.progressTotal}
+                value={currentEntry.progressCurrent}
+              />
+            )}
+          {currentEntry.completedAt && (
+            <p className="completion-memory">
+              Concluído em{" "}
+              {new Date(currentEntry.completedAt).toLocaleDateString("pt-BR")}
+            </p>
+          )}
+          {(currentEntry.type === "work" || currentEntry.type === "study") &&
+            currentEntry.deadline && (
+              <p>
+                Prazo ·{" "}
+                {new Date(currentEntry.deadline).toLocaleDateString("pt-BR", {
+                  timeZone: "UTC",
+                })}
+              </p>
+            )}
+          {currentEntry.type === "physical_activity" &&
+            currentEntry.exercises && (
+              <ExerciseList exercises={currentEntry.exercises} />
+            )}
+          {currentEntry.type === "physical_activity" && (
+            <p className="field-help">
+              Repita esta prática em dias diferentes. As execuções ficam no seu
+              histórico; concluir o registro encerra a prática.
+            </p>
+          )}
           <div className="form-actions">
             {currentEntry.status === "planned" && (
               <button
@@ -306,6 +316,28 @@ export function EntryDetailPage({
                 onClick={() => void changeStatus("in_progress")}
               >
                 Iniciar
+              </button>
+            )}
+            {(currentEntry.status === "completed" ||
+              currentEntry.status === "abandoned" ||
+              currentEntry.status === "paused") && (
+              <button
+                className="button button--secondary"
+                type="button"
+                disabled={busy}
+                onClick={() => void changeStatus("in_progress")}
+              >
+                Retomar registro
+              </button>
+            )}
+            {currentEntry.status === "in_progress" && (
+              <button
+                className="button button--secondary"
+                type="button"
+                disabled={busy}
+                onClick={() => void changeStatus("paused")}
+              >
+                Pausar registro
               </button>
             )}
             {currentEntry.status !== "completed" &&
@@ -319,14 +351,6 @@ export function EntryDetailPage({
                   Concluir
                 </button>
               )}
-            <button
-              disabled={busy}
-              type="button"
-              className="button button--danger"
-              onClick={() => void removeEntry()}
-            >
-              Excluir registro
-            </button>
           </div>
         </section>
         {(currentEntry.type === "series" || currentEntry.type === "study") && (
@@ -334,20 +358,67 @@ export function EntryDetailPage({
             className="content-card"
             onSubmit={(event) => void updateProgress(event)}
           >
-            <h3>Atualizar progresso</h3>
+            <p className="eyebrow">Seu marcador</p>
+            <h3>
+              {currentEntry.type === "series"
+                ? "Retomar a história"
+                : "Mais um passo na trilha"}
+            </h3>
+            {currentEntry.type === "series" && (
+              <div className="ritual-pair">
+                <label className="form-field">
+                  Temporada atual
+                  <input
+                    name="season"
+                    type="number"
+                    min="1"
+                    defaultValue={currentEntry.currentSeason}
+                  />
+                </label>
+                <label className="form-field">
+                  Episódio em que parou
+                  <input
+                    name="episode"
+                    type="number"
+                    min="1"
+                    defaultValue={currentEntry.currentEpisode}
+                  />
+                </label>
+              </div>
+            )}
             <div className="form-field">
               <label htmlFor="entry-progress">
                 {currentEntry.type === "series"
                   ? "Episódios assistidos"
                   : currentEntry.progressUnit === "hours"
                     ? "Horas estudadas"
-                    : `Progresso em ${currentEntry.progressUnit}`}
+                    : `Progresso em ${studyUnitLabels[currentEntry.progressUnit]}`}
               </label>
               <input
                 id="entry-progress"
                 name="progress"
                 type="number"
                 min="0"
+                step={
+                  currentEntry.type === "study" &&
+                  currentEntry.progressUnit === "hours"
+                    ? "any"
+                    : "1"
+                }
+                max={
+                  currentEntry.type === "series"
+                    ? currentEntry.totalEpisodes
+                    : currentEntry.progressTotal === undefined
+                      ? undefined
+                      : currentEntry.progressTotal /
+                        (currentEntry.progressUnit === "hours" ? 60 : 1)
+                }
+                defaultValue={
+                  currentEntry.type === "series"
+                    ? currentEntry.episodesWatched
+                    : currentEntry.progressCurrent /
+                      (currentEntry.progressUnit === "hours" ? 60 : 1)
+                }
                 required
               />
             </div>
@@ -360,53 +431,44 @@ export function EntryDetailPage({
             </button>
           </form>
         )}
-        <section className="content-card" aria-labelledby="entry-notes-title">
-          <h3 id="entry-notes-title">Notas</h3>
-          <form onSubmit={(event) => void addNote(event)}>
-            <div className="form-field">
-              <label htmlFor="entry-note">Nova nota</label>
-              <textarea id="entry-note" name="note" required />
-            </div>
-            <button
-              className="button button--primary"
-              disabled={busy}
-              type="submit"
-            >
-              Adicionar nota
-            </button>
-          </form>
-          {notes.length === 0 ? (
-            <p>Nenhuma nota neste registro.</p>
-          ) : (
-            <ul>
-              {notes.map((note) => (
-                <li key={note.id}>{note.content}</li>
-              ))}
-            </ul>
-          )}
-        </section>
-        {(currentEntry.type === "movie" ||
-          currentEntry.type === "series" ||
-          currentEntry.type === "study") && (
-          <section className="content-card">
-            <h3>Citações</h3>
-            {quotes.length === 0 ? (
-              <p>Nenhuma citação neste registro.</p>
-            ) : (
-              <ul>
-                {quotes.map((quote) => (
-                  <li key={quote.id}>{quote.content}</li>
-                ))}
-              </ul>
-            )}
-          </section>
-        )}
+        <SessionPanel
+          application={availableApplication}
+          entry={currentEntry}
+          onChanged={() => {
+            void availableApplication.queries.getLibraryEntry
+              .execute({ id })
+              .then(setEntry, (failure: unknown) =>
+                setError(presentApplicationError(failure).message),
+              );
+          }}
+        />
+        <RecordMemories
+          key={id}
+          application={availableApplication}
+          entry={currentEntry}
+          initialNotes={notes}
+          initialQuotes={quotes}
+        />
         <OrganizationPanel
           application={availableApplication}
           entry={currentEntry}
           onChange={setEntry}
         />
-        <SessionPanel application={availableApplication} entry={currentEntry} />
+        <details className="record-care">
+          <summary>Cuidar deste registro</summary>
+          <p>
+            Excluir remove também notas, citações e sessões vinculadas. Esta
+            ação pede confirmação.
+          </p>
+          <button
+            className="button button--danger"
+            type="button"
+            disabled={busy}
+            onClick={() => void removeEntry()}
+          >
+            Excluir registro
+          </button>
+        </details>
       </div>
     </section>
   );

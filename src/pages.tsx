@@ -87,22 +87,33 @@ let nextApplicationMountId = 0;
 
 export function LibraryPage({
   application,
+  active = true,
 }: {
   readonly application?: LibraryApplication;
+  readonly active?: boolean;
 }) {
-  if (!application) return <LibraryPageContent key="unavailable" />;
+  if (!application)
+    return <LibraryPageContent active={active} key="unavailable" />;
   let mountId = applicationMountIds.get(application);
   if (mountId === undefined) {
     mountId = ++nextApplicationMountId;
     applicationMountIds.set(application, mountId);
   }
-  return <LibraryPageContent application={application} key={mountId} />;
+  return (
+    <LibraryPageContent
+      application={application}
+      active={active}
+      key={mountId}
+    />
+  );
 }
 
 function LibraryPageContent({
   application,
+  active = true,
 }: {
   readonly application?: LibraryApplication;
+  readonly active?: boolean;
 }) {
   const diagnosticsEnabled = isDiagnosticsEnabled(
     import.meta.env.DEV,
@@ -173,18 +184,21 @@ function LibraryPageContent({
   }
 
   useEffect(() => {
-    if (!application || diagnosticsActive) return;
-    let active = true;
+    if (!application || diagnosticsActive || !active) return;
+    let current = true;
     const loadSnapshot = async (): Promise<void> => {
       try {
         const entries = await application.queries.listLibraryEntries.execute();
-        if (!active) return;
-        setSnapshot({
-          application,
-          world: projectLibraryWorldEntries(entries),
-        });
+        if (!current) return;
+        const world = projectLibraryWorldEntries(entries);
+        setSnapshot((previous) =>
+          previous?.application === application &&
+          JSON.stringify(previous.world) === JSON.stringify(world)
+            ? previous
+            : { application, world },
+        );
       } catch (failure: unknown) {
-        if (!active) return;
+        if (!current) return;
         setSnapshot({
           application,
           error: presentApplicationError(failure).message,
@@ -193,11 +207,12 @@ function LibraryPageContent({
     };
     void loadSnapshot();
     return () => {
-      active = false;
+      current = false;
     };
-  }, [application, diagnosticsActive]);
+  }, [application, diagnosticsActive, active]);
 
   useEffect(() => {
+    if (!active) return;
     const closeExploration = (event: Event) => {
       if (
         event.defaultPrevented ||
@@ -229,7 +244,7 @@ function LibraryPageContent({
         closeExploration,
       );
     };
-  }, [toolsOpen]);
+  }, [toolsOpen, active]);
 
   const returnPath = `${location.pathname}${location.search}`;
   const representedIds = new Set(selectableObjects.map(({ id }) => id));
@@ -332,6 +347,7 @@ function LibraryPageContent({
         ) : (
           <>
             <WorldHost
+              active={active}
               libraryWorldSnapshot={libraryWorldSnapshot}
               onSelectableObjectsChange={handleSelectableObjects}
               onSelectionChange={handleWorldSelection}

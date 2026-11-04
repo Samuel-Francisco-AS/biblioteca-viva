@@ -59,7 +59,7 @@ describe("migração Dexie v7 para v8", () => {
     expect(await migrated.libraryEntries.count()).toBe(0);
     expect(await migrated.settings.count()).toBe(0);
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-      value: "8",
+      value: "9",
     });
 
     const fresh = createBook({

@@ -114,16 +114,25 @@ for (const fallback of [false, true]) {
       .getByRole("button", { name: "Guardar o epílogo no diário" })
       .click();
     await expect(journal).toContainText("companhia discreta");
+    await page
+      .getByRole("button", { name: "Fechar diário", exact: true })
+      .click();
     await expect(
       page.getByRole("button", { name: /Diário de histórias · 1\/5/ }),
     ).toBeVisible();
     expect(await readRecords()).toBe(recordsBefore);
     await page.getByRole("link", { name: "Coleção", exact: true }).click();
     await expect(
-      page.getByRole("heading", { name: "Coleção", exact: true, level: 2 }),
+      page.getByRole("heading", { name: "Acervo encantado", exact: true }),
     ).toBeVisible();
-    await expect(page.locator("canvas[data-three-world-canvas]")).toHaveCount(
-      0,
-    );
+    const retainedCanvas = page.locator("canvas[data-three-world-canvas]");
+    await expect(retainedCanvas).toHaveCount(fallback ? 0 : 1);
+    if (!fallback) {
+      await expect(retainedCanvas).toBeHidden();
+      await expect(retainedCanvas).toHaveAttribute(
+        "data-active-frame-loops",
+        "0",
+      );
+    }
   });
 }

@@ -1,5 +1,8 @@
 # Documentação da Biblioteca Viva
 
+> **BF-5R5 — candidata de refinamento (2026-11-04):** mundo residente/pausado, fichas e detalhes contextuais dos seis registros, dados v9 aditivos e toque. [Relatório, gates e roteiro Moto G06](BF-5R5_RELATORIO.md), [decisão técnica](decisions/ADR-015-bf5r5-residencia-e-fichas.md). BF-5 continua aberta, PR #20 draft. Notas antigas abaixo são cronologia.
+
+
 > **BF-5R4 — candidata em revisão:** editores dos seis tipos, composição ambiental/profundidade de câmera e linguagem de papel/tinta/latão implementados na branch da PR draft #20. [Relatório e limites](BF-5R4_RELATORIO.md). Não há aceite artístico/físico, CI verde ou fechamento da BF-5; textos anteriores de planejamento são cronologia.
 
 > **PRÓXIMA SEQUÊNCIA APROVADA (2026-11-03):** **BF-5 — Reforma Global de UI/UX → BF-6 — Aprimoramento do Mundo Vivo/RPG → BF-7 — Consolidação Funcional e Assistiva (antiga BF-5)**. A BF-5 adotará **grande reforma integrada e refinamentos posteriores até o aceite**, em vez de pequenos checkpoints obrigatórios. Apenas o replanejamento está autorizado; design detalhado e implementação futuros. Consulte [ADR-014](decisions/ADR-014-replanejamento-pos-bf4.md), [ROADMAP](ROADMAP.md) e [STATUS](STATUS.md). Os blocos abaixo registram estados históricos da BF-4 e não revogam a nova ordem.

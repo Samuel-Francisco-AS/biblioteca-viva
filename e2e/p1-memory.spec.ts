@@ -14,16 +14,21 @@ test("tag, favorito, sessão persistente e estatísticas formam memória unifica
   await page.getByRole("button", { name: "Criar e associar" }).click();
   await expect(page.getByLabel("Pesquisa Fictícia")).toBeChecked();
 
+  await page.getByText("Usar cronômetro (opcional)", { exact: true }).click();
   await page.getByRole("button", { name: "Iniciar sessão" }).click();
   await expect(page.getByText(/Sessão em andamento/u).first()).toBeVisible();
   await navigateFromDock("Coleção");
   await expect(page.getByRole("link", { name: "Abrir sessão" })).toBeVisible();
   await page.getByRole("link", { name: "Abrir sessão" }).click();
-  await page.getByRole("button", { name: "Pausar" }).click();
+  await page
+    .getByRole("button", { name: "Pausar sessão", exact: true })
+    .click();
   await expect(page.getByText(/Sessão pausada/u).first()).toBeVisible();
   await page.reload();
   await expect(page.getByText(/Sessão pausada/u).first()).toBeVisible();
-  await page.getByRole("button", { name: "Retomar" }).click();
+  await page
+    .getByRole("button", { name: "Retomar sessão", exact: true })
+    .click();
   await page.getByRole("button", { name: "Concluir sessão" }).click();
   await expect(page.getByText("Nenhuma sessão concluída.")).toHaveCount(0);
 

@@ -1275,7 +1275,6 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.textures = info.memory.textures;
       this.triangles = info.render.triangles;
     }
-    this.updateObjectCounts(scene);
     return true;
   }
 
@@ -1408,6 +1407,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       return;
     }
     this.lastDiagnosticsPublishedAt = timestamp;
+    if (this.mountedWorld) this.updateObjectCounts(this.mountedWorld.scene);
     const diagnostics = this.getDiagnostics();
     this.updateCanvasDiagnostics(diagnostics);
     for (const listener of this.diagnosticsListeners) listener(diagnostics);

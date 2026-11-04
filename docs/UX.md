@@ -1,5 +1,21 @@
 # Fluxos de experiência
 
+## BF-5R5 — contrato candidato vigente
+
+- A Biblioteca mantém uma única instância pausada entre abas; a primeira visita monta sob demanda. No retorno consulta dados e conserva a cena se sua projeção não mudou. Alterações representadas substituem o runtime; não há persistência espacial. Conteúdo fora da rota fica oculto/inert e não captura Back. Diálogo fecha ao sair, mas histórias/diário da visita sobrevivem às abas; recarregar encerra a visita. Há tentativa explícita após falha WebGL.
+- Livro: folha de rosto, marcador de página, estado de leitura, notas/citações e sessões com páginas inicial/final. Tempo é opcional; histórico mostra páginas e nota, não apenas minutos.
+- Série/anime: marcador de temporada/episódio e total assistido; criação admite posição inicial. Episódios concluídos são a ação principal do histórico, sem campo de minutos assistidos na série. Registrar episódios incrementa o total sem inferir limites de temporada. O marcador é explícito e independente. Citações podem apontar temporada/episódio.
+- Filme: obra, direção/ano/duração/plataforma; exibições e reencontros datados, notas de impressão/opinião e citações por minuto opcional. Registrar exibição não infere conclusão: o usuário controla o estado.
+- Estudos: área/disciplina/objetivo/unidade/meta/prazo, progresso em unidades traduzidas e horas apresentadas como horas, mantendo minutos inteiros no armazenamento. Sessões alimentam metas de sessões/horas; outras unidades são atualizadas explicitamente. Caderno recebe materiais/referências em notas.
+- Atividade física: modalidade e categoria contextual; força/mobilidade/mista oferecem ficha de exercícios com séries/repetições/carga/tempo/observação. Editar preserva fichas existentes inclusive ao trocar categoria. Execuções datadas guardam cópia da ficha e esforço, histórico e frequência por dias distintos; distância é campo de cardio, não núcleo de força. Distâncias antigas continuam visíveis no histórico. Exercícios de uma execução são um snapshot da ficha, não um check de cada série.
+- Trabalho: intenção, descrição, área/organização, próxima ação/prazo e estado; passos realizados têm resultado/nota e tempo opcional. Não há progresso percentual ou checklist fictício.
+- Detalhes oferecem notas/citações com edição, exclusão e compartilhamento; organização mantém etiquetas/favoritos. Exclusão genérica fica em “Cuidar deste registro”, com confirmação. Erros de ação mantêm a ficha aberta. Iniciar/concluir segue transições válidas; pausa/retomada de registro e sessão têm nomes distintos.
+- Cronômetro é opcional/recolhido; registro manual aceita dia e duração opcional (zero significa tempo não informado). Datas usam meio-dia local, evitando deslocamento de dia pelo fuso. Não há tempo fictício para satisfazer validação.
+- Controles, fichas, disclosures, HUD, diálogo e dock recebem superfícies com bordas suaves e relevo curto. Resposta de pressão usa transform; navegação mantém chegada de 140 ms, diálogo 120 ms, sem espera artificial/blur. Haptic via capacidade de vibração: 8 ms em ativações importantes, intervalo mínimo 180 ms, sem disparos em pan/pinch, desabilitado com movimento reduzido; ausência/negação degrada sem bloquear.
+
+[ADR-015](decisions/ADR-015-bf5r5-residencia-e-fichas.md), [limites e evidências](BF-5R5_RELATORIO.md). O estado R5 prevalece sobre os contratos históricos de montagem por rota abaixo.
+
+
 ## BF-5R4 — contrato de apresentação candidato
 
 Criação e edição compartilham capítulos específicos por categoria, com dados opcionais em referências recolhíveis e título obrigatório explícito. Livro usa folha de rosto/marcador; filme, ficha de cinema; série, fio episódico; estudo, percurso; prática, modalidade/objetivo; trabalho, intenção/próximo passo. Erro de edição preserva campos. Referências antigas continuam acessíveis. Sem alterações de dados/schema. Pan aplica o delta excedente a 8px imediatamente; zoom inicial composto 1, sem regra por proporção. [Limites e testes](BF-5R4_RELATORIO.md).

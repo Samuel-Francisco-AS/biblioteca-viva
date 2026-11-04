@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import {
   Link,
@@ -36,6 +36,8 @@ import "./styles-arcane.css";
 import "./styles-touch.css";
 import "./styles-ritual.css";
 import "./styles-sanctuary.css";
+import "./styles-living.css";
+import { pulseTouch } from "./app/touchFeedback";
 
 function NotFoundPage() {
   return (
@@ -75,6 +77,9 @@ const unsafeContextGuidance =
 
 export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   const location = useLocation();
+  const libraryActive = location.pathname === APP_ROUTE_PATHS.library;
+  const [libraryVisited, setLibraryVisited] = useState(libraryActive);
+  if (libraryActive && !libraryVisited) setLibraryVisited(true);
   const mainRef = useRef<HTMLElement>(null);
   const previousPathRef = useRef(location.pathname);
   const pressedRef = useRef<HTMLElement | null>(null);
@@ -152,6 +157,19 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
     <div
       className="app-shell"
       onPointerDownCapture={revealTap}
+      onClickCapture={(event) => {
+        if (!(event.target instanceof Element)) return;
+        const control = event.target.closest<HTMLElement>(
+          ".button--primary, .primary-dock__link, .rpg-choices button, .rpg-tools button, .exploration-compass, summary",
+        );
+        if (
+          control &&
+          !control.matches(
+            ":disabled, [aria-disabled='true'], [aria-current='page']",
+          )
+        )
+          pulseTouch(effectiveExperience.reducedMotion);
+      }}
       data-route={
         location.pathname === "/" ? "library" : location.pathname.split("/")[1]
       }
@@ -181,11 +199,17 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
             {unsafeContextGuidance}
           </p>
         )}
+        {(libraryActive || libraryVisited) && (
+          <div
+            hidden={!libraryActive}
+            inert={!libraryActive}
+            className="library-residence"
+          >
+            <LibraryPage application={application} active={libraryActive} />
+          </div>
+        )}
         <Routes>
-          <Route
-            path={APP_ROUTE_PATHS.library}
-            element={<LibraryPage application={application} />}
-          />
+          <Route path={APP_ROUTE_PATHS.library} element={null} />
           <Route
             path={APP_ROUTE_PATHS.collection}
             element={<CollectionPage application={application} />}

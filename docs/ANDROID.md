@@ -1,5 +1,10 @@
 # Android
 
+## BF-5R5 — haptic opcional e candidata
+
+O manifesto declara a permissão normal `android.permission.VIBRATE` para `navigator.vibrate` quando a WebView/dispositivo permitir. Não há dependência/plugin novo, prompt de permissão ou prova de vibração percebida. A preferência efetiva de movimento reduzido desliga o recurso. [Relatório R5](BF-5R5_RELATORIO.md) registra APK/SHA-256 e roteiro físico; gerar o APK não equivale a instalá-lo/avaliá-lo no Moto G06.
+
+
 O aplicativo web é empacotado com Capacitor. O projeto Android permanece em `android/` e recebe somente a saída gerada por `npm run build` durante a sincronização.
 
 ## Comandos

@@ -47,6 +47,8 @@ interface TestWorldRuntime extends WorldRuntime {
   >;
   readonly selectObject: Mock<(id: string | null) => void>;
   readonly start: Mock<() => void>;
+  readonly pause: Mock<() => void>;
+  readonly resume: Mock<() => void>;
 }
 
 async function openWorldControls() {
@@ -156,7 +158,9 @@ describe("WorldHost", () => {
     expect(runtime.mount).toHaveBeenCalledOnce();
     expect(runtime.start).toHaveBeenCalledOnce();
     expect(runtime.getSelectableObjects).toHaveBeenCalledOnce();
-    expect(runtime.onDiagnosticsChange).toHaveBeenCalledOnce();
+    await waitFor(() =>
+      expect(runtime.onDiagnosticsChange).toHaveBeenCalledOnce(),
+    );
     expect(runtime.onFailure).toHaveBeenCalledOnce();
     expect(runtime.onSelectionChange).toHaveBeenCalledOnce();
     expect(
@@ -765,4 +769,67 @@ it("F4 opens from canvas once, bridges choices, retains progress after terminal 
   });
   expect(applyNarrative).toHaveBeenCalledTimes(calls);
   error.mockRestore();
+});
+
+it("R5 pauses a resident host, resumes the same canvas and disposes once", async () => {
+  const runtime = createRuntime();
+  const runtimeFactory = vi.fn(() => Promise.resolve(runtime));
+  const view = render(<WorldHost runtimeFactory={runtimeFactory} active />);
+  await screen.findByText("Ambiente 3D em execução.");
+  const canvas = view.container.querySelector("canvas");
+  for (let index = 0; index < 3; index++) {
+    view.rerender(<WorldHost runtimeFactory={runtimeFactory} active={false} />);
+    expect(runtime.pause).toHaveBeenCalledTimes(index + 1);
+    expect(runtime.dispose).not.toHaveBeenCalled();
+    view.rerender(<WorldHost runtimeFactory={runtimeFactory} active />);
+    expect(runtime.resume).toHaveBeenCalledTimes(index + 1);
+    expect(view.container.querySelector("canvas")).toBe(canvas);
+  }
+  expect(runtimeFactory).toHaveBeenCalledOnce();
+  expect(runtime.mount).toHaveBeenCalledOnce();
+  view.unmount();
+  expect(runtime.dispose).toHaveBeenCalledOnce();
+});
+
+it("R5 pauses a runtime that finishes loading after leaving the library", async () => {
+  let finish: ((runtime: WorldRuntime) => void) | undefined;
+  const runtimeFactory = () =>
+    new Promise<WorldRuntime>((resolve) => {
+      finish = resolve;
+    });
+  const runtime = createRuntime();
+  const view = render(<WorldHost runtimeFactory={runtimeFactory} active />);
+  view.rerender(<WorldHost runtimeFactory={runtimeFactory} active={false} />);
+  await act(() => {
+    finish?.(runtime);
+    return Promise.resolve();
+  });
+  expect(runtime.start).toHaveBeenCalledOnce();
+  expect(runtime.pause).toHaveBeenCalledOnce();
+  expect(runtime.dispose).not.toHaveBeenCalled();
+  view.unmount();
+  expect(runtime.dispose).toHaveBeenCalledOnce();
+});
+
+it("R5 can retry a failed resident runtime without reloading personal data", async () => {
+  const failed = createRuntime(),
+    recovered = createRuntime();
+  const runtimeFactory = vi
+    .fn()
+    .mockResolvedValueOnce(failed)
+    .mockResolvedValueOnce(recovered);
+  render(<WorldHost runtimeFactory={runtimeFactory} />);
+  await screen.findByText("Ambiente 3D em execução.");
+  const log = vi.spyOn(console, "error").mockImplementation(() => {});
+  act(() =>
+    failed.emitFailure({ code: "unavailable", message: "Falha fictícia" }),
+  );
+  await userEvent.click(
+    screen.getByRole("button", { name: "Tentar abrir o mundo novamente" }),
+  );
+  await screen.findByText("Ambiente 3D em execução.");
+  expect(recovered.mount).toHaveBeenCalledOnce();
+  expect(recovered.start).toHaveBeenCalledOnce();
+  expect(document.querySelectorAll("canvas")).toHaveLength(1);
+  log.mockRestore();
 });

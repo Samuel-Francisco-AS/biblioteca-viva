@@ -1,16 +1,16 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  DATABASE_SCHEMA_V8,
+  DATABASE_SCHEMA_V9,
   DATABASE_VERSION,
   persistedMilestoneSchema,
 } from "./schema";
 
 describe("schema pós-reset", () => {
-  it("declara Dexie v8 sem tabelas espaciais ativas", () => {
-    expect(DATABASE_VERSION).toBe(8);
-    expect(DATABASE_SCHEMA_V8.placedObjects).toBeNull();
-    expect(DATABASE_SCHEMA_V8.worldStructures).toBeNull();
+  it("declara Dexie v9 sem tabelas espaciais ativas", () => {
+    expect(DATABASE_VERSION).toBe(9);
+    expect(DATABASE_SCHEMA_V9.placedObjects).toBeNull();
+    expect(DATABASE_SCHEMA_V9.worldStructures).toBeNull();
   });
 
   it("aceita apenas marcos convencionais sem recompensas", () => {

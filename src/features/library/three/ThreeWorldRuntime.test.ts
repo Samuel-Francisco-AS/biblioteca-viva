@@ -2874,3 +2874,31 @@ it("BF-4F3 drives real models from one runtime loop and preserves semantic state
   narrative.dispose();
   living.dispose();
 });
+
+it("R5 counts the scene at diagnostic cadence rather than on every rendered frame", () => {
+  const renderer = new TestRenderer();
+  let callback: FrameRequestCallback | undefined;
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    fixtureLoader: new TestFixtureLoader(),
+    now: () => 0,
+    frameScheduler: {
+      request: (next) => {
+        callback = next;
+        return 1;
+      },
+      cancel: () => {},
+    },
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  const scene = renderer.render.mock.calls.at(-1)?.[0];
+  if (!scene) throw new Error("Scene did not render");
+  const traversal = vi.spyOn(scene, "traverseVisible");
+  for (let frame = 1; frame <= 60; frame++) callback?.(frame * (1000 / 60));
+  expect(renderer.render.mock.calls.length).toBeGreaterThanOrEqual(60);
+  expect(traversal.mock.calls.length).toBeGreaterThanOrEqual(3);
+  expect(traversal.mock.calls.length).toBeLessThanOrEqual(4);
+  expect(runtime.getDiagnostics().meshes).toBeGreaterThan(0);
+  runtime.dispose();
+});

@@ -1,3 +1,4 @@
+import { exercisesFromForm } from "./exercisesFromForm";
 import { RitualFields } from "./RitualFields";
 import { ritualCopy } from "./ritualCopy";
 import { useEffect, useState, type FormEvent } from "react";
@@ -94,7 +95,8 @@ function updateInput(
     case "physical_activity":
       return {
         ...common,
-        category: entry.category,
+        category: value(form, "category") ?? entry.category,
+        exercises: exercisesFromForm(form),
         modality: value(form, "modality"),
         objective: value(form, "objective"),
       };

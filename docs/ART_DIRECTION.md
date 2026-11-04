@@ -1,5 +1,10 @@
 # Direção artística
 
+## BF-5R5 — acabamento candidato
+
+Continuidade artesanal do papel/tinta/latão R4: superfícies de encadernação, cantos suaves, instrumentos encaixados, hierarquia de percurso e memórias por categoria. Retratos de detalhe mostram cinema, marcador episódico, intenção de estudo, ficha de prática e próximo passo de empreitada. Pressão curta e luz/relevo dão resposta sem reduzir o mundo, suas animações ou habitantes. A composição/pátio R4 é preservada; não há promoção da fixture à Biblioteca definitiva. Aceite artístico depende do proprietário. [Relatório R5](BF-5R5_RELATORIO.md).
+
+
 ## Candidata BF-5R4 (2026-11-03)
 
 Papel claro e tinta nos rituais de registro, manuscritos no Arquivo, pedra azul e latão no observatório/ateliê. Gravuras originais dos seis tipos substituem símbolos tipográficos nas fichas. O exterior é um pátio cenográfico real com marcações e lanternas, sem prometer interações. A avaliação artística permanece humana e pendente; [relatório R4](BF-5R4_RELATORIO.md).

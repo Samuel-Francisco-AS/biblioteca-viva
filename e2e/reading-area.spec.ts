@@ -155,7 +155,7 @@ test("overflow mantém 71 livros convencionais sem criar selecionável para o ex
   await expect(page.locator(".reading-area-books li")).toHaveCount(71);
 });
 
-test("retornos da Biblioteca removem o canvas anterior e reconstruem um único snapshot", async ({
+test("retornos da Biblioteca preservam um canvas pausado e um único snapshot", async ({
   createBook,
   page,
 }) => {
@@ -171,7 +171,10 @@ test("retornos da Biblioteca removem o canvas anterior e reconstruem um único s
       page.getByRole("button", { name: /Selecionar no ambiente:/u }),
     ).toHaveCount(1);
     await page.getByRole("link", { name: "Coleção", exact: true }).click();
-    await expect(canvas, `canvas removido no ciclo ${cycle}`).toHaveCount(0);
+    await expect(canvas, `canvas residente no ciclo ${cycle}`).toHaveCount(1);
+    await expect(canvas).toBeHidden();
+    await expect(canvas).toHaveAttribute("data-runtime-state", "paused");
+    await expect(canvas).toHaveAttribute("data-active-frame-loops", "0");
     await page.getByRole("link", { name: "Biblioteca", exact: true }).click();
   }
 

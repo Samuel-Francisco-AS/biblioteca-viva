@@ -18,6 +18,7 @@ Este índice distingue as decisões vigentes das preservadas para contexto. O re
 | ADR-012 | BF-4 — Mundo Vivo e Habitável               | aceita (escopo)         |
 | ADR-013 | BF-4F — 4 habitantes e conversação RPG      | aceita (escopo criativo) |
 | ADR-014 | Pós-BF-4: BF-5 UI/UX → BF-6 Mundo Vivo → BF-7 consolidação | aceita (ordem e estratégia; sem execução) |
+| ADR-015 | BF-5R5: residência do mundo e fichas de prática | aceita no escopo R5; candidata |
 
 ADR-008 permanece a autoridade do WORLD RESET. [`ADR-009`](ADR-009-three-foundation.md) a complementa ao aprovar Three.js como renderer da Fundação depois da evidência técnica e física da F1; não substitui o reset.
 

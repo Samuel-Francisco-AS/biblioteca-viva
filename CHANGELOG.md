@@ -1,5 +1,14 @@
 # Changelog
 
+## BF-5R5 — candidata (2026-11-04)
+
+- Biblioteca retém a cena pausada entre abas, preserva câmera sem mudanças de conteúdo representado e permite tentar novamente após falha WebGL. Pátio e gestos R4 preservados.
+- Fichas de força/mobilidade com exercícios, séries/repetições/carga/tempo; execuções datadas guardam o treino realizado. Banco v9 aditivo, compatibilidade de dados v8 e backup v6 preservada.
+- Série prioriza temporada/episódio e histórico de episódios; filme recebe exibições/reencontros, estudo uma trilha e trabalho passos com resultado. Sessões manuais têm tempo opcional; histórico exibe resultados/notas/páginas e frequência de prática.
+- Notas/citações contextuais nos detalhes, controles/disclosures mais suaves, diálogo/HUD/dock coesos e vibração leve opcional por capacidade, respeitando movimento reduzido.
+- Diagnósticos e apresentação de habitantes isolados de React; contagem da cena acompanha diagnósticos em vez de cada frame. Sem alegação de desempenho físico aprovado. BF-5 aberta, PR #20 draft. [Relatório](docs/BF-5R5_RELATORIO.md).
+
+
 ## BF-5R4 — reconstrução de experiência candidata (2026-11-03)
 
 - Removido zoom por proporção da R3; pátio exterior real e câmera ortográfica recuada para preservar profundidade durante exploração.

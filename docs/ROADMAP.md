@@ -1,5 +1,8 @@
 # Roadmap
 
+> **BF-5R5 — refinamento autorizado em candidata (2026-11-04):** próxima ação é avaliar a R5 no Moto G06, incluindo arte, fluidez, toque, teclado e seis categorias, e refinar conforme feedback até o aceite. [Relatório](BF-5R5_RELATORIO.md). Não fechar BF-5, não iniciar BF-6/BF-7 nem publicar beta/release por consequência desta rodada.
+
+
 > **BF-5 — implementação candidata em revisão (2026-11-03).** Reforma de apresentação nas cinco abas, autorizada pelo proprietário como macroentrega. Biblioteca com canvas ocupando o viewport, superfícies semânticas recolhidas e diálogo sobreposto; Coleção com categorias diretas e densidade; Arquivo, Resumo e Ajustes com composição editorial. **BF-5 não concluída nem aprovada artisticamente.** Gates, limitações e evidências em [BF-5_RELATORIO.md](BF-5_RELATORIO.md). As notas anteriores de ausência de autorização descrevem o planejamento histórico.
 
 
