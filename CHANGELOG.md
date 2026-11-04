@@ -1,3 +1,10 @@
+## BF-5R9 — 2026-11-04
+
+- Corrigida recuperação da capa e de rotas sob demanda, preservando navegação e mundo residente.
+- Coleção consulta dados canônicos sem reapresentar conteúdo antigo; vibração acompanha clique confirmado e tolera falhas da ponte.
+- Novo ícone Android original de códice e chama, adaptive, redondo, monocromático e legado.
+- BF-5 permanece aberta para avaliação física e técnica final.
+
 ## BF-5R8 — entrada progressiva (candidata, 2026-11-04)
 
 - Capa artesanal mínima antes do bootstrap e remoção condicionada à primeira área utilizável; sem temporizador de navegação.

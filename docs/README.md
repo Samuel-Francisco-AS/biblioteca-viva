@@ -1,3 +1,5 @@
+[BF-5R9 — Auditoria Final, Polimento e Identidade Android](BF-5R9_RELATORIO.md): candidata final de implementação; sem fechamento automático da BF-5.
+
 # Documentação da Biblioteca Viva
 
 > **BF-5R5 — candidata de refinamento (2026-11-04):** mundo residente/pausado, fichas e detalhes contextuais dos seis registros, dados v9 aditivos e toque. [Relatório, gates e roteiro Moto G06](BF-5R5_RELATORIO.md), [decisão técnica](decisions/ADR-015-bf5r5-residencia-e-fichas.md). BF-5 continua aberta, PR #20 draft. Notas antigas abaixo são cronologia.

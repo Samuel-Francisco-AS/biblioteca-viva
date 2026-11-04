@@ -97,3 +97,7 @@ As quedas são observações não bloqueantes, não falhas comprovadas nem bench
 A validação humana ampla da F3 foi positiva: o aplicativo abriu normalmente; framing inicial, pan, tap/seleção sem confusão com pan, pinch fluido sem seleção acidental, pinch → um pointer → pan, zoom mínimo/máximo, portrait → landscape → portrait e background/resume permaneceram funcionais. O FPS ficou aproximadamente em 60 ou muito próximo durante interações e rotação; não houve crash, travamento ou regressão funcional perceptível. Isto não é benchmark científico nem garantia para o mundo final.
 
 Depois dessa validação, o APK posterior ao fix matemático dos bounds foi gerado por sync e debug build aprovados. Esse APK **não foi revalidado fisicamente** no Moto G06. A limitação foi aceita como não bloqueante no fechamento da F3 e não deve ser interpretada como prova física do fix.
+
+## BF-5R9 — identidade do launcher
+
+Ícone de códice/chama original integrado nos recursos apontados por `android:icon` e `android:roundIcon`; adaptive v26 e monochrome v33, além dos legados mdpi–xxxhdpi. Fonte e reprodução em [assets/android-icon](../assets/android-icon/README.md). Ao trocar o foreground qualificado antigo por drawable comum, o build incremental local não encontrou o recurso; `./gradlew :app:clean assembleDebug` reconstruiu com sucesso. Não foi necessário limpar dados do app. Build limpo e extração via `aapt2 dump xmltree` confirmam as três camadas no APK; isso não substitui inspeção do launcher físico. [Relatório R9](BF-5R9_RELATORIO.md).

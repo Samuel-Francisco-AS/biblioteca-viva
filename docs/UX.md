@@ -1,3 +1,7 @@
+## BF-5R9 — contrato vigente
+
+BF-5R9: a Coleção aguarda consulta canônica em cada montagem, sem reapresentar snapshot de conteúdo de visitas anteriores. Feedback tátil acompanha clique confirmado; pointerup encerra apenas pressão visual. Falha de rota fica contida, mantém dock e oferece recarga explícita. Capa secundária termina após commit do destino. Aparência aprovada preservada. [Relatório](BF-5R9_RELATORIO.md).
+
 # Fluxos de experiência
 
 ## BF-5R7 — feedback de ativação

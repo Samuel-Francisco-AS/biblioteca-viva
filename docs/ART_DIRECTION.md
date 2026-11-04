@@ -1,3 +1,7 @@
+## BF-5R9 — preservação do Códice Iluminado
+
+O proprietário confirmou aprovação física da direção R6 no pedido R9 e resultados positivos do canvas/pan/pinch/rolagem. Esta rodada preserva a arte existente e acrescenta apenas o ícone Android original de códice/chama. O novo ícone ainda depende de avaliação humana; não se transfere o aceite R6 automaticamente. [Relatório](BF-5R9_RELATORIO.md).
+
 # Direção artística
 
 ## BF-5R5 — acabamento candidato
