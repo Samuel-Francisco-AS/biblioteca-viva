@@ -84,7 +84,9 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                 <span className="primary-dock__caption">
                   {route.primaryNavigation.label}
                 </span>
-                <span className="primary-dock__star" aria-hidden="true">✦</span>
+                <span className="primary-dock__star" aria-hidden="true">
+                  ✦
+                </span>
               </Link>
             </li>
           );

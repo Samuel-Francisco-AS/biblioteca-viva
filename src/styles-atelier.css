@@ -35,14 +35,12 @@
   --dock-height: 6.3rem;
   background:
     radial-gradient(ellipse at 50% 0%, #59415865, transparent 32rem),
-    radial-gradient(ellipse at 8% 65%, #46334236, transparent 29rem),
-    #1a1422;
+    radial-gradient(ellipse at 8% 65%, #46334236, transparent 29rem), #1a1422;
   color: var(--color-text-primary);
 }
 .app-shell:not([data-route="library"]) .app-content {
   max-width: 70rem;
-  padding: clamp(1.05rem, 3vw, 2rem)
-    max(0.95rem, env(safe-area-inset-right))
+  padding: clamp(1.05rem, 3vw, 2rem) max(0.95rem, env(safe-area-inset-right))
     calc(10.5rem + env(safe-area-inset-bottom))
     max(0.95rem, env(safe-area-inset-left));
 }
@@ -54,7 +52,8 @@
   height: min(92dvh, 920px);
   opacity: 0.25;
   pointer-events: none;
-  background: url("/ornaments/astral-veil.svg") center top / min(100%, 720px) auto no-repeat;
+  background: url("/ornaments/astral-veil.svg") center top / min(100%, 720px)
+    auto no-repeat;
 }
 .app-shell:not([data-route="library"]) .app-content {
   position: relative;
@@ -64,11 +63,11 @@
   z-index: 1;
 }
 .app-shell .top-bar:not(.top-bar--immersive) {
-  background:
-    linear-gradient(90deg, #2b1d2f, #1d1728 70%),
-    #1d1728;
+  background: linear-gradient(90deg, #2b1d2f, #1d1728 70%), #1d1728;
   border-bottom: 1px solid #d6ae7d55;
-  box-shadow: inset 0 -2px #07081050, 0 10px 26px #05070f3c;
+  box-shadow:
+    inset 0 -2px #07081050,
+    0 10px 26px #05070f3c;
 }
 .app-shell .top-bar__brand {
   font-size: 0.67rem;
@@ -106,8 +105,11 @@
     linear-gradient(150deg, #8a5c6835 0%, transparent 31%),
     url("/ornaments/astral-veil.svg") right 0 center / 62% auto no-repeat,
     linear-gradient(125deg, #352335 5%, #211a2e 58%, #161421);
-  box-shadow: inset 0 0 0 1px #bd957e66, inset 0 0 0 5px #1b1528,
-    inset 0 0 0 6px #b98b7759, 0 9px 23px #08081130;
+  box-shadow:
+    inset 0 0 0 1px #bd957e66,
+    inset 0 0 0 5px #1b1528,
+    inset 0 0 0 6px #b98b7759,
+    0 9px 23px #08081130;
   overflow: hidden;
   animation: none;
 }
@@ -122,8 +124,10 @@
   inset: 0;
   opacity: 0.9;
   background:
-    url("/ornaments/folio-corners.svg") left top / clamp(6rem, 25vw, 12rem) auto no-repeat,
-    url("/ornaments/folio-corners.svg") right bottom / clamp(6rem, 25vw, 12rem) auto no-repeat;
+    url("/ornaments/folio-corners.svg") left top / clamp(6rem, 25vw, 12rem) auto
+      no-repeat,
+    url("/ornaments/folio-corners.svg") right bottom / clamp(6rem, 25vw, 12rem)
+      auto no-repeat;
 }
 .app-shell .realm-intro::after {
   width: 32%;
@@ -132,23 +136,30 @@
   right: 6%;
   background: linear-gradient(90deg, transparent, #ddbc97, transparent);
 }
-.app-shell .realm-intro[data-realm="acervo"] { --realm-glow: #e8bca6; }
+.app-shell .realm-intro[data-realm="acervo"] {
+  --realm-glow: #e8bca6;
+}
 .app-shell .realm-intro[data-realm="arquivo"] {
   --realm-glow: #cc9ab7;
-  background: url("/ornaments/astral-veil.svg") 100% 10% / 50% auto no-repeat,
+  background:
+    url("/ornaments/astral-veil.svg") 100% 10% / 50% auto no-repeat,
     linear-gradient(120deg, #422936, #221926 60%, #191827);
 }
 .app-shell .realm-intro[data-realm="observatorio"] {
   --realm-glow: #a4ddcf;
-  background: url("/ornaments/astral-veil.svg") 100% 10% / 62% auto no-repeat,
+  background:
+    url("/ornaments/astral-veil.svg") 100% 10% / 62% auto no-repeat,
     linear-gradient(120deg, #193544, #1d233b 55%, #171b2b);
 }
 .app-shell .realm-intro[data-realm="atelie"] {
   --realm-glow: #f0c68c;
-  background: url("/ornaments/astral-veil.svg") 100% 10% / 54% auto no-repeat,
+  background:
+    url("/ornaments/astral-veil.svg") 100% 10% / 54% auto no-repeat,
     linear-gradient(120deg, #453035, #2a2137 66%, #201a25);
 }
-.realm-intro__filigree { display: none; }
+.realm-intro__filigree {
+  display: none;
+}
 .app-shell .realm-intro__number {
   position: absolute;
   z-index: -1;
@@ -158,7 +169,9 @@
   color: #dcb38a12;
   font: 400 clamp(5rem, 22vw, 13rem)/1 var(--arc-serif);
 }
-.realm-intro__number small { display: none; }
+.realm-intro__number small {
+  display: none;
+}
 .app-shell .realm-intro__copy {
   position: relative;
   z-index: 2;
@@ -221,11 +234,24 @@
   right: 1.6rem;
   bottom: 0.4rem;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #e9bd8b88 20%, #aa8e98 80%, transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #e9bd8b88 20%,
+    #aa8e98 80%,
+    transparent
+  );
 }
 @keyframes manuscript-seal-breathe {
-  0%, 100% { transform: scale(0.985); opacity: 0.74; }
-  50% { transform: scale(1.035); opacity: 0.92; }
+  0%,
+  100% {
+    transform: scale(0.985);
+    opacity: 0.74;
+  }
+  50% {
+    transform: scale(1.035);
+    opacity: 0.92;
+  }
 }
 .app-shell .section-heading {
   gap: 0.9rem;
@@ -258,7 +284,9 @@
   color: #d8c0c5;
   font-size: 0.82rem;
 }
-.app-shell .result-summary p { color: #cbb8c4; }
+.app-shell .result-summary p {
+  color: #cbb8c4;
+}
 
 /* Navigation: five hand-engraved portals bound onto a dark wooden rail. */
 .app-shell .primary-dock {
@@ -277,7 +305,9 @@
   background:
     linear-gradient(180deg, #8d6f7555 0, transparent 17%),
     linear-gradient(105deg, #34263b, #1c1729 54%, #2d2033);
-  box-shadow: inset 0 0 0 3px #1b1425, inset 0 0 0 4px #b39a7c61,
+  box-shadow:
+    inset 0 0 0 3px #1b1425,
+    inset 0 0 0 4px #b39a7c61,
     0 12px 25px #09091280;
   transform: none;
   -webkit-backdrop-filter: none;
@@ -304,7 +334,9 @@
   white-space: nowrap;
 }
 .primary-dock__engraving span:first-child,
-.primary-dock__engraving span:last-child { color: #9ed4d4; }
+.primary-dock__engraving span:last-child {
+  color: #9ed4d4;
+}
 .app-shell .primary-dock__aura {
   top: 0.35rem;
   left: 5%;
@@ -325,13 +357,19 @@
   gap: 0.18rem;
   color: #c9bec8;
   font: 500 clamp(0.65rem, 2.7vw, 0.78rem)/1.15 var(--font-family);
-  transition: transform 110ms ease-out, color 130ms ease, background 130ms ease, border-color 130ms ease;
+  transition:
+    transform 110ms ease-out,
+    color 130ms ease,
+    background 130ms ease,
+    border-color 130ms ease;
 }
 .app-shell .primary-dock__link[aria-current="page"] {
   color: #fbe9d2;
   border-color: #dfba938c;
   background: linear-gradient(180deg, #99718a3d, #39293a90 70%);
-  box-shadow: inset 0 0 0 1px #0d101c, 0 0 11px #b58ea83d;
+  box-shadow:
+    inset 0 0 0 1px #0d101c,
+    0 0 11px #b58ea83d;
 }
 .app-shell .primary-dock__medallion {
   position: relative;
@@ -342,7 +380,9 @@
   border: 1px solid #aa93a080;
   background: #1b1528;
   border-radius: 49% 49% 43% 43%;
-  box-shadow: inset 0 0 0 3px #35263a, inset 0 0 0 4px #916d7990;
+  box-shadow:
+    inset 0 0 0 3px #35263a,
+    inset 0 0 0 4px #916d7990;
 }
 .app-shell .primary-dock__halo {
   position: absolute;
@@ -352,7 +392,9 @@
   opacity: 0;
   pointer-events: none;
   transform: rotate(-18deg) scale(0.8);
-  transition: transform 190ms ease-out, opacity 190ms ease-out;
+  transition:
+    transform 190ms ease-out,
+    opacity 190ms ease-out;
 }
 .app-shell .primary-dock__link[aria-current="page"] .primary-dock__halo {
   opacity: 1;
@@ -369,7 +411,9 @@
   white-space: normal;
   overflow-wrap: break-word;
 }
-.app-shell .primary-dock__star { display: none; }
+.app-shell .primary-dock__star {
+  display: none;
+}
 .app-shell .primary-dock__link[aria-current="page"]::before {
   width: 0.45rem;
   height: 0.45rem;
@@ -382,7 +426,7 @@
 .app-shell .primary-dock__link[aria-current="page"]::after {
   display: none;
 }
-.app-shell .primary-dock__link:is(:active,[data-tap-active="true"]) {
+.app-shell .primary-dock__link:is(:active, [data-tap-active="true"]) {
   transform: translate3d(0, 2px, 0) scale(0.96);
   color: #fff0da;
   background: #9b6a9040;
@@ -410,13 +454,27 @@
   box-shadow: none;
   border-radius: 0;
 }
-.app-shell .book-card[data-entry-type="book"] { --record-foil: #855f76; }
-.app-shell .book-card[data-entry-type="movie"] { --record-foil: #896048; }
-.app-shell .book-card[data-entry-type="series"] { --record-foil: #506b78; }
-.app-shell .book-card[data-entry-type="study"] { --record-foil: #665c88; }
-.app-shell .book-card[data-entry-type="physical_activity"] { --record-foil: #92604f; }
-.app-shell .book-card[data-entry-type="work"] { --record-foil: #63745b; }
-.app-shell .book-card::before { display: none; }
+.app-shell .book-card[data-entry-type="book"] {
+  --record-foil: #855f76;
+}
+.app-shell .book-card[data-entry-type="movie"] {
+  --record-foil: #896048;
+}
+.app-shell .book-card[data-entry-type="series"] {
+  --record-foil: #506b78;
+}
+.app-shell .book-card[data-entry-type="study"] {
+  --record-foil: #665c88;
+}
+.app-shell .book-card[data-entry-type="physical_activity"] {
+  --record-foil: #92604f;
+}
+.app-shell .book-card[data-entry-type="work"] {
+  --record-foil: #63745b;
+}
+.app-shell .book-card::before {
+  display: none;
+}
 .app-shell .book-card__link {
   position: relative;
   display: block;
@@ -431,11 +489,17 @@
     url("/ornaments/folio-corners.svg") right top / 8rem auto no-repeat,
     repeating-linear-gradient(0deg, transparent 0 19px, #a6927812 20px 21px),
     linear-gradient(110deg, #f8f0dd, #e8d6b9 84%, #eedcc0);
-  box-shadow: inset 0 0 0 3px #f7edd8, inset 0 0 0 4px #aa8a6c4a, 2px 6px 0 #0e0d1b50;
+  box-shadow:
+    inset 0 0 0 3px #f7edd8,
+    inset 0 0 0 4px #aa8a6c4a,
+    2px 6px 0 #0e0d1b50;
   color: var(--folio-ink);
   text-decoration: none;
   transform: none;
-  transition: transform 135ms ease, box-shadow 135ms ease, border-color 135ms ease;
+  transition:
+    transform 135ms ease,
+    box-shadow 135ms ease,
+    border-color 135ms ease;
 }
 .app-shell .book-card__link::before {
   position: absolute;
@@ -444,7 +508,8 @@
   left: 0.42rem;
   width: 0.38rem;
   border: 1px solid #a3876970;
-  background: url("/ornaments/illuminated-spine.svg") center / 100% 8rem repeat-y;
+  background: url("/ornaments/illuminated-spine.svg") center / 100% 8rem
+    repeat-y;
   content: "";
   pointer-events: none;
 }
@@ -460,12 +525,15 @@
   opacity: 0.52;
   pointer-events: none;
 }
-.app-shell .book-card__link:is(:hover,:focus-visible) {
+.app-shell .book-card__link:is(:hover, :focus-visible) {
   border-color: var(--record-foil);
-  box-shadow: inset 0 0 0 3px #f7edd8, inset 0 0 0 4px #aa8a6c70, 3px 10px 0 #0e0d1b60;
+  box-shadow:
+    inset 0 0 0 3px #f7edd8,
+    inset 0 0 0 4px #aa8a6c70,
+    3px 10px 0 #0e0d1b60;
   transform: translate3d(0, -2px, 0);
 }
-.app-shell .book-card__link:is(:active,[data-tap-active="true"]) {
+.app-shell .book-card__link:is(:active, [data-tap-active="true"]) {
   transform: translate3d(0, 2px, 0) scale(0.988);
 }
 .app-shell .book-card .record-tile {
@@ -489,9 +557,14 @@
   border-radius: 1rem 0.25rem 1rem 0.25rem;
   background: linear-gradient(145deg, var(--record-foil), #291a31);
   color: #ffe8b9;
-  box-shadow: inset 0 0 0 3px #4a33456e, 2px 3px 0 #6e4e4366;
+  box-shadow:
+    inset 0 0 0 3px #4a33456e,
+    2px 3px 0 #6e4e4366;
 }
-.app-shell .record-tile__emblem svg { width: 1.55rem; height: 1.55rem; }
+.app-shell .record-tile__emblem svg {
+  width: 1.55rem;
+  height: 1.55rem;
+}
 .app-shell .record-tile__content .eyebrow {
   color: var(--record-foil);
   margin: 0 0 0.12rem;
@@ -527,14 +600,21 @@
   font-size: 1.2rem;
   opacity: 0.92;
 }
-.app-shell .book-grid--compact .record-tile { min-height: 4.8rem; }
-.app-shell .book-grid--compact .record-tile__emblem { width: 2.2rem; height: 2.3rem; }
-.app-shell .book-grid--compact .record-tile__content h3 { font-size: 1.05rem; }
+.app-shell .book-grid--compact .record-tile {
+  min-height: 4.8rem;
+}
+.app-shell .book-grid--compact .record-tile__emblem {
+  width: 2.2rem;
+  height: 2.3rem;
+}
+.app-shell .book-grid--compact .record-tile__content h3 {
+  font-size: 1.05rem;
+}
 
 /* Instruments: responses feel pressed into wax and brass, not like browser widgets. */
 .app-shell .button,
 .app-shell .text-button,
-.app-shell .category-ribbon :is(button,a),
+.app-shell .category-ribbon :is(button, a),
 .app-shell .memory-tabs button {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -557,8 +637,15 @@
   color: #f7e6cb;
   font: 650 clamp(0.84rem, 2.85vw, 0.99rem)/1.25 var(--font-family);
   text-align: center;
-  box-shadow: inset 0 0 0 2px #201926, inset 0 0 0 3px #bd947277, 1px 3px 0 #0e0d16a6;
-  transition: transform 100ms ease-out, background-color 120ms ease-out, box-shadow 120ms ease-out, color 120ms ease-out;
+  box-shadow:
+    inset 0 0 0 2px #201926,
+    inset 0 0 0 3px #bd947277,
+    1px 3px 0 #0e0d16a6;
+  transition:
+    transform 100ms ease-out,
+    background-color 120ms ease-out,
+    box-shadow 120ms ease-out,
+    color 120ms ease-out;
 }
 .app-shell .button::before {
   position: absolute;
@@ -589,7 +676,10 @@
   border-color: #deb38f;
   background: linear-gradient(125deg, #873e59, #71344f 45%, #552941);
   color: #fff2db;
-  box-shadow: inset 0 0 0 2px #5c2a44, inset 0 0 0 3px #dbad897a, 1px 3px 0 #0e0d16a6;
+  box-shadow:
+    inset 0 0 0 2px #5c2a44,
+    inset 0 0 0 3px #dbad897a,
+    1px 3px 0 #0e0d16a6;
 }
 .app-shell .button--secondary {
   border-color: #a68c77;
@@ -608,11 +698,13 @@
   cursor: not-allowed;
   transform: none;
 }
-.app-shell .button:not(:disabled):is(:active,[data-tap-active="true"]),
-.app-shell .text-button:is(:active,[data-tap-active="true"]),
-.app-shell .memory-tabs button:is(:active,[data-tap-active="true"]) {
+.app-shell .button:not(:disabled):is(:active, [data-tap-active="true"]),
+.app-shell .text-button:is(:active, [data-tap-active="true"]),
+.app-shell .memory-tabs button:is(:active, [data-tap-active="true"]) {
   transform: translate3d(0, 2px, 0) scale(0.975);
-  box-shadow: inset 0 2px 5px #1a142c70, 0 0 0 2px #a2e3d680;
+  box-shadow:
+    inset 0 2px 5px #1a142c70,
+    0 0 0 2px #a2e3d680;
 }
 .app-shell .button:focus-visible,
 .app-shell .text-button:focus-visible {
@@ -624,7 +716,7 @@
   padding: 0.3rem 0 0.75rem;
   margin: 0.3rem 0 0.6rem;
 }
-.app-shell .category-ribbon :is(button,a) {
+.app-shell .category-ribbon :is(button, a) {
   min-height: 2.75rem;
   padding: 0.6rem 0.9rem;
   border: 1px solid #aa8595;
@@ -633,18 +725,27 @@
   color: #f3dfe0;
   font-size: 0.86rem;
   box-shadow: inset 0 -1px #0e0e1a;
-  transition: transform 115ms ease, background 115ms ease, border-color 115ms ease;
+  transition:
+    transform 115ms ease,
+    background 115ms ease,
+    border-color 115ms ease;
 }
-.app-shell .category-ribbon :is([aria-pressed="true"],[aria-current="page"]) {
+.app-shell .category-ribbon :is([aria-pressed="true"], [aria-current="page"]) {
   color: #fef0d5;
   border-color: #e5c6a0;
   background: #6e3856;
-  box-shadow: inset 0 0 0 2px #312034, inset 0 0 0 3px #ccad9a80;
+  box-shadow:
+    inset 0 0 0 2px #312034,
+    inset 0 0 0 3px #ccad9a80;
 }
-.app-shell .category-ribbon :is(button,a):is(:active,[data-tap-active="true"]) {
+.app-shell
+  .category-ribbon
+  :is(button, a):is(:active, [data-tap-active="true"]) {
   transform: translate3d(0, 2px, 0) scale(0.972);
 }
-.app-shell .result-summary .button { min-height: 2.55rem; }
+.app-shell .result-summary .button {
+  min-height: 2.55rem;
+}
 
 /* Full-page illuminated manuscript: editor as an authored experience. */
 .app-shell:not([data-high-contrast="true"]) .ritual-editor {
@@ -661,11 +762,15 @@
   border-radius: 0.2rem 2.1rem 0.3rem 1.6rem;
   color: var(--folio-ink);
   background:
-    url("/ornaments/folio-corners.svg") right top / min(36%, 13rem) auto no-repeat,
+    url("/ornaments/folio-corners.svg") right top / min(36%, 13rem) auto
+      no-repeat,
     repeating-linear-gradient(0deg, transparent 0 26px, #a7875512 27px 28px),
     linear-gradient(115deg, #faf0dc 5%, #f1dfc5 68%, #e9d2b5);
-  box-shadow: inset 0 0 0 4px #f9ebd6, inset 0 0 0 5px #b395785c,
-    -5px 8px 0 #2f2232, -8px 12px 0 #0d101b66;
+  box-shadow:
+    inset 0 0 0 4px #f9ebd6,
+    inset 0 0 0 5px #b395785c,
+    -5px 8px 0 #2f2232,
+    -8px 12px 0 #0d101b66;
 }
 .app-shell .ritual-editor::before {
   content: "";
@@ -676,7 +781,8 @@
   width: 0.38rem;
   opacity: 0.4;
   pointer-events: none;
-  background: url("/ornaments/illuminated-spine.svg") center top / 100% 13rem repeat-y;
+  background: url("/ornaments/illuminated-spine.svg") center top / 100% 13rem
+    repeat-y;
 }
 .app-shell .ritual-editor > .eyebrow {
   font-size: 0.67rem;
@@ -695,7 +801,9 @@
   color: #695366;
   font: 400 clamp(0.89rem, 2.8vw, 1.05rem)/1.58 var(--font-family);
 }
-.app-shell .ritual-editor > form { margin-top: 1.25rem; }
+.app-shell .ritual-editor > form {
+  margin-top: 1.25rem;
+}
 .app-shell .ritual-chapter {
   position: relative;
   width: 100%;
@@ -778,10 +886,13 @@
   font-weight: 720;
   letter-spacing: 0.025em;
 }
-.inscription__quill { color: #a77c63; margin-right: 0.35rem; }
+.inscription__quill {
+  color: #a77c63;
+  margin-right: 0.35rem;
+}
 .app-shell .ritual-editor :is(input, textarea, select),
-.app-shell .ritual-editor .form-field :is(input,textarea,select),
-.app-shell .book-form .form-field :is(input,textarea,select) {
+.app-shell .ritual-editor .form-field :is(input, textarea, select),
+.app-shell .book-form .form-field :is(input, textarea, select) {
   width: 100%;
   min-width: 0;
   min-height: 3.05rem;
@@ -796,29 +907,36 @@
   caret-color: #75455d;
   color-scheme: light;
   box-shadow: inset 1px 2px 0 #907b5d1b;
-  transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    background 140ms ease;
 }
-.app-shell .ritual-editor :is(input,textarea,select):focus,
-.app-shell .book-form .form-field :is(input,textarea,select):focus {
+.app-shell .ritual-editor :is(input, textarea, select):focus,
+.app-shell .book-form .form-field :is(input, textarea, select):focus {
   outline: 2px solid #9871a2;
   outline-offset: 2px;
   border-bottom-color: #6a435c;
   background: #fffdf6;
-  box-shadow: inset 0 0 0 1px #f3cfa2, 0 0 0 4px #9871a227;
+  box-shadow:
+    inset 0 0 0 1px #f3cfa2,
+    0 0 0 4px #9871a227;
 }
-.app-shell .ritual-editor :is(input,textarea,select):disabled {
+.app-shell .ritual-editor :is(input, textarea, select):disabled {
   opacity: 0.65;
   color: #64556a;
   background: #e6d8c8;
 }
-.app-shell .ritual-editor :is(.field-help,small),
+.app-shell .ritual-editor :is(.field-help, small),
 .app-shell .book-form .field-help {
   color: #786270;
   font-size: 0.79rem;
   line-height: 1.38;
 }
-.app-shell .ritual-editor .field-error { color: #a7394e; }
-.app-shell .ritual-editor :is(.form-actions,.book-form__actions) {
+.app-shell .ritual-editor .field-error {
+  color: #a7394e;
+}
+.app-shell .ritual-editor :is(.form-actions, .book-form__actions) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -865,7 +983,7 @@
 }
 .app-shell .ritual-editor .exercise-measures {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0,1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.65rem;
 }
 
@@ -884,15 +1002,19 @@
   background:
     url("/ornaments/folio-corners.svg") right top / 7.5rem auto no-repeat,
     linear-gradient(125deg, #f8ecd8 5%, #eaddc8 77%, #e4d2b9);
-  box-shadow: inset 0 0 0 3px #f7e9d5, inset 0 0 0 4px #94745840,
+  box-shadow:
+    inset 0 0 0 3px #f7e9d5,
+    inset 0 0 0 4px #94745840,
     2px 4px 0 #130e1d2b;
   color: var(--folio-ink);
 }
-.app-shell:not([data-high-contrast="true"]) .content-card :is(h2,h3,h4) {
+.app-shell:not([data-high-contrast="true"]) .content-card :is(h2, h3, h4) {
   color: #4b2e49;
   font-weight: 500;
 }
-.app-shell:not([data-high-contrast="true"]) .content-card :is(p,small,label,dt,dd,li) {
+.app-shell:not([data-high-contrast="true"])
+  .content-card
+  :is(p, small, label, dt, dd, li) {
   color: #594856;
 }
 .app-shell:not([data-high-contrast="true"]) .content-card p.eyebrow {
@@ -929,7 +1051,9 @@
   background:
     url("/ornaments/folio-corners.svg") right top / 8rem auto no-repeat,
     linear-gradient(130deg, #483047, #2d243c 68%, #221e34);
-  box-shadow: inset 0 0 0 3px #251d33, inset 0 0 0 4px #ac7f7577;
+  box-shadow:
+    inset 0 0 0 3px #251d33,
+    inset 0 0 0 4px #ac7f7577;
   color: #f7e3cb;
 }
 .app-shell .entry-detail-hero::before {
@@ -951,9 +1075,14 @@
   border-radius: 0.75rem 0.2rem 0.75rem 0.2rem;
   color: #ffe2b8;
   background: #9d687633;
-  box-shadow: inset 0 0 0 3px #302238, inset 0 0 0 4px #d3bb8a6a;
+  box-shadow:
+    inset 0 0 0 3px #302238,
+    inset 0 0 0 4px #d3bb8a6a;
 }
-.app-shell .entry-detail-hero__emblem svg { width: 1.9rem; height: 1.9rem; }
+.app-shell .entry-detail-hero__emblem svg {
+  width: 1.9rem;
+  height: 1.9rem;
+}
 .app-shell .entry-detail-hero h2 {
   margin: 0 0 0.55rem;
   color: #fbe9d0;
@@ -985,8 +1114,12 @@
   align-items: start;
   gap: clamp(0.75rem, 2.5vw, 1.15rem);
 }
-.app-shell:not([data-high-contrast="true"]) .entry-detail-sections > .content-card,
-.app-shell:not([data-high-contrast="true"]) .entry-detail-sections > form.content-card {
+.app-shell:not([data-high-contrast="true"])
+  .entry-detail-sections
+  > .content-card,
+.app-shell:not([data-high-contrast="true"])
+  .entry-detail-sections
+  > form.content-card {
   min-width: 0;
   width: 100%;
   margin: 0;
@@ -994,15 +1127,16 @@
   border-radius: 0.2rem 1.2rem 0.2rem 1.2rem;
   border: 1px solid #b4a185;
   border-left: 0.22rem solid #8b6478;
-  background:
-    linear-gradient(110deg, #fff1dd 0%, #ebdcc5 85%);
+  background: linear-gradient(110deg, #fff1dd 0%, #ebdcc5 85%);
   color: #3f2e40;
-  box-shadow: inset 0 0 0 3px #fff4e3, 2px 4px #0b091a36;
+  box-shadow:
+    inset 0 0 0 3px #fff4e3,
+    2px 4px #0b091a36;
 }
 .app-shell .entry-detail-sections > .content-card:first-child {
   border-left: 0.22rem solid #855475;
 }
-.app-shell .entry-detail-sections :is(h2,h3,h4) {
+.app-shell .entry-detail-sections :is(h2, h3, h4) {
   color: #51364d;
   font: 400 clamp(1.18rem, 3.7vw, 1.55rem)/1.2 var(--arc-serif);
   letter-spacing: -0.012em;
@@ -1019,7 +1153,9 @@
 .app-shell .entry-detail-sections dd {
   color: #503f4e;
 }
-.app-shell .entry-detail-sections .field-help { color: #776471; }
+.app-shell .entry-detail-sections .field-help {
+  color: #776471;
+}
 .app-shell .entry-detail-sections .form-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1032,8 +1168,10 @@
 .app-shell .entry-detail-sections .form-actions .button--danger {
   flex: 1 1 12rem;
 }
-.app-shell .entry-detail-sections :is(input,textarea,select),
-.app-shell .content-card :is(.form-field input,.form-field textarea,.form-field select) {
+.app-shell .entry-detail-sections :is(input, textarea, select),
+.app-shell
+  .content-card
+  :is(.form-field input, .form-field textarea, .form-field select) {
   min-height: 2.95rem;
   width: 100%;
   min-width: 0;
@@ -1048,12 +1186,14 @@
   font-size: max(1rem, 16px);
   box-shadow: inset 0 2px 1px #6b55451c;
 }
-.app-shell .entry-detail-sections :is(input,textarea,select):focus-visible,
-.app-shell .content-card :is(input,textarea,select):focus-visible {
+.app-shell .entry-detail-sections :is(input, textarea, select):focus-visible,
+.app-shell .content-card :is(input, textarea, select):focus-visible {
   outline: 2px solid #956d93;
   outline-offset: 2px;
 }
-.app-shell .entry-detail-sections textarea { min-height: 6rem; }
+.app-shell .entry-detail-sections textarea {
+  min-height: 6rem;
+}
 .app-shell .entry-detail-sections fieldset {
   min-width: 0;
   padding: 0.8rem 1rem;
@@ -1086,7 +1226,7 @@
 .app-shell .detail-layout .detail-summary .book-facts {
   margin: 1rem 0;
 }
-.app-shell .detail-layout .detail-summary .book-facts :is(dt,dd) {
+.app-shell .detail-layout .detail-summary .book-facts :is(dt, dd) {
   color: #5c4a59;
 }
 
@@ -1106,10 +1246,10 @@
   background: #e9d2c9;
   color: #493643;
 }
-.app-shell[data-route="arquivo"] .archive-search :is(p,label) {
+.app-shell[data-route="arquivo"] .archive-search :is(p, label) {
   color: #5d4b51;
 }
-.app-shell[data-route="arquivo"] .archive-search :is(input,textarea,select) {
+.app-shell[data-route="arquivo"] .archive-search :is(input, textarea, select) {
   background: #fff4e8;
   color: #412a39;
   color-scheme: light;
@@ -1121,12 +1261,12 @@
   border: 1px solid #b69b93;
   border-left: 4px solid #9e687c;
   background:
-    repeating-linear-gradient(180deg,transparent 0 27px,#a7878515 28px 29px),
-    linear-gradient(120deg,#fff1e6,#e5cec4);
+    repeating-linear-gradient(180deg, transparent 0 27px, #a7878515 28px 29px),
+    linear-gradient(120deg, #fff1e6, #e5cec4);
   color: #533546;
   box-shadow: 2px 3px 0 #150d1a36;
 }
-.app-shell[data-route="arquivo"] .annotation-list > li :is(p,h4,time,a) {
+.app-shell[data-route="arquivo"] .annotation-list > li :is(p, h4, time, a) {
   color: #54384b;
 }
 .app-shell[data-route="arquivo"] .no-results {
@@ -1144,7 +1284,7 @@
   padding: clamp(0.95rem, 3vw, 1.4rem);
   color: #f7e5dc;
 }
-.app-shell[data-route="estatisticas"] .statistics-filters :is(label,legend) {
+.app-shell[data-route="estatisticas"] .statistics-filters :is(label, legend) {
   color: #f8dbc6;
 }
 .app-shell[data-route="estatisticas"] .statistics-filters select {
@@ -1167,10 +1307,15 @@
   border-radius: 0.25rem 1.2rem 0.25rem 1.2rem;
   padding: 1rem;
   color: #3a2d3b;
-  background: linear-gradient(145deg,#f8edda,#e6d0bc);
-  box-shadow: inset 0 0 0 2px #fff5e6, 2px 3px #09091836;
+  background: linear-gradient(145deg, #f8edda, #e6d0bc);
+  box-shadow:
+    inset 0 0 0 2px #fff5e6,
+    2px 3px #09091836;
 }
-.app-shell[data-route="estatisticas"] .statistics-metrics > * :is(dt,dd,span,strong,p) {
+.app-shell[data-route="estatisticas"]
+  .statistics-metrics
+  > *
+  :is(dt, dd, span, strong, p) {
   color: #563c53;
 }
 .app-shell[data-route="estatisticas"] .statistics-chart {
@@ -1181,7 +1326,7 @@
     url("/ornaments/astral-veil.svg") center / 70% auto no-repeat,
     #241d34;
 }
-.app-shell[data-route="estatisticas"] .statistics-chart :is(h2,h3,p,small) {
+.app-shell[data-route="estatisticas"] .statistics-chart :is(h2, h3, p, small) {
   color: #f4e2da;
 }
 .app-shell[data-route="estatisticas"] .statistics-type {
@@ -1191,7 +1336,7 @@
   background: #eadbc8;
   color: #51364d;
 }
-.app-shell[data-route="estatisticas"] .statistics-type :is(h3,p,dt,dd) {
+.app-shell[data-route="estatisticas"] .statistics-type :is(h3, p, dt, dd) {
   color: #51364d;
 }
 
@@ -1203,7 +1348,7 @@
 .app-shell .settings-stack > .content-card {
   border-left: 0.23rem solid #665d91;
 }
-.app-shell .settings-stack .content-card :is(h2,h3) {
+.app-shell .settings-stack .content-card :is(h2, h3) {
   color: #4d3556;
 }
 .app-shell .settings-choice-group {
@@ -1230,8 +1375,10 @@
   background: #d9c5c444;
   border-left: 3px solid #835776;
 }
-.app-shell .settings-check-control input { accent-color: #855675; }
-.app-shell .settings-stack :is(input,select,textarea) {
+.app-shell .settings-check-control input {
+  accent-color: #855675;
+}
+.app-shell .settings-stack :is(input, select, textarea) {
   background: #fff7e9;
   color: #432e40;
   border-color: #ab9182;
@@ -1251,13 +1398,15 @@
     url("/ornaments/folio-corners.svg") right top / 10rem auto no-repeat,
     linear-gradient(130deg, #3b253e, #211b34 76%);
   color: #fff0db;
-  box-shadow: inset 0 0 0 3px #261c35, inset 0 0 0 4px #aa7d85a0,
+  box-shadow:
+    inset 0 0 0 3px #261c35,
+    inset 0 0 0 4px #aa7d85a0,
     0 15px 35px #08091694;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
-.app-shell .rpg-dialogue :is(h2,h3,p),
-.app-shell .rpg-journal :is(h2,h3,p) {
+.app-shell .rpg-dialogue :is(h2, h3, p),
+.app-shell .rpg-journal :is(h2, h3, p) {
   color: #f6e9d7;
 }
 .app-shell .rpg-voice {
@@ -1277,10 +1426,13 @@
   background: #57465a73;
   color: #f6eadf;
   text-align: left;
-  transition: transform 105ms ease, background-color 125ms ease, border-color 125ms ease;
+  transition:
+    transform 105ms ease,
+    background-color 125ms ease,
+    border-color 125ms ease;
 }
-.app-shell .rpg-choices button:is(:active,[data-tap-active="true"]) {
-  transform: translate3d(0,2px,0) scale(0.985);
+.app-shell .rpg-choices button:is(:active, [data-tap-active="true"]) {
+  transform: translate3d(0, 2px, 0) scale(0.985);
   background: #7c566b;
   border-color: #a9ebdc;
 }
@@ -1290,13 +1442,18 @@
   border-radius: 0.25rem 1.1rem 0.25rem 1.1rem;
   background: linear-gradient(130deg, #452940, #231b35);
   color: #fce6d6;
-  box-shadow: inset 0 0 0 2px #241a32, 2px 3px #07091463;
+  box-shadow:
+    inset 0 0 0 2px #241a32,
+    2px 3px #07091463;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
-.app-shell .library-page .rpg-tools button:is(:active,[data-tap-active="true"]),
-.app-shell .exploration-compass:is(:active,[data-tap-active="true"]) {
-  transform: translate3d(0,2px,0) scale(0.98);
+.app-shell
+  .library-page
+  .rpg-tools
+  button:is(:active, [data-tap-active="true"]),
+.app-shell .exploration-compass:is(:active, [data-tap-active="true"]) {
+  transform: translate3d(0, 2px, 0) scale(0.98);
   border-color: #b0e8da;
 }
 
@@ -1304,7 +1461,8 @@
 .app-shell:not([data-route="library"]) .app-content > section,
 .app-shell:not([data-route="library"]) .app-content > article,
 .app-shell:not([data-route="library"]) .app-content > .settings-stack {
-  animation: illuminated-page-arrive 155ms cubic-bezier(.25,.78,.29,1) both;
+  animation: illuminated-page-arrive 155ms cubic-bezier(0.25, 0.78, 0.29, 1)
+    both;
 }
 .app-shell .realm-intro,
 .app-shell .section-heading,
@@ -1314,23 +1472,35 @@
   animation-duration: 155ms;
 }
 @keyframes illuminated-page-arrive {
-  from { opacity: 0.77; transform: translate3d(0,5px,0); }
-  to { opacity: 1; transform: translate3d(0,0,0); }
+  from {
+    opacity: 0.77;
+    transform: translate3d(0, 5px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 /* Safe areas, landscape, small screens and keyboard support. */
 @media (max-width: 520px) {
   .app-shell .realm-intro {
     min-height: 10.9rem;
-    grid-template-columns: 0 minmax(0,1fr) 3.8rem;
+    grid-template-columns: 0 minmax(0, 1fr) 3.8rem;
     padding: 1.15rem 1rem 1.45rem;
   }
-  .app-shell .realm-intro h1 { font-size: clamp(1.6rem,6.15vw,2.15rem); }
-  .app-shell .realm-intro__seal { width: 3.6rem; }
-  .app-shell .realm-intro__signature { margin-top: 0.55rem; }
+  .app-shell .realm-intro h1 {
+    font-size: clamp(1.6rem, 6.15vw, 2.15rem);
+  }
+  .app-shell .realm-intro__seal {
+    width: 3.6rem;
+  }
+  .app-shell .realm-intro__signature {
+    margin-top: 0.55rem;
+  }
   .app-shell .section-heading__actions {
     display: grid;
-    grid-template-columns: repeat(2,minmax(0,1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     width: 100%;
   }
   .app-shell .section-heading__actions .button {
@@ -1339,42 +1509,86 @@
     white-space: normal;
     font-size: 0.84rem;
   }
-  .app-shell .primary-dock__engraving { font-size: 0.4rem; left: 18%; right: 18%; }
+  .app-shell .primary-dock__engraving {
+    font-size: 0.4rem;
+    left: 18%;
+    right: 18%;
+  }
   .app-shell .entry-detail-hero {
-    grid-template-columns: 2.9rem minmax(0,1fr);
+    grid-template-columns: 2.9rem minmax(0, 1fr);
     padding: 0.95rem;
   }
-  .app-shell .entry-detail-hero__emblem { width: 2.7rem; height: 2.9rem; }
-  .app-shell .entry-detail-hero__edit { grid-column: 2; justify-self: start; }
-  .app-shell .ritual-pair { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .app-shell .ritual-editor { padding: 1.25rem 1.05rem 1.6rem; }
+  .app-shell .entry-detail-hero__emblem {
+    width: 2.7rem;
+    height: 2.9rem;
+  }
+  .app-shell .entry-detail-hero__edit {
+    grid-column: 2;
+    justify-self: start;
+  }
+  .app-shell .ritual-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .app-shell .ritual-editor {
+    padding: 1.25rem 1.05rem 1.6rem;
+  }
 }
 @media (max-width: 370px) {
-  .app-shell .realm-intro { grid-template-columns: 0 minmax(0,1fr) 2.9rem; gap: 0.25rem; }
-  .app-shell .realm-intro__seal { width: 2.8rem; }
-  .app-shell .primary-dock__engraving span:nth-child(2) { display: none; }
-  .app-shell .primary-dock__link { font-size: 0.63rem; }
-  .app-shell .book-card .record-tile { grid-template-columns: 2.2rem minmax(0,1fr) 0.8rem; }
-  .app-shell .record-tile__emblem { width: 2.25rem; height: 2.4rem; }
-  .app-shell .ritual-pair { grid-template-columns: minmax(0,1fr); }
-  .app-shell .ritual-editor .exercise-measures { grid-template-columns: minmax(0,1fr); }
+  .app-shell .realm-intro {
+    grid-template-columns: 0 minmax(0, 1fr) 2.9rem;
+    gap: 0.25rem;
+  }
+  .app-shell .realm-intro__seal {
+    width: 2.8rem;
+  }
+  .app-shell .primary-dock__engraving span:nth-child(2) {
+    display: none;
+  }
+  .app-shell .primary-dock__link {
+    font-size: 0.63rem;
+  }
+  .app-shell .book-card .record-tile {
+    grid-template-columns: 2.2rem minmax(0, 1fr) 0.8rem;
+  }
+  .app-shell .record-tile__emblem {
+    width: 2.25rem;
+    height: 2.4rem;
+  }
+  .app-shell .ritual-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .app-shell .ritual-editor .exercise-measures {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 @media (max-height: 480px) and (orientation: landscape) {
   .app-shell .primary-dock {
     left: auto;
-    width: min(29rem,78vw);
+    width: min(29rem, 78vw);
     min-height: 3.5rem;
   }
-  .app-shell .primary-dock__engraving { display: none; }
-  .app-shell .primary-dock__link { min-height: 3.1rem; }
-  .app-shell .primary-dock__medallion { width: 1.8rem; height: 1.8rem; }
-  .app-shell .realm-intro { min-height: 8rem; padding: 0.7rem 1rem; }
-  .app-shell .realm-intro__seal { width: 4rem; }
+  .app-shell .primary-dock__engraving {
+    display: none;
+  }
+  .app-shell .primary-dock__link {
+    min-height: 3.1rem;
+  }
+  .app-shell .primary-dock__medallion {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+  .app-shell .realm-intro {
+    min-height: 8rem;
+    padding: 0.7rem 1rem;
+  }
+  .app-shell .realm-intro__seal {
+    width: 4rem;
+  }
 }
 
 /* The keyboard takes priority over fixed navigation: no button obscures a field. */
-.app-shell:has(:is(input,textarea,select):focus) .primary-dock {
-  transform: translate3d(0,calc(125% + env(safe-area-inset-bottom)),0);
+.app-shell:has(:is(input, textarea, select):focus) .primary-dock {
+  transform: translate3d(0, calc(125% + env(safe-area-inset-bottom)), 0);
   pointer-events: none;
   transition: transform 145ms ease;
 }
@@ -1412,24 +1626,39 @@
 }
 
 /* Accessibility is not decorated away: monochrome, visible focus and contrast. */
-.app-shell[data-high-contrast="true"] :is(
-  .realm-intro, .primary-dock, .content-card, .book-card__link,
-  .ritual-editor, .ritual-chapter, .entry-detail-hero,
-  .entry-detail-sections > .content-card, .rpg-dialogue, .rpg-journal,
-  .statistics-filters, .statistics-chart, .statistics-metrics > *
-) {
+.app-shell[data-high-contrast="true"]
+  :is(
+    .realm-intro,
+    .primary-dock,
+    .content-card,
+    .book-card__link,
+    .ritual-editor,
+    .ritual-chapter,
+    .entry-detail-hero,
+    .entry-detail-sections > .content-card,
+    .rpg-dialogue,
+    .rpg-journal,
+    .statistics-filters,
+    .statistics-chart,
+    .statistics-metrics > *
+  ) {
   color: #fff;
   background: #080808;
   border-color: #fff;
   box-shadow: none;
 }
-.app-shell[data-high-contrast="true"] :is(
-  .content-card, .ritual-editor, .entry-detail-hero,
-  .entry-detail-sections > .content-card, .book-card__link
-) :is(h2,h3,h4,p,small,summary,label,dt,dd,li) {
+.app-shell[data-high-contrast="true"]
+  :is(
+    .content-card,
+    .ritual-editor,
+    .entry-detail-hero,
+    .entry-detail-sections > .content-card,
+    .book-card__link
+  )
+  :is(h2, h3, h4, p, small, summary, label, dt, dd, li) {
   color: #fff;
 }
-.app-shell[data-high-contrast="true"] :is(input,textarea,select) {
+.app-shell[data-high-contrast="true"] :is(input, textarea, select) {
   color: #fff;
   background: #111;
   border-color: #fff;
@@ -1445,13 +1674,33 @@
 }
 
 /* Each record opens a different chapter, not a clone of the same editor. */
-.app-shell .ritual-editor[data-craft="book"] { --craft-ink: #704263; --craft-symbol: "✦"; }
-.app-shell .ritual-editor[data-craft="movie"] { --craft-ink: #86574c; --craft-symbol: "◈"; }
-.app-shell .ritual-editor[data-craft="series"] { --craft-ink: #4c647d; --craft-symbol: "✧"; }
-.app-shell .ritual-editor[data-craft="study"] { --craft-ink: #66547e; --craft-symbol: "✶"; }
-.app-shell .ritual-editor[data-craft="physical_activity"] { --craft-ink: #7c514e; --craft-symbol: "✷"; }
-.app-shell .ritual-editor[data-craft="work"] { --craft-ink: #506d5b; --craft-symbol: "⌁"; }
-.app-shell .ritual-editor[data-craft] { border-top-color: var(--craft-ink); }
+.app-shell .ritual-editor[data-craft="book"] {
+  --craft-ink: #704263;
+  --craft-symbol: "✦";
+}
+.app-shell .ritual-editor[data-craft="movie"] {
+  --craft-ink: #86574c;
+  --craft-symbol: "◈";
+}
+.app-shell .ritual-editor[data-craft="series"] {
+  --craft-ink: #4c647d;
+  --craft-symbol: "✧";
+}
+.app-shell .ritual-editor[data-craft="study"] {
+  --craft-ink: #66547e;
+  --craft-symbol: "✶";
+}
+.app-shell .ritual-editor[data-craft="physical_activity"] {
+  --craft-ink: #7c514e;
+  --craft-symbol: "✷";
+}
+.app-shell .ritual-editor[data-craft="work"] {
+  --craft-ink: #506d5b;
+  --craft-symbol: "⌁";
+}
+.app-shell .ritual-editor[data-craft] {
+  border-top-color: var(--craft-ink);
+}
 .app-shell .ritual-editor[data-craft]::after {
   content: var(--craft-symbol);
   pointer-events: none;
@@ -1471,7 +1720,11 @@
 .app-shell .ritual-editor[data-craft] .ritual-chapter__number {
   background: var(--craft-ink);
 }
-.app-shell .ritual-editor[data-craft] .ritual-chapter legend span.ritual-chapter__title {
+.app-shell
+  .ritual-editor[data-craft]
+  .ritual-chapter
+  legend
+  span.ritual-chapter__title {
   color: var(--craft-ink);
 }
 
@@ -1488,7 +1741,7 @@
   border-radius: 0.3rem 1.65rem 0.3rem 1.65rem;
   background:
     url("/ornaments/astral-veil.svg") right center / 20rem auto no-repeat,
-    linear-gradient(118deg,#3b2640,#221b32);
+    linear-gradient(118deg, #3b2640, #221b32);
 }
 .register-threshold__sigil {
   flex: 0 0 auto;
@@ -1501,7 +1754,9 @@
   background: #c69d8a1c;
   color: #f5cfaf;
   font-size: clamp(1.6rem, 6vw, 2.4rem);
-  box-shadow: inset 0 0 0 3px #291d31, inset 0 0 0 4px #ce9f9f6d;
+  box-shadow:
+    inset 0 0 0 3px #291d31,
+    inset 0 0 0 4px #ce9f9f6d;
 }
 .register-threshold h2 {
   color: #fbe8d5;
@@ -1516,18 +1771,20 @@
 }
 .app-shell .type-picker {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0,1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   list-style: none;
   padding: 0;
   margin: 0.75rem 0 1.5rem;
   gap: 0.8rem;
 }
-.app-shell .type-picker > li { min-width: 0; }
+.app-shell .type-picker > li {
+  min-width: 0;
+}
 .app-shell .type-picker__option {
   --picker-foil: #896074;
   position: relative;
   display: grid;
-  grid-template-columns: 3.3rem minmax(0,1fr) auto;
+  grid-template-columns: 3.3rem minmax(0, 1fr) auto;
   gap: 0.7rem;
   align-items: center;
   width: 100%;
@@ -1541,19 +1798,36 @@
     url("/ornaments/folio-corners.svg") top right / 6rem auto no-repeat,
     linear-gradient(120deg, #f7ebd8, #e7d5bd);
   color: #3c2a3b;
-  box-shadow: inset 0 0 0 3px #f7ebda, 2px 4px 0 #0d0c1c5e;
+  box-shadow:
+    inset 0 0 0 3px #f7ebda,
+    2px 4px 0 #0d0c1c5e;
   text-align: left;
   cursor: pointer;
-  transition: transform 130ms ease-out, box-shadow 130ms ease-out, border-color 130ms ease-out;
+  transition:
+    transform 130ms ease-out,
+    box-shadow 130ms ease-out,
+    border-color 130ms ease-out;
 }
-.app-shell .type-picker__option[data-craft="movie"] { --picker-foil: #9b6a57; }
-.app-shell .type-picker__option[data-craft="series"] { --picker-foil: #567c80; }
-.app-shell .type-picker__option[data-craft="study"] { --picker-foil: #70608c; }
-.app-shell .type-picker__option[data-craft="physical_activity"] { --picker-foil: #ab715b; }
-.app-shell .type-picker__option[data-craft="work"] { --picker-foil: #687c67; }
-.app-shell .type-picker__option:is(:active,[data-tap-active="true"]) {
-  transform: translate3d(0,2px,0) scale(0.985);
-  box-shadow: inset 0 0 0 3px #f7ebda, 1px 2px 0 #0d0c1c;
+.app-shell .type-picker__option[data-craft="movie"] {
+  --picker-foil: #9b6a57;
+}
+.app-shell .type-picker__option[data-craft="series"] {
+  --picker-foil: #567c80;
+}
+.app-shell .type-picker__option[data-craft="study"] {
+  --picker-foil: #70608c;
+}
+.app-shell .type-picker__option[data-craft="physical_activity"] {
+  --picker-foil: #ab715b;
+}
+.app-shell .type-picker__option[data-craft="work"] {
+  --picker-foil: #687c67;
+}
+.app-shell .type-picker__option:is(:active, [data-tap-active="true"]) {
+  transform: translate3d(0, 2px, 0) scale(0.985);
+  box-shadow:
+    inset 0 0 0 3px #f7ebda,
+    1px 2px 0 #0d0c1c;
 }
 .app-shell .type-picker__option:focus-visible {
   outline: 2px solid #a9e6d4;
@@ -1570,7 +1844,10 @@
   color: #ffe9d2;
   box-shadow: inset 0 0 0 3px #2b182954;
 }
-.app-shell .type-picker__sigil svg { width: 1.85rem; height: 1.85rem; }
+.app-shell .type-picker__sigil svg {
+  width: 1.85rem;
+  height: 1.85rem;
+}
 .app-shell .type-picker__copy {
   display: grid;
   min-width: 0;
@@ -1596,8 +1873,12 @@
   font: 1.3rem/1 var(--arc-serif);
 }
 @media (max-width: 620px) {
-  .app-shell .type-picker { grid-template-columns: minmax(0,1fr); }
-  .app-shell .type-picker__option { min-height: 6.8rem; }
+  .app-shell .type-picker {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .app-shell .type-picker__option {
+    min-height: 6.8rem;
+  }
 }
 
 /* Shallow information surfaces have their own engraving instead of empty space. */
@@ -1614,8 +1895,13 @@
   font-size: 1.5rem;
   opacity: 0.6;
 }
-.app-shell .record-facts dt { color: #856575; font-size: 0.73rem; }
-.app-shell .record-facts dd { color: #50384a; }
+.app-shell .record-facts dt {
+  color: #856575;
+  font-size: 0.73rem;
+}
+.app-shell .record-facts dd {
+  color: #50384a;
+}
 .app-shell .session-history > li {
   border-left: 0.2rem solid #89617b;
   padding: 0.8rem 0.95rem;
@@ -1645,7 +1931,9 @@
   border-radius: 0.2rem 1rem 0.2rem 1rem;
   background: #3a273b;
 }
-.app-shell .record-care > summary { color: #f5dfca; }
+.app-shell .record-care > summary {
+  color: #f5dfca;
+}
 .app-shell .destructive-section {
   border-left-color: #9b4c60;
 }
@@ -1653,4 +1941,6 @@
   background: #50283c;
   color: #ffebe1;
 }
-.app-shell .delete-confirmation :is(h3,p) { color: #ffebe1; }
+.app-shell .delete-confirmation :is(h3, p) {
+  color: #ffebe1;
+}

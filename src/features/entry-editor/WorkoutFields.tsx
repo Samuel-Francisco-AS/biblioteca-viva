@@ -19,7 +19,8 @@ export function WorkoutFields({
       {rows.map(({ id, exercise }, index) => (
         <fieldset className="exercise-leaf" key={id}>
           <legend>
-            <span aria-hidden="true">✦</span> Movimento {String(index + 1).padStart(2, "0")}
+            <span aria-hidden="true">✦</span> Movimento{" "}
+            {String(index + 1).padStart(2, "0")}
           </legend>
           <label className="form-field">
             Nome do exercício

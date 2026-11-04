@@ -13,9 +13,9 @@ it("shows a distinct illuminated chapter without creating a second banner landma
   expect(
     screen.getByRole("heading", { name: "Acervo encantado" }),
   ).toBeTruthy();
-  expect(container.querySelector(".realm-intro")?.getAttribute("data-realm")).toBe(
-    "acervo",
-  );
+  expect(
+    container.querySelector(".realm-intro")?.getAttribute("data-realm"),
+  ).toBe("acervo");
   expect(container.textContent).toContain("PRIMEIRA ALA");
   expect(container.querySelector(".realm-intro__seal")).toBeTruthy();
   expect(screen.queryByRole("banner")).toBeNull();
@@ -28,8 +28,8 @@ it("gives the Observatory its own sigil and narrative label", () => {
       description="Uma perspectiva sobre o tempo."
     />,
   );
-  expect(container.querySelector(".realm-intro")?.getAttribute("data-realm")).toBe(
-    "observatorio",
-  );
+  expect(
+    container.querySelector(".realm-intro")?.getAttribute("data-realm"),
+  ).toBe("observatorio");
   expect(container.textContent).toContain("CONSTELAÇÕES");
 });

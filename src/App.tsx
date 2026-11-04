@@ -172,7 +172,9 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           pulseTouch(
             effectiveExperience.reducedMotion,
             performance.now(),
-            control.matches(".button--primary, [type='submit'], .rpg-choices button")
+            control.matches(
+              ".button--primary, [type='submit'], .rpg-choices button",
+            )
               ? "confirm"
               : "selection",
           );

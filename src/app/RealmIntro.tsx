@@ -67,7 +67,13 @@ export function RealmIntro({ title, description }: RealmIntroProps) {
         fill="none"
         viewBox="0 0 160 160"
       >
-        <circle cx="80" cy="80" r="68" stroke="currentColor" strokeWidth="0.75" />
+        <circle
+          cx="80"
+          cy="80"
+          r="68"
+          stroke="currentColor"
+          strokeWidth="0.75"
+        />
         <circle
           cx="80"
           cy="80"

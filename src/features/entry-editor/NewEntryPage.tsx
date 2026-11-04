@@ -139,11 +139,16 @@ export function NewEntryPage({
     return (
       <section aria-labelledby="entry-type-title">
         <div className="register-threshold">
-          <span aria-hidden="true" className="register-threshold__sigil">✦</span>
+          <span aria-hidden="true" className="register-threshold__sigil">
+            ✦
+          </span>
           <div>
             <p className="eyebrow">O portal dos registros</p>
             <h2 id="entry-type-title">Uma nova história encontra lugar</h2>
-            <p>Escolha o que deseja guardar. Cada registro abre uma página diferente do seu mundo.</p>
+            <p>
+              Escolha o que deseja guardar. Cada registro abre uma página
+              diferente do seu mundo.
+            </p>
           </div>
         </div>
         <ul className="type-picker">

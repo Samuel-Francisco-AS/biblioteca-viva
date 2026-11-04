@@ -1,6 +1,8 @@
 import { expect, test } from "./fixtures";
 
-test("BF-5R6: o códice oferece capítulos e controles distintos no retrato", async ({ page }) => {
+test("BF-5R6: o códice oferece capítulos e controles distintos no retrato", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/colecao");
   await expect(page.locator(".realm-intro[data-realm='acervo']")).toBeVisible();
@@ -13,10 +15,16 @@ test("BF-5R6: o códice oferece capítulos e controles distintos no retrato", as
   expect(css.backdrop).toBe("none");
   expect(css.position).toBe("fixed");
   expect(
-    await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
   ).toBe(true);
 
-  await page.getByRole("navigation", { name: "Navegação principal" })
-    .getByRole("link", { name: "Arquivo", exact: true }).click();
-  await expect(page.locator(".realm-intro[data-realm='arquivo']")).toBeVisible();
+  await page
+    .getByRole("navigation", { name: "Navegação principal" })
+    .getByRole("link", { name: "Arquivo", exact: true })
+    .click();
+  await expect(
+    page.locator(".realm-intro[data-realm='arquivo']"),
+  ).toBeVisible();
 });
