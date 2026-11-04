@@ -38,5 +38,14 @@
   "iconGenerationRepeatHashes": "identical",
   "physicalR9": "NOT EXECUTED",
   "talkBack": "NOT EXECUTED",
-  "newOptimizations": 0
+  "newOptimizations": 0,
+  "remoteCI": {
+    "sha": "d20d4e39c6acf5011c3b03f166ecea2a840ad36d",
+    "run": "https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41805229003",
+    "conclusion": "cancelled",
+    "unitPass": 732,
+    "unitFiles": 97,
+    "gatesThroughPerformance": "PASS",
+    "e2e": "incomplete, failures logged; no final total"
+  }
 }

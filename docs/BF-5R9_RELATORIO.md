@@ -53,7 +53,7 @@ A maioria das falhas tem nomes já FAIL no inventário parcial R7, sem prova de 
 
 ### CI e limites
 
-CI anterior [41788653118](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41788653118): conclusão API **cancelled**, após aproximadamente 20 min; checks da PR a apresentavam como fail. Etapas até bundle/performance passaram; não há aprovação E2E integral. Não se converte cancelamento em verde. A execução R9 será iniciada pelo push e seu estado exato ficará vinculado à PR; relatório local não antecipa conclusão remota.
+CI anterior [41788653118](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41788653118): conclusão API **cancelled**, após aproximadamente 20 min; checks da PR a apresentavam como fail. Etapas até bundle/performance passaram; não há aprovação E2E integral. Não se converte cancelamento em verde. A CI R9 do SHA documental `d20d4e39c6acf5011c3b03f166ecea2a840ad36d`, [run 41805229003](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41805229003), também terminou **cancelled** em aproximadamente 20 min, durante E2E com falhas já registradas. Format, lint, tipos, **732 unitários em 97 arquivos**, áudio, build e performance PASS nessa execução remota. O teste de agência que expirou localmente passou remotamente em 3,19 s; isso não apaga o timeout local nem comprova causa única. Os E2E remotos não completaram os 48 cenários configurados (incluindo o novo R9); não há total final PASS/FAIL remoto nem CI verde. A consolidação documental posterior não altera código/APK e pode iniciar uma nova execução; o estado do topo fica informado na PR.
 
 ### Parecer de prontidão
 
