@@ -1944,3 +1944,14 @@
 .app-shell .delete-confirmation :is(h3, p) {
   color: #ffebe1;
 }
+
+/* Preserve the exact accessible label text while keeping a decorative mark. */
+.app-shell .ritual-editor .inscription label::before {
+  content: "";
+  display: inline-block;
+  width: 0.43rem;
+  height: 0.43rem;
+  margin-right: 0.5rem;
+  border: 1px solid #a77c63;
+  transform: rotate(45deg);
+}

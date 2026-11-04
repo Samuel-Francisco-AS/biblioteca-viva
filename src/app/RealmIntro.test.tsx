@@ -31,5 +31,5 @@ it("gives the Observatory its own sigil and narrative label", () => {
   expect(
     container.querySelector(".realm-intro")?.getAttribute("data-realm"),
   ).toBe("observatorio");
-  expect(container.textContent).toContain("CONSTELAÇÕES");
+  expect(container.textContent).toContain("TERCEIRA ALA");
 });

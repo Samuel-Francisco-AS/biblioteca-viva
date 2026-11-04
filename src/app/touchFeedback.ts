@@ -4,7 +4,12 @@ interface NativeTactileFeedback {
   pulse(options: { kind: "selection" | "confirm" }): Promise<void>;
 }
 
-const tactile = registerPlugin<NativeTactileFeedback>("TactileFeedback");
+// Do not instantiate the native bridge in web/test environments. This also
+// allows Vitest's web Capacitor shim to omit registerPlugin entirely.
+const tactile =
+  Capacitor.isNativePlatform() && Capacitor.getPlatform() === "android"
+    ? registerPlugin<NativeTactileFeedback>("TactileFeedback")
+    : undefined;
 
 // Activation feedback only. A short cadence avoids double pulses from nested
 // interactive elements; pan, pinch and keyboard input never invoke this bridge.
@@ -18,7 +23,7 @@ export function pulseTouch(
   if (reducedMotion || now - lastPulse < 135) return;
   lastPulse = now;
 
-  if (Capacitor.getPlatform() === "android") {
+  if (tactile) {
     void tactile.pulse({ kind }).catch(() => {
       try {
         navigator.vibrate?.(kind === "confirm" ? 13 : 8);

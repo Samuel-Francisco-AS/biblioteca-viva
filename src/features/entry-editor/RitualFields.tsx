@@ -52,12 +52,7 @@ function Inscription({
   const id = `ritual-${name}`;
   return (
     <div className={`form-field inscription inscription--${name}`}>
-      <label htmlFor={id}>
-        <span className="inscription__quill" aria-hidden="true">
-          ✧
-        </span>
-        {label}
-      </label>
+      <label htmlFor={id}>{label}</label>
       {multiline ? (
         <textarea id={id} name={name} defaultValue={value} rows={3} />
       ) : (
