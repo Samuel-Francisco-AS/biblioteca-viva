@@ -18,6 +18,7 @@ import {
 
 import { APP_ROUTE_PATHS, appRoutes, primaryAppRoutes } from "./routes";
 import { useAndroidBackButton } from "./useAndroidBackButton";
+import { AppErrorBoundary } from "./app/AppErrorBoundary";
 import { AppHeader } from "./app/AppHeader";
 import { DevelopmentDiagnostics } from "./app/DevelopmentDiagnostics";
 import { PrimaryDock } from "./app/PrimaryDock";
@@ -70,6 +71,14 @@ const EntryDetailPage = lazy(async () => ({
   default: (await routeModules.detail()).EntryDetailPage,
 }));
 
+// Effects in this Suspense subtree commit only once the destination is mounted.
+function RouteStartupReady({ active }: { readonly active: boolean }) {
+  useEffect(() => {
+    if (active) completeStartupExperience();
+  }, [active]);
+  return null;
+}
+
 function NotFoundPage() {
   return (
     <section className="placeholder" aria-labelledby="not-found-title">
@@ -114,10 +123,6 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   const mainRef = useRef<HTMLElement>(null);
   const previousPathRef = useRef(location.pathname);
   const pressedRef = useRef<HTMLElement | null>(null);
-  const lastReleasePulseRef = useRef<{
-    control: HTMLElement;
-    at: number;
-  } | null>(null);
   const pressedOriginRef = useRef<{ id: number; x: number; y: number } | null>(
     null,
   );
@@ -148,10 +153,6 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
     if (shellStartedAt !== undefined)
       measureStartupPhase("react-shell", shellStartedAt);
   }, [shellStartedAt]);
-
-  useEffect(() => {
-    if (application && !libraryActive) completeStartupExperience();
-  }, [application, libraryActive]);
 
   useEffect(() => {
     let cancelWarmup: (() => void) | undefined;
@@ -224,30 +225,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
         )
           clearTap();
       }}
-      onPointerUpCapture={(event) => {
-        const control = pressedRef.current;
-        const origin = pressedOriginRef.current;
-        if (
-          origin?.id === event.pointerId &&
-          control &&
-          event.target instanceof Element &&
-          control.contains(event.target) &&
-          !control.matches(
-            ":disabled, [aria-disabled='true'], [aria-current='page']",
-          )
-        ) {
-          pulseTouch(
-            effectiveExperience.reducedMotion,
-            control.matches(
-              ".button--primary, [type='submit'], .rpg-choices button",
-            )
-              ? "confirm"
-              : "selection",
-          );
-          lastReleasePulseRef.current = { control, at: performance.now() };
-        }
-        clearTap();
-      }}
+      onPointerUpCapture={clearTap}
       onPointerCancelCapture={clearTap}
       onLostPointerCapture={clearTap}
       onClickCapture={(event) => {
@@ -261,10 +239,6 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
             ":disabled, [aria-disabled='true'], [aria-current='page']",
           )
         )
-          return;
-        const pulse = lastReleasePulseRef.current;
-        lastReleasePulseRef.current = null;
-        if (pulse?.control === control && performance.now() - pulse.at < 800)
           return;
         pulseTouch(
           effectiveExperience.reducedMotion,
@@ -313,68 +287,71 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
             <LibraryPage application={application} active={libraryActive} />
           </div>
         )}
-        <Suspense
-          fallback={
-            <section
-              className="passage-preparing"
-              role="status"
-              aria-live="polite"
-            >
-              <span aria-hidden="true">✧</span>
-              <p>Desdobrando as páginas do Códice…</p>
-            </section>
-          }
-        >
-          <Routes>
-            <Route path={APP_ROUTE_PATHS.library} element={null} />
-            <Route
-              path={APP_ROUTE_PATHS.collection}
-              element={<CollectionPage application={application} />}
-            />
-            <Route
-              path={APP_ROUTE_PATHS.archive}
-              element={<ArchivePage application={application} />}
-            />
-            <Route
-              path={APP_ROUTE_PATHS.statistics}
-              element={<StatisticsPage application={application} />}
-            />
-            <Route
-              path={APP_ROUTE_PATHS.settings}
-              element={
-                <SettingsPage
-                  application={application}
-                  diagnostics={diagnostics}
-                />
-              }
-            />
-            <Route
-              path={APP_ROUTE_PATHS.newEntry}
-              element={<NewEntryPage application={application} />}
-            />
-            <Route
-              path={APP_ROUTE_PATHS.entryEdit}
-              element={<EditEntryPage application={application} />}
-            />
-            <Route
-              path={APP_ROUTE_PATHS.entryDetail}
-              element={<EntryDetailPage application={application} />}
-            />
-            <Route
-              path={APP_ROUTE_PATHS.legacyNewBook}
-              element={<Navigate replace to={APP_ROUTE_PATHS.newEntry} />}
-            />
-            <Route
-              path={APP_ROUTE_PATHS.legacyBookEdit}
-              element={<LegacyEntryRedirect edit />}
-            />
-            <Route
-              path={APP_ROUTE_PATHS.legacyBookDetail}
-              element={<LegacyEntryRedirect />}
-            />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Suspense>
+        <AppErrorBoundary embedded key={location.pathname}>
+          <Suspense
+            fallback={
+              <section
+                className="passage-preparing"
+                role="status"
+                aria-live="polite"
+              >
+                <span aria-hidden="true">✧</span>
+                <p>Desdobrando as páginas do Códice…</p>
+              </section>
+            }
+          >
+            <Routes>
+              <Route path={APP_ROUTE_PATHS.library} element={null} />
+              <Route
+                path={APP_ROUTE_PATHS.collection}
+                element={<CollectionPage application={application} />}
+              />
+              <Route
+                path={APP_ROUTE_PATHS.archive}
+                element={<ArchivePage application={application} />}
+              />
+              <Route
+                path={APP_ROUTE_PATHS.statistics}
+                element={<StatisticsPage application={application} />}
+              />
+              <Route
+                path={APP_ROUTE_PATHS.settings}
+                element={
+                  <SettingsPage
+                    application={application}
+                    diagnostics={diagnostics}
+                  />
+                }
+              />
+              <Route
+                path={APP_ROUTE_PATHS.newEntry}
+                element={<NewEntryPage application={application} />}
+              />
+              <Route
+                path={APP_ROUTE_PATHS.entryEdit}
+                element={<EditEntryPage application={application} />}
+              />
+              <Route
+                path={APP_ROUTE_PATHS.entryDetail}
+                element={<EntryDetailPage application={application} />}
+              />
+              <Route
+                path={APP_ROUTE_PATHS.legacyNewBook}
+                element={<Navigate replace to={APP_ROUTE_PATHS.newEntry} />}
+              />
+              <Route
+                path={APP_ROUTE_PATHS.legacyBookEdit}
+                element={<LegacyEntryRedirect edit />}
+              />
+              <Route
+                path={APP_ROUTE_PATHS.legacyBookDetail}
+                element={<LegacyEntryRedirect />}
+              />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+            <RouteStartupReady active={!libraryActive} />
+          </Suspense>
+        </AppErrorBoundary>
         {diagnosticsBuildEnabled &&
           isDiagnosticsEnabled(
             import.meta.env.DEV,

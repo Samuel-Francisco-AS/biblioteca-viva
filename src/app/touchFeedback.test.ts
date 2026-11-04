@@ -17,3 +17,21 @@ it("pulses lightly on every valid activation, honors reduced motion and tolerate
   vi.stubGlobal("navigator", {});
   expect(() => pulseTouch(false)).not.toThrow();
 });
+
+it("contains synchronous native bridge failures", async () => {
+  vi.resetModules();
+  vi.doMock("@capacitor/core", () => ({
+    Capacitor: { isNativePlatform: () => true, getPlatform: () => "android" },
+    registerPlugin: () => ({
+      pulse: () => {
+        throw new Error("Bridge unavailable");
+      },
+    }),
+  }));
+  const vibrate = vi.fn();
+  vi.stubGlobal("navigator", { vibrate });
+  const native = await import("./touchFeedback");
+  expect(() => native.pulseTouch(false)).not.toThrow();
+  expect(vibrate).toHaveBeenCalledWith(8);
+  vi.doUnmock("@capacitor/core");
+});

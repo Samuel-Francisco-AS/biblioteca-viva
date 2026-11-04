@@ -60,27 +60,21 @@ function secondaryText(entry: LibraryEntry): string {
   }
 }
 
-// Presentation-only warm snapshot. Every mount revalidates from the canonical
-// local database; edits, deletions and restored backups are never written here.
-const recentCollection = new WeakMap<
-  CollectionApplication,
-  { readonly entries: readonly LibraryEntry[]; readonly tags: readonly Tag[] }
->();
-
 export function CollectionPage({
   application,
 }: {
   readonly application?: CollectionApplication;
 }) {
-  const [entries, setEntries] = useState<readonly LibraryEntry[] | undefined>(
-    () =>
-      application ? recentCollection.get(application)?.entries : undefined,
-  );
-  const [tags, setTags] = useState<readonly Tag[]>(
-    () =>
-      (application ? recentCollection.get(application)?.tags : undefined) ?? [],
-  );
-  const [error, setError] = useState<string>();
+  const [snapshot, setSnapshot] = useState<{
+    application: CollectionApplication;
+    entries?: readonly LibraryEntry[];
+    tags?: readonly Tag[];
+    error?: string;
+  }>();
+  const current = snapshot?.application === application ? snapshot : undefined;
+  const entries = current?.entries;
+  const tags = useMemo(() => current?.tags ?? [], [current?.tags]);
+  const error = current?.error;
   const [params, setParams] = useSearchParams();
   const location = useLocation();
   const searchRef = useRef<HTMLInputElement>(null);
@@ -117,16 +111,15 @@ export function CollectionPage({
     ]).then(
       ([loaded, loadedTags]) => {
         if (active) {
-          recentCollection.set(application, {
-            entries: loaded,
-            tags: loadedTags,
-          });
-          setEntries(loaded);
-          setTags(loadedTags);
+          setSnapshot({ application, entries: loaded, tags: loadedTags });
         }
       },
       (failure: unknown) =>
-        active && setError(presentApplicationError(failure).message),
+        active &&
+        setSnapshot({
+          application,
+          error: presentApplicationError(failure).message,
+        }),
     );
     return () => {
       active = false;

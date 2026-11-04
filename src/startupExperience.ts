@@ -21,10 +21,14 @@ export function completeStartupExperience(): void {
     requestAnimationFrame(() => {
       veil.classList.add("bv-startup-veil--leaving");
       veil.setAttribute("aria-hidden", "true");
-      const remove = () => veil.remove();
+      const remove = () => {
+        window.clearTimeout(cleanup);
+        veil.removeEventListener("transitionend", remove);
+        veil.remove();
+      };
       veil.addEventListener("transitionend", remove, { once: true });
       // Cleanup fallback, not an artificial waiting period for navigation.
-      window.setTimeout(remove, 320);
+      const cleanup = window.setTimeout(remove, 320);
       window.dispatchEvent(new Event("biblioteca-viva:startup-ready"));
     }),
   );

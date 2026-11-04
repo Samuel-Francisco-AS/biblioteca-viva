@@ -1,7 +1,10 @@
-import { Component, type ReactNode } from "react";
+import { Component, Fragment, type ReactNode } from "react";
+
+import { completeStartupExperience } from "../startupExperience";
 
 interface Props {
   readonly children: ReactNode;
+  readonly embedded?: boolean;
   readonly reloadApplication?: () => void;
 }
 interface State {
@@ -17,6 +20,7 @@ export class AppErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(): void {
+    completeStartupExperience();
     if (import.meta.env.DEV)
       console.error("Falha de renderização sanitizada na interface.");
   }
@@ -28,8 +32,12 @@ export class AppErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.failed) {
+      const RecoveryRegion = this.props.embedded ? "section" : "main";
       return (
-        <main className="recovery-page" aria-labelledby="recovery-title">
+        <RecoveryRegion
+          className="recovery-page"
+          aria-labelledby="recovery-title"
+        >
           <section className="content-card">
             <p className="eyebrow">Recuperação da interface</p>
             <h1 id="recovery-title">A tela encontrou um problema</h1>
@@ -50,9 +58,9 @@ export class AppErrorBoundary extends Component<Props, State> {
               </button>
             </div>
           </section>
-        </main>
+        </RecoveryRegion>
       );
     }
-    return <div key={this.state.retryKey}>{this.props.children}</div>;
+    return <Fragment key={this.state.retryKey}>{this.props.children}</Fragment>;
   }
 }

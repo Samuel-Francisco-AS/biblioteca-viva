@@ -34,7 +34,7 @@ test("BF-5R2: canvas intact, route entrance without blur and tactile response", 
     const style = getComputedStyle(element);
     return { name: style.animationName, filter: style.filter };
   });
-  expect(motion.name).toContain("sanctuary-arrive");
+  expect(motion.name).toContain("illuminated-page-arrive");
   expect(motion.filter).toBe("none");
 
   const search = page.getByRole("button", { name: "Busca", exact: true });

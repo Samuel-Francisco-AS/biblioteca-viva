@@ -19,14 +19,18 @@ export function pulseTouch(
   if (reducedMotion) return;
 
   if (tactile) {
-    void tactile.pulse({ kind }).catch(() => {
-      try {
-        navigator.vibrate?.(kind === "confirm" ? 13 : 8);
-      } catch {
-        // Optional browser fallback may be unsupported.
-      }
-    });
-    return;
+    try {
+      void tactile.pulse({ kind }).catch(() => {
+        try {
+          navigator.vibrate?.(kind === "confirm" ? 13 : 8);
+        } catch {
+          // Optional browser fallback may be unsupported.
+        }
+      });
+      return;
+    } catch {
+      // A synchronous bridge failure uses the same optional web fallback.
+    }
   }
 
   try {

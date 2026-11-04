@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
@@ -86,4 +86,35 @@ it("R7 releases touch feedback on scroll, cancellation and release without early
   emit("pointerdown");
   emit("pointerup");
   expect(link).not.toHaveAttribute("data-tap-active");
+});
+
+it("R9 only pulses for confirmed clicks, including consecutive keyboard activations", () => {
+  const vibrate = vi.fn();
+  Object.defineProperty(navigator, "vibrate", {
+    configurable: true,
+    value: vibrate,
+  });
+  render(
+    <MemoryRouter>
+      <App />
+    </MemoryRouter>,
+  );
+  const control = document.createElement("button");
+  control.textContent = "Comando fictício";
+  document.querySelector(".app-shell")!.append(control);
+  fireEvent.pointerDown(control, {
+    pointerType: "touch",
+    isPrimary: true,
+    pointerId: 1,
+  });
+  fireEvent.pointerUp(control, {
+    pointerType: "touch",
+    isPrimary: true,
+    pointerId: 1,
+  });
+  expect(vibrate).not.toHaveBeenCalled();
+  fireEvent.click(control, { detail: 0 });
+  fireEvent.click(control, { detail: 0 });
+  expect(vibrate).toHaveBeenCalledTimes(2);
+  Reflect.deleteProperty(navigator, "vibrate");
 });
