@@ -1,4 +1,4 @@
-import { expect, openWorldTools, test } from "./fixtures";
+import { fillWorkoutPlan, expect, openWorldTools, test } from "./fixtures";
 import { OrthographicCamera, Vector3 } from "three";
 import { LIBRARY_ROOMS } from "../src/features/library/libraryBuildingGeometry";
 import { CameraNavigation } from "../src/features/library/three/CameraNavigation";
@@ -17,7 +17,10 @@ test("BF-4D: ambiente integrado em paisagem/retrato, zoom, pan e seleção", asy
   ]) {
     await page.goto("/novo-registro");
     await page.getByRole("button", { name: new RegExp(type, "u") }).click();
-    await page.getByLabel("Título").fill(`${type} fictício BF4`);
+    await page
+      .getByLabel(type === "Atividade física" ? "Nome do treino" : "Título")
+      .fill(`${type} fictício BF4`);
+    if (type === "Atividade física") await fillWorkoutPlan(page);
     await page.getByRole("button", { name: "Salvar registro" }).click();
     await expect(
       page.getByRole("heading", { name: `${type} fictício BF4` }),

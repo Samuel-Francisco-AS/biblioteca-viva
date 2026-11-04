@@ -1,4 +1,4 @@
-import { expect, test } from "./fixtures";
+import { fillWorkoutPlan, expect, test } from "./fixtures";
 
 test("BF-5R4: seis rituais criam, reabrem e editam sem perder referências", async ({
   page,
@@ -18,9 +18,16 @@ test("BF-5R4: seis rituais criam, reabrem e editam sem perder referências", asy
       .click();
     const title = `${category} do Santuário Fictício`;
     await page
-      .getByLabel(category === "Livro" ? "Título (obrigatório)" : "Título", {
-        exact: true,
-      })
+      .getByLabel(
+        category === "Atividade física"
+          ? "Nome do treino"
+          : category === "Livro"
+            ? "Título (obrigatório)"
+            : "Título",
+        {
+          exact: true,
+        },
+      )
       .fill(title);
     if (category === "Livro")
       await page.getByLabel("Autor (opcional)").fill("Autoria fictícia");
@@ -32,8 +39,7 @@ test("BF-5R4: seis rituais criam, reabrem e editam sem perder referências", asy
       await page
         .getByLabel("Disciplina (opcional)")
         .fill("Astronomia fictícia");
-    if (category === "Atividade física")
-      await page.getByLabel("Modalidade (opcional)").fill("Caminhada fictícia");
+    if (category === "Atividade física") await fillWorkoutPlan(page);
     if (category === "Trabalho")
       await page
         .getByLabel("Próxima ação (opcional)")
@@ -49,7 +55,11 @@ test("BF-5R4: seis rituais criam, reabrem e editam sem perder referências", asy
     ).toBeVisible();
     await page.getByRole("link", { name: /Editar/ }).click();
     const titleField = page.getByLabel(
-      category === "Livro" ? "Título (obrigatório)" : "Título",
+      category === "Atividade física"
+        ? "Nome do treino"
+        : category === "Livro"
+          ? "Título (obrigatório)"
+          : "Título",
       { exact: true },
     );
     await expect(titleField).toHaveValue(title);

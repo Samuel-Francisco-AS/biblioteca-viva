@@ -1,3 +1,4 @@
+import { physicalProfileSchema } from "../../domain/workouts";
 import {
   BACKUP_FORMAT_VERSION,
   BACKUP_KIND,
@@ -24,6 +25,10 @@ import {
 
 const digestSchema = z.string().regex(/^[a-f0-9]{64}$/u);
 const backupSettingSchema = z.discriminatedUnion("key", [
+  persistedSettingSchema.extend({
+    key: z.literal("physical.profile.v1"),
+    value: physicalProfileSchema,
+  }),
   persistedSettingSchema.extend({
     key: z.literal("audio.preferences.v1"),
     value: z.strictObject({

@@ -83,10 +83,12 @@ export function SessionPanel({
   application,
   entry,
   onChanged,
+  historyOnly = false,
 }: {
   readonly application: SessionApplication;
   readonly entry: LibraryEntry;
   readonly onChanged?: () => void;
+  readonly historyOnly?: boolean;
 }) {
   const copy = entryExperience[entry.type];
   const [editing, setEditing] = useState<string>();
@@ -198,19 +200,21 @@ export function SessionPanel({
     <section className="content-card" aria-labelledby="sessions-title">
       <p className="eyebrow">Seu percurso</p>
       <h3 id="sessions-title">{copy.sessions}</h3>
-      <p>
-        {entry.type === "series"
-          ? "Registre os episódios que assistiu. Não precisa contar minutos."
-          : entry.type === "physical_activity"
-            ? "Uma mesma ficha, novos dias. Registre a execução e como se sentiu."
-            : entry.type === "movie"
-              ? "Guarde o dia em que assistiu; um reencontro também merece uma lembrança."
-              : entry.type === "book"
-                ? "Da primeira à última página de cada encontro com o livro."
-                : entry.type === "study"
-                  ? "Registre o tempo de estudo e suas descobertas. Sessões e horas alimentam a trilha automaticamente."
-                  : "Guarde o resultado de cada etapa e siga para o próximo passo."}
-      </p>
+      {!historyOnly && (
+        <p>
+          {entry.type === "series"
+            ? "Registre os episódios que assistiu. Não precisa contar minutos."
+            : entry.type === "physical_activity"
+              ? "Uma mesma ficha, novos dias. Registre a execução e como se sentiu."
+              : entry.type === "movie"
+                ? "Guarde o dia em que assistiu; um reencontro também merece uma lembrança."
+                : entry.type === "book"
+                  ? "Da primeira à última página de cada encontro com o livro."
+                  : entry.type === "study"
+                    ? "Registre o tempo de estudo e suas descobertas. Sessões e horas alimentam a trilha automaticamente."
+                    : "Guarde o resultado de cada etapa e siga para o próximo passo."}
+        </p>
+      )}
       {error && <p role="alert">{error}</p>}
       {ownOpen ? (
         <div aria-live="polite">
@@ -288,7 +292,7 @@ export function SessionPanel({
             </button>
           </div>
         </div>
-      ) : (
+      ) : !historyOnly ? (
         <details className="session-clock">
           <summary>Usar cronômetro (opcional)</summary>
           <form onSubmit={start}>
@@ -312,36 +316,38 @@ export function SessionPanel({
             )}
           </form>
         </details>
-      )}
-      <form onSubmit={manual} className="session-record">
-        <h4>{copy.record}</h4>
-        <label className="form-field">
-          Dia da experiência
-          <input name="date" type="date" />
-        </label>
-        <p className="field-help">
-          Deixe o dia em branco para registrar agora.
-        </p>
-        <SessionFields entry={entry} />
-        <details className="session-time">
-          <summary>Guardar tempo (opcional)</summary>
+      ) : null}
+      {!historyOnly && (
+        <form onSubmit={manual} className="session-record">
+          <h4>{copy.record}</h4>
           <label className="form-field">
-            Duração em minutos (opcional)
-            <input min="0" step="any" name="duration" type="number" />
+            Dia da experiência
+            <input name="date" type="date" />
           </label>
-        </details>
-        <label className="form-field">
-          Nota opcional
-          <textarea name="note" />
-        </label>
-        <button
-          className="button button--secondary"
-          disabled={busy}
-          type="submit"
-        >
-          {copy.record}
-        </button>
-      </form>
+          <p className="field-help">
+            Deixe o dia em branco para registrar agora.
+          </p>
+          <SessionFields entry={entry} />
+          <details className="session-time">
+            <summary>Guardar tempo (opcional)</summary>
+            <label className="form-field">
+              Duração em minutos (opcional)
+              <input min="0" step="any" name="duration" type="number" />
+            </label>
+          </details>
+          <label className="form-field">
+            Nota opcional
+            <textarea name="note" />
+          </label>
+          <button
+            className="button button--secondary"
+            disabled={busy}
+            type="submit"
+          >
+            {copy.record}
+          </button>
+        </form>
+      )}
       <h4>Histórico</h4>
       {entry.type === "physical_activity" && (
         <p className="practice-frequency">
@@ -350,7 +356,11 @@ export function SessionPanel({
         </p>
       )}
       {sessions.filter(({ status }) => status === "completed").length === 0 ? (
-        <p>O primeiro encontro ainda está por vir.</p>
+        <p>
+          {historyOnly
+            ? "Sem sessões anteriores."
+            : "O primeiro encontro ainda está por vir."}
+        </p>
       ) : (
         <ul className="session-history">
           {sessions

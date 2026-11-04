@@ -1,3 +1,5 @@
+> **BF-5 Parte 2C (2026-11-04):** ilustração original local `public/illustrations/corpo-em-movimento.webp` (1024×1536, alpha, ImageGen integrado). Uso editorial decorativo do painel corporal, sem valor diagnóstico. [Procedência e prompt](evidence/BF-5P2C/ARTE.md).
+
 ## BF-5R9 — contrato vigente
 
 BF-5R9: ícone Android original Códice/Chama Viva, sem fontes externas. Fonte, SVGs e processo reproduzível em `assets/android-icon/README.md`; gerador `scripts/generate-android-icon.py`. Adaptive v26, themed v33 e legados mdpi–xxxhdpi integrados. Aprovação física do ícone pendente. [Relatório](BF-5R9_RELATORIO.md).

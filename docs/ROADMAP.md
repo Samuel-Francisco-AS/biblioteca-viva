@@ -1,3 +1,5 @@
+> **BF-5 Parte 2C em candidata (2026-11-04):** após #25/#26, avaliar no Moto G06 a reconstrução de Atividade Física e refinar a experiência com feedback humano; testes físicos amplos permanecem acumulados por orientação do proprietário. Sem fechamento da BF-5 ou avanço para BF-6. [Escopo, limites e roteiro](BF-5_PARTE2C_ATIVIDADE_FISICA.md).
+
 > **Próxima validação aprovada — Parte 2B:** revisar a PR draft encadeada e avaliar no Moto G06 o fólio de Estudo, foco com tela desligada/retomada/reabertura, acumulado, caderno, revisão de cartas, contraste, teclado e orientações. [Roteiro](BF-5_PARTE2B_ESTUDO.md). Refinar conforme feedback; preservar também a avaliação da Parte 2 de livros. Sem fechamento de BF-5/#24, início de BF-6/BF-7 ou merge automático.
 
 > **Próxima ação vigente (2026-11-04):** revisar a PR da BF-5 parte 2 e validar no Moto G06 o [fólio de livros, scroll da Coleção e exportação PNG](BF-5_PARTE2_FOLIO.md). Refinar conforme aceite humano. Escopo restante das seis categorias da issue #24 e dívidas #21–23 continuam abertos. Não iniciar BF-6/BF-7, fechar BF-5 ou publicar beta por esta candidata.

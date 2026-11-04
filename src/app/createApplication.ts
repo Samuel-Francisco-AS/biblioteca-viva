@@ -1,3 +1,9 @@
+import {
+  SaveWorkoutDay,
+  PhysicalProfileService,
+  type PhysicalProfilePort,
+} from "../application/workouts";
+import { DexiePhysicalProfile } from "../infrastructure/database/physicalProfile";
 import { SaveFlashCard, DeleteFlashCard } from "../application/flashCards";
 import type { ImageFilesPort } from "../application/imageFiles";
 import { PlatformImageFiles } from "../infrastructure/files/imageFiles";
@@ -124,6 +130,7 @@ export interface ApplicationDiagnostics {
 export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 
 export interface ApplicationRuntime {
+  readonly physicalProfile: PhysicalProfilePort;
   readonly imageFiles: ImageFilesPort;
   readonly appVersion: string;
   readonly audio: AudioPort;
@@ -146,6 +153,7 @@ export interface ApplicationRuntime {
   };
   readonly commands: {
     readonly saveFlashCard: SaveFlashCard;
+    readonly saveWorkoutDay: SaveWorkoutDay;
     readonly deleteFlashCard: DeleteFlashCard;
     readonly addNote: AddNote;
     readonly addQuote: AddQuote;
@@ -267,6 +275,9 @@ export async function createApplication(
     transaction: new DexieTransactionRunner(database),
   };
 
+  const physicalProfile = new PhysicalProfileService(
+    new DexiePhysicalProfile(database, clock),
+  );
   const audioReporter = options.audioReporter ?? consoleAudioErrorReporter;
   const audio = new AudioService(
     options.audioBackend ?? new BrowserAudioBackend(audioReporter),
@@ -316,6 +327,7 @@ export async function createApplication(
     options.annotationShare ?? new PlatformAnnotationShare();
 
   return {
+    physicalProfile,
     imageFiles: new PlatformImageFiles(),
     appVersion: packageMetadata.version,
     audio,
@@ -386,6 +398,7 @@ export async function createApplication(
     },
     commands: {
       saveFlashCard: new SaveFlashCard(dependencies),
+      saveWorkoutDay: new SaveWorkoutDay(dependencies, physicalProfile),
       deleteFlashCard: new DeleteFlashCard(dependencies),
       addNote: new AddNote(dependencies),
       addQuote: new AddQuote(dependencies),

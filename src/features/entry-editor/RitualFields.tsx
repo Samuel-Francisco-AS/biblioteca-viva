@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { WorkoutFields } from "./WorkoutFields";
+import { WorkoutFields, WorkoutSetup } from "./WorkoutFields";
 import type { ReactNode } from "react";
 import {
-  PHYSICAL_ACTIVITY_CATEGORIES,
   STUDY_PROGRESS_UNITS,
   type EntryType,
   type LibraryEntry,
@@ -82,7 +81,6 @@ export function RitualFields({
   const study = entry?.type === "study" ? entry : undefined;
   const activity = entry?.type === "physical_activity" ? entry : undefined;
   const work = entry?.type === "work" ? entry : undefined;
-  const [category, setCategory] = useState(activity?.category ?? "other");
   const [unit, setUnit] = useState(study?.progressUnit ?? "sessions");
   const detail = (
     <details className="ritual-marginalia">
@@ -146,7 +144,7 @@ export function RitualFields({
       >
         <Inscription
           name="title"
-          label="Título"
+          label={type === "physical_activity" ? "Nome do treino" : "Título"}
           value={entry?.title}
           required
         />
@@ -286,57 +284,14 @@ export function RitualFields({
       )}
       {type === "physical_activity" && (
         <RitualChapter number="II" title="Corpo em movimento">
-          <div className="form-field">
-            <label htmlFor="ritual-category">Categoria</label>
-            <select
-              id="ritual-category"
-              name="category"
-              value={category}
-              onChange={(event) => {
-                const selected = PHYSICAL_ACTIVITY_CATEGORIES.find(
-                  (value) => value === event.target.value,
-                );
-                if (selected) setCategory(selected);
-              }}
-            >
-              {PHYSICAL_ACTIVITY_CATEGORIES.map((category) => (
-                <option key={category} value={category}>
-                  {
-                    {
-                      strength: "Força",
-                      cardio: "Cardio",
-                      mobility: "Mobilidade",
-                      sport: "Esporte",
-                      mixed: "Mista",
-                      other: "Outra",
-                    }[category]
-                  }
-                </option>
-              ))}
-            </select>
-          </div>
-          <Inscription
-            name="modality"
-            label="Modalidade (opcional)"
-            value={activity?.modality}
-          />
-          <Inscription
-            name="objective"
-            label="Objetivo (opcional)"
-            value={activity?.objective}
-            multiline
-          />
+          <WorkoutSetup entry={activity} />
         </RitualChapter>
       )}
-      {type === "physical_activity" &&
-        (category === "strength" ||
-          category === "mobility" ||
-          category === "mixed" ||
-          Boolean(activity?.exercises?.length)) && (
-          <RitualChapter number="III" title="Sua ficha de exercícios">
-            <WorkoutFields exercises={activity?.exercises} />
-          </RitualChapter>
-        )}
+      {type === "physical_activity" && (
+        <RitualChapter number="III" title="Ficha-base">
+          <WorkoutFields exercises={activity?.exercises} />
+        </RitualChapter>
+      )}
       {type === "work" && (
         <RitualChapter number="II" title="O próximo passo">
           <Inscription

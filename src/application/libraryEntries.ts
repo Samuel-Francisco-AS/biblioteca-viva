@@ -1,3 +1,4 @@
+import { workoutScheduleSchema } from "../domain/workouts";
 import { z } from "zod";
 
 import {
@@ -72,6 +73,7 @@ const physicalActivityInputSchema = z.strictObject({
   ...common,
   type: z.literal("physical_activity"),
   category: z.enum(PHYSICAL_ACTIVITY_CATEGORIES),
+  schedule: workoutScheduleSchema.optional(),
   exercises: exercisePlanSchema.optional(),
   modality: optionalText,
   objective: optionalText,

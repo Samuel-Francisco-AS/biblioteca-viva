@@ -1,3 +1,8 @@
+import {
+  workoutScheduleSchema,
+  validateWorkoutPlan,
+  type WorkoutSchedule,
+} from "./workouts";
 import { exercisePlanSchema } from "./schemas";
 import type { Exercise } from "./types";
 import {
@@ -74,6 +79,7 @@ export interface CreateStudyInput extends CommonCreateInput {
 
 export interface CreatePhysicalActivityInput extends CommonCreateInput {
   readonly category: PhysicalActivityCategory;
+  readonly schedule?: WorkoutSchedule;
   readonly exercises?: readonly Exercise[];
   readonly modality?: string;
   readonly objective?: string;
@@ -116,6 +122,7 @@ export type UpdateLibraryEntryDetailsInput =
       readonly type: "physical_activity";
       readonly title: string;
       readonly category: PhysicalActivityCategory;
+      readonly schedule?: WorkoutSchedule;
       readonly exercises?: readonly Exercise[];
       readonly modality?: string;
       readonly objective?: string;
@@ -295,9 +302,13 @@ export function createStudy(input: CreateStudyInput): StudyEntry {
 export function createPhysicalActivity(
   input: CreatePhysicalActivityInput,
 ): PhysicalActivityEntry {
+  validateWorkoutPlan(input.schedule, input.exercises);
   return Object.freeze({
     ...common("physical_activity", input),
     category: input.category,
+    ...(input.schedule !== undefined && {
+      schedule: workoutScheduleSchema.parse(input.schedule),
+    }),
     ...(input.exercises !== undefined && {
       exercises: Object.freeze(
         exercisePlanSchema
@@ -505,11 +516,15 @@ export function updateLibraryEntryDetails(
     case "physical_activity": {
       if (entry.type !== "physical_activity")
         throw new InvalidFieldError("type", "não pode ser alterado");
+      validateWorkoutPlan(input.schedule, input.exercises);
       return Object.freeze({
         ...entry,
         ...metadata,
         title: requireText(input.title, "title"),
         category: input.category,
+        ...(input.schedule !== undefined && {
+          schedule: workoutScheduleSchema.parse(input.schedule),
+        }),
         ...(input.exercises !== undefined && {
           exercises: Object.freeze(
             exercisePlanSchema

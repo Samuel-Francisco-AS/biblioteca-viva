@@ -58,27 +58,24 @@ test("BF-5R5: same canvas pauses between tabs, resumes its camera and survives r
   });
 });
 
-test("BF-5R5: strength is a reusable sheet with dated executions and immutable history", async ({
+test("BF-5R5/2C: strength is a reusable sheet with dated executions and immutable history", async ({
   page,
 }) => {
+  await page.clock.setFixedTime(new Date("2026-11-04T12:00:00.000Z"));
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/novo-registro");
-  await page
-    .getByRole("button", { name: /^FÓLIO \d+ Atividade física / })
-    .click();
-  await page
-    .getByLabel("Título", { exact: true })
-    .fill("Peito e tríceps fictício");
-  await page.getByLabel("Categoria", { exact: true }).selectOption("strength");
+  await page.getByRole("button", { name: /Atividade física/ }).click();
+  await page.getByLabel("Nome do treino").fill("Peito e tríceps fictício");
+  await page.getByRole("radio", { name: "Força", exact: true }).check();
+  await page.getByLabel("Data de início").fill("2026-10-01");
+  await page.getByLabel("Data final").fill("2026-11-30");
+  await page.getByRole("checkbox", { name: "Qua", exact: true }).check();
   await page
     .getByRole("button", { name: "Adicionar exercício", exact: true })
     .click();
-  await page
-    .getByLabel("Nome do exercício", { exact: true })
-    .fill("Supino fictício");
+  await page.getByLabel("Nome do exercício").fill("Supino fictício");
   await page.getByLabel("Séries", { exact: true }).fill("3");
-  await page.getByLabel("Repetições", { exact: true }).fill("10");
-  await page.getByLabel("Carga (kg)", { exact: true }).fill("12.5");
+  await page.getByLabel("Repetições por série", { exact: true }).fill("10");
   await page
     .getByRole("button", { name: "Salvar registro", exact: true })
     .click();
@@ -89,41 +86,53 @@ test("BF-5R5: strength is a reusable sheet with dated executions and immutable h
     }),
   ).toBeVisible();
   await expect(page.getByLabel(/Distância em metros/)).toHaveCount(0);
-  const record = page.locator("form.session-record");
-  await record.getByLabel("Dia da experiência").fill("2026-10-30");
-  await record.getByLabel("Esforço percebido (1–10)").fill("6");
-  await record
-    .getByLabel("Nota opcional")
-    .fill("Execução fictícia confortável");
-  await record
-    .getByRole("button", { name: "Registrar execução", exact: true })
+  await page.getByLabel("Dia", { exact: true }).fill("2026-10-30");
+  await page.getByLabel("Intensidade percebida (1–10)").fill("6");
+  const observations = page
+    .locator("summary")
+    .filter({ hasText: "Observações do corpo" });
+  await observations.scrollIntoViewIfNeeded();
+  await expect(observations).toBeInViewport();
+  await observations.click();
+  await expect(page.getByLabel("Nota deste dia")).toBeVisible();
+  await page.getByLabel("Nota deste dia").fill("Execução fictícia confortável");
+  await page
+    .getByRole("button", { name: "Marcar treino inteiro", exact: true })
     .click();
-  // Surface validation/persistence failures explicitly before relying on a
-  // derived count; don't treat a hidden session error as a stale label.
+  await page
+    .getByRole("button", { name: "Salvar execução", exact: true })
+    .click();
   await expect(
-    record.getByRole("button", { name: "Registrar execução" }),
+    page.getByRole("button", { name: "Salvar execução", exact: true }),
   ).toBeEnabled();
-  await expect(page.locator(".session-history > li")).toHaveCount(1);
-  await expect(page.getByText("1 dia de prática · 1 execução")).toBeVisible();
-  await expect(page.getByText("Execução fictícia confortável")).toBeVisible();
-  await page.getByRole("link", { name: "Editar", exact: true }).click();
-  await expect(page.getByLabel("Carga (kg)", { exact: true })).toHaveValue(
-    "12.5",
+  await expect(page.locator(".workout-feedback")).toHaveText("Execução salva.");
+  await expect(
+    page.getByRole("button", { name: "2026-10-30: Realizado", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Nota deste dia")).toHaveValue(
+    "Execução fictícia confortável",
   );
-  await page.getByLabel("Carga (kg)", { exact: true }).fill("15");
+  await page.getByRole("link", { name: "Editar treino" }).click();
+  await expect(
+    page.getByLabel("Repetições por série", { exact: true }),
+  ).toHaveValue("10");
+  await page.getByLabel("Repetições por série", { exact: true }).fill("15");
   await page.getByRole("button", { name: "Salvar", exact: true }).click();
-  await page.getByText("Ficha desta execução", { exact: true }).click();
+  await expect(page.locator(".workout-movement")).toContainText(
+    "Base · 3 × 15",
+  );
+  await page.getByLabel("Dia", { exact: true }).fill("2026-10-30");
+  await expect(page.locator(".workout-movement")).toContainText(
+    "Base · 3 × 10",
+  );
   await expect(
-    page
-      .locator(".session-history")
-      .getByText("3 séries · 10 repetições · 12.5 kg", { exact: true }),
-  ).toBeVisible();
-  await expect(
-    page
-      .locator(".entry-detail-sections > section")
-      .first()
-      .getByText("3 séries · 10 repetições · 15 kg", { exact: true }),
-  ).toBeVisible();
+    page.locator(".workout-movement").getByLabel("Repetições", { exact: true }),
+  ).toHaveValue("10");
+  await page.reload();
+  await page.getByLabel("Dia", { exact: true }).fill("2026-10-30");
+  await expect(page.locator(".workout-movement")).toContainText(
+    "Base · 3 × 10",
+  );
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

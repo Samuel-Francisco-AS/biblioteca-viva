@@ -11,9 +11,15 @@ export function exercisesFromForm(form: FormData): readonly Exercise[] {
   return names.map((name, index) => ({
     name: typeof name === "string" ? name.trim() : "",
     sets: numeric("exerciseSets", index),
-    repetitions: numeric("exerciseRepetitions", index),
+    repetitions:
+      form.getAll("exerciseUnit")[index] === "reps"
+        ? numeric("exerciseTarget", index)
+        : undefined,
     loadKg: numeric("exerciseLoad", index),
-    durationSeconds: numeric("exerciseTime", index),
+    durationSeconds:
+      form.getAll("exerciseUnit")[index] === "seconds"
+        ? numeric("exerciseTarget", index)
+        : undefined,
     note: text(form.getAll("exerciseNote")[index]),
   }));
 }

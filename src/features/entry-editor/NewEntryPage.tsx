@@ -1,3 +1,4 @@
+import { scheduleFromForm, workoutFormError } from "./workoutFormModel";
 import { ArtifactGlyph } from "../../app/ArtifactGlyph";
 import { exercisesFromForm } from "./exercisesFromForm";
 import { RitualFields } from "./RitualFields";
@@ -7,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 
 import { ENTRY_TYPES, type EntryType, type LibraryEntry } from "../../domain";
 import { entryTypeLabels } from "../collection/collectionControls";
-import { presentApplicationError } from "./errorMessages";
 import { NewBookPage, type EditorApplication } from "./EntryEditorPages";
 
 interface NewEntryApplication extends EditorApplication {
@@ -86,6 +86,7 @@ function specificInput(type: Exclude<EntryType, "book">, form: FormData) {
         modality: field(form, "modality"),
         objective: field(form, "objective"),
         exercises: exercisesFromForm(form),
+        schedule: scheduleFromForm(form),
       };
     case "work":
       return {
@@ -193,7 +194,7 @@ export function NewEntryPage({
       );
       void navigate(`/registros/${encodeURIComponent(entry.id)}`);
     } catch (failure: unknown) {
-      setError(presentApplicationError(failure).message);
+      setError(workoutFormError(failure));
       setSubmitting(false);
     }
   }

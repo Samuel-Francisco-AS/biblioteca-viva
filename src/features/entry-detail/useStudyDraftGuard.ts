@@ -1,8 +1,12 @@
 import { useEffect, type RefObject } from "react";
 
-export function useStudyDraftGuard(root: RefObject<HTMLElement | null>) {
+export function useStudyDraftGuard(
+  root: RefObject<HTMLElement | null>,
+  message = "Há anotações ou cartas não salvas. Sair e descartar o rascunho?",
+) {
   useEffect(() => {
     const hasDraft = () =>
+      Boolean(root.current?.matches('[data-has-record-draft="true"]')) ||
       Boolean(
         root.current?.querySelector(
           '[data-has-study-draft="true"], .annotation-editor',
@@ -13,11 +17,7 @@ export function useStudyDraftGuard(root: RefObject<HTMLElement | null>) {
           "[data-study-draft]",
         ) ?? []),
       ].some((field) => field.value.trim() !== "");
-    const confirm = () =>
-      !hasDraft() ||
-      window.confirm(
-        "Há anotações ou cartas não salvas. Sair e descartar o rascunho?",
-      );
+    const confirm = () => !hasDraft() || window.confirm(message);
     function link(event: MouseEvent) {
       if (!(event.target instanceof Element)) return;
       const anchor = event.target.closest("a[href]");
@@ -44,5 +44,5 @@ export function useStudyDraftGuard(root: RefObject<HTMLElement | null>) {
       window.removeEventListener("beforeunload", unload);
       window.removeEventListener("biblioteca-viva:native-back", back);
     };
-  }, [root]);
+  }, [root, message]);
 }

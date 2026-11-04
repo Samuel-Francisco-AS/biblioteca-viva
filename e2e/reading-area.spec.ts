@@ -1,4 +1,4 @@
-import { expect, test } from "./fixtures";
+import { fillWorkoutPlan, expect, test } from "./fixtures";
 import type { Page } from "@playwright/test";
 
 async function openLibraryRecords(page: Page) {
@@ -203,7 +203,12 @@ test("seis tipos abrem pela Biblioteca e preservam edição e retorno", async ({
     await page
       .getByRole("button", { name: new RegExp(record.type, "u") })
       .click();
-    await page.getByLabel("Título").fill(record.title);
+    await page
+      .getByLabel(
+        record.type === "Atividade física" ? "Nome do treino" : "Título",
+      )
+      .fill(record.title);
+    if (record.type === "Atividade física") await fillWorkoutPlan(page);
     await page.getByRole("button", { name: "Salvar registro" }).click();
     await expect(
       page.getByRole("heading", { name: record.title }),
@@ -238,7 +243,7 @@ test("seis tipos abrem pela Biblioteca e preservam edição e retorno", async ({
   await expect(
     page.getByRole("heading", { name: "Filme BF3 fictício" }),
   ).toBeVisible();
-  await page.getByRole("link", { name: "Editar" }).click();
+  await page.getByRole("link", { name: /Editar/ }).click();
   await page.getByLabel("Título").fill("Filme BF3 editado");
   await page.getByRole("button", { name: "Salvar" }).click();
   await expect(
@@ -251,11 +256,13 @@ test("seis tipos abrem pela Biblioteca e preservam edição e retorno", async ({
   ).toBeVisible();
   await expect(canvas).toHaveCount(1);
 
-  for (const { title } of records.slice(1)) {
+  for (const { title, type } of records.slice(1)) {
     await page.getByRole("link", { name: title, exact: true }).click();
     await expect(page.getByRole("heading", { name: title })).toBeVisible();
-    await page.getByRole("link", { name: "Editar" }).click();
-    await page.getByLabel("Título").fill(`${title} editado`);
+    await page.getByRole("link", { name: /Editar/ }).click();
+    await page
+      .getByLabel(type === "Atividade física" ? "Nome do treino" : "Título")
+      .fill(`${title} editado`);
     await page.getByRole("button", { name: "Salvar" }).click();
     await expect(
       page.getByRole("heading", { name: `${title} editado` }),

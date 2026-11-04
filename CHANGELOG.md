@@ -1,3 +1,10 @@
+## 2026-11-04 — BF-5 Parte 2C (candidata)
+
+- Atividade Física reconstruída como ficha-base reutilizável com período/dias, metas de séries por repetições/tempo e ordenação. Rádios visíveis substituem o seletor nativo de categoria afetado pela tela branca Android.
+- Fólio contínuo com execução diária editável/checks, gráfico mensal de presença/volume e painel corporal editorial; notas/organização/exclusão discretas e contraste destrutivo corrigido.
+- Perfil físico local opcional/removível em Ajustes e estimativa calórica aproximada por MET com parâmetros históricos preservados. Dexie v11 aditiva e backup v6 compatível com dados anteriores.
+- Candidata encadeada à PR #26; BF-5 aberta, sem merge ou aceite físico/artístico. [Relatório](docs/BF-5_PARTE2C_ATIVIDADE_FISICA.md).
+
 ## BF-5 — Parte 2B: fólio de estudo (2026-11-04, candidata)
 
 - Estudo reconstruído em uma superfície contínua com foco circular, tempo acumulado, caderno e revisão de flash cards com flip e deslizamento.

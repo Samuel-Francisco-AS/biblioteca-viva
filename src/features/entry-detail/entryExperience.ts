@@ -13,6 +13,7 @@ export const studyUnitLabels: Record<StudyProgressUnit, string> = {
 };
 export const activityLabels: Record<PhysicalActivityCategory, string> = {
   strength: "Força",
+  resistance: "Resistência",
   cardio: "Cardio",
   mobility: "Mobilidade",
   sport: "Esporte",

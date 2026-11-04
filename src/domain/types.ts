@@ -32,6 +32,7 @@ export type StudyProgressUnit = (typeof STUDY_PROGRESS_UNITS)[number];
 
 export const PHYSICAL_ACTIVITY_CATEGORIES = [
   "strength",
+  "resistance",
   "cardio",
   "mobility",
   "sport",
@@ -116,6 +117,8 @@ export interface Exercise {
 }
 
 export interface PhysicalActivityEntry extends LibraryEntryBase {
+  readonly schedule?: import("./workouts").WorkoutSchedule;
+  readonly workoutDays?: readonly import("./workouts").WorkoutDay[];
   readonly type: "physical_activity";
   readonly category: PhysicalActivityCategory;
   readonly exercises?: readonly Exercise[];
