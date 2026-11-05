@@ -19,6 +19,10 @@ import {
 import { ENCOUNTERS, type EncounterScript } from "./inhabitantEncounters";
 import type { NarrativeBond } from "./narrative/contracts";
 import type { LivingEvent } from "./livingObjects";
+import {
+  parseInhabitantContinuity,
+  type InhabitantContinuitySnapshot,
+} from "./inhabitantContinuity";
 
 export type AgencyState =
   | "idle"
@@ -280,6 +284,133 @@ export class InhabitantAgency {
   getPoses(): readonly AgentView[] {
     return this.agents.map((a) => this.view(a));
   }
+
+  /** Save stable identity, position and intention, not animation or route frames. */
+  captureContinuity(
+    savedAt = new Date().toISOString(),
+  ): InhabitantContinuitySnapshot {
+    return {
+      version: 1,
+      savedAt,
+      randomState: this.randomState,
+      agents: this.agents.map((a) => ({
+        id: a.id,
+        x: a.x,
+        z: a.z,
+        facing: a.facing,
+        phase:
+          a.state === "navigate"
+            ? "navigate"
+            : a.state === "work" && a.task
+              ? "work"
+              : "idle",
+        taskId: a.task?.id ?? null,
+        destination:
+          a.state === "navigate" && a.destination
+            ? { x: a.destination.x, z: a.destination.z }
+            : null,
+        remainingSeconds: Math.max(0, Math.min(90, a.until - this.elapsed)),
+        recentTaskIds: a.history.slice(0, 6),
+        taskCount: a.taskCount,
+      })),
+    };
+  }
+
+  /**
+   * Restore safe positions first, then only valid intentions. An interrupted
+   * encounter or manual action is not replayed as a half-finished scene.
+   */
+  restoreContinuity(value: unknown, now = Date.now()): boolean {
+    if (this.disposed) return false;
+    const saved = parseInhabitantContinuity(value);
+    if (!saved) return false;
+    const staleActivity = Math.max(0, now - Date.parse(saved.savedAt)) > 15 * 60_000;
+    const positioned: Array<{ x: number; z: number; radius: number }> = [];
+    const valid = (a: Agent, x: number, z: number): boolean => {
+      const radius = INHABITANT_ENVELOPES[a.key].travel;
+      return (
+        this.navigation.clear({ x, z }, { x, z }, radius) &&
+        positioned.every(
+          (p) => Math.hypot(p.x - x, p.z - z) >= p.radius + radius + 0.1,
+        )
+      );
+    };
+    this.randomState = saved.randomState;
+    for (const a of this.agents) {
+      const row = saved.agents.find((item) => item.id === a.id)!;
+      const initial = INHABITANTS.find((item) => item.id === a.id)!;
+      const location = [
+        { x: row.x, z: row.z },
+        { x: initial.x, z: initial.z },
+        ...this.navigation.nodes,
+      ].find((point) => valid(a, point.x, point.z));
+      a.x = location?.x ?? initial.x;
+      a.z = location?.z ?? initial.z;
+      positioned.push({
+        x: a.x,
+        z: a.z,
+        radius: INHABITANT_ENVELOPES[a.key].travel,
+      });
+      a.facing = Math.atan2(Math.sin(row.facing), Math.cos(row.facing));
+      a.route = [];
+      a.destination = null;
+      a.encounter = null;
+      a.manual = false;
+      a.task = null;
+      a.state = "idle";
+      a.action = "idle";
+      a.activity = "Retoma sua rotina na Biblioteca.";
+      a.blocked = 0;
+      a.taskCount = row.taskCount;
+      a.history = row.recentTaskIds.filter((id) =>
+        tasks.some((task) => task.id === id),
+      );
+      a.until = this.elapsed + 2 + this.random() * 4;
+    }
+    // Long absences do not run a background simulation or teleport actors.
+    for (const a of this.agents) {
+      const row = saved.agents.find((item) => item.id === a.id)!;
+      const task = tasks.find((item) => item.id === row.taskId);
+      if (!task || staleActivity) continue;
+      if (
+        row.phase === "work" &&
+        distance(a, task.position) < 0.2 &&
+        this.navigation.clear(
+          a,
+          a,
+          task.kind === "experiment"
+            ? INHABITANT_ENVELOPES[a.key].magic
+            : task.kind === "rest" || task.kind === "observation"
+              ? INHABITANT_ENVELOPES[a.key].travel
+              : INHABITANT_ENVELOPES[a.key].work,
+        )
+      ) {
+        a.task = task;
+        a.state = "work";
+        a.started = this.elapsed;
+        a.action =
+          task.kind === "experiment"
+            ? "magic"
+            : task.kind === "rest" ||
+                (task.kind === "observation" && !task.objectId)
+              ? "idle"
+              : "work";
+        a.activity = this.taskDescription(a, task);
+        a.until = this.elapsed + Math.max(2, row.remainingSeconds);
+      } else if (
+        row.phase === "navigate" &&
+        row.destination &&
+        distance(row.destination, task.position) < 0.1 &&
+        this.go(a, task.position)
+      ) {
+        a.task = task;
+        a.activity = `Retoma o caminho: ${this.taskDescription(a, task)}`;
+      }
+    }
+    this.message = "Os habitantes retomaram sua continuidade.";
+    this.publish();
+    return true;
+  }
   setAvailable(id: string, available: boolean) {
     const a = this.agents.find((a) => a.id === id);
     if (!a || this.disposed || a.available === available) return;
@@ -289,7 +420,9 @@ export class InhabitantAgency {
         "Encontro interrompido: um modelo ficou indisponível.",
       );
       this.stop(a, "Modelo indisponível; rotina suspensa.", 6);
-    } else a.activity = "Observando antes de escolher uma atividade.";
+    } else if (a.state === "idle") {
+      a.activity = "Observando antes de escolher uma atividade.";
+    }
     this.publish();
   }
   setMode(mode: AgencyMode) {
