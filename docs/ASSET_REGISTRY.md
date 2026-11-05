@@ -1,3 +1,7 @@
+## Atlas clássico projetado — vigente
+
+Seis gravuras originais assistidas por ImageGen em [`public/illustrations/atlas-classico/`](../public/illustrations/atlas-classico/): masculino/feminino × frontal/três quartos/passo. WebP 1024 × 1536 com alpha, qualidade 88; [origem, prompts e nomes exatos](../assets/atlas-classico/README.md). Consumo por `ClassicAtlas`, sem fontes remotas em runtime. Rig SVG e coreografias da Parte 2F removidos; seus registros abaixo são cronologia substituída. [ADR-022](decisions/ADR-022-atlas-classico-projetado.md).
+
 ## BF-5 Parte 2F — gravuras originais em código
 
 Atlas Vivo: [`BodyStudy.tsx`](../src/features/entry-detail/BodyStudy.tsx), contornos masculino/feminino, anatomia estilizada/indumentária e ornamentos SVG originais produzidos para o projeto, sem fonte remota ou asset de terceiros. Rig e coreografias em [`atlasMotion.ts`](../src/features/entry-detail/atlasMotion.ts); desenho/articulação verificáveis no código. Substitui na apresentação a gravura estática da Parte 2C, sem apagar o asset anterior. Estrelas dos PNGs são paths Canvas originais. [ADR-021](decisions/ADR-021-empreitadas-atlas-avaliacoes.md).

@@ -1,0 +1,120 @@
+.classic-atlas-host {
+  min-width: 0;
+}
+.classic-atlas {
+  margin: 0;
+  color: #50364b;
+}
+.classic-atlas__stage {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  max-height: 620px;
+  overflow: hidden;
+  border-radius: 48% 48% 3px 3px / 8% 8% 3px 3px;
+  background: radial-gradient(ellipse at 50% 45%, #cda77c24, transparent 68%);
+}
+.classic-atlas__stage::after {
+  content: "";
+  position: absolute;
+  inset: auto 12% 2%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #a37e4c88, transparent);
+  pointer-events: none;
+}
+.classic-atlas__art {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 1;
+}
+.classic-atlas__art--arriving {
+  animation: atlas-materialize 1800ms ease-in-out both;
+}
+.classic-atlas__art--departing {
+  animation: atlas-dissolve 1800ms ease-in-out both;
+}
+.classic-atlas__placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font:
+    italic 0.85rem Georgia,
+    serif;
+  color: #695266;
+}
+.classic-atlas__caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #a580573d;
+}
+.classic-atlas__caption > span {
+  font:
+    small-caps 0.78rem Georgia,
+    serif;
+  letter-spacing: 0.06em;
+}
+.classic-atlas__caption > span > span {
+  letter-spacing: 0;
+  color: #715b66;
+}
+.classic-atlas__controls {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.classic-atlas .text-button {
+  min-height: 44px;
+  color: #634258;
+  font-size: 0.72rem;
+  padding: 0.3rem 0.45rem;
+}
+.classic-atlas .text-button:focus-visible {
+  outline: 2px solid #634258;
+  outline-offset: 2px;
+}
+.classic-atlas__error {
+  font-size: 0.75rem;
+  color: #76505c;
+}
+.classic-atlas--loading {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 2 / 3;
+  font:
+    italic 0.85rem Georgia,
+    serif;
+}
+@keyframes atlas-materialize {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes atlas-dissolve {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .classic-atlas__art {
+    animation: none;
+  }
+}
+[data-reduced-motion="true"] .classic-atlas__art {
+  animation: none;
+}

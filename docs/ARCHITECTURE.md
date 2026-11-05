@@ -1,3 +1,7 @@
+## BF-5 — Atlas clássico projetado
+
+`ClassicAtlas` substitui integralmente o rig/poses de `BodyStudy` e `atlasMotion`. Seis WebPs locais, decodificação antecipada e dissolução entre duas camadas por opacidade CSS; timers de permanência/transição, sem RAF contínuo ou engine nova. Observers/visibilidade/preferências/pausa cancelam o ciclo e callbacks obsoletos. Metadados e cálculo metabólico permanecem na superfície semântica do fólio, fora das imagens. [ADR-022](decisions/ADR-022-atlas-classico-projetado.md). A descrição de rig na Parte 2F abaixo foi substituída.
+
 ## BF-5 Parte 2F — Empreitadas, atlas e estrelas
 
 `SaveEndeavor` coordena leitura/revisão/transação do agregado `WorkEntry.plan?`, validado por regras puras do domínio. Sem React→Dexie, tabelas espaciais ou projeção de tarefas. Dexie v14 aditiva e backup v6 compartilham validação estrita. `BodyStudy` compõe gravuras SVG originais distintas com hierarquia articulada; RAF, observer/visibilidade/preferências pertencem à apresentação e são liberados no cleanup. `StarRating` compartilha semântica nativa; `PersistedRating` coordena feedback provisório e recuperação. Comandos existentes atualizam a nota única; Canvas desenha estrelas geométricas da nota persistida, incluindo opção de ocultação. [ADR-021](decisions/ADR-021-empreitadas-atlas-avaliacoes.md).

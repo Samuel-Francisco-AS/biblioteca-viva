@@ -26,7 +26,7 @@ import { SessionPanel } from "../sessions/SessionPanel";
 import { RecordMemories } from "./RecordMemories";
 import type { EntryDetailApplication } from "./EntryDetailPage";
 import { WorkoutChart } from "./WorkoutChart";
-import { BodyStudy } from "./BodyStudy";
+import { ClassicAtlas } from "./ClassicAtlas";
 import { useStudyDraftGuard } from "./useStudyDraftGuard";
 import { presentApplicationError } from "../entry-editor/errorMessages";
 import "./workout-folio.css";
@@ -465,14 +465,11 @@ export function WorkoutDetailPage({
         aria-labelledby="workout-metabolic-title"
       >
         <div className="workout-metabolic-heading">
-          <p className="workout-eyebrow">III · Atlas do movimento</p>
+          <p className="workout-eyebrow">III · Atlas clássico</p>
           <h3 id="workout-metabolic-title">O corpo em percurso</h3>
         </div>
-        <BodyStudy
-          category={entry.category}
-          profile={application.physicalProfile}
-        />
-        <div>
+        <ClassicAtlas profile={application.physicalProfile} />
+        <div className="workout-metabolic-data">
           <p className="workout-calories">
             {stored?.estimate ? (
               <>

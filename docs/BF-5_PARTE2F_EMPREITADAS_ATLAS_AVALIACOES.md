@@ -1,3 +1,5 @@
+> **Atualização:** o atlas articulado desta candidata foi substituído pelo [Atlas clássico projetado](BF-5_ATLAS_CLASSICO_PROJETADO.md), por rejeição artística do proprietário. Evidências/testes de poses abaixo preservam somente a cronologia anterior. Empreitadas e avaliações continuam vigentes.
+
 # BF-5 Parte 2F — Empreitadas, Atlas Vivo e avaliações
 
 Candidata de implementação de 2026-11-05, na [PR draft #30](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/30), encadeada à #29. Branch `feat/bf5-parte2f-empreitadas-atlas-avaliacoes`, derivada da PR #29 (`7267a3e4a268d0e8ac6a91f1d15b1b538c59df4f`). Fetch remoto confirmou branch/HEAD idênticos, worktree limpo e dependências instaladas (`npm ls --depth=0`, Node 24.18.0/npm 12.0.2). Preserva #25–#29. Sem alteração da main, merge, fechamento da BF-5 ou aceite artístico/físico.

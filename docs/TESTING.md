@@ -1,3 +1,7 @@
+## BF-5 — Atlas clássico projetado
+
+19 unitários dirigidos em oito arquivos e cinco E2E distintos (três novos + duas regressões de treino) PASS. Cobertura: conjunto por gênero/preferência/fallback, seis artes locais, permanência e decodificação antes da dissolução, pausa/redução de movimento, viewport/visibilidade/cleanup, cancelamento e falhas sem loop; fórmulas MET e treinos preservados. Removidos testes do motor de poses aposentado; a regressão agora exige imagem raster carregada/dimensões, mantendo os asserts funcionais anteriores. [Resultados, falhas intermediárias e roteiro físico](BF-5_ATLAS_CLASSICO_PROJETADO.md). Sem CI global verde, retries/timeouts alterados ou teste físico presumido.
+
 ## BF-5 Parte 2F — verificação dirigida
 
 214 testes aprovados na rodada ampliada (30 arquivos), dois do renderizador após corrigir mock e 75/75 na rodada final (10 arquivos, com sobreposição). Oito E2E distintos aprovados entre rodadas: quatro novos de Empreitadas/Atlas/avaliações/PNG e quatro de regressão (dois de treino, catálogo audiovisual e criação/edição dos seis tipos). Asserções cobrem revisão concorrente/rollback, referências, progresso/diário, upgrade/reabertura, restore v6 antigo/novo, sessões e projeção 3D preservadas, escolha voluntária de perfil, poses/pausa/movimento reduzido, estrelas nativas/teclado e PNG real nas três proporções. Contraste de Trabalho é verificado contra o papel; imagens/vídeo usam fixtures.

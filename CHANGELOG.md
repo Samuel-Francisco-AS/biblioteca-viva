@@ -1,3 +1,9 @@
+## BF-5 — Atlas clássico projetado, candidata 2026-11-05
+
+- Substituído atlas articulado por seis gravuras originais estáticas masculinas/femininas, com rotação contemplativa, dissolução, pausa e avanço manual.
+- Removidos rig SVG, motor/controles de poses e estilos órfãos. Movimento reduzido, viewport/visibilidade e falha de imagem têm tratamento próprio.
+- Perfil, MET, treinos, gráfico, Empreitadas e avaliações preservados. Sem migração, dependência ou versão nova. [Entrega](docs/BF-5_ATLAS_CLASSICO_PROJETADO.md). BF-5 aberta, aceite humano pendente.
+
 ## BF-5 Parte 2F — candidata, 2026-11-05
 
 - Trabalho reconstruído como Empreitadas: etapas, tarefas, progresso real, próxima ação explícita e diário; sessões e notas anteriores preservadas.

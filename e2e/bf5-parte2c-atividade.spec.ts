@@ -205,12 +205,12 @@ test("ficha viva cria, adapta dias, conserva base, estima com perfil e apresenta
   const atlas = page.getByRole("img", { name: /Atlas masculino:/ });
   await atlas.scrollIntoViewIfNeeded();
   await expect(atlas).toBeVisible();
-  await expect(atlas.locator("[data-joint]")).toHaveCount(10);
+  await expect(atlas).toHaveJSProperty("naturalWidth", 1024);
   const atlasBox = await atlas.boundingBox();
   if (!atlasBox) throw new Error("Atlas sem área de desenho");
   expect(atlasBox.width).toBeGreaterThan(100);
   expect(atlasBox.height).toBeGreaterThan(100);
-  await mkdir("docs/evidence/BF-5P2F", { recursive: true });
+  await mkdir("docs/evidence/BF-5_ATLAS_CLASSICO", { recursive: true });
   for (const [name, size] of [
     ["retrato", { width: 390, height: 844 }],
     ["paisagem", { width: 844, height: 390 }],
@@ -228,7 +228,7 @@ test("ficha viva cria, adapta dias, conserva base, estima com perfil e apresenta
       window.scrollTo(0, 0);
     });
     await page.screenshot({
-      path: `docs/evidence/BF-5P2F/regressao-treino-${name}.png`,
+      path: `docs/evidence/BF-5_ATLAS_CLASSICO/regressao-treino-${name}.png`,
       fullPage: true,
     });
   }

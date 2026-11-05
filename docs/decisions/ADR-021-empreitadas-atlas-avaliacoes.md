@@ -1,5 +1,7 @@
 # ADR-021 — Empreitadas, Atlas Vivo e avaliações
 
+> A apresentação articulada do Atlas Vivo foi rejeitada e substituída pela [ADR-022](ADR-022-atlas-classico-projetado.md). Demais contratos desta decisão permanecem vigentes.
+
 - Data: 2026-11-05.
 - Estado: implementação candidata BF-5 Parte 2F, autorizada pelo proprietário; aceite humano pendente.
 - Base: PR #29, `7267a3e4a268d0e8ac6a91f1d15b1b538c59df4f`; preserva #25–#29 e ADR-014–020.
