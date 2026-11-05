@@ -110,6 +110,44 @@ describe("BF-4F3 real spatial navigation", () => {
 });
 
 describe("BF-4F3 local agency", () => {
+  it("completes the autonomous book interaction from canonical layout point to release", () => {
+    const navigation = realNavigation();
+    const s = session(navigation);
+    for (const inhabitant of INHABITANTS.filter((item) => item.key !== "aryn"))
+      s.agency.setAvailable(inhabitant.id, false);
+    const states = new Set<string>();
+    let completed = false;
+    for (let i = 0; i < 30_000 && !completed; i++) {
+      s.step(0.1);
+      const poses = s.agency.getPoses();
+      const book = poses.find(
+        (pose) => pose.interactionObjectId === "living:book",
+      );
+      if (book) states.add(book.interactionState ?? "none");
+      completed =
+        states.has("placing") &&
+        states.has("recollecting") &&
+        states.has("returning") &&
+        !book;
+    }
+    expect(states).toEqual(
+      new Set([
+        "orienting",
+        "picking",
+        "carrying",
+        "placing",
+        "recollecting",
+        "returning",
+      ]),
+    );
+    expect(completed).toBe(true);
+    expect(
+      s.agency
+        .getPoses()
+        .some((pose) => pose.interactionObjectId === "living:book"),
+    ).toBe(false);
+  });
+
   it("reproduces decisions from clock/seed; preserves positions over pause, reduced motion, manual interruption and disposal", () => {
     const nav = realNavigation(),
       a = session(nav),

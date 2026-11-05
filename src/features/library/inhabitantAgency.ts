@@ -50,7 +50,9 @@ interface Task {
   readonly objectId?: string;
   readonly interaction?: {
     readonly source: Position;
+    readonly approach: Position;
     readonly destination: Position;
+    readonly reach: number;
   };
 }
 export interface AgentView extends Position {
@@ -141,11 +143,21 @@ const tasks: readonly Task[] = [
   ...LIBRARY_ACTIVITY_POINTS.flatMap((p) => {
     const z = LIBRARY_ACTIVITY_ZONES.find((z) => z.id === p.zoneId);
     if (!z || z.activity === "circulation") return [];
+    const interaction =
+      p.id === "bf4-point:c-study"
+        ? {
+            source: { x: p.x - 0.65, z: p.z + 2.1 },
+            approach: approachToBook({ x: p.x - 0.65, z: p.z + 2.1 }, p),
+            destination: { x: p.x + 0.8, z: p.z },
+            reach: 1.5,
+          }
+        : undefined;
+    const position = interaction?.approach ?? { x: p.x, z: p.z };
     return [
       {
         id: p.id,
         kind: z.activity,
-        position: { x: p.x, z: p.z },
+        position,
         facing: p.facing,
         label:
           z.activity === "study"
@@ -156,15 +168,7 @@ const tasks: readonly Task[] = [
                 ? "repouso e observação tranquila"
                 : "observação dos mecanismos",
         ...(p.id.endsWith("d-study") ? { objectId: "living:globe" } : {}),
-        ...(p.id === "c-study"
-          ? {
-              objectId: "living:book",
-              interaction: {
-                source: { x: 14.75, z: -4.8 },
-                destination: { x: 16.2, z: -7.2 },
-              },
-            }
-          : {}),
+        ...(interaction ? { objectId: "living:book", interaction } : {}),
         ...{},
       },
     ];
@@ -229,6 +233,15 @@ const preferences: Record<InhabitantKey, Record<TaskKind, number>> = {
   },
 };
 const clamp = (v: number, min = 0, max = 12) => Math.min(max, Math.max(min, v));
+function approachToBook(source: Position, point: Position): Position {
+  const dx = point.x - source.x;
+  const dz = point.z - source.z;
+  const length = Math.hypot(dx, dz);
+  return {
+    x: source.x + (dz / length) * 1.35,
+    z: source.z - (dx / length) * 1.35,
+  };
+}
 /** Session-only agency. No renderer, browser, timers, records or persistence.
  * update() consumes an injected monotonic clock; pauses discard elapsed wall time. */
 export class InhabitantAgency {
@@ -1086,6 +1099,13 @@ export class InhabitantAgency {
       return;
     }
     if (a.interactionState === "orienting") {
+      if (distance(a, task.interaction.source) > task.interaction.reach) {
+        a.interactionState = "failed";
+        this.releaseInteraction(a);
+        a.task = null;
+        this.stop(a, "Não alcança o livro; a interação foi cancelada.", 4);
+        return;
+      }
       a.interactionState = "picking";
       a.action = "gesture";
       a.activity = "Estende a mão e pega o livro cenográfico.";
@@ -1118,7 +1138,7 @@ export class InhabitantAgency {
       a.action = "walk";
       a.activity = "Devolve o livro ao ponto cenográfico original.";
       a.until = this.elapsed;
-      if (this.go(a, task.interaction.source)) return;
+      if (this.go(a, task.interaction.approach)) return;
     }
     if (a.interactionState === "returning" && a.state === "work") {
       a.interactionState = "completed";
