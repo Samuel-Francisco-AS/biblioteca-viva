@@ -48,4 +48,7 @@ Os GLBs atuais não expõem ossos nomeados de mão/pulso. A implementação usa 
 
 ## Dívidas, riscos e próximos gates
 
+O teste integrado determinístico comprova o ciclo na agência com navegação realista; não equivale a uma observação visual da coreografia, dos rigs ou do picking em um dispositivo físico. A validação no Moto G06 permanece acumulada para o gate integrado.
+
+
 O ciclo usa somente o livro decorativo e não cobre assentos, sessões reais, pergaminhos, luminárias ou livros pessoais. Ainda é necessário refinar o ponto de mão com assets/rig compatíveis, testar interrupção durante cada fase em Android, validar câmera/picking em retrato e paisagem e acumular o gate físico no Moto G06. Não houve teste físico, TalkBack, aprovação de CI global ou alteração de Dexie/backup. BF-5.5C, D e F não foram antecipadas.
