@@ -10,7 +10,9 @@ export function RecordMemories({
   entry,
   initialNotes,
   initialQuotes,
+  folio = false,
 }: {
+  readonly folio?: boolean;
   readonly application: BookDetailApplication;
   readonly entry: LibraryEntry;
   readonly initialNotes: readonly Note[];
@@ -74,10 +76,19 @@ export function RecordMemories({
   }
   return (
     <section
-      className="content-card memory-chapter"
+      className={
+        folio ? "study-chapter study-notebook" : "content-card memory-chapter"
+      }
+      data-has-study-draft={
+        folio && Boolean(drafts.note.trim() || drafts.quote.trim())
+          ? "true"
+          : undefined
+      }
       aria-labelledby="memory-title"
     >
-      <p className="eyebrow">Memórias</p>
+      <p className={folio ? "study-kicker" : "eyebrow"}>
+        {folio ? "III · Ideias que merecem ficar" : "Memórias"}
+      </p>
       <h3 id="memory-title">{copy.memory}</h3>
       <p>{copy.invitation}</p>
       <div className="memory-tabs" aria-label="Tipo de anotação">
@@ -104,7 +115,7 @@ export function RecordMemories({
           {kind === "note" ? "Nova nota" : "Nova citação"}
           <textarea
             name="content"
-            rows={3}
+            rows={folio ? 6 : 3}
             required
             value={drafts[kind]}
             onChange={(event) =>

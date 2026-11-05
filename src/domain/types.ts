@@ -86,6 +86,9 @@ export interface SeriesEntry extends LibraryEntryBase {
 
 export interface StudyEntry extends LibraryEntryBase {
   readonly type: "study";
+  readonly flashCards?: readonly FlashCard[];
+  /** Legacy time not represented in session history; captured once, never rounded anew. */
+  readonly studyTimeBaselineSeconds?: number;
   readonly area?: string;
   readonly discipline?: string;
   readonly objective?: string;
@@ -95,6 +98,12 @@ export interface StudyEntry extends LibraryEntryBase {
   /** Minutos inteiros quando progressUnit === "hours". */
   readonly progressTotal?: number;
   readonly deadline?: string;
+}
+
+export interface FlashCard {
+  readonly id: string;
+  readonly front: string;
+  readonly back: string;
 }
 
 export interface Exercise {
@@ -158,6 +167,8 @@ export interface ViewingSession extends SessionBase {
 }
 
 export interface StudySession extends SessionBase {
+  /** Optional focus limit in seconds; legacy sessions remain unbounded. */
+  readonly focusDurationSeconds?: number;
   readonly kind: "study";
   readonly entryType: "study";
 }

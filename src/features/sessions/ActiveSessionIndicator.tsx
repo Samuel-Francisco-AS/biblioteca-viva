@@ -52,11 +52,18 @@ export function ActiveSessionIndicator({
     return () => window.clearInterval(interval);
   }, [session?.id, session?.status]);
   if (!session) return null;
+  const duration = currentSessionDuration(session, now);
+  const focusFinished =
+    session.kind === "study" &&
+    session.focusDurationSeconds !== undefined &&
+    duration >= session.focusDurationSeconds;
   return (
     <aside className="active-session" aria-live="polite">
       <span>
-        Sessão {session.status === "active" ? "em andamento" : "pausada"} ·{" "}
-        {formatSessionDuration(currentSessionDuration(session, now))}
+        {focusFinished
+          ? "Foco concluído · aguardando registro"
+          : `Sessão ${session.status === "active" ? "em andamento" : "pausada"}`}{" "}
+        · {formatSessionDuration(duration)}
       </span>
       <Link
         className="text-link"

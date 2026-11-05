@@ -1,3 +1,10 @@
+## BF-5 — Parte 2B: fólio de estudo (2026-11-04, candidata)
+
+- Estudo reconstruído em uma superfície contínua com foco circular, tempo acumulado, caderno e revisão de flash cards com flip e deslizamento.
+- Pomodoro por timestamps persistidos, limite de foco e recuperação após retorno/reabertura; horas deixam de ser digitadas diretamente nessa tela. Tempo anterior preservado.
+- Cartas locais editáveis e backup v6 mantido; Dexie v10 aditiva preserva dados v9. Exclusão ganha contraste explícito e conserva confirmação.
+- [Relatório, validações e limites](docs/BF-5_PARTE2B_ESTUDO.md). BF-5 aberta, sem merge automático ou aceite físico.
+
 ## BF-5 — Parte 2: fólio de leitura (2026-11-04, candidata)
 
 - Cards da Coleção deixam de mudar de cor no início do toque/scroll; abertura e teclado usam ativação confirmada.

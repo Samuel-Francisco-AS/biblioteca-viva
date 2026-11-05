@@ -319,3 +319,135 @@ it("R5 starts an unmeasured study encounter without inventing minutes", async ()
   ).toMatchObject({ status: "in_progress", progressCurrent: 0 });
   test.database.close();
 });
+
+it("P2B recovers timestamp focus after database reopen, excludes pauses, caps screen-off time and credits once", async () => {
+  const test = await context();
+  const entry = createStudy({
+    id: "pomodoro",
+    title: "Astros fictícios",
+    progressUnit: "hours",
+    progressTotal: 10,
+    createdAt: "2026-08-16T09:00:00.000Z",
+  });
+  await test.dependencies.libraryEntries.save(entry);
+  const started = await new StartSession(test.dependencies).execute({
+    entryId: entry.id,
+    entryType: "study",
+    focusDurationSeconds: 1500,
+  });
+  test.setNow("2026-08-16T10:05:00.000Z");
+  await new PauseSession(test.dependencies).execute({ id: started.id });
+  test.database.close();
+  await test.database.open();
+  const paused = await test.dependencies.sessions.getOpen();
+  expect(paused).toMatchObject({
+    status: "paused",
+    accumulatedDuration: 300,
+    focusDurationSeconds: 1500,
+  });
+  test.setNow("2026-08-16T12:00:00.000Z");
+  await new ResumeSession(test.dependencies).execute({ id: started.id });
+  // No interval executes during two hours of screen-off/process suspension.
+  test.database.close();
+  await test.database.open();
+  test.setNow("2026-08-16T14:00:00.000Z");
+  const [first, second] = await Promise.all([
+    new CompleteSession(test.dependencies).execute({ id: started.id }),
+    new CompleteSession(test.dependencies).execute({ id: started.id }),
+  ]);
+  expect(first.session.accumulatedDuration).toBe(1500);
+  expect(second.session).toEqual(first.session);
+  expect(
+    await test.dependencies.libraryEntries.getById(entry.id),
+  ).toMatchObject({ progressCurrent: 10, status: "completed" });
+  expect(
+    (await test.dependencies.activities.list()).filter(
+      (activity) => activity.type === "session_completed",
+    ),
+  ).toHaveLength(1);
+  expect(
+    test.published.filter(
+      (event) =>
+        event.type === "SessionChanged" && event.payload.status === "completed",
+    ),
+  ).toHaveLength(1);
+  expect(await test.dependencies.sessions.getOpen()).toBeUndefined();
+  test.database.close();
+});
+
+it("P2B persists early finish and restart does not credit discarded time", async () => {
+  const test = await context();
+  await test.dependencies.libraryEntries.save(
+    createStudy({
+      id: "short-focus",
+      title: "Pistas fictícias",
+      progressUnit: "sessions",
+      createdAt: "2026-08-16T09:00:00.000Z",
+    }),
+  );
+  const start = new StartSession(test.dependencies);
+  const first = await start.execute({
+    entryId: "short-focus",
+    entryType: "study",
+    focusDurationSeconds: 900,
+  });
+  test.setNow("2026-08-16T10:02:05.000Z");
+  const ended = await new CompleteSession(test.dependencies).execute({
+    id: first.id,
+  });
+  expect(ended.session.accumulatedDuration).toBe(125);
+  const discarded = await start.execute({
+    entryId: "short-focus",
+    entryType: "study",
+    focusDurationSeconds: 1500,
+  });
+  test.setNow("2026-08-16T10:05:00.000Z");
+  await new DeleteSession(test.dependencies).execute({ id: discarded.id });
+  expect(
+    await test.dependencies.libraryEntries.getById("short-focus"),
+  ).toMatchObject({ progressCurrent: 1 });
+  expect(
+    await test.dependencies.sessions.listByEntryId("short-focus"),
+  ).toHaveLength(1);
+  await expect(
+    start.execute({
+      entryId: "short-focus",
+      entryType: "study",
+      focusDurationSeconds: 0,
+    }),
+  ).rejects.toMatchObject({ code: "VALIDATION_FAILED" });
+  test.database.close();
+});
+
+it("P2B preserves old hours once and adds exact seconds without compounding minute rounding", async () => {
+  const test = await context();
+  await test.dependencies.libraryEntries.save(
+    createStudy({
+      id: "legacy-time",
+      title: "Tempo anterior fictício",
+      progressUnit: "hours",
+      progressCurrent: 90,
+      createdAt: "2026-08-16T09:00:00.000Z",
+    }),
+  );
+  const session = await new StartSession(test.dependencies).execute({
+    entryId: "legacy-time",
+    entryType: "study",
+    focusDurationSeconds: 1500,
+  });
+  expect(
+    await test.dependencies.libraryEntries.getById("legacy-time"),
+  ).toMatchObject({ studyTimeBaselineSeconds: 5400 });
+  test.setNow("2026-08-16T10:02:05.000Z");
+  await new CompleteSession(test.dependencies).execute({ id: session.id });
+  const entry = await test.dependencies.libraryEntries.getById("legacy-time");
+  expect(entry).toMatchObject({
+    progressCurrent: 93,
+    studyTimeBaselineSeconds: 5400,
+  });
+  const history = await test.dependencies.sessions.listByEntryId("legacy-time");
+  expect(
+    history.reduce((sum, item) => sum + item.accumulatedDuration, 5400),
+  ).toBe(5525);
+  test.database.close();
+});
