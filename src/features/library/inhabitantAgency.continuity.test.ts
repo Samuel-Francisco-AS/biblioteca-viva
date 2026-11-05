@@ -25,22 +25,33 @@ function fixture() {
 }
 
 describe("BF-5.5A real agency continuity", () => {
-  it("restores distinct positions and progresses its random sequence on relaunch", () => {
+  it("restores positions and progresses its random sequence", () => {
     const before = fixture();
     before.advance(12);
-    const checkpoint = before.agency.captureContinuity("2026-11-05T12:00:00.000Z");
+    const checkpoint = before.agency.captureContinuity(
+      "2026-11-05T12:00:00.000Z",
+    );
     const after = fixture();
-    expect(after.agency.restoreContinuity(checkpoint, Date.parse(checkpoint.savedAt) + 1000)).toBe(true);
+    expect(
+      after.agency.restoreContinuity(
+        checkpoint,
+        Date.parse(checkpoint.savedAt) + 1000,
+      ),
+    ).toBe(true);
     for (const descriptor of INHABITANTS) {
       const stored = checkpoint.agents.find((a) => a.id === descriptor.id)!;
-      const restored = after.agency.getPoses().find((a) => a.id === descriptor.id)!;
+      const restored = after.agency
+        .getPoses()
+        .find((a) => a.id === descriptor.id)!;
       expect(distance(stored, restored)).toBeLessThan(0.01);
     }
     expect(after.agency.captureContinuity().randomState).not.toBe(51);
   });
 
-  it("discards an invalid position without placing a character beyond the floor", () => {
-    const before = fixture().agency.captureContinuity("2026-11-05T12:00:00.000Z");
+  it("rejects an invalid position outside the floor", () => {
+    const before = fixture().agency.captureContinuity(
+      "2026-11-05T12:00:00.000Z",
+    );
     const corrupted = {
       ...before,
       agents: before.agents.map((a) =>
@@ -48,9 +59,17 @@ describe("BF-5.5A real agency continuity", () => {
       ),
     };
     const after = fixture();
-    expect(after.agency.restoreContinuity(corrupted, Date.parse(before.savedAt))).toBe(true);
+    expect(
+      after.agency.restoreContinuity(corrupted, Date.parse(before.savedAt)),
+    ).toBe(true);
     const actor = after.agency.getPoses().find((a) => a.key === "samael")!;
     expect(actor.x).not.toBe(999);
-    expect(after.agency.navigation.clear(actor, actor, INHABITANT_ENVELOPES.samael.travel)).toBe(true);
+    expect(
+      after.agency.navigation.clear(
+        actor,
+        actor,
+        INHABITANT_ENVELOPES.samael.travel,
+      ),
+    ).toBe(true);
   });
 });

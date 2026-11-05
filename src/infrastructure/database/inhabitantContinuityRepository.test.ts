@@ -16,7 +16,7 @@ afterEach(async () => {
 });
 
 describe("BF-5.5A checkpoint in existing IndexedDB settings", () => {
-  it("reopens, serializes writes and round-trips via backup snapshot", async () => {
+  it("reopens and round-trips via backup snapshot", async () => {
     const name = `bf55a-${crypto.randomUUID()}`;
     names.push(name);
     const database = new BibliotecaDatabase(name);
@@ -45,20 +45,31 @@ describe("BF-5.5A checkpoint in existing IndexedDB settings", () => {
     ]);
     expect((await store.load())?.randomState).toBe(79);
     const copied = await new DexieBackupSnapshotStore(database).read();
-    expect(copied.settings.some((setting) => setting.key === INHABITANT_CONTINUITY_KEY)).toBe(true);
+    expect(
+      copied.settings.some(
+        (setting) => setting.key === INHABITANT_CONTINUITY_KEY,
+      ),
+    ).toBe(true);
     database.close();
 
     const reopened = new BibliotecaDatabase(name);
     await reopened.open();
-    expect((await new DexieInhabitantContinuityRepository(reopened).load())?.agents).toHaveLength(4);
+    expect(
+      (await new DexieInhabitantContinuityRepository(reopened).load())?.agents,
+    ).toHaveLength(4);
     await reopened.settings.put({
       key: INHABITANT_CONTINUITY_KEY,
       value: { broken: true },
       updatedAt: snapshot.savedAt,
     });
-    expect(await new DexieInhabitantContinuityRepository(reopened).load()).toBeUndefined();
+    expect(
+      await new DexieInhabitantContinuityRepository(reopened).load(),
+    ).toBeUndefined();
     await new DexieBackupSnapshotStore(reopened).replace(copied);
-    expect((await new DexieInhabitantContinuityRepository(reopened).load())?.randomState).toBe(79);
+    expect(
+      (await new DexieInhabitantContinuityRepository(reopened).load())
+        ?.randomState,
+    ).toBe(79);
     reopened.close();
   });
 });

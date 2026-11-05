@@ -609,7 +609,7 @@ describe("WorldHost", () => {
     expect(diagnosticRuntime.dispose).toHaveBeenCalledOnce();
   });
 
-  it("loads the durable inhabitant checkpoint before mounting and wires saves", async () => {
+  it("loads checkpoints before mounting and forwards saves", async () => {
     createThreeWorldRuntime.mockReset();
     const runtime = createRuntime();
     createThreeWorldRuntime.mockResolvedValue(runtime);
@@ -653,7 +653,9 @@ describe("WorldHost", () => {
       ?.onInhabitantCheckpoint;
     expect(save).toBeTypeOf("function");
     save?.(checkpoint);
-    await waitFor(() => expect(continuity.save).toHaveBeenCalledWith(checkpoint));
+    await waitFor(() =>
+      expect(continuity.save).toHaveBeenCalledWith(checkpoint),
+    );
   });
 
   it("encaminha seleção externa sem remontar o runtime", async () => {

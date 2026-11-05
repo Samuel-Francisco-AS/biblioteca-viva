@@ -324,7 +324,8 @@ export class InhabitantAgency {
     if (this.disposed) return false;
     const saved = parseInhabitantContinuity(value);
     if (!saved) return false;
-    const staleActivity = Math.max(0, now - Date.parse(saved.savedAt)) > 15 * 60_000;
+    const staleActivity =
+      Math.max(0, now - Date.parse(saved.savedAt)) > 15 * 60_000;
     const positioned: Array<{ x: number; z: number; radius: number }> = [];
     const valid = (a: Agent, x: number, z: number): boolean => {
       const radius = INHABITANT_ENVELOPES[a.key].travel;
