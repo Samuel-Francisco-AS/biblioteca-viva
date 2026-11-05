@@ -3,6 +3,7 @@ import type { NarrativeSnapshot } from "../narrative/contracts";
 import { STORIES } from "../narrative/stories";
 import { nodeFor } from "../narrative/session";
 import { InhabitantAgency, type AgencySnapshot } from "../inhabitantAgency";
+import type { InhabitantContinuitySnapshot } from "../inhabitantContinuity";
 import { InhabitantNavigation } from "../inhabitantNavigation";
 import { collectInhabitantObstacles } from "./inhabitantObstacles";
 import { createInhabitantSceneProps } from "./inhabitantSceneProps";
@@ -116,6 +117,10 @@ export interface FixtureModelLoader {
 export interface ThreeWorldRuntimeDependencies {
   readonly livingSession?: LivingSession;
   readonly inhabitantLoader?: InhabitantLoader;
+  readonly inhabitantContinuity?: InhabitantContinuitySnapshot;
+  readonly onInhabitantCheckpoint?: (
+    snapshot: InhabitantContinuitySnapshot,
+  ) => void;
   readonly createRenderer?: () => ThreeWorldRenderer;
   readonly fixtureLoader?: FixtureModelLoader;
   readonly frameScheduler?: FrameScheduler;
@@ -453,6 +458,11 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly inhabitantLoader?: InhabitantLoader;
   private agency?: InhabitantAgency;
   private agencyClock = 0;
+  private readonly continuity?: InhabitantContinuitySnapshot;
+  private readonly onInhabitantCheckpoint?: (
+    snapshot: InhabitantContinuitySnapshot,
+  ) => void;
+  private lastContinuityCheckpointAt: number | undefined;
   private readonly inhabitantActivations = new Set<
     (key: InhabitantKey) => void
   >();
@@ -466,6 +476,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private sceneProps?: ReturnType<typeof createInhabitantSceneProps>;
   constructor(dependencies: ThreeWorldRuntimeDependencies = {}) {
     this.inhabitantLoader = dependencies.inhabitantLoader;
+    this.continuity = dependencies.inhabitantContinuity;
+    this.onInhabitantCheckpoint = dependencies.onInhabitantCheckpoint;
     this.livingSession = dependencies.performanceScenario
       ? undefined
       : dependencies.livingSession;
@@ -670,6 +682,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
             },
           },
         );
+        if (this.continuity) {
+          this.agency.restoreContinuity(this.continuity);
+        }
         this.narrativeVisuals = createNarrativeVisuals(building);
         this.unsubscribeAgency = this.agency.subscribe(() => {
           const snapshot = this.agency?.getSnapshot();
@@ -793,6 +808,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.loadScenarioFixtures();
       mountedWorld.watchResize(this.handleWindowResize);
       mountedWorld.watchVisibility(this.handleVisibilityChange);
+      window.addEventListener("pagehide", this.handlePageHide);
       this.publishDiagnostics(true);
     } catch (error) {
       if (unattachedProceduralComposition) {
@@ -845,6 +861,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
 
   pause(): void {
     if (this.isTerminal()) return;
+    this.checkpointInhabitants(true);
     this.pausedByVisibility = false;
     this.pauseLoop();
   }
@@ -1055,6 +1072,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly handleVisibilityChange = (): void => {
     if (this.isTerminal()) return;
     if (document.hidden) {
+      this.checkpointInhabitants(true);
       if (this.state === "running") {
         this.pausedByVisibility = true;
         this.pauseLoop();
@@ -1068,6 +1086,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.activateLoop();
     }
   };
+
+  private readonly handlePageHide = (): void =>
+    this.checkpointInhabitants(true);
 
   private readonly handleWindowResize = (): void => this.resize();
 
@@ -1200,6 +1221,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         );
       this.agencyClock += delta * 1000;
       this.agency?.update();
+      this.checkpointInhabitants(false);
       if (this.agency) this.inhabitants?.drive(this.agency.getPoses());
       this.inhabitants?.update(delta, reduced);
       if (this.agency)
@@ -1336,7 +1358,29 @@ export class ThreeWorldRuntime implements WorldRuntime {
     return this.state === "failed" || this.state === "disposed";
   }
 
+  /** Periodic lightweight snapshots, plus pause/close; no IndexedDB per frame. */
+  private checkpointInhabitants(force: boolean): void {
+    if (!this.agency || !this.onInhabitantCheckpoint) return;
+    if (!this.agency.getPoses().some((actor) => actor.available)) return;
+    const now = this.now();
+    if (
+      !force &&
+      this.lastContinuityCheckpointAt !== undefined &&
+      now - this.lastContinuityCheckpointAt < 12_000
+    ) {
+      return;
+    }
+    this.lastContinuityCheckpointAt = now;
+    try {
+      this.onInhabitantCheckpoint(this.agency.captureContinuity());
+    } catch {
+      // A failed persistence adapter cannot turn a working scene into a crash.
+    }
+  }
+
   private releaseMount(): void {
+    this.checkpointInhabitants(true);
+    window.removeEventListener("pagehide", this.handlePageHide);
     const mountedWorld = this.mountedWorld;
     this.mountedWorld = undefined;
     this.navigation = undefined;

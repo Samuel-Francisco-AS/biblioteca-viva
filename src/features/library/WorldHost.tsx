@@ -9,6 +9,10 @@ import {
 } from "./inhabitants";
 import { LivingSession } from "./livingObjects";
 import { LivingControls, LivingFeedback } from "./LivingControls";
+import type {
+  InhabitantContinuityPort,
+  InhabitantContinuitySnapshot,
+} from "./inhabitantContinuity";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { completeStartupExperience } from "../../startupExperience";
 
@@ -29,20 +33,40 @@ const createRuntime = async (
   readingAreaBooks: readonly ReadingAreaBook[] | undefined,
   libraryWorldSnapshot: LibraryWorldSnapshot | undefined,
   livingSession: LivingSession,
+  continuity?: InhabitantContinuityPort,
 ): Promise<WorldRuntime> => {
   if (libraryWorldSnapshot && readingAreaBooks) {
     throw new Error("Use somente um snapshot BF por montagem.");
   }
+  // Wait for the durable checkpoint before mounting real agents.
+  let restored: InhabitantContinuitySnapshot | undefined;
+  if (libraryWorldSnapshot && continuity) {
+    try {
+      restored = await continuity.load();
+    } catch {
+      // Optional world continuity must not prevent using the library.
+    }
+  }
   const { createThreeWorldRuntime } = await import("./three/ThreeWorldRuntime");
   return createThreeWorldRuntime(
     libraryWorldSnapshot
-      ? { libraryWorldSnapshot, livingSession }
+      ? {
+          libraryWorldSnapshot,
+          livingSession,
+          inhabitantContinuity: restored,
+          onInhabitantCheckpoint: continuity
+            ? (snapshot) => {
+                void continuity.save(snapshot).catch(() => undefined);
+              }
+            : undefined,
+        }
       : { readingAreaBooks },
   );
 };
 
 export interface WorldHostProps {
   readonly active?: boolean;
+  readonly inhabitantContinuity?: InhabitantContinuityPort;
   readonly libraryWorldSnapshot?: LibraryWorldSnapshot;
   readonly onSelectableObjectsChange?: (
     objects: readonly WorldSelectableObject[],
@@ -81,6 +105,7 @@ function adjacentSelectionId(
 
 export function WorldHost({
   active = true,
+  inhabitantContinuity,
   libraryWorldSnapshot,
   onSelectableObjectsChange,
   onSelectionChange,
@@ -200,6 +225,7 @@ export function WorldHost({
               readingAreaBooks,
               libraryWorldSnapshot,
               livingSession,
+              inhabitantContinuity,
             ));
 
     void effectiveRuntimeFactory()
@@ -280,6 +306,7 @@ export function WorldHost({
   }, [
     livingSession,
     narrativeSession,
+    inhabitantContinuity,
     publishSelection,
     performanceScenario,
     readingAreaBooks,
