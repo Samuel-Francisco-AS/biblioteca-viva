@@ -53,12 +53,16 @@ const createRuntime = async (
       ? {
           libraryWorldSnapshot,
           livingSession,
-          inhabitantContinuity: restored,
-          onInhabitantCheckpoint: continuity
-            ? (snapshot) => {
-                void continuity.save(snapshot).catch(() => undefined);
+          ...(restored ? { inhabitantContinuity: restored } : {}),
+          ...(continuity
+            ? {
+                onInhabitantCheckpoint: (
+                  snapshot: InhabitantContinuitySnapshot,
+                ) => {
+                  void continuity.save(snapshot).catch(() => undefined);
+                },
               }
-            : undefined,
+            : {}),
         }
       : { readingAreaBooks },
   );

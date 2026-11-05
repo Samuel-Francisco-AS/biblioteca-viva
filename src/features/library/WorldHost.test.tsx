@@ -609,6 +609,53 @@ describe("WorldHost", () => {
     expect(diagnosticRuntime.dispose).toHaveBeenCalledOnce();
   });
 
+  it("loads the durable inhabitant checkpoint before mounting and wires saves", async () => {
+    createThreeWorldRuntime.mockReset();
+    const runtime = createRuntime();
+    createThreeWorldRuntime.mockResolvedValue(runtime);
+    const snapshot = projectLibraryWorldEntries([]);
+    const checkpoint = {
+      version: 1 as const,
+      savedAt: "2026-11-05T12:00:00.000Z",
+      randomState: 17,
+      agents: INHABITANTS.map((actor) => ({
+        id: actor.id,
+        x: actor.x,
+        z: actor.z,
+        facing: 0,
+        phase: "idle" as const,
+        taskId: null,
+        destination: null,
+        remainingSeconds: 3,
+        recentTaskIds: [],
+        taskCount: 0,
+      })),
+    };
+    const continuity = {
+      load: vi.fn(async () => checkpoint),
+      save: vi.fn(async () => undefined),
+    };
+    render(
+      <WorldHost
+        libraryWorldSnapshot={snapshot}
+        inhabitantContinuity={continuity}
+      />,
+    );
+    await screen.findByText("Ambiente 3D em execução.");
+    expect(continuity.load).toHaveBeenCalledOnce();
+    expect(createThreeWorldRuntime).toHaveBeenCalledWith({
+      libraryWorldSnapshot: snapshot,
+      livingSession: expect.any(LivingSession),
+      inhabitantContinuity: checkpoint,
+      onInhabitantCheckpoint: expect.any(Function),
+    });
+    const save = vi.mocked(createThreeWorldRuntime).mock.calls.at(-1)?.[0]
+      ?.onInhabitantCheckpoint;
+    expect(save).toBeTypeOf("function");
+    save?.(checkpoint);
+    await waitFor(() => expect(continuity.save).toHaveBeenCalledWith(checkpoint));
+  });
+
   it("encaminha seleção externa sem remontar o runtime", async () => {
     const runtime = createRuntime();
     const runtimeFactory = vi.fn(() => Promise.resolve(runtime));
