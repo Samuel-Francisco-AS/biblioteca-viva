@@ -1,3 +1,5 @@
+> **BF-5.5E em candidata — 05/11/2026:** mobília reformulada e integrada aos contratos B/C/D; [relatório](BF-5_5E_RELATORIO.md). Próximos trabalhos previstos: F, resposta a sessões reais; G, integração e gate artístico/físico no Moto G06. **F/G não iniciadas e sem autorização automática por esta entrega.** Manter revisão da stack #32–#35 e da candidata E, sem merge ou encerramento implícito. As indicações antigas de E como ainda não implementada são cronologia anterior.
+
 > **BF-5.5D — saneamento na PR draft #35:** contrato neutro, liberação de leases no handoff/descarte, voo validado entre móveis, reações dos quatro habitantes e acesso à anotação/citação específica. [Relatório vigente](BF-5_5D_RELATORIO.md). Sem merge, CI global verde ou aceite físico; avaliação Moto G06 acumulada para G. E/F permanecem futuras.
 
 > **BF-5.5D — candidata em revisão (05/11/2026):** magia ambiental independente do relógio e até dez projeções de notas/citações, com voo local, interação pela agência B e acesso ao registro original. Base C `8cc12c2`; sem merge ou aceite físico. Limites (rotas locais, rig, foco da anotação e validação WebGL) e evidências no [relatório](BF-5_5D_RELATORIO.md). BF-5.5 permanece aberta; refinamento físico em G e E/F ainda pendentes.
@@ -10,7 +12,7 @@
 
 ## PLANEJAMENTO VIGENTE — 05/11/2026: BF-5.5 inserida entre BF-5 e BF-6
 
-Por autorização do proprietário, após o fechamento da BF-5, foi planejada a **BF-5.5 — O Despertar da Biblioteca**. A candidata B iniciou somente tarefas, leases e um ciclo físico com o livro cenográfico; iluminação, magia, pergaminhos, mobília refinada e sessões reais continuam futuras. [Plano e contrato](BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md) · [ADR-023](decisions/ADR-023-bf-5-5-despertar-da-biblioteca.md).
+Por autorização do proprietário, após o fechamento da BF-5, foi planejada a **BF-5.5 — O Despertar da Biblioteca**. As candidatas A–E implementam continuidade, tarefas/manipulação, iluminação, magia/pergaminhos e reforma da mobília em branches encadeadas. Resposta às sessões reais (F) e gate integrado (G) permanecem futuros. [Plano e contrato](BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md) · [ADR-023](decisions/ADR-023-bf-5-5-despertar-da-biblioteca.md).
 
 **Nova ordem:** BF-5 ✅ → BF-5.5 ⏳ → BF-6 (habitantes/RPG) ⏳ → BF-7 (consolidação) ⏳. A cronologia anterior abaixo, inclusive a indicação de BF-6 como próximo passo, descreve o estado **anterior a esta decisão**, não o planejamento vigente. As ressalvas técnicas da BF-5, issues #21–#24 e ausência de CI E2E global verde permanecem. Não há entrega BF-5.5, gate novo, beta ou release neste registro.
 

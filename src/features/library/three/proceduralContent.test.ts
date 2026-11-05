@@ -89,7 +89,7 @@ describe("fábrica procedural de estante BF-1A", () => {
     const bookshelf = createProceduralBookshelf(createIdentity("shelf-01"));
     const parts = meshes(bookshelf.root);
 
-    expect(parts).toHaveLength(10);
+    expect(parts).toHaveLength(30);
     expect(parts.filter(({ name }) => name === "bookshelf-base")).toHaveLength(
       1,
     );
@@ -127,14 +127,14 @@ describe("fábrica procedural de estante BF-1A", () => {
       expect.closeTo(2.5, 6),
     ]);
     expect(sizes.map(({ y }) => y)).toEqual([
-      expect.closeTo(3.1, 6),
-      expect.closeTo(3.38, 6),
-      expect.closeTo(2.86, 6),
+      expect.closeTo(3.37, 6),
+      expect.closeTo(3.72, 6),
+      expect.closeTo(3.06, 6),
     ]);
     expect(sizes.map(({ z }) => z)).toEqual([
-      expect.closeTo(0.62, 6),
-      expect.closeTo(0.6, 6),
-      expect.closeTo(0.66, 6),
+      expect.closeTo(0.705, 6),
+      expect.closeTo(0.685, 6),
+      expect.closeTo(0.745, 6),
     ]);
     expect(
       bookshelves.map(
@@ -161,7 +161,11 @@ describe("fábrica procedural de estante BF-1A", () => {
   it("separa fundo, prateleiras e moldura sem sobreposição de volume", () => {
     const bookshelf = createProceduralBookshelf(createIdentity("shelf-01"));
     const parts = meshes(bookshelf.root);
-    const bounds = parts.map((part) => new Box3().setFromObject(part));
+    // Decorative joinery intentionally intersects its supporting timber. Keep
+    // checking all structural bays; slot tests also check the new carved parts.
+    const bounds = parts
+      .filter((part) => part.parent === bookshelf.root)
+      .map((part) => new Box3().setFromObject(part));
 
     for (const [index, first] of bounds.entries()) {
       for (const second of bounds.slice(index + 1)) {
@@ -268,10 +272,10 @@ function createBookIdentity(
 describe("fábrica procedural de livro BF-2B", () => {
   it("expõe as quatro dimensões ampliadas e deriva seu envelope máximo", () => {
     const expectedDimensions = {
-      "book-amber": { depth: 0.33, height: 0.38, width: 0.2 },
+      "book-amber": { depth: 0.33, height: 0.34, width: 0.2 },
       "book-blue": { depth: 0.36, height: 0.4, width: 0.225 },
-      "book-green": { depth: 0.32, height: 0.37, width: 0.19 },
-      "book-red": { depth: 0.35, height: 0.39, width: 0.215 },
+      "book-green": { depth: 0.32, height: 0.3, width: 0.19 },
+      "book-red": { depth: 0.35, height: 0.37, width: 0.215 },
     } satisfies Record<
       ProceduralBookVolumeVariant,
       Readonly<{ depth: number; height: number; width: number }>
@@ -342,6 +346,16 @@ describe("fábrica procedural de livro BF-2B", () => {
     expect(book.root.rotation.z).toBe(0);
     expect(book.root.scale).toEqual(new Vector3(1, 1, 1));
     disposeObjectTree(book.root);
+  });
+
+  it("varia lombadas de IDs consecutivos sem mudar a identidade nem usar aleatoriedade", () => {
+    const variants = Array.from({ length: 70 }, (_, i) =>
+      getProceduralBookVolumeVariant({
+        entryId: `fiction-${i}`,
+        instanceId: `reading-book:fiction-${i}`,
+      }),
+    );
+    expect(new Set(variants).size).toBe(4);
   });
 
   it("escolhe a variante sem aleatoriedade e a mantém para a mesma identidade", () => {

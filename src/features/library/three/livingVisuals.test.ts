@@ -1,3 +1,4 @@
+import { SCENIC_BOOK_ANCHORS } from "./libraryFurnishingLayout";
 import { LIBRARY_CIRCULATION } from "../librarySpatialLayout";
 import { rectanglesOverlap } from "../librarySpatialGeometry";
 import { describe, expect, it, vi } from "vitest";
@@ -191,8 +192,8 @@ describe("living visuals", () => {
           id: "character:aryn",
           key: "aryn",
           label: "Aryn",
-          x: 16.2,
-          z: -7.2,
+          x: SCENIC_BOOK_ANCHORS.destinationApproach.x,
+          z: SCENIC_BOOK_ANCHORS.destinationApproach.z,
           facing: 0,
           state: "work",
           activity: "placing",
@@ -207,7 +208,14 @@ describe("living visuals", () => {
       () => anchor,
     );
     const placedBounds = new Box3().setFromObject(book.root);
-    expect(placedBounds.min.y).toBeCloseTo(0.96, 2);
+    expect(placedBounds.min.y).toBeCloseTo(
+      SCENIC_BOOK_ANCHORS.destination.y + 0.004,
+      3,
+    );
+    expect(placedBounds.getCenter(new Vector3()).x).toBeCloseTo(
+      SCENIC_BOOK_ANCHORS.destination.x,
+      2,
+    );
 
     visuals.driveInhabitantInteractions(
       [
@@ -215,8 +223,8 @@ describe("living visuals", () => {
           id: "character:aryn",
           key: "aryn",
           label: "Aryn",
-          x: 16.2,
-          z: -7.2,
+          x: SCENIC_BOOK_ANCHORS.destinationApproach.x,
+          z: SCENIC_BOOK_ANCHORS.destinationApproach.z,
           facing: 0,
           state: "work",
           activity: "recollecting",

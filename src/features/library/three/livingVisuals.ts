@@ -14,6 +14,7 @@ import {
   Vector3,
   Color,
   MeshBasicMaterial,
+  MeshPhongMaterial,
   type Scene,
 } from "three";
 import type { AgentView } from "../inhabitantAgency";
@@ -24,7 +25,11 @@ import {
   type Atmosphere,
 } from "../livingObjects";
 import { LIBRARY_SHELVES } from "../libraryShelfLayout";
-import { LIBRARY_FURNISHING } from "./libraryFurnishingLayout";
+import {
+  LIBRARY_FURNISHING,
+  furnitureLamp,
+  SCENIC_BOOK_ANCHORS,
+} from "./libraryFurnishingLayout";
 /** Resources are attached to the building owner before use, and disposed with it. */
 export function createLivingVisuals(
   building: Group,
@@ -76,20 +81,39 @@ export function createLivingVisuals(
     }
     switch (object.family) {
       case "lamp":
-        part(0.32, 0.04, 0.32, 0, 1.43, 0);
-        light = new PointLight(0xffc878, 0, 7, 1.5);
-        light.position.set(0, 1.65, 0);
-        group.add(light);
-        moving.add(part(0.28, 0.2, 0.28, 0, 1.55, 0, glow, true));
+        adopt(`living-shade:${object.anchor}`, group);
+        if (placement) {
+          const lamp = furnitureLamp(placement);
+          if (lamp) {
+            light = new PointLight(0xffc878, 0, 7, 1.5);
+            light.position.set(lamp.local.x, lamp.local.y, lamp.local.z);
+            group.add(light);
+            moving.add(
+              part(
+                0.18,
+                0.16,
+                0.18,
+                lamp.local.x,
+                lamp.local.y,
+                lamp.local.z,
+                glow,
+                true,
+              ),
+            );
+          }
+        }
         break;
       case "table":
         moving.position.set(0.65, 0.97, -0.15);
-        moving.add(part(0.65, 0.02, 0.35, 0, 0, 0.175, paper));
+        moving.add(part(0.53, 0.02, 0.35, 0, 0, 0.175, paper));
         part(0.05, 0.025, 0.25, 0.65, 0.99, 0, brass);
         break;
       case "book":
-        group.position.x -= 0.65;
-        moving.position.set(-0.22, 0.99, 0.05);
+        group.userData.carriedObject = true;
+        group.position.x = SCENIC_BOOK_ANCHORS.source.x;
+        group.position.z = SCENIC_BOOK_ANCHORS.source.z - 0.05;
+        adopt("living-book-base", group);
+        moving.position.set(-0.22, 0.9665, 0.05);
         {
           const cover = part(0.44, 0.025, 0.34, 0.22, 0, 0, wood);
           moving.add(cover);
@@ -109,8 +133,8 @@ export function createLivingVisuals(
         adopt("living-seat-cushion", moving);
         break;
       case "cabinet":
-        moving.add(part(1.5, 0.22, 0.48, 0, 0.82, -0.02, wood));
-        part(0.18, 0.18, 0.18, 0, 0.75, 0, brass, true);
+        adopt("living-cabinet-drawer", moving);
+        adopt("living-cabinet-handle", moving);
         break;
       case "plant":
         moving.add(part(0.2, 0.2, 0.2, 0, 1.45, 0, paper, true));
@@ -185,6 +209,10 @@ export function createLivingVisuals(
       object,
       moving,
       light,
+      shade:
+        object.family === "lamp"
+          ? building.getObjectByName(`living-shade:${object.anchor}`)
+          : undefined,
     };
   });
   // Existing BF-4 furniture already has physical lamps in nine positions.
@@ -213,7 +241,10 @@ export function createLivingVisuals(
           light.name = `${fixture.id}:light`;
           group.add(light);
           root.add(group);
-          return { fixture, group, light, glow };
+          const shade = building.getObjectByName(
+            `living-shade:${fixture.id.replace("night-lamp:", "")}`,
+          );
+          return { fixture, group, light, glow, shade };
         })
       : [];
   const daytimeSky = new Color(0xffedd2);
@@ -255,8 +286,12 @@ export function createLivingVisuals(
           .clone()
           .sub(bookRestBounds.getCenter(new Vector3()))
       : undefined;
-  const bookDestination = new Vector3(16.2, 0, -7.2);
-  const bookDestinationSurfaceY = 0.96;
+  const bookDestination = new Vector3(
+    SCENIC_BOOK_ANCHORS.destination.x,
+    0,
+    SCENIC_BOOK_ANCHORS.destination.z - 0.05,
+  );
+  const bookDestinationSurfaceY = SCENIC_BOOK_ANCHORS.destination.y + 0.004;
   const parentWorldQuaternion = new Quaternion();
   const worldPosition = new Vector3();
   const worldQuaternion = new Quaternion();
@@ -301,12 +336,19 @@ export function createLivingVisuals(
       const atmosphere = narrativeAtmosphere ?? state.atmosphere;
       sparks.visible = atmosphere === "encantada";
       const blend = reduced ? 1 : Math.min(1, delta * 3);
-      for (const { fixture, light, glow } of ambientLamps) {
+      for (const { fixture, light, glow, shade } of ambientLamps) {
         const target = nightLighting?.power(fixture.id) ?? 0;
         light.intensity = reduced
           ? 4.2 * target
           : light.intensity + (4.2 * target - light.intensity) * blend;
         glow.visible = target > 0;
+        if (
+          shade instanceof Mesh &&
+          shade.material instanceof MeshPhongMaterial
+        ) {
+          shade.material.emissive.setHex(0xffac51);
+          shade.material.emissiveIntensity = target * 0.55;
+        }
         glow.scale.setScalar(
           reduced ? 0.75 : 0.86 + 0.04 * Math.sin(elapsed * 1.7),
         );
@@ -328,6 +370,16 @@ export function createLivingVisuals(
             if (item.light)
               item.light.intensity = target * (5 + (value.turns % 3) * 3);
             item.moving.visible = value.active;
+            {
+              const shade = item.shade;
+              if (
+                shade instanceof Mesh &&
+                shade.material instanceof MeshPhongMaterial
+              ) {
+                shade.material.emissive.setHex(0xffac51);
+                shade.material.emissiveIntensity = target * 0.55;
+              }
+            }
             break;
           case "hearth":
             if (item.light) item.light.intensity = target * 8;

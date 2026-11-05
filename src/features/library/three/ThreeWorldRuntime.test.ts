@@ -206,7 +206,7 @@ describe("ThreeWorldRuntime", () => {
       activeFrameLoops: 0,
       drawCalls: 46,
       geometries: 46,
-      meshes: 75,
+      meshes: 135,
       runtimeState: "mounted",
       selectableObjects: 13,
       textures: 0,
@@ -718,7 +718,7 @@ describe("ThreeWorldRuntime", () => {
     expect(replacementHighlight).toBeInstanceOf(Box3Helper);
     if (!(replacementHighlight instanceof Box3Helper)) return;
     expect(replacementHighlight).not.toBe(previousHighlight);
-    expect(replacementHighlight.box.max.y).toBeCloseTo(3.1, 6);
+    expect(replacementHighlight.box.max.y).toBeCloseTo(3.37, 6);
 
     scene.updateMatrixWorld(true);
     camera.updateMatrixWorld();

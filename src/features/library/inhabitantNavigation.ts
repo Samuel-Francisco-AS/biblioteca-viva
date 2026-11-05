@@ -1,3 +1,7 @@
+import {
+  LIBRARY_FURNISHING,
+  furnitureWorldPoint,
+} from "./three/libraryFurnishingLayout";
 import { LIBRARY_PASSAGES, LIBRARY_ROOMS } from "./libraryBuildingGeometry";
 import {
   LIBRARY_ACTIVITY_POINTS,
@@ -104,6 +108,12 @@ candidates.push({ x: -11.7, z: 5.6 }, { x: -13, z: 10 }, { x: -12.2, z: 6.3 });
 // Open hall bays provide passing/meeting space off the main circulation lines.
 for (const x of [-6.5, -2, 2, 6.5])
   for (const z of [-6.5, -3, 0, 3, 6.3]) candidates.push({ x, z });
+
+// C's two-reader desk has a real rear aisle for the book handoff. Append only
+// its two bends; retain the existing priority of social/room navigation sites.
+for (const p of LIBRARY_FURNISHING.filter((p) => p.id === "bf4-prop:9"))
+  for (const x of [-1.9, 1.9])
+    candidates.push(furnitureWorldPoint(p, { x, y: 0, z: -1.8 }));
 
 /** Small visibility graph from BF-4D centre lines, crossings and activity points.
  * The mounted geometry is authoritative: every edge is checked, not assumed. */

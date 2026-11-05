@@ -1,3 +1,4 @@
+import { PRACTICE_FOLIO_ANCHOR } from "./libraryFurnishingLayout";
 import {
   BoxGeometry,
   Group,
@@ -10,7 +11,11 @@ import type { CosmeticState } from "../inhabitantAgency";
 export function createInhabitantSceneProps(building: Object3D) {
   const root = new Group();
   root.name = "inhabitants-practice-folio";
-  root.position.set(-14.9, 1.02, 7.1);
+  root.position.set(
+    PRACTICE_FOLIO_ANCHOR.x,
+    PRACTICE_FOLIO_ANCHOR.y,
+    PRACTICE_FOLIO_ANCHOR.z,
+  );
   building.add(root);
   const geometry = new BoxGeometry(1, 1, 1);
   const paper = new MeshLambertMaterial({ color: 0xefdcaa });

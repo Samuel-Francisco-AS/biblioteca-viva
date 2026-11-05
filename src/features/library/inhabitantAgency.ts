@@ -1,3 +1,4 @@
+import { SCENIC_BOOK_ANCHORS } from "./three/libraryFurnishingLayout";
 import {
   INHABITANTS,
   INHABITANT_ENVELOPES,
@@ -153,9 +154,9 @@ const tasks: readonly Task[] = [
     const interaction =
       p.id === "bf4-point:c-study"
         ? {
-            source: { x: p.x - 0.65, z: p.z + 2.1 },
-            approach: approachToBook({ x: p.x - 0.65, z: p.z + 2.1 }, p),
-            destination: { x: p.x + 0.8, z: p.z },
+            source: SCENIC_BOOK_ANCHORS.source,
+            approach: SCENIC_BOOK_ANCHORS.approach,
+            destination: SCENIC_BOOK_ANCHORS.destinationApproach,
             reach: 1.5,
           }
         : undefined;
@@ -240,15 +241,6 @@ const preferences: Record<InhabitantKey, Record<TaskKind, number>> = {
   },
 };
 const clamp = (v: number, min = 0, max = 12) => Math.min(max, Math.max(min, v));
-function approachToBook(source: Position, point: Position): Position {
-  const dx = point.x - source.x;
-  const dz = point.z - source.z;
-  const length = Math.hypot(dx, dz);
-  return {
-    x: source.x + (dz / length) * 1.35,
-    z: source.z - (dx / length) * 1.35,
-  };
-}
 /** Session-only agency. No renderer, browser, timers, records or persistence.
  * update() consumes an injected monotonic clock; pauses discard elapsed wall time. */
 export class InhabitantAgency {
@@ -1351,6 +1343,12 @@ export class InhabitantAgency {
       a.activity = "Transporta o objeto até uma superfície válida.";
       a.until = this.elapsed;
       if (this.go(a, task.interaction.destination)) return;
+      // A failed route is not a placement. Release the lease so the same
+      // visual recovers on its real source surface without a ghost handoff.
+      this.releaseInteraction(a);
+      a.task = null;
+      this.stop(a, "O caminho ficou bloqueado; devolveu o objeto ao apoio.", 4);
+      return;
     }
     if (a.interactionState === "carrying" && a.state === "work") {
       a.interactionState = "placing";

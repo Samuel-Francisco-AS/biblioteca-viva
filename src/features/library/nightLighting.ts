@@ -1,30 +1,22 @@
 import { z } from "zod";
-import { LIBRARY_FURNISHING } from "./three/libraryFurnishingLayout";
+import {
+  LIBRARY_FURNISHING,
+  furnitureLamp,
+} from "./three/libraryFurnishingLayout";
 
-/** Existing physical shades, not new furniture or selectable objects. */
-const lampOffsets = {
-  study: { x: 0, z: 0, y: 1.63 },
-  lounge: { x: 1.2, z: -0.9, y: 0.77 },
-  cabinet: { x: 0.5, z: 0, y: 1.82 },
-} as const;
-
+/** Physical fixtures share their anchors with the model factory. */
 export const NIGHT_LAMPS = Object.freeze(
-  LIBRARY_FURNISHING.filter(
-    (p) =>
-      (p.kind === "study" || p.kind === "lounge" || p.kind === "cabinet") &&
-      // The BF-4E parchment lamp remains exclusively player-operated.
-      p.id !== "bf4-prop:0",
-  ).map((p) => {
-    const offset = lampOffsets[p.kind as keyof typeof lampOffsets];
-    const cosine = Math.cos(p.rotation);
-    const sine = Math.sin(p.rotation);
-    return Object.freeze({
-      id: `night-lamp:${p.id}`,
-      roomId: p.roomId,
-      x: p.x + offset.x * cosine + offset.z * sine,
-      z: p.z - offset.x * sine + offset.z * cosine,
-      y: offset.y,
-    });
+  LIBRARY_FURNISHING.flatMap((p) => {
+    const lamp = furnitureLamp(p);
+    return lamp && p.id !== "bf4-prop:0"
+      ? [
+          Object.freeze({
+            id: `night-lamp:${p.id}`,
+            roomId: p.roomId,
+            ...lamp.world,
+          }),
+        ]
+      : [];
   }),
 );
 

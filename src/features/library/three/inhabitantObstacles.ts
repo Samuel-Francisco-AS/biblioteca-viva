@@ -7,6 +7,13 @@ import {
 } from "three";
 import type { NavigationObstacle } from "../inhabitantNavigation";
 
+/** Carried props are governed by leases/anchors, never a permanent collider at their old pose. */
+export function isCarriedProp(object: Object3D): boolean {
+  for (let parent: Object3D | null = object; parent; parent = parent.parent)
+    if (parent.userData.carriedObject === true) return true;
+  return false;
+}
+
 /** Per-instance bounds, never the giant AABB of a whole architectural batch.
  * Includes walls, props, shelves and present records; never reads entry content. */
 export function collectInhabitantObstacles(
@@ -16,7 +23,11 @@ export function collectInhabitantObstacles(
   for (const root of roots) {
     root.updateMatrixWorld(true);
     root.traverse((o) => {
-      if (!(o instanceof Mesh) || !(o.geometry instanceof BufferGeometry))
+      if (
+        isCarriedProp(o) ||
+        !(o instanceof Mesh) ||
+        !(o.geometry instanceof BufferGeometry)
+      )
         return;
       o.geometry.computeBoundingBox();
       const local = o.geometry.boundingBox;

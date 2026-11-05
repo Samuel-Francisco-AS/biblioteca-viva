@@ -1,3 +1,4 @@
+import { isCarriedProp } from "./inhabitantObstacles";
 import {
   Box3,
   BufferGeometry,
@@ -8,33 +9,30 @@ import {
   Vector3,
   type Object3D,
 } from "three";
-import { LIBRARY_FURNISHING } from "./libraryFurnishingLayout";
-export const SCROLL_SURFACES = LIBRARY_FURNISHING.flatMap((p) => {
-  const positions =
-    p.kind === "study"
-      ? [-1.08, 1.08].flatMap((x) =>
-          [-0.22, 0.22].map((z) => ({ x: p.x + x, y: 0.93, z: p.z + z })),
-        )
-      : p.kind === "bench"
-        ? [{ x: p.x, y: 0.65, z: p.z }]
-        : p.kind === "cabinet"
-          ? [{ x: p.x - 0.72, y: 1.12, z: p.z - 0.1 }]
-          : p.kind === "lounge"
-            ? [{ x: p.x, y: 0.76, z: p.z + (p.rotation ? 0.3 : -0.3) }]
-            : [];
-  return positions.map((point, i) => ({
-    ...point,
+import {
+  LIBRARY_FURNISHING,
+  furnitureScrollSupports,
+  furnitureWorldPoint,
+} from "./libraryFurnishingLayout";
+export const SCROLL_SURFACES = LIBRARY_FURNISHING.flatMap((p) =>
+  furnitureScrollSupports(p).map((point, i) => ({
+    ...furnitureWorldPoint(p, point),
     id: `${p.id}:${i}`,
     furnitureId: p.id,
     roomId: p.roomId,
-  }));
-});
+  })),
+);
 export type ScrollSurface = (typeof SCROLL_SURFACES)[number];
 export function flightObstacles(root: Object3D): readonly Box3[] {
   const boxes: Box3[] = [];
   root.updateMatrixWorld(true);
   root.traverse((o) => {
-    if (!(o instanceof Mesh) || !(o.geometry instanceof BufferGeometry)) return;
+    if (
+      isCarriedProp(o) ||
+      !(o instanceof Mesh) ||
+      !(o.geometry instanceof BufferGeometry)
+    )
+      return;
     o.geometry.computeBoundingBox();
     const b = o.geometry.boundingBox;
     if (!b) return;
