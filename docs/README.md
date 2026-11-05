@@ -1,3 +1,5 @@
+[BF-5 Parte 2C — ficha viva, gráfico e estimativa local](BF-5_PARTE2C_ATIVIDADE_FISICA.md): candidata sobre a PR #26, Dexie v11 aditiva e backup v6; [ADR-017](decisions/ADR-017-ficha-viva-e-estimativa-local.md). BF-5 aberta.
+
 [BF-5 Parte 2B — fólio de Estudo, pomodoro e cartas](BF-5_PARTE2B_ESTUDO.md): candidata encadeada à Parte 2; contrato de persistência na [ADR-016](decisions/ADR-016-estudo-folio-pomodoro-cartas.md). BF-5 aberta.
 
 > **BF-5 parte 2 — candidata de implementação:** [fólio de leitura e toque da Coleção](BF-5_PARTE2_FOLIO.md), com PNG real, limites e validação. BF-5 aberta; demais notas datadas abaixo são cronologia.

@@ -1,4 +1,8 @@
 import {
+  workoutScheduleSchema,
+  workoutDaysSchema,
+} from "../../domain/workouts";
+import {
   exercisePlanSchema,
   flashCardsSchema,
   focusDurationSchema,
@@ -17,7 +21,7 @@ import {
 import { z } from "zod";
 
 export const DATABASE_NAME = "biblioteca-viva";
-export const DATABASE_VERSION = 10;
+export const DATABASE_VERSION = 11;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
 export const DATABASE_SCHEMA_V1 = {
@@ -67,6 +71,8 @@ export const DATABASE_SCHEMA_V8 = {
 
 export const DATABASE_SCHEMA_V9 = { ...DATABASE_SCHEMA_V8 } as const;
 export const DATABASE_SCHEMA_V10 = { ...DATABASE_SCHEMA_V9 } as const;
+
+export const DATABASE_SCHEMA_V11 = { ...DATABASE_SCHEMA_V10 } as const;
 
 const isoUtc = z.iso.datetime({ offset: false });
 const entityMetadata = {
@@ -225,6 +231,8 @@ const persistedPhysicalActivitySchema = z.strictObject({
   ...commonEntry,
   type: z.literal("physical_activity"),
   category: z.enum(PHYSICAL_ACTIVITY_CATEGORIES),
+  schedule: workoutScheduleSchema.optional(),
+  workoutDays: workoutDaysSchema.optional(),
   exercises: exercisePlanSchema.optional(),
   modality: z.string().trim().min(1).optional(),
   objective: z.string().trim().min(1).optional(),

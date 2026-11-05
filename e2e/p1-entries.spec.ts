@@ -1,4 +1,4 @@
-import { expect, test } from "./fixtures";
+import { fillWorkoutPlan, expect, test } from "./fixtures";
 
 test("Coleção registra e encontra os seis tipos de P1", async ({
   createBook,
@@ -17,7 +17,12 @@ test("Coleção registra e encontra os seis tipos de P1", async ({
     await page
       .getByRole("button", { name: new RegExp(record.type, "u") })
       .click();
-    await page.getByLabel("Título").fill(record.title);
+    await page
+      .getByLabel(
+        record.type === "Atividade física" ? "Nome do treino" : "Título",
+      )
+      .fill(record.title);
+    if (record.type === "Atividade física") await fillWorkoutPlan(page);
     await page.getByRole("button", { name: "Salvar registro" }).click();
     await expect(
       page.getByRole("heading", { name: record.title }),

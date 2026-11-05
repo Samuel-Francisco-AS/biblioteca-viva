@@ -4,7 +4,13 @@ export type StudyWorldProgressUnit =
   "hours" | "sessions" | "modules" | "topics" | "exercises" | "percent";
 
 export type PhysicalActivityWorldCategory =
-  "strength" | "cardio" | "mobility" | "sport" | "mixed" | "other";
+  | "strength"
+  | "resistance"
+  | "cardio"
+  | "mobility"
+  | "sport"
+  | "mixed"
+  | "other";
 
 export interface MovieWorldEntry {
   readonly createdAt: string;

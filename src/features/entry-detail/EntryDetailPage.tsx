@@ -1,8 +1,11 @@
+import {
+  WorkoutDetailPage,
+  type WorkoutApplication,
+} from "./WorkoutDetailPage";
 import { StudyDetailPage } from "./StudyDetailPage";
 import type { FlashCardApplication } from "./StudyFlashCards";
 import { EntryPortrait } from "./EntryPortrait";
 import { RecordMemories } from "./RecordMemories";
-import { ExerciseList } from "./ExerciseList";
 import { entryExperience } from "./entryExperience";
 import { ArtifactGlyph } from "../../app/ArtifactGlyph";
 import { useEffect, useState, type FormEvent } from "react";
@@ -29,8 +32,10 @@ import {
 } from "../tags/OrganizationPanel";
 
 export interface EntryDetailApplication extends BookDetailApplication {
+  readonly physicalProfile?: WorkoutApplication["physicalProfile"];
   readonly commands: BookDetailApplication["commands"] &
-    FlashCardApplication["commands"] & {
+    FlashCardApplication["commands"] &
+    WorkoutApplication["commands"] & {
       readonly changeLibraryEntryStatus: {
         execute(input: unknown): Promise<LibraryEntry>;
       };
@@ -170,6 +175,18 @@ export function EntryDetailPage({
         onChange={setEntry}
       />
     );
+  if (entry.type === "physical_activity")
+    return (
+      <WorkoutDetailPage
+        key={id}
+        application={application}
+        entry={entry}
+        notes={notes}
+        quotes={quotes}
+        returnPath={returnPath}
+        onChange={setEntry}
+      />
+    );
   const availableApplication = application;
   const currentEntry = entry;
 
@@ -296,16 +313,6 @@ export function EntryDetailPage({
               {new Date(currentEntry.deadline).toLocaleDateString("pt-BR", {
                 timeZone: "UTC",
               })}
-            </p>
-          )}
-          {currentEntry.type === "physical_activity" &&
-            currentEntry.exercises && (
-              <ExerciseList exercises={currentEntry.exercises} />
-            )}
-          {currentEntry.type === "physical_activity" && (
-            <p className="field-help">
-              Repita esta prática em dias diferentes. As execuções ficam no seu
-              histórico; concluir o registro encerra a prática.
             </p>
           )}
           <div className="form-actions">

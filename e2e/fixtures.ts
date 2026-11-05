@@ -196,3 +196,14 @@ export async function openWorldTools(page: Page): Promise<void> {
 }
 
 export { expect } from "@playwright/test";
+
+/** Supply the mandatory BF-5 Parte 2C plan in generic six-type creation flows. */
+export async function fillWorkoutPlan(page: Page) {
+  await page.getByLabel("Data de início").fill("2026-11-01");
+  await page.getByLabel("Data final").fill("2026-11-30");
+  await page.getByRole("checkbox", { name: "Qua", exact: true }).check();
+  await page
+    .getByRole("button", { name: "Adicionar exercício", exact: true })
+    .click();
+  await page.getByLabel("Nome do exercício").fill("Movimento fictício");
+}

@@ -1,3 +1,4 @@
+import { PhysicalProfilePanel } from "./PhysicalProfilePanel";
 import { RealmIntro } from "../../app/RealmIntro";
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export interface SettingsApplication {
+  readonly physicalProfile?: ApplicationRuntime["physicalProfile"];
   readonly audio?: ApplicationRuntime["audio"];
   readonly experience?: ApplicationRuntime["experience"];
   readonly appVersion: string;
@@ -382,6 +384,9 @@ export function SettingsPage({ application, diagnostics }: Props) {
         <a href="#export-title">Backup</a>
         <a href="#import-title">Restaurar</a>
       </nav>
+      {application?.physicalProfile && (
+        <PhysicalProfilePanel profile={application.physicalProfile} />
+      )}
       <section
         className="content-card"
         aria-labelledby="experience-settings-title"

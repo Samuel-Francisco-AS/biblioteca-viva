@@ -12,6 +12,7 @@ import {
   DATABASE_SCHEMA_V8,
   DATABASE_SCHEMA_V9,
   DATABASE_SCHEMA_V10,
+  DATABASE_SCHEMA_V11,
   SCHEMA_MARKER_KEY,
   type PersistedActivity,
   type PersistedLibraryEntry,
@@ -160,6 +161,15 @@ export class BibliotecaDatabase extends Dexie {
         await transaction.table<PersistedMetadata>("metadata").put({
           key: SCHEMA_MARKER_KEY,
           value: "10",
+          updatedAt: MIGRATION_TIMESTAMP,
+        });
+      });
+    this.version(11)
+      .stores(DATABASE_SCHEMA_V11)
+      .upgrade(async (transaction) => {
+        await transaction.table<PersistedMetadata>("metadata").put({
+          key: SCHEMA_MARKER_KEY,
+          value: "11",
           updatedAt: MIGRATION_TIMESTAMP,
         });
       });

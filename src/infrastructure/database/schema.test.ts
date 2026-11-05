@@ -7,8 +7,8 @@ import {
 } from "./schema";
 
 describe("schema pós-reset", () => {
-  it("declara Dexie v9 sem tabelas espaciais ativas", () => {
-    expect(DATABASE_VERSION).toBe(10);
+  it("declara Dexie v11 sem tabelas espaciais ativas", () => {
+    expect(DATABASE_VERSION).toBe(11);
     expect(DATABASE_SCHEMA_V9.placedObjects).toBeNull();
     expect(DATABASE_SCHEMA_V9.worldStructures).toBeNull();
   });

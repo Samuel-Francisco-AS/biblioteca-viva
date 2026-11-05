@@ -1,3 +1,4 @@
+import { scheduleFromForm, workoutFormError } from "./workoutFormModel";
 import { exercisesFromForm } from "./exercisesFromForm";
 import { RitualFields } from "./RitualFields";
 import { ritualCopy } from "./ritualCopy";
@@ -97,6 +98,7 @@ function updateInput(
         ...common,
         category: value(form, "category") ?? entry.category,
         exercises: exercisesFromForm(form),
+        schedule: scheduleFromForm(form),
         modality: value(form, "modality"),
         objective: value(form, "objective"),
       };
@@ -167,7 +169,7 @@ export function EditEntryPage({
           `/registros/${encodeURIComponent(updated.id)}?from=${encodeURIComponent(returnPath)}`,
         );
     } catch (failure: unknown) {
-      setError(presentApplicationError(failure).message);
+      setError(workoutFormError(failure));
       setBusy(false);
     }
   }
