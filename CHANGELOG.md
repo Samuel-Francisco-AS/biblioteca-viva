@@ -1,3 +1,5 @@
+> **BF-5.5D — candidata em revisão (05/11/2026):** magia ambiental independente do relógio e até dez projeções de notas/citações, com voo local, interação pela agência B e acesso ao registro original. Base C `8cc12c2`; sem merge ou aceite físico. Limites (rotas locais, rig, foco da anotação e validação WebGL) e evidências no [relatório](docs/BF-5_5D_RELATORIO.md). BF-5.5 permanece aberta; refinamento físico em G e E/F ainda pendentes.
+
 ## 2026-11-05 — BF-5.5C (candidata)
 
 - Noite com preenchimento lunar azulado e nove luminárias existentes efetivamente luminosas, sem novos seletores ou mobília.

@@ -855,3 +855,57 @@ it("R5 refreshes records on return but preserves an unchanged projected snapshot
     ).toHaveLength(0),
   );
 });
+
+it("projects private notes and resolves a selected scroll to its original record", async () => {
+  const application: LibraryApplication = {
+    queries: {
+      listLibraryEntries: { execute: () => Promise.resolve([firstBook]) },
+      listAllNotes: {
+        execute: () =>
+          Promise.resolve([
+            {
+              id: "fiction-note",
+              entryId: firstBook.id,
+              content: "Private fixture text",
+              createdAt: firstBook.createdAt,
+              updatedAt: firstBook.updatedAt,
+              revision: 1,
+              favorite: false,
+              tagIds: [],
+            },
+          ]),
+      },
+      listAllQuotes: { execute: () => Promise.resolve([]) },
+    },
+  };
+  render(
+    <MemoryRouter>
+      <LibraryPage application={application} />
+    </MemoryRouter>,
+  );
+  await waitFor(() =>
+    expect(worldHostProps().libraryWorldSnapshot?.scrolls).toHaveLength(1),
+  );
+  const scroll = worldHostProps().libraryWorldSnapshot!.scrolls![0];
+  expect(JSON.stringify(scroll)).not.toContain("Private fixture text");
+  act(() =>
+    worldHostProps().onSelectionChange?.({
+      id: scroll.id,
+      entryId: scroll.entryId,
+      label: "Pergaminho",
+    }),
+  );
+  expect(
+    screen.getByRole("link", { name: "Abrir conteúdo do pergaminho" }),
+  ).toHaveAttribute("href", "/registros/book-1");
+  act(() =>
+    worldHostProps().onSelectionChange?.({
+      id: "scroll:note:removed",
+      entryId: firstBook.id,
+      label: "Pergaminho",
+    }),
+  );
+  expect(
+    screen.queryByRole("link", { name: "Abrir conteúdo do pergaminho" }),
+  ).not.toBeInTheDocument();
+});

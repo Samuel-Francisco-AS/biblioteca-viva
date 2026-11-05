@@ -450,7 +450,12 @@ export class ThreeWorldInteraction {
       true,
     );
     const environmentalRoots = [...this.selectableRoots]
-      .filter(([id]) => id.startsWith("living:") || id.startsWith("character:"))
+      .filter(
+        ([id]) =>
+          id.startsWith("living:") ||
+          id.startsWith("character:") ||
+          id.startsWith("scroll:"),
+      )
       .map(([, root]) => root);
     const environmentalIntersections = this.raycaster.intersectObjects(
       environmentalRoots,

@@ -1,3 +1,5 @@
+> **BF-5.5D — candidata em revisão (05/11/2026):** magia ambiental independente do relógio e até dez projeções de notas/citações, com voo local, interação pela agência B e acesso ao registro original. Base C `8cc12c2`; sem merge ou aceite físico. Limites (rotas locais, rig, foco da anotação e validação WebGL) e evidências no [relatório](BF-5_5D_RELATORIO.md). BF-5.5 permanece aberta; refinamento físico em G e E/F ainda pendentes.
+
 > **BF-5.5C em candidata (05/11/2026):** noite azulada legível, nove abajures físicos luminosos, fallback mágico e ritual autônomo idempotente com checkpoint local. [Relatório](BF-5_5C_RELATORIO.md) · [PR draft #34](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/34). Encadeada às PRs #33/#32; **sem merge, gate físico ou CI global verde confirmado**. BF-5.5D–G continuam planejadas.
 
 > **BF-5.5B em candidata (05/11/2026):** leases exclusivos e ciclo físico do livro cenográfico sobre a BF-5.5A, sem nova migração. **Sem merge, gate físico ou CI global verde confirmado.** [Relatório](BF-5_5B_RELATORIO.md). B permanece encadeada à PR #32; C–G e BF-6 não foram iniciadas.

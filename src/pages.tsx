@@ -1,7 +1,8 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import type { LibraryEntry } from "./domain";
+import { projectLivingScrolls } from "./application/livingScrolls";
+import type { LibraryEntry, Note, Quote } from "./domain";
 import { presentApplicationError } from "./features/entry-editor/errorMessages";
 import { entryTypeLabels } from "./features/collection/collectionControls";
 import { WorldHost, type WorldHostStatus } from "./features/library/WorldHost";
@@ -33,6 +34,8 @@ export interface LibraryApplication {
   readonly inhabitantContinuity?: InhabitantContinuityPort;
   readonly nightLightingContinuity?: NightLightingPort;
   readonly queries: {
+    readonly listAllNotes?: { execute(): Promise<readonly Note[]> };
+    readonly listAllQuotes?: { execute(): Promise<readonly Quote[]> };
     readonly listLibraryEntries: {
       execute(): Promise<readonly LibraryEntry[]>;
     };
@@ -198,7 +201,15 @@ function LibraryPageContent({
       try {
         const entries = await application.queries.listLibraryEntries.execute();
         if (!current) return;
-        const world = projectLibraryWorldEntries(entries);
+        const [notes, quotes] = await Promise.all([
+          application.queries.listAllNotes?.execute() ?? [],
+          application.queries.listAllQuotes?.execute() ?? [],
+        ]);
+        if (!current) return;
+        const world = Object.freeze({
+          ...projectLibraryWorldEntries(entries),
+          scrolls: projectLivingScrolls(entries, notes, quotes),
+        });
         setSnapshot((previous) =>
           previous?.application === application &&
           JSON.stringify(previous.world) === JSON.stringify(world)
@@ -364,8 +375,40 @@ function LibraryPageContent({
               onStatusChange={handleWorldStatus}
               selectedObjectId={requestedSelectionId}
             />
+            {selection?.id.startsWith("scroll:") &&
+              libraryWorldSnapshot?.scrolls?.some(
+                (s) => s.id === selection.id,
+              ) && (
+                <Link
+                  className="reading-area-selection button button--secondary"
+                  to={entryPath(
+                    libraryWorldSnapshot.scrolls.find(
+                      (s) => s.id === selection.id,
+                    )!.entryId,
+                  )}
+                >
+                  Abrir conteúdo do pergaminho
+                </Link>
+              )}
             <details className="library-index" open={worldStatus === "failed"}>
               <summary>Registros · alternativa acessível</summary>
+              {libraryWorldSnapshot?.scrolls?.length ? (
+                <section className="reading-area-books">
+                  <h3>Pergaminhos vivos</h3>
+                  {libraryWorldSnapshot.scrolls.map((scroll) => (
+                    <p key={scroll.id}>
+                      <Link
+                        to={entryPath(scroll.entryId)}
+                        state={{ returnTo: returnPath }}
+                      >
+                        Abrir {scroll.kind === "note" ? "anotação" : "citação"}{" "}
+                        no registro de origem
+                      </Link>
+                    </p>
+                  ))}
+                </section>
+              ) : null}
+
               {worldStatus === "ready" && readingAreaBooks.length > 0 && (
                 <p className="reading-area-summary" aria-live="polite">
                   {representedBooks?.length ?? 0}{" "}

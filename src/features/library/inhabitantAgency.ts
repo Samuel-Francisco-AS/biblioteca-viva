@@ -141,6 +141,10 @@ export interface AgencyOptions {
   readonly seed?: number;
   readonly onEnvironmentAction?: (key: InhabitantKey, objectId: string) => void;
   readonly nightLighting?: NightLightingSession;
+  readonly scrollCandidates?: () => readonly {
+    readonly id: string;
+    readonly source: Position;
+  }[];
 }
 const tasks: readonly Task[] = [
   ...LIBRARY_ACTIVITY_POINTS.flatMap((p) => {
@@ -919,20 +923,21 @@ export class InhabitantAgency {
       if (a.interactionState === "carrying") {
         a.interactionState = "placing";
         a.action = "gesture";
-        a.activity = "Posiciona o livro sobre a bancada.";
+        a.activity = "Posiciona o objeto sobre a bancada.";
         a.until = this.elapsed + 1;
         return;
       }
       if (a.interactionState === "returning") {
         a.interactionState = "completed";
-        this.options.onEnvironmentAction?.(a.key, "living:book");
-        this.stop(a, "Devolveu o livro e liberou a superfície.", 5);
+        if (task.objectId === "living:book")
+          this.options.onEnvironmentAction?.(a.key, "living:book");
+        this.stop(a, "Devolveu o objeto e liberou a superfície.", 5);
         a.task = null;
         return;
       }
     }
     if (task.interaction) {
-      const taskId = `${task.id}:${a.key}`;
+      const taskId = a.interactionTaskId ?? `${task.id}:${a.key}`;
       if (
         this.interactions.reserve(
           task.objectId ?? task.id,
@@ -945,11 +950,11 @@ export class InhabitantAgency {
         a.interactionState = "orienting";
         a.until = this.elapsed + 0.8;
         a.action = "turn";
-        a.activity = "Orienta-se para pegar o livro cenográfico.";
+        a.activity = "Orienta-se para pegar o objeto.";
         return;
       }
       a.task = null;
-      this.stop(a, "O livro está reservado por outro habitante.", 4);
+      this.stop(a, "O objeto está reservado por outro habitante.", 4);
       return;
     }
     a.until =
@@ -1040,8 +1045,76 @@ export class InhabitantAgency {
     return false;
   }
 
+  private chooseScrollTask(a: Agent): boolean {
+    if (a.taskCount % 3 !== 0) return false;
+    for (const scroll of this.options.scrollCandidates?.() ?? []) {
+      const position = this.navigation.nodes
+        .filter(
+          (p) =>
+            distance(p, scroll.source) < 1.5 &&
+            roomAt(p) === roomAt(scroll.source),
+        )
+        .sort((l, r) => distance(l, a) - distance(r, a))
+        .find((p) =>
+          this.navigation.clear(
+            p,
+            p,
+            INHABITANT_ENVELOPES[a.key].work,
+            this.occupied(a, true),
+          ),
+        );
+      if (!position) continue;
+      const nearby = { x: position.x, z: position.z + 0.5 };
+      const destination =
+        distance(nearby, scroll.source) <= 1.5 &&
+        this.navigation.clear(
+          position,
+          nearby,
+          INHABITANT_ENVELOPES[a.key].work,
+          this.occupied(a, true),
+        )
+          ? nearby
+          : position;
+      const taskId = `inspect:${scroll.id}:${a.key}`;
+      if (
+        !this.interactions.reserve(
+          scroll.id,
+          a.key,
+          taskId,
+          this.elapsed * 1000,
+        )
+      )
+        continue;
+      if (this.go(a, position)) {
+        a.task = {
+          id: taskId,
+          kind: "reading",
+          position,
+          facing: Math.atan2(
+            scroll.source.x - position.x,
+            scroll.source.z - position.z,
+          ),
+          label: "pergaminho vivo",
+          objectId: scroll.id,
+          interaction: {
+            source: scroll.source,
+            approach: position,
+            destination,
+            reach: 1.5,
+          },
+        };
+        a.interactionTaskId = taskId;
+        a.interactionState = "approaching";
+        a.activity = "Aproxima-se de um pergaminho desperto para examiná-lo.";
+        return true;
+      }
+      this.interactions.release(scroll.id, a.key, taskId);
+    }
+    return false;
+  }
   private chooseTask(a: Agent) {
     if (this.chooseNightTask(a)) return;
+    if (this.chooseScrollTask(a)) return;
     const night = this.hour() < 6 || this.hour() >= 18;
     const scored = tasks
       .map((t) => {
@@ -1206,7 +1279,7 @@ export class InhabitantAgency {
       a.interactionState = "failed";
       this.releaseInteraction(a);
       a.task = null;
-      this.stop(a, "A reserva expirou; o livro permanece no mundo.", 4);
+      this.stop(a, "A reserva expirou; o objeto permanece no mundo.", 4);
       return;
     }
     if (a.interactionState === "orienting") {
@@ -1214,47 +1287,48 @@ export class InhabitantAgency {
         a.interactionState = "failed";
         this.releaseInteraction(a);
         a.task = null;
-        this.stop(a, "Não alcança o livro; a interação foi cancelada.", 4);
+        this.stop(a, "Não alcança o objeto; a interação foi cancelada.", 4);
         return;
       }
       a.interactionState = "picking";
       a.action = "gesture";
-      a.activity = "Estende a mão e pega o livro cenográfico.";
+      a.activity = "Estende a mão e pega o objeto.";
       a.until = this.elapsed + 0.9;
       return;
     }
     if (a.interactionState === "picking") {
       a.interactionState = "carrying";
       a.action = "walk";
-      a.activity = "Transporta o livro até uma superfície válida.";
+      a.activity = "Transporta o objeto até uma superfície válida.";
       a.until = this.elapsed;
       if (this.go(a, task.interaction.destination)) return;
     }
     if (a.interactionState === "carrying" && a.state === "work") {
       a.interactionState = "placing";
       a.action = "gesture";
-      a.activity = "Posiciona o livro sobre a bancada.";
+      a.activity = "Posiciona o objeto sobre a bancada.";
       a.until = this.elapsed + 1;
       return;
     }
     if (a.interactionState === "placing") {
       a.interactionState = "recollecting";
       a.action = "gesture";
-      a.activity = "Recolhe o livro para devolvê-lo à estante.";
+      a.activity = "Recolhe o objeto para devolvê-lo à estante.";
       a.until = this.elapsed + 0.7;
       return;
     }
     if (a.interactionState === "recollecting") {
       a.interactionState = "returning";
       a.action = "walk";
-      a.activity = "Devolve o livro ao ponto cenográfico original.";
+      a.activity = "Devolve o objeto ao ponto cenográfico original.";
       a.until = this.elapsed;
       if (this.go(a, task.interaction.approach)) return;
     }
     if (a.interactionState === "returning" && a.state === "work") {
       a.interactionState = "completed";
-      this.options.onEnvironmentAction?.(a.key, "living:book");
-      this.stop(a, "Devolveu o livro e liberou a superfície.", 5);
+      if (task.objectId === "living:book")
+        this.options.onEnvironmentAction?.(a.key, "living:book");
+      this.stop(a, "Devolveu o objeto e liberou a superfície.", 5);
       a.task = null;
     }
   }

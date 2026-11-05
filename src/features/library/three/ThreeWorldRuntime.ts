@@ -1,3 +1,5 @@
+import { createAmbientMagic } from "./ambientMagic";
+import { createLivingScrollVisuals } from "./livingScrollVisuals";
 import { createNarrativeVisuals } from "./narrativeVisuals";
 import type { NarrativeSnapshot } from "../narrative/contracts";
 import { STORIES } from "../narrative/stories";
@@ -456,6 +458,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly livingSession?: LivingSession;
   private readonly nightLighting?: NightLightingSession;
   private inhabitants?: ReturnType<typeof createInhabitantVisuals>;
+  private ambientMagic?: ReturnType<typeof createAmbientMagic>;
+  private scrollVisuals?: ReturnType<typeof createLivingScrollVisuals>;
+  private readonly scrolls: readonly import("../../../application/livingScrolls").LivingScroll[];
   private livingVisuals?: ReturnType<typeof createLivingVisuals>;
   private livingFrameTime: number | undefined;
   private readonly inhabitantLoader?: InhabitantLoader;
@@ -479,6 +484,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private sceneProps?: ReturnType<typeof createInhabitantSceneProps>;
   constructor(dependencies: ThreeWorldRuntimeDependencies = {}) {
     this.inhabitantLoader = dependencies.inhabitantLoader;
+    this.scrolls = dependencies.libraryWorldSnapshot?.scrolls ?? [];
     this.continuity = dependencies.inhabitantContinuity;
     this.onInhabitantCheckpoint = dependencies.onInhabitantCheckpoint;
     this.nightLighting = dependencies.performanceScenario
@@ -679,12 +685,15 @@ export class ThreeWorldRuntime implements WorldRuntime {
           ...proceduralSelectables.map((s) => s.root),
           ...readingAreaBookVisuals.map((v) => v.node),
         ]);
+        this.scrollVisuals = createLivingScrollVisuals(building, this.scrolls);
+        this.ambientMagic = createAmbientMagic(building);
         this.agency = new InhabitantAgency(
           new InhabitantNavigation(obstacles),
           {
             now: () => this.agencyClock,
             hour: () => new Date().getHours(),
             nightLighting: this.nightLighting,
+            scrollCandidates: () => this.scrollVisuals?.candidates() ?? [],
             onEnvironmentAction: (key, objectId) => {
               this.livingSession?.actFromInhabitant(key, objectId);
             },
@@ -746,6 +755,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
         ...(this.inhabitants?.selectables ?? []).map(
           ({ descriptor }) => descriptor,
         ),
+        ...(this.scrollVisuals?.selectables ?? []).map(
+          ({ descriptor }) => descriptor,
+        ),
         ...(this.livingVisuals?.selectables ?? []).map(
           ({ descriptor }) => descriptor,
         ),
@@ -788,6 +800,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         selectables: [
           ...(this.inhabitants?.selectables ?? []),
           ...(this.livingVisuals?.selectables ?? []),
+          ...(this.scrollVisuals?.selectables ?? []),
           ...(referenceScene?.selectables ?? []),
           ...proceduralSelectables,
           ...libraryRecordSelectables,
@@ -1237,6 +1250,15 @@ export class ThreeWorldRuntime implements WorldRuntime {
           (id) => this.inhabitants?.getCarryAnchor(id) ?? null,
         );
       this.inhabitants?.update(delta, reduced);
+      this.ambientMagic?.update(delta, reduced);
+      this.scrollVisuals?.update(
+        delta,
+        reduced,
+        this.agency?.getPoses() ?? [],
+        (id) => this.inhabitants?.getCarryAnchor(id) ?? null,
+      );
+      if (this.selection?.id.startsWith("scroll:"))
+        mountedWorld.getInteraction()?.updateHighlightBounds();
       if (this.agency)
         this.sceneProps?.update(
           this.narrative?.scenes.spell
@@ -1409,6 +1431,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.inhabitants?.dispose();
     this.inhabitants = undefined;
     this.livingVisuals = undefined;
+    this.scrollVisuals = undefined;
+    this.ambientMagic = undefined;
     this.narrativeVisuals = undefined;
     this.narrative = undefined;
     this.livingFrameTime = undefined;
