@@ -12,9 +12,12 @@ import {
   Box3,
   Quaternion,
   Vector3,
+  Color,
+  MeshBasicMaterial,
   type Scene,
 } from "three";
 import type { AgentView } from "../inhabitantAgency";
+import { NIGHT_LAMPS, type NightLightingSession } from "../nightLighting";
 import {
   LIVING_OBJECTS,
   type LivingSession,
@@ -27,6 +30,7 @@ export function createLivingVisuals(
   building: Group,
   scene: Scene,
   session: LivingSession,
+  nightLighting?: NightLightingSession,
 ) {
   const root = new Group();
   root.name = "living-objects";
@@ -183,6 +187,38 @@ export function createLivingVisuals(
       light,
     };
   });
+  // Existing BF-4 furniture already has physical lamps in nine positions.
+  // Add luminous cores at the real shades, not duplicate models or pickables.
+  const shadeGlowGeometry = new SphereGeometry(0.14, 12, 8);
+  const shadeGlowMaterial = new MeshBasicMaterial({
+    color: 0xffd6a1,
+    transparent: true,
+    opacity: 0.82,
+    depthWrite: false,
+  });
+  const ambientLamps = nightLighting
+    ? NIGHT_LAMPS.map((fixture) => {
+        const group = new Group();
+        group.name = fixture.id;
+        group.position.set(fixture.x, fixture.y, fixture.z);
+        const glow = new Mesh(shadeGlowGeometry, shadeGlowMaterial);
+        glow.name = `${fixture.id}:ember`;
+        group.add(glow);
+        const light = new PointLight(0xffbf79, 0, 6.5, 1.65);
+        light.name = `${fixture.id}:light`;
+        group.add(light);
+        root.add(group);
+        return { fixture, group, light, glow };
+      })
+    : [];
+  const daytimeSky = new Color(0xffedd2);
+  const nighttimeSky = new Color(0xa1c8ff);
+  const daytimeGround = new Color(0x58665b);
+  const nighttimeGround = new Color(0x233f63);
+  const daytimeSun = new Color(0xffdfac);
+  const nighttimeMoon = new Color(0x8dbbff);
+  const daytimeBackdrop = new Color(0x18342d);
+  const nighttimeBackdrop = new Color(0x12263c);
   const sparks = new Group();
   root.add(sparks);
   for (const item of selectables) {
@@ -259,6 +295,15 @@ export function createLivingVisuals(
       const state = session.getSnapshot();
       const atmosphere = narrativeAtmosphere ?? state.atmosphere;
       sparks.visible = atmosphere === "encantada";
+      const blend = reduced ? 1 : Math.min(1, delta * 3);
+      for (const { fixture, light, glow } of ambientLamps) {
+        const target = nightLighting?.power(fixture.id) ?? 0;
+        light.intensity = reduced
+          ? 4.2 * target
+          : light.intensity + (4.2 * target - light.intensity) * blend;
+        glow.visible = target > 0;
+        glow.scale.setScalar(reduced ? 0.75 : 0.86 + 0.04 * Math.sin(elapsed * 1.7));
+      }
       sparks.children.forEach((spark, index) => {
         const y: unknown = spark.userData.baseY;
         if (typeof y === "number")
@@ -351,27 +396,28 @@ export function createLivingVisuals(
             break;
         }
       }
-      // Scene lighting eases toward context; reduced-motion takes the target.
-      const blend = reduced ? 1 : Math.min(1, delta * 3);
+      // Moonlit blue fill preserves legibility; amber pools reveal the furniture.
+      // Narrative darkness affects sky, but does not turn off the real clock lamps.
+      const dark = atmosphere === "noturna";
       scene.traverse((object) => {
         if (object instanceof HemisphereLight) {
-          const targetIntensity =
-            atmosphere === "noturna"
-              ? 0.65
-              : atmosphere === "encantada"
-                ? 1.25
-                : 2;
+          const intensity = dark ? 1.08 : atmosphere === "encantada" ? 1.25 : 2;
           object.intensity = reduced
-            ? targetIntensity
-            : object.intensity + (targetIntensity - object.intensity) * blend;
+            ? intensity
+            : object.intensity + (intensity - object.intensity) * blend;
+          object.color.lerp(dark ? nighttimeSky : daytimeSky, blend);
+          object.groundColor.lerp(dark ? nighttimeGround : daytimeGround, blend);
         }
         if (object instanceof DirectionalLight) {
-          const targetIntensity = atmosphere === "noturna" ? 0.4 : 1.5;
+          const intensity = dark ? 0.8 : 1.5;
           object.intensity = reduced
-            ? targetIntensity
-            : object.intensity + (targetIntensity - object.intensity) * blend;
+            ? intensity
+            : object.intensity + (intensity - object.intensity) * blend;
+          object.color.lerp(dark ? nighttimeMoon : daytimeSun, blend);
         }
       });
+      if (scene.background instanceof Color)
+        scene.background.lerp(dark ? nighttimeBackdrop : daytimeBackdrop, blend);
     },
     driveInhabitantInteractions(
       poses: readonly AgentView[],

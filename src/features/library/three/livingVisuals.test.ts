@@ -61,7 +61,7 @@ describe("living visuals", () => {
     expect(find("living:book").moving.rotation.z).toBe(2.1);
     session.setAtmosphere("noturna");
     visuals.update(0, true);
-    expect(light.intensity).toBe(0.65);
+    expect(light.intensity).toBe(1.08);
     for (const item of visuals.selectables) {
       const room = LIBRARY_ROOMS.find(
         (r) => r.id === `room-${item.object.room.toLowerCase()}`,
