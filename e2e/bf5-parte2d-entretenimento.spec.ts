@@ -125,6 +125,7 @@ test("seis combinações de formato mantêm as duas estruturas, campos opcionais
 test("catálogo acompanha estreia, poster, episódios, temporadas, diário, desejos e Arquivo", async ({
   page,
 }) => {
+  const evidence = "test-results/BF-5P2F-regressao-catalogo";
   await page.clock.setFixedTime(new Date("2026-11-04T12:00:00Z"));
   await page.goto("/novo-registro");
   await page.getByRole("button", { name: /^FÓLIO \d+ Entretenimento/ }).click();
@@ -162,7 +163,6 @@ test("catálogo acompanha estreia, poster, episódios, temporadas, diário, dese
   await page
     .getByRole("checkbox", { name: "Temporada atual concluída" })
     .check();
-  await page.getByLabel("Avaliação (1–5)").fill("5");
   await page.getByRole("button", { name: "Salvar acompanhamento" }).click();
   await expect(page.locator(".cinema-feedback")).toHaveText(
     "Acompanhamento salvo.",
@@ -170,6 +170,14 @@ test("catálogo acompanha estreia, poster, episódios, temporadas, diário, dese
   await expect(
     page.getByRole("progressbar", { name: "Progresso da obra" }),
   ).toHaveAttribute("value", "6");
+  await page.getByRole("radio", { name: "5 de 5 estrelas" }).check();
+  await expect(page.locator(".persisted-rating")).toHaveAttribute(
+    "aria-busy",
+    "false",
+  );
+  await expect(
+    page.getByRole("radio", { name: "5 de 5 estrelas" }),
+  ).toBeChecked();
   await page
     .getByLabel("Nova nota", { exact: true })
     .fill("Opinião privada da fixture.");

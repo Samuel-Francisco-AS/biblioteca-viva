@@ -39,10 +39,6 @@ test("BF-5R4: seis rituais criam, reabrem e editam sem perder referências", asy
         .getByLabel("Disciplina (opcional)")
         .fill("Astronomia fictícia");
     if (category === "Atividade física") await fillWorkoutPlan(page);
-    if (category === "Trabalho")
-      await page
-        .getByLabel("Próxima ação (opcional)")
-        .fill("Revisar manuscrito fictício");
     await page
       .getByRole("button", {
         name: recordSaveLabel(category),
@@ -52,6 +48,20 @@ test("BF-5R4: seis rituais criam, reabrem e editam sem perder referências", asy
     await expect(
       page.getByRole("heading", { name: title, exact: true }),
     ).toBeVisible();
+    if (category === "Trabalho") {
+      await page
+        .locator(".work-next")
+        .getByRole("button", { name: "Escolher", exact: true })
+        .click();
+      const editor = page.locator("dialog[open]").last();
+      await editor
+        .getByLabel("Próxima ação escrita")
+        .fill("Revisar manuscrito fictício");
+      await editor.getByRole("button", { name: "Salvar", exact: true }).click();
+      await expect(page.locator(".work-next")).toContainText(
+        "Revisar manuscrito fictício",
+      );
+    }
     if (category === "Livro")
       await page.locator("#book-secondary > summary").click();
     if (category === "Filme" || category === "Série")
@@ -80,6 +90,10 @@ test("BF-5R4: seis rituais criam, reabrem e editam sem perder referências", asy
     await expect(
       page.getByRole("heading", { name: `${title} revisado`, exact: true }),
     ).toBeVisible();
+    if (category === "Trabalho")
+      await expect(page.locator(".work-next")).toContainText(
+        "Revisar manuscrito fictício",
+      );
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,

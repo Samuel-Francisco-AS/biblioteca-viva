@@ -1,6 +1,6 @@
 # BF-5 Parte 2F — Empreitadas, Atlas Vivo e avaliações
 
-Candidata de implementação de 2026-11-05. Branch `feat/bf5-parte2f-empreitadas-atlas-avaliacoes`, derivada da PR #29 (`7267a3e4a268d0e8ac6a91f1d15b1b538c59df4f`). Fetch remoto confirmou branch/HEAD idênticos, worktree limpo e dependências instaladas (`npm ls --depth=0`, Node 24.18.0/npm 12.0.2). Preserva #25–#29. Sem alteração da main, merge, fechamento da BF-5 ou aceite artístico/físico.
+Candidata de implementação de 2026-11-05, na [PR draft #30](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/30), encadeada à #29. Branch `feat/bf5-parte2f-empreitadas-atlas-avaliacoes`, derivada da PR #29 (`7267a3e4a268d0e8ac6a91f1d15b1b538c59df4f`). Fetch remoto confirmou branch/HEAD idênticos, worktree limpo e dependências instaladas (`npm ls --depth=0`, Node 24.18.0/npm 12.0.2). Preserva #25–#29. Sem alteração da main, merge, fechamento da BF-5 ou aceite artístico/físico.
 
 ## Experiência entregue
 
@@ -12,22 +12,22 @@ Contrato detalhado, invariantes, limites e justificativa de agregado embutido: [
 
 ## Verificações
 
-| Verificação                                    | Resultado realmente observado                                                                             |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `npm run format` / `format:check`              | PASS; sem ajuste de configuração                                                                          |
-| `npm run lint`                                 | PASS; lint dirigido adicional no E2E legado atualizado                                                    |
-| `npm run typecheck`                            | PASS, incluindo testes/E2E                                                                                |
-| Vitest ampliado                                | 214 PASS em 30 arquivos; arquivo novo de Canvas corrigido e 2/2 PASS isolados                             |
-| Vitest final dirigido                          | 75/75 PASS em 10 arquivos, com sobreposição à rodada ampliada                                             |
-| E2E novos                                      | Quatro cenários distintos aprovados: Empreitadas, Livro/PNG/teclado, audiovisual e perfil/Atlas/lifecycle |
-| E2E de regressão                               | Dois cenários anteriores de treino aprovados; seis cenários distintos aprovados ao todo entre rodadas     |
-| Rodada web final de atlas/empreitada + treinos | 3 PASS/1 FAIL por seletor raster obsoleto; após adequação, cenário restante 1/1 PASS (14,5 s)             |
-| `npm run audio:check`                          | PASS, dois assets verificados                                                                             |
-| `npm run build`                                | PASS; warning conhecido de chunks >500 kB, sem alteração do limite                                        |
-| `npm run performance:report`                   | PASS; inicial 659.253 bytes; sem inferência de FPS físico                                                 |
-| `npm run android:sync`                         | PASS, três plugins existentes                                                                             |
-| `npm run android:build:debug`                  | PASS; Gradle 184 tarefas, 27 executadas / 157 atualizadas                                                 |
-| `git diff --check`                             | PASS na revisão final                                                                                     |
+| Verificação                                    | Resultado realmente observado                                                                                                                                                  |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `npm run format` / `format:check`              | PASS; sem ajuste de configuração                                                                                                                                               |
+| `npm run lint`                                 | PASS; lint dirigido adicional no E2E legado atualizado                                                                                                                         |
+| `npm run typecheck`                            | PASS, incluindo testes/E2E                                                                                                                                                     |
+| Vitest ampliado                                | 214 PASS em 30 arquivos; arquivo novo de Canvas corrigido e 2/2 PASS isolados                                                                                                  |
+| Vitest final dirigido                          | 75/75 PASS em 10 arquivos, com sobreposição à rodada ampliada                                                                                                                  |
+| E2E novos                                      | Quatro cenários distintos aprovados: Empreitadas, Livro/PNG/teclado, audiovisual e perfil/Atlas/lifecycle                                                                      |
+| E2E de regressão                               | Quatro cenários anteriores aprovados: dois de treino, catálogo audiovisual e criação/reabertura/edição dos seis tipos; oito cenários distintos aprovados ao todo entre rodadas |
+| Rodada web final de atlas/empreitada + treinos | 3 PASS/1 FAIL por seletor raster obsoleto; após adequação, cenário restante 1/1 PASS (14,5 s)                                                                                  |
+| `npm run audio:check`                          | PASS, dois assets verificados                                                                                                                                                  |
+| `npm run build`                                | PASS; warning conhecido de chunks >500 kB, sem alteração do limite                                                                                                             |
+| `npm run performance:report`                   | PASS; inicial 659.253 bytes; sem inferência de FPS físico                                                                                                                      |
+| `npm run android:sync`                         | PASS, três plugins existentes                                                                                                                                                  |
+| `npm run android:build:debug`                  | PASS; Gradle 184 tarefas, 27 executadas / 157 atualizadas                                                                                                                      |
+| `git diff --check`                             | PASS na revisão final                                                                                                                                                          |
 
 Os totais Vitest têm sobreposição e não são somados como testes distintos. A bateria inclui domínio/aplicação, concorrência real Dexie, rollback, upgrade v13→v14/reabertura, backup v6 novo/antigo, imagens, sessões, organização, formulários, fólios, projeções e fronteiras 3D/acessíveis. O teste de corrida intercala uma gravação de tarefa/avaliação entre a leitura inicial de sessão manual e o commit; planejamento/nota mais recentes sobrevivem. A apresentação de Empreitadas também verifica contraste ≥4,5:1 para títulos, links e ações principais sobre o papel.
 
@@ -46,6 +46,8 @@ Demais falhas intermediárias, resolvidas e não atribuídas ao baseline:
 - Regressão nova de avaliação esperava remoção física da propriedade, mas o contrato anterior representa nota removida por `undefined`; asserção verifica essa ausência semântica após reabrir. Fixture da corrida de sessão usava `durationSeconds` em vez do `duration` vigente; corrigida sem mudar schema de sessão. Rodada final 75/75 PASS.
 - Rodada web com regressões: seletor antigo de imagem raster não existe mais. Substituído por SVG acessível visível, dez grupos articulados e dimensões efetivas >100 px, mantendo verificações de treino/MET/remoção de perfil. Reexecução desse cenário 1/1 PASS.
 - Inspeção das capturas encontrou herança de cores claras em títulos/ações de Trabalho, controles de pose excessivamente grandes e mãos fora da composição em elevação. Corrigidos estilos locais/contraste, controles compactos, margem superior e articulação dos tornozelos. Novas capturas e assert de contraste aprovados; sem alegação de aceite artístico.
+
+Na conferência final dos seletores, os cenários antigos de catálogo audiovisual e seis rituais ainda referenciavam, respectivamente, o campo numérico e a próxima ação no cadastro. Foram adequados ao controle de estrelas e à escolha explícita no fólio, com assert de preservação após edição. **2/2 PASS** (12,7 s e 16,8 s), sem retries ou mudança de timeout. Evidências adicionais de catálogo ficam somente em `test-results`, preservando as capturas históricas da Parte 2D.
 
 ## Evidências
 
