@@ -1,4 +1,38 @@
-# BF-5.5D — Magia ambiental e pergaminhos vivos (candidata)
+# BF-5.5D — Saneamento e conclusão funcional candidata
+
+Esta seção substitui as limitações funcionais da primeira candidata `72db7ff` descritas no histórico abaixo. PR existente #35, base `feat/bf-5-5c-night-lighting`; sem merge, gate físico ou encerramento da BF-5.5.
+
+## Contratos e comportamento atuais
+
+- Contrato `LivingScroll` extraído para `src/contracts/livingScroll.ts`. Aplicação projeta; renderer consome somente contrato neutro. Nenhuma exceção adicionada ao teste arquitetural, nenhuma dependência de Dexie/domínio no renderer.
+- `scrollFlightRoutes.ts` deriva superfícies de mesas, armários, bancos e mesas de estar do layout. Valida corredores aéreos no mesmo cômodo contra AABBs de meshes/instâncias reais, com margem para o papel; no runtime inclui prédio, mobiliário, estantes, livros e registros. Rotas bloqueadas não são executadas. Não há voo entre cômodos nem contrato espacial persistido.
+- Pergaminhos sobem, atravessam a 2,8 unidades, desaceleram e pousam em **outro móvel**. Destinos ocupados ou já em uso por outro voo são excluídos. Papel com bordas curvas, abertura, inclinação orgânica, orientação gradual e rastro histórico. Grupo Three e identificador permanecem os mesmos. Redução de movimento conclui a rota validada sem animação; pausa congela o tempo visual.
+- Pergaminhos em voo não entram nos candidatos da agência. Leases impedem decolagem durante aproximação/manipulação. Retorno da âncora usa superfície de repouso atual, não uma origem antiga. Exclusão por snapshot elimina a árvore/recursos pelo ciclo existente de remount; descarte da agência libera leases antes de apagar tarefas.
+- Episódios ambientais disparam reações alternadas: Samael/desconfiança e aura lilás, Aryn/restauração, Ytha/floral, Lua/entusiasmo desajeitado. Usam animações existentes; somente um personagem é elegível por episódio, com janela de 25 s para ficar livre. Trabalho, reservas, encontros, comandos manuais e diálogo não são interrompidos. Episódio consumido não se repete; ausência de espaço para magia usa gesto.
+- Canvas e alternativa React usam `annotationKind`, `annotationId` e `from` na rota existente do registro. Fólio de livro e `RecordMemories` abrem a seção, escolhem a aba correta, focam e destacam o item canônico, com rolagem sem animação. Conteúdo removido mostra mensagem local. Nenhum texto pessoal foi adicionado à geometria, aos logs ou à telemetria.
+- Seleção dos dez mais recentes, seis categorias convencionais, identidade, schema Dexie v14, backup v6 e dependências preservados. Atualização dos dados ocorre ao retornar à Biblioteca, sem inventar observador de mutações externas concorrentes.
+
+## Reparos e evidências
+
+A violação arquitetural está corrigida. A investigação de picking encontrou câmera incorreta **no teste de C e D**, corrigida sem mudar raycast nem relaxar assertivas. O handoff social/descarte agora libera leases explicitamente; a janela social exata não foi reproduzida nas duas configurações tentadas, limitação mantida na [auditoria](BF-5_5D_AUDITORIA_PRELIMINAR.md).
+
+- Arquitetura dirigida: **6 PASS**.
+- Integração da implementação final: **83 PASS em 8 arquivos**, incluindo contratos, agência, voo, Pointer Events no runtime, foco real no fólio, alvo removido e ligação React.
+- Regressões A/B/C/WorldHost/repositórios: **47 PASS em 8 arquivos**.
+- Complemento de descarte durante voo/transporte e recuperação: **6 PASS em 2 arquivos** (inclui testes já contados; não somar como casos únicos).
+- `format:check`, lint, typecheck, build e `git diff --check`: **PASS**. Lint dirigido dos dois testes finais de descarte também PASS. Build mantém aviso conhecido de chunks >500 kB.
+- E2E dirigido da luminária: **FAIL em uma tentativa, sem retries**. Após corrigir a câmera do teste, as assertivas de seleção e destaque `living:lamp` passaram; o teste avançou e falhou no feedback temporário “A luz revela uma estrela” (elemento ausente, timeout total de 30 s). Trace preservado localmente em `test-results`, não versionado. A causa dessa falha posterior permanece aberta; não é declarada falha de runner.
+- O teste antigo de voo restrito à mesma superfície foi substituído por provas de trajetória contra o prédio real, pouso em móvel distinto, identidade, redução de movimento e exclusão em voo. Não houve relaxamento de assertivas da luminária nem do teste arquitetural.
+- CI da candidata anterior: gate unitário FAIL por arquitetura (835 PASS / 1 FAIL reportados), já corrigido localmente. CI do novo HEAD deve ser acompanhada na PR #35; resultados locais não implicam CI global verde.
+
+## Limites de aprovação
+
+Ainda não há observação no Moto G06, TalkBack, avaliação artística ou benchmark físico. Os rigs continuam usando âncoras existentes; o teste de transporte não prova alinhamento anatômico perfeito das mãos. A navegação aérea é deliberadamente restrita a trajetos geometricamente validados entre móveis do mesmo cômodo; sem destino seguro, o pergaminho permanece disponível em repouso. Não houve teste de backup pessoal nem eliminação das dívidas #21–#24. Sem claim de CI global verde. E/F/G não iniciadas.
+
+---
+
+## Histórico da primeira candidata (72db7ff)
+
 
 05/11/2026. Branch `feat/bf-5-5d-living-scrolls`, base C `8cc12c214f539089cb47566415a66376fa3305d9`. Sem merge, encerramento da BF-5.5 ou aceite artístico/físico. [Auditoria preliminar](BF-5_5D_AUDITORIA_PRELIMINAR.md).
 

@@ -1,3 +1,5 @@
+> **BF-5.5D — saneamento na PR draft #35:** contrato neutro, liberação de leases no handoff/descarte, voo validado entre móveis, reações dos quatro habitantes e acesso à anotação/citação específica. [Relatório vigente](docs/BF-5_5D_RELATORIO.md). Sem merge, CI global verde ou aceite físico; avaliação Moto G06 acumulada para G. E/F permanecem futuras.
+
 > **BF-5.5D — candidata em revisão (05/11/2026):** magia ambiental independente do relógio e até dez projeções de notas/citações, com voo local, interação pela agência B e acesso ao registro original. Base C `8cc12c2`; sem merge ou aceite físico. Limites (rotas locais, rig, foco da anotação e validação WebGL) e evidências no [relatório](docs/BF-5_5D_RELATORIO.md). BF-5.5 permanece aberta; refinamento físico em G e E/F ainda pendentes.
 
 ## 2026-11-05 — BF-5.5C (candidata)
