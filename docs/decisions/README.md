@@ -17,7 +17,8 @@ Este índice distingue as decisões vigentes das preservadas para contexto. O re
 | ADR-011 | Biblioteca Funcional Primeiro              | aceita                  |
 | ADR-012 | BF-4 — Mundo Vivo e Habitável               | aceita (escopo)         |
 | ADR-013 | BF-4F — 4 habitantes e conversação RPG      | aceita (escopo criativo) |
-| ADR-014 | Pós-BF-4: BF-5 UI/UX → BF-6 Mundo Vivo → BF-7 consolidação | aceita (ordem e estratégia; sem execução) |
+| ADR-014 | Pós-BF-4: BF-5 UI/UX → BF-6 Mundo Vivo → BF-7 consolidação | aceita (ordem histórica, atualizada pela ADR-023) |
+| ADR-023 | [BF-5.5 — O Despertar da Biblioteca](ADR-023-bf-5-5-despertar-da-biblioteca.md) | aceita (ordem e planejamento; sem implementação) |
 | ADR-022 | [Atlas clássico projetado](ADR-022-atlas-classico-projetado.md) | candidata; substitui apresentação articulada da ADR-021 |
 | ADR-021 | [Empreitadas, Atlas Vivo e avaliações](ADR-021-empreitadas-atlas-avaliacoes.md) | implementação candidata Parte 2F |
 | ADR-020 | [Baralhos e cartas globais](ADR-020-baralhos-e-cartas-globais.md) | recomendação documental; execução futura |
@@ -38,5 +39,7 @@ ADR-008 permanece a autoridade do WORLD RESET. [`ADR-009`](ADR-009-three-foundat
 [`ADR-013`](ADR-013-bf-4f-quatro-habitantes-rpg.md) atualiza para **quatro** o número inicial de habitantes e fixa o **diálogo local em árvores de 3–4 escolhas de RPG**, sem LLM; não substitui os demais contratos da ADR-012. A autoridade criativa é a [concepção BF-4F](../BF-4F_CONCEPCAO_HABITANTES.md).
 
 [`ADR-014`](ADR-014-replanejamento-pos-bf4.md) atualiza **somente o plano futuro** da ADR-011/ADR-012: a consolidação chamada anteriormente de BF-5 passa a **BF-7**; a nova BF-5 é reforma ampla de UI/UX, seguida de refinamentos; BF-6 aprofunda personagens/RPG/interatividade. Não altera os fatos nem os aceites históricos da BF-4, não implementa nenhuma fase e não retira a obrigação de TalkBack/gates assistivos.
+
+[`ADR-023`](ADR-023-bf-5-5-despertar-da-biblioteca.md) insere a **BF-5.5** após o fechamento da BF-5, antes da BF-6, sem alterar escopo/número da BF-6 ou BF-7. Seu contrato de implementação futura está em [BF-5.5](../BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md). Esta é a autoridade mais recente para a ordem futura; a ADR-014 permanece registro válido da decisão anterior.
 
 Uma nova decisão recebe o próximo número. Substituição preserva a decisão anterior com estado e link para a sucessora.

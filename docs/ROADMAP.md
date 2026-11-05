@@ -1,3 +1,9 @@
+## PLANEJAMENTO VIGENTE — 05/11/2026: BF-5.5 inserida entre BF-5 e BF-6
+
+Por autorização do proprietário, após o fechamento da BF-5, foi planejada a **BF-5.5 — O Despertar da Biblioteca**, uma fase de mundo 3D vivo: persistência dos quatro habitantes entre inicializações, tarefas e manipulação física de objetos, iluminação noturna com ritual de abajures sem loop, magia ambiental expressiva, até dez pergaminhos vivos de anotações, refino da mobília e resposta concreta às sessões. **Planejada/documentada; implementação ainda não iniciada.** [Plano e contrato](BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md) · [ADR-023](decisions/ADR-023-bf-5-5-despertar-da-biblioteca.md).
+
+**Nova ordem:** BF-5 ✅ → BF-5.5 ⏳ → BF-6 (habitantes/RPG) ⏳ → BF-7 (consolidação) ⏳. A cronologia anterior abaixo, inclusive a indicação de BF-6 como próximo passo, descreve o estado **anterior a esta decisão**, não o planejamento vigente. As ressalvas técnicas da BF-5, issues #21–#24 e ausência de CI E2E global verde permanecem. Não há entrega BF-5.5, gate novo, beta ou release neste registro.
+
 ## Estado vigente em 05/11/2026 — BF-5 encerrada no escopo aprovado
 
 A **BF-5 — Reforma Global de UI/UX** foi integrada à `main` pelas PRs #25–#30, com aceite artístico/funcional dirigido no Moto G06 e **exceções técnicas registradas**, sem CI E2E global verde. [Fechamento formal e commits de merge](BF-5_FECHAMENTO_2026-11-05.md).
@@ -109,7 +115,8 @@ BF-4 ✅ Mundo Vivo e Habitável — BF-4B–G encerradas em escopo dirigido, 6/
     BF-4F3 ✅ comportamento autônomo, relações e interação ambiental — 3 PASS físicos; folio Lua não testado; CI FAIL
     BF-4F4 ✅ diálogos RPG e cinco histórias — aceite funcional Moto G06; CI global FAIL, refinamentos futuros
   BF-4G ✅ integração e gate físico dirigido 6/6 PASS; exceção CI preservada
-BF-5 ⏳ reforma global de UI/UX — grande entrega integrada, seguida de refinamentos
+BF-5 ✅ reforma global de UI/UX — encerrada no escopo dirigido, com ressalvas
+BF-5.5 ⏳ O Despertar da Biblioteca — persistência, magia, iluminação e objetos reativos
 BF-6 ⏳ aprimoramento do Mundo Vivo — personagens, RPG, animações, diálogos e interação
 BF-7 ⏳ consolidação funcional/assistiva — antiga BF-5; gate antes de beta/release
 ```

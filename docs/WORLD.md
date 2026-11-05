@@ -1,3 +1,5 @@
+> **BF-5.5 — O Despertar da Biblioteca (planejamento aprovado em 05/11/2026, sem implementação):** continuidade dos quatro habitantes além da sessão, manipulação física de objetos por tarefa/reserva, iluminação noturna distribuída e ritual sem loop, magia ambiental, até dez pergaminhos de anotações e respostas a sessões reais. O baseline vigente permanece o do fechamento BF-5 até que mudanças de produção sejam entregues e validadas. [Plano BF-5.5](BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md) · [ADR-023](decisions/ADR-023-bf-5-5-despertar-da-biblioteca.md).
+
 ## BF-5 Parte 2D — preservação audiovisual (2026-11-04)
 
 Entretenimento é apenas agrupamento convencional de UI. O mundo mantém **seis listas técnicas**; `movie → movie-record → library-movie:${entryId}` e `series → series-record → library-series:${entryId}` permanecem intactos. Anime/Animação unitários usam filme; episódicos usam série. Metadados `catalog` e posters não entram nos snapshots, recursos ou objetos do mundo. Não há mudança de seleção, slot, ordenação espacial, posicionamento ou persistência espacial. [ADR-018](decisions/ADR-018-entretenimento-catalogo-midia-local.md).

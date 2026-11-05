@@ -1,3 +1,5 @@
+> **Direção futura BF-5.5 — O Despertar da Biblioteca (05/11/2026):** magia permanentemente perceptível com manifestações de impacto, luz noturna quente e azulada legível, móveis mais variados, pergaminhos luminosos voadores e habitantes manipulando fisicamente objetos e participando das atividades reais do jogador. Trata-se de planejamento, não de arte implementada nem de aceite físico. [Plano de fase](BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md).
+
 > **Direção aprovada da BF-5 (05/11/2026):** O Códice Iluminado e o **Atlas Clássico projetado** com gravuras masculinas/femininas estáticas, rotação contemplativa e dissolução substituem a apresentação articulada rejeitada. O proprietário considerou a versão instalada satisfatória para integração e fechamento da reforma de UI/UX. Esse é um aceite artístico dirigido, sem equivaler a um gate físico/assistivo completo. [Fechamento BF-5](BF-5_FECHAMENTO_2026-11-05.md) · [ADR-022](decisions/ADR-022-atlas-classico-projetado.md). Textos de candidatas anteriores são históricos.
 
 ## BF-5 — Atlas clássico projetado (2026-11-05)
