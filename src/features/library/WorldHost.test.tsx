@@ -632,8 +632,8 @@ describe("WorldHost", () => {
       })),
     };
     const continuity = {
-      load: vi.fn(async () => checkpoint),
-      save: vi.fn(async () => undefined),
+      load: vi.fn(() => Promise.resolve(checkpoint)),
+      save: vi.fn(() => Promise.resolve()),
     };
     render(
       <WorldHost
