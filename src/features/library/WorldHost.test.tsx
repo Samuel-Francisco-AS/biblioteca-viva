@@ -643,19 +643,17 @@ describe("WorldHost", () => {
     );
     await screen.findByText("Ambiente 3D em execução.");
     expect(continuity.load).toHaveBeenCalledOnce();
-    expect(createThreeWorldRuntime).toHaveBeenCalledWith({
+    const options = vi.mocked(createThreeWorldRuntime).mock.calls.at(-1)?.[0];
+    expect(options).toMatchObject({
       libraryWorldSnapshot: snapshot,
-      livingSession: expect.any(LivingSession),
       inhabitantContinuity: checkpoint,
-      onInhabitantCheckpoint: expect.any(Function),
     });
-    const save = vi.mocked(createThreeWorldRuntime).mock.calls.at(-1)?.[0]
-      ?.onInhabitantCheckpoint;
-    expect(save).toBeTypeOf("function");
-    save?.(checkpoint);
-    await waitFor(() =>
-      expect(continuity.save).toHaveBeenCalledWith(checkpoint),
-    );
+    expect(options?.livingSession).toBeInstanceOf(LivingSession);
+    expect(options?.onInhabitantCheckpoint).toBeTypeOf("function");
+    options?.onInhabitantCheckpoint?.(checkpoint);
+    await waitFor(() => {
+      expect(continuity.save).toHaveBeenCalledWith(checkpoint);
+    });
   });
 
   it("encaminha seleção externa sem remontar o runtime", async () => {

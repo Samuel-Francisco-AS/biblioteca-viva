@@ -25,40 +25,24 @@ const sample = (): InhabitantContinuitySnapshot => ({
 
 describe("BF-5.5A versioned continuity contract", () => {
   it("rejects duplicate IDs, corruption and personal fields", () => {
-    expect(parseInhabitantContinuity(sample())).toEqual(sample());
     const value = sample();
-    expect(parseInhabitantContinuity({ ...value, version: 2 })).toBeUndefined();
-    expect(
-      parseInhabitantContinuity({
-        ...value,
-        agents: [
-          value.agents[0],
-          value.agents[0],
-          value.agents[2],
-          value.agents[3],
-        ],
-      }),
-    ).toBeUndefined();
-    expect(
-      parseInhabitantContinuity({
-        ...value,
-        agents: [
-          { ...value.agents[0], x: Infinity },
-          ...value.agents.slice(1),
-        ],
-      }),
-    ).toBeUndefined();
-    expect(
-      parseInhabitantContinuity({ ...value, savedAt: "broken" }),
-    ).toBeUndefined();
-    expect(
-      parseInhabitantContinuity({
-        ...value,
-        agents: [
-          { ...value.agents[0], privateContent: "forbidden" },
-          ...value.agents.slice(1),
-        ],
-      }),
-    ).toBeUndefined();
+    expect(parseInhabitantContinuity(value)).toEqual(value);
+    const first = value.agents[0];
+    const duplicated = [first, first, ...value.agents.slice(2)];
+    const infinite = [{ ...first, x: Infinity }, ...value.agents.slice(1)];
+    const withSecret = [
+      { ...first, privateContent: "forbidden" },
+      ...value.agents.slice(1),
+    ];
+    const invalid: unknown[] = [
+      { ...value, version: 2 },
+      { ...value, savedAt: "broken" },
+      { ...value, agents: duplicated },
+      { ...value, agents: infinite },
+      { ...value, agents: withSecret },
+    ];
+    for (const input of invalid) {
+      expect(parseInhabitantContinuity(input)).toBeUndefined();
+    }
   });
 });
