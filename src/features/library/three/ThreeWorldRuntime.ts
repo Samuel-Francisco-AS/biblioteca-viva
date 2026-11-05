@@ -18,6 +18,7 @@ import {
 } from "./inhabitantVisuals";
 import { createLivingVisuals } from "./livingVisuals";
 import type { LivingSession } from "../livingObjects";
+import type { NightLightingSession } from "../nightLighting";
 import { LIBRARY_SHELVES } from "../libraryShelfLayout";
 import { LIBRARY_ROOMS } from "../libraryBuildingGeometry";
 import {
@@ -116,6 +117,7 @@ export interface FixtureModelLoader {
 
 export interface ThreeWorldRuntimeDependencies {
   readonly livingSession?: LivingSession;
+  readonly nightLighting?: NightLightingSession;
   readonly inhabitantLoader?: InhabitantLoader;
   readonly inhabitantContinuity?: InhabitantContinuitySnapshot;
   readonly onInhabitantCheckpoint?: (
@@ -452,6 +454,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly now: () => number;
 
   private readonly livingSession?: LivingSession;
+  private readonly nightLighting?: NightLightingSession;
   private inhabitants?: ReturnType<typeof createInhabitantVisuals>;
   private livingVisuals?: ReturnType<typeof createLivingVisuals>;
   private livingFrameTime: number | undefined;
@@ -478,6 +481,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.inhabitantLoader = dependencies.inhabitantLoader;
     this.continuity = dependencies.inhabitantContinuity;
     this.onInhabitantCheckpoint = dependencies.onInhabitantCheckpoint;
+    this.nightLighting = dependencies.performanceScenario
+      ? undefined
+      : dependencies.nightLighting;
     this.livingSession = dependencies.performanceScenario
       ? undefined
       : dependencies.livingSession;
@@ -659,6 +665,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
             building,
             scene,
             this.livingSession,
+            this.nightLighting,
           );
         const records = createLibraryRecordComposition(
           this.libraryRecordPlacements ?? [],
@@ -677,6 +684,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
           {
             now: () => this.agencyClock,
             hour: () => new Date().getHours(),
+            nightLighting: this.nightLighting,
             onEnvironmentAction: (key, objectId) => {
               this.livingSession?.actFromInhabitant(key, objectId);
             },
@@ -1312,6 +1320,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (!mountedWorld) return;
     this.state = "running";
     this.pausedByVisibility = false;
+    this.nightLighting?.refreshContext();
     this.resetFrameMetrics();
     const timestamp = this.now();
     if (!this.viewportReady) {

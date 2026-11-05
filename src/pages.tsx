@@ -6,6 +6,7 @@ import { presentApplicationError } from "./features/entry-editor/errorMessages";
 import { entryTypeLabels } from "./features/collection/collectionControls";
 import { WorldHost, type WorldHostStatus } from "./features/library/WorldHost";
 import type { InhabitantContinuityPort } from "./features/library/inhabitantContinuity";
+import type { NightLightingPort } from "./features/library/nightLighting";
 import {
   projectLibraryWorldEntries,
   type LibraryWorldCategory,
@@ -30,6 +31,7 @@ const PerformanceScenarioHarness = diagnosticsBuildEnabled
 
 export interface LibraryApplication {
   readonly inhabitantContinuity?: InhabitantContinuityPort;
+  readonly nightLightingContinuity?: NightLightingPort;
   readonly queries: {
     readonly listLibraryEntries: {
       execute(): Promise<readonly LibraryEntry[]>;
@@ -355,6 +357,7 @@ function LibraryPageContent({
             <WorldHost
               active={active}
               inhabitantContinuity={application.inhabitantContinuity}
+              nightLightingContinuity={application.nightLightingContinuity}
               libraryWorldSnapshot={libraryWorldSnapshot}
               onSelectableObjectsChange={handleSelectableObjects}
               onSelectionChange={handleWorldSelection}
