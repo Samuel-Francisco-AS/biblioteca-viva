@@ -9,6 +9,9 @@ import {
   PointLight,
   HemisphereLight,
   DirectionalLight,
+  Box3,
+  Quaternion,
+  Vector3,
   type Scene,
 } from "three";
 import type { AgentView } from "../inhabitantAgency";
@@ -199,6 +202,55 @@ export function createLivingVisuals(
   );
   const bookRestPosition = book?.root.position.clone();
   const bookRestRotation = book?.moving.rotation.clone();
+  const bookRestQuaternion = book?.root.quaternion.clone();
+  const bookRestWorldPosition = book?.root.getWorldPosition(new Vector3());
+  const bookRestWorldQuaternion = book?.root.getWorldQuaternion(
+    new Quaternion(),
+  );
+  const bookRestBounds = book ? new Box3().setFromObject(book.root) : undefined;
+  const bookCarryOffset =
+    book && bookRestWorldPosition && bookRestBounds
+      ? bookRestWorldPosition
+          .clone()
+          .sub(bookRestBounds.getCenter(new Vector3()))
+      : undefined;
+  const bookDestination = new Vector3(16.2, 0, -7.2);
+  const bookDestinationSurfaceY = 0.96;
+  const parentWorldQuaternion = new Quaternion();
+  const worldPosition = new Vector3();
+  const worldQuaternion = new Quaternion();
+  const setBookWorldPosition = (position: Vector3) => {
+    if (!book?.root.parent) return;
+    book.root.parent.worldToLocal(book.root.position.copy(position));
+  };
+  const setBookWorldQuaternion = (quaternion: Quaternion) => {
+    if (!book?.root.parent) return;
+    book.root.parent.getWorldQuaternion(parentWorldQuaternion).invert();
+    book.root.quaternion.copy(
+      parentWorldQuaternion.multiply(worldQuaternion.copy(quaternion)),
+    );
+  };
+  const placeBook = () => {
+    if (!book || !bookRestWorldPosition || !bookRestBounds) return;
+    setBookWorldPosition(
+      bookDestination.set(
+        bookDestination.x,
+        bookRestWorldPosition.y,
+        bookDestination.z,
+      ),
+    );
+    setBookWorldQuaternion(bookRestWorldQuaternion ?? new Quaternion());
+    book.root.updateMatrixWorld(true);
+    const bounds = new Box3().setFromObject(book.root);
+    setBookWorldPosition(
+      bookDestination.set(
+        bookDestination.x,
+        bookDestination.y + bookDestinationSurfaceY - bounds.min.y,
+        bookDestination.z,
+      ),
+    );
+    book.moving.rotation.copy(bookRestRotation ?? book.moving.rotation);
+  };
   return {
     selectables,
     update(delta: number, reduced: boolean, narrativeAtmosphere?: Atmosphere) {
@@ -326,25 +378,36 @@ export function createLivingVisuals(
       getCarryAnchor: (id: string) => import("three").Object3D | null,
     ) {
       if (!book || !bookRestPosition || !bookRestRotation) return;
-      const carrier = poses.find(
+      const interaction = poses.find(
         (pose) =>
           pose.interactionObjectId === "living:book" &&
-          (pose.interactionState === "carrying" ||
-            pose.interactionState === "placing" ||
-            pose.interactionState === "returning"),
+          pose.interactionState !== null,
       );
-      if (!carrier) {
+      if (!interaction) {
         book.root.position.copy(bookRestPosition);
+        book.root.quaternion.copy(bookRestQuaternion ?? book.root.quaternion);
         book.moving.rotation.copy(bookRestRotation);
         return;
       }
-      const anchor = getCarryAnchor(carrier.id);
+      if (interaction.interactionState === "placing") {
+        placeBook();
+        return;
+      }
+      if (
+        interaction.interactionState !== "carrying" &&
+        interaction.interactionState !== "recollecting" &&
+        interaction.interactionState !== "returning"
+      )
+        return;
+      const anchor = getCarryAnchor(interaction.id);
       if (!anchor) return;
       anchor.updateWorldMatrix(true, false);
-      book.root.parent?.worldToLocal(
-        book.root.position.copy(anchor.getWorldPosition(book.root.position)),
-      );
-      book.root.position.y = 0;
+      if (bookCarryOffset) {
+        setBookWorldPosition(
+          anchor.getWorldPosition(worldPosition).add(bookCarryOffset),
+        );
+      }
+      setBookWorldQuaternion(anchor.getWorldQuaternion(worldQuaternion));
       book.moving.rotation.set(0, 0, 0);
     },
   };

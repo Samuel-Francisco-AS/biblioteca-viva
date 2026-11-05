@@ -7,6 +7,7 @@ export type InteractionTaskState =
   | "picking"
   | "carrying"
   | "placing"
+  | "recollecting"
   | "returning"
   | "completed"
   | "cancelled"
@@ -46,7 +47,8 @@ export class InteractionCoordinator {
   ): InteractionLease | null {
     this.reclaim(now);
     const current = this.leases.get(resourceId);
-    if (current && current.owner !== owner) return null;
+    if (current && (current.owner !== owner || current.taskId !== taskId))
+      return null;
     const lease = Object.freeze({
       resourceId,
       owner,
@@ -55,6 +57,33 @@ export class InteractionCoordinator {
     });
     this.leases.set(resourceId, lease);
     return lease;
+  }
+
+  renew(
+    resourceId: string,
+    owner: InhabitantKey,
+    taskId: string,
+    now: number,
+    durationMs = 30_000,
+  ): boolean {
+    const current = this.leases.get(resourceId);
+    if (
+      !current ||
+      current.owner !== owner ||
+      current.taskId !== taskId ||
+      current.expiresAt <= now
+    ) {
+      this.reclaim(now);
+      return false;
+    }
+    this.leases.set(
+      resourceId,
+      Object.freeze({
+        ...current,
+        expiresAt: now + Math.max(1_000, durationMs),
+      }),
+    );
+    return true;
   }
 
   owns(resourceId: string, owner: InhabitantKey, taskId: string, now: number) {

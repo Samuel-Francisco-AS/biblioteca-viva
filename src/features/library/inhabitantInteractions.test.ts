@@ -9,6 +9,8 @@ describe("BF-5.5B interaction leases", () => {
     );
     expect(coordinator.reserve("living:book", "lua", "task-b", 1)).toBeNull();
     expect(coordinator.owns("living:book", "aryn", "task-a", 1)).toBe(true);
+    expect(coordinator.reserve("living:book", "aryn", "task-b", 2)).toBeNull();
+    expect(coordinator.renew("living:book", "aryn", "task-a", 2)).toBe(true);
   });
 
   it("releases on cancellation and reclaims abandoned leases", () => {
@@ -20,5 +22,8 @@ describe("BF-5.5B interaction leases", () => {
     ).not.toBeNull();
     coordinator.reclaim(31_001);
     expect(coordinator.snapshot()).toEqual([]);
+    expect(coordinator.renew("seat:room-c", "lua", "task-b", 31_002)).toBe(
+      false,
+    );
   });
 });

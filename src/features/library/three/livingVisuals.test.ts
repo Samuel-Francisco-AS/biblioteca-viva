@@ -7,6 +7,7 @@ import {
   Mesh,
   Object3D,
   Scene,
+  Vector3,
   type BufferGeometry,
   type Material,
 } from "three";
@@ -131,9 +132,58 @@ describe("living visuals", () => {
       () => anchor,
     );
     expect(book.root).toBe(original);
-    expect(book.root.position.x).toBeCloseTo(18);
-    expect(book.root.position.z).toBeCloseTo(-6);
+    const carriedBounds = new Box3().setFromObject(book.root);
+    expect(carriedBounds.getCenter(new Vector3()).y).toBeCloseTo(
+      anchor.position.y,
+      2,
+    );
+    expect(book.root.position.y).not.toBe(0);
 
+    visuals.driveInhabitantInteractions(
+      [
+        {
+          id: "character:aryn",
+          key: "aryn",
+          label: "Aryn",
+          x: 16.2,
+          z: -7.2,
+          facing: 0,
+          state: "work",
+          activity: "placing",
+          room: "CÔMODO C",
+          destination: null,
+          action: "gesture",
+          available: true,
+          interactionObjectId: "living:book",
+          interactionState: "placing",
+        },
+      ],
+      () => anchor,
+    );
+    const placedBounds = new Box3().setFromObject(book.root);
+    expect(placedBounds.min.y).toBeCloseTo(0.96, 2);
+
+    visuals.driveInhabitantInteractions(
+      [
+        {
+          id: "character:aryn",
+          key: "aryn",
+          label: "Aryn",
+          x: 16.2,
+          z: -7.2,
+          facing: 0,
+          state: "work",
+          activity: "recollecting",
+          room: "CÔMODO C",
+          destination: null,
+          action: "gesture",
+          available: true,
+          interactionObjectId: "living:book",
+          interactionState: "recollecting",
+        },
+      ],
+      () => anchor,
+    );
     visuals.driveInhabitantInteractions([], () => null);
     expect(book.root.position.x).toBeCloseTo(14.75);
     expect(book.root.position.z).toBeCloseTo(-4.8);

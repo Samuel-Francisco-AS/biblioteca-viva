@@ -72,4 +72,38 @@ describe("BF-5.5A real agency continuity", () => {
       ),
     ).toBe(true);
   });
+
+  it("cancels a physical interaction checkpoint instead of restoring a ghost lease", () => {
+    const source = fixture().agency.captureContinuity(
+      "2026-11-05T12:00:00.000Z",
+    );
+    const interrupted = {
+      ...source,
+      agents: source.agents.map((agent) =>
+        agent.id === "character:aryn"
+          ? {
+              ...agent,
+              x: 15.4,
+              z: -6.9,
+              phase: "work" as const,
+              taskId: "c-study",
+              destination: null,
+            }
+          : agent,
+      ),
+    };
+    const restored = fixture();
+    expect(
+      restored.agency.restoreContinuity(
+        interrupted,
+        Date.parse(interrupted.savedAt) + 1000,
+      ),
+    ).toBe(true);
+    const aryn = restored.agency
+      .getPoses()
+      .find((pose) => pose.key === "aryn")!;
+    expect(aryn.interactionObjectId).toBeNull();
+    expect(aryn.interactionState).toBeNull();
+    expect(aryn.state).not.toBe("work");
+  });
 });

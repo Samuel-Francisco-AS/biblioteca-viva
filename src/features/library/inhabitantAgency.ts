@@ -399,6 +399,7 @@ export class InhabitantAgency {
       if (!task || staleActivity) continue;
       if (
         row.phase === "work" &&
+        !task.interaction &&
         distance(a, task.position) < 0.2 &&
         this.navigation.clear(
           a,
@@ -424,6 +425,7 @@ export class InhabitantAgency {
         a.until = this.elapsed + Math.max(2, row.remainingSeconds);
       } else if (
         row.phase === "navigate" &&
+        !task.interaction &&
         row.destination &&
         distance(row.destination, task.position) < 0.1 &&
         this.go(a, task.position)
@@ -491,6 +493,22 @@ export class InhabitantAgency {
     this.lastTime = time;
     if (this.mode !== "running" || dt === 0) return;
     this.elapsed += dt;
+    for (const a of this.agents) {
+      if (!a.task?.interaction || !a.interactionTaskId) continue;
+      if (
+        !this.interactions.renew(
+          a.task.objectId ?? a.task.id,
+          a.key,
+          a.interactionTaskId,
+          this.elapsed * 1000,
+        )
+      ) {
+        a.interactionState = "failed";
+        this.releaseInteraction(a);
+        a.task = null;
+        this.stop(a, "A reserva expirou; o livro permanece no mundo.", 4);
+      }
+    }
     for (const a of this.agents)
       if (
         a.available &&
@@ -544,6 +562,10 @@ export class InhabitantAgency {
       action === "magic" ? e.magic : action === "work" ? e.work : e.travel;
     if (!this.navigation.clear(a, a, radius, this.occupied(a))) return false;
     this.cancelMeeting("Encontro adiado para respeitar a atenção manual.", a);
+    if (a.task?.interaction) {
+      this.releaseInteraction(a);
+      a.task = null;
+    }
     a.state = "react";
     a.action = action;
     a.activity = "Atenção manual; a rotina será retomada com segurança.";
@@ -574,6 +596,12 @@ export class InhabitantAgency {
     );
     for (const a of this.agents) {
       if (wanted.has(a.key)) {
+        if (a.task?.interaction) {
+          this.releaseInteraction(a);
+          a.task = null;
+          a.route = [];
+          a.destination = null;
+        }
         this.cancelMeeting(
           "Encontro adiado para uma conversa; a intenção será reconsiderada.",
           a,
@@ -669,6 +697,10 @@ export class InhabitantAgency {
         const relevant =
           roomAt(a) === room || (e.type === "discovered" && a.key === "lua");
         if (!relevant) continue;
+        if (a.task?.interaction) {
+          this.releaseInteraction(a);
+          a.task = null;
+        }
         a.lastEvent = this.elapsed;
         a.state = "react";
         a.action = "react";
@@ -1048,6 +1080,7 @@ export class InhabitantAgency {
       )
     ) {
       a.interactionState = "failed";
+      this.releaseInteraction(a);
       a.task = null;
       this.stop(a, "A reserva expirou; o livro permanece no mundo.", 4);
       return;
@@ -1074,6 +1107,13 @@ export class InhabitantAgency {
       return;
     }
     if (a.interactionState === "placing") {
+      a.interactionState = "recollecting";
+      a.action = "gesture";
+      a.activity = "Recolhe o livro para devolvê-lo à estante.";
+      a.until = this.elapsed + 0.7;
+      return;
+    }
+    if (a.interactionState === "recollecting") {
       a.interactionState = "returning";
       a.action = "walk";
       a.activity = "Devolve o livro ao ponto cenográfico original.";
