@@ -1,3 +1,13 @@
+## BF-5 — Atlas clássico projetado
+
+19 unitários dirigidos em oito arquivos e cinco E2E distintos (três novos + duas regressões de treino) PASS. Cobertura: conjunto por gênero/preferência/fallback, seis artes locais, permanência e decodificação antes da dissolução, pausa/redução de movimento, viewport/visibilidade/cleanup, cancelamento e falhas sem loop; fórmulas MET e treinos preservados. Removidos testes do motor de poses aposentado; a regressão agora exige imagem raster carregada/dimensões, mantendo os asserts funcionais anteriores. [Resultados, falhas intermediárias e roteiro físico](BF-5_ATLAS_CLASSICO_PROJETADO.md). Sem CI global verde, retries/timeouts alterados ou teste físico presumido.
+
+## BF-5 Parte 2F — verificação dirigida
+
+214 testes aprovados na rodada ampliada (30 arquivos), dois do renderizador após corrigir mock e 75/75 na rodada final (10 arquivos, com sobreposição). Oito E2E distintos aprovados entre rodadas: quatro novos de Empreitadas/Atlas/avaliações/PNG e quatro de regressão (dois de treino, catálogo audiovisual e criação/edição dos seis tipos). Asserções cobrem revisão concorrente/rollback, referências, progresso/diário, upgrade/reabertura, restore v6 antigo/novo, sessões e projeção 3D preservadas, escolha voluntária de perfil, poses/pausa/movimento reduzido, estrelas nativas/teclado e PNG real nas três proporções. Contraste de Trabalho é verificado contra o papel; imagens/vídeo usam fixtures.
+
+Gates de formatação/lint/tipos/áudio/build/performance/sync/APK aprovados. Falhas intermediárias novas e CI histórica da #29 explicitamente separadas no [relatório Parte 2F](BF-5_PARTE2F_EMPREITADAS_ATLAS_AVALIACOES.md). Sem timeouts aumentados, omissão de asserts, CI global verde ou teste físico presumido.
+
 # BF-5 Parte 2E — verificação proporcional (2026-11-04)
 
 Controles DOM testados por toque/teclado, confirmação/cancelamento, FormData/reset/required e Back da superfície superior. Chromium verifica foco real/inert/top layer, datas e recuperação de foco persistido. Imagens têm upgrade v12→v13/reabertura, ownership, duplicatas, remoção/substituição/restore/exclusão isolada. Ateliê compara byte a byte prévia e download PNG, assinatura e dimensões 1080 × 1080/1350/1920, modos offline, capa, fundo e personalização. [Resultados finais, falhas intermediárias e roteiro físico](BF-5_PARTE2E_CONTROLES_CAPAS_ATELIE.md).

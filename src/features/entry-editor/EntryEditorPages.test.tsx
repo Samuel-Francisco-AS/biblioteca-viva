@@ -94,11 +94,11 @@ describe("cadastro de livro", () => {
       /total de páginas/i,
       /página atual/i,
       /status/i,
-      /avaliação/i,
       /data de início/i,
     ]) {
       expect(screen.getByLabelText(label)).toBeVisible();
     }
+    expect(screen.getByRole("group", { name: "Avaliação" })).toBeVisible();
     expect(screen.getByRole("button", { name: "Salvar livro" })).toBeVisible();
     expect(screen.getByRole("button", { name: "Cancelar" })).toHaveAttribute(
       "type",
@@ -116,7 +116,7 @@ describe("cadastro de livro", () => {
     await user.clear(screen.getByLabelText(/página atual/i));
     await user.type(screen.getByLabelText(/página atual/i), "12");
     await chooseOption(user, screen.getByLabelText(/status/i), "in_progress");
-    await chooseOption(user, screen.getByLabelText(/avaliação/i), "5");
+    await user.click(screen.getByRole("radio", { name: "5 de 5 estrelas" }));
     await user.click(screen.getByRole("button", { name: "Salvar livro" }));
     await waitFor(() => expect(create).toHaveBeenCalledOnce());
     expect(create).toHaveBeenCalledWith({

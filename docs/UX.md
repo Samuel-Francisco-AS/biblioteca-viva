@@ -1,3 +1,11 @@
+## BF-5 — Atlas clássico projetado
+
+A seção de Atividade Física apresenta gravuras originais estáticas com permanência de 8 s e dissolução de 1,8 s, em vez do corpo articulado. Pausar/Próxima arte são os únicos controles; movimento reduzido mantém troca manual estática. Automático segue gênero; fallback masculino e escolha visual manual independente preservam o perfil existente. Arte domina o retrato e divide espaço com dados diários em fólios largos. [Contrato e limites](decisions/ADR-022-atlas-classico-projetado.md) · [evidências/validação](BF-5_ATLAS_CLASSICO_PROJETADO.md). Os controles de poses descritos anteriormente foram removidos.
+
+## BF-5 Parte 2F — fólios operacionais
+
+Trabalho usa um fólio de Empreitadas, com progresso por tarefas, seções de etapas, ações contextuais e editores na top layer. Próxima ação sempre escolhida; diário cronológico manual e notas anteriores identificadas; sessões/organização recolhidas. Atlas é gravura articulada original em duas apresentações com movimento manual/por categoria, pausa e pose estática. Perfil físico voluntário e independente da preferência visual. Cinco rádios em estrelas substituem avaliação numérica em formulários e permitem avaliar no fólio; falha restaura a nota persistida. Ateliê inclui/oculta estrelas Canvas sem editar a nota. [Contrato e limites](decisions/ADR-021-empreitadas-atlas-avaliacoes.md) · [evidências e roteiro](BF-5_PARTE2F_EMPREITADAS_ATLAS_AVALIACOES.md). Sem aceite humano presumido.
+
 # BF-5 Parte 2E — controles e ateliê (2026-11-04)
 
 Seleções de formulários/filtros/Ajustes e datas usam controles DOM internos (`BVSelectSheet`, `BVDatePicker`); opções provisórias só entram no registro ao confirmar o seletor e salvar o fluxo correspondente. Cancelar/Escape/Voltar mantêm o valor e restauram foco. Calendário mensal, campos numéricos e ausência opcional de data; formulário conserva FormData/validação. `<dialog>` na top layer cobre o dock e comporta rolagem nas duas orientações. Seleção de arquivo, Share e SAF continuam as pontes Android apropriadas; a causa da tela branca ainda não foi comprovada.

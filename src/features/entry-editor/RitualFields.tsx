@@ -1,3 +1,4 @@
+import { WORK_KINDS, workKindLabels } from "../../domain/endeavors";
 import { BVSelectSheet, BVDatePicker } from "../../ui/BVPicker";
 import { useState } from "react";
 import { WorkoutFields, WorkoutSetup } from "./WorkoutFields";
@@ -114,6 +115,24 @@ export function RitualFields({
         {type === "work" && (
           <>
             <Inscription
+              name="startDate"
+              label="Data inicial (opcional)"
+              type="date"
+              value={work?.startDate}
+            />
+            <Inscription
+              name="reference"
+              label="Referência externa (opcional)"
+              type="url"
+              value={work?.reference}
+            />
+            <Inscription
+              name="initialNotes"
+              label="Observações iniciais (opcional)"
+              value={work?.initialNotes}
+              multiline
+            />
+            <Inscription
               name="area"
               label="Área (opcional)"
               value={work?.area}
@@ -180,9 +199,21 @@ export function RitualFields({
           </div>
         )}
         {type === "work" && (
+          <label className="form-field">
+            Tipo de atividade
+            <BVSelectSheet name="kind" defaultValue={work?.kind ?? "personal"}>
+              {WORK_KINDS.map((kind) => (
+                <option key={kind} value={kind}>
+                  {workKindLabels[kind]}
+                </option>
+              ))}
+            </BVSelectSheet>
+          </label>
+        )}
+        {type === "work" && (
           <Inscription
             name="description"
-            label="Descrição (opcional)"
+            label="Descrição / objetivo (opcional)"
             value={work?.description}
             multiline
           />
@@ -292,16 +323,6 @@ export function RitualFields({
       {type === "physical_activity" && (
         <RitualChapter number="III" title="Ficha-base">
           <WorkoutFields exercises={activity?.exercises} />
-        </RitualChapter>
-      )}
-      {type === "work" && (
-        <RitualChapter number="II" title="O próximo passo">
-          <Inscription
-            name="nextAction"
-            label="Próxima ação (opcional)"
-            value={work?.nextAction}
-            multiline
-          />
         </RitualChapter>
       )}
       {(type === "movie" || type === "study" || type === "work") && detail}

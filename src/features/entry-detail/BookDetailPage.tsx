@@ -1,3 +1,4 @@
+import { PersistedRating } from "../../ui/StarRating";
 import { useRecordCover } from "../../ui/useRecordCover";
 import type { PosterPort } from "../../application/media";
 import { RecordCoverEditor } from "../../ui/RecordCoverEditor";
@@ -35,6 +36,7 @@ export interface BookDetailApplication {
   readonly posters?: PosterPort;
   readonly imageFiles?: ImageFilesPort;
   readonly commands: {
+    readonly updateBookEntry?: { execute(input: unknown): Promise<BookEntry> };
     readonly addNote: { execute(input: unknown): Promise<Note> };
     readonly addQuote: { execute(input: unknown): Promise<Quote> };
     readonly changeBookStatus: { execute(input: unknown): Promise<BookEntry> };
@@ -363,6 +365,22 @@ export function BookDetailPage({
           <p className="folio-kicker">Códice pessoal · Livro</p>
           <h2 id="detail-title">{book.title}</h2>
           <p className="folio-author">{book.author ?? "Autor não informado"}</p>
+          <PersistedRating
+            value={book.rating}
+            disabled={!application.commands.updateBookEntry}
+            save={async (rating) => {
+              if (!application.commands.updateBookEntry)
+                throw new Error("Avaliação indisponível.");
+              updateBook(
+                await application.commands.updateBookEntry.execute({
+                  id: book.id,
+                  expectedRevision: book.revision,
+                  rating: rating ?? null,
+                }),
+                "Avaliação salva.",
+              );
+            }}
+          />
           <details className="folio-status">
             <summary>
               <span className="visually-hidden">Status da leitura: </span>
@@ -539,14 +557,6 @@ export function BookDetailPage({
         <details className="folio-metadata">
           <summary>Mais informações</summary>
           <dl className="book-facts">
-            <div>
-              <dt>Avaliação</dt>
-              <dd>
-                {book.rating === undefined
-                  ? "Não informada"
-                  : `${book.rating} de 5`}
-              </dd>
-            </div>
             <div>
               <dt>Início</dt>
               <dd>

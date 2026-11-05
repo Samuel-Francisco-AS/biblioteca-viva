@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import type { LibraryEntry, Note, Quote } from "../../domain";
 import { AnnotationActions } from "../annotations/AnnotationActions";
 import type { BookDetailApplication } from "./BookDetailPage";
@@ -28,8 +28,10 @@ export function RecordMemories({
   initialNotes,
   initialQuotes,
   folio = false,
+  onNotesChange,
 }: {
   readonly folio?: boolean;
+  readonly onNotesChange?: (notes: readonly Note[]) => void;
   readonly application: BookDetailApplication;
   readonly entry: LibraryEntry;
   readonly initialNotes: readonly Note[];
@@ -37,6 +39,9 @@ export function RecordMemories({
 }) {
   const [notes, setNotes] = useState(initialNotes),
     [quotes, setQuotes] = useState(initialQuotes);
+  useEffect(() => {
+    onNotesChange?.(notes);
+  }, [notes, onNotesChange]);
   const [error, setError] = useState<string>(),
     [busy, setBusy] = useState(false);
   const [drafts, setDrafts] = useState({ note: "", quote: "" });

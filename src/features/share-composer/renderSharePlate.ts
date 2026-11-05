@@ -2,7 +2,8 @@ import type { PngArtifact } from "../../application/imageFiles";
 import { posterSchema } from "../../infrastructure/database/media";
 import { readDataUrl } from "../../infrastructure/files/localImage";
 import { imageHeight, type CompositionStyle } from "./composition";
-interface PlateContent {
+export interface PlateContent {
+  readonly rating?: number;
   readonly title: string;
   readonly eyebrow: string;
   readonly caption?: string;
@@ -203,8 +204,25 @@ export async function renderSharePlate(
     ctx.font = "24px sans-serif";
     ctx.fillText(content.caption, x, lineY + 44, maxWidth);
   }
+  const hasRating =
+    options.showRating !== false && content.rating !== undefined;
+  if (hasRating)
+    drawRating(
+      ctx,
+      content.rating ?? 0,
+      centered ? 540 : alignment === "right" ? 980 : 100,
+      lineY + 88,
+      alignment,
+      options.layout === "folio",
+    );
   const message = [content.text, content.message].filter(Boolean).join("\n\n");
-  block(message, lineY + 100, 38, h - lineY - 220, false);
+  block(
+    message,
+    lineY + (hasRating ? 155 : 100),
+    38,
+    h - lineY - (hasRating ? 275 : 220),
+    false,
+  );
   ctx.textAlign = "center";
   ctx.fillStyle = "#c5a989";
   ctx.font = "19px sans-serif";
@@ -220,4 +238,58 @@ export async function renderSharePlate(
     dataUrl: await readDataUrl(blob),
     name: content.name,
   };
+}
+
+/** Geometry avoids font-dependent star substitution and keeps every rating inside the PNG. */
+export function drawRating(
+  ctx: CanvasRenderingContext2D,
+  rating: number,
+  x: number,
+  y: number,
+  alignment: CanvasTextAlign,
+  light: boolean,
+) {
+  if (!Number.isInteger(rating) || rating < 1 || rating > 5)
+    throw new Error("Avaliação inválida.");
+  const width = 230,
+    step = 48;
+  const left =
+    alignment === "center"
+      ? x - width / 2
+      : alignment === "right"
+        ? x - width
+        : x;
+  ctx.save();
+  for (let star = 0; star < 5; star++) {
+    ctx.beginPath();
+    for (let point = 0; point < 10; point++) {
+      const angle = -Math.PI / 2 + (point * Math.PI) / 5;
+      const radius = point % 2 ? 8 : 19;
+      const px = left + 19 + star * step + Math.cos(angle) * radius;
+      const py = y + Math.sin(angle) * radius;
+      if (point === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fillStyle =
+      star < rating
+        ? light
+          ? "#94651b"
+          : "#e9bd66"
+        : light
+          ? "#c6beb0"
+          : "#716674";
+    ctx.fill();
+    ctx.strokeStyle =
+      star < rating
+        ? light
+          ? "#62461c"
+          : "#ffe3a5"
+        : light
+          ? "#7b7165"
+          : "#a89aaa";
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+  }
+  ctx.restore();
 }

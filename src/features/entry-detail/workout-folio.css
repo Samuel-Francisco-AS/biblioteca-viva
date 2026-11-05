@@ -390,11 +390,6 @@
   gap: clamp(12px, 3vw, 36px);
   padding: 32px 0;
 }
-.body-study {
-  width: 100%;
-  max-height: 400px;
-  color: #765245;
-}
 .workout-metabolic h3 {
   font-size: clamp(1.4rem, 3vw, 1.9rem);
 }
@@ -611,23 +606,21 @@
 .workout-metabolic-heading {
   grid-column: 1 / -1;
 }
-.workout-metabolic .body-study {
-  margin: 0;
-  max-height: none;
+/* The projected plate leads in portrait; daily estimates stay beside it on wider folios. */
+.workout-metabolic .classic-atlas-host,
+.workout-metabolic-data {
+  grid-column: 1 / -1;
 }
-.body-study img {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 380px;
-  object-fit: contain;
+.workout-metabolic-data {
+  border-left: 2px solid #a67b5355;
+  padding: 0.3rem 0 0.3rem 1.1rem;
 }
-.body-study figcaption {
-  color: #72584c;
-  text-align: center;
-  font:
-    italic 0.7rem Georgia,
-    serif;
-  letter-spacing: 0.1em;
-  margin-top: 8px;
+.workout-metabolic-data .workout-calories {
+  margin-top: 0;
+}
+@media (min-width: 700px) {
+  .workout-metabolic .classic-atlas-host,
+  .workout-metabolic-data {
+    grid-column: auto;
+  }
 }

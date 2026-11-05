@@ -97,6 +97,10 @@ function specificInput(type: Exclude<EntryType, "book">, form: FormData) {
       return {
         type,
         title,
+        kind: field(form, "kind"),
+        startDate: field(form, "startDate"),
+        reference: field(form, "reference"),
+        initialNotes: field(form, "initialNotes"),
         area: field(form, "area"),
         organization: field(form, "organization"),
         description: field(form, "description"),

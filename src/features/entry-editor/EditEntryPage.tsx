@@ -110,11 +110,16 @@ function updateInput(
     case "work":
       return {
         ...common,
+        expectedRevision: entry.revision,
+        kind: value(form, "kind"),
+        startDate: value(form, "startDate"),
+        reference: value(form, "reference"),
+        initialNotes: value(form, "initialNotes"),
         area: value(form, "area"),
         organization: value(form, "organization"),
         description: value(form, "description"),
         deadline: deadlineFromForm(form, entry.deadline),
-        nextAction: value(form, "nextAction"),
+        nextAction: entry.nextAction,
       };
   }
 }

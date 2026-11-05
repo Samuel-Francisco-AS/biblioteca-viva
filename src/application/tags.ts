@@ -160,21 +160,23 @@ export class OrganizeLibraryEntry {
   constructor(private readonly dependencies: TagDependencies) {}
   async execute(input: unknown) {
     const parsed = parseInput(organizationSchema, input);
-    const existing = await this.dependencies.libraryEntries.getById(parsed.id);
-    if (!existing)
-      throw new ApplicationError("NOT_FOUND", "Registro não encontrado.");
-    await validateTags(this.dependencies, parsed.tagIds);
     const now = await currentTime(this.dependencies);
-    const updated = applyDomain(() =>
-      organizeLibraryEntry(existing, parsed, now),
-    );
-    await runTransaction(this.dependencies, () =>
-      saveEntity(
+    return runTransaction(this.dependencies, async () => {
+      const existing = await this.dependencies.libraryEntries.getById(
+        parsed.id,
+      );
+      if (!existing)
+        throw new ApplicationError("NOT_FOUND", "Registro não encontrado.");
+      await validateTags(this.dependencies, parsed.tagIds);
+      const updated = applyDomain(() =>
+        organizeLibraryEntry(existing, parsed, now),
+      );
+      await saveEntity(
         () => this.dependencies.libraryEntries.save(updated),
         "save_entry",
-      ),
-    );
-    return updated;
+      );
+      return updated;
+    });
   }
 }
 

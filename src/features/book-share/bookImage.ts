@@ -15,6 +15,7 @@ export async function createBookImage(
   return renderSharePlate(
     {
       title: book.title,
+      rating: book.rating,
       eyebrow: quote ? "Uma passagem" : "Meu marcador",
       caption: book.author ?? "Autor não informado",
       text: quote

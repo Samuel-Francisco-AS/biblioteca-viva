@@ -1,3 +1,5 @@
+import { WorkDetailPage } from "./WorkDetailPage";
+import type { WorkEntry } from "../../domain";
 import {
   EntertainmentDetail,
   type EntertainmentApplication,
@@ -8,22 +10,11 @@ import {
 } from "./WorkoutDetailPage";
 import { StudyDetailPage } from "./StudyDetailPage";
 import type { FlashCardApplication } from "./StudyFlashCards";
-import { EntryPortrait } from "./EntryPortrait";
-import { RecordMemories } from "./RecordMemories";
-import { entryExperience } from "./entryExperience";
-import { ArtifactGlyph } from "../../app/ArtifactGlyph";
 import { useEffect, useState } from "react";
-import {
-  Link,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 
-import type { EntryStatus, LibraryEntry, Note, Quote } from "../../domain";
-import { statusLabels } from "../books/bookPresentation";
+import type { LibraryEntry, Note, Quote } from "../../domain";
 import { safeReturnPath } from "../books/navigationOrigin";
-import { entryTypeLabels } from "../collection/collectionControls";
 import { presentApplicationError } from "../entry-editor/errorMessages";
 import { BookDetailPage, type BookDetailApplication } from "./BookDetailPage";
 import {
@@ -42,6 +33,7 @@ export interface EntryDetailApplication extends BookDetailApplication {
     FlashCardApplication["commands"] &
     EntertainmentApplication["commands"] &
     WorkoutApplication["commands"] & {
+      readonly saveEndeavor?: { execute(input: unknown): Promise<WorkEntry> };
       readonly changeLibraryEntryStatus: {
         execute(input: unknown): Promise<LibraryEntry>;
       };
@@ -87,13 +79,11 @@ export function EntryDetailPage({
   const { id = "" } = useParams();
   const [searchParams] = useSearchParams();
   const returnPath = safeReturnPath(searchParams.get("from"));
-  const navigate = useNavigate();
   const [entry, setEntry] = useState<LibraryEntry>();
   const [notes, setNotes] = useState<readonly Note[]>([]);
   const [quotes, setQuotes] = useState<readonly Quote[]>([]);
   const [error, setError] = useState<string>();
   const [refreshKey, setRefreshKey] = useState(0);
-  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (!application) return;
@@ -205,178 +195,15 @@ export function EntryDetailPage({
         onChange={setEntry}
       />
     );
-  const availableApplication = application;
-  const currentEntry = entry;
-
-  async function changeStatus(status: EntryStatus) {
-    setBusy(true);
-    setError(undefined);
-    try {
-      if (status === "completed" && currentEntry.status === "planned") {
-        const started =
-          await availableApplication.commands.changeLibraryEntryStatus.execute({
-            id,
-            status: "in_progress",
-          });
-        setEntry(started);
-      }
-      setEntry(
-        await availableApplication.commands.changeLibraryEntryStatus.execute({
-          id,
-          status,
-        }),
-      );
-    } catch (failure: unknown) {
-      setError(presentApplicationError(failure).message);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function removeEntry() {
-    if (!window.confirm("Excluir este registro e suas anotações?")) return;
-    setBusy(true);
-    try {
-      await availableApplication.commands.deleteLibraryEntry.execute({ id });
-      void navigate("/colecao");
-    } catch (failure: unknown) {
-      setError(presentApplicationError(failure).message);
-      setBusy(false);
-    }
-  }
-
   return (
-    <section className="entry-detail-page" aria-labelledby="entry-title">
-      <Link className="text-link entry-detail-return" to={returnPath}>
-        {returnPath.startsWith("/arquivo")
-          ? "Voltar ao Arquivo"
-          : returnPath.startsWith("/colecao")
-            ? "Voltar à Coleção"
-            : "Voltar à Biblioteca"}
-      </Link>
-      <div className="section-heading entry-detail-hero">
-        <span aria-hidden="true" className="entry-detail-hero__emblem">
-          <ArtifactGlyph type={currentEntry.type} />
-        </span>
-        <div className="entry-detail-hero__body">
-          <p className="eyebrow">{entryTypeLabels[currentEntry.type]}</p>
-          <h2 id="entry-title">{currentEntry.title}</h2>
-          <p className="status-badge">{statusLabels[currentEntry.status]}</p>
-        </div>
-        <Link
-          className="button button--secondary entry-detail-hero__edit"
-          to={`/registros/${encodeURIComponent(id)}/editar?from=${encodeURIComponent(returnPath)}`}
-        >
-          Editar
-        </Link>
-      </div>
-      {error && <p role="alert">{error}</p>}
-      <div className="entry-detail-sections">
-        <section className="content-card" aria-labelledby="entry-data-title">
-          <p className="eyebrow">{entryTypeLabels[currentEntry.type]}</p>
-          <h3 id="entry-data-title">
-            {entryExperience[currentEntry.type].chapter}
-          </h3>
-          <EntryPortrait entry={currentEntry} />
-          {currentEntry.completedAt && (
-            <p className="completion-memory">
-              Concluído em{" "}
-              {new Date(currentEntry.completedAt).toLocaleDateString("pt-BR")}
-            </p>
-          )}
-          {currentEntry.type === "work" && currentEntry.deadline && (
-            <p>
-              Prazo ·{" "}
-              {new Date(currentEntry.deadline).toLocaleDateString("pt-BR", {
-                timeZone: "UTC",
-              })}
-            </p>
-          )}
-          <div className="form-actions">
-            {currentEntry.status === "planned" && (
-              <button
-                disabled={busy}
-                type="button"
-                className="button button--primary"
-                onClick={() => void changeStatus("in_progress")}
-              >
-                Iniciar
-              </button>
-            )}
-            {(currentEntry.status === "completed" ||
-              currentEntry.status === "abandoned" ||
-              currentEntry.status === "paused") && (
-              <button
-                className="button button--secondary"
-                type="button"
-                disabled={busy}
-                onClick={() => void changeStatus("in_progress")}
-              >
-                Retomar registro
-              </button>
-            )}
-            {currentEntry.status === "in_progress" && (
-              <button
-                className="button button--secondary"
-                type="button"
-                disabled={busy}
-                onClick={() => void changeStatus("paused")}
-              >
-                Pausar registro
-              </button>
-            )}
-            {currentEntry.status !== "completed" &&
-              currentEntry.status !== "abandoned" && (
-                <button
-                  disabled={busy}
-                  type="button"
-                  className="button button--secondary"
-                  onClick={() => void changeStatus("completed")}
-                >
-                  Concluir
-                </button>
-              )}
-          </div>
-        </section>
-        <SessionPanel
-          application={availableApplication}
-          entry={currentEntry}
-          onChanged={() => {
-            void availableApplication.queries.getLibraryEntry
-              .execute({ id })
-              .then(setEntry, (failure: unknown) =>
-                setError(presentApplicationError(failure).message),
-              );
-          }}
-        />
-        <RecordMemories
-          key={id}
-          application={availableApplication}
-          entry={currentEntry}
-          initialNotes={notes}
-          initialQuotes={quotes}
-        />
-        <OrganizationPanel
-          application={availableApplication}
-          entry={currentEntry}
-          onChange={setEntry}
-        />
-        <details className="record-care">
-          <summary>Cuidar deste registro</summary>
-          <p>
-            Excluir remove também notas, citações e sessões vinculadas. Esta
-            ação pede confirmação.
-          </p>
-          <button
-            className="button button--danger"
-            type="button"
-            disabled={busy}
-            onClick={() => void removeEntry()}
-          >
-            Excluir registro
-          </button>
-        </details>
-      </div>
-    </section>
+    <WorkDetailPage
+      key={id}
+      application={application}
+      entry={entry}
+      notes={notes}
+      quotes={quotes}
+      returnPath={returnPath}
+      onChange={setEntry}
+    />
   );
 }

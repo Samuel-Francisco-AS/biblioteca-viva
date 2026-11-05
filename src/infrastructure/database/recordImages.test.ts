@@ -43,7 +43,7 @@ it("upgrades v12 without rewriting any record, reopens book covers and movie pos
   await db.open();
   try {
     const images = new DexiePosters(db);
-    expect(db.verno).toBe(13);
+    expect(db.verno).toBe(14);
     expect(await db.libraryEntries.toArray()).toEqual([book, movie]);
     const image = { entryId: "b", dataUrl, width: 720, height: 1080 };
     await images.save(image);

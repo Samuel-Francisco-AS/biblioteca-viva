@@ -33,11 +33,12 @@ export const createBookEntrySchema = createBookInputSchema.omit({
 
 export const updateBookEntrySchema = updateBibliographicDataInputSchema
   .omit({ updatedAt: true })
-  .extend({ id: idSchema })
+  .extend({ id: idSchema, expectedRevision: z.int().positive().optional() })
   .refine(
     (input) =>
       Object.entries(input).some(
-        ([key, value]) => key !== "id" && value !== undefined,
+        ([key, value]) =>
+          key !== "id" && key !== "expectedRevision" && value !== undefined,
       ),
     { message: "Informe ao menos um campo para atualizar" },
   );

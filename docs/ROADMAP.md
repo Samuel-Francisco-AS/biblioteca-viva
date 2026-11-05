@@ -1,3 +1,11 @@
+## BF-5 — revisão do Atlas clássico
+
+Candidata estática projetada substitui o atlas articulado por solicitação do proprietário. Próximo trabalho aprovado: apreciação/refinamento desta apresentação e validação física acumulada no Moto G06, mantendo Empreitadas e avaliações. Sem encerramento BF-5 ou avanço automático à BF-6. [Relatório](BF-5_ATLAS_CLASSICO_PROJETADO.md).
+
+## BF-5 Parte 2F — continuidade aprovada
+
+Empreitadas, Atlas Vivo e avaliações implementados como candidata sobre a PR #29; [entrega](BF-5_PARTE2F_EMPREITADAS_ATLAS_AVALIACOES.md). Próximo trabalho aprovado: apreciação/refinamento da candidata e validação física ampla acumulada no Moto G06. BF-5 permanece aberta; BF-6/BF-7 e dívidas #21–#24 não são encerradas nem executadas por esta entrega. Sem merge automático.
+
 # BF-5 Parte 2E — sequência vigente (2026-11-04)
 
 Candidata de seletores internos, capas por registro e ateliê compartilhado entregue para revisão sobre a PR #28; [contrato e pendências](BF-5_PARTE2E_CONTROLES_CAPAS_ATELIE.md). Próxima avaliação: instalar APK preservando dados e executar o roteiro dirigido no Moto G06; refinar com feedback, sem encerrar BF-5 ou realizar merge automático. Testes físicos amplos acumulados para fase posterior por opção do proprietário.

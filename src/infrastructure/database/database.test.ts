@@ -244,7 +244,7 @@ describe("BibliotecaDatabase e migrações", () => {
     expect(await migrated.libraryEntries.count()).toBe(0);
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
       key: SCHEMA_MARKER_KEY,
-      value: "13",
+      value: "14",
     });
     migrated.close();
 
@@ -277,7 +277,7 @@ describe("BibliotecaDatabase e migrações", () => {
     expect(await migrated.settings.get("audio.preferences.v1")).toBeUndefined();
     expect(await migrated.milestones.count()).toBe(0);
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-      value: "13",
+      value: "14",
     });
     migrated.close();
 

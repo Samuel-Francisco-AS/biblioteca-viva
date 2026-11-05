@@ -1,3 +1,4 @@
+import { SaveEndeavor } from "../application/endeavors";
 import { SaveEntertainment } from "../application/entertainment";
 import type { PosterPort } from "../application/media";
 import { DexiePosters } from "../infrastructure/database/media";
@@ -158,6 +159,7 @@ export interface ApplicationRuntime {
   readonly commands: {
     readonly saveFlashCard: SaveFlashCard;
     readonly saveEntertainment: SaveEntertainment;
+    readonly saveEndeavor: SaveEndeavor;
     readonly saveWorkoutDay: SaveWorkoutDay;
     readonly deleteFlashCard: DeleteFlashCard;
     readonly addNote: AddNote;
@@ -414,6 +416,7 @@ export async function createApplication(
       createBookEntry: new CreateBookEntry(dependencies),
       createLibraryEntry: new CreateLibraryEntry(dependencies),
       saveEntertainment: new SaveEntertainment(dependencies),
+      saveEndeavor: new SaveEndeavor(dependencies),
       createManualSession: new CreateManualSession(dependencies),
       createTag: new CreateTag(dependencies),
       deleteBookEntry: new DeleteBookEntry(

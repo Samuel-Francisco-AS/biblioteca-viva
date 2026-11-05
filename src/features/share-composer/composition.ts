@@ -1,4 +1,5 @@
 export interface CompositionStyle {
+  readonly showRating?: boolean;
   readonly aspect: "post" | "story" | "square";
   readonly layout: "nocturne" | "premiere" | "folio";
   readonly frame?: "copper" | "lunar" | "none";
