@@ -25,7 +25,7 @@ export const posterSchema = z
       )
         throw new Error();
     } catch {
-      ctx.addIssue({ code: "custom", message: "Poster inválido" });
+      ctx.addIssue({ code: "custom", message: "Imagem de capa inválida" });
     }
   });
 export class DexiePosters implements PosterPort {
@@ -41,7 +41,12 @@ export class DexiePosters implements PosterPort {
       [this.db.media, this.db.libraryEntries],
       async () => {
         const owner = await this.db.libraryEntries.get(poster.entryId);
-        if (!owner || (owner.type !== "movie" && owner.type !== "series"))
+        if (
+          !owner ||
+          (owner.type !== "book" &&
+            owner.type !== "movie" &&
+            owner.type !== "series")
+        )
           throw new Error("Obra não encontrada.");
         await this.db.media.put(poster);
       },

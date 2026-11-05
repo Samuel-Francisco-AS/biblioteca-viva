@@ -1,3 +1,4 @@
+import { chooseOption } from "../../test/pickers";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -68,7 +69,11 @@ describe("prévia e entrega da leitura", () => {
       screen.getByRole("button", { name: "Criar imagem da leitura" }),
     );
     expect(await screen.findByRole("img")).toHaveAttribute("src", png.dataUrl);
-    expect(createBookImage).toHaveBeenCalledWith(book, undefined);
+    expect(createBookImage).toHaveBeenCalledWith(
+      book,
+      undefined,
+      expect.objectContaining({ aspect: "post", layout: "folio" }),
+    );
     await user.click(
       screen.getByRole("button", { name: "Compartilhar imagem" }),
     );
@@ -89,25 +94,34 @@ describe("prévia e entrega da leitura", () => {
       screen.getByRole("button", { name: "Criar imagem da leitura" }),
     );
     await screen.findByRole("img");
-    await user.selectOptions(screen.getByLabelText("Composição"), quote.id);
+    await chooseOption(user, screen.getByLabelText("Composição"), quote.id);
     await waitFor(() =>
-      expect(createBookImage).toHaveBeenLastCalledWith(book, quote),
+      expect(createBookImage).toHaveBeenLastCalledWith(
+        book,
+        quote,
+        expect.objectContaining({ mode: quote.id }),
+      ),
     );
-    await user.click(screen.getByText("Ajustar trecho para a imagem"));
     await user.clear(screen.getByLabelText("Trecho para a imagem"));
     await user.type(
       screen.getByLabelText("Trecho para a imagem"),
       "Uma passagem",
     );
-    const calls = vi.mocked(createBookImage).mock.calls.length;
-    await user.click(screen.getByRole("button", { name: "Atualizar prévia" }));
     await waitFor(() =>
-      expect(createBookImage).toHaveBeenCalledTimes(calls + 1),
+      expect(createBookImage).toHaveBeenLastCalledWith(
+        book,
+        { ...quote, content: "Uma passagem" },
+        expect.objectContaining({ mode: quote.id }),
+      ),
     );
-    expect(createBookImage).toHaveBeenLastCalledWith(book, {
-      ...quote,
-      content: "Uma passagem",
-    });
+    expect(createBookImage).toHaveBeenLastCalledWith(
+      book,
+      {
+        ...quote,
+        content: "Uma passagem",
+      },
+      expect.objectContaining({ mode: quote.id }),
+    );
     expect(quote.content).toBe("Uma passagem completa");
     const back = new Event("biblioteca-viva:native-back", { cancelable: true });
     fireEvent(window, back);

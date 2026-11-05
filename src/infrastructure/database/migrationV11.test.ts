@@ -54,7 +54,7 @@ it("upgrades v10 verbatim, reopens and round-trips/restores v6 with schedule, da
   old.close();
   const db = new BibliotecaDatabase(name);
   await db.open();
-  expect(db.verno).toBe(12);
+  expect(db.verno).toBe(13);
   expect(await db.libraryEntries.get(entry.id)).toEqual(entry);
   expect(await db.libraryEntries.get(study.id)).toEqual(study);
   expect(await db.sessions.get(session.id)).toEqual(session);

@@ -1,3 +1,11 @@
+# BF-5 Parte 2E — controles e ateliê (2026-11-04)
+
+Seleções de formulários/filtros/Ajustes e datas usam controles DOM internos (`BVSelectSheet`, `BVDatePicker`); opções provisórias só entram no registro ao confirmar o seletor e salvar o fluxo correspondente. Cancelar/Escape/Voltar mantêm o valor e restauram foco. Calendário mensal, campos numéricos e ausência opcional de data; formulário conserva FormData/validação. `<dialog>` na top layer cobre o dock e comporta rolagem nas duas orientações. Seleção de arquivo, Share e SAF continuam as pontes Android apropriadas; a causa da tela branca ainda não foi comprovada.
+
+Livro/Entretenimento mostram capa proporcional na identidade do fólio e editor recolhido nas ações da obra: escolher, pré-visualizar, Salvar capa; substituição e remoção são explícitas e canceláveis antes de salvar. Ausência conserva a identidade padrão.
+
+Ateliê compartilhado com PNG real como prévia, modos preservados, três proporções, composições/molduras, título/mensagem/trecho editáveis, alinhamento/posição predefinidos, capa/fundo local e escurecimento. Acabamento secundário recolhido, sem legendas longas. Entrega anterior fica indisponível enquanto a prévia está obsoleta; erros/cancelamento preservam a composição. [Parte 2E](BF-5_PARTE2E_CONTROLES_CAPAS_ATELIE.md) · [ADR-019](decisions/ADR-019-controles-internos-capas-atelie.md). **Validação Moto G06/TalkBack e artística pendente; BF-5 aberta.**
+
 # BF-5 Parte 2D — Entretenimento (2026-11-04)
 
 Coleção/cadastro/Arquivo/Resumo mostram cinco grupos; Entretenimento agrega estruturalmente Filme e Série. Quatro formatos em escolhas DOM, Anime/Animação com estrutura explícita, campos opcionais e rascunho protegido. Fólio cinematográfico contínuo: poster/identidade/estreia → acompanhamento → diário → compositor; organização/histórico/ações recolhidos. Desejos, favoritos e lançamentos se sobrepõem sem duplicação. PNG real 4:5/9:16, duas composições, mensagem e fundo local, prévia do próprio arquivo, Share/SAF e tratamento de cancelamento/falha. [Contrato completo, limites e roteiro físico](BF-5_PARTE2D_ENTRETENIMENTO.md). Sem aceite artístico/físico antecipado.

@@ -1,3 +1,9 @@
+# BF-5 Parte 2E — sequência vigente (2026-11-04)
+
+Candidata de seletores internos, capas por registro e ateliê compartilhado entregue para revisão sobre a PR #28; [contrato e pendências](BF-5_PARTE2E_CONTROLES_CAPAS_ATELIE.md). Próxima avaliação: instalar APK preservando dados e executar o roteiro dirigido no Moto G06; refinar com feedback, sem encerrar BF-5 ou realizar merge automático. Testes físicos amplos acumulados para fase posterior por opção do proprietário.
+
+Baralhos/cartas globais e revisão independente ficam em entrega própria futura. [ADR-020](decisions/ADR-020-baralhos-e-cartas-globais.md) recomenda arquitetura e transição, **sem autorizar migração ou minigame 3D nesta candidata**. Ordem BF-5 → BF-6 → BF-7 da ADR-014 preservada.
+
 > **Próxima avaliação aprovada — Parte 2D (2026-11-04):** revisar a candidata de [Entretenimento](BF-5_PARTE2D_ENTRETENIMENTO.md), encadeada à #27; acumular a validação física/artística das Partes 2/2B/2C/2D para a rodada posterior da BF-5, conforme orientação do proprietário. Refinar a partir desse feedback. Sem merge automático, fechamento BF-5, início BF-6/BF-7 ou publicação.
 
 > **BF-5 Parte 2C em candidata (2026-11-04):** após #25/#26, avaliar no Moto G06 a reconstrução de Atividade Física e refinar a experiência com feedback humano; testes físicos amplos permanecem acumulados por orientação do proprietário. Sem fechamento da BF-5 ou avanço para BF-6. [Escopo, limites e roteiro](BF-5_PARTE2C_ATIVIDADE_FISICA.md).

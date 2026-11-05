@@ -62,7 +62,9 @@ it("keeps the exact PNG for cancelled/unavailable/failed delivery and restores f
   await user.click(screen.getByRole("button", { name: "Compartilhar banner" }));
   expect(await screen.findByRole("status")).toHaveTextContent("indisponível");
   await user.click(screen.getByRole("button", { name: "Compartilhar banner" }));
-  expect(await screen.findByRole("alert")).toHaveTextContent("salvar o PNG");
+  expect(await screen.findByRole("alert")).toHaveTextContent(
+    "Tente Salvar PNG",
+  );
   await user.click(screen.getByRole("button", { name: "Salvar PNG" }));
   expect(await screen.findByRole("alert")).toHaveTextContent(
     "espaço disponível",

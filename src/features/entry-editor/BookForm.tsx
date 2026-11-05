@@ -1,3 +1,4 @@
+import { BVSelectSheet, BVDatePicker } from "../../ui/BVPicker";
 import { RitualChapter } from "./RitualFields";
 import { useRef, useState, type FormEvent } from "react";
 
@@ -60,10 +61,11 @@ export function BookForm({
     type = "text",
     locked = false,
   ) {
+    const Field = type === "date" ? BVDatePicker : "input";
     return (
       <div className="form-field inscription">
         <label htmlFor={field}>{label}</label>
-        <input
+        <Field
           id={field}
           name={field}
           type={type}
@@ -118,7 +120,7 @@ export function BookForm({
         </div>
         <div className="form-field">
           <label htmlFor="status">Status (obrigatório)</label>
-          <select
+          <BVSelectSheet
             id="status"
             name="status"
             value={values.status}
@@ -130,7 +132,7 @@ export function BookForm({
                 {statusLabels[status]}
               </option>
             ))}
-          </select>
+          </BVSelectSheet>
           {mode === "edit" && (
             <p className="field-help">
               O progresso e o status podem ser alterados no detalhe do livro.
@@ -143,7 +145,7 @@ export function BookForm({
         <div className="ritual-chapter__body">
           <div className="form-field">
             <label htmlFor="rating">Avaliação (opcional)</label>
-            <select
+            <BVSelectSheet
               id="rating"
               name="rating"
               value={values.rating}
@@ -155,7 +157,7 @@ export function BookForm({
                   {rating}
                 </option>
               ))}
-            </select>
+            </BVSelectSheet>
             {errors.rating && <p className="field-error">{errors.rating}</p>}
           </div>
           {inscription(

@@ -1,3 +1,9 @@
+# BF-5 Parte 2E — contorno interno dos seletores (2026-11-04)
+
+Relato do proprietário: no Moto G06, duração de foco e seleção de datas abriram superfície branca com símbolo azul, sem opções. Auditoria encontrou duas famílias que delegavam UI ao navegador/WebView: selects e calendários de data, incluindo helpers. A candidata elimina essas dependências dos formulários, filtros, sessões e Ajustes com opções/calendário DOM. Não há comprovação da causa nem de correção física antes da rodada no aparelho. Importação de arquivos e Share/SAF mantêm seus contratos nativos distintos.
+
+Back em capture fecha só o diálogo superior e devolve foco; folhas DOM usam top layer sobre o dock e limites de viewport/safe area. [ADR-019](decisions/ADR-019-controles-internos-capas-atelie.md) · [testes, APK e roteiro físico](BF-5_PARTE2E_CONTROLES_CAPAS_ATELIE.md). Sem instalação, TalkBack ou aprovação física automática.
+
 ## BF-5 Parte 2D — PNG cinematográfico
 
 Reutiliza Share/Filesystem e `ImageDocument` da Parte 2, ampliando somente o nome permitido para `biblioteca-viva-cinema.png`; SAF continua separado do backup, sem permissão ampla ou dependência nova. JPEG/PNG importados são locais/validados; compositor exporta PNG real independente do display. [Artefato, checks e roteiro Moto G06](BF-5_PARTE2D_ENTRETENIMENTO.md). Cancelamento/falhas têm tratamento automatizado, ainda sem prova física do seletor, compartilhamento, teclado ou espaço insuficiente.

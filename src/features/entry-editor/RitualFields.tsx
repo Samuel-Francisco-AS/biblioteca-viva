@@ -1,3 +1,4 @@
+import { BVSelectSheet, BVDatePicker } from "../../ui/BVPicker";
 import { useState } from "react";
 import { WorkoutFields, WorkoutSetup } from "./WorkoutFields";
 import type { ReactNode } from "react";
@@ -49,13 +50,14 @@ function Inscription({
   readonly numericStep?: string;
 }) {
   const id = `ritual-${name}`;
+  const Field = type === "date" ? BVDatePicker : "input";
   return (
     <div className={`form-field inscription inscription--${name}`}>
       <label htmlFor={id}>{label}</label>
       {multiline ? (
         <textarea id={id} name={name} defaultValue={value} rows={3} />
       ) : (
-        <input
+        <Field
           id={id}
           name={name}
           defaultValue={value}
@@ -239,7 +241,7 @@ export function RitualFields({
           <div className="ritual-pair">
             <div className="form-field">
               <label htmlFor="ritual-progressUnit">Unidade de progresso</label>
-              <select
+              <BVSelectSheet
                 id="ritual-progressUnit"
                 name="progressUnit"
                 value={unit}
@@ -265,7 +267,7 @@ export function RitualFields({
                     }
                   </option>
                 ))}
-              </select>
+              </BVSelectSheet>
             </div>
             <Inscription
               name="progressTotal"

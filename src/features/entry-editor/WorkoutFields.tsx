@@ -1,3 +1,4 @@
+import { BVDatePicker } from "../../ui/BVPicker";
 import { workoutTypes, weekLabels } from "./workoutFormModel";
 import { useRef, useState } from "react";
 import type { Exercise, PhysicalActivityEntry } from "../../domain";
@@ -35,8 +36,7 @@ export function WorkoutSetup({
       <div className="ritual-pair">
         <label className="form-field">
           Data de início
-          <input
-            type="date"
+          <BVDatePicker
             name="workoutStart"
             defaultValue={entry?.schedule?.start}
             required
@@ -44,8 +44,7 @@ export function WorkoutSetup({
         </label>
         <label className="form-field">
           Data final
-          <input
-            type="date"
+          <BVDatePicker
             name="workoutEnd"
             defaultValue={entry?.schedule?.end}
             required

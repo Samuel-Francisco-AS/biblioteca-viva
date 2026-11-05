@@ -1,3 +1,4 @@
+import { BVSelectSheet } from "../../ui/BVPicker";
 import {
   useCallback,
   useEffect,
@@ -349,7 +350,7 @@ export function StudyDetailPage({
           <summary>Ações do estudo</summary>
           <label className="form-field">
             Estado do percurso
-            <select
+            <BVSelectSheet
               disabled={busy}
               value={entry.status}
               onChange={(event) =>
@@ -369,7 +370,7 @@ export function StudyDetailPage({
                   {statusLabels[status]}
                 </option>
               ))}
-            </select>
+            </BVSelectSheet>
           </label>
           {entry.deadline && (
             <p>

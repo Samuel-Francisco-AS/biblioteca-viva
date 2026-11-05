@@ -1,3 +1,4 @@
+import { BVDatePicker } from "../../ui/BVPicker";
 import { useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { LibraryEntry } from "../../domain";
@@ -71,10 +72,11 @@ export function EntertainmentEditor({
     required = false,
     min = 1,
   ) {
+    const Field = type === "date" ? BVDatePicker : "input";
     return (
       <label className="form-field">
         {label}
-        <input
+        <Field
           name={name}
           defaultValue={value}
           type={type}

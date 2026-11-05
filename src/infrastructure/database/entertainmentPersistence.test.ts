@@ -93,10 +93,10 @@ it("upgrades v11 verbatim, reopens legacy sessions and adds one poster table wit
   const db = new BibliotecaDatabase(name);
   dbs.push(db);
   await db.open();
-  expect(db.verno).toBe(12);
+  expect(db.verno).toBe(13);
   expect(await db.libraryEntries.toArray()).toEqual([movie, series]);
   expect(await db.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-    value: "12",
+    value: "13",
   });
   const store = new DexiePosters(db);
   await store.save(await poster(movie.id));

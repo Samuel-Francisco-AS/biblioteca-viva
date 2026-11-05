@@ -71,7 +71,9 @@ describe("Coleção", () => {
       await screen.findByRole("heading", { name: book.title }),
     ).toBeVisible();
     expect(screen.getByText(book.author ?? "")).toBeVisible();
-    expect(screen.getAllByText("Em andamento")).toHaveLength(2);
+    expect(
+      screen.getByText("Em andamento", { selector: ".status-badge" }),
+    ).toBeVisible();
     expect(screen.getByText("50 de 200 páginas (25%)")).toBeVisible();
     expect(
       screen.getByRole("progressbar", { name: `Progresso de ${book.title}` }),
@@ -133,8 +135,8 @@ describe("Coleção", () => {
     expect(await screen.findByLabelText("Buscar registros")).toHaveValue(
       "cidade",
     );
-    expect(screen.getByLabelText("Status")).toHaveValue("in_progress");
-    expect(screen.getByLabelText("Ordenar por")).toHaveValue("title");
+    expect(screen.getByLabelText("Status")).toHaveTextContent("Em andamento");
+    expect(screen.getByLabelText("Ordenar por")).toHaveTextContent("Título");
     await user.clear(screen.getByLabelText("Buscar registros"));
     await user.type(screen.getByLabelText("Buscar registros"), "serras");
     await waitFor(() =>
@@ -172,8 +174,12 @@ describe("Coleção", () => {
       Promise.resolve([book]),
       "/colecao?status=unknown&sort=wrong",
     );
-    expect(await screen.findByLabelText("Status")).toHaveValue("all");
-    expect(screen.getByLabelText("Ordenar por")).toHaveValue("recent");
+    expect(await screen.findByLabelText("Status")).toHaveTextContent(
+      "Todos os status",
+    );
+    expect(screen.getByLabelText("Ordenar por")).toHaveTextContent(
+      "Atualização recente",
+    );
   });
 });
 

@@ -1,3 +1,4 @@
+import { chooseBVOption, chooseBVDate } from "./pickers";
 import {
   expect,
   test as base,
@@ -133,7 +134,11 @@ async function createBook(page: Page, fixture: BookFixture): Promise<void> {
       .getByLabel("Página atual (obrigatório)")
       .fill(String(fixture.currentPage));
   if (fixture.status)
-    await page.getByLabel("Status (obrigatório)").selectOption(fixture.status);
+    await chooseBVOption(
+      page,
+      page.getByLabel("Status (obrigatório)"),
+      fixture.status,
+    );
   await page.getByRole("button", { name: "Salvar livro" }).click();
   await expect(
     page.getByRole("heading", { name: fixture.title }),
@@ -199,8 +204,8 @@ export { expect } from "@playwright/test";
 
 /** Supply the mandatory BF-5 Parte 2C plan in generic six-type creation flows. */
 export async function fillWorkoutPlan(page: Page) {
-  await page.getByLabel("Data de início").fill("2026-11-01");
-  await page.getByLabel("Data final").fill("2026-11-30");
+  await chooseBVDate(page, page.getByLabel("Data de início"), "2026-11-01");
+  await chooseBVDate(page, page.getByLabel("Data final"), "2026-11-30");
   await page.getByRole("checkbox", { name: "Qua", exact: true }).check();
   await page
     .getByRole("button", { name: "Adicionar exercício", exact: true })

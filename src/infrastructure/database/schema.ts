@@ -22,7 +22,7 @@ import {
 import { z } from "zod";
 
 export const DATABASE_NAME = "biblioteca-viva";
-export const DATABASE_VERSION = 12;
+export const DATABASE_VERSION = 13;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
 export const DATABASE_SCHEMA_V1 = {
@@ -79,6 +79,8 @@ export const DATABASE_SCHEMA_V12 = {
   ...DATABASE_SCHEMA_V11,
   media: "&entryId",
 } as const;
+
+export const DATABASE_SCHEMA_V13 = { ...DATABASE_SCHEMA_V12 } as const;
 
 const isoUtc = z.iso.datetime({ offset: false });
 const entityMetadata = {

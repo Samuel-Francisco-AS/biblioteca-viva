@@ -1,3 +1,5 @@
+[BF-5 Parte 2E — seletores, capas e ateliê](BF-5_PARTE2E_CONTROLES_CAPAS_ATELIE.md): candidata sobre a #28, com [ADR-019](decisions/ADR-019-controles-internos-capas-atelie.md) e [recomendação de baralhos globais](decisions/ADR-020-baralhos-e-cartas-globais.md). BF-5 aberta; teste físico pendente.
+
 [BF-5 Parte 2D — Entretenimento, catálogo e compositor cinematográfico](BF-5_PARTE2D_ENTRETENIMENTO.md): candidata encadeada à #27, com [ADR-018](decisions/ADR-018-entretenimento-catalogo-midia-local.md), mídia local e preservação dos seis tipos técnicos. BF-5 aberta.
 
 [BF-5 Parte 2C — ficha viva, gráfico e estimativa local](BF-5_PARTE2C_ATIVIDADE_FISICA.md): candidata sobre a PR #26, Dexie v11 aditiva e backup v6; [ADR-017](decisions/ADR-017-ficha-viva-e-estimativa-local.md). BF-5 aberta.

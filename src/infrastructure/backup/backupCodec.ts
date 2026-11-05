@@ -174,13 +174,15 @@ function sorted(data: BackupData): BackupData {
 function rejectDuplicates(data: BackupData): void {
   const owners = new Set(
     data.libraryEntries
-      .filter((e) => e.type === "movie" || e.type === "series")
+      .filter(
+        (e) => e.type === "book" || e.type === "movie" || e.type === "series",
+      )
       .map((e) => e.id),
   );
   if (data.media?.some((p) => !owners.has(p.entryId)))
     throw new BackupError(
       "INVALID_BACKUP_DATA",
-      "Poster sem obra correspondente.",
+      "Capa sem obra correspondente.",
     );
   const collections: readonly (readonly string[])[] = [
     (data.media ?? []).map(({ entryId }) => entryId),

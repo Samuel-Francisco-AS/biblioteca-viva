@@ -1,0 +1,161 @@
+.bv-picker-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid #92715f;
+  border-radius: 8px;
+  background: #faf1df;
+  color: #392739;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.bv-picker-trigger:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.bv-picker-trigger:focus-visible,
+.bv-picker-sheet :focus-visible {
+  outline: 3px solid #825268;
+  outline-offset: 3px;
+}
+.bv-picker-value {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  opacity: 0;
+  pointer-events: none;
+}
+.bv-picker-sheet {
+  color-scheme: light;
+  box-sizing: border-box;
+  color: #392739;
+  background: linear-gradient(135deg, #fff8e9, #eee0ca);
+  border: 1px solid #ad865d;
+  border-radius: 18px;
+  width: min(94vw, 480px);
+  max-height: calc(
+    100dvh - 2rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+  );
+  overflow-y: auto;
+  padding: 1.1rem;
+  box-shadow: 0 20px 90px #160f2299;
+  overscroll-behavior: contain;
+}
+.bv-picker-sheet::backdrop {
+  background: #211525bb;
+}
+.bv-picker-sheet header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid #ad865d;
+  margin-bottom: 1rem;
+}
+.bv-picker-sheet h2 {
+  color: #392739;
+  font:
+    1.35rem Georgia,
+    serif;
+  margin: 0.5rem 0 1rem;
+}
+.bv-picker-sheet .text-button {
+  background: #faf1df;
+  border: 1px solid #b89d80;
+  border-radius: 6px;
+  font: inherit;
+  color: #683c56;
+  min-width: 44px;
+  min-height: 44px;
+}
+.bv-picker-options {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.bv-picker-options label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem;
+  border: 1px solid #b89d80;
+  border-radius: 8px;
+  min-height: 48px;
+  cursor: pointer;
+}
+.bv-picker-options label:has(:checked) {
+  background: #e6d4c2;
+  border-color: #683c56;
+}
+.bv-picker-options input {
+  width: 20px;
+  height: 20px;
+  accent-color: #683c56;
+}
+.bv-picker-confirm {
+  margin-top: 1rem;
+  width: 100%;
+}
+.bv-date-parts {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 0.6rem;
+}
+.bv-date-parts label {
+  display: grid;
+  gap: 0.3rem;
+}
+.bv-date-parts input {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem;
+  border: 1px solid #92715f;
+  border-radius: 6px;
+  color: #392739;
+  background: #fff8e9;
+  font: inherit;
+}
+.bv-calendar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.8rem 0;
+  text-transform: capitalize;
+}
+.bv-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.bv-calendar button {
+  min-height: 44px;
+  padding: 0;
+  font: inherit;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: #f7eddd;
+  color: #392739;
+}
+.bv-calendar button[aria-pressed="true"] {
+  color: #fff3df;
+  background: #542b4a;
+}
+.bv-calendar button:disabled {
+  opacity: 0.35;
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .bv-picker-sheet {
+    width: min(94vw, 620px);
+  }
+}

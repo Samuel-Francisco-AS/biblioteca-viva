@@ -1,3 +1,7 @@
+import { useRecordCover } from "../../ui/useRecordCover";
+import type { PosterPort } from "../../application/media";
+import { RecordCoverEditor } from "../../ui/RecordCoverEditor";
+import { BVSelectSheet } from "../../ui/BVPicker";
 import { ArtifactGlyph } from "../../app/ArtifactGlyph";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
@@ -28,6 +32,7 @@ import { ProgressForm } from "./ProgressForm";
 import { StatusActions } from "./StatusActions";
 
 export interface BookDetailApplication {
+  readonly posters?: PosterPort;
   readonly imageFiles?: ImageFilesPort;
   readonly commands: {
     readonly addNote: { execute(input: unknown): Promise<Note> };
@@ -201,6 +206,11 @@ export function BookDetailPage({
 }) {
   const { id = "" } = useParams();
   const navigate = useNavigate();
+  const {
+    cover,
+    setCover,
+    error: coverError,
+  } = useRecordCover(application?.posters, id);
   const [searchParams] = useSearchParams();
   const returnPath = safeReturnPath(searchParams.get("from"));
   const [book, setBook] = useState<BookEntry>();
@@ -333,10 +343,22 @@ export function BookDetailPage({
           Ações do livro ↓
         </a>
       </nav>
-      <header className="folio-identity">
-        <span className="folio-emblem" aria-hidden="true">
-          <ArtifactGlyph type="book" />
-        </span>
+      <header
+        className={`folio-identity${cover ? " folio-identity--covered" : ""}`}
+      >
+        {cover ? (
+          <img
+            className="folio-book-cover"
+            src={cover.dataUrl}
+            width={cover.width}
+            height={cover.height}
+            alt={`Capa de ${book.title}`}
+          />
+        ) : (
+          <span className="folio-emblem" aria-hidden="true">
+            <ArtifactGlyph type="book" />
+          </span>
+        )}
         <div className="folio-identity-text">
           <p className="folio-kicker">Códice pessoal · Livro</p>
           <h2 id="detail-title">{book.title}</h2>
@@ -406,13 +428,13 @@ export function BookDetailPage({
           <summary>Escrever nas margens</summary>
           <label className="form-field">
             Tipo de anotação
-            <select
+            <BVSelectSheet
               value={annotationKind}
               onChange={(event) => setAnnotationKind(event.target.value)}
             >
               <option value="note">Nota pessoal</option>
               <option value="quote">Citação textual</option>
-            </select>
+            </BVSelectSheet>
           </label>
           <div hidden={annotationKind !== "note"}>
             <NoteForm
@@ -494,11 +516,20 @@ export function BookDetailPage({
         <BookImageShare
           book={book}
           quotes={quotes}
+          poster={cover}
           files={application.imageFiles}
         />
       </section>
       <details className="folio-secondary" id="book-secondary">
         <summary>Ações do livro</summary>
+        {coverError && <p role="alert">{coverError}</p>}
+        <RecordCoverEditor
+          key={book.id}
+          entryId={book.id}
+          images={application.posters}
+          cover={cover}
+          onSaved={setCover}
+        />
         <Link
           className="button button--secondary"
           to={`/registros/${encodeURIComponent(book.id)}/editar?from=${encodeURIComponent(returnPath)}`}

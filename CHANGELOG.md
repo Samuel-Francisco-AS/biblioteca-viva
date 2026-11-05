@@ -1,3 +1,11 @@
+## BF-5 Parte 2E — candidata (2026-11-04)
+
+- Seletores internos com confirmação/cancelamento e Voltar; calendário DOM para datas em formulários, atividade física, entretenimento e sessões. Filtros/Ajustes e duração de foco também deixam de abrir seletores nativos.
+- Capas locais persistentes para livros e entretenimento, com prévia, substituição e remoção explícitas; Dexie v13 aditiva e backup v6 com ownership validado.
+- Ateliê compartilhado offline: modos anteriores, PNG 4:5/9:16/1:1, composições/molduras, capa/fundo, título/trecho/mensagem, alinhamento/posição e escurecimento; prévia do arquivo real e entrega Android existente.
+- ADR de evolução dos flashcards para baralhos/cartas globais; sem migração ou minigame nesta entrega.
+- BF-5 aberta; causa Android e correção física ainda dependem da validação Moto G06. [Relatório](docs/BF-5_PARTE2E_CONTROLES_CAPAS_ATELIE.md).
+
 ## 2026-11-04 — BF-5 Parte 2D (candidata)
 
 - Entretenimento reúne filmes/séries visualmente e adiciona Anime/Animação unitários ou episódicos, desejos, favoritos, estreias civis e acompanhamento. Cinco grupos na Coleção/cadastro/Arquivo/Resumo, seis tipos técnicos e mundo preservados.

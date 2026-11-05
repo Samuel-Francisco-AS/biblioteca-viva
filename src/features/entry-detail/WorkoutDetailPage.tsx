@@ -1,3 +1,4 @@
+import { BVDatePicker } from "../../ui/BVPicker";
 import { ApplicationError } from "../../application";
 import { useAppResume } from "../../app/useAppResume";
 import { useCallback, useRef, useState } from "react";
@@ -309,8 +310,8 @@ export function WorkoutDetailPage({
           </div>
           <label className="form-field">
             Dia
-            <input
-              type="date"
+            <BVDatePicker
+              required
               value={date}
               disabled={busy}
               onChange={(e) => e.target.value && select(e.target.value)}

@@ -1,3 +1,4 @@
+import { chooseBVOption } from "./pickers";
 import { expect, test } from "./fixtures";
 
 test("ciclo principal persiste livro, edição, anotações e conclusão", async ({
@@ -39,7 +40,7 @@ test("ciclo principal persiste livro, edição, anotações e conclusão", async
       .last(),
   ).toBeVisible();
 
-  await page.getByLabel("Tipo de anotação").selectOption("quote");
+  await chooseBVOption(page, page.getByLabel("Tipo de anotação"), "quote");
   await page
     .getByLabel("Citação (obrigatório)")
     .fill("Citação fictícia para regressão.");
