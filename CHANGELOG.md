@@ -1,3 +1,13 @@
+## 2026-11-05 — BF-5 integrada e encerrada no escopo aprovado (com ressalvas)
+
+- Integração ordenada das PRs [#25](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/25) a [#30](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/30) na `main`, preservando os commits de merge; merge final `1df8adad`.
+- Coleção e Livros: seleção tátil confirmada, fólio, progresso, anotações/citações, capas, avaliações por estrelas e PNG.
+- Estudo: pomodoro persistido, caderno e cartas locais. Atividade Física: ficha-base, execuções adaptáveis, frequência, MET e Atlas Clássico de seis gravuras com dissolução.
+- Entretenimento: catálogo, subformatos, favoritos/desejos, estreias e compartilhamento; Trabalho: Empreitadas, etapas/tarefas, progresso real e diário. Controles DOM próprios para opções/datas; ateliê compartilhado.
+- Dexie v14 aditiva; backup v6 compatível com arquivos anteriores, sem downgrade garantido. Mundo 3D e seis tipos técnicos preservados.
+- **Aceite do proprietário no Moto G06 para o observado, não gate completo:** CI da PR #30 com estáticos/unitários/build PASS e E2E global FAIL. Pendências de backup, sessões, E2E/Canvas/TalkBack e saneamento CSS rastreadas em #21–#24. Sem beta ou publicação.
+- [**Decisão de fechamento, histórico e dívidas**](docs/BF-5_FECHAMENTO_2026-11-05.md). As entradas “candidata” abaixo são cronologia das entregas antes da integração.
+
 ## BF-5 — Atlas clássico projetado, candidata 2026-11-05
 
 - Substituído atlas articulado por seis gravuras originais estáticas masculinas/femininas, com rotação contemplativa, dissolução, pausa e avanço manual.
