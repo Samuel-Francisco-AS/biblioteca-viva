@@ -4,6 +4,7 @@ import { LivingSession } from "./livingObjects";
 import { createLivingVisuals } from "./three/livingVisuals";
 import { createInhabitantSceneProps } from "./three/inhabitantSceneProps";
 import { InhabitantAgency } from "./inhabitantAgency";
+import { NightLightingSession } from "./nightLighting";
 import { INHABITANTS, INHABITANT_ENVELOPES } from "./inhabitants";
 import {
   InhabitantNavigation,
@@ -110,6 +111,35 @@ describe("BF-4F3 real spatial navigation", () => {
 });
 
 describe("BF-4F3 local agency", () => {
+  it("performs a reachable autonomous night-lamp ritual with an exclusive lease", () => {
+    let elapsed = 0;
+    const night = new NightLightingSession(() => new Date(2026, 10, 5, 22));
+    const agency = new InhabitantAgency(realNavigation(), {
+      now: () => elapsed,
+      hour: () => 22,
+      seed: 42,
+      nightLighting: night,
+    });
+    const aryn = INHABITANTS.find((a) => a.key === "aryn")!;
+    agency.setAvailable(aryn.id, true);
+    agency.setMode("running");
+    agency.update();
+    let observedGesture = false;
+    for (let step = 0; step < 10000 && night.getSnapshot().completedLampIds.length === 0; step++) {
+      elapsed += 100;
+      agency.update();
+      observedGesture ||= agency.getPoses().some((pose) => pose.key === "aryn" && pose.action === "gesture");
+    }
+    expect(observedGesture).toBe(true);
+    expect(night.getSnapshot().completedLampIds.length).toBeGreaterThan(0);
+    expect(night.getSnapshot().completedLampIds.length).toBeLessThanOrEqual(9);
+    const completed = night.getSnapshot().completedLampIds[0]!;
+    expect(night.complete(completed)).toBe(false);
+    agency.setMode("paused");
+    expect(agency.getPoses().some((pose) => pose.interactionObjectId === completed)).toBe(false);
+    agency.dispose();
+  });
+
   it("completes the autonomous book interaction from canonical layout point to release", () => {
     const navigation = realNavigation();
     const s = session(navigation);

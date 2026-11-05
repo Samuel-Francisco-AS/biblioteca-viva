@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   Box3,
   HemisphereLight,
+  PointLight,
   Mesh,
   Object3D,
   Scene,
@@ -17,11 +18,45 @@ function isMesh(
   return object instanceof Mesh;
 }
 import { LivingSession } from "../livingObjects";
+import { NIGHT_LAMPS, NightLightingSession } from "../nightLighting";
 import { createProceduralLibraryBuilding } from "./proceduralLibraryBuilding";
 import { createLivingVisuals } from "./livingVisuals";
 import { disposeObjectTree } from "./referenceScene";
 import { LIBRARY_ROOMS } from "../libraryBuildingGeometry";
 describe("living visuals", () => {
+  it("illuminates nine real shades after dusk and preserves the manually controlled secret lamp", () => {
+    let now = new Date(2026, 10, 5, 17, 59);
+    const night = new NightLightingSession(() => now);
+    const scene = new Scene();
+    const building = createProceduralLibraryBuilding(true);
+    scene.add(building);
+    const living = new LivingSession(() => now);
+    const visuals = createLivingVisuals(building, scene, living, night);
+    const fixtures = NIGHT_LAMPS.map((fixture) =>
+      building.getObjectByName(`${fixture.id}:light`),
+    );
+    expect(fixtures).toHaveLength(9);
+    expect(fixtures.every((fixture) => fixture instanceof PointLight)).toBe(true);
+    visuals.update(0, true);
+    expect(fixtures.every((fixture) => (fixture as PointLight).intensity === 0)).toBe(true);
+    now = new Date(2026, 10, 5, 18, 0);
+    night.refreshContext();
+    living.refreshContext();
+    visuals.update(0, true);
+    expect(fixtures.every((fixture) => (fixture as PointLight).intensity > 0)).toBe(true);
+    expect(visuals.selectables.find((item) => item.descriptor.id === "living:lamp")?.light?.intensity).toBe(0);
+    expect(living.getSnapshot().discovery).toBe(0);
+    night.complete(NIGHT_LAMPS[0]!.id);
+    visuals.update(0, true);
+    expect((fixtures[0] as PointLight).intensity).toBe(4.2);
+    now = new Date(2026, 10, 6, 6);
+    night.refreshContext();
+    living.refreshContext();
+    visuals.update(0, true);
+    expect(fixtures.every((fixture) => (fixture as PointLight).intensity === 0)).toBe(true);
+    disposeObjectTree(scene);
+  });
+
   it("animates real pieces, lights the scene and disposes resources exactly once", () => {
     const scene = new Scene();
     const building = createProceduralLibraryBuilding(true);
