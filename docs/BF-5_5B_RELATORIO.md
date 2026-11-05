@@ -1,6 +1,6 @@
 # BF-5.5B — Tarefas, reservas e manipulação física de objetos
 
-**Data:** 05/11/2026. **Estado:** candidata na PR draft encadeada à BF-5.5A (#32); sem merge, aceite físico ou CI global verde.
+**Data:** 05/11/2026. **Estado:** candidata na [PR draft #33](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/33), encadeada à BF-5.5A (#32); sem merge, aceite físico ou CI global verde.
 
 ## Auditoria da BF-5.5A
 
