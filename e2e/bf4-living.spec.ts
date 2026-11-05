@@ -79,7 +79,12 @@ test("BF-4E: tocar a luminária executa e repete ação sem botões React", asyn
   const box = await canvas.boundingBox();
   if (!box) throw new Error("Canvas ausente");
   const camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 100);
-  const navigation = new CameraNavigation(camera, 0.7, LIBRARY_ROOMS);
+  const navigation = new CameraNavigation(
+    camera,
+    Number(await canvas.getAttribute("data-camera-zoom")),
+    LIBRARY_ROOMS,
+    10,
+  );
   navigation.setViewport(Math.round(box.width), Math.round(box.height));
   camera.updateMatrixWorld();
   const point = new Vector3(-4.5, 1.43, -2).project(camera);

@@ -1,5 +1,7 @@
 import {
   BoxGeometry,
+  PlaneGeometry,
+  DoubleSide,
   CylinderGeometry,
   Group,
   Mesh,
@@ -9,25 +11,16 @@ import {
   Vector3,
   type Object3D,
 } from "three";
-import type { LivingScroll } from "../../../application/livingScrolls";
+import type { LivingScroll } from "../../../contracts/livingScroll";
 import type { AgentView } from "../inhabitantAgency";
-import { LIBRARY_FURNISHING } from "./libraryFurnishingLayout";
-
-// Narrow lanes along the free outer edges of existing desks; no wall crossings.
-export const SCROLL_SURFACES = LIBRARY_FURNISHING.filter(
-  (p) => p.kind === "study" || p.kind === "cabinet",
-).flatMap((p) =>
-  (p.kind === "cabinet" ? [-1] : [-1, 1]).map((side) => ({
-    x: p.x + side * (p.kind === "study" ? 1 : 0.72),
-    z: p.z - 0.22,
-    y: p.kind === "study" ? 0.92 : 1.11,
-  })),
-);
-export function scrollFlight(t: number) {
-  const u = Math.max(0, Math.min(1, t));
-  const smooth = u * u * (3 - 2 * u);
-  return { z: 0.38 * smooth, y: 0.7 * Math.sin(Math.PI * u) ** 2 };
-}
+import {
+  SCROLL_SURFACES,
+  flightObstacles,
+  planScrollFlight,
+  sampleScrollFlight,
+  type ScrollSurface,
+} from "./scrollFlightRoutes";
+export { SCROLL_SURFACES } from "./scrollFlightRoutes";
 export function enchantmentAt(seconds: number) {
   const phase = seconds % 90;
   return phase < 60 ? 0 : Math.sin((Math.PI * (phase - 60)) / 30) ** 2;
@@ -35,13 +28,19 @@ export function enchantmentAt(seconds: number) {
 export function createLivingScrollVisuals(
   building: Group,
   scrolls: readonly LivingScroll[],
+  obstacleRoots: readonly Object3D[] = [building],
 ) {
   if (scrolls.length === 0)
     return { selectables: [], candidates: () => [], update: () => {} };
+  const obstacles = obstacleRoots.flatMap(flightObstacles);
   const root = new Group();
   root.name = "living-scrolls";
   building.add(root);
-  const paper = new MeshStandardMaterial({ color: 0xd8b77c, roughness: 0.95 });
+  const paper = new MeshStandardMaterial({
+    color: 0xd8b77c,
+    roughness: 0.95,
+    side: DoubleSide,
+  });
   const gold = new MeshStandardMaterial({
     color: 0xa77c36,
     metalness: 0.65,
@@ -56,12 +55,24 @@ export function createLivingScrollVisuals(
   const roll = new CylinderGeometry(0.035, 0.035, 0.26, 12);
   let elapsed = 0;
   const selectables = scrolls.slice(0, 10).map((scroll, i) => {
-    const surface = SCROLL_SURFACES[i];
+    const surface = SCROLL_SURFACES[(i * 2) % SCROLL_SURFACES.length];
     const group = new Group();
     group.position.set(surface.x, surface.y, surface.z);
     root.add(group);
-    const sheet = new Mesh(box, paper);
-    sheet.scale.set(0.25, 0.012, 0.25);
+    const sheetGeometry = new PlaneGeometry(0.25, 0.25, 8, 12);
+    const vertices = sheetGeometry.attributes.position;
+    for (let v = 0; v < vertices.count; v++) {
+      const x = vertices.getX(v),
+        z = vertices.getY(v);
+      vertices.setXYZ(
+        v,
+        x,
+        0.006 + 0.012 * Math.pow(Math.abs(z) / 0.125, 6),
+        z,
+      );
+    }
+    sheetGeometry.computeVertexNormals();
+    const sheet = new Mesh(sheetGeometry, paper);
     group.add(sheet);
     for (const z of [-0.14, 0.14]) {
       const cylinder = new Mesh(roll, paper);
@@ -99,6 +110,14 @@ export function createLivingScrollVisuals(
       index: i,
       held: false,
       reservedPosition: group.position.clone(),
+      rest: surface,
+      flight: null as {
+        points: readonly Vector3[];
+        destination: ScrollSurface;
+        time: number;
+      } | null,
+      wakeAt: 15 + i * 5,
+      history: [] as Vector3[],
     };
   });
   return {
@@ -108,8 +127,10 @@ export function createLivingScrollVisuals(
         .filter(
           (s) =>
             !s.held &&
-            Math.abs(s.root.position.y - s.surface.y) < 0.02 &&
-            (elapsed + s.index * 7) % 48 < 30,
+            !s.flight &&
+            s.root.position.distanceTo(
+              new Vector3(s.rest.x, s.rest.y, s.rest.z),
+            ) < 0.02,
         )
         .map((s) => ({
           id: s.descriptor.id,
@@ -128,17 +149,39 @@ export function createLivingScrollVisuals(
         );
         if (pose && !s.held) s.reservedPosition.copy(s.root.position);
         s.held = Boolean(pose);
-        const cycle = (elapsed + s.index * 7) % 48;
-        const flight = !reduced && !pose && cycle > 30;
-        const step = scrollFlight(flight ? (cycle - 30) / 18 : 0);
-        // Alternate outward/return journeys without accumulating displacement.
-        const outward = Math.floor((elapsed + s.index * 7) / 48) % 2 === 0;
-        const z = reduced ? 0 : outward ? step.z : 0.38 - step.z;
-        const target = new Vector3(
-          s.surface.x,
-          s.surface.y + step.y,
-          s.surface.z + z,
-        );
+        if (!pose && !reduced && !s.flight && elapsed >= s.wakeAt) {
+          const occupied = new Set(
+            selectables
+              .filter((o) => o !== s)
+              .flatMap((o) => [
+                o.rest.id,
+                ...(o.flight ? [o.flight.destination.id] : []),
+              ]),
+          );
+          for (const destination of SCROLL_SURFACES.filter(
+            (p) => !occupied.has(p.id),
+          )) {
+            const points = planScrollFlight(s.rest, destination, obstacles);
+            if (points) {
+              s.flight = { points, destination, time: 0 };
+              break;
+            }
+          }
+          s.wakeAt = elapsed + 45 + s.index * 3;
+        }
+        if (s.flight && !pose) {
+          // Reduced motion completes the already validated journey without animation.
+          s.flight.time += reduced ? 18 : Math.min(delta, 0.1);
+          if (s.flight.time >= 18) {
+            s.rest = s.flight.destination;
+            s.flight = null;
+            s.wakeAt = elapsed + 35 + s.index * 3;
+          }
+        }
+        const flight = Boolean(s.flight);
+        const target = s.flight
+          ? sampleScrollFlight(s.flight.points, s.flight.time / 18)
+          : new Vector3(s.rest.x, s.rest.y, s.rest.z);
         if (pose) target.copy(s.reservedPosition);
         if (
           pose &&
@@ -155,14 +198,30 @@ export function createLivingScrollVisuals(
         }
         if (reduced) s.root.position.copy(target);
         else s.root.position.lerp(target, Math.min(1, delta * 5));
-        s.root.rotation.z = flight ? Math.sin(elapsed * 1.2) * 0.09 : 0;
-        s.sheet.scale.z =
-          0.25 + (flight ? Math.sin((Math.PI * (cycle - 30)) / 18) * 0.07 : 0);
-        s.trail.visible = flight;
+        const intensity = s.flight
+          ? Math.sin((Math.PI * s.flight.time) / 18)
+          : 0;
+        s.root.rotation.z = reduced
+          ? 0
+          : Math.sin(elapsed * 2.1) * 0.12 * intensity;
+        s.root.rotation.x = reduced
+          ? 0
+          : Math.sin(elapsed * 1.3) * 0.08 * intensity;
+        if (s.flight) {
+          const direction = s.flight.points[2].clone().sub(s.flight.points[1]);
+          const yaw = Math.atan2(direction.x, direction.z) * intensity;
+          s.root.rotation.y +=
+            Math.atan2(
+              Math.sin(yaw - s.root.rotation.y),
+              Math.cos(yaw - s.root.rotation.y),
+            ) * Math.min(1, delta * 2);
+        }
+        s.sheet.scale.z = 1 + intensity * 0.25;
+        s.trail.visible = flight && !reduced;
+        s.history.unshift(s.root.position.clone());
+        s.history.length = Math.min(s.history.length, 36);
         s.trail.children.forEach((m, j) => {
-          m.position.copy(s.root.position);
-          m.position.y -= j * 0.025;
-          m.position.z -= j * 0.025 * (outward ? 1 : -1);
+          m.position.copy(s.history[Math.min(s.history.length - 1, j * 4)]);
         });
       }
     },

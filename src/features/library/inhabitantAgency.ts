@@ -513,6 +513,7 @@ export class InhabitantAgency {
     this.lastTime = time;
     if (this.mode !== "running" || dt === 0) return;
     this.elapsed += dt;
+    this.applyMagicReaction();
     for (const a of this.agents) {
       if (!a.interactionTaskId || !a.task) continue;
       if (
@@ -569,6 +570,53 @@ export class InhabitantAgency {
       this.chooseTask(a);
     }
     this.tryMeeting();
+    this.publish();
+  }
+  private magicEpisode = -1;
+  private pendingMagic: { episode: number; until: number } | null = null;
+  reactToMagic(episode: number): void {
+    if (
+      this.disposed ||
+      this.mode !== "running" ||
+      episode <= this.magicEpisode
+    )
+      return;
+    this.magicEpisode = episode;
+    this.pendingMagic = { episode, until: this.elapsed + 25 };
+    this.applyMagicReaction();
+  }
+  private applyMagicReaction(): void {
+    if (!this.pendingMagic) return;
+    const { episode, until } = this.pendingMagic;
+    if (this.elapsed > until) {
+      this.pendingMagic = null;
+      return;
+    }
+    const key = INHABITANTS[episode % INHABITANTS.length].key;
+    const a = this.agents.find((actor) => actor.key === key)!;
+    if (
+      !a.available ||
+      a.manual ||
+      a.encounter ||
+      this.conversation.has(key) ||
+      a.task ||
+      a.interactionTaskId ||
+      a.state !== "idle"
+    )
+      return;
+    const e = INHABITANT_ENVELOPES[key];
+    const magic = this.navigation.clear(a, a, e.magic, this.occupied(a));
+    const descriptions = {
+      samael: "Observa a inscrição com desconfiança; sua aura lilás responde.",
+      aryn: "Examina as linhas arcanas com curiosidade de restauradora.",
+      ytha: "Acolhe a manifestação com um gesto floral delicado.",
+      lua: "Entusiasma-se com a inscrição e ensaia um feitiço desajeitado.",
+    };
+    this.pendingMagic = null;
+    a.state = "react";
+    a.action = magic ? "magic" : "gesture";
+    a.activity = descriptions[key];
+    a.until = this.elapsed + 4;
     this.publish();
   }
   /** Manual controls hold the current position; interrupted work is resumed by a fresh route. */
@@ -752,6 +800,7 @@ export class InhabitantAgency {
     this.meeting = null;
     this.recent = [];
     for (const a of this.agents) {
+      this.releaseInteraction(a);
       a.route = [];
       a.history = [];
       a.task = null;
@@ -1340,6 +1389,7 @@ export class InhabitantAgency {
       !this.conversation.has(a.key) &&
       !a.encounter &&
       !a.task?.nightLampId &&
+      (!a.interactionState || a.interactionState === "approaching") &&
       (a.state === "idle" ||
         (a.state === "work" && this.elapsed - a.started >= 8) ||
         (a.state === "navigate" && this.elapsed - a.started >= 15));
@@ -1411,6 +1461,8 @@ export class InhabitantAgency {
         this.stop(a, "Aguarda uma oportunidade de encontro.", 4);
         continue;
       }
+      this.releaseInteraction(a);
+      this.releaseInteraction(b);
       a.encounter = r.script.id;
       b.encounter = r.script.id;
       a.task = null;

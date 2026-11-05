@@ -897,7 +897,10 @@ it("projects private notes and resolves a selected scroll to its original record
   );
   expect(
     screen.getByRole("link", { name: "Abrir conteúdo do pergaminho" }),
-  ).toHaveAttribute("href", "/registros/book-1");
+  ).toHaveAttribute(
+    "href",
+    "/registros/book-1?annotationKind=note&annotationId=fiction-note&from=%2F",
+  );
   act(() =>
     worldHostProps().onSelectionChange?.({
       id: "scroll:note:removed",

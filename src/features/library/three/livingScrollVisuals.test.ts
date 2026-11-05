@@ -2,9 +2,7 @@ import { expect, it } from "vitest";
 import { Group } from "three";
 import {
   createLivingScrollVisuals,
-  scrollFlight,
   enchantmentAt,
-  SCROLL_SURFACES,
 } from "./livingScrollVisuals";
 import { InhabitantAgency } from "../inhabitantAgency";
 import { InhabitantNavigation } from "../inhabitantNavigation";
@@ -19,31 +17,6 @@ const scroll = {
   category: "book" as const,
   updatedAt: "2026-11-05T12:00:00.000Z",
 };
-it("flies and lands on the same physical lane without duplicating the selected object", () => {
-  const building = new Group();
-  const visuals = createLivingScrollVisuals(building, [scroll]);
-  const original = visuals.selectables[0].root;
-  let peak = 0;
-  for (let i = 0; i < 1000; i++) {
-    visuals.update(0.1, false, [], () => null);
-    peak = Math.max(peak, original.position.y);
-    expect(original.position.x).toBeCloseTo(SCROLL_SURFACES[0].x);
-    expect(original.position.z).toBeGreaterThanOrEqual(
-      SCROLL_SURFACES[0].z - 0.001,
-    );
-    expect(original.position.z).toBeLessThanOrEqual(
-      SCROLL_SURFACES[0].z + 0.381,
-    );
-  }
-  expect(peak).toBeGreaterThan(1.5);
-  expect(visuals.selectables[0].root).toBe(original);
-  expect(visuals.selectables).toHaveLength(1);
-  for (let i = 0; i < 100; i++) visuals.update(0.1, true, [], () => null);
-  expect(original.position.y).toBeCloseTo(SCROLL_SURFACES[0].y);
-  expect(scrollFlight(0).y).toBe(0);
-  expect(scrollFlight(1).y).toBeCloseTo(0);
-  disposeObjectTree(building);
-});
 it("has an enchantment cycle independent of day and night", () => {
   expect(enchantmentAt(10)).toBe(0);
   expect(enchantmentAt(75)).toBe(1);
@@ -90,4 +63,52 @@ it("autonomously reserves, reaches and examines a real scroll through the existi
   );
   agency.dispose();
   disposeObjectTree(building);
+});
+
+it("recovers the same carried object when its agency is discarded during transport", () => {
+  let now = 0;
+  const building = createProceduralLibraryBuilding(true);
+  const visuals = createLivingScrollVisuals(building, [scroll]);
+  const agency = new InhabitantAgency(
+    new InhabitantNavigation(collectInhabitantObstacles([building])),
+    {
+      now: () => now,
+      hour: () => 12,
+      seed: 51,
+      scrollCandidates: visuals.candidates,
+    },
+  );
+  for (const key of ["samael", "aryn", "ytha", "lua"])
+    agency.setAvailable(`character:${key}`, true);
+  agency.setMode("running");
+  const anchor = new Group();
+  anchor.position.set(-3, 1.3, -2);
+  let carrying = false;
+  for (let i = 0; i < 2500; i++) {
+    now += 100;
+    agency.update();
+    const poses = agency.getPoses();
+    visuals.update(0.1, false, poses, () => anchor);
+    if (
+      poses.some(
+        (p) =>
+          p.interactionObjectId === scroll.id &&
+          p.interactionState === "carrying",
+      )
+    ) {
+      carrying = true;
+      break;
+    }
+  }
+  expect(carrying).toBe(true);
+  const original = visuals.selectables[0].root;
+  agency.dispose();
+  expect(agency.getPoses().every((p) => p.interactionObjectId === null)).toBe(
+    true,
+  );
+  visuals.update(0.1, true, agency.getPoses(), () => anchor);
+  expect(visuals.selectables[0].root).toBe(original);
+  expect(original.position.y).toBeCloseTo(visuals.selectables[0].rest.y);
+  disposeObjectTree(building);
+  expect(building.getObjectById(original.id)).toBeUndefined();
 });

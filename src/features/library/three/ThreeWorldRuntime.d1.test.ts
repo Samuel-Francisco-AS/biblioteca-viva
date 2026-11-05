@@ -907,3 +907,52 @@ describe("BF-4E integrated lifecycle", () => {
     expect(renderer.dispose).toHaveBeenCalledOnce();
   });
 });
+
+it("D picks the canonical scroll through real pointer events and discards it on removal", () => {
+  vi.stubGlobal("ResizeObserver", TestResizeObserver);
+  const renderer = new TestRenderer();
+  const scroll = {
+    id: "scroll:note:fiction",
+    annotationId: "fiction",
+    entryId: "book-fiction",
+    kind: "note" as const,
+    category: "book" as const,
+    updatedAt: "2026-11-05T12:00:00.000Z",
+  };
+  const runtime = new ThreeWorldRuntime({
+    libraryWorldSnapshot: {
+      ...projectLibraryWorldEntries([]),
+      scrolls: [scroll],
+    },
+    createRenderer: () => renderer,
+  });
+  runtime.mount(host());
+  runtime.start();
+  const [scene, camera] = renderer.render.mock.calls.at(-1)!;
+  const root = scene.getObjectByName("living-scrolls")!.children[0];
+  const point = root
+    .getWorldPosition(new Vector3())
+    .add(new Vector3(0, 0.03, 0))
+    .project(camera);
+  tap(renderer.domElement, (point.x + 1) * 320, (1 - point.y) * 180);
+  expect(renderer.domElement.dataset.selectedObject).toBe(scroll.id);
+  expect(
+    runtime.getSelectableObjects().filter((s) => s.id === scroll.id),
+  ).toHaveLength(1);
+  runtime.pause();
+  runtime.resume();
+  expect(
+    runtime.getSelectableObjects().filter((s) => s.id === scroll.id),
+  ).toHaveLength(1);
+  runtime.dispose();
+  expect(scene.getObjectById(root.id)).toBeUndefined();
+  const replacement = new ThreeWorldRuntime({
+    libraryWorldSnapshot: projectLibraryWorldEntries([]),
+    createRenderer: () => new TestRenderer(),
+  });
+  replacement.mount(host());
+  expect(
+    replacement.getSelectableObjects().some((s) => s.id === scroll.id),
+  ).toBe(false);
+  replacement.dispose();
+});

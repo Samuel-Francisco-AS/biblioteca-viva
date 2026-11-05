@@ -53,6 +53,12 @@ interface ApplicationBound<Value> {
   readonly value: Value;
 }
 
+function scrollPath(
+  scroll: import("./contracts/livingScroll").LivingScroll,
+  returnPath: string,
+): string {
+  return `${entryPath(scroll.entryId)}?${new URLSearchParams({ annotationKind: scroll.kind, annotationId: scroll.annotationId, from: returnPath })}`;
+}
 function entryPath(entryId: string): string {
   return `/registros/${encodeURIComponent(entryId)}`;
 }
@@ -381,10 +387,11 @@ function LibraryPageContent({
               ) && (
                 <Link
                   className="reading-area-selection button button--secondary"
-                  to={entryPath(
+                  to={scrollPath(
                     libraryWorldSnapshot.scrolls.find(
                       (s) => s.id === selection.id,
-                    )!.entryId,
+                    )!,
+                    returnPath,
                   )}
                 >
                   Abrir conteúdo do pergaminho
@@ -398,7 +405,7 @@ function LibraryPageContent({
                   {libraryWorldSnapshot.scrolls.map((scroll) => (
                     <p key={scroll.id}>
                       <Link
-                        to={entryPath(scroll.entryId)}
+                        to={scrollPath(scroll, returnPath)}
                         state={{ returnTo: returnPath }}
                       >
                         Abrir {scroll.kind === "note" ? "anotação" : "citação"}{" "}

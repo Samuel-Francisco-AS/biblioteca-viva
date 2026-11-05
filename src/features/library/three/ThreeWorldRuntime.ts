@@ -460,7 +460,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private inhabitants?: ReturnType<typeof createInhabitantVisuals>;
   private ambientMagic?: ReturnType<typeof createAmbientMagic>;
   private scrollVisuals?: ReturnType<typeof createLivingScrollVisuals>;
-  private readonly scrolls: readonly import("../../../application/livingScrolls").LivingScroll[];
+  private readonly scrolls: readonly import("../../../contracts/livingScroll").LivingScroll[];
   private livingVisuals?: ReturnType<typeof createLivingVisuals>;
   private livingFrameTime: number | undefined;
   private readonly inhabitantLoader?: InhabitantLoader;
@@ -685,8 +685,15 @@ export class ThreeWorldRuntime implements WorldRuntime {
           ...proceduralSelectables.map((s) => s.root),
           ...readingAreaBookVisuals.map((v) => v.node),
         ]);
-        this.scrollVisuals = createLivingScrollVisuals(building, this.scrolls);
-        this.ambientMagic = createAmbientMagic(building);
+        this.scrollVisuals = createLivingScrollVisuals(building, this.scrolls, [
+          building,
+          records.root,
+          ...proceduralSelectables.map((s) => s.root),
+          ...readingAreaBookVisuals.map((v) => v.node),
+        ]);
+        this.ambientMagic = createAmbientMagic(building, (episode) =>
+          this.agency?.reactToMagic(episode),
+        );
         this.agency = new InhabitantAgency(
           new InhabitantNavigation(obstacles),
           {

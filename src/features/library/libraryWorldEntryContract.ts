@@ -124,7 +124,7 @@ export type LibraryWorldCategory =
  * world. `categories` always follows `ENTRY_TYPES`.
  */
 export interface LibraryWorldSnapshot {
-  readonly scrolls?: readonly import("../../application/livingScrolls").LivingScroll[];
+  readonly scrolls?: readonly import("../../contracts/livingScroll").LivingScroll[];
   readonly categories: readonly [
     LibraryWorldBookCategory,
     LibraryWorldMovieCategory,

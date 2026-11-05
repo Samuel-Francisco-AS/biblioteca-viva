@@ -13,7 +13,10 @@ import { LIBRARY_FURNISHING } from "./libraryFurnishingLayout";
 import { enchantmentAt } from "./livingScrollVisuals";
 
 /** Separate from the wall clock and functional illumination. Owned by building. */
-export function createAmbientMagic(building: Group) {
+export function createAmbientMagic(
+  building: Group,
+  onEpisode?: (episode: number) => void,
+) {
   const root = new Group();
   root.name = "ambient-magic";
   building.add(root);
@@ -71,9 +74,15 @@ export function createAmbientMagic(building: Group) {
     return { island, rune, ring, index: i };
   });
   let elapsed = 0;
+  let episode = -1;
   return {
     update(delta: number, reduced: boolean) {
       if (!reduced) elapsed += Math.min(delta, 0.1);
+      const nextEpisode = Math.floor((elapsed - 60) / 90);
+      if (!reduced && nextEpisode >= 0 && nextEpisode > episode) {
+        episode = nextEpisode;
+        onEpisode?.(episode);
+      }
       const intensity = reduced ? 0.12 : enchantmentAt(elapsed);
       dustMaterial.opacity = 0.22 + intensity * 0.4;
       runeMaterial.opacity = intensity * 0.65;
