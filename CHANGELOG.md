@@ -928,3 +928,8 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 - Dez famílias de objetos ambientais com ações nos cinco cômodos, animações e iluminação local.
 - Três atmosferas e descoberta ficcional do Pergaminho, com ações React disponíveis sem WebGL.
 - Estado somente de sessão; sem mudanças de dados ou backup. Auditoria e gate humano pendentes.
+## 2026-11-05 — BF-5.5B candidata
+
+- Tarefas de interação com estados previsíveis e leases exclusivos recuperáveis.
+- Ciclo físico demonstrável com o mesmo livro cenográfico selecionável: pegar, transportar, posicionar e devolver.
+- Sem nova migração Dexie/backup; BF-5.5A preservada. Testes Moto G06 e E2E global permanecem pendentes/vermelhos conforme relatório.

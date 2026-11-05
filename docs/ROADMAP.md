@@ -1,8 +1,10 @@
-> **BF-5.5A em candidata na PR draft #32 (05/11/2026):** continuidade local dos quatro habitantes, checkpoint seguro de pose/intenção e restauração antes da montagem do mundo. **Sem merge, gate físico ou CI global verde confirmado.** [Relatório](BF-5_5A_RELATORIO.md). O marco BF-5.5 permanece em execução candidata, sem aprovar B–G nem BF-6.
+> **BF-5.5B em candidata (05/11/2026):** leases exclusivos e ciclo físico do livro cenográfico sobre a BF-5.5A, sem nova migração. **Sem merge, gate físico ou CI global verde confirmado.** [Relatório](BF-5_5B_RELATORIO.md). B permanece encadeada à PR #32; C–G e BF-6 não foram iniciadas.
+
+> **BF-5.5A em candidata na PR draft #32 (05/11/2026):** continuidade local dos quatro habitantes, checkpoint seguro de pose/intenção e restauração antes da montagem do mundo. **Sem merge, gate físico ou CI global verde confirmado.** [Relatório](BF-5_5A_RELATORIO.md).
 
 ## PLANEJAMENTO VIGENTE — 05/11/2026: BF-5.5 inserida entre BF-5 e BF-6
 
-Por autorização do proprietário, após o fechamento da BF-5, foi planejada a **BF-5.5 — O Despertar da Biblioteca**, uma fase de mundo 3D vivo: persistência dos quatro habitantes entre inicializações, tarefas e manipulação física de objetos, iluminação noturna com ritual de abajures sem loop, magia ambiental expressiva, até dez pergaminhos vivos de anotações, refino da mobília e resposta concreta às sessões. **Planejada/documentada; implementação ainda não iniciada.** [Plano e contrato](BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md) · [ADR-023](decisions/ADR-023-bf-5-5-despertar-da-biblioteca.md).
+Por autorização do proprietário, após o fechamento da BF-5, foi planejada a **BF-5.5 — O Despertar da Biblioteca**. A candidata B iniciou somente tarefas, leases e um ciclo físico com o livro cenográfico; iluminação, magia, pergaminhos, mobília refinada e sessões reais continuam futuras. [Plano e contrato](BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md) · [ADR-023](decisions/ADR-023-bf-5-5-despertar-da-biblioteca.md).
 
 **Nova ordem:** BF-5 ✅ → BF-5.5 ⏳ → BF-6 (habitantes/RPG) ⏳ → BF-7 (consolidação) ⏳. A cronologia anterior abaixo, inclusive a indicação de BF-6 como próximo passo, descreve o estado **anterior a esta decisão**, não o planejamento vigente. As ressalvas técnicas da BF-5, issues #21–#24 e ausência de CI E2E global verde permanecem. Não há entrega BF-5.5, gate novo, beta ou release neste registro.
 

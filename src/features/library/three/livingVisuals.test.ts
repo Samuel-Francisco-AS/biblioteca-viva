@@ -5,8 +5,8 @@ import {
   Box3,
   HemisphereLight,
   Mesh,
+  Object3D,
   Scene,
-  type Object3D,
   type BufferGeometry,
   type Material,
 } from "three";
@@ -94,5 +94,49 @@ describe("living visuals", () => {
     disposeObjectTree(building);
     disposeObjectTree(building);
     for (const spy of spies) expect(spy).toHaveBeenCalledOnce();
+  });
+
+  it("moves the original selectable book through a real carry anchor and restores it", () => {
+    const scene = new Scene();
+    const building = createProceduralLibraryBuilding(true);
+    scene.add(building);
+    const visuals = createLivingVisuals(building, scene, new LivingSession());
+    const book = visuals.selectables.find(
+      (item) => item.descriptor.id === "living:book",
+    )!;
+    const original = book.root;
+    const anchor = new Object3D();
+    anchor.position.set(18, 1, -6);
+    scene.add(anchor);
+
+    visuals.driveInhabitantInteractions(
+      [
+        {
+          id: "character:aryn",
+          key: "aryn",
+          label: "Aryn",
+          x: 0,
+          z: 0,
+          facing: 0,
+          state: "work",
+          activity: "transport",
+          room: "CÔMODO C",
+          destination: null,
+          action: "walk",
+          available: true,
+          interactionObjectId: "living:book",
+          interactionState: "carrying",
+        },
+      ],
+      () => anchor,
+    );
+    expect(book.root).toBe(original);
+    expect(book.root.position.x).toBeCloseTo(18);
+    expect(book.root.position.z).toBeCloseTo(-6);
+
+    visuals.driveInhabitantInteractions([], () => null);
+    expect(book.root.position.x).toBeCloseTo(14.75);
+    expect(book.root.position.z).toBeCloseTo(-4.8);
+    disposeObjectTree(scene);
   });
 });

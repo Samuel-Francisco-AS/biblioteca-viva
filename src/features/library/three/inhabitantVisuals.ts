@@ -1,5 +1,5 @@
 import type { AgentView } from "../inhabitantAgency";
-import { Group, type Object3D, type AnimationClip } from "three";
+import { Group, Object3D, type AnimationClip } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { createInhabitantAnimator } from "./inhabitantAnimator";
 import {
@@ -119,6 +119,30 @@ export function createInhabitantVisuals(
           );
         }
       }
+    },
+    getCarryAnchor(id: string): Object3D | null {
+      const actor = selectables.find(({ descriptor }) => descriptor.id === id);
+      if (!actor) return null;
+      let named: Object3D | undefined;
+      actor.root.traverse((node) => {
+        if (
+          !named &&
+          /hand|wrist|grip/i.test(node.name) &&
+          node.type === "Bone"
+        )
+          named = node;
+      });
+      if (named) return named;
+      let anchor = actor.root.getObjectByName("interaction-hand-anchor");
+      if (!anchor) {
+        anchor = new Group();
+        anchor.name = "interaction-hand-anchor";
+        // The current GLBs expose no hand/wrist bones. This stable transport
+        // point is replaced by a rig anchor when assets gain one.
+        anchor.position.set(0.28, 1.02, 0.28);
+        actor.root.add(anchor);
+      }
+      return anchor;
     },
     dispose() {
       if (disposed) return;

@@ -11,6 +11,7 @@ import {
   DirectionalLight,
   type Scene,
 } from "three";
+import type { AgentView } from "../inhabitantAgency";
 import {
   LIVING_OBJECTS,
   type LivingSession,
@@ -193,6 +194,11 @@ export function createLivingVisuals(
     }
   }
   let elapsed = 0;
+  const book = selectables.find(
+    (item) => item.object.objectId === "living:book",
+  );
+  const bookRestPosition = book?.root.position.clone();
+  const bookRestRotation = book?.moving.rotation.clone();
   return {
     selectables,
     update(delta: number, reduced: boolean, narrativeAtmosphere?: Atmosphere) {
@@ -314,6 +320,32 @@ export function createLivingVisuals(
             : object.intensity + (targetIntensity - object.intensity) * blend;
         }
       });
+    },
+    driveInhabitantInteractions(
+      poses: readonly AgentView[],
+      getCarryAnchor: (id: string) => import("three").Object3D | null,
+    ) {
+      if (!book || !bookRestPosition || !bookRestRotation) return;
+      const carrier = poses.find(
+        (pose) =>
+          pose.interactionObjectId === "living:book" &&
+          (pose.interactionState === "carrying" ||
+            pose.interactionState === "placing" ||
+            pose.interactionState === "returning"),
+      );
+      if (!carrier) {
+        book.root.position.copy(bookRestPosition);
+        book.moving.rotation.copy(bookRestRotation);
+        return;
+      }
+      const anchor = getCarryAnchor(carrier.id);
+      if (!anchor) return;
+      anchor.updateWorldMatrix(true, false);
+      book.root.parent?.worldToLocal(
+        book.root.position.copy(anchor.getWorldPosition(book.root.position)),
+      );
+      book.root.position.y = 0;
+      book.moving.rotation.set(0, 0, 0);
     },
   };
 }

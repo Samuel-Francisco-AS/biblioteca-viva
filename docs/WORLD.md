@@ -1,4 +1,4 @@
-> **BF-5.5 — O Despertar da Biblioteca (planejamento aprovado em 05/11/2026, sem implementação):** continuidade dos quatro habitantes além da sessão, manipulação física de objetos por tarefa/reserva, iluminação noturna distribuída e ritual sem loop, magia ambiental, até dez pergaminhos de anotações e respostas a sessões reais. O baseline vigente permanece o do fechamento BF-5 até que mudanças de produção sejam entregues e validadas. [Plano BF-5.5](BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md) · [ADR-023](decisions/ADR-023-bf-5-5-despertar-da-biblioteca.md).
+> **BF-5.5B candidata em 05/11/2026:** a cena agora possui leases e um ciclo físico demonstrável com o livro cenográfico, sobre a continuidade A; não há schema novo. Iluminação, pergaminhos, mobília refinada e sessões reais permanecem futuras. [Relatório](BF-5_5B_RELATORIO.md) · [Plano BF-5.5](BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md).
 
 ## BF-5 Parte 2D — preservação audiovisual (2026-11-04)
 

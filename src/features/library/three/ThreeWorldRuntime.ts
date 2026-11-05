@@ -1223,6 +1223,11 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.agency?.update();
       this.checkpointInhabitants(false);
       if (this.agency) this.inhabitants?.drive(this.agency.getPoses());
+      if (this.agency && this.livingVisuals && this.inhabitants)
+        this.livingVisuals.driveInhabitantInteractions(
+          this.agency.getPoses(),
+          (id) => this.inhabitants?.getCarryAnchor(id) ?? null,
+        );
       this.inhabitants?.update(delta, reduced);
       if (this.agency)
         this.sceneProps?.update(

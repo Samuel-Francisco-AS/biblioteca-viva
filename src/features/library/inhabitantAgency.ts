@@ -23,6 +23,10 @@ import {
   parseInhabitantContinuity,
   type InhabitantContinuitySnapshot,
 } from "./inhabitantContinuity";
+import {
+  InteractionCoordinator,
+  type InteractionTaskState,
+} from "./inhabitantInteractions";
 
 export type AgencyState =
   | "idle"
@@ -44,6 +48,10 @@ interface Task {
   readonly facing: number;
   readonly label: string;
   readonly objectId?: string;
+  readonly interaction?: {
+    readonly source: Position;
+    readonly destination: Position;
+  };
 }
 export interface AgentView extends Position {
   readonly id: InhabitantId;
@@ -56,6 +64,8 @@ export interface AgentView extends Position {
   readonly facing: number;
   readonly action: InhabitantAction;
   readonly available: boolean;
+  readonly interactionObjectId: string | null;
+  readonly interactionState: InteractionTaskState | null;
 }
 export interface RelationView {
   readonly id: string;
@@ -99,6 +109,8 @@ interface Agent {
   taskCount: number;
   history: string[];
   lastEvent: number;
+  interactionState: InteractionTaskState | null;
+  interactionTaskId: string | null;
 }
 interface Relation {
   script: EncounterScript;
@@ -144,6 +156,15 @@ const tasks: readonly Task[] = [
                 ? "repouso e observação tranquila"
                 : "observação dos mecanismos",
         ...(p.id.endsWith("d-study") ? { objectId: "living:globe" } : {}),
+        ...(p.id === "c-study"
+          ? {
+              objectId: "living:book",
+              interaction: {
+                source: { x: 14.75, z: -4.8 },
+                destination: { x: 16.2, z: -7.2 },
+              },
+            }
+          : {}),
         ...{},
       },
     ];
@@ -231,6 +252,7 @@ export class InhabitantAgency {
   private socialAfter = 12;
   private cooperation = 0;
   private readonly conversation = new Set<InhabitantKey>();
+  private readonly interactions = new InteractionCoordinator();
   private narrativeBonds: readonly NarrativeBond[] = [];
   private readonly now: () => number;
   private readonly hour: () => number;
@@ -260,6 +282,8 @@ export class InhabitantAgency {
       taskCount: 0,
       history: [],
       lastEvent: -30,
+      interactionState: null,
+      interactionTaskId: null,
     }));
     this.relations = ENCOUNTERS.map((script, i) => ({
       script,
@@ -417,6 +441,7 @@ export class InhabitantAgency {
     if (!a || this.disposed || a.available === available) return;
     a.available = available;
     if (!available) {
+      this.releaseInteraction(a);
       this.cancelMeeting(
         "Encontro interrompido: um modelo ficou indisponível.",
       );
@@ -429,6 +454,21 @@ export class InhabitantAgency {
   setMode(mode: AgencyMode) {
     if (this.disposed || mode === this.mode) return;
     this.mode = mode;
+    if (mode !== "running") {
+      for (const agent of this.agents) {
+        if (agent.task?.interaction) {
+          this.releaseInteraction(agent);
+          agent.task = null;
+          agent.route = [];
+          agent.destination = null;
+          agent.state = "idle";
+          agent.action = "idle";
+          agent.activity =
+            "Interação interrompida com segurança; o objeto permanece em sua superfície.";
+          agent.until = this.elapsed + 2;
+        }
+      }
+    }
     this.lastTime = undefined;
     this.message =
       mode === "running"
@@ -800,6 +840,43 @@ export class InhabitantAgency {
           ? "magic"
           : "work";
     a.activity = this.taskDescription(a, task);
+    if (task.interaction && a.interactionTaskId) {
+      if (a.interactionState === "carrying") {
+        a.interactionState = "placing";
+        a.action = "gesture";
+        a.activity = "Posiciona o livro sobre a bancada.";
+        a.until = this.elapsed + 1;
+        return;
+      }
+      if (a.interactionState === "returning") {
+        a.interactionState = "completed";
+        this.options.onEnvironmentAction?.(a.key, "living:book");
+        this.stop(a, "Devolveu o livro e liberou a superfície.", 5);
+        a.task = null;
+        return;
+      }
+    }
+    if (task.interaction) {
+      const taskId = `${task.id}:${a.key}`;
+      if (
+        this.interactions.reserve(
+          task.objectId ?? task.id,
+          a.key,
+          taskId,
+          this.elapsed * 1000,
+        )
+      ) {
+        a.interactionTaskId = taskId;
+        a.interactionState = "orienting";
+        a.until = this.elapsed + 0.8;
+        a.action = "turn";
+        a.activity = "Orienta-se para pegar o livro cenográfico.";
+        return;
+      }
+      a.task = null;
+      this.stop(a, "O livro está reservado por outro habitante.", 4);
+      return;
+    }
     a.until =
       this.elapsed +
       (task.kind === "experiment"
@@ -929,6 +1006,10 @@ export class InhabitantAgency {
         }
       return;
     }
+    if (a.task?.interaction) {
+      this.advanceInteraction(a);
+      return;
+    }
     if (a.task?.objectId)
       this.options.onEnvironmentAction?.(a.key, a.task.objectId);
     a.task = null;
@@ -939,6 +1020,7 @@ export class InhabitantAgency {
     );
   }
   private stop(a: Agent, activity: string, seconds: number) {
+    this.releaseInteraction(a);
     a.state = "idle";
     a.action = "idle";
     a.activity = activity;
@@ -946,6 +1028,64 @@ export class InhabitantAgency {
     a.destination = null;
     a.until = this.elapsed + seconds;
     a.blocked = 0;
+  }
+  private releaseInteraction(a: Agent) {
+    if (a.task?.objectId && a.interactionTaskId)
+      this.interactions.release(a.task.objectId, a.key, a.interactionTaskId);
+    a.interactionTaskId = null;
+    a.interactionState = null;
+  }
+  private advanceInteraction(a: Agent) {
+    const task = a.task;
+    if (!task?.interaction || !a.interactionTaskId) return;
+    const now = this.elapsed * 1000;
+    if (
+      !this.interactions.owns(
+        task.objectId ?? task.id,
+        a.key,
+        a.interactionTaskId,
+        now,
+      )
+    ) {
+      a.interactionState = "failed";
+      a.task = null;
+      this.stop(a, "A reserva expirou; o livro permanece no mundo.", 4);
+      return;
+    }
+    if (a.interactionState === "orienting") {
+      a.interactionState = "picking";
+      a.action = "gesture";
+      a.activity = "Estende a mão e pega o livro cenográfico.";
+      a.until = this.elapsed + 0.9;
+      return;
+    }
+    if (a.interactionState === "picking") {
+      a.interactionState = "carrying";
+      a.action = "walk";
+      a.activity = "Transporta o livro até uma superfície válida.";
+      a.until = this.elapsed;
+      if (this.go(a, task.interaction.destination)) return;
+    }
+    if (a.interactionState === "carrying" && a.state === "work") {
+      a.interactionState = "placing";
+      a.action = "gesture";
+      a.activity = "Posiciona o livro sobre a bancada.";
+      a.until = this.elapsed + 1;
+      return;
+    }
+    if (a.interactionState === "placing") {
+      a.interactionState = "returning";
+      a.action = "walk";
+      a.activity = "Devolve o livro ao ponto cenográfico original.";
+      a.until = this.elapsed;
+      if (this.go(a, task.interaction.source)) return;
+    }
+    if (a.interactionState === "returning" && a.state === "work") {
+      a.interactionState = "completed";
+      this.options.onEnvironmentAction?.(a.key, "living:book");
+      this.stop(a, "Devolveu o livro e liberou a superfície.", 5);
+      a.task = null;
+    }
   }
   private tryMeeting() {
     if (this.meeting || this.elapsed < this.socialAfter) return;
@@ -1256,6 +1396,10 @@ export class InhabitantAgency {
         : a.activity,
       action: a.action,
       available: a.available,
+      interactionObjectId: a.interactionState
+        ? (a.task?.objectId ?? null)
+        : null,
+      interactionState: a.interactionState,
       room: roomAt(a)?.replace("room-", "Cômodo ").toUpperCase() ?? "Passagem",
       destination: a.destination ? { ...a.destination } : null,
     };
