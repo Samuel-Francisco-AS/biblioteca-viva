@@ -12,8 +12,14 @@ describe("BF-5.5C independent night lighting", () => {
     expect(NIGHT_LAMPS).toHaveLength(9);
     expect(new Set(NIGHT_LAMPS.map((lamp) => lamp.id)).size).toBe(9);
     expect(new Set(NIGHT_LAMPS.map((lamp) => lamp.roomId)).size).toBe(5);
-    expect(NIGHT_LAMPS.some((lamp) => lamp.id === "night-lamp:bf4-prop:0")).toBe(false);
-    expect(NIGHT_LAMPS.every((lamp) => [lamp.x, lamp.y, lamp.z].every(Number.isFinite))).toBe(true);
+    expect(
+      NIGHT_LAMPS.some((lamp) => lamp.id === "night-lamp:bf4-prop:0"),
+    ).toBe(false);
+    expect(
+      NIGHT_LAMPS.every((lamp) =>
+        [lamp.x, lamp.y, lamp.z].every(Number.isFinite),
+      ),
+    ).toBe(true);
   });
 
   it("spans midnight, starts usable at dusk and reaches full brightness without an NPC", () => {
@@ -61,9 +67,15 @@ describe("BF-5.5C independent night lighting", () => {
     const restored = new NightLightingSession(() => date);
     expect(restored.restore(saved)).toBe(true);
     expect(restored.pending()).toHaveLength(NIGHT_LAMPS.length - 1);
-    expect(restored.restore({ ...saved, completedLampIds: [id, id] })).toBe(false);
-    expect(restored.restore({ ...saved, completedLampIds: ["unknown"] })).toBe(false);
-    expect(parseNightLightingCheckpoint({ ...saved, version: 2 })).toBeUndefined();
+    expect(restored.restore({ ...saved, completedLampIds: [id, id] })).toBe(
+      false,
+    );
+    expect(restored.restore({ ...saved, completedLampIds: ["unknown"] })).toBe(
+      false,
+    );
+    expect(
+      parseNightLightingCheckpoint({ ...saved, version: 2 }),
+    ).toBeUndefined();
     expect(restored.restore({ ...saved, cycleKey: "2026-11-04" })).toBe(false);
   });
 });

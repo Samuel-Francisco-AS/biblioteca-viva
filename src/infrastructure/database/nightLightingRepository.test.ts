@@ -29,12 +29,17 @@ describe("BF-5.5C ritual ledger in the existing settings table", () => {
     const repository = new DexieNightLightingRepository(database);
     const first = night.capture();
     night.complete(NIGHT_LAMPS[0]!.id);
-    await Promise.all([repository.save(first), repository.save(night.capture())]);
+    await Promise.all([
+      repository.save(first),
+      repository.save(night.capture()),
+    ]);
     expect((await repository.load())?.completedLampIds).toEqual([
       NIGHT_LAMPS[0]!.id,
     ]);
     const backup = await new DexieBackupSnapshotStore(database).read();
-    expect(backup.settings.some((row) => row.key === NIGHT_LIGHTING_KEY)).toBe(true);
+    expect(backup.settings.some((row) => row.key === NIGHT_LIGHTING_KEY)).toBe(
+      true,
+    );
     database.close();
 
     const reopened = new BibliotecaDatabase(name);
@@ -43,7 +48,11 @@ describe("BF-5.5C ritual ledger in the existing settings table", () => {
     expect((await fresh.load())?.cycleKey).toBe("2026-11-05");
     await reopened.settings.put({
       key: NIGHT_LIGHTING_KEY,
-      value: { version: 1, cycleKey: "2026-11-05", completedLampIds: ["invalid"] },
+      value: {
+        version: 1,
+        cycleKey: "2026-11-05",
+        completedLampIds: ["invalid"],
+      },
       updatedAt: date.toISOString(),
     });
     expect(await fresh.load()).toBeUndefined();

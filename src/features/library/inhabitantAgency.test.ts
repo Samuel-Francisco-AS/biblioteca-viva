@@ -125,10 +125,16 @@ describe("BF-4F3 local agency", () => {
     agency.setMode("running");
     agency.update();
     let observedGesture = false;
-    for (let step = 0; step < 10000 && night.getSnapshot().completedLampIds.length === 0; step++) {
+    for (
+      let step = 0;
+      step < 10000 && night.getSnapshot().completedLampIds.length === 0;
+      step++
+    ) {
       elapsed += 100;
       agency.update();
-      observedGesture ||= agency.getPoses().some((pose) => pose.key === "aryn" && pose.action === "gesture");
+      observedGesture ||= agency
+        .getPoses()
+        .some((pose) => pose.key === "aryn" && pose.action === "gesture");
     }
     expect(observedGesture).toBe(true);
     expect(night.getSnapshot().completedLampIds.length).toBeGreaterThan(0);
@@ -136,7 +142,9 @@ describe("BF-4F3 local agency", () => {
     const completed = night.getSnapshot().completedLampIds[0]!;
     expect(night.complete(completed)).toBe(false);
     agency.setMode("paused");
-    expect(agency.getPoses().some((pose) => pose.interactionObjectId === completed)).toBe(false);
+    expect(
+      agency.getPoses().some((pose) => pose.interactionObjectId === completed),
+    ).toBe(false);
     agency.dispose();
   });
 

@@ -36,15 +36,24 @@ describe("living visuals", () => {
       building.getObjectByName(`${fixture.id}:light`),
     );
     expect(fixtures).toHaveLength(9);
-    expect(fixtures.every((fixture) => fixture instanceof PointLight)).toBe(true);
+    expect(fixtures.every((fixture) => fixture instanceof PointLight)).toBe(
+      true,
+    );
     visuals.update(0, true);
-    expect(fixtures.every((fixture) => (fixture as PointLight).intensity === 0)).toBe(true);
+    expect(
+      fixtures.every((fixture) => (fixture as PointLight).intensity === 0),
+    ).toBe(true);
     now = new Date(2026, 10, 5, 18, 0);
     night.refreshContext();
     living.refreshContext();
     visuals.update(0, true);
-    expect(fixtures.every((fixture) => (fixture as PointLight).intensity > 0)).toBe(true);
-    expect(visuals.selectables.find((item) => item.descriptor.id === "living:lamp")?.light?.intensity).toBe(0);
+    expect(
+      fixtures.every((fixture) => (fixture as PointLight).intensity > 0),
+    ).toBe(true);
+    expect(
+      visuals.selectables.find((item) => item.descriptor.id === "living:lamp")
+        ?.light?.intensity,
+    ).toBe(0);
     expect(living.getSnapshot().discovery).toBe(0);
     night.complete(NIGHT_LAMPS[0]!.id);
     visuals.update(0, true);
@@ -53,7 +62,9 @@ describe("living visuals", () => {
     night.refreshContext();
     living.refreshContext();
     visuals.update(0, true);
-    expect(fixtures.every((fixture) => (fixture as PointLight).intensity === 0)).toBe(true);
+    expect(
+      fixtures.every((fixture) => (fixture as PointLight).intensity === 0),
+    ).toBe(true);
     disposeObjectTree(scene);
   });
 

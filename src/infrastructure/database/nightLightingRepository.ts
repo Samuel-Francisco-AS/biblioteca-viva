@@ -21,8 +21,7 @@ export class DexieNightLightingRepository implements NightLightingPort {
 
   save(value: NightLightingCheckpoint): Promise<void> {
     const parsed = parseNightLightingCheckpoint(value);
-    if (!parsed)
-      return Promise.reject(new Error("Ritual noturno inválido."));
+    if (!parsed) return Promise.reject(new Error("Ritual noturno inválido."));
     const write = this.pending.then(async () => {
       await this.database.settings.put({
         key: NIGHT_LIGHTING_KEY,

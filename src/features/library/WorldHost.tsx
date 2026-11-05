@@ -348,10 +348,13 @@ export function WorldHost({
     // One host timer aligned to the wall-clock minute boundary. The evening
     // transition does not wait up to a full minute after 18:00.
     let interval: number | undefined;
-    const initial = window.setTimeout(() => {
-      refresh();
-      interval = window.setInterval(refresh, 60_000);
-    }, 60_000 - (Date.now() % 60_000));
+    const initial = window.setTimeout(
+      () => {
+        refresh();
+        interval = window.setInterval(refresh, 60_000);
+      },
+      60_000 - (Date.now() % 60_000),
+    );
     const onVisible = () => {
       if (!document.hidden) refresh();
     };
@@ -364,12 +367,23 @@ export function WorldHost({
   }, [livingSession, nightLighting, libraryWorldSnapshot, performanceScenario]);
 
   useEffect(() => {
-    if (!nightLightingContinuity || performanceScenario || !libraryWorldSnapshot)
+    if (
+      !nightLightingContinuity ||
+      performanceScenario ||
+      !libraryWorldSnapshot
+    )
       return;
     return nightLighting.subscribe(() => {
-      void nightLightingContinuity.save(nightLighting.capture()).catch(() => undefined);
+      void nightLightingContinuity
+        .save(nightLighting.capture())
+        .catch(() => undefined);
     });
-  }, [nightLighting, nightLightingContinuity, libraryWorldSnapshot, performanceScenario]);
+  }, [
+    nightLighting,
+    nightLightingContinuity,
+    libraryWorldSnapshot,
+    performanceScenario,
+  ]);
 
   useEffect(() => {
     if (selectedObjectId === undefined || status !== "ready") return;

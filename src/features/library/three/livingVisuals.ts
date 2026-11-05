@@ -200,21 +200,22 @@ export function createLivingVisuals(
         depthWrite: false,
       })
     : undefined;
-  const ambientLamps = nightLighting && shadeGlowGeometry && shadeGlowMaterial
-    ? NIGHT_LAMPS.map((fixture) => {
-        const group = new Group();
-        group.name = fixture.id;
-        group.position.set(fixture.x, fixture.y, fixture.z);
-        const glow = new Mesh(shadeGlowGeometry, shadeGlowMaterial);
-        glow.name = `${fixture.id}:ember`;
-        group.add(glow);
-        const light = new PointLight(0xffbf79, 0, 6.5, 1.65);
-        light.name = `${fixture.id}:light`;
-        group.add(light);
-        root.add(group);
-        return { fixture, group, light, glow };
-      })
-    : [];
+  const ambientLamps =
+    nightLighting && shadeGlowGeometry && shadeGlowMaterial
+      ? NIGHT_LAMPS.map((fixture) => {
+          const group = new Group();
+          group.name = fixture.id;
+          group.position.set(fixture.x, fixture.y, fixture.z);
+          const glow = new Mesh(shadeGlowGeometry, shadeGlowMaterial);
+          glow.name = `${fixture.id}:ember`;
+          group.add(glow);
+          const light = new PointLight(0xffbf79, 0, 6.5, 1.65);
+          light.name = `${fixture.id}:light`;
+          group.add(light);
+          root.add(group);
+          return { fixture, group, light, glow };
+        })
+      : [];
   const daytimeSky = new Color(0xffedd2);
   const nighttimeSky = new Color(0xa1c8ff);
   const daytimeGround = new Color(0x58665b);
@@ -306,7 +307,9 @@ export function createLivingVisuals(
           ? 4.2 * target
           : light.intensity + (4.2 * target - light.intensity) * blend;
         glow.visible = target > 0;
-        glow.scale.setScalar(reduced ? 0.75 : 0.86 + 0.04 * Math.sin(elapsed * 1.7));
+        glow.scale.setScalar(
+          reduced ? 0.75 : 0.86 + 0.04 * Math.sin(elapsed * 1.7),
+        );
       }
       sparks.children.forEach((spark, index) => {
         const y: unknown = spark.userData.baseY;
@@ -404,7 +407,8 @@ export function createLivingVisuals(
       // Narrative darkness affects sky, but does not turn off the real clock lamps.
       const dark =
         atmosphere === "noturna" ||
-        (nightLighting?.getSnapshot().cycleKey !== null && nightLighting !== undefined);
+        (nightLighting?.getSnapshot().cycleKey !== null &&
+          nightLighting !== undefined);
       scene.traverse((object) => {
         if (object instanceof HemisphereLight) {
           const intensity = dark ? 1.08 : atmosphere === "encantada" ? 1.25 : 2;
@@ -412,7 +416,10 @@ export function createLivingVisuals(
             ? intensity
             : object.intensity + (intensity - object.intensity) * blend;
           object.color.lerp(dark ? nighttimeSky : daytimeSky, blend);
-          object.groundColor.lerp(dark ? nighttimeGround : daytimeGround, blend);
+          object.groundColor.lerp(
+            dark ? nighttimeGround : daytimeGround,
+            blend,
+          );
         }
         if (object instanceof DirectionalLight) {
           const intensity = dark ? 0.8 : 1.5;
@@ -423,7 +430,10 @@ export function createLivingVisuals(
         }
       });
       if (scene.background instanceof Color)
-        scene.background.lerp(dark ? nighttimeBackdrop : daytimeBackdrop, blend);
+        scene.background.lerp(
+          dark ? nighttimeBackdrop : daytimeBackdrop,
+          blend,
+        );
     },
     driveInhabitantInteractions(
       poses: readonly AgentView[],

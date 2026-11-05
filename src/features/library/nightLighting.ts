@@ -30,7 +30,10 @@ export const NIGHT_LAMPS = Object.freeze(
 
 const checkpointSchema = z.strictObject({
   version: z.literal(1),
-  cycleKey: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable(),
+  cycleKey: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .nullable(),
   completedLampIds: z.array(z.string().max(80)).max(NIGHT_LAMPS.length),
 });
 export type NightLightingCheckpoint = z.infer<typeof checkpointSchema>;
@@ -65,7 +68,9 @@ export function nightCycleKey(date: Date): string | null {
       ? new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1)
       : date;
   return [day.getFullYear(), day.getMonth() + 1, day.getDate()]
-    .map((part, index) => (index === 0 ? String(part) : String(part).padStart(2, "0")))
+    .map((part, index) =>
+      index === 0 ? String(part) : String(part).padStart(2, "0"),
+    )
     .join("-");
 }
 
