@@ -1,3 +1,5 @@
+> **BF-5 parte 2 — candidata de implementação:** [fólio de leitura e toque da Coleção](BF-5_PARTE2_FOLIO.md), com PNG real, limites e validação. BF-5 aberta; demais notas datadas abaixo são cronologia.
+
 > **Estado atual (04/11/2026):** a PR #20 (O Códice Iluminado) foi integrada à `main` com dívidas rastreadas, **sem fechar a BF-5**. A continuação prioriza formulários/UX e validação de integridade. [Decisão de integração](BF-5_INTEGRACAO_PR20.md) · [Auditoria pré-merge](BF-5_PRE_MERGE_AUDIT.md).
 
 [BF-5R9 — Auditoria Final, Polimento e Identidade Android](BF-5R9_RELATORIO.md): candidata final de implementação; sem fechamento automático da BF-5.

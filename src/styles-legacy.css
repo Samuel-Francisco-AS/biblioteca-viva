@@ -1306,7 +1306,7 @@ button:not(.primary-dock__link),
 }
 
 /* Intentional touch feedback: a short, visible pressed state on mobile.
-   React sets data-tap-active on pointerdown, not after an action completes. */
+   Cards use semantic click confirmation; other controls show pending pressure. */
 .app-shell
   :is(
     .button,
@@ -1327,7 +1327,6 @@ button:not(.primary-dock__link),
     .button,
     .primary-dock__link,
     .category-ribbon button,
-    .book-card__link,
     .rpg-choices button,
     .exploration-compass,
     .library-page .rpg-tools button
@@ -1346,11 +1345,6 @@ button:not(.primary-dock__link),
 .app-shell .category-ribbon button:is(:active, [data-tap-active="true"]) {
   background: #554267;
   color: #fff2f7;
-}
-
-.app-shell .book-card__link:is(:active, [data-tap-active="true"]) {
-  border-color: #dcc6fa;
-  background: #293047;
 }
 
 .app-shell summary[data-tap-active="true"] {
@@ -1496,10 +1490,6 @@ button:not(.primary-dock__link),
     width: 100%;
     font-size: 0.88rem;
     white-space: normal;
-  }
-
-  .app-shell .detail-layout .form-actions > .button--danger {
-    flex-basis: 100%;
   }
 
   .app-shell .button {
@@ -2303,9 +2293,6 @@ button:not(.primary-dock__link),
 .app-shell .book-card__link::before {
   display: none;
 }
-.app-shell .book-card__link:active {
-  background: #304347;
-}
 .app-shell .record-tile__emblem {
   border: 0;
   border-radius: 0;
@@ -2672,9 +2659,6 @@ button:not(.primary-dock__link),
 }
 .ritual-editor :is(input, textarea, select) {
   scroll-margin-block: 5rem;
-}
-.detail-layout > .entry-detail-sections {
-  grid-column: 1 / -1;
 }
 /* Own dock geometry at every breakpoint: legacy desktop translateX must not
    combine with the later edge insets and push the first destinations offscreen. */

@@ -1,3 +1,5 @@
+> **Próxima ação vigente (2026-11-04):** revisar a PR da BF-5 parte 2 e validar no Moto G06 o [fólio de livros, scroll da Coleção e exportação PNG](BF-5_PARTE2_FOLIO.md). Refinar conforme aceite humano. Escopo restante das seis categorias da issue #24 e dívidas #21–23 continuam abertos. Não iniciar BF-6/BF-7, fechar BF-5 ou publicar beta por esta candidata.
+
 # Roadmap
 
 > **BF-5R5 — refinamento autorizado em candidata (2026-11-04):** próxima ação é avaliar a R5 no Moto G06, incluindo arte, fluidez, toque, teclado e seis categorias, e refinar conforme feedback até o aceite. [Relatório](BF-5R5_RELATORIO.md). Não fechar BF-5, não iniciar BF-6/BF-7 nem publicar beta/release por consequência desta rodada.

@@ -185,6 +185,10 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
 
   function revealTap(event: ReactPointerEvent<HTMLDivElement>): void {
     clearTap();
+    if (event.target instanceof Element)
+      event.target
+        .closest(".book-card__link")
+        ?.removeAttribute("data-tap-confirmed");
     if (event.pointerType === "mouse" || !event.isPrimary) return;
     if (!(event.target instanceof Element)) return;
     const control = event.target.closest<HTMLElement>(
@@ -199,7 +203,9 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
 
     if (control instanceof HTMLAnchorElement)
       preloadRoute(control.getAttribute("href") ?? "");
-    control.setAttribute("data-tap-active", "true");
+    // Cards acknowledge semantic clicks only: pointerdown may begin a scroll.
+    if (!control.matches(".book-card__link"))
+      control.setAttribute("data-tap-active", "true");
     pressedRef.current = control;
     pressedOriginRef.current = {
       id: event.pointerId,
@@ -236,6 +242,8 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           )
         )
           return;
+        if (control.matches(".book-card__link"))
+          control.setAttribute("data-tap-confirmed", "true");
         pulseTouch(
           effectiveExperience.reducedMotion,
           control.matches(

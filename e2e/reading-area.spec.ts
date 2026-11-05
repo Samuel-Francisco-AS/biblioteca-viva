@@ -109,6 +109,7 @@ test("livros convencionais preservam identidade entre lista, runtime, seleção 
     page.getByRole("heading", { name: "Livro real A" }),
   ).toBeVisible();
 
+  await page.locator(".folio-secondary > summary").click();
   await page.getByRole("link", { name: "Editar dados" }).click();
   await page.getByLabel("Título").fill("Livro real A atualizado");
   await page.getByRole("button", { name: "Salvar alterações" }).click();

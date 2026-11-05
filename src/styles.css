@@ -404,7 +404,6 @@ blockquote {
 .settings-stack,
 .audio-settings-controls,
 .experience-settings-controls,
-.detail-layout,
 .history-grid {
   display: grid;
   gap: var(--space-5);
@@ -728,43 +727,6 @@ blockquote {
 .annotation-actions,
 .annotation-editor {
   margin-top: var(--space-3);
-}
-
-.detail-layout {
-  gap: 0;
-}
-
-.detail-layout > .content-card {
-  padding-block: var(--space-6);
-  border-bottom: var(--border-width) solid var(--color-border-subtle);
-  border-radius: 0;
-  background: transparent;
-}
-
-.detail-layout > .detail-summary {
-  padding-top: 0;
-}
-
-.detail-disclosure > summary {
-  cursor: pointer;
-  color: var(--color-text-primary);
-  font-weight: 720;
-}
-
-.detail-disclosure[open] > summary {
-  margin-bottom: var(--space-4);
-}
-
-.detail-summary__essentials {
-  margin-bottom: var(--space-3);
-}
-
-.detail-layout > .destructive-section {
-  margin-top: var(--space-6);
-  border: var(--border-width) solid
-    color-mix(in srgb, var(--color-error) 50%, transparent);
-  border-radius: var(--radius-medium);
-  background: color-mix(in srgb, var(--color-error-surface) 45%, transparent);
 }
 
 .reading-progress {

@@ -128,26 +128,32 @@ export function EntryDetailPage({
   if (!entry) return <p role="status">Carregando registro…</p>;
   if (entry.type === "book")
     return (
-      <>
-        <BookDetailPage application={application} refreshKey={refreshKey} />
-        <OrganizationPanel
-          application={application}
-          entry={entry}
-          onChange={setEntry}
-        />
-        <SessionPanel
-          application={application}
-          entry={entry}
-          onChanged={() => {
-            setRefreshKey((value) => value + 1);
-            void application.queries.getLibraryEntry
-              .execute({ id })
-              .then(setEntry, (failure: unknown) =>
-                setError(presentApplicationError(failure).message),
-              );
-          }}
-        />
-      </>
+      <BookDetailPage
+        application={application}
+        refreshKey={refreshKey}
+        secondary={(book, onUpdated) => (
+          <>
+            <details className="folio-secondary-flow">
+              <summary>Organização e favoritos</summary>
+              <OrganizationPanel
+                application={application}
+                entry={book}
+                onChange={(updated) => {
+                  if (updated.type === "book") onUpdated(updated);
+                }}
+              />
+            </details>
+            <details className="folio-secondary-flow">
+              <summary>Sessões de leitura</summary>
+              <SessionPanel
+                application={application}
+                entry={book}
+                onChanged={() => setRefreshKey((value) => value + 1)}
+              />
+            </details>
+          </>
+        )}
+      />
     );
   const availableApplication = application;
   const currentEntry = entry;

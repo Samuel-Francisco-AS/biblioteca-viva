@@ -19,10 +19,12 @@ test("ciclo principal persiste livro, edição, anotações e conclusão", async
     page.getByText("120 de 240 páginas", { exact: true }),
   ).toBeVisible();
 
-  await page.locator("summary", { hasText: "Adicionar nota" }).click();
+  await page.getByText("Escrever nas margens", { exact: true }).click();
   await page.getByLabel("Nota (obrigatório)").fill("Nota fictícia de leitura.");
   await page.getByRole("button", { name: "Adicionar nota" }).click();
-  await page.locator("summary", { hasText: "Histórico de leitura" }).click();
+  await page
+    .locator(".folio-annotation-tools > summary", { hasText: "Opções da nota" })
+    .click();
   await expect(page.getByText("Nota fictícia de leitura.")).toBeVisible();
   await page.getByRole("button", { name: "Editar nota" }).click();
   await page
@@ -37,7 +39,7 @@ test("ciclo principal persiste livro, edição, anotações e conclusão", async
       .last(),
   ).toBeVisible();
 
-  await page.locator("summary", { hasText: "Adicionar citação" }).click();
+  await page.getByLabel("Tipo de anotação").selectOption("quote");
   await page
     .getByLabel("Citação (obrigatório)")
     .fill("Citação fictícia para regressão.");
@@ -46,6 +48,11 @@ test("ciclo principal persiste livro, edição, anotações e conclusão", async
   await expect(
     page.getByText("Citação fictícia para regressão."),
   ).toBeVisible();
+  await page
+    .locator(".folio-annotation-tools > summary", {
+      hasText: "Opções da citação",
+    })
+    .click();
   await page.getByRole("button", { name: "Editar citação" }).click();
   await page
     .getByLabel("Editar conteúdo da citação")
@@ -70,6 +77,7 @@ test("ciclo principal persiste livro, edição, anotações e conclusão", async
   await page.locator("summary", { hasText: "Status da leitura" }).click();
   await page.getByRole("button", { name: "Concluir leitura" }).click();
   await expect(page.getByText("Status atual: Concluído.")).toBeVisible();
+  await page.locator(".folio-secondary > summary").click();
   await page.getByRole("link", { name: "Editar dados" }).click();
   await page.getByLabel("Título").fill("A Casa das Palavras — revista");
   await page.getByRole("button", { name: "Salvar alterações" }).click();

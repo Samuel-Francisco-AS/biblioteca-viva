@@ -6,14 +6,19 @@ import { presentApplicationError } from "../entry-editor/errorMessages";
 export function NoteForm({
   entryId,
   addNote,
+  totalPages,
   onAdded,
 }: {
   readonly entryId: string;
+  readonly totalPages?: number;
   readonly addNote: (input: unknown) => Promise<Note>;
   readonly onAdded: (note: Note, message: string) => void;
 }) {
   const [content, setContent] = useState("");
   const [error, setError] = useState<string>();
+  const [page, setPage] = useState("");
+  const [pageError, setPageError] = useState<string>();
+  const pageRef = useRef<HTMLInputElement>(null);
   const [isSaving, setIsSaving] = useState(false);
   const savingRef = useRef(false);
   const fieldRef = useRef<HTMLTextAreaElement>(null);
@@ -26,11 +31,34 @@ export function NoteForm({
       fieldRef.current?.focus();
       return;
     }
+    const parsedPage = page.trim() === "" ? undefined : Number(page);
+    if (
+      parsedPage !== undefined &&
+      (!Number.isSafeInteger(parsedPage) ||
+        parsedPage < 1 ||
+        (totalPages !== undefined && parsedPage > totalPages))
+    ) {
+      setPageError(
+        totalPages === undefined
+          ? "Informe uma página inteira maior que zero."
+          : `Informe uma página inteira entre 1 e ${totalPages}.`,
+      );
+      pageRef.current?.focus();
+      return;
+    }
+    setPageError(undefined);
     savingRef.current = true;
     setIsSaving(true);
     setError(undefined);
     try {
-      const note = await addNote({ entryId, content });
+      const note = await addNote({
+        entryId,
+        content,
+        ...(parsedPage !== undefined && {
+          location: { type: "book", page: parsedPage },
+        }),
+      });
+      setPage("");
       setContent("");
       onAdded(note, "Nota adicionada.");
     } catch (failure: unknown) {
@@ -65,6 +93,30 @@ export function NoteForm({
         {error && (
           <p className="field-error" id="note-content-error">
             {error}
+          </p>
+        )}
+      </div>
+      {totalPages !== undefined && (
+        <p className="field-help">O livro tem {totalPages} páginas.</p>
+      )}
+      <div className="form-field">
+        <label htmlFor="note-page">Página da nota (opcional)</label>
+        <input
+          id="note-page"
+          ref={pageRef}
+          type="number"
+          inputMode="numeric"
+          min="1"
+          max={totalPages}
+          step="1"
+          value={page}
+          onChange={(event) => setPage(event.target.value)}
+          aria-invalid={pageError ? "true" : undefined}
+          aria-describedby={pageError ? "note-page-error" : undefined}
+        />
+        {pageError && (
+          <p className="field-error" id="note-page-error">
+            {pageError}
           </p>
         )}
       </div>

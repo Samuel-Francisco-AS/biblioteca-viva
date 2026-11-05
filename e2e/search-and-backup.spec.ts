@@ -40,11 +40,17 @@ test("busca, filtro, ordenação e Arquivo preservam navegação", async ({
   page,
 }) => {
   await createBook({ author: "Lia Ômega", title: "Árvore Azul" });
-  await page.locator("summary", { hasText: "Adicionar nota" }).click();
+  await page.getByText("Escrever nas margens", { exact: true }).click();
   await page
     .getByLabel("Nota (obrigatório)")
     .fill("Mapa fictício do capítulo.");
   await page.getByRole("button", { name: "Adicionar nota" }).click();
+  // A hard page.goto must wait for the transaction's visible confirmation.
+  await expect(
+    page
+      .locator(".folio-annotations")
+      .getByText("Mapa fictício do capítulo.", { exact: true }),
+  ).toBeVisible();
   await createBook({ author: "Bruno Exemplo", title: "Brasa Serena" });
   await createBook({
     author: "Carla Teste",

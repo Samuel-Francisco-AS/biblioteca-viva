@@ -1,3 +1,5 @@
+import type { ImageFilesPort } from "../application/imageFiles";
+import { PlatformImageFiles } from "../infrastructure/files/imageFiles";
 import {
   AddNote,
   AddQuote,
@@ -121,6 +123,7 @@ export interface ApplicationDiagnostics {
 export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 
 export interface ApplicationRuntime {
+  readonly imageFiles: ImageFilesPort;
   readonly appVersion: string;
   readonly audio: AudioPort;
   readonly experience: ExperiencePreferencesPort;
@@ -310,6 +313,7 @@ export async function createApplication(
     options.annotationShare ?? new PlatformAnnotationShare();
 
   return {
+    imageFiles: new PlatformImageFiles(),
     appVersion: packageMetadata.version,
     audio,
     experience,

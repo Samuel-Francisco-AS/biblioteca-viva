@@ -118,3 +118,46 @@ it("R9 only pulses for confirmed clicks, including consecutive keyboard activati
   expect(vibrate).toHaveBeenCalledTimes(2);
   Reflect.deleteProperty(navigator, "vibrate");
 });
+
+it("cards never show pending pressure, acknowledge confirmed clicks and keep keyboard activation", () => {
+  render(
+    <MemoryRouter>
+      <App />
+    </MemoryRouter>,
+  );
+  const card = document.createElement("a");
+  card.className = "book-card__link";
+  card.textContent = "Registro fictício";
+  card.href = "#fixture";
+  card.onclick = (event) => event.preventDefault();
+  document.querySelector(".app-shell")!.append(card);
+  for (const type of [
+    "pointerdown",
+    "pointermove",
+    "pointercancel",
+    "pointerup",
+  ]) {
+    card.dispatchEvent(
+      new PointerEvent(type, {
+        bubbles: true,
+        pointerType: "touch",
+        isPrimary: true,
+        pointerId: 1,
+        clientY: type === "pointermove" ? 90 : 10,
+      }),
+    );
+    expect(card).not.toHaveAttribute("data-tap-active");
+    expect(card).not.toHaveAttribute("data-tap-confirmed");
+  }
+  fireEvent.click(card, { detail: 0 });
+  expect(card).toHaveAttribute("data-tap-confirmed", "true");
+  card.dispatchEvent(
+    new PointerEvent("pointerdown", {
+      bubbles: true,
+      pointerType: "touch",
+      isPrimary: true,
+      pointerId: 2,
+    }),
+  );
+  expect(card).not.toHaveAttribute("data-tap-confirmed");
+});
