@@ -1,3 +1,9 @@
+## Estado vigente em 05/11/2026 — BF-5 encerrada no escopo aprovado
+
+A **BF-5 — Reforma Global de UI/UX** foi integrada à `main` pelas PRs #25–#30, com aceite artístico/funcional dirigido no Moto G06 e **exceções técnicas registradas**, sem CI E2E global verde. [Fechamento formal e commits de merge](BF-5_FECHAMENTO_2026-11-05.md).
+
+**Próximo passo: planejamento independente da BF-6 — Mundo Vivo/RPG**, aprofundando personagens, exploração, diálogos, interatividade e sistemas de RPG, a definir com o proprietário. **BF-7 permanece futura**, com testes globais, estabilidade, acessibilidade, TalkBack e gate de consolidação. Dívidas [#21](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/21), [#22](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/22), [#23](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/23) e [#24](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/24) não foram encerradas por implicação; integridade de dados é prioritária quando relevante. **Não há autorização automática para BF-6, BF-7, beta ou release.** Os planos de avaliação da BF-5 abaixo são registros históricos anteriores ao fechamento.
+
 ## BF-5 — revisão do Atlas clássico
 
 Candidata estática projetada substitui o atlas articulado por solicitação do proprietário. Próximo trabalho aprovado: apreciação/refinamento desta apresentação e validação física acumulada no Moto G06, mantendo Empreitadas e avaliações. Sem encerramento BF-5 ou avanço automático à BF-6. [Relatório](BF-5_ATLAS_CLASSICO_PROJETADO.md).

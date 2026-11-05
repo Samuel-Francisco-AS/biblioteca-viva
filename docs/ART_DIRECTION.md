@@ -1,3 +1,5 @@
+> **Direção aprovada da BF-5 (05/11/2026):** O Códice Iluminado e o **Atlas Clássico projetado** com gravuras masculinas/femininas estáticas, rotação contemplativa e dissolução substituem a apresentação articulada rejeitada. O proprietário considerou a versão instalada satisfatória para integração e fechamento da reforma de UI/UX. Esse é um aceite artístico dirigido, sem equivaler a um gate físico/assistivo completo. [Fechamento BF-5](BF-5_FECHAMENTO_2026-11-05.md) · [ADR-022](decisions/ADR-022-atlas-classico-projetado.md). Textos de candidatas anteriores são históricos.
+
 ## BF-5 — Atlas clássico projetado (2026-11-05)
 
 O proprietário rejeitou a interpretação articulada do Atlas Vivo. A direção vigente exige gravuras estáticas clássicas refinadas, com desenhos masculinos/femininos próprios, variando pose/perspectiva, e rotação contemplativa por dissolução. A sensação sobrenatural vem da arte e da projeção; não há animação corporal procedural. [ADR-022](decisions/ADR-022-atlas-classico-projetado.md) · [candidata e pendências de aceite humano](BF-5_ATLAS_CLASSICO_PROJETADO.md).
