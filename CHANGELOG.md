@@ -1,3 +1,10 @@
+## 2026-11-05 — BF-5.5C (candidata)
+
+- Noite com preenchimento lunar azulado e nove luminárias existentes efetivamente luminosas, sem novos seletores ou mobília.
+- Ritual de acendimento integrado à agência, reservas exclusivas e fallback luminoso independente dos NPCs.
+- Checkpoint local idempotente do ritual na tabela `settings`, sem migração Dexie ou backup; segredo da luminária manual BF-4E preservado.
+- [Relatório e pendências físicas](docs/BF-5_5C_RELATORIO.md). PR draft #34 sobre #33, sem merge ou aprovação física/CI global.
+
 ## 2026-11-05 — BF-5 integrada e encerrada no escopo aprovado (com ressalvas)
 
 - Integração ordenada das PRs [#25](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/25) a [#30](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/30) na `main`, preservando os commits de merge; merge final `1df8adad`.

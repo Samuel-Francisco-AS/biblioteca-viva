@@ -1,3 +1,5 @@
+> **BF-5.5C em candidata (05/11/2026):** noite azulada legível, nove abajures físicos luminosos, fallback mágico e ritual autônomo idempotente com checkpoint local. [Relatório](BF-5_5C_RELATORIO.md) · [PR draft #34](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/34). Encadeada às PRs #33/#32; **sem merge, gate físico ou CI global verde confirmado**. BF-5.5D–G continuam planejadas.
+
 > **BF-5.5B em candidata (05/11/2026):** leases exclusivos e ciclo físico do livro cenográfico sobre a BF-5.5A, sem nova migração. **Sem merge, gate físico ou CI global verde confirmado.** [Relatório](BF-5_5B_RELATORIO.md). B permanece encadeada à PR #32; C–G e BF-6 não foram iniciadas.
 
 > **BF-5.5A em candidata na PR draft #32 (05/11/2026):** continuidade local dos quatro habitantes, checkpoint seguro de pose/intenção e restauração antes da montagem do mundo. **Sem merge, gate físico ou CI global verde confirmado.** [Relatório](BF-5_5A_RELATORIO.md).

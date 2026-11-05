@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { LivingSession } from "./livingObjects";
 import {
   NIGHT_LAMPS,
   NightLightingSession,
@@ -33,6 +34,20 @@ describe("BF-5.5C independent night lighting", () => {
     expect(session.getSnapshot().cycleKey).toBeNull();
     expect(session.power(NIGHT_LAMPS[0]!.id)).toBe(0);
     expect(nightCycleKey(new Date(2026, 10, 6, 18))).toBe("2026-11-06");
+  });
+
+  it("keeps the BF-4E story lamp manual even while the other shades glow", () => {
+    const date = new Date(2026, 10, 5, 22);
+    const ritual = new NightLightingSession(() => date);
+    const story = new LivingSession(() => date);
+    for (const lamp of ritual.pending()) ritual.complete(lamp.id);
+    expect(story.getSnapshot().discovery).toBe(0);
+    expect(story.getSnapshot().objects["living:lamp"]?.active).toBe(false);
+    story.act("living:lamp", "toggle");
+    expect(story.getSnapshot().discovery).toBe(1);
+    story.act("living:lamp", "toggle");
+    expect(story.getSnapshot().objects["living:lamp"]?.active).toBe(false);
+    expect(ritual.pending()).toHaveLength(0);
   });
 
   it("records gestures once per cycle and reconstructs safe state after reopening", () => {

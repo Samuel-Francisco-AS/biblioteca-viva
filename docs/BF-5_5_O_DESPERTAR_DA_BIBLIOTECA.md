@@ -7,6 +7,8 @@
 
 > **BF-5.5A — candidata na PR draft #32:** checkpoint versionado dos habitantes, restauração geométrica, armazenamento na tabela `settings` já coberta por backup v6 e saves em lifecycle. **Implementação em branch separada, ainda não validada fisicamente nem integrada à main.** [Relatório](BF-5_5A_RELATORIO.md) · [PR #32](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/32). Frentes B–G continuam planejadas.
 
+> **BF-5.5C — candidata na PR draft #34:** nove abajures existentes iluminados, noite lunar, fallback independente e tarefa ritual dos habitantes, com progresso local versionado; sem merge, CI global verde ou gate físico. [Relatório](BF-5_5C_RELATORIO.md) · [PR #34](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/34). Etapas D–G continuam planejadas.
+
 ## 1. Visão e objetivo de produto
 
 Transformar o cenário 3D existente em um lugar persistentemente habitado e visivelmente encantado. A arquitetura, a iluminação e os objetos devem responder às rotinas dos quatro habitantes e às atividades reais do jogador; as interações precisam acontecer **fisicamente na cena**, com consequências observáveis, não apenas por texto ou gestos decorativos. A experiência deve preservar a identidade de fantasia sobrenatural, com magia regularmente presente e momentos espetaculares, mantendo legibilidade, conforto e operação mobile.

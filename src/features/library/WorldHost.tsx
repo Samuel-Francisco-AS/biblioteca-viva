@@ -345,14 +345,20 @@ export function WorldHost({
       nightLighting.refreshContext();
     };
     refresh();
-    // One timer per host; no per-lamp or per-frame timers.
-    const interval = window.setInterval(refresh, 60_000);
+    // One host timer aligned to the wall-clock minute boundary. The evening
+    // transition does not wait up to a full minute after 18:00.
+    let interval: number | undefined;
+    const initial = window.setTimeout(() => {
+      refresh();
+      interval = window.setInterval(refresh, 60_000);
+    }, 60_000 - (Date.now() % 60_000));
     const onVisible = () => {
       if (!document.hidden) refresh();
     };
     document.addEventListener("visibilitychange", onVisible);
     return () => {
-      window.clearInterval(interval);
+      window.clearTimeout(initial);
+      if (interval !== undefined) window.clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisible);
     };
   }, [livingSession, nightLighting, libraryWorldSnapshot, performanceScenario]);

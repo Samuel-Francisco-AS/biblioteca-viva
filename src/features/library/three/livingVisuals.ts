@@ -189,14 +189,18 @@ export function createLivingVisuals(
   });
   // Existing BF-4 furniture already has physical lamps in nine positions.
   // Add luminous cores at the real shades, not duplicate models or pickables.
-  const shadeGlowGeometry = new SphereGeometry(0.14, 12, 8);
-  const shadeGlowMaterial = new MeshBasicMaterial({
-    color: 0xffd6a1,
-    transparent: true,
-    opacity: 0.82,
-    depthWrite: false,
-  });
-  const ambientLamps = nightLighting
+  const shadeGlowGeometry = nightLighting
+    ? new SphereGeometry(0.14, 12, 8)
+    : undefined;
+  const shadeGlowMaterial = nightLighting
+    ? new MeshBasicMaterial({
+        color: 0xffd6a1,
+        transparent: true,
+        opacity: 0.82,
+        depthWrite: false,
+      })
+    : undefined;
+  const ambientLamps = nightLighting && shadeGlowGeometry && shadeGlowMaterial
     ? NIGHT_LAMPS.map((fixture) => {
         const group = new Group();
         group.name = fixture.id;
@@ -398,7 +402,9 @@ export function createLivingVisuals(
       }
       // Moonlit blue fill preserves legibility; amber pools reveal the furniture.
       // Narrative darkness affects sky, but does not turn off the real clock lamps.
-      const dark = atmosphere === "noturna";
+      const dark =
+        atmosphere === "noturna" ||
+        (nightLighting?.getSnapshot().cycleKey !== null && nightLighting !== undefined);
       scene.traverse((object) => {
         if (object instanceof HemisphereLight) {
           const intensity = dark ? 1.08 : atmosphere === "encantada" ? 1.25 : 2;
