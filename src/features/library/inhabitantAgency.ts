@@ -17,6 +17,7 @@ import {
   LIBRARY_ACTIVITY_ZONES,
 } from "./librarySpatialLayout";
 import { ENCOUNTERS, type EncounterScript } from "./inhabitantEncounters";
+import type { NightLightingSession } from "./nightLighting";
 import type { NarrativeBond } from "./narrative/contracts";
 import type { LivingEvent } from "./livingObjects";
 import {
@@ -48,6 +49,7 @@ interface Task {
   readonly facing: number;
   readonly label: string;
   readonly objectId?: string;
+  readonly nightLampId?: string;
   readonly interaction?: {
     readonly source: Position;
     readonly approach: Position;
@@ -138,6 +140,7 @@ export interface AgencyOptions {
   readonly hour?: () => number;
   readonly seed?: number;
   readonly onEnvironmentAction?: (key: InhabitantKey, objectId: string) => void;
+  readonly nightLighting?: NightLightingSession;
 }
 const tasks: readonly Task[] = [
   ...LIBRARY_ACTIVITY_POINTS.flatMap((p) => {
@@ -471,7 +474,7 @@ export class InhabitantAgency {
     this.mode = mode;
     if (mode !== "running") {
       for (const agent of this.agents) {
-        if (agent.task?.interaction) {
+        if (agent.task?.interaction || agent.task?.nightLampId) {
           this.releaseInteraction(agent);
           agent.task = null;
           agent.route = [];
@@ -507,10 +510,10 @@ export class InhabitantAgency {
     if (this.mode !== "running" || dt === 0) return;
     this.elapsed += dt;
     for (const a of this.agents) {
-      if (!a.task?.interaction || !a.interactionTaskId) continue;
+      if (!a.interactionTaskId || !a.task) continue;
       if (
         !this.interactions.renew(
-          a.task.objectId ?? a.task.id,
+          a.task.nightLampId ?? a.task.objectId ?? a.task.id,
           a.key,
           a.interactionTaskId,
           this.elapsed * 1000,
@@ -519,7 +522,7 @@ export class InhabitantAgency {
         a.interactionState = "failed";
         this.releaseInteraction(a);
         a.task = null;
-        this.stop(a, "A reserva expirou; o livro permanece no mundo.", 4);
+        this.stop(a, "Reserva expirada; a tarefa foi interrompida com segurança.", 4);
       }
     }
     for (const a of this.agents)
@@ -575,7 +578,7 @@ export class InhabitantAgency {
       action === "magic" ? e.magic : action === "work" ? e.work : e.travel;
     if (!this.navigation.clear(a, a, radius, this.occupied(a))) return false;
     this.cancelMeeting("Encontro adiado para respeitar a atenção manual.", a);
-    if (a.task?.interaction) {
+    if (a.task?.interaction || a.task?.nightLampId) {
       this.releaseInteraction(a);
       a.task = null;
     }
@@ -609,7 +612,7 @@ export class InhabitantAgency {
     );
     for (const a of this.agents) {
       if (wanted.has(a.key)) {
-        if (a.task?.interaction) {
+        if (a.task?.interaction || a.task?.nightLampId) {
           this.releaseInteraction(a);
           a.task = null;
           a.route = [];
@@ -710,7 +713,7 @@ export class InhabitantAgency {
         const relevant =
           roomAt(a) === room || (e.type === "discovered" && a.key === "lua");
         if (!relevant) continue;
-        if (a.task?.interaction) {
+        if (a.task?.interaction || a.task?.nightLampId) {
           this.releaseInteraction(a);
           a.task = null;
         }
@@ -885,6 +888,24 @@ export class InhabitantAgency {
           ? "magic"
           : "work";
     a.activity = this.taskDescription(a, task);
+    if (task.nightLampId && a.interactionTaskId) {
+      const lamp = this.options.nightLighting?.pending().find(
+        (fixture) => fixture.id === task.nightLampId,
+      );
+      if (
+        !lamp ||
+        distance(a, lamp) > 2.8 ||
+        !this.interactions.owns(lamp.id, a.key, a.interactionTaskId, this.elapsed * 1000)
+      ) {
+        this.stop(a, "A luminária está fora de alcance; tarefa liberada.", 4);
+        a.task = null;
+        return;
+      }
+      a.action = "gesture";
+      a.activity = "Ergue a mão e invoca uma chama âmbar na luminária.";
+      a.until = this.elapsed + 1.2;
+      return;
+    }
     if (task.interaction && a.interactionTaskId) {
       if (a.interactionState === "carrying") {
         a.interactionState = "placing";
@@ -958,7 +979,43 @@ export class InhabitantAgency {
           ? "Desenha e revisa o grimório com o lápis em movimento."
           : "Lê e observa os detalhes de uma flor cenográfica.";
   }
+  private chooseNightTask(a: Agent): boolean {
+    const ritual = this.options.nightLighting;
+    if (!ritual || ritual.getSnapshot().cycleKey === null) return false;
+    const envelope = INHABITANT_ENVELOPES[a.key];
+    for (const lamp of [...ritual.pending()].sort(
+      (left, right) => distance(a, left) - distance(a, right),
+    )) {
+      const candidates = this.navigation.nodes
+        .filter((point) => roomAt(point) === lamp.roomId && distance(point, lamp) <= 2.8)
+        .sort((left, right) => distance(left, lamp) - distance(right, lamp));
+      for (const position of candidates) {
+        if (!this.navigation.clear(position, position, envelope.work, this.occupied(a, true)))
+          continue;
+        const taskId = `night:${ritual.getSnapshot().cycleKey}:${lamp.id}:${a.key}`;
+        if (!this.interactions.reserve(lamp.id, a.key, taskId, this.elapsed * 1000))
+          break;
+        if (this.go(a, position)) {
+          a.task = {
+            id: taskId,
+            kind: "observation",
+            position,
+            facing: Math.atan2(lamp.x - position.x, lamp.z - position.z),
+            label: "ritual noturno de acendimento",
+            nightLampId: lamp.id,
+          };
+          a.interactionTaskId = taskId;
+          a.activity = "A caminho de um abajur para o ritual noturno.";
+          return true;
+        }
+        this.interactions.release(lamp.id, a.key, taskId);
+      }
+    }
+    return false;
+  }
+
   private chooseTask(a: Agent) {
+    if (this.chooseNightTask(a)) return;
     const night = this.hour() < 6 || this.hour() >= 18;
     const scored = tasks
       .map((t) => {
@@ -1017,6 +1074,20 @@ export class InhabitantAgency {
   }
   private finishWork(a: Agent) {
     a.taskCount++;
+    if (a.task?.nightLampId) {
+      const lampId = a.task.nightLampId;
+      const valid =
+        a.interactionTaskId !== null &&
+        this.interactions.owns(lampId, a.key, a.interactionTaskId, this.elapsed * 1000);
+      if (valid && this.options.nightLighting?.complete(lampId)) {
+        this.note(`${a.label} reacende uma luminária. A Biblioteca responde em âmbar.`);
+        this.stop(a, "Concluiu o ritual de acendimento.", 4);
+      } else {
+        this.stop(a, "O ritual foi interrompido; a luz permanece funcional.", 4);
+      }
+      a.task = null;
+      return;
+    }
     if (
       a.task?.kind === "experiment" &&
       this.elapsed >= this.incidentAfter &&
@@ -1075,8 +1146,11 @@ export class InhabitantAgency {
     a.blocked = 0;
   }
   private releaseInteraction(a: Agent) {
-    if (a.task?.objectId && a.interactionTaskId)
-      this.interactions.release(a.task.objectId, a.key, a.interactionTaskId);
+    if (a.interactionTaskId) {
+      const resourceId = a.task?.nightLampId ?? a.task?.objectId;
+      if (resourceId)
+        this.interactions.release(resourceId, a.key, a.interactionTaskId);
+    }
     a.interactionTaskId = null;
     a.interactionState = null;
   }
@@ -1154,6 +1228,7 @@ export class InhabitantAgency {
       !a.manual &&
       !this.conversation.has(a.key) &&
       !a.encounter &&
+      !a.task?.nightLampId &&
       (a.state === "idle" ||
         (a.state === "work" && this.elapsed - a.started >= 8) ||
         (a.state === "navigate" && this.elapsed - a.started >= 15));
