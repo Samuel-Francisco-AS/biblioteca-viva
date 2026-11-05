@@ -1,3 +1,4 @@
+import { BVSelectSheet } from "../../ui/BVPicker";
 import { VISIBLE_GROUPS, groupLabels } from "../entertainment/catalogFilters";
 import { parseTypeFilter } from "../collection/collectionControls";
 import { RealmIntro } from "../../app/RealmIntro";
@@ -419,7 +420,7 @@ export function StatisticsPage({
         <legend>Filtros</legend>
         <label className="form-field">
           Período
-          <select
+          <BVSelectSheet
             value={window}
             onChange={(event) => update("window", event.target.value)}
           >
@@ -428,11 +429,11 @@ export function StatisticsPage({
                 {windowLabels[value]}
               </option>
             ))}
-          </select>
+          </BVSelectSheet>
         </label>
         <label className="form-field">
           Tipo de registro
-          <select
+          <BVSelectSheet
             value={
               entryType === "movie" || entryType === "series"
                 ? "entertainment"
@@ -446,11 +447,11 @@ export function StatisticsPage({
                 {groupLabels[type]}
               </option>
             ))}
-          </select>
+          </BVSelectSheet>
         </label>
         <label className="form-field">
           Categoria da timeline
-          <select
+          <BVSelectSheet
             value={category ?? "all"}
             onChange={(event) => update("category", event.target.value)}
           >
@@ -460,7 +461,7 @@ export function StatisticsPage({
                 {label}
               </option>
             ))}
-          </select>
+          </BVSelectSheet>
         </label>
       </fieldset>
       <section className="statistics-overview" aria-labelledby="global-summary">

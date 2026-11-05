@@ -1,3 +1,4 @@
+import { chooseOption, chooseDate } from "../../test/pickers";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
@@ -114,8 +115,8 @@ describe("cadastro de livro", () => {
     await user.type(screen.getByLabelText(/total de páginas/i), "200");
     await user.clear(screen.getByLabelText(/página atual/i));
     await user.type(screen.getByLabelText(/página atual/i), "12");
-    await user.selectOptions(screen.getByLabelText(/status/i), "in_progress");
-    await user.selectOptions(screen.getByLabelText(/avaliação/i), "5");
+    await chooseOption(user, screen.getByLabelText(/status/i), "in_progress");
+    await chooseOption(user, screen.getByLabelText(/avaliação/i), "5");
     await user.click(screen.getByRole("button", { name: "Salvar livro" }));
     await waitFor(() => expect(create).toHaveBeenCalledOnce());
     expect(create).toHaveBeenCalledWith({
@@ -151,7 +152,7 @@ describe("cadastro de livro", () => {
     await user.click(screen.getByText("Impressões e data de início"));
     const startedAt = screen.getByLabelText(/data de início/i);
     expect(startedAt).not.toHaveAttribute("min");
-    await user.type(startedAt, "2020-01-15");
+    await chooseDate(user, startedAt, "2020-01-15");
     await user.click(screen.getByRole("button", { name: "Salvar livro" }));
     await waitFor(() => expect(create).toHaveBeenCalledOnce());
     expect(create).toHaveBeenCalledWith({

@@ -1,3 +1,4 @@
+import { chooseBVOption } from "./pickers";
 import { readFile, writeFile } from "node:fs/promises";
 import { expect, test } from "./fixtures";
 
@@ -113,7 +114,7 @@ test("fólio persiste estado, marcador, notas/citações e exporta PNG nas duas 
   await expect(
     page.locator(".folio-annotations").getByText("Página 45"),
   ).toBeVisible();
-  await page.getByLabel("Tipo de anotação").selectOption("quote");
+  await chooseBVOption(page, page.getByLabel("Tipo de anotação"), "quote");
   await page
     .getByLabel("Citação (obrigatório)")
     .fill("As horas florescem onde a memória encontra abrigo.");
@@ -156,9 +157,12 @@ test("fólio persiste estado, marcador, notas/citações e exporta PNG nas duas 
   await expect(preview).toBeVisible();
   await expect(preview).toHaveJSProperty("naturalWidth", 1080);
   await expect(preview).toHaveJSProperty("naturalHeight", 1350);
-  await expect(dialog.getByLabel("Composição").locator("option")).toHaveCount(
-    2,
-  );
+  await dialog.getByLabel("Composição").click();
+  const selectionSheet = page.locator("dialog[open]").last();
+  await expect(selectionSheet.getByRole("radio")).toHaveCount(2);
+  await selectionSheet
+    .getByRole("button", { name: "Cancelar", exact: true })
+    .click();
   const summarySrc = await preview.getAttribute("src");
   expect(summarySrc).toMatch(/^data:image\/png;base64,/);
   await page.evaluate(() => {
@@ -188,7 +192,7 @@ test("fólio persiste estado, marcador, notas/citações e exporta PNG nas duas 
     body: png,
     contentType: "image/png",
   });
-  await dialog.getByLabel("Composição").selectOption({ index: 1 });
+  await chooseBVOption(page, dialog.getByLabel("Composição"), { index: 1 });
   await expect(preview).toHaveAttribute("alt", /As horas florescem/);
   await expect.poll(() => preview.getAttribute("src")).not.toBe(summarySrc);
   const quoteDownload = page.waitForEvent("download");

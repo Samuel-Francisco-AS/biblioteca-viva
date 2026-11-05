@@ -1,3 +1,9 @@
+# BF-5 Parte 2E — verificação proporcional (2026-11-04)
+
+Controles DOM testados por toque/teclado, confirmação/cancelamento, FormData/reset/required e Back da superfície superior. Chromium verifica foco real/inert/top layer, datas e recuperação de foco persistido. Imagens têm upgrade v12→v13/reabertura, ownership, duplicatas, remoção/substituição/restore/exclusão isolada. Ateliê compara byte a byte prévia e download PNG, assinatura e dimensões 1080 × 1080/1350/1920, modos offline, capa, fundo e personalização. [Resultados finais, falhas intermediárias e roteiro físico](BF-5_PARTE2E_CONTROLES_CAPAS_ATELIE.md).
+
+Suíte ampla local: 777 PASS/9 FAIL antes de adequar expectativas; oito de contrato corrigidas, timeout antigo da agência preservado e não repetido. Rodada dirigida 71 PASS/13 arquivos e posterior 9 PASS/3 arquivos, com sobreposição; seis E2E distintos aprovados entre rodadas e rodada final nova 2/2. Nenhuma alegação de CI global verde ou teste físico/TalkBack. Baseline remoto #28 FAIL (780 unitários PASS/1 expectativa antiga FAIL; E2E 30 PASS/27 FAIL), separado das regressões desta candidata.
+
 ## BF-5 Parte 2D — evidência dirigida
 
 [Relatório e resultados](BF-5_PARTE2D_ENTRETENIMENTO.md): criação das seis combinações de formato/estrutura, legado, filtros/listas/datas civis, progresso/temporadas/diário, revisão concorrente, poster limitado/ownership, upgrade/reabertura e restore v6 antigo/novo. Playwright valida o PNG binário 1080 × 1350/1920 offline, fundos/mensagem/prévia e ergonomia web; mocks verificam Share/SAF/cancelamento/erro. Preservam-se regressões dos livros/estudo/treinos e seis projeções 3D. Nenhum resultado equivale a aceite físico/artístico, TalkBack ou CI global verde.

@@ -1,3 +1,9 @@
+# BF-5 Parte 2E — controles, mídia e composição (2026-11-04)
+
+`src/ui/BVPicker.tsx` mantém seletores/calendário na top layer DOM, com valores/validação convencionais e Back exclusivo da superfície superior. `RecordCoverEditor` acessa a porta generalizada de mídia, nunca Dexie. Dexie v13 conserva a tabela `media` v12 e amplia ownership para livros, com backup v6 validado. `BVShareComposer` coordena estado/PNG/entrega; adaptadores de livro/cinema fornecem somente conteúdo explicitamente compartilhável, e `renderSharePlate` desenha em Canvas 2D independente da tela. [ADR-019](decisions/ADR-019-controles-internos-capas-atelie.md).
+
+A [ADR-020](decisions/ADR-020-baralhos-e-cartas-globais.md) é recomendação para futuro subsistema de cartas, sem implementação/migração ou contrato espacial novo. Fronteiras de domínio/aplicação/infraestrutura e os seis tipos/renderer permanecem vigentes.
+
 # Arquitetura
 
 ```text

@@ -1,3 +1,4 @@
+import { chooseBVOption } from "./pickers";
 import { expect, test } from "./fixtures";
 
 test.use({
@@ -16,7 +17,7 @@ test("estudo recupera pomodoro após suspensão/reload, preserva pausas e regist
   await page
     .getByRole("textbox", { name: "Título", exact: true })
     .fill("Cartografia das estrelas");
-  await page.getByLabel("Unidade de progresso").selectOption("hours");
+  await chooseBVOption(page, page.getByLabel("Unidade de progresso"), "hours");
   await page.getByRole("button", { name: "Salvar registro" }).click();
   await expect(
     page.getByRole("heading", { name: "Cartografia das estrelas" }),

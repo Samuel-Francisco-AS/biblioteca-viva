@@ -1,0 +1,48 @@
+.bv-cover-editor {
+  padding: 1rem 0;
+  border-top: 1px solid #b89d80;
+}
+.bv-cover-editor summary {
+  cursor: pointer;
+  padding: 0.5rem 0;
+  font-family: Georgia, serif;
+}
+.bv-cover-editor img {
+  display: block;
+  width: 100px;
+  height: 145px;
+  object-fit: cover;
+  margin: 1rem 0;
+  border: 1px solid #ad865d;
+  border-radius: 3px 8px 8px 3px;
+  box-shadow: 3px 6px 16px #281c3033;
+}
+.book-folio .folio-identity--covered {
+  grid-template-columns: clamp(64px, 18vw, 125px) minmax(0, 1fr) auto;
+}
+.book-folio img.folio-book-cover {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  border-radius: 3px 8px 8px 3px;
+  border: 1px solid #ad865d;
+  box-shadow: 4px 6px 18px #281c3033;
+  flex-shrink: 0;
+}
+.folio-identity-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+  .book-folio .folio-identity--covered {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+  .folio-identity--covered .folio-seal {
+    grid-column: 2;
+    justify-self: start;
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+}

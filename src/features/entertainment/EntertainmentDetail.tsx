@@ -1,3 +1,5 @@
+import { RecordCoverEditor } from "../../ui/RecordCoverEditor";
+import { BVDatePicker } from "../../ui/BVPicker";
 import { ApplicationError } from "../../application/errors";
 import {
   useCallback,
@@ -438,8 +440,7 @@ export function EntertainmentDetail({
                 </p>
                 <label className="form-field">
                   Data em que assistiu
-                  <input
-                    type="date"
+                  <BVDatePicker
                     name="watchedOn"
                     defaultValue={entry.catalog?.watchedOn}
                   />
@@ -515,27 +516,13 @@ export function EntertainmentDetail({
         >
           Editar obra
         </Link>
-        {poster && (
-          <button
-            type="button"
-            disabled={busy}
-            className="button button--secondary"
-            onClick={() => {
-              void (async () => {
-                if (!window.confirm("Remover o poster desta obra?")) return;
-                try {
-                  await application.posters?.remove(entry.id);
-                  setPoster(undefined);
-                  setMessage("Poster removido.");
-                } catch {
-                  setError("Não foi possível remover o poster.");
-                }
-              })();
-            }}
-          >
-            Remover poster
-          </button>
-        )}
+        <RecordCoverEditor
+          key={entry.id}
+          entryId={entry.id}
+          images={application.posters}
+          cover={poster}
+          onSaved={setPoster}
+        />
         <p className="cinema-dates">
           Atualizado em {new Date(entry.updatedAt).toLocaleDateString("pt-BR")}
         </p>

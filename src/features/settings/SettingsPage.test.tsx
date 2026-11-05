@@ -1,3 +1,4 @@
+import { chooseOption } from "../../test/pickers";
 import {
   act,
   fireEvent,
@@ -142,7 +143,8 @@ describe("Configurações e backup", () => {
     await user.click(
       screen.getByRole("checkbox", { name: "Usar alto contraste" }),
     );
-    await user.selectOptions(
+    await chooseOption(
+      user,
       screen.getByRole("combobox", { name: "Tamanho do texto" }),
       "larger",
     );

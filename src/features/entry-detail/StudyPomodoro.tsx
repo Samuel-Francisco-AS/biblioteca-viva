@@ -1,3 +1,4 @@
+import { BVSelectSheet } from "../../ui/BVPicker";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -65,7 +66,7 @@ export function StudyPomodoro({
         <p>Uma página, uma ideia, um passo de cada vez.</p>
         <label className="study-duration">
           Duração do foco
-          <select
+          <BVSelectSheet
             value={minutes}
             disabled={Boolean(open) || busy || loading}
             onChange={(event) => setMinutes(Number(event.target.value))}
@@ -73,7 +74,7 @@ export function StudyPomodoro({
             <option value={15}>15 minutos · breve encontro</option>
             <option value={25}>25 minutos · pomodoro</option>
             <option value={45}>45 minutos · imersão</option>
-          </select>
+          </BVSelectSheet>
         </label>
         <p className="study-hint">
           Pode apagar a tela ou sair do app. O tempo é recuperado no retorno e

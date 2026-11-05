@@ -1,3 +1,4 @@
+import { chooseBVDate } from "./pickers";
 import { chooseRecordType } from "./fixtures";
 import { expect, test } from "./fixtures";
 
@@ -68,8 +69,8 @@ test("BF-5R5/2C: strength is a reusable sheet with dated executions and immutabl
   await page.getByRole("button", { name: /Atividade física/ }).click();
   await page.getByLabel("Nome do treino").fill("Peito e tríceps fictício");
   await page.getByRole("radio", { name: "Força", exact: true }).check();
-  await page.getByLabel("Data de início").fill("2026-10-01");
-  await page.getByLabel("Data final").fill("2026-11-30");
+  await chooseBVDate(page, page.getByLabel("Data de início"), "2026-10-01");
+  await chooseBVDate(page, page.getByLabel("Data final"), "2026-11-30");
   await page.getByRole("checkbox", { name: "Qua", exact: true }).check();
   await page
     .getByRole("button", { name: "Adicionar exercício", exact: true })
@@ -87,7 +88,11 @@ test("BF-5R5/2C: strength is a reusable sheet with dated executions and immutabl
     }),
   ).toBeVisible();
   await expect(page.getByLabel(/Distância em metros/)).toHaveCount(0);
-  await page.getByLabel("Dia", { exact: true }).fill("2026-10-30");
+  await chooseBVDate(
+    page,
+    page.getByRole("button", { name: "Dia", exact: true }),
+    "2026-10-30",
+  );
   await page.getByLabel("Intensidade percebida (1–10)").fill("6");
   const observations = page
     .locator("summary")
@@ -122,7 +127,11 @@ test("BF-5R5/2C: strength is a reusable sheet with dated executions and immutabl
   await expect(page.locator(".workout-movement")).toContainText(
     "Base · 3 × 15",
   );
-  await page.getByLabel("Dia", { exact: true }).fill("2026-10-30");
+  await chooseBVDate(
+    page,
+    page.getByRole("button", { name: "Dia", exact: true }),
+    "2026-10-30",
+  );
   await expect(page.locator(".workout-movement")).toContainText(
     "Base · 3 × 10",
   );
@@ -130,7 +139,11 @@ test("BF-5R5/2C: strength is a reusable sheet with dated executions and immutabl
     page.locator(".workout-movement").getByLabel("Repetições", { exact: true }),
   ).toHaveValue("10");
   await page.reload();
-  await page.getByLabel("Dia", { exact: true }).fill("2026-10-30");
+  await chooseBVDate(
+    page,
+    page.getByRole("button", { name: "Dia", exact: true }),
+    "2026-10-30",
+  );
   await expect(page.locator(".workout-movement")).toContainText(
     "Base · 3 × 10",
   );

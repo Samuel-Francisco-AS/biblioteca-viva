@@ -1,3 +1,4 @@
+import { BVSelectSheet } from "../../ui/BVPicker";
 import {
   VISIBLE_GROUPS,
   groupLabels,
@@ -250,7 +251,7 @@ export function ArchivePage({
           <legend>Filtros do Arquivo</legend>
           <label className="form-field">
             Anotação
-            <select
+            <BVSelectSheet
               value={kind}
               onChange={(event) =>
                 setParams(
@@ -267,11 +268,11 @@ export function ArchivePage({
               <option value="all">Notas e citações</option>
               <option value="note">Notas</option>
               <option value="quote">Citações</option>
-            </select>
+            </BVSelectSheet>
           </label>
           <label className="form-field">
             Tipo de registro
-            <select
+            <BVSelectSheet
               value={
                 entryType === "movie" || entryType === "series"
                   ? "entertainment"
@@ -295,11 +296,11 @@ export function ArchivePage({
                   {groupLabels[type]}
                 </option>
               ))}
-            </select>
+            </BVSelectSheet>
           </label>
           <label className="form-field">
             Etiqueta
-            <select
+            <BVSelectSheet
               value={tagId}
               onChange={(event) =>
                 setParams(
@@ -319,7 +320,7 @@ export function ArchivePage({
                   {tag.name}
                 </option>
               ))}
-            </select>
+            </BVSelectSheet>
           </label>
           <label className="checkbox-field">
             <input

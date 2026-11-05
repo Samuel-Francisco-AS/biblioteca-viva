@@ -1,3 +1,4 @@
+import { chooseBVDate } from "./pickers";
 import { expect, test } from "./fixtures";
 import { mkdir } from "node:fs/promises";
 test.use({
@@ -29,8 +30,8 @@ test("ficha viva cria, adapta dias, conserva base, estima com perfil e apresenta
       page.getByRole("radio", { name: label, exact: true }),
     ).toBeChecked();
   }
-  await page.getByLabel("Data de início").fill("2026-11-01");
-  await page.getByLabel("Data final").fill("2026-11-30");
+  await chooseBVDate(page, page.getByLabel("Data de início"), "2026-11-01");
+  await chooseBVDate(page, page.getByLabel("Data final"), "2026-11-30");
   for (const name of ["Seg", "Qua", "Sex"])
     await page.getByRole("checkbox", { name, exact: true }).check();
   await page
@@ -100,7 +101,11 @@ test("ficha viva cria, adapta dias, conserva base, estima com perfil e apresenta
       exact: true,
     }),
   ).toBeVisible();
-  await page.getByLabel("Dia", { exact: true }).fill("2026-11-02");
+  await chooseBVDate(
+    page,
+    page.getByRole("button", { name: "Dia", exact: true }),
+    "2026-11-02",
+  );
   await expect(movements.nth(0).locator(".workout-set")).toHaveCount(1);
   await expect(movements.nth(0).getByRole("checkbox")).not.toBeChecked();
   await movements.nth(0).getByLabel("Repetições", { exact: true }).fill("10");
@@ -154,7 +159,11 @@ test("ficha viva cria, adapta dias, conserva base, estima com perfil e apresenta
   await page.getByLabel("Repetições por série").first().fill("12");
   await page.getByRole("button", { name: "Salvar", exact: true }).click();
   await expect(movements.nth(0)).toContainText("Base · 3 × 15");
-  await page.getByLabel("Dia", { exact: true }).fill("2026-11-03");
+  await chooseBVDate(
+    page,
+    page.getByRole("button", { name: "Dia", exact: true }),
+    "2026-11-03",
+  );
   await expect(movements.nth(0)).toContainText("Base · 3 × 12");
   await expect(page.locator(".workout-calories")).toContainText(
     "Sem estimativa",
@@ -239,8 +248,8 @@ test("cadastro exige ficha, permite ordenar metas e diário protege rascunho, de
     .getByLabel("Nome do treino")
     .fill("Treino fictício de resistência");
   await page.getByRole("radio", { name: "Resistência", exact: true }).check();
-  await page.getByLabel("Data de início").fill("2026-11-01");
-  await page.getByLabel("Data final").fill("2026-11-30");
+  await chooseBVDate(page, page.getByLabel("Data de início"), "2026-11-01");
+  await chooseBVDate(page, page.getByLabel("Data final"), "2026-11-30");
   await page.getByRole("checkbox", { name: "Qua", exact: true }).check();
   await page
     .getByRole("button", { name: "Salvar registro", exact: true })
@@ -335,7 +344,11 @@ test("cadastro exige ficha, permite ordenar metas e diário protege rascunho, de
     .getByRole("button", { name: "Reconsultar treino", exact: true })
     .click();
   await expect(checks.last()).toBeChecked();
-  await page.getByLabel("Dia", { exact: true }).fill("2026-11-05");
+  await chooseBVDate(
+    page,
+    page.getByRole("button", { name: "Dia", exact: true }),
+    "2026-11-05",
+  );
   await expect(
     page.getByRole("button", { name: "Salvar execução", exact: true }),
   ).toBeDisabled();

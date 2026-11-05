@@ -9,6 +9,7 @@ export function useBookDraftGuard(
     function hasDraft() {
       const folio = root.current;
       if (!folio) return false;
+      if (folio.querySelector('[data-has-record-draft="true"]')) return true;
       const drafts = folio.querySelectorAll<
         HTMLTextAreaElement | HTMLInputElement
       >(

@@ -1,3 +1,4 @@
+import { chooseBVDate } from "./pickers";
 import { expect, test } from "./fixtures";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 const evidence = "docs/evidence/BF-5P2D";
@@ -132,7 +133,7 @@ test("catálogo acompanha estreia, poster, episódios, temporadas, diário, dese
   await page.getByLabel("Título", { exact: true }).fill("A última constelação");
   await page.getByLabel("Quantidade de temporadas").fill("2");
   await page.getByLabel("Total de episódios", { exact: true }).fill("12");
-  await page.getByLabel("Data de estreia").fill("2026-11-16");
+  await chooseBVDate(page, page.getByLabel("Data de estreia"), "2026-11-16");
   await page
     .getByRole("radio", { name: "Aguardando lançamento", exact: true })
     .check();
@@ -283,7 +284,7 @@ test("catálogo acompanha estreia, poster, episódios, temporadas, diário, dese
     "A última constelação",
   );
   await page.getByLabel("Plataforma / serviço").fill("Cinema de bolso");
-  await page.getByLabel("Data de estreia").fill("2026-11-20");
+  await chooseBVDate(page, page.getByLabel("Data de estreia"), "2026-11-20");
   await page
     .getByRole("button", { name: "Salvar alterações", exact: true })
     .click();
@@ -310,7 +311,7 @@ test("compositor exporta PNG real offline nos quatro modos, personaliza fundo e 
   await page
     .getByLabel("Título", { exact: true })
     .fill("O céu depois da meia-noite");
-  await page.getByLabel("Data de estreia").fill("2026-11-16");
+  await chooseBVDate(page, page.getByLabel("Data de estreia"), "2026-11-16");
   await page
     .getByLabel("Poster personalizado")
     .setInputFiles("e2e/fixtures/entertainment/ceu-ficticio.jpg");
@@ -332,6 +333,7 @@ test("compositor exporta PNG real offline nos quatro modos, personaliza fundo e 
     "alt",
     /atravessar o impossível/,
   );
+  await dialog.getByText("Imagem e acabamento", { exact: true }).click();
   await dialog.getByRole("radio", { name: "Gravura do Códice" }).check();
   await expect(dialog.getByRole("img")).toBeVisible();
   const first = await dialog.getByRole("img").getAttribute("src");

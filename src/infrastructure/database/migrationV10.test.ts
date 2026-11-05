@@ -40,7 +40,7 @@ it("upgrades v9 without rewriting entries, restores v6 backups with and without 
   legacy.close();
   const db = new BibliotecaDatabase(name);
   await db.open();
-  expect(db.verno).toBe(12);
+  expect(db.verno).toBe(13);
   expect(await db.libraryEntries.get(entry.id)).toEqual(entry);
   expect(await db.sessions.get(session.id)).toEqual(session);
   const codec = new JsonBackupCodec();

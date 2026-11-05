@@ -1,3 +1,4 @@
+import { BVSelectSheet } from "../../ui/BVPicker";
 import { PhysicalProfilePanel } from "./PhysicalProfilePanel";
 import { RealmIntro } from "../../app/RealmIntro";
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
@@ -445,7 +446,7 @@ export function SettingsPage({ application, diagnostics }: Props) {
           </label>
           <div className="form-field">
             <label htmlFor="text-size">Tamanho do texto</label>
-            <select
+            <BVSelectSheet
               disabled={!application?.experience}
               id="text-size"
               onChange={(event) =>
@@ -456,7 +457,7 @@ export function SettingsPage({ application, diagnostics }: Props) {
               <option value="default">Padrão</option>
               <option value="large">Grande</option>
               <option value="larger">Maior</option>
-            </select>
+            </BVSelectSheet>
           </div>
         </div>
         {experiencePreferenceError && (

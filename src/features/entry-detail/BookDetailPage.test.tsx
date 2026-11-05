@@ -1,3 +1,4 @@
+import { chooseOption } from "../../test/pickers";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
@@ -187,7 +188,8 @@ async function openDisclosure(
     });
     if (!composer.parentElement?.hasAttribute("open"))
       await user.click(composer);
-    await user.selectOptions(
+    await chooseOption(
+      user,
       screen.getByLabelText("Tipo de anotação"),
       label === "Adicionar nota" ? "note" : "quote",
     );

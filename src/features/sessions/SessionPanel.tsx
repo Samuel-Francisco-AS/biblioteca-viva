@@ -1,3 +1,4 @@
+import { BVDatePicker } from "../../ui/BVPicker";
 import { entryExperience } from "../entry-detail/entryExperience";
 import { ExerciseList } from "../entry-detail/ExerciseList";
 import { useEffect, useState, type FormEvent } from "react";
@@ -322,7 +323,7 @@ export function SessionPanel({
           <h4>{copy.record}</h4>
           <label className="form-field">
             Dia da experiência
-            <input name="date" type="date" />
+            <BVDatePicker name="date" />
           </label>
           <p className="field-help">
             Deixe o dia em branco para registrar agora.

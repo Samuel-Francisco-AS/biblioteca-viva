@@ -1,3 +1,4 @@
+import { BVSelectSheet } from "../../ui/BVPicker";
 import {
   VISIBLE_GROUPS,
   groupLabels,
@@ -348,7 +349,7 @@ export function CollectionPage({
           </div>
           <div className="form-field">
             <label htmlFor="collection-type">Tipo</label>
-            <select
+            <BVSelectSheet
               id="collection-type"
               value={
                 type === "movie" || type === "series" ? "entertainment" : type
@@ -361,11 +362,11 @@ export function CollectionPage({
                   {groupLabels[entryType]}
                 </option>
               ))}
-            </select>
+            </BVSelectSheet>
           </div>
           <div className="form-field">
             <label htmlFor="collection-status">Status</label>
-            <select
+            <BVSelectSheet
               id="collection-status"
               value={status}
               onChange={(event) => updateParam("status", event.target.value)}
@@ -376,7 +377,7 @@ export function CollectionPage({
                   {statusLabels[entryStatus]}
                 </option>
               ))}
-            </select>
+            </BVSelectSheet>
           </div>
           <label className="checkbox-field">
             <input
@@ -390,7 +391,7 @@ export function CollectionPage({
           </label>
           <div className="form-field">
             <label htmlFor="collection-tag">Etiqueta</label>
-            <select
+            <BVSelectSheet
               id="collection-tag"
               value={tagId}
               onChange={(event) => updateParam("tag", event.target.value)}
@@ -401,11 +402,11 @@ export function CollectionPage({
                   {tag.name}
                 </option>
               ))}
-            </select>
+            </BVSelectSheet>
           </div>
           <div className="form-field">
             <label htmlFor="collection-sort">Ordenar por</label>
-            <select
+            <BVSelectSheet
               id="collection-sort"
               value={sort}
               onChange={(event) => updateParam("sort", event.target.value)}
@@ -413,7 +414,7 @@ export function CollectionPage({
               <option value="recent">Atualização recente</option>
               <option value="created">Criação recente</option>
               <option value="title">Título</option>
-            </select>
+            </BVSelectSheet>
           </div>
         </fieldset>
       </div>

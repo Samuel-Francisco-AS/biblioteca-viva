@@ -1,3 +1,4 @@
+import { chooseBVOption } from "./pickers";
 import { expect, test } from "./fixtures";
 
 test("tag, favorito, sessão persistente e estatísticas formam memória unificada", async ({
@@ -48,9 +49,9 @@ test("tag, favorito, sessão persistente e estatísticas formam memória unifica
 
   await navigateFromDock("Coleção");
   await page.getByRole("button", { name: /^Busca/u }).click();
-  await page
-    .getByLabel("Etiqueta")
-    .selectOption({ label: "Pesquisa Fictícia" });
+  await chooseBVOption(page, page.getByLabel("Etiqueta"), {
+    label: "Pesquisa Fictícia",
+  });
   const favoritesOnly = page.getByLabel("Somente favoritos");
   if (!(await favoritesOnly.isChecked())) {
     await favoritesOnly.click();

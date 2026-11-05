@@ -1,3 +1,4 @@
+import { chooseBVOption } from "./pickers";
 import { expect, test } from "./fixtures";
 import type { Page } from "@playwright/test";
 
@@ -68,9 +69,9 @@ test("busca, filtro, ordenação e Arquivo preservam navegação", async ({
   ).toBeVisible();
   await page.getByLabel("Buscar registros").fill("Caderno");
   await expect(page).toHaveURL(/q=Caderno/u);
-  await page.getByLabel("Status").selectOption("in_progress");
+  await chooseBVOption(page, page.getByLabel("Status"), "in_progress");
   await expect(page).toHaveURL(/status=in_progress/u);
-  await page.getByLabel("Ordenar por").selectOption("title");
+  await chooseBVOption(page, page.getByLabel("Ordenar por"), "title");
   await expect(page).toHaveURL(/sort=title/u);
   await page
     .getByRole("link", { name: "Abrir detalhes de Caderno Unicode" })
@@ -101,7 +102,7 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
   await page.getByRole("button", { name: "Concluir leitura" }).click();
   await navigateFromDock("Ajustes");
   await page.getByLabel("Usar alto contraste").check();
-  await page.getByLabel("Tamanho do texto").selectOption("larger");
+  await chooseBVOption(page, page.getByLabel("Tamanho do texto"), "larger");
 
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: "Exportar backup" }).click();

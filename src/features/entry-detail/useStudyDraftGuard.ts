@@ -9,7 +9,7 @@ export function useStudyDraftGuard(
       Boolean(root.current?.matches('[data-has-record-draft="true"]')) ||
       Boolean(
         root.current?.querySelector(
-          '[data-has-study-draft="true"], .annotation-editor',
+          '[data-has-study-draft="true"], [data-has-record-draft="true"], .annotation-editor',
         ),
       ) ||
       [
