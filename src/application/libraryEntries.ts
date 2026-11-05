@@ -1,3 +1,4 @@
+import { catalogSchema } from "../domain/entertainment";
 import { workoutScheduleSchema } from "../domain/workouts";
 import { z } from "zod";
 
@@ -44,6 +45,8 @@ const common = {
 const movieInputSchema = z.strictObject({
   ...common,
   type: z.literal("movie"),
+  catalog: catalogSchema.optional(),
+  favorite: z.boolean().optional(),
   director: optionalText,
   year: z.int().positive().optional(),
   durationMinutes: z.int().positive().optional(),
@@ -52,6 +55,8 @@ const movieInputSchema = z.strictObject({
 const seriesInputSchema = z.strictObject({
   ...common,
   type: z.literal("series"),
+  catalog: catalogSchema.optional(),
+  favorite: z.boolean().optional(),
   platform: optionalText,
   episodesWatched: z.int().nonnegative().optional(),
   totalEpisodes: z.int().positive().optional(),

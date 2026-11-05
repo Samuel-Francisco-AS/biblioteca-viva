@@ -1,3 +1,4 @@
+import { posterSchema } from "../database/media";
 import { physicalProfileSchema } from "../../domain/workouts";
 import {
   BACKUP_FORMAT_VERSION,
@@ -46,6 +47,7 @@ const backupSettingSchema = z.discriminatedUnion("key", [
   }),
 ]);
 const dataSchema = z.strictObject({
+  media: z.array(posterSchema).optional(),
   libraryEntries: z.array(persistedLibraryEntrySchema),
   notes: z.array(persistedNoteSchema),
   quotes: z.array(persistedQuoteSchema),
@@ -131,6 +133,7 @@ function byteLength(content: string): number {
 
 function counts(data: BackupData): BackupCounts {
   return Object.freeze({
+    ...(data.media?.length && { media: data.media.length }),
     libraryEntries: data.libraryEntries.length,
     notes: data.notes.length,
     quotes: data.quotes.length,
@@ -148,6 +151,11 @@ function sorted(data: BackupData): BackupData {
       [...values].sort((left, right) => left.id.localeCompare(right.id)),
     );
   return Object.freeze({
+    ...(data.media !== undefined && {
+      media: Object.freeze(
+        [...data.media].sort((a, b) => a.entryId.localeCompare(b.entryId)),
+      ),
+    }),
     libraryEntries: byId(data.libraryEntries),
     notes: byId(data.notes),
     quotes: byId(data.quotes),
@@ -164,7 +172,18 @@ function sorted(data: BackupData): BackupData {
 }
 
 function rejectDuplicates(data: BackupData): void {
+  const owners = new Set(
+    data.libraryEntries
+      .filter((e) => e.type === "movie" || e.type === "series")
+      .map((e) => e.id),
+  );
+  if (data.media?.some((p) => !owners.has(p.entryId)))
+    throw new BackupError(
+      "INVALID_BACKUP_DATA",
+      "Poster sem obra correspondente.",
+    );
   const collections: readonly (readonly string[])[] = [
+    (data.media ?? []).map(({ entryId }) => entryId),
     data.libraryEntries.map(({ id }) => id),
     data.notes.map(({ id }) => id),
     data.quotes.map(({ id }) => id),
@@ -190,6 +209,7 @@ export class JsonBackupCodec implements BackupCodecPort {
   }): Promise<BackupArtifact> {
     const data = sorted(
       dataSchema.parse({
+        media: input.data.media,
         libraryEntries: input.data.libraryEntries,
         notes: input.data.notes,
         quotes: input.data.quotes,

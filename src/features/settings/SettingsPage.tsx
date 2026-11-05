@@ -89,6 +89,12 @@ function publicError(error: unknown): string {
 function Counts({ counts }: { readonly counts: BackupCounts }) {
   return (
     <dl className="backup-counts">
+      {Boolean(counts.media) && (
+        <div>
+          <dt>Posters locais</dt>
+          <dd>{counts.media}</dd>
+        </div>
+      )}
       <div>
         <dt>Registros</dt>
         <dd>{counts.libraryEntries}</dd>

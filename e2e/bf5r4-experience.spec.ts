@@ -1,3 +1,4 @@
+import { chooseRecordType, recordSaveLabel } from "./fixtures";
 import { fillWorkoutPlan, expect, test } from "./fixtures";
 
 test("BF-5R4: seis rituais criam, reabrem e editam sem perder referências", async ({
@@ -13,9 +14,7 @@ test("BF-5R4: seis rituais criam, reabrem e editam sem perder referências", asy
     "Trabalho",
   ]) {
     await page.goto("/novo-registro");
-    await page
-      .getByRole("button", { name: new RegExp(`^FÓLIO \\d+ ${category} `) })
-      .click();
+    await chooseRecordType(page, category);
     const title = `${category} do Santuário Fictício`;
     await page
       .getByLabel(
@@ -32,9 +31,9 @@ test("BF-5R4: seis rituais criam, reabrem e editam sem perder referências", asy
     if (category === "Livro")
       await page.getByLabel("Autor (opcional)").fill("Autoria fictícia");
     if (category === "Filme")
-      await page.getByLabel("Direção (opcional)").fill("Direção fictícia");
+      await page.getByLabel("Diretor / criador").fill("Direção fictícia");
     if (category === "Série")
-      await page.getByLabel("Total de episódios (opcional)").fill("12");
+      await page.getByLabel("Total de episódios").fill("12");
     if (category === "Estudo")
       await page
         .getByLabel("Disciplina (opcional)")
@@ -46,14 +45,22 @@ test("BF-5R4: seis rituais criam, reabrem e editam sem perder referências", asy
         .fill("Revisar manuscrito fictício");
     await page
       .getByRole("button", {
-        name: category === "Livro" ? "Salvar livro" : "Salvar registro",
+        name: recordSaveLabel(category),
         exact: true,
       })
       .click();
     await expect(
       page.getByRole("heading", { name: title, exact: true }),
     ).toBeVisible();
-    await page.getByRole("link", { name: /Editar/ }).click();
+    if (category === "Livro")
+      await page.locator("#book-secondary > summary").click();
+    if (category === "Filme" || category === "Série")
+      await page.locator("#cinema-actions > summary").click();
+    await page
+      .getByRole("link", {
+        name: category === "Atividade física" ? "Editar treino ↗" : /Editar/,
+      })
+      .click();
     const titleField = page.getByLabel(
       category === "Atividade física"
         ? "Nome do treino"
@@ -66,7 +73,7 @@ test("BF-5R4: seis rituais criam, reabrem e editam sem perder referências", asy
     await titleField.fill(`${title} revisado`);
     await page
       .getByRole("button", {
-        name: category === "Livro" ? "Salvar alterações" : "Salvar",
+        name: recordSaveLabel(category, true),
         exact: true,
       })
       .click();

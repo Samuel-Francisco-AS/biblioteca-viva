@@ -1,4 +1,8 @@
 import {
+  catalogForStructure,
+  type EntertainmentCatalog,
+} from "./entertainment";
+import {
   workoutScheduleSchema,
   validateWorkoutPlan,
   type WorkoutSchedule,
@@ -53,6 +57,7 @@ interface CommonCreateInput {
 }
 
 export interface CreateMovieInput extends CommonCreateInput {
+  readonly catalog?: EntertainmentCatalog;
   readonly director?: string;
   readonly year?: number;
   readonly durationMinutes?: number;
@@ -60,6 +65,7 @@ export interface CreateMovieInput extends CommonCreateInput {
 }
 
 export interface CreateSeriesInput extends CommonCreateInput {
+  readonly catalog?: EntertainmentCatalog;
   readonly platform?: string;
   readonly episodesWatched?: number;
   readonly totalEpisodes?: number;
@@ -96,6 +102,8 @@ export interface CreateWorkInput extends CommonCreateInput {
 export type UpdateLibraryEntryDetailsInput =
   | {
       readonly type: "movie";
+      readonly catalog?: EntertainmentCatalog;
+      readonly favorite?: boolean;
       readonly title: string;
       readonly director?: string;
       readonly year?: number;
@@ -104,6 +112,8 @@ export type UpdateLibraryEntryDetailsInput =
     }
   | {
       readonly type: "series";
+      readonly catalog?: EntertainmentCatalog;
+      readonly favorite?: boolean;
       readonly title: string;
       readonly platform?: string;
       readonly totalEpisodes?: number;
@@ -212,6 +222,9 @@ export function createMovie(input: CreateMovieInput): MovieEntry {
   );
   return Object.freeze({
     ...common("movie", input),
+    ...(input.catalog !== undefined && {
+      catalog: catalogForStructure(input.catalog, "movie"),
+    }),
     ...(optionalText(input.director) && {
       director: optionalText(input.director),
     }),
@@ -241,6 +254,9 @@ export function createSeries(input: CreateSeriesInput): SeriesEntry {
   );
   let entry: SeriesEntry = {
     ...common("series", input),
+    ...(input.catalog !== undefined && {
+      catalog: catalogForStructure(input.catalog, "series"),
+    }),
     ...(optionalText(input.platform) && {
       platform: optionalText(input.platform),
     }),
@@ -460,6 +476,10 @@ export function updateLibraryEntryDetails(
         ...entry,
         ...metadata,
         title: requireText(input.title, "title"),
+        ...(input.catalog !== undefined && {
+          catalog: catalogForStructure(input.catalog, "movie"),
+        }),
+        ...(input.favorite !== undefined && { favorite: input.favorite }),
         director: optionalText(input.director),
         year: positiveInteger(input.year, "year"),
         durationMinutes: positiveInteger(
@@ -485,6 +505,10 @@ export function updateLibraryEntryDetails(
         ...entry,
         ...metadata,
         title: requireText(input.title, "title"),
+        ...(input.catalog !== undefined && {
+          catalog: catalogForStructure(input.catalog, "series"),
+        }),
+        ...(input.favorite !== undefined && { favorite: input.favorite }),
         platform: optionalText(input.platform),
         totalEpisodes,
       });

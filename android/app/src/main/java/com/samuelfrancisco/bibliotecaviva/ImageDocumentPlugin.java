@@ -21,7 +21,7 @@ public class ImageDocumentPlugin extends Plugin {
     public void savePng(PluginCall call) {
         String name = call.getString("suggestedName");
         String data = call.getString("dataBase64");
-        if (name == null || !name.matches("biblioteca-viva-(leitura|citacao)\\.png") ||
+        if (name == null || !name.matches("biblioteca-viva-(leitura|citacao|cinema)\\.png") ||
             data == null || data.length() > 16000000 || !data.matches("iVBORw0KGgo[A-Za-z0-9+/=]+")) {
             call.reject("Imagem PNG inválida.", "INVALID_IMAGE");
             return;

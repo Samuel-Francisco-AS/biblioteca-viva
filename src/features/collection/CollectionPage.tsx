@@ -1,14 +1,25 @@
+import {
+  VISIBLE_GROUPS,
+  groupLabels,
+  CATALOG_FILTERS,
+  catalogFilterLabels,
+} from "../entertainment/catalogFilters";
+import { useCivilToday } from "../entertainment/useCivilToday";
+import {
+  isEntertainment,
+  entertainmentFormat,
+  formatLabels,
+  watchState,
+  watchLabels,
+  releaseDays,
+} from "../../domain/entertainment";
+import "../entertainment/entertainment.css";
 import { ArtifactGlyph } from "../../app/ArtifactGlyph";
 import { RealmIntro } from "../../app/RealmIntro";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
-import {
-  ENTRY_STATUSES,
-  ENTRY_TYPES,
-  type LibraryEntry,
-  type Tag,
-} from "../../domain";
+import { ENTRY_STATUSES, type LibraryEntry, type Tag } from "../../domain";
 import {
   progressPercentage,
   progressText,
@@ -86,6 +97,9 @@ export function CollectionPage({
   const type = parseTypeFilter(params.get("type"));
   const favoritesOnly = params.get("favorite") === "true";
   const tagId = params.get("tag") ?? "all";
+  const today = useCivilToday();
+  const catalogFilter =
+    CATALOG_FILTERS.find((value) => value === params.get("catalog")) ?? "all";
   const sort = parseCollectionSort(params.get("sort"));
   const visibleEntries = useMemo(
     () =>
@@ -98,8 +112,21 @@ export function CollectionPage({
         favoritesOnly,
         new Map(tags.map((tag) => [tag.id, tag.name])),
         tagId,
+        type === "entertainment" ? catalogFilter : "all",
+        today,
       ),
-    [entries, favoritesOnly, query, sort, status, tagId, tags, type],
+    [
+      entries,
+      favoritesOnly,
+      query,
+      sort,
+      status,
+      tagId,
+      tags,
+      type,
+      catalogFilter,
+      today,
+    ],
   );
 
   useEffect(() => {
@@ -205,6 +232,7 @@ export function CollectionPage({
     query.trim() !== "",
     status !== "all",
     type !== "all",
+    type === "entertainment" && catalogFilter !== "all",
     favoritesOnly,
     tagId !== "all",
     sort !== "recent",
@@ -250,17 +278,52 @@ export function CollectionPage({
         >
           Todos
         </button>
-        {ENTRY_TYPES.map((category) => (
+        {VISIBLE_GROUPS.map((category) => (
           <button
             type="button"
             key={category}
-            aria-pressed={type === category}
+            aria-pressed={
+              type === category ||
+              (category === "entertainment" &&
+                (type === "movie" || type === "series"))
+            }
             onClick={() => updateParam("type", category)}
           >
-            {entryTypeLabels[category]}
+            {groupLabels[category]}
           </button>
         ))}
       </nav>
+      {type === "entertainment" && (
+        <details
+          className="cinema-filter-panel"
+          open={catalogFilter !== "all" ? true : undefined}
+        >
+          <summary>
+            Explorar catálogo ·{" "}
+            {
+              catalogFilterLabels[
+                CATALOG_FILTERS.find((f) => f === catalogFilter) ?? "all"
+              ]
+            }
+          </summary>
+          <div
+            className="cinema-filter-grid"
+            role="group"
+            aria-label="Filtros de Entretenimento"
+          >
+            {CATALOG_FILTERS.map((filter) => (
+              <button
+                type="button"
+                key={filter}
+                aria-pressed={catalogFilter === filter}
+                onClick={() => updateParam("catalog", filter)}
+              >
+                {catalogFilterLabels[filter]}
+              </button>
+            ))}
+          </div>
+        </details>
+      )}
       <div
         aria-hidden={!searchExpanded}
         className="collapsible-controls"
@@ -287,13 +350,15 @@ export function CollectionPage({
             <label htmlFor="collection-type">Tipo</label>
             <select
               id="collection-type"
-              value={type}
+              value={
+                type === "movie" || type === "series" ? "entertainment" : type
+              }
               onChange={(event) => updateParam("type", event.target.value)}
             >
               <option value="all">Todos os tipos</option>
-              {ENTRY_TYPES.map((entryType) => (
+              {VISIBLE_GROUPS.map((entryType) => (
                 <option key={entryType} value={entryType}>
-                  {entryTypeLabels[entryType]}
+                  {groupLabels[entryType]}
                 </option>
               ))}
             </select>
@@ -417,12 +482,33 @@ export function CollectionPage({
                   </span>
                   <div className="record-tile__content">
                     <p className="eyebrow">
-                      {entryTypeLabels[entry.type]}
+                      {isEntertainment(entry)
+                        ? formatLabels[entertainmentFormat(entry)]
+                        : entryTypeLabels[entry.type]}
                       {entry.favorite ? " · Favorito" : ""}
                     </p>
-                    <p className="status-badge">{statusLabels[entry.status]}</p>
+                    <p className="status-badge">
+                      {isEntertainment(entry)
+                        ? watchLabels[watchState(entry)]
+                        : statusLabels[entry.status]}
+                    </p>
                     <h3 id={`entry-${entry.id}-title`}>{entry.title}</h3>
-                    <p>{secondaryText(entry)}</p>
+                    <p>
+                      {secondaryText(entry)}
+                      {isEntertainment(entry) &&
+                        (releaseDays(entry.catalog?.releaseDate, today) ?? -1) >
+                          0 && (
+                          <span className="cinema-release-chip">
+                            {" "}
+                            · Estreia em{" "}
+                            {releaseDays(
+                              entry.catalog?.releaseDate,
+                              today,
+                            )}{" "}
+                            dias
+                          </span>
+                        )}
+                    </p>
                     {entry.type === "book" && (
                       <>
                         <p>{progressText(entry)}</p>

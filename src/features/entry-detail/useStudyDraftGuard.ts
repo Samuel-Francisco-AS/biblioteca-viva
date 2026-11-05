@@ -34,6 +34,7 @@ export function useStudyDraftGuard(
       if (hasDraft()) event.preventDefault();
     };
     const back = (event: Event) => {
+      if (document.querySelector("dialog[open]")) return;
       if (!confirm()) event.preventDefault();
     };
     document.addEventListener("click", link, true);

@@ -1,3 +1,4 @@
+import { chooseRecordType } from "./fixtures";
 import { expect, test } from "./fixtures";
 
 test("BF-5R5: same canvas pauses between tabs, resumes its camera and survives rotation", async ({
@@ -145,32 +146,31 @@ test("BF-5R5: series bookmark, episodes without minutes and contextual quotation
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/novo-registro");
-  await page.getByRole("button", { name: /^FÓLIO \d+ Série / }).click();
+  await chooseRecordType(page, "Série");
   await page.getByLabel("Título", { exact: true }).fill("Crônica fictícia");
-  await page.getByLabel("Total de episódios (opcional)").fill("12");
-  await page.getByLabel("Temporada em que parou (opcional)").fill("2");
-  await page.getByLabel("Episódio em que parou (opcional)").fill("3");
-  await page
-    .getByRole("button", { name: "Salvar registro", exact: true })
-    .click();
+  await page.getByLabel("Total de episódios").fill("12");
+  await page.getByLabel("Temporada atual", { exact: true }).fill("2");
+  await page.getByLabel("Episódio atual").fill("3");
+  await page.getByRole("button", { name: "Salvar obra", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Crônica fictícia", exact: true }),
   ).toBeVisible();
-  await page.getByLabel("Temporada atual").fill("2");
-  await page.getByLabel("Episódio em que parou", { exact: true }).fill("4");
+  await page.getByLabel("Temporada atual", { exact: true }).fill("2");
+  await page.getByLabel("Episódio atual", { exact: true }).fill("4");
   await page.getByLabel("Episódios assistidos", { exact: true }).fill("8");
-  await page.getByRole("button", { name: "Salvar progresso" }).click();
+  await page.getByRole("button", { name: "Salvar acompanhamento" }).click();
   await expect(
-    page.getByText("8 de 12 episódios", { exact: true }),
-  ).toBeVisible();
+    page.getByRole("progressbar", { name: "Progresso da obra" }),
+  ).toHaveAttribute("value", "8");
+  await page.getByText("Histórico de acompanhamento", { exact: true }).click();
   const record = page.locator("form.session-record");
   await expect(record.getByLabel(/Minutos assistidos/)).toHaveCount(0);
   await record
     .getByRole("button", { name: "Registrar episódios", exact: true })
     .click();
   await expect(
-    page.getByText("9 de 12 episódios", { exact: true }),
-  ).toBeVisible();
+    page.getByRole("progressbar", { name: "Progresso da obra" }),
+  ).toHaveAttribute("value", "9");
   await page.getByRole("button", { name: "Citações", exact: true }).click();
   await page
     .getByLabel("Nova citação", { exact: true })
@@ -184,14 +184,17 @@ test("BF-5R5: series bookmark, episodes without minutes and contextual quotation
     page.getByText("A estrela lembra o caminho fictício.", { exact: true }),
   ).toBeVisible();
   await page.reload();
-  await expect(page.getByLabel("Temporada atual")).toHaveValue("2");
-  await expect(
-    page.getByLabel("Episódio em que parou", { exact: true }),
-  ).toHaveValue("4");
+  await expect(page.getByLabel("Temporada atual", { exact: true })).toHaveValue(
+    "2",
+  );
+  await expect(page.getByLabel("Episódio atual", { exact: true })).toHaveValue(
+    "4",
+  );
   await page.getByRole("button", { name: "Citações", exact: true }).click();
   await expect(
     page.getByText("A estrela lembra o caminho fictício.", { exact: true }),
   ).toBeVisible();
+  await page.getByText("Opções da anotação", { exact: true }).click();
   await page
     .getByRole("button", { name: "Editar citação", exact: true })
     .click();

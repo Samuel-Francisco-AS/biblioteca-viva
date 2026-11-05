@@ -1,3 +1,7 @@
+import {
+  EntertainmentEditor,
+  type EntertainmentEditorApplication,
+} from "../entertainment/EntertainmentEditor";
 import { scheduleFromForm, workoutFormError } from "./workoutFormModel";
 import { ArtifactGlyph } from "../../app/ArtifactGlyph";
 import { exercisesFromForm } from "./exercisesFromForm";
@@ -11,6 +15,7 @@ import { entryTypeLabels } from "../collection/collectionControls";
 import { NewBookPage, type EditorApplication } from "./EntryEditorPages";
 
 interface NewEntryApplication extends EditorApplication {
+  readonly posters?: EntertainmentEditorApplication["posters"];
   readonly commands: EditorApplication["commands"] & {
     readonly createLibraryEntry: {
       execute(input: unknown): Promise<LibraryEntry>;
@@ -20,7 +25,7 @@ interface NewEntryApplication extends EditorApplication {
 
 const descriptions: Readonly<Record<EntryType, string>> = {
   book: "Acompanhe páginas, notas e citações.",
-  movie: "Guarde filmes vistos ou que deseja assistir.",
+  movie: "Filmes, séries, animes e animações.",
   series: "Acompanhe episódios e onde parou.",
   study: "Registre uma área, disciplina ou percurso de estudo.",
   physical_activity: "Registre uma prática ao longo do tempo.",
@@ -108,7 +113,9 @@ export function NewEntryPage({
 }: {
   readonly application?: NewEntryApplication;
 }) {
-  const [selectedType, setSelectedType] = useState<EntryType>();
+  const [selectedType, setSelectedType] = useState<
+    EntryType | "entertainment"
+  >();
   const [error, setError] = useState<string>();
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -119,6 +126,13 @@ export function NewEntryPage({
         <h2>Formulário indisponível</h2>
         <p>Não foi possível iniciar o armazenamento local.</p>
       </section>
+    );
+  if (selectedType === "entertainment")
+    return (
+      <EntertainmentEditor
+        application={application}
+        onCancel={() => setSelectedType(undefined)}
+      />
     );
   if (selectedType === "book")
     return (
@@ -153,7 +167,7 @@ export function NewEntryPage({
           </div>
         </div>
         <ul className="type-picker">
-          {ENTRY_TYPES.map((type, index) => (
+          {ENTRY_TYPES.filter((t) => t !== "series").map((type, index) => (
             <li key={type}>
               <button
                 className="content-card type-picker__option"
@@ -161,7 +175,7 @@ export function NewEntryPage({
                 type="button"
                 onClick={() => {
                   setError(undefined);
-                  setSelectedType(type);
+                  setSelectedType(type === "movie" ? "entertainment" : type);
                 }}
               >
                 <span className="type-picker__sigil" aria-hidden="true">
@@ -169,7 +183,11 @@ export function NewEntryPage({
                 </span>
                 <span className="type-picker__copy">
                   <small>FÓLIO {String(index + 1).padStart(2, "0")}</small>
-                  <strong>{entryTypeLabels[type]}</strong>
+                  <strong>
+                    {type === "movie"
+                      ? "Entretenimento"
+                      : entryTypeLabels[type]}
+                  </strong>
                   <span>{descriptions[type]}</span>
                 </span>
                 <span className="type-picker__invitation" aria-hidden="true">
@@ -184,7 +202,13 @@ export function NewEntryPage({
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!application || !selectedType || selectedType === "book" || submitting)
+    if (
+      !application ||
+      !selectedType ||
+      selectedType === "book" ||
+      selectedType === "entertainment" ||
+      submitting
+    )
       return;
     setError(undefined);
     setSubmitting(true);

@@ -1,9 +1,26 @@
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import type { LibraryEntry, Note, Quote } from "../../domain";
 import { AnnotationActions } from "../annotations/AnnotationActions";
 import type { BookDetailApplication } from "./BookDetailPage";
 import { presentApplicationError } from "../entry-editor/errorMessages";
 import { entryExperience } from "./entryExperience";
+
+function MemoryTools({
+  folded,
+  children,
+}: {
+  readonly folded: boolean;
+  readonly children: ReactNode;
+}) {
+  return folded ? (
+    <details className="cinema-annotation-tools">
+      <summary>Opções da anotação</summary>
+      {children}
+    </details>
+  ) : (
+    <>{children}</>
+  );
+}
 
 export function RecordMemories({
   application,
@@ -53,6 +70,7 @@ export function RecordMemories({
                 type: "series",
                 season: Number(season),
                 episode: Number(episode),
+                ...(minute ? { minute: Number(minute) } : {}),
               }
             : entry.type === "movie" && minute
               ? { type: "movie", minute: Number(minute) }
@@ -86,11 +104,20 @@ export function RecordMemories({
       }
       aria-labelledby="memory-title"
     >
-      <p className={folio ? "study-kicker" : "eyebrow"}>
+      <p
+        hidden={entry.type === "movie" || entry.type === "series"}
+        className={folio ? "study-kicker" : "eyebrow"}
+      >
         {folio ? "III · Ideias que merecem ficar" : "Memórias"}
       </p>
-      <h3 id="memory-title">{copy.memory}</h3>
-      <p>{copy.invitation}</p>
+      <h3 id="memory-title">
+        {entry.type === "movie" || entry.type === "series"
+          ? "Diário da obra"
+          : copy.memory}
+      </h3>
+      {entry.type !== "movie" && entry.type !== "series" && (
+        <p>{copy.invitation}</p>
+      )}
       <div className="memory-tabs" aria-label="Tipo de anotação">
         <button
           type="button"
@@ -135,12 +162,13 @@ export function RecordMemories({
             </label>
           </div>
         )}
-        {kind === "quote" && entry.type === "movie" && (
-          <label className="form-field">
-            Minuto da cena (opcional)
-            <input name="minute" type="number" min="0" />
-          </label>
-        )}
+        {kind === "quote" &&
+          (entry.type === "movie" || entry.type === "series") && (
+            <label className="form-field">
+              Minuto da cena (opcional)
+              <input name="minute" type="number" min="0" />
+            </label>
+          )}
         <button
           type="submit"
           className="button button--primary"
@@ -156,53 +184,57 @@ export function RecordMemories({
             <small>
               {new Date(annotation.createdAt).toLocaleDateString("pt-BR")}
               {annotation.location?.type === "series"
-                ? ` · T${annotation.location.season} E${annotation.location.episode}`
+                ? ` · T${annotation.location.season} E${annotation.location.episode}${annotation.location.minute !== undefined ? ` · ${annotation.location.minute} min` : ""}`
                 : annotation.location?.type === "movie"
                   ? ` · ${annotation.location.minute} min`
                   : ""}
             </small>
-            <AnnotationActions
-              kind={kind}
-              showPageField={false}
-              annotation={annotation}
-              onDelete={async (id) => {
-                if (kind === "note") {
-                  await application.commands.deleteNote.execute({ id });
-                  setNotes(notes.filter((note) => note.id !== id));
-                } else {
-                  await application.commands.deleteQuote.execute({ id });
-                  setQuotes(quotes.filter((quote) => quote.id !== id));
+            <MemoryTools
+              folded={entry.type === "movie" || entry.type === "series"}
+            >
+              <AnnotationActions
+                kind={kind}
+                showPageField={false}
+                annotation={annotation}
+                onDelete={async (id) => {
+                  if (kind === "note") {
+                    await application.commands.deleteNote.execute({ id });
+                    setNotes(notes.filter((note) => note.id !== id));
+                  } else {
+                    await application.commands.deleteQuote.execute({ id });
+                    setQuotes(quotes.filter((quote) => quote.id !== id));
+                  }
+                }}
+                onShare={(id) =>
+                  kind === "note"
+                    ? application.commands.shareNote.execute({ id })
+                    : application.commands.shareQuote.execute({ id })
                 }
-              }}
-              onShare={(id) =>
-                kind === "note"
-                  ? application.commands.shareNote.execute({ id })
-                  : application.commands.shareQuote.execute({ id })
-              }
-              onUpdate={async (input) => {
-                if (typeof input !== "object" || input === null) return;
-                if (kind === "note") {
-                  const updated =
-                    await application.commands.updateNote.execute(input);
-                  setNotes(
-                    notes.map((note) =>
-                      note.id === updated.id ? updated : note,
-                    ),
-                  );
-                } else {
-                  const updated =
-                    await application.commands.updateQuote.execute({
-                      ...input,
-                      location: annotation.location,
-                    });
-                  setQuotes(
-                    quotes.map((quote) =>
-                      quote.id === updated.id ? updated : quote,
-                    ),
-                  );
-                }
-              }}
-            />
+                onUpdate={async (input) => {
+                  if (typeof input !== "object" || input === null) return;
+                  if (kind === "note") {
+                    const updated =
+                      await application.commands.updateNote.execute(input);
+                    setNotes(
+                      notes.map((note) =>
+                        note.id === updated.id ? updated : note,
+                      ),
+                    );
+                  } else {
+                    const updated =
+                      await application.commands.updateQuote.execute({
+                        ...input,
+                        location: annotation.location,
+                      });
+                    setQuotes(
+                      quotes.map((quote) =>
+                        quote.id === updated.id ? updated : quote,
+                      ),
+                    );
+                  }
+                }}
+              />
+            </MemoryTools>
           </li>
         ))}
       </ul>

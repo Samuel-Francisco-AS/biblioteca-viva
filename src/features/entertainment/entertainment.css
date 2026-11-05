@@ -1,0 +1,852 @@
+/* The cinema folio shares the Códice's paper, but has its own optical language. */
+.cinema-folio,
+.cinema-editor {
+  --cinema-ink: #362336;
+  --cinema-plum: #38263f;
+  --cinema-copper: #96613e;
+  --cinema-paper: #f5ebd9;
+  color: var(--cinema-ink);
+  background:
+    radial-gradient(ellipse at 95% 0, #d8bdc536, transparent 45%),
+    linear-gradient(
+      108deg,
+      #eadbc5,
+      var(--cinema-paper) 18%,
+      #fbf3e5 65%,
+      #eadcc6
+    );
+  border: 1px solid #bfa487;
+  border-radius: 5px 24px 7px 7px;
+  box-shadow: 0 18px 65px #180d2426;
+  padding: clamp(1rem, 3vw, 2.8rem);
+  max-width: 1080px;
+  margin-inline: auto;
+  min-width: 0;
+  overflow: clip;
+}
+.cinema-kicker {
+  font-size: 0.69rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #79524d;
+  margin: 0 0 0.6rem;
+  font-weight: 700;
+}
+.cinema-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.8rem;
+  font-size: 0.82rem;
+}
+.cinema-hero {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.8fr) minmax(0, 1.5fr);
+  gap: clamp(1.1rem, 4vw, 3rem);
+  align-items: center;
+  padding-bottom: 1.4rem;
+}
+.cinema-poster {
+  position: relative;
+  aspect-ratio: 2/3;
+  min-width: 0;
+  border: 5px solid #352637;
+  outline: 1px solid #9c7859;
+  outline-offset: 4px;
+  background: #302039;
+  box-shadow: 8px 15px 22px #37233836;
+  transform: rotate(-1.4deg);
+  overflow: hidden;
+}
+.cinema-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.cinema-poster-seal {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #d7b389;
+  color: #f4e4c4;
+  background: #24152ad9;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-family: Georgia, serif;
+  font-size: 0.7rem;
+}
+.cinema-engraving {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse at 40% 32%,
+    #ac7188,
+    #493047 45%,
+    #191523
+  );
+}
+.cinema-engraving span {
+  font-size: clamp(3rem, 10vw, 7rem);
+  color: #f5d3a5;
+  text-shadow: 0 0 35px #f0c77b75;
+}
+.cinema-engraving i {
+  position: absolute;
+  border: 1px solid #dbb38c59;
+  width: 75%;
+  height: 60%;
+  border-radius: 50%;
+  transform: rotate(-28deg);
+}
+.cinema-engraving i:nth-of-type(2) {
+  transform: rotate(42deg);
+  width: 50%;
+  height: 80%;
+}
+.cinema-engraving i:nth-of-type(3) {
+  transform: rotate(75deg);
+  width: 90%;
+  height: 48%;
+}
+.cinema-identity h2 {
+  font-family: Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.7rem, 4vw, 3.4rem);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  margin: 0.4rem 0 0.9rem;
+  overflow-wrap: anywhere;
+}
+.cinema-metadata {
+  font-size: 0.86rem;
+  color: #6c5159;
+  line-height: 1.7;
+}
+.cinema-state {
+  display: inline-block;
+  border-bottom: 1px solid #b99173;
+  padding-bottom: 0.2rem;
+  font-size: 0.82rem;
+  color: #633d54;
+}
+.cinema-countdown {
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+  margin: 0.7rem 0 1.2rem;
+}
+.cinema-countdown strong {
+  font:
+    clamp(2.7rem, 7vw, 5rem)/1 Georgia,
+    serif;
+  color: #663e56;
+}
+.cinema-countdown span {
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.cinema-countdown time {
+  display: block;
+  font-size: 0.72rem;
+  color: #7b564d;
+}
+.cinema-personal {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.cinema-personal button,
+.cinema-filter-grid button {
+  background: transparent;
+  color: #55344a;
+  border: 1px solid #b79782;
+  border-radius: 999px;
+  min-height: 44px;
+  padding: 0.55rem 0.8rem;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.cinema-personal button[aria-pressed="true"],
+.cinema-filter-grid button[aria-pressed="true"] {
+  background: #56364e;
+  color: #fff1dd;
+  border-color: #56364e;
+}
+.cinema-rating {
+  color: #8b5b30;
+  letter-spacing: 0.15em;
+  margin: 0.7rem 0 0;
+}
+.cinema-chapter {
+  border-top: 1px solid #b79b7b80;
+  padding: 1.5rem 0;
+}
+.cinema-chapter-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+}
+.cinema-chapter-heading > span {
+  color: #a37656;
+  font-family: Georgia, serif;
+  font-size: 0.8rem;
+}
+.cinema-chapter-heading h3,
+.cinema-folio #memory-title {
+  font:
+    400 1.5rem Georgia,
+    serif;
+  margin: 0;
+}
+.cinema-form-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.cinema-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem 1rem;
+}
+.cinema-folio .form-field,
+.cinema-editor .form-field {
+  font-size: 0.85rem;
+  color: #533849;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+.cinema-folio input,
+.cinema-folio textarea,
+.cinema-editor input {
+  color: #382638;
+  background: #fffaf0b8;
+  border-color: #b79a7e;
+  border-radius: 5px;
+  min-height: 46px;
+  width: 100%;
+}
+.cinema-folio input[type="checkbox"],
+.cinema-editor input[type="checkbox"],
+.cinema-folio input[type="radio"],
+.cinema-editor input[type="radio"] {
+  width: 20px;
+  min-height: 20px;
+  height: 20px;
+  accent-color: #69435d;
+  flex-shrink: 0;
+}
+.cinema-folio .checkbox-field {
+  margin: 0 0 1rem;
+  color: #55374d;
+}
+.cinema-form-fields > .form-field {
+  max-width: 360px;
+}
+.cinema-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  border: 0;
+  padding: 0;
+  margin: 1rem 0 1.4rem;
+  min-width: 0;
+}
+.cinema-choices legend {
+  font-size: 0.8rem;
+  color: #73514f;
+  margin-bottom: 0.7rem;
+  font-weight: 650;
+}
+.cinema-choices label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  border: 1px solid #b4947c;
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  min-height: 46px;
+  cursor: pointer;
+}
+.cinema-choices label:has(input:checked) {
+  background: #5b3a52;
+  color: #fff2dd;
+  border-color: #5b3a52;
+}
+.cinema-choices input {
+  width: 18px !important;
+  min-height: 18px !important;
+  height: 18px;
+  accent-color: #c89b74;
+  flex-shrink: 0;
+}
+.cinema-folio :focus-visible,
+.cinema-editor :focus-visible,
+.cinema-dialog :focus-visible {
+  outline: 3px solid #9d643a;
+  outline-offset: 3px;
+}
+.cinema-folio button:disabled,
+.cinema-editor button:disabled,
+.cinema-dialog button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.cinema-progress {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.3rem;
+}
+.cinema-progress strong {
+  font:
+    2.6rem Georgia,
+    serif;
+}
+.cinema-progress small {
+  font: 400 0.9rem system-ui;
+  color: #71515a;
+}
+.cinema-progress span {
+  color: #725062;
+}
+.cinema-progress progress {
+  width: 100%;
+  height: 7px;
+  accent-color: #805067;
+}
+.cinema-progress p {
+  font-size: 0.8rem;
+  color: #75535c;
+  width: 100%;
+  margin: 0;
+}
+.cinema-viewed {
+  font-size: 0.9rem;
+  color: #654455;
+}
+.cinema-secondary {
+  border-top: 1px solid #b79b7b70;
+  padding: 0.75rem 0;
+}
+.cinema-secondary summary,
+.cinema-state-chooser > summary {
+  cursor: pointer;
+  font-size: 0.86rem;
+  min-height: 44px;
+  padding: 0.6rem 0;
+  color: #59394f;
+  font-weight: 600;
+}
+.cinema-secondary[open] > summary {
+  margin-bottom: 0.8rem;
+}
+.cinema-state-chooser {
+  margin-bottom: 1rem;
+}
+.cinema-state-chooser > summary {
+  border-bottom: 1px solid #b79b7b70;
+}
+.cinema-feedback {
+  min-height: 1.4rem;
+  font-size: 0.82rem;
+  color: #5a4d38;
+  margin: 0;
+}
+.cinema-dates {
+  font-size: 0.74rem;
+  color: #705259;
+}
+.cinema-danger {
+  background: #713341 !important;
+  color: #fff6e6 !important;
+  border: 1px solid #713341 !important;
+}
+.cinema-secondary .button {
+  margin-right: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+.cinema-folio .study-notebook {
+  border: 0;
+  border-top: 1px solid #b79b7b80;
+  padding: 1.7rem 0;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+.cinema-folio .memory-tabs {
+  margin-top: 1.1rem;
+}
+.cinema-folio .annotation-list {
+  padding: 0;
+  list-style: none;
+}
+.cinema-folio .annotation-list li {
+  border-bottom: 1px solid #b79b7b70;
+  padding: 1.2rem 0;
+  background: none;
+}
+.cinema-folio .annotation-list p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.cinema-folio .annotation-actions {
+  flex-wrap: wrap;
+}
+.cinema-folio .study-notebook textarea {
+  background:
+    repeating-linear-gradient(transparent, transparent 31px, #b79b7b3b 32px),
+    #fff8e9;
+  line-height: 32px;
+  border: 1px solid #b79b7b70;
+  padding: 0.6rem 0.8rem;
+}
+.cinema-format-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin: 1.7rem 0 1.5rem;
+}
+.cinema-format-grid button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+  min-height: 165px;
+  padding: 1.1rem;
+  border: 1px solid #a9866b;
+  background: linear-gradient(140deg, #3e2c44, #271d32);
+  color: #f9ecd6;
+  border-radius: 4px 15px 4px 4px;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.cinema-format-grid button > span {
+  font-size: 2rem;
+  color: #d8b387;
+}
+.cinema-format-grid button strong {
+  font:
+    1.15rem Georgia,
+    serif;
+}
+.cinema-format-grid button small {
+  font-size: 0.7rem;
+  color: #deccba;
+  line-height: 1.4;
+}
+.cinema-format-grid button[aria-pressed="true"] {
+  outline: 2px solid #b57a45;
+  outline-offset: 3px;
+  background: linear-gradient(135deg, #77506b, #34263d);
+  box-shadow: 0 8px 20px #38263830;
+}
+.cinema-format-grid button:disabled {
+  opacity: 0.45;
+}
+.cinema-poster-choice {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.cinema-poster-choice img {
+  max-height: 180px;
+  max-width: 120px;
+  object-fit: contain;
+  border: 1px solid #9e7b60;
+}
+.cinema-editor h2 {
+  font:
+    400 2.3rem Georgia,
+    serif;
+  margin: 0.5rem 0;
+}
+.cinema-editor .form-actions {
+  margin-top: 1.5rem;
+}
+.cinema-filter-panel {
+  margin: 0.6rem 0 1rem;
+  border: 1px solid #b3937480;
+  border-radius: 8px;
+  padding: 0.3rem 0.8rem;
+  color: #e5cfb5;
+  background: #302437;
+}
+.cinema-filter-panel summary {
+  min-height: 44px;
+  padding: 0.7rem 0;
+  cursor: pointer;
+  font-size: 0.83rem;
+}
+.cinema-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 0.6rem;
+  padding: 0.5rem 0 1rem;
+}
+.cinema-filter-grid button {
+  color: #f6e8d2;
+  border-color: #b39374;
+}
+.cinema-filter-grid button[aria-pressed="true"] {
+  background: #e5c9a0;
+  color: #352135;
+}
+.cinema-release-chip {
+  color: #754d39;
+  font-size: 0.8rem;
+}
+.cinema-dialog,
+.cinema-confirmation {
+  background: #f3e8d5;
+  color: #372537;
+  border: 1px solid #ba9570;
+  border-radius: 12px;
+  box-shadow: 0 20px 100px #10071999;
+  padding: clamp(1rem, 3vw, 2rem);
+  max-height: calc(100dvh - 24px);
+  max-width: min(1100px, calc(100vw - 24px));
+  width: 100%;
+  overscroll-behavior: contain;
+  overflow-y: auto;
+}
+.cinema-dialog::backdrop,
+.cinema-confirmation::backdrop {
+  background: #150d21db;
+  backdrop-filter: blur(5px);
+}
+.cinema-dialog-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #b79b7b80;
+  margin-bottom: 1.2rem;
+}
+.cinema-dialog h2 {
+  font:
+    400 1.5rem Georgia,
+    serif;
+  margin: 0.3rem 0;
+}
+.cinema-composer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.9fr);
+  gap: 1.7rem;
+  align-items: start;
+}
+.cinema-preview {
+  position: sticky;
+  top: 0;
+  min-height: 200px;
+  display: grid;
+  place-items: center;
+  background: #251a2e;
+  border: 1px solid #ad8967;
+  box-shadow: 0 10px 22px #35273d38;
+}
+.cinema-preview img {
+  width: 100%;
+  height: auto;
+  display: block;
+  animation: cinema-reveal 0.3s ease;
+}
+.cinema-preview p {
+  color: #f3e3cb;
+}
+.cinema-dialog .cinema-choices {
+  margin: 0 0 1.2rem;
+}
+.cinema-dialog .form-field {
+  color: #51344b;
+  font-size: 0.83rem;
+}
+.cinema-dialog input,
+.cinema-dialog textarea {
+  color: #382638;
+  background: #fff8ed;
+  border-color: #b79a7e;
+  min-height: 46px;
+  width: 100%;
+  border-radius: 4px;
+}
+.cinema-dialog .cinema-choices label {
+  padding: 0.45rem 0.65rem;
+}
+.cinema-dialog .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+.cinema-privacy {
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: #74535c;
+}
+.cinema-composer-controls > small {
+  display: block;
+  margin-top: 1rem;
+  color: #74535c;
+}
+.cinema-confirmation {
+  max-width: 480px;
+}
+.cinema-confirmation p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+@keyframes cinema-reveal {
+  from {
+    opacity: 0.5;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (max-width: 600px) {
+  .cinema-format-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+  }
+  .cinema-format-grid button {
+    min-height: 135px;
+    padding: 0.8rem;
+  }
+  .cinema-hero {
+    grid-template-columns: minmax(95px, 0.7fr) minmax(0, 1.3fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  .cinema-identity h2 {
+    font-size: 1.75rem;
+  }
+  .cinema-kicker {
+    font-size: 0.6rem;
+  }
+  .cinema-metadata {
+    font-size: 0.75rem;
+  }
+  .cinema-countdown strong {
+    font-size: 2.5rem;
+  }
+  .cinema-personal {
+    grid-column: 1/-1;
+  }
+  .cinema-personal button {
+    font-size: 0.72rem;
+    padding: 0.4rem 0.6rem;
+  }
+  .cinema-field-grid {
+    gap: 0.5rem;
+  }
+  .cinema-dialog {
+    max-width: calc(100vw - 12px);
+    max-height: calc(100dvh - 12px);
+    padding: 1rem;
+  }
+  .cinema-dialog-heading {
+    flex-wrap: wrap;
+  }
+  .cinema-composer-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.2rem;
+  }
+  .cinema-preview {
+    position: static;
+    width: min(100%, 330px);
+    margin: auto;
+  }
+  .cinema-preview img {
+    max-height: 54dvh;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+  .cinema-dialog-heading h2 {
+    font-size: 1.3rem;
+  }
+  .category-ribbon {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem;
+  }
+  .category-ribbon button {
+    white-space: normal;
+    min-width: 0;
+    font-size: 0.75rem;
+  }
+}
+@media (max-width: 360px) {
+  .cinema-hero {
+    grid-template-columns: 1fr;
+  }
+  .cinema-poster {
+    width: 130px;
+    margin: 0 auto 1rem;
+  }
+  .cinema-field-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cinema-preview img {
+    animation: none;
+  }
+  .cinema-format-grid button {
+    transition: none;
+  }
+}
+.cinema-folio[data-format="anime"] .cinema-engraving {
+  background: radial-gradient(
+    ellipse at 40% 32%,
+    #9386b6,
+    #513858 45%,
+    #191523
+  );
+}
+.cinema-folio[data-format="animation"] .cinema-engraving {
+  background: radial-gradient(
+    ellipse at 40% 32%,
+    #c09268,
+    #704456 45%,
+    #241927
+  );
+}
+/* Override inherited dark-shell tokens only inside these paper surfaces. */
+.cinema-folio,
+.cinema-editor,
+.cinema-dialog,
+.cinema-confirmation {
+  --color-text-primary: #362336;
+  --color-text-secondary: #71515a;
+  --color-text-muted: #71515a;
+  --color-border-subtle: #b79a7e;
+  --color-surface: #f6ecdc;
+  --color-error: #7c2439;
+}
+.app-shell
+  :is(.cinema-folio, .cinema-editor, .cinema-dialog, .cinema-confirmation)
+  :is(h2, h3, h4) {
+  color: #362336;
+}
+.app-shell :is(.cinema-folio, .cinema-editor, .cinema-dialog) .text-link {
+  color: #62394e;
+}
+.app-shell
+  :is(.cinema-folio, .cinema-editor, .cinema-dialog)
+  .form-field
+  :is(input, textarea, select) {
+  background: #fff8ed;
+  color: #362336;
+  border-color: #ad8a75;
+  box-shadow: inset 0 2px 3px #3623360a;
+}
+.app-shell
+  :is(.cinema-folio, .cinema-editor, .cinema-dialog)
+  :is(.button--primary, .button--secondary) {
+  border-radius: 5px;
+  box-shadow: none;
+  min-height: 46px;
+  text-shadow: none;
+}
+.app-shell :is(.cinema-folio, .cinema-editor, .cinema-dialog) .button--primary {
+  background: #633e56;
+  color: #fff2df;
+  border: 1px solid #633e56;
+}
+.app-shell
+  :is(.cinema-folio, .cinema-editor, .cinema-dialog)
+  .button--secondary {
+  background: #f8edda;
+  color: #513148;
+  border: 1px solid #aa866c;
+}
+.app-shell :is(.cinema-folio, .cinema-editor, .cinema-dialog) .button::before {
+  display: none;
+}
+.app-shell .cinema-folio .cinema-secondary > summary,
+.app-shell .cinema-folio .cinema-state-chooser > summary {
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+  border-radius: 0;
+  padding-inline: 0;
+}
+.cinema-annotation-tools > summary {
+  cursor: pointer;
+  min-height: 44px;
+  font-size: 0.78rem;
+  padding: 0.6rem 0;
+  color: #603d53;
+}
+.cinema-folio .cinema-annotation-tools .inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.cinema-folio .cinema-annotation-tools .button {
+  font-size: 0.75rem;
+  padding: 0.5rem 0.7rem;
+}
+.app-shell:has(
+    .cinema-folio form:focus-within,
+    .cinema-editor form:focus-within
+  )
+  .primary-dock {
+  transform: translate3d(0, calc(125% + env(safe-area-inset-bottom)), 0);
+  pointer-events: none;
+}
+.app-shell[data-high-contrast="true"]
+  :is(.cinema-folio, .cinema-editor, .cinema-dialog, .cinema-confirmation) {
+  background: #fff;
+  color: #171017;
+  border-color: #171017;
+  --color-text-primary: #171017;
+  --color-text-secondary: #171017;
+  --color-text-muted: #171017;
+}
+.app-shell[data-high-contrast="true"]
+  :is(.cinema-folio, .cinema-editor, .cinema-dialog)
+  .form-field
+  :is(input, textarea, select) {
+  background: #fff;
+  color: #171017;
+  border: 2px solid #171017;
+}
+.app-shell[data-high-contrast="true"]
+  :is(.cinema-folio, .cinema-editor, .cinema-dialog)
+  :is(.button--secondary, .button--primary) {
+  background: #171017;
+  color: #fff;
+  border: 2px solid #171017;
+}
+.cinema-countdown {
+  flex-wrap: wrap;
+}
+.cinema-release-share {
+  flex-basis: 100%;
+  font-size: 0.76rem;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}

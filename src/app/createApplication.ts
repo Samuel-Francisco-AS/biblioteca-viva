@@ -1,3 +1,6 @@
+import { SaveEntertainment } from "../application/entertainment";
+import type { PosterPort } from "../application/media";
+import { DexiePosters } from "../infrastructure/database/media";
 import {
   SaveWorkoutDay,
   PhysicalProfileService,
@@ -132,6 +135,7 @@ export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 export interface ApplicationRuntime {
   readonly physicalProfile: PhysicalProfilePort;
   readonly imageFiles: ImageFilesPort;
+  readonly posters: PosterPort;
   readonly appVersion: string;
   readonly audio: AudioPort;
   readonly experience: ExperiencePreferencesPort;
@@ -153,6 +157,7 @@ export interface ApplicationRuntime {
   };
   readonly commands: {
     readonly saveFlashCard: SaveFlashCard;
+    readonly saveEntertainment: SaveEntertainment;
     readonly saveWorkoutDay: SaveWorkoutDay;
     readonly deleteFlashCard: DeleteFlashCard;
     readonly addNote: AddNote;
@@ -329,6 +334,7 @@ export async function createApplication(
   return {
     physicalProfile,
     imageFiles: new PlatformImageFiles(),
+    posters: new DexiePosters(database),
     appVersion: packageMetadata.version,
     audio,
     experience,
@@ -407,6 +413,7 @@ export async function createApplication(
       completeSession: new CompleteSession(dependencies),
       createBookEntry: new CreateBookEntry(dependencies),
       createLibraryEntry: new CreateLibraryEntry(dependencies),
+      saveEntertainment: new SaveEntertainment(dependencies),
       createManualSession: new CreateManualSession(dependencies),
       createTag: new CreateTag(dependencies),
       deleteBookEntry: new DeleteBookEntry(

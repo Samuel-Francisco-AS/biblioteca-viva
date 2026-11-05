@@ -236,3 +236,38 @@ describe("estatísticas derivadas P1-C", () => {
     ).toEqual([1, 1, 1]);
   });
 });
+
+it("aggregates the visual entertainment filter while keeping six technical metrics and original IDs", () => {
+  const timestamp = "2026-11-04T12:00:00.000Z";
+  const base = {
+    createdAt: timestamp,
+    updatedAt: timestamp,
+    revision: 1,
+    status: "planned" as const,
+    favorite: false,
+    tagIds: [],
+  };
+  const snapshot = deriveStatistics({
+    now: timestamp,
+    window: "all",
+    entryGroup: "entertainment",
+    entries: [
+      { ...base, id: "movie", type: "movie", title: "Filme" },
+      {
+        ...base,
+        id: "series",
+        type: "series",
+        title: "Anime",
+        episodesWatched: 0,
+      },
+      { ...base, id: "book", type: "book", title: "Livro", currentPage: 0 },
+    ],
+    sessions: [],
+    activities: [],
+  });
+  expect(snapshot.totalEntries).toBe(2);
+  expect(Object.keys(snapshot.byType)).toHaveLength(6);
+  expect(snapshot.byType.movie.entries).toBe(1);
+  expect(snapshot.byType.series.entries).toBe(1);
+  expect(snapshot.byType.book.entries).toBe(0);
+});

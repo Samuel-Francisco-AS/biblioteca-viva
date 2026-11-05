@@ -69,6 +69,7 @@ export interface BookEntry extends LibraryEntryBase {
 }
 
 export interface MovieEntry extends LibraryEntryBase {
+  readonly catalog?: import("./entertainment").EntertainmentCatalog;
   readonly type: "movie";
   readonly director?: string;
   readonly year?: number;
@@ -77,6 +78,7 @@ export interface MovieEntry extends LibraryEntryBase {
 }
 
 export interface SeriesEntry extends LibraryEntryBase {
+  readonly catalog?: import("./entertainment").EntertainmentCatalog;
   readonly type: "series";
   readonly platform?: string;
   readonly episodesWatched: number;

@@ -102,19 +102,21 @@ export function deriveStatistics(input: {
   readonly sessions: readonly Session[];
   readonly window: StatisticsWindow;
   readonly entryType?: EntryType;
+  readonly entryGroup?: "entertainment";
   readonly category?: TimelineCategory;
 }): StatisticsSnapshot {
   const minimum = cutoff(input.window, input.now);
-  const entries =
-    input.entryType === undefined
-      ? input.entries
-      : input.entries.filter(({ type }) => type === input.entryType);
+  const matchesType = (type: EntryType | undefined) =>
+    input.entryGroup === "entertainment"
+      ? type === "movie" || type === "series"
+      : input.entryType === undefined || type === input.entryType;
+  const entries = input.entries.filter(({ type }) => matchesType(type));
   const entryById = new Map(input.entries.map((entry) => [entry.id, entry]));
   const completedSessions = input.sessions.filter(
     (session) =>
       session.status === "completed" &&
       within(session.endedAt ?? session.startedAt, minimum) &&
-      (input.entryType === undefined || session.entryType === input.entryType),
+      matchesType(session.entryType),
   );
   const byType = typeRecord();
   for (const entry of entries) {
@@ -182,7 +184,7 @@ export function deriveStatistics(input: {
     }))
     .filter(
       (item) =>
-        (input.entryType === undefined || item.entryType === input.entryType) &&
+        matchesType(item.entryType) &&
         (input.category === undefined || item.category === input.category),
     );
   const sessionIdsInActivities = new Set(
@@ -240,6 +242,7 @@ export function deriveStatistics(input: {
 const querySchema = z.strictObject({
   window: z.enum(STATISTICS_WINDOWS).optional(),
   entryType: z.enum(ENTRY_TYPES).optional(),
+  entryGroup: z.literal("entertainment").optional(),
   category: z.enum(["entry", "progress", "annotation", "session"]).optional(),
 });
 
@@ -265,6 +268,7 @@ export class GetStatistics {
       now,
       window: parsed.window ?? "30d",
       ...(parsed.entryType !== undefined && { entryType: parsed.entryType }),
+      ...(parsed.entryGroup !== undefined && { entryGroup: parsed.entryGroup }),
       ...(parsed.category !== undefined && { category: parsed.category }),
     });
   }

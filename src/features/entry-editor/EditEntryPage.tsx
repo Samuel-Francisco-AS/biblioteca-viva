@@ -1,3 +1,7 @@
+import {
+  EntertainmentEditor,
+  type EntertainmentEditorApplication,
+} from "../entertainment/EntertainmentEditor";
 import { scheduleFromForm, workoutFormError } from "./workoutFormModel";
 import { exercisesFromForm } from "./exercisesFromForm";
 import { RitualFields } from "./RitualFields";
@@ -17,6 +21,7 @@ import { EditBookPage, type EditorApplication } from "./EntryEditorPages";
 import { presentApplicationError } from "./errorMessages";
 
 interface EditEntryApplication extends EditorApplication {
+  readonly posters?: EntertainmentEditorApplication["posters"];
   readonly commands: EditorApplication["commands"] & {
     readonly updateLibraryEntry: {
       execute(input: unknown): Promise<LibraryEntry>;
@@ -154,6 +159,19 @@ export function EditEntryPage({
     );
   if (!entry) return <p role="status">Carregando registro…</p>;
   if (entry.type === "book") return <EditBookPage application={application} />;
+  if (entry.type === "movie" || entry.type === "series")
+    return (
+      <EntertainmentEditor
+        application={application}
+        entry={entry}
+        returnPath={returnPath}
+        onCancel={() =>
+          void navigate(
+            `/registros/${encodeURIComponent(id)}?from=${encodeURIComponent(returnPath)}`,
+          )
+        }
+      />
+    );
   const current = entry;
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
