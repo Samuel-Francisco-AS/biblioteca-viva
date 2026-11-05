@@ -33,7 +33,9 @@ describe("BF-5.5C ritual ledger in the existing settings table", () => {
       repository.save(first),
       repository.save(night.capture()),
     ]);
-    expect((await repository.load())?.completedLampIds).toEqual([NIGHT_LAMPS[0].id]);
+    expect((await repository.load())?.completedLampIds).toEqual([
+      NIGHT_LAMPS[0].id,
+    ]);
     const backup = await new DexieBackupSnapshotStore(database).read();
     expect(backup.settings.some((row) => row.key === NIGHT_LIGHTING_KEY)).toBe(
       true,
