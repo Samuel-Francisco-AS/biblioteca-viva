@@ -3,6 +3,7 @@ import { InhabitantNavigation } from "./inhabitantNavigation";
 import { INHABITANTS } from "./inhabitants";
 import type { ThreeWorldRuntimeDependencies } from "./three/ThreeWorldRuntime";
 import { LivingSession } from "./livingObjects";
+import { NightLightingSession } from "./nightLighting";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi, type Mock } from "vitest";
@@ -572,10 +573,14 @@ describe("WorldHost", () => {
     expect(
       vi.mocked(createThreeWorldRuntime).mock.calls[0]?.[0]?.livingSession,
     ).toBeInstanceOf(LivingSession);
+    const nightLighting = vi.mocked(createThreeWorldRuntime).mock.calls[0]?.[0]
+      ?.nightLighting;
+    expect(nightLighting).toBeInstanceOf(NightLightingSession);
     expect(createThreeWorldRuntime).toHaveBeenCalledWith({
       libraryWorldSnapshot: snapshot,
       livingSession: vi.mocked(createThreeWorldRuntime).mock.calls[0]?.[0]
         ?.livingSession,
+      nightLighting,
     });
     view.rerender(
       <WorldHost
