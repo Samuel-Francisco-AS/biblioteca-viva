@@ -58,11 +58,11 @@ export async function createCinemaImage(
     caption = `ESTREIA ${date}${days === 0 ? "  ·  HOJE" : days !== undefined && days > 0 ? `  ·  ${days} DIAS` : ""}`;
   } else if (options.mode === "progress" && entry.type === "series") {
     caption = `${entry.episodesWatched}${entry.totalEpisodes ? ` / ${entry.totalEpisodes}` : ""} EPISÓDIOS${entry.currentSeason ? `  ·  T${entry.currentSeason}` : ""}${entry.currentEpisode ? ` E${entry.currentEpisode}` : ""}`;
-  } else if (options.mode === "recommendation" && entry.catalog?.rating)
-    caption = `${"★".repeat(entry.catalog.rating)}${"☆".repeat(5 - entry.catalog.rating)}  ·  MINHA AVALIAÇÃO`;
+  }
   return renderSharePlate(
     {
       title: entry.title,
+      rating: entry.catalog?.rating,
       eyebrow: `${formatLabels[entertainmentFormat(entry)]} / ${bannerModeLabels[options.mode]}`,
       caption,
       text: options.message,

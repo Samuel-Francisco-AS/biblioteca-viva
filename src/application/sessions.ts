@@ -471,13 +471,23 @@ export class CreateManualSession {
       [],
     ) as readonly import("../domain").DomainEvent[];
     await runTransaction(this.dependencies, async () => {
+      const currentEntry =
+        entry.type === "work" || entry.type === "book"
+          ? await loadEntry(this.dependencies, entry.id)
+          : entry;
       await saveEntity(
         () => this.dependencies.sessions.save(session),
         "save_session",
       );
-      if (updatedEntry !== entry)
+      // A manual session may have been drafted before a plan/rating mutation.
+      // Reconcile these owners inside the commit, retaining their latest fields.
+      const reconciledEntry =
+        entry.type === "work" || entry.type === "book"
+          ? applyDomain(() => applyCompletedSession(currentEntry, session, now))
+          : updatedEntry;
+      if (reconciledEntry !== currentEntry)
         await saveEntity(
-          () => this.dependencies.libraryEntries.save(updatedEntry),
+          () => this.dependencies.libraryEntries.save(reconciledEntry),
           "save_entry",
         );
       await saveActivity(this.dependencies, activity);

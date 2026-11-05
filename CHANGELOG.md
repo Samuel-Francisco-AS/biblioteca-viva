@@ -1,3 +1,10 @@
+## BF-5 Parte 2F — candidata, 2026-11-05
+
+- Trabalho reconstruído como Empreitadas: etapas, tarefas, progresso real, próxima ação explícita e diário; sessões e notas anteriores preservadas.
+- Atlas Vivo com duas gravuras articuladas originais e quatro movimentos, escolha visual voluntária, pausa/pose estática e movimento reduzido. MET preservado.
+- Cinco estrelas em Livros/Entretenimento e formulários; atualização/remoção direta e opção de estrelas Canvas nos banners 4:5, 9:16 e 1:1.
+- Dexie v14 aditiva, backup v6 antigo/novo e revisão concorrente. BF-5 aberta, sem aceite artístico/físico. [Entrega](docs/BF-5_PARTE2F_EMPREITADAS_ATLAS_AVALIACOES.md).
+
 ## BF-5 Parte 2E — candidata (2026-11-04)
 
 - Seletores internos com confirmação/cancelamento e Voltar; calendário DOM para datas em formulários, atividade física, entretenimento e sessões. Filtros/Ajustes e duração de foco também deixam de abrir seletores nativos.

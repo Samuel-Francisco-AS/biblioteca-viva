@@ -1,3 +1,4 @@
+import { PersistedRating } from "../../ui/StarRating";
 import { RecordCoverEditor } from "../../ui/RecordCoverEditor";
 import { BVDatePicker } from "../../ui/BVPicker";
 import { ApplicationError } from "../../application/errors";
@@ -155,7 +156,7 @@ export function EntertainmentDetail({
         form.get("state") === watchState(entry) ? undefined : form.get("state"),
       catalog: {
         ...entry.catalog,
-        rating: number("rating"),
+
         watchedOn: form.get("watchedOn") || undefined,
         completedSeasons: [...completedSeasons].sort((a, b) => a - b),
       },
@@ -296,15 +297,28 @@ export function EntertainmentDetail({
               {isWishlisted(entry) ? "✓ Nos desejos" : "+ Lista de desejos"}
             </button>
           </div>
-          {entry.catalog?.rating && (
-            <p
-              className="cinema-rating"
-              aria-label={`Avaliação: ${entry.catalog.rating} de 5`}
-            >
-              {"★".repeat(entry.catalog.rating)}
-              {"☆".repeat(5 - entry.catalog.rating)}
-            </p>
-          )}
+          <PersistedRating
+            value={entry.catalog?.rating}
+            disabled={busy || dirty}
+            save={async (rating) => {
+              if (!application.commands.saveEntertainment || lock.current)
+                throw new Error("Avaliação indisponível.");
+              lock.current = true;
+              setBusy(true);
+              try {
+                onChange(
+                  await application.commands.saveEntertainment.execute({
+                    id: entry.id,
+                    expectedRevision: entry.revision,
+                    catalog: { ...entry.catalog, rating },
+                  }),
+                );
+              } finally {
+                lock.current = false;
+                setBusy(false);
+              }
+            }}
+          />
         </div>
       </header>
       <p className="cinema-feedback" role="status">
@@ -447,16 +461,6 @@ export function EntertainmentDetail({
                 </label>
               </>
             )}
-            <label className="form-field">
-              Avaliação (1–5)
-              <input
-                type="number"
-                name="rating"
-                min="1"
-                max="5"
-                defaultValue={entry.catalog?.rating}
-              />
-            </label>
             <button
               type="submit"
               className="button button--primary"

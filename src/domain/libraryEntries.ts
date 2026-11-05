@@ -1,3 +1,5 @@
+import { WORK_KINDS, workReferenceSchema } from "./endeavors";
+import { z } from "zod";
 import {
   catalogForStructure,
   type EntertainmentCatalog,
@@ -92,6 +94,10 @@ export interface CreatePhysicalActivityInput extends CommonCreateInput {
 }
 
 export interface CreateWorkInput extends CommonCreateInput {
+  readonly kind?: (typeof WORK_KINDS)[number];
+  readonly startDate?: string;
+  readonly reference?: string;
+  readonly initialNotes?: string;
   readonly area?: string;
   readonly organization?: string;
   readonly description?: string;
@@ -139,6 +145,10 @@ export type UpdateLibraryEntryDetailsInput =
     }
   | {
       readonly type: "work";
+      readonly kind?: (typeof WORK_KINDS)[number];
+      readonly startDate?: string;
+      readonly reference?: string;
+      readonly initialNotes?: string;
       readonly title: string;
       readonly area?: string;
       readonly organization?: string;
@@ -344,6 +354,16 @@ export function createPhysicalActivity(
 export function createWork(input: CreateWorkInput): WorkEntry {
   return Object.freeze({
     ...common("work", input),
+    ...(input.kind !== undefined && {
+      kind: z.enum(WORK_KINDS).parse(input.kind),
+    }),
+    ...(input.startDate && { startDate: z.iso.date().parse(input.startDate) }),
+    ...(input.reference && {
+      reference: workReferenceSchema.parse(input.reference),
+    }),
+    ...(input.initialNotes && {
+      initialNotes: z.string().trim().max(4000).parse(input.initialNotes),
+    }),
     ...(optionalText(input.area) && { area: optionalText(input.area) }),
     ...(optionalText(input.organization) && {
       organization: optionalText(input.organization),
@@ -567,6 +587,22 @@ export function updateLibraryEntryDetails(
         ...entry,
         ...metadata,
         title: requireText(input.title, "title"),
+        kind:
+          input.kind === undefined
+            ? entry.kind
+            : z.enum(WORK_KINDS).parse(input.kind),
+        startDate:
+          input.startDate === undefined
+            ? undefined
+            : z.iso.date().parse(input.startDate),
+        reference:
+          input.reference === undefined
+            ? undefined
+            : workReferenceSchema.parse(input.reference),
+        initialNotes:
+          input.initialNotes === undefined
+            ? undefined
+            : z.string().trim().max(4000).parse(input.initialNotes),
         area: optionalText(input.area),
         organization: optionalText(input.organization),
         description: optionalText(input.description),

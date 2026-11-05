@@ -468,7 +468,10 @@ export function WorkoutDetailPage({
           <p className="workout-eyebrow">III · Atlas do movimento</p>
           <h3 id="workout-metabolic-title">O corpo em percurso</h3>
         </div>
-        <BodyStudy />
+        <BodyStudy
+          category={entry.category}
+          profile={application.physicalProfile}
+        />
         <div>
           <p className="workout-calories">
             {stored?.estimate ? (

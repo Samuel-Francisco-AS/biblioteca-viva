@@ -21,11 +21,13 @@ export const workoutScheduleSchema = z
     message: "A data final deve ser igual ou posterior ao início.",
   });
 export const physicalProfileSchema = z.strictObject({
-  weightKg: z.number().finite().min(20).max(400),
+  weightKg: z.number().finite().min(20).max(400).optional(),
+  gender: z.enum(["male", "female", "other", "undisclosed"]).optional(),
+  atlas: z.enum(["auto", "male", "female"]).optional(),
 });
 export const workoutEstimateSchema = z.strictObject({
   method: z.literal("met-v1"),
-  weightKg: physicalProfileSchema.shape.weightKg,
+  weightKg: z.number().finite().min(20).max(400),
   met: z.number().positive().max(20),
   kcal: z.int().nonnegative(),
 });
@@ -104,7 +106,7 @@ export function estimateCalories(
   intensity: number | undefined,
   profile: PhysicalProfile | undefined,
 ) {
-  if (!duration || !intensity || !profile) return undefined;
+  if (!duration || !intensity || !profile?.weightKg) return undefined;
   // Pragmatic perceived-effort bands inspired by the 2024 Adult Compendium; not a measured conversion of RPE to MET.
   const bands =
     category === "strength"

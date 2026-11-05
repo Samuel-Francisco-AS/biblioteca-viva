@@ -1,3 +1,4 @@
+import { WORK_KINDS, workReferenceSchema } from "../domain/endeavors";
 import { catalogSchema } from "../domain/entertainment";
 import { workoutScheduleSchema } from "../domain/workouts";
 import { z } from "zod";
@@ -84,6 +85,10 @@ const physicalActivityInputSchema = z.strictObject({
   objective: optionalText,
 });
 const workInputSchema = z.strictObject({
+  kind: z.enum(WORK_KINDS).optional(),
+  startDate: z.iso.date().optional(),
+  reference: workReferenceSchema.optional(),
+  initialNotes: z.string().trim().max(4000).optional(),
   ...common,
   type: z.literal("work"),
   area: optionalText,
@@ -106,7 +111,10 @@ export const updateLibraryEntrySchema = z.discriminatedUnion("type", [
   seriesInputSchema.extend({ id: text }),
   studyInputSchema.extend({ id: text }),
   physicalActivityInputSchema.extend({ id: text }),
-  workInputSchema.extend({ id: text }),
+  workInputSchema.extend({
+    id: text,
+    expectedRevision: z.int().positive().optional(),
+  }),
 ]);
 
 const progressSchema = z.discriminatedUnion("type", [
@@ -257,6 +265,41 @@ export class UpdateLibraryEntry {
 
   async execute(input: unknown): Promise<LibraryEntry> {
     const parsed = parseInput(updateLibraryEntrySchema, input);
+    if (parsed.type === "work") {
+      const now = await currentTime(this.dependencies);
+      const eventId = await generatedId(this.dependencies, "work_edit_event");
+      const updated = await runTransaction(this.dependencies, async () => {
+        const entry = await loadEntry(this.dependencies, parsed.id);
+        if (entry.type !== "work")
+          throw new ApplicationError("VALIDATION_FAILED", "Tipo incompatível.");
+        if (
+          parsed.expectedRevision !== undefined &&
+          entry.revision !== parsed.expectedRevision
+        )
+          throw new ApplicationError(
+            "CONFLICT",
+            "A empreitada mudou em outra tela. Reabra antes de salvar.",
+          );
+        const result = applyDomain(() =>
+          updateLibraryEntryDetails(entry, parsed, now),
+        );
+        await saveEntity(
+          () => this.dependencies.libraryEntries.save(result),
+          "update_work",
+        );
+        return result;
+      });
+      await publishEvents(this.dependencies, [
+        createLibraryEntryUpdatedEvent({
+          eventId,
+          aggregateId: updated.id,
+          occurredAt: now,
+          revision: updated.revision,
+          payload: { entryType: "work", changedFields: ["details"] },
+        }),
+      ]);
+      return updated;
+    }
     const existing = await loadEntry(this.dependencies, parsed.id);
     if (existing.type === "book")
       throw new ApplicationError(

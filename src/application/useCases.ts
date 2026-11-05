@@ -177,39 +177,50 @@ export class UpdateBookEntry {
 
   async execute(input: unknown): Promise<BookEntry> {
     const parsed = parseInput(updateBookEntrySchema, input);
-    const existing = await loadBook(this.dependencies, parsed.id);
     const occurredAt = await currentTime(this.dependencies);
+    const activityId = await generatedId(
+      this.dependencies,
+      "generate_activity_id",
+    );
     const changes = {
       title: parsed.title,
       author: parsed.author,
       totalPages: parsed.totalPages,
       rating: parsed.rating,
     };
-    const updated = applyDomain(() =>
-      updateBibliographicData(existing, { ...changes, updatedAt: occurredAt }),
-    );
     const changedFields = Object.entries(changes)
       .filter(([, value]) => value !== undefined)
       .map(([field]) => field);
-
-    const activityId = await generatedId(
-      this.dependencies,
-      "generate_activity_id",
-    );
-    const activity = createActivity({
-      id: activityId,
-      type: "book_updated",
-      aggregateId: updated.id,
-      occurredAt,
-      revision: updated.revision,
-      metadata: { changedFields: Object.freeze(changedFields) },
-    });
-    await runTransaction(this.dependencies, async () => {
+    const updated = await runTransaction(this.dependencies, async () => {
+      const existing = await loadBook(this.dependencies, parsed.id);
+      if (
+        parsed.expectedRevision !== undefined &&
+        existing.revision !== parsed.expectedRevision
+      )
+        throw new ApplicationError(
+          "CONFLICT",
+          "O livro mudou em outra tela. Reabra antes de avaliar.",
+        );
+      const result = applyDomain(() =>
+        updateBibliographicData(existing, {
+          ...changes,
+          updatedAt: occurredAt,
+        }),
+      );
+      const activity = createActivity({
+        id: activityId,
+        type: "book_updated",
+        aggregateId: result.id,
+        occurredAt,
+        revision: result.revision,
+        metadata: { changedFields: Object.freeze(changedFields) },
+      });
       await saveEntity(
-        () => this.dependencies.libraryEntries.save(updated),
+        () => this.dependencies.libraryEntries.save(result),
         "save_book",
       );
       await saveActivity(this.dependencies, activity);
+      return result;
     });
     const eventId = await generatedId(this.dependencies, "generate_event_id");
     await publishEvent(

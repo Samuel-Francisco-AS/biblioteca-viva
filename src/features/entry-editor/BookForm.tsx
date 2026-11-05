@@ -1,3 +1,4 @@
+import { StarRating } from "../../ui/StarRating";
 import { BVSelectSheet, BVDatePicker } from "../../ui/BVPicker";
 import { RitualChapter } from "./RitualFields";
 import { useRef, useState, type FormEvent } from "react";
@@ -144,20 +145,14 @@ export function BookForm({
         <summary>Impressões e data de início</summary>
         <div className="ritual-chapter__body">
           <div className="form-field">
-            <label htmlFor="rating">Avaliação (opcional)</label>
-            <BVSelectSheet
-              id="rating"
+            <StarRating
               name="rating"
-              value={values.rating}
-              onChange={(event) => change("rating", event.target.value)}
-            >
-              <option value="">Sem avaliação</option>
-              {[1, 2, 3, 4, 5].map((rating) => (
-                <option key={rating} value={rating}>
-                  {rating}
-                </option>
-              ))}
-            </BVSelectSheet>
+              value={values.rating ? Number(values.rating) : undefined}
+              onChange={(value) =>
+                change("rating", value === undefined ? "" : String(value))
+              }
+              disabled={isSubmitting}
+            />
             {errors.rating && <p className="field-error">{errors.rating}</p>}
           </div>
           {inscription(

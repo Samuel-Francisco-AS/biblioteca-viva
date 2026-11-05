@@ -1,3 +1,7 @@
+## BF-5 Parte 2F — gravuras originais em código
+
+Atlas Vivo: [`BodyStudy.tsx`](../src/features/entry-detail/BodyStudy.tsx), contornos masculino/feminino, anatomia estilizada/indumentária e ornamentos SVG originais produzidos para o projeto, sem fonte remota ou asset de terceiros. Rig e coreografias em [`atlasMotion.ts`](../src/features/entry-detail/atlasMotion.ts); desenho/articulação verificáveis no código. Substitui na apresentação a gravura estática da Parte 2C, sem apagar o asset anterior. Estrelas dos PNGs são paths Canvas originais. [ADR-021](decisions/ADR-021-empreitadas-atlas-avaliacoes.md).
+
 > **BF-5 Parte 2C (2026-11-04):** ilustração original local `public/illustrations/corpo-em-movimento.webp` (1024×1536, alpha, ImageGen integrado). Uso editorial decorativo do painel corporal, sem valor diagnóstico. [Procedência e prompt](evidence/BF-5P2C/ARTE.md).
 
 ## BF-5R9 — contrato vigente

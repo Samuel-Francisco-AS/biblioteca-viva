@@ -1,3 +1,8 @@
+import {
+  WORK_KINDS,
+  workPlanSchema,
+  workReferenceSchema,
+} from "../../domain/endeavors";
 import { catalogSchema } from "../../domain/entertainment";
 import {
   workoutScheduleSchema,
@@ -22,7 +27,7 @@ import {
 import { z } from "zod";
 
 export const DATABASE_NAME = "biblioteca-viva";
-export const DATABASE_VERSION = 13;
+export const DATABASE_VERSION = 14;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
 export const DATABASE_SCHEMA_V1 = {
@@ -81,6 +86,8 @@ export const DATABASE_SCHEMA_V12 = {
 } as const;
 
 export const DATABASE_SCHEMA_V13 = { ...DATABASE_SCHEMA_V12 } as const;
+
+export const DATABASE_SCHEMA_V14 = { ...DATABASE_SCHEMA_V13 } as const;
 
 const isoUtc = z.iso.datetime({ offset: false });
 const entityMetadata = {
@@ -249,6 +256,11 @@ const persistedPhysicalActivitySchema = z.strictObject({
 });
 
 const persistedWorkSchema = z.strictObject({
+  kind: z.enum(WORK_KINDS).optional(),
+  startDate: z.iso.date().optional(),
+  reference: workReferenceSchema.optional(),
+  initialNotes: z.string().trim().max(4000).optional(),
+  plan: workPlanSchema.optional(),
   ...commonEntry,
   type: z.literal("work"),
   area: z.string().trim().min(1).optional(),

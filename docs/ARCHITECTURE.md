@@ -1,3 +1,7 @@
+## BF-5 Parte 2F — Empreitadas, atlas e estrelas
+
+`SaveEndeavor` coordena leitura/revisão/transação do agregado `WorkEntry.plan?`, validado por regras puras do domínio. Sem React→Dexie, tabelas espaciais ou projeção de tarefas. Dexie v14 aditiva e backup v6 compartilham validação estrita. `BodyStudy` compõe gravuras SVG originais distintas com hierarquia articulada; RAF, observer/visibilidade/preferências pertencem à apresentação e são liberados no cleanup. `StarRating` compartilha semântica nativa; `PersistedRating` coordena feedback provisório e recuperação. Comandos existentes atualizam a nota única; Canvas desenha estrelas geométricas da nota persistida, incluindo opção de ocultação. [ADR-021](decisions/ADR-021-empreitadas-atlas-avaliacoes.md).
+
 # BF-5 Parte 2E — controles, mídia e composição (2026-11-04)
 
 `src/ui/BVPicker.tsx` mantém seletores/calendário na top layer DOM, com valores/validação convencionais e Back exclusivo da superfície superior. `RecordCoverEditor` acessa a porta generalizada de mídia, nunca Dexie. Dexie v13 conserva a tabela `media` v12 e amplia ownership para livros, com backup v6 validado. `BVShareComposer` coordena estado/PNG/entrega; adaptadores de livro/cinema fornecem somente conteúdo explicitamente compartilhável, e `renderSharePlate` desenha em Canvas 2D independente da tela. [ADR-019](decisions/ADR-019-controles-internos-capas-atelie.md).

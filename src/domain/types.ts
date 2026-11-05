@@ -129,6 +129,11 @@ export interface PhysicalActivityEntry extends LibraryEntryBase {
 }
 
 export interface WorkEntry extends LibraryEntryBase {
+  readonly kind?: (typeof import("./endeavors").WORK_KINDS)[number];
+  readonly startDate?: string;
+  readonly reference?: string;
+  readonly initialNotes?: string;
+  readonly plan?: import("./endeavors").WorkPlan;
   readonly type: "work";
   readonly area?: string;
   readonly organization?: string;

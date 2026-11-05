@@ -61,6 +61,7 @@ export function BVShareComposer({
   const [alignment, setAlignment] = useState<CompositionStyle["alignment"]>();
   const [position, setPosition] =
     useState<CompositionStyle["position"]>("lower");
+  const [showRating, setShowRating] = useState(true);
   const [darkness, setDarkness] = useState(0.25);
   const [background, setBackground] =
     useState<Awaited<ReturnType<typeof importLocalImage>>>();
@@ -81,6 +82,7 @@ export function BVShareComposer({
     source === "custom" ? background : source === "poster" ? poster : undefined;
   const options: ShareComposition = useMemo(
     () => ({
+      showRating,
       mode,
       aspect,
       layout,
@@ -94,6 +96,7 @@ export function BVShareComposer({
       background: selectedBackground,
     }),
     [
+      showRating,
       mode,
       aspect,
       layout,
@@ -325,6 +328,14 @@ export function BVShareComposer({
                 </label>
                 <details>
                   <summary>Imagem e acabamento</summary>
+                  <label className="checkbox-field">
+                    <input
+                      type="checkbox"
+                      checked={showRating}
+                      onChange={(event) => setShowRating(event.target.checked)}
+                    />
+                    Incluir avaliação, quando houver
+                  </label>
                   <BVChoiceGroup
                     label="Composição visual"
                     value={layout}

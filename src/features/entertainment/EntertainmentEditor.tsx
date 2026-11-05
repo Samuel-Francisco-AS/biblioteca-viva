@@ -1,3 +1,4 @@
+import { StarRating } from "../../ui/StarRating";
 import { BVDatePicker } from "../../ui/BVPicker";
 import { useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -413,12 +414,14 @@ export function EntertainmentEditor({
                 )}
               </div>
             )}
-            {field(
-              "rating",
-              "Avaliação (1–5)",
-              entry?.catalog?.rating,
-              "number",
-            )}
+            <StarRating
+              name="rating"
+              defaultValue={entry?.catalog?.rating}
+              onTouched={() => {
+                setDirty(true);
+                setFieldsTouched(true);
+              }}
+            />
             <div className="cinema-choices">
               <label>
                 <input
