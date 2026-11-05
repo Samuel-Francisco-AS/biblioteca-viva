@@ -55,7 +55,7 @@ describe("living visuals", () => {
         ?.light?.intensity,
     ).toBe(0);
     expect(living.getSnapshot().discovery).toBe(0);
-    night.complete(NIGHT_LAMPS[0]!.id);
+    night.complete(NIGHT_LAMPS[0].id);
     visuals.update(0, true);
     expect((fixtures[0] as PointLight).intensity).toBe(4.2);
     now = new Date(2026, 10, 6, 6);

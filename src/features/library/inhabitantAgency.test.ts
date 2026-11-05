@@ -139,7 +139,7 @@ describe("BF-4F3 local agency", () => {
     expect(observedGesture).toBe(true);
     expect(night.getSnapshot().completedLampIds.length).toBeGreaterThan(0);
     expect(night.getSnapshot().completedLampIds.length).toBeLessThanOrEqual(9);
-    const completed = night.getSnapshot().completedLampIds[0]!;
+    const completed = night.getSnapshot().completedLampIds[0];
     expect(night.complete(completed)).toBe(false);
     agency.setMode("paused");
     expect(

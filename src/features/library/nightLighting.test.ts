@@ -29,16 +29,16 @@ describe("BF-5.5C independent night lighting", () => {
     now = new Date(2026, 10, 5, 18, 0, 0);
     session.refreshContext();
     expect(session.pending()).toHaveLength(NIGHT_LAMPS.length);
-    expect(session.power(NIGHT_LAMPS[0]!.id)).toBe(0.68);
+    expect(session.power(NIGHT_LAMPS[0].id)).toBe(0.68);
     now = new Date(2026, 10, 5, 18, 0, 46);
-    expect(session.power(NIGHT_LAMPS[0]!.id)).toBe(1);
+    expect(session.power(NIGHT_LAMPS[0].id)).toBe(1);
     now = new Date(2026, 10, 6, 3);
     session.refreshContext();
     expect(session.getSnapshot().cycleKey).toBe("2026-11-05");
     now = new Date(2026, 10, 6, 6);
     session.refreshContext();
     expect(session.getSnapshot().cycleKey).toBeNull();
-    expect(session.power(NIGHT_LAMPS[0]!.id)).toBe(0);
+    expect(session.power(NIGHT_LAMPS[0].id)).toBe(0);
     expect(nightCycleKey(new Date(2026, 10, 6, 18))).toBe("2026-11-06");
   });
 
@@ -59,7 +59,7 @@ describe("BF-5.5C independent night lighting", () => {
   it("records gestures once per cycle and reconstructs safe state after reopening", () => {
     const date = new Date(2026, 10, 5, 22);
     const session = new NightLightingSession(() => date);
-    const id = NIGHT_LAMPS[0]!.id;
+    const id = NIGHT_LAMPS[0].id;
     expect(session.complete(id)).toBe(true);
     expect(session.complete(id)).toBe(false);
     const saved = session.capture();
