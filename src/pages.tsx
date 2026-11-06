@@ -2,7 +2,9 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { projectLivingScrolls } from "./application/livingScrolls";
-import type { LibraryEntry, Note, Quote } from "./domain";
+import { projectWorldSessionActivity } from "./application/projectWorldSessionActivity";
+import type { WorldSessionActivity } from "./contracts/worldSessionActivity";
+import type { LibraryEntry, Note, Quote, Session } from "./domain";
 import { presentApplicationError } from "./features/entry-editor/errorMessages";
 import { entryTypeLabels } from "./features/collection/collectionControls";
 import { WorldHost, type WorldHostStatus } from "./features/library/WorldHost";
@@ -33,18 +35,23 @@ const PerformanceScenarioHarness = diagnosticsBuildEnabled
 export interface LibraryApplication {
   readonly inhabitantContinuity?: InhabitantContinuityPort;
   readonly nightLightingContinuity?: NightLightingPort;
+  readonly events?: {
+    subscribe(type: "SessionChanged", listener: () => void): () => void;
+  };
   readonly queries: {
     readonly listAllNotes?: { execute(): Promise<readonly Note[]> };
     readonly listAllQuotes?: { execute(): Promise<readonly Quote[]> };
     readonly listLibraryEntries: {
       execute(): Promise<readonly LibraryEntry[]>;
     };
+    readonly getOpenSession?: { execute(): Promise<Session | undefined> };
   };
 }
 
 interface LibraryPageSnapshot {
   readonly application: LibraryApplication;
   readonly world?: LibraryWorldSnapshot;
+  readonly activity?: WorldSessionActivity | null;
   readonly error?: string;
 }
 
@@ -151,6 +158,7 @@ function LibraryPageContent({
   const currentSnapshot =
     snapshot?.application === application ? snapshot : undefined;
   const libraryWorldSnapshot = currentSnapshot?.world;
+  const worldSessionActivity = currentSnapshot?.activity ?? null;
   const readingAreaBooks = libraryWorldSnapshot?.categories[0].entries;
   const error = currentSnapshot?.error;
   useEffect(() => {
@@ -203,27 +211,39 @@ function LibraryPageContent({
   useEffect(() => {
     if (!application || diagnosticsActive || !active) return;
     let current = true;
+    let generation = 0;
     const loadSnapshot = async (): Promise<void> => {
+      const request = ++generation;
       try {
         const entries = await application.queries.listLibraryEntries.execute();
-        if (!current) return;
-        const [notes, quotes] = await Promise.all([
+        if (!current || request !== generation) return;
+        const [notes, quotes, openSession] = await Promise.all([
           application.queries.listAllNotes?.execute() ?? [],
           application.queries.listAllQuotes?.execute() ?? [],
+          application.queries.getOpenSession?.execute() ?? undefined,
         ]);
-        if (!current) return;
+        if (!current || request !== generation) return;
         const world = Object.freeze({
           ...projectLibraryWorldEntries(entries),
           scrolls: projectLivingScrolls(entries, notes, quotes),
         });
-        setSnapshot((previous) =>
-          previous?.application === application &&
-          JSON.stringify(previous.world) === JSON.stringify(world)
-            ? previous
-            : { application, world },
-        );
+        const activity = projectWorldSessionActivity(openSession, entries);
+        setSnapshot((previous) => {
+          const sameWorld =
+            previous?.application === application &&
+            JSON.stringify(previous.world) === JSON.stringify(world);
+          const sameActivity =
+            previous?.application === application &&
+            JSON.stringify(previous.activity ?? null) === JSON.stringify(activity);
+          if (sameWorld && sameActivity) return previous;
+          return {
+            application,
+            world: sameWorld && previous?.world ? previous.world : world,
+            activity,
+          };
+        });
       } catch (failure: unknown) {
-        if (!current) return;
+        if (!current || request !== generation) return;
         setSnapshot({
           application,
           error: presentApplicationError(failure).message,
@@ -231,8 +251,12 @@ function LibraryPageContent({
       }
     };
     void loadSnapshot();
+    const unsubscribe = application.events?.subscribe("SessionChanged", () => {
+      void loadSnapshot();
+    });
     return () => {
       current = false;
+      unsubscribe?.();
     };
   }, [application, diagnosticsActive, active]);
 
@@ -376,6 +400,7 @@ function LibraryPageContent({
               inhabitantContinuity={application.inhabitantContinuity}
               nightLightingContinuity={application.nightLightingContinuity}
               libraryWorldSnapshot={libraryWorldSnapshot}
+              worldSessionActivity={worldSessionActivity}
               onSelectableObjectsChange={handleSelectableObjects}
               onSelectionChange={handleWorldSelection}
               onStatusChange={handleWorldStatus}

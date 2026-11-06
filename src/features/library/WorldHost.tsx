@@ -9,6 +9,7 @@ import {
 } from "./inhabitants";
 import { LivingSession } from "./livingObjects";
 import { NightLightingSession, type NightLightingPort } from "./nightLighting";
+import type { WorldSessionActivity } from "../../contracts/worldSessionActivity";
 import { LivingControls, LivingFeedback } from "./LivingControls";
 import type {
   InhabitantContinuityPort,
@@ -85,6 +86,7 @@ export interface WorldHostProps {
   readonly inhabitantContinuity?: InhabitantContinuityPort;
   readonly nightLightingContinuity?: NightLightingPort;
   readonly libraryWorldSnapshot?: LibraryWorldSnapshot;
+  readonly worldSessionActivity?: WorldSessionActivity | null;
   readonly onSelectableObjectsChange?: (
     objects: readonly WorldSelectableObject[],
   ) => void;
@@ -125,6 +127,7 @@ export function WorldHost({
   inhabitantContinuity,
   nightLightingContinuity,
   libraryWorldSnapshot,
+  worldSessionActivity,
   onSelectableObjectsChange,
   onSelectionChange,
   onStatusChange,
@@ -150,6 +153,13 @@ export function WorldHost({
   }, [active, narrativeSession]);
   const hostRef = useRef<HTMLDivElement>(null);
   const runtimeRef = useRef<WorldRuntime | null>(null);
+  const worldSessionRef = useRef<WorldSessionActivity | null>(
+    worldSessionActivity ?? null,
+  );
+  useEffect(() => {
+    worldSessionRef.current = worldSessionActivity ?? null;
+    runtimeRef.current?.applyWorldSession?.(worldSessionRef.current);
+  }, [worldSessionActivity]);
   const [viewRuntime, setViewRuntime] = useState<WorldRuntime | null>(null);
   const [selectableObjects, setSelectableObjects] = useState<
     readonly WorldSelectableObject[]
@@ -259,6 +269,7 @@ export function WorldHost({
         runtime = createdRuntime;
         runtime.mount(host);
         runtimeRef.current = runtime;
+        runtime.applyWorldSession?.(worldSessionRef.current);
         if (!performanceScenario && libraryWorldSnapshot) {
           const applyNarrative = () => {
             if (active && runtimeRef.current === createdRuntime)

@@ -1,4 +1,5 @@
 import type { NarrativeSnapshot } from "./narrative/contracts";
+import type { WorldSessionActivity } from "../../contracts/worldSessionActivity";
 import type { AgencySnapshot } from "./inhabitantAgency";
 import type { InhabitantAction, InhabitantKey } from "./inhabitants";
 export interface WorldSelectableObject {
@@ -81,6 +82,7 @@ export interface WorldRuntime {
   ): "playing" | "loading" | "unavailable" | "reduced";
   onInhabitantActivate?(listener: (key: InhabitantKey) => void): () => void;
   applyNarrative?(snapshot: NarrativeSnapshot): void;
+  applyWorldSession?(activity: WorldSessionActivity | null): void;
   selectObject(id: string | null): void;
   dispose(): void;
 }

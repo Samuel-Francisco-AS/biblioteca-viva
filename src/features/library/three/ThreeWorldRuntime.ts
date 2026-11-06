@@ -48,6 +48,8 @@ import type {
   WorldSelectionListener,
 } from "../worldRuntime";
 import type { ReadingAreaBook } from "../readingAreaBookContract";
+import type { WorldSessionActivity } from "../../../contracts/worldSessionActivity";
+import { createSessionWorldVisuals } from "./sessionWorldVisuals";
 import type { LibraryWorldSnapshot } from "../libraryWorldEntryContract";
 import {
   assignLibraryRecordSlots,
@@ -482,6 +484,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private unsubscribeAgency?: () => void;
   private unsubscribeLivingEvents?: () => void;
   private sceneProps?: ReturnType<typeof createInhabitantSceneProps>;
+  private worldSessionActivity: WorldSessionActivity | null = null;
+  private sessionVisuals?: ReturnType<typeof createSessionWorldVisuals>;
   constructor(dependencies: ThreeWorldRuntimeDependencies = {}) {
     this.inhabitantLoader = dependencies.inhabitantLoader;
     this.scrolls = dependencies.libraryWorldSnapshot?.scrolls ?? [];
@@ -666,6 +670,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
         );
         mountedWorld.addLibraryBuilding(building);
         scene.add(building);
+        this.sessionVisuals = createSessionWorldVisuals(building);
+        this.sessionVisuals.apply(this.worldSessionActivity);
         if (this.livingSession)
           this.livingVisuals = createLivingVisuals(
             building,
@@ -975,6 +981,12 @@ export class ThreeWorldRuntime implements WorldRuntime {
     return () => {
       this.inhabitantActivations.delete(listener);
     };
+  }
+
+  applyWorldSession(activity: WorldSessionActivity | null): void {
+    if (this.isTerminal()) return;
+    this.worldSessionActivity = activity;
+    this.sessionVisuals?.apply(activity);
   }
 
   applyNarrative(snapshot: NarrativeSnapshot): void {
@@ -1435,6 +1447,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.agencyListeners.clear();
     this.inhabitantActivations.clear();
     this.sceneProps = undefined;
+    this.sessionVisuals = undefined;
     this.inhabitants?.dispose();
     this.inhabitants = undefined;
     this.livingVisuals = undefined;
