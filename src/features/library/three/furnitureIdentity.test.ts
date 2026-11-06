@@ -193,7 +193,7 @@ describe("BF-5.5E physical furniture", () => {
     scene.add(root);
     const visuals = createLivingVisuals(root, scene, new LivingSession());
     const nav = new InhabitantNavigation(collectInhabitantObstacles([root]));
-    for (const key of ["aryn", "samael", "lua"] as const) {
+    for (const key of ["aryn", "samael", "lua", "ytha"] as const) {
       const route = nav.route(
         SCENIC_BOOK_ANCHORS.approach,
         SCENIC_BOOK_ANCHORS.destinationApproach,
