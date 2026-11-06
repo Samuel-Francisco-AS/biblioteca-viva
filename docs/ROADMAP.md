@@ -1,3 +1,5 @@
+> **BF-5.5F — checkpoint F1:** projeção real de sessões e resposta ambiental inicial; animações de livros/habitantes e provas de concorrência planejadas para F2. [Relatório](BF-5_5F_RELATORIO.md). Nenhuma PR A–E foi integrada automaticamente; gate físico permanece G.
+
 > **BF-5.5E em candidata — 05/11/2026:** mobília reformulada e integrada aos contratos B/C/D; [relatório](BF-5_5E_RELATORIO.md). Próximos trabalhos previstos: F, resposta a sessões reais; G, integração e gate artístico/físico no Moto G06. **F/G não iniciadas e sem autorização automática por esta entrega.** Manter revisão da stack #32–#35 e da candidata E, sem merge ou encerramento implícito. As indicações antigas de E como ainda não implementada são cronologia anterior.
 
 > **BF-5.5D — saneamento na PR draft #35:** contrato neutro, liberação de leases no handoff/descarte, voo validado entre móveis, reações dos quatro habitantes e acesso à anotação/citação específica. [Relatório vigente](BF-5_5D_RELATORIO.md). Sem merge, CI global verde ou aceite físico; avaliação Moto G06 acumulada para G. E/F permanecem futuras.

@@ -1,3 +1,9 @@
+## 2026-11-05 — BF-5.5F, fundação confirmada de sessões (F1)
+
+- Contrato de sessão ativa/pausada sem dados pessoais no renderer; reconciliação por `SessionChanged`, reabertura e mudança de abas.
+- Primeiro sinal mágico posicionado sobre a mobília real para leitura, estudo, trabalho, atividade física e entretenimento; sem objetos duplicados ou animações falsas.
+- [Relatório BF-5.5F](docs/BF-5_5F_RELATORIO.md). F2 física reservada ao Codex; sem merge, fechamento ou aceite físico da F.
+
 ## 2026-11-05 — BF-5.5E, candidata de mobília
 
 - Estantes com colunas/coroas, lombadas encadernadas e variação determinística; mesas de estudo, poltronas, bancos, armários, plantas e luminárias remodelados.
