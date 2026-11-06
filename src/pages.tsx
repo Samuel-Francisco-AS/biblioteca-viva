@@ -234,7 +234,8 @@ function LibraryPageContent({
             JSON.stringify(previous.world) === JSON.stringify(world);
           const sameActivity =
             previous?.application === application &&
-            JSON.stringify(previous.activity ?? null) === JSON.stringify(activity);
+            JSON.stringify(previous.activity ?? null) ===
+            JSON.stringify(activity);
           if (sameWorld && sameActivity) return previous;
           return {
             application,

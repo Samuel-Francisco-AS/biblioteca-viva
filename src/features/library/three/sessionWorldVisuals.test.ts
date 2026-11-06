@@ -5,6 +5,14 @@ import type { WorldSessionActivity } from "../../../contracts/worldSessionActivi
 import { disposeObjectTree } from "./referenceScene";
 import { createSessionWorldVisuals } from "./sessionWorldVisuals";
 
+const ENTRY_TYPES = {
+  reading: "book",
+  viewing: "movie",
+  study: "study",
+  physical_activity: "physical_activity",
+  work: "work",
+} as const;
+
 function session(
   kind: WorldSessionActivity["kind"],
   status: WorldSessionActivity["status"] = "active",
@@ -12,7 +20,7 @@ function session(
   return {
     sessionId: "session-1",
     entryId: "entry-1",
-    entryType: kind === "reading" ? "book" : kind === "viewing" ? "movie" : kind,
+    entryType: ENTRY_TYPES[kind],
     instanceId: "reading-book:entry-1",
     kind,
     status,
@@ -21,7 +29,7 @@ function session(
 }
 
 describe("BF-5.5F confirmed activity stage", () => {
-  it("reveals one stage on existing furniture and pauses without duplication", () => {
+  it("uses existing furniture, pauses and disposes once", () => {
     const building = new Group();
     const visuals = createSessionWorldVisuals(building);
     expect(visuals.root.visible).toBe(false);
