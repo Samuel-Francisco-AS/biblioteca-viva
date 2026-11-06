@@ -1,3 +1,9 @@
+## Recuperação R1 — trabalho removido do input (06/11/2026)
+
+Geometria de pisos preparada por câmera e restrições limitadas a dois zooms eliminam reconstrução em pan de viewport/zoom invariáveis. Pinch constrói somente a região do zoom novo. Busca linear substitui sort que repetia projeções; helpers compartilham uma normalização por gesto. Picking faz um raycast por hierarquia selecionável e não força matrizes da cena decorativa inteira.
+
+[Baseline, P50/P95/P99 CPU do host, contadores e reprodução](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md). Esses tempos não são FPS/latência Android ou GPU. Sem alteração artística/DPR; Moto G06 não conectado e E2E dirigido FAIL. Não declarar fluidez recuperada no aparelho.
+
 # Desempenho e estabilidade
 
 ## BF-5R7 — eficiência sem redução visual

@@ -136,6 +136,84 @@ export type NavigationFloors = readonly {
   readonly maxZ: number;
 }[];
 
+/** Prepared floor geometry owned by one runtime camera. Recreate on layout change.
+ * Viewport changes discard zoom constraints; only the two most recent zooms
+ * are retained, so a continuous pinch cannot grow a cache without bound.
+ */
+export class CameraNavigationGeometry {
+  private readonly floors: readonly (readonly ProjectedPoint[])[];
+  private readonly constraints = new Map<
+    number,
+    readonly CameraNavigationConstraint[]
+  >();
+  private width = 0;
+  private height = 0;
+  private constraintBuilds = 0;
+
+  constructor(floors?: NavigationFloors) {
+    // Project into owned, frozen points: later mutation of caller data cannot
+    // silently invalidate the cache. The runtime layout is fixed per mount.
+    this.floors = floors
+      ? floors.map((floor) =>
+          convexHull(
+            [
+              { x: floor.minX, y: 0, z: floor.minZ },
+              { x: floor.maxX, y: 0, z: floor.minZ },
+              { x: floor.maxX, y: 0, z: floor.maxZ },
+              { x: floor.minX, y: 0, z: floor.maxZ },
+            ].map(projectPoint),
+          ),
+        )
+      : [projectedTechnicalFixtureFloor];
+  }
+
+  forViewport(
+    width: number,
+    height: number,
+    zoom: number,
+  ): readonly CameraNavigationConstraint[] {
+    if (width !== this.width || height !== this.height) {
+      this.constraints.clear();
+      this.width = width;
+      this.height = height;
+    }
+    const safeZoom = clampCameraZoom(zoom);
+    const cached = this.constraints.get(safeZoom);
+    if (cached) return cached;
+    const constraints = this.floors.flatMap((floor) => {
+      this.constraintBuilds++;
+      const constraint = cameraNavigationConstraintForViewport(
+        width,
+        height,
+        safeZoom,
+        floor,
+      );
+      return constraint ? [constraint] : [];
+    });
+    if (this.constraints.size === 2) {
+      const oldest = this.constraints.keys().next().value;
+      if (oldest !== undefined) this.constraints.delete(oldest);
+    }
+    this.constraints.set(safeZoom, constraints);
+    return constraints;
+  }
+
+  /** Low-cost mechanism counters, read on demand (no per-frame publication). */
+  getDiagnostics(): {
+    readonly projectedFloors: number;
+    readonly constraintBuilds: number;
+    readonly cachedZooms: number;
+  } {
+    return {
+      projectedFloors: this.floors.length,
+      constraintBuilds: this.constraintBuilds,
+      cachedZooms: this.constraints.size,
+    };
+  }
+}
+
+type NavigationGeometry = NavigationFloors | CameraNavigationGeometry;
+
 function cross(
   origin: ProjectedPoint,
   first: ProjectedPoint,
@@ -544,7 +622,7 @@ export function clampCameraNavigationState(
   state: CameraNavigationState,
   width: number,
   height: number,
-  floors?: NavigationFloors,
+  floors?: NavigationGeometry,
 ): CameraNavigationState | null {
   const zoom = clampCameraZoom(state.zoom);
   const normalized =
@@ -553,44 +631,28 @@ export function clampCameraNavigationState(
       : initialCameraNavigationState();
   // Union of valid regions: retain a real floor patch in at least one room,
   // instead of accepting the empty corners of the whole building's AABB.
-  const constraints = floors
-    ? floors.map((floor) =>
-        cameraNavigationConstraintForViewport(
-          width,
-          height,
-          zoom,
-          convexHull(
-            [
-              { x: floor.minX, y: 0, z: floor.minZ },
-              { x: floor.maxX, y: 0, z: floor.minZ },
-              { x: floor.maxX, y: 0, z: floor.maxZ },
-              { x: floor.minX, y: 0, z: floor.maxZ },
-            ].map(projectPoint),
-          ),
-        ),
-      )
-    : [cameraNavigationConstraintForViewport(width, height, zoom)];
-  const viewCandidate = cameraViewOffsetForTarget(normalized);
-  const constraint = constraints
-    .filter((value) => value !== null)
-    .sort((a, b) => {
-      const distance = (value: CameraNavigationConstraint) => {
-        const point = closestPointInConvexPolygon(
-          viewCandidate,
-          value.allowedViewRegion,
-        );
-        return point
-          ? Math.hypot(point.x - viewCandidate.x, point.y - viewCandidate.y)
-          : Infinity;
-      };
-      return distance(a) - distance(b);
-    })[0];
-  if (!constraint) return null;
+  const constraints =
+    floors instanceof CameraNavigationGeometry
+      ? floors.forViewport(width, height, zoom)
+      : new CameraNavigationGeometry(floors).forViewport(width, height, zoom);
   const view = cameraViewOffsetForTarget(normalized);
-  const clampedView = closestPointInConvexPolygon(
-    view,
-    constraint.allowedViewRegion,
-  );
+  let clampedView: ProjectedPoint | null = null;
+  let closestDistance = Infinity;
+  for (const constraint of constraints) {
+    const point = closestPointInConvexPolygon(
+      view,
+      constraint.allowedViewRegion,
+    );
+    if (!point) continue;
+    const distance = Math.hypot(point.x - view.x, point.y - view.y);
+    // Strict comparison retains room order for ties, as the previous stable
+    // sort did, without projecting the same region in every comparator.
+    if (distance < closestDistance) {
+      clampedView = point;
+      closestDistance = distance;
+      if (distance === 0) break;
+    }
+  }
   return clampedView
     ? targetForCameraViewOffset(clampedView.x, clampedView.y, zoom)
     : null;
@@ -637,7 +699,7 @@ export function panCameraNavigationState(
   viewDeltaY: number,
   width: number,
   height: number,
-  floors?: NavigationFloors,
+  floors?: NavigationGeometry,
 ): CameraNavigationState | null {
   if (!Number.isFinite(viewDeltaX) || !Number.isFinite(viewDeltaY)) {
     return clampCameraNavigationState(state, width, height, floors);
@@ -666,12 +728,31 @@ export function navigationPlanePointForScreenPosition(
   screenY: number,
   width: number,
   height: number,
-  floors?: NavigationFloors,
+  floors?: NavigationGeometry,
 ): NavigationPlanePoint | null {
   if (!Number.isFinite(screenX) || !Number.isFinite(screenY)) return null;
   const normalized = clampCameraNavigationState(state, width, height, floors);
   const frustum = orthographicFrustumForViewport(width, height);
   if (!normalized || !frustum) return null;
+  return navigationPlanePointForNormalizedState(
+    normalized,
+    screenX,
+    screenY,
+    width,
+    height,
+    frustum,
+  );
+}
+
+function navigationPlanePointForNormalizedState(
+  normalized: CameraNavigationState,
+  screenX: number,
+  screenY: number,
+  width: number,
+  height: number,
+  frustum: OrthographicFrustum,
+): NavigationPlanePoint | null {
+  if (!Number.isFinite(screenX) || !Number.isFinite(screenY)) return null;
   const view = cameraViewOffsetForTarget(normalized);
   const viewX =
     view.x +
@@ -692,26 +773,28 @@ export function panCameraNavigationStateBetweenScreenPoints(
   current: { readonly x: number; readonly y: number },
   width: number,
   height: number,
-  floors?: NavigationFloors,
+  floors?: NavigationGeometry,
 ): CameraNavigationState | null {
   const normalized = clampCameraNavigationState(state, width, height, floors);
-  const previousPoint = navigationPlanePointForScreenPosition(
-    state,
+  const frustum = orthographicFrustumForViewport(width, height);
+  if (!normalized || !frustum) return normalized;
+  const previousPoint = navigationPlanePointForNormalizedState(
+    normalized,
     previous.x,
     previous.y,
     width,
     height,
-    floors,
+    frustum,
   );
-  const currentPoint = navigationPlanePointForScreenPosition(
-    state,
+  const currentPoint = navigationPlanePointForNormalizedState(
+    normalized,
     current.x,
     current.y,
     width,
     height,
-    floors,
+    frustum,
   );
-  if (!normalized || !previousPoint || !currentPoint) return normalized;
+  if (!previousPoint || !currentPoint) return normalized;
   return clampCameraNavigationState(
     {
       targetX: normalized.targetX + previousPoint.x - currentPoint.x,
@@ -736,19 +819,20 @@ export function zoomCameraNavigationStateBetweenScreenPoints(
   zoom: number,
   width: number,
   height: number,
-  floors?: NavigationFloors,
+  floors?: NavigationGeometry,
 ): CameraNavigationState | null {
   const normalized = clampCameraNavigationState(state, width, height, floors);
-  const anchor = navigationPlanePointForScreenPosition(
-    state,
+  const frustum = orthographicFrustumForViewport(width, height);
+  if (!normalized || !frustum) return normalized;
+  const anchor = navigationPlanePointForNormalizedState(
+    normalized,
     previous.x,
     previous.y,
     width,
     height,
-    floors,
+    frustum,
   );
-  const frustum = orthographicFrustumForViewport(width, height);
-  if (!normalized || !anchor || !frustum) return normalized;
+  if (!anchor) return normalized;
   const nextZoom = clampCameraZoom(zoom);
   const screenViewX =
     (frustum.left + (current.x / width) * (frustum.right - frustum.left)) /

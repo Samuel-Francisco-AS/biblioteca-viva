@@ -1,3 +1,7 @@
+## Recuperação R1 — regressões (06/11/2026)
+
+Baseline F: 97 testes existentes PASS em seis arquivos, repetidos após a mudança; nove novos PASS validam trajetória golden da F, cache limitado/invalidação, ownership, raycasts reais, precedência e ausência de trabalho duplicado. Scripts dirigidos de CPU/picking ficam fora da CI e não impõem expectativas de tempo. [Comandos, resultados finais e falhas E2E discriminadas](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md). Sem timeout/retry/assert removido; sem PASS físico presumido.
+
 ## BF-5 — Atlas clássico projetado
 
 19 unitários dirigidos em oito arquivos e cinco E2E distintos (três novos + duas regressões de treino) PASS. Cobertura: conjunto por gênero/preferência/fallback, seis artes locais, permanência e decodificação antes da dissolução, pausa/redução de movimento, viewport/visibilidade/cleanup, cancelamento e falhas sem loop; fórmulas MET e treinos preservados. Removidos testes do motor de poses aposentado; a regressão agora exige imagem raster carregada/dimensões, mantendo os asserts funcionais anteriores. [Resultados, falhas intermediárias e roteiro físico](BF-5_ATLAS_CLASSICO_PROJETADO.md). Sem CI global verde, retries/timeouts alterados ou teste físico presumido.

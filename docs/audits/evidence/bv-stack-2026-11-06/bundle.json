@@ -1,0 +1,158 @@
+[
+  {
+    "source": "src/features/library/three/ThreeWorldRuntime.ts",
+    "bytes": 802457,
+    "initial": false,
+    "dynamic": true
+  },
+  {
+    "source": "index.html",
+    "bytes": 668041,
+    "initial": true,
+    "dynamic": false
+  },
+  {
+    "source": "src/features/entry-detail/EntryDetailPage.tsx",
+    "bytes": 125368,
+    "initial": false,
+    "dynamic": true
+  },
+  {
+    "source": "_EntryEditorPages-DL-Og9fJ.js",
+    "bytes": 24980,
+    "initial": false,
+    "dynamic": false
+  },
+  {
+    "source": "src/features/settings/SettingsPage.tsx",
+    "bytes": 20123,
+    "initial": false,
+    "dynamic": true
+  },
+  {
+    "source": "_entertainment-Bf8ngaYl.css",
+    "bytes": 14348,
+    "initial": false,
+    "dynamic": false
+  },
+  {
+    "source": "src/features/statistics/StatisticsPage.tsx",
+    "bytes": 11850,
+    "initial": false,
+    "dynamic": true
+  },
+  {
+    "source": "_navigationOrigin-4L8oPlKu.css",
+    "bytes": 11010,
+    "initial": false,
+    "dynamic": false
+  },
+  {
+    "source": "src/features/collection/CollectionPage.tsx",
+    "bytes": 10018,
+    "initial": false,
+    "dynamic": true
+  },
+  {
+    "source": "src/features/archive/ArchivePage.tsx",
+    "bytes": 10013,
+    "initial": false,
+    "dynamic": true
+  },
+  {
+    "source": "../../home/sam/Projetos/biblioteca-viva/node_modules/@capacitor/filesystem/dist/esm/web.js",
+    "bytes": 8495,
+    "initial": false,
+    "dynamic": true
+  },
+  {
+    "source": "_BVPicker-CQjzwaL4.js",
+    "bytes": 7174,
+    "initial": false,
+    "dynamic": false
+  },
+  {
+    "source": "src/features/entry-editor/NewEntryPage.tsx",
+    "bytes": 4832,
+    "initial": false,
+    "dynamic": true
+  },
+  {
+    "source": "_AnnotationActions-CeTwwV3o.js",
+    "bytes": 4485,
+    "initial": false,
+    "dynamic": false
+  },
+  {
+    "source": "_navigationOrigin-Dw8dbNAZ.js",
+    "bytes": 3965,
+    "initial": false,
+    "dynamic": false
+  },
+  {
+    "source": "src/features/entry-editor/EditEntryPage.tsx",
+    "bytes": 3627,
+    "initial": false,
+    "dynamic": true
+  },
+  {
+    "source": "_BVPicker-mP1gmq5R.css",
+    "bytes": 2692,
+    "initial": false,
+    "dynamic": false
+  },
+  {
+    "source": "_RealmIntro-D4tntfW0.js",
+    "bytes": 2338,
+    "initial": false,
+    "dynamic": false
+  },
+  {
+    "source": "../../home/sam/Projetos/biblioteca-viva/node_modules/@capacitor/filesystem/dist/esm/index.js",
+    "bytes": 1324,
+    "initial": false,
+    "dynamic": true
+  },
+  {
+    "source": "_ArtifactGlyph-O724XpXZ.js",
+    "bytes": 853,
+    "initial": false,
+    "dynamic": false
+  },
+  {
+    "source": "../../home/sam/Projetos/biblioteca-viva/node_modules/@capacitor/app/dist/esm/web.js",
+    "bytes": 845,
+    "initial": false,
+    "dynamic": true
+  },
+  {
+    "source": "_bookPresentation-Du5Ruowv.js",
+    "bytes": 796,
+    "initial": false,
+    "dynamic": false
+  },
+  {
+    "source": "_useCivilToday-3FgHDkXf.js",
+    "bytes": 599,
+    "initial": false,
+    "dynamic": false
+  },
+  {
+    "source": "../../home/sam/Projetos/biblioteca-viva/node_modules/@capacitor/share/dist/esm/web.js",
+    "bytes": 366,
+    "initial": false,
+    "dynamic": true
+  },
+  {
+    "source": "../../home/sam/Projetos/biblioteca-viva/node_modules/@capacitor/share/dist/esm/index.js",
+    "bytes": 337,
+    "initial": false,
+    "dynamic": true
+  },
+  {
+    "source": "src/infrastructure/files/androidBackupDocumentPlugin.ts",
+    "bytes": 140,
+    "initial": false,
+    "dynamic": true
+  }
+]

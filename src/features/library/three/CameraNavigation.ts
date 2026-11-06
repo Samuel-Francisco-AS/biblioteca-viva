@@ -2,6 +2,7 @@ import { OrthographicCamera } from "three";
 
 import {
   type NavigationFloors,
+  CameraNavigationGeometry,
   CAMERA_INITIAL_OFFSET,
   CAMERA_TARGET_Y,
   clampCameraNavigationState,
@@ -15,6 +16,7 @@ import {
 
 /** Single runtime authority for logical target/zoom and its camera projection. */
 export class CameraNavigation {
+  private readonly geometry: CameraNavigationGeometry;
   private state: CameraNavigationState;
   private viewport: { readonly height: number; readonly width: number } | null =
     null;
@@ -22,9 +24,10 @@ export class CameraNavigation {
   constructor(
     private readonly camera: OrthographicCamera,
     initialZoom = 1,
-    private readonly floors?: NavigationFloors,
+    floors?: NavigationFloors,
     private readonly distanceScale = 1,
   ) {
+    this.geometry = new CameraNavigationGeometry(floors);
     // Initial framing must exist before the first viewport-triggered render.
     // The legacy F3/F5 path retains zoom 1.
     this.state = Object.freeze({
@@ -53,7 +56,7 @@ export class CameraNavigation {
       current,
       this.viewport.width,
       this.viewport.height,
-      this.floors,
+      this.geometry,
     );
     return this.commit(next);
   }
@@ -63,7 +66,7 @@ export class CameraNavigation {
       this.state,
       width,
       height,
-      this.floors,
+      this.geometry,
     );
     const frustum = orthographicFrustumForViewport(width, height);
     if (!next || !frustum) return false;
@@ -79,7 +82,14 @@ export class CameraNavigation {
 
   setZoom(zoom: number): boolean {
     if (!this.viewport) return false;
-    return this.commit({ ...this.state, zoom: clampCameraZoom(zoom) });
+    return this.commit(
+      clampCameraNavigationState(
+        { ...this.state, zoom: clampCameraZoom(zoom) },
+        this.viewport.width,
+        this.viewport.height,
+        this.geometry,
+      ),
+    );
   }
 
   zoomBetweenScreenPoints(
@@ -96,20 +106,15 @@ export class CameraNavigation {
         zoom,
         this.viewport.width,
         this.viewport.height,
-        this.floors,
+        this.geometry,
       ),
     );
   }
 
   private commit(candidate: CameraNavigationState | null): boolean {
     if (!candidate || !this.viewport) return false;
-    const next = clampCameraNavigationState(
-      candidate,
-      this.viewport.width,
-      this.viewport.height,
-      this.floors,
-    );
-    if (!next) return false;
+    // Gesture helpers already return a normalized, bounded state.
+    const next = candidate;
     const changed =
       next.targetX !== this.state.targetX ||
       next.targetZ !== this.state.targetZ ||

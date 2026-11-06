@@ -1,3 +1,5 @@
+> **Recuperação vigente — 06/11/2026:** [execução R1–R5 e matriz dos 18 achados](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md), sobre F `254ae15`; [auditoria de origem](audits/BV_AUDITORIA_ARQUITETURA_PERFORMANCE_STACK.md). R1 candidata, R2–R5 pendentes, sem gate físico/CI global verde. STATUS continua sendo a autoridade do presente; notas antigas abaixo são cronologia.
+
 > BF-5.5D candidata: [relatório](BF-5_5D_RELATORIO.md) e [auditoria B/C](BF-5_5D_AUDITORIA_PRELIMINAR.md). Sem aceite físico ou fechamento.
 
 > **PRÓXIMA FASE APROVADA EM PLANEJAMENTO — 05/11/2026: BF-5.5 — O Despertar da Biblioteca.** Inserida entre BF-5 (fechada no escopo aceito, com dívidas) e BF-6 (habitantes/RPG), preservando BF-7 (consolidação). Persistência dos habitantes, interação física com livros/pergaminhos/mobília, ritual de iluminação noturna robusto, magia visível e integração com sessões reais. **Documentação apenas, sem implementação iniciada.** [Plano e contrato](BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md) · [ADR-023](decisions/ADR-023-bf-5-5-despertar-da-biblioteca.md) · [Roadmap](ROADMAP.md). A indicação histórica de BF-6 como próxima fase abaixo antecede esta decisão.

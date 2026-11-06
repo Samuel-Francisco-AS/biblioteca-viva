@@ -1,3 +1,9 @@
+## 2026-11-06 — Recuperação R1 (candidata sobre BF-5.5F)
+
+- Câmera reutiliza pisos/restrições entre gestos e remove clamps/projeções redundantes, preservando limites e focalização.
+- Picking elimina atualização global de matrizes e raycasts repetidos de hierarquias aninhadas, preservando seleção, prioridade e fallback.
+- [Plano dos 18 achados e comparação técnica](docs/audits/BV_PLANO_RECUPERACAO_EXECUCAO.md). R2–R5 e gate físico permanecem pendentes; E2E dirigido FAIL, sem declaração de CI verde ou recuperação integral.
+
 ## 2026-11-06 — BF-5.5F2A (candidata parcial)
 
 - Livro da sessão confirmada conserva identidade e seleção durante retirada, voo, pouso, abertura de capa e retorno à estante; pausa e conclusão reconciliadas.
