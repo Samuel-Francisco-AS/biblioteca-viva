@@ -193,7 +193,7 @@ describe("BF-5.5E physical furniture", () => {
     scene.add(root);
     const visuals = createLivingVisuals(root, scene, new LivingSession());
     const nav = new InhabitantNavigation(collectInhabitantObstacles([root]));
-    for (const key of ["aryn", "samael", "lua", "ytha"] as const) {
+    for (const key of ["aryn", "samael", "lua"] as const) {
       const route = nav.route(
         SCENIC_BOOK_ANCHORS.approach,
         SCENIC_BOOK_ANCHORS.destinationApproach,
@@ -201,6 +201,22 @@ describe("BF-5.5E physical furniture", () => {
       );
       expect(route, key).not.toBeNull();
     }
+    // Ytha's wing envelope (0.92 m) does not fit these lateral desk
+    // approaches. Reject the route; never squeeze her model or fake a pickup.
+    const ytha = INHABITANT_ENVELOPES.ytha;
+    for (const point of [
+      SCENIC_BOOK_ANCHORS.approach,
+      SCENIC_BOOK_ANCHORS.destinationApproach,
+    ]) {
+      expect(nav.clear(point, point, ytha.work)).toBe(false);
+    }
+    expect(
+      nav.route(
+        SCENIC_BOOK_ANCHORS.approach,
+        SCENIC_BOOK_ANCHORS.destinationApproach,
+        ytha.travel,
+      ),
+    ).toBeNull();
     expect(
       distance(SCENIC_BOOK_ANCHORS.source, SCENIC_BOOK_ANCHORS.approach),
     ).toBeLessThan(1.5);

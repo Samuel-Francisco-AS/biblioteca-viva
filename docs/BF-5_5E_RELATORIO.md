@@ -1,6 +1,6 @@
 # BF-5.5E — Modelos e identidade da mobília
 
-**05/11/2026 — candidata artística e funcional, sem aceite humano ou integração.** Branch `feat/bf-5-5e-furniture-identity`, derivada de `feat/bf-5-5d-living-scrolls` em `ab19f1a57f4e62fedbd866e543da1a9c9ab84a82`. BF-5.5F/G não iniciadas. Autoridades: [plano](BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md), [ADR-023](decisions/ADR-023-bf-5-5-despertar-da-biblioteca.md), [ADR-010](decisions/ADR-010-3d-pipeline-v1.md), [arte](ART_DIRECTION.md).
+**05/11/2026 — candidata artística e funcional em saneamento na PR draft #36, sem aceite humano ou integração.** Branch `feat/bf-5-5e-furniture-identity`, derivada de `feat/bf-5-5d-living-scrolls` em `ab19f1a57f4e62fedbd866e543da1a9c9ab84a82`. BF-5.5F/G não iniciadas. Autoridades: [plano](BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md), [ADR-023](decisions/ADR-023-bf-5-5-despertar-da-biblioteca.md), [ADR-010](decisions/ADR-010-3d-pipeline-v1.md), [arte](ART_DIRECTION.md).
 
 ## Preparação e auditoria localizada
 
@@ -55,7 +55,10 @@ Resultados consolidados abaixo após os comandos terminarem; não inferir CI ver
 - Rodada dirigida de geometria/agência/livros/voo: **45 PASS**.
 - Rodada ampla: **854 PASS / 2 FAIL, 132 arquivos**. As duas falhas eram expectativas do runtime: contagem de meshes 75→135 e altura do highlight 3,10→3,37. Atualizadas explicitamente, preservando os asserts de seleção e descarte.
 - O teste novo com o volume real do pergaminho encontrou o relógio B sobre um antigo ponto de repouso; o apoio incompatível foi retirado, sem remover a verificação.
-- **Verificação final dirigida, gates estáticos e E2E:** resultado a consolidar antes do commit.
+- **CI do checkpoint `0d8b787` — run [42136465357](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/42136465357):** job estático, formatação, lint, tipos, testes unitários e build **PASS**. E2E devem ser avaliados separadamente.
+- **Saneamento remoto (PR draft #36):** a suíte existente `readingAreaBookLayout.test.ts` já comprova encaixe físico das quatro variantes reais de livros contra **todos** os meshes das três estantes, incluindo os ornamentos novos; dispensa asserção duplicada. O teste físico `furnitureIdentity.test.ts` foi ampliado para investigar o envelope de Ytha.
+- **Restrição física confirmada:** o teste temporariamente estendido da run [42136672374](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/42136672374) resultou em **855 PASS / 1 FAIL**: o trajeto lateral do livro B é inviável para o envelope real de asas de Ytha (raio 0,92 m), embora funcione para Aryn, Samael e Lua. O teste saneado verifica explicitamente rejeição espacial de Ytha e mantém a rota dos três; a agência usa verificações de espaço antes de iniciar tarefas, sem diminuir raios, atravessar móveis ou assumir colocação fictícia. A melhoria de alcance físico para Ytha é uma dívida de composição/interação futura, não uma aprovação de interação da personagem.
+- **CI final da revisão saneada:** aguardar resultados do novo HEAD; não declarar E2E ou aceite físico/artístico aprovados sem evidência.
 
 A CI da base D [42120874450](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/42120874450) terminou com estáticos/unitários/build/áudio/performance **PASS**; E2E shard 1 **16 PASS / 17 FAIL**, shard 2 **17 PASS / 15 FAIL**. Inclui falhas pré-existentes de ambiente/coleção cheia, habitantes, luminária/segredo, picking/gestos/rotação, seletores de UI e backup. São bloqueantes da declaração de CI global verde, não prova de causa única ou falha do runner. Issues #21–#24 permanecem. CI da nova PR deve ser consultada no HEAD remoto.
 
