@@ -1,0 +1,110 @@
+name: Android preview APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Branch ou SHA para gerar o APK"
+        required: false
+        default: "feat/bf-5-5f-real-session-response"
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/android-preview-apk.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    name: Build unsigned-production-independent debug preview
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Checkout requested candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || '254ae15d48a10896d00b8a6b539532725375d13c' }}
+
+      - name: Record exact build source
+        run: |
+          echo "BF-5.5 preview APK" > BUILD-SOURCE.txt
+          echo "Git SHA: $(git rev-parse HEAD)" >> BUILD-SOURCE.txt
+          echo "Git ref: $(git branch --show-current)" >> BUILD-SOURCE.txt
+          echo "Build type: Android debug APK (separate preview package)" >> BUILD-SOURCE.txt
+          cat BUILD-SOURCE.txt
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install compile SDK
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web assets and synchronize Capacitor
+        run: |
+          npm run build
+          npx cap sync android
+
+      - name: Set separate preview application ID and label
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          gradle = Path("android/app/build.gradle")
+          source = gradle.read_text()
+          old = "    buildTypes {\n        release {"
+          new = (
+              "    buildTypes {\n"
+              "        debug {\n"
+              "            applicationIdSuffix '.bf55preview'\n"
+              "            versionNameSuffix '-bf55f'\n"
+              "        }\n"
+              "        release {"
+          )
+          assert source.count(old) == 1, "Unexpected Android build configuration"
+          gradle.write_text(source.replace(old, new))
+          strings = Path("android/app/src/main/res/values/strings.xml")
+          content = strings.read_text()
+          original = '<string name="app_name">Biblioteca Viva</string>'
+          assert content.count(original) == 1, "Unexpected app name"
+          strings.write_text(content.replace(original, '<string name="app_name">Biblioteca Viva (Teste)</string>'))
+          PY
+
+      - name: Assemble debug APK
+        run: |
+          chmod +x android/gradlew
+          cd android
+          ./gradlew --no-daemon assembleDebug
+
+      - name: Package APK and provenance
+        run: |
+          test -s android/app/build/outputs/apk/debug/app-debug.apk
+          mkdir -p artifact
+          cp android/app/build/outputs/apk/debug/app-debug.apk artifact/Biblioteca-Viva-BF-5.5F2A-Teste.apk
+          cp BUILD-SOURCE.txt artifact/
+          cd artifact
+          sha256sum Biblioteca-Viva-BF-5.5F2A-Teste.apk > SHA256.txt
+          ls -lh
+
+      - name: Upload Android preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: Biblioteca-Viva-BF-5.5F2A-Teste
+          path: artifact/
+          if-no-files-found: error
+          retention-days: 14
