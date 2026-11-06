@@ -1,3 +1,4 @@
+import { setSpatialComponents, spatialBox } from "./spatialComponents";
 import {
   BoxGeometry,
   CylinderGeometry,
@@ -27,6 +28,7 @@ function isBuildingBox(
 export function createProceduralLibraryBuilding(interactive = false): Group {
   const root = new Group();
   root.name = "procedural-library-building";
+  const physical: ReturnType<typeof spatialBox>[] = [];
   const materials = createLibraryBuildingMaterials();
   const floor = materials.timber;
   const wall = materials.plaster;
@@ -54,6 +56,17 @@ export function createProceduralLibraryBuilding(interactive = false): Group {
     mesh.name = name;
     mesh.position.set(x, y, z);
     root.add(mesh);
+    if (name.endsWith("wall") || name === "passage-pier")
+      physical.push(
+        spatialBox(
+          x,
+          y,
+          z,
+          Math.max(width, 0.24),
+          name.endsWith("wall") ? 0.96 : height,
+          Math.max(depth, 0.24),
+        ),
+      );
     if (name.endsWith("wall")) {
       const alongX = width > depth;
       const length = alongX ? width : depth;
@@ -376,6 +389,17 @@ export function createProceduralLibraryBuilding(interactive = false): Group {
     batch.computeBoundingSphere();
     root.add(batch);
   }
+  // This node owns architecture only; independent furnishing/props remain discoverable.
+  const architecture = new Group();
+  architecture.name = "library-architecture";
+  for (const child of [...root.children])
+    if (!child.name.endsWith("-floor")) architecture.add(child);
+  setSpatialComponents(architecture, {
+    physical,
+    navigation: physical,
+    mobility: "static",
+  });
+  root.add(architecture);
   root.add(createLibraryFurnishing(interactive));
   return root;
 }

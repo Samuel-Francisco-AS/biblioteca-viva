@@ -1,3 +1,4 @@
+import { setSpatialComponents, spatialBox } from "./spatialComponents";
 import {
   BoxGeometry,
   CylinderGeometry,
@@ -21,6 +22,7 @@ import {
   LIBRARY_FURNISHING,
   furnitureLamp,
   FURNITURE_DIMENSIONS,
+  furnitureScrollSupports,
 } from "./libraryFurnishingLayout";
 
 function isFurnitureMesh(
@@ -86,6 +88,15 @@ export function createLibraryFurnishing(interactive = false): Group {
     island.position.set(p.x, 0, p.z);
     island.rotation.y = p.rotation;
     root.add(island);
+    const physical: ReturnType<typeof spatialBox>[] = [];
+    const solid = (
+      x: number,
+      y: number,
+      z: number,
+      w: number,
+      h: number,
+      d: number,
+    ) => physical.push(spatialBox(x, y, z, w, h, d));
     const upholstery =
       p.roomId === "room-b" || p.roomId === "room-a" ? m.burgundy : m.green;
     function part(
@@ -263,6 +274,7 @@ export function createLibraryFurnishing(interactive = false): Group {
     }
     function chair(x: number, z: number, facing: number, soft = false) {
       const w = soft ? 0.88 : 0.55;
+      solid(x, 0.7, z + facing * 0.025, w, 1.4, 0.78);
       legs(x, z, w, 0.65, 0.42);
       part("edge", m.timber, x, 0.44, z, w, 0.12, 0.68, "seat-frame");
       const cushion = part(
@@ -382,6 +394,7 @@ export function createLibraryFurnishing(interactive = false): Group {
       const a = furnitureLamp(p);
       if (!a) return;
       const { x, z, y } = a.local;
+      solid(x, a.base + (a.height + 0.27) / 2, z, 0.64, a.height + 0.27, 0.64);
       part(
         "edge",
         m.stone,
@@ -463,6 +476,19 @@ export function createLibraryFurnishing(interactive = false): Group {
     switch (p.kind) {
       case "study": {
         const top = FURNITURE_DIMENSIONS.study;
+        solid(0, top.top / 2, 0, top.width, top.top, 1.12);
+        // Stationery and scenic books are one fixed tabletop occupation per reader.
+        for (const x of [-0.65, 0.65])
+          if (
+            p.id !== "bf4-prop:9" &&
+            p.roomId !== "room-d" &&
+            !(p.id === "bf4-prop:0" && x > 0)
+          )
+            solid(x, 0.96, 0.04, 0.44, 0.12, 0.35);
+        if (p.roomId === "room-c" || p.roomId === "room-a") {
+          solid(-0.32, 1.05, -0.27, 0.15, 0.42, 0.12);
+          solid(0.33, 0.918, -0.28, 0.38, 0.03, 0.035);
+        }
         rug(3.4, 2.8);
         legs(0, 0, 2.25, 0.94, 0.78);
         part("edge", m.timber, 0, 0.73, 0, 2.3, 0.19, 0.95, "desk-apron");
@@ -557,6 +583,7 @@ export function createLibraryFurnishing(interactive = false): Group {
         break;
       }
       case "lounge":
+        solid(0, 0.33, -0.3, 0.9, 0.66, 0.9);
         rug(3.4, 2.8);
         chair(-1, 0.35, 1, true);
         chair(1, 0.35, 1, true);
@@ -598,6 +625,14 @@ export function createLibraryFurnishing(interactive = false): Group {
         lamp();
         break;
       case "bench": {
+        solid(
+          0,
+          p.roomId === "room-d" ? 0.76 : 0.39,
+          0,
+          1.9,
+          p.roomId === "room-d" ? 1.52 : 0.78,
+          0.7,
+        );
         legs(0, 0, 1.8, 0.65, 0.44, p.roomId === "room-d");
         part("edge", m.timber, 0, 0.45, 0, 1.9, 0.15, 0.7, "bench-frame");
         part(
@@ -682,6 +717,12 @@ export function createLibraryFurnishing(interactive = false): Group {
       }
       case "cabinet": {
         const work = p.roomId === "room-e";
+        solid(0, 0.545, 0, 1.94, 1.09, 0.7);
+        if (work) {
+          solid(0, 0.82, 0.37, 1.55, 0.28, 0.66); // full authorized drawer excursion
+          solid(0.05, 1.17, 0.1, 0.7, 0.18, 0.35);
+          solid(0.73, 1.12, 0.29, 0.3, 0.3, 0.3);
+        }
         legs(0, 0, 1.8, 0.55, 0.2, work);
         part("box", m.timber, 0, 0.58, -0.24, 1.8, 0.8, 0.08, "cabinet-back");
         for (const y of [0.2, 0.62, 1.04])
@@ -870,6 +911,14 @@ export function createLibraryFurnishing(interactive = false): Group {
         break;
       }
       case "plant":
+        solid(
+          0,
+          0.79,
+          0.004,
+          p.id === "bf4-prop:13" ? 1.04 : 0.8,
+          1.58,
+          p.id === "bf4-prop:13" ? 1.04 : 0.81,
+        ); // includes leaf motion
         part("pot", m.stone, 0, 0, 0, 1, 1, 1, "carved-planter");
         ring(0, 0.47, 0, 0.61);
         part("round", m.timber, 0, 0.46, 0, 0.52, 0.03, 0.52, "soil");
@@ -916,6 +965,15 @@ export function createLibraryFurnishing(interactive = false): Group {
         }
         break;
     }
+    setSpatialComponents(island, {
+      physical,
+      navigation: physical,
+      mobility: "static",
+      supports: furnitureScrollSupports(p).map((point, i) => ({
+        id: `${p.id}:${i}`,
+        position: [point.x, point.y, point.z],
+      })),
+    });
   }
   // Same batching strategy as BF-4B, per geometry/material; metadata groups remain for inspection.
   root.updateMatrixWorld(true);
@@ -937,6 +995,11 @@ export function createLibraryFurnishing(interactive = false): Group {
     for (const [material, parts] of materials) {
       const batch = new InstancedMesh(geometry, material, parts.length);
       batch.name = "bf4-furniture-details";
+      setSpatialComponents(batch, {
+        physical: [],
+        navigation: [],
+        mobility: "static",
+      });
       batch.userData.placements = parts.map((part) => part.parent?.name);
       batch.userData.parts = parts.map((part) => part.name);
       parts.forEach((part, index) => {

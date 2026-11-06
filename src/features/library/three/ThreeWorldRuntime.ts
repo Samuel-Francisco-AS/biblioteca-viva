@@ -12,6 +12,7 @@ import { collectInhabitantObstacles } from "./inhabitantObstacles";
 import { createInhabitantSceneProps } from "./inhabitantSceneProps";
 import {
   INHABITANTS,
+  INHABITANT_ENVELOPES,
   type InhabitantAction,
   type InhabitantKey,
 } from "../inhabitants";
@@ -711,22 +712,22 @@ export class ThreeWorldRuntime implements WorldRuntime {
         this.ambientMagic = createAmbientMagic(building, (episode) =>
           this.agency?.reactToMagic(episode),
         );
-        this.agency = new InhabitantAgency(
-          new InhabitantNavigation(obstacles),
-          {
-            now: () => this.agencyClock,
-            hour: () => new Date().getHours(),
-            nightLighting: this.nightLighting,
-            physicalObstacles: () =>
-              this.sessionBooks?.navigationObstacles() ?? [],
-            sessionReadingCandidate: () =>
-              this.sessionBooks?.candidate() ?? null,
-            scrollCandidates: () => this.scrollVisuals?.candidates() ?? [],
-            onEnvironmentAction: (key, objectId) => {
-              this.livingSession?.actFromInhabitant(key, objectId);
-            },
-          },
+        const inhabitantNavigation = new InhabitantNavigation(obstacles);
+        inhabitantNavigation.prepare(
+          INHABITANTS.map((a) => INHABITANT_ENVELOPES[a.key].travel),
         );
+        this.agency = new InhabitantAgency(inhabitantNavigation, {
+          now: () => this.agencyClock,
+          hour: () => new Date().getHours(),
+          nightLighting: this.nightLighting,
+          physicalObstacles: () =>
+            this.sessionBooks?.navigationObstacles() ?? [],
+          sessionReadingCandidate: () => this.sessionBooks?.candidate() ?? null,
+          scrollCandidates: () => this.scrollVisuals?.candidates() ?? [],
+          onEnvironmentAction: (key, objectId) => {
+            this.livingSession?.actFromInhabitant(key, objectId);
+          },
+        });
         this.sessionBooks = createSessionBookVisuals({
           books: () => this.readingAreaBookVisuals,
           obstacleRoots: [

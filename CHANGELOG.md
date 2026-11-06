@@ -1,3 +1,8 @@
+## Recuperação R2A — 2026-11-06
+
+- Navegação e colisão deixam de herdar ornamentos do edifício/móveis/estantes; vãos, apoios, asas e recuperação dos objetos preservados.
+- Grafos estáticos preparados por envelope e consultas com índice espacial; evidências pareadas e regressão contra geometria R1. Sem mudança de dados/identidade ou aprovação física.
+
 ## 2026-11-06 — Recuperação R1 (candidata sobre BF-5.5F)
 
 - Câmera reutiliza pisos/restrições entre gestos e remove clamps/projeções redundantes, preservando limites e focalização.

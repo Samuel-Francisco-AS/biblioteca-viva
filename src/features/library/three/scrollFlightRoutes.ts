@@ -1,3 +1,4 @@
+import { getSpatialComponents } from "./spatialComponents";
 import { isCarriedProp } from "./inhabitantObstacles";
 import {
   Box3,
@@ -32,7 +33,16 @@ export function flightObstacles(
 ): readonly Box3[] {
   const boxes: Box3[] = [];
   root.updateMatrixWorld(true);
-  root.traverse((o) => {
+  const visit = (o: Object3D, authored = false) => {
+    if (exclude(o) || isCarriedProp(o)) return;
+    const spatial = getSpatialComponents(o);
+    if (spatial)
+      for (const local of spatial.physical)
+        boxes.push(
+          local.clone().applyMatrix4(o.matrixWorld).expandByVector(clearance),
+        );
+    for (const child of o.children) visit(child, authored || !!spatial);
+    if (authored || spatial) return;
     if (
       exclude(o) ||
       isCarriedProp(o) ||
@@ -72,7 +82,8 @@ export function flightObstacles(
         add(m.premultiply(o.matrixWorld));
       }
     else add(o.matrixWorld);
-  });
+  };
+  visit(root);
   return boxes;
 }
 export function clearFlight(

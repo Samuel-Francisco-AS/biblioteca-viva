@@ -1,3 +1,4 @@
+import { setSpatialComponents, spatialBox } from "./spatialComponents";
 import {
   BoxGeometry,
   CylinderGeometry,
@@ -176,6 +177,16 @@ function createRoot<TIdentity extends ProceduralLibraryRecordIdentity>(
   const spec = RECORD_SPECS[modelTypeId];
   const root = new Group();
   root.name = spec.rootName;
+  const d = spec.dimensions;
+  const bounds = [spatialBox(0, d.height / 2, 0, d.width, d.height, d.depth)];
+  setSpatialComponents(root, {
+    physical: bounds,
+    navigation:
+      modelTypeId === "physical-activity-record"
+        ? [spatialBox(0, d.height / 2, 0, d.width, d.height, 0.2)]
+        : bounds,
+    mobility: "static",
+  });
   return { dimensions: spec.dimensions, identity, root };
 }
 

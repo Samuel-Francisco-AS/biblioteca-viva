@@ -5,6 +5,7 @@ import {
   Mesh,
   type Object3D,
 } from "three";
+import { getSpatialComponents, navigationBoxes } from "./spatialComponents";
 import type { NavigationObstacle } from "../inhabitantNavigation";
 
 /** Carried props are governed by leases/anchors, never a permanent collider at their old pose. */
@@ -14,15 +15,19 @@ export function isCarriedProp(object: Object3D): boolean {
   return false;
 }
 
-/** Per-instance bounds, never the giant AABB of a whole architectural batch.
- * Includes walls, props, shelves and present records; never reads entry content. */
+/** Authored components first. Mesh fallback is restricted to unconverted/technical roots. */
 export function collectInhabitantObstacles(
   roots: readonly Object3D[],
 ): readonly NavigationObstacle[] {
   const result: NavigationObstacle[] = [];
   for (const root of roots) {
     root.updateMatrixWorld(true);
-    root.traverse((o) => {
+    const visit = (o: Object3D, authored = false) => {
+      if (isCarriedProp(o)) return;
+      const spatial = getSpatialComponents(o);
+      if (spatial) result.push(...navigationBoxes(o, spatial.navigation));
+      for (const child of o.children) visit(child, authored || !!spatial);
+      if (authored || spatial) return;
       if (
         isCarriedProp(o) ||
         !(o instanceof Mesh) ||
@@ -55,7 +60,8 @@ export function collectInhabitantObstacles(
           add(m.premultiply(o.matrixWorld), i);
         }
       else add(o.matrixWorld, 0);
-    });
+    };
+    visit(root);
   }
   return result;
 }

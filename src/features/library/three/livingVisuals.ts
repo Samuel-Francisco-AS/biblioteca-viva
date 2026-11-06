@@ -1,3 +1,4 @@
+import { setSpatialComponents, spatialBox } from "./spatialComponents";
 import {
   BoxGeometry,
   TorusGeometry,
@@ -203,6 +204,27 @@ export function createLivingVisuals(
         moving.add(part(0.12, 0.12, 0.05, 0, 0, 0, paper));
         break;
     }
+    // Maximal authorised motion envelopes, independent of ornament/animation meshes.
+    const physical = (() => {
+      switch (object.family) {
+        case "clock":
+          return [spatialBox(-0.5, 1.5, 0.02, 0.72, 0.78, 0.3)];
+        case "globe":
+          return [spatialBox(0, 1.22, 0, 0.62, 0.66, 0.62)];
+        case "table":
+          return [spatialBox(0.65, 1, -0.02, 0.56, 0.16, 0.4)];
+        case "hearth":
+          return [spatialBox(0, 0.92, 0, 0.52, 0.6, 0.52)];
+        // Furniture already reserves these complete motion envelopes.
+        default:
+          return [];
+      }
+    })();
+    setSpatialComponents(group, {
+      physical,
+      navigation: physical,
+      mobility: "dynamic",
+    });
     return {
       descriptor: { id: object.objectId, label: object.label },
       root: group,

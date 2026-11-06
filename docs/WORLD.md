@@ -1,3 +1,7 @@
+## Recuperação R2A — contrato espacial autoral (06/11/2026)
+
+`spatialComponents.ts` declara volumes físicos/navegáveis locais, mobilidade e canais separados para picking/âncoras. Decoração não cria obstáculos em roots convertidos; componentes filhos permanecem independentes. Estantes preservam vãos no voo e footprint no chão; móveis reservam excursões de folhas/gaveta. Picking continua na geometria visual, sem alterar R1. Índice de células é broad phase; segmentos exatos validam cada trecho. Grafos estáticos pertencem à montagem, preparados por envelope antes do input; ocupação temporária permanece separada. Alteração física exige atualizar componente/recriar navegação, alteração somente artística não. Sem persistência espacial/schema novo. [Resultados, oracle R1 e limitações](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md).
+
 ## Recuperação R1 — contrato de câmera e picking (06/11/2026)
 
 `CameraNavigation` possui a geometria preparada dos pisos por montagem; restrições são reutilizadas por viewport/zoom com cache máximo de duas entradas, invalidado por dimensão nova. Layout novo cria outra instância. Pan/pinch preservam estado limitado, focalização e cancelamento, sem normalização repetida no commit ou atraso deliberado. Input é imediato; o RAF existente apresenta a pose mais recente.

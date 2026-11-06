@@ -1,3 +1,4 @@
+import { setSpatialComponents, spatialBox } from "./spatialComponents";
 import {
   BoxGeometry,
   Group,
@@ -266,6 +267,65 @@ export function createProceduralBookshelf(
   root.name = "procedural-bookshelf";
 
   const spec = BOOKSHELF_VARIANTS[variant];
+  const physical = [
+    spatialBox(
+      0,
+      spec.baseHeight / 2,
+      0,
+      spec.width,
+      spec.baseHeight,
+      spec.depth,
+    ),
+    spatialBox(
+      0,
+      spec.height / 2,
+      -spec.depth / 2 + 0.06,
+      spec.width,
+      spec.height,
+      0.12,
+    ),
+    ...[-1, 1].map((side) =>
+      spatialBox(
+        side * (spec.width / 2 - 0.09),
+        spec.height / 2,
+        0.04,
+        0.19,
+        spec.height,
+        spec.depth + 0.08,
+      ),
+    ),
+    ...getProceduralBookshelfLayout(variant).shelves.map((s) =>
+      spatialBox(
+        0,
+        (s.topY + s.bottomY) / 2,
+        0.1,
+        spec.width - 0.36,
+        s.topY - s.bottomY,
+        spec.depth - 0.15,
+      ),
+    ),
+    spatialBox(
+      0,
+      spec.height - 0.03,
+      0,
+      spec.width + spec.topTrimOverhang * 2,
+      0.12,
+      spec.depth,
+    ),
+    spatialBox(
+      0,
+      spec.height + 0.18,
+      spec.depth / 2 - 0.04,
+      spec.width,
+      0.36,
+      0.13,
+    ),
+  ];
+  setSpatialComponents(root, {
+    physical,
+    navigation: [spatialBox(0, 1, 0.04, spec.width, 2, spec.depth + 0.08)],
+    mobility: "static",
+  });
   const commonMaterial = { metalness: 0, roughness: 0.82 } as const;
   const grain = createWoodGrain();
   const frameMaterial = new MeshStandardMaterial({
@@ -484,6 +544,17 @@ export function createProceduralBookVolume(
   const spec = BOOK_VOLUME_VARIANTS[variant];
   const root = new Group();
   root.name = "procedural-book-volume";
+  const bounds = [
+    spatialBox(0, spec.height / 2, 0, spec.width, spec.height, spec.depth),
+  ];
+  setSpatialComponents(root, {
+    physical: bounds,
+    navigation: bounds,
+    mobility: "dynamic",
+    manipulation: [
+      { id: "spine", position: [0, spec.height / 2, spec.depth / 2] },
+    ],
+  });
   const commonMaterial = { metalness: 0, roughness: 0.78 } as const;
   const coverMaterial = new MeshStandardMaterial({
     ...commonMaterial,

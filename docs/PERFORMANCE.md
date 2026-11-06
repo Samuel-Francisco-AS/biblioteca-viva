@@ -1,3 +1,7 @@
+## Recuperação R2A — navegação (06/11/2026)
+
+Mesmo mundo cheio fictício: 1.220→155 obstáculos, 138 nós mantidos; P50 de construção do grafo de Ytha 95,94→18,31 ms no host e testes exatos 3.270.560→12.187. Índice espacial, pares simétricos únicos, caches por envelope/montagem e colliders autorais; 65 rotas válidas e sete inválidas preservadas contra baseline e oracle detalhado R1. [P50/P95, receita e dados brutos](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md#r2a--navegação-e-colisores-06112026). CPU local não mede GPU, apresentação ou Moto G06; gate físico pendente.
+
 ## Recuperação R1 — trabalho removido do input (06/11/2026)
 
 Geometria de pisos preparada por câmera e restrições limitadas a dois zooms eliminam reconstrução em pan de viewport/zoom invariáveis. Pinch constrói somente a região do zoom novo. Busca linear substitui sort que repetia projeções; helpers compartilham uma normalização por gesto. Picking faz um raycast por hierarquia selecionável e não força matrizes da cena decorativa inteira.
