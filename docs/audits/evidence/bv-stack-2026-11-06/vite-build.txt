@@ -1,0 +1,49 @@
+vite v8.1.5 building client environment for production...
+[2Ktransforming...✓ 355 modules transformed.
+
+(!) outDir /tmp/bv-audit-dist is not inside project root and will not be emptied.
+Use --emptyOutDir to override.
+
+rendering chunks...
+computing gzip size...
+../bv-audit-dist/index.html                                        2.78 kB │ gzip:   1.21 kB
+../bv-audit-dist/.vite/manifest.json                               9.05 kB │ gzip:   1.30 kB
+../bv-audit-dist/assets/samael-SR9VWktg.glb                      315.25 kB
+../bv-audit-dist/assets/aryn-DrcqFNQd.glb                        344.34 kB
+../bv-audit-dist/assets/lua--QJJH-1Y.glb                         352.35 kB
+../bv-audit-dist/assets/ytha-BMk82Kww.glb                        395.62 kB
+../bv-audit-dist/assets/BVPicker-mP1gmq5R.css                      2.69 kB │ gzip:   1.04 kB
+../bv-audit-dist/assets/navigationOrigin-4L8oPlKu.css             11.01 kB │ gzip:   3.20 kB
+../bv-audit-dist/assets/entertainment-Bf8ngaYl.css                14.34 kB │ gzip:   3.95 kB
+../bv-audit-dist/assets/EntryDetailPage-DaJSTKBI.css              33.10 kB │ gzip:   7.83 kB
+../bv-audit-dist/assets/index-C3NqbmTN.css                       136.24 kB │ gzip:  29.30 kB
+../bv-audit-dist/assets/androidBackupDocumentPlugin-C4l4azm0.js    0.14 kB │ gzip:   0.13 kB
+../bv-audit-dist/assets/esm-Dg2zo9Kw.js                            0.33 kB │ gzip:   0.24 kB
+../bv-audit-dist/assets/web-BxfLGVgg.js                            0.36 kB │ gzip:   0.24 kB
+../bv-audit-dist/assets/useCivilToday-3FgHDkXf.js                  0.59 kB │ gzip:   0.35 kB
+../bv-audit-dist/assets/bookPresentation-Du5Ruowv.js               0.79 kB │ gzip:   0.39 kB
+../bv-audit-dist/assets/web-BuNqi18n.js                            0.84 kB │ gzip:   0.40 kB
+../bv-audit-dist/assets/ArtifactGlyph-O724XpXZ.js                  0.85 kB │ gzip:   0.55 kB
+../bv-audit-dist/assets/esm-Dc9HQXcK.js                            1.32 kB │ gzip:   0.70 kB
+../bv-audit-dist/assets/RealmIntro-D4tntfW0.js                     2.33 kB │ gzip:   0.96 kB
+../bv-audit-dist/assets/EditEntryPage-CgiuQcvn.js                  3.62 kB │ gzip:   1.52 kB
+../bv-audit-dist/assets/navigationOrigin-Dw8dbNAZ.js               3.96 kB │ gzip:   1.89 kB
+../bv-audit-dist/assets/AnnotationActions-CeTwwV3o.js              4.48 kB │ gzip:   1.52 kB
+../bv-audit-dist/assets/NewEntryPage-CT89afrc.js                   4.83 kB │ gzip:   1.93 kB
+../bv-audit-dist/assets/BVPicker-CQjzwaL4.js                       7.17 kB │ gzip:   2.63 kB
+../bv-audit-dist/assets/web-zCCdnvls.js                            8.49 kB │ gzip:   2.85 kB
+../bv-audit-dist/assets/ArchivePage-DL-Wbs95.js                   10.01 kB │ gzip:   3.00 kB
+../bv-audit-dist/assets/CollectionPage-DYkX1AxO.js                10.01 kB │ gzip:   3.35 kB
+../bv-audit-dist/assets/StatisticsPage-V-_YNC0K.js                11.85 kB │ gzip:   4.01 kB
+../bv-audit-dist/assets/SettingsPage-BUHf00o2.js                  20.12 kB │ gzip:   5.85 kB
+../bv-audit-dist/assets/EntryEditorPages-DL-Og9fJ.js              24.98 kB │ gzip:   7.74 kB
+../bv-audit-dist/assets/EntryDetailPage-LoLe8BLc.js              125.36 kB │ gzip:  32.86 kB
+../bv-audit-dist/assets/index-CeRB_yGC.js                        668.04 kB │ gzip: 203.08 kB
+../bv-audit-dist/assets/ThreeWorldRuntime-DUXdrrfy.js            802.45 kB │ gzip: 213.39 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.19s
