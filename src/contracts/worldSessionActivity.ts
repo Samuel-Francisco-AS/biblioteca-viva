@@ -3,20 +3,27 @@
  * is persisted. Do not include entry titles, notes, exercises or private text.
  * The renderer never queries repositories or treats gestures as confirmation.
  */
-export type WorldSessionEntryType =
-  | "book"
-  | "movie"
-  | "series"
-  | "study"
-  | "physical_activity"
-  | "work";
+export const WORLD_SESSION_ENTRY_TYPES = [
+  "book",
+  "movie",
+  "series",
+  "study",
+  "physical_activity",
+  "work",
+] as const;
 
-export type WorldSessionKind =
-  | "reading"
-  | "viewing"
-  | "study"
-  | "physical_activity"
-  | "work";
+export type WorldSessionEntryType =
+  (typeof WORLD_SESSION_ENTRY_TYPES)[number];
+
+export const WORLD_SESSION_KINDS = [
+  "reading",
+  "viewing",
+  "study",
+  "physical_activity",
+  "work",
+] as const;
+
+export type WorldSessionKind = (typeof WORLD_SESSION_KINDS)[number];
 
 export interface WorldSessionActivity {
   readonly sessionId: string;
