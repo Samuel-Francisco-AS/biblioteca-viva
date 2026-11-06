@@ -1,0 +1,73 @@
+{
+  "label": "R2A",
+  "sourceRef": "50f425d9fc972f1dd91914e4092fef45fffd5e0b",
+  "base": "50f425d9fc972f1dd91914e4092fef45fffd5e0b",
+  "browser": "151.0.7922.34",
+  "scope": "Chromium headless SwiftShader, DPR1, antialias, same complete fictional world and four GLBs, manual deterministic frames; CPU submission not GPU time; no Android or React shell",
+  "errors": [],
+  "disposal": {
+    "canvases": 0,
+    "state": "disposed"
+  },
+  "results": [
+    {
+      "name": "scroll-flight",
+      "drawCalls": 380,
+      "renderedTriangles": 178576,
+      "gpuGeometries": 132,
+      "gpuTextures": 3,
+      "programs": 23,
+      "bufferBytes": 1401916,
+      "materials": 165,
+      "geometries": 242,
+      "meshes": 729,
+      "objects": 967,
+      "visibleObjects": 824,
+      "potentialTriangles": 220362,
+      "pointLights": 13,
+      "matrixUpdates": 5808,
+      "frameJsMs": {
+        "p50": 5.6000000005587935,
+        "p95": 6.099999999627471
+      },
+      "renderSubmissionMs": {
+        "p50": 4.2999999998137355,
+        "p95": 5.2000000001862645
+      },
+      "otherJsMs": {
+        "p50": 0.8999999994412065,
+        "p95": 1.7999999998137355
+      },
+      "stagesTotalMs": {
+        "sessionBooks": 0,
+        "ambientMagic": 0.09999999962747097,
+        "scrollVisuals": 0.40000000037252903,
+        "livingVisuals": 1.799999998882413
+      },
+      "book": {
+        "sessionId": null,
+        "instanceId": null,
+        "progress": 0,
+        "opening": 0,
+        "state": "shelf"
+      },
+      "inhabitants": 4,
+      "scrolls": 4,
+      "flyingScrolls": 3,
+      "activePointLights": 11,
+      "viewport": [
+        1280,
+        900
+      ],
+      "framebuffer": [
+        1280,
+        900
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 1
+      }
+    }
+  ]
+}

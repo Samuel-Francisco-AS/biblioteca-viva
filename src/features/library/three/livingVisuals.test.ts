@@ -44,6 +44,7 @@ describe("living visuals", () => {
     expect(
       fixtures.every((fixture) => (fixture as PointLight).intensity === 0),
     ).toBe(true);
+    expect(fixtures.every((fixture) => fixture?.visible === false)).toBe(true);
     now = new Date(2026, 10, 5, 18, 0);
     night.refreshContext();
     living.refreshContext();
@@ -56,6 +57,7 @@ describe("living visuals", () => {
         ?.light?.intensity,
     ).toBe(0);
     expect(living.getSnapshot().discovery).toBe(0);
+    expect(fixtures.every((fixture) => fixture?.visible)).toBe(true);
     night.complete(NIGHT_LAMPS[0].id);
     visuals.update(0, true);
     expect((fixtures[0] as PointLight).intensity).toBe(4.2);
@@ -66,6 +68,7 @@ describe("living visuals", () => {
     expect(
       fixtures.every((fixture) => (fixture as PointLight).intensity === 0),
     ).toBe(true);
+    expect(fixtures.every((fixture) => fixture?.visible === false)).toBe(true);
     disposeObjectTree(scene);
   });
 

@@ -1,0 +1,61 @@
+[
+  {
+    "name": "scroll-flight",
+    "drawCalls": 353,
+    "renderedTriangles": 178576,
+    "gpuGeometries": 119,
+    "gpuTextures": 3,
+    "programs": 23,
+    "bufferBytes": 1712308,
+    "materials": 165,
+    "geometries": 219,
+    "meshes": 648,
+    "objects": 883,
+    "visibleObjects": 729,
+    "potentialTriangles": 220362,
+    "pointLights": 13,
+    "matrixUpdates": 4872,
+    "frameJsMs": {
+      "p50": 9.099999999627471,
+      "p95": 13.299999999813735
+    },
+    "renderSubmissionMs": {
+      "p50": 8,
+      "p95": 12.399999999441206
+    },
+    "otherJsMs": {
+      "p50": 1.199999999254942,
+      "p95": 3.099999999627471
+    },
+    "stagesTotalMs": {
+      "sessionBooks": 0.10000000055879354,
+      "ambientMagic": 0.2000000011175871,
+      "scrollVisuals": 0.39999999944120646,
+      "livingVisuals": 2.2999999998137355
+    },
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "inhabitants": 4,
+    "scrolls": 4,
+    "flyingScrolls": 3,
+    "activePointLights": 0,
+    "viewport": [
+      1280,
+      900
+    ],
+    "framebuffer": [
+      1280,
+      900
+    ],
+    "camera": {
+      "targetX": 0,
+      "targetZ": 0,
+      "zoom": 1
+    }
+  }
+]

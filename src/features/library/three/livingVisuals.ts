@@ -363,6 +363,9 @@ export function createLivingVisuals(
         light.intensity = reduced
           ? 4.2 * target
           : light.intensity + (4.2 * target - light.intensity) * blend;
+        // A zero-power light otherwise still participates in Three's light list/shader.
+        if (target === 0 && light.intensity < 0.0001) light.intensity = 0;
+        light.visible = light.intensity > 0;
         glow.visible = target > 0;
         if (
           shade instanceof Mesh &&
@@ -371,16 +374,18 @@ export function createLivingVisuals(
           shade.material.emissive.setHex(0xffac51);
           shade.material.emissiveIntensity = target * 0.55;
         }
-        glow.scale.setScalar(
-          reduced ? 0.75 : 0.86 + 0.04 * Math.sin(elapsed * 1.7),
-        );
+        if (glow.visible)
+          glow.scale.setScalar(
+            reduced ? 0.75 : 0.86 + 0.04 * Math.sin(elapsed * 1.7),
+          );
       }
-      sparks.children.forEach((spark, index) => {
-        const y: unknown = spark.userData.baseY;
-        if (typeof y === "number")
-          spark.position.y =
-            y + (reduced ? 0 : Math.sin(elapsed + index) * 0.12);
-      });
+      if (sparks.visible)
+        sparks.children.forEach((spark, index) => {
+          const y: unknown = spark.userData.baseY;
+          if (typeof y === "number")
+            spark.position.y =
+              y + (reduced ? 0 : Math.sin(elapsed + index) * 0.12);
+        });
       for (const item of selectables) {
         const value = state.objects[item.object.objectId];
         if (!value) continue;
@@ -483,6 +488,8 @@ export function createLivingVisuals(
         atmosphere === "noturna" ||
         (nightLighting?.getSnapshot().cycleKey !== null &&
           nightLighting !== undefined);
+      for (const item of selectables)
+        if (item.light) item.light.visible = item.light.intensity > 0;
       scene.traverse((object) => {
         if (object instanceof HemisphereLight) {
           const intensity = dark ? 1.08 : atmosphere === "encantada" ? 1.25 : 2;

@@ -1,0 +1,545 @@
+{
+  "label": "R2B",
+  "sourceRef": "working-tree",
+  "base": "50f425d9fc972f1dd91914e4092fef45fffd5e0b",
+  "browser": "151.0.7922.34",
+  "scope": "Chromium headless SwiftShader, DPR1, antialias, same complete fictional world and four GLBs, manual deterministic frames; CPU submission not GPU time; no Android or React shell",
+  "errors": [],
+  "disposal": {
+    "canvases": 0,
+    "state": "disposed"
+  },
+  "results": [
+    {
+      "name": "static",
+      "drawCalls": 326,
+      "renderedTriangles": 178252,
+      "gpuGeometries": 119,
+      "gpuTextures": 3,
+      "programs": 23,
+      "bufferBytes": 2451268,
+      "materials": 165,
+      "geometries": 219,
+      "meshes": 648,
+      "objects": 883,
+      "visibleObjects": 699,
+      "potentialTriangles": 220362,
+      "pointLights": 13,
+      "matrixUpdates": 4872,
+      "frameJsMs": {
+        "p50": 10.699999999254942,
+        "p95": 13.800000000745058
+      },
+      "renderSubmissionMs": {
+        "p50": 7.7999999998137355,
+        "p95": 13.200000000186265
+      },
+      "otherJsMs": {
+        "p50": 1.099999999627471,
+        "p95": 2.8999999994412065
+      },
+      "stagesTotalMs": {
+        "sessionBooks": 0.2999999998137355,
+        "ambientMagic": 0,
+        "scrollVisuals": 2,
+        "livingVisuals": 1.4999999990686774
+      },
+      "book": {
+        "sessionId": null,
+        "instanceId": null,
+        "progress": 0,
+        "opening": 0,
+        "state": "shelf"
+      },
+      "inhabitants": 4,
+      "scrolls": 4,
+      "flyingScrolls": 0,
+      "activePointLights": 0,
+      "viewport": [
+        1280,
+        900
+      ],
+      "framebuffer": [
+        1280,
+        900
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 1
+      }
+    },
+    {
+      "name": "active-four",
+      "drawCalls": 326,
+      "renderedTriangles": 178252,
+      "gpuGeometries": 119,
+      "gpuTextures": 3,
+      "programs": 23,
+      "bufferBytes": 2451268,
+      "materials": 165,
+      "geometries": 219,
+      "meshes": 648,
+      "objects": 883,
+      "visibleObjects": 699,
+      "potentialTriangles": 220362,
+      "pointLights": 13,
+      "matrixUpdates": 4872,
+      "frameJsMs": {
+        "p50": 4.7000000001862645,
+        "p95": 6.400000000372529
+      },
+      "renderSubmissionMs": {
+        "p50": 4,
+        "p95": 4.5
+      },
+      "otherJsMs": {
+        "p50": 0.6999999992549419,
+        "p95": 1.900000000372529
+      },
+      "stagesTotalMs": {
+        "sessionBooks": 0,
+        "ambientMagic": 0.09999999962747097,
+        "scrollVisuals": 0.2000000011175871,
+        "livingVisuals": 1.2999999998137355
+      },
+      "book": {
+        "sessionId": null,
+        "instanceId": null,
+        "progress": 0,
+        "opening": 0,
+        "state": "shelf"
+      },
+      "inhabitants": 4,
+      "scrolls": 4,
+      "flyingScrolls": 0,
+      "activePointLights": 0,
+      "viewport": [
+        1280,
+        900
+      ],
+      "framebuffer": [
+        1280,
+        900
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 1
+      }
+    },
+    {
+      "name": "night",
+      "drawCalls": 331,
+      "renderedTriangles": 179092,
+      "gpuGeometries": 119,
+      "gpuTextures": 3,
+      "programs": 34,
+      "bufferBytes": 2451268,
+      "materials": 165,
+      "geometries": 219,
+      "meshes": 648,
+      "objects": 883,
+      "visibleObjects": 717,
+      "potentialTriangles": 220362,
+      "pointLights": 13,
+      "matrixUpdates": 4872,
+      "frameJsMs": {
+        "p50": 3.1000000005587935,
+        "p95": 3.2999999998137355
+      },
+      "renderSubmissionMs": {
+        "p50": 2.7000000001862645,
+        "p95": 2.7999999998137355
+      },
+      "otherJsMs": {
+        "p50": 0.40000000037252903,
+        "p95": 0.5
+      },
+      "stagesTotalMs": {
+        "sessionBooks": 0.09999999962747097,
+        "ambientMagic": 0.19999999925494194,
+        "scrollVisuals": 0.10000000055879354,
+        "livingVisuals": 0.900000000372529
+      },
+      "book": {
+        "sessionId": null,
+        "instanceId": null,
+        "progress": 0,
+        "opening": 0,
+        "state": "shelf"
+      },
+      "inhabitants": 4,
+      "scrolls": 4,
+      "flyingScrolls": 0,
+      "activePointLights": 9,
+      "viewport": [
+        1280,
+        900
+      ],
+      "framebuffer": [
+        1280,
+        900
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 1
+      }
+    },
+    {
+      "name": "scrolls-active",
+      "drawCalls": 331,
+      "renderedTriangles": 179092,
+      "gpuGeometries": 119,
+      "gpuTextures": 3,
+      "programs": 34,
+      "bufferBytes": 2451268,
+      "materials": 165,
+      "geometries": 219,
+      "meshes": 648,
+      "objects": 883,
+      "visibleObjects": 717,
+      "potentialTriangles": 220362,
+      "pointLights": 13,
+      "matrixUpdates": 4872,
+      "frameJsMs": {
+        "p50": 4.599999999627471,
+        "p95": 5.400000000372529
+      },
+      "renderSubmissionMs": {
+        "p50": 3.900000000372529,
+        "p95": 4.300000000745058
+      },
+      "otherJsMs": {
+        "p50": 0.7000000001862645,
+        "p95": 1.099999999627471
+      },
+      "stagesTotalMs": {
+        "sessionBooks": 0,
+        "ambientMagic": 0.10000000055879354,
+        "scrollVisuals": 0.39999999944120646,
+        "livingVisuals": 2.0999999986961484
+      },
+      "book": {
+        "sessionId": null,
+        "instanceId": null,
+        "progress": 0,
+        "opening": 0,
+        "state": "shelf"
+      },
+      "inhabitants": 4,
+      "scrolls": 4,
+      "flyingScrolls": 0,
+      "activePointLights": 9,
+      "viewport": [
+        1280,
+        900
+      ],
+      "framebuffer": [
+        1280,
+        900
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 1
+      }
+    },
+    {
+      "name": "book-transport",
+      "drawCalls": 332,
+      "renderedTriangles": 179860,
+      "gpuGeometries": 120,
+      "gpuTextures": 3,
+      "programs": 46,
+      "bufferBytes": 2451268,
+      "materials": 165,
+      "geometries": 219,
+      "meshes": 648,
+      "objects": 883,
+      "visibleObjects": 720,
+      "potentialTriangles": 220362,
+      "pointLights": 13,
+      "matrixUpdates": 5088,
+      "frameJsMs": {
+        "p50": 7.099999999627471,
+        "p95": 8.200000000186265
+      },
+      "renderSubmissionMs": {
+        "p50": 6.099999999627471,
+        "p95": 6.6000000005587935
+      },
+      "otherJsMs": {
+        "p50": 1,
+        "p95": 1.599999999627471
+      },
+      "stagesTotalMs": {
+        "sessionBooks": 1.5000000009313226,
+        "ambientMagic": 0.10000000055879354,
+        "scrollVisuals": 0.20000000018626451,
+        "livingVisuals": 2.0000000009313226
+      },
+      "book": {
+        "sessionId": "fiction-session",
+        "instanceId": "reading-book:fiction-book-2",
+        "progress": 0.3750000000000001,
+        "opening": 0,
+        "state": "transport"
+      },
+      "inhabitants": 4,
+      "scrolls": 4,
+      "flyingScrolls": 0,
+      "activePointLights": 10,
+      "viewport": [
+        1280,
+        900
+      ],
+      "framebuffer": [
+        1280,
+        900
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 1
+      }
+    },
+    {
+      "name": "camera-near",
+      "drawCalls": 206,
+      "renderedTriangles": 162940,
+      "gpuGeometries": 120,
+      "gpuTextures": 3,
+      "programs": 46,
+      "bufferBytes": 2451268,
+      "materials": 165,
+      "geometries": 219,
+      "meshes": 648,
+      "objects": 883,
+      "visibleObjects": 720,
+      "potentialTriangles": 220362,
+      "pointLights": 13,
+      "matrixUpdates": 5165,
+      "frameJsMs": {
+        "p50": 6.7000000001862645,
+        "p95": 10.799999999813735
+      },
+      "renderSubmissionMs": {
+        "p50": 4.7999999998137355,
+        "p95": 5.7999999998137355
+      },
+      "otherJsMs": {
+        "p50": 1.900000000372529,
+        "p95": 5
+      },
+      "stagesTotalMs": {
+        "sessionBooks": 1.4000000013038516,
+        "ambientMagic": 0.09999999962747097,
+        "scrollVisuals": 0.2999999998137355,
+        "livingVisuals": 3.800000000745058
+      },
+      "book": {
+        "sessionId": "fiction-session",
+        "instanceId": "reading-book:fiction-book-2",
+        "progress": 0.7499999999999999,
+        "opening": 0,
+        "state": "transport"
+      },
+      "inhabitants": 4,
+      "scrolls": 4,
+      "flyingScrolls": 0,
+      "activePointLights": 10,
+      "viewport": [
+        1280,
+        900
+      ],
+      "framebuffer": [
+        1280,
+        900
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 2.2
+      }
+    },
+    {
+      "name": "camera-far",
+      "drawCalls": 403,
+      "renderedTriangles": 188752,
+      "gpuGeometries": 147,
+      "gpuTextures": 4,
+      "programs": 46,
+      "bufferBytes": 2451268,
+      "materials": 165,
+      "geometries": 219,
+      "meshes": 648,
+      "objects": 883,
+      "visibleObjects": 720,
+      "potentialTriangles": 220362,
+      "pointLights": 13,
+      "matrixUpdates": 5154,
+      "frameJsMs": {
+        "p50": 7.7000000001862645,
+        "p95": 8.199999999254942
+      },
+      "renderSubmissionMs": {
+        "p50": 6.599999999627471,
+        "p95": 7.2999999998137355
+      },
+      "otherJsMs": {
+        "p50": 1,
+        "p95": 1.2999999998137355
+      },
+      "stagesTotalMs": {
+        "sessionBooks": 1,
+        "ambientMagic": 0.2000000011175871,
+        "scrollVisuals": 0.09999999962747097,
+        "livingVisuals": 1.400000000372529
+      },
+      "book": {
+        "sessionId": "fiction-session",
+        "instanceId": "reading-book:fiction-book-2",
+        "progress": 1.0903954802259885,
+        "opening": 0,
+        "state": "transport"
+      },
+      "inhabitants": 4,
+      "scrolls": 4,
+      "flyingScrolls": 0,
+      "activePointLights": 10,
+      "viewport": [
+        1280,
+        900
+      ],
+      "framebuffer": [
+        1280,
+        900
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 0.7
+      }
+    },
+    {
+      "name": "reduced",
+      "drawCalls": 402,
+      "renderedTriangles": 188716,
+      "gpuGeometries": 147,
+      "gpuTextures": 4,
+      "programs": 46,
+      "bufferBytes": 2451268,
+      "materials": 165,
+      "geometries": 219,
+      "meshes": 648,
+      "objects": 883,
+      "visibleObjects": 720,
+      "potentialTriangles": 220362,
+      "pointLights": 13,
+      "matrixUpdates": 5088,
+      "frameJsMs": {
+        "p50": 4.699999999254942,
+        "p95": 5.300000000745058
+      },
+      "renderSubmissionMs": {
+        "p50": 4.2999999998137355,
+        "p95": 4.800000000745058
+      },
+      "otherJsMs": {
+        "p50": 0.5,
+        "p95": 0.599999999627471
+      },
+      "stagesTotalMs": {
+        "sessionBooks": 0.5000000009313226,
+        "ambientMagic": 0,
+        "scrollVisuals": 0.20000000018626451,
+        "livingVisuals": 1
+      },
+      "book": {
+        "sessionId": "fiction-session",
+        "instanceId": "reading-book:fiction-book-2",
+        "progress": 0.784604519774011,
+        "opening": 0,
+        "state": "transport"
+      },
+      "inhabitants": 4,
+      "scrolls": 4,
+      "flyingScrolls": 0,
+      "activePointLights": 10,
+      "viewport": [
+        1280,
+        900
+      ],
+      "framebuffer": [
+        1280,
+        900
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 0.7
+      }
+    },
+    {
+      "name": "return",
+      "drawCalls": 402,
+      "renderedTriangles": 188716,
+      "gpuGeometries": 147,
+      "gpuTextures": 4,
+      "programs": 46,
+      "bufferBytes": 2451268,
+      "materials": 165,
+      "geometries": 219,
+      "meshes": 648,
+      "objects": 883,
+      "visibleObjects": 720,
+      "potentialTriangles": 220362,
+      "pointLights": 13,
+      "matrixUpdates": 5088,
+      "frameJsMs": {
+        "p50": 7.3999999994412065,
+        "p95": 7.900000000372529
+      },
+      "renderSubmissionMs": {
+        "p50": 6.7999999998137355,
+        "p95": 7.2000000001862645
+      },
+      "otherJsMs": {
+        "p50": 0.7000000001862645,
+        "p95": 0.8000000007450581
+      },
+      "stagesTotalMs": {
+        "sessionBooks": 0.7000000020489097,
+        "ambientMagic": 0,
+        "scrollVisuals": 0.10000000055879354,
+        "livingVisuals": 1.8999999994412065
+      },
+      "book": {
+        "sessionId": "fiction-session",
+        "instanceId": "reading-book:fiction-book-2",
+        "progress": 0.4512711864406779,
+        "opening": 0,
+        "state": "transport"
+      },
+      "inhabitants": 4,
+      "scrolls": 4,
+      "flyingScrolls": 0,
+      "activePointLights": 10,
+      "viewport": [
+        1280,
+        900
+      ],
+      "framebuffer": [
+        1280,
+        900
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 0.7
+      }
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { batchStaticBookshelf } from "./staticVisuals";
 import { createSessionBookVisuals } from "./sessionBookVisuals";
 import { createAmbientMagic } from "./ambientMagic";
 import { createLivingScrollVisuals } from "./livingScrollVisuals";
@@ -620,6 +621,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
                 : READING_SHELF_COMPOSITION_DEFINITIONS,
             );
             unattachedProceduralComposition = composition;
+            if (composedWorld)
+              for (const instance of composition.instances)
+                batchStaticBookshelf(instance.representation.root);
             scene.add(composition.root);
             mountedWorld.addProceduralComposition(composition);
             unattachedProceduralComposition = undefined;
@@ -1084,6 +1088,11 @@ export class ThreeWorldRuntime implements WorldRuntime {
       variant,
     );
     if (result === "unchanged") return result;
+    const replaced = composition.instances.find(
+      (i) => i.identity.instanceId === instanceId,
+    );
+    if (replaced && this.libraryRecordPlacements !== undefined)
+      batchStaticBookshelf(replaced.representation.root);
 
     this.sessionBooks?.releaseForLayoutChange();
 

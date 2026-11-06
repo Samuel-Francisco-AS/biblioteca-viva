@@ -1,3 +1,9 @@
+## Recuperação R2B — 2026-11-06
+
+- Estantes agregadas por material no mundo composto, preservando entalhes/texturas, picking e vãos físicos; transformações estáticas e caixa arquitetural compartilhada.
+- Luzes apagadas deixam de participar do shader; brilhos ocultos evitam atualizações inúteis. Comparação visual e tradeoffs medidos, sem aceite físico ou promessa de FPS.
+- Corrigida a hierarquia dos batches do edifício que causou uma falha unitária nova na CI R2A; asserts preservados.
+
 ## Recuperação R2A — 2026-11-06
 
 - Navegação e colisão deixam de herdar ornamentos do edifício/móveis/estantes; vãos, apoios, asas e recuperação dos objetos preservados.

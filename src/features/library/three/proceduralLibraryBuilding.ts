@@ -1,3 +1,4 @@
+import { freezeLocalTransform } from "./staticVisuals";
 import { setSpatialComponents, spatialBox } from "./spatialComponents";
 import {
   BoxGeometry,
@@ -367,12 +368,9 @@ export function createProceduralLibraryBuilding(interactive = false): Group {
     parts.push(child);
     batches.set(child.material, parts);
   }
+  const unitBox = new BoxGeometry(1, 1, 1);
   for (const [material, parts] of batches) {
-    const batch = new InstancedMesh(
-      new BoxGeometry(1, 1, 1),
-      material,
-      parts.length,
-    );
+    const batch = new InstancedMesh(unitBox, material, parts.length);
     batch.name = "architectural-details";
     parts.forEach((part, index) => {
       const { width, height, depth } = part.geometry.parameters;
@@ -389,17 +387,25 @@ export function createProceduralLibraryBuilding(interactive = false): Group {
     batch.computeBoundingSphere();
     root.add(batch);
   }
-  // This node owns architecture only; independent furnishing/props remain discoverable.
+  // Collider-only component; keep the established direct visual batch hierarchy.
+  // Furnishing/props have their own independently discoverable components.
   const architecture = new Group();
   architecture.name = "library-architecture";
   for (const child of [...root.children])
-    if (!child.name.endsWith("-floor")) architecture.add(child);
+    if (!child.name.endsWith("-floor"))
+      setSpatialComponents(child, {
+        physical: [],
+        navigation: [],
+        mobility: "static",
+      });
   setSpatialComponents(architecture, {
     physical,
     navigation: physical,
     mobility: "static",
   });
   root.add(architecture);
+  for (const child of root.children)
+    if (child instanceof Mesh) freezeLocalTransform(child);
   root.add(createLibraryFurnishing(interactive));
   return root;
 }

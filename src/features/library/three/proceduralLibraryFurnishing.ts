@@ -1,3 +1,4 @@
+import { freezeLocalTransform } from "./staticVisuals";
 import { setSpatialComponents, spatialBox } from "./spatialComponents";
 import {
   BoxGeometry,
@@ -1008,6 +1009,7 @@ export function createLibraryFurnishing(interactive = false): Group {
       });
       batch.computeBoundingBox();
       batch.computeBoundingSphere();
+      freezeLocalTransform(batch);
       root.add(batch);
     }
   for (const material of Object.values(m))

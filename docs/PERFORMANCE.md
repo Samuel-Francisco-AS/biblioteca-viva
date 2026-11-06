@@ -1,3 +1,7 @@
+## Recuperação R2B — renderização (06/11/2026)
+
+Runtime completo fictício/Chromium SwiftShader/DPR1: normal 353→326 calls com os mesmos 178.252 triângulos; afastada 452→403 calls com 188.176→188.752 triângulos por culling agregado. 729→648 meshes; materiais 165 e texturas 3/4 mantidos; matrizes locais 5.808→4.872 em seis frames. Buffers CPU 1.401.916→1.712.308 B e programas acumulados 25→46 são custos explícitos. Tempos CPU mistos: sem FPS/GPU/performance física concluída. [Métricas, imagens e receita](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md#r2b--renderização-sem-redução-artística-06112026).
+
 ## Recuperação R2A — navegação (06/11/2026)
 
 Mesmo mundo cheio fictício: 1.220→155 obstáculos, 138 nós mantidos; P50 de construção do grafo de Ytha 95,94→18,31 ms no host e testes exatos 3.270.560→12.187. Índice espacial, pares simétricos únicos, caches por envelope/montagem e colliders autorais; 65 rotas válidas e sete inválidas preservadas contra baseline e oracle detalhado R1. [P50/P95, receita e dados brutos](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md#r2a--navegação-e-colisores-06112026). CPU local não mede GPU, apresentação ou Moto G06; gate físico pendente.
