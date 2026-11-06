@@ -52,9 +52,9 @@ describe("BF-5.5F confirmed activity stage", () => {
     visuals.apply(null);
     expect(visuals.root.visible).toBe(false);
     expect(building.children).toHaveLength(1);
-    expect(
-      visuals.root.getObjectByName("bf55f-session-rune"),
-    ).toBeInstanceOf(Mesh);
+    expect(visuals.root.getObjectByName("bf55f-session-rune")).toBeInstanceOf(
+      Mesh,
+    );
     disposeObjectTree(building);
     expect(building.children).toHaveLength(0);
   });
