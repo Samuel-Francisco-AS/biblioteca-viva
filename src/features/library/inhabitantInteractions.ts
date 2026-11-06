@@ -4,6 +4,7 @@ export type InteractionTaskState =
   | "queued"
   | "approaching"
   | "orienting"
+  | "reading"
   | "picking"
   | "carrying"
   | "placing"
@@ -26,7 +27,7 @@ export interface InteractionTask {
 
 export interface InteractionLease {
   readonly resourceId: string;
-  readonly owner: InhabitantKey;
+  readonly owner: InhabitantKey | "session";
   readonly taskId: string;
   readonly expiresAt: number;
 }
@@ -40,7 +41,7 @@ export class InteractionCoordinator {
 
   reserve(
     resourceId: string,
-    owner: InhabitantKey,
+    owner: InhabitantKey | "session",
     taskId: string,
     now: number,
     durationMs = 30_000,
@@ -61,7 +62,7 @@ export class InteractionCoordinator {
 
   renew(
     resourceId: string,
-    owner: InhabitantKey,
+    owner: InhabitantKey | "session",
     taskId: string,
     now: number,
     durationMs = 30_000,
@@ -86,13 +87,22 @@ export class InteractionCoordinator {
     return true;
   }
 
-  owns(resourceId: string, owner: InhabitantKey, taskId: string, now: number) {
+  owns(
+    resourceId: string,
+    owner: InhabitantKey | "session",
+    taskId: string,
+    now: number,
+  ) {
     this.reclaim(now);
     const lease = this.leases.get(resourceId);
     return lease?.owner === owner && lease.taskId === taskId;
   }
 
-  release(resourceId: string, owner: InhabitantKey, taskId: string): void {
+  release(
+    resourceId: string,
+    owner: InhabitantKey | "session",
+    taskId: string,
+  ): void {
     const lease = this.leases.get(resourceId);
     if (lease?.owner === owner && lease.taskId === taskId)
       this.leases.delete(resourceId);

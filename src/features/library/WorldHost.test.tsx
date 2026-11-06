@@ -885,3 +885,56 @@ it("R5 can retry a failed resident runtime without reloading personal data", asy
   expect(document.querySelectorAll("canvas")).toHaveLength(1);
   log.mockRestore();
 });
+
+it("F2 reconciles confirmed sessions on the same resident Canvas, including while paused", async () => {
+  const runtime = { ...createRuntime(), applyWorldSession: vi.fn() };
+  const runtimeFactory = vi.fn(() => Promise.resolve(runtime));
+  const session = {
+    sessionId: "session-fiction",
+    entryId: "book-fiction",
+    instanceId: "reading-book:book-fiction",
+    kind: "reading" as const,
+    entryType: "book" as const,
+    status: "active" as const,
+    revision: 1,
+  };
+  const view = render(
+    <WorldHost
+      runtimeFactory={runtimeFactory}
+      worldSessionActivity={session}
+      active
+    />,
+  );
+  await screen.findByText("Ambiente 3D em execução.");
+  const canvas = view.container.querySelector("canvas");
+  expect(runtime.applyWorldSession).toHaveBeenLastCalledWith(session);
+  const paused = { ...session, status: "paused" as const, revision: 2 };
+  view.rerender(
+    <WorldHost
+      runtimeFactory={runtimeFactory}
+      worldSessionActivity={paused}
+      active
+    />,
+  );
+  expect(runtime.applyWorldSession).toHaveBeenLastCalledWith(paused);
+  view.rerender(
+    <WorldHost
+      runtimeFactory={runtimeFactory}
+      worldSessionActivity={null}
+      active={false}
+    />,
+  );
+  expect(runtime.applyWorldSession).toHaveBeenLastCalledWith(null);
+  view.rerender(
+    <WorldHost
+      runtimeFactory={runtimeFactory}
+      worldSessionActivity={null}
+      active
+    />,
+  );
+  expect(view.container.querySelector("canvas")).toBe(canvas);
+  expect(runtimeFactory).toHaveBeenCalledOnce();
+  expect(runtime.dispose).not.toHaveBeenCalled();
+  view.unmount();
+  expect(runtime.dispose).toHaveBeenCalledOnce();
+});

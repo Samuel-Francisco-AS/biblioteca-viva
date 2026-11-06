@@ -29,10 +29,17 @@ export function createLivingScrollVisuals(
   building: Group,
   scrolls: readonly LivingScroll[],
   obstacleRoots: readonly Object3D[] = [building],
+  surfaceAvailable: (furnitureId: string) => boolean = () => true,
 ) {
   if (scrolls.length === 0)
-    return { selectables: [], candidates: () => [], update: () => {} };
-  const obstacles = obstacleRoots.flatMap(flightObstacles);
+    return {
+      selectables: [],
+      occupiedSurfaces: () => [],
+      hasFlight: () => false,
+      candidates: () => [],
+      update: () => {},
+    };
+  const obstacles = obstacleRoots.flatMap((root) => flightObstacles(root));
   const root = new Group();
   root.name = "living-scrolls";
   building.add(root);
@@ -122,6 +129,12 @@ export function createLivingScrollVisuals(
   });
   return {
     selectables,
+    hasFlight: () => selectables.some((s) => s.flight !== null),
+    occupiedSurfaces: () =>
+      selectables.flatMap((s) => [
+        s.rest.furnitureId,
+        ...(s.flight ? [s.flight.destination.furnitureId] : []),
+      ]),
     candidates: () =>
       selectables
         .filter(
@@ -159,7 +172,7 @@ export function createLivingScrollVisuals(
               ]),
           );
           for (const destination of SCROLL_SURFACES.filter(
-            (p) => !occupied.has(p.id),
+            (p) => !occupied.has(p.id) && surfaceAvailable(p.furnitureId),
           )) {
             const points = planScrollFlight(s.rest, destination, obstacles);
             if (points) {

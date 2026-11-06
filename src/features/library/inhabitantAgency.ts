@@ -51,6 +51,11 @@ interface Task {
   readonly label: string;
   readonly objectId?: string;
   readonly nightLampId?: string;
+  readonly sessionReading?: {
+    readonly sessionId: string;
+    readonly bookId: string;
+    readonly source: Position;
+  };
   readonly interaction?: {
     readonly source: Position;
     readonly approach: Position;
@@ -142,6 +147,12 @@ export interface AgencyOptions {
   readonly seed?: number;
   readonly onEnvironmentAction?: (key: InhabitantKey, objectId: string) => void;
   readonly nightLighting?: NightLightingSession;
+  readonly physicalObstacles?: () => readonly NavigationObstacle[];
+  readonly sessionReadingCandidate?: () => {
+    readonly id: string;
+    readonly sessionId: string;
+    readonly source: Position;
+  } | null;
   readonly scrollCandidates?: () => readonly {
     readonly id: string;
     readonly source: Position;
@@ -264,7 +275,7 @@ export class InhabitantAgency {
   private socialAfter = 12;
   private cooperation = 0;
   private readonly conversation = new Set<InhabitantKey>();
-  private readonly interactions = new InteractionCoordinator();
+  readonly interactions = new InteractionCoordinator();
   private narrativeBonds: readonly NarrativeBond[] = [];
   private readonly now: () => number;
   private readonly hour: () => number;
@@ -470,7 +481,11 @@ export class InhabitantAgency {
     this.mode = mode;
     if (mode !== "running") {
       for (const agent of this.agents) {
-        if (agent.task?.interaction || agent.task?.nightLampId) {
+        if (
+          agent.task?.interaction ||
+          agent.task?.nightLampId ||
+          agent.task?.sessionReading
+        ) {
           this.releaseInteraction(agent);
           agent.task = null;
           agent.route = [];
@@ -536,6 +551,7 @@ export class InhabitantAgency {
     this.logic += dt;
     if (this.logic < 0.25) return;
     this.logic %= 0.25;
+    this.reconcileSessionReader();
     this.updateMeeting();
     for (const a of this.agents) {
       if (!a.available || a.encounter || this.conversation.has(a.key)) continue;
@@ -563,6 +579,9 @@ export class InhabitantAgency {
     }
     this.tryMeeting();
     this.publish();
+  }
+  get interactionTime() {
+    return this.elapsed * 1000;
   }
   private magicEpisode = -1;
   private pendingMagic: { episode: number; until: number } | null = null;
@@ -626,7 +645,7 @@ export class InhabitantAgency {
       action === "magic" ? e.magic : action === "work" ? e.work : e.travel;
     if (!this.navigation.clear(a, a, radius, this.occupied(a))) return false;
     this.cancelMeeting("Encontro adiado para respeitar a atenção manual.", a);
-    if (a.task?.interaction || a.task?.nightLampId) {
+    if (a.task?.interaction || a.task?.nightLampId || a.task?.sessionReading) {
       this.releaseInteraction(a);
       a.task = null;
     }
@@ -660,7 +679,11 @@ export class InhabitantAgency {
     );
     for (const a of this.agents) {
       if (wanted.has(a.key)) {
-        if (a.task?.interaction || a.task?.nightLampId) {
+        if (
+          a.task?.interaction ||
+          a.task?.nightLampId ||
+          a.task?.sessionReading
+        ) {
           this.releaseInteraction(a);
           a.task = null;
           a.route = [];
@@ -761,7 +784,11 @@ export class InhabitantAgency {
         const relevant =
           roomAt(a) === room || (e.type === "discovered" && a.key === "lua");
         if (!relevant) continue;
-        if (a.task?.interaction || a.task?.nightLampId) {
+        if (
+          a.task?.interaction ||
+          a.task?.nightLampId ||
+          a.task?.sessionReading
+        ) {
           this.releaseInteraction(a);
           a.task = null;
         }
@@ -810,7 +837,7 @@ export class InhabitantAgency {
   ): NavigationObstacle[] {
     return this.agents
       .filter((b) => b !== a && b.available)
-      .flatMap((b) => {
+      .flatMap<NavigationObstacle>((b) => {
         const e = INHABITANT_ENVELOPES[b.key];
         const radius =
           (b.action === "magic"
@@ -829,7 +856,8 @@ export class InhabitantAgency {
           minZ: p.z - radius,
           maxZ: p.z + radius,
         }));
-      });
+      })
+      .concat(this.options.physicalObstacles?.() ?? []);
   }
   private go(a: Agent, destination: Position) {
     const route = this.navigation.route(
@@ -937,6 +965,20 @@ export class InhabitantAgency {
           ? "magic"
           : "work";
     a.activity = this.taskDescription(a, task);
+    if (task.sessionReading) {
+      a.interactionState = "reading";
+      a.action = "work";
+      const descriptions = {
+        samael: "Inclina-se atento ao volume encantado, em uma pausa do café.",
+        aryn: "Ajusta os óculos e examina as páginas do livro desperto.",
+        ytha: "Acompanha a leitura com as asas em repouso, preservando espaço.",
+        lua: "Consulta o livro desperto e compara seus gestos com o próprio grimório.",
+      };
+      a.activity = descriptions[a.key];
+      a.until = this.elapsed + 14 + preferences[a.key].reading;
+      a.history = [task.id, ...a.history].slice(0, 6);
+      return;
+    }
     if (task.nightLampId && a.interactionTaskId) {
       const lamp = this.options.nightLighting
         ?.pending()
@@ -1153,6 +1195,97 @@ export class InhabitantAgency {
     }
     return false;
   }
+  private reconcileSessionReader() {
+    const candidate = this.options.sessionReadingCandidate?.();
+    for (const a of this.agents) {
+      if (!a.task?.sessionReading) continue;
+      if (
+        !a.available ||
+        a.task.sessionReading.sessionId !== candidate?.sessionId
+      ) {
+        this.stop(
+          a,
+          "Encerra a leitura; o livro conserva sua devolução independente.",
+          3,
+        );
+        a.task = null;
+      }
+    }
+    if (!candidate || this.agents.some((a) => a.task?.sessionReading)) return;
+    const taskId = `read-session:${candidate.sessionId}`;
+    const actors = this.agents
+      .filter(
+        (a) =>
+          a.available &&
+          !a.manual &&
+          !a.encounter &&
+          !this.conversation.has(a.key) &&
+          !a.interactionTaskId &&
+          a.task?.kind !== "experiment" &&
+          a.state !== "recover" &&
+          (a.state === "idle" ||
+            a.state === "work" ||
+            a.state === "navigate") &&
+          !a.history.includes(taskId),
+      )
+      .sort(
+        (a, b) =>
+          preferences[b.key].reading -
+          preferences[a.key].reading +
+          (distance(a, candidate.source) - distance(b, candidate.source)) * 0.2,
+      );
+    for (const a of actors) {
+      const envelope = INHABITANT_ENVELOPES[a.key];
+      const positions = [
+        ...this.navigation.nodes,
+        { x: candidate.source.x, z: candidate.source.z - 1.4 },
+      ].filter(
+        (p) =>
+          roomAt(p) === roomAt(candidate.source) &&
+          distance(p, candidate.source) < 1.65 &&
+          distance(p, candidate.source) > 0.85 &&
+          this.navigation.clear(p, p, envelope.work, this.occupied(a, true)),
+      );
+      const resource = `reader:${candidate.id}`;
+      for (const position of positions.sort(
+        (p, q) => distance(a, p) - distance(a, q),
+      )) {
+        if (
+          !this.interactions.reserve(
+            resource,
+            a.key,
+            taskId,
+            this.interactionTime,
+          )
+        )
+          continue;
+        if (this.go(a, position)) {
+          a.task = {
+            id: taskId,
+            kind: "reading",
+            position,
+            facing: Math.atan2(
+              candidate.source.x - position.x,
+              candidate.source.z - position.z,
+            ),
+            label: "Leitura compartilhada",
+            objectId: resource,
+            sessionReading: {
+              sessionId: candidate.sessionId,
+              bookId: candidate.id,
+              source: candidate.source,
+            },
+          };
+          a.interactionTaskId = taskId;
+          a.interactionState = "approaching";
+          a.activity =
+            "Percebe o livro desperto e aproxima-se para acompanhar a leitura.";
+          return;
+        }
+        this.interactions.release(resource, a.key, taskId);
+      }
+    }
+  }
   private chooseTask(a: Agent) {
     if (this.chooseNightTask(a)) return;
     if (this.chooseScrollTask(a)) return;
@@ -1214,6 +1347,15 @@ export class InhabitantAgency {
   }
   private finishWork(a: Agent) {
     a.taskCount++;
+    if (a.task?.sessionReading) {
+      this.stop(
+        a,
+        "Conclui sua visita de leitura e deixa o livro em segurança.",
+        5,
+      );
+      a.task = null;
+      return;
+    }
     if (a.task?.nightLampId) {
       const lampId = a.task.nightLampId;
       const valid =
@@ -1387,6 +1529,7 @@ export class InhabitantAgency {
       !this.conversation.has(a.key) &&
       !a.encounter &&
       !a.task?.nightLampId &&
+      !a.task?.sessionReading &&
       (!a.interactionState || a.interactionState === "approaching") &&
       (a.state === "idle" ||
         (a.state === "work" && this.elapsed - a.started >= 8) ||
@@ -1693,7 +1836,7 @@ export class InhabitantAgency {
       action: a.action,
       available: a.available,
       interactionObjectId: a.interactionState
-        ? (a.task?.objectId ?? null)
+        ? (a.task?.sessionReading?.bookId ?? a.task?.objectId ?? null)
         : null,
       interactionState: a.interactionState,
       room: roomAt(a)?.replace("room-", "Cômodo ").toUpperCase() ?? "Passagem",

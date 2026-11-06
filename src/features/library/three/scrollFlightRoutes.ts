@@ -7,6 +7,7 @@ import {
   Mesh,
   Ray,
   Vector3,
+  TorusGeometry,
   type Object3D,
 } from "three";
 import {
@@ -23,11 +24,17 @@ export const SCROLL_SURFACES = LIBRARY_FURNISHING.flatMap((p) =>
   })),
 );
 export type ScrollSurface = (typeof SCROLL_SURFACES)[number];
-export function flightObstacles(root: Object3D): readonly Box3[] {
+export function flightObstacles(
+  root: Object3D,
+  clearance = new Vector3(0.2, 0.015, 0.2),
+  exclude: (object: Object3D) => boolean = () => false,
+  hollowRings = false,
+): readonly Box3[] {
   const boxes: Box3[] = [];
   root.updateMatrixWorld(true);
   root.traverse((o) => {
     if (
+      exclude(o) ||
       isCarriedProp(o) ||
       !(o instanceof Mesh) ||
       !(o.geometry instanceof BufferGeometry)
@@ -36,13 +43,28 @@ export function flightObstacles(root: Object3D): readonly Box3[] {
     o.geometry.computeBoundingBox();
     const b = o.geometry.boundingBox;
     if (!b) return;
-    const add = (m: Matrix4) =>
-      boxes.push(
-        b
-          .clone()
-          .applyMatrix4(m)
-          .expandByVector(new Vector3(0.2, 0.015, 0.2)),
-      );
+    const pieces = [b];
+    if (hollowRings && o.geometry instanceof TorusGeometry) {
+      pieces.length = 0;
+      const { radius, tube } = o.geometry.parameters;
+      // Sixty-four conservative arc envelopes preserve the real central opening.
+      for (let i = 0; i < 64; i++) {
+        const a = (i * Math.PI) / 32,
+          c = ((i + 1) * Math.PI) / 32;
+        pieces.push(
+          new Box3()
+            .setFromPoints([
+              new Vector3(Math.cos(a) * radius, Math.sin(a) * radius, 0),
+              new Vector3(Math.cos(c) * radius, Math.sin(c) * radius, 0),
+            ])
+            .expandByScalar(tube),
+        );
+      }
+    }
+    const add = (m: Matrix4) => {
+      for (const piece of pieces)
+        boxes.push(piece.clone().applyMatrix4(m).expandByVector(clearance));
+    };
     if (o instanceof InstancedMesh)
       for (let i = 0; i < o.count; i++) {
         const m = new Matrix4();
@@ -61,6 +83,7 @@ export function clearFlight(
     const a = points[i];
     const direction = b.clone().sub(a);
     const length = direction.length();
+    if (length < 1e-9) return boxes.every((box) => !box.containsPoint(a));
     const ray = new Ray(a, direction.normalize());
     return boxes.every((box) => {
       if (box.containsPoint(a) || box.containsPoint(b)) return false;

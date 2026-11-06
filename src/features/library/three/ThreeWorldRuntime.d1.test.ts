@@ -956,3 +956,74 @@ it("D picks the canonical scroll through real pointer events and discards it on 
   ).toBe(false);
   replacement.dispose();
 });
+
+it("F2 moves the original selectable, tracks highlight bounds and cancels after context loss", () => {
+  vi.stubGlobal("ResizeObserver", TestResizeObserver);
+  const renderer = new TestRenderer();
+  const request = vi
+    .fn<(callback: FrameRequestCallback) => number>()
+    .mockReturnValue(1);
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    libraryWorldSnapshot: snapshot(),
+    livingSession: new LivingSession(),
+    frameScheduler: { request, cancel: vi.fn() },
+  });
+  const session = {
+    sessionId: "session-fiction",
+    entryId: "book-10",
+    instanceId: "reading-book:book-10",
+    kind: "reading" as const,
+    entryType: "book" as const,
+    status: "active" as const,
+    revision: 1,
+  };
+  runtime.applyWorldSession(session);
+  runtime.mount(host());
+  runtime.start();
+  const scene = renderer.render.mock.calls[0][0];
+  let book: Object3D | undefined;
+  scene.traverse((o) => {
+    if (o.userData.readingAreaBookInstanceId === session.instanceId) book = o;
+  });
+  if (!book) throw new Error("Missing original book");
+  const original = book,
+    home = book.position.clone(),
+    canvas = renderer.domElement;
+  runtime.selectObject(session.instanceId);
+  const frame = request.mock.calls.at(-1)![0];
+  for (let t = 0; t <= 35_000; t += 50) frame(t);
+  expect(book.position.equals(home)).toBe(false);
+  expect(canvas.dataset.selectedObject).toBe(session.instanceId);
+  expect(
+    runtime.getSelectableObjects().find((o) => o.id === session.instanceId)
+      ?.entryId,
+  ).toBe(session.entryId);
+  const highlight = scene.getObjectByName("f1-c-selection-highlight");
+  expect(highlight).toBeInstanceOf(Box3Helper);
+  if (highlight instanceof Box3Helper)
+    expect(
+      highlight.box
+        .getCenter(new Vector3())
+        .distanceTo(new Box3().setFromObject(book).getCenter(new Vector3())),
+    ).toBeLessThan(0.01);
+  runtime.pause();
+  const resting = book.position.clone();
+  frame(36_000);
+  expect(book.position.equals(resting)).toBe(true);
+  runtime.applyWorldSession(null);
+  runtime.resume();
+  for (let t = 37_000; t <= 75_000; t += 50) frame(t);
+  expect(book).toBe(original);
+  expect(book.position.equals(home)).toBe(true);
+  expect(renderer.domElement).toBe(canvas);
+  renderer.domElement.dispatchEvent(
+    new Event("webglcontextlost", { cancelable: true }),
+  );
+  const renders = renderer.render.mock.calls.length;
+  runtime.applyWorldSession(session);
+  frame(80_000);
+  expect(renderer.render).toHaveBeenCalledTimes(renders);
+  runtime.dispose();
+  expect(renderer.dispose).toHaveBeenCalledOnce();
+});

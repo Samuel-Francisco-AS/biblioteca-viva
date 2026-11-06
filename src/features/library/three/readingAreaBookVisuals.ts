@@ -17,6 +17,7 @@ export interface ReadingAreaBookVisual {
   node: Group;
   placement: ReadingAreaBookPlacement;
   representation: ProceduralBookVolume;
+  sessionControlled?: boolean;
 }
 
 export interface ReadingAreaBookReconciliation {
@@ -124,8 +125,10 @@ export function reconcileReadingAreaBookVisuals(
         `O layout aponta para estante ausente: ${placement.hostInstanceId}.`,
       );
     }
-    host.node.add(current.node);
-    current.node.position.set(...placement.position);
+    if (!current.sessionControlled) {
+      host.node.add(current.node);
+      current.node.position.set(...placement.position);
+    }
     current.placement = placement;
     next.set(book.instanceId, current);
   }

@@ -1,3 +1,5 @@
+> **Próximos passos F2 — 06/11/2026:** núcleo físico F2A candidato na #37; completar manipulação por habitante e leitura sentada, depois F2B (estudo/ocupação exclusiva) e F2C (trabalho/treino/entretenimento), publicando cada checkpoint autorizado. [Limites e evidências](BF-5_5F_RELATORIO.md). G permanece reservado, não iniciado. Preservar base E e reconciliar F1/main somente na futura integração autorizada.
+
 > **BF-5.5F — checkpoint F1:** projeção real de sessões e resposta ambiental inicial; animações de livros/habitantes e provas de concorrência planejadas para F2. [Relatório](BF-5_5F_RELATORIO.md). Nenhuma PR A–E foi integrada automaticamente; gate físico permanece G.
 
 > **BF-5.5E em candidata — 05/11/2026:** mobília reformulada e integrada aos contratos B/C/D; [relatório](BF-5_5E_RELATORIO.md). Próximos trabalhos previstos: F, resposta a sessões reais; G, integração e gate artístico/físico no Moto G06. **F/G não iniciadas e sem autorização automática por esta entrega.** Manter revisão da stack #32–#35 e da candidata E, sem merge ou encerramento implícito. As indicações antigas de E como ainda não implementada são cronologia anterior.

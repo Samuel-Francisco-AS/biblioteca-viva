@@ -1,3 +1,10 @@
+## 2026-11-06 — BF-5.5F2A (candidata parcial)
+
+- Livro da sessão confirmada conserva identidade e seleção durante retirada, voo, pouso, abertura de capa e retorno à estante; pausa e conclusão reconciliadas.
+- Habitante disponível pode visitar o livro por rota válida e executar gesto de leitura em pé, com prioridade contextual e reserva exclusiva da visita.
+- Coordenação com pergaminhos e colisões reais; sem clones, schema novo ou dependência de WebGL para a sessão convencional.
+- Mãos/leitura sentada, estudo F2B e respostas F2C continuam pendentes. [Relatório](docs/BF-5_5F_RELATORIO.md). Sem aceite físico, merge ou CI global verde.
+
 ## 2026-11-05 — BF-5.5F, fundação confirmada de sessões (F1)
 
 - Contrato de sessão ativa/pausada sem dados pessoais no renderer; reconciliação por `SessionChanged`, reabertura e mudança de abas.

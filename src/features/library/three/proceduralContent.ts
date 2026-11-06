@@ -52,6 +52,7 @@ export interface ProceduralBookVolume {
   readonly identity: ProceduralBookVolumeIdentity;
   readonly root: Group;
   readonly variant: ProceduralBookVolumeVariant;
+  readonly coverHinge: Group;
 }
 
 export interface ProceduralBookVolumeDimensions {
@@ -527,11 +528,19 @@ export function createProceduralBookVolume(
     spec.height - pageReveal * 2,
     spec.depth - 0.035,
   );
+  const coverHinge = new Group();
+  coverHinge.name = "book-cover-hinge";
+  coverHinge.position.set(
+    -spec.width / 2 + coverThickness / 2,
+    0,
+    spec.depth / 2 - 0.012,
+  );
+  root.add(coverHinge);
   for (const x of [
     -spec.width / 2 + coverThickness / 2,
     spec.width / 2 - coverThickness / 2,
-  ])
-    piece(
+  ]) {
+    const cover = piece(
       "book-cover",
       coverMaterial,
       x,
@@ -541,6 +550,11 @@ export function createProceduralBookVolume(
       spec.height,
       spec.depth,
     );
+    if (x < 0) {
+      cover.position.sub(coverHinge.position);
+      coverHinge.add(cover);
+    }
+  }
   piece(
     "book-rounded-spine",
     coverMaterial,
@@ -583,5 +597,5 @@ export function createProceduralBookVolume(
     0.002,
   );
 
-  return { identity, root, variant };
+  return { identity, root, variant, coverHinge };
 }

@@ -1,3 +1,4 @@
+import { createSessionBookVisuals } from "./sessionBookVisuals";
 import { createAmbientMagic } from "./ambientMagic";
 import { createLivingScrollVisuals } from "./livingScrollVisuals";
 import { createNarrativeVisuals } from "./narrativeVisuals";
@@ -485,6 +486,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private unsubscribeLivingEvents?: () => void;
   private sceneProps?: ReturnType<typeof createInhabitantSceneProps>;
   private worldSessionActivity: WorldSessionActivity | null = null;
+  private sessionBooks?: ReturnType<typeof createSessionBookVisuals>;
   private sessionVisuals?: ReturnType<typeof createSessionWorldVisuals>;
   constructor(dependencies: ThreeWorldRuntimeDependencies = {}) {
     this.inhabitantLoader = dependencies.inhabitantLoader;
@@ -691,12 +693,21 @@ export class ThreeWorldRuntime implements WorldRuntime {
           ...proceduralSelectables.map((s) => s.root),
           ...readingAreaBookVisuals.map((v) => v.node),
         ]);
-        this.scrollVisuals = createLivingScrollVisuals(building, this.scrolls, [
+        this.scrollVisuals = createLivingScrollVisuals(
           building,
-          records.root,
-          ...proceduralSelectables.map((s) => s.root),
-          ...readingAreaBookVisuals.map((v) => v.node),
-        ]);
+          this.scrolls,
+          [
+            building,
+            records.root,
+            ...proceduralSelectables.map((s) => s.root),
+            ...readingAreaBookVisuals.map((v) => v.node),
+          ],
+          (furnitureId) =>
+            this.sessionBooks?.snapshot().state !== "transport" &&
+            !this.agency?.interactions
+              .snapshot()
+              .some((l) => l.resourceId === `surface:${furnitureId}`),
+        );
         this.ambientMagic = createAmbientMagic(building, (episode) =>
           this.agency?.reactToMagic(episode),
         );
@@ -706,12 +717,29 @@ export class ThreeWorldRuntime implements WorldRuntime {
             now: () => this.agencyClock,
             hour: () => new Date().getHours(),
             nightLighting: this.nightLighting,
+            physicalObstacles: () =>
+              this.sessionBooks?.navigationObstacles() ?? [],
+            sessionReadingCandidate: () =>
+              this.sessionBooks?.candidate() ?? null,
             scrollCandidates: () => this.scrollVisuals?.candidates() ?? [],
             onEnvironmentAction: (key, objectId) => {
               this.livingSession?.actFromInhabitant(key, objectId);
             },
           },
         );
+        this.sessionBooks = createSessionBookVisuals({
+          books: () => this.readingAreaBookVisuals,
+          obstacleRoots: [
+            building,
+            records.root,
+            ...proceduralSelectables.map((s) => s.root),
+          ],
+          interactions: this.agency.interactions,
+          now: () => this.agency?.interactionTime ?? 0,
+          canDepart: () => !this.scrollVisuals?.hasFlight(),
+          occupiedSurfaces: () => this.scrollVisuals?.occupiedSurfaces() ?? [],
+        });
+        this.sessionBooks.apply(this.worldSessionActivity);
         if (this.continuity) {
           this.agency.restoreContinuity(this.continuity);
         }
@@ -987,6 +1015,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (this.isTerminal()) return;
     this.worldSessionActivity = activity;
     this.sessionVisuals?.apply(activity);
+    this.sessionBooks?.apply(activity);
   }
 
   applyNarrative(snapshot: NarrativeSnapshot): void {
@@ -1054,6 +1083,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
       variant,
     );
     if (result === "unchanged") return result;
+
+    this.sessionBooks?.releaseForLayoutChange();
 
     const reconciliation = reconcileReadingAreaBookVisuals(
       composition,
@@ -1260,6 +1291,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
           actor.root.userData.loadState === "ready",
         );
       this.agencyClock += delta * 1000;
+      this.sessionBooks?.update(delta, reduced, this.agency?.getPoses() ?? []);
       this.agency?.update();
       this.checkpointInhabitants(false);
       if (this.agency) this.inhabitants?.drive(this.agency.getPoses());
@@ -1276,7 +1308,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
         this.agency?.getPoses() ?? [],
         (id) => this.inhabitants?.getCarryAnchor(id) ?? null,
       );
-      if (this.selection?.id.startsWith("scroll:"))
+      if (
+        this.selection?.id.startsWith("scroll:") ||
+        this.selection?.id.startsWith("reading-book:")
+      )
         mountedWorld.getInteraction()?.updateHighlightBounds();
       if (this.agency)
         this.sceneProps?.update(
@@ -1439,6 +1474,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const mountedWorld = this.mountedWorld;
     this.mountedWorld = undefined;
     this.navigation = undefined;
+    this.sessionBooks?.dispose();
+    this.sessionBooks = undefined;
     this.agency?.setMode("unavailable");
     this.unsubscribeAgency?.();
     this.unsubscribeLivingEvents?.();
