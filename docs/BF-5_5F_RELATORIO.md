@@ -4,7 +4,7 @@
 
 ## F2A — Livro original em movimento (06/11/2026)
 
-**Checkpoint funcional candidato; entrega F2 parcial.** O núcleo de leitura física e uma visita de leitura em pé estão implementados. Recolhimento nas mãos, deslocamento até assento e leitura sentada **não estão implementados**. F2B/F2C permanecem pendentes; nenhum gate G iniciado.
+**Checkpoint funcional publicado em `43d2c822eccb00113491b285fef4408183f05ff8`; entrega F2 parcial.** O núcleo de leitura física e uma visita de leitura em pé estão implementados. Recolhimento nas mãos, deslocamento até assento e leitura sentada **não estão implementados**. F2B/F2C permanecem pendentes; nenhum gate G iniciado.
 
 ### Propriedade e percurso
 
@@ -41,11 +41,25 @@ CI F1 [42153944878](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actio
 
 A fundação F1 também existe na main por histórico independente. **Não houve merge/cherry-pick da main.** Na integração futura da stack, comparar os contratos/projeção F1 equivalentes e reconciliar o conteúdo preservando a cadeia #32–#37; essa nota não autoriza merge nem mudança de base.
 
+### Revisão e continuidade após o checkpoint publicado
+
+- **Recuperação de autoridade:** se livro ou superfície deixam de pertencer à tarefa, o controlador suspende pose/abertura e retira a oportunidade da agência. O volume continua sendo obstáculo. Aguarda recuperar ambas as reservas sem roubar a concorrente; depois fecha e retorna continuamente, liberando somente seus próprios leases. Quatro regressões cobrem perda de cada recurso no transporte e com o livro aberto, conclusão durante o bloqueio e devolução sem salto.
+- **Correção F1 de trabalho:** o sinal estava sobre a ilha de estar/lareira E (`bf4-prop:15`); agora usa a bancada de ofício E (`bf4-prop:16`), com regressão de posição/pausa/conclusão. Não equivale a ferramentas animadas ou F2C entregue.
+- **Validação desta revisão:** 27 testes PASS em quatro arquivos (controlador do livro, estações, agência de leitura e runtime); tipos globais, ESLint e Prettier dos quatro arquivos alterados, revisão do diff e `git diff --check` PASS.
+- **Rodada ampla local do checkpoint `43d2c82`:** build PASS; 871 testes PASS e 1 FAIL em 137 arquivos (872 testes). A falha foi timeout de 5.000 ms no cenário preexistente de encontros autônomos/reparação em `inhabitantAgency.test.ts`, duração observada 5.101 ms. Não houve aumento de timeout, retry amplo ou atribuição automática à F2A. O mesmo conjunto unitário passou na CI desse commit.
+- **CI do checkpoint `43d2c82`:** [42157945191](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/42157945191), gates estáticos/unitários/áudio/build/performance SUCCESS; E2E **31 PASS / 35 FAIL** (16/17 e 15/18). Comparação dos logs com F1: mesmos nomes de cenários reprovados, sem novo bloqueante de integração de sessões demonstrado. Não há CI global verde. Resultado desse SHA não antecipa a CI do commit de revisão.
+
+### F2B — Experimento de assento não promovido
+
+Investigados pivôs rígidos de joelhos/quadril/roupa nas fontes Blender, preservando os oito clips, e afastamento da cadeira C em 30 cm. Testes carregaram os GLBs reais, verificaram apoio por raycast sob a pelve e colisão de triângulos contra a mobília. Na última rodada, **Lua passou somente na pose final; Aryn, Samael e Ytha falharam** por interseções de braço/objeto/roupa. Uma pose final isolada não prova aproximação, sentar ou levantar. Não foram integrados estados de assento à agência nem implementada ocupação de cadeira.
+
+O experimento foi preservado em patch binário e fontes de teste fora do checkout; seus GLBs, fonte geradora e alteração de cadeira foram retirados da candidata. Os assets produtivos e envelopes de asas permanecem os do checkpoint publicado. A retomada precisa resolver materialidade das roupas/objetos e validar a sequência física completa antes de integrar reservas e estudo. Nenhuma asserção ou envelope foi reduzido para aprovar a pose. **F2B continua não entregue; F2C não foi iniciado.**
+
 ### Pendências por checkpoint
 
 - **F2A:** ampliar a encenação de leitura para recolhimento/anexação às mãos e assento, com contato e deslocamento comprovados; avaliar visualmente a abertura/ritmo do livro e os gestos. Não declarar a leitura sentada entregue.
 - **F2B — não implementado:** cadeira com ocupação exclusiva, aproximação/sentar/escrever/levantar, estudo distinto, cancelamento e liberação.
-- **F2C — não implementado:** respostas físicas próprias de trabalho/treino e atmosfera de entretenimento além do sinal F1. A bancada correta de trabalho é `bf4-prop:16`; o mapeamento F1 ainda aponta para a ilha de estar `bf4-prop:15`, pendência para F2C.
+- **F2C — não implementado:** respostas físicas próprias de trabalho/treino e atmosfera de entretenimento além do sinal F1. O sinal F1 de trabalho foi corrigido para a bancada `bf4-prop:16`; isso não implementa as ações físicas F2C.
 - **G — não iniciado:** aceite artístico/físico, ergonomia e fluidez no Moto G06 continuam reservados.
 
 ## F1 — Entrega direta

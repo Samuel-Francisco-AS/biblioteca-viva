@@ -43,6 +43,7 @@ interface Journey {
   homePosition: Vector3;
   homeRotation: Quaternion;
   obstacles: readonly Box3[];
+  recovering: boolean;
 }
 function belongsTo(object: Object3D, root: Object3D): boolean {
   for (let p: Object3D | null = object; p; p = p.parent)
@@ -244,6 +245,7 @@ export function createSessionBookVisuals(options: {
       homePosition: visual.node.position.clone(),
       homeRotation: visual.node.quaternion.clone(),
       obstacles,
+      recovering: false,
     };
     visual.sessionControlled = true;
   }
@@ -283,6 +285,7 @@ export function createSessionBookVisuals(options: {
     candidate() {
       if (
         !journey ||
+        journey.recovering ||
         !confirmed ||
         confirmed.status !== "active" ||
         journey.task !== `session:${confirmed.sessionId}` ||
@@ -332,19 +335,26 @@ export function createSessionBookVisuals(options: {
       if (!j) return;
       const dt = Math.min(0.05, Math.max(0, delta));
       // The same coordinator clock as the agency; background time does not expire a physical owner.
-      options.interactions.reserve(
+      const bookLease = options.interactions.reserve(
         j.visual.book.instanceId,
         "session",
         j.task,
         options.now(),
       );
-      options.interactions.reserve(
+      const surfaceLease = options.interactions.reserve(
         SESSION_READING_RESOURCE,
         "session",
         j.task,
         options.now(),
       );
+      if (!bookLease || !surfaceLease) {
+        // Never animate without both authorities. Keep the physical envelope
+        // in navigation, withdraw the reader and wait for a safe return.
+        j.recovering = true;
+        return;
+      }
       const returning =
+        j.recovering ||
         reduced ||
         !confirmed ||
         confirmed.kind !== "reading" ||

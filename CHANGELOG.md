@@ -2,6 +2,7 @@
 
 - Livro da sessão confirmada conserva identidade e seleção durante retirada, voo, pouso, abertura de capa e retorno à estante; pausa e conclusão reconciliadas.
 - Habitante disponível pode visitar o livro por rota válida e executar gesto de leitura em pé, com prioridade contextual e reserva exclusiva da visita.
+- Recuperação após perda de reserva sem disputar transformação; sinal de trabalho corrigido para a bancada de ofício E.
 - Coordenação com pergaminhos e colisões reais; sem clones, schema novo ou dependência de WebGL para a sessão convencional.
 - Mãos/leitura sentada, estudo F2B e respostas F2C continuam pendentes. [Relatório](docs/BF-5_5F_RELATORIO.md). Sem aceite físico, merge ou CI global verde.
 

@@ -20,7 +20,7 @@ const STATIONS = {
   viewing: "bf4-prop:6",
   study: "bf4-prop:9",
   physical_activity: "bf4-prop:14",
-  work: "bf4-prop:15",
+  work: "bf4-prop:16",
 } as const satisfies Record<WorldSessionActivity["kind"], string>;
 
 const COLORS = {

@@ -4,6 +4,10 @@ import { describe, expect, it } from "vitest";
 import type { WorldSessionActivity } from "../../../contracts/worldSessionActivity";
 import { disposeObjectTree } from "./referenceScene";
 import { createSessionWorldVisuals } from "./sessionWorldVisuals";
+import {
+  LIBRARY_FURNISHING,
+  FURNITURE_DIMENSIONS,
+} from "./libraryFurnishingLayout";
 
 const ENTRY_TYPES = {
   reading: "book",
@@ -29,6 +33,24 @@ function session(
 }
 
 describe("BF-5.5F confirmed activity stage", () => {
+  it("places confirmed work at the enterprise workbench, not the lounge hearth", () => {
+    const building = new Group();
+    const visuals = createSessionWorldVisuals(building);
+    const workbench = LIBRARY_FURNISHING.find(
+      (p) => p.roomId === "room-e" && p.kind === "cabinet",
+    )!;
+    visuals.apply(session("work"));
+    expect(visuals.root.position.toArray()).toEqual([
+      workbench.x,
+      FURNITURE_DIMENSIONS.cabinet.top + 0.1,
+      workbench.z,
+    ]);
+    visuals.apply(session("work", "paused"));
+    expect(visuals.root.position.x).toBe(workbench.x);
+    visuals.apply(null);
+    expect(visuals.root.visible).toBe(false);
+    disposeObjectTree(building);
+  });
   it("uses existing furniture, pauses and disposes once", () => {
     const building = new Group();
     const visuals = createSessionWorldVisuals(building);

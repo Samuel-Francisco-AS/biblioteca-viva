@@ -70,6 +70,7 @@ function setup(count = 3, occupiedSurfaces = () => [] as string[]) {
     interactions,
     controller,
     step,
+    now: () => time,
     dispose() {
       controller.dispose();
       disposeObjectTree(scene);
@@ -77,6 +78,47 @@ function setup(count = 3, occupiedSurfaces = () => [] as string[]) {
   };
 }
 describe("BF-5.5F2A original session book", () => {
+  it.each([
+    [3, activity.instanceId],
+    [3, SESSION_READING_RESOURCE],
+    [40, activity.instanceId],
+    [40, SESSION_READING_RESOURCE],
+  ] as const)(
+    "recovers a lost lease after %s seconds (%s) without moving or stealing ownership",
+    (seconds, resource) => {
+      const f = setup();
+      const visual = f.visuals[2];
+      const home = visual.node.position.clone();
+      f.controller.apply(activity);
+      f.step(seconds);
+      const before = visual.node.position.clone();
+      const opening = f.controller.snapshot().opening;
+      f.interactions.release(
+        resource,
+        "session",
+        `session:${activity.sessionId}`,
+      );
+      expect(
+        f.interactions.reserve(resource, "lua", "other-interaction", f.now()),
+      ).not.toBeNull();
+      f.step(1);
+      expect(visual.node.position.equals(before)).toBe(true);
+      expect(f.controller.snapshot().opening).toBe(opening);
+      expect(f.controller.candidate()).toBeNull();
+      expect(
+        f.interactions.owns(resource, "lua", "other-interaction", f.now()),
+      ).toBe(true);
+      f.controller.apply(null);
+      f.interactions.release(resource, "lua", "other-interaction");
+      f.controller.update(0.05, false);
+      expect(visual.node.position.distanceTo(before)).toBeLessThan(0.1);
+      f.step(45);
+      expect(visual.node.position.equals(home)).toBe(true);
+      expect(f.controller.snapshot().opening).toBe(0);
+      expect(f.interactions.snapshot()).toHaveLength(0);
+      f.dispose();
+    },
+  );
   it("extracts, flies, lands and opens the SAME selectable in a full collection; returns on completion", () => {
     const f = setup(READING_AREA_BOOK_CAPACITY);
     const original = f.visuals[2],
