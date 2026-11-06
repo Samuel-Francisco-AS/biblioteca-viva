@@ -12,8 +12,7 @@ export const WORLD_SESSION_ENTRY_TYPES = [
   "work",
 ] as const;
 
-export type WorldSessionEntryType =
-  (typeof WORLD_SESSION_ENTRY_TYPES)[number];
+export type WorldSessionEntryType = (typeof WORLD_SESSION_ENTRY_TYPES)[number];
 
 export const WORLD_SESSION_KINDS = [
   "reading",
