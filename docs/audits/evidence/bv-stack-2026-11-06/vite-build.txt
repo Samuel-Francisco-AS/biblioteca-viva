@@ -1,5 +1,6 @@
 vite v8.1.5 building client environment for production...
-[2Ktransforming...✓ 355 modules transformed.
+
+transforming...✓ 355 modules transformed.
 
 (!) outDir /tmp/bv-audit-dist is not inside project root and will not be emptied.
 Use --emptyOutDir to override.
@@ -41,7 +42,7 @@ computing gzip size...
 ../bv-audit-dist/assets/index-CeRB_yGC.js                        668.04 kB │ gzip: 203.08 kB
 ../bv-audit-dist/assets/ThreeWorldRuntime-DUXdrrfy.js            802.45 kB │ gzip: 213.39 kB
 
-[plugin builtin:vite-reporter] 
+[plugin builtin:vite-reporter]
 (!) Some chunks are larger than 500 kB after minification. Consider:
 - Using dynamic import() to code-split the application
 - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
