@@ -1,3 +1,5 @@
+> **07/11/2026 — R4 em execução:** R1–R3 e segurança integradas na main `d5eb469`; R4A separa reconciliação de sessão/catálogo e inputs de construção do mundo. Estado e limites canônicos da R4 no [relatório](docs/audits/BV_RECUPERACAO_R4.md). BF-5.5 parcial; R5 não iniciada; sem aprovação física R4/CI global verde. Notas datadas anteriores preservam a cronologia.
+
 ## Segurança pós-R3 — 2026-11-07
 
 - Corrigidas dependências de produção: Capacitor Android/Core/CLI 8.4.3, React Router DOM/Router 7.18.5 e Zod 4.6.7. A correção do proxy nativo requer APK atualizado.

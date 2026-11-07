@@ -1,3 +1,4 @@
+import { equalSnapshot } from "./features/library/snapshotEquality";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -36,13 +37,19 @@ export interface LibraryApplication {
   readonly inhabitantContinuity?: InhabitantContinuityPort;
   readonly nightLightingContinuity?: NightLightingPort;
   readonly events?: {
-    subscribe(type: "SessionChanged", listener: () => void): () => void;
+    subscribe(
+      type: "SessionChanged",
+      listener: (event: { readonly aggregateId: string }) => void,
+    ): () => void;
   };
   readonly queries: {
     readonly listAllNotes?: { execute(): Promise<readonly Note[]> };
     readonly listAllQuotes?: { execute(): Promise<readonly Quote[]> };
     readonly listLibraryEntries: {
       execute(): Promise<readonly LibraryEntry[]>;
+    };
+    readonly getLibraryEntry?: {
+      execute(input: { id: string }): Promise<LibraryEntry>;
     };
     readonly getOpenSession?: { execute(): Promise<Session | undefined> };
   };
@@ -212,10 +219,12 @@ function LibraryPageContent({
     if (!application || diagnosticsActive || !active) return;
     let current = true;
     let generation = 0;
+    let cachedEntries: readonly LibraryEntry[] = [];
     const loadSnapshot = async (): Promise<void> => {
       const request = ++generation;
       try {
         const entries = await application.queries.listLibraryEntries.execute();
+        cachedEntries = entries;
         if (!current || request !== generation) return;
         const [notes, quotes, openSession] = await Promise.all([
           application.queries.listAllNotes?.execute() ?? [],
@@ -231,11 +240,10 @@ function LibraryPageContent({
         setSnapshot((previous) => {
           const sameWorld =
             previous?.application === application &&
-            JSON.stringify(previous.world) === JSON.stringify(world);
+            equalSnapshot(previous.world, world);
           const sameActivity =
             previous?.application === application &&
-            JSON.stringify(previous.activity ?? null) ===
-              JSON.stringify(activity);
+            equalSnapshot(previous.activity ?? null, activity);
           if (sameWorld && sameActivity) return previous;
           return {
             application,
@@ -251,10 +259,62 @@ function LibraryPageContent({
         });
       }
     };
-    void loadSnapshot();
-    const unsubscribe = application.events?.subscribe("SessionChanged", () => {
-      void loadSnapshot();
-    });
+    let pending = loadSnapshot();
+    const loadSession = async (entryId: string): Promise<void> => {
+      try {
+        const openSession = await application.queries.getOpenSession?.execute();
+        if (!current) return;
+        let entryChanged = false;
+        if (application.queries.getLibraryEntry) {
+          const entry = await application.queries.getLibraryEntry.execute({
+            id: entryId,
+          });
+          entryChanged = !equalSnapshot(
+            cachedEntries.find((old) => old.id === entry.id),
+            entry,
+          );
+          cachedEntries = cachedEntries.map((old) =>
+            old.id === entry.id ? entry : old,
+          );
+        }
+        if (!current) return;
+        const world = entryChanged
+          ? projectLibraryWorldEntries(cachedEntries)
+          : undefined;
+        const activity = projectWorldSessionActivity(
+          openSession,
+          cachedEntries,
+        );
+        setSnapshot((previous) => {
+          if (previous?.application !== application || !previous.world)
+            return previous;
+          const nextWorld = Object.freeze({
+            ...(world ?? previous.world),
+            scrolls: previous.world.scrolls,
+          });
+          const sameWorld = equalSnapshot(previous.world, nextWorld);
+          if (sameWorld && equalSnapshot(previous.activity ?? null, activity))
+            return previous;
+          return {
+            ...previous,
+            world: sameWorld ? previous.world : nextWorld,
+            activity,
+          };
+        });
+      } catch (failure: unknown) {
+        if (current)
+          setSnapshot({
+            application,
+            error: presentApplicationError(failure).message,
+          });
+      }
+    };
+    const unsubscribe = application.events?.subscribe(
+      "SessionChanged",
+      (event) => {
+        pending = pending.then(() => loadSession(event.aggregateId));
+      },
+    );
     return () => {
       current = false;
       unsubscribe?.();

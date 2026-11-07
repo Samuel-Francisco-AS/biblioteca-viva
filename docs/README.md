@@ -1,3 +1,5 @@
+> **07/11/2026 — R4 em execução:** R1–R3 e segurança integradas na main `d5eb469`; R4A separa reconciliação de sessão/catálogo e inputs de construção do mundo. Estado e limites canônicos da R4 no [relatório](audits/BV_RECUPERACAO_R4.md). BF-5.5 parcial; R5 não iniciada; sem aprovação física R4/CI global verde. Notas datadas anteriores preservam a cronologia.
+
 > **Recuperação R3:** [relatório de loop, agência e lifecycle](audits/BV_RECUPERACAO_R3.md), candidata na PR draft #38; gate físico R3 e recuperação integral abertos.
 
 > **RETOMADA VIGENTE (07/11/2026):** R2 e saneamento aprovados em teste dirigido no Moto G06; melhora considerável da fluidez, remodelagens aprovadas e Livro da Estrela corrigido. **Próxima: R3A–R3C**, na PR draft #38, sem merge; E2E/CI e gate quantitativo pendentes. [Resumo canônico para a próxima conversa](audits/BV_RETOMADA_R3_2026-11-07.md) · [Matriz de recuperação](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md). As notas antigas abaixo preservam a cronologia.
