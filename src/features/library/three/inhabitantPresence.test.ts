@@ -61,6 +61,11 @@ it("presence modifies only its FX materials/light; reduced motion is static, dis
   const owner = createInhabitantPresence(scene, "ytha");
   const light = scene.getObjectByName("ytha-fey-light");
   expect(light).toBeInstanceOf(PointLight);
+  owner.setPointLightEnabled(false);
+  owner.update(0.05, "idle", false);
+  expect(light?.visible).toBe(false);
+  owner.setPointLightEnabled(true);
+  expect(light?.visible).toBe(true);
   const initial = scene.position.clone();
   const dispose = vi.spyOn(fx, "dispose");
   owner.update(0.05, "magic", false);

@@ -1,6 +1,7 @@
 /** Local opt-in CPU/RAF observations, never GPU or presentation timings. */
-export const PROBE_CAPACITY = 240;
+export const PROBE_CAPACITY = 4096;
 export type ProbeStage =
+  | "rafInterval"
   | "updateCpu"
   | "bookCpu"
   | "agencyCpu"
@@ -34,6 +35,7 @@ export class PerformanceProbe {
   private observer?: PerformanceObserver;
   private canvas?: HTMLCanvasElement;
   private inputAt?: number;
+  private frameAt?: number;
   active = false;
   longTasksSupported = false;
   constructor(private readonly now: () => number) {}
@@ -63,12 +65,25 @@ export class PerformanceProbe {
   }
   stop(): void {
     this.active = false;
+    this.frameAt = undefined;
     this.observer?.disconnect();
     this.observer = undefined;
     for (const type of ["pointerdown", "pointermove", "pointerup"])
       this.canvas?.removeEventListener(type, this.input, true);
     this.canvas = undefined;
     this.inputAt = undefined;
+  }
+  reset(): void {
+    this.samples.clear();
+    this.frameAt = undefined;
+    this.inputAt = undefined;
+    this.observer?.takeRecords();
+  }
+  frame(timestamp: number): void {
+    if (!this.active) return;
+    if (this.frameAt !== undefined)
+      this.record("rafInterval", timestamp - this.frameAt);
+    this.frameAt = timestamp;
   }
   record(stage: ProbeStage, value: number): void {
     if (!this.active || !Number.isFinite(value) || value < 0) return;

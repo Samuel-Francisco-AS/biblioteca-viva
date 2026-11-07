@@ -75,6 +75,9 @@ export function createInhabitantPresence(scene: Object3D, key: InhabitantKey) {
   let previous: InhabitantAction = "idle";
   let disposed = false;
   const controller = {
+    setPointLightEnabled(enabled: boolean) {
+      if (!disposed && light) light.visible = enabled;
+    },
     update(delta: number, action: InhabitantAction, reduced: boolean) {
       if (disposed) return;
       const dt = reduced ? 0 : Math.max(0, Math.min(delta, 0.05));

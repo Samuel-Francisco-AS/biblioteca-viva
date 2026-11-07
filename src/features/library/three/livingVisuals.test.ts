@@ -414,3 +414,56 @@ it.each([false, true])(
     disposeObjectTree(scene);
   },
 );
+
+it("R5P overrides only render lighting: nine cores/ritual states survive C/D, close restores day/night", () => {
+  let now = new Date(2026, 10, 7, 18, 0, 20);
+  const night = new NightLightingSession(() => now),
+    living = new LivingSession(() => now);
+  const scene = new Scene(),
+    building = createProceduralLibraryBuilding(true);
+  const sky = new HemisphereLight(),
+    sun = new DirectionalLight();
+  scene.add(building, sky, sun);
+  const visual = createLivingVisuals(building, scene, living, night, [
+    sky,
+    sun,
+  ]);
+  const lamps = NIGHT_LAMPS.map((l) =>
+    building.getObjectByName(`${l.id}:light`),
+  );
+  const cores = NIGHT_LAMPS.map((l) =>
+    building.getObjectByName(`${l.id}:ember`),
+  );
+  night.complete(NIGHT_LAMPS[0].id);
+  const checkpoint = night.capture(),
+    state = living.getSnapshot();
+  for (const mode of ["original", "no-lamps", "limited", "day"] as const) {
+    visual.setLightingExperiment({ mode, ythaLight: true }, 0, 0);
+    visual.update(0, true);
+    expect(lamps.filter((l) => l?.visible)).toHaveLength(
+      mode === "original" ? 9 : mode === "limited" ? 3 : 0,
+    );
+    expect(cores.filter((l) => l?.visible)).toHaveLength(
+      mode === "day" ? 0 : 9,
+    );
+    expect(night.capture()).toEqual(checkpoint);
+    expect(living.getSnapshot()).toBe(state);
+  }
+  visual.setLightingExperiment(null);
+  visual.update(0, true);
+  expect(lamps.every((l) => l?.visible)).toBe(true);
+  expect(lamps[0]).toHaveProperty("intensity", 4.2);
+  expect(lamps[1]).toHaveProperty("intensity", 4.2 * 0.68);
+  now = new Date(2026, 10, 7, 18, 0, 45);
+  visual.update(0, true);
+  expect(
+    lamps.every((l) => l instanceof PointLight && l.intensity === 4.2),
+  ).toBe(true);
+  now = new Date(2026, 10, 8, 6);
+  night.refreshContext();
+  living.refreshContext();
+  visual.update(0, true);
+  expect(lamps.every((l) => !l?.visible)).toBe(true);
+  visual.dispose();
+  disposeObjectTree(scene);
+});

@@ -1,0 +1,47 @@
+{
+  "kind": "Android debug; local artifact; not installed/tested physically",
+  "path": "android/app/build/outputs/apk/debug/Biblioteca-Viva-R5P-debug.apk",
+  "canonicalPath": "android/app/build/outputs/apk/debug/app-debug.apk",
+  "bytes": 10641553,
+  "sha256": "3e15958db0824a285a1d57cadd3b300e96b4af0189b3feb9e70592d21092c5c0",
+  "sourceBase": "0a50fad83e70dfd39e55889386098f138827c282",
+  "implementationReference": "R5P commit in PR #40; final SHA in PR and handoff",
+  "bundle": {
+    "file": "assets/ThreeWorldRuntime-COE7duDT.js",
+    "bytes": 836415,
+    "sha256": "278b9b7a6aa98746b1843c1a111d2959c8d92e537a67a310b86be7a7aa788020",
+    "matchesCurrentDist": true
+  },
+  "assetsMatchCurrentSource": {
+    "samael": {
+      "bytes": 1296796,
+      "sha256": "217f54d26b4bd32c6f06a12e7903b6a2bc26fcec014ba5489f84239b0ecc46f7"
+    },
+    "aryn": {
+      "bytes": 1911848,
+      "sha256": "19b4d6df3034521d4e28522366f163927cd749e008fca1528b528eb7f2c0c69d"
+    },
+    "ytha": {
+      "bytes": 2411544,
+      "sha256": "2927850b827cda10ff45fb739158b829228f8d8ca10a1293a80cfe204b752071"
+    },
+    "lua": {
+      "bytes": 1344812,
+      "sha256": "c184c1957105f03435d2507710f115fc83aba828047d7dccc697a7a66dd10449"
+    }
+  },
+  "sourceSha256": {
+    "src/features/library/three/ThreeWorldRuntime.ts": "928999f5680deadc5937d0ac612c297bf555a1249f12ca34e42e9a25e181492d",
+    "src/features/library/three/ThreeWorldInteraction.ts": "b28d6a7233ccedfef42a885eb490eca0319d2bb9fb02d3aa66c2e1e8ff69711a",
+    "src/features/library/three/preparedSkinning.ts": "83744e339ca5c4b41de579ca30f5849991e399f7289859354a9a4509b013b123",
+    "src/features/library/three/boundedPointLighting.ts": "271cdacbc63566afb65f46e5ca056a489d742ce295257168b64d610862b6b529",
+    "src/features/library/three/livingVisuals.ts": "fdeee9977b6f7a6f4c8fc30df9a865ce864341578dc78556518bf373d9c3a04d",
+    "src/features/library/three/inhabitantVisuals.ts": "368164d076a4ab9cbb49904f0d9fb858f58f6b07997cb482a5f4d2d62b823c54",
+    "src/features/library/three/inhabitantPresence.ts": "4a3abebfc39050d4bb4868690f79feb075527ca65c7e6d13114e82d6fb810401",
+    "src/features/library/three/performanceProbe.ts": "960ac105c27a92322bf2f09328a6c813eb3cf8547789fea1205e68535f2c93f2",
+    "src/features/library/three/gpuTimer.ts": "cbc4ecb53dd97655554aa5c64ffbf57046c9820cb3be97954a237697ff3011a5",
+    "src/features/library/three/lightingExperiment.ts": "1cf6967c9e3a65bb7d2e569d71a1ab343f694445399013ec9836c55b091e261e",
+    "src/features/library/WorldDiagnosticPanel.tsx": "b45116b818f421ba50924d829d78a632eabc51e413dda7be675d3b969cc6c06d",
+    "src/features/library/worldRuntime.ts": "5d3272969d3531bdd71ac8a463823b18117e98f8e98874baee7d9711ac391bf1"
+  }
+}

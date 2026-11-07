@@ -1,0 +1,60 @@
+{
+  "powers": [
+    {
+      "h": 17,
+      "m": 59,
+      "s": 59,
+      "power": 0
+    },
+    {
+      "h": 18,
+      "m": 0,
+      "s": 0,
+      "power": 0.68
+    },
+    {
+      "h": 18,
+      "m": 0,
+      "s": 44,
+      "power": 0.68
+    },
+    {
+      "h": 18,
+      "m": 0,
+      "s": 45,
+      "power": 1
+    },
+    {
+      "h": 6,
+      "m": 0,
+      "s": 0,
+      "power": 0
+    }
+  ],
+  "modes": [
+    {
+      "mode": "day",
+      "points": 0
+    },
+    {
+      "mode": "original",
+      "points": 9
+    },
+    {
+      "mode": "no-lamps",
+      "points": 0
+    },
+    {
+      "mode": "limited",
+      "points": 3
+    },
+    {
+      "mode": "candidate",
+      "points": 9
+    }
+  ],
+  "selection": "four real rigs/highlights PASS",
+  "resume": "same canvas; one loop",
+  "normal": "clock/ritual/Ytha restored",
+  "sessionsUnchanged": true
+}

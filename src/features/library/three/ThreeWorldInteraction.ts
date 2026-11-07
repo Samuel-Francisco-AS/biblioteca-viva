@@ -1,3 +1,4 @@
+import { withPreparedSkinning } from "./preparedSkinning";
 import {
   Box3,
   Box3Helper,
@@ -218,10 +219,11 @@ export class ThreeWorldInteraction {
       root.updateWorldMatrix(true, false);
       root.updateMatrixWorld(true);
       // Character meshes deform; cached bind-pose bounds are insufficient.
-      this.highlight.box.setFromObject(
-        root,
-        this.selectedId.startsWith("character:"),
-      );
+      const box = this.highlight.box;
+      const precise = this.selectedId.startsWith("character:");
+      if (precise)
+        withPreparedSkinning([root], () => box.setFromObject(root, true));
+      else box.setFromObject(root);
     }
   }
 
@@ -234,10 +236,10 @@ export class ThreeWorldInteraction {
   private applyHighlight(root: Object3D): void {
     root.updateWorldMatrix(true, false);
     root.updateMatrixWorld(true);
-    const bounds = new Box3().setFromObject(
-      root,
-      this.selectedId?.startsWith("character:") ?? false,
-    );
+    const bounds = new Box3();
+    if (this.selectedId?.startsWith("character:"))
+      withPreparedSkinning([root], () => bounds.setFromObject(root, true));
+    else bounds.setFromObject(root);
     if (bounds.isEmpty()) return;
     const highlight = new Box3Helper(bounds, 0x45d9ff);
     highlight.name = "f1-c-selection-highlight";
@@ -477,16 +479,19 @@ export class ThreeWorldInteraction {
     for (const root of roots) {
       root.updateWorldMatrix(true, false);
       root.updateMatrixWorld(true);
-      root.traverse((node) => {
-        if (node instanceof SkinnedMesh) {
-          node.computeBoundingBox();
-          node.computeBoundingSphere();
-        }
-      });
     }
-    this.raycaster.setFromCamera(this.pickPointer, this.camera);
-    this.pickIntersections.length = 0;
-    this.raycaster.intersectObjects(roots, true, this.pickIntersections);
+    withPreparedSkinning(roots, () => {
+      for (const root of roots)
+        root.traverse((node) => {
+          if (node instanceof SkinnedMesh) {
+            node.computeBoundingBox();
+            node.computeBoundingSphere();
+          }
+        });
+      this.raycaster.setFromCamera(this.pickPointer, this.camera);
+      this.pickIntersections.length = 0;
+      this.raycaster.intersectObjects(roots, true, this.pickIntersections);
+    });
     let priority: Intersection | undefined;
     let environmental: Intersection | undefined;
     let fallback: Intersection | undefined;

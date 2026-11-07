@@ -25,6 +25,7 @@ export function createInhabitantVisuals(
   externalPosition = false,
 ) {
   let disposed = false;
+  let pointLightEnabled = true;
   const animators = new Map<
     string,
     ReturnType<typeof createInhabitantAnimator>
@@ -51,6 +52,7 @@ export function createInhabitantVisuals(
           descriptor.id,
           createInhabitantPresence(scene, descriptor.key),
         );
+        presence.get(descriptor.id)?.setPointLightEnabled(pointLightEnabled);
         // Replace a pre-load fallback with the real rig socket if one exists.
         anchors.delete(descriptor.id);
         root.userData.loadState = "ready";
@@ -76,6 +78,11 @@ export function createInhabitantVisuals(
   let motionReduced = false;
   return {
     selectables,
+    setPointLightEnabled(enabled: boolean) {
+      pointLightEnabled = enabled;
+      for (const effect of presence.values())
+        effect.setPointLightEnabled(enabled);
+    },
     drive(poses: readonly AgentView[]) {
       if (disposed) return;
       for (const p of poses) {

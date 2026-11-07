@@ -1,3 +1,11 @@
+## R5P — candidata de fluidez noturna, 07/11/2026
+
+- Mantidas as nove luminárias, cores, emissão e luz de Ytha; shader evita cálculo completo de contribuições pontuais já nulas fora do alcance.
+- Consultas de skinning preparam matrizes por Skeleton, reduzindo CPU de seleção/toque sem alterar os vértices, bounds ou raycasts precisos.
+- Diagnóstico opt-in permite comparar dia/noite, três pontos, ausência de pontos e luz de Ytha, além da candidata com nove pontos; fechar restaura o ciclo normal, sem persistência.
+- Percentis acumulados, long tasks, contadores e timer WebGL assíncrono quando suportado. Visual pareado preservado; ganho de fluidez no Moto G06 ainda depende de comprovação.
+- R5/R5E não aprovadas; avaliação artística suspensa. [Relatório](docs/audits/BV_SANEAMENTO_PERFORMANCE_R5P.md). Sem merge, schema/backup/IDs ou fase nova.
+
 ## R5E — refinamento candidato, 07/11/2026
 
 - Samael mais largo e demoníaco, com aura negra/lilás intermitente e reações de tensão.

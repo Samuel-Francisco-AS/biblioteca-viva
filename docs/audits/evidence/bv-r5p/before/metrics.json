@@ -1,0 +1,3513 @@
+{
+  "label": "R5E",
+  "sourceRef": "working-tree",
+  "browser": "151.0.7922.34",
+  "scope": "Chromium/SwiftShader host only; 800x600 DPR1 AA; fixed four R5E poses/clips, 24 fictional records and 4 scrolls; 8 warmup + 32 native RAF-driven frames at fixed animation dt. Agency decisions excluded equally; CPU submission is NOT GPU/Android FPS. D pins the three nearest lamps to initial target.",
+  "errors": [],
+  "results": [
+    {
+      "mode": "A-day",
+      "motion": "still",
+      "raf": {
+        "count": 31,
+        "p50": 16.800000000000182,
+        "p95": 750,
+        "p99": 1016.5999999999999,
+        "max": 1016.5999999999999
+      },
+      "frameCpu": {
+        "count": 32,
+        "p50": 6.4000000059604645,
+        "p95": 10,
+        "p99": 10.600000001490116,
+        "max": 10.600000001490116
+      },
+      "submitCpu": {
+        "count": 32,
+        "p50": 5.800000004470348,
+        "p95": 9.399999998509884,
+        "p99": 9.899999998509884,
+        "max": 9.899999998509884
+      },
+      "otherCpu": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1,
+        "p99": 1.1000000014901161,
+        "max": 1.1000000014901161
+      },
+      "longTasksSupported": true,
+      "longTasks": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpuTimerSupported": true,
+      "gpuTimerMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "webgl": [
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        }
+      ],
+      "activePointLights": 1,
+      "visibleTransparentMeshes": 136,
+      "cpuMetrics": {
+        "updateCpu": {
+          "count": 40,
+          "p50": 0.5,
+          "p95": 1.2999999970197678,
+          "p99": 3.600000001490116,
+          "max": 3.600000001490116
+        },
+        "bookCpu": {
+          "count": 40,
+          "p50": 0.10000000149011612,
+          "p95": 0.20000000298023224,
+          "p99": 1,
+          "max": 1
+        },
+        "agencyCpu": {
+          "count": 40,
+          "p50": 0,
+          "p95": 0.10000000149011612,
+          "p99": 0.7999999970197678,
+          "max": 0.7999999970197678
+        },
+        "effectsCpu": {
+          "count": 40,
+          "p50": 0.3999999985098839,
+          "p95": 1.2000000029802322,
+          "p99": 2.7000000029802322,
+          "max": 2.7000000029802322
+        },
+        "submitCpu": {
+          "count": 40,
+          "p50": 6.100000001490116,
+          "p95": 10.200000002980232,
+          "p99": 536.7000000029802,
+          "max": 536.7000000029802
+        },
+        "longTask": {
+          "count": 1,
+          "p50": 541,
+          "p95": 541,
+          "p99": 541,
+          "max": 541
+        }
+      },
+      "framebuffer": [
+        800,
+        600
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 0.7
+      },
+      "inhabitants": [
+        {
+          "id": "character:samael",
+          "x": -2,
+          "z": 1,
+          "action": "idle"
+        },
+        {
+          "id": "character:aryn",
+          "x": -13,
+          "z": -8,
+          "action": "idle"
+        },
+        {
+          "id": "character:ytha",
+          "x": 12.4,
+          "z": -10.4,
+          "action": "idle"
+        },
+        {
+          "id": "character:lua",
+          "x": -13,
+          "z": 10,
+          "action": "idle"
+        }
+      ],
+      "shadows": false
+    },
+    {
+      "mode": "A-day",
+      "motion": "pan-pinch",
+      "raf": {
+        "count": 31,
+        "p50": 16.700000000000273,
+        "p95": 483.3000000000002,
+        "p99": 633.3000000000002,
+        "max": 633.3000000000002
+      },
+      "frameCpu": {
+        "count": 32,
+        "p50": 5.899999998509884,
+        "p95": 10.299999997019768,
+        "p99": 12.600000001490116,
+        "max": 12.600000001490116
+      },
+      "submitCpu": {
+        "count": 32,
+        "p50": 5.200000002980232,
+        "p95": 9.699999995529652,
+        "p99": 12.099999994039536,
+        "max": 12.099999994039536
+      },
+      "otherCpu": {
+        "count": 32,
+        "p50": 0.5999999940395355,
+        "p95": 1.1000000014901161,
+        "p99": 1.9000000059604645,
+        "max": 1.9000000059604645
+      },
+      "longTasksSupported": true,
+      "longTasks": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpuTimerSupported": true,
+      "gpuTimerMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "webgl": [
+        {
+          "calls": 282,
+          "triangles": 248380,
+          "programs": 26
+        },
+        {
+          "calls": 280,
+          "triangles": 248308,
+          "programs": 26
+        },
+        {
+          "calls": 278,
+          "triangles": 248236,
+          "programs": 26
+        },
+        {
+          "calls": 277,
+          "triangles": 248200,
+          "programs": 26
+        },
+        {
+          "calls": 275,
+          "triangles": 248128,
+          "programs": 26
+        },
+        {
+          "calls": 274,
+          "triangles": 248096,
+          "programs": 26
+        },
+        {
+          "calls": 273,
+          "triangles": 248060,
+          "programs": 26
+        },
+        {
+          "calls": 272,
+          "triangles": 248048,
+          "programs": 26
+        },
+        {
+          "calls": 274,
+          "triangles": 248312,
+          "programs": 26
+        },
+        {
+          "calls": 275,
+          "triangles": 248348,
+          "programs": 26
+        },
+        {
+          "calls": 278,
+          "triangles": 249984,
+          "programs": 26
+        },
+        {
+          "calls": 283,
+          "triangles": 250868,
+          "programs": 26
+        },
+        {
+          "calls": 286,
+          "triangles": 250952,
+          "programs": 26
+        },
+        {
+          "calls": 289,
+          "triangles": 251036,
+          "programs": 26
+        },
+        {
+          "calls": 292,
+          "triangles": 251116,
+          "programs": 26
+        },
+        {
+          "calls": 297,
+          "triangles": 251380,
+          "programs": 26
+        },
+        {
+          "calls": 304,
+          "triangles": 252336,
+          "programs": 26
+        },
+        {
+          "calls": 312,
+          "triangles": 252528,
+          "programs": 26
+        },
+        {
+          "calls": 314,
+          "triangles": 252572,
+          "programs": 26
+        },
+        {
+          "calls": 317,
+          "triangles": 252608,
+          "programs": 26
+        },
+        {
+          "calls": 321,
+          "triangles": 253028,
+          "programs": 26
+        },
+        {
+          "calls": 325,
+          "triangles": 253972,
+          "programs": 26
+        },
+        {
+          "calls": 328,
+          "triangles": 254536,
+          "programs": 26
+        },
+        {
+          "calls": 331,
+          "triangles": 255156,
+          "programs": 26
+        },
+        {
+          "calls": 331,
+          "triangles": 255156,
+          "programs": 26
+        },
+        {
+          "calls": 333,
+          "triangles": 255216,
+          "programs": 26
+        },
+        {
+          "calls": 334,
+          "triangles": 256780,
+          "programs": 26
+        },
+        {
+          "calls": 337,
+          "triangles": 258988,
+          "programs": 26
+        },
+        {
+          "calls": 337,
+          "triangles": 258988,
+          "programs": 26
+        },
+        {
+          "calls": 337,
+          "triangles": 258988,
+          "programs": 26
+        },
+        {
+          "calls": 337,
+          "triangles": 258988,
+          "programs": 26
+        },
+        {
+          "calls": 337,
+          "triangles": 258988,
+          "programs": 26
+        }
+      ],
+      "activePointLights": 1,
+      "visibleTransparentMeshes": 136,
+      "cpuMetrics": {
+        "updateCpu": {
+          "count": 40,
+          "p50": 0.3999999985098839,
+          "p95": 1,
+          "p99": 1.8000000044703484,
+          "max": 1.8000000044703484
+        },
+        "bookCpu": {
+          "count": 40,
+          "p50": 0.10000000149011612,
+          "p95": 0.20000000298023224,
+          "p99": 0.20000000298023224,
+          "max": 0.20000000298023224
+        },
+        "agencyCpu": {
+          "count": 40,
+          "p50": 0,
+          "p95": 0.10000000149011612,
+          "p99": 0.10000000149011612,
+          "max": 0.10000000149011612
+        },
+        "effectsCpu": {
+          "count": 40,
+          "p50": 0.30000000447034836,
+          "p95": 0.7000000029802322,
+          "p99": 1.7000000029802322,
+          "max": 1.7000000029802322
+        },
+        "submitCpu": {
+          "count": 40,
+          "p50": 5.299999997019768,
+          "p95": 9.799999997019768,
+          "p99": 368.5,
+          "max": 368.5
+        },
+        "longTask": {
+          "count": 1,
+          "p50": 371,
+          "p95": 371,
+          "p99": 371,
+          "max": 371
+        }
+      },
+      "framebuffer": [
+        800,
+        600
+      ],
+      "camera": {
+        "targetX": -0.32219642062601767,
+        "targetZ": 0.34925468384996555,
+        "zoom": 0.7358198032956456
+      },
+      "inhabitants": [
+        {
+          "id": "character:samael",
+          "x": -2,
+          "z": 1,
+          "action": "idle"
+        },
+        {
+          "id": "character:aryn",
+          "x": -13,
+          "z": -8,
+          "action": "idle"
+        },
+        {
+          "id": "character:ytha",
+          "x": 12.4,
+          "z": -10.4,
+          "action": "idle"
+        },
+        {
+          "id": "character:lua",
+          "x": -13,
+          "z": 10,
+          "action": "idle"
+        }
+      ],
+      "shadows": false
+    },
+    {
+      "mode": "B-night",
+      "motion": "still",
+      "raf": {
+        "count": 31,
+        "p50": 16.699999999999818,
+        "p95": 1366.5999999999995,
+        "p99": 1449.9000000000005,
+        "max": 1449.9000000000005
+      },
+      "frameCpu": {
+        "count": 32,
+        "p50": 7,
+        "p95": 9.100000001490116,
+        "p99": 9.299999997019768,
+        "max": 9.299999997019768
+      },
+      "submitCpu": {
+        "count": 32,
+        "p50": 6.100000001490116,
+        "p95": 8.5,
+        "p99": 8.599999994039536,
+        "max": 8.599999994039536
+      },
+      "otherCpu": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1,
+        "p99": 1.2999999970197678,
+        "max": 1.2999999970197678
+      },
+      "longTasksSupported": true,
+      "longTasks": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpuTimerSupported": true,
+      "gpuTimerMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "webgl": [
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        }
+      ],
+      "activePointLights": 10,
+      "visibleTransparentMeshes": 145,
+      "cpuMetrics": {
+        "updateCpu": {
+          "count": 40,
+          "p50": 0.5,
+          "p95": 0.8999999985098839,
+          "p99": 0.8999999985098839,
+          "max": 0.8999999985098839
+        },
+        "bookCpu": {
+          "count": 40,
+          "p50": 0.10000000149011612,
+          "p95": 0.20000000298023224,
+          "p99": 0.20000000298023224,
+          "max": 0.20000000298023224
+        },
+        "agencyCpu": {
+          "count": 40,
+          "p50": 0,
+          "p95": 0.10000000149011612,
+          "p99": 0.10000000149011612,
+          "max": 0.10000000149011612
+        },
+        "effectsCpu": {
+          "count": 40,
+          "p50": 0.3999999985098839,
+          "p95": 0.7000000029802322,
+          "p99": 0.7000000029802322,
+          "max": 0.7000000029802322
+        },
+        "submitCpu": {
+          "count": 40,
+          "p50": 6.199999995529652,
+          "p95": 8.5,
+          "p99": 880.7999999970198,
+          "max": 880.7999999970198
+        },
+        "longTask": {
+          "count": 1,
+          "p50": 882,
+          "p95": 882,
+          "p99": 882,
+          "max": 882
+        }
+      },
+      "framebuffer": [
+        800,
+        600
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 0.7
+      },
+      "inhabitants": [
+        {
+          "id": "character:samael",
+          "x": -2,
+          "z": 1,
+          "action": "idle"
+        },
+        {
+          "id": "character:aryn",
+          "x": -13,
+          "z": -8,
+          "action": "idle"
+        },
+        {
+          "id": "character:ytha",
+          "x": 12.4,
+          "z": -10.4,
+          "action": "idle"
+        },
+        {
+          "id": "character:lua",
+          "x": -13,
+          "z": 10,
+          "action": "idle"
+        }
+      ],
+      "shadows": false
+    },
+    {
+      "mode": "B-night",
+      "motion": "pan-pinch",
+      "raf": {
+        "count": 31,
+        "p50": 16.699999999999818,
+        "p95": 2333.199999999999,
+        "p99": 2699.9000000000015,
+        "max": 2699.9000000000015
+      },
+      "frameCpu": {
+        "count": 32,
+        "p50": 9.399999998509884,
+        "p95": 15.800000004470348,
+        "p99": 16.200000002980232,
+        "max": 16.200000002980232
+      },
+      "submitCpu": {
+        "count": 32,
+        "p50": 8.799999997019768,
+        "p95": 15,
+        "p99": 15.299999997019768,
+        "max": 15.299999997019768
+      },
+      "otherCpu": {
+        "count": 32,
+        "p50": 0.5,
+        "p95": 1,
+        "p99": 2.9000000059604645,
+        "max": 2.9000000059604645
+      },
+      "longTasksSupported": true,
+      "longTasks": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpuTimerSupported": true,
+      "gpuTimerMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "webgl": [
+        {
+          "calls": 287,
+          "triangles": 249220,
+          "programs": 26
+        },
+        {
+          "calls": 285,
+          "triangles": 249148,
+          "programs": 26
+        },
+        {
+          "calls": 282,
+          "triangles": 248908,
+          "programs": 26
+        },
+        {
+          "calls": 281,
+          "triangles": 248872,
+          "programs": 26
+        },
+        {
+          "calls": 279,
+          "triangles": 248800,
+          "programs": 26
+        },
+        {
+          "calls": 278,
+          "triangles": 248768,
+          "programs": 26
+        },
+        {
+          "calls": 277,
+          "triangles": 248732,
+          "programs": 26
+        },
+        {
+          "calls": 276,
+          "triangles": 248720,
+          "programs": 26
+        },
+        {
+          "calls": 278,
+          "triangles": 248984,
+          "programs": 26
+        },
+        {
+          "calls": 279,
+          "triangles": 249020,
+          "programs": 26
+        },
+        {
+          "calls": 282,
+          "triangles": 250656,
+          "programs": 26
+        },
+        {
+          "calls": 287,
+          "triangles": 251540,
+          "programs": 26
+        },
+        {
+          "calls": 290,
+          "triangles": 251624,
+          "programs": 26
+        },
+        {
+          "calls": 293,
+          "triangles": 251708,
+          "programs": 26
+        },
+        {
+          "calls": 297,
+          "triangles": 251956,
+          "programs": 26
+        },
+        {
+          "calls": 302,
+          "triangles": 252220,
+          "programs": 26
+        },
+        {
+          "calls": 309,
+          "triangles": 253176,
+          "programs": 26
+        },
+        {
+          "calls": 318,
+          "triangles": 253536,
+          "programs": 26
+        },
+        {
+          "calls": 320,
+          "triangles": 253580,
+          "programs": 26
+        },
+        {
+          "calls": 324,
+          "triangles": 253784,
+          "programs": 26
+        },
+        {
+          "calls": 328,
+          "triangles": 254204,
+          "programs": 26
+        },
+        {
+          "calls": 332,
+          "triangles": 255148,
+          "programs": 26
+        },
+        {
+          "calls": 335,
+          "triangles": 255712,
+          "programs": 26
+        },
+        {
+          "calls": 338,
+          "triangles": 256332,
+          "programs": 26
+        },
+        {
+          "calls": 338,
+          "triangles": 256332,
+          "programs": 26
+        },
+        {
+          "calls": 340,
+          "triangles": 256392,
+          "programs": 26
+        },
+        {
+          "calls": 341,
+          "triangles": 257956,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        }
+      ],
+      "activePointLights": 10,
+      "visibleTransparentMeshes": 145,
+      "cpuMetrics": {
+        "updateCpu": {
+          "count": 40,
+          "p50": 0.4000000059604645,
+          "p95": 1.3000000044703484,
+          "p99": 2.7000000029802322,
+          "max": 2.7000000029802322
+        },
+        "bookCpu": {
+          "count": 40,
+          "p50": 0.09999999403953552,
+          "p95": 0.20000000298023224,
+          "p99": 0.4000000059604645,
+          "max": 0.4000000059604645
+        },
+        "agencyCpu": {
+          "count": 40,
+          "p50": 0,
+          "p95": 0.10000000149011612,
+          "p99": 0.10000000149011612,
+          "max": 0.10000000149011612
+        },
+        "effectsCpu": {
+          "count": 40,
+          "p50": 0.3999999985098839,
+          "p95": 0.8999999985098839,
+          "p99": 2.600000001490116,
+          "max": 2.600000001490116
+        },
+        "submitCpu": {
+          "count": 40,
+          "p50": 8.899999998509884,
+          "p95": 15.100000001490116,
+          "p99": 909.1999999955297,
+          "max": 909.1999999955297
+        },
+        "longTask": {
+          "count": 1,
+          "p50": 912,
+          "p95": 912,
+          "p99": 912,
+          "max": 912
+        }
+      },
+      "framebuffer": [
+        800,
+        600
+      ],
+      "camera": {
+        "targetX": -0.32219642062601767,
+        "targetZ": 0.34925468384996555,
+        "zoom": 0.7358198032956456
+      },
+      "inhabitants": [
+        {
+          "id": "character:samael",
+          "x": -2,
+          "z": 1,
+          "action": "idle"
+        },
+        {
+          "id": "character:aryn",
+          "x": -13,
+          "z": -8,
+          "action": "idle"
+        },
+        {
+          "id": "character:ytha",
+          "x": 12.4,
+          "z": -10.4,
+          "action": "idle"
+        },
+        {
+          "id": "character:lua",
+          "x": -13,
+          "z": 10,
+          "action": "idle"
+        }
+      ],
+      "shadows": false
+    },
+    {
+      "mode": "C-no-lamps",
+      "motion": "still",
+      "raf": {
+        "count": 31,
+        "p50": 16.700000000000273,
+        "p95": 500,
+        "p99": 500,
+        "max": 500
+      },
+      "frameCpu": {
+        "count": 32,
+        "p50": 7.299999997019768,
+        "p95": 11.5,
+        "p99": 12.399999998509884,
+        "max": 12.399999998509884
+      },
+      "submitCpu": {
+        "count": 32,
+        "p50": 6.5,
+        "p95": 10.5,
+        "p99": 11.899999998509884,
+        "max": 11.899999998509884
+      },
+      "otherCpu": {
+        "count": 32,
+        "p50": 0.6999999955296516,
+        "p95": 1.2000000029802322,
+        "p99": 2.5,
+        "max": 2.5
+      },
+      "longTasksSupported": true,
+      "longTasks": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpuTimerSupported": true,
+      "gpuTimerMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "webgl": [
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        }
+      ],
+      "activePointLights": 1,
+      "visibleTransparentMeshes": 145,
+      "cpuMetrics": {
+        "updateCpu": {
+          "count": 40,
+          "p50": 0.6000000014901161,
+          "p95": 0.8999999985098839,
+          "p99": 2.2999999970197678,
+          "max": 2.2999999970197678
+        },
+        "bookCpu": {
+          "count": 40,
+          "p50": 0.10000000149011612,
+          "p95": 0.29999999701976776,
+          "p99": 0.30000000447034836,
+          "max": 0.30000000447034836
+        },
+        "agencyCpu": {
+          "count": 40,
+          "p50": 0,
+          "p95": 0.10000000149011612,
+          "p99": 0.10000000149011612,
+          "max": 0.10000000149011612
+        },
+        "effectsCpu": {
+          "count": 40,
+          "p50": 0.5,
+          "p95": 0.6000000014901161,
+          "p99": 2.2000000029802322,
+          "max": 2.2000000029802322
+        },
+        "submitCpu": {
+          "count": 40,
+          "p50": 6.100000001490116,
+          "p95": 10.600000001490116,
+          "p99": 375.20000000298023,
+          "max": 375.20000000298023
+        },
+        "longTask": {
+          "count": 1,
+          "p50": 377,
+          "p95": 377,
+          "p99": 377,
+          "max": 377
+        }
+      },
+      "framebuffer": [
+        800,
+        600
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 0.7
+      },
+      "inhabitants": [
+        {
+          "id": "character:samael",
+          "x": -2,
+          "z": 1,
+          "action": "idle"
+        },
+        {
+          "id": "character:aryn",
+          "x": -13,
+          "z": -8,
+          "action": "idle"
+        },
+        {
+          "id": "character:ytha",
+          "x": 12.4,
+          "z": -10.4,
+          "action": "idle"
+        },
+        {
+          "id": "character:lua",
+          "x": -13,
+          "z": 10,
+          "action": "idle"
+        }
+      ],
+      "shadows": false
+    },
+    {
+      "mode": "C-no-lamps",
+      "motion": "pan-pinch",
+      "raf": {
+        "count": 31,
+        "p50": 16.799999999999272,
+        "p95": 550,
+        "p99": 566.6000000000004,
+        "max": 566.6000000000004
+      },
+      "frameCpu": {
+        "count": 32,
+        "p50": 6.899999998509884,
+        "p95": 12.199999995529652,
+        "p99": 12.699999995529652,
+        "max": 12.699999995529652
+      },
+      "submitCpu": {
+        "count": 32,
+        "p50": 6.399999998509884,
+        "p95": 11.299999997019768,
+        "p99": 12,
+        "max": 12
+      },
+      "otherCpu": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 0.8999999985098839,
+        "p99": 1.2999999895691872,
+        "max": 1.2999999895691872
+      },
+      "longTasksSupported": true,
+      "longTasks": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpuTimerSupported": true,
+      "gpuTimerMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "webgl": [
+        {
+          "calls": 287,
+          "triangles": 249220,
+          "programs": 26
+        },
+        {
+          "calls": 285,
+          "triangles": 249148,
+          "programs": 26
+        },
+        {
+          "calls": 282,
+          "triangles": 248908,
+          "programs": 26
+        },
+        {
+          "calls": 281,
+          "triangles": 248872,
+          "programs": 26
+        },
+        {
+          "calls": 279,
+          "triangles": 248800,
+          "programs": 26
+        },
+        {
+          "calls": 278,
+          "triangles": 248768,
+          "programs": 26
+        },
+        {
+          "calls": 277,
+          "triangles": 248732,
+          "programs": 26
+        },
+        {
+          "calls": 276,
+          "triangles": 248720,
+          "programs": 26
+        },
+        {
+          "calls": 278,
+          "triangles": 248984,
+          "programs": 26
+        },
+        {
+          "calls": 279,
+          "triangles": 249020,
+          "programs": 26
+        },
+        {
+          "calls": 282,
+          "triangles": 250656,
+          "programs": 26
+        },
+        {
+          "calls": 287,
+          "triangles": 251540,
+          "programs": 26
+        },
+        {
+          "calls": 290,
+          "triangles": 251624,
+          "programs": 26
+        },
+        {
+          "calls": 293,
+          "triangles": 251708,
+          "programs": 26
+        },
+        {
+          "calls": 297,
+          "triangles": 251956,
+          "programs": 26
+        },
+        {
+          "calls": 302,
+          "triangles": 252220,
+          "programs": 26
+        },
+        {
+          "calls": 309,
+          "triangles": 253176,
+          "programs": 26
+        },
+        {
+          "calls": 318,
+          "triangles": 253536,
+          "programs": 26
+        },
+        {
+          "calls": 320,
+          "triangles": 253580,
+          "programs": 26
+        },
+        {
+          "calls": 324,
+          "triangles": 253784,
+          "programs": 26
+        },
+        {
+          "calls": 328,
+          "triangles": 254204,
+          "programs": 26
+        },
+        {
+          "calls": 332,
+          "triangles": 255148,
+          "programs": 26
+        },
+        {
+          "calls": 335,
+          "triangles": 255712,
+          "programs": 26
+        },
+        {
+          "calls": 338,
+          "triangles": 256332,
+          "programs": 26
+        },
+        {
+          "calls": 338,
+          "triangles": 256332,
+          "programs": 26
+        },
+        {
+          "calls": 340,
+          "triangles": 256392,
+          "programs": 26
+        },
+        {
+          "calls": 341,
+          "triangles": 257956,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        }
+      ],
+      "activePointLights": 1,
+      "visibleTransparentMeshes": 145,
+      "cpuMetrics": {
+        "updateCpu": {
+          "count": 40,
+          "p50": 0.5,
+          "p95": 0.7999999970197678,
+          "p99": 1.1000000014901161,
+          "max": 1.1000000014901161
+        },
+        "bookCpu": {
+          "count": 40,
+          "p50": 0.09999999403953552,
+          "p95": 0.20000000298023224,
+          "p99": 0.30000000447034836,
+          "max": 0.30000000447034836
+        },
+        "agencyCpu": {
+          "count": 40,
+          "p50": 0,
+          "p95": 0.10000000149011612,
+          "p99": 0.10000000149011612,
+          "max": 0.10000000149011612
+        },
+        "effectsCpu": {
+          "count": 40,
+          "p50": 0.3999999985098839,
+          "p95": 0.5,
+          "p99": 0.8999999985098839,
+          "max": 0.8999999985098839
+        },
+        "submitCpu": {
+          "count": 40,
+          "p50": 6.299999997019768,
+          "p95": 11.399999998509884,
+          "p99": 446.3999999985099,
+          "max": 446.3999999985099
+        },
+        "longTask": {
+          "count": 1,
+          "p50": 449,
+          "p95": 449,
+          "p99": 449,
+          "max": 449
+        }
+      },
+      "framebuffer": [
+        800,
+        600
+      ],
+      "camera": {
+        "targetX": -0.32219642062601767,
+        "targetZ": 0.34925468384996555,
+        "zoom": 0.7358198032956456
+      },
+      "inhabitants": [
+        {
+          "id": "character:samael",
+          "x": -2,
+          "z": 1,
+          "action": "idle"
+        },
+        {
+          "id": "character:aryn",
+          "x": -13,
+          "z": -8,
+          "action": "idle"
+        },
+        {
+          "id": "character:ytha",
+          "x": 12.4,
+          "z": -10.4,
+          "action": "idle"
+        },
+        {
+          "id": "character:lua",
+          "x": -13,
+          "z": 10,
+          "action": "idle"
+        }
+      ],
+      "shadows": false
+    },
+    {
+      "mode": "D-three-lamps",
+      "motion": "still",
+      "raf": {
+        "count": 31,
+        "p50": 16.699999999999818,
+        "p95": 1499.8999999999996,
+        "p99": 1550,
+        "max": 1550
+      },
+      "frameCpu": {
+        "count": 32,
+        "p50": 7.399999998509884,
+        "p95": 13.099999994039536,
+        "p99": 16.299999997019768,
+        "max": 16.299999997019768
+      },
+      "submitCpu": {
+        "count": 32,
+        "p50": 6.799999997019768,
+        "p95": 12.299999997019768,
+        "p99": 15.699999995529652,
+        "max": 15.699999995529652
+      },
+      "otherCpu": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1.2999999970197678,
+        "p99": 1.5,
+        "max": 1.5
+      },
+      "longTasksSupported": true,
+      "longTasks": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpuTimerSupported": true,
+      "gpuTimerMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "webgl": [
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        }
+      ],
+      "activePointLights": 4,
+      "visibleTransparentMeshes": 145,
+      "cpuMetrics": {
+        "updateCpu": {
+          "count": 40,
+          "p50": 0.5,
+          "p95": 1,
+          "p99": 1.3000000044703484,
+          "max": 1.3000000044703484
+        },
+        "bookCpu": {
+          "count": 40,
+          "p50": 0.10000000149011612,
+          "p95": 0.20000000298023224,
+          "p99": 0.30000000447034836,
+          "max": 0.30000000447034836
+        },
+        "agencyCpu": {
+          "count": 40,
+          "p50": 0,
+          "p95": 0.10000000149011612,
+          "p99": 0.10000000149011612,
+          "max": 0.10000000149011612
+        },
+        "effectsCpu": {
+          "count": 40,
+          "p50": 0.3999999985098839,
+          "p95": 0.8000000044703484,
+          "p99": 1.2000000029802322,
+          "max": 1.2000000029802322
+        },
+        "submitCpu": {
+          "count": 40,
+          "p50": 7,
+          "p95": 12.5,
+          "p99": 683.5,
+          "max": 683.5
+        },
+        "longTask": {
+          "count": 1,
+          "p50": 686,
+          "p95": 686,
+          "p99": 686,
+          "max": 686
+        }
+      },
+      "framebuffer": [
+        800,
+        600
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 0.7
+      },
+      "inhabitants": [
+        {
+          "id": "character:samael",
+          "x": -2,
+          "z": 1,
+          "action": "idle"
+        },
+        {
+          "id": "character:aryn",
+          "x": -13,
+          "z": -8,
+          "action": "idle"
+        },
+        {
+          "id": "character:ytha",
+          "x": 12.4,
+          "z": -10.4,
+          "action": "idle"
+        },
+        {
+          "id": "character:lua",
+          "x": -13,
+          "z": 10,
+          "action": "idle"
+        }
+      ],
+      "shadows": false
+    },
+    {
+      "mode": "D-three-lamps",
+      "motion": "pan-pinch",
+      "raf": {
+        "count": 31,
+        "p50": 16.699999999999818,
+        "p95": 1633.2000000000007,
+        "p99": 2549.7999999999993,
+        "max": 2549.7999999999993
+      },
+      "frameCpu": {
+        "count": 32,
+        "p50": 8.100000001490116,
+        "p95": 14.299999997019768,
+        "p99": 16.799999997019768,
+        "max": 16.799999997019768
+      },
+      "submitCpu": {
+        "count": 32,
+        "p50": 7.399999998509884,
+        "p95": 13.700000002980232,
+        "p99": 16.19999999552965,
+        "max": 16.19999999552965
+      },
+      "otherCpu": {
+        "count": 32,
+        "p50": 0.6999999955296516,
+        "p95": 0.8999999985098839,
+        "p99": 0.8999999985098839,
+        "max": 0.8999999985098839
+      },
+      "longTasksSupported": true,
+      "longTasks": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpuTimerSupported": true,
+      "gpuTimerMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "webgl": [
+        {
+          "calls": 287,
+          "triangles": 249220,
+          "programs": 26
+        },
+        {
+          "calls": 285,
+          "triangles": 249148,
+          "programs": 26
+        },
+        {
+          "calls": 282,
+          "triangles": 248908,
+          "programs": 26
+        },
+        {
+          "calls": 281,
+          "triangles": 248872,
+          "programs": 26
+        },
+        {
+          "calls": 279,
+          "triangles": 248800,
+          "programs": 26
+        },
+        {
+          "calls": 278,
+          "triangles": 248768,
+          "programs": 26
+        },
+        {
+          "calls": 277,
+          "triangles": 248732,
+          "programs": 26
+        },
+        {
+          "calls": 276,
+          "triangles": 248720,
+          "programs": 26
+        },
+        {
+          "calls": 278,
+          "triangles": 248984,
+          "programs": 26
+        },
+        {
+          "calls": 279,
+          "triangles": 249020,
+          "programs": 26
+        },
+        {
+          "calls": 282,
+          "triangles": 250656,
+          "programs": 26
+        },
+        {
+          "calls": 287,
+          "triangles": 251540,
+          "programs": 26
+        },
+        {
+          "calls": 290,
+          "triangles": 251624,
+          "programs": 26
+        },
+        {
+          "calls": 293,
+          "triangles": 251708,
+          "programs": 26
+        },
+        {
+          "calls": 297,
+          "triangles": 251956,
+          "programs": 26
+        },
+        {
+          "calls": 302,
+          "triangles": 252220,
+          "programs": 26
+        },
+        {
+          "calls": 309,
+          "triangles": 253176,
+          "programs": 26
+        },
+        {
+          "calls": 318,
+          "triangles": 253536,
+          "programs": 26
+        },
+        {
+          "calls": 320,
+          "triangles": 253580,
+          "programs": 26
+        },
+        {
+          "calls": 324,
+          "triangles": 253784,
+          "programs": 26
+        },
+        {
+          "calls": 328,
+          "triangles": 254204,
+          "programs": 26
+        },
+        {
+          "calls": 332,
+          "triangles": 255148,
+          "programs": 26
+        },
+        {
+          "calls": 335,
+          "triangles": 255712,
+          "programs": 26
+        },
+        {
+          "calls": 338,
+          "triangles": 256332,
+          "programs": 26
+        },
+        {
+          "calls": 338,
+          "triangles": 256332,
+          "programs": 26
+        },
+        {
+          "calls": 340,
+          "triangles": 256392,
+          "programs": 26
+        },
+        {
+          "calls": 341,
+          "triangles": 257956,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        }
+      ],
+      "activePointLights": 4,
+      "visibleTransparentMeshes": 145,
+      "cpuMetrics": {
+        "updateCpu": {
+          "count": 40,
+          "p50": 0.5999999940395355,
+          "p95": 0.8999999985098839,
+          "p99": 2.2000000029802322,
+          "max": 2.2000000029802322
+        },
+        "bookCpu": {
+          "count": 40,
+          "p50": 0.10000000149011612,
+          "p95": 0.20000000298023224,
+          "p99": 1.1000000014901161,
+          "max": 1.1000000014901161
+        },
+        "agencyCpu": {
+          "count": 40,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000000149011612,
+          "max": 0.10000000149011612
+        },
+        "effectsCpu": {
+          "count": 40,
+          "p50": 0.5,
+          "p95": 0.7999999970197678,
+          "p99": 1,
+          "max": 1
+        },
+        "submitCpu": {
+          "count": 40,
+          "p50": 7.800000004470348,
+          "p95": 13.799999997019768,
+          "p99": 586.6999999955297,
+          "max": 586.6999999955297
+        },
+        "longTask": {
+          "count": 1,
+          "p50": 591,
+          "p95": 591,
+          "p99": 591,
+          "max": 591
+        }
+      },
+      "framebuffer": [
+        800,
+        600
+      ],
+      "camera": {
+        "targetX": -0.32219642062601767,
+        "targetZ": 0.34925468384996555,
+        "zoom": 0.7358198032956456
+      },
+      "inhabitants": [
+        {
+          "id": "character:samael",
+          "x": -2,
+          "z": 1,
+          "action": "idle"
+        },
+        {
+          "id": "character:aryn",
+          "x": -13,
+          "z": -8,
+          "action": "idle"
+        },
+        {
+          "id": "character:ytha",
+          "x": 12.4,
+          "z": -10.4,
+          "action": "idle"
+        },
+        {
+          "id": "character:lua",
+          "x": -13,
+          "z": 10,
+          "action": "idle"
+        }
+      ],
+      "shadows": false
+    },
+    {
+      "mode": "E-no-ytha",
+      "motion": "still",
+      "raf": {
+        "count": 31,
+        "p50": 16.700000000000728,
+        "p95": 2599.8999999999996,
+        "p99": 2633.2999999999993,
+        "max": 2633.2999999999993
+      },
+      "frameCpu": {
+        "count": 32,
+        "p50": 8.5,
+        "p95": 19.600000001490116,
+        "p99": 19.799999997019768,
+        "max": 19.799999997019768
+      },
+      "submitCpu": {
+        "count": 32,
+        "p50": 8,
+        "p95": 18.600000001490116,
+        "p99": 19,
+        "max": 19
+      },
+      "otherCpu": {
+        "count": 32,
+        "p50": 0.7000000029802322,
+        "p95": 1,
+        "p99": 1.2999999970197678,
+        "max": 1.2999999970197678
+      },
+      "longTasksSupported": true,
+      "longTasks": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpuTimerSupported": true,
+      "gpuTimerMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "webgl": [
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        },
+        {
+          "calls": 350,
+          "triangles": 260488,
+          "programs": 26
+        }
+      ],
+      "activePointLights": 9,
+      "visibleTransparentMeshes": 145,
+      "cpuMetrics": {
+        "updateCpu": {
+          "count": 40,
+          "p50": 0.5999999940395355,
+          "p95": 1.1000000014901161,
+          "p99": 1.6000000014901161,
+          "max": 1.6000000014901161
+        },
+        "bookCpu": {
+          "count": 40,
+          "p50": 0.10000000149011612,
+          "p95": 0.29999999701976776,
+          "p99": 0.5,
+          "max": 0.5
+        },
+        "agencyCpu": {
+          "count": 40,
+          "p50": 0,
+          "p95": 0.10000000149011612,
+          "p99": 0.10000000149011612,
+          "max": 0.10000000149011612
+        },
+        "effectsCpu": {
+          "count": 40,
+          "p50": 0.5,
+          "p95": 0.9000000059604645,
+          "p99": 1.1000000014901161,
+          "max": 1.1000000014901161
+        },
+        "submitCpu": {
+          "count": 40,
+          "p50": 8,
+          "p95": 18.80000000447035,
+          "p99": 941.3999999985099,
+          "max": 941.3999999985099
+        },
+        "longTask": {
+          "count": 1,
+          "p50": 944,
+          "p95": 944,
+          "p99": 944,
+          "max": 944
+        }
+      },
+      "framebuffer": [
+        800,
+        600
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 0.7
+      },
+      "inhabitants": [
+        {
+          "id": "character:samael",
+          "x": -2,
+          "z": 1,
+          "action": "idle"
+        },
+        {
+          "id": "character:aryn",
+          "x": -13,
+          "z": -8,
+          "action": "idle"
+        },
+        {
+          "id": "character:ytha",
+          "x": 12.4,
+          "z": -10.4,
+          "action": "idle"
+        },
+        {
+          "id": "character:lua",
+          "x": -13,
+          "z": 10,
+          "action": "idle"
+        }
+      ],
+      "shadows": false
+    },
+    {
+      "mode": "E-no-ytha",
+      "motion": "pan-pinch",
+      "raf": {
+        "count": 31,
+        "p50": 16.700000000000728,
+        "p95": 2416.6000000000004,
+        "p99": 2566.5999999999985,
+        "max": 2566.5999999999985
+      },
+      "frameCpu": {
+        "count": 32,
+        "p50": 10.299999997019768,
+        "p95": 17,
+        "p99": 20.200000002980232,
+        "max": 20.200000002980232
+      },
+      "submitCpu": {
+        "count": 32,
+        "p50": 9.699999995529652,
+        "p95": 16.399999998509884,
+        "p99": 19.399999998509884,
+        "max": 19.399999998509884
+      },
+      "otherCpu": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 0.8000000044703484,
+        "p99": 1,
+        "max": 1
+      },
+      "longTasksSupported": true,
+      "longTasks": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpuTimerSupported": true,
+      "gpuTimerMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "webgl": [
+        {
+          "calls": 287,
+          "triangles": 249220,
+          "programs": 26
+        },
+        {
+          "calls": 285,
+          "triangles": 249148,
+          "programs": 26
+        },
+        {
+          "calls": 282,
+          "triangles": 248908,
+          "programs": 26
+        },
+        {
+          "calls": 281,
+          "triangles": 248872,
+          "programs": 26
+        },
+        {
+          "calls": 279,
+          "triangles": 248800,
+          "programs": 26
+        },
+        {
+          "calls": 278,
+          "triangles": 248768,
+          "programs": 26
+        },
+        {
+          "calls": 277,
+          "triangles": 248732,
+          "programs": 26
+        },
+        {
+          "calls": 276,
+          "triangles": 248720,
+          "programs": 26
+        },
+        {
+          "calls": 278,
+          "triangles": 248984,
+          "programs": 26
+        },
+        {
+          "calls": 279,
+          "triangles": 249020,
+          "programs": 26
+        },
+        {
+          "calls": 282,
+          "triangles": 250656,
+          "programs": 26
+        },
+        {
+          "calls": 287,
+          "triangles": 251540,
+          "programs": 26
+        },
+        {
+          "calls": 290,
+          "triangles": 251624,
+          "programs": 26
+        },
+        {
+          "calls": 293,
+          "triangles": 251708,
+          "programs": 26
+        },
+        {
+          "calls": 297,
+          "triangles": 251956,
+          "programs": 26
+        },
+        {
+          "calls": 302,
+          "triangles": 252220,
+          "programs": 26
+        },
+        {
+          "calls": 309,
+          "triangles": 253176,
+          "programs": 26
+        },
+        {
+          "calls": 318,
+          "triangles": 253536,
+          "programs": 26
+        },
+        {
+          "calls": 320,
+          "triangles": 253580,
+          "programs": 26
+        },
+        {
+          "calls": 324,
+          "triangles": 253784,
+          "programs": 26
+        },
+        {
+          "calls": 328,
+          "triangles": 254204,
+          "programs": 26
+        },
+        {
+          "calls": 332,
+          "triangles": 255148,
+          "programs": 26
+        },
+        {
+          "calls": 335,
+          "triangles": 255712,
+          "programs": 26
+        },
+        {
+          "calls": 338,
+          "triangles": 256332,
+          "programs": 26
+        },
+        {
+          "calls": 338,
+          "triangles": 256332,
+          "programs": 26
+        },
+        {
+          "calls": 340,
+          "triangles": 256392,
+          "programs": 26
+        },
+        {
+          "calls": 341,
+          "triangles": 257956,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        },
+        {
+          "calls": 344,
+          "triangles": 260164,
+          "programs": 26
+        }
+      ],
+      "activePointLights": 9,
+      "visibleTransparentMeshes": 145,
+      "cpuMetrics": {
+        "updateCpu": {
+          "count": 40,
+          "p50": 0.5,
+          "p95": 0.7000000029802322,
+          "p99": 1.2000000029802322,
+          "max": 1.2000000029802322
+        },
+        "bookCpu": {
+          "count": 40,
+          "p50": 0.10000000149011612,
+          "p95": 0.20000000298023224,
+          "p99": 0.30000000447034836,
+          "max": 0.30000000447034836
+        },
+        "agencyCpu": {
+          "count": 40,
+          "p50": 0,
+          "p95": 0.10000000149011612,
+          "p99": 0.10000000149011612,
+          "max": 0.10000000149011612
+        },
+        "effectsCpu": {
+          "count": 40,
+          "p50": 0.3999999985098839,
+          "p95": 0.6999999955296516,
+          "p99": 0.8000000044703484,
+          "max": 0.8000000044703484
+        },
+        "submitCpu": {
+          "count": 40,
+          "p50": 8.300000004470348,
+          "p95": 16.5,
+          "p99": 851.8999999985099,
+          "max": 851.8999999985099
+        },
+        "longTask": {
+          "count": 1,
+          "p50": 855,
+          "p95": 855,
+          "p99": 855,
+          "max": 855
+        }
+      },
+      "framebuffer": [
+        800,
+        600
+      ],
+      "camera": {
+        "targetX": -0.32219642062601767,
+        "targetZ": 0.34925468384996555,
+        "zoom": 0.7358198032956456
+      },
+      "inhabitants": [
+        {
+          "id": "character:samael",
+          "x": -2,
+          "z": 1,
+          "action": "idle"
+        },
+        {
+          "id": "character:aryn",
+          "x": -13,
+          "z": -8,
+          "action": "idle"
+        },
+        {
+          "id": "character:ytha",
+          "x": 12.4,
+          "z": -10.4,
+          "action": "idle"
+        },
+        {
+          "id": "character:lua",
+          "x": -13,
+          "z": 10,
+          "action": "idle"
+        }
+      ],
+      "shadows": false
+    },
+    {
+      "mode": "A-no-ytha",
+      "motion": "still",
+      "raf": {
+        "count": 31,
+        "p50": 16.700000000000728,
+        "p95": 616.5999999999985,
+        "p99": 633.3000000000002,
+        "max": 633.3000000000002
+      },
+      "frameCpu": {
+        "count": 32,
+        "p50": 8.799999997019768,
+        "p95": 14.799999997019768,
+        "p99": 16,
+        "max": 16
+      },
+      "submitCpu": {
+        "count": 32,
+        "p50": 8.199999995529652,
+        "p95": 14.200000002980232,
+        "p99": 15.299999997019768,
+        "max": 15.299999997019768
+      },
+      "otherCpu": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "longTasksSupported": true,
+      "longTasks": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpuTimerSupported": true,
+      "gpuTimerMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "webgl": [
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        },
+        {
+          "calls": 343,
+          "triangles": 259312,
+          "programs": 26
+        }
+      ],
+      "activePointLights": 0,
+      "visibleTransparentMeshes": 136,
+      "cpuMetrics": {
+        "updateCpu": {
+          "count": 40,
+          "p50": 0.5,
+          "p95": 0.8999999985098839,
+          "p99": 1.2999999970197678,
+          "max": 1.2999999970197678
+        },
+        "bookCpu": {
+          "count": 40,
+          "p50": 0.10000000149011612,
+          "p95": 0.20000000298023224,
+          "p99": 0.3999999985098839,
+          "max": 0.3999999985098839
+        },
+        "agencyCpu": {
+          "count": 40,
+          "p50": 0,
+          "p95": 0.10000000149011612,
+          "p99": 0.10000000149011612,
+          "max": 0.10000000149011612
+        },
+        "effectsCpu": {
+          "count": 40,
+          "p50": 0.3999999985098839,
+          "p95": 0.7999999970197678,
+          "p99": 0.8999999985098839,
+          "max": 0.8999999985098839
+        },
+        "submitCpu": {
+          "count": 40,
+          "p50": 8.200000002980232,
+          "p95": 14.299999997019768,
+          "p99": 559.8000000044703,
+          "max": 559.8000000044703
+        },
+        "longTask": {
+          "count": 1,
+          "p50": 562,
+          "p95": 562,
+          "p99": 562,
+          "max": 562
+        }
+      },
+      "framebuffer": [
+        800,
+        600
+      ],
+      "camera": {
+        "targetX": 0,
+        "targetZ": 0,
+        "zoom": 0.7
+      },
+      "inhabitants": [
+        {
+          "id": "character:samael",
+          "x": -2,
+          "z": 1,
+          "action": "idle"
+        },
+        {
+          "id": "character:aryn",
+          "x": -13,
+          "z": -8,
+          "action": "idle"
+        },
+        {
+          "id": "character:ytha",
+          "x": 12.4,
+          "z": -10.4,
+          "action": "idle"
+        },
+        {
+          "id": "character:lua",
+          "x": -13,
+          "z": 10,
+          "action": "idle"
+        }
+      ],
+      "shadows": false
+    },
+    {
+      "mode": "A-no-ytha",
+      "motion": "pan-pinch",
+      "raf": {
+        "count": 31,
+        "p50": 16.700000000000728,
+        "p95": 400,
+        "p99": 616.5999999999995,
+        "max": 616.5999999999995
+      },
+      "frameCpu": {
+        "count": 32,
+        "p50": 5.799999997019768,
+        "p95": 10.399999998509884,
+        "p99": 11,
+        "max": 11
+      },
+      "submitCpu": {
+        "count": 32,
+        "p50": 5.200000002980232,
+        "p95": 9.799999997019768,
+        "p99": 10.399999998509884,
+        "max": 10.399999998509884
+      },
+      "otherCpu": {
+        "count": 32,
+        "p50": 0.5,
+        "p95": 0.7999999970197678,
+        "p99": 0.8000000044703484,
+        "max": 0.8000000044703484
+      },
+      "longTasksSupported": true,
+      "longTasks": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpuTimerSupported": true,
+      "gpuTimerMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "webgl": [
+        {
+          "calls": 282,
+          "triangles": 248380,
+          "programs": 26
+        },
+        {
+          "calls": 280,
+          "triangles": 248308,
+          "programs": 26
+        },
+        {
+          "calls": 278,
+          "triangles": 248236,
+          "programs": 26
+        },
+        {
+          "calls": 277,
+          "triangles": 248200,
+          "programs": 26
+        },
+        {
+          "calls": 275,
+          "triangles": 248128,
+          "programs": 26
+        },
+        {
+          "calls": 274,
+          "triangles": 248096,
+          "programs": 26
+        },
+        {
+          "calls": 273,
+          "triangles": 248060,
+          "programs": 26
+        },
+        {
+          "calls": 272,
+          "triangles": 248048,
+          "programs": 26
+        },
+        {
+          "calls": 274,
+          "triangles": 248312,
+          "programs": 26
+        },
+        {
+          "calls": 275,
+          "triangles": 248348,
+          "programs": 26
+        },
+        {
+          "calls": 278,
+          "triangles": 249984,
+          "programs": 26
+        },
+        {
+          "calls": 283,
+          "triangles": 250868,
+          "programs": 26
+        },
+        {
+          "calls": 286,
+          "triangles": 250952,
+          "programs": 26
+        },
+        {
+          "calls": 289,
+          "triangles": 251036,
+          "programs": 26
+        },
+        {
+          "calls": 292,
+          "triangles": 251116,
+          "programs": 26
+        },
+        {
+          "calls": 297,
+          "triangles": 251380,
+          "programs": 26
+        },
+        {
+          "calls": 304,
+          "triangles": 252336,
+          "programs": 26
+        },
+        {
+          "calls": 312,
+          "triangles": 252528,
+          "programs": 26
+        },
+        {
+          "calls": 314,
+          "triangles": 252572,
+          "programs": 26
+        },
+        {
+          "calls": 317,
+          "triangles": 252608,
+          "programs": 26
+        },
+        {
+          "calls": 321,
+          "triangles": 253028,
+          "programs": 26
+        },
+        {
+          "calls": 325,
+          "triangles": 253972,
+          "programs": 26
+        },
+        {
+          "calls": 328,
+          "triangles": 254536,
+          "programs": 26
+        },
+        {
+          "calls": 331,
+          "triangles": 255156,
+          "programs": 26
+        },
+        {
+          "calls": 331,
+          "triangles": 255156,
+          "programs": 26
+        },
+        {
+          "calls": 333,
+          "triangles": 255216,
+          "programs": 26
+        },
+        {
+          "calls": 334,
+          "triangles": 256780,
+          "programs": 26
+        },
+        {
+          "calls": 337,
+          "triangles": 258988,
+          "programs": 26
+        },
+        {
+          "calls": 337,
+          "triangles": 258988,
+          "programs": 26
+        },
+        {
+          "calls": 337,
+          "triangles": 258988,
+          "programs": 26
+        },
+        {
+          "calls": 337,
+          "triangles": 258988,
+          "programs": 26
+        },
+        {
+          "calls": 337,
+          "triangles": 258988,
+          "programs": 26
+        }
+      ],
+      "activePointLights": 0,
+      "visibleTransparentMeshes": 136,
+      "cpuMetrics": {
+        "updateCpu": {
+          "count": 40,
+          "p50": 0.4000000059604645,
+          "p95": 0.6999999955296516,
+          "p99": 1.4000000059604645,
+          "max": 1.4000000059604645
+        },
+        "bookCpu": {
+          "count": 40,
+          "p50": 0.10000000149011612,
+          "p95": 0.20000000298023224,
+          "p99": 0.4000000059604645,
+          "max": 0.4000000059604645
+        },
+        "agencyCpu": {
+          "count": 40,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000000149011612,
+          "max": 0.10000000149011612
+        },
+        "effectsCpu": {
+          "count": 40,
+          "p50": 0.3999999985098839,
+          "p95": 0.5,
+          "p99": 1,
+          "max": 1
+        },
+        "submitCpu": {
+          "count": 40,
+          "p50": 5.299999997019768,
+          "p95": 10,
+          "p99": 325.3999999985099,
+          "max": 325.3999999985099
+        },
+        "longTask": {
+          "count": 1,
+          "p50": 328,
+          "p95": 328,
+          "p99": 328,
+          "max": 328
+        }
+      },
+      "framebuffer": [
+        800,
+        600
+      ],
+      "camera": {
+        "targetX": -0.32219642062601767,
+        "targetZ": 0.34925468384996555,
+        "zoom": 0.7358198032956456
+      },
+      "inhabitants": [
+        {
+          "id": "character:samael",
+          "x": -2,
+          "z": 1,
+          "action": "idle"
+        },
+        {
+          "id": "character:aryn",
+          "x": -13,
+          "z": -8,
+          "action": "idle"
+        },
+        {
+          "id": "character:ytha",
+          "x": 12.4,
+          "z": -10.4,
+          "action": "idle"
+        },
+        {
+          "id": "character:lua",
+          "x": -13,
+          "z": 10,
+          "action": "idle"
+        }
+      ],
+      "shadows": false
+    }
+  ]
+}

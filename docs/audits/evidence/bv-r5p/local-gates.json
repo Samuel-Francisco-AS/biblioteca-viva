@@ -1,0 +1,63 @@
+{
+  "base": "0a50fad83e70dfd39e55889386098f138827c282",
+  "directedInitial": {
+    "files": 8,
+    "passed": 73
+  },
+  "directedCpuChange": {
+    "files": 2,
+    "passed": 8
+  },
+  "broadBeforeAdditionalCpuChange": {
+    "passed": 960,
+    "files": 153,
+    "workers": 2
+  },
+  "broadFinal": {
+    "passed": 962,
+    "files": 154,
+    "workers": 2
+  },
+  "format": "PASS",
+  "formatCheck": "PASS",
+  "lintGlobal": "PASS",
+  "typecheck": "PASS",
+  "audioCheck": "PASS",
+  "buildFinal": "PASS",
+  "performanceReport": "PASS; static bundle bytes only",
+  "androidSync": "PASS via android:build:debug",
+  "androidDebugFinal": "PASS",
+  "webglPaired": {
+    "cases": 12,
+    "errors": 0,
+    "countersPosesCameraIdentical": true,
+    "pixelIdenticalPairs": 10,
+    "pairsWithOnePixelOneLevelDifference": 2
+  },
+  "webglPostCpuChecks": "PASS: transitions, nine cores, modes/Ytha, restore, exact rigs highlight, resident resume, dispose",
+  "lifecycle": {
+    "cycles": 3,
+    "ownedResourcesPerMount": 303,
+    "undisposed": 0,
+    "repeatedDisposals": 0,
+    "ownListenersObserversRafsLeasesAfterDispose": 0,
+    "heapDomStable": false
+  },
+  "e2e": "FAIL/open; rounds and base control in e2e.json, no retries/timeouts modified",
+  "warnings": [
+    "Vite chunk >500 kB",
+    "Gradle flatDir"
+  ],
+  "androidDevices": [],
+  "physicalGpuAndroidOrTalkbackTested": false,
+  "remoteActionsDispatched": false,
+  "publicationPlan": {
+    "branch": "feat/bv-r5-renascimento-artistico",
+    "pr": 40,
+    "draft": true,
+    "commitSkipCi": true,
+    "merge": false
+  },
+  "schemaBackupIdsPersistence": "unchanged",
+  "gitDiffCheck": "PASS"
+}

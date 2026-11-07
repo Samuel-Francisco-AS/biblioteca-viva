@@ -1,0 +1,943 @@
+{
+  "baseline": "0a50fad83e70dfd39e55889386098f138827c282",
+  "environment": "Chromium/SwiftShader, 800x600, DPR1, AA, native RAF-driven fixed dt; not Android FPS/GPU",
+  "limitations": "32 frames; tail-heavy software queue; no repeated statistical runs; first candidate cases may overlap static tool processes; no consistent RAF gain established. Baseline timer produced zero valid samples; after-only software timer is not a paired GPU comparison.",
+  "rows": [
+    {
+      "case": "A-day-still",
+      "rafMsBefore": {
+        "count": 31,
+        "p50": 16.800000000000182,
+        "p95": 750,
+        "p99": 1016.5999999999999,
+        "max": 1016.5999999999999
+      },
+      "rafMsAfter": {
+        "count": 31,
+        "p50": 33.29999999999927,
+        "p95": 866.7000000000007,
+        "p99": 2083.2999999999993,
+        "max": 2083.2999999999993
+      },
+      "submitCpuMsBefore": {
+        "count": 32,
+        "p50": 5.800000004470348,
+        "p95": 9.399999998509884,
+        "p99": 9.899999998509884,
+        "max": 9.899999998509884
+      },
+      "submitCpuMsAfter": {
+        "count": 32,
+        "p50": 7.4000000059604645,
+        "p95": 19.599999994039536,
+        "p99": 26,
+        "max": 26
+      },
+      "otherCpuMsBefore": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1,
+        "p99": 1.1000000014901161,
+        "max": 1.1000000014901161
+      },
+      "otherCpuMsAfter": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1.1999999955296516,
+        "p99": 1.6000000014901161,
+        "max": 1.6000000014901161
+      },
+      "longTasksBefore": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "longTasksAfter": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "softwareTimerAfterOnly": {
+        "count": 8,
+        "p50": 288.940655,
+        "p95": 416.35501,
+        "p99": 416.35501,
+        "max": 416.35501
+      },
+      "activePointLights": 1,
+      "webglCountersIdentical": true,
+      "cameraAndInhabitantsIdentical": true,
+      "visualDifference": {
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "meanAbsoluteRgb": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "A-day-pan-pinch",
+      "rafMsBefore": {
+        "count": 31,
+        "p50": 16.700000000000273,
+        "p95": 483.3000000000002,
+        "p99": 633.3000000000002,
+        "max": 633.3000000000002
+      },
+      "rafMsAfter": {
+        "count": 31,
+        "p50": 16.700000000000273,
+        "p95": 1149.9000000000005,
+        "p99": 1799.9999999999995,
+        "max": 1799.9999999999995
+      },
+      "submitCpuMsBefore": {
+        "count": 32,
+        "p50": 5.200000002980232,
+        "p95": 9.699999995529652,
+        "p99": 12.099999994039536,
+        "max": 12.099999994039536
+      },
+      "submitCpuMsAfter": {
+        "count": 32,
+        "p50": 8.699999995529652,
+        "p95": 13.399999998509884,
+        "p99": 18,
+        "max": 18
+      },
+      "otherCpuMsBefore": {
+        "count": 32,
+        "p50": 0.5999999940395355,
+        "p95": 1.1000000014901161,
+        "p99": 1.9000000059604645,
+        "max": 1.9000000059604645
+      },
+      "otherCpuMsAfter": {
+        "count": 32,
+        "p50": 0.6999999955296516,
+        "p95": 1.2000000029802322,
+        "p99": 1.3999999985098839,
+        "max": 1.3999999985098839
+      },
+      "longTasksBefore": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "longTasksAfter": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "softwareTimerAfterOnly": {
+        "count": 8,
+        "p50": 344.588753,
+        "p95": 446.667356,
+        "p99": 446.667356,
+        "max": 446.667356
+      },
+      "activePointLights": 1,
+      "webglCountersIdentical": true,
+      "cameraAndInhabitantsIdentical": true,
+      "visualDifference": {
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "meanAbsoluteRgb": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "B-night-still",
+      "rafMsBefore": {
+        "count": 31,
+        "p50": 16.699999999999818,
+        "p95": 1366.5999999999995,
+        "p99": 1449.9000000000005,
+        "max": 1449.9000000000005
+      },
+      "rafMsAfter": {
+        "count": 31,
+        "p50": 16.699999999999818,
+        "p95": 2233.2,
+        "p99": 2349.9000000000015,
+        "max": 2349.9000000000015
+      },
+      "submitCpuMsBefore": {
+        "count": 32,
+        "p50": 6.100000001490116,
+        "p95": 8.5,
+        "p99": 8.599999994039536,
+        "max": 8.599999994039536
+      },
+      "submitCpuMsAfter": {
+        "count": 32,
+        "p50": 5.699999995529652,
+        "p95": 14.399999998509884,
+        "p99": 14.399999998509884,
+        "max": 14.399999998509884
+      },
+      "otherCpuMsBefore": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1,
+        "p99": 1.2999999970197678,
+        "max": 1.2999999970197678
+      },
+      "otherCpuMsAfter": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1,
+        "p99": 1.0000000074505806,
+        "max": 1.0000000074505806
+      },
+      "longTasksBefore": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "longTasksAfter": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "softwareTimerAfterOnly": {
+        "count": 8,
+        "p50": 1146.725029,
+        "p95": 1327.489222,
+        "p99": 1327.489222,
+        "max": 1327.489222
+      },
+      "activePointLights": 10,
+      "webglCountersIdentical": true,
+      "cameraAndInhabitantsIdentical": true,
+      "visualDifference": {
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "meanAbsoluteRgb": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "B-night-pan-pinch",
+      "rafMsBefore": {
+        "count": 31,
+        "p50": 16.699999999999818,
+        "p95": 2333.199999999999,
+        "p99": 2699.9000000000015,
+        "max": 2699.9000000000015
+      },
+      "rafMsAfter": {
+        "count": 31,
+        "p50": 16.699999999999818,
+        "p95": 2166.600000000002,
+        "p99": 2416.6000000000004,
+        "max": 2416.6000000000004
+      },
+      "submitCpuMsBefore": {
+        "count": 32,
+        "p50": 8.799999997019768,
+        "p95": 15,
+        "p99": 15.299999997019768,
+        "max": 15.299999997019768
+      },
+      "submitCpuMsAfter": {
+        "count": 32,
+        "p50": 4.600000001490116,
+        "p95": 15.199999995529652,
+        "p99": 15.799999997019768,
+        "max": 15.799999997019768
+      },
+      "otherCpuMsBefore": {
+        "count": 32,
+        "p50": 0.5,
+        "p95": 1,
+        "p99": 2.9000000059604645,
+        "max": 2.9000000059604645
+      },
+      "otherCpuMsAfter": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1.1000000014901161,
+        "p99": 1.1999999955296516,
+        "max": 1.1999999955296516
+      },
+      "longTasksBefore": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "longTasksAfter": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "softwareTimerAfterOnly": {
+        "count": 8,
+        "p50": 1219.562538,
+        "p95": 1350.865251,
+        "p99": 1350.865251,
+        "max": 1350.865251
+      },
+      "activePointLights": 10,
+      "webglCountersIdentical": true,
+      "cameraAndInhabitantsIdentical": true,
+      "visualDifference": {
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "meanAbsoluteRgb": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "C-no-lamps-still",
+      "rafMsBefore": {
+        "count": 31,
+        "p50": 16.700000000000273,
+        "p95": 500,
+        "p99": 500,
+        "max": 500
+      },
+      "rafMsAfter": {
+        "count": 31,
+        "p50": 16.700000000000728,
+        "p95": 550,
+        "p99": 550,
+        "max": 550
+      },
+      "submitCpuMsBefore": {
+        "count": 32,
+        "p50": 6.5,
+        "p95": 10.5,
+        "p99": 11.899999998509884,
+        "max": 11.899999998509884
+      },
+      "submitCpuMsAfter": {
+        "count": 32,
+        "p50": 7.0999999940395355,
+        "p95": 11.5,
+        "p99": 12.600000001490116,
+        "max": 12.600000001490116
+      },
+      "otherCpuMsBefore": {
+        "count": 32,
+        "p50": 0.6999999955296516,
+        "p95": 1.2000000029802322,
+        "p99": 2.5,
+        "max": 2.5
+      },
+      "otherCpuMsAfter": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1.1999999955296516,
+        "p99": 1.3999999985098839,
+        "max": 1.3999999985098839
+      },
+      "longTasksBefore": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "longTasksAfter": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "softwareTimerAfterOnly": {
+        "count": 8,
+        "p50": 326.693323,
+        "p95": 440.134693,
+        "p99": 440.134693,
+        "max": 440.134693
+      },
+      "activePointLights": 1,
+      "webglCountersIdentical": true,
+      "cameraAndInhabitantsIdentical": true,
+      "visualDifference": {
+        "changedPixels": 1,
+        "maxChannelDifference": 1,
+        "meanAbsoluteRgb": [
+          0.0,
+          2.0833333333333334e-06,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "C-no-lamps-pan-pinch",
+      "rafMsBefore": {
+        "count": 31,
+        "p50": 16.799999999999272,
+        "p95": 550,
+        "p99": 566.6000000000004,
+        "max": 566.6000000000004
+      },
+      "rafMsAfter": {
+        "count": 31,
+        "p50": 16.700000000000728,
+        "p95": 483.3000000000002,
+        "p99": 500,
+        "max": 500
+      },
+      "submitCpuMsBefore": {
+        "count": 32,
+        "p50": 6.399999998509884,
+        "p95": 11.299999997019768,
+        "p99": 12,
+        "max": 12
+      },
+      "submitCpuMsAfter": {
+        "count": 32,
+        "p50": 6,
+        "p95": 14.399999998509884,
+        "p99": 15.200000002980232,
+        "max": 15.200000002980232
+      },
+      "otherCpuMsBefore": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 0.8999999985098839,
+        "p99": 1.2999999895691872,
+        "max": 1.2999999895691872
+      },
+      "otherCpuMsAfter": {
+        "count": 32,
+        "p50": 0.5,
+        "p95": 0.8000000044703484,
+        "p99": 0.8000000044703484,
+        "max": 0.8000000044703484
+      },
+      "longTasksBefore": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "longTasksAfter": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "softwareTimerAfterOnly": {
+        "count": 8,
+        "p50": 288.694028,
+        "p95": 539.517113,
+        "p99": 539.517113,
+        "max": 539.517113
+      },
+      "activePointLights": 1,
+      "webglCountersIdentical": true,
+      "cameraAndInhabitantsIdentical": true,
+      "visualDifference": {
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "meanAbsoluteRgb": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "D-three-lamps-still",
+      "rafMsBefore": {
+        "count": 31,
+        "p50": 16.699999999999818,
+        "p95": 1499.8999999999996,
+        "p99": 1550,
+        "max": 1550
+      },
+      "rafMsAfter": {
+        "count": 31,
+        "p50": 16.699999999999818,
+        "p95": 983.2000000000007,
+        "p99": 1133.3999999999996,
+        "max": 1133.3999999999996
+      },
+      "submitCpuMsBefore": {
+        "count": 32,
+        "p50": 6.799999997019768,
+        "p95": 12.299999997019768,
+        "p99": 15.699999995529652,
+        "max": 15.699999995529652
+      },
+      "submitCpuMsAfter": {
+        "count": 32,
+        "p50": 6.399999998509884,
+        "p95": 9.600000001490116,
+        "p99": 12.5,
+        "max": 12.5
+      },
+      "otherCpuMsBefore": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1.2999999970197678,
+        "p99": 1.5,
+        "max": 1.5
+      },
+      "otherCpuMsAfter": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 0.9000000059604645,
+        "p99": 1.1000000014901161,
+        "max": 1.1000000014901161
+      },
+      "longTasksBefore": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "longTasksAfter": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "softwareTimerAfterOnly": {
+        "count": 8,
+        "p50": 612.253602,
+        "p95": 915.542836,
+        "p99": 915.542836,
+        "max": 915.542836
+      },
+      "activePointLights": 4,
+      "webglCountersIdentical": true,
+      "cameraAndInhabitantsIdentical": true,
+      "visualDifference": {
+        "changedPixels": 1,
+        "maxChannelDifference": 1,
+        "meanAbsoluteRgb": [
+          0.0,
+          2.0833333333333334e-06,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "D-three-lamps-pan-pinch",
+      "rafMsBefore": {
+        "count": 31,
+        "p50": 16.699999999999818,
+        "p95": 1633.2000000000007,
+        "p99": 2549.7999999999993,
+        "max": 2549.7999999999993
+      },
+      "rafMsAfter": {
+        "count": 31,
+        "p50": 33.399999999999636,
+        "p95": 1566.6000000000004,
+        "p99": 1949.8999999999996,
+        "max": 1949.8999999999996
+      },
+      "submitCpuMsBefore": {
+        "count": 32,
+        "p50": 7.399999998509884,
+        "p95": 13.700000002980232,
+        "p99": 16.19999999552965,
+        "max": 16.19999999552965
+      },
+      "submitCpuMsAfter": {
+        "count": 32,
+        "p50": 7.600000001490116,
+        "p95": 20.5,
+        "p99": 41.100000001490116,
+        "max": 41.100000001490116
+      },
+      "otherCpuMsBefore": {
+        "count": 32,
+        "p50": 0.6999999955296516,
+        "p95": 0.8999999985098839,
+        "p99": 0.8999999985098839,
+        "max": 0.8999999985098839
+      },
+      "otherCpuMsAfter": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1.2000000029802322,
+        "p99": 2.600000001490116,
+        "max": 2.600000001490116
+      },
+      "longTasksBefore": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "longTasksAfter": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "softwareTimerAfterOnly": {
+        "count": 8,
+        "p50": 687.755174,
+        "p95": 771.908609,
+        "p99": 771.908609,
+        "max": 771.908609
+      },
+      "activePointLights": 4,
+      "webglCountersIdentical": true,
+      "cameraAndInhabitantsIdentical": true,
+      "visualDifference": {
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "meanAbsoluteRgb": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "E-no-ytha-still",
+      "rafMsBefore": {
+        "count": 31,
+        "p50": 16.700000000000728,
+        "p95": 2599.8999999999996,
+        "p99": 2633.2999999999993,
+        "max": 2633.2999999999993
+      },
+      "rafMsAfter": {
+        "count": 31,
+        "p50": 16.699999999999818,
+        "p95": 1550.1000000000004,
+        "p99": 1999.9000000000015,
+        "max": 1999.9000000000015
+      },
+      "submitCpuMsBefore": {
+        "count": 32,
+        "p50": 8,
+        "p95": 18.600000001490116,
+        "p99": 19,
+        "max": 19
+      },
+      "submitCpuMsAfter": {
+        "count": 32,
+        "p50": 7.799999997019768,
+        "p95": 14.5,
+        "p99": 17.799999997019768,
+        "max": 17.799999997019768
+      },
+      "otherCpuMsBefore": {
+        "count": 32,
+        "p50": 0.7000000029802322,
+        "p95": 1,
+        "p99": 1.2999999970197678,
+        "max": 1.2999999970197678
+      },
+      "otherCpuMsAfter": {
+        "count": 32,
+        "p50": 0.6999999955296516,
+        "p95": 1.1000000014901161,
+        "p99": 1.3000000044703484,
+        "max": 1.3000000044703484
+      },
+      "longTasksBefore": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "longTasksAfter": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "softwareTimerAfterOnly": {
+        "count": 8,
+        "p50": 1311.210496,
+        "p95": 1537.140371,
+        "p99": 1537.140371,
+        "max": 1537.140371
+      },
+      "activePointLights": 10,
+      "webglCountersIdentical": true,
+      "cameraAndInhabitantsIdentical": true,
+      "visualDifference": {
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "meanAbsoluteRgb": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "E-no-ytha-pan-pinch",
+      "rafMsBefore": {
+        "count": 31,
+        "p50": 16.700000000000728,
+        "p95": 2416.6000000000004,
+        "p99": 2566.5999999999985,
+        "max": 2566.5999999999985
+      },
+      "rafMsAfter": {
+        "count": 31,
+        "p50": 16.700000000000728,
+        "p95": 1616.6000000000022,
+        "p99": 1649.8999999999996,
+        "max": 1649.8999999999996
+      },
+      "submitCpuMsBefore": {
+        "count": 32,
+        "p50": 9.699999995529652,
+        "p95": 16.399999998509884,
+        "p99": 19.399999998509884,
+        "max": 19.399999998509884
+      },
+      "submitCpuMsAfter": {
+        "count": 32,
+        "p50": 5.600000001490116,
+        "p95": 16,
+        "p99": 16.100000001490116,
+        "max": 16.100000001490116
+      },
+      "otherCpuMsBefore": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 0.8000000044703484,
+        "p99": 1,
+        "max": 1
+      },
+      "otherCpuMsAfter": {
+        "count": 32,
+        "p50": 0.5,
+        "p95": 1,
+        "p99": 1.1999999955296516,
+        "max": 1.1999999955296516
+      },
+      "longTasksBefore": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "longTasksAfter": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "softwareTimerAfterOnly": {
+        "count": 8,
+        "p50": 1202.297842,
+        "p95": 1572.394258,
+        "p99": 1572.394258,
+        "max": 1572.394258
+      },
+      "activePointLights": 10,
+      "webglCountersIdentical": true,
+      "cameraAndInhabitantsIdentical": true,
+      "visualDifference": {
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "meanAbsoluteRgb": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "A-no-ytha-still",
+      "rafMsBefore": {
+        "count": 31,
+        "p50": 16.700000000000728,
+        "p95": 616.5999999999985,
+        "p99": 633.3000000000002,
+        "max": 633.3000000000002
+      },
+      "rafMsAfter": {
+        "count": 31,
+        "p50": 16.699999999999818,
+        "p95": 383.39999999999964,
+        "p99": 400,
+        "max": 400
+      },
+      "submitCpuMsBefore": {
+        "count": 32,
+        "p50": 8.199999995529652,
+        "p95": 14.200000002980232,
+        "p99": 15.299999997019768,
+        "max": 15.299999997019768
+      },
+      "submitCpuMsAfter": {
+        "count": 32,
+        "p50": 5.600000001490116,
+        "p95": 8.600000001490116,
+        "p99": 9.5,
+        "max": 9.5
+      },
+      "otherCpuMsBefore": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "otherCpuMsAfter": {
+        "count": 32,
+        "p50": 0.6000000014901161,
+        "p95": 1,
+        "p99": 1.2000000029802322,
+        "max": 1.2000000029802322
+      },
+      "longTasksBefore": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "longTasksAfter": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "softwareTimerAfterOnly": {
+        "count": 8,
+        "p50": 226.294452,
+        "p95": 372.446292,
+        "p99": 372.446292,
+        "max": 372.446292
+      },
+      "activePointLights": 1,
+      "webglCountersIdentical": true,
+      "cameraAndInhabitantsIdentical": true,
+      "visualDifference": {
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "meanAbsoluteRgb": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "case": "A-no-ytha-pan-pinch",
+      "rafMsBefore": {
+        "count": 31,
+        "p50": 16.700000000000728,
+        "p95": 400,
+        "p99": 616.5999999999995,
+        "max": 616.5999999999995
+      },
+      "rafMsAfter": {
+        "count": 31,
+        "p50": 16.700000000000728,
+        "p95": 699.8999999999996,
+        "p99": 733.3999999999996,
+        "max": 733.3999999999996
+      },
+      "submitCpuMsBefore": {
+        "count": 32,
+        "p50": 5.200000002980232,
+        "p95": 9.799999997019768,
+        "p99": 10.399999998509884,
+        "max": 10.399999998509884
+      },
+      "submitCpuMsAfter": {
+        "count": 32,
+        "p50": 7.200000002980232,
+        "p95": 12.5,
+        "p99": 14.5,
+        "max": 14.5
+      },
+      "otherCpuMsBefore": {
+        "count": 32,
+        "p50": 0.5,
+        "p95": 0.7999999970197678,
+        "p99": 0.8000000044703484,
+        "max": 0.8000000044703484
+      },
+      "otherCpuMsAfter": {
+        "count": 32,
+        "p50": 0.5999999940395355,
+        "p95": 1,
+        "p99": 1.1000000014901161,
+        "max": 1.1000000014901161
+      },
+      "longTasksBefore": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "longTasksAfter": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "softwareTimerAfterOnly": {
+        "count": 8,
+        "p50": 360.959484,
+        "p95": 371.021278,
+        "p99": 371.021278,
+        "max": 371.021278
+      },
+      "activePointLights": 1,
+      "webglCountersIdentical": true,
+      "cameraAndInhabitantsIdentical": true,
+      "visualDifference": {
+        "changedPixels": 0,
+        "maxChannelDifference": 0,
+        "meanAbsoluteRgb": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  ]
+}

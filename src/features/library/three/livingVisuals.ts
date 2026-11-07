@@ -1,3 +1,4 @@
+import type { LightingExperiment } from "./lightingExperiment";
 import { setSpatialComponents, spatialBox } from "./spatialComponents";
 import {
   BoxGeometry,
@@ -336,6 +337,8 @@ export function createLivingVisuals(
       sparks.add(spark);
     }
   }
+  let experiment: LightingExperiment | null = null;
+  let limitedLampIds = new Set<string>();
   let elapsed = 0;
   let bookDisplaced = false;
   let bookCarried = false;
@@ -402,6 +405,27 @@ export function createLivingVisuals(
       disposed = true;
       lights.length = 0;
     },
+    setLightingExperiment(
+      value: LightingExperiment | null,
+      targetX = 0,
+      targetZ = 0,
+    ) {
+      experiment = value;
+      // Pin on explicit selection; camera motion never swaps light slots.
+      if (value?.mode === "limited")
+        limitedLampIds = new Set(
+          [...NIGHT_LAMPS]
+            .sort(
+              (a, b) =>
+                (a.x - targetX) ** 2 +
+                (a.z - targetZ) ** 2 -
+                ((b.x - targetX) ** 2 + (b.z - targetZ) ** 2),
+            )
+            .slice(0, 3)
+            .map((l) => l.id),
+        );
+      lightingPending = true;
+    },
     reconcileLighting() {
       lightingPending = true;
     },
@@ -423,18 +447,24 @@ export function createLivingVisuals(
         : 0;
       for (const lamp of ambientLamps) {
         const { fixture, light, glow, shade } = lamp;
-        const target = night?.cycleKey
-          ? night.completedLampIds.includes(fixture.id)
-            ? 1
-            : pendingPower
-          : 0;
+        const target = experiment
+          ? experiment.mode === "day"
+            ? 0
+            : 1
+          : night?.cycleKey
+            ? night.completedLampIds.includes(fixture.id)
+              ? 1
+              : pendingPower
+            : 0;
         const intensity = 4.2 * target;
         if (light.intensity !== intensity) {
           light.intensity = approachLight(light.intensity, intensity, blend);
           if (target === 0 && light.intensity < 0.0001) light.intensity = 0;
         }
-        if (light.visible !== light.intensity > 0)
-          light.visible = light.intensity > 0;
+        light.visible =
+          light.intensity > 0 &&
+          experiment?.mode !== "no-lamps" &&
+          (experiment?.mode !== "limited" || limitedLampIds.has(fixture.id));
         if (lamp.target !== target) {
           lamp.target = target;
           glow.visible = target > 0;
@@ -562,10 +592,11 @@ export function createLivingVisuals(
       }
       // Moonlit blue fill preserves legibility; amber pools reveal the furniture.
       // Narrative darkness affects sky, but does not turn off the real clock lamps.
-      const dark =
-        atmosphere === "noturna" ||
-        (nightLighting?.getSnapshot().cycleKey !== null &&
-          nightLighting !== undefined);
+      const dark = experiment
+        ? experiment.mode !== "day"
+        : atmosphere === "noturna" ||
+          (nightLighting?.getSnapshot().cycleKey !== null &&
+            nightLighting !== undefined);
       for (const item of selectables)
         if (item.light) item.light.visible = item.light.intensity > 0;
       const nextKey = `${dark}:${atmosphere}:${reduced}`;

@@ -30,6 +30,13 @@ export type WorldRuntimeState =
 export type WorldFixtureStatus = "idle" | "loading" | "ready" | "error";
 
 export interface WorldRuntimeDiagnostics {
+  readonly shaderPrograms?: number | null;
+  readonly activePointLights?: number;
+  readonly gpuTimer?: ReturnType<
+    import("./three/gpuTimer").GpuTimer["snapshot"]
+  >;
+  readonly lightingExperiment?:
+    import("./three/lightingExperiment").LightingExperiment | null;
   readonly frameIntervals?: import("./three/performanceProbe").Distribution & {
     readonly lateFramesOver33Ms: number;
   };
@@ -75,6 +82,10 @@ export type WorldDiagnosticsListener = (
  * owner disposes it before mounting a replacement for that host.
  */
 export interface WorldRuntime {
+  setLightingExperiment?(
+    value: import("./three/lightingExperiment").LightingExperiment | null,
+  ): void;
+  resetPerformanceProbe?(): void;
   getDiagnostics(): WorldRuntimeDiagnostics;
   getSelectableObjects(): readonly WorldSelectableObject[];
   mount(host: HTMLElement): void;

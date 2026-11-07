@@ -1,0 +1,68 @@
+{
+  "scope": "Local Chromium, no retry or timeout changes; no Actions. Initial round preceded CPU skinning correction; final round recorded separately.",
+  "initialCandidate": {
+    "result": "0 PASS / 3 FAIL",
+    "command": "npm run test:e2e -- e2e/bf55-furniture.spec.ts e2e/bv-recovery-r2.spec.ts e2e/bf5r5-world-input.spec.ts --retries=0",
+    "cases": [
+      {
+        "file": "bf55-furniture.spec.ts",
+        "line": 49,
+        "failure": "Global 30 s deadline at furniture-night.png, detached element while capturing after reload",
+        "classification": "Newly observed in R5P; same scenario and line also fail original R5E below."
+      },
+      {
+        "file": "bf5r5-world-input.spec.ts",
+        "line": 48,
+        "failure": "Global 30 s deadline polling zoom after pinch",
+        "classification": "Newly observed in R5P; original R5E also fails same flow but at next assertion. Common cause not established, regression not excluded."
+      },
+      {
+        "file": "bv-recovery-r2.spec.ts",
+        "line": 82,
+        "failure": "Global 30 s deadline clicking accessible exploration tools, before first selection",
+        "classification": "Historical failing R2 scenario; failure point differs across prior executions. No common cause assumed."
+      }
+    ]
+  },
+  "originalR5EControl": {
+    "source": "0a50fad83e70dfd39e55889386098f138827c282",
+    "immutableArchive": true,
+    "result": "0 PASS / 2 FAIL",
+    "runs": 1,
+    "cases": [
+      {
+        "file": "bf55-furniture.spec.ts",
+        "line": 49,
+        "failure": "30 s global deadline while waiting stability for furniture-night.png after reload"
+      },
+      {
+        "file": "bf5r5-world-input.spec.ts",
+        "line": 49,
+        "failure": "30 s global deadline at selected-object assertion after zoom poll, session closed"
+      }
+    ]
+  },
+  "historicalR5D": "Two BF-4F1 scenarios remain failed/open per BV_RECUPERACAO_R5.md; not conflated with these input/furniture scenarios.",
+  "limitations": "Comparison does not prove common cause, physical regression absence, or global CI green. Traces retained locally in test-results, compact public summary only.",
+  "finalAfterCpu": {
+    "result": "0 PASS / 2 FAIL",
+    "command": "npm run test:e2e -- e2e/bf4-inhabitants.spec.ts e2e/bf5r5-world-input.spec.ts --grep 'canvas selects all four|resident input' --retries=0",
+    "cases": [
+      {
+        "file": "bf4-inhabitants.spec.ts",
+        "line": 60,
+        "failure": "Global 30 s deadline at scrollIntoViewIfNeeded in four-loaded-model selection flow",
+        "classification": "Historical BF-4F1 scenario failed in R5D; current step differs. Cause not attributed."
+      },
+      {
+        "file": "bf5r5-world-input.spec.ts",
+        "line": 47,
+        "failure": "Global 30 s deadline reading canvas camera zoom in pinch poll",
+        "classification": "Still failing after CPU correction; original R5E also failed same flow at subsequent assertion. Does not rule out temporal regression."
+      }
+    ],
+    "testSourceModified": false,
+    "retries": 0,
+    "timeoutsIncreased": false
+  }
+}

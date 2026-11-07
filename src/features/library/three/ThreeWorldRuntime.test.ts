@@ -3042,3 +3042,34 @@ it("R3 rejects a cancelled RAF delivered after resume without losing the current
   expect(callbacks.size).toBe(0);
   expect(renderer.forceContextLoss).toHaveBeenCalledOnce();
 });
+
+it("R5P experiments require diagnostic opt-in, survive pause, and restore normal state on close", () => {
+  const renderer = new TestRenderer();
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    fixtureLoader: new TestFixtureLoader(),
+    livingSession: new LivingSession(),
+    frameScheduler: { request: () => 1, cancel: () => {} },
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  runtime.setLightingExperiment({ mode: "no-lamps", ythaLight: false });
+  expect(runtime.getDiagnostics().lightingExperiment).toBeNull();
+  const unsubscribe = runtime.onDiagnosticsChange(() => {});
+  runtime.setLightingExperiment({ mode: "limited", ythaLight: false });
+  expect(runtime.getDiagnostics().lightingExperiment).toEqual({
+    mode: "limited",
+    ythaLight: false,
+  });
+  const canvas = renderer.domElement;
+  runtime.pause();
+  runtime.resume();
+  expect(renderer.domElement).toBe(canvas);
+  expect(runtime.getDiagnostics().lightingExperiment?.mode).toBe("limited");
+  unsubscribe();
+  expect(runtime.getDiagnostics().lightingExperiment).toBeNull();
+  expect(runtime.getDiagnostics().cpuMetrics).toEqual({});
+  runtime.dispose();
+  runtime.setLightingExperiment({ mode: "original", ythaLight: true });
+  expect(runtime.getDiagnostics().runtimeState).toBe("disposed");
+});

@@ -50,3 +50,20 @@ it("timestamps gesture receipt to submission, and detaches on pause/disposal", (
   probe.submitted();
   expect(probe.snapshot().gestureToSubmit?.count).toBe(1);
 });
+it("captures a full dusk interval and resets experiments without mixing pause gaps", () => {
+  const probe = new PerformanceProbe(() => 0),
+    canvas = document.createElement("canvas");
+  probe.start(canvas);
+  for (let i = 0; i <= 2700; i++) probe.frame((i * 1000) / 60);
+  expect(probe.snapshot().rafInterval).toMatchObject({ count: 2700 });
+  expect(probe.snapshot().rafInterval?.p95).toBeCloseTo(1000 / 60);
+  probe.reset();
+  probe.frame(100000);
+  probe.frame(100020);
+  expect(probe.snapshot().rafInterval).toMatchObject({ count: 1, p99: 20 });
+  probe.stop();
+  probe.start(canvas);
+  probe.frame(200000);
+  expect(probe.snapshot().rafInterval?.count).toBe(1);
+  probe.stop();
+});
