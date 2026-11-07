@@ -30,6 +30,19 @@ export type WorldRuntimeState =
 export type WorldFixtureStatus = "idle" | "loading" | "ready" | "error";
 
 export interface WorldRuntimeDiagnostics {
+  readonly frameIntervals?: import("./three/performanceProbe").Distribution & {
+    readonly lateFramesOver33Ms: number;
+  };
+  readonly cpuMetrics?: Readonly<
+    Partial<
+      Record<
+        import("./three/performanceProbe").ProbeStage,
+        import("./three/performanceProbe").Distribution
+      >
+    >
+  >;
+  readonly longTasksSupported?: boolean;
+  readonly jsHeapUsedBytes?: number | null;
   readonly activeFrameLoops: 0 | 1;
   readonly drawCalls: number;
   readonly fixtureLoadMs: number | null;

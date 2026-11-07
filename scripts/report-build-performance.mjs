@@ -29,4 +29,6 @@ chunks.sort((left, right) => right.bytes - left.bytes);
 const initialBytes = chunks
   .filter(({ initial }) => initial)
   .reduce((total, chunk) => total + chunk.bytes, 0);
-process.stdout.write(`${JSON.stringify({ chunks, initialBytes }, null, 2)}\n`);
+process.stdout.write(
+  `${JSON.stringify({ measurementScope: "Static bundle bytes; no CPU, GPU, presentation or Android FPS measurement", chunks, initialBytes }, null, 2)}\n`,
+);

@@ -10,7 +10,7 @@ Workflows inspecionados: CI em push main/pull_request; preview Android em dispat
 
 ## R4A — BV-09
 
-Entrada `d5eb469`; saída: commit identificado por `R4A` no histórico desta branch (SHA definitivo registrado no checkpoint seguinte).
+Entrada `d5eb469`; saída `8c095c30087a4128011407f0efd21b492aad5633`.
 
 Diagnóstico reproduzível: efeito em pages consultava quatro coleções/estado e serializava os snapshots completos a cada SessionChanged. WorldHost dependia da identidade de todos os metadados, mesmo os que a construção Three não consome.
 
@@ -22,8 +22,32 @@ WorldHost distingue os inputs consumidos na construção: ordem, categoria, IDs/
 
 Arquivos: pages.tsx/test, WorldHost.tsx, snapshotEquality.ts/test; relatório/evidência e autoridades documentais. Risco residual: registro modificado ainda reprojeta N; alterações físicas remountam, reiniciando câmera/seleção como antes. Incrementalização física ampla fica limitada pela segurança de reservas/ownership. Continuidade, sessão/livro e lifecycle serão incluídos na rodada final dirigida/ampla.
 
-## R4B — pendente
+## R4B — BV-13/14/16
+
+Entrada `8c095c3`; saída: commit `R4B` (SHA registrado no próximo checkpoint). PR draft [#39](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/39).
+
+Anterior: média RAF de 750 ms, renderer.info, inventário e datasets a cada 250 ms; painel assinado mesmo fechado. Agora assinatura somente ao abrir details. Travessia ampla periódica: **3–4/s → 0/s fechado**; ao abrir, inventário imediato e cadência 250 ms, sem recriar a cena. Datasets baratos e publicações de lifecycle preservados. Teste do runtime mede 60 frames fechado, 60 aberto, 60 fechado novamente; zero travessias nos trechos fechados. Inventários também atualizam em mudanças estruturais forçadas.
+
+RAF: P50/P95/P99, máximo, contagem de intervalos >33,34 ms na janela móvel, teto 1024 timestamps. Probe opt-in com até 240 amostras por sete canais: CPU do update, livro, agência, restante dos visuais/efeitos (inclui animação/checkpoint), chamada síncrona renderer.render, recepção do primeiro Pointer desde o último frame até retorno da submissão e long tasks quando PerformanceObserver suporta. Sem conteúdo pessoal, rede ou coleta permanente. Observer e listeners removidos ao fechar, pausar, falhar ou descartar; retorno reativa apenas com consumidor. Heap JS lido apenas sob demanda quando API existe. Percentis calculados na publicação, não ordenados por estágio a cada frame.
+
+**Limites de interpretação:** RAF não é duração de CPU. renderer.render mede CPU da chamada/submissão, podendo incluir espera de driver, nunca tempo GPU. gestureToSubmit começa no listener do Canvas, não no hardware e não mede input-to-photon. Tempo GPU, apresentação/compositor, memória GPU/VRAM e custo separado do handler de input indisponíveis nesta implementação. renderer.info fornece calls/triângulos/geometrias/texturas, não bytes gráficos. Bundle report agora explicita que mede bytes estáticos. Fechado ainda mantém janela RAF/datasets baratos, sem long tasks/CPU detalhada ou atualizações React periódicas.
+
+Gates: primeira rodada **77 PASS/1 FAIL** (WorldHost esperava assinatura fechada). Atualizado o contrato do teste: exige ausência de assinatura fechada, abre painel antes dos asserts existentes de diagnóstico; nenhum assert funcional removido. Reexecução dirigida do host registrada abaixo e rodada global final confirmará integração. Testes novos: percentis/outliers, limite de buffers, descarte de listeners e recepção→submissão.
+
+WebView: MainActivity apenas registra plugins de arquivos/haptics e configura insets/barras. Pointer/câmera/RAF/renderização usam JS/Canvas/WebGL; não há frame ou gesto transmitido por bridge Capacitor. Isso refuta a hipótese específica de bridge por frame no código atual, **não** elimina possíveis custos de WebView, composição ou driver. ADB sem aparelho; nenhuma comparação Chrome/WebView, GPU, versão WebView ou gargalo físico medido. Sem alteração de qualidade/DPR/iluminação/animações.
+
+### Protocolo Moto G06
+
+1. Instalar APK debug local apenas após proteger dados conforme rotina do proprietário; não limpar storage. Anotar SHA, Android/WebView, orientação, bateria/temperatura e estado de movimento reduzido.
+2. Usar catálogo fictício ou cenário diagnóstico isolado. Com mesma câmera, observar 60 s parado, pan/pinch, seleção, sessão/livro e dia/noite; repetir com painel fechado/aberto. Registrar percentis RAF, canais CPU P95, long tasks e renderer.info disponíveis, sem conteúdo/caminhos pessoais.
+3. Fechar painel, navegar entre abas, pausar/background 20 s, retomar e reabrir. Confirmar câmera/seleção, livro retornando, quatro habitantes, nove lâmpadas e pergaminhos. Distinguir pausa intencional de frame atrasado.
+4. Para atribuição física usar DevTools Performance/Perfetto sob conexão autorizada; comparar trilhas JS, driver/GPU e compositor separadamente. Filmagem externa é necessária para input-to-photon; performance.now não o substitui. Reportar fluidez percebida separada de métricas.
+
+Arquivos: frameMetrics, performanceProbe/test, ThreeWorldRuntime/test, WorldDiagnosticPanel, worldRuntime, WorldHost.test, report-build-performance e docs. APK comum contém painel opt-in; build:diagnostics existente habilita cenários técnicos, sem telemetria.
+
 
 ## R4C — pendente
 
 ## R4D — pendente
+
+R4B pós-ajuste: **26/26 WorldHost PASS**, typecheck PASS, lint dirigido PASS; os outros 52 testes da rodada inicial passaram. Validação ampla final obrigatória antes de R4D.

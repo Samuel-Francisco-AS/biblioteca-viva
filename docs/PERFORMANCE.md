@@ -1,3 +1,5 @@
+> **R4B (07/11):** diagnóstico opt-in, percentis RAF e amostras CPU limitadas; sem travessias periódicas com painel fechado. Métricas e protocolo físico no [relatório R4](audits/BV_RECUPERACAO_R4.md). Sem inferência de FPS/GPU/apresentação Android.
+
 > **R3C — 07/11/2026:** dez ciclos WebGL com 341 recursos acompanhados por montagem, zero omissões/duplicações no descarte e zero RAF/listeners/observer próprios pendentes. Contexto termina perdido. **Heap/DOM host não declarados estáveis:** resíduo +1 nó/ciclo e heap pós-GC 22,95→24,77 MB, sem retentor causal atribuído; não é medição Android/GPU. [Dados, limites e diagnóstico](audits/BV_RECUPERACAO_R3.md#r3c--bv-15).
 
 > **R3A — 07/11/2026:** em 600 frames determinísticos no host: travessias 600→0, lerps de cor 2.400→0, bounds 1.200→1, clones Vector3 600→0. [Cenário, tradeoffs e reprodução](audits/BV_RECUPERACAO_R3.md). Não é FPS/GC/GPU Android medido; arte e taxas de animação preservadas.

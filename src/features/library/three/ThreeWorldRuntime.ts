@@ -68,6 +68,7 @@ import type {
   BookRecordFactory,
   RecordAssetFactory,
 } from "./recordAssetContract";
+import { PerformanceProbe } from "./performanceProbe";
 import { FrameMetricsWindow } from "./frameMetrics";
 import {
   CAMERA_REFERENCE_HALF_HEIGHT,
@@ -446,6 +447,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private fixtureLoadStartedAt: number | undefined;
   private fixtureStatus: WorldFixtureStatus = "idle";
   private failureReported = false;
+  private readonly performanceProbe = new PerformanceProbe(() => this.now());
   private readonly frameMetrics = new FrameMetricsWindow();
   private geometries = 0;
   private lastDiagnosticsPublishedAt: number | undefined;
@@ -576,6 +578,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
   getDiagnostics(): WorldRuntimeDiagnostics {
     const frameMetrics = this.frameMetrics.snapshot();
     return Object.freeze({
+      frameIntervals: this.frameMetrics.distribution(),
+      cpuMetrics: this.performanceProbe.snapshot(),
+      longTasksSupported: this.performanceProbe.longTasksSupported,
+      jsHeapUsedBytes: this.readJsHeap(),
       activeFrameLoops:
         this.state === "running" && this.mountedWorld?.hasActiveFrame() ? 1 : 0,
       drawCalls: this.drawCalls,
@@ -922,6 +928,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
 
     if (document.hidden) {
       this.state = "paused";
+      this.performanceProbe.stop();
       this.livingFrameTime = undefined;
       this.pausedByVisibility = true;
       this.resetFrameMetrics();
@@ -936,8 +943,14 @@ export class ThreeWorldRuntime implements WorldRuntime {
   onDiagnosticsChange(listener: WorldDiagnosticsListener): () => void {
     if (this.isTerminal()) return () => undefined;
     this.diagnosticsListeners.add(listener);
+    if (this.mountedWorld && this.state === "running")
+      this.performanceProbe.start(this.mountedWorld.renderer.domElement);
+    if (this.mountedWorld) this.updateObjectCounts(this.mountedWorld.scene);
     listener(this.getDiagnostics());
-    return () => this.diagnosticsListeners.delete(listener);
+    return () => {
+      this.diagnosticsListeners.delete(listener);
+      if (this.diagnosticsListeners.size === 0) this.performanceProbe.stop();
+    };
   }
 
   onFailure(listener: WorldRuntimeFailureListener): () => void {
@@ -965,6 +978,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (this.state !== "paused" && this.state !== "mounted") return;
     if (document.hidden) {
       this.state = "paused";
+      this.performanceProbe.stop();
       this.livingFrameTime = undefined;
       this.pausedByVisibility = true;
       this.publishDiagnostics(true);
@@ -1211,6 +1225,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.failureListeners.clear();
     this.selectionListeners.clear();
     this.publishDiagnostics(true);
+    this.performanceProbe.stop();
     this.diagnosticsListeners.clear();
   }
 
@@ -1346,6 +1361,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const mountedWorld = this.mountedWorld;
     if (!mountedWorld) return;
     mountedWorld.settleFrame();
+    const cpuStart = this.performanceProbe.active ? this.now() : 0;
+    let bookEnd = cpuStart;
+    let agencyEnd = cpuStart;
     const delta =
       this.livingFrameTime === undefined
         ? 0
@@ -1366,11 +1384,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
         );
       this.agencyClock += delta * 1000;
       this.sessionBooks?.update(delta, reduced, this.agency?.getPoses() ?? []);
+      bookEnd = this.performanceProbe.active ? this.now() : 0;
       this.agency?.update({
         physicalObstacles: this.sessionBooks?.navigationObstacles() ?? [],
         readingCandidate: this.sessionBooks?.candidate() ?? null,
         scrollCandidates: this.scrollVisuals?.candidates() ?? [],
       });
+      agencyEnd = this.performanceProbe.active ? this.now() : 0;
       // Session collision reads the preceding phase; all post-agency consumers
       // share one detached snapshot, never mutable Agent objects.
       const poses = this.agency?.getPoses() ?? [];
@@ -1420,6 +1440,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.failRuntime();
       return;
     }
+    if (this.performanceProbe.active) {
+      const end = this.now();
+      this.performanceProbe.record("updateCpu", end - cpuStart);
+      this.performanceProbe.record("bookCpu", bookEnd - cpuStart);
+      this.performanceProbe.record("agencyCpu", agencyEnd - bookEnd);
+      this.performanceProbe.record("effectsCpu", end - agencyEnd);
+    }
     if (!this.renderCurrentFrame()) return;
     if (this.state !== "running") return;
     this.renderedFrames += 1;
@@ -1444,7 +1471,12 @@ export class ThreeWorldRuntime implements WorldRuntime {
     }
     const { camera, renderer, scene } = mountedWorld;
     try {
+      const start = this.performanceProbe.active ? this.now() : 0;
       renderer.render(scene, camera);
+      if (this.performanceProbe.active) {
+        this.performanceProbe.record("submitCpu", this.now() - start);
+        this.performanceProbe.submitted();
+      }
     } catch {
       this.failRuntime();
       return false;
@@ -1476,6 +1508,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const mountedWorld = this.mountedWorld;
     if (!mountedWorld) return;
     this.state = "running";
+    if (this.diagnosticsListeners.size > 0)
+      this.performanceProbe.start(mountedWorld.renderer.domElement);
     this.pausedByVisibility = false;
     this.nightLighting?.refreshContext();
     this.livingVisuals?.reconcileLighting();
@@ -1497,6 +1531,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (this.state !== "running" && this.state !== "mounted") return;
     this.mountedWorld?.cancelFrame();
     this.state = "paused";
+    this.performanceProbe.stop();
     this.agency?.setMode("paused");
     this.livingFrameTime = undefined;
     this.resetFrameMetrics();
@@ -1620,6 +1655,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   }
 
   private clearListeners(): void {
+    this.performanceProbe.stop();
     this.diagnosticsListeners.clear();
     this.failureListeners.clear();
     this.selectionListeners.clear();
@@ -1635,10 +1671,26 @@ export class ThreeWorldRuntime implements WorldRuntime {
       return;
     }
     this.lastDiagnosticsPublishedAt = timestamp;
-    if (this.mountedWorld) this.updateObjectCounts(this.mountedWorld.scene);
+    if (this.mountedWorld && (force || this.diagnosticsListeners.size > 0))
+      this.updateObjectCounts(this.mountedWorld.scene);
     const diagnostics = this.getDiagnostics();
     this.updateCanvasDiagnostics(diagnostics);
     for (const listener of this.diagnosticsListeners) listener(diagnostics);
+  }
+
+  private readJsHeap(): number | null {
+    if (
+      !this.performanceProbe.active ||
+      typeof performance === "undefined" ||
+      !("memory" in performance)
+    )
+      return null;
+    const memory: unknown = performance.memory;
+    if (!memory || typeof memory !== "object" || !("usedJSHeapSize" in memory))
+      return null;
+    return typeof memory.usedJSHeapSize === "number"
+      ? memory.usedJSHeapSize
+      : null;
   }
 
   private resetFrameMetrics(): void {

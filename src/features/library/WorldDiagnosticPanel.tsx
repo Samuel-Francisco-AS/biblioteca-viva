@@ -39,9 +39,16 @@ export function WorldDiagnosticPanel({
   const [diagnostics, setDiagnostics] = useState(
     () => runtime?.getDiagnostics() ?? EMPTY_DIAGNOSTICS,
   );
-  useEffect(() => runtime?.onDiagnosticsChange(setDiagnostics), [runtime]);
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (!open || !runtime) return;
+    return runtime.onDiagnosticsChange(setDiagnostics);
+  }, [runtime, open]);
   return (
-    <details className="world-technical">
+    <details
+      className="world-technical"
+      onToggle={(event) => setOpen(event.currentTarget.open)}
+    >
       <summary>Diagnóstico do mundo</summary>
       <aside
         aria-label="Diagnóstico técnico do ambiente 3D"
@@ -85,6 +92,34 @@ export function WorldDiagnosticPanel({
           <div>
             <dt>Frame médio</dt>
             <dd>{metric(diagnostics.frameTimeMs, " ms")}</dd>
+          </div>
+          <div>
+            <dt>RAF P50 / P95 / P99</dt>
+            <dd>
+              {metric(diagnostics.frameIntervals?.p50 ?? null)} /{" "}
+              {metric(diagnostics.frameIntervals?.p95 ?? null)} /{" "}
+              {metric(diagnostics.frameIntervals?.p99 ?? null)} ms
+            </dd>
+          </div>
+          <div>
+            <dt>Intervalos RAF &gt;33,34 ms</dt>
+            <dd>{diagnostics.frameIntervals?.lateFramesOver33Ms ?? 0}</dd>
+          </div>
+          {Object.entries(diagnostics.cpuMetrics ?? {}).map(
+            ([name, values]) => (
+              <div key={name}>
+                <dt>{name} P95 (CPU/observação local)</dt>
+                <dd>{metric(values.p95, " ms")}</dd>
+              </div>
+            ),
+          )}
+          <div>
+            <dt>Heap JS disponível</dt>
+            <dd>{metric(diagnostics.jsHeapUsedBytes ?? null, " B")}</dd>
+          </div>
+          <div>
+            <dt>Long tasks suportadas</dt>
+            <dd>{diagnostics.longTasksSupported ? "Sim" : "Não informado"}</dd>
           </div>
           <div>
             <dt>Chamadas</dt>

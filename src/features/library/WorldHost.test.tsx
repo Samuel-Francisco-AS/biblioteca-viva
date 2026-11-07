@@ -159,6 +159,9 @@ describe("WorldHost", () => {
     expect(runtime.mount).toHaveBeenCalledOnce();
     expect(runtime.start).toHaveBeenCalledOnce();
     expect(runtime.getSelectableObjects).toHaveBeenCalledOnce();
+    expect(runtime.onDiagnosticsChange).not.toHaveBeenCalled();
+    await openWorldControls();
+    await userEvent.click(screen.getByText("Diagnóstico do mundo"));
     await waitFor(() =>
       expect(runtime.onDiagnosticsChange).toHaveBeenCalledOnce(),
     );
@@ -169,8 +172,6 @@ describe("WorldHost", () => {
         name: "Diagnóstico técnico do ambiente 3D",
       }),
     ).toHaveAttribute("data-runtime-state", "running");
-    await openWorldControls();
-    await userEvent.click(screen.getByText("Diagnóstico do mundo"));
     expect(screen.getByText("60.0")).toBeVisible();
 
     view.unmount();

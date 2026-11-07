@@ -1,3 +1,5 @@
+> **R4B (07/11):** diagnóstico opt-in, percentis RAF e amostras CPU limitadas; sem travessias periódicas com painel fechado. Métricas e protocolo físico no [relatório R4](audits/BV_RECUPERACAO_R4.md). Sem inferência de FPS/GPU/apresentação Android.
+
 ## Saneamento de segurança pós-R3 — 07/11/2026
 
 `npm ci`, auditorias produção/completa (zero), format:check, lint, typecheck,
