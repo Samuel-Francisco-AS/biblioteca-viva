@@ -1,3 +1,5 @@
+> **GATE FÍSICO DIRIGIDO — 07/11/2026:** proprietário instalou APK pós-R2 no Moto G06 e confirmou melhora considerável de interação/lag do Canvas, arte de quatro categorias aprovada e reparo do Livro da Estrela funcional. Observação humana sem números de FPS, P95/P99, GPU/heap ou cobertura exaustiva de lifecycle/TalkBack/E2E React; CI global permanece FAIL nos shards E2E. [Handoff R3](audits/BV_RETOMADA_R3_2026-11-07.md).
+
 ## Saneamento pós-R2 — regressão focalizada (06/11/2026)
 
 Livro da Estrela reproduzido na ordem real drive→update: base fica em 0,315 rad após 120 frames. Regressões cobrem convergência, abrir/fechar, duplo comando, reversões em transição, página/examinar, transporte/pouso/retorno, movimento reduzido e runtime pausado/retomado com seleção/highlight. UI sincroniza os dois menus; quatro navegações React e raycasts de troca preservam IDs. E2E R2 executado uma vez: timeout de 30 s antes da primeira seleção, sem alcançar reload/abertura e sem retry/timeout alterado. [Gates, falhas intermediárias, CI da base e roteiro físico](audits/BV_SANEAMENTO_POS_R2.md#gates-e-falhas). Capturas são do mundo integrado com dados fictícios, não teste Android.

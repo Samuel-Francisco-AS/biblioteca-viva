@@ -271,3 +271,9 @@ O checkpoint A permanece historicamente **1.220→155**. Após esta limpeza da c
 Rodada ampla final após essa correção e o novo teste: **900/900 PASS em 142 arquivos**, 55,94 s. Format global/typecheck, lint dirigido do collector/owner/teste e build novamente PASS; áudio e lint global anteriores PASS, sem mudança nesses contratos. O estado operacional final substitui o total anterior de 899 (que continua registrado como histórico da rodada antes do teste adicional). Arquivos adicionais C: `three/inhabitantObstacles.ts`, `livingVisuals.ts`, `spatialComponents.test.ts`. Nenhuma falha unitária remanescente conhecida; **E2E continua pendente/FAIL**, sem novo ensaio após a limpeza de volumes que não altera o DOM.
 
 Build publicado final após o collector: Three dinâmico **821,99 kB bruto / 219,32 kB gzip**, entry **668.041 B**; [manifest final](evidence/bv-recovery-r2/build-final.json). As contagens anteriores de bundle descrevem suas respectivas rodadas, não outro gate final.
+
+## Aceite físico e artístico dirigido — 07/11/2026
+
+**Registro posterior ao relato de implementação:** o proprietário atualizou o APK no Moto G06, observou **melhora considerável nos travamentos e no lag do Canvas**, aprovou as remodelagens de **Estudo, Trabalho, Filmes e Atividade Física** e confirmou explicitamente que **o Livro da Estrela agora abre corretamente e o bug parou**. R2 + saneamento aprovados para seguir à R3. Não é certificação de FPS, de performance livre de jank, de todas as seleções/gestos, de E2E React, GPU/memória, acessibilidade ou backup.
+
+SHA da implementação aprovada: `849dd290c2f715012257b5b49e3e8d59c7d6f50a`. [CI correspondente](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/42330962430): estáticos/unitários/build **SUCCESS**, shards E2E **FAIL**, resultado global **FAIL**. PR draft #38 sem merge. R3A–R3C são a próxima execução; R4/R5 pendentes. [Ponto canônico de retomada](BV_RETOMADA_R3_2026-11-07.md).

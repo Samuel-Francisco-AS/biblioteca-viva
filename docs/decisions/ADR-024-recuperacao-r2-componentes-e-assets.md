@@ -1,6 +1,6 @@
 # ADR-024 — Recuperação R2: componentes espaciais e assets de registros
 
-- **Estado:** aceita para a implementação autorizada R2; aceite artístico/físico pendente.
+- **Estado:** implementação em candidata R2 com aceite físico/artístico dirigido em 07/11/2026; CI E2E global/merge pendentes.
 - **Data:** 2026-11-06.
 - **Complementa:** ADR-009/010/011/023; sem nova engine, persistência espacial ou promoção de fixture.
 - **Evidências:** [plano e matriz dos 18 achados](../audits/BV_PLANO_RECUPERACAO_EXECUCAO.md).
@@ -27,3 +27,7 @@ Métricas de host e imagens do runtime completo demonstram redução de trabalho
 ## Refinamento pós-R2 (06/11/2026)
 
 O feedback físico do proprietário motivou o [saneamento focalizado](../audits/BV_SANEAMENTO_POS_R2.md): mesinha de estudos, estojo de ofício aberto, projetor emissivo e dois halteres em suporte substituem apenas as quatro aparências da candidata C. Revisões v2 conservam dimensões, perfil espacial, wrappers/IDs, ownership e batching; série/livro pessoal e stack preservados. Não altera as decisões acima nem inicia R3/R4/R5. Correção do Livro da Estrela elimina disputa de pose entre transporte e animação; é bugfix do controlador existente, sem reescrever a agência. Próximo gate recomendado é novo teste Moto G06; recuperação integral aberta.
+
+## Aceite físico posterior — 07/11/2026
+
+Proprietário aprovou no Moto G06 as representações pós-saneamento; Livro da Estrela também confirmado funcional. Aceite **artístico/funcional dirigido** da candidata R2, não CI global verde, FPS verificado, gate exaustivo ou merge. A PR #38 permanece draft. [Retomada da R3](../audits/BV_RETOMADA_R3_2026-11-07.md).
