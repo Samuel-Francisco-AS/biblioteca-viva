@@ -1,3 +1,5 @@
+> **Recuperação R3:** [relatório de loop, agência e lifecycle](audits/BV_RECUPERACAO_R3.md), candidata na PR draft #38; gate físico R3 e recuperação integral abertos.
+
 > **RETOMADA VIGENTE (07/11/2026):** R2 e saneamento aprovados em teste dirigido no Moto G06; melhora considerável da fluidez, remodelagens aprovadas e Livro da Estrela corrigido. **Próxima: R3A–R3C**, na PR draft #38, sem merge; E2E/CI e gate quantitativo pendentes. [Resumo canônico para a próxima conversa](audits/BV_RETOMADA_R3_2026-11-07.md) · [Matriz de recuperação](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md). As notas antigas abaixo preservam a cronologia.
 
 > **Saneamento pós-R2 (06/11/2026), PR draft #38:** [Livro da Estrela, quatro representações, custos e gates](audits/BV_SANEAMENTO_POS_R2.md). Feedback físico da R2 recebido; candidata nova requer retorno ao Moto G06. Recuperação integral aberta; R3/R4/R5 não iniciadas nesta rodada, sem merge. STATUS permanece autoridade do presente; notas anteriores abaixo são cronologia.

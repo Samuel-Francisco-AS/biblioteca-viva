@@ -41,6 +41,11 @@ interface Journey {
   homeRotation: Quaternion;
   obstacles: readonly Box3[];
   recovering: boolean;
+  glow: number;
+  bounds: Box3;
+  boundsMatrix: Matrix4;
+  boundsOpening: number;
+  navigation: readonly import("../inhabitantNavigation").NavigationObstacle[];
 }
 function belongsTo(object: Object3D, root: Object3D): boolean {
   for (let p: Object3D | null = object; p; p = p.parent)
@@ -236,6 +241,11 @@ export function createSessionBookVisuals(options: {
       homeRotation: visual.node.quaternion.clone(),
       obstacles,
       recovering: false,
+      glow: NaN,
+      bounds: new Box3(),
+      boundsMatrix: new Matrix4(),
+      boundsOpening: NaN,
+      navigation: [],
     };
     visual.sessionControlled = true;
   }
@@ -290,17 +300,33 @@ export function createSessionBookVisuals(options: {
     },
     navigationObstacles() {
       if (!journey) return [];
-      const box = new Box3().setFromObject(journey.visual.node);
-      if (box.min.y > 2.1) return [];
-      return [
-        {
-          id: "session-book-envelope",
-          minX: box.min.x - 0.02,
-          maxX: box.max.x + 0.02,
-          minZ: box.min.z - 0.02,
-          maxZ: box.max.z + 0.02,
-        },
-      ];
+      const j = journey;
+      // Opening changes local geometry; parent translation/rotation/scale also
+      // invalidates. Layout/representation replacement releases the journey.
+      j.visual.node.updateWorldMatrix(true, false, true);
+      if (
+        j.boundsOpening !== j.opening ||
+        !j.boundsMatrix.equals(j.visual.node.matrixWorld)
+      ) {
+        j.visual.node.updateWorldMatrix(false, true, true);
+        j.bounds.setFromObject(j.visual.node);
+        j.boundsMatrix.copy(j.visual.node.matrixWorld);
+        j.boundsOpening = j.opening;
+        const box = j.bounds;
+        j.navigation =
+          box.min.y > 2.1
+            ? []
+            : [
+                Object.freeze({
+                  id: "session-book-envelope",
+                  minX: box.min.x - 0.02,
+                  maxX: box.max.x + 0.02,
+                  minZ: box.min.z - 0.02,
+                  maxZ: box.max.z + 0.02,
+                }),
+              ];
+      }
+      return j.navigation;
     },
     snapshot() {
       return {
@@ -325,13 +351,13 @@ export function createSessionBookVisuals(options: {
       if (!j) return;
       const dt = Math.min(0.05, Math.max(0, delta));
       // The same coordinator clock as the agency; background time does not expire a physical owner.
-      const bookLease = options.interactions.reserve(
+      const bookLease = options.interactions.retain(
         j.visual.book.instanceId,
         "session",
         j.task,
         options.now(),
       );
-      const surfaceLease = options.interactions.reserve(
+      const surfaceLease = options.interactions.retain(
         SESSION_READING_RESOURCE,
         "session",
         j.task,
@@ -357,15 +383,17 @@ export function createSessionBookVisuals(options: {
         Math.sign(desiredOpening - j.opening) *
           Math.min(Math.abs(desiredOpening - j.opening), dt * 0.65);
       // Opening is real cover articulation on the original volume, not skeletal page animation.
-      j.visual.representation.animation.setOpening(nextOpening);
-      j.visual.node.updateWorldMatrix(true, true);
-      const coverBox = j.visual.representation.animation.worldBounds();
-      if (
-        nextOpening <= j.opening ||
-        !j.obstacles.some((b) => b.intersectsBox(coverBox))
-      )
-        j.opening = nextOpening;
-      j.visual.representation.animation.setOpening(j.opening);
+      if (nextOpening !== j.opening) {
+        j.visual.representation.animation.setOpening(nextOpening);
+        j.visual.node.updateWorldMatrix(true, true);
+        const coverBox = j.visual.representation.animation.worldBounds();
+        if (
+          nextOpening <= j.opening ||
+          !j.obstacles.some((b) => b.intersectsBox(coverBox))
+        )
+          j.opening = nextOpening;
+        else j.visual.representation.animation.setOpening(j.opening);
+      }
       const direction = returning ? -1 : 1; // A pause finishes the safe landing, then rests closed.
       if (
         (!returning || j.opening === 0) &&
@@ -402,7 +430,11 @@ export function createSessionBookVisuals(options: {
           write(j, b);
         }
       }
-      lightMaterials(j.visual, active ? 0.12 + j.opening * 0.16 : 0.025);
+      const glow = active ? 0.12 + j.opening * 0.16 : 0.025;
+      if (j.glow !== glow) {
+        j.glow = glow;
+        lightMaterials(j.visual, glow);
+      }
       if (returning && j.progress === 0 && j.opening === 0) release();
     },
     dispose() {

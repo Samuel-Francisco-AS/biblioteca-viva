@@ -1,0 +1,13 @@
+{
+  "scenario": "600x1/60s; day; three books; one resting scroll; personal reading landed; no GPU",
+  "counters": {
+    "frames": 600,
+    "sceneTraversals": 600,
+    "colorLerps": 2400,
+    "boxFromObject": 1200,
+    "coverWrites": 1200,
+    "glowWrites": 600,
+    "leaseReservations": 1200,
+    "vectorClones": 600
+  }
+}

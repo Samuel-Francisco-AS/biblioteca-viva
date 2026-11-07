@@ -1,3 +1,5 @@
+> **R3A — 07/11/2026:** em 600 frames determinísticos no host: travessias 600→0, lerps de cor 2.400→0, bounds 1.200→1, clones Vector3 600→0. [Cenário, tradeoffs e reprodução](audits/BV_RECUPERACAO_R3.md). Não é FPS/GC/GPU Android medido; arte e taxas de animação preservadas.
+
 ## Saneamento pós-R2 — redução local (06/11/2026)
 
 Uma instância de Estudo/Trabalho/Filmes/Atividade Física, somadas: 7.644→4.216 triângulos potenciais, 19→18 meshes/materiais após batch. Mesmo mundo completo com dois de cada: 241.554→234.698 triângulos potenciais, 628→626 meshes, 191→189 materiais e 2.326.308→2.187.380 B de arrays geométricos CPU. Nenhuma das 12 vistas aumentou calls/triângulos desenhados; nenhuma luz, transparência ou atualização por frame nova para os registros. Dados de host/SwiftShader, sem ganho de FPS/GPU/input alegado; o lag relatado no Moto G06 continua pendente de medição física. [Tabelas por categoria/vista, receita e evidências](audits/BV_SANEAMENTO_POS_R2.md#custo-pareado). R3 não iniciada.

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { InteractionCoordinator } from "./inhabitantInteractions";
 
 describe("BF-5.5B interaction leases", () => {
@@ -26,4 +26,21 @@ describe("BF-5.5B interaction leases", () => {
       false,
     );
   });
+});
+
+it("retains immutable leases without renewal churn and detects theft, expiry and release immediately", () => {
+  const c = new InteractionCoordinator();
+  const original = c.reserve("book", "session", "reading", 0)!;
+  const reserve = vi.spyOn(c, "reserve");
+  for (let t = 1; t < 20_000; t += 16)
+    expect(c.retain("book", "session", "reading", t)).toBe(original);
+  expect(reserve).not.toHaveBeenCalled();
+  const renewed = c.retain("book", "session", "reading", 20_000)!;
+  expect(renewed.expiresAt).toBe(50_000);
+  expect(original.expiresAt).toBe(30_000);
+  c.release("book", "session", "reading");
+  c.reserve("book", "lua", "other", 20_001);
+  expect(c.retain("book", "session", "reading", 20_002)).toBeNull();
+  expect(c.owns("book", "lua", "other", 20_002)).toBe(true);
+  expect(c.retain("book", "session", "reading", 50_002)?.owner).toBe("session");
 });

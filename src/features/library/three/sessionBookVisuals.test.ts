@@ -80,6 +80,38 @@ function setup(count = 3, occupiedSurfaces = () => [] as string[]) {
   };
 }
 describe("BF-5.5F2A original session book", () => {
+  it("invalidates the resting envelope for parent transforms and cover motion, preserving previous snapshots", () => {
+    const f = setup();
+    f.controller.apply(activity);
+    f.step(42);
+    const visual = f.visuals[2];
+    const first = f.controller.navigationObstacles();
+    expect(first).toHaveLength(1);
+    const bounds = vi.spyOn(Box3.prototype, "setFromObject");
+    const opening = vi.spyOn(visual.representation.animation, "setOpening");
+    f.controller.update(0.05, false);
+    expect(f.controller.navigationObstacles()).toBe(first);
+    expect(bounds).not.toHaveBeenCalled();
+    expect(opening).not.toHaveBeenCalled();
+    const previous = first[0].minX;
+    const parent = visual.node.parent!;
+    parent.position.x += 0.2;
+    parent.updateMatrix();
+    const moved = f.controller.navigationObstacles();
+    expect(moved[0].minX).toBeCloseTo(previous + 0.2);
+    expect(first[0].minX).toBe(previous);
+    parent.rotation.y += 0.3;
+    parent.updateMatrix();
+    expect(f.controller.navigationObstacles()).not.toBe(moved);
+    parent.position.x -= 0.2;
+    parent.rotation.y -= 0.3;
+    parent.updateMatrix();
+    f.controller.apply({ ...activity, status: "paused", revision: 2 });
+    f.controller.update(0.05, false);
+    expect(opening).toHaveBeenCalled();
+    expect(f.controller.navigationObstacles()).not.toBe(first);
+    f.dispose();
+  });
   it.each([
     [3, activity.instanceId],
     [3, SESSION_READING_RESOURCE],

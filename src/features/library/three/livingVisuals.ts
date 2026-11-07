@@ -37,7 +37,39 @@ export function createLivingVisuals(
   scene: Scene,
   session: LivingSession,
   nightLighting?: NightLightingSession,
+  environmentLights?: readonly (HemisphereLight | DirectionalLight)[],
 ) {
+  // Captured once by this mount. Runtime supplies the lights it owns; the
+  // fallback supports standalone factory callers without a per-frame search.
+  const lights = [...(environmentLights ?? [])];
+  if (!environmentLights)
+    scene.traverse((object) => {
+      if (
+        object instanceof HemisphereLight ||
+        object instanceof DirectionalLight
+      )
+        lights.push(object);
+    });
+  let lightingKey = "";
+  let lightingPending = true;
+  let disposed = false;
+  const approachLight = (current: number, target: number, blend: number) => {
+    const next = current + (target - current) * blend;
+    return Math.abs(target - next) < 1e-5 ? target : next;
+  };
+  const blendColor = (current: Color, target: Color, blend: number) => {
+    if (current.equals(target)) return false;
+    current.lerp(target, blend);
+    if (
+      Math.max(
+        Math.abs(current.r - target.r),
+        Math.abs(current.g - target.g),
+        Math.abs(current.b - target.b),
+      ) < 1e-5
+    )
+      current.copy(target);
+    return !current.equals(target);
+  };
   const root = new Group();
   root.name = "living-objects";
   // Effects have no physical volume. Each tangible family below owns its own
@@ -238,6 +270,13 @@ export function createLivingVisuals(
       object,
       moving,
       light,
+      pages:
+        object.family === "book"
+          ? group.getObjectByName("living-page-pivot")
+          : undefined,
+      leaves: group.children.filter((child) =>
+        child.name.startsWith("living-leaf-"),
+      ),
       shade:
         object.family === "lamp"
           ? building.getObjectByName(`living-shade:${object.anchor}`)
@@ -273,7 +312,7 @@ export function createLivingVisuals(
           const shade = building.getObjectByName(
             `living-shade:${fixture.id.replace("night-lamp:", "")}`,
           );
-          return { fixture, group, light, glow, shade };
+          return { fixture, group, light, glow, shade, target: -1 };
         })
       : [];
   const daytimeSky = new Color(0xffedd2);
@@ -358,28 +397,54 @@ export function createLivingVisuals(
   };
   return {
     selectables,
+    // Tree resources belong to the building; release only borrowed references here.
+    dispose() {
+      disposed = true;
+      lights.length = 0;
+    },
+    reconcileLighting() {
+      lightingPending = true;
+    },
     update(delta: number, reduced: boolean, narrativeAtmosphere?: Atmosphere) {
+      if (disposed) return;
       delta = Number.isFinite(delta) ? Math.min(Math.max(delta, 0), 0.05) : 0;
       elapsed += delta;
       const state = session.getSnapshot();
       const atmosphere = narrativeAtmosphere ?? state.atmosphere;
       sparks.visible = atmosphere === "encantada";
       const blend = reduced ? 1 : Math.min(1, delta * 3);
-      for (const { fixture, light, glow, shade } of ambientLamps) {
-        const target = nightLighting?.power(fixture.id) ?? 0;
-        light.intensity = reduced
-          ? 4.2 * target
-          : light.intensity + (4.2 * target - light.intensity) * blend;
-        // A zero-power light otherwise still participates in Three's light list/shader.
-        if (target === 0 && light.intensity < 0.0001) light.intensity = 0;
-        light.visible = light.intensity > 0;
-        glow.visible = target > 0;
-        if (
-          shade instanceof Mesh &&
-          shade.material instanceof MeshPhongMaterial
-        ) {
-          shade.material.emissive.setHex(0xffac51);
-          shade.material.emissiveIntensity = target * 0.55;
+      const night = nightLighting?.getSnapshot();
+      const pendingLamp = ambientLamps.find(
+        (lamp) => !night?.completedLampIds.includes(lamp.fixture.id),
+      );
+      // Only the unresolved fallback depends on wall time (45s after dusk).
+      const pendingPower = pendingLamp
+        ? (nightLighting?.power(pendingLamp.fixture.id) ?? 0)
+        : 0;
+      for (const lamp of ambientLamps) {
+        const { fixture, light, glow, shade } = lamp;
+        const target = night?.cycleKey
+          ? night.completedLampIds.includes(fixture.id)
+            ? 1
+            : pendingPower
+          : 0;
+        const intensity = 4.2 * target;
+        if (light.intensity !== intensity) {
+          light.intensity = approachLight(light.intensity, intensity, blend);
+          if (target === 0 && light.intensity < 0.0001) light.intensity = 0;
+        }
+        if (light.visible !== light.intensity > 0)
+          light.visible = light.intensity > 0;
+        if (lamp.target !== target) {
+          lamp.target = target;
+          glow.visible = target > 0;
+          if (
+            shade instanceof Mesh &&
+            shade.material instanceof MeshPhongMaterial
+          ) {
+            shade.material.emissive.setHex(0xffac51);
+            shade.material.emissiveIntensity = target * 0.55;
+          }
         }
         if (glow.visible)
           glow.scale.setScalar(
@@ -431,7 +496,7 @@ export function createLivingVisuals(
           case "book":
             if (bookCarried) break;
             {
-              const pages = item.root.getObjectByName("living-page-pivot");
+              const pages = item.pages;
               if (pages)
                 pages.rotation.x = approach(
                   pages.rotation.x,
@@ -461,10 +526,9 @@ export function createLivingVisuals(
           case "plant":
             item.moving.visible = value.active || atmosphere === "encantada";
             item.moving.rotation.z = reduced ? 0 : Math.sin(elapsed * 2) * 0.12;
-            item.root.children.forEach((child) => {
-              if (child.name.startsWith("living-leaf-"))
-                child.rotation.x =
-                  reduced || !value.active ? 0 : Math.sin(elapsed * 2) * 0.18;
+            item.leaves.forEach((child) => {
+              child.rotation.x =
+                reduced || !value.active ? 0 : Math.sin(elapsed * 2) * 0.18;
             });
             break;
           case "clock":
@@ -504,37 +568,69 @@ export function createLivingVisuals(
           nightLighting !== undefined);
       for (const item of selectables)
         if (item.light) item.light.visible = item.light.intensity > 0;
-      scene.traverse((object) => {
-        if (object instanceof HemisphereLight) {
-          const intensity = dark ? 1.08 : atmosphere === "encantada" ? 1.25 : 2;
-          object.intensity = reduced
-            ? intensity
-            : object.intensity + (intensity - object.intensity) * blend;
-          object.color.lerp(dark ? nighttimeSky : daytimeSky, blend);
-          object.groundColor.lerp(
-            dark ? nighttimeGround : daytimeGround,
+      const nextKey = `${dark}:${atmosphere}:${reduced}`;
+      if (nextKey !== lightingKey) {
+        lightingKey = nextKey;
+        lightingPending = true;
+      }
+      if (lightingPending) {
+        lightingPending = false;
+        for (const object of lights) {
+          const intensity =
+            object instanceof HemisphereLight
+              ? dark
+                ? 1.08
+                : atmosphere === "encantada"
+                  ? 1.25
+                  : 2
+              : dark
+                ? 0.8
+                : 1.5;
+          if (object.intensity !== intensity) {
+            object.intensity = approachLight(
+              object.intensity,
+              intensity,
+              blend,
+            );
+            lightingPending ||= object.intensity !== intensity;
+          }
+          // Do not short circuit: all color channels must advance this frame.
+          const colorPending = blendColor(
+            object.color,
+            object instanceof HemisphereLight
+              ? dark
+                ? nighttimeSky
+                : daytimeSky
+              : dark
+                ? nighttimeMoon
+                : daytimeSun,
             blend,
           );
+          lightingPending = colorPending || lightingPending;
+          if (object instanceof HemisphereLight) {
+            const groundPending = blendColor(
+              object.groundColor,
+              dark ? nighttimeGround : daytimeGround,
+              blend,
+            );
+            lightingPending = groundPending || lightingPending;
+          }
         }
-        if (object instanceof DirectionalLight) {
-          const intensity = dark ? 0.8 : 1.5;
-          object.intensity = reduced
-            ? intensity
-            : object.intensity + (intensity - object.intensity) * blend;
-          object.color.lerp(dark ? nighttimeMoon : daytimeSun, blend);
+        if (scene.background instanceof Color) {
+          const backgroundPending = blendColor(
+            scene.background,
+            dark ? nighttimeBackdrop : daytimeBackdrop,
+            blend,
+          );
+          lightingPending = backgroundPending || lightingPending;
         }
-      });
-      if (scene.background instanceof Color)
-        scene.background.lerp(
-          dark ? nighttimeBackdrop : daytimeBackdrop,
-          blend,
-        );
+      }
     },
     driveInhabitantInteractions(
       poses: readonly AgentView[],
       getCarryAnchor: (id: string) => import("three").Object3D | null,
     ) {
-      if (!book || !bookRestPosition) return;
+      if (disposed || !book || !bookRestPosition) return;
       const interaction = poses.find(
         (pose) =>
           pose.interactionObjectId === "living:book" &&
@@ -572,7 +668,7 @@ export function createLivingVisuals(
       }
       setBookWorldQuaternion(anchor.getWorldQuaternion(worldQuaternion));
       book.moving.rotation.set(0, 0, 0);
-      book.root.getObjectByName("living-page-pivot")?.rotation.set(0, 0, 0);
+      book.pages?.rotation.set(0, 0, 0);
     },
   };
 }

@@ -612,14 +612,18 @@ export class ThreeWorldRuntime implements WorldRuntime {
       // unmodified reference scene for legacy BF-2 and F5 only.
       const referenceScene = composedWorld ? undefined : createReferenceScene();
 
+      const environmentLights: (HemisphereLight | DirectionalLight)[] = [];
       scene.background = new Color(0x18342d);
       if (referenceScene) {
         mountedWorld.addReferenceScene(referenceScene);
         scene.add(referenceScene.root);
       } else {
-        scene.add(new HemisphereLight(0xffedd2, 0x58665b, 2));
+        const hemisphere = new HemisphereLight(0xffedd2, 0x58665b, 2);
+        environmentLights.push(hemisphere);
+        scene.add(hemisphere);
         const sunlight = new DirectionalLight(0xffdfac, 1.5);
         sunlight.position.set(-4, 12, 7);
+        environmentLights.push(sunlight);
         scene.add(sunlight);
       }
       const proceduralSelectables = this.performanceScenarioDiagnosticsEnabled
@@ -695,6 +699,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
             scene,
             this.livingSession,
             this.nightLighting,
+            environmentLights,
           );
         const records = createLibraryRecordComposition(
           this.libraryRecordPlacements ?? [],
@@ -1352,11 +1357,14 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.agencyClock += delta * 1000;
       this.sessionBooks?.update(delta, reduced, this.agency?.getPoses() ?? []);
       this.agency?.update();
-      this.checkpointInhabitants(false);
-      if (this.agency) this.inhabitants?.drive(this.agency.getPoses());
+      // Session collision reads the preceding phase; all post-agency consumers
+      // share one detached snapshot, never mutable Agent objects.
+      const poses = this.agency?.getPoses() ?? [];
+      this.checkpointInhabitants(false, poses);
+      this.inhabitants?.drive(poses);
       if (this.agency && this.livingVisuals && this.inhabitants)
         this.livingVisuals.driveInhabitantInteractions(
-          this.agency.getPoses(),
+          poses,
           (id) => this.inhabitants?.getCarryAnchor(id) ?? null,
         );
       this.inhabitants?.update(delta, reduced);
@@ -1364,7 +1372,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.scrollVisuals?.update(
         delta,
         reduced,
-        this.agency?.getPoses() ?? [],
+        poses,
         (id) => this.inhabitants?.getCarryAnchor(id) ?? null,
       );
       if (
@@ -1456,6 +1464,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.state = "running";
     this.pausedByVisibility = false;
     this.nightLighting?.refreshContext();
+    this.livingVisuals?.reconcileLighting();
     this.resetFrameMetrics();
     const timestamp = this.now();
     if (!this.viewportReady) {
@@ -1508,9 +1517,11 @@ export class ThreeWorldRuntime implements WorldRuntime {
   }
 
   /** Periodic lightweight snapshots, plus pause/close; no IndexedDB per frame. */
-  private checkpointInhabitants(force: boolean): void {
+  private checkpointInhabitants(
+    force: boolean,
+    poses?: readonly import("../inhabitantAgency").AgentView[],
+  ): void {
     if (!this.agency || !this.onInhabitantCheckpoint) return;
-    if (!this.agency.getPoses().some((actor) => actor.available)) return;
     const now = this.now();
     if (
       !force &&
@@ -1519,6 +1530,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     ) {
       return;
     }
+    if (!(poses ?? this.agency.getPoses()).some((actor) => actor.available))
+      return;
     this.lastContinuityCheckpointAt = now;
     try {
       this.onInhabitantCheckpoint(this.agency.captureContinuity());
@@ -1547,6 +1560,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.sessionVisuals = undefined;
     this.inhabitants?.dispose();
     this.inhabitants = undefined;
+    this.livingVisuals?.dispose();
     this.livingVisuals = undefined;
     this.scrollVisuals = undefined;
     this.ambientMagic = undefined;

@@ -39,6 +39,22 @@ export interface InteractionLease {
 export class InteractionCoordinator {
   private readonly leases = new Map<string, InteractionLease>();
 
+  /** Validate ownership on every use, extend only near expiry. Returned leases
+   * are immutable; no consumer can retain a reference that changes underneath it. */
+  retain(
+    resourceId: string,
+    owner: InteractionLease["owner"],
+    taskId: string,
+    now: number,
+  ): InteractionLease | null {
+    const current = this.leases.get(resourceId);
+    if (current && current.expiresAt > now) {
+      if (current.owner !== owner || current.taskId !== taskId) return null;
+      if (current.expiresAt - now > 10_000) return current;
+    }
+    return this.reserve(resourceId, owner, taskId, now);
+  }
+
   reserve(
     resourceId: string,
     owner: InhabitantKey | "session",

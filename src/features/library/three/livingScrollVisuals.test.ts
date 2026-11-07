@@ -1,5 +1,5 @@
-import { expect, it } from "vitest";
-import { Group } from "three";
+import { expect, it, vi } from "vitest";
+import { Group, Vector3 } from "three";
 import {
   createLivingScrollVisuals,
   enchantmentAt,
@@ -111,4 +111,31 @@ it("recovers the same carried object when its agency is discarded during transpo
   expect(original.position.y).toBeCloseTo(visuals.selectables[0].rest.y);
   disposeObjectTree(building);
   expect(building.getObjectById(original.id)).toBeUndefined();
+});
+
+it("keeps resting tails idle and reuses samples during flight without suppressing motion", () => {
+  const building = createProceduralLibraryBuilding(true);
+  const visuals = createLivingScrollVisuals(building, [scroll], []);
+  const s = visuals.selectables[0];
+  const samples = [...s.history];
+  const copy = vi.spyOn(s.history[0], "copy");
+  const clone = vi.spyOn(Vector3.prototype, "clone");
+  for (let i = 0; i < 600; i++) visuals.update(1 / 60, false, [], () => null);
+  expect(clone).not.toHaveBeenCalled();
+  expect(copy).not.toHaveBeenCalled();
+  expect(s.trail.visible).toBe(false);
+  const rest = s.root.position.clone();
+  for (let i = 0; i < 500 && !visuals.hasFlight(); i++)
+    visuals.update(0.05, false, [], () => null);
+  expect(visuals.hasFlight()).toBe(true);
+  for (let i = 0; i < 50; i++) visuals.update(0.05, false, [], () => null);
+  expect(s.root.position.distanceTo(rest)).toBeGreaterThan(0.1);
+  expect(s.trail.visible).toBe(true);
+  expect(s.history).toHaveLength(36);
+  s.history.forEach((p, i) => expect(p).toBe(samples[i]));
+  expect(
+    s.trail.children.every((m) => m.position.toArray().every(Number.isFinite)),
+  ).toBe(true);
+  vi.restoreAllMocks();
+  disposeObjectTree(building);
 });

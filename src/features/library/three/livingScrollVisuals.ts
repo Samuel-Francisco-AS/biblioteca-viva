@@ -124,7 +124,11 @@ export function createLivingScrollVisuals(
         time: number;
       } | null,
       wakeAt: 15 + i * 5,
-      history: [] as Vector3[],
+      target: new Vector3(),
+      direction: new Vector3(),
+      history: Array.from({ length: 36 }, () => group.position.clone()),
+      historyHead: 0,
+      trailActive: false,
     };
   });
   return {
@@ -141,8 +145,10 @@ export function createLivingScrollVisuals(
           (s) =>
             !s.held &&
             !s.flight &&
-            s.root.position.distanceTo(
-              new Vector3(s.rest.x, s.rest.y, s.rest.z),
+            Math.hypot(
+              s.root.position.x - s.rest.x,
+              s.root.position.y - s.rest.y,
+              s.root.position.z - s.rest.z,
             ) < 0.02,
         )
         .map((s) => ({
@@ -193,8 +199,10 @@ export function createLivingScrollVisuals(
         }
         const flight = Boolean(s.flight);
         const target = s.flight
-          ? sampleScrollFlight(s.flight.points, s.flight.time / 18)
-          : new Vector3(s.rest.x, s.rest.y, s.rest.z);
+          ? s.target.copy(
+              sampleScrollFlight(s.flight.points, s.flight.time / 18),
+            )
+          : s.target.set(s.rest.x, s.rest.y, s.rest.z);
         if (pose) target.copy(s.reservedPosition);
         if (
           pose &&
@@ -209,7 +217,8 @@ export function createLivingScrollVisuals(
             root.worldToLocal(target);
           }
         }
-        if (reduced) s.root.position.copy(target);
+        if (reduced || s.root.position.distanceToSquared(target) < 1e-16)
+          s.root.position.copy(target);
         else s.root.position.lerp(target, Math.min(1, delta * 5));
         const intensity = s.flight
           ? Math.sin((Math.PI * s.flight.time) / 18)
@@ -221,7 +230,9 @@ export function createLivingScrollVisuals(
           ? 0
           : Math.sin(elapsed * 1.3) * 0.08 * intensity;
         if (s.flight) {
-          const direction = s.flight.points[2].clone().sub(s.flight.points[1]);
+          const direction = s.direction
+            .copy(s.flight.points[2])
+            .sub(s.flight.points[1]);
           const yaw = Math.atan2(direction.x, direction.z) * intensity;
           s.root.rotation.y +=
             Math.atan2(
@@ -231,11 +242,18 @@ export function createLivingScrollVisuals(
         }
         s.sheet.scale.z = 1 + intensity * 0.25;
         s.trail.visible = flight && !reduced;
-        s.history.unshift(s.root.position.clone());
-        s.history.length = Math.min(s.history.length, 36);
-        s.trail.children.forEach((m, j) => {
-          m.position.copy(s.history[Math.min(s.history.length - 1, j * 4)]);
-        });
+        if (s.trail.visible) {
+          // Preserve the 36-sample tail while allocating only at mount. Idle
+          // scrolls do no history work; a new flight starts at its actual rest.
+          if (!s.trailActive)
+            for (const point of s.history) point.copy(s.root.position);
+          s.historyHead = (s.historyHead + 35) % 36;
+          s.history[s.historyHead].copy(s.root.position);
+          s.trail.children.forEach((m, j) => {
+            m.position.copy(s.history[(s.historyHead + j * 4) % 36]);
+          });
+        }
+        s.trailActive = s.trail.visible;
       }
     },
   };

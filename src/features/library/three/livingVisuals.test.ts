@@ -5,6 +5,8 @@ import { describe, expect, it, vi } from "vitest";
 import {
   Box3,
   HemisphereLight,
+  DirectionalLight,
+  Color,
   PointLight,
   Mesh,
   Object3D,
@@ -25,6 +27,66 @@ import { createLivingVisuals } from "./livingVisuals";
 import { disposeObjectTree } from "./referenceScene";
 import { LIBRARY_ROOMS } from "../libraryBuildingGeometry";
 describe("living visuals", () => {
+  it("settles lighting, wakes for reversal, fallback and reconciliation without traversing the scene", () => {
+    let now = new Date(2026, 10, 7, 17, 59);
+    const scene = new Scene();
+    scene.background = new Color(0x18342d);
+    const sky = new HemisphereLight(0xffedd2, 0x58665b, 2);
+    const sun = new DirectionalLight(0xffdfac, 1.5);
+    const building = createProceduralLibraryBuilding(true);
+    scene.add(building, sky, sun);
+    const session = new LivingSession(() => now);
+    const night = new NightLightingSession(() => now);
+    const visuals = createLivingVisuals(building, scene, session, night, [
+      sky,
+      sun,
+    ]);
+    const traverse = vi.spyOn(scene, "traverse");
+    const lerp = vi.spyOn(Color.prototype, "lerp");
+    const settle = () => {
+      for (let i = 0; i < 600; i++) visuals.update(1 / 60, false);
+    };
+    settle();
+    lerp.mockClear();
+    settle();
+    expect(lerp).not.toHaveBeenCalled();
+    session.setAtmosphere("noturna");
+    visuals.update(1 / 60, false);
+    expect(sky.intensity).toBeLessThan(2);
+    session.setAtmosphere("encantada");
+    settle();
+    expect(sky.intensity).toBe(1.25);
+    expect(sun.intensity).toBe(1.5);
+    now = new Date(2026, 10, 7, 18);
+    night.refreshContext();
+    settle();
+    expect(sky.intensity).toBe(1.08);
+    expect(sun.intensity).toBe(0.8);
+    const lamps = NIGHT_LAMPS.map(
+      (l) => building.getObjectByName(`${l.id}:light`) as PointLight,
+    );
+    expect(lamps.every((l) => l.intensity === 4.2 * 0.68)).toBe(true);
+    now = new Date(2026, 10, 7, 18, 0, 46);
+    settle(); // fallback changes without a new revision
+    expect(lamps.every((l) => l.intensity === 4.2)).toBe(true);
+    sky.intensity = 0;
+    visuals.reconcileLighting();
+    settle();
+    expect(sky.intensity).toBe(1.08);
+    now = new Date(2026, 10, 8, 6);
+    night.refreshContext();
+    settle();
+    expect(lamps.every((l) => l.intensity === 0 && !l.visible)).toBe(true);
+    expect(sky.intensity).toBe(1.25);
+    expect(traverse).not.toHaveBeenCalled();
+    visuals.dispose();
+    const before = sky.intensity;
+    session.setAtmosphere("noturna");
+    visuals.update(1, true);
+    expect(sky.intensity).toBe(before);
+    vi.restoreAllMocks();
+    disposeObjectTree(scene);
+  });
   it("illuminates nine real shades after dusk and preserves the manually controlled secret lamp", () => {
     let now = new Date(2026, 10, 5, 17, 59);
     const night = new NightLightingSession(() => now);
