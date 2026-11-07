@@ -1,3 +1,5 @@
+import { useSearchParams } from "react-router-dom";
+import { useAnnotationTarget } from "./useAnnotationTarget";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import type { LibraryEntry, Note, Quote } from "../../domain";
 import { AnnotationActions } from "../annotations/AnnotationActions";
@@ -45,7 +47,22 @@ export function RecordMemories({
   const [error, setError] = useState<string>(),
     [busy, setBusy] = useState(false);
   const [drafts, setDrafts] = useState({ note: "", quote: "" });
-  const [kind, setKind] = useState<"note" | "quote">("note");
+  const [params] = useSearchParams();
+  const requestedKind =
+    params.get("annotationKind") === "quote" ? "quote" : "note";
+  const targetKey = `${requestedKind}:${params.get("annotationId") ?? ""}`;
+  const [tab, setTab] = useState<{ key: string; kind: "note" | "quote" }>({
+    key: targetKey,
+    kind: requestedKind,
+  });
+  const kind = tab.key === targetKey ? tab.kind : requestedKind;
+  const setKind = (value: "note" | "quote") =>
+    setTab({ key: targetKey, kind: value });
+  const {
+    ref: targetRef,
+    missing: targetMissing,
+    id: targetId,
+  } = useAnnotationTarget(notes, quotes, kind);
   const copy = entryExperience[entry.type];
   const allowsQuotes =
     entry.type === "movie" || entry.type === "series" || entry.type === "study";
@@ -182,9 +199,22 @@ export function RecordMemories({
           {kind === "note" ? "Adicionar nota" : "Adicionar citação"}
         </button>
       </form>
-      <ul className="annotation-list">
+      {targetMissing && (
+        <p role="status">Este conteúdo não está mais disponível.</p>
+      )}
+      <ul className="annotation-list" ref={targetRef}>
         {(kind === "note" ? notes : quotes).map((annotation) => (
-          <li key={annotation.id}>
+          <li
+            key={annotation.id}
+            tabIndex={-1}
+            data-annotation-id={annotation.id}
+            data-annotation-kind={kind}
+            style={
+              targetId === annotation.id && requestedKind === kind
+                ? { outline: "2px solid var(--color-accent, #af8a50)" }
+                : undefined
+            }
+          >
             <p>{annotation.content}</p>
             <small>
               {new Date(annotation.createdAt).toLocaleDateString("pt-BR")}

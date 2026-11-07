@@ -1,3 +1,29 @@
+> **R3C — 07/11/2026:** dez ciclos WebGL com 341 recursos acompanhados por montagem, zero omissões/duplicações no descarte e zero RAF/listeners/observer próprios pendentes. Contexto termina perdido. **Heap/DOM host não declarados estáveis:** resíduo +1 nó/ciclo e heap pós-GC 22,95→24,77 MB, sem retentor causal atribuído; não é medição Android/GPU. [Dados, limites e diagnóstico](audits/BV_RECUPERACAO_R3.md#r3c--bv-15).
+
+> **R3A — 07/11/2026:** em 600 frames determinísticos no host: travessias 600→0, lerps de cor 2.400→0, bounds 1.200→1, clones Vector3 600→0. [Cenário, tradeoffs e reprodução](audits/BV_RECUPERACAO_R3.md). Não é FPS/GC/GPU Android medido; arte e taxas de animação preservadas.
+
+## Saneamento pós-R2 — redução local (06/11/2026)
+
+Uma instância de Estudo/Trabalho/Filmes/Atividade Física, somadas: 7.644→4.216 triângulos potenciais, 19→18 meshes/materiais após batch. Mesmo mundo completo com dois de cada: 241.554→234.698 triângulos potenciais, 628→626 meshes, 191→189 materiais e 2.326.308→2.187.380 B de arrays geométricos CPU. Nenhuma das 12 vistas aumentou calls/triângulos desenhados; nenhuma luz, transparência ou atualização por frame nova para os registros. Dados de host/SwiftShader, sem ganho de FPS/GPU/input alegado; o lag relatado no Moto G06 continua pendente de medição física. [Tabelas por categoria/vista, receita e evidências](audits/BV_SANEAMENTO_POS_R2.md#custo-pareado). R3 não iniciada.
+
+## Recuperação R2C — custo dos registros (06/11/2026)
+
+Reforma visual medida no mesmo mundo fictício: 220.362→241.554 triângulos potenciais; 648→628 meshes; materiais 165→191, texturas iguais por vista. Buffers geométricos CPU 1.712.308→2.326.308 B, sem equiparar a RAM/GPU. Encadernação instancia dois recursos por livro sob grupos fixo/articulado; demais registros são agregados por material. Não se sacrifica arte para manter contagem anterior. Navegação final: 125 obstáculos no cenário pareado de 13 registros não livrescos e estantes sem volumes pessoais, 65 rotas válidas/7 inválidas preservadas, asas intactas. [Custos individuais, imagens e limitações físicas](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md#r2c--seis-representações-pessoais-e-assets-substituíveis-06112026).
+
+## Recuperação R2B — renderização (06/11/2026)
+
+Runtime completo fictício/Chromium SwiftShader/DPR1: normal 353→326 calls com os mesmos 178.252 triângulos; afastada 452→403 calls com 188.176→188.752 triângulos por culling agregado. 729→648 meshes; materiais 165 e texturas 3/4 mantidos; matrizes locais 5.808→4.872 em seis frames. Buffers CPU 1.401.916→1.712.308 B e programas acumulados 25→46 são custos explícitos. Tempos CPU mistos: sem FPS/GPU/performance física concluída. [Métricas, imagens e receita](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md#r2b--renderização-sem-redução-artística-06112026).
+
+## Recuperação R2A — navegação (06/11/2026)
+
+Mesmo mundo cheio fictício: 1.220→155 obstáculos, 138 nós mantidos; P50 de construção do grafo de Ytha 95,94→18,31 ms no host e testes exatos 3.270.560→12.187. Índice espacial, pares simétricos únicos, caches por envelope/montagem e colliders autorais; 65 rotas válidas e sete inválidas preservadas contra baseline e oracle detalhado R1. [P50/P95, receita e dados brutos](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md#r2a--navegação-e-colisores-06112026). CPU local não mede GPU, apresentação ou Moto G06; gate físico pendente.
+
+## Recuperação R1 — trabalho removido do input (06/11/2026)
+
+Geometria de pisos preparada por câmera e restrições limitadas a dois zooms eliminam reconstrução em pan de viewport/zoom invariáveis. Pinch constrói somente a região do zoom novo. Busca linear substitui sort que repetia projeções; helpers compartilham uma normalização por gesto. Picking faz um raycast por hierarquia selecionável e não força matrizes da cena decorativa inteira.
+
+[Baseline, P50/P95/P99 CPU do host, contadores e reprodução](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md). Esses tempos não são FPS/latência Android ou GPU. Sem alteração artística/DPR; Moto G06 não conectado e E2E dirigido FAIL. Não declarar fluidez recuperada no aparelho.
+
 # Desempenho e estabilidade
 
 ## BF-5R7 — eficiência sem redução visual

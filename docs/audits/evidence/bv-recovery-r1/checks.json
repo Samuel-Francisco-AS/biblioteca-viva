@@ -1,0 +1,86 @@
+{
+  "scope": "R1; local evidence; not CI or physical Android approval",
+  "directedBaseline": {
+    "files": 6,
+    "passed": 97,
+    "failed": 0,
+    "sha": "254ae15d48a10896d00b8a6b539532725375d13c"
+  },
+  "directedAfterInitial": {
+    "files": 6,
+    "passed": 97,
+    "failed": 0
+  },
+  "directedAfterFinalHierarchyCorrection": {
+    "files": 5,
+    "passed": 71,
+    "failed": 0,
+    "filesCovered": [
+      "cameraRecovery.test.ts",
+      "ThreeWorldInteraction.test.ts",
+      "ThreeWorldRuntime.test.ts",
+      "ThreeWorldRuntime.d1.test.ts",
+      "smallLivingTapTargets.test.ts"
+    ]
+  },
+  "broadSingleRunBeforeLastRegressionAdded": {
+    "passedFiles": 138,
+    "failedFiles": 1,
+    "passed": 884,
+    "failed": 1,
+    "failure": "inhabitantAgency.test.ts:245; 5000 ms timeout; observed 5920 ms"
+  },
+  "agencyIsolated": {
+    "baseline": {
+      "passed": 9,
+      "failed": 0
+    },
+    "candidate": {
+      "passed": 9,
+      "failed": 0
+    },
+    "interpretation": "Load sensitivity; not proof of a unique cause or broad suite PASS"
+  },
+  "e2e": {
+    "retries": 0,
+    "candidate": {
+      "passed": 0,
+      "failed": 3,
+      "details": {
+        "bf5r4-experience.spec.ts:120": "mouse.move timeout",
+        "bf5r5-experience.spec.ts:38": "canvas visible after tab click",
+        "bf5r5-world-input.spec.ts:14": "frame loop still 1 after tab click"
+      }
+    },
+    "baseline": {
+      "passed": 0,
+      "failed": 3,
+      "details": {
+        "bf5r4-experience.spec.ts:117": "getAttribute timeout before movement",
+        "bf5r5-experience.spec.ts:11": "fixture ready element missing",
+        "bf5r5-world-input.spec.ts:14": "frame loop still 1 after tab click"
+      }
+    },
+    "limitation": "Baseline E2E overlapped broad unit run. Same failing names do not prove same cause; no timing comparison."
+  },
+  "finalGates": {
+    "format:check": "PASS",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "audio:check": "PASS",
+    "build": "PASS",
+    "performance:report": "PASS",
+    "git diff --check": "PASS"
+  },
+  "buildWarnings": [
+    "chunks above 500 kB; not changed to suppress warning"
+  ],
+  "android": {
+    "adb": "no devices connected",
+    "syncApk": "not executed",
+    "physicalGate": "pending",
+    "presentationPercentiles": "not measured",
+    "gpuTime": "not measured"
+  },
+  "remoteCI": "not inferred from local runs; report at delivery"
+}

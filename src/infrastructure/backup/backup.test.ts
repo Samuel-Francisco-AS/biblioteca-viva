@@ -6,7 +6,9 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import {
   BACKUP_FORMAT_VERSION,
+  BACKUP_KIND,
   ExportBackup,
+  MAX_BACKUP_BYTES,
   ImportBackup,
   type BackupData,
 } from "../../application";
@@ -196,5 +198,57 @@ describe("backup pós-reset", () => {
         data: { ...emptyData(), libraryEntries: [book, book] },
       }),
     ).rejects.toMatchObject({ code: "DUPLICATE_ID" });
+  });
+
+  it("rejeita coleção externa inválida de tamanho controlado sem alterar a base", async () => {
+    const name = `backup-adversarial-${crypto.randomUUID()}`;
+    databases.push(name);
+    const database = new BibliotecaDatabase(name);
+    await database.open();
+    const book = createBook({
+      id: "preservado",
+      title: "Livro fictício preservado",
+      createdAt: "2026-09-08T10:00:00.000Z",
+    });
+    await database.libraryEntries.add(book);
+    const store = new DexieBackupSnapshotStore(database);
+    const codec = new JsonBackupCodec();
+    const exporter = new ExportBackup(
+      store,
+      codec,
+      { now: () => Promise.resolve("2026-09-08T10:00:00.000Z") },
+      "0.2.0-test",
+      14,
+    );
+    const snapshot = await store.read();
+    // 512 malformed items exercise issue collection without exhausting memory.
+    // A syntactically valid envelope ensures collection validation is reached.
+    const malformed = {
+      kind: BACKUP_KIND,
+      formatVersion: BACKUP_FORMAT_VERSION,
+      createdAt: "2026-09-08T10:00:00.000Z",
+      appVersion: "0.2.0-test",
+      databaseVersion: 14,
+      metadata: { policy: "replace" },
+      integrity: { algorithm: "SHA-256", digest: "0".repeat(64) },
+      data: {
+        ...emptyData(),
+        notes: Array.from({ length: 512 }, () => ({ content: 42 })),
+      },
+    };
+    const importer = new ImportBackup(store, codec, exporter, {
+      shareBackupFile: () => Promise.resolve("flow-finished"),
+    });
+    await expect(
+      importer.execute(JSON.stringify(malformed), "empty-destination"),
+    ).rejects.toMatchObject({ code: "INVALID_BACKUP_DATA" });
+    expect(await store.read()).toEqual(snapshot);
+    database.close();
+  });
+
+  it("rejeita arquivo acima de 10 MiB antes do parsing JSON", async () => {
+    await expect(
+      new JsonBackupCodec().inspect(" ".repeat(MAX_BACKUP_BYTES + 1)),
+    ).rejects.toMatchObject({ code: "BACKUP_TOO_LARGE" });
   });
 });

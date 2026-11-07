@@ -18,7 +18,8 @@ Este índice distingue as decisões vigentes das preservadas para contexto. O re
 | ADR-012 | BF-4 — Mundo Vivo e Habitável               | aceita (escopo)         |
 | ADR-013 | BF-4F — 4 habitantes e conversação RPG      | aceita (escopo criativo) |
 | ADR-014 | Pós-BF-4: BF-5 UI/UX → BF-6 Mundo Vivo → BF-7 consolidação | aceita (ordem histórica, atualizada pela ADR-023) |
-| ADR-023 | [BF-5.5 — O Despertar da Biblioteca](ADR-023-bf-5-5-despertar-da-biblioteca.md) | aceita (ordem e planejamento; sem implementação) |
+| ADR-024 | [Recuperação R2: componentes espaciais e assets](ADR-024-recuperacao-r2-componentes-e-assets.md) | implementada em candidata R2; gates físico/artístico pendentes |
+| ADR-023 | [BF-5.5 — O Despertar da Biblioteca](ADR-023-bf-5-5-despertar-da-biblioteca.md) | aceita (ordem/guardrails; implementação B candidata) |
 | ADR-022 | [Atlas clássico projetado](ADR-022-atlas-classico-projetado.md) | candidata; substitui apresentação articulada da ADR-021 |
 | ADR-021 | [Empreitadas, Atlas Vivo e avaliações](ADR-021-empreitadas-atlas-avaliacoes.md) | implementação candidata Parte 2F |
 | ADR-020 | [Baralhos e cartas globais](ADR-020-baralhos-e-cartas-globais.md) | recomendação documental; execução futura |

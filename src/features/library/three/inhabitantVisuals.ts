@@ -1,5 +1,5 @@
 import type { AgentView } from "../inhabitantAgency";
-import { Group, type Object3D, type AnimationClip } from "three";
+import { Group, Object3D, type AnimationClip } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { createInhabitantAnimator } from "./inhabitantAnimator";
 import {
@@ -28,6 +28,8 @@ export function createInhabitantVisuals(
     string,
     ReturnType<typeof createInhabitantAnimator>
   >();
+  const magic = new Map<string, Object3D | undefined>();
+  const anchors = new Map<string, Object3D>();
   const selectables = INHABITANTS.map((descriptor) => {
     const root = new Group();
     root.name = descriptor.id;
@@ -41,6 +43,9 @@ export function createInhabitantVisuals(
           return;
         }
         root.add(scene);
+        magic.set(descriptor.id, scene.getObjectByName("Magic"));
+        // Replace a pre-load fallback with the real rig socket if one exists.
+        anchors.delete(descriptor.id);
         root.userData.loadState = "ready";
         animators.set(
           descriptor.id,
@@ -109,9 +114,7 @@ export function createInhabitantVisuals(
       }
       for (const [id, animator] of animators) {
         animator.update(delta, reducedMotion);
-        const fx = selectables
-          .find((a) => a.descriptor.id === id)
-          ?.root.getObjectByName("Magic");
+        const fx = magic.get(id);
         if (fx && externalPosition) {
           const target = reducedMotion ? 0.65 : (moods.get(id) ?? 0.65);
           fx.scale.setScalar(
@@ -120,11 +123,46 @@ export function createInhabitantVisuals(
         }
       }
     },
+    getCarryAnchor(id: string): Object3D | null {
+      if (disposed) return null;
+      const cached = anchors.get(id);
+      if (cached) return cached;
+      const actor = selectables.find(({ descriptor }) => descriptor.id === id);
+      if (!actor) return null;
+      let named: Object3D | undefined;
+      actor.root.traverse((node) => {
+        if (
+          !named &&
+          /hand|wrist|grip/i.test(node.name) &&
+          node.type === "Bone"
+        )
+          named = node;
+      });
+      if (named) {
+        anchors.set(id, named);
+        return named;
+      }
+      let anchor = actor.root.getObjectByName("interaction-hand-anchor");
+      if (!anchor) {
+        anchor = new Group();
+        anchor.name = "interaction-hand-anchor";
+        // The current GLBs expose no hand/wrist bones. This stable transport
+        // point is replaced by a rig anchor when assets gain one.
+        anchor.position.set(0.28, 1.02, 0.28);
+        actor.root.add(anchor);
+      }
+      anchors.set(id, anchor);
+      return anchor;
+    },
     dispose() {
       if (disposed) return;
       disposed = true;
       for (const animator of animators.values()) animator.dispose();
       animators.clear();
+      anchors.clear();
+      magic.clear();
+      driven.clear();
+      moods.clear();
       for (const { root } of selectables) disposeObjectTree(root);
     },
   };

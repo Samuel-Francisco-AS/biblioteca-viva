@@ -1,3 +1,8 @@
+import { tasks, preferences, type Task } from "./inhabitantActivities";
+import {
+  EMPTY_AGENCY_ENVIRONMENT,
+  type AgencyEnvironment,
+} from "./inhabitantEnvironment";
 import {
   INHABITANTS,
   INHABITANT_ENVELOPES,
@@ -12,13 +17,18 @@ import {
   type Position,
   type NavigationObstacle,
 } from "./inhabitantNavigation";
-import {
-  LIBRARY_ACTIVITY_POINTS,
-  LIBRARY_ACTIVITY_ZONES,
-} from "./librarySpatialLayout";
 import { ENCOUNTERS, type EncounterScript } from "./inhabitantEncounters";
+import type { NightLightingSession } from "./nightLighting";
 import type { NarrativeBond } from "./narrative/contracts";
 import type { LivingEvent } from "./livingObjects";
+import {
+  parseInhabitantContinuity,
+  type InhabitantContinuitySnapshot,
+} from "./inhabitantContinuity";
+import {
+  InteractionCoordinator,
+  type InteractionTaskState,
+} from "./inhabitantInteractions";
 
 export type AgencyState =
   | "idle"
@@ -31,16 +41,6 @@ export type AgencyState =
   | "converse";
 export type AgencyMode = "running" | "paused" | "reduced" | "unavailable";
 export type CosmeticState = "intact" | "damaged-cosmetic" | "repairing";
-type TaskKind =
-  "study" | "reading" | "rest" | "observation" | "plant" | "experiment";
-interface Task {
-  readonly id: string;
-  readonly kind: TaskKind;
-  readonly position: Position;
-  readonly facing: number;
-  readonly label: string;
-  readonly objectId?: string;
-}
 export interface AgentView extends Position {
   readonly id: InhabitantId;
   readonly key: InhabitantKey;
@@ -52,6 +52,8 @@ export interface AgentView extends Position {
   readonly facing: number;
   readonly action: InhabitantAction;
   readonly available: boolean;
+  readonly interactionObjectId: string | null;
+  readonly interactionState: InteractionTaskState | null;
 }
 export interface RelationView {
   readonly id: string;
@@ -95,6 +97,8 @@ interface Agent {
   taskCount: number;
   history: string[];
   lastEvent: number;
+  interactionState: InteractionTaskState | null;
+  interactionTaskId: string | null;
 }
 interface Relation {
   script: EncounterScript;
@@ -120,89 +124,8 @@ export interface AgencyOptions {
   readonly hour?: () => number;
   readonly seed?: number;
   readonly onEnvironmentAction?: (key: InhabitantKey, objectId: string) => void;
+  readonly nightLighting?: NightLightingSession;
 }
-const tasks: readonly Task[] = [
-  ...LIBRARY_ACTIVITY_POINTS.flatMap((p) => {
-    const z = LIBRARY_ACTIVITY_ZONES.find((z) => z.id === p.zoneId);
-    if (!z || z.activity === "circulation") return [];
-    return [
-      {
-        id: p.id,
-        kind: z.activity,
-        position: { x: p.x, z: p.z },
-        facing: p.facing,
-        label:
-          z.activity === "study"
-            ? "atividade em prop de estudo"
-            : z.activity === "reading"
-              ? "leitura de ficção cenográfica"
-              : z.activity === "rest"
-                ? "repouso e observação tranquila"
-                : "observação dos mecanismos",
-        ...(p.id.endsWith("d-study") ? { objectId: "living:globe" } : {}),
-        ...{},
-      },
-    ];
-  }),
-  {
-    id: "clock-inspection",
-    kind: "observation",
-    position: { x: -15.2, z: -6.8 },
-    facing: -Math.PI / 2,
-    label: "inspeção do relógio cenográfico",
-    objectId: "living:clock",
-  },
-  {
-    id: "care-star-plant",
-    kind: "plant",
-    position: { x: -11.7, z: 5.6 },
-    facing: Math.PI,
-    label: "cuidado da planta estrelada",
-    objectId: "living:plant",
-  },
-  {
-    id: "lua-practice",
-    kind: "experiment",
-    position: { x: -13, z: 10 },
-    facing: Math.PI,
-    label: "ensaio mágico sobre folha de treino",
-    objectId: "living:globe",
-  },
-];
-const preferences: Record<InhabitantKey, Record<TaskKind, number>> = {
-  samael: {
-    study: 9,
-    reading: 4,
-    rest: 7,
-    observation: 8,
-    plant: 2,
-    experiment: 0,
-  },
-  aryn: {
-    study: 9,
-    reading: 8,
-    rest: 3,
-    observation: 7,
-    plant: 6,
-    experiment: 0,
-  },
-  ytha: {
-    study: 3,
-    reading: 8,
-    rest: 7,
-    observation: 5,
-    plant: 12,
-    experiment: 0,
-  },
-  lua: {
-    study: 10,
-    reading: 7,
-    rest: 4,
-    observation: 7,
-    plant: 6,
-    experiment: 12,
-  },
-};
 const clamp = (v: number, min = 0, max = 12) => Math.min(max, Math.max(min, v));
 /** Session-only agency. No renderer, browser, timers, records or persistence.
  * update() consumes an injected monotonic clock; pauses discard elapsed wall time. */
@@ -224,9 +147,11 @@ export class InhabitantAgency {
   private readonly listeners = new Set<() => void>();
   private snapshot: AgencySnapshot;
   private disposed = false;
+  private environment: AgencyEnvironment = EMPTY_AGENCY_ENVIRONMENT;
   private socialAfter = 12;
   private cooperation = 0;
   private readonly conversation = new Set<InhabitantKey>();
+  readonly interactions = new InteractionCoordinator();
   private narrativeBonds: readonly NarrativeBond[] = [];
   private readonly now: () => number;
   private readonly hour: () => number;
@@ -256,6 +181,8 @@ export class InhabitantAgency {
       taskCount: 0,
       history: [],
       lastEvent: -30,
+      interactionState: null,
+      interactionTaskId: null,
     }));
     this.relations = ENCOUNTERS.map((script, i) => ({
       script,
@@ -280,21 +207,173 @@ export class InhabitantAgency {
   getPoses(): readonly AgentView[] {
     return this.agents.map((a) => this.view(a));
   }
+
+  /** Save stable identity, position and intention, not animation or route frames. */
+  captureContinuity(
+    savedAt = new Date().toISOString(),
+  ): InhabitantContinuitySnapshot {
+    return {
+      version: 1,
+      savedAt,
+      randomState: this.randomState,
+      agents: this.agents.map((a) => ({
+        id: a.id,
+        x: a.x,
+        z: a.z,
+        facing: a.facing,
+        phase:
+          a.state === "navigate"
+            ? "navigate"
+            : a.state === "work" && a.task
+              ? "work"
+              : "idle",
+        taskId: a.task?.id ?? null,
+        destination:
+          a.state === "navigate" && a.destination
+            ? { x: a.destination.x, z: a.destination.z }
+            : null,
+        remainingSeconds: Math.max(0, Math.min(90, a.until - this.elapsed)),
+        recentTaskIds: a.history.slice(0, 6),
+        taskCount: a.taskCount,
+      })),
+    };
+  }
+
+  /**
+   * Restore safe positions first, then only valid intentions. An interrupted
+   * encounter or manual action is not replayed as a half-finished scene.
+   */
+  restoreContinuity(value: unknown, now = Date.now()): boolean {
+    if (this.disposed) return false;
+    const saved = parseInhabitantContinuity(value);
+    if (!saved) return false;
+    const staleActivity =
+      Math.max(0, now - Date.parse(saved.savedAt)) > 15 * 60_000;
+    const positioned: Array<{ x: number; z: number; radius: number }> = [];
+    const valid = (a: Agent, x: number, z: number): boolean => {
+      const radius = INHABITANT_ENVELOPES[a.key].travel;
+      return (
+        this.navigation.clear({ x, z }, { x, z }, radius) &&
+        positioned.every(
+          (p) => Math.hypot(p.x - x, p.z - z) >= p.radius + radius + 0.1,
+        )
+      );
+    };
+    this.randomState = saved.randomState;
+    for (const a of this.agents) {
+      const row = saved.agents.find((item) => item.id === a.id)!;
+      const initial = INHABITANTS.find((item) => item.id === a.id)!;
+      const location = [
+        { x: row.x, z: row.z },
+        { x: initial.x, z: initial.z },
+        ...this.navigation.nodes,
+      ].find((point) => valid(a, point.x, point.z));
+      a.x = location?.x ?? initial.x;
+      a.z = location?.z ?? initial.z;
+      positioned.push({
+        x: a.x,
+        z: a.z,
+        radius: INHABITANT_ENVELOPES[a.key].travel,
+      });
+      a.facing = Math.atan2(Math.sin(row.facing), Math.cos(row.facing));
+      a.route = [];
+      a.destination = null;
+      a.encounter = null;
+      a.manual = false;
+      a.task = null;
+      a.state = "idle";
+      a.action = "idle";
+      a.activity = "Retoma sua rotina na Biblioteca.";
+      a.blocked = 0;
+      a.taskCount = row.taskCount;
+      a.history = row.recentTaskIds.filter((id) =>
+        tasks.some((task) => task.id === id),
+      );
+      a.until = this.elapsed + 2 + this.random() * 4;
+    }
+    // Long absences do not run a background simulation or teleport actors.
+    for (const a of this.agents) {
+      const row = saved.agents.find((item) => item.id === a.id)!;
+      const task = tasks.find((item) => item.id === row.taskId);
+      if (!task || staleActivity) continue;
+      if (
+        row.phase === "work" &&
+        !task.interaction &&
+        distance(a, task.position) < 0.2 &&
+        this.navigation.clear(
+          a,
+          a,
+          task.kind === "experiment"
+            ? INHABITANT_ENVELOPES[a.key].magic
+            : task.kind === "rest" || task.kind === "observation"
+              ? INHABITANT_ENVELOPES[a.key].travel
+              : INHABITANT_ENVELOPES[a.key].work,
+        )
+      ) {
+        a.task = task;
+        a.state = "work";
+        a.started = this.elapsed;
+        a.action =
+          task.kind === "experiment"
+            ? "magic"
+            : task.kind === "rest" ||
+                (task.kind === "observation" && !task.objectId)
+              ? "idle"
+              : "work";
+        a.activity = this.taskDescription(a, task);
+        a.until = this.elapsed + Math.max(2, row.remainingSeconds);
+      } else if (
+        row.phase === "navigate" &&
+        !task.interaction &&
+        row.destination &&
+        distance(row.destination, task.position) < 0.1 &&
+        this.go(a, task.position)
+      ) {
+        a.task = task;
+        a.activity = `Retoma o caminho: ${this.taskDescription(a, task)}`;
+      }
+    }
+    this.message = "Os habitantes retomaram sua continuidade.";
+    this.publish();
+    return true;
+  }
   setAvailable(id: string, available: boolean) {
     const a = this.agents.find((a) => a.id === id);
     if (!a || this.disposed || a.available === available) return;
     a.available = available;
     if (!available) {
+      this.releaseInteraction(a);
       this.cancelMeeting(
         "Encontro interrompido: um modelo ficou indisponível.",
       );
       this.stop(a, "Modelo indisponível; rotina suspensa.", 6);
-    } else a.activity = "Observando antes de escolher uma atividade.";
+    } else if (a.state === "idle") {
+      a.activity = "Observando antes de escolher uma atividade.";
+    }
     this.publish();
   }
   setMode(mode: AgencyMode) {
     if (this.disposed || mode === this.mode) return;
     this.mode = mode;
+    if (mode !== "running") {
+      for (const agent of this.agents) {
+        if (
+          agent.task?.interaction ||
+          agent.task?.nightLampId ||
+          agent.task?.sessionReading
+        ) {
+          this.releaseInteraction(agent);
+          agent.task = null;
+          agent.route = [];
+          agent.destination = null;
+          agent.state = "idle";
+          agent.action = "idle";
+          agent.activity =
+            "Interação interrompida com segurança; o objeto permanece em sua superfície.";
+          agent.until = this.elapsed + 2;
+        }
+      }
+    }
     this.lastTime = undefined;
     this.message =
       mode === "running"
@@ -306,8 +385,9 @@ export class InhabitantAgency {
             : "Ambiente 3D indisponível; nenhuma ação ou percurso adicional foi realizado.";
     this.publish();
   }
-  update() {
+  update(environment: AgencyEnvironment = EMPTY_AGENCY_ENVIRONMENT) {
     if (this.disposed) return;
+    this.environment = environment;
     const time = this.now();
     if (!Number.isFinite(time)) return;
     const dt =
@@ -317,6 +397,27 @@ export class InhabitantAgency {
     this.lastTime = time;
     if (this.mode !== "running" || dt === 0) return;
     this.elapsed += dt;
+    this.applyMagicReaction();
+    for (const a of this.agents) {
+      if (!a.interactionTaskId || !a.task) continue;
+      if (
+        !this.interactions.renew(
+          a.task.nightLampId ?? a.task.objectId ?? a.task.id,
+          a.key,
+          a.interactionTaskId,
+          this.elapsed * 1000,
+        )
+      ) {
+        a.interactionState = "failed";
+        this.releaseInteraction(a);
+        a.task = null;
+        this.stop(
+          a,
+          "Reserva expirada; a tarefa foi interrompida com segurança.",
+          4,
+        );
+      }
+    }
     for (const a of this.agents)
       if (
         a.available &&
@@ -327,6 +428,7 @@ export class InhabitantAgency {
     this.logic += dt;
     if (this.logic < 0.25) return;
     this.logic %= 0.25;
+    this.reconcileSessionReader();
     this.updateMeeting();
     for (const a of this.agents) {
       if (!a.available || a.encounter || this.conversation.has(a.key)) continue;
@@ -355,6 +457,56 @@ export class InhabitantAgency {
     this.tryMeeting();
     this.publish();
   }
+  get interactionTime() {
+    return this.elapsed * 1000;
+  }
+  private magicEpisode = -1;
+  private pendingMagic: { episode: number; until: number } | null = null;
+  reactToMagic(episode: number): void {
+    if (
+      this.disposed ||
+      this.mode !== "running" ||
+      episode <= this.magicEpisode
+    )
+      return;
+    this.magicEpisode = episode;
+    this.pendingMagic = { episode, until: this.elapsed + 25 };
+    this.applyMagicReaction();
+  }
+  private applyMagicReaction(): void {
+    if (!this.pendingMagic) return;
+    const { episode, until } = this.pendingMagic;
+    if (this.elapsed > until) {
+      this.pendingMagic = null;
+      return;
+    }
+    const key = INHABITANTS[episode % INHABITANTS.length].key;
+    const a = this.agents.find((actor) => actor.key === key)!;
+    if (
+      !a.available ||
+      a.manual ||
+      a.encounter ||
+      this.conversation.has(key) ||
+      a.task ||
+      a.interactionTaskId ||
+      a.state !== "idle"
+    )
+      return;
+    const e = INHABITANT_ENVELOPES[key];
+    const magic = this.navigation.clear(a, a, e.magic, this.occupied(a));
+    const descriptions = {
+      samael: "Observa a inscrição com desconfiança; sua aura lilás responde.",
+      aryn: "Examina as linhas arcanas com curiosidade de restauradora.",
+      ytha: "Acolhe a manifestação com um gesto floral delicado.",
+      lua: "Entusiasma-se com a inscrição e ensaia um feitiço desajeitado.",
+    };
+    this.pendingMagic = null;
+    a.state = "react";
+    a.action = magic ? "magic" : "gesture";
+    a.activity = descriptions[key];
+    a.until = this.elapsed + 4;
+    this.publish();
+  }
   /** Manual controls hold the current position; interrupted work is resumed by a fresh route. */
   interrupt(id: string, action: InhabitantAction): boolean {
     const a = this.agents.find((a) => a.id === id);
@@ -370,6 +522,10 @@ export class InhabitantAgency {
       action === "magic" ? e.magic : action === "work" ? e.work : e.travel;
     if (!this.navigation.clear(a, a, radius, this.occupied(a))) return false;
     this.cancelMeeting("Encontro adiado para respeitar a atenção manual.", a);
+    if (a.task?.interaction || a.task?.nightLampId || a.task?.sessionReading) {
+      this.releaseInteraction(a);
+      a.task = null;
+    }
     a.state = "react";
     a.action = action;
     a.activity = "Atenção manual; a rotina será retomada com segurança.";
@@ -400,6 +556,16 @@ export class InhabitantAgency {
     );
     for (const a of this.agents) {
       if (wanted.has(a.key)) {
+        if (
+          a.task?.interaction ||
+          a.task?.nightLampId ||
+          a.task?.sessionReading
+        ) {
+          this.releaseInteraction(a);
+          a.task = null;
+          a.route = [];
+          a.destination = null;
+        }
         this.cancelMeeting(
           "Encontro adiado para uma conversa; a intenção será reconsiderada.",
           a,
@@ -495,6 +661,14 @@ export class InhabitantAgency {
         const relevant =
           roomAt(a) === room || (e.type === "discovered" && a.key === "lua");
         if (!relevant) continue;
+        if (
+          a.task?.interaction ||
+          a.task?.nightLampId ||
+          a.task?.sessionReading
+        ) {
+          this.releaseInteraction(a);
+          a.task = null;
+        }
         a.lastEvent = this.elapsed;
         a.state = "react";
         a.action = "react";
@@ -516,12 +690,14 @@ export class InhabitantAgency {
   dispose() {
     if (this.disposed) return;
     this.disposed = true;
+    this.environment = EMPTY_AGENCY_ENVIRONMENT;
     this.listeners.clear();
     this.conversation.clear();
     this.narrativeBonds = [];
     this.meeting = null;
     this.recent = [];
     for (const a of this.agents) {
+      this.releaseInteraction(a);
       a.route = [];
       a.history = [];
       a.task = null;
@@ -539,7 +715,7 @@ export class InhabitantAgency {
   ): NavigationObstacle[] {
     return this.agents
       .filter((b) => b !== a && b.available)
-      .flatMap((b) => {
+      .flatMap<NavigationObstacle>((b) => {
         const e = INHABITANT_ENVELOPES[b.key];
         const radius =
           (b.action === "magic"
@@ -558,7 +734,8 @@ export class InhabitantAgency {
           minZ: p.z - radius,
           maxZ: p.z + radius,
         }));
-      });
+      })
+      .concat(this.environment.physicalObstacles);
   }
   private go(a: Agent, destination: Position) {
     const route = this.navigation.route(
@@ -666,6 +843,81 @@ export class InhabitantAgency {
           ? "magic"
           : "work";
     a.activity = this.taskDescription(a, task);
+    if (task.sessionReading) {
+      a.interactionState = "reading";
+      a.action = "work";
+      const descriptions = {
+        samael: "Inclina-se atento ao volume encantado, em uma pausa do café.",
+        aryn: "Ajusta os óculos e examina as páginas do livro desperto.",
+        ytha: "Acompanha a leitura com as asas em repouso, preservando espaço.",
+        lua: "Consulta o livro desperto e compara seus gestos com o próprio grimório.",
+      };
+      a.activity = descriptions[a.key];
+      a.until = this.elapsed + 14 + preferences[a.key].reading;
+      a.history = [task.id, ...a.history].slice(0, 6);
+      return;
+    }
+    if (task.nightLampId && a.interactionTaskId) {
+      const lamp = this.options.nightLighting
+        ?.pending()
+        .find((fixture) => fixture.id === task.nightLampId);
+      if (
+        !lamp ||
+        distance(a, lamp) > 2.8 ||
+        !this.interactions.owns(
+          lamp.id,
+          a.key,
+          a.interactionTaskId,
+          this.elapsed * 1000,
+        )
+      ) {
+        this.stop(a, "A luminária está fora de alcance; tarefa liberada.", 4);
+        a.task = null;
+        return;
+      }
+      a.action = "gesture";
+      a.activity = "Ergue a mão e invoca uma chama âmbar na luminária.";
+      a.until = this.elapsed + 1.2;
+      return;
+    }
+    if (task.interaction && a.interactionTaskId) {
+      if (a.interactionState === "carrying") {
+        a.interactionState = "placing";
+        a.action = "gesture";
+        a.activity = "Posiciona o objeto sobre a bancada.";
+        a.until = this.elapsed + 1;
+        return;
+      }
+      if (a.interactionState === "returning") {
+        a.interactionState = "completed";
+        if (task.objectId === "living:book")
+          this.options.onEnvironmentAction?.(a.key, "living:book");
+        this.stop(a, "Devolveu o objeto e liberou a superfície.", 5);
+        a.task = null;
+        return;
+      }
+    }
+    if (task.interaction) {
+      const taskId = a.interactionTaskId ?? `${task.id}:${a.key}`;
+      if (
+        this.interactions.reserve(
+          task.objectId ?? task.id,
+          a.key,
+          taskId,
+          this.elapsed * 1000,
+        )
+      ) {
+        a.interactionTaskId = taskId;
+        a.interactionState = "orienting";
+        a.until = this.elapsed + 0.8;
+        a.action = "turn";
+        a.activity = "Orienta-se para pegar o objeto.";
+        return;
+      }
+      a.task = null;
+      this.stop(a, "O objeto está reservado por outro habitante.", 4);
+      return;
+    }
     a.until =
       this.elapsed +
       (task.kind === "experiment"
@@ -702,7 +954,219 @@ export class InhabitantAgency {
           ? "Desenha e revisa o grimório com o lápis em movimento."
           : "Lê e observa os detalhes de uma flor cenográfica.";
   }
+  private chooseNightTask(a: Agent): boolean {
+    const ritual = this.options.nightLighting;
+    if (!ritual || ritual.getSnapshot().cycleKey === null) return false;
+    const envelope = INHABITANT_ENVELOPES[a.key];
+    for (const lamp of [...ritual.pending()].sort(
+      (left, right) => distance(a, left) - distance(a, right),
+    )) {
+      const candidates = this.navigation.nodes
+        .filter(
+          (point) =>
+            roomAt(point) === lamp.roomId && distance(point, lamp) <= 2.8,
+        )
+        .sort((left, right) => distance(left, lamp) - distance(right, lamp));
+      for (const position of candidates) {
+        if (
+          !this.navigation.clear(
+            position,
+            position,
+            envelope.work,
+            this.occupied(a, true),
+          )
+        )
+          continue;
+        const taskId = `night:${ritual.getSnapshot().cycleKey}:${lamp.id}:${a.key}`;
+        if (
+          !this.interactions.reserve(
+            lamp.id,
+            a.key,
+            taskId,
+            this.elapsed * 1000,
+          )
+        )
+          break;
+        if (this.go(a, position)) {
+          a.task = {
+            id: taskId,
+            kind: "observation",
+            position,
+            facing: Math.atan2(lamp.x - position.x, lamp.z - position.z),
+            label: "ritual noturno de acendimento",
+            nightLampId: lamp.id,
+          };
+          a.interactionTaskId = taskId;
+          a.activity = "A caminho de um abajur para o ritual noturno.";
+          return true;
+        }
+        this.interactions.release(lamp.id, a.key, taskId);
+      }
+    }
+    return false;
+  }
+
+  private chooseScrollTask(a: Agent): boolean {
+    if (a.taskCount % 3 !== 0) return false;
+    for (const scroll of this.environment.scrollCandidates) {
+      const position = this.navigation.nodes
+        .filter(
+          (p) =>
+            distance(p, scroll.source) < 1.5 &&
+            roomAt(p) === roomAt(scroll.source),
+        )
+        .sort((l, r) => distance(l, a) - distance(r, a))
+        .find((p) =>
+          this.navigation.clear(
+            p,
+            p,
+            INHABITANT_ENVELOPES[a.key].work,
+            this.occupied(a, true),
+          ),
+        );
+      if (!position) continue;
+      const nearby = { x: position.x, z: position.z + 0.5 };
+      const destination =
+        distance(nearby, scroll.source) <= 1.5 &&
+        this.navigation.clear(
+          position,
+          nearby,
+          INHABITANT_ENVELOPES[a.key].work,
+          this.occupied(a, true),
+        )
+          ? nearby
+          : position;
+      const taskId = `inspect:${scroll.id}:${a.key}`;
+      if (
+        !this.interactions.reserve(
+          scroll.id,
+          a.key,
+          taskId,
+          this.elapsed * 1000,
+        )
+      )
+        continue;
+      if (this.go(a, position)) {
+        a.task = {
+          id: taskId,
+          kind: "reading",
+          position,
+          facing: Math.atan2(
+            scroll.source.x - position.x,
+            scroll.source.z - position.z,
+          ),
+          label: "pergaminho vivo",
+          objectId: scroll.id,
+          interaction: {
+            source: scroll.source,
+            approach: position,
+            destination,
+            reach: 1.5,
+          },
+        };
+        a.interactionTaskId = taskId;
+        a.interactionState = "approaching";
+        a.activity = "Aproxima-se de um pergaminho desperto para examiná-lo.";
+        return true;
+      }
+      this.interactions.release(scroll.id, a.key, taskId);
+    }
+    return false;
+  }
+  private reconcileSessionReader() {
+    const candidate = this.environment.readingCandidate;
+    for (const a of this.agents) {
+      if (!a.task?.sessionReading) continue;
+      if (
+        !a.available ||
+        a.task.sessionReading.sessionId !== candidate?.sessionId
+      ) {
+        this.stop(
+          a,
+          "Encerra a leitura; o livro conserva sua devolução independente.",
+          3,
+        );
+        a.task = null;
+      }
+    }
+    if (!candidate || this.agents.some((a) => a.task?.sessionReading)) return;
+    const taskId = `read-session:${candidate.sessionId}`;
+    const actors = this.agents
+      .filter(
+        (a) =>
+          a.available &&
+          !a.manual &&
+          !a.encounter &&
+          !this.conversation.has(a.key) &&
+          !a.interactionTaskId &&
+          a.task?.kind !== "experiment" &&
+          a.state !== "recover" &&
+          (a.state === "idle" ||
+            a.state === "work" ||
+            a.state === "navigate") &&
+          !a.history.includes(taskId),
+      )
+      .sort(
+        (a, b) =>
+          preferences[b.key].reading -
+          preferences[a.key].reading +
+          (distance(a, candidate.source) - distance(b, candidate.source)) * 0.2,
+      );
+    for (const a of actors) {
+      const envelope = INHABITANT_ENVELOPES[a.key];
+      const positions = [
+        ...this.navigation.nodes,
+        { x: candidate.source.x, z: candidate.source.z - 1.4 },
+      ].filter(
+        (p) =>
+          roomAt(p) === roomAt(candidate.source) &&
+          distance(p, candidate.source) < 1.65 &&
+          distance(p, candidate.source) > 0.85 &&
+          this.navigation.clear(p, p, envelope.work, this.occupied(a, true)),
+      );
+      const resource = `reader:${candidate.id}`;
+      for (const position of positions.sort(
+        (p, q) => distance(a, p) - distance(a, q),
+      )) {
+        if (
+          !this.interactions.reserve(
+            resource,
+            a.key,
+            taskId,
+            this.interactionTime,
+          )
+        )
+          continue;
+        if (this.go(a, position)) {
+          a.task = {
+            id: taskId,
+            kind: "reading",
+            position,
+            facing: Math.atan2(
+              candidate.source.x - position.x,
+              candidate.source.z - position.z,
+            ),
+            label: "Leitura compartilhada",
+            objectId: resource,
+            sessionReading: {
+              sessionId: candidate.sessionId,
+              bookId: candidate.id,
+              source: candidate.source,
+            },
+          };
+          a.interactionTaskId = taskId;
+          a.interactionState = "approaching";
+          a.activity =
+            "Percebe o livro desperto e aproxima-se para acompanhar a leitura.";
+          return;
+        }
+        this.interactions.release(resource, a.key, taskId);
+      }
+    }
+  }
   private chooseTask(a: Agent) {
+    if (this.chooseNightTask(a)) return;
+    if (this.chooseScrollTask(a)) return;
     const night = this.hour() < 6 || this.hour() >= 18;
     const scored = tasks
       .map((t) => {
@@ -761,6 +1225,40 @@ export class InhabitantAgency {
   }
   private finishWork(a: Agent) {
     a.taskCount++;
+    if (a.task?.sessionReading) {
+      this.stop(
+        a,
+        "Conclui sua visita de leitura e deixa o livro em segurança.",
+        5,
+      );
+      a.task = null;
+      return;
+    }
+    if (a.task?.nightLampId) {
+      const lampId = a.task.nightLampId;
+      const valid =
+        a.interactionTaskId !== null &&
+        this.interactions.owns(
+          lampId,
+          a.key,
+          a.interactionTaskId,
+          this.elapsed * 1000,
+        );
+      if (valid && this.options.nightLighting?.complete(lampId)) {
+        this.note(
+          `${a.label} reacende uma luminária. A Biblioteca responde em âmbar.`,
+        );
+        this.stop(a, "Concluiu o ritual de acendimento.", 4);
+      } else {
+        this.stop(
+          a,
+          "O ritual foi interrompido; a luz permanece funcional.",
+          4,
+        );
+      }
+      a.task = null;
+      return;
+    }
     if (
       a.task?.kind === "experiment" &&
       this.elapsed >= this.incidentAfter &&
@@ -795,6 +1293,10 @@ export class InhabitantAgency {
         }
       return;
     }
+    if (a.task?.interaction) {
+      this.advanceInteraction(a);
+      return;
+    }
     if (a.task?.objectId)
       this.options.onEnvironmentAction?.(a.key, a.task.objectId);
     a.task = null;
@@ -805,6 +1307,7 @@ export class InhabitantAgency {
     );
   }
   private stop(a: Agent, activity: string, seconds: number) {
+    this.releaseInteraction(a);
     a.state = "idle";
     a.action = "idle";
     a.activity = activity;
@@ -813,6 +1316,89 @@ export class InhabitantAgency {
     a.until = this.elapsed + seconds;
     a.blocked = 0;
   }
+  private releaseInteraction(a: Agent) {
+    if (a.interactionTaskId) {
+      const resourceId = a.task?.nightLampId ?? a.task?.objectId;
+      if (resourceId)
+        this.interactions.release(resourceId, a.key, a.interactionTaskId);
+    }
+    a.interactionTaskId = null;
+    a.interactionState = null;
+  }
+  private advanceInteraction(a: Agent) {
+    const task = a.task;
+    if (!task?.interaction || !a.interactionTaskId) return;
+    const now = this.elapsed * 1000;
+    if (
+      !this.interactions.owns(
+        task.objectId ?? task.id,
+        a.key,
+        a.interactionTaskId,
+        now,
+      )
+    ) {
+      a.interactionState = "failed";
+      this.releaseInteraction(a);
+      a.task = null;
+      this.stop(a, "A reserva expirou; o objeto permanece no mundo.", 4);
+      return;
+    }
+    if (a.interactionState === "orienting") {
+      if (distance(a, task.interaction.source) > task.interaction.reach) {
+        a.interactionState = "failed";
+        this.releaseInteraction(a);
+        a.task = null;
+        this.stop(a, "Não alcança o objeto; a interação foi cancelada.", 4);
+        return;
+      }
+      a.interactionState = "picking";
+      a.action = "gesture";
+      a.activity = "Estende a mão e pega o objeto.";
+      a.until = this.elapsed + 0.9;
+      return;
+    }
+    if (a.interactionState === "picking") {
+      a.interactionState = "carrying";
+      a.action = "walk";
+      a.activity = "Transporta o objeto até uma superfície válida.";
+      a.until = this.elapsed;
+      if (this.go(a, task.interaction.destination)) return;
+      // A failed route is not a placement. Release the lease so the same
+      // visual recovers on its real source surface without a ghost handoff.
+      this.releaseInteraction(a);
+      a.task = null;
+      this.stop(a, "O caminho ficou bloqueado; devolveu o objeto ao apoio.", 4);
+      return;
+    }
+    if (a.interactionState === "carrying" && a.state === "work") {
+      a.interactionState = "placing";
+      a.action = "gesture";
+      a.activity = "Posiciona o objeto sobre a bancada.";
+      a.until = this.elapsed + 1;
+      return;
+    }
+    if (a.interactionState === "placing") {
+      a.interactionState = "recollecting";
+      a.action = "gesture";
+      a.activity = "Recolhe o objeto para devolvê-lo à estante.";
+      a.until = this.elapsed + 0.7;
+      return;
+    }
+    if (a.interactionState === "recollecting") {
+      a.interactionState = "returning";
+      a.action = "walk";
+      a.activity = "Devolve o objeto ao ponto cenográfico original.";
+      a.until = this.elapsed;
+      if (this.go(a, task.interaction.approach)) return;
+    }
+    if (a.interactionState === "returning" && a.state === "work") {
+      a.interactionState = "completed";
+      if (task.objectId === "living:book")
+        this.options.onEnvironmentAction?.(a.key, "living:book");
+      this.stop(a, "Devolveu o objeto e liberou a superfície.", 5);
+      a.task = null;
+    }
+  }
   private tryMeeting() {
     if (this.meeting || this.elapsed < this.socialAfter) return;
     const available = (a: Agent) =>
@@ -820,6 +1406,9 @@ export class InhabitantAgency {
       !a.manual &&
       !this.conversation.has(a.key) &&
       !a.encounter &&
+      !a.task?.nightLampId &&
+      !a.task?.sessionReading &&
+      (!a.interactionState || a.interactionState === "approaching") &&
       (a.state === "idle" ||
         (a.state === "work" && this.elapsed - a.started >= 8) ||
         (a.state === "navigate" && this.elapsed - a.started >= 15));
@@ -891,6 +1480,8 @@ export class InhabitantAgency {
         this.stop(a, "Aguarda uma oportunidade de encontro.", 4);
         continue;
       }
+      this.releaseInteraction(a);
+      this.releaseInteraction(b);
       a.encounter = r.script.id;
       b.encounter = r.script.id;
       a.task = null;
@@ -1122,6 +1713,10 @@ export class InhabitantAgency {
         : a.activity,
       action: a.action,
       available: a.available,
+      interactionObjectId: a.interactionState
+        ? (a.task?.sessionReading?.bookId ?? a.task?.objectId ?? null)
+        : null,
+      interactionState: a.interactionState,
       room: roomAt(a)?.replace("room-", "Cômodo ").toUpperCase() ?? "Passagem",
       destination: a.destination ? { ...a.destination } : null,
     };

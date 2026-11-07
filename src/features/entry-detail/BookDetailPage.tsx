@@ -1,3 +1,4 @@
+import { useAnnotationTarget } from "./useAnnotationTarget";
 import { PersistedRating } from "../../ui/StarRating";
 import { useRecordCover } from "../../ui/useRecordCover";
 import type { PosterPort } from "../../application/media";
@@ -93,6 +94,12 @@ function History({
   readonly onUpdateNote: (input: unknown) => Promise<void>;
   readonly onUpdateQuote: (input: unknown) => Promise<void>;
 }) {
+  const {
+    ref: targetRef,
+    missing: targetMissing,
+    id: targetId,
+    requestedKind,
+  } = useAnnotationTarget(notes, quotes);
   const items = [
     ...notes.map((annotation) => ({ annotation, kind: "note" as const })),
     ...quotes.map((annotation) => ({ annotation, kind: "quote" as const })),
@@ -107,9 +114,22 @@ function History({
       {quotes.length === 0 && (
         <p className="folio-empty">Nenhuma citação adicionada.</p>
       )}
-      <ul className="folio-annotations">
+      {targetMissing && (
+        <p role="status">Este conteúdo não está mais disponível.</p>
+      )}
+      <ul className="folio-annotations" ref={targetRef}>
         {items.map(({ annotation, kind }) => (
-          <li key={`${kind}-${annotation.id}`}>
+          <li
+            key={`${kind}-${annotation.id}`}
+            tabIndex={-1}
+            data-annotation-id={annotation.id}
+            data-annotation-kind={kind}
+            style={
+              targetId === annotation.id && requestedKind === kind
+                ? { outline: "2px solid var(--color-accent, #af8a50)" }
+                : undefined
+            }
+          >
             <article>
               <div className="folio-annotation-caption">
                 <h4>{kind === "note" ? "Nota pessoal" : "Citação"}</h4>

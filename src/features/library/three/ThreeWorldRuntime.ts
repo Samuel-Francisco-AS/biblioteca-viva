@@ -1,13 +1,19 @@
+import { batchStaticBookshelf } from "./staticVisuals";
+import { createSessionBookVisuals } from "./sessionBookVisuals";
+import { createAmbientMagic } from "./ambientMagic";
+import { createLivingScrollVisuals } from "./livingScrollVisuals";
 import { createNarrativeVisuals } from "./narrativeVisuals";
 import type { NarrativeSnapshot } from "../narrative/contracts";
 import { STORIES } from "../narrative/stories";
 import { nodeFor } from "../narrative/session";
 import { InhabitantAgency, type AgencySnapshot } from "../inhabitantAgency";
+import type { InhabitantContinuitySnapshot } from "../inhabitantContinuity";
 import { InhabitantNavigation } from "../inhabitantNavigation";
 import { collectInhabitantObstacles } from "./inhabitantObstacles";
 import { createInhabitantSceneProps } from "./inhabitantSceneProps";
 import {
   INHABITANTS,
+  INHABITANT_ENVELOPES,
   type InhabitantAction,
   type InhabitantKey,
 } from "../inhabitants";
@@ -17,6 +23,7 @@ import {
 } from "./inhabitantVisuals";
 import { createLivingVisuals } from "./livingVisuals";
 import type { LivingSession } from "../livingObjects";
+import type { NightLightingSession } from "../nightLighting";
 import { LIBRARY_SHELVES } from "../libraryShelfLayout";
 import { LIBRARY_ROOMS } from "../libraryBuildingGeometry";
 import {
@@ -44,13 +51,23 @@ import type {
   WorldSelectionListener,
 } from "../worldRuntime";
 import type { ReadingAreaBook } from "../readingAreaBookContract";
+import type { WorldSessionActivity } from "../../../contracts/worldSessionActivity";
+import { createSessionWorldVisuals } from "./sessionWorldVisuals";
 import type { LibraryWorldSnapshot } from "../libraryWorldEntryContract";
 import {
   assignLibraryRecordSlots,
   type LibraryRecordPlacement,
 } from "../libraryRecordLayout";
 import { createProceduralLibraryBuilding } from "./proceduralLibraryBuilding";
-import { createLibraryRecordComposition } from "./libraryRecordComposition";
+import {
+  createLibraryRecordComposition,
+  replaceLibraryRecordRepresentation,
+  type LibraryRecordVisual,
+} from "./libraryRecordComposition";
+import type {
+  BookRecordFactory,
+  RecordAssetFactory,
+} from "./recordAssetContract";
 import { FrameMetricsWindow } from "./frameMetrics";
 import {
   CAMERA_REFERENCE_HALF_HEIGHT,
@@ -75,6 +92,7 @@ import { collectSceneTextureMetrics } from "./sceneTextureMetrics";
 import { ThreeWorldInteraction } from "./ThreeWorldInteraction";
 import {
   reconcileReadingAreaBookVisuals,
+  replaceReadingAreaBookRepresentation,
   validateReadingAreaBookSnapshot,
   type ReadingAreaBookVisual,
 } from "./readingAreaBookVisuals";
@@ -95,6 +113,7 @@ export interface ThreeWorldRenderer {
   readonly info?: RendererInfo;
   readonly shadowMap: { enabled: boolean };
   dispose(): void;
+  forceContextLoss?(): void;
   render(scene: Scene, camera: OrthographicCamera): void;
   setPixelRatio(value: number): void;
   setSize(width: number, height: number, updateStyle?: boolean): void;
@@ -115,7 +134,12 @@ export interface FixtureModelLoader {
 
 export interface ThreeWorldRuntimeDependencies {
   readonly livingSession?: LivingSession;
+  readonly nightLighting?: NightLightingSession;
   readonly inhabitantLoader?: InhabitantLoader;
+  readonly inhabitantContinuity?: InhabitantContinuitySnapshot;
+  readonly onInhabitantCheckpoint?: (
+    snapshot: InhabitantContinuitySnapshot,
+  ) => void;
   readonly createRenderer?: () => ThreeWorldRenderer;
   readonly fixtureLoader?: FixtureModelLoader;
   readonly frameScheduler?: FrameScheduler;
@@ -186,6 +210,7 @@ function createFixtureLoader(): FixtureModelLoader {
 /** Resources that live and are released together for one runtime mount. */
 class ThreeWorldMount {
   private disposed = false;
+  private frameGeneration = 0;
   private readonly fixtures: Object3D[] = [];
   private interaction: ThreeWorldInteraction | undefined;
   private proceduralComposition: ProceduralComposition | undefined;
@@ -230,6 +255,7 @@ class ThreeWorldMount {
       );
     } catch (error) {
       renderer.dispose();
+      renderer.forceContextLoss?.();
       renderer.domElement.remove();
       throw error;
     }
@@ -264,6 +290,8 @@ class ThreeWorldMount {
   }
 
   cancelFrame(): void {
+    // Invalidates queued callbacks even if delivered after a later resume.
+    this.frameGeneration++;
     const frameId = this.frameId;
     this.frameId = undefined;
     if (frameId === undefined) return;
@@ -283,7 +311,12 @@ class ThreeWorldMount {
   }
 
   requestFrame(callback: FrameRequestCallback): void {
-    this.frameId = this.frameScheduler.request(callback);
+    if (this.disposed || this.frameId !== undefined) return;
+    const generation = this.frameGeneration;
+    this.frameId = this.frameScheduler.request((timestamp) => {
+      if (this.disposed || generation !== this.frameGeneration) return;
+      callback(timestamp);
+    });
   }
 
   settleFrame(): void {
@@ -388,6 +421,9 @@ class ThreeWorldMount {
     });
     this.safely(() => this.scene.clear());
     this.safely(() => this.renderer.dispose());
+    // dispose() releases renderer caches, but does not release its WebGL context.
+    // This mount owns the context; resident pauses never take this terminal path.
+    this.safely(() => this.renderer.forceContextLoss?.());
     this.safely(() => this.renderer.domElement.remove());
   }
 
@@ -415,6 +451,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private lastDiagnosticsPublishedAt: number | undefined;
   private materialTextureReferences = 0;
   private meshes = 0;
+  private readonly recordVisuals = new Map<string, LibraryRecordVisual>();
   private mountStartedAt: number | undefined;
   private mountedWorld: ThreeWorldMount | undefined;
   private navigation: CameraNavigation | undefined;
@@ -447,12 +484,21 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly now: () => number;
 
   private readonly livingSession?: LivingSession;
+  private readonly nightLighting?: NightLightingSession;
   private inhabitants?: ReturnType<typeof createInhabitantVisuals>;
+  private ambientMagic?: ReturnType<typeof createAmbientMagic>;
+  private scrollVisuals?: ReturnType<typeof createLivingScrollVisuals>;
+  private readonly scrolls: readonly import("../../../contracts/livingScroll").LivingScroll[];
   private livingVisuals?: ReturnType<typeof createLivingVisuals>;
   private livingFrameTime: number | undefined;
   private readonly inhabitantLoader?: InhabitantLoader;
   private agency?: InhabitantAgency;
   private agencyClock = 0;
+  private readonly continuity?: InhabitantContinuitySnapshot;
+  private readonly onInhabitantCheckpoint?: (
+    snapshot: InhabitantContinuitySnapshot,
+  ) => void;
+  private lastContinuityCheckpointAt: number | undefined;
   private readonly inhabitantActivations = new Set<
     (key: InhabitantKey) => void
   >();
@@ -464,8 +510,17 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private unsubscribeAgency?: () => void;
   private unsubscribeLivingEvents?: () => void;
   private sceneProps?: ReturnType<typeof createInhabitantSceneProps>;
+  private worldSessionActivity: WorldSessionActivity | null = null;
+  private sessionBooks?: ReturnType<typeof createSessionBookVisuals>;
+  private sessionVisuals?: ReturnType<typeof createSessionWorldVisuals>;
   constructor(dependencies: ThreeWorldRuntimeDependencies = {}) {
     this.inhabitantLoader = dependencies.inhabitantLoader;
+    this.scrolls = dependencies.libraryWorldSnapshot?.scrolls ?? [];
+    this.continuity = dependencies.inhabitantContinuity;
+    this.onInhabitantCheckpoint = dependencies.onInhabitantCheckpoint;
+    this.nightLighting = dependencies.performanceScenario
+      ? undefined
+      : dependencies.nightLighting;
     this.livingSession = dependencies.performanceScenario
       ? undefined
       : dependencies.livingSession;
@@ -570,14 +625,18 @@ export class ThreeWorldRuntime implements WorldRuntime {
       // unmodified reference scene for legacy BF-2 and F5 only.
       const referenceScene = composedWorld ? undefined : createReferenceScene();
 
+      const environmentLights: (HemisphereLight | DirectionalLight)[] = [];
       scene.background = new Color(0x18342d);
       if (referenceScene) {
         mountedWorld.addReferenceScene(referenceScene);
         scene.add(referenceScene.root);
       } else {
-        scene.add(new HemisphereLight(0xffedd2, 0x58665b, 2));
+        const hemisphere = new HemisphereLight(0xffedd2, 0x58665b, 2);
+        environmentLights.push(hemisphere);
+        scene.add(hemisphere);
         const sunlight = new DirectionalLight(0xffdfac, 1.5);
         sunlight.position.set(-4, 12, 7);
+        environmentLights.push(sunlight);
         scene.add(sunlight);
       }
       const proceduralSelectables = this.performanceScenarioDiagnosticsEnabled
@@ -589,6 +648,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
                 : READING_SHELF_COMPOSITION_DEFINITIONS,
             );
             unattachedProceduralComposition = composition;
+            if (composedWorld)
+              for (const instance of composition.instances)
+                batchStaticBookshelf(instance.representation.root);
             scene.add(composition.root);
             mountedWorld.addProceduralComposition(composition);
             unattachedProceduralComposition = undefined;
@@ -642,15 +704,21 @@ export class ThreeWorldRuntime implements WorldRuntime {
         );
         mountedWorld.addLibraryBuilding(building);
         scene.add(building);
+        this.sessionVisuals = createSessionWorldVisuals(building);
+        this.sessionVisuals.apply(this.worldSessionActivity);
         if (this.livingSession)
           this.livingVisuals = createLivingVisuals(
             building,
             scene,
             this.livingSession,
+            this.nightLighting,
+            environmentLights,
           );
         const records = createLibraryRecordComposition(
           this.libraryRecordPlacements ?? [],
         );
+        for (const visual of records.instances)
+          this.recordVisuals.set(visual.instanceId, visual);
         mountedWorld.addLibraryRecords(records.root);
         scene.add(records.root);
         this.sceneProps = createInhabitantSceneProps(building);
@@ -660,16 +728,53 @@ export class ThreeWorldRuntime implements WorldRuntime {
           ...proceduralSelectables.map((s) => s.root),
           ...readingAreaBookVisuals.map((v) => v.node),
         ]);
-        this.agency = new InhabitantAgency(
-          new InhabitantNavigation(obstacles),
-          {
-            now: () => this.agencyClock,
-            hour: () => new Date().getHours(),
-            onEnvironmentAction: (key, objectId) => {
-              this.livingSession?.actFromInhabitant(key, objectId);
-            },
-          },
+        this.scrollVisuals = createLivingScrollVisuals(
+          building,
+          this.scrolls,
+          [
+            building,
+            records.root,
+            ...proceduralSelectables.map((s) => s.root),
+            ...readingAreaBookVisuals.map((v) => v.node),
+          ],
+          (furnitureId) =>
+            !this.sessionBooks?.isTransporting() &&
+            !this.agency?.interactions.isReserved(
+              `surface:${furnitureId}`,
+              this.agency.interactionTime,
+            ),
         );
+        this.ambientMagic = createAmbientMagic(building, (episode) =>
+          this.agency?.reactToMagic(episode),
+        );
+        const inhabitantNavigation = new InhabitantNavigation(obstacles);
+        inhabitantNavigation.prepare(
+          INHABITANTS.map((a) => INHABITANT_ENVELOPES[a.key].travel),
+        );
+        this.agency = new InhabitantAgency(inhabitantNavigation, {
+          now: () => this.agencyClock,
+          hour: () => new Date().getHours(),
+          nightLighting: this.nightLighting,
+          onEnvironmentAction: (key, objectId) => {
+            this.livingSession?.actFromInhabitant(key, objectId);
+          },
+        });
+        this.sessionBooks = createSessionBookVisuals({
+          books: () => this.readingAreaBookVisuals,
+          obstacleRoots: [
+            building,
+            records.root,
+            ...proceduralSelectables.map((s) => s.root),
+          ],
+          interactions: this.agency.interactions,
+          now: () => this.agency?.interactionTime ?? 0,
+          canDepart: () => !this.scrollVisuals?.hasFlight(),
+          occupiedSurfaces: () => this.scrollVisuals?.occupiedSurfaces() ?? [],
+        });
+        this.sessionBooks.apply(this.worldSessionActivity);
+        if (this.continuity) {
+          this.agency.restoreContinuity(this.continuity);
+        }
         this.narrativeVisuals = createNarrativeVisuals(building);
         this.unsubscribeAgency = this.agency.subscribe(() => {
           const snapshot = this.agency?.getSnapshot();
@@ -723,6 +828,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
         ...(this.inhabitants?.selectables ?? []).map(
           ({ descriptor }) => descriptor,
         ),
+        ...(this.scrollVisuals?.selectables ?? []).map(
+          ({ descriptor }) => descriptor,
+        ),
         ...(this.livingVisuals?.selectables ?? []).map(
           ({ descriptor }) => descriptor,
         ),
@@ -765,6 +873,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         selectables: [
           ...(this.inhabitants?.selectables ?? []),
           ...(this.livingVisuals?.selectables ?? []),
+          ...(this.scrollVisuals?.selectables ?? []),
           ...(referenceScene?.selectables ?? []),
           ...proceduralSelectables,
           ...libraryRecordSelectables,
@@ -793,6 +902,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.loadScenarioFixtures();
       mountedWorld.watchResize(this.handleWindowResize);
       mountedWorld.watchVisibility(this.handleVisibilityChange);
+      window.addEventListener("pagehide", this.handlePageHide);
       this.publishDiagnostics(true);
     } catch (error) {
       if (unattachedProceduralComposition) {
@@ -845,6 +955,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
 
   pause(): void {
     if (this.isTerminal()) return;
+    this.checkpointInhabitants(true);
     this.pausedByVisibility = false;
     this.pauseLoop();
   }
@@ -932,6 +1043,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
     };
   }
 
+  applyWorldSession(activity: WorldSessionActivity | null): void {
+    if (this.isTerminal()) return;
+    this.worldSessionActivity = activity;
+    this.sessionVisuals?.apply(activity);
+    this.sessionBooks?.apply(activity);
+  }
+
   applyNarrative(snapshot: NarrativeSnapshot): void {
     if (
       this.isTerminal() ||
@@ -975,6 +1093,43 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.mountedWorld?.getInteraction()?.selectObject(id);
   }
 
+  /** Replace compatible visuals without changing the registered record wrapper. */
+  replaceLibraryRecordRepresentation(
+    instanceId: string,
+    factory: RecordAssetFactory,
+  ): "replaced" | "unavailable" {
+    const visual = this.recordVisuals.get(instanceId);
+    if (this.isTerminal() || !visual || !this.mountedWorld)
+      return "unavailable";
+    replaceLibraryRecordRepresentation(visual, factory);
+    this.mountedWorld
+      .getInteraction()
+      ?.refreshHighlightForSelectedObject(instanceId);
+    this.updateObjectCounts(this.mountedWorld.scene);
+    this.updateMaterialTextureMetrics(this.mountedWorld.scene);
+    this.renderCurrentFrame();
+    this.publishDiagnostics(true);
+    return "replaced";
+  }
+  replaceReadingAreaBookRepresentation(
+    instanceId: string,
+    factory: BookRecordFactory,
+  ): "replaced" | "busy" | "unavailable" {
+    const visual = this.readingAreaBookVisuals.get(instanceId);
+    if (this.isTerminal() || !visual || !this.mountedWorld)
+      return "unavailable";
+    const result = replaceReadingAreaBookRepresentation(visual, factory);
+    if (result === "busy") return result;
+    this.mountedWorld
+      .getInteraction()
+      ?.refreshHighlightForSelectedObject(instanceId);
+    this.updateObjectCounts(this.mountedWorld.scene);
+    this.updateMaterialTextureMetrics(this.mountedWorld.scene);
+    this.renderCurrentFrame();
+    this.publishDiagnostics(true);
+    return result;
+  }
+
   /**
    * BF-1D's intentionally narrow, synchronous replacement proof.
    *
@@ -997,6 +1152,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
       variant,
     );
     if (result === "unchanged") return result;
+    const replaced = composition.instances.find(
+      (i) => i.identity.instanceId === instanceId,
+    );
+    if (replaced && this.libraryRecordPlacements !== undefined)
+      batchStaticBookshelf(replaced.representation.root);
+
+    this.sessionBooks?.releaseForLayoutChange();
 
     const reconciliation = reconcileReadingAreaBookVisuals(
       composition,
@@ -1055,6 +1217,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly handleVisibilityChange = (): void => {
     if (this.isTerminal()) return;
     if (document.hidden) {
+      this.checkpointInhabitants(true);
       if (this.state === "running") {
         this.pausedByVisibility = true;
         this.pauseLoop();
@@ -1068,6 +1231,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.activateLoop();
     }
   };
+
+  private readonly handlePageHide = (): void =>
+    this.checkpointInhabitants(true);
 
   private readonly handleWindowResize = (): void => this.resize();
 
@@ -1199,9 +1365,35 @@ export class ThreeWorldRuntime implements WorldRuntime {
           actor.root.userData.loadState === "ready",
         );
       this.agencyClock += delta * 1000;
-      this.agency?.update();
-      if (this.agency) this.inhabitants?.drive(this.agency.getPoses());
+      this.sessionBooks?.update(delta, reduced, this.agency?.getPoses() ?? []);
+      this.agency?.update({
+        physicalObstacles: this.sessionBooks?.navigationObstacles() ?? [],
+        readingCandidate: this.sessionBooks?.candidate() ?? null,
+        scrollCandidates: this.scrollVisuals?.candidates() ?? [],
+      });
+      // Session collision reads the preceding phase; all post-agency consumers
+      // share one detached snapshot, never mutable Agent objects.
+      const poses = this.agency?.getPoses() ?? [];
+      this.checkpointInhabitants(false, poses);
+      this.inhabitants?.drive(poses);
+      if (this.agency && this.livingVisuals && this.inhabitants)
+        this.livingVisuals.driveInhabitantInteractions(
+          poses,
+          (id) => this.inhabitants?.getCarryAnchor(id) ?? null,
+        );
       this.inhabitants?.update(delta, reduced);
+      this.ambientMagic?.update(delta, reduced);
+      this.scrollVisuals?.update(
+        delta,
+        reduced,
+        poses,
+        (id) => this.inhabitants?.getCarryAnchor(id) ?? null,
+      );
+      if (
+        this.selection?.id.startsWith("scroll:") ||
+        this.selection?.id.startsWith("reading-book:")
+      )
+        mountedWorld.getInteraction()?.updateHighlightBounds();
       if (this.agency)
         this.sceneProps?.update(
           this.narrative?.scenes.spell
@@ -1285,6 +1477,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (!mountedWorld) return;
     this.state = "running";
     this.pausedByVisibility = false;
+    this.nightLighting?.refreshContext();
+    this.livingVisuals?.reconcileLighting();
     this.resetFrameMetrics();
     const timestamp = this.now();
     if (!this.viewportReady) {
@@ -1336,10 +1530,39 @@ export class ThreeWorldRuntime implements WorldRuntime {
     return this.state === "failed" || this.state === "disposed";
   }
 
+  /** Periodic lightweight snapshots, plus pause/close; no IndexedDB per frame. */
+  private checkpointInhabitants(
+    force: boolean,
+    poses?: readonly import("../inhabitantAgency").AgentView[],
+  ): void {
+    if (!this.agency || !this.onInhabitantCheckpoint) return;
+    const now = this.now();
+    if (
+      !force &&
+      this.lastContinuityCheckpointAt !== undefined &&
+      now - this.lastContinuityCheckpointAt < 12_000
+    ) {
+      return;
+    }
+    if (!(poses ?? this.agency.getPoses()).some((actor) => actor.available))
+      return;
+    this.lastContinuityCheckpointAt = now;
+    try {
+      this.onInhabitantCheckpoint(this.agency.captureContinuity());
+    } catch {
+      // A failed persistence adapter cannot turn a working scene into a crash.
+    }
+  }
+
   private releaseMount(): void {
+    this.checkpointInhabitants(true);
+    window.removeEventListener("pagehide", this.handlePageHide);
     const mountedWorld = this.mountedWorld;
     this.mountedWorld = undefined;
     this.navigation = undefined;
+    this.recordVisuals.clear();
+    this.sessionBooks?.dispose();
+    this.sessionBooks = undefined;
     this.agency?.setMode("unavailable");
     this.unsubscribeAgency?.();
     this.unsubscribeLivingEvents?.();
@@ -1348,9 +1571,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.agencyListeners.clear();
     this.inhabitantActivations.clear();
     this.sceneProps = undefined;
+    this.sessionVisuals = undefined;
     this.inhabitants?.dispose();
     this.inhabitants = undefined;
+    this.livingVisuals?.dispose();
     this.livingVisuals = undefined;
+    this.scrollVisuals = undefined;
+    this.ambientMagic = undefined;
     this.narrativeVisuals = undefined;
     this.narrative = undefined;
     this.livingFrameTime = undefined;

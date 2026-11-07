@@ -1,10 +1,15 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import type { LibraryEntry } from "./domain";
+import { projectLivingScrolls } from "./application/livingScrolls";
+import { projectWorldSessionActivity } from "./application/projectWorldSessionActivity";
+import type { WorldSessionActivity } from "./contracts/worldSessionActivity";
+import type { LibraryEntry, Note, Quote, Session } from "./domain";
 import { presentApplicationError } from "./features/entry-editor/errorMessages";
 import { entryTypeLabels } from "./features/collection/collectionControls";
 import { WorldHost, type WorldHostStatus } from "./features/library/WorldHost";
+import type { InhabitantContinuityPort } from "./features/library/inhabitantContinuity";
+import type { NightLightingPort } from "./features/library/nightLighting";
 import {
   projectLibraryWorldEntries,
   type LibraryWorldCategory,
@@ -28,16 +33,25 @@ const PerformanceScenarioHarness = diagnosticsBuildEnabled
   : undefined;
 
 export interface LibraryApplication {
+  readonly inhabitantContinuity?: InhabitantContinuityPort;
+  readonly nightLightingContinuity?: NightLightingPort;
+  readonly events?: {
+    subscribe(type: "SessionChanged", listener: () => void): () => void;
+  };
   readonly queries: {
+    readonly listAllNotes?: { execute(): Promise<readonly Note[]> };
+    readonly listAllQuotes?: { execute(): Promise<readonly Quote[]> };
     readonly listLibraryEntries: {
       execute(): Promise<readonly LibraryEntry[]>;
     };
+    readonly getOpenSession?: { execute(): Promise<Session | undefined> };
   };
 }
 
 interface LibraryPageSnapshot {
   readonly application: LibraryApplication;
   readonly world?: LibraryWorldSnapshot;
+  readonly activity?: WorldSessionActivity | null;
   readonly error?: string;
 }
 
@@ -46,6 +60,12 @@ interface ApplicationBound<Value> {
   readonly value: Value;
 }
 
+function scrollPath(
+  scroll: import("./contracts/livingScroll").LivingScroll,
+  returnPath: string,
+): string {
+  return `${entryPath(scroll.entryId)}?${new URLSearchParams({ annotationKind: scroll.kind, annotationId: scroll.annotationId, from: returnPath })}`;
+}
 function entryPath(entryId: string): string {
   return `/registros/${encodeURIComponent(entryId)}`;
 }
@@ -138,6 +158,7 @@ function LibraryPageContent({
   const currentSnapshot =
     snapshot?.application === application ? snapshot : undefined;
   const libraryWorldSnapshot = currentSnapshot?.world;
+  const worldSessionActivity = currentSnapshot?.activity ?? null;
   const readingAreaBooks = libraryWorldSnapshot?.categories[0].entries;
   const error = currentSnapshot?.error;
   useEffect(() => {
@@ -190,19 +211,40 @@ function LibraryPageContent({
   useEffect(() => {
     if (!application || diagnosticsActive || !active) return;
     let current = true;
+    let generation = 0;
     const loadSnapshot = async (): Promise<void> => {
+      const request = ++generation;
       try {
         const entries = await application.queries.listLibraryEntries.execute();
-        if (!current) return;
-        const world = projectLibraryWorldEntries(entries);
-        setSnapshot((previous) =>
-          previous?.application === application &&
-          JSON.stringify(previous.world) === JSON.stringify(world)
-            ? previous
-            : { application, world },
-        );
+        if (!current || request !== generation) return;
+        const [notes, quotes, openSession] = await Promise.all([
+          application.queries.listAllNotes?.execute() ?? [],
+          application.queries.listAllQuotes?.execute() ?? [],
+          application.queries.getOpenSession?.execute() ?? undefined,
+        ]);
+        if (!current || request !== generation) return;
+        const world = Object.freeze({
+          ...projectLibraryWorldEntries(entries),
+          scrolls: projectLivingScrolls(entries, notes, quotes),
+        });
+        const activity = projectWorldSessionActivity(openSession, entries);
+        setSnapshot((previous) => {
+          const sameWorld =
+            previous?.application === application &&
+            JSON.stringify(previous.world) === JSON.stringify(world);
+          const sameActivity =
+            previous?.application === application &&
+            JSON.stringify(previous.activity ?? null) ===
+              JSON.stringify(activity);
+          if (sameWorld && sameActivity) return previous;
+          return {
+            application,
+            world: sameWorld && previous?.world ? previous.world : world,
+            activity,
+          };
+        });
       } catch (failure: unknown) {
-        if (!current) return;
+        if (!current || request !== generation) return;
         setSnapshot({
           application,
           error: presentApplicationError(failure).message,
@@ -210,8 +252,12 @@ function LibraryPageContent({
       }
     };
     void loadSnapshot();
+    const unsubscribe = application.events?.subscribe("SessionChanged", () => {
+      void loadSnapshot();
+    });
     return () => {
       current = false;
+      unsubscribe?.();
     };
   }, [application, diagnosticsActive, active]);
 
@@ -352,14 +398,50 @@ function LibraryPageContent({
           <>
             <WorldHost
               active={active}
+              inhabitantContinuity={application.inhabitantContinuity}
+              nightLightingContinuity={application.nightLightingContinuity}
               libraryWorldSnapshot={libraryWorldSnapshot}
+              worldSessionActivity={worldSessionActivity}
               onSelectableObjectsChange={handleSelectableObjects}
               onSelectionChange={handleWorldSelection}
               onStatusChange={handleWorldStatus}
               selectedObjectId={requestedSelectionId}
             />
+            {selection?.id.startsWith("scroll:") &&
+              libraryWorldSnapshot?.scrolls?.some(
+                (s) => s.id === selection.id,
+              ) && (
+                <Link
+                  className="reading-area-selection button button--secondary"
+                  to={scrollPath(
+                    libraryWorldSnapshot.scrolls.find(
+                      (s) => s.id === selection.id,
+                    )!,
+                    returnPath,
+                  )}
+                >
+                  Abrir conteúdo do pergaminho
+                </Link>
+              )}
             <details className="library-index" open={worldStatus === "failed"}>
               <summary>Registros · alternativa acessível</summary>
+              {libraryWorldSnapshot?.scrolls?.length ? (
+                <section className="reading-area-books">
+                  <h3>Pergaminhos vivos</h3>
+                  {libraryWorldSnapshot.scrolls.map((scroll) => (
+                    <p key={scroll.id}>
+                      <Link
+                        to={scrollPath(scroll, returnPath)}
+                        state={{ returnTo: returnPath }}
+                      >
+                        Abrir {scroll.kind === "note" ? "anotação" : "citação"}{" "}
+                        no registro de origem
+                      </Link>
+                    </p>
+                  ))}
+                </section>
+              ) : null}
+
               {worldStatus === "ready" && readingAreaBooks.length > 0 && (
                 <p className="reading-area-summary" aria-live="polite">
                   {representedBooks?.length ?? 0}{" "}

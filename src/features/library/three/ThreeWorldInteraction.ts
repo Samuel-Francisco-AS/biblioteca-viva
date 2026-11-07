@@ -5,6 +5,7 @@ import {
   OrthographicCamera,
   Raycaster,
   Scene,
+  type Intersection,
   Vector2,
   Vector3,
 } from "three";
@@ -60,6 +61,12 @@ export class ThreeWorldInteraction {
   private readonly render: () => void;
   private readonly scene: Scene;
   private readonly pickingPriorityRoots: readonly Object3D[];
+  private readonly environmentalRootSet = new Set<Object3D>();
+  private readonly pickingPriorityRootSet: ReadonlySet<Object3D>;
+  private pickingRoots: Object3D[] = [];
+  private pickingRootsDirty = true;
+  private readonly pickPointer = new Vector2();
+  private readonly pickIntersections: Intersection[] = [];
   private selectedId: string | null = null;
   private readonly selectableDescriptors = new Map<
     string,
@@ -85,6 +92,7 @@ export class ThreeWorldInteraction {
     this.onSelectionChange = options.onSelectionChange;
     this.onTapObject = options.onTapObject;
     this.pickingPriorityRoots = options.pickingPriorityRoots ?? [];
+    this.pickingPriorityRootSet = new Set(this.pickingPriorityRoots);
     this.render = options.render;
     this.scene = options.scene;
     for (const descriptor of options.catalog) {
@@ -134,6 +142,8 @@ export class ThreeWorldInteraction {
     if (root) {
       this.selectableRoots.delete(id);
       this.selectableRootIds.delete(root);
+      this.environmentalRootSet.delete(root);
+      this.pickingRootsDirty = true;
     }
     if (this.selectedId === id) this.selectObject(null);
     this.updateDiagnostics();
@@ -164,6 +174,9 @@ export class ThreeWorldInteraction {
     this.clearHighlight();
     this.selectableRoots.clear();
     this.selectableRootIds.clear();
+    this.environmentalRootSet.clear();
+    this.pickingRoots = [];
+    this.pickIntersections.length = 0;
   }
 
   selectObject(id: string | null): void {
@@ -339,8 +352,9 @@ export class ThreeWorldInteraction {
   };
 
   private applyPan(previous: PointerPosition, current: PointerPosition): void {
-    const previousPosition = this.viewportPosition(previous);
-    const currentPosition = this.viewportPosition(current);
+    const bounds = this.canvas.getBoundingClientRect();
+    const previousPosition = this.viewportPosition(previous, bounds);
+    const currentPosition = this.viewportPosition(current, bounds);
     if (
       !previousPosition ||
       !currentPosition ||
@@ -438,42 +452,42 @@ export class ThreeWorldInteraction {
     ) {
       return;
     }
-    const pointer = new Vector2(
+    this.pickPointer.set(
       ((position.x - bounds.left) / width) * 2 - 1,
       -((position.y - bounds.top) / height) * 2 + 1,
     );
     this.camera.updateMatrixWorld();
-    this.scene.updateMatrixWorld(true);
-    this.raycaster.setFromCamera(pointer, this.camera);
-    const prioritizedIntersections = this.raycaster.intersectObjects(
-      [...this.pickingPriorityRoots],
-      true,
-    );
-    const environmentalRoots = [...this.selectableRoots]
-      .filter(([id]) => id.startsWith("living:") || id.startsWith("character:"))
-      .map(([, root]) => root);
-    const environmentalIntersections = this.raycaster.intersectObjects(
-      environmentalRoots,
-      true,
-    );
-    const priority = prioritizedIntersections.find(
-      (hit) => this.findSelectableId(hit.object) !== undefined,
-    );
-    const environmental = environmentalIntersections.find(
-      (hit) => this.findSelectableId(hit.object) !== undefined,
-    );
-    // Nearest genuinely visible prop may win; records/shelves retain precedence
-    // for overlapping surfaces at equal depth, preserving conventional selection.
+    const roots = this.getPickingRoots();
+    // Update only selectable hierarchies and their ancestors. This also handles
+    // input arriving before the next render after a book/inhabitant moves.
+    for (const root of roots) root.updateWorldMatrix(true, true);
+    this.raycaster.setFromCamera(this.pickPointer, this.camera);
+    this.pickIntersections.length = 0;
+    this.raycaster.intersectObjects(roots, true, this.pickIntersections);
+    let priority: Intersection | undefined;
+    let environmental: Intersection | undefined;
+    let fallback: Intersection | undefined;
+    for (const hit of this.pickIntersections) {
+      const id = this.findSelectableId(hit.object);
+      if (!id) continue;
+      fallback ??= hit;
+      if (
+        !priority &&
+        this.belongsToPickingRoots(hit.object, this.pickingPriorityRootSet)
+      )
+        priority = hit;
+      if (
+        !environmental &&
+        this.belongsToPickingRoots(hit.object, this.environmentalRootSet)
+      )
+        environmental = hit;
+    }
+    // Keep the original 2 cm depth tolerance, record precedence, and fallback.
     const chosen =
       environmental &&
       (!priority || environmental.distance + 0.02 < priority.distance)
         ? environmental
         : priority;
-    const fallback = chosen
-      ? undefined
-      : this.raycaster
-          .intersectObjects([...this.selectableRoots.values()], true)
-          .find((hit) => this.findSelectableId(hit.object) !== undefined);
     const hit = chosen ?? fallback;
     // A projected, larger hit target is considered only after 3D geometry misses.
     // Existing books, shelves and every direct ray hit keep their precedence.
@@ -485,12 +499,45 @@ export class ThreeWorldInteraction {
           bounds,
           position,
         );
+    this.pickIntersections.length = 0;
     this.selectObject(selectedId ?? null);
     if (
       selectedId?.startsWith("living:") ||
       selectedId?.startsWith("character:")
     )
       this.onTapObject?.(selectedId);
+  }
+
+  private belongsToPickingRoots(
+    object: Object3D,
+    roots: ReadonlySet<Object3D>,
+  ): boolean {
+    let current: Object3D | null = object;
+    while (current) {
+      if (roots.has(current)) return true;
+      current = current.parent;
+    }
+    return false;
+  }
+
+  private getPickingRoots(): Object3D[] {
+    if (!this.pickingRootsDirty) return this.pickingRoots;
+    const candidates = new Set([
+      ...this.pickingPriorityRoots,
+      ...this.selectableRoots.values(),
+    ]);
+    // A book may be registered below a shelf that is itself selectable. Raycast
+    // its hierarchy once, resolving the nearest registered ancestor per hit.
+    this.pickingRoots = [...candidates].filter((root) => {
+      let parent = root.parent;
+      while (parent) {
+        if (candidates.has(parent)) return false;
+        parent = parent.parent;
+      }
+      return true;
+    });
+    this.pickingRootsDirty = false;
+    return this.pickingRoots;
   }
 
   private findSelectableId(object: Object3D): string | undefined {
@@ -504,7 +551,19 @@ export class ThreeWorldInteraction {
   }
 
   private registerSelectableRoot(id: string, root: Object3D): void {
+    const previous = this.selectableRoots.get(id);
+    if (previous) {
+      this.selectableRootIds.delete(previous);
+      this.environmentalRootSet.delete(previous);
+    }
+    if (
+      id.startsWith("living:") ||
+      id.startsWith("character:") ||
+      id.startsWith("scroll:")
+    )
+      this.environmentalRootSet.add(root);
     this.selectableRoots.set(id, root);
+    this.pickingRootsDirty = true;
     this.selectableRootIds.set(root, id);
   }
 
@@ -558,8 +617,9 @@ export class ThreeWorldInteraction {
       this.pinchPreviousDistance,
       distance,
     );
-    const previousPosition = this.viewportPosition(previousMidpoint);
-    const currentPosition = this.viewportPosition(midpoint);
+    const bounds = this.canvas.getBoundingClientRect();
+    const previousPosition = this.viewportPosition(previousMidpoint, bounds);
+    const currentPosition = this.viewportPosition(midpoint, bounds);
     const changed =
       previousPosition &&
       currentPosition &&
@@ -588,8 +648,10 @@ export class ThreeWorldInteraction {
     };
   }
 
-  private viewportPosition(position: PointerPosition): PointerPosition | null {
-    const bounds = this.canvas.getBoundingClientRect();
+  private viewportPosition(
+    position: PointerPosition,
+    bounds = this.canvas.getBoundingClientRect(),
+  ): PointerPosition | null {
     if (
       !Number.isFinite(bounds.left) ||
       !Number.isFinite(bounds.top) ||

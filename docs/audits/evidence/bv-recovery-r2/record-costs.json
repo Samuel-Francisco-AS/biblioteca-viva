@@ -1,0 +1,326 @@
+[
+  {
+    "view": "record-book-normal",
+    "focusedMeshes": [
+      8,
+      6
+    ],
+    "focusedTriangles": [
+      1536,
+      1740
+    ],
+    "totalPotentialTriangles": [
+      220362,
+      241554
+    ],
+    "drawCalls": [
+      295,
+      272
+    ],
+    "materials": [
+      165,
+      191
+    ],
+    "textures": [
+      3,
+      3
+    ]
+  },
+  {
+    "view": "record-book-near",
+    "focusedMeshes": [
+      8,
+      6
+    ],
+    "focusedTriangles": [
+      1536,
+      1740
+    ],
+    "totalPotentialTriangles": [
+      220362,
+      241554
+    ],
+    "drawCalls": [
+      186,
+      162
+    ],
+    "materials": [
+      165,
+      191
+    ],
+    "textures": [
+      3,
+      3
+    ]
+  },
+  {
+    "view": "record-movie-normal",
+    "focusedMeshes": [
+      3,
+      5
+    ],
+    "focusedTriangles": [
+      36,
+      2596
+    ],
+    "totalPotentialTriangles": [
+      220362,
+      241554
+    ],
+    "drawCalls": [
+      263,
+      238
+    ],
+    "materials": [
+      165,
+      191
+    ],
+    "textures": [
+      4,
+      4
+    ]
+  },
+  {
+    "view": "record-movie-near",
+    "focusedMeshes": [
+      3,
+      5
+    ],
+    "focusedTriangles": [
+      36,
+      2596
+    ],
+    "totalPotentialTriangles": [
+      220362,
+      241554
+    ],
+    "drawCalls": [
+      120,
+      119
+    ],
+    "materials": [
+      165,
+      191
+    ],
+    "textures": [
+      4,
+      4
+    ]
+  },
+  {
+    "view": "record-series-normal",
+    "focusedMeshes": [
+      7,
+      4
+    ],
+    "focusedTriangles": [
+      84,
+      2044
+    ],
+    "totalPotentialTriangles": [
+      220362,
+      241554
+    ],
+    "drawCalls": [
+      265,
+      240
+    ],
+    "materials": [
+      165,
+      191
+    ],
+    "textures": [
+      4,
+      4
+    ]
+  },
+  {
+    "view": "record-series-near",
+    "focusedMeshes": [
+      7,
+      4
+    ],
+    "focusedTriangles": [
+      84,
+      2044
+    ],
+    "totalPotentialTriangles": [
+      220362,
+      241554
+    ],
+    "drawCalls": [
+      94,
+      93
+    ],
+    "materials": [
+      165,
+      191
+    ],
+    "textures": [
+      4,
+      4
+    ]
+  },
+  {
+    "view": "record-study-normal",
+    "focusedMeshes": [
+      4,
+      5
+    ],
+    "focusedTriangles": [
+      48,
+      1824
+    ],
+    "totalPotentialTriangles": [
+      220362,
+      241554
+    ],
+    "drawCalls": [
+      147,
+      148
+    ],
+    "materials": [
+      165,
+      191
+    ],
+    "textures": [
+      5,
+      5
+    ]
+  },
+  {
+    "view": "record-study-near",
+    "focusedMeshes": [
+      4,
+      5
+    ],
+    "focusedTriangles": [
+      48,
+      1824
+    ],
+    "totalPotentialTriangles": [
+      220362,
+      241554
+    ],
+    "drawCalls": [
+      111,
+      113
+    ],
+    "materials": [
+      165,
+      191
+    ],
+    "textures": [
+      5,
+      5
+    ]
+  },
+  {
+    "view": "record-physical_activity-normal",
+    "focusedMeshes": [
+      3,
+      4
+    ],
+    "focusedTriangles": [
+      100,
+      1560
+    ],
+    "totalPotentialTriangles": [
+      220362,
+      241554
+    ],
+    "drawCalls": [
+      118,
+      120
+    ],
+    "materials": [
+      165,
+      191
+    ],
+    "textures": [
+      5,
+      5
+    ]
+  },
+  {
+    "view": "record-physical_activity-near",
+    "focusedMeshes": [
+      3,
+      4
+    ],
+    "focusedTriangles": [
+      100,
+      1560
+    ],
+    "totalPotentialTriangles": [
+      220362,
+      241554
+    ],
+    "drawCalls": [
+      103,
+      105
+    ],
+    "materials": [
+      165,
+      191
+    ],
+    "textures": [
+      5,
+      5
+    ]
+  },
+  {
+    "view": "record-work-normal",
+    "focusedMeshes": [
+      4,
+      5
+    ],
+    "focusedTriangles": [
+      48,
+      1664
+    ],
+    "totalPotentialTriangles": [
+      220362,
+      241554
+    ],
+    "drawCalls": [
+      122,
+      121
+    ],
+    "materials": [
+      165,
+      191
+    ],
+    "textures": [
+      5,
+      5
+    ]
+  },
+  {
+    "view": "record-work-near",
+    "focusedMeshes": [
+      4,
+      5
+    ],
+    "focusedTriangles": [
+      48,
+      1664
+    ],
+    "totalPotentialTriangles": [
+      220362,
+      241554
+    ],
+    "drawCalls": [
+      85,
+      87
+    ],
+    "materials": [
+      165,
+      191
+    ],
+    "textures": [
+      5,
+      5
+    ]
+  }
+]

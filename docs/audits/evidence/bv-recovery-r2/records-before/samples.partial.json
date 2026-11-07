@@ -1,0 +1,734 @@
+[
+  {
+    "name": "record-book-normal",
+    "focusedTriangles": 1536,
+    "focusedMeshes": 8,
+    "drawCalls": 295,
+    "renderedTriangles": 177372,
+    "gpuGeometries": 132,
+    "gpuTextures": 3,
+    "programs": 22,
+    "bufferBytes": 1712308,
+    "materials": 165,
+    "geometries": 219,
+    "meshes": 648,
+    "objects": 883,
+    "visibleObjects": 699,
+    "potentialTriangles": 220362,
+    "pointLights": 13,
+    "matrixUpdates": 4872,
+    "frameJsMs": {
+      "p50": 5.699999999254942,
+      "p95": 7.2000000001862645
+    },
+    "renderSubmissionMs": {
+      "p50": 4.8999999994412065,
+      "p95": 6.5
+    },
+    "otherJsMs": {
+      "p50": 0.7999999998137355,
+      "p95": 0.7999999998137355
+    },
+    "stagesTotalMs": {
+      "sessionBooks": 0.09999999962747097,
+      "ambientMagic": 0.19999999925494194,
+      "scrollVisuals": 0.20000000018626451,
+      "livingVisuals": 1.3999999994412065
+    },
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "inhabitants": 4,
+    "scrolls": 4,
+    "flyingScrolls": 0,
+    "activePointLights": 0,
+    "viewport": [
+      1280,
+      900
+    ],
+    "framebuffer": [
+      1280,
+      900
+    ],
+    "camera": {
+      "targetX": -3.1475,
+      "targetZ": -7.140000000000001,
+      "zoom": 1
+    }
+  },
+  {
+    "name": "record-book-near",
+    "focusedTriangles": 1536,
+    "focusedMeshes": 8,
+    "drawCalls": 186,
+    "renderedTriangles": 164880,
+    "gpuGeometries": 133,
+    "gpuTextures": 3,
+    "programs": 23,
+    "bufferBytes": 1712308,
+    "materials": 165,
+    "geometries": 219,
+    "meshes": 648,
+    "objects": 884,
+    "visibleObjects": 700,
+    "potentialTriangles": 220362,
+    "pointLights": 13,
+    "matrixUpdates": 4944,
+    "frameJsMs": {
+      "p50": 3.8999999994412065,
+      "p95": 4.7000000001862645
+    },
+    "renderSubmissionMs": {
+      "p50": 3.2999999998137355,
+      "p95": 3.900000000372529
+    },
+    "otherJsMs": {
+      "p50": 0.5,
+      "p95": 0.7999999998137355
+    },
+    "stagesTotalMs": {
+      "sessionBooks": 0,
+      "ambientMagic": 0.30000000167638063,
+      "scrollVisuals": 0.19999999925494194,
+      "livingVisuals": 1.1000000005587935
+    },
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "inhabitants": 4,
+    "scrolls": 4,
+    "flyingScrolls": 0,
+    "activePointLights": 0,
+    "viewport": [
+      1280,
+      900
+    ],
+    "framebuffer": [
+      1280,
+      900
+    ],
+    "camera": {
+      "targetX": -3.1475,
+      "targetZ": -7.140000000000001,
+      "zoom": 2.2
+    }
+  },
+  {
+    "name": "record-movie-normal",
+    "focusedTriangles": 36,
+    "focusedMeshes": 3,
+    "drawCalls": 263,
+    "renderedTriangles": 174604,
+    "gpuGeometries": 138,
+    "gpuTextures": 4,
+    "programs": 23,
+    "bufferBytes": 1712308,
+    "materials": 165,
+    "geometries": 219,
+    "meshes": 648,
+    "objects": 883,
+    "visibleObjects": 699,
+    "potentialTriangles": 220362,
+    "pointLights": 13,
+    "matrixUpdates": 4872,
+    "frameJsMs": {
+      "p50": 4.2999999998137355,
+      "p95": 4.8999999994412065
+    },
+    "renderSubmissionMs": {
+      "p50": 3.900000000372529,
+      "p95": 4.3999999994412065
+    },
+    "otherJsMs": {
+      "p50": 0.5,
+      "p95": 0.6999999992549419
+    },
+    "stagesTotalMs": {
+      "sessionBooks": 0,
+      "ambientMagic": 0.19999999925494194,
+      "scrollVisuals": 0.2999999988824129,
+      "livingVisuals": 1.1000000014901161
+    },
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "inhabitants": 4,
+    "scrolls": 4,
+    "flyingScrolls": 0,
+    "activePointLights": 0,
+    "viewport": [
+      1280,
+      900
+    ],
+    "framebuffer": [
+      1280,
+      900
+    ],
+    "camera": {
+      "targetX": -16.5,
+      "targetZ": -10.8,
+      "zoom": 1
+    }
+  },
+  {
+    "name": "record-movie-near",
+    "focusedTriangles": 36,
+    "focusedMeshes": 3,
+    "drawCalls": 120,
+    "renderedTriangles": 145184,
+    "gpuGeometries": 139,
+    "gpuTextures": 4,
+    "programs": 24,
+    "bufferBytes": 1712308,
+    "materials": 165,
+    "geometries": 219,
+    "meshes": 648,
+    "objects": 884,
+    "visibleObjects": 700,
+    "potentialTriangles": 220362,
+    "pointLights": 13,
+    "matrixUpdates": 4878,
+    "frameJsMs": {
+      "p50": 2.1000000005587935,
+      "p95": 2.800000000745058
+    },
+    "renderSubmissionMs": {
+      "p50": 1.7000000001862645,
+      "p95": 2.400000000372529
+    },
+    "otherJsMs": {
+      "p50": 0.39999999944120646,
+      "p95": 0.40000000037252903
+    },
+    "stagesTotalMs": {
+      "sessionBooks": 0,
+      "ambientMagic": 0.10000000055879354,
+      "scrollVisuals": 0.20000000018626451,
+      "livingVisuals": 1
+    },
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "inhabitants": 4,
+    "scrolls": 4,
+    "flyingScrolls": 0,
+    "activePointLights": 0,
+    "viewport": [
+      1280,
+      900
+    ],
+    "framebuffer": [
+      1280,
+      900
+    ],
+    "camera": {
+      "targetX": -16.5,
+      "targetZ": -10.8,
+      "zoom": 2.2
+    }
+  },
+  {
+    "name": "record-series-normal",
+    "focusedTriangles": 84,
+    "focusedMeshes": 7,
+    "drawCalls": 265,
+    "renderedTriangles": 174580,
+    "gpuGeometries": 138,
+    "gpuTextures": 4,
+    "programs": 23,
+    "bufferBytes": 1712308,
+    "materials": 165,
+    "geometries": 219,
+    "meshes": 648,
+    "objects": 883,
+    "visibleObjects": 699,
+    "potentialTriangles": 220362,
+    "pointLights": 13,
+    "matrixUpdates": 4872,
+    "frameJsMs": {
+      "p50": 2.2000000001862645,
+      "p95": 2.400000000372529
+    },
+    "renderSubmissionMs": {
+      "p50": 2,
+      "p95": 2.099999999627471
+    },
+    "otherJsMs": {
+      "p50": 0.20000000018626451,
+      "p95": 0.30000000074505806
+    },
+    "stagesTotalMs": {
+      "sessionBooks": 0.09999999962747097,
+      "ambientMagic": 0,
+      "scrollVisuals": 0.10000000055879354,
+      "livingVisuals": 0.40000000037252903
+    },
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "inhabitants": 4,
+    "scrolls": 4,
+    "flyingScrolls": 0,
+    "activePointLights": 0,
+    "viewport": [
+      1280,
+      900
+    ],
+    "framebuffer": [
+      1280,
+      900
+    ],
+    "camera": {
+      "targetX": -14.1,
+      "targetZ": -10.8,
+      "zoom": 1
+    }
+  },
+  {
+    "name": "record-series-near",
+    "focusedTriangles": 84,
+    "focusedMeshes": 7,
+    "drawCalls": 94,
+    "renderedTriangles": 147548,
+    "gpuGeometries": 139,
+    "gpuTextures": 4,
+    "programs": 24,
+    "bufferBytes": 1712308,
+    "materials": 165,
+    "geometries": 219,
+    "meshes": 648,
+    "objects": 884,
+    "visibleObjects": 700,
+    "potentialTriangles": 220362,
+    "pointLights": 13,
+    "matrixUpdates": 4878,
+    "frameJsMs": {
+      "p50": 1.7000000001862645,
+      "p95": 1.7999999998137355
+    },
+    "renderSubmissionMs": {
+      "p50": 1.400000000372529,
+      "p95": 1.5
+    },
+    "otherJsMs": {
+      "p50": 0.2999999998137355,
+      "p95": 0.30000000074505806
+    },
+    "stagesTotalMs": {
+      "sessionBooks": 0,
+      "ambientMagic": 0.09999999962747097,
+      "scrollVisuals": 0,
+      "livingVisuals": 0.6000000005587935
+    },
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "inhabitants": 4,
+    "scrolls": 4,
+    "flyingScrolls": 0,
+    "activePointLights": 0,
+    "viewport": [
+      1280,
+      900
+    ],
+    "framebuffer": [
+      1280,
+      900
+    ],
+    "camera": {
+      "targetX": -14.1,
+      "targetZ": -10.8,
+      "zoom": 2.2
+    }
+  },
+  {
+    "name": "record-study-normal",
+    "focusedTriangles": 48,
+    "focusedMeshes": 4,
+    "drawCalls": 147,
+    "renderedTriangles": 151664,
+    "gpuGeometries": 179,
+    "gpuTextures": 5,
+    "programs": 24,
+    "bufferBytes": 1712308,
+    "materials": 165,
+    "geometries": 219,
+    "meshes": 648,
+    "objects": 883,
+    "visibleObjects": 699,
+    "potentialTriangles": 220362,
+    "pointLights": 13,
+    "matrixUpdates": 4872,
+    "frameJsMs": {
+      "p50": 2,
+      "p95": 2.599999999627471
+    },
+    "renderSubmissionMs": {
+      "p50": 1.7999999998137355,
+      "p95": 2.2000000001862645
+    },
+    "otherJsMs": {
+      "p50": 0.20000000018626451,
+      "p95": 0.39999999944120646
+    },
+    "stagesTotalMs": {
+      "sessionBooks": 0,
+      "ambientMagic": 0,
+      "scrollVisuals": 0.19999999925494194,
+      "livingVisuals": 0.7000000011175871
+    },
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "inhabitants": 4,
+    "scrolls": 4,
+    "flyingScrolls": 0,
+    "activePointLights": 0,
+    "viewport": [
+      1280,
+      900
+    ],
+    "framebuffer": [
+      1280,
+      900
+    ],
+    "camera": {
+      "targetX": 14.055999983668327,
+      "targetZ": -8.3,
+      "zoom": 1
+    }
+  },
+  {
+    "name": "record-study-near",
+    "focusedTriangles": 48,
+    "focusedMeshes": 4,
+    "drawCalls": 111,
+    "renderedTriangles": 145460,
+    "gpuGeometries": 180,
+    "gpuTextures": 5,
+    "programs": 25,
+    "bufferBytes": 1712308,
+    "materials": 165,
+    "geometries": 219,
+    "meshes": 648,
+    "objects": 884,
+    "visibleObjects": 700,
+    "potentialTriangles": 220362,
+    "pointLights": 13,
+    "matrixUpdates": 4878,
+    "frameJsMs": {
+      "p50": 1.7000000001862645,
+      "p95": 1.900000000372529
+    },
+    "renderSubmissionMs": {
+      "p50": 1.5,
+      "p95": 1.699999999254942
+    },
+    "otherJsMs": {
+      "p50": 0.20000000018626451,
+      "p95": 0.40000000037252903
+    },
+    "stagesTotalMs": {
+      "sessionBooks": 0,
+      "ambientMagic": 0,
+      "scrollVisuals": 0.2999999988824129,
+      "livingVisuals": 0.40000000037252903
+    },
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "inhabitants": 4,
+    "scrolls": 4,
+    "flyingScrolls": 0,
+    "activePointLights": 0,
+    "viewport": [
+      1280,
+      900
+    ],
+    "framebuffer": [
+      1280,
+      900
+    ],
+    "camera": {
+      "targetX": 14.055999983668327,
+      "targetZ": -8.3,
+      "zoom": 2.2
+    }
+  },
+  {
+    "name": "record-physical_activity-normal",
+    "focusedTriangles": 100,
+    "focusedMeshes": 3,
+    "drawCalls": 118,
+    "renderedTriangles": 150976,
+    "gpuGeometries": 210,
+    "gpuTextures": 5,
+    "programs": 24,
+    "bufferBytes": 1712308,
+    "materials": 165,
+    "geometries": 219,
+    "meshes": 648,
+    "objects": 883,
+    "visibleObjects": 699,
+    "potentialTriangles": 220362,
+    "pointLights": 13,
+    "matrixUpdates": 4872,
+    "frameJsMs": {
+      "p50": 1.7000000001862645,
+      "p95": 1.800000000745058
+    },
+    "renderSubmissionMs": {
+      "p50": 1.5,
+      "p95": 1.6000000005587935
+    },
+    "otherJsMs": {
+      "p50": 0.20000000018626451,
+      "p95": 0.30000000074505806
+    },
+    "stagesTotalMs": {
+      "sessionBooks": 0,
+      "ambientMagic": 0,
+      "scrollVisuals": 0,
+      "livingVisuals": 0.5
+    },
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "inhabitants": 4,
+    "scrolls": 4,
+    "flyingScrolls": 0,
+    "activePointLights": 0,
+    "viewport": [
+      1280,
+      900
+    ],
+    "framebuffer": [
+      1280,
+      900
+    ],
+    "camera": {
+      "targetX": -17.1,
+      "targetZ": 10.8,
+      "zoom": 1
+    }
+  },
+  {
+    "name": "record-physical_activity-near",
+    "focusedTriangles": 100,
+    "focusedMeshes": 3,
+    "drawCalls": 103,
+    "renderedTriangles": 145924,
+    "gpuGeometries": 211,
+    "gpuTextures": 5,
+    "programs": 25,
+    "bufferBytes": 1712308,
+    "materials": 165,
+    "geometries": 219,
+    "meshes": 648,
+    "objects": 884,
+    "visibleObjects": 700,
+    "potentialTriangles": 220362,
+    "pointLights": 13,
+    "matrixUpdates": 4878,
+    "frameJsMs": {
+      "p50": 1.300000000745058,
+      "p95": 1.3999999994412065
+    },
+    "renderSubmissionMs": {
+      "p50": 1,
+      "p95": 1.099999999627471
+    },
+    "otherJsMs": {
+      "p50": 0.2999999998137355,
+      "p95": 0.40000000037252903
+    },
+    "stagesTotalMs": {
+      "sessionBooks": 0,
+      "ambientMagic": 0.19999999925494194,
+      "scrollVisuals": 0,
+      "livingVisuals": 0.900000000372529
+    },
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "inhabitants": 4,
+    "scrolls": 4,
+    "flyingScrolls": 0,
+    "activePointLights": 0,
+    "viewport": [
+      1280,
+      900
+    ],
+    "framebuffer": [
+      1280,
+      900
+    ],
+    "camera": {
+      "targetX": -17.1,
+      "targetZ": 10.8,
+      "zoom": 2.2
+    }
+  },
+  {
+    "name": "record-work-normal",
+    "focusedTriangles": 48,
+    "focusedMeshes": 4,
+    "drawCalls": 122,
+    "renderedTriangles": 141416,
+    "gpuGeometries": 218,
+    "gpuTextures": 5,
+    "programs": 24,
+    "bufferBytes": 1712308,
+    "materials": 165,
+    "geometries": 219,
+    "meshes": 648,
+    "objects": 883,
+    "visibleObjects": 699,
+    "potentialTriangles": 220362,
+    "pointLights": 13,
+    "matrixUpdates": 4872,
+    "frameJsMs": {
+      "p50": 3.099999999627471,
+      "p95": 3.800000000745058
+    },
+    "renderSubmissionMs": {
+      "p50": 2.699999999254942,
+      "p95": 3
+    },
+    "otherJsMs": {
+      "p50": 0.599999999627471,
+      "p95": 0.8000000007450581
+    },
+    "stagesTotalMs": {
+      "sessionBooks": 0,
+      "ambientMagic": 0.20000000018626451,
+      "scrollVisuals": 0.10000000055879354,
+      "livingVisuals": 1.400000000372529
+    },
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "inhabitants": 4,
+    "scrolls": 4,
+    "flyingScrolls": 0,
+    "activePointLights": 0,
+    "viewport": [
+      1280,
+      900
+    ],
+    "framebuffer": [
+      1280,
+      900
+    ],
+    "camera": {
+      "targetX": 14.1,
+      "targetZ": 10.8,
+      "zoom": 1
+    }
+  },
+  {
+    "name": "record-work-near",
+    "focusedTriangles": 48,
+    "focusedMeshes": 4,
+    "drawCalls": 85,
+    "renderedTriangles": 139080,
+    "gpuGeometries": 219,
+    "gpuTextures": 5,
+    "programs": 25,
+    "bufferBytes": 1712308,
+    "materials": 165,
+    "geometries": 219,
+    "meshes": 648,
+    "objects": 884,
+    "visibleObjects": 700,
+    "potentialTriangles": 220362,
+    "pointLights": 13,
+    "matrixUpdates": 4878,
+    "frameJsMs": {
+      "p50": 1.7999999998137355,
+      "p95": 2.1000000005587935
+    },
+    "renderSubmissionMs": {
+      "p50": 1.5,
+      "p95": 1.7000000001862645
+    },
+    "otherJsMs": {
+      "p50": 0.2999999998137355,
+      "p95": 0.40000000037252903
+    },
+    "stagesTotalMs": {
+      "sessionBooks": 0.10000000055879354,
+      "ambientMagic": 0.09999999962747097,
+      "scrollVisuals": 0.09999999962747097,
+      "livingVisuals": 0.599999999627471
+    },
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "inhabitants": 4,
+    "scrolls": 4,
+    "flyingScrolls": 0,
+    "activePointLights": 0,
+    "viewport": [
+      1280,
+      900
+    ],
+    "framebuffer": [
+      1280,
+      900
+    ],
+    "camera": {
+      "targetX": 14.1,
+      "targetZ": 10.8,
+      "zoom": 2.2
+    }
+  }
+]

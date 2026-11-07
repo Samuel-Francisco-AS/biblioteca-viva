@@ -257,6 +257,9 @@ export class LivingSession {
       return [];
     const previous = this.snapshot.objects[objectId];
     if (!previous) return [];
+    // A page command never opens a closed book or races a pending close.
+    if (object.family === "book" && action === "turn" && !previous.active)
+      return [];
     const objects = { ...this.snapshot.objects };
     let discovery = this.snapshot.discovery;
     let message = object.description;

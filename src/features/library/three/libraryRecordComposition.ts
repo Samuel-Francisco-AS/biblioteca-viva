@@ -1,13 +1,14 @@
 import { Group } from "three";
 
 import type { LibraryRecordPlacement } from "../libraryRecordLayout";
+import { createRecordAsset } from "./recordAssets";
+import { batchStaticVisual } from "./staticVisuals";
 import {
-  createProceduralMovieRecord,
-  createProceduralPhysicalActivityRecord,
-  createProceduralSeriesRecord,
-  createProceduralStudyRecord,
-  createProceduralWorkRecord,
-} from "./libraryRecordRepresentations";
+  validateRecordReplacement,
+  type RecordAsset,
+  type RecordAssetFactory,
+  type RecordAssetIdentity,
+} from "./recordAssetContract";
 import { disposeObjectTree } from "./referenceScene";
 
 export interface LibraryRecordVisual {
@@ -16,6 +17,7 @@ export interface LibraryRecordVisual {
   readonly modelTypeId: LibraryRecordPlacement["modelTypeId"];
   /** Stable per-mount wrapper used by the runtime catalog and picking. */
   readonly node: Group;
+  representation: RecordAsset;
 }
 
 export interface LibraryRecordComposition {
@@ -23,40 +25,12 @@ export interface LibraryRecordComposition {
   readonly instances: readonly LibraryRecordVisual[];
 }
 
-function makeRepresentation(placement: LibraryRecordPlacement): Group {
-  const identity = {
+function makeRepresentation(placement: LibraryRecordPlacement): RecordAsset {
+  return createRecordAsset({
     entryId: placement.entryId,
     instanceId: placement.instanceId,
-  };
-  switch (placement.modelTypeId) {
-    case "movie-record":
-      return createProceduralMovieRecord({
-        ...identity,
-        modelTypeId: "movie-record",
-      }).root;
-    case "series-record":
-      return createProceduralSeriesRecord({
-        ...identity,
-        modelTypeId: "series-record",
-      }).root;
-    case "study-record":
-      return createProceduralStudyRecord({
-        ...identity,
-        modelTypeId: "study-record",
-      }).root;
-    case "physical-activity-record":
-      return createProceduralPhysicalActivityRecord({
-        ...identity,
-        modelTypeId: "physical-activity-record",
-      }).root;
-    case "work-record":
-      return createProceduralWorkRecord({
-        ...identity,
-        modelTypeId: "work-record",
-      }).root;
-    default:
-      throw new Error("Modelo BF-3 desconhecido.");
-  }
+    modelTypeId: placement.modelTypeId,
+  });
 }
 
 /**
@@ -85,19 +59,59 @@ export function createLibraryRecordComposition(
       node.userData.libraryRecordInstanceId = placement.instanceId;
       node.position.set(...placement.position);
       root.add(node);
-      node.add(makeRepresentation(placement));
-      instances.push(
-        Object.freeze({
-          entryId: placement.entryId,
-          instanceId: placement.instanceId,
-          modelTypeId: placement.modelTypeId,
-          node,
-        }),
-      );
+      const representation = makeRepresentation(placement);
+      batchStaticVisual(representation.root);
+      node.add(representation.root);
+      instances.push({
+        representation,
+        entryId: placement.entryId,
+        instanceId: placement.instanceId,
+        modelTypeId: placement.modelTypeId,
+        node,
+      });
     }
   } catch (error) {
     disposeObjectTree(root);
     throw error;
   }
   return Object.freeze({ root, instances: Object.freeze(instances) });
+}
+
+/** Preserve the registered wrapper; R1 picking visits its current children. */
+export function replaceLibraryRecordRepresentation(
+  visual: LibraryRecordVisual,
+  factory: RecordAssetFactory,
+): void {
+  const identity: RecordAssetIdentity = {
+    entryId: visual.entryId,
+    instanceId: visual.instanceId,
+    modelTypeId: visual.modelTypeId,
+  };
+  const replacement = factory(identity);
+  if (replacement.root === visual.representation.root)
+    throw new Error("A substituição exige um asset independente.");
+  try {
+    validateRecordReplacement(
+      replacement,
+      identity,
+      visual.representation.dimensions,
+    );
+    if (replacement.animation)
+      throw new Error("Este perfil de registro é estático.");
+    const current = visual.representation.spatial.navigation,
+      next = replacement.spatial.navigation;
+    if (
+      current.length !== next.length ||
+      current.some((box, i) => !box.equals(next[i]))
+    )
+      throw new Error("Substituição visual exige o mesmo contrato navegável.");
+    batchStaticVisual(replacement.root);
+    visual.node.add(replacement.root);
+  } catch (error) {
+    if (!replacement.root.parent) disposeObjectTree(replacement.root);
+    throw error;
+  }
+  const previous = visual.representation;
+  visual.representation = replacement;
+  disposeObjectTree(previous.root);
 }

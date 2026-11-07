@@ -1,3 +1,37 @@
+## Saneamento de segurança pós-R3 — 07/11/2026
+
+`npm ci`, auditorias produção/completa (zero), format:check, lint, typecheck,
+923 testes/144 arquivos, áudio, build, performance report e APK debug PASS.
+Override localizado de minimatch mantém os mesmos 427 arquivos do lint,
+sem erros/avisos. Fixture adversarial de backup: 512 notas inválidas e limite
+10 MiB + 1 byte, base intacta e sem casts/consumo de memória exaustivo.
+
+Playwright: rodada inicial 7 PASS/2 FAIL; assert antigo de `toHaveValue` no
+botão do seletor de tamanho substituído por exibição + radio checked/value,
+backup final 1/1 PASS. Oito cenários distintos PASS; R2 seleção/highlight
+continua FAIL. Comparação única da base a29f2ca também FAIL em seleção, em
+ponto distinto, sem causa comum presumida ou timeout/retry ampliado.
+Um ciclo real de lifecycle com seis categorias/quatro GLBs/pergaminho PASS.
+[Relatório, comandos, limitações e APK](audits/BV_SANEAMENTO_SEGURANCA_POS_R3.md).
+Sem nova CI (publicação com `[skip ci]`), sem aparelho/teste físico novo;
+aceite humano anterior da R3 preservado, recuperação integral aberta.
+
+> **R3C — 07/11/2026:** harness real de dez ciclos PASS (zero retries), perda/restauração WebGL terminal e pointer capture; testes de host residente/timer único, quatro loaders tardios, livros e retomada. [Matriz, falhas de desenvolvimento/instrumentação e limites de memória](audits/BV_RECUPERACAO_R3.md#r3c--bv-15). Não equivale à CI E2E do produto ou gate físico Moto G06.
+
+> **R3B — 07/11/2026:** agência/continuidade/interações/runtime 81 PASS; subconjunto final com contratos novos 23 PASS (sobreposição), incluindo envelope temporário bloqueando e removido, disputa/expiração e oportunidades estáveis. [Evidências](audits/BV_RECUPERACAO_R3.md#r3b--bv-10); gate físico R3 pendente.
+
+> **R3A — 07/11/2026:** regressões de invalidação por matriz/capa, ownership em toda utilização, transições de luz, cauda de pergaminho e poses estáveis. [102 testes distintos e gates, com falha intermediária documentada](audits/BV_RECUPERACAO_R3.md). Sem novo aceite físico R3 ou CI global verde.
+
+> **GATE FÍSICO DIRIGIDO — 07/11/2026:** proprietário instalou APK pós-R2 no Moto G06 e confirmou melhora considerável de interação/lag do Canvas, arte de quatro categorias aprovada e reparo do Livro da Estrela funcional. Observação humana sem números de FPS, P95/P99, GPU/heap ou cobertura exaustiva de lifecycle/TalkBack/E2E React; CI global permanece FAIL nos shards E2E. [Handoff R3](audits/BV_RETOMADA_R3_2026-11-07.md).
+
+## Saneamento pós-R2 — regressão focalizada (06/11/2026)
+
+Livro da Estrela reproduzido na ordem real drive→update: base fica em 0,315 rad após 120 frames. Regressões cobrem convergência, abrir/fechar, duplo comando, reversões em transição, página/examinar, transporte/pouso/retorno, movimento reduzido e runtime pausado/retomado com seleção/highlight. UI sincroniza os dois menus; quatro navegações React e raycasts de troca preservam IDs. E2E R2 executado uma vez: timeout de 30 s antes da primeira seleção, sem alcançar reload/abertura e sem retry/timeout alterado. [Gates, falhas intermediárias, CI da base e roteiro físico](audits/BV_SANEAMENTO_POS_R2.md#gates-e-falhas). Capturas são do mundo integrado com dados fictícios, não teste Android.
+
+## Recuperação R1 — regressões (06/11/2026)
+
+Baseline F: 97 testes existentes PASS em seis arquivos, repetidos após a mudança; nove novos PASS validam trajetória golden da F, cache limitado/invalidação, ownership, raycasts reais, precedência e ausência de trabalho duplicado. Scripts dirigidos de CPU/picking ficam fora da CI e não impõem expectativas de tempo. [Comandos, resultados finais e falhas E2E discriminadas](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md). Sem timeout/retry/assert removido; sem PASS físico presumido.
+
 ## BF-5 — Atlas clássico projetado
 
 19 unitários dirigidos em oito arquivos e cinco E2E distintos (três novos + duas regressões de treino) PASS. Cobertura: conjunto por gênero/preferência/fallback, seis artes locais, permanência e decodificação antes da dissolução, pausa/redução de movimento, viewport/visibilidade/cleanup, cancelamento e falhas sem loop; fórmulas MET e treinos preservados. Removidos testes do motor de poses aposentado; a regressão agora exige imagem raster carregada/dimensões, mantendo os asserts funcionais anteriores. [Resultados, falhas intermediárias e roteiro físico](BF-5_ATLAS_CLASSICO_PROJETADO.md). Sem CI global verde, retries/timeouts alterados ou teste físico presumido.

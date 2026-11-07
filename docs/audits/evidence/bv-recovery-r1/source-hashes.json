@@ -1,0 +1,14 @@
+{
+  "baseline": "254ae15d48a10896d00b8a6b539532725375d13c",
+  "algorithm": "SHA-256",
+  "before": {
+    "src/features/library/three/cameraMath.ts": "fb72fd28ac12808c27658f08523fbec0902eff71cbbbb8f3d2957182ceeb3991",
+    "src/features/library/three/CameraNavigation.ts": "cb7225285a7b5c809aa88f3940da7c5b1718fb796062cbe9ef34e76a6ca5c8ef",
+    "src/features/library/three/ThreeWorldInteraction.ts": "d35c7c419c8a5302d540e17d3d257adc5259160ef155c987e4f1e3033fb8a614"
+  },
+  "after": {
+    "src/features/library/three/cameraMath.ts": "c27d7c66e7d607baead3086d6679e78d81f7db663a9dfd559fa5c04f296a8dbe",
+    "src/features/library/three/CameraNavigation.ts": "e5869365d3329cb6cfc0f4dfc5d9d2d063632ae92684d95db978e10967158d78",
+    "src/features/library/three/ThreeWorldInteraction.ts": "7327f6b3686582560540ac017ade36b6911b0dff08acf5f50107f27563782e95"
+  }
+}

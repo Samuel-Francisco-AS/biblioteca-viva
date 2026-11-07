@@ -4,11 +4,15 @@ import {
   Group,
   HemisphereLight,
   Mesh,
+  Line,
+  BufferGeometry,
+  Material,
   MeshBasicMaterial,
   Object3D,
   Texture,
 } from "three";
 import { describe, expect, it, vi } from "vitest";
+import { createAmbientMagic } from "./ambientMagic";
 
 import {
   createReferenceScene,
@@ -17,6 +21,23 @@ import {
 } from "./referenceScene";
 
 describe("cena de referência F1-B", () => {
+  it("releases every actual ambient rune line geometry and its shared material", () => {
+    const root = new Group();
+    createAmbientMagic(root);
+    const resources = new Set<{ dispose(): void }>();
+    let lines = 0;
+    root.traverse((o) => {
+      if (!(o instanceof Line)) return;
+      lines++;
+      if (o.geometry instanceof BufferGeometry) resources.add(o.geometry);
+      for (const m of Array.isArray(o.material) ? o.material : [o.material])
+        if (m instanceof Material) resources.add(m);
+    });
+    expect(lines).toBeGreaterThan(0);
+    const spies = [...resources].map((r) => vi.spyOn(r, "dispose"));
+    disposeObjectTree(root);
+    for (const spy of spies) expect(spy).toHaveBeenCalledOnce();
+  });
   it("constrói piso, quatro paredes, quatro tipos de proxies e 45 meshes", () => {
     const reference = createReferenceScene();
     const meshes: Object3D[] = [];

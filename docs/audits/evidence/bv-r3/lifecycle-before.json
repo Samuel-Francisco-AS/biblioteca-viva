@@ -1,0 +1,58 @@
+{
+  "environment": "Chromium / SwiftShader / DPR1; real runtime, six categories, four GLBs, one scroll; host counters, no Android bytes/FPS",
+  "sourceRef": "a9fc253b6139c9a7054a212eb987ac4f605632cc",
+  "cycles": [
+    {
+      "cycle": 1,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 26,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 2,
+        "backgroundFrames": 1,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": false
+      },
+      "contextLoss": "requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 108,
+            "textures": 3
+          },
+          "listeners": 26,
+          "observers": 1
+        },
+        "frames": 1,
+        "canvas": 0,
+        "state": "failed",
+        "leases": 0,
+        "undisposed": 8,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 5,
+          "textures": 1
+        },
+        "listeners": 13,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 49,
+        "jsEventListeners": 16
+      }
+    }
+  ],
+  "pageErrors": []
+}

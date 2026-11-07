@@ -1,12 +1,17 @@
+import { SCENIC_BOOK_ANCHORS } from "./libraryFurnishingLayout";
 import { LIBRARY_CIRCULATION } from "../librarySpatialLayout";
 import { rectanglesOverlap } from "../librarySpatialGeometry";
 import { describe, expect, it, vi } from "vitest";
 import {
   Box3,
   HemisphereLight,
+  DirectionalLight,
+  Color,
+  PointLight,
   Mesh,
+  Object3D,
   Scene,
-  type Object3D,
+  Vector3,
   type BufferGeometry,
   type Material,
 } from "three";
@@ -16,11 +21,119 @@ function isMesh(
   return object instanceof Mesh;
 }
 import { LivingSession } from "../livingObjects";
+import { NIGHT_LAMPS, NightLightingSession } from "../nightLighting";
 import { createProceduralLibraryBuilding } from "./proceduralLibraryBuilding";
 import { createLivingVisuals } from "./livingVisuals";
 import { disposeObjectTree } from "./referenceScene";
 import { LIBRARY_ROOMS } from "../libraryBuildingGeometry";
 describe("living visuals", () => {
+  it("settles lighting, wakes for reversal, fallback and reconciliation without traversing the scene", () => {
+    let now = new Date(2026, 10, 7, 17, 59);
+    const scene = new Scene();
+    scene.background = new Color(0x18342d);
+    const sky = new HemisphereLight(0xffedd2, 0x58665b, 2);
+    const sun = new DirectionalLight(0xffdfac, 1.5);
+    const building = createProceduralLibraryBuilding(true);
+    scene.add(building, sky, sun);
+    const session = new LivingSession(() => now);
+    const night = new NightLightingSession(() => now);
+    const visuals = createLivingVisuals(building, scene, session, night, [
+      sky,
+      sun,
+    ]);
+    const traverse = vi.spyOn(scene, "traverse");
+    const lerp = vi.spyOn(Color.prototype, "lerp");
+    const settle = () => {
+      for (let i = 0; i < 600; i++) visuals.update(1 / 60, false);
+    };
+    settle();
+    lerp.mockClear();
+    settle();
+    expect(lerp).not.toHaveBeenCalled();
+    session.setAtmosphere("noturna");
+    visuals.update(1 / 60, false);
+    expect(sky.intensity).toBeLessThan(2);
+    session.setAtmosphere("encantada");
+    settle();
+    expect(sky.intensity).toBe(1.25);
+    expect(sun.intensity).toBe(1.5);
+    now = new Date(2026, 10, 7, 18);
+    night.refreshContext();
+    settle();
+    expect(sky.intensity).toBe(1.08);
+    expect(sun.intensity).toBe(0.8);
+    const lamps = NIGHT_LAMPS.map(
+      (l) => building.getObjectByName(`${l.id}:light`) as PointLight,
+    );
+    expect(lamps.every((l) => l.intensity === 4.2 * 0.68)).toBe(true);
+    now = new Date(2026, 10, 7, 18, 0, 46);
+    settle(); // fallback changes without a new revision
+    expect(lamps.every((l) => l.intensity === 4.2)).toBe(true);
+    sky.intensity = 0;
+    visuals.reconcileLighting();
+    settle();
+    expect(sky.intensity).toBe(1.08);
+    now = new Date(2026, 10, 8, 6);
+    night.refreshContext();
+    settle();
+    expect(lamps.every((l) => l.intensity === 0 && !l.visible)).toBe(true);
+    expect(sky.intensity).toBe(1.25);
+    expect(traverse).not.toHaveBeenCalled();
+    visuals.dispose();
+    const before = sky.intensity;
+    session.setAtmosphere("noturna");
+    visuals.update(1, true);
+    expect(sky.intensity).toBe(before);
+    vi.restoreAllMocks();
+    disposeObjectTree(scene);
+  });
+  it("illuminates nine real shades after dusk and preserves the manually controlled secret lamp", () => {
+    let now = new Date(2026, 10, 5, 17, 59);
+    const night = new NightLightingSession(() => now);
+    const scene = new Scene();
+    const building = createProceduralLibraryBuilding(true);
+    scene.add(building);
+    const living = new LivingSession(() => now);
+    const visuals = createLivingVisuals(building, scene, living, night);
+    const fixtures = NIGHT_LAMPS.map((fixture) =>
+      building.getObjectByName(`${fixture.id}:light`),
+    );
+    expect(fixtures).toHaveLength(9);
+    expect(fixtures.every((fixture) => fixture instanceof PointLight)).toBe(
+      true,
+    );
+    visuals.update(0, true);
+    expect(
+      fixtures.every((fixture) => (fixture as PointLight).intensity === 0),
+    ).toBe(true);
+    expect(fixtures.every((fixture) => fixture?.visible === false)).toBe(true);
+    now = new Date(2026, 10, 5, 18, 0);
+    night.refreshContext();
+    living.refreshContext();
+    visuals.update(0, true);
+    expect(
+      fixtures.every((fixture) => (fixture as PointLight).intensity > 0),
+    ).toBe(true);
+    expect(
+      visuals.selectables.find((item) => item.descriptor.id === "living:lamp")
+        ?.light?.intensity,
+    ).toBe(0);
+    expect(living.getSnapshot().discovery).toBe(0);
+    expect(fixtures.every((fixture) => fixture?.visible)).toBe(true);
+    night.complete(NIGHT_LAMPS[0].id);
+    visuals.update(0, true);
+    expect((fixtures[0] as PointLight).intensity).toBe(4.2);
+    now = new Date(2026, 10, 6, 6);
+    night.refreshContext();
+    living.refreshContext();
+    visuals.update(0, true);
+    expect(
+      fixtures.every((fixture) => (fixture as PointLight).intensity === 0),
+    ).toBe(true);
+    expect(fixtures.every((fixture) => fixture?.visible === false)).toBe(true);
+    disposeObjectTree(scene);
+  });
+
   it("animates real pieces, lights the scene and disposes resources exactly once", () => {
     const scene = new Scene();
     const building = createProceduralLibraryBuilding(true);
@@ -60,7 +173,7 @@ describe("living visuals", () => {
     expect(find("living:book").moving.rotation.z).toBe(2.1);
     session.setAtmosphere("noturna");
     visuals.update(0, true);
-    expect(light.intensity).toBe(0.65);
+    expect(light.intensity).toBe(1.08);
     for (const item of visuals.selectables) {
       const room = LIBRARY_ROOMS.find(
         (r) => r.id === `room-${item.object.room.toLowerCase()}`,
@@ -95,4 +208,209 @@ describe("living visuals", () => {
     disposeObjectTree(building);
     for (const spy of spies) expect(spy).toHaveBeenCalledOnce();
   });
+
+  it("moves the original selectable book through a real carry anchor and restores it", () => {
+    const scene = new Scene();
+    const building = createProceduralLibraryBuilding(true);
+    scene.add(building);
+    const session = new LivingSession();
+    const visuals = createLivingVisuals(building, scene, session);
+    const book = visuals.selectables.find(
+      (item) => item.descriptor.id === "living:book",
+    )!;
+    const original = book.root;
+    const anchor = new Object3D();
+    anchor.position.set(18, 1, -6);
+    scene.add(anchor);
+    session.act("living:book", "toggle");
+    session.act("living:book", "turn");
+    visuals.update(0, true);
+    visuals.update(0, true);
+    expect(book.root.getObjectByName("living-page-pivot")!.rotation.x).toBe(
+      -2.4,
+    );
+
+    visuals.driveInhabitantInteractions(
+      [
+        {
+          id: "character:aryn",
+          key: "aryn",
+          label: "Aryn",
+          x: 0,
+          z: 0,
+          facing: 0,
+          state: "work",
+          activity: "transport",
+          room: "CÔMODO C",
+          destination: null,
+          action: "walk",
+          available: true,
+          interactionObjectId: "living:book",
+          interactionState: "carrying",
+        },
+      ],
+      () => anchor,
+    );
+    session.act("living:book", "examine");
+    visuals.update(0.05, false);
+    expect(book.moving.rotation.z).toBe(0);
+    expect(book.root.getObjectByName("living-page-pivot")!.rotation.x).toBe(0);
+    expect(book.root).toBe(original);
+    const carriedBounds = new Box3().setFromObject(book.root);
+    expect(carriedBounds.getCenter(new Vector3()).y).toBeCloseTo(
+      anchor.position.y,
+      2,
+    );
+    expect(book.root.position.y).not.toBe(0);
+
+    visuals.driveInhabitantInteractions(
+      [
+        {
+          id: "character:aryn",
+          key: "aryn",
+          label: "Aryn",
+          x: SCENIC_BOOK_ANCHORS.destinationApproach.x,
+          z: SCENIC_BOOK_ANCHORS.destinationApproach.z,
+          facing: 0,
+          state: "work",
+          activity: "placing",
+          room: "CÔMODO C",
+          destination: null,
+          action: "gesture",
+          available: true,
+          interactionObjectId: "living:book",
+          interactionState: "placing",
+        },
+      ],
+      () => anchor,
+    );
+    const placedBounds = new Box3().setFromObject(book.root);
+    expect(placedBounds.min.y).toBeCloseTo(
+      SCENIC_BOOK_ANCHORS.destination.y + 0.004,
+      3,
+    );
+    expect(placedBounds.getCenter(new Vector3()).x).toBeCloseTo(
+      SCENIC_BOOK_ANCHORS.destination.x,
+      2,
+    );
+    visuals.update(0.05, false);
+    expect(book.moving.rotation.z).toBeGreaterThan(0);
+
+    visuals.driveInhabitantInteractions(
+      [
+        {
+          id: "character:aryn",
+          key: "aryn",
+          label: "Aryn",
+          x: SCENIC_BOOK_ANCHORS.destinationApproach.x,
+          z: SCENIC_BOOK_ANCHORS.destinationApproach.z,
+          facing: 0,
+          state: "work",
+          activity: "recollecting",
+          room: "CÔMODO C",
+          destination: null,
+          action: "gesture",
+          available: true,
+          interactionObjectId: "living:book",
+          interactionState: "recollecting",
+        },
+      ],
+      () => anchor,
+    );
+    visuals.driveInhabitantInteractions([], () => null);
+    expect(book.root.position.x).toBeCloseTo(14.75);
+    expect(book.root.position.z).toBeCloseTo(-4.8);
+    for (let i = 0; i < 120; i++) {
+      visuals.driveInhabitantInteractions([], () => null);
+      visuals.update(1 / 60, false);
+    }
+    expect(book.moving.rotation.z).toBe(2.1);
+    expect(session.getSnapshot().objects["living:book"].active).toBe(true);
+    disposeObjectTree(scene);
+  });
 });
+
+it("converges on the requested star-book cover pose in runtime frame order", () => {
+  const scene = new Scene();
+  const building = createProceduralLibraryBuilding(true);
+  scene.add(building);
+  const session = new LivingSession();
+  const visuals = createLivingVisuals(building, scene, session);
+  const book = visuals.selectables.find(
+    (item) => item.descriptor.id === "living:book",
+  )!;
+  session.act("living:book", "toggle");
+  for (let i = 0; i < 120; i++) {
+    visuals.driveInhabitantInteractions([], () => null);
+    visuals.update(1 / 60, false);
+  }
+  expect(session.getSnapshot().objects["living:book"].active).toBe(true);
+  expect(book.moving.rotation.z).toBeCloseTo(2.1, 5);
+  disposeObjectTree(scene);
+});
+
+it.each([false, true])(
+  "handles rapid reversals, page/examine commands and repeated star-book toggles (reduced=%s)",
+  (reduced) => {
+    const scene = new Scene();
+    const building = createProceduralLibraryBuilding(true);
+    scene.add(building);
+    const session = new LivingSession();
+    const visuals = createLivingVisuals(building, scene, session);
+    const book = visuals.selectables.find(
+      (item) => item.descriptor.id === "living:book",
+    )!;
+    const frame = () => {
+      visuals.driveInhabitantInteractions([], () => null);
+      visuals.update(1 / 60, reduced);
+      expect(book.moving.rotation.z).toBeGreaterThanOrEqual(0);
+      expect(book.moving.rotation.z).toBeLessThanOrEqual(2.1);
+    };
+    const settle = () => {
+      for (let i = 0; i < 120; i++) frame();
+    };
+    const initial = session.getSnapshot();
+    expect(session.act("living:book", "turn")).toEqual([]);
+    expect(session.getSnapshot()).toBe(initial);
+    // A double command before the next frame cancels to closed.
+    session.act("living:book", "toggle");
+    session.act("living:book", "toggle");
+    settle();
+    expect(book.moving.rotation.z).toBe(0);
+    for (let cycle = 0; cycle < 4; cycle++) {
+      session.act("living:book", "toggle");
+      frame();
+      const opening = book.moving.rotation.z;
+      expect(opening).toBeGreaterThan(0);
+      session.act("living:book", "examine");
+      expect(session.getSnapshot().objects["living:book"].active).toBe(true);
+      session.act("living:book", "turn");
+      // Page intent during opening waits for safe cover clearance.
+      frame();
+      if (!reduced)
+        expect(book.root.getObjectByName("living-page-pivot")!.rotation.x).toBe(
+          0,
+        );
+      settle();
+      expect(book.moving.rotation.z).toBeCloseTo(2.1, 5);
+      expect(
+        book.root.getObjectByName("living-page-pivot")!.rotation.x,
+      ).toBeCloseTo(
+        -(session.getSnapshot().objects["living:book"].turns % 2) * 2.4,
+        5,
+      );
+      session.act("living:book", "toggle");
+      frame();
+      session.act("living:book", "toggle"); // Reverse a close already in progress.
+      frame();
+      session.act("living:book", "toggle");
+      settle();
+      expect(book.moving.rotation.z).toBeCloseTo(0, 5);
+      expect(
+        book.root.getObjectByName("living-page-pivot")!.rotation.x,
+      ).toBeCloseTo(0, 5);
+      expect(session.getSnapshot().objects["living:book"].active).toBe(false);
+    }
+    disposeObjectTree(scene);
+  },
+);

@@ -3,6 +3,7 @@ import { InhabitantNavigation } from "./inhabitantNavigation";
 import { INHABITANTS } from "./inhabitants";
 import type { ThreeWorldRuntimeDependencies } from "./three/ThreeWorldRuntime";
 import { LivingSession } from "./livingObjects";
+import { NightLightingSession } from "./nightLighting";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi, type Mock } from "vitest";
@@ -572,10 +573,14 @@ describe("WorldHost", () => {
     expect(
       vi.mocked(createThreeWorldRuntime).mock.calls[0]?.[0]?.livingSession,
     ).toBeInstanceOf(LivingSession);
+    const nightLighting = vi.mocked(createThreeWorldRuntime).mock.calls[0]?.[0]
+      ?.nightLighting;
+    expect(nightLighting).toBeInstanceOf(NightLightingSession);
     expect(createThreeWorldRuntime).toHaveBeenCalledWith({
       libraryWorldSnapshot: snapshot,
       livingSession: vi.mocked(createThreeWorldRuntime).mock.calls[0]?.[0]
         ?.livingSession,
+      nightLighting,
     });
     view.rerender(
       <WorldHost
@@ -607,6 +612,53 @@ describe("WorldHost", () => {
     expect(runtime.dispose).toHaveBeenCalledOnce();
     view.unmount();
     expect(diagnosticRuntime.dispose).toHaveBeenCalledOnce();
+  });
+
+  it("loads checkpoints before mounting and forwards saves", async () => {
+    createThreeWorldRuntime.mockReset();
+    const runtime = createRuntime();
+    createThreeWorldRuntime.mockResolvedValue(runtime);
+    const snapshot = projectLibraryWorldEntries([]);
+    const checkpoint = {
+      version: 1 as const,
+      savedAt: "2026-11-05T12:00:00.000Z",
+      randomState: 17,
+      agents: INHABITANTS.map((actor) => ({
+        id: actor.id,
+        x: actor.x,
+        z: actor.z,
+        facing: 0,
+        phase: "idle" as const,
+        taskId: null,
+        destination: null,
+        remainingSeconds: 3,
+        recentTaskIds: [],
+        taskCount: 0,
+      })),
+    };
+    const continuity = {
+      load: vi.fn(() => Promise.resolve(checkpoint)),
+      save: vi.fn(() => Promise.resolve()),
+    };
+    render(
+      <WorldHost
+        libraryWorldSnapshot={snapshot}
+        inhabitantContinuity={continuity}
+      />,
+    );
+    await screen.findByText("Ambiente 3D em execução.");
+    expect(continuity.load).toHaveBeenCalledOnce();
+    const options = vi.mocked(createThreeWorldRuntime).mock.calls.at(-1)?.[0];
+    expect(options).toMatchObject({
+      libraryWorldSnapshot: snapshot,
+      inhabitantContinuity: checkpoint,
+    });
+    expect(options?.livingSession).toBeInstanceOf(LivingSession);
+    expect(options?.onInhabitantCheckpoint).toBeTypeOf("function");
+    options?.onInhabitantCheckpoint?.(checkpoint);
+    await waitFor(() => {
+      expect(continuity.save).toHaveBeenCalledWith(checkpoint);
+    });
   });
 
   it("encaminha seleção externa sem remontar o runtime", async () => {
@@ -777,7 +829,7 @@ it("R5 pauses a resident host, resumes the same canvas and disposes once", async
   const view = render(<WorldHost runtimeFactory={runtimeFactory} active />);
   await screen.findByText("Ambiente 3D em execução.");
   const canvas = view.container.querySelector("canvas");
-  for (let index = 0; index < 3; index++) {
+  for (let index = 0; index < 10; index++) {
     view.rerender(<WorldHost runtimeFactory={runtimeFactory} active={false} />);
     expect(runtime.pause).toHaveBeenCalledTimes(index + 1);
     expect(runtime.dispose).not.toHaveBeenCalled();
@@ -789,6 +841,49 @@ it("R5 pauses a resident host, resumes the same canvas and disposes once", async
   expect(runtime.mount).toHaveBeenCalledOnce();
   view.unmount();
   expect(runtime.dispose).toHaveBeenCalledOnce();
+});
+
+it("R3 owns one context clock timer through route changes and releases it on unmount", async () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date(2026, 10, 7, 17, 59, 59, 500));
+  try {
+    const runtime = createRuntime();
+    const runtimeFactory = () => Promise.resolve(runtime);
+    const snapshot = projectLibraryWorldEntries([]);
+    const view = render(
+      <WorldHost
+        runtimeFactory={runtimeFactory}
+        libraryWorldSnapshot={snapshot}
+      />,
+    );
+    await act(() => Promise.resolve());
+    expect(runtime.mount).toHaveBeenCalledOnce();
+    expect(vi.getTimerCount()).toBe(1);
+    for (let i = 0; i < 10; i++) {
+      view.rerender(
+        <WorldHost
+          runtimeFactory={runtimeFactory}
+          libraryWorldSnapshot={snapshot}
+          active={false}
+        />,
+      );
+      view.rerender(
+        <WorldHost
+          runtimeFactory={runtimeFactory}
+          libraryWorldSnapshot={snapshot}
+          active
+        />,
+      );
+      expect(vi.getTimerCount()).toBe(1);
+    }
+    await act(() => vi.advanceTimersByTime(500));
+    expect(vi.getTimerCount()).toBe(1);
+    view.unmount();
+    expect(vi.getTimerCount()).toBe(0);
+    expect(runtime.dispose).toHaveBeenCalledOnce();
+  } finally {
+    vi.useRealTimers();
+  }
 });
 
 it("R5 pauses a runtime that finishes loading after leaving the library", async () => {
@@ -832,4 +927,57 @@ it("R5 can retry a failed resident runtime without reloading personal data", asy
   expect(recovered.start).toHaveBeenCalledOnce();
   expect(document.querySelectorAll("canvas")).toHaveLength(1);
   log.mockRestore();
+});
+
+it("F2 reconciles confirmed sessions on the same resident Canvas, including while paused", async () => {
+  const runtime = { ...createRuntime(), applyWorldSession: vi.fn() };
+  const runtimeFactory = vi.fn(() => Promise.resolve(runtime));
+  const session = {
+    sessionId: "session-fiction",
+    entryId: "book-fiction",
+    instanceId: "reading-book:book-fiction",
+    kind: "reading" as const,
+    entryType: "book" as const,
+    status: "active" as const,
+    revision: 1,
+  };
+  const view = render(
+    <WorldHost
+      runtimeFactory={runtimeFactory}
+      worldSessionActivity={session}
+      active
+    />,
+  );
+  await screen.findByText("Ambiente 3D em execução.");
+  const canvas = view.container.querySelector("canvas");
+  expect(runtime.applyWorldSession).toHaveBeenLastCalledWith(session);
+  const paused = { ...session, status: "paused" as const, revision: 2 };
+  view.rerender(
+    <WorldHost
+      runtimeFactory={runtimeFactory}
+      worldSessionActivity={paused}
+      active
+    />,
+  );
+  expect(runtime.applyWorldSession).toHaveBeenLastCalledWith(paused);
+  view.rerender(
+    <WorldHost
+      runtimeFactory={runtimeFactory}
+      worldSessionActivity={null}
+      active={false}
+    />,
+  );
+  expect(runtime.applyWorldSession).toHaveBeenLastCalledWith(null);
+  view.rerender(
+    <WorldHost
+      runtimeFactory={runtimeFactory}
+      worldSessionActivity={null}
+      active
+    />,
+  );
+  expect(view.container.querySelector("canvas")).toBe(canvas);
+  expect(runtimeFactory).toHaveBeenCalledOnce();
+  expect(runtime.dispose).not.toHaveBeenCalled();
+  view.unmount();
+  expect(runtime.dispose).toHaveBeenCalledOnce();
 });

@@ -1,0 +1,40 @@
+{
+  "baseline": "254ae15d48a10896d00b8a6b539532725375d13c",
+  "scope": "Synthetic 60 selectables, 100 decorations; same geometry and rays in both versions; not a full scene or GPU/Android benchmark",
+  "results": [
+    {
+      "mode": "before",
+      "taps": 6,
+      "counts": {
+        "meshRaycasts": 540,
+        "sceneMatrixForces": 6,
+        "decorationMatrixVisits": 600
+      },
+      "selections": [
+        "book:14",
+        "book:25",
+        "book:3",
+        "",
+        "",
+        "book:14"
+      ]
+    },
+    {
+      "mode": "after",
+      "taps": 6,
+      "counts": {
+        "meshRaycasts": 360,
+        "sceneMatrixForces": 0,
+        "decorationMatrixVisits": 0
+      },
+      "selections": [
+        "book:14",
+        "book:25",
+        "book:3",
+        "",
+        "",
+        "book:14"
+      ]
+    }
+  ]
+}

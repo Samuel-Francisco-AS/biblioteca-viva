@@ -8,7 +8,13 @@ import {
   INHABITANTS,
 } from "./inhabitants";
 import { LivingSession } from "./livingObjects";
+import { NightLightingSession, type NightLightingPort } from "./nightLighting";
+import type { WorldSessionActivity } from "../../contracts/worldSessionActivity";
 import { LivingControls, LivingFeedback } from "./LivingControls";
+import type {
+  InhabitantContinuityPort,
+  InhabitantContinuitySnapshot,
+} from "./inhabitantContinuity";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { completeStartupExperience } from "../../startupExperience";
 
@@ -29,21 +35,58 @@ const createRuntime = async (
   readingAreaBooks: readonly ReadingAreaBook[] | undefined,
   libraryWorldSnapshot: LibraryWorldSnapshot | undefined,
   livingSession: LivingSession,
+  nightLighting: NightLightingSession,
+  continuity?: InhabitantContinuityPort,
+  nightLightingContinuity?: NightLightingPort,
 ): Promise<WorldRuntime> => {
   if (libraryWorldSnapshot && readingAreaBooks) {
     throw new Error("Use somente um snapshot BF por montagem.");
   }
+  // Wait for the durable checkpoint before mounting real agents.
+  let restored: InhabitantContinuitySnapshot | undefined;
+  if (libraryWorldSnapshot && continuity) {
+    try {
+      restored = await continuity.load();
+    } catch {
+      // Optional world continuity must not prevent using the library.
+    }
+  }
+  nightLighting.refreshContext();
+  if (libraryWorldSnapshot && nightLightingContinuity) {
+    try {
+      nightLighting.restore(await nightLightingContinuity.load());
+    } catch {
+      // Corrupted or unavailable optional ritual data cannot block the world.
+    }
+  }
   const { createThreeWorldRuntime } = await import("./three/ThreeWorldRuntime");
   return createThreeWorldRuntime(
     libraryWorldSnapshot
-      ? { libraryWorldSnapshot, livingSession }
+      ? {
+          libraryWorldSnapshot,
+          livingSession,
+          nightLighting,
+          ...(restored ? { inhabitantContinuity: restored } : {}),
+          ...(continuity
+            ? {
+                onInhabitantCheckpoint: (
+                  snapshot: InhabitantContinuitySnapshot,
+                ) => {
+                  void continuity.save(snapshot).catch(() => undefined);
+                },
+              }
+            : {}),
+        }
       : { readingAreaBooks },
   );
 };
 
 export interface WorldHostProps {
   readonly active?: boolean;
+  readonly inhabitantContinuity?: InhabitantContinuityPort;
+  readonly nightLightingContinuity?: NightLightingPort;
   readonly libraryWorldSnapshot?: LibraryWorldSnapshot;
+  readonly worldSessionActivity?: WorldSessionActivity | null;
   readonly onSelectableObjectsChange?: (
     objects: readonly WorldSelectableObject[],
   ) => void;
@@ -81,7 +124,10 @@ function adjacentSelectionId(
 
 export function WorldHost({
   active = true,
+  inhabitantContinuity,
+  nightLightingContinuity,
   libraryWorldSnapshot,
+  worldSessionActivity,
   onSelectableObjectsChange,
   onSelectionChange,
   onStatusChange,
@@ -92,6 +138,7 @@ export function WorldHost({
 }: WorldHostProps) {
   const [narrativeSession] = useState(() => new NarrativeSession());
   const [livingSession] = useState(() => new LivingSession());
+  const [nightLighting] = useState(() => new NightLightingSession());
   const [livingSelection, setLivingSelection] = useState<string | null>(null);
   const activeRef = useRef(active);
   useEffect(() => {
@@ -106,6 +153,13 @@ export function WorldHost({
   }, [active, narrativeSession]);
   const hostRef = useRef<HTMLDivElement>(null);
   const runtimeRef = useRef<WorldRuntime | null>(null);
+  const worldSessionRef = useRef<WorldSessionActivity | null>(
+    worldSessionActivity ?? null,
+  );
+  useEffect(() => {
+    worldSessionRef.current = worldSessionActivity ?? null;
+    runtimeRef.current?.applyWorldSession?.(worldSessionRef.current);
+  }, [worldSessionActivity]);
   const [viewRuntime, setViewRuntime] = useState<WorldRuntime | null>(null);
   const [selectableObjects, setSelectableObjects] = useState<
     readonly WorldSelectableObject[]
@@ -200,6 +254,9 @@ export function WorldHost({
               readingAreaBooks,
               libraryWorldSnapshot,
               livingSession,
+              nightLighting,
+              inhabitantContinuity,
+              nightLightingContinuity,
             ));
 
     void effectiveRuntimeFactory()
@@ -212,6 +269,7 @@ export function WorldHost({
         runtime = createdRuntime;
         runtime.mount(host);
         runtimeRef.current = runtime;
+        runtime.applyWorldSession?.(worldSessionRef.current);
         if (!performanceScenario && libraryWorldSnapshot) {
           const applyNarrative = () => {
             if (active && runtimeRef.current === createdRuntime)
@@ -279,7 +337,10 @@ export function WorldHost({
     };
   }, [
     livingSession,
+    nightLighting,
     narrativeSession,
+    inhabitantContinuity,
+    nightLightingContinuity,
     publishSelection,
     performanceScenario,
     readingAreaBooks,
@@ -290,21 +351,50 @@ export function WorldHost({
 
   useEffect(() => {
     if (performanceScenario || !libraryWorldSnapshot) return;
-    livingSession.refreshContext();
-    // One timer per host, never one per object or one per animation frame.
-    const interval = window.setInterval(
-      () => livingSession.refreshContext(),
-      60_000,
+    const refresh = () => {
+      livingSession.refreshContext();
+      nightLighting.refreshContext();
+    };
+    refresh();
+    // One host timer aligned to the wall-clock minute boundary. The evening
+    // transition does not wait up to a full minute after 18:00.
+    let interval: number | undefined;
+    const initial = window.setTimeout(
+      () => {
+        refresh();
+        interval = window.setInterval(refresh, 60_000);
+      },
+      60_000 - (Date.now() % 60_000),
     );
     const onVisible = () => {
-      if (!document.hidden) livingSession.refreshContext();
+      if (!document.hidden) refresh();
     };
     document.addEventListener("visibilitychange", onVisible);
     return () => {
-      window.clearInterval(interval);
+      window.clearTimeout(initial);
+      if (interval !== undefined) window.clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisible);
     };
-  }, [livingSession, libraryWorldSnapshot, performanceScenario]);
+  }, [livingSession, nightLighting, libraryWorldSnapshot, performanceScenario]);
+
+  useEffect(() => {
+    if (
+      !nightLightingContinuity ||
+      performanceScenario ||
+      !libraryWorldSnapshot
+    )
+      return;
+    return nightLighting.subscribe(() => {
+      void nightLightingContinuity
+        .save(nightLighting.capture())
+        .catch(() => undefined);
+    });
+  }, [
+    nightLighting,
+    nightLightingContinuity,
+    libraryWorldSnapshot,
+    performanceScenario,
+  ]);
 
   useEffect(() => {
     if (selectedObjectId === undefined || status !== "ready") return;

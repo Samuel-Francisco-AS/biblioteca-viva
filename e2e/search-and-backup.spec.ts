@@ -152,7 +152,21 @@ test("backup web real é baixado, validado, restaurado e persiste", async ({
 
   await page.reload();
   await expect(page.getByLabel("Usar alto contraste")).toBeChecked();
-  await expect(page.getByLabel("Tamanho do texto")).toHaveValue("larger");
+  // BVSelectSheet exposes a button combobox; the persisted value belongs to
+  // its selected radio, not to the trigger element.
+  const textSize = page.getByRole("combobox", { name: "Tamanho do texto" });
+  await expect(textSize).toContainText("Maior");
+  await textSize.click();
+  const textSizeDialog = page.getByRole("dialog", { name: "Tamanho do texto" });
+  const selectedSize = textSizeDialog.getByRole("radio", {
+    name: "Maior",
+    exact: true,
+  });
+  await expect(selectedSize).toBeChecked();
+  await expect(selectedSize).toHaveValue("larger");
+  await textSizeDialog
+    .getByRole("button", { name: "Cancelar", exact: true })
+    .click();
   await expect
     .poll(() => entryTitlesInTestDatabase(page))
     .toContain("Backup de Ensaio");

@@ -2,7 +2,7 @@ import { LivingSession } from "../livingObjects";
 import {
   Box3,
   Box3Helper,
-  BoxGeometry,
+  BufferGeometry,
   Mesh,
   MeshStandardMaterial,
   OrthographicCamera,
@@ -639,11 +639,21 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
     );
     // Observe the actual resource types used by a movie representation.
     // A second invalid model throws after the first valid movie was built.
-    const geometryDisposals = vi.spyOn(BoxGeometry.prototype, "dispose");
+    const geometryDisposals = vi.spyOn(BufferGeometry.prototype, "dispose");
     const materialDisposals = vi.spyOn(
       MeshStandardMaterial.prototype,
       "dispose",
     );
+    // A complete one-asset lifecycle is the reference for partial construction.
+    // Include baked buffers/temporary clones, not only the retired box model.
+    const reference = createLibraryRecordComposition(placements.slice(0, 1));
+    disposeObjectTree(reference.root);
+    const geometryCount = geometryDisposals.mock.calls.length,
+      materialCount = materialDisposals.mock.calls.length;
+    expect(new Set(geometryDisposals.mock.contexts).size).toBe(geometryCount);
+    expect(new Set(materialDisposals.mock.contexts).size).toBe(materialCount);
+    geometryDisposals.mockClear();
+    materialDisposals.mockClear();
     const invalid = {
       ...placements[1],
       modelTypeId: "invalid-record",
@@ -651,8 +661,10 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
     expect(() =>
       createLibraryRecordComposition([placements[0], invalid]),
     ).toThrow("Modelo BF-3 desconhecido");
-    expect(geometryDisposals).toHaveBeenCalledTimes(3);
-    expect(materialDisposals).toHaveBeenCalledTimes(2);
+    expect(geometryDisposals).toHaveBeenCalledTimes(geometryCount);
+    expect(materialDisposals).toHaveBeenCalledTimes(materialCount);
+    expect(new Set(geometryDisposals.mock.contexts).size).toBe(geometryCount);
+    expect(new Set(materialDisposals.mock.contexts).size).toBe(materialCount);
     expect(disposeIndependent).not.toHaveBeenCalled();
     const mesh = firstMesh(independent.root);
     expect(mesh.geometry).toBeDefined();
@@ -729,7 +741,7 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
     vi.stubGlobal("ResizeObserver", TestResizeObserver);
     const renderer = new TestRenderer();
     const sceneAdds = vi.spyOn(Scene.prototype, "add");
-    const geometryDisposals = vi.spyOn(BoxGeometry.prototype, "dispose");
+    const geometryDisposals = vi.spyOn(BufferGeometry.prototype, "dispose");
     const materialDisposals = vi.spyOn(
       MeshStandardMaterial.prototype,
       "dispose",
@@ -778,7 +790,7 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
         add(type, listener, options);
       },
     );
-    const geometryDisposals = vi.spyOn(BoxGeometry.prototype, "dispose");
+    const geometryDisposals = vi.spyOn(BufferGeometry.prototype, "dispose");
     const container = host();
     const runtime = new ThreeWorldRuntime({
       libraryWorldSnapshot: snapshot(),
@@ -871,8 +883,9 @@ describe("BF-4E integrated lifecycle", () => {
     if (!drawer) throw new Error("drawer");
     runtime.selectObject("living:cabinet");
     session.act("living:cabinet", "toggle");
-    const frame = request.mock.calls.at(-1)?.[0];
-    if (!frame) throw new Error("frame");
+    if (!request.mock.calls.at(-1)?.[0]) throw new Error("frame");
+    const frame = (timestamp: number) =>
+      request.mock.calls.at(-1)![0](timestamp);
     frame(0);
     frame(50);
     expect(drawer.position.z).toBeGreaterThan(0);
@@ -906,4 +919,168 @@ describe("BF-4E integrated lifecycle", () => {
     runtime.dispose();
     expect(renderer.dispose).toHaveBeenCalledOnce();
   });
+});
+
+it("D picks the canonical scroll through real pointer events and discards it on removal", () => {
+  vi.stubGlobal("ResizeObserver", TestResizeObserver);
+  const renderer = new TestRenderer();
+  const scroll = {
+    id: "scroll:note:fiction",
+    annotationId: "fiction",
+    entryId: "book-fiction",
+    kind: "note" as const,
+    category: "book" as const,
+    updatedAt: "2026-11-05T12:00:00.000Z",
+  };
+  const runtime = new ThreeWorldRuntime({
+    libraryWorldSnapshot: {
+      ...projectLibraryWorldEntries([]),
+      scrolls: [scroll],
+    },
+    createRenderer: () => renderer,
+  });
+  runtime.mount(host());
+  runtime.start();
+  const [scene, camera] = renderer.render.mock.calls.at(-1)!;
+  const root = scene.getObjectByName("living-scrolls")!.children[0];
+  const point = root
+    .getWorldPosition(new Vector3())
+    .add(new Vector3(0, 0.03, 0))
+    .project(camera);
+  tap(renderer.domElement, (point.x + 1) * 320, (1 - point.y) * 180);
+  expect(renderer.domElement.dataset.selectedObject).toBe(scroll.id);
+  expect(
+    runtime.getSelectableObjects().filter((s) => s.id === scroll.id),
+  ).toHaveLength(1);
+  runtime.pause();
+  runtime.resume();
+  expect(
+    runtime.getSelectableObjects().filter((s) => s.id === scroll.id),
+  ).toHaveLength(1);
+  runtime.dispose();
+  expect(scene.getObjectById(root.id)).toBeUndefined();
+  const replacement = new ThreeWorldRuntime({
+    libraryWorldSnapshot: projectLibraryWorldEntries([]),
+    createRenderer: () => new TestRenderer(),
+  });
+  replacement.mount(host());
+  expect(
+    replacement.getSelectableObjects().some((s) => s.id === scroll.id),
+  ).toBe(false);
+  replacement.dispose();
+});
+
+it("F2 moves the original selectable, tracks highlight bounds and cancels after context loss", () => {
+  vi.stubGlobal("ResizeObserver", TestResizeObserver);
+  const renderer = new TestRenderer();
+  const request = vi
+    .fn<(callback: FrameRequestCallback) => number>()
+    .mockReturnValue(1);
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    libraryWorldSnapshot: snapshot(),
+    livingSession: new LivingSession(),
+    frameScheduler: { request, cancel: vi.fn() },
+  });
+  const session = {
+    sessionId: "session-fiction",
+    entryId: "book-10",
+    instanceId: "reading-book:book-10",
+    kind: "reading" as const,
+    entryType: "book" as const,
+    status: "active" as const,
+    revision: 1,
+  };
+  runtime.applyWorldSession(session);
+  runtime.mount(host());
+  runtime.start();
+  const scene = renderer.render.mock.calls[0][0];
+  let book: Object3D | undefined;
+  scene.traverse((o) => {
+    if (o.userData.readingAreaBookInstanceId === session.instanceId) book = o;
+  });
+  if (!book) throw new Error("Missing original book");
+  const original = book,
+    home = book.position.clone(),
+    canvas = renderer.domElement;
+  runtime.selectObject(session.instanceId);
+  const frame = (timestamp: number) => request.mock.calls.at(-1)![0](timestamp);
+  for (let t = 0; t <= 35_000; t += 50) frame(t);
+  expect(book.position.equals(home)).toBe(false);
+  expect(canvas.dataset.selectedObject).toBe(session.instanceId);
+  expect(
+    runtime.getSelectableObjects().find((o) => o.id === session.instanceId)
+      ?.entryId,
+  ).toBe(session.entryId);
+  const highlight = scene.getObjectByName("f1-c-selection-highlight");
+  expect(highlight).toBeInstanceOf(Box3Helper);
+  if (highlight instanceof Box3Helper)
+    expect(
+      highlight.box
+        .getCenter(new Vector3())
+        .distanceTo(new Box3().setFromObject(book).getCenter(new Vector3())),
+    ).toBeLessThan(0.01);
+  runtime.pause();
+  const resting = book.position.clone();
+  frame(36_000);
+  expect(book.position.equals(resting)).toBe(true);
+  runtime.applyWorldSession(null);
+  runtime.resume();
+  for (let t = 37_000; t <= 75_000; t += 50) frame(t);
+  expect(book).toBe(original);
+  expect(book.position.equals(home)).toBe(true);
+  expect(renderer.domElement).toBe(canvas);
+  renderer.domElement.dispatchEvent(
+    new Event("webglcontextlost", { cancelable: true }),
+  );
+  const renders = renderer.render.mock.calls.length;
+  runtime.applyWorldSession(session);
+  frame(80_000);
+  expect(renderer.render).toHaveBeenCalledTimes(renders);
+  runtime.dispose();
+  expect(renderer.dispose).toHaveBeenCalledOnce();
+});
+
+it("post-R2 star book opens, survives pause/resume and closes with selection intact", () => {
+  vi.stubGlobal("ResizeObserver", TestResizeObserver);
+  const renderer = new TestRenderer();
+  const request = vi
+    .fn<(callback: FrameRequestCallback) => number>()
+    .mockReturnValue(1);
+  const session = new LivingSession();
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    libraryWorldSnapshot: snapshot(),
+    livingSession: session,
+    frameScheduler: { request, cancel: vi.fn() },
+  });
+  runtime.mount(host());
+  runtime.start();
+  const scene = renderer.render.mock.calls[0][0];
+  const cover = scene
+    .getObjectByName("living:book")!
+    .children.find(
+      (child) => child.type === "Group" && child.name !== "living-page-pivot",
+    )!;
+  const frame = (timestamp: number) => request.mock.calls.at(-1)![0](timestamp);
+  runtime.selectObject("living:book");
+  session.act("living:book", "toggle");
+  frame(0);
+  frame(50);
+  const opening = cover.rotation.z;
+  expect(opening).toBeGreaterThan(0);
+  expect(opening).toBeLessThan(2.1);
+  runtime.pause();
+  frame(10_000);
+  expect(cover.rotation.z).toBe(opening);
+  runtime.resume();
+  for (let t = 10_050; t < 12_050; t += 50) frame(t);
+  expect(cover.rotation.z).toBeCloseTo(2.1, 5);
+  expect(renderer.domElement.dataset.selectedObject).toBe("living:book");
+  expect(renderer.domElement.dataset.highlightedObject).toBe("living:book");
+  session.act("living:book", "toggle");
+  for (let t = 12_050; t < 14_050; t += 50) frame(t);
+  expect(cover.rotation.z).toBeCloseTo(0, 5);
+  expect(session.getSnapshot().objects["living:book"].active).toBe(false);
+  runtime.dispose();
 });

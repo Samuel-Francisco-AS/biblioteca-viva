@@ -1,3 +1,78 @@
+## Segurança pós-R3 — 2026-11-07
+
+- Corrigidas dependências de produção: Capacitor Android/Core/CLI 8.4.3, React Router DOM/Router 7.18.5 e Zod 4.6.7. A correção do proxy nativo requer APK atualizado.
+- Corrigidas ferramentas e dependências transitivas; auditorias completa e de produção passam de 24/4 ocorrências para zero. Overrides de minimatch localizados e regressão de importação adversarial controlada.
+- Corrigida a asserção de preferência restaurada no E2E de backup para o seletor DOM existente, preservando checagens de valor e persistência.
+- [Relatório de segurança, versões, testes e roteiro físico](docs/audits/BV_SANEAMENTO_SEGURANCA_POS_R3.md). R1–R3 preservadas; sem R4/R5, merge ou nova CI presumida.
+
+> **Recuperação R3C (2026-11-07), candidata:** runas liberam geometria/material; callbacks RAF cancelados não reativam trabalho após retomar; contexto WebGL liberado no descarte terminal. Mundo continua residente e pausado entre abas. [Dez ciclos, regressões e pendências de memória/gate físico](docs/audits/BV_RECUPERACAO_R3.md). Recuperação integral aberta.
+
+> **Recuperação R3B (2026-11-07), candidata:** atividades autorais separadas do coordenador, entradas físicas explícitas por atualização e consulta direta de reservas de superfície. Comportamentos, prioridades e personagens preservados. [Relatório](docs/audits/BV_RECUPERACAO_R3.md).
+
+> **Recuperação R3A (2026-11-07), candidata:** mundo evita travessias/interpolação de luz estável, atualização redundante do livro pessoal e históricos de pergaminhos parados; poses compartilhadas por fase e âncoras mantidas por asset. Livro da Estrela, transições, magia e visuais aprovados preservados. [Evidências](docs/audits/BV_RECUPERACAO_R3.md); sem gate físico R3 ou fechamento da recuperação.
+
+## Saneamento pós-R2 — 2026-11-06
+
+- Livro da Estrela abre/fecha sem a restauração de capa concorrente por frame; comandos rápidos seguem a última intenção. Página fechada desabilitada/recusada; página aguarda abertura suficiente. Seleção e menus preservados.
+- Estudo ganha mesinha com cadernos/cristal; Trabalho, estojo aberto com instrumentos; Filmes, lente/memória emissivas; Atividade Física, par de halteres em suporte. IDs, slots e persistência preservados.
+- Menor geometria nas quatro peças, com comparação no mundo completo e regressões dirigidas. [Relatório](docs/audits/BV_SANEAMENTO_POS_R2.md). Recuperação aberta, E2E pendente/FAIL, novo teste Moto G06 recomendado; sem R3 ou merge.
+
+## Recuperação R2C — 2026-11-06
+
+- Livros com acabamento de encadernação; filmes como projetores de memória, séries como receptores episódicos, estudos como fólios de pesquisa, atividades físicas como pesos/tapetes de treino e trabalhos como estojos de ofício.
+- Contrato/factories de assets substituíveis preservam IDs, slots, picking e destaques; livro original transporta/abre/retorna por capacidade de animação, sem dependência de variante/hinge concreto. Troca durante transporte é rejeitada com segurança.
+- Faíscas visuais excluídas do fallback físico e roots sobrepostos coletados uma vez; 125 obstáculos no cenário pareado final.
+- Custos geométricos e imagens comparáveis registrados, sem aceite artístico/mobile ou encerramento da recuperação R3–R5.
+
+## Recuperação R2B — 2026-11-06
+
+- Estantes agregadas por material no mundo composto, preservando entalhes/texturas, picking e vãos físicos; transformações estáticas e caixa arquitetural compartilhada.
+- Luzes apagadas deixam de participar do shader; brilhos ocultos evitam atualizações inúteis. Comparação visual e tradeoffs medidos, sem aceite físico ou promessa de FPS.
+- Corrigida a hierarquia dos batches do edifício que causou uma falha unitária nova na CI R2A; asserts preservados.
+
+## Recuperação R2A — 2026-11-06
+
+- Navegação e colisão deixam de herdar ornamentos do edifício/móveis/estantes; vãos, apoios, asas e recuperação dos objetos preservados.
+- Grafos estáticos preparados por envelope e consultas com índice espacial; evidências pareadas e regressão contra geometria R1. Sem mudança de dados/identidade ou aprovação física.
+
+## 2026-11-06 — Recuperação R1 (candidata sobre BF-5.5F)
+
+- Câmera reutiliza pisos/restrições entre gestos e remove clamps/projeções redundantes, preservando limites e focalização.
+- Picking elimina atualização global de matrizes e raycasts repetidos de hierarquias aninhadas, preservando seleção, prioridade e fallback.
+- [Plano dos 18 achados e comparação técnica](docs/audits/BV_PLANO_RECUPERACAO_EXECUCAO.md). R2–R5 e gate físico permanecem pendentes; E2E dirigido FAIL, sem declaração de CI verde ou recuperação integral.
+
+## 2026-11-06 — BF-5.5F2A (candidata parcial)
+
+- Livro da sessão confirmada conserva identidade e seleção durante retirada, voo, pouso, abertura de capa e retorno à estante; pausa e conclusão reconciliadas.
+- Habitante disponível pode visitar o livro por rota válida e executar gesto de leitura em pé, com prioridade contextual e reserva exclusiva da visita.
+- Recuperação após perda de reserva sem disputar transformação; sinal de trabalho corrigido para a bancada de ofício E.
+- Coordenação com pergaminhos e colisões reais; sem clones, schema novo ou dependência de WebGL para a sessão convencional.
+- Mãos/leitura sentada, estudo F2B e respostas F2C continuam pendentes. [Relatório](docs/BF-5_5F_RELATORIO.md). Sem aceite físico, merge ou CI global verde.
+
+## 2026-11-05 — BF-5.5F, fundação confirmada de sessões (F1)
+
+- Contrato de sessão ativa/pausada sem dados pessoais no renderer; reconciliação por `SessionChanged`, reabertura e mudança de abas.
+- Primeiro sinal mágico posicionado sobre a mobília real para leitura, estudo, trabalho, atividade física e entretenimento; sem objetos duplicados ou animações falsas.
+- [Relatório BF-5.5F](docs/BF-5_5F_RELATORIO.md). F2 física reservada ao Codex; sem merge, fechamento ou aceite físico da F.
+
+## 2026-11-05 — BF-5.5E, candidata de mobília
+
+- Estantes com colunas/coroas, lombadas encadernadas e variação determinística; mesas de estudo, poltronas, bancos, armários, plantas e luminárias remodelados.
+- Bancada de ofício em E e estação de treino em D com madeira, couro, metal e pedra; preservadas funções narrativas e registros pessoais.
+- Luz emitida nas cúpulas, âncoras compartilhadas e pontos de repouso compatíveis com a geometria; transporte do livro cenográfico usa tampo real sem capa duplicada.
+- [Relatório BF-5.5E](docs/BF-5_5E_RELATORIO.md). Sem aceite artístico/físico, merge ou início de F/G.
+
+> **BF-5.5D — saneamento na PR draft #35:** contrato neutro, liberação de leases no handoff/descarte, voo validado entre móveis, reações dos quatro habitantes e acesso à anotação/citação específica. [Relatório vigente](docs/BF-5_5D_RELATORIO.md). Sem merge, CI global verde ou aceite físico; avaliação Moto G06 acumulada para G. E/F permanecem futuras.
+
+> **BF-5.5D — candidata em revisão (05/11/2026):** magia ambiental independente do relógio e até dez projeções de notas/citações, com voo local, interação pela agência B e acesso ao registro original. Base C `8cc12c2`; sem merge ou aceite físico. Limites (rotas locais, rig, foco da anotação e validação WebGL) e evidências no [relatório](docs/BF-5_5D_RELATORIO.md). BF-5.5 permanece aberta; refinamento físico em G e E/F ainda pendentes.
+
+## 2026-11-05 — BF-5.5C (candidata)
+
+- Noite com preenchimento lunar azulado e nove luminárias existentes efetivamente luminosas, sem novos seletores ou mobília.
+- Ritual de acendimento integrado à agência, reservas exclusivas e fallback luminoso independente dos NPCs.
+- Checkpoint local idempotente do ritual na tabela `settings`, sem migração Dexie ou backup; segredo da luminária manual BF-4E preservado.
+- [Relatório e pendências físicas](docs/BF-5_5C_RELATORIO.md). PR draft #34 sobre #33, sem merge ou aprovação física/CI global.
+
 ## 2026-11-05 — BF-5 integrada e encerrada no escopo aprovado (com ressalvas)
 
 - Integração ordenada das PRs [#25](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/25) a [#30](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/30) na `main`, preservando os commits de merge; merge final `1df8adad`.
@@ -928,3 +1003,8 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 - Dez famílias de objetos ambientais com ações nos cinco cômodos, animações e iluminação local.
 - Três atmosferas e descoberta ficcional do Pergaminho, com ações React disponíveis sem WebGL.
 - Estado somente de sessão; sem mudanças de dados ou backup. Auditoria e gate humano pendentes.
+## 2026-11-05 — BF-5.5B candidata
+
+- Tarefas de interação com estados previsíveis e leases exclusivos recuperáveis.
+- Ciclo físico demonstrável com o mesmo livro cenográfico selecionável: pegar, transportar, posicionar e devolver.
+- Sem nova migração Dexie/backup; BF-5.5A preservada. Testes Moto G06 e E2E global permanecem pendentes/vermelhos conforme relatório.

@@ -1,0 +1,19 @@
+{
+  "scope": "building+shelves only; all instances including culled; no renderer",
+  "objects": 100,
+  "meshes": 72,
+  "instances": 1109,
+  "triangles": 27012,
+  "vertices": 42551,
+  "geometries": 42,
+  "materials": 23,
+  "textures": 0,
+  "transparent": 0,
+  "obstacles": 805,
+  "nodes": 136,
+  "collectMs": 6.4887639999999465,
+  "coldRouteMs": 156.93137300000012,
+  "panMedianMs": 0.4479790000000321,
+  "panP95Ms": 0.7160080000001017,
+  "panMaxMs": 2.0176300000000538
+}

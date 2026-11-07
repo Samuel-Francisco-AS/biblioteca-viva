@@ -1,6 +1,6 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ApplicationError } from "./application";
@@ -855,3 +855,112 @@ it("R5 refreshes records on return but preserves an unchanged projected snapshot
     ).toHaveLength(0),
   );
 });
+
+it("projects private notes and resolves a selected scroll to its original record", async () => {
+  const application: LibraryApplication = {
+    queries: {
+      listLibraryEntries: { execute: () => Promise.resolve([firstBook]) },
+      listAllNotes: {
+        execute: () =>
+          Promise.resolve([
+            {
+              id: "fiction-note",
+              entryId: firstBook.id,
+              content: "Private fixture text",
+              createdAt: firstBook.createdAt,
+              updatedAt: firstBook.updatedAt,
+              revision: 1,
+              favorite: false,
+              tagIds: [],
+            },
+          ]),
+      },
+      listAllQuotes: { execute: () => Promise.resolve([]) },
+    },
+  };
+  render(
+    <MemoryRouter>
+      <LibraryPage application={application} />
+    </MemoryRouter>,
+  );
+  await waitFor(() =>
+    expect(worldHostProps().libraryWorldSnapshot?.scrolls).toHaveLength(1),
+  );
+  const scroll = worldHostProps().libraryWorldSnapshot!.scrolls![0];
+  expect(JSON.stringify(scroll)).not.toContain("Private fixture text");
+  act(() =>
+    worldHostProps().onSelectionChange?.({
+      id: scroll.id,
+      entryId: scroll.entryId,
+      label: "Pergaminho",
+    }),
+  );
+  expect(
+    screen.getByRole("link", { name: "Abrir conteúdo do pergaminho" }),
+  ).toHaveAttribute(
+    "href",
+    "/registros/book-1?annotationKind=note&annotationId=fiction-note&from=%2F",
+  );
+  act(() =>
+    worldHostProps().onSelectionChange?.({
+      id: "scroll:note:removed",
+      entryId: firstBook.id,
+      label: "Pergaminho",
+    }),
+  );
+  expect(
+    screen.queryByRole("link", { name: "Abrir conteúdo do pergaminho" }),
+  ).not.toBeInTheDocument();
+});
+
+it.each([
+  ["movie", "library-movie:movie-1"],
+  ["study", "library-study:study-1"],
+  ["physical_activity", "library-physical-activity:activity-1"],
+  ["work", "library-work:work-1"],
+])(
+  "post-R2 selects and opens the canonical %s record",
+  async (type, instanceId) => {
+    const entry = sixEntries.find((entry) => entry.type === type)!;
+    const application: LibraryApplication = {
+      queries: {
+        listLibraryEntries: { execute: vi.fn().mockResolvedValue(sixEntries) },
+      },
+    };
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <Routes>
+          <Route path="/" element={<LibraryPage application={application} />} />
+          <Route
+            path={`/registros/${entry.id}`}
+            element={<h1>{entry.title} aberto</h1>}
+          />
+        </Routes>
+      </MemoryRouter>,
+    );
+    await screen.findByTestId("world-host-stub");
+    const descriptor = {
+      id: instanceId,
+      entryId: entry.id,
+      label: entry.title,
+    };
+    act(() => {
+      worldHostProps().onSelectableObjectsChange?.([descriptor]);
+      worldHostProps().onStatusChange?.("ready");
+    });
+    await openIndex();
+    await userEvent.click(selectionButton(entry.title));
+    expect(worldHostProps().selectedObjectId).toBe(instanceId);
+    act(() => worldHostProps().onSelectionChange?.(descriptor));
+    expect(selectionButton(entry.title)).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    const open = screen.getByRole("link", { name: "Abrir registro" });
+    expect(open).toHaveAttribute("href", `/registros/${entry.id}?from=%2F`);
+    await userEvent.click(open);
+    expect(
+      screen.getByRole("heading", { name: `${entry.title} aberto` }),
+    ).toBeVisible();
+  },
+);

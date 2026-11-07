@@ -1,5 +1,5 @@
 import { NarrativeSession } from "../narrative/session";
-import type { AgencySnapshot } from "../inhabitantAgency";
+import { InhabitantAgency, type AgencySnapshot } from "../inhabitantAgency";
 import { readFileSync } from "node:fs";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { INHABITANTS } from "../inhabitants";
@@ -44,6 +44,7 @@ function readingBook(index: number, title = `Livro ${index}`) {
 class TestRenderer implements ThreeWorldRenderer {
   readonly domElement = document.createElement("canvas");
   readonly dispose = vi.fn();
+  readonly forceContextLoss = vi.fn();
   readonly info = {
     memory: { geometries: 46, textures: 0 },
     render: { calls: 46, triangles: 546 },
@@ -206,7 +207,7 @@ describe("ThreeWorldRuntime", () => {
       activeFrameLoops: 0,
       drawCalls: 46,
       geometries: 46,
-      meshes: 75,
+      meshes: 135,
       runtimeState: "mounted",
       selectableObjects: 13,
       textures: 0,
@@ -718,7 +719,7 @@ describe("ThreeWorldRuntime", () => {
     expect(replacementHighlight).toBeInstanceOf(Box3Helper);
     if (!(replacementHighlight instanceof Box3Helper)) return;
     expect(replacementHighlight).not.toBe(previousHighlight);
-    expect(replacementHighlight.box.max.y).toBeCloseTo(3.1, 6);
+    expect(replacementHighlight.box.max.y).toBeCloseTo(3.37, 6);
 
     scene.updateMatrixWorld(true);
     camera.updateMatrixWorld();
@@ -2953,4 +2954,84 @@ it("R7 measures gesture diagnostic traversal and redundant resize", () => {
   runtime.resize();
   expect(renderer.setSize).toHaveBeenCalledTimes(sizes);
   runtime.dispose();
+});
+
+it("R3 shares a detached post-agency snapshot and preserves the prior collision phase", async () => {
+  vi.stubGlobal("ResizeObserver", TestResizeObserver);
+  const renderer = new TestRenderer();
+  const callbacks = new Map<number, FrameRequestCallback>();
+  let next = 0;
+  let now = 0;
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    fixtureLoader: new TestFixtureLoader(),
+    libraryWorldSnapshot: projectLibraryWorldEntries([]),
+    livingSession: new LivingSession(),
+    inhabitantLoader: () =>
+      Promise.resolve({ scene: new Group(), animations: [] }),
+    onInhabitantCheckpoint: () => {},
+    now: () => now,
+    frameScheduler: {
+      request: (cb) => {
+        callbacks.set(++next, cb);
+        return next;
+      },
+      cancel: (id) => {
+        callbacks.delete(id);
+      },
+    },
+  });
+  runtime.mount(createHost());
+  await Promise.resolve();
+  runtime.start();
+  const poses = vi.spyOn(InhabitantAgency.prototype, "getPoses");
+  const frame = () => {
+    const [id, cb] = callbacks.entries().next().value!;
+    callbacks.delete(id);
+    now += 16;
+    cb(now);
+  };
+  frame();
+  expect(poses).toHaveBeenCalledTimes(2);
+  const snapshot: unknown = poses.mock.results[1].value;
+  const saved = structuredClone(snapshot);
+  frame();
+  expect(poses).toHaveBeenCalledTimes(4);
+  expect(snapshot).toEqual(saved);
+  expect(poses.mock.results[3].value).not.toBe(snapshot);
+  expect(callbacks.size).toBe(1);
+  runtime.dispose();
+});
+
+it("R3 rejects a cancelled RAF delivered after resume without losing the current frame", () => {
+  vi.stubGlobal("ResizeObserver", TestResizeObserver);
+  const callbacks = new Map<number, FrameRequestCallback>();
+  let next = 0;
+  const renderer = new TestRenderer();
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    fixtureLoader: new TestFixtureLoader(),
+    frameScheduler: {
+      request: (cb) => {
+        callbacks.set(++next, cb);
+        return next;
+      },
+      cancel: (id) => {
+        callbacks.delete(id);
+      },
+    },
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  const old = callbacks.values().next().value!;
+  runtime.pause();
+  runtime.resume();
+  const renders = renderer.render.mock.calls.length;
+  old(1_000);
+  expect(renderer.render).toHaveBeenCalledTimes(renders);
+  expect(callbacks.size).toBe(1);
+  expect(renderer.forceContextLoss).not.toHaveBeenCalled();
+  runtime.dispose();
+  expect(callbacks.size).toBe(0);
+  expect(renderer.forceContextLoss).toHaveBeenCalledOnce();
 });

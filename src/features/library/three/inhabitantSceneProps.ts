@@ -1,3 +1,5 @@
+import { setSpatialComponents, spatialBox } from "./spatialComponents";
+import { PRACTICE_FOLIO_ANCHOR } from "./libraryFurnishingLayout";
 import {
   BoxGeometry,
   Group,
@@ -10,8 +12,18 @@ import type { CosmeticState } from "../inhabitantAgency";
 export function createInhabitantSceneProps(building: Object3D) {
   const root = new Group();
   root.name = "inhabitants-practice-folio";
-  root.position.set(-14.9, 1.02, 7.1);
+  root.position.set(
+    PRACTICE_FOLIO_ANCHOR.x,
+    PRACTICE_FOLIO_ANCHOR.y,
+    PRACTICE_FOLIO_ANCHOR.z,
+  );
   building.add(root);
+  const physical = [spatialBox(0, 0.04, 0, 0.68, 0.13, 0.53)];
+  setSpatialComponents(root, {
+    physical,
+    navigation: physical,
+    mobility: "static",
+  });
   const geometry = new BoxGeometry(1, 1, 1);
   const paper = new MeshLambertMaterial({ color: 0xefdcaa });
   const cover = new MeshLambertMaterial({ color: 0x50305d });

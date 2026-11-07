@@ -8,6 +8,10 @@ import {
   type PhysicalProfilePort,
 } from "../application/workouts";
 import { DexiePhysicalProfile } from "../infrastructure/database/physicalProfile";
+import { DexieInhabitantContinuityRepository } from "../infrastructure/database/inhabitantContinuityRepository";
+import { DexieNightLightingRepository } from "../infrastructure/database/nightLightingRepository";
+import type { NightLightingPort } from "../features/library/nightLighting";
+import type { InhabitantContinuityPort } from "../features/library/inhabitantContinuity";
 import { SaveFlashCard, DeleteFlashCard } from "../application/flashCards";
 import type { ImageFilesPort } from "../application/imageFiles";
 import { PlatformImageFiles } from "../infrastructure/files/imageFiles";
@@ -134,6 +138,8 @@ export interface ApplicationDiagnostics {
 export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 
 export interface ApplicationRuntime {
+  readonly inhabitantContinuity: InhabitantContinuityPort;
+  readonly nightLightingContinuity: NightLightingPort;
   readonly physicalProfile: PhysicalProfilePort;
   readonly imageFiles: ImageFilesPort;
   readonly posters: PosterPort;
@@ -334,6 +340,8 @@ export async function createApplication(
     options.annotationShare ?? new PlatformAnnotationShare();
 
   return {
+    inhabitantContinuity: new DexieInhabitantContinuityRepository(database),
+    nightLightingContinuity: new DexieNightLightingRepository(database),
     physicalProfile,
     imageFiles: new PlatformImageFiles(),
     posters: new DexiePosters(database),

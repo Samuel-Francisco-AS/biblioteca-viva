@@ -1,0 +1,59 @@
+{
+  "commit": "10c664c95a4edd94e7b59b856ae02bdc80996748",
+  "run": "https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/42316880825",
+  "staticUnitBuild": "success",
+  "totalPassed": 31,
+  "totalFailed": 36,
+  "shards": [
+    {
+      "shard": 1,
+      "failedTests": [
+        "e2e/bf4-environment.spec.ts:7:1 › BF-4D: ambiente integrado em paisagem/retrato, zoom, pan e seleção",
+        "e2e/bf4-environment.spec.ts:100:3 › BF-4D: coleção cheia explora cinco cômodos e quatro conexões em 1280px",
+        "e2e/bf4-environment.spec.ts:100:3 › BF-4D: coleção cheia explora cinco cômodos e quatro conexões em 390px",
+        "e2e/bf4-inhabitants.spec.ts:7:3 › BF-4F1 four inhabitants world",
+        "e2e/bf4-inhabitants.spec.ts:7:3 › BF-4F1 four inhabitants fallback",
+        "e2e/bf4-inhabitants.spec.ts:43:1 › BF-4F1 canvas selects all four loaded models",
+        "e2e/bf4-inhabitants.spec.ts:69:3 › BF-4F2 samael: directed actions in the five-room world",
+        "e2e/bf4-inhabitants.spec.ts:69:3 › BF-4F2 aryn: directed actions in the five-room world",
+        "e2e/bf4-inhabitants.spec.ts:69:3 › BF-4F2 ytha: directed actions in the five-room world",
+        "e2e/bf4-inhabitants.spec.ts:69:3 › BF-4F2 lua: directed actions in the five-room world",
+        "e2e/bf4-inhabitants.spec.ts:113:1 › BF-4F3 spontaneous life and honest reduced-motion semantics",
+        "e2e/bf4-living.spec.ts:6:3 › BF-4E: segredo completo no mundo",
+        "e2e/bf4-living.spec.ts:71:1 › BF-4E: tocar a luminária executa e repete ação sem botões React",
+        "e2e/bf4-rpg.spec.ts:8:3 › BF-4F4 RPG choices, objective, resume and conclusion from canvas",
+        "e2e/bf5-parte2e-controles-capas.spec.ts:13:1 › seletores DOM confirmam foco e datas, cancelam com Back/Escape e mantêm teclado e formulário",
+        "e2e/bf5-parte2e-controles-capas.spec.ts:83:1 › capa de livro persiste, ateliê exporta PNG real offline e substituição/remoção preservam o registro",
+        "e2e/bf5-ritual.spec.ts:3:1 › BF-5R3: a coleção usa fichas de acervo e detalhes ergonômicos",
+        "e2e/bf5-rpg-hud.spec.ts:3:1 › BF-5R1: immersive canvas layout, accessible command hub and five realms"
+      ],
+      "passed": 16,
+      "failed": 18
+    },
+    {
+      "shard": 2,
+      "failedTests": [
+        "e2e/bf55-furniture.spec.ts:10:1 › BF-5.5E: mobília renderiza, luminária mantém picking e câmera atravessa dia/noite e rotação",
+        "e2e/bf5r4-experience.spec.ts:105:1 › BF-5R4: arraste de um movimento responde em retrato e paisagem",
+        "e2e/bf5r5-experience.spec.ts:5:1 › BF-5R5: same canvas pauses between tabs, resumes its camera and survives rotation",
+        "e2e/bf5r5-world-input.spec.ts:3:1 › BF-5R5: resident input accepts pinch, semantic selection and character dialogue",
+        "e2e/bv-recovery-r2.spec.ts:11:1 › R2: six real records retain React selection, highlights and identity after reload",
+        "e2e/p1-memory.spec.ts:4:1 › tag, favorito, sessão persistente e estatísticas formam memória unificada",
+        "e2e/r4-shell.spec.ts:54:1 › shell abre a Biblioteca com uma única superfície Three.js",
+        "e2e/r4-shell.spec.ts:114:1 › interação desktop conecta picking, pan, zoom e seleção React",
+        "e2e/r4-shell.spec.ts:201:1 › viewport mobile mantém tap, pan, pinch sintético e alternativa React",
+        "e2e/r4-shell.spec.ts:313:1 › Biblioteca preserva a mesma superfície em portrait, landscape e viewport estreito",
+        "e2e/r4-shell.spec.ts:384:1 › dez ciclos de rota não acumulam canvases, loops ou interação",
+        "e2e/r4-shell.spec.ts:449:1 › dock navega pelas áreas convencionais",
+        "e2e/reading-area.spec.ts:17:1 › coleção vazia mantém estantes sem livros artificiais e caminho convencional",
+        "e2e/reading-area.spec.ts:42:1 › livros convencionais preservam identidade entre lista, runtime, seleção e retorno",
+        "e2e/reading-area.spec.ts:133:1 › overflow mantém 71 livros convencionais sem criar selecionável para o excedente",
+        "e2e/reading-area.spec.ts:160:1 › retornos da Biblioteca preservam um canvas pausado e um único snapshot",
+        "e2e/reading-area.spec.ts:190:1 › seis tipos abrem pela Biblioteca e preservam edição e retorno",
+        "e2e/search-and-backup.spec.ts:89:1 › backup web real é baixado, validado, restaurado e persiste"
+      ],
+      "passed": 15,
+      "failed": 18
+    }
+  ]
+}

@@ -787,3 +787,31 @@ it("pede confirmação ao sair com marcador ou anotação não salva e mantém o
     confirm.mockRestore();
   }
 });
+
+it.each(["note", "quote"])(
+  "focuses the specific %s from a living scroll in the real folio",
+  async (kind) => {
+    const { facade } = application({
+      listNotes: () => Promise.resolve([note]),
+      listQuotes: () => Promise.resolve([quote]),
+    });
+    render(
+      <MemoryRouter
+        initialEntries={[
+          `/livros/book-1?annotationKind=${kind}&annotationId=${kind}-1&from=%2F`,
+        ]}
+      >
+        <Routes>
+          <Route
+            path="/livros/:id"
+            element={<BookDetailPage application={facade} />}
+          />
+        </Routes>
+      </MemoryRouter>,
+    );
+    const text = await screen.findByText(
+      kind === "note" ? note.content : quote.content,
+    );
+    await waitFor(() => expect(text.closest("li")).toHaveFocus());
+  },
+);

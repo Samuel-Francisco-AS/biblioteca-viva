@@ -1,0 +1,50 @@
+{
+  "total": 9,
+  "runs": [
+    {
+      "id": 42387946289,
+      "sha": "a29f2ca42cfd121044bfd8bda8019b01d2467211",
+      "event": "pull_request",
+      "createdAt": "2026-11-07T15:45:50Z",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/42387946289"
+    },
+    {
+      "id": 42386553098,
+      "sha": "a9fc253b6139c9a7054a212eb987ac4f605632cc",
+      "event": "pull_request",
+      "createdAt": "2026-11-07T15:28:37Z",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/42386553098"
+    },
+    {
+      "id": 42386112957,
+      "sha": "f1086b7ee842a63d28b8c7523f422d31773b694a",
+      "event": "pull_request",
+      "createdAt": "2026-11-07T15:22:59Z",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/42386112957"
+    },
+    {
+      "id": 42384682480,
+      "sha": "15ba07f29975160d530d8af4dda3553839eaf5a7",
+      "event": "pull_request",
+      "createdAt": "2026-11-07T15:05:39Z",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/42384682480"
+    },
+    {
+      "id": 42330962430,
+      "sha": "849dd290c2f715012257b5b49e3e8d59c7d6f50a",
+      "event": "pull_request",
+      "createdAt": "2026-11-07T02:47:37Z",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/42330962430"
+    }
+  ]
+}

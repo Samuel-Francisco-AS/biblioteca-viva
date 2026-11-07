@@ -5,6 +5,8 @@ import {
   InstancedMesh,
   HemisphereLight,
   Mesh,
+  Line,
+  Points,
   MeshStandardMaterial,
   Object3D,
   DirectionalLight,
@@ -27,10 +29,15 @@ export interface ReferenceSelectableObject {
   readonly root: Object3D;
 }
 
-function isDisposableMesh(
+function isDisposableRenderable(
   object: Object3D,
-): object is Mesh<BufferGeometry, Material | Material[]> {
-  return object instanceof Mesh;
+): object is
+  | Mesh<BufferGeometry, Material | Material[]>
+  | Line<BufferGeometry, Material | Material[]>
+  | Points<BufferGeometry, Material | Material[]> {
+  return (
+    object instanceof Mesh || object instanceof Line || object instanceof Points
+  );
 }
 
 interface BoxPart {
@@ -239,7 +246,7 @@ export function createReferenceScene(): ReferenceScene {
 
   let meshCount = 0;
   root.traverse((object) => {
-    if (isDisposableMesh(object)) meshCount += 1;
+    if (object instanceof Mesh) meshCount += 1;
   });
 
   return { meshCount, root, selectables };
@@ -258,7 +265,7 @@ export function disposeObjectTree(root: Object3D): void {
 
   root.traverse((object) => {
     if (object instanceof InstancedMesh) object.dispose();
-    if (!isDisposableMesh(object)) return;
+    if (!isDisposableRenderable(object)) return;
     geometries.add(object.geometry);
     const meshMaterials = Array.isArray(object.material)
       ? object.material

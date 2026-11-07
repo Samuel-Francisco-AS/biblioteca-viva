@@ -5,18 +5,38 @@ import {
   Mesh,
   type Object3D,
 } from "three";
+import { getSpatialComponents, navigationBoxes } from "./spatialComponents";
 import type { NavigationObstacle } from "../inhabitantNavigation";
 
-/** Per-instance bounds, never the giant AABB of a whole architectural batch.
- * Includes walls, props, shelves and present records; never reads entry content. */
+/** Carried props are governed by leases/anchors, never a permanent collider at their old pose. */
+export function isCarriedProp(object: Object3D): boolean {
+  for (let parent: Object3D | null = object; parent; parent = parent.parent)
+    if (parent.userData.carriedObject === true) return true;
+  return false;
+}
+
+/** Authored components first. Mesh fallback is restricted to unconverted/technical roots. */
 export function collectInhabitantObstacles(
   roots: readonly Object3D[],
 ): readonly NavigationObstacle[] {
   const result: NavigationObstacle[] = [];
+  const visited = new Set<Object3D>();
   for (const root of roots) {
+    if (visited.has(root)) continue;
     root.updateMatrixWorld(true);
-    root.traverse((o) => {
-      if (!(o instanceof Mesh) || !(o.geometry instanceof BufferGeometry))
+    const visit = (o: Object3D, authored = false) => {
+      if (visited.has(o)) return;
+      visited.add(o);
+      if (isCarriedProp(o)) return;
+      const spatial = getSpatialComponents(o);
+      if (spatial) result.push(...navigationBoxes(o, spatial.navigation));
+      for (const child of o.children) visit(child, authored || !!spatial);
+      if (authored || spatial) return;
+      if (
+        isCarriedProp(o) ||
+        !(o instanceof Mesh) ||
+        !(o.geometry instanceof BufferGeometry)
+      )
         return;
       o.geometry.computeBoundingBox();
       const local = o.geometry.boundingBox;
@@ -44,7 +64,8 @@ export function collectInhabitantObstacles(
           add(m.premultiply(o.matrixWorld), i);
         }
       else add(o.matrixWorld, 0);
-    });
+    };
+    visit(root);
   }
   return result;
 }

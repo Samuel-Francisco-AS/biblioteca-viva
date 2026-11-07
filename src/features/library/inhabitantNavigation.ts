@@ -1,3 +1,7 @@
+import {
+  LIBRARY_FURNISHING,
+  furnitureWorldPoint,
+} from "./three/libraryFurnishingLayout";
 import { LIBRARY_PASSAGES, LIBRARY_ROOMS } from "./libraryBuildingGeometry";
 import {
   LIBRARY_ACTIVITY_POINTS,
@@ -105,10 +109,57 @@ candidates.push({ x: -11.7, z: 5.6 }, { x: -13, z: 10 }, { x: -12.2, z: 6.3 });
 for (const x of [-6.5, -2, 2, 6.5])
   for (const z of [-6.5, -3, 0, 3, 6.3]) candidates.push({ x, z });
 
+// C's two-reader desk has a real rear aisle for the book handoff. Append only
+// its two bends; retain the existing priority of social/room navigation sites.
+for (const p of LIBRARY_FURNISHING.filter((p) => p.id === "bf4-prop:9"))
+  for (const x of [-1.9, 1.9])
+    candidates.push(furnitureWorldPoint(p, { x, y: 0, z: -1.8 }));
+
+/** Fixed-size broad phase for the mounted library; exact segmentHits remains authoritative. */
+class ObstacleIndex {
+  private readonly cells = new Map<string, number[]>();
+  constructor(private readonly obstacles: readonly NavigationObstacle[]) {
+    obstacles.forEach((box, i) => {
+      for (let x = Math.floor(box.minX / 3); x <= Math.floor(box.maxX / 3); x++)
+        for (
+          let z = Math.floor(box.minZ / 3);
+          z <= Math.floor(box.maxZ / 3);
+          z++
+        ) {
+          const key = `${x}:${z}`,
+            cell = this.cells.get(key) ?? [];
+          cell.push(i);
+          this.cells.set(key, cell);
+        }
+    });
+  }
+  hits(a: Position, b: Position, radius: number): boolean {
+    const seen = new Set<number>();
+    for (
+      let x = Math.floor((Math.min(a.x, b.x) - radius) / 3);
+      x <= Math.floor((Math.max(a.x, b.x) + radius) / 3);
+      x++
+    )
+      for (
+        let z = Math.floor((Math.min(a.z, b.z) - radius) / 3);
+        z <= Math.floor((Math.max(a.z, b.z) + radius) / 3);
+        z++
+      )
+        for (const i of this.cells.get(`${x}:${z}`) ?? []) {
+          if (seen.has(i)) continue;
+          seen.add(i);
+          if (segmentHits(a, b, this.obstacles[i], radius)) return true;
+        }
+    return false;
+  }
+}
+
 /** Small visibility graph from BF-4D centre lines, crossings and activity points.
  * The mounted geometry is authoritative: every edge is checked, not assumed. */
 export class InhabitantNavigation {
   readonly nodes: readonly Position[];
+  readonly obstacles: readonly NavigationObstacle[];
+  private readonly index: ObstacleIndex;
   private readonly graphs = new Map<number, readonly (readonly number[])[]>();
   private readonly connections = new Map<string, readonly number[]>();
   private links(p: Position, radius: number): readonly number[] {
@@ -123,7 +174,9 @@ export class InhabitantNavigation {
     this.connections.set(key, links);
     return links;
   }
-  constructor(readonly obstacles: readonly NavigationObstacle[]) {
+  constructor(obstacles: readonly NavigationObstacle[]) {
+    this.obstacles = obstacles.map((o) => Object.freeze({ ...o }));
+    this.index = new ObstacleIndex(this.obstacles);
     this.nodes = candidates.filter(
       (p, i, all) => all.findIndex((q) => distance(p, q) < 0.01) === i,
     );
@@ -149,21 +202,31 @@ export class InhabitantNavigation {
     )
       return false;
     return (
-      !this.obstacles.some((o) => segmentHits(a, b, o, radius)) &&
+      !this.index.hits(a, b, radius) &&
       !extra.some((o) => segmentHits(a, b, o, radius))
     );
   }
   private graph(radius: number) {
     let graph = this.graphs.get(radius);
     if (!graph) {
-      graph = this.nodes.map((a, i) =>
-        this.nodes.flatMap((b, j) =>
-          i !== j && distance(a, b) < 12 && this.clear(a, b, radius) ? [j] : [],
-        ),
-      );
+      const adjacency = this.nodes.map(() => [] as number[]);
+      for (let i = 0; i < this.nodes.length; i++)
+        for (let j = i + 1; j < this.nodes.length; j++)
+          if (
+            distance(this.nodes[i], this.nodes[j]) < 12 &&
+            this.clear(this.nodes[i], this.nodes[j], radius)
+          ) {
+            adjacency[i].push(j);
+            adjacency[j].push(i);
+          }
+      graph = adjacency;
       this.graphs.set(radius, graph);
     }
     return graph;
+  }
+  /** Called once at mount, before input/agency starts. Dynamic occupancy never invalidates static edges. */
+  prepare(radii: readonly number[]): void {
+    for (const radius of new Set(radii)) this.graph(radius);
   }
   route(
     from: Position,

@@ -1,0 +1,119 @@
+{
+  "date": "2026-11-07",
+  "baselineSha": "a29f2ca42cfd121044bfd8bda8019b01d2467211",
+  "environment": {
+    "os": "Fedora 44",
+    "node": "24.18.0",
+    "npm": "12.0.2"
+  },
+  "npmCi": {
+    "baseline": "PASS",
+    "final": "PASS"
+  },
+  "staticGates": {
+    "audit-production": {
+      "exit": 0,
+      "seconds": 0.89
+    },
+    "audit-full": {
+      "exit": 0,
+      "seconds": 1.0
+    },
+    "format": {
+      "exit": 0,
+      "seconds": 23.37
+    },
+    "lint": {
+      "exit": 0,
+      "seconds": 73.81
+    },
+    "typecheck": {
+      "exit": 0,
+      "seconds": 24.77
+    },
+    "audio": {
+      "exit": 0,
+      "seconds": 0.19
+    }
+  },
+  "finalTestEdits": {
+    "targetedESLint": "PASS",
+    "typecheck": "PASS",
+    "formatCheck": "PASS",
+    "backupUnit": {
+      "files": 1,
+      "passed": 11
+    }
+  },
+  "unit": {
+    "files": 144,
+    "passed": 923,
+    "failed": 0,
+    "seconds": 72.11
+  },
+  "e2eInitial": {
+    "passed": 7,
+    "failed": 2,
+    "retries": 0,
+    "failures": [
+      {
+        "file": "bv-recovery-r2.spec.ts",
+        "line": 104,
+        "reason": "30s timeout; series highlight empty; reload not reached"
+      },
+      {
+        "file": "search-and-backup.spec.ts",
+        "line": 155,
+        "reason": "toHaveValue called on button combobox after successful restore"
+      }
+    ]
+  },
+  "e2eBackupFinal": {
+    "passed": 1,
+    "failed": 0,
+    "retries": 0,
+    "seconds": 10.1,
+    "change": "assert visible label, checked radio and radio value larger after restore/reload"
+  },
+  "e2eBaselineComparison": {
+    "sha": "a29f2ca42cfd121044bfd8bda8019b01d2467211",
+    "originalLock": true,
+    "ciAndBuild": "PASS",
+    "file": "bv-recovery-r2.spec.ts",
+    "passed": 0,
+    "failed": 1,
+    "retries": 0,
+    "line": 102,
+    "reason": "30s timeout during Study selection click; distinct point from candidate, no shared cause claimed"
+  },
+  "distinctE2eScenarios": {
+    "passed": 8,
+    "pendingFailed": 1,
+    "singleGreenRun": false
+  },
+  "lifecycle": {
+    "cycles": 1,
+    "result": "PASS",
+    "environment": "Chromium/SwiftShader",
+    "physicalAndroid": false
+  },
+  "android": {
+    "result": "PASS",
+    "gradleSeconds": 45,
+    "path": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "bytes": 8609208,
+    "sha256": "679dadad2a8c70a6611ebb0705ef84375bc66dd8e36b1a1909e2b703a77334dd",
+    "installedOrPhysicalTested": false
+  },
+  "build": "PASS (android:sync includes npm run build)",
+  "performanceReport": "PASS (bundle inventory only)",
+  "gitDiffCheck": "PASS",
+  "remainingKnownNpmVulnerabilities": 0,
+  "uniqueBaselineAdvisories": 49,
+  "publication": {
+    "skipCiRequired": true,
+    "pushOperationsPlanned": 1,
+    "newWorkflowRequested": false,
+    "remoteResult": "Recorded after publication in PR description and final response"
+  }
+}

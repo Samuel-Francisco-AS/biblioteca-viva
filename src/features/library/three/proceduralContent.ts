@@ -1,4 +1,22 @@
-import { BoxGeometry, Group, Mesh, MeshStandardMaterial } from "three";
+import { batchBookBinding } from "./staticVisuals";
+import {
+  bindRecordSpatial,
+  recordSpatial,
+  type BookCoverAnimation,
+  type BookRecordAsset,
+} from "./recordAssetContract";
+import { setSpatialComponents, spatialBox } from "./spatialComponents";
+import {
+  Box3,
+  BoxGeometry,
+  Group,
+  Mesh,
+  MeshStandardMaterial,
+  Shape,
+  ExtrudeGeometry,
+} from "three";
+import { furnitureBlock, turnedProfile } from "./furnitureGeometry";
+import { createWoodGrain } from "./furnitureMaterials";
 
 /** A stable semantic model type; it is not an asset filename or GLB asset ID. */
 export type ProceduralModelTypeId = "bookshelf" | "book-volume";
@@ -39,10 +57,11 @@ export interface ProceduralBookshelf {
   readonly variant: ProceduralBookshelfVariant;
 }
 
-export interface ProceduralBookVolume {
-  readonly identity: ProceduralBookVolumeIdentity;
-  readonly root: Group;
+export interface ProceduralBookVolume extends BookRecordAsset {
+  readonly animation: BookCoverAnimation;
+  setSessionGlow(strength: number): void;
   readonly variant: ProceduralBookVolumeVariant;
+  readonly coverHinge: Group;
 }
 
 export interface ProceduralBookVolumeDimensions {
@@ -139,7 +158,7 @@ const BOOK_VOLUME_VARIANTS: Readonly<
   "book-amber": Object.freeze({
     coverColor: 0xb86e35,
     depth: 0.33,
-    height: 0.38,
+    height: 0.34,
     width: 0.2,
   }),
   "book-blue": Object.freeze({
@@ -151,13 +170,13 @@ const BOOK_VOLUME_VARIANTS: Readonly<
   "book-green": Object.freeze({
     coverColor: 0x527b59,
     depth: 0.32,
-    height: 0.37,
+    height: 0.3,
     width: 0.19,
   }),
   "book-red": Object.freeze({
     coverColor: 0x9a4a42,
     depth: 0.35,
-    height: 0.39,
+    height: 0.37,
     width: 0.215,
   }),
 });
@@ -218,12 +237,15 @@ export function getProceduralBookshelfLayout(
 export function getProceduralBookVolumeVariant(
   identity: Pick<ProceduralBookVolumeIdentity, "entryId" | "instanceId">,
 ): ProceduralBookVolumeVariant {
-  let hash = 0;
+  let hash = 2166136261;
   const stableValue = `${identity.instanceId}:${identity.entryId}`;
   for (let index = 0; index < stableValue.length; index += 1) {
-    hash = (hash * 31 + stableValue.charCodeAt(index)) >>> 0;
+    hash = Math.imul(hash ^ stableValue.charCodeAt(index), 16777619) >>> 0;
   }
-  return BOOK_VOLUME_VARIANT_IDS[hash % BOOK_VOLUME_VARIANT_IDS.length];
+  // Avalanche both halves: paired entry/instance suffixes must not collapse
+  // consecutive records to one colour as with the old modulo-four sum.
+  hash ^= hash >>> 16;
+  return BOOK_VOLUME_VARIANT_IDS[(hash >>> 0) % BOOK_VOLUME_VARIANT_IDS.length];
 }
 
 /** Returns immutable physical dimensions for a supported book-volume variant. */
@@ -253,13 +275,75 @@ export function createProceduralBookshelf(
   root.name = "procedural-bookshelf";
 
   const spec = BOOKSHELF_VARIANTS[variant];
+  const physical = [
+    spatialBox(
+      0,
+      spec.baseHeight / 2,
+      0,
+      spec.width,
+      spec.baseHeight,
+      spec.depth,
+    ),
+    spatialBox(
+      0,
+      spec.height / 2,
+      -spec.depth / 2 + 0.06,
+      spec.width,
+      spec.height,
+      0.12,
+    ),
+    ...[-1, 1].map((side) =>
+      spatialBox(
+        side * (spec.width / 2 - 0.09),
+        spec.height / 2,
+        0.04,
+        0.19,
+        spec.height,
+        spec.depth + 0.08,
+      ),
+    ),
+    ...getProceduralBookshelfLayout(variant).shelves.map((s) =>
+      spatialBox(
+        0,
+        (s.topY + s.bottomY) / 2,
+        0.1,
+        spec.width - 0.36,
+        s.topY - s.bottomY,
+        spec.depth - 0.15,
+      ),
+    ),
+    spatialBox(
+      0,
+      spec.height - 0.03,
+      0,
+      spec.width + spec.topTrimOverhang * 2,
+      0.12,
+      spec.depth,
+    ),
+    spatialBox(
+      0,
+      spec.height + 0.18,
+      spec.depth / 2 - 0.04,
+      spec.width,
+      0.36,
+      0.13,
+    ),
+  ];
+  setSpatialComponents(root, {
+    physical,
+    navigation: [spatialBox(0, 1, 0.04, spec.width, 2, spec.depth + 0.08)],
+    mobility: "static",
+  });
   const commonMaterial = { metalness: 0, roughness: 0.82 } as const;
+  const grain = createWoodGrain();
   const frameMaterial = new MeshStandardMaterial({
     ...commonMaterial,
+    map: grain,
     color: spec.frameColor,
   });
   const shelfMaterial = new MeshStandardMaterial({
     ...commonMaterial,
+    map: grain,
     color: spec.shelfColor,
   });
   const frameThickness = 0.18;
@@ -326,6 +410,118 @@ export function createProceduralBookshelf(
     position: [0, spec.height - spec.topTrimHeight / 2, 0],
   });
 
+  // The load-bearing bays retain their exact slot envelope. The carved joinery
+  // sits on the exterior stiles and above the final shelf, never inside a book slot.
+  const details = new Group();
+  details.name = "bookshelf-joinery";
+  root.add(details);
+  const brass = new MeshStandardMaterial({
+    color: 0xa88c52,
+    metalness: 0.65,
+    roughness: 0.46,
+  });
+  const carved = furnitureBlock(0.045);
+  const column = turnedProfile([
+    [0, 0],
+    [0.065, 0],
+    [0.075, 0.08],
+    [0.045, 0.16],
+    [0.042, 0.8],
+    [0.07, 0.94],
+    [0.065, 1],
+    [0, 1],
+  ]);
+  const detail = (
+    name: string,
+    x: number,
+    y: number,
+    z: number,
+    w: number,
+    h: number,
+    d: number,
+    metal = false,
+  ) => {
+    const mesh = new Mesh(carved, metal ? brass : frameMaterial);
+    mesh.name = name;
+    mesh.position.set(x, y, z);
+    mesh.scale.set(w, h, d);
+    details.add(mesh);
+    return mesh;
+  };
+  for (const x of [-spec.width / 2 + 0.09, spec.width / 2 - 0.09]) {
+    const post = new Mesh(column, frameMaterial);
+    post.name = "bookshelf-turned-column";
+    post.position.set(x, spec.baseHeight, spec.depth / 2);
+    post.scale.y = bodyHeight;
+    details.add(post);
+    for (const y of [spec.baseHeight + 0.14, spec.height - 0.22])
+      detail("bookshelf-capital", x, y, spec.depth / 2, 0.17, 0.09, 0.17, true);
+    for (let i = 0; i < 3; i++)
+      detail(
+        "bookshelf-fluting",
+        x + (i - 1) * 0.035,
+        spec.height / 2,
+        spec.depth / 2 + 0.043,
+        0.008,
+        bodyHeight * 0.48,
+        0.008,
+        true,
+      );
+  }
+  for (const support of getProceduralBookshelfLayout(variant).shelves)
+    detail(
+      "bookshelf-shelf-lip",
+      0,
+      support.topY - 0.035,
+      spec.depth / 2 + 0.01,
+      interiorWidth,
+      0.05,
+      0.03,
+    );
+  // Three silhouettes: low fan, gothic crest and broad broken pediment.
+  const rise =
+    variant === "reading-dark-tall"
+      ? 0.34
+      : variant === "reading-light-wide"
+        ? 0.2
+        : 0.27;
+  const crown = new Shape();
+  crown.moveTo(-spec.width / 2, 0);
+  crown.lineTo(spec.width / 2, 0);
+  crown.quadraticCurveTo(spec.width * 0.25, rise * 0.14, 0, rise);
+  crown.quadraticCurveTo(-spec.width * 0.25, rise * 0.14, -spec.width / 2, 0);
+  const crest = new Mesh(
+    new ExtrudeGeometry(crown, {
+      depth: 0.09,
+      bevelEnabled: false,
+      curveSegments: 12,
+    }),
+    frameMaterial,
+  );
+  crest.name = "bookshelf-crown";
+  crest.position.set(0, spec.height, spec.depth / 2 - 0.09);
+  details.add(crest);
+  detail(
+    "bookshelf-cornice",
+    0,
+    spec.height - 0.03,
+    0,
+    spec.width + spec.topTrimOverhang * 2,
+    0.06,
+    spec.depth,
+  );
+  const sigil = detail(
+    "bookshelf-arcane-seal",
+    0,
+    spec.height + rise * 0.38,
+    spec.depth / 2 + 0.01,
+    0.11,
+    0.11,
+    0.02,
+    true,
+  );
+  sigil.rotation.z = Math.PI / 4;
+
   return { identity, root, variant };
 }
 
@@ -367,34 +563,224 @@ export function createProceduralBookVolume(
   });
   const coverThickness = 0.018;
   const pageReveal = 0.012;
-  const pageDepth = spec.depth - coverThickness * 2 - pageReveal * 2;
-  const coverGeometry = new BoxGeometry(
+  const unit = furnitureBlock(0.04);
+  const bandMaterial = new MeshStandardMaterial({
+    color: 0xb69b65,
+    metalness: 0.5,
+    roughness: 0.48,
+  });
+  function piece(
+    name: string,
+    material: MeshStandardMaterial,
+    x: number,
+    y: number,
+    z: number,
+    w: number,
+    h: number,
+    d: number,
+  ) {
+    const mesh = new Mesh(unit, material);
+    mesh.name = name;
+    mesh.position.set(x, y, z);
+    mesh.scale.set(w, h, d);
+    root.add(mesh);
+    return mesh;
+  }
+  piece(
+    "book-page-block",
+    pagesMaterial,
+    0,
+    spec.height / 2,
+    -0.005,
+    spec.width - coverThickness * 2,
+    spec.height - pageReveal * 2,
+    spec.depth - 0.035,
+  );
+  const coverHinge = new Group();
+  coverHinge.name = "book-cover-hinge";
+  coverHinge.position.set(
+    -spec.width / 2 + coverThickness / 2,
+    0,
+    spec.depth / 2 - 0.012,
+  );
+  root.add(coverHinge);
+  for (const x of [
+    -spec.width / 2 + coverThickness / 2,
+    spec.width / 2 - coverThickness / 2,
+  ]) {
+    const cover = piece(
+      "book-cover",
+      coverMaterial,
+      x,
+      spec.height / 2,
+      0,
+      coverThickness,
+      spec.height,
+      spec.depth,
+    );
+    if (x < 0) {
+      cover.position.sub(coverHinge.position);
+      coverHinge.add(cover);
+    }
+  }
+  piece(
+    "book-rounded-spine",
+    coverMaterial,
+    0,
+    spec.height / 2,
+    spec.depth / 2 - 0.012,
     spec.width,
     spec.height,
-    coverThickness,
+    0.024,
+  );
+  for (const fraction of [0.16, 0.82])
+    piece(
+      "book-binding-band",
+      bandMaterial,
+      0,
+      spec.height * fraction,
+      spec.depth / 2 - 0.003,
+      spec.width * 0.92,
+      0.015,
+      0.006,
+    );
+  piece(
+    "book-spine-label",
+    pagesMaterial,
+    0,
+    spec.height * 0.57,
+    spec.depth / 2 - 0.002,
+    spec.width * 0.61,
+    spec.height * 0.22,
+    0.004,
+  );
+  piece(
+    "book-title-mark",
+    bandMaterial,
+    0,
+    spec.height * 0.57,
+    spec.depth / 2 - 0.001,
+    spec.width * 0.42,
+    0.012,
+    0.002,
   );
 
-  addBox(root, {
-    geometry: new BoxGeometry(
-      spec.width - pageReveal * 2,
-      spec.height - pageReveal * 2,
-      pageDepth,
-    ),
-    material: pagesMaterial,
-    name: "book-page-block",
-    position: [0, spec.height / 2, 0],
-  });
-  for (const z of [
-    -spec.depth / 2 + coverThickness / 2,
-    spec.depth / 2 - coverThickness / 2,
-  ]) {
-    addBox(root, {
-      geometry: coverGeometry,
-      material: coverMaterial,
-      name: "book-cover",
-      position: [0, spec.height / 2, z],
-    });
+  const detailGeometry = new BoxGeometry(1, 1, 1);
+  function gilding(
+    name: string,
+    x: number,
+    y: number,
+    z: number,
+    w: number,
+    h: number,
+    d: number,
+    hinged = false,
+  ) {
+    const mesh = new Mesh(detailGeometry, bandMaterial);
+    mesh.name = name;
+    mesh.position.set(x, y, z);
+    mesh.scale.set(w, h, d);
+    root.add(mesh);
+    if (hinged) {
+      mesh.position.sub(coverHinge.position);
+      coverHinge.add(mesh);
+    }
+    return mesh;
   }
-
-  return { identity, root, variant };
+  // Corner tooling follows the moving cover; sewn headbands stay on the spine.
+  for (const side of [-1, 1]) {
+    const x = side * (spec.width / 2 - 0.003);
+    for (const y of [spec.height * 0.13, spec.height * 0.87])
+      for (const z of [-spec.depth * 0.35, spec.depth * 0.28])
+        gilding("book-gilded-corner", x, y, z, 0.004, 0.035, 0.035, side < 0);
+    gilding(
+      "book-cover-seal",
+      x,
+      spec.height * 0.52,
+      -0.025,
+      0.005,
+      spec.height * 0.22,
+      0.07,
+      side < 0,
+    ).rotation.x = Math.PI / 4;
+    for (const z of [-spec.depth * 0.4, spec.depth * 0.34])
+      gilding(
+        "book-cover-tooling",
+        x,
+        spec.height * 0.5,
+        z,
+        0.003,
+        spec.height * 0.65,
+        0.004,
+        side < 0,
+      );
+  }
+  for (const y of [spec.height * 0.06, spec.height * 0.94])
+    gilding(
+      "book-sewn-headband",
+      0,
+      y,
+      spec.depth / 2 - 0.002,
+      spec.width * 0.8,
+      0.012,
+      0.004,
+    );
+  gilding(
+    "book-spine-sigil",
+    0,
+    spec.height * 0.57,
+    spec.depth / 2 - 0.002,
+    0.038,
+    0.038,
+    0.004,
+  ).rotation.z = Math.PI / 4;
+  const fixed = new Group();
+  fixed.name = "book-fixed-binding";
+  for (const child of [...root.children])
+    if (child !== coverHinge) fixed.add(child);
+  root.add(fixed);
+  batchBookBinding(fixed);
+  batchBookBinding(coverHinge);
+  const dimensions = getProceduralBookVolumeDimensions(variant);
+  const spatial = {
+    ...recordSpatial(dimensions),
+    mobility: "dynamic" as const,
+  };
+  bindRecordSpatial(root, spatial);
+  const animation: BookCoverAnimation = {
+    kind: "hinged-cover",
+    setOpening(progress) {
+      coverHinge.rotation.y =
+        (Number.isFinite(progress) ? Math.min(1, Math.max(0, progress)) : 0) *
+        Math.PI *
+        0.82;
+    },
+    opening() {
+      return coverHinge.rotation.y / (Math.PI * 0.82);
+    },
+    worldBounds() {
+      coverHinge.updateWorldMatrix(true, true);
+      return new Box3().setFromObject(coverHinge);
+    },
+  };
+  return {
+    identity,
+    root,
+    variant,
+    coverHinge,
+    dimensions,
+    spatial,
+    materials: [coverMaterial, pagesMaterial, bandMaterial],
+    assetId: "bv:records/illuminated-codex-v1",
+    pivot: [0, 0, 0],
+    scale: [1, 1, 1],
+    orientation: [0, 0, 0],
+    animation,
+    setSessionGlow(strength) {
+      for (const m of [coverMaterial, pagesMaterial, bandMaterial]) {
+        m.emissive.setHex(0xf0c680);
+        m.emissiveIntensity = strength;
+      }
+    },
+  };
 }

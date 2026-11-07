@@ -1,0 +1,23 @@
+[
+  {
+    "scene": "static",
+    "meanAbsoluteChannelDifference": 1.591435185185185e-05,
+    "changedPixels": 10,
+    "totalPixels": 1152000,
+    "maxChannelDifference": 9
+  },
+  {
+    "scene": "night",
+    "meanAbsoluteChannelDifference": 1.1284722222222222e-05,
+    "changedPixels": 8,
+    "totalPixels": 1152000,
+    "maxChannelDifference": 6
+  },
+  {
+    "scene": "camera-far",
+    "meanAbsoluteChannelDifference": 1.0706018518518518e-05,
+    "changedPixels": 9,
+    "totalPixels": 1152000,
+    "maxChannelDifference": 3
+  }
+]

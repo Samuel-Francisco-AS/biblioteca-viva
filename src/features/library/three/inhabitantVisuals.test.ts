@@ -10,6 +10,9 @@ import {
   Box3,
   Group,
   Mesh,
+  MeshBasicMaterial,
+  BoxGeometry,
+  Texture,
   Vector3,
   Scene,
   OrthographicCamera,
@@ -21,6 +24,40 @@ import { createInhabitantVisuals } from "./inhabitantVisuals";
 import { disposeObjectTree } from "./referenceScene";
 
 describe("BF-4F1 inhabitants", () => {
+  it("releases all four late models and their textures without anchors or ready callbacks after cancellation", async () => {
+    const pending: ((value: { scene: Group; animations: [] }) => void)[] = [];
+    const parent = new Group();
+    const ready = vi.fn();
+    const owner = createInhabitantVisuals(
+      parent,
+      () =>
+        new Promise((resolve) => {
+          pending.push(resolve);
+        }),
+      ready,
+    );
+    expect(pending).toHaveLength(4);
+    owner.dispose();
+    const spies = pending.flatMap((resolve) => {
+      const geometry = new BoxGeometry(),
+        texture = new Texture(),
+        material = new MeshBasicMaterial({ map: texture });
+      const scene = new Group();
+      scene.add(new Mesh(geometry, material));
+      const spies = [geometry, material, texture].map((r) =>
+        vi.spyOn(r, "dispose"),
+      );
+      resolve({ scene, animations: [] });
+      return spies;
+    });
+    await Promise.resolve();
+    for (const spy of spies) expect(spy).toHaveBeenCalledOnce();
+    expect(ready).not.toHaveBeenCalled();
+    expect(owner.getCarryAnchor("character:aryn")).toBeNull();
+    expect(parent.children).toHaveLength(0);
+    owner.dispose();
+    for (const spy of spies) expect(spy).toHaveBeenCalledOnce();
+  });
   for (const actor of INHABITANTS)
     it(`${actor.key}: real exported GLB, dimensions, clip and ownership`, async () => {
       const bytes = readFileSync(
