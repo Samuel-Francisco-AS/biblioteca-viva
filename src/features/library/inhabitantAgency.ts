@@ -1,4 +1,8 @@
-import { SCENIC_BOOK_ANCHORS } from "./three/libraryFurnishingLayout";
+import { tasks, preferences, type Task } from "./inhabitantActivities";
+import {
+  EMPTY_AGENCY_ENVIRONMENT,
+  type AgencyEnvironment,
+} from "./inhabitantEnvironment";
 import {
   INHABITANTS,
   INHABITANT_ENVELOPES,
@@ -13,10 +17,6 @@ import {
   type Position,
   type NavigationObstacle,
 } from "./inhabitantNavigation";
-import {
-  LIBRARY_ACTIVITY_POINTS,
-  LIBRARY_ACTIVITY_ZONES,
-} from "./librarySpatialLayout";
 import { ENCOUNTERS, type EncounterScript } from "./inhabitantEncounters";
 import type { NightLightingSession } from "./nightLighting";
 import type { NarrativeBond } from "./narrative/contracts";
@@ -41,28 +41,6 @@ export type AgencyState =
   | "converse";
 export type AgencyMode = "running" | "paused" | "reduced" | "unavailable";
 export type CosmeticState = "intact" | "damaged-cosmetic" | "repairing";
-type TaskKind =
-  "study" | "reading" | "rest" | "observation" | "plant" | "experiment";
-interface Task {
-  readonly id: string;
-  readonly kind: TaskKind;
-  readonly position: Position;
-  readonly facing: number;
-  readonly label: string;
-  readonly objectId?: string;
-  readonly nightLampId?: string;
-  readonly sessionReading?: {
-    readonly sessionId: string;
-    readonly bookId: string;
-    readonly source: Position;
-  };
-  readonly interaction?: {
-    readonly source: Position;
-    readonly approach: Position;
-    readonly destination: Position;
-    readonly reach: number;
-  };
-}
 export interface AgentView extends Position {
   readonly id: InhabitantId;
   readonly key: InhabitantKey;
@@ -147,110 +125,7 @@ export interface AgencyOptions {
   readonly seed?: number;
   readonly onEnvironmentAction?: (key: InhabitantKey, objectId: string) => void;
   readonly nightLighting?: NightLightingSession;
-  readonly physicalObstacles?: () => readonly NavigationObstacle[];
-  readonly sessionReadingCandidate?: () => {
-    readonly id: string;
-    readonly sessionId: string;
-    readonly source: Position;
-  } | null;
-  readonly scrollCandidates?: () => readonly {
-    readonly id: string;
-    readonly source: Position;
-  }[];
 }
-const tasks: readonly Task[] = [
-  ...LIBRARY_ACTIVITY_POINTS.flatMap((p) => {
-    const z = LIBRARY_ACTIVITY_ZONES.find((z) => z.id === p.zoneId);
-    if (!z || z.activity === "circulation") return [];
-    const interaction =
-      p.id === "bf4-point:c-study"
-        ? {
-            source: SCENIC_BOOK_ANCHORS.source,
-            approach: SCENIC_BOOK_ANCHORS.approach,
-            destination: SCENIC_BOOK_ANCHORS.destinationApproach,
-            reach: 1.5,
-          }
-        : undefined;
-    const position = interaction?.approach ?? { x: p.x, z: p.z };
-    return [
-      {
-        id: p.id,
-        kind: z.activity,
-        position,
-        facing: p.facing,
-        label:
-          z.activity === "study"
-            ? "atividade em prop de estudo"
-            : z.activity === "reading"
-              ? "leitura de ficção cenográfica"
-              : z.activity === "rest"
-                ? "repouso e observação tranquila"
-                : "observação dos mecanismos",
-        ...(p.id.endsWith("d-study") ? { objectId: "living:globe" } : {}),
-        ...(interaction ? { objectId: "living:book", interaction } : {}),
-        ...{},
-      },
-    ];
-  }),
-  {
-    id: "clock-inspection",
-    kind: "observation",
-    position: { x: -15.2, z: -6.8 },
-    facing: -Math.PI / 2,
-    label: "inspeção do relógio cenográfico",
-    objectId: "living:clock",
-  },
-  {
-    id: "care-star-plant",
-    kind: "plant",
-    position: { x: -11.7, z: 5.6 },
-    facing: Math.PI,
-    label: "cuidado da planta estrelada",
-    objectId: "living:plant",
-  },
-  {
-    id: "lua-practice",
-    kind: "experiment",
-    position: { x: -13, z: 10 },
-    facing: Math.PI,
-    label: "ensaio mágico sobre folha de treino",
-    objectId: "living:globe",
-  },
-];
-const preferences: Record<InhabitantKey, Record<TaskKind, number>> = {
-  samael: {
-    study: 9,
-    reading: 4,
-    rest: 7,
-    observation: 8,
-    plant: 2,
-    experiment: 0,
-  },
-  aryn: {
-    study: 9,
-    reading: 8,
-    rest: 3,
-    observation: 7,
-    plant: 6,
-    experiment: 0,
-  },
-  ytha: {
-    study: 3,
-    reading: 8,
-    rest: 7,
-    observation: 5,
-    plant: 12,
-    experiment: 0,
-  },
-  lua: {
-    study: 10,
-    reading: 7,
-    rest: 4,
-    observation: 7,
-    plant: 6,
-    experiment: 12,
-  },
-};
 const clamp = (v: number, min = 0, max = 12) => Math.min(max, Math.max(min, v));
 /** Session-only agency. No renderer, browser, timers, records or persistence.
  * update() consumes an injected monotonic clock; pauses discard elapsed wall time. */
@@ -272,6 +147,7 @@ export class InhabitantAgency {
   private readonly listeners = new Set<() => void>();
   private snapshot: AgencySnapshot;
   private disposed = false;
+  private environment: AgencyEnvironment = EMPTY_AGENCY_ENVIRONMENT;
   private socialAfter = 12;
   private cooperation = 0;
   private readonly conversation = new Set<InhabitantKey>();
@@ -509,8 +385,9 @@ export class InhabitantAgency {
             : "Ambiente 3D indisponível; nenhuma ação ou percurso adicional foi realizado.";
     this.publish();
   }
-  update() {
+  update(environment: AgencyEnvironment = EMPTY_AGENCY_ENVIRONMENT) {
     if (this.disposed) return;
+    this.environment = environment;
     const time = this.now();
     if (!Number.isFinite(time)) return;
     const dt =
@@ -813,6 +690,7 @@ export class InhabitantAgency {
   dispose() {
     if (this.disposed) return;
     this.disposed = true;
+    this.environment = EMPTY_AGENCY_ENVIRONMENT;
     this.listeners.clear();
     this.conversation.clear();
     this.narrativeBonds = [];
@@ -857,7 +735,7 @@ export class InhabitantAgency {
           maxZ: p.z + radius,
         }));
       })
-      .concat(this.options.physicalObstacles?.() ?? []);
+      .concat(this.environment.physicalObstacles);
   }
   private go(a: Agent, destination: Position) {
     const route = this.navigation.route(
@@ -1130,7 +1008,7 @@ export class InhabitantAgency {
 
   private chooseScrollTask(a: Agent): boolean {
     if (a.taskCount % 3 !== 0) return false;
-    for (const scroll of this.options.scrollCandidates?.() ?? []) {
+    for (const scroll of this.environment.scrollCandidates) {
       const position = this.navigation.nodes
         .filter(
           (p) =>
@@ -1196,7 +1074,7 @@ export class InhabitantAgency {
     return false;
   }
   private reconcileSessionReader() {
-    const candidate = this.options.sessionReadingCandidate?.();
+    const candidate = this.environment.readingCandidate;
     for (const a of this.agents) {
       if (!a.task?.sessionReading) continue;
       if (

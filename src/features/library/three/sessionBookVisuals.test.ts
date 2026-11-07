@@ -86,6 +86,9 @@ describe("BF-5.5F2A original session book", () => {
     f.step(42);
     const visual = f.visuals[2];
     const first = f.controller.navigationObstacles();
+    const opportunity = f.controller.candidate();
+    expect(opportunity).not.toBeNull();
+    expect(f.controller.candidate()).toBe(opportunity);
     expect(first).toHaveLength(1);
     const bounds = vi.spyOn(Box3.prototype, "setFromObject");
     const opening = vi.spyOn(visual.representation.animation, "setOpening");
@@ -107,6 +110,8 @@ describe("BF-5.5F2A original session book", () => {
     parent.rotation.y -= 0.3;
     parent.updateMatrix();
     f.controller.apply({ ...activity, status: "paused", revision: 2 });
+    expect(f.controller.candidate()).toBeNull();
+    expect(opportunity?.sessionId).toBe(activity.sessionId);
     f.controller.update(0.05, false);
     expect(opening).toHaveBeenCalled();
     expect(f.controller.navigationObstacles()).not.toBe(first);

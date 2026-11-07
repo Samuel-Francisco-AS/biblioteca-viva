@@ -12,6 +12,10 @@ import {
   type Object3D,
 } from "three";
 import type { LivingScroll } from "../../../contracts/livingScroll";
+import {
+  EMPTY_AGENCY_ENVIRONMENT,
+  type ScrollOpportunity,
+} from "../inhabitantEnvironment";
 import type { AgentView } from "../inhabitantAgency";
 import {
   SCROLL_SURFACES,
@@ -36,7 +40,7 @@ export function createLivingScrollVisuals(
       selectables: [],
       occupiedSurfaces: () => [],
       hasFlight: () => false,
-      candidates: () => [],
+      candidates: () => EMPTY_AGENCY_ENVIRONMENT.scrollCandidates,
       update: () => {},
     };
   const obstacles = obstacleRoots.flatMap((root) => flightObstacles(root));
@@ -131,6 +135,40 @@ export function createLivingScrollVisuals(
       trailActive: false,
     };
   });
+  let opportunities: readonly ScrollOpportunity[] = [];
+  const eligible = (s: (typeof selectables)[number]) =>
+    !s.held &&
+    !s.flight &&
+    Math.hypot(
+      s.root.position.x - s.rest.x,
+      s.root.position.y - s.rest.y,
+      s.root.position.z - s.rest.z,
+    ) < 0.02;
+  function candidates(): readonly ScrollOpportunity[] {
+    let count = 0;
+    let changed = false;
+    for (const s of selectables) {
+      if (!eligible(s)) continue;
+      const previous = opportunities[count++];
+      if (
+        previous?.id !== s.descriptor.id ||
+        previous.source.x !== s.root.position.x ||
+        previous.source.z !== s.root.position.z
+      )
+        changed = true;
+    }
+    if (changed || count !== opportunities.length)
+      opportunities = selectables.filter(eligible).map((s) =>
+        Object.freeze({
+          id: s.descriptor.id,
+          source: Object.freeze({
+            x: s.root.position.x,
+            z: s.root.position.z,
+          }),
+        }),
+      );
+    return opportunities;
+  }
   return {
     selectables,
     hasFlight: () => selectables.some((s) => s.flight !== null),
@@ -139,22 +177,7 @@ export function createLivingScrollVisuals(
         s.rest.furnitureId,
         ...(s.flight ? [s.flight.destination.furnitureId] : []),
       ]),
-    candidates: () =>
-      selectables
-        .filter(
-          (s) =>
-            !s.held &&
-            !s.flight &&
-            Math.hypot(
-              s.root.position.x - s.rest.x,
-              s.root.position.y - s.rest.y,
-              s.root.position.z - s.rest.z,
-            ) < 0.02,
-        )
-        .map((s) => ({
-          id: s.descriptor.id,
-          source: { x: s.root.position.x, z: s.root.position.z },
-        })),
+    candidates,
     update(
       delta: number,
       reduced: boolean,

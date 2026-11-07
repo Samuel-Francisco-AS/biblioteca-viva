@@ -7,6 +7,10 @@ import {
   type Object3D,
 } from "three";
 import type { WorldSessionActivity } from "../../../contracts/worldSessionActivity";
+import {
+  EMPTY_AGENCY_ENVIRONMENT,
+  type ReadingOpportunity,
+} from "../inhabitantEnvironment";
 import type { AgentView } from "../inhabitantAgency";
 import { InhabitantNavigation } from "../inhabitantNavigation";
 import { INHABITANTS, INHABITANT_ENVELOPES } from "../inhabitants";
@@ -32,6 +36,7 @@ interface Pose {
 }
 interface Journey {
   visual: ReadingAreaBookVisual;
+  opportunity: ReadingOpportunity;
   task: string;
   points: readonly Pose[];
   progress: number;
@@ -232,6 +237,11 @@ export function createSessionBookVisuals(options: {
     }
     journey = {
       visual,
+      opportunity: Object.freeze({
+        id: visual.book.instanceId,
+        sessionId: confirmed.sessionId,
+        source: SESSION_READING_SUPPORT,
+      }),
       task,
       points,
       half,
@@ -292,14 +302,10 @@ export function createSessionBookVisuals(options: {
         journey.progress < journey.points.length - 1
       )
         return null;
-      return {
-        id: journey.visual.book.instanceId,
-        sessionId: confirmed.sessionId,
-        source: SESSION_READING_SUPPORT,
-      };
+      return journey.opportunity;
     },
     navigationObstacles() {
-      if (!journey) return [];
+      if (!journey) return EMPTY_AGENCY_ENVIRONMENT.physicalObstacles;
       const j = journey;
       // Opening changes local geometry; parent translation/rotation/scale also
       // invalidates. Layout/representation replacement releases the journey.
@@ -327,6 +333,9 @@ export function createSessionBookVisuals(options: {
               ];
       }
       return j.navigation;
+    },
+    isTransporting() {
+      return journey !== null && journey.progress !== journey.points.length - 1;
     },
     snapshot() {
       return {

@@ -48,7 +48,35 @@ Publicação: commit que introduz esta seção (consultável com `git log -- doc
 
 ## R3B — BV-10
 
-Pendente; somente após publicação integral de R3A.
+R3A publicada e push confirmado em `f1086b7ee842a63d28b8c7523f422d31773b694a` antes de modificar B. [CI A 42386112957](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/42386112957): na consulta durante B, formatação/lint/tipos PASS, unitários e E2E ainda rodando; sem conclusão antecipada.
+
+### Antes e depois
+
+Antes: agência continha catálogo autoral e preferências junto ao escalonamento; callbacks instalados no construtor consultavam envelope/candidatos dos visuais de dentro de movimento, escolhas, encontros e recuperação. A mesma atualização podia solicitar várias vezes o mesmo estado; a fase em que esse estado era válido dependia da composição por closures. Pergaminhos consultavam snapshots diagnósticos completos para saber se uma superfície estava reservada.
+
+Depois:
+
+| Responsabilidade | Owner/contrato |
+|---|---|
+| Pontos, rótulos, interação cenográfica e preferências individuais | `inhabitantActivities.ts`, catálogo extraído sem mudar valores/ordem/âncoras |
+| Obstáculos físicos, oportunidade de leitura e pergaminhos | `AgencyEnvironment`, somente dados readonly; composição fornece a `agency.update(environment)` |
+| Amostragem e ordem física | Runtime: livro usa poses prévias → amostra entradas atuais → agência move/decide → snapshot pós-agência → visuais |
+| Escolha/prioridades, rotas, cancelamento, narrativa, continuidade | Mesma `InhabitantAgency`, única autoridade de movimento |
+| Exclusividade, expiração, renovação e disputa | Mesmo `InteractionCoordinator`; `isReserved(resource, now)` consulta uma superfície sem copiar leases |
+| Livro pessoal: root, capa e devolução | Mesmo `sessionBookVisuals`; oportunidade é intenção disponível, não reserva/transformação transferida ao NPC |
+| Livro da Estrela/pergaminhos carregados | Visuais seguem estado da agência e âncora, sem decidir movimento de personagens |
+
+Removidos os três callbacks de leitura de estado do construtor da agência. Navegação/encontros compartilham o envelope amostrado durante toda a atualização, sem chamar Three. Catálogo de aproximadamente 130 linhas e tipos autorais saiu do coordenador; não se criou scheduler, segunda agência ou framework. Layout continua compartilhado (dados sem renderer), e a navegação mantém os mesmos envelopes, incluindo Ytha.
+
+Capturar entradas explicitamente em cada frame poderia alocar candidatos em repouso; por isso livro mantém uma oportunidade imutável por jornada e pergaminhos retornam a lista anterior quando IDs/elegibilidade/posições não mudam. Durante transporte, mudança de posição/ownership/voo invalida; snapshots entregues antes continuam estáveis. `isTransporting()` evita construir o snapshot diagnóstico do livro para arbitrar novos voos. Não há cache de autoridade de lease.
+
+### Evidências, riscos e gates
+
+Antes: regressões A aprovadas. Depois da troca de contrato: **81/81 PASS, sete arquivos**, incluindo agência completa, todos encontros/manipulação cenográfica, sessão/prioridade, leases órfãos, continuidade, runtime e pergaminhos. Depois dos snapshots estáveis e testes novos: **23/23 PASS, cinco arquivos**, com sobreposição. Novo teste bloqueia movimento com envelope temporário e exige retomada no próximo update após removê-lo. Outros asserts verificam expiração/disputa de superfície e identidade/imutabilidade de oportunidades. Probe A continua PASS; nenhuma asserção anterior retirada (testes apenas passaram a fornecer as mesmas entradas por argumento).
+
+PASS: lint global (mais dirigido após os últimos imports), typecheck, format:check, build web, performance:report e git diff --check. Um format:check intermediário identificou formatação pendente em livingScrollVisuals; corrigida e check global repetido com PASS. Warning de bundle >500 kB permanece; inventário em evidence/bv-r3/build-r3b.json. E2E global conhecido permanece dívida; não foi repetido em B sem nova hipótese. Nenhuma leitura sentada, rig, F2B/F2C ou simplificação visual. Riscos mantidos: coordenador ainda extenso, coreografia especializada e geometria autoral precisam disciplina; entradas valem por uma atualização, e novos sistemas devem respeitar a fase declarada. Isso não pretende resolver autoria de rigs/assentos ou R5.
+
+Publicação B: commit que introduz esta seção; SHA remoto registrado em C após push e antes de sua implementação.
 
 ## R3C — BV-15
 

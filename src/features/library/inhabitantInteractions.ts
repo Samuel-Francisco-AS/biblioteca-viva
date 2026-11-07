@@ -129,6 +129,17 @@ export class InteractionCoordinator {
       if (lease.expiresAt <= now) this.leases.delete(resourceId);
   }
 
+  /** Query one resource without allocating a diagnostic lease snapshot. */
+  isReserved(resourceId: string, now: number): boolean {
+    const lease = this.leases.get(resourceId);
+    if (!lease) return false;
+    if (lease.expiresAt <= now) {
+      this.leases.delete(resourceId);
+      return false;
+    }
+    return true;
+  }
+
   snapshot(): readonly InteractionLease[] {
     return [...this.leases.values()];
   }

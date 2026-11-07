@@ -16,9 +16,6 @@ it("never abandons a scroll lease when autonomous social activity replaces its r
     now: () => now,
     seed: 51,
     hour: () => 12,
-    scrollCandidates: () => [
-      { id: "scroll:note:fiction", source: { x: 17, z: 8 } },
-    ],
   });
   INHABITANTS.filter((a) => a.key === "aryn" || a.key === "lua").forEach((a) =>
     agency.setAvailable(a.id, true),
@@ -28,7 +25,13 @@ it("never abandons a scroll lease when autonomous social activity replaces its r
   let social = false;
   for (let i = 0; i < 5000; i++) {
     now += 100;
-    agency.update();
+    agency.update({
+      physicalObstacles: [],
+      readingCandidate: null,
+      scrollCandidates: [
+        { id: "scroll:note:fiction", source: { x: 17, z: 8 } },
+      ],
+    });
     const poses = agency.getPoses();
     const leases = reservations() ?? [];
     reserves += leases.length;

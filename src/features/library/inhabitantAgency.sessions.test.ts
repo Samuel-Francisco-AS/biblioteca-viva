@@ -30,7 +30,6 @@ it("prioritizes a real reading opportunity, walks a clear route, reserves exclus
     {
       now: () => now,
       seed: 51,
-      sessionReadingCandidate: () => candidate,
     },
   );
   for (const a of INHABITANTS) agency.setAvailable(a.id, true);
@@ -38,7 +37,11 @@ it("prioritizes a real reading opportunity, walks a clear route, reserves exclus
   let reader = agency.getPoses().find((p) => p.interactionState === "reading");
   for (let i = 0; i < 1500 && !reader; i++) {
     now += 100;
-    agency.update();
+    agency.update({
+      physicalObstacles: [],
+      readingCandidate: candidate,
+      scrollCandidates: [],
+    });
     const poses = agency.getPoses();
     expect(
       poses.filter((p) => p.interactionObjectId === candidate?.id),
@@ -64,7 +67,11 @@ it("prioritizes a real reading opportunity, walks a clear route, reserves exclus
   );
   candidate = null;
   now += 100;
-  agency.update();
+  agency.update({
+    physicalObstacles: [],
+    readingCandidate: candidate,
+    scrollCandidates: [],
+  });
   agency.setConversation(null);
   agency.dispose();
   expect(agency.interactions.snapshot()).toHaveLength(0);

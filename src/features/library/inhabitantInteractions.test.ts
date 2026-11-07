@@ -2,6 +2,18 @@ import { describe, expect, it, vi } from "vitest";
 import { InteractionCoordinator } from "./inhabitantInteractions";
 
 describe("BF-5.5B interaction leases", () => {
+  it("queries one surface without allocating a snapshot and respects expiry and ownership", () => {
+    const c = new InteractionCoordinator();
+    const snapshot = vi.spyOn(c, "snapshot");
+    c.reserve("surface:fiction", "session", "reading", 0, 1_000);
+    expect(c.isReserved("surface:fiction", 999)).toBe(true);
+    expect(c.reserve("surface:fiction", "lua", "scroll", 999)).toBeNull();
+    expect(c.isReserved("surface:fiction", 1_000)).toBe(false);
+    expect(c.reserve("surface:fiction", "lua", "scroll", 1_000)?.owner).toBe(
+      "lua",
+    );
+    expect(snapshot).not.toHaveBeenCalled();
+  });
   it("allows one owner and rejects a concurrent owner", () => {
     const coordinator = new InteractionCoordinator();
     expect(coordinator.reserve("living:book", "aryn", "task-a", 0)).not.toBe(

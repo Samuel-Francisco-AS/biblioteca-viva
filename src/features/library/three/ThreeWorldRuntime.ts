@@ -725,10 +725,11 @@ export class ThreeWorldRuntime implements WorldRuntime {
             ...readingAreaBookVisuals.map((v) => v.node),
           ],
           (furnitureId) =>
-            this.sessionBooks?.snapshot().state !== "transport" &&
-            !this.agency?.interactions
-              .snapshot()
-              .some((l) => l.resourceId === `surface:${furnitureId}`),
+            !this.sessionBooks?.isTransporting() &&
+            !this.agency?.interactions.isReserved(
+              `surface:${furnitureId}`,
+              this.agency.interactionTime,
+            ),
         );
         this.ambientMagic = createAmbientMagic(building, (episode) =>
           this.agency?.reactToMagic(episode),
@@ -741,10 +742,6 @@ export class ThreeWorldRuntime implements WorldRuntime {
           now: () => this.agencyClock,
           hour: () => new Date().getHours(),
           nightLighting: this.nightLighting,
-          physicalObstacles: () =>
-            this.sessionBooks?.navigationObstacles() ?? [],
-          sessionReadingCandidate: () => this.sessionBooks?.candidate() ?? null,
-          scrollCandidates: () => this.scrollVisuals?.candidates() ?? [],
           onEnvironmentAction: (key, objectId) => {
             this.livingSession?.actFromInhabitant(key, objectId);
           },
@@ -1356,7 +1353,11 @@ export class ThreeWorldRuntime implements WorldRuntime {
         );
       this.agencyClock += delta * 1000;
       this.sessionBooks?.update(delta, reduced, this.agency?.getPoses() ?? []);
-      this.agency?.update();
+      this.agency?.update({
+        physicalObstacles: this.sessionBooks?.navigationObstacles() ?? [],
+        readingCandidate: this.sessionBooks?.candidate() ?? null,
+        scrollCandidates: this.scrollVisuals?.candidates() ?? [],
+      });
       // Session collision reads the preceding phase; all post-agency consumers
       // share one detached snapshot, never mutable Agent objects.
       const poses = this.agency?.getPoses() ?? [];

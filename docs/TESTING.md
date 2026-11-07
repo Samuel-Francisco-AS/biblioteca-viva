@@ -1,3 +1,5 @@
+> **R3B — 07/11/2026:** agência/continuidade/interações/runtime 81 PASS; subconjunto final com contratos novos 23 PASS (sobreposição), incluindo envelope temporário bloqueando e removido, disputa/expiração e oportunidades estáveis. [Evidências](audits/BV_RECUPERACAO_R3.md#r3b--bv-10); gate físico R3 pendente.
+
 > **R3A — 07/11/2026:** regressões de invalidação por matriz/capa, ownership em toda utilização, transições de luz, cauda de pergaminho e poses estáveis. [102 testes distintos e gates, com falha intermediária documentada](audits/BV_RECUPERACAO_R3.md). Sem novo aceite físico R3 ou CI global verde.
 
 > **GATE FÍSICO DIRIGIDO — 07/11/2026:** proprietário instalou APK pós-R2 no Moto G06 e confirmou melhora considerável de interação/lag do Canvas, arte de quatro categorias aprovada e reparo do Livro da Estrela funcional. Observação humana sem números de FPS, P95/P99, GPU/heap ou cobertura exaustiva de lifecycle/TalkBack/E2E React; CI global permanece FAIL nos shards E2E. [Handoff R3](audits/BV_RETOMADA_R3_2026-11-07.md).

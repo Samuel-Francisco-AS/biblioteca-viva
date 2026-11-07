@@ -32,7 +32,6 @@ it("autonomously reserves, reaches and examines a real scroll through the existi
       now: () => now,
       hour: () => 12,
       seed: 51,
-      scrollCandidates: visuals.candidates,
     },
   );
   agency.setAvailable("character:samael", true);
@@ -45,7 +44,11 @@ it("autonomously reserves, reaches and examines a real scroll through the existi
   anchor.position.set(-3, 1.3, -2);
   for (let i = 0; i < 2500; i++) {
     now += 100;
-    agency.update();
+    agency.update({
+      physicalObstacles: [],
+      readingCandidate: null,
+      scrollCandidates: visuals.candidates(),
+    });
     const poses = agency.getPoses();
     const owners = poses.filter((p) => p.interactionObjectId === scroll.id);
     expect(owners.length).toBeLessThanOrEqual(1);
@@ -75,7 +78,6 @@ it("recovers the same carried object when its agency is discarded during transpo
       now: () => now,
       hour: () => 12,
       seed: 51,
-      scrollCandidates: visuals.candidates,
     },
   );
   for (const key of ["samael", "aryn", "ytha", "lua"])
@@ -86,7 +88,11 @@ it("recovers the same carried object when its agency is discarded during transpo
   let carrying = false;
   for (let i = 0; i < 2500; i++) {
     now += 100;
-    agency.update();
+    agency.update({
+      physicalObstacles: [],
+      readingCandidate: null,
+      scrollCandidates: visuals.candidates(),
+    });
     const poses = agency.getPoses();
     visuals.update(0.1, false, poses, () => anchor);
     if (
@@ -124,10 +130,15 @@ it("keeps resting tails idle and reuses samples during flight without suppressin
   expect(clone).not.toHaveBeenCalled();
   expect(copy).not.toHaveBeenCalled();
   expect(s.trail.visible).toBe(false);
+  const candidates = visuals.candidates();
+  expect(candidates).toHaveLength(1);
+  expect(visuals.candidates()).toBe(candidates);
   const rest = s.root.position.clone();
   for (let i = 0; i < 500 && !visuals.hasFlight(); i++)
     visuals.update(0.05, false, [], () => null);
   expect(visuals.hasFlight()).toBe(true);
+  expect(visuals.candidates()).toHaveLength(0);
+  expect(candidates).toHaveLength(1);
   for (let i = 0; i < 50; i++) visuals.update(0.05, false, [], () => null);
   expect(s.root.position.distanceTo(rest)).toBeGreaterThan(0.1);
   expect(s.trail.visible).toBe(true);
