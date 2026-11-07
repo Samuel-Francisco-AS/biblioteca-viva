@@ -466,7 +466,7 @@ it("R4 rejects file read failures and oversized files before inspect or restore"
   const oversized = new File(["{}"], "large-fixture.json", {
     type: "application/json",
   });
-  const text = vi.fn(async () => "{}");
+  const text = vi.fn(() => Promise.resolve("{}"));
   Object.defineProperty(oversized, "size", { value: 10 * 1024 * 1024 + 1 });
   Object.defineProperty(oversized, "text", { value: text });
   await user.upload(input, oversized);

@@ -19,7 +19,7 @@ export default defineConfig({
     },
   ],
   reporter: process.env.CI ? "github" : "list",
-  retries: process.env.CI ? 1 : 0,
+  retries: 0,
   testDir: "./e2e",
   workers: 1,
   use: {

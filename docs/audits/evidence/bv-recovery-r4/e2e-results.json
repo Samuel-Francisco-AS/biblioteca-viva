@@ -1,0 +1,20 @@
+{
+  "command": "npm run test:e2e -- e2e/bv-recovery-r2.spec.ts e2e/search-and-backup.spec.ts --retries=0",
+  "attempts": 1,
+  "passed": 3,
+  "failed": 1,
+  "seconds": 59.8,
+  "passes": [
+    "Busca/filtro/Arquivo",
+    "Backup web download/validate/restore/persist",
+    "Restore empty destination conventional data"
+  ],
+  "failure": {
+    "test": "R2 six real records retain React selection, highlights and identity after reload",
+    "causeEstablished": "Global 30000ms deadline exhausted while advancing toward Study selection",
+    "classification": "Historical failing scenario, different stopping step; no proof of common root cause or production regression. No retry or timeout extension.",
+    "coverageLimit": "Full six selections/reload not completed"
+  },
+  "preparation": "Web dist built successfully before run; browser isolated localhost fictional fixtures only",
+  "remoteCI": "Not executed: exhausted Actions quota, skip ci commits"
+}

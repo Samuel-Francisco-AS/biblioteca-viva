@@ -1,0 +1,117 @@
+{
+  "source": "Existing integration trace, inspected before new Playwright run",
+  "observations": "Canvas frame counter monotonic; first-frame marker stable through last captured series click input. No captured remount. Book/movie selection and highlight confirmed. Overall 30s test deadline exhausted during series; final empty-attribute error alone does not prove production selection failure or runner-only cause.",
+  "calls": [
+    {
+      "method": "expect",
+      "selector": "internal:role=navigation[name=\"Navegação principal\"i]",
+      "ms": 78.73
+    },
+    {
+      "method": "expect",
+      "selector": "canvas[data-three-world-canvas='true']",
+      "ms": 4098.26
+    },
+    {
+      "method": "click",
+      "selector": "internal:role=button[name=\"Abrir ferramentas de exploração acessível\"i]",
+      "ms": 2919.6
+    },
+    {
+      "method": "expect",
+      "selector": ".library-page",
+      "ms": 433.61
+    },
+    {
+      "method": "click",
+      "selector": "internal:text=\"Registros · alternativa acessível\"s",
+      "ms": 3098.57
+    },
+    {
+      "method": "click",
+      "selector": "internal:role=button[name=\"Selecionar no ambiente: Livro R2 livro fictício\"s]",
+      "ms": 4320.0
+    },
+    {
+      "method": "expect",
+      "selector": "canvas[data-three-world-canvas='true']",
+      "ms": 673.54
+    },
+    {
+      "method": "expect",
+      "selector": "canvas[data-three-world-canvas='true']",
+      "ms": 654.22
+    },
+    {
+      "method": "expect",
+      "selector": "internal:role=link[name=\"Abrir registro\"s]",
+      "ms": 700.63
+    },
+    {
+      "method": "click",
+      "selector": "internal:role=button[name=\"Selecionar no ambiente: Filme R2 filme fictício\"s]",
+      "ms": 4040.08
+    },
+    {
+      "method": "expect",
+      "selector": "canvas[data-three-world-canvas='true']",
+      "ms": 606.88
+    },
+    {
+      "method": "expect",
+      "selector": "canvas[data-three-world-canvas='true']",
+      "ms": 630.51
+    },
+    {
+      "method": "expect",
+      "selector": "internal:role=link[name=\"Abrir registro\"s]",
+      "ms": 542.11
+    }
+  ],
+  "lastSnapshots": [
+    {
+      "snapshot": "before@call@462",
+      "time": 67337.849,
+      "data-selected-object": "library-movie:r2-movie",
+      "data-highlighted-object": "library-movie:r2-movie",
+      "data-first-usable-frame-ms": "850.6",
+      "data-rendered-frames": "78",
+      "data-fps": "3.2",
+      "data-runtime-state": "running",
+      "data-inhabitants-ready": "4"
+    },
+    {
+      "snapshot": "after@call@462",
+      "time": 67869.341,
+      "data-selected-object": "library-movie:r2-movie",
+      "data-highlighted-object": "library-movie:r2-movie",
+      "data-first-usable-frame-ms": "850.6",
+      "data-rendered-frames": "80",
+      "data-fps": "3.5",
+      "data-runtime-state": "running",
+      "data-inhabitants-ready": "4"
+    },
+    {
+      "snapshot": "before@call@464",
+      "time": 68138.417,
+      "data-selected-object": "library-movie:r2-movie",
+      "data-highlighted-object": "library-movie:r2-movie",
+      "data-first-usable-frame-ms": "850.6",
+      "data-rendered-frames": "81",
+      "data-fps": "3.7",
+      "data-runtime-state": "running",
+      "data-inhabitants-ready": "4"
+    },
+    {
+      "snapshot": "input@call@464",
+      "time": 70611.278,
+      "data-selected-object": "library-movie:r2-movie",
+      "data-highlighted-object": "library-movie:r2-movie",
+      "data-first-usable-frame-ms": "850.6",
+      "data-rendered-frames": "89",
+      "data-fps": "3.3",
+      "data-runtime-state": "running",
+      "data-inhabitants-ready": "4"
+    }
+  ]
+}

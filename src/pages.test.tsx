@@ -967,11 +967,11 @@ it.each([
 
 it("R4 session events avoid catalog and annotation queries and retain world identity", async () => {
   let changed: ((event: { aggregateId: string }) => void) | undefined;
-  const entries = vi.fn(async () => [firstBook]);
-  const notes = vi.fn(async () => []);
-  const quotes = vi.fn(async () => []);
-  const session = vi.fn(async () => undefined);
-  const entry = vi.fn(async () => firstBook);
+  const entries = vi.fn(() => Promise.resolve([firstBook]));
+  const notes = vi.fn(() => Promise.resolve([]));
+  const quotes = vi.fn(() => Promise.resolve([]));
+  const session = vi.fn(() => Promise.resolve(undefined));
+  const entry = vi.fn(() => Promise.resolve(firstBook));
   const application: LibraryApplication = {
     events: {
       subscribe: (_type, listener) => {
@@ -1001,6 +1001,7 @@ it("R4 session events avoid catalog and annotation queries and retain world iden
   for (let i = 0; i < 4; i++) {
     await act(async () => {
       changed?.({ aggregateId: firstBook.id });
+      await Promise.resolve();
     });
   }
   expect(entries).toHaveBeenCalledTimes(1);

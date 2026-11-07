@@ -28,7 +28,7 @@ Entrada `8c095c3`; saída `345ea0b`. PR draft [#39](https://github.com/Samuel-Fr
 
 Anterior: média RAF de 750 ms, renderer.info, inventário e datasets a cada 250 ms; painel assinado mesmo fechado. Agora assinatura somente ao abrir details. Travessia ampla periódica: **3–4/s → 0/s fechado**; ao abrir, inventário imediato e cadência 250 ms, sem recriar a cena. Datasets baratos e publicações de lifecycle preservados. Teste do runtime mede 60 frames fechado, 60 aberto, 60 fechado novamente; zero travessias nos trechos fechados. Inventários também atualizam em mudanças estruturais forçadas.
 
-RAF: P50/P95/P99, máximo, contagem de intervalos >33,34 ms na janela móvel, teto 1024 timestamps. Probe opt-in com até 240 amostras por sete canais: CPU do update, livro, agência, restante dos visuais/efeitos (inclui animação/checkpoint), chamada síncrona renderer.render, recepção do primeiro Pointer desde o último frame até retorno da submissão e long tasks quando PerformanceObserver suporta. Sem conteúdo pessoal, rede ou coleta permanente. Observer e listeners removidos ao fechar, pausar, falhar ou descartar; retorno reativa apenas com consumidor. Heap JS lido apenas sob demanda quando API existe. Percentis calculados na publicação, não ordenados por estágio a cada frame.
+RAF: P50/P95/P99, máximo, contagem de intervalos >33,34 ms na janela móvel, teto 1024 timestamps. Probe opt-in com até 240 amostras por sete canais: CPU do update, livro (inclui preparação de modo/disponibilidade), agência, restante dos visuais/efeitos (inclui animação/checkpoint), chamada síncrona renderer.render, recepção do primeiro Pointer desde o último frame até retorno da submissão e long tasks quando PerformanceObserver suporta. Sem conteúdo pessoal, rede ou coleta permanente. Observer e listeners removidos ao fechar, pausar, falhar ou descartar; retorno reativa apenas com consumidor. Heap JS lido apenas sob demanda quando API existe. Percentis calculados na publicação, não ordenados por estágio a cada frame.
 
 **Limites de interpretação:** RAF não é duração de CPU. renderer.render mede CPU da chamada/submissão, podendo incluir espera de driver, nunca tempo GPU. gestureToSubmit começa no listener do Canvas, não no hardware e não mede input-to-photon. Tempo GPU, apresentação/compositor, memória GPU/VRAM e custo separado do handler de input indisponíveis nesta implementação. renderer.info fornece calls/triângulos/geometrias/texturas, não bytes gráficos. Bundle report agora explicita que mede bytes estáticos. Fechado ainda mantém janela RAF/datasets baratos, sem long tasks/CPU detalhada ou atualizações React periódicas.
 
@@ -48,7 +48,7 @@ Arquivos: frameMetrics, performanceProbe/test, ThreeWorldRuntime/test, WorldDiag
 
 ## R4C — BV-17
 
-Entrada `345ea0b`; saída: commit `R4C` (SHA no checkpoint seguinte). [Matriz dos 17 casos e reprodução](evidence/bv-recovery-r4/backup-matrix.md).
+Entrada `345ea0b`; saída `b05b0be`. [Matriz dos 17 casos e reprodução](evidence/bv-recovery-r4/backup-matrix.md).
 
 Defeito demonstrado: snapshot Dexie incluía continuidade/ritual mas codec completo rejeitava suas chaves. Testes anteriores apenas read/replace não atravessavam encode/inspect; não comprovavam exportação utilizável. Teste novo falhou antes da correção com discriminador de settings desconhecido. A primeira fixture também tinha dimensões/localização incorretas, corrigidas para JPEG real 720×1080 e tópico de estudo; erro de fixture separado do defeito real das chaves.
 
@@ -63,8 +63,35 @@ Gates: conjunto inicial **30 PASS/7 arquivos**; reexecução após ajuste de tip
 Arquivos: backupCodec.ts, r4Integrity.test.ts, SettingsPage.test.tsx, docs DATA_MODEL/SECURITY/TESTING/relatório/evidência. Riscos: transações fictícias não reproduzem corte de energia, falta real de storage, seletor Android ou corrupção física. Reabertura de app React/ausência de duplicação no mundo depende também do E2E R4D; sem prova humana de backups pessoais.
 
 
-## R4D — pendente
+## R4D — BV-18
 
-R4B pós-ajuste: **26/26 WorldHost PASS**, typecheck PASS, lint dirigido PASS; os outros 52 testes da rodada inicial passaram. Validação ampla final obrigatória antes de R4D.
+Entrada `b05b0be`; saída identificada pelo commit `R4D`, SHA definitivo na PR/final (não pode ser incluído no próprio conteúdo do commit).
 
-R4C final: UI **15/15 PASS**, typecheck PASS após fixture compatível, lint dirigido PASS após substituir mocks async sem await por Promise.resolve. Os 6 testes novos de integridade passaram na rodada de 20; checks amplos finais em R4D.
+Investigação inicial antes de nova execução: [extração limitada do trace de integração](evidence/bv-recovery-r4/selection-trace-analysis.json). Livro/filme tiveram seleção e highlight confirmados; ~3–4 s por click e ~1 s por assert, RAF host ~3 FPS; marcador do primeiro frame estável e frames monotônicos até input da série, sem evidência de remount. Deadline global encerrou teste durante série; estado final pressed React versus atributo vazio é evidência incompleta, não prova de causa runner-only nem de erro de picking. Fixture contém seis entidades válidas e transação de seed concluída. Novo teste aguarda também WorldHost ready e runtime running além de fixture ready; asserts de seleção/highlight/href/reload mantidos, prazo inalterado e sem sleeps.
+
+Pipeline: concurrency por workflow/PR/ref cancela execuções obsoletas; artefatos de falha identificam SHA/shard e mantêm retenção de três dias. retries=0 também na configuração local/CI, coerente com --retries=0 já usado no workflow. Push só main e PR preservados, sem filtros que omitam código relevante ou alteração de proteção. Builds duplicados dos shards permanecem: extração de job/artifact compartilhado não foi necessária para proteger a cota nesta missão. Nenhum dispatch/rerun. Futuro após 01/12: retirar skip somente numa publicação expressamente autorizada com cota, executar todos os gates e ambos shards sem retries, classificar FAIL por trace contra baseline e não supor sucesso desta rodada local.
+
+Gates finais em execução. Primeira format:check capturou novo teste antes de formatação; lint encontrou cinco achados novos (inicializações sobrescritas, dois non-null redundantes e mock async sem await), corrigidos sem supressões. Novo teste de conservação do runtime esperava start, mas contava chamadas antes do efeito ready/seleção; corrigido para aguardar seleção publicada, **27/27 host PASS**. Essas falhas novas de preparação/teste/estática são separadas do E2E histórico. Nenhuma assertion removida ou timeout ampliado.
+
+
+R4B pós-ajuste: **26/26 WorldHost PASS**, typecheck PASS, lint dirigido posteriormente identificado como FAIL (quatro achados estáticos corrigidos em R4D); os outros 52 testes da rodada inicial passaram. Validação ampla final obrigatória antes de R4D.
+
+R4C final: UI **15/15 PASS**, typecheck PASS após fixture compatível, lint dirigido do codec PASS após substituir mocks async sem await por Promise.resolve; UI adicional ainda tinha um mock async sem await, identificado e corrigido em R4D. Os 6 testes novos de integridade passaram na rodada de 20; checks amplos finais em R4D.
+
+### E2E final dirigido
+
+[Resultados reproduzíveis](evidence/bv-recovery-r4/e2e-results.json): **3 PASS / 1 FAIL em 59,8 s**, uma execução, zero retries. Busca/Arquivo, exportar-validar-restaurar e restore vazio/reabertura PASS. R2 esgotou prazo global de 30 s ao avançar para Estudo. O passo difere da integração (série), sem prova de causa comum/regressão nem de que apenas o runner seja responsável. Não repetir sem hipótese nova. Prontidão de WorldHost/runtime agora é explícita, mas não resolveu o deadline. Seleção completa dos seis tipos/reload permanece dívida E2E ativa; testes unitários de identidade/seleção/ownership não a substituem.
+
+### Dívidas preservadas
+
+R5/assets/rigs/leitura sentada, F2B/F2C e BF-5.5G fora do escopo. Ytha conserva envelope de 0,92 m e impedimento físico conhecido. Livro da Estrela, livro pessoal, quatro habitantes, reservas, nove luzes, magia, seis representações e formulários não foram reduzidos. Integridade física Android, TalkBack, áudio percebido, desempenho sustentado, memória host sem atribuição e CI E2E global continuam abertos. Não há migração, release, beta, merge ou alteração de proteção da main.
+
+## Resultado local final da candidata
+
+[Evidência dos comandos/saídas e APK](evidence/bv-recovery-r4/local-gates.json). `npm ci`, `npm audit --omit=dev`, `npm audit` PASS, **zero vulnerabilidades**. `format:check`, lint global, typecheck, **935 testes/147 arquivos**, áudio, build web, performance:report, Android sync/build debug e diff --check PASS. Reexecução ampla justificada pela correção do novo teste de espera; não houve loop E2E. Build mantém warning de chunk >500 kB e Gradle flatDir, sem falha nova. Lockfile/package e schema sem diff.
+
+APK local: `android/app/build/outputs/apk/debug/app-debug.apk`, proveniência/checksum na evidência. Não foi instalado nem submetido a avaliação física. O painel diagnóstico é opt-in nessa build; cenários técnicos adicionais continuam em `npm run android:build:diagnostics`, não executado aqui. Nenhum APK/backup binário foi versionado.
+
+PR única draft [#39](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/39), branch R4 própria; nenhuma alteração/merge na main. A/B/C consultadas sem runs PR após publicação. R4D contém `[skip ci]`, com gatilhos rechecados (somente push main/pull_request e preview dispatch/push main filtrado). Consumo novo de Actions evitado; não se alegam minutos de faturamento auditados nem CI remota verde. Plano remoto futuro na seção R4D.
+
+**Estado:** R4 candidata técnica para revisão e gate físico dirigido, com redução demonstrável de trabalho, instrumentação local e correções de integridade, mantendo o FAIL E2E e limites explícitos. Recuperação integral não encerrada. O roteiro Moto G06 está na seção R4B; validar também backup/restore apenas de fixture em ambiente isolado e preservando recuperação dos dados existentes.

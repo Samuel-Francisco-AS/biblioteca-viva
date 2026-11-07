@@ -1362,8 +1362,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (!mountedWorld) return;
     mountedWorld.settleFrame();
     const cpuStart = this.performanceProbe.active ? this.now() : 0;
-    let bookEnd = cpuStart;
-    let agencyEnd = cpuStart;
+    let bookEnd: number;
+    let agencyEnd: number;
     const delta =
       this.livingFrameTime === undefined
         ? 0

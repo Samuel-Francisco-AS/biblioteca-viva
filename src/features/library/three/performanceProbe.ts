@@ -19,7 +19,7 @@ export function distribution(values: readonly number[]): Distribution {
   const sorted = [...values].sort((a, b) => a - b);
   const percentile = (p: number) =>
     sorted.length
-      ? sorted[Math.max(0, Math.ceil(sorted.length * p) - 1)]!
+      ? sorted[Math.max(0, Math.ceil(sorted.length * p) - 1)]
       : null;
   return {
     count: sorted.length,

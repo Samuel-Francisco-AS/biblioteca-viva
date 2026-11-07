@@ -26,7 +26,7 @@ export class FrameMetricsWindow {
   distribution() {
     const intervals = this.timestamps
       .slice(1)
-      .map((t, i) => t - this.timestamps[i]!);
+      .map((t, i) => t - this.timestamps[i]);
     return Object.freeze({
       ...distribution(intervals),
       lateFramesOver33Ms: intervals.filter((t) => t > 33.34).length,
