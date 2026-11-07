@@ -1,3 +1,5 @@
+> **R5E:** `assets:inhabitants:check` inclui intermitência/níveis/redução de efeitos, ownership da luz e hover real dos clips de Ytha (clearance e X/Z), além dos rigs/envelopes/picking. [Relatório R5E](audits/BV_RECUPERACAO_R5E.md). E2E R5D/R2 continuam dívidas; não repetidos nesta rodada artística.
+
 > **R5 — candidata em implementação (07/11/2026):** R5A–D candidatas publicadas na [PR draft #40](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/40), sobre main `7100ff6` integrada com R4. Quatro GLBs remodelados, skins reais, oito clips reconstruídos, sockets explícitos e descarte de Skeleton. 950 unitários PASS; E2E dirigido 0/2 após correção de preparação, sem retries; APK debug gerado; aceite artístico individual/Moto G06 pendentes, assento/F2B/F2C não entregues, CI remota omitida por cota. Recuperação integral aberta. [Relatório vigente](audits/BV_RECUPERACAO_R5.md) · [Pipeline](INHABITANT_ART_PIPELINE.md). Notas abaixo preservam a cronologia.
 
 ## Saneamento pós-R4 — sessões de leitura (07/11/2026)

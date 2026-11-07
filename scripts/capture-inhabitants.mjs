@@ -6,6 +6,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 const out = process.argv[2] || "docs/audits/evidence/bv-r5/portraits";
 await mkdir(out, { recursive: true });
 const server = await createServer({
+  cacheDir: "/tmp/bv-portrait-probe-vite",
   server: { host: "127.0.0.1", port: 4189 },
   plugins: [
     {
@@ -18,7 +19,11 @@ const server = await createServer({
           } else if (req.url.startsWith("/before/")) {
             res.setHeader("Content-Type", "model/gltf-binary");
             res.end(
-              await readFile("/tmp/bv-r5-before/" + req.url.split("/").at(-1)),
+              await readFile(
+                (process.argv[3] || "/tmp/bv-r5-before") +
+                  "/" +
+                  req.url.split("/").at(-1),
+              ),
             );
           } else next();
         });
@@ -39,6 +44,10 @@ try {
     const T = await import("/node_modules/three/build/three.module.js");
     const { GLTFLoader } =
       await import("/node_modules/three/examples/jsm/loaders/GLTFLoader.js");
+    const { createInhabitantPresence } =
+      await import("/src/features/library/three/inhabitantPresence.ts");
+    const { disposeObjectTree } =
+      await import("/src/features/library/three/referenceScene.ts");
     const r = new T.WebGLRenderer({
       antialias: true,
       preserveDrawingBuffer: true,
@@ -80,24 +89,36 @@ try {
         view === "front" ? 5 : 4,
       );
       camera.lookAt(0, 1, 0);
-      if (view === "magic") {
-        const mixer = new T.AnimationMixer(gltf.scene);
-        mixer
-          .clipAction(gltf.animations.find((c) => c.name === "magic"))
-          .play();
-        mixer.setTime(1.6);
-      }
+      const mixer = new T.AnimationMixer(gltf.scene);
+      mixer
+        .clipAction(
+          gltf.animations.find(
+            (c) => c.name === (view === "magic" ? "magic" : "idle"),
+          ),
+        )
+        .play();
+      mixer.setTime(view === "magic" ? 1.6 : 1.2);
+      const presence = createInhabitantPresence(gltf.scene, key);
+      for (let step = 0; step < (view === "night" ? 320 : 32); step++)
+        presence.update(0.05, view === "magic" ? "magic" : "idle", false);
       r.render(scene, camera);
-      return {
+      const metrics = {
         calls: r.info.render.calls,
         triangles: r.info.render.triangles,
         geometries: r.info.memory.geometries,
       };
+      presence.dispose();
+      mixer.stopAllAction();
+      mixer.uncacheRoot(gltf.scene);
+      disposeObjectTree(scene);
+      return metrics;
     };
   });
   const metrics = {};
   for (const key of ["samael", "aryn", "ytha", "lua"])
-    for (const version of ["before", "after"])
+    for (const version of process.argv[4]
+      ? [process.argv[4]]
+      : ["before", "after"])
       for (const view of ["front", "three-quarter", "night", "magic"]) {
         metrics[`${key}-${version}-${view}`] = await page.evaluate(
           ([k, v, w]) => globalThis.capture(k, v, w),
@@ -106,7 +127,7 @@ try {
         await page.screenshot({ path: `${out}/${key}-${version}-${view}.png` });
       }
   await writeFile(
-    `${out}/metrics.json`,
+    `${out}/${process.argv[4] ? `metrics-${process.argv[4]}` : "metrics"}.json`,
     JSON.stringify({ metrics, errors }, null, 2),
   );
 } finally {

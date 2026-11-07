@@ -1,3 +1,4 @@
+import { createInhabitantPresence } from "./inhabitantPresence";
 import type { AgentView } from "../inhabitantAgency";
 import { Group, Object3D, type AnimationClip } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -28,7 +29,10 @@ export function createInhabitantVisuals(
     string,
     ReturnType<typeof createInhabitantAnimator>
   >();
-  const magic = new Map<string, Object3D | undefined>();
+  const presence = new Map<
+    string,
+    ReturnType<typeof createInhabitantPresence>
+  >();
   const anchors = new Map<string, Object3D>();
   const selectables = INHABITANTS.map((descriptor) => {
     const root = new Group();
@@ -43,7 +47,10 @@ export function createInhabitantVisuals(
           return;
         }
         root.add(scene);
-        magic.set(descriptor.id, scene.getObjectByName("Magic"));
+        presence.set(
+          descriptor.id,
+          createInhabitantPresence(scene, descriptor.key),
+        );
         // Replace a pre-load fallback with the real rig socket if one exists.
         anchors.delete(descriptor.id);
         root.userData.loadState = "ready";
@@ -66,7 +73,6 @@ export function createInhabitantVisuals(
     return { descriptor, root };
   });
   const driven = new Map<string, string>();
-  const moods = new Map<string, number>();
   let motionReduced = false;
   return {
     selectables,
@@ -84,17 +90,6 @@ export function createInhabitantVisuals(
           if (animators.get(p.id)?.play(p.action, repeat))
             driven.set(p.id, token);
         }
-        // Keep signature effects inside the measured envelope; never replace gestures.
-        moods.set(
-          p.id,
-          p.state === "react"
-            ? 1
-            : p.state === "socialize"
-              ? 0.75
-              : p.state === "work"
-                ? 0.85
-                : 0.65,
-        );
       }
     },
     play(id: string, action: InhabitantAction) {
@@ -114,13 +109,7 @@ export function createInhabitantVisuals(
       }
       for (const [id, animator] of animators) {
         animator.update(delta, reducedMotion);
-        const fx = magic.get(id);
-        if (fx && externalPosition) {
-          const target = reducedMotion ? 0.65 : (moods.get(id) ?? 0.65);
-          fx.scale.setScalar(
-            fx.scale.x + (target - fx.scale.x) * Math.min(1, delta * 4),
-          );
-        }
+        presence.get(id)?.update(delta, animator.action, reducedMotion);
       }
     },
     getCarryAnchor(id: string): Object3D | null {
@@ -152,9 +141,9 @@ export function createInhabitantVisuals(
       for (const animator of animators.values()) animator.dispose();
       animators.clear();
       anchors.clear();
-      magic.clear();
+      for (const effect of presence.values()) effect.dispose();
+      presence.clear();
       driven.clear();
-      moods.clear();
       for (const { root } of selectables) disposeObjectTree(root);
     },
   };

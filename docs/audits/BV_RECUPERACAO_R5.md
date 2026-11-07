@@ -1,3 +1,5 @@
+> **R5E — refinamento adicional autorizado:** o feedback Moto G06 reconheceu melhora da R5D, mas não aprovou sua arte como resultado esperado. Refinamento dos quatro habitantes na mesma PR #40, sem merge e sem encerrar R5. [Relatório, comparação R5D/R5E, custos e limites](BV_RECUPERACAO_R5E.md). R5A–D abaixo preservam a cronologia.
+
 # R5 — Renascimento artístico dos habitantes
 
 07/11/2026. Missão expressamente autorizada pelo proprietário, sobre main `7100ff6e5fecc2f20ade8bfff5c9c4ca5b6b231e`. Merge R4 `960d8cecb94f7de776215e5d91c1dbe16bc65c4a` confirmado na história e PR #39 fechada/integrada pelo conector. Árvore inicial limpa; branch `feat/bv-r5-renascimento-artistico`. Sem merge, release, migração de dados ou fechamento do programa.

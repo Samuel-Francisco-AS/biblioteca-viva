@@ -1,3 +1,10 @@
+## R5E — refinamento candidato, 07/11/2026
+
+- Samael mais largo e demoníaco, com aura negra/lilás intermitente e reações de tensão.
+- Ytha menor, suspensa e animada em hover, asas curvas com laceado e luz feérica própria; envelope de 0,92 m preservado.
+- Aryn com fólio aberto, folhas curvas, gestos de consulta e sutura dourada; Lua com capa/cachos e presença arcana mais frequente.
+- Mesma PR #40, sem merge; arte aguarda novo aceite, R5 e F2B/F2C continuam abertas.
+
 ## R5 — candidata, 07/11/2026
 
 - Quatro habitantes remodelados em GLB com superfícies/roupas/acessórios próprios, skinning funcional, sockets de mãos e oito ações reconstruídas.

@@ -10,6 +10,7 @@ const sourceRef = process.argv[4] || undefined;
 if (!directory) throw new Error("Expected evidence directory");
 await mkdir(directory, { recursive: true });
 const server = await createServer({
+  cacheDir: "/tmp/bv-world-probe-vite",
   server: { host: "127.0.0.1", port: 4178, strictPort: true },
   plugins: [
     {
@@ -18,6 +19,8 @@ const server = await createServer({
       transform(code, id) {
         const files = [
           "ThreeWorldRuntime.ts",
+          "inhabitantVisuals.ts",
+          "inhabitantAnimator.ts",
           "proceduralLibraryBuilding.ts",
           "proceduralLibraryFurnishing.ts",
           "livingVisuals.ts",
@@ -50,11 +53,14 @@ const server = await createServer({
             !req.url.includes("url")
           ) {
             res.setHeader("Content-Type", "model/gltf-binary");
+            const ref = `${sourceRef}:${req.url.slice(1).split("?")[0]}`;
+            const bytes = Number(
+              execFileSync("git", ["cat-file", "-s", ref], {
+                encoding: "utf8",
+              }),
+            );
             res.end(
-              execFileSync("git", [
-                "show",
-                `${sourceRef}:${req.url.slice(1).split("?")[0]}`,
-              ]),
+              execFileSync("git", ["show", ref], { maxBuffer: bytes + 1024 }),
             );
             return;
           }

@@ -1,0 +1,11 @@
+{
+  "path": "android/app/build/outputs/apk/debug/app-debug.apk",
+  "bytes": 10641553,
+  "sha256": "56fd5b3ef2ab59d60175b6dc78aaa9aeab611aee8e29d4da30ead1653f98ca5b",
+  "verifiedEmbeddedGLBs": {
+    "samael": "217f54d26b4bd32c6f06a12e7903b6a2bc26fcec014ba5489f84239b0ecc46f7",
+    "aryn": "19b4d6df3034521d4e28522366f163927cd749e008fca1528b528eb7f2c0c69d",
+    "ytha": "2927850b827cda10ff45fb739158b829228f8d8ca10a1293a80cfe204b752071",
+    "lua": "c184c1957105f03435d2507710f115fc83aba828047d7dccc697a7a66dd10449"
+  }
+}

@@ -1,3 +1,5 @@
+> **Extensão R5E:** `refine.py` integra a receita autoral; Ytha tem geometria de 1,32 m e clearance de 0,16 m, root físico em Y=0. Hover/gestos continuam nos oito clips; emissão material/luz usa `inhabitantPresence` no RAF existente, sem mover personagens ou bones. FX têm materiais próprios (`FX`), descartados pelo owner da árvore; a luz de Ytha pertence ao controlador e é removida/descarregada antes da árvore. Raio de navegação 0,92 m intocado. [Evidências e limites](audits/BV_RECUPERACAO_R5E.md).
+
 # Pipeline autoral dos habitantes — R5
 
 Autoridade: missão R5 do proprietário (07/11/2026). Assets originais, sem aquisição ou licença externa; Blender 3.3.21 é ferramenta de autoria, Three.js/GLTFLoader permanece runtime. Não altera o pipeline dos seis registros pessoais aprovado em ADR-024.

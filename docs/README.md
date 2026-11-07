@@ -1,3 +1,5 @@
+> **R5E — refinamento candidato:** [arte/comportamento/efeitos e custos](audits/BV_RECUPERACAO_R5E.md) · [roteiro Moto G06](audits/evidence/bv-r5e/MOTO_G06.md). Mesma PR #40, sem merge ou aceite automático.
+
 > **R5 — candidata:** [Renascimento artístico dos habitantes](audits/BV_RECUPERACAO_R5.md), [pipeline autoral](INHABITANT_ART_PIPELINE.md) e [roteiro Moto G06](audits/evidence/bv-r5/MOTO_G06.md). PR draft #40, sem aceite humano ou encerramento da recuperação.
 
 > **Integração R4:** [registro canônico e ressalvas](audits/BV_INTEGRACAO_PR39_R4_2026-11-07.md); R5 não iniciada. As notas anteriores de candidata são cronologia.

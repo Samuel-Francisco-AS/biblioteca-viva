@@ -5,6 +5,7 @@ import bpy, math, os
 from mathutils import Vector
 ROOT=os.getcwd(); OUT=ROOT+'/assets/3d/source/inhabitants'; DEST=ROOT+'/src/features/library/three/assets'
 TAU=math.tau
+exec(compile(open(OUT+'/refine.py').read(), OUT+'/refine.py', 'exec'))
 
 def mat(name,c,metal=0,rough=.55,alpha=1,glow=0):
  m=bpy.data.materials.new(name);m.diffuse_color=(*c,alpha);m.use_nodes=True
@@ -80,7 +81,7 @@ def build(who,height):
  metal=mat('Aged brass',(.55,.32,.115),.72,.34);ivory=mat('Ivory linen',(.84,.74,.53),rough=.85);ink=mat('Ink leather',(.018,.014,.025),rough=.47)
  glow=mat('Signature crystal',{'samael':(.48,.13,.92),'aryn':(.75,.59,.22),'ytha':(.44,.8,.57),'lua':(.28,.48,.95)}[who],.15,.28,glow=.8)
  lips=mat('Lip and ear blush',(.28,.11,.19) if broad else (.48,.19,.23),rough=.7)
- w=.285 if broad else (.172 if elf else (.18 if fairy else .20));headz=1.40 if broad else 1.39
+ w=.33 if broad else (.172 if elf else (.18 if fairy else .20));headz=1.40 if broad else 1.39
  # Continuous ring surfaces with true multi-bone weights at waist, knees and elbows.
  loft('Anatomical tailored torso',[(.77,w*.85,.12,0,0),(.91,w*.85,.135,0,0),(1.03,w*.92,.145,0,0),(1.17,w*1.20,.17,0,0),(1.29,w*1.12,.135,0,0),(1.33,w*.65,.10,0,0)],cloth,'Pelvis',('Torso',.87,1.10))
  for s,side in [(-1,'L'),(1,'R')]:
@@ -113,7 +114,7 @@ def build(who,height):
  loft('Waist belt',[(.89,w*.88,.146,0,0),(.935,w*.88,.147,0,0)],ink,'Pelvis');jewel((0,-.158,.92),.044,glow,'Pelvis')
  ell('Neck',(0,0,1.355),(.07,.067,.105),skin,'Head')
  # Jaw/chin/cheek/brow contour differs by species, not just skin palette.
- hw=.145 if broad else (.112 if elf else (.124 if fairy else .132))
+ hw=.167 if broad else (.112 if elf else (.124 if fairy else .132))
  loft('Sculpted face',[(headz-.025,.055 if elf else .075,.060,0,-.01),(headz+.02,hw*.75,.087,0,-.018),(headz+.075,hw,.10,0,-.008),(headz+.14,hw*1.02,.108,0,0),(headz+.22,hw*.94,.095,0,.006),(headz+.275,hw*.60,.065,0,.015)],skin,'Head')
  ell('Hair cap',(0,.025,headz+.245),(hw*1.07,.111,.097),hair,'Head')
  for s in [-1,1]:
@@ -160,7 +161,7 @@ def build(who,height):
    jewel((s*.13,-.02,headz+.055),.021,glow,'Head')
   plate('Restorer apron',[(-.115,-.15,.90),(.115,-.15,.90),(.14,-.17,.54),(-.14,-.17,.54)],ivory,'Pelvis')
   for x in [-.065,0,.065]:line('Restoration instrument',[(x,-.183,.68),(x,-.185,.83)],.007,metal,'Pelvis')
-  book((w+.11,-.12,.77),cloth,ivory,metal,'HandR')
+  open_folio(w,cloth,ivory,metal,glow)
  elif fairy:
   wing=mat('Opaline membrane',(.34,.62,.53),.1,.35,.66,.16)
   pink=mat('Rose membrane',(.62,.23,.45),.1,.35,.72,.10)
@@ -186,15 +187,6 @@ def build(who,height):
   book((w+.11,-.12,.80),cloth,ivory,metal,'HandR')
   for j in range(3):line('Silver stylus',[(-w-.12+j*.016,-.10,.72),(-w-.12+j*.016,-.10,.95)],.005,metal,'HandL')
   line('Crescent hairpin',[(.10+.032*math.cos(i*.22),-.07,headz+.21+.04*math.sin(i*.22)) for i in range(22)],.007,metal,'Head')
- # Signature geometrical magic, behind hands and away from the face; animated by Magic.
- for j in range(3):
-  radius=.28+j*.07
-  pts=[(radius*math.cos(TAU*i/48),-.12,.61+radius*.46*math.sin(TAU*i/48)) for i in range(49)]
-  line('Infernal seal' if broad else 'Restoration script' if elf else 'Pollen wreath' if fairy else 'Fractured lunar orbit',pts,.003 if not broad else .005,glow,'Magic')
- for j in range(12):
-  a=j*TAU/12;p=(.39*math.cos(a),-.12,.61+.19*math.sin(a))
-  if fairy:ell('Floating petal',p,(.018,.009,.032),silk,'Magic')
-  else:jewel(p,.016 if broad else .011,glow,'Magic')
  # Sculpted drapery: long elven gown, organic feeric underskirt, asymmetric mage overskirt.
  if not broad:
   rings=[];vs=[];fs=[];n=64
@@ -224,10 +216,13 @@ def build(who,height):
   ell('Loose side knot',(-.145,.055,headz+.18),(.07,.065,.085),hair,'Head')
   for i in range(5):
    strand('Swept mage fringe',[(.07-i*.025,-.02,headz+.31),(.10-i*.034,-.10,headz+.26),(.09-i*.035,-.116,headz+.20-i*.008)],[.02,.027,.001],hair,'Head')
+ refine_character(who,w,headz,skin,hair,cloth,silk,metal,ivory,ink,glow)
  # Normalize all authored surfaces BEFORE binding. Identity pivot on floor.
  meshes=[o for o in bpy.context.scene.objects if o.type=='MESH'];hi=max(v.co.z for o in meshes for v in o.data.vertices);factor=height/hi
  for o in meshes:
-  for v in o.data.vertices:v.co*=factor
+  for v in o.data.vertices:
+   v.co*=factor
+   if fairy:v.co.z+=.16
  # Anatomical deform rig, real weights/modifiers exported as glTF skins.
  rigdata=bpy.data.armatures.new('InhabitantSkeleton');rig=bpy.data.objects.new(who+'Rig',rigdata);bpy.context.collection.objects.link(rig);bpy.context.view_layer.objects.active=rig;rig.select_set(True);bpy.ops.object.mode_set(mode='EDIT')
  coords={'Facing':((0,0,0),(0,0,.15),None),'Pelvis':((0,0,.81),(0,0,.94),'Facing'),'Torso':((0,0,.94),(0,0,1.30),'Pelvis'),'Head':((0,0,1.34),(0,0,1.63),'Torso'),'Magic':((0,0,.61),(0,0,.71),'Facing')}
@@ -235,14 +230,14 @@ def build(who,height):
   coords.update({'Shoulder'+side:((s*w,0,1.25),(s*(w+.06),-.02,1.04),'Torso'),'Elbow'+side:((s*(w+.06),-.02,1.04),(s*(w+.115),-.06,.85),'Shoulder'+side),'Hand'+side:((s*(w+.115),-.06,.85),(s*(w+.115),-.08,.74),'Elbow'+side),'Hip'+side:((s*w*.56,0,.81),(s*w*.56,0,.46),'Pelvis'),'Knee'+side:((s*w*.56,0,.46),(s*w*.56,0,.12),'Hip'+side)})
   if fairy:coords['Wing'+side]=((s*.075,.13,1.15),(s*.5,.17,1.4),'Torso')
  for name,(a,b,parent) in coords.items():
-  bone=rigdata.edit_bones.new(name);bone.head=Vector(a)*factor;bone.tail=Vector(b)*factor
+  bone=rigdata.edit_bones.new(name);bone.head=Vector(a)*factor+Vector((0,0,.16 if fairy else 0));bone.tail=Vector(b)*factor+Vector((0,0,.16 if fairy else 0))
   if parent:bone.parent=rigdata.edit_bones[parent]
  bpy.ops.object.mode_set(mode='OBJECT')
  for o in meshes:
   mod=o.modifiers.new('Anatomical skin','ARMATURE');mod.object=rig;o.parent=rig
  # Explicit named contact sockets inherit a real deform bone, no name search heuristic.
  for name,bone,xyz in [('socket_carry','HandL',(-w-.115,-.135,.77)),('socket_hand_right','HandR',(w+.115,-.135,.77)),('socket_seat','Pelvis',(0,.03,.80))]:
-  o=bpy.data.objects.new(name,None);bpy.context.collection.objects.link(o);o.parent=rig;o.parent_type='BONE';o.parent_bone=bone;bpy.context.view_layer.update();o.matrix_world.translation=Vector(xyz)*factor
+  o=bpy.data.objects.new(name,None);bpy.context.collection.objects.link(o);o.parent=rig;o.parent_type='BONE';o.parent_bone=bone;bpy.context.view_layer.update();o.matrix_world.translation=Vector(xyz)*factor+Vector((0,0,.16 if fairy else 0))
  # Eight agency-compatible actions; no competing root translation.
  durations={'idle':3.6,'walk':3.2,'turn':2.4,'react':1.8,'gesture':2.8,'work':4.,'magic':3.6,'recover':2.4};bpy.context.scene.render.fps=30
  for clip,duration in durations.items():
@@ -265,12 +260,46 @@ def build(who,height):
      if clip=='react':head.rotation_euler.z=.12*p;body.rotation_euler.x=-.06*p
      if clip=='recover':head.rotation_euler.z=-.08*p
     if fairy:rig.pose.bones['Wing'+side].rotation_euler.y=s*(.035 if clip=='idle' else .09)*slow
+   # Character-specific acting, all under the existing mixer and eight clips.
+   left=rig.pose.bones['ShoulderL'];right=rig.pose.bones['ShoulderR'];le=rig.pose.bones['ElbowL'];re=rig.pose.bones['ElbowR']
+   if broad:
+    if clip=='idle':body.rotation_euler.x=.018*slow;head.rotation_euler.x=-.035+.018*slow;left.rotation_euler.z=-.035;right.rotation_euler.z=.035
+    if clip in ['react','magic','recover']:
+     body.rotation_euler.x=(-.07 if clip=='react' else .06)*p
+     le.rotation_euler.x=-.48*p;re.rotation_euler.x=-.40*p
+     left.rotation_euler.z=-.19*p;right.rotation_euler.z=.19*p
+     head.rotation_euler.x=-.10*p;head.rotation_euler.z=.035*slow
+   elif elf:
+    if clip in ['idle','work','gesture','magic']:
+     re.rotation_euler.x=-.22-(.38*p if clip in ['work','magic'] else .08*p)
+     right.rotation_euler.x=-.08-.10*p
+     if clip=='work':
+      head.rotation_euler.x=.18*p;head.rotation_euler.z=.045*slow
+      le.rotation_euler.x=-.65*p;left.rotation_euler.z=-.15*p;left.rotation_euler.x=-.28*p
+     if clip=='magic':le.rotation_euler.x=-.65*p;left.rotation_euler.z=-.25*p;body.rotation_euler.z=.025*slow
+   elif fairy:
+    for side in ['L','R']:
+     rig.pose.bones['Hip'+side].rotation_euler.x=-.13
+     rig.pose.bones['Knee'+side].rotation_euler.x=.28+.035*slow
+    rig.pose.bones['Facing'].location.y=.012*slow
+    body.rotation_euler.x=.025*slow;body.rotation_euler.z=.015*slow
+    for sign,side in [(-1,'L'),(1,'R')]:rig.pose.bones['Wing'+side].rotation_euler.y=sign*(.10+.10*math.sin(t*TAU*2))
+    if clip=='walk':left.rotation_euler.z=-.13;right.rotation_euler.z=.13
+   else:
+    if clip in ['gesture','magic','recover']:
+     flourish=math.sin(t*TAU*1.5)*p
+     left.rotation_euler.z=-.35*p;left.rotation_euler.x=-.25*p
+     le.rotation_euler.x=-.68*p+.13*flourish
+     right.rotation_euler.z=.22*p;re.rotation_euler.x=-.38*p
+     head.rotation_euler.z=.10*flourish;body.rotation_euler.z=.07*slow*p
+     magic.rotation_euler.z=.20*slow
    if clip=='turn':rig.pose.bones['Facing'].rotation_euler.y=.9*p
    for b in rig.pose.bones:b.keyframe_insert('rotation_euler',frame=frame,group=b.name)
+   if fairy:rig.pose.bones['Facing'].keyframe_insert('location',frame=frame,group='Facing')
   for f in action.fcurves:
    for k in f.keyframe_points:k.interpolation='BEZIER'
   track=rig.animation_data.nla_tracks.new();track.name=clip;strip=track.strips.new(clip,1,action);strip.name=clip;rig.animation_data.action=None;track.mute=True
- for b in rig.pose.bones:b.rotation_euler=(0,0,0)
+ for b in rig.pose.bones:b.rotation_euler=(0,0,0);b.location=(0,0,0)
  bpy.context.scene.frame_set(1);bpy.context.preferences.filepaths.save_version=0
  bpy.ops.wm.save_as_mainfile(filepath=OUT+'/'+who+'.blend')
  # Join by material while preserving per-vertex bone weights. Editable source stays separate.
@@ -284,7 +313,7 @@ def build(who,height):
   bpy.context.object.name=who+'_'+bpy.context.object.active_material.name
  for track in rig.animation_data.nla_tracks:track.mute=False
  bpy.ops.export_scene.gltf(filepath=DEST+'/'+who+'.glb',export_format='GLB',export_animations=True,export_force_sampling=True,export_nla_strips=True,export_skins=True,export_all_influences=False)
-for key,h in [('samael',2),('aryn',1.7),('ytha',1.7),('lua',1.6)]:build(key,h)
+for key,h in [('samael',2),('aryn',1.7),('ytha',1.32),('lua',1.6)]:build(key,h)
 # Manifest always describes the bytes just exported, not an older generation.
 import hashlib, json, struct
 manifest={}

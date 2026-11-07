@@ -13,7 +13,7 @@ const result = {
   versions: {},
 };
 for (const [label, folder] of [
-  ["before", "/tmp/bv-r5-before"],
+  ["before", process.argv[3] || "/tmp/bv-r5-before"],
   ["after", "src/features/library/three/assets"],
 ]) {
   const actors = [];
