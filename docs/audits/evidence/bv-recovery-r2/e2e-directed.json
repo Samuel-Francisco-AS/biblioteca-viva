@@ -1,0 +1,36 @@
+{
+  "scope": "Directed E2E on production preview, isolated fictitious IndexedDB, retries=0, original 30 s test timeout. No timeout/assertion disabled.",
+  "firstRun": {
+    "passed": 0,
+    "failed": 2,
+    "existing": {
+      "file": "e2e/bf5r5-world-input.spec.ts",
+      "line": 58,
+      "blocked": "Pr\u00f3ximo \u2192 click; lifecycle/pinch steps were reached before failure; not compared against R1 again."
+    },
+    "new": {
+      "file": "e2e/bv-recovery-r2.spec.ts",
+      "blocked": "openWorldTools summary before first record selection"
+    }
+  },
+  "newTestCorrection": "Open the record index directly through real UI; unrelated world-explore panel is unnecessary.",
+  "secondRun": {
+    "passed": 0,
+    "failed": 1,
+    "blocked": "first record button; no six-selection/highlight or reload assert reached",
+    "snapshot": "all six fictitious records listed as represented; screenshot extracted from final screencast frame",
+    "actions": [
+      {
+        "method": "click",
+        "selector": "internal:role=button[name=\"Abrir ferramentas de explora\u00e7\u00e3o acess\u00edvel\"i]",
+        "durationMs": 9655.814999999999
+      },
+      {
+        "method": "click",
+        "selector": "internal:text=\"Registros \u00b7 alternativa acess\u00edvel\"s",
+        "durationMs": 9477.560999999998
+      }
+    ]
+  },
+  "conclusion": "E2E selection/persistence remains unproved; neither a product regression nor a runner-only cause established. New test failure is recorded separately from existing debt. No further E2E retries."
+}

@@ -201,17 +201,31 @@ try {
   const scenarios =
     process.argv[5] === "flight"
       ? ["scroll-flight"]
-      : [
-          "static",
-          "active-four",
-          "night",
-          "scrolls-active",
-          "book-transport",
-          "camera-near",
-          "camera-far",
-          "reduced",
-          "return",
-        ];
+      : process.argv[5] === "book"
+        ? ["record-book-normal", "record-book-near"]
+        : process.argv[5] === "records"
+          ? [
+              "book",
+              "movie",
+              "series",
+              "study",
+              "physical_activity",
+              "work",
+            ].flatMap((type) => [
+              `record-${type}-normal`,
+              `record-${type}-near`,
+            ])
+          : [
+              "static",
+              "active-four",
+              "night",
+              "scrolls-active",
+              "book-transport",
+              "camera-near",
+              "camera-far",
+              "reduced",
+              "return",
+            ];
   const results = [];
   for (const name of scenarios) {
     const result = await page.evaluate(async (name) => {
@@ -219,6 +233,36 @@ try {
       if (name === "scroll-flight")
         for (const scroll of p.runtime.scrollVisuals.selectables)
           scroll.wakeAt = 0;
+      let focusNode = null;
+      if (name.startsWith("record-")) {
+        const [, type, view] = name.split("-");
+        let id;
+        if (type === "book") {
+          id = "reading-book:fiction-book-2";
+          focusNode = p.runtime.readingAreaBookVisuals.get(id).node;
+        } else {
+          const placement = p.runtime.libraryRecordPlacements.find(
+            (record) =>
+              record.modelTypeId ===
+              (type === "physical_activity"
+                ? "physical-activity-record"
+                : `${type}-record`),
+          );
+          id = placement.instanceId;
+          focusNode = p.scene.getObjectByName(`library-record-instance:${id}`);
+        }
+        const { Box3, Vector3 } =
+          await import("/node_modules/three/build/three.module.js");
+        const center = new Box3()
+          .setFromObject(focusNode)
+          .getCenter(new Vector3());
+        p.runtime.navigation.commit({
+          targetX: center.x,
+          targetZ: center.z,
+          zoom: view === "near" ? 2.2 : 1,
+        });
+        p.runtime.selectObject(view === "near" ? id : null);
+      }
       const stages = {};
       const originals = [];
       if (name === "night") p.setHour(22);
@@ -255,12 +299,15 @@ try {
           return value;
         };
       }
-      for (let i = 0; i < 3; i++) p.step(name === "static" ? 0 : 50);
+      for (let i = 0; i < 3; i++)
+        p.step(name === "static" || name.startsWith("record-") ? 0 : 50);
       p.reset();
       for (const key in stages) stages[key] = 0;
       const samples = [];
       for (let i = 0; i < 6; i++)
-        samples.push(p.step(name === "static" ? 0 : 50));
+        samples.push(
+          p.step(name === "static" || name.startsWith("record-") ? 0 : 50),
+        );
       const materials = new Set(),
         geometries = new Set();
       let meshes = 0,
@@ -298,8 +345,21 @@ try {
         const s = samples.map((v) => v[key]).sort((a, b) => a - b);
         return { p50: s[3], p95: s[5] };
       };
+      let focusedTriangles = 0,
+        focusedMeshes = 0;
+      focusNode?.traverse((o) => {
+        if (o.isMesh) {
+          focusedMeshes++;
+          focusedTriangles +=
+            ((o.geometry.index?.count ?? o.geometry.attributes.position.count) /
+              3) *
+            (o.isInstancedMesh ? o.count : 1);
+        }
+      });
       return {
         name,
+        focusedTriangles,
+        focusedMeshes,
         drawCalls: p.renderer.info.render.calls,
         renderedTriangles: p.renderer.info.render.triangles,
         gpuGeometries: p.renderer.info.memory.geometries,

@@ -1,5 +1,13 @@
+import { batchBookBinding } from "./staticVisuals";
+import {
+  bindRecordSpatial,
+  recordSpatial,
+  type BookCoverAnimation,
+  type BookRecordAsset,
+} from "./recordAssetContract";
 import { setSpatialComponents, spatialBox } from "./spatialComponents";
 import {
+  Box3,
   BoxGeometry,
   Group,
   Mesh,
@@ -49,9 +57,9 @@ export interface ProceduralBookshelf {
   readonly variant: ProceduralBookshelfVariant;
 }
 
-export interface ProceduralBookVolume {
-  readonly identity: ProceduralBookVolumeIdentity;
-  readonly root: Group;
+export interface ProceduralBookVolume extends BookRecordAsset {
+  readonly animation: BookCoverAnimation;
+  setSessionGlow(strength: number): void;
   readonly variant: ProceduralBookVolumeVariant;
   readonly coverHinge: Group;
 }
@@ -544,17 +552,6 @@ export function createProceduralBookVolume(
   const spec = BOOK_VOLUME_VARIANTS[variant];
   const root = new Group();
   root.name = "procedural-book-volume";
-  const bounds = [
-    spatialBox(0, spec.height / 2, 0, spec.width, spec.height, spec.depth),
-  ];
-  setSpatialComponents(root, {
-    physical: bounds,
-    navigation: bounds,
-    mobility: "dynamic",
-    manipulation: [
-      { id: "spine", position: [0, spec.height / 2, spec.depth / 2] },
-    ],
-  });
   const commonMaterial = { metalness: 0, roughness: 0.78 } as const;
   const coverMaterial = new MeshStandardMaterial({
     ...commonMaterial,
@@ -668,5 +665,122 @@ export function createProceduralBookVolume(
     0.002,
   );
 
-  return { identity, root, variant, coverHinge };
+  const detailGeometry = new BoxGeometry(1, 1, 1);
+  function gilding(
+    name: string,
+    x: number,
+    y: number,
+    z: number,
+    w: number,
+    h: number,
+    d: number,
+    hinged = false,
+  ) {
+    const mesh = new Mesh(detailGeometry, bandMaterial);
+    mesh.name = name;
+    mesh.position.set(x, y, z);
+    mesh.scale.set(w, h, d);
+    root.add(mesh);
+    if (hinged) {
+      mesh.position.sub(coverHinge.position);
+      coverHinge.add(mesh);
+    }
+    return mesh;
+  }
+  // Corner tooling follows the moving cover; sewn headbands stay on the spine.
+  for (const side of [-1, 1]) {
+    const x = side * (spec.width / 2 - 0.003);
+    for (const y of [spec.height * 0.13, spec.height * 0.87])
+      for (const z of [-spec.depth * 0.35, spec.depth * 0.28])
+        gilding("book-gilded-corner", x, y, z, 0.004, 0.035, 0.035, side < 0);
+    gilding(
+      "book-cover-seal",
+      x,
+      spec.height * 0.52,
+      -0.025,
+      0.005,
+      spec.height * 0.22,
+      0.07,
+      side < 0,
+    ).rotation.x = Math.PI / 4;
+    for (const z of [-spec.depth * 0.4, spec.depth * 0.34])
+      gilding(
+        "book-cover-tooling",
+        x,
+        spec.height * 0.5,
+        z,
+        0.003,
+        spec.height * 0.65,
+        0.004,
+        side < 0,
+      );
+  }
+  for (const y of [spec.height * 0.06, spec.height * 0.94])
+    gilding(
+      "book-sewn-headband",
+      0,
+      y,
+      spec.depth / 2 - 0.002,
+      spec.width * 0.8,
+      0.012,
+      0.004,
+    );
+  gilding(
+    "book-spine-sigil",
+    0,
+    spec.height * 0.57,
+    spec.depth / 2 - 0.002,
+    0.038,
+    0.038,
+    0.004,
+  ).rotation.z = Math.PI / 4;
+  const fixed = new Group();
+  fixed.name = "book-fixed-binding";
+  for (const child of [...root.children])
+    if (child !== coverHinge) fixed.add(child);
+  root.add(fixed);
+  batchBookBinding(fixed);
+  batchBookBinding(coverHinge);
+  const dimensions = getProceduralBookVolumeDimensions(variant);
+  const spatial = {
+    ...recordSpatial(dimensions),
+    mobility: "dynamic" as const,
+  };
+  bindRecordSpatial(root, spatial);
+  const animation: BookCoverAnimation = {
+    kind: "hinged-cover",
+    setOpening(progress) {
+      coverHinge.rotation.y =
+        (Number.isFinite(progress) ? Math.min(1, Math.max(0, progress)) : 0) *
+        Math.PI *
+        0.82;
+    },
+    opening() {
+      return coverHinge.rotation.y / (Math.PI * 0.82);
+    },
+    worldBounds() {
+      coverHinge.updateWorldMatrix(true, true);
+      return new Box3().setFromObject(coverHinge);
+    },
+  };
+  return {
+    identity,
+    root,
+    variant,
+    coverHinge,
+    dimensions,
+    spatial,
+    materials: [coverMaterial, pagesMaterial, bandMaterial],
+    assetId: "bv:records/illuminated-codex-v1",
+    pivot: [0, 0, 0],
+    scale: [1, 1, 1],
+    orientation: [0, 0, 0],
+    animation,
+    setSessionGlow(strength) {
+      for (const m of [coverMaterial, pagesMaterial, bandMaterial]) {
+        m.emissive.setHex(0xf0c680);
+        m.emissiveIntensity = strength;
+      }
+    },
+  };
 }

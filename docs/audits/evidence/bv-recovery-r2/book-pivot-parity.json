@@ -1,0 +1,23 @@
+{
+  "note": "Final one-instance binding preserves authored name/pivot; same composed geometry and matrix product. Both captures contain real complete world.",
+  "images": [
+    {
+      "scene": "record-book-normal",
+      "changedPixels": 0,
+      "meanAbsoluteChannelDifference": 0.0
+    },
+    {
+      "scene": "record-book-near",
+      "changedPixels": 18,
+      "meanAbsoluteChannelDifference": 2.2280092592592593e-05
+    }
+  ],
+  "costs": {
+    "beforeMeshes": 628,
+    "afterMeshes": 628,
+    "beforeTriangles": 241554,
+    "afterTriangles": 241554,
+    "beforeBufferBytes": 2326308,
+    "afterBufferBytes": 2326308
+  }
+}

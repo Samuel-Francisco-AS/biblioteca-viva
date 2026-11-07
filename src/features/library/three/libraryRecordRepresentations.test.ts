@@ -48,13 +48,6 @@ function materials(parts: readonly DisposableMesh[]): Set<Material> {
   );
 }
 
-function hasPositiveVolumeOverlap(first: Box3, second: Box3): boolean {
-  const intersection = first.clone().intersect(second);
-  const size = intersection.getSize(new Vector3());
-  const tolerance = 0.000_001;
-  return size.x > tolerance && size.y > tolerance && size.z > tolerance;
-}
-
 const identities = Object.freeze({
   movie: Object.freeze({
     entryId: "movie-01",
@@ -189,83 +182,58 @@ describe("fábricas isoladas dos registros BF-3C1", () => {
     for (const { root } of representations) disposeObjectTree(root);
   });
 
-  it("mantém componentes internos intencionais sem sobreposição positiva", () => {
-    const representations = createEveryRepresentation();
-    const expectedPartNames = [
-      ["movie-media-base", "movie-media-panel", "movie-screen-inset"],
+  it("mantém componentes autorais finitos dentro do envelope físico declarado", () => {
+    const required = [
+      ["projector-body", "projector-reel", "projector-lens-crystal"],
+      ["series-bakelite-case", "series-antenna-left", "series-curved-glass"],
+      ["study-open-pages", "study-quill", "study-inkwell"],
       [
-        "series-media-base",
-        "series-media-case",
-        "series-episode-marker",
-        "series-media-case",
-        "series-episode-marker",
-        "series-media-case",
-        "series-episode-marker",
+        "training-kettlebell",
+        "training-kettlebell-handle",
+        "training-rolled-mat",
       ],
-      [
-        "study-notebook-bottom-cover",
-        "study-notebook-pages",
-        "study-notebook-top-cover",
-        "study-notebook-spine",
-      ],
-      [
-        "activity-marker-base",
-        "activity-marker-post",
-        "activity-direction-marker",
-      ],
-      [
-        "work-folder-base",
-        "work-file-stack",
-        "work-folder-front",
-        "work-folder-tab",
-      ],
+      ["work-tool-chest", "work-carry-handle", "work-blueprint-scroll"],
     ];
-
-    for (const [index, representation] of representations.entries()) {
+    for (const [i, representation] of createEveryRepresentation().entries()) {
       const parts = meshes(representation.root);
-      expect(parts.map(({ name }) => name)).toEqual(expectedPartNames[index]);
-      expect(
-        parts.every(
-          ({ material }) =>
-            !Array.isArray(material) &&
-            material instanceof MeshStandardMaterial,
-        ),
-      ).toBe(true);
-      const bounds = parts.map((part) => new Box3().setFromObject(part));
-      for (const [partIndex, first] of bounds.entries()) {
-        for (const second of bounds.slice(partIndex + 1)) {
-          expect(hasPositiveVolumeOverlap(first, second)).toBe(false);
-        }
+      for (const name of required[i])
+        expect(parts.some((part) => part.name === name)).toBe(true);
+      const envelope = representation.spatial.physical[0];
+      for (const part of parts) {
+        expect(part.material).toBeInstanceOf(MeshStandardMaterial);
+        const p = part.geometry.attributes.position;
+        for (let v = 0; v < p.count; v++)
+          expect([p.getX(v), p.getY(v), p.getZ(v)].every(Number.isFinite)).toBe(
+            true,
+          );
+        const b = new Box3().setFromObject(part);
+        expect(envelope.clone().expandByScalar(1e-6).containsBox(b)).toBe(true);
       }
+      expect(representation.spatial.manipulation?.length).toBeGreaterThan(0);
+      disposeObjectTree(representation.root);
     }
-
-    for (const { root } of representations) disposeObjectTree(root);
   });
 
-  it("distingue filme e série por composição, não apenas por material", () => {
-    const movie = createProceduralMovieRecord(identities.movie);
-    const series = createProceduralSeriesRecord(identities.series);
-
+  it("distingue projetor cinematográfico e receptor episódico por silhueta e geometria", () => {
+    const movie = createProceduralMovieRecord(identities.movie),
+      series = createProceduralSeriesRecord(identities.series);
     expect(
-      meshes(movie.root).filter(({ name }) => name === "movie-media-panel"),
-    ).toHaveLength(1);
+      meshes(movie.root).filter((p) => p.name === "projector-reel"),
+    ).toHaveLength(2);
     expect(
-      meshes(movie.root).filter(({ name }) => name === "series-media-case"),
-    ).toHaveLength(0);
+      meshes(series.root).filter((p) => p.name.startsWith("series-antenna")),
+    ).toHaveLength(2);
     expect(
-      meshes(series.root).filter(({ name }) => name === "movie-media-panel"),
-    ).toHaveLength(0);
-    expect(
-      meshes(series.root).filter(({ name }) => name === "series-media-case"),
+      meshes(series.root).filter((p) => p.name === "series-episode-marker"),
     ).toHaveLength(3);
+    expect(meshes(movie.root).some((p) => p.name.startsWith("series-"))).toBe(
+      false,
+    );
     expect(
-      meshes(series.root).filter(
-        ({ name }) => name === "series-episode-marker",
-      ),
-    ).toHaveLength(3);
-
-    disposeObjectTree(movie.root);
-    disposeObjectTree(series.root);
+      meshes(series.root).some((p) => p.name.startsWith("projector-")),
+    ).toBe(false);
+    expect(movie.root.getObjectByName("projector-reel")).toBeInstanceOf(Mesh);
+    for (const asset of [movie, series]) disposeObjectTree(asset.root);
   });
 
   it("é determinística para uma identidade e não usa aleatoriedade", () => {
@@ -326,10 +294,10 @@ describe("fábricas isoladas dos registros BF-3C1", () => {
       instanceId: "library-series:series-02",
     });
     const firstCase = meshes(first.root).find(
-      ({ name }) => name === "series-media-case",
+      ({ name }) => name === "series-bakelite-case",
     );
     const secondCase = meshes(second.root).find(
-      ({ name }) => name === "series-media-case",
+      ({ name }) => name === "series-bakelite-case",
     );
     if (
       !firstCase ||
@@ -337,7 +305,7 @@ describe("fábricas isoladas dos registros BF-3C1", () => {
       Array.isArray(firstCase.material) ||
       Array.isArray(secondCase.material)
     ) {
-      throw new Error("A série precisa expor cases descartáveis.");
+      throw new Error("A série precisa expor gabinetes descartáveis.");
     }
     const firstGeometryDispose = vi.spyOn(firstCase.geometry, "dispose");
     const firstMaterialDispose = vi.spyOn(firstCase.material, "dispose");

@@ -1,5 +1,7 @@
+import { replaceReadingAreaBookRepresentation } from "./readingAreaBookVisuals";
+import { createProceduralBookVolume } from "./proceduralContent";
 import { LIBRARY_SHELVES } from "../libraryShelfLayout";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { Box3, Raycaster, Scene, Vector3 } from "three";
 import { InteractionCoordinator } from "../inhabitantInteractions";
 import { createProceduralComposition } from "./proceduralComposition";
@@ -162,7 +164,7 @@ describe("BF-5.5F2A original session book", () => {
     expect(f.controller.snapshot().state).toBe("shelf");
     expect(node.position.equals(home)).toBe(true);
     expect(f.interactions.snapshot()).toHaveLength(0);
-    expect(original.representation.coverHinge.rotation.y).toBe(0);
+    expect(original.representation.animation.opening()).toBe(0);
     f.controller.apply(activity); // delayed old callback cannot resurrect completed session
     f.step(2);
     expect(f.controller.snapshot().state).toBe("shelf");
@@ -288,5 +290,52 @@ it("does not move through a real obstacle or another inhabitant, and releases on
   f.controller.apply(activity);
   f.step(5);
   expect(visual.node.position.equals(home)).toBe(true);
+  f.dispose();
+});
+
+it("uses replaceable book dimensions and animation capabilities without procedural variant or hinge coupling", () => {
+  const f = setup(),
+    visual = f.visuals[2],
+    node = visual.node,
+    old = visual.representation;
+  const factory = vi.fn(
+    (
+      identity: import("./recordAssetContract").RecordAssetIdentity<"book-volume">,
+    ) => {
+      const asset = createProceduralBookVolume(identity);
+      return {
+        assetId: "fiction:independent-book",
+        identity: asset.identity,
+        dimensions: asset.dimensions,
+        pivot: asset.pivot,
+        scale: asset.scale,
+        orientation: asset.orientation,
+        root: asset.root,
+        spatial: asset.spatial,
+        materials: asset.materials,
+        animation: asset.animation,
+        setSessionGlow: (strength: number) => asset.setSessionGlow(strength),
+      };
+    },
+  );
+  expect(replaceReadingAreaBookRepresentation(visual, factory)).toBe(
+    "replaced",
+  );
+  expect(visual.node).toBe(node);
+  expect(old.root.children).toHaveLength(0);
+  expect(node.children).toHaveLength(1);
+  f.controller.apply(activity);
+  f.step(3);
+  expect(f.controller.snapshot().state).toBe("transport");
+  expect(replaceReadingAreaBookRepresentation(visual, factory)).toBe("busy");
+  expect(factory).toHaveBeenCalledTimes(1);
+  f.step(42);
+  expect(f.controller.snapshot().state).toBe("resting");
+  expect(visual.representation.animation.opening()).toBeGreaterThan(0);
+  f.controller.apply(null);
+  f.step(45);
+  expect(f.controller.snapshot().state).toBe("shelf");
+  expect(visual.representation.animation.opening()).toBe(0);
+  expect(f.interactions.snapshot()).toHaveLength(0);
   f.dispose();
 });

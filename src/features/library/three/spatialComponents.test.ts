@@ -52,6 +52,7 @@ it("keeps authored physical, navigation and selectable geometry independent thro
   });
   root.add(dynamic);
   expect(collectInhabitantObstacles([root])).toHaveLength(2);
+  expect(collectInhabitantObstacles([root, root, dynamic])).toHaveLength(2);
   dynamic.userData.carriedObject = true;
   expect(collectInhabitantObstacles([root])).toHaveLength(1);
   disposeObjectTree(root);
@@ -119,5 +120,23 @@ it("preserves every R1 valid route pair and rejects its invalid pairs without cr
       last = point;
     }
   }
+  disposeObjectTree(scene);
+});
+
+it("keeps new ambient decorations out of real living-object colliders", () => {
+  const scene = new Scene(),
+    building = createProceduralLibraryBuilding(true);
+  scene.add(building);
+  createLivingVisuals(building, scene, new LivingSession());
+  const before = collectInhabitantObstacles([building]),
+    living = building.getObjectByName("living-objects");
+  if (!living) throw new Error("Missing living owner");
+  const decoration = new Mesh(
+    new BoxGeometry(20, 2, 20),
+    new MeshBasicMaterial(),
+  );
+  decoration.position.y = 1;
+  living.add(decoration);
+  expect(collectInhabitantObstacles([building])).toEqual(before);
   disposeObjectTree(scene);
 });

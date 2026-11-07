@@ -40,6 +40,13 @@ export function createLivingVisuals(
 ) {
   const root = new Group();
   root.name = "living-objects";
+  // Effects have no physical volume. Each tangible family below owns its own
+  // component; sparks/glows must not fall back to visual mesh extraction.
+  setSpatialComponents(root, {
+    physical: [],
+    navigation: [],
+    mobility: "dynamic",
+  });
   building.add(root);
   const box = new BoxGeometry(1, 1, 1),
     sphere = new SphereGeometry(0.5, 12, 8);

@@ -1,3 +1,7 @@
+## Recuperação R2C — custo dos registros (06/11/2026)
+
+Reforma visual medida no mesmo mundo fictício: 220.362→241.554 triângulos potenciais; 648→628 meshes; materiais 165→191, texturas iguais por vista. Buffers geométricos CPU 1.712.308→2.326.308 B, sem equiparar a RAM/GPU. Encadernação instancia dois recursos por livro sob grupos fixo/articulado; demais registros são agregados por material. Não se sacrifica arte para manter contagem anterior. Navegação final: 125 obstáculos no cenário pareado de 13 registros não livrescos e estantes sem volumes pessoais, 65 rotas válidas/7 inválidas preservadas, asas intactas. [Custos individuais, imagens e limitações físicas](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md#r2c--seis-representações-pessoais-e-assets-substituíveis-06112026).
+
 ## Recuperação R2B — renderização (06/11/2026)
 
 Runtime completo fictício/Chromium SwiftShader/DPR1: normal 353→326 calls com os mesmos 178.252 triângulos; afastada 452→403 calls com 188.176→188.752 triângulos por culling agregado. 729→648 meshes; materiais 165 e texturas 3/4 mantidos; matrizes locais 5.808→4.872 em seis frames. Buffers CPU 1.401.916→1.712.308 B e programas acumulados 25→46 são custos explícitos. Tempos CPU mistos: sem FPS/GPU/performance física concluída. [Métricas, imagens e receita](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md#r2b--renderização-sem-redução-artística-06112026).

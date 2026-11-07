@@ -20,9 +20,13 @@ export function collectInhabitantObstacles(
   roots: readonly Object3D[],
 ): readonly NavigationObstacle[] {
   const result: NavigationObstacle[] = [];
+  const visited = new Set<Object3D>();
   for (const root of roots) {
+    if (visited.has(root)) continue;
     root.updateMatrixWorld(true);
     const visit = (o: Object3D, authored = false) => {
+      if (visited.has(o)) return;
+      visited.add(o);
       if (isCarriedProp(o)) return;
       const spatial = getSpatialComponents(o);
       if (spatial) result.push(...navigationBoxes(o, spatial.navigation));

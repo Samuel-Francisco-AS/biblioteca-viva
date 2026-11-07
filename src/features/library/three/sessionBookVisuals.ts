@@ -1,8 +1,6 @@
 import {
   Box3,
   Matrix4,
-  Mesh,
-  MeshStandardMaterial,
   Quaternion,
   Raycaster,
   Vector3,
@@ -13,7 +11,6 @@ import type { AgentView } from "../inhabitantAgency";
 import { InhabitantNavigation } from "../inhabitantNavigation";
 import { INHABITANTS, INHABITANT_ENVELOPES } from "../inhabitants";
 import type { InteractionCoordinator } from "../inhabitantInteractions";
-import { getProceduralBookVolumeDimensions } from "./proceduralContent";
 import type { ReadingAreaBookVisual } from "./readingAreaBookVisuals";
 import {
   LIBRARY_FURNISHING,
@@ -97,19 +94,14 @@ export function createSessionBookVisuals(options: {
   let retryAfter = 0;
   const ended = new Set<string>();
   const lightMaterials = (visual: ReadingAreaBookVisual, strength: number) => {
-    visual.representation.root.traverse((o) => {
-      if (o instanceof Mesh && o.material instanceof MeshStandardMaterial) {
-        o.material.emissive.setHex(0xf0c680);
-        o.material.emissiveIntensity = strength;
-      }
-    });
+    visual.representation.setSessionGlow(strength);
   };
   function release() {
     if (!journey) return;
     const j = journey;
     j.visual.node.position.copy(j.homePosition);
     j.visual.node.quaternion.copy(j.homeRotation);
-    j.visual.representation.coverHinge.rotation.y = 0;
+    j.visual.representation.animation.setOpening(0);
     j.visual.sessionControlled = false;
     lightMaterials(j.visual, 0);
     options.interactions.release(j.visual.book.instanceId, "session", j.task);
@@ -128,9 +120,7 @@ export function createSessionBookVisuals(options: {
     if (confirmed.instanceId !== id) return;
     const visual = options.books().get(id);
     if (!visual || options.occupiedSurfaces?.().includes(stage.id)) return;
-    const dimensions = getProceduralBookVolumeDimensions(
-      visual.representation.variant,
-    );
+    const dimensions = visual.representation.dimensions;
     const half = new Vector3(
       dimensions.width / 2,
       dimensions.height / 2,
@@ -367,19 +357,15 @@ export function createSessionBookVisuals(options: {
         Math.sign(desiredOpening - j.opening) *
           Math.min(Math.abs(desiredOpening - j.opening), dt * 0.65);
       // Opening is real cover articulation on the original volume, not skeletal page animation.
-      j.visual.representation.coverHinge.rotation.y =
-        nextOpening * Math.PI * 0.82;
+      j.visual.representation.animation.setOpening(nextOpening);
       j.visual.node.updateWorldMatrix(true, true);
-      const coverBox = new Box3().setFromObject(
-        j.visual.representation.coverHinge,
-      );
+      const coverBox = j.visual.representation.animation.worldBounds();
       if (
         nextOpening <= j.opening ||
         !j.obstacles.some((b) => b.intersectsBox(coverBox))
       )
         j.opening = nextOpening;
-      j.visual.representation.coverHinge.rotation.y =
-        j.opening * Math.PI * 0.82;
+      j.visual.representation.animation.setOpening(j.opening);
       const direction = returning ? -1 : 1; // A pause finishes the safe landing, then rests closed.
       if (
         (!returning || j.opening === 0) &&

@@ -1,0 +1,3418 @@
+{
+  "label": "R2C-final",
+  "base": "291b0b4bee546645e583e61cdb70b90c6925a54f",
+  "node": "v24.18.0",
+  "scope": "Host CPU; same full fictional slots, shelves, building, living props; 7 graph builds per envelope; 20 repetitions per pair; no WebGL/device",
+  "obstacleCount": 125,
+  "collectionMs": 2.320423000000119,
+  "graphs": [
+    {
+      "radius": 0.66,
+      "nodes": 138,
+      "edges": 1432,
+      "collisionTests": 12789,
+      "buildMs": {
+        "p50": 23.895578999999998,
+        "p95": 40.04859099999999
+      }
+    },
+    {
+      "radius": 0.62,
+      "nodes": 138,
+      "edges": 1440,
+      "collisionTests": 12877,
+      "buildMs": {
+        "p50": 20.11629599999992,
+        "p95": 22.367475000000013
+      }
+    },
+    {
+      "radius": 0.92,
+      "nodes": 138,
+      "edges": 773,
+      "collisionTests": 10645,
+      "buildMs": {
+        "p50": 18.851605999999947,
+        "p95": 20.016218999999865
+      }
+    },
+    {
+      "radius": 0.58,
+      "nodes": 138,
+      "edges": 1451,
+      "collisionTests": 12833,
+      "buildMs": {
+        "p50": 18.34441599999991,
+        "p95": 29.138821000000007
+      }
+    }
+  ],
+  "repeatedRouteMs": {
+    "p50": 0.23722899999984293,
+    "p95": 0.4879719999998997
+  },
+  "queryMs": {
+    "p50": 0.006283000000166794,
+    "p95": 0.0075490000003810565
+  },
+  "routeAndQueryCollisionTests": 88728,
+  "dynamic": {
+    "free": true,
+    "occupied": false,
+    "released": true
+  },
+  "routes": [
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": -3,
+        "z": -5.7
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": -2,
+          "z": 0
+        },
+        {
+          "id": "bf4-point:a-reading",
+          "zoneId": "bf4-zone:a-reading",
+          "x": -3,
+          "z": -5.7,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 20.476152000000184
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": -4.5,
+        "z": -4.3
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": -2,
+          "z": 0
+        },
+        {
+          "id": "bf4-point:a-reading",
+          "zoneId": "bf4-zone:a-reading",
+          "x": -3,
+          "z": -5.7,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        },
+        {
+          "id": "bf4-point:a-study",
+          "zoneId": "bf4-zone:a-study",
+          "x": -4.5,
+          "z": -4.3,
+          "radius": 0.35,
+          "facing": 0
+        }
+      ],
+      "coldMs": 0.7771939999997812
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": -4.5,
+        "z": 4.8
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:a-rest",
+          "zoneId": "bf4-zone:a-rest",
+          "x": -4.5,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 0
+        }
+      ],
+      "coldMs": 0.04400099999975282
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": -15.2,
+        "z": -6.8
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": -6.5,
+          "z": 0
+        },
+        {
+          "id": "bf4-point:room-b-inner",
+          "zoneId": "bf4-zone:room-b-inner",
+          "x": -8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-b-outer",
+          "zoneId": "bf4-zone:room-b-outer",
+          "x": -11.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "x": -12.2,
+          "z": -6.8
+        },
+        {
+          "id": "bf4-point:b-rest",
+          "zoneId": "bf4-zone:b-rest",
+          "x": -15.2,
+          "z": -6.8,
+          "radius": 0.35,
+          "facing": 0
+        }
+      ],
+      "coldMs": 2.42091900000014
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": 15.8,
+        "z": -9.8
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": 8.3,
+          "z": -4.6499999999999995
+        },
+        {
+          "id": "bf4-point:room-c-outer",
+          "zoneId": "bf4-zone:room-c-outer",
+          "x": 11.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "x": 12.2,
+          "z": -9.8
+        },
+        {
+          "id": "bf4-point:c-reading",
+          "zoneId": "bf4-zone:c-reading",
+          "x": 15.8,
+          "z": -9.8,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 1.2136279999999715
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": 15.4,
+        "z": -6.9
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": 8.3,
+          "z": -4.6499999999999995
+        },
+        {
+          "x": 11.8,
+          "z": -4.95
+        },
+        {
+          "x": 13.5,
+          "y": 0,
+          "z": -6.6
+        },
+        {
+          "id": "bf4-point:c-study",
+          "zoneId": "bf4-zone:c-study",
+          "x": 15.4,
+          "z": -6.9,
+          "radius": 0.35,
+          "facing": 0
+        }
+      ],
+      "coldMs": 3.0504860000000917
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": -15.5,
+        "z": 4.8
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": -8.3,
+          "z": 4.6499999999999995
+        },
+        {
+          "id": "bf4-point:d-reading",
+          "zoneId": "bf4-zone:d-reading",
+          "x": -15.5,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 2.1426940000001196
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": -14.9,
+        "z": 9.6
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": -8.3,
+          "z": 4.6499999999999995
+        },
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "character:lua",
+          "key": "lua",
+          "label": "Lua",
+          "height": 1.6,
+          "x": -13,
+          "z": 10,
+          "description": "Maga de 1,60 m, óculos, capa acadêmica, grimório e lápis."
+        },
+        {
+          "id": "bf4-point:d-study",
+          "zoneId": "bf4-zone:d-study",
+          "x": -14.9,
+          "z": 9.6,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 1.0871499999998377
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": 15.3,
+        "z": 9.5
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": 0,
+          "z": 4.8
+        },
+        {
+          "id": "bf4-point:room-e-outer",
+          "zoneId": "bf4-zone:room-e-outer",
+          "x": 11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "x": 12.2,
+          "z": 9.5
+        },
+        {
+          "id": "bf4-point:e-rest",
+          "zoneId": "bf4-zone:e-rest",
+          "x": 15.3,
+          "z": 9.5,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 1.743985000000066
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": 16.1,
+        "z": 4.8
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": 0,
+          "z": 4.8
+        },
+        {
+          "id": "bf4-point:e-observation",
+          "zoneId": "bf4-zone:e-observation",
+          "x": 16.1,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 1.226795999999922
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": -8.6,
+        "z": -4.8
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": -6.5,
+          "z": 0
+        },
+        {
+          "id": "bf4-point:room-b-inner",
+          "zoneId": "bf4-zone:room-b-inner",
+          "x": -8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 0.8027030000002924
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": -11.6,
+        "z": -4.8
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": -6.5,
+          "z": 0
+        },
+        {
+          "id": "bf4-point:room-b-inner",
+          "zoneId": "bf4-zone:room-b-inner",
+          "x": -8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-b-outer",
+          "zoneId": "bf4-zone:room-b-outer",
+          "x": -11.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 1.012105000000247
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": 8.6,
+        "z": -4.8
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-c-inner",
+          "zoneId": "bf4-zone:room-c-inner",
+          "x": 8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 0.00784399999974994
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": 11.6,
+        "z": -4.8
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": 8.3,
+          "z": -4.6499999999999995
+        },
+        {
+          "id": "bf4-point:room-c-outer",
+          "zoneId": "bf4-zone:room-c-outer",
+          "x": 11.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 1.0904729999997471
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": -8.6,
+        "z": 4.8
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-inner",
+          "zoneId": "bf4-zone:room-d-inner",
+          "x": -8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 0.005519000000276719
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": -11.6,
+        "z": 4.8
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": -8.3,
+          "z": 4.6499999999999995
+        },
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 0.9431789999998728
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": 8.6,
+        "z": 4.8
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": 0,
+          "z": 4.8
+        },
+        {
+          "id": "bf4-point:room-e-inner",
+          "zoneId": "bf4-zone:room-e-inner",
+          "x": 8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 0.9193420000001424
+    },
+    {
+      "inhabitant": "samael",
+      "from": {
+        "x": -2,
+        "z": 1
+      },
+      "to": {
+        "x": 11.6,
+        "z": 4.8
+      },
+      "radius": 0.66,
+      "valid": true,
+      "points": [
+        {
+          "x": 0,
+          "z": 4.8
+        },
+        {
+          "id": "bf4-point:room-e-outer",
+          "zoneId": "bf4-zone:room-e-outer",
+          "x": 11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 1.1614620000000286
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": -3,
+        "z": -5.7
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "x": -8.3,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:a-reading",
+          "zoneId": "bf4-zone:a-reading",
+          "x": -3,
+          "z": -5.7,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 19.864802000000054
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": -4.5,
+        "z": -4.3
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:a-study",
+          "zoneId": "bf4-zone:a-study",
+          "x": -4.5,
+          "z": -4.3,
+          "radius": 0.35,
+          "facing": 0
+        }
+      ],
+      "coldMs": 0.7346919999999955
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": -4.5,
+        "z": 4.8
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:room-b-inner",
+          "zoneId": "bf4-zone:room-b-inner",
+          "x": -8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:a-rest",
+          "zoneId": "bf4-zone:a-rest",
+          "x": -4.5,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 0
+        }
+      ],
+      "coldMs": 0.8187290000000758
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": -15.2,
+        "z": -6.8
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:b-rest",
+          "zoneId": "bf4-zone:b-rest",
+          "x": -15.2,
+          "z": -6.8,
+          "radius": 0.35,
+          "facing": 0
+        }
+      ],
+      "coldMs": 0.0038739999999961583
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": 15.8,
+        "z": -9.8
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "x": 0,
+          "z": -4.8
+        },
+        {
+          "x": 8.3,
+          "z": -4.8
+        },
+        {
+          "id": "bf4-point:room-c-outer",
+          "zoneId": "bf4-zone:room-c-outer",
+          "x": 11.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "x": 12.2,
+          "z": -9.8
+        },
+        {
+          "id": "bf4-point:c-reading",
+          "zoneId": "bf4-zone:c-reading",
+          "x": 15.8,
+          "z": -9.8,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 1.0929219999998168
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": 15.4,
+        "z": -6.9
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "x": 0,
+          "z": -4.8
+        },
+        {
+          "x": 11.8,
+          "z": -4.95
+        },
+        {
+          "x": 13.5,
+          "y": 0,
+          "z": -6.6
+        },
+        {
+          "id": "bf4-point:c-study",
+          "zoneId": "bf4-zone:c-study",
+          "x": 15.4,
+          "z": -6.9,
+          "radius": 0.35,
+          "facing": 0
+        }
+      ],
+      "coldMs": 1.045556999999917
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": -15.5,
+        "z": 4.8
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:room-b-inner",
+          "zoneId": "bf4-zone:room-b-inner",
+          "x": -8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-d-inner",
+          "zoneId": "bf4-zone:room-d-inner",
+          "x": -8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:d-reading",
+          "zoneId": "bf4-zone:d-reading",
+          "x": -15.5,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 1.0225659999996424
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": -14.9,
+        "z": 9.6
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:room-b-inner",
+          "zoneId": "bf4-zone:room-b-inner",
+          "x": -8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-d-inner",
+          "zoneId": "bf4-zone:room-d-inner",
+          "x": -8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "character:lua",
+          "key": "lua",
+          "label": "Lua",
+          "height": 1.6,
+          "x": -13,
+          "z": 10,
+          "description": "Maga de 1,60 m, óculos, capa acadêmica, grimório e lápis."
+        },
+        {
+          "id": "bf4-point:d-study",
+          "zoneId": "bf4-zone:d-study",
+          "x": -14.9,
+          "z": 9.6,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 1.063713000000007
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": 15.3,
+        "z": 9.5
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "x": -4.5,
+          "z": -4.8
+        },
+        {
+          "x": 2,
+          "z": -3
+        },
+        {
+          "x": 6.5,
+          "z": 0
+        },
+        {
+          "id": "bf4-point:room-e-inner",
+          "zoneId": "bf4-zone:room-e-inner",
+          "x": 8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-e-outer",
+          "zoneId": "bf4-zone:room-e-outer",
+          "x": 11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "x": 12.2,
+          "z": 9.5
+        },
+        {
+          "id": "bf4-point:e-rest",
+          "zoneId": "bf4-zone:e-rest",
+          "x": 15.3,
+          "z": 9.5,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 1.5514349999998558
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": 16.1,
+        "z": 4.8
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "x": -4.5,
+          "z": -4.8
+        },
+        {
+          "x": 2,
+          "z": -3
+        },
+        {
+          "x": 6.5,
+          "z": 0
+        },
+        {
+          "id": "bf4-point:room-e-inner",
+          "zoneId": "bf4-zone:room-e-inner",
+          "x": 8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "bf4-point:e-observation",
+          "zoneId": "bf4-zone:e-observation",
+          "x": 16.1,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 1.2044810000002144
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": -8.6,
+        "z": -4.8
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:room-b-inner",
+          "zoneId": "bf4-zone:room-b-inner",
+          "x": -8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 0.7417820000000575
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": -11.6,
+        "z": -4.8
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-b-outer",
+          "zoneId": "bf4-zone:room-b-outer",
+          "x": -11.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 0.004596999999648688
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": 8.6,
+        "z": -4.8
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:room-c-inner",
+          "zoneId": "bf4-zone:room-c-inner",
+          "x": 8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 0.9283829999999398
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": 11.6,
+        "z": -4.8
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:room-c-outer",
+          "zoneId": "bf4-zone:room-c-outer",
+          "x": 11.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 1.0688050000003386
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": -8.6,
+        "z": 4.8
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:room-b-inner",
+          "zoneId": "bf4-zone:room-b-inner",
+          "x": -8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-d-inner",
+          "zoneId": "bf4-zone:room-d-inner",
+          "x": -8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 0.848171000000093
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": -11.6,
+        "z": 4.8
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:room-b-inner",
+          "zoneId": "bf4-zone:room-b-inner",
+          "x": -8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-d-inner",
+          "zoneId": "bf4-zone:room-d-inner",
+          "x": -8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 0.9608889999999519
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": 8.6,
+        "z": 4.8
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "x": -4.5,
+          "z": -4.8
+        },
+        {
+          "x": 2,
+          "z": -3
+        },
+        {
+          "x": 6.5,
+          "z": 0
+        },
+        {
+          "id": "bf4-point:room-e-inner",
+          "zoneId": "bf4-zone:room-e-inner",
+          "x": 8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 0.9620119999999588
+    },
+    {
+      "inhabitant": "aryn",
+      "from": {
+        "x": -13,
+        "z": -8
+      },
+      "to": {
+        "x": 11.6,
+        "z": 4.8
+      },
+      "radius": 0.62,
+      "valid": true,
+      "points": [
+        {
+          "x": -11.8,
+          "z": -4.95
+        },
+        {
+          "x": -4.5,
+          "z": -4.8
+        },
+        {
+          "x": 2,
+          "z": -3
+        },
+        {
+          "x": 6.5,
+          "z": 0
+        },
+        {
+          "id": "bf4-point:room-e-inner",
+          "zoneId": "bf4-zone:room-e-inner",
+          "x": 8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-e-outer",
+          "zoneId": "bf4-zone:room-e-outer",
+          "x": 11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 1.199341000000004
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": -3,
+        "z": -5.7
+      },
+      "radius": 0.92,
+      "valid": true,
+      "points": [
+        {
+          "x": 11.8,
+          "z": -4.95
+        },
+        {
+          "x": 8.3,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:a-reading",
+          "zoneId": "bf4-zone:a-reading",
+          "x": -3,
+          "z": -5.7,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 20.784989000000223
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": -4.5,
+        "z": -4.3
+      },
+      "radius": 0.92,
+      "valid": false,
+      "points": null,
+      "coldMs": 0.0027019999997719424
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": -4.5,
+        "z": 4.8
+      },
+      "radius": 0.92,
+      "valid": false,
+      "points": null,
+      "coldMs": 0.0015109999999367574
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": -15.2,
+        "z": -6.8
+      },
+      "radius": 0.92,
+      "valid": false,
+      "points": null,
+      "coldMs": 0.0016140000002451416
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": 15.8,
+        "z": -9.8
+      },
+      "radius": 0.92,
+      "valid": true,
+      "points": [
+        {
+          "x": 12.2,
+          "z": -9.8
+        },
+        {
+          "id": "bf4-point:c-reading",
+          "zoneId": "bf4-zone:c-reading",
+          "x": 15.8,
+          "z": -9.8,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 0.745169999999689
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": 15.4,
+        "z": -6.9
+      },
+      "radius": 0.92,
+      "valid": true,
+      "points": [
+        {
+          "x": 12.2,
+          "z": -6.9
+        },
+        {
+          "id": "bf4-point:c-study",
+          "zoneId": "bf4-zone:c-study",
+          "x": 15.4,
+          "z": -6.9,
+          "radius": 0.35,
+          "facing": 0
+        }
+      ],
+      "coldMs": 0.7455240000003869
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": -15.5,
+        "z": 4.8
+      },
+      "radius": 0.92,
+      "valid": false,
+      "points": null,
+      "coldMs": 0.00223199999982171
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": -14.9,
+        "z": 9.6
+      },
+      "radius": 0.92,
+      "valid": true,
+      "points": [
+        {
+          "x": 11.8,
+          "z": -4.95
+        },
+        {
+          "x": 8.3,
+          "z": -4.6499999999999995
+        },
+        {
+          "id": "character:samael",
+          "key": "samael",
+          "label": "Samael",
+          "height": 2,
+          "x": -2,
+          "z": 1,
+          "description": "Espírito demoníaco de 2 m, casaco escuro, chifres, notebook e café."
+        },
+        {
+          "x": -8.3,
+          "z": 4.6499999999999995
+        },
+        {
+          "x": -9.5,
+          "z": 4.8
+        },
+        {
+          "x": -11.8,
+          "z": 4.95
+        },
+        {
+          "x": -12.2,
+          "z": 9.6
+        },
+        {
+          "id": "bf4-point:d-study",
+          "zoneId": "bf4-zone:d-study",
+          "x": -14.9,
+          "z": 9.6,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 1.0260299999999916
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": 15.3,
+        "z": 9.5
+      },
+      "radius": 0.92,
+      "valid": false,
+      "points": null,
+      "coldMs": 0.0047739999999976135
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": 16.1,
+        "z": 4.8
+      },
+      "radius": 0.92,
+      "valid": false,
+      "points": null,
+      "coldMs": 1.1505130000000463
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": -8.6,
+        "z": -4.8
+      },
+      "radius": 0.92,
+      "valid": true,
+      "points": [
+        {
+          "x": 11.8,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:room-b-inner",
+          "zoneId": "bf4-zone:room-b-inner",
+          "x": -8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 1.0068949999999859
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": -11.6,
+        "z": -4.8
+      },
+      "radius": 0.92,
+      "valid": true,
+      "points": [
+        {
+          "x": 11.8,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:room-b-outer",
+          "zoneId": "bf4-zone:room-b-outer",
+          "x": -11.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 1.0594830000000002
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": 8.6,
+        "z": -4.8
+      },
+      "radius": 0.92,
+      "valid": true,
+      "points": [
+        {
+          "x": 11.8,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:room-c-inner",
+          "zoneId": "bf4-zone:room-c-inner",
+          "x": 8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 0.8930799999998271
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": 11.6,
+        "z": -4.8
+      },
+      "radius": 0.92,
+      "valid": true,
+      "points": [
+        {
+          "x": 11.8,
+          "z": -4.95
+        },
+        {
+          "id": "bf4-point:room-c-outer",
+          "zoneId": "bf4-zone:room-c-outer",
+          "x": 11.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 1.2601850000000923
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": -8.6,
+        "z": 4.8
+      },
+      "radius": 0.92,
+      "valid": true,
+      "points": [
+        {
+          "x": 11.8,
+          "z": -4.95
+        },
+        {
+          "x": 8.3,
+          "z": -4.6499999999999995
+        },
+        {
+          "id": "character:samael",
+          "key": "samael",
+          "label": "Samael",
+          "height": 2,
+          "x": -2,
+          "z": 1,
+          "description": "Espírito demoníaco de 2 m, casaco escuro, chifres, notebook e café."
+        },
+        {
+          "x": -8.3,
+          "z": 4.6499999999999995
+        },
+        {
+          "id": "bf4-point:room-d-inner",
+          "zoneId": "bf4-zone:room-d-inner",
+          "x": -8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 1.0188740000003236
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": -11.6,
+        "z": 4.8
+      },
+      "radius": 0.92,
+      "valid": false,
+      "points": null,
+      "coldMs": 0.01036100000010265
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": 8.6,
+        "z": 4.8
+      },
+      "radius": 0.92,
+      "valid": true,
+      "points": [
+        {
+          "x": 11.8,
+          "z": -4.95
+        },
+        {
+          "x": 8.3,
+          "z": -4.6499999999999995
+        },
+        {
+          "x": 8.3,
+          "z": 4.6499999999999995
+        },
+        {
+          "id": "bf4-point:room-e-inner",
+          "zoneId": "bf4-zone:room-e-inner",
+          "x": 8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 0.9319620000001123
+    },
+    {
+      "inhabitant": "ytha",
+      "from": {
+        "x": 12.4,
+        "z": -10.4
+      },
+      "to": {
+        "x": 11.6,
+        "z": 4.8
+      },
+      "radius": 0.92,
+      "valid": true,
+      "points": [
+        {
+          "x": 11.8,
+          "z": -4.95
+        },
+        {
+          "x": 8.3,
+          "z": -4.6499999999999995
+        },
+        {
+          "x": 8.3,
+          "z": 4.6499999999999995
+        },
+        {
+          "id": "bf4-point:room-e-outer",
+          "zoneId": "bf4-zone:room-e-outer",
+          "x": 11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 1.0410670000001119
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": -3,
+        "z": -5.7
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "x": -8.3,
+          "z": 4.6499999999999995
+        },
+        {
+          "x": -2,
+          "z": 0
+        },
+        {
+          "id": "bf4-point:a-reading",
+          "zoneId": "bf4-zone:a-reading",
+          "x": -3,
+          "z": -5.7,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 19.590373
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": -4.5,
+        "z": -4.3
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-d-inner",
+          "zoneId": "bf4-zone:room-d-inner",
+          "x": -8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "x": -8.3,
+          "z": -4.6499999999999995
+        },
+        {
+          "id": "bf4-point:a-study",
+          "zoneId": "bf4-zone:a-study",
+          "x": -4.5,
+          "z": -4.3,
+          "radius": 0.35,
+          "facing": 0
+        }
+      ],
+      "coldMs": 0.8165189999999711
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": -4.5,
+        "z": 4.8
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "bf4-point:a-rest",
+          "zoneId": "bf4-zone:a-rest",
+          "x": -4.5,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 0
+        }
+      ],
+      "coldMs": 0.7941820000000916
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": -15.2,
+        "z": -6.8
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-d-inner",
+          "zoneId": "bf4-zone:room-d-inner",
+          "x": -8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-b-inner",
+          "zoneId": "bf4-zone:room-b-inner",
+          "x": -8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-b-outer",
+          "zoneId": "bf4-zone:room-b-outer",
+          "x": -11.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "x": -12.2,
+          "z": -6.8
+        },
+        {
+          "id": "bf4-point:b-rest",
+          "zoneId": "bf4-zone:b-rest",
+          "x": -15.2,
+          "z": -6.8,
+          "radius": 0.35,
+          "facing": 0
+        }
+      ],
+      "coldMs": 1.389278000000104
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": 15.8,
+        "z": -9.8
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "x": -8.3,
+          "z": 4.6499999999999995
+        },
+        {
+          "id": "character:samael",
+          "key": "samael",
+          "label": "Samael",
+          "height": 2,
+          "x": -2,
+          "z": 1,
+          "description": "Espírito demoníaco de 2 m, casaco escuro, chifres, notebook e café."
+        },
+        {
+          "x": 8.3,
+          "z": -4.6499999999999995
+        },
+        {
+          "id": "bf4-point:room-c-outer",
+          "zoneId": "bf4-zone:room-c-outer",
+          "x": 11.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "x": 12.2,
+          "z": -9.8
+        },
+        {
+          "id": "bf4-point:c-reading",
+          "zoneId": "bf4-zone:c-reading",
+          "x": 15.8,
+          "z": -9.8,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 1.0753310000000056
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": 15.4,
+        "z": -6.9
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "x": -8.3,
+          "z": 4.6499999999999995
+        },
+        {
+          "id": "character:samael",
+          "key": "samael",
+          "label": "Samael",
+          "height": 2,
+          "x": -2,
+          "z": 1,
+          "description": "Espírito demoníaco de 2 m, casaco escuro, chifres, notebook e café."
+        },
+        {
+          "x": 8.3,
+          "z": -4.6499999999999995
+        },
+        {
+          "x": 11.8,
+          "z": -4.95
+        },
+        {
+          "x": 13.5,
+          "y": 0,
+          "z": -6.6
+        },
+        {
+          "id": "bf4-point:c-study",
+          "zoneId": "bf4-zone:c-study",
+          "x": 15.4,
+          "z": -6.9,
+          "radius": 0.35,
+          "facing": 0
+        }
+      ],
+      "coldMs": 1.0568080000002738
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": -15.5,
+        "z": 4.8
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "x": -12.2,
+          "z": 4.95
+        },
+        {
+          "id": "bf4-point:d-reading",
+          "zoneId": "bf4-zone:d-reading",
+          "x": -15.5,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 0.8677299999999377
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": -14.9,
+        "z": 9.6
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:d-study",
+          "zoneId": "bf4-zone:d-study",
+          "x": -14.9,
+          "z": 9.6,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 0.00297900000032314
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": 15.3,
+        "z": 9.5
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "x": 0,
+          "z": 4.8
+        },
+        {
+          "id": "bf4-point:room-e-outer",
+          "zoneId": "bf4-zone:room-e-outer",
+          "x": 11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "x": 12.2,
+          "z": 9.5
+        },
+        {
+          "id": "bf4-point:e-rest",
+          "zoneId": "bf4-zone:e-rest",
+          "x": 15.3,
+          "z": 9.5,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 1.121056999999837
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": 16.1,
+        "z": 4.8
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "bf4-point:e-observation",
+          "zoneId": "bf4-zone:e-observation",
+          "x": 16.1,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 3.141592653589793
+        }
+      ],
+      "coldMs": 1.190074999999979
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": -8.6,
+        "z": -4.8
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-d-inner",
+          "zoneId": "bf4-zone:room-d-inner",
+          "x": -8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-b-inner",
+          "zoneId": "bf4-zone:room-b-inner",
+          "x": -8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 0.7967690000000403
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": -11.6,
+        "z": -4.8
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-d-inner",
+          "zoneId": "bf4-zone:room-d-inner",
+          "x": -8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-b-inner",
+          "zoneId": "bf4-zone:room-b-inner",
+          "x": -8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-b-outer",
+          "zoneId": "bf4-zone:room-b-outer",
+          "x": -11.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 0.96865200000002
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": 8.6,
+        "z": -4.8
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "x": -8.3,
+          "z": 4.6499999999999995
+        },
+        {
+          "id": "bf4-point:room-c-inner",
+          "zoneId": "bf4-zone:room-c-inner",
+          "x": 8.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 0.9785470000001624
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": 11.6,
+        "z": -4.8
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "x": -8.3,
+          "z": 4.6499999999999995
+        },
+        {
+          "id": "character:samael",
+          "key": "samael",
+          "label": "Samael",
+          "height": 2,
+          "x": -2,
+          "z": 1,
+          "description": "Espírito demoníaco de 2 m, casaco escuro, chifres, notebook e café."
+        },
+        {
+          "x": 8.3,
+          "z": -4.6499999999999995
+        },
+        {
+          "id": "bf4-point:room-c-outer",
+          "zoneId": "bf4-zone:room-c-outer",
+          "x": 11.6,
+          "z": -4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 1.1262620000002244
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": -8.6,
+        "z": 4.8
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-d-inner",
+          "zoneId": "bf4-zone:room-d-inner",
+          "x": -8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 0.8000660000002426
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": -11.6,
+        "z": 4.8
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 0.005710999999791966
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": 8.6,
+        "z": 4.8
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-e-inner",
+          "zoneId": "bf4-zone:room-e-inner",
+          "x": 8.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        }
+      ],
+      "coldMs": 0.9117419999997765
+    },
+    {
+      "inhabitant": "lua",
+      "from": {
+        "x": -13,
+        "z": 10
+      },
+      "to": {
+        "x": 11.6,
+        "z": 4.8
+      },
+      "radius": 0.58,
+      "valid": true,
+      "points": [
+        {
+          "id": "bf4-point:room-d-outer",
+          "zoneId": "bf4-zone:room-d-outer",
+          "x": -11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": 1.5707963267948966
+        },
+        {
+          "id": "bf4-point:room-e-outer",
+          "zoneId": "bf4-zone:room-e-outer",
+          "x": 11.6,
+          "z": 4.8,
+          "radius": 0.35,
+          "facing": -1.5707963267948966
+        }
+      ],
+      "coldMs": 1.13709899999958
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "spatial:641:0",
+      "minX": -9.5,
+      "maxX": 9.5,
+      "minZ": -8.67,
+      "maxZ": -8.430000000000001
+    },
+    {
+      "id": "spatial:641:1",
+      "minX": -9.5,
+      "maxX": 9.5,
+      "minZ": 8.430000000000001,
+      "maxZ": 8.67
+    },
+    {
+      "id": "spatial:641:2",
+      "minX": -9.62,
+      "maxX": -9.38,
+      "minZ": -8.55,
+      "maxZ": -6.1
+    },
+    {
+      "id": "spatial:641:3",
+      "minX": -9.62,
+      "maxX": -9.38,
+      "minZ": -3.5,
+      "maxZ": 3.5
+    },
+    {
+      "id": "spatial:641:4",
+      "minX": -9.62,
+      "maxX": -9.38,
+      "minZ": 6.1,
+      "maxZ": 8.55
+    },
+    {
+      "id": "spatial:641:5",
+      "minX": 9.38,
+      "maxX": 9.62,
+      "minZ": -8.55,
+      "maxZ": -6.1
+    },
+    {
+      "id": "spatial:641:6",
+      "minX": 9.38,
+      "maxX": 9.62,
+      "minZ": -3.5,
+      "maxZ": 3.5
+    },
+    {
+      "id": "spatial:641:7",
+      "minX": 9.38,
+      "maxX": 9.62,
+      "minZ": 6.1,
+      "maxZ": 8.55
+    },
+    {
+      "id": "spatial:641:8",
+      "minX": -18.38,
+      "maxX": -10.7,
+      "minZ": -12.6,
+      "maxZ": -12.360000000000001
+    },
+    {
+      "id": "spatial:641:9",
+      "minX": -18.38,
+      "maxX": -10.7,
+      "minZ": -2.52,
+      "maxZ": -2.28
+    },
+    {
+      "id": "spatial:641:10",
+      "minX": -18.5,
+      "maxX": -18.259999999999998,
+      "minZ": -12.48,
+      "maxZ": -2.4000000000000004
+    },
+    {
+      "id": "spatial:641:11",
+      "minX": -10.819999999999999,
+      "maxX": -10.58,
+      "minZ": -12.48,
+      "maxZ": -6.099999999999999
+    },
+    {
+      "id": "spatial:641:12",
+      "minX": -10.819999999999999,
+      "maxX": -10.58,
+      "minZ": -3.5,
+      "maxZ": -2.4000000000000004
+    },
+    {
+      "id": "spatial:641:13",
+      "minX": 10.7,
+      "maxX": 18.38,
+      "minZ": -12.6,
+      "maxZ": -12.360000000000001
+    },
+    {
+      "id": "spatial:641:14",
+      "minX": 10.7,
+      "maxX": 18.38,
+      "minZ": -2.52,
+      "maxZ": -2.28
+    },
+    {
+      "id": "spatial:641:15",
+      "minX": 18.259999999999998,
+      "maxX": 18.5,
+      "minZ": -12.48,
+      "maxZ": -2.4000000000000004
+    },
+    {
+      "id": "spatial:641:16",
+      "minX": 10.58,
+      "maxX": 10.819999999999999,
+      "minZ": -12.48,
+      "maxZ": -6.099999999999999
+    },
+    {
+      "id": "spatial:641:17",
+      "minX": 10.58,
+      "maxX": 10.819999999999999,
+      "minZ": -3.5,
+      "maxZ": -2.4000000000000004
+    },
+    {
+      "id": "spatial:641:18",
+      "minX": -18.38,
+      "maxX": -10.7,
+      "minZ": 2.28,
+      "maxZ": 2.52
+    },
+    {
+      "id": "spatial:641:19",
+      "minX": -18.38,
+      "maxX": -10.7,
+      "minZ": 12.360000000000001,
+      "maxZ": 12.6
+    },
+    {
+      "id": "spatial:641:20",
+      "minX": -18.5,
+      "maxX": -18.259999999999998,
+      "minZ": 2.4000000000000004,
+      "maxZ": 12.48
+    },
+    {
+      "id": "spatial:641:21",
+      "minX": -10.819999999999999,
+      "maxX": -10.58,
+      "minZ": 2.4000000000000004,
+      "maxZ": 3.5
+    },
+    {
+      "id": "spatial:641:22",
+      "minX": -10.819999999999999,
+      "maxX": -10.58,
+      "minZ": 6.099999999999999,
+      "maxZ": 12.48
+    },
+    {
+      "id": "spatial:641:23",
+      "minX": 10.7,
+      "maxX": 18.38,
+      "minZ": 2.28,
+      "maxZ": 2.52
+    },
+    {
+      "id": "spatial:641:24",
+      "minX": 10.7,
+      "maxX": 18.38,
+      "minZ": 12.360000000000001,
+      "maxZ": 12.6
+    },
+    {
+      "id": "spatial:641:25",
+      "minX": 18.259999999999998,
+      "maxX": 18.5,
+      "minZ": 2.4000000000000004,
+      "maxZ": 12.48
+    },
+    {
+      "id": "spatial:641:26",
+      "minX": 10.58,
+      "maxX": 10.819999999999999,
+      "minZ": 2.4000000000000004,
+      "maxZ": 3.5
+    },
+    {
+      "id": "spatial:641:27",
+      "minX": 10.58,
+      "maxX": 10.819999999999999,
+      "minZ": 6.099999999999999,
+      "maxZ": 12.48
+    },
+    {
+      "id": "spatial:641:28",
+      "minX": -10.83,
+      "maxX": -10.569999999999999,
+      "minZ": -6.28,
+      "maxZ": -6.04
+    },
+    {
+      "id": "spatial:641:29",
+      "minX": -9.63,
+      "maxX": -9.37,
+      "minZ": -6.28,
+      "maxZ": -6.04
+    },
+    {
+      "id": "spatial:641:30",
+      "minX": -10.83,
+      "maxX": -10.569999999999999,
+      "minZ": -3.5599999999999996,
+      "maxZ": -3.3199999999999994
+    },
+    {
+      "id": "spatial:641:31",
+      "minX": -9.63,
+      "maxX": -9.37,
+      "minZ": -3.5599999999999996,
+      "maxZ": -3.3199999999999994
+    },
+    {
+      "id": "spatial:641:32",
+      "minX": -10.83,
+      "maxX": -10.569999999999999,
+      "minZ": 3.3199999999999994,
+      "maxZ": 3.5599999999999996
+    },
+    {
+      "id": "spatial:641:33",
+      "minX": -9.63,
+      "maxX": -9.37,
+      "minZ": 3.3199999999999994,
+      "maxZ": 3.5599999999999996
+    },
+    {
+      "id": "spatial:641:34",
+      "minX": -10.83,
+      "maxX": -10.569999999999999,
+      "minZ": 6.04,
+      "maxZ": 6.28
+    },
+    {
+      "id": "spatial:641:35",
+      "minX": -9.63,
+      "maxX": -9.37,
+      "minZ": 6.04,
+      "maxZ": 6.28
+    },
+    {
+      "id": "spatial:641:36",
+      "minX": 9.37,
+      "maxX": 9.63,
+      "minZ": -6.28,
+      "maxZ": -6.04
+    },
+    {
+      "id": "spatial:641:37",
+      "minX": 10.569999999999999,
+      "maxX": 10.83,
+      "minZ": -6.28,
+      "maxZ": -6.04
+    },
+    {
+      "id": "spatial:641:38",
+      "minX": 9.37,
+      "maxX": 9.63,
+      "minZ": -3.5599999999999996,
+      "maxZ": -3.3199999999999994
+    },
+    {
+      "id": "spatial:641:39",
+      "minX": 10.569999999999999,
+      "maxX": 10.83,
+      "minZ": -3.5599999999999996,
+      "maxZ": -3.3199999999999994
+    },
+    {
+      "id": "spatial:641:40",
+      "minX": 9.37,
+      "maxX": 9.63,
+      "minZ": 3.3199999999999994,
+      "maxZ": 3.5599999999999996
+    },
+    {
+      "id": "spatial:641:41",
+      "minX": 10.569999999999999,
+      "maxX": 10.83,
+      "minZ": 3.3199999999999994,
+      "maxZ": 3.5599999999999996
+    },
+    {
+      "id": "spatial:641:42",
+      "minX": 9.37,
+      "maxX": 9.63,
+      "minZ": 6.04,
+      "maxZ": 6.28
+    },
+    {
+      "id": "spatial:641:43",
+      "minX": 10.569999999999999,
+      "maxX": 10.83,
+      "minZ": 6.04,
+      "maxZ": 6.28
+    },
+    {
+      "id": "spatial:643:0",
+      "minX": -5.725,
+      "maxX": -3.275,
+      "minZ": -2.56,
+      "maxZ": -1.44
+    },
+    {
+      "id": "spatial:643:1",
+      "minX": -5.37,
+      "maxX": -4.93,
+      "minZ": -2.135,
+      "maxZ": -1.785
+    },
+    {
+      "id": "spatial:643:2",
+      "minX": -4.895,
+      "maxX": -4.745,
+      "minZ": -2.33,
+      "maxZ": -2.21
+    },
+    {
+      "id": "spatial:643:3",
+      "minX": -4.36,
+      "maxX": -3.98,
+      "minZ": -2.2975,
+      "maxZ": -2.2625
+    },
+    {
+      "id": "spatial:643:4",
+      "minX": -5.425,
+      "maxX": -4.875,
+      "minZ": -1.3650000000000002,
+      "maxZ": -0.585
+    },
+    {
+      "id": "spatial:643:5",
+      "minX": -5.425,
+      "maxX": -4.875,
+      "minZ": -3.415,
+      "maxZ": -2.635
+    },
+    {
+      "id": "spatial:643:6",
+      "minX": -4.125,
+      "maxX": -3.575,
+      "minZ": -1.3650000000000002,
+      "maxZ": -0.585
+    },
+    {
+      "id": "spatial:643:7",
+      "minX": -4.125,
+      "maxX": -3.575,
+      "minZ": -3.415,
+      "maxZ": -2.635
+    },
+    {
+      "id": "spatial:643:8",
+      "minX": -4.82,
+      "maxX": -4.18,
+      "minZ": -2.32,
+      "maxZ": -1.68
+    },
+    {
+      "id": "spatial:756:0",
+      "minX": 3.275,
+      "maxX": 5.725,
+      "minZ": 1.44,
+      "maxZ": 2.56
+    },
+    {
+      "id": "spatial:756:1",
+      "minX": 3.63,
+      "maxX": 4.07,
+      "minZ": 1.865,
+      "maxZ": 2.215
+    },
+    {
+      "id": "spatial:756:2",
+      "minX": 4.93,
+      "maxX": 5.37,
+      "minZ": 1.865,
+      "maxZ": 2.215
+    },
+    {
+      "id": "spatial:756:3",
+      "minX": 4.105,
+      "maxX": 4.255,
+      "minZ": 1.67,
+      "maxZ": 1.79
+    },
+    {
+      "id": "spatial:756:4",
+      "minX": 4.64,
+      "maxX": 5.02,
+      "minZ": 1.7025,
+      "maxZ": 1.7375
+    },
+    {
+      "id": "spatial:756:5",
+      "minX": 3.575,
+      "maxX": 4.125,
+      "minZ": 2.635,
+      "maxZ": 3.415
+    },
+    {
+      "id": "spatial:756:6",
+      "minX": 3.575,
+      "maxX": 4.125,
+      "minZ": 0.585,
+      "maxZ": 1.3650000000000002
+    },
+    {
+      "id": "spatial:756:7",
+      "minX": 4.875,
+      "maxX": 5.425,
+      "minZ": 2.635,
+      "maxZ": 3.415
+    },
+    {
+      "id": "spatial:756:8",
+      "minX": 4.875,
+      "maxX": 5.425,
+      "minZ": 0.585,
+      "maxZ": 1.3650000000000002
+    },
+    {
+      "id": "spatial:756:9",
+      "minX": 4.18,
+      "maxX": 4.82,
+      "minZ": 1.68,
+      "maxZ": 2.32
+    },
+    {
+      "id": "spatial:873:0",
+      "minX": -4.95,
+      "maxX": -4.05,
+      "minZ": 6.05,
+      "maxZ": 6.95
+    },
+    {
+      "id": "spatial:873:1",
+      "minX": -5.9399999999999995,
+      "maxX": -5.0600000000000005,
+      "minZ": 6.785,
+      "maxZ": 7.5649999999999995
+    },
+    {
+      "id": "spatial:873:2",
+      "minX": -3.94,
+      "maxX": -3.06,
+      "minZ": 6.785,
+      "maxZ": 7.5649999999999995
+    },
+    {
+      "id": "spatial:873:3",
+      "minX": -3.62,
+      "maxX": -2.98,
+      "minZ": 5.58,
+      "maxZ": 6.22
+    },
+    {
+      "id": "spatial:956:0",
+      "minX": 6.73,
+      "maxX": 8.67,
+      "minZ": -7.55,
+      "maxZ": -6.8500000000000005
+    },
+    {
+      "id": "spatial:956:1",
+      "minX": 7.88,
+      "maxX": 8.52,
+      "minZ": -7.5200000000000005,
+      "maxZ": -6.88
+    },
+    {
+      "id": "spatial:1007:0",
+      "minX": -8.4,
+      "maxX": -7.6,
+      "minZ": 6.599,
+      "maxZ": 7.409
+    },
+    {
+      "id": "spatial:1024:0",
+      "minX": 7.6,
+      "maxX": 8.4,
+      "minZ": 6.599,
+      "maxZ": 7.409
+    },
+    {
+      "id": "spatial:1041:0",
+      "minX": -15.85,
+      "maxX": -14.950000000000001,
+      "minZ": -5.35,
+      "maxZ": -4.449999999999999
+    },
+    {
+      "id": "spatial:1041:1",
+      "minX": -16.84,
+      "maxX": -15.96,
+      "minZ": -4.614999999999999,
+      "maxZ": -3.8349999999999995
+    },
+    {
+      "id": "spatial:1041:2",
+      "minX": -14.84,
+      "maxX": -13.96,
+      "minZ": -4.614999999999999,
+      "maxZ": -3.8349999999999995
+    },
+    {
+      "id": "spatial:1041:3",
+      "minX": -14.52,
+      "maxX": -13.88,
+      "minZ": -5.819999999999999,
+      "maxZ": -5.18
+    },
+    {
+      "id": "spatial:1124:0",
+      "minX": -17.97,
+      "maxX": -16.03,
+      "minZ": -7.1499999999999995,
+      "maxZ": -6.45
+    },
+    {
+      "id": "spatial:1124:1",
+      "minX": -16.82,
+      "maxX": -16.18,
+      "minZ": -7.12,
+      "maxZ": -6.4799999999999995
+    },
+    {
+      "id": "spatial:1175:0",
+      "minX": -12.1,
+      "maxX": -11.299999999999999,
+      "minZ": -3.801,
+      "maxZ": -2.9909999999999997
+    },
+    {
+      "id": "spatial:1192:0",
+      "minX": 14.175,
+      "maxX": 16.625,
+      "minZ": -5.359999999999999,
+      "maxZ": -4.24
+    },
+    {
+      "id": "spatial:1192:1",
+      "minX": 15.005,
+      "maxX": 15.155000000000001,
+      "minZ": -5.13,
+      "maxZ": -5.01
+    },
+    {
+      "id": "spatial:1192:2",
+      "minX": 15.540000000000001,
+      "maxX": 15.92,
+      "minZ": -5.0975,
+      "maxZ": -5.0625
+    },
+    {
+      "id": "spatial:1192:3",
+      "minX": 14.475,
+      "maxX": 15.025,
+      "minZ": -4.165,
+      "maxZ": -3.385
+    },
+    {
+      "id": "spatial:1192:4",
+      "minX": 15.775,
+      "maxX": 16.325,
+      "minZ": -4.165,
+      "maxZ": -3.385
+    },
+    {
+      "id": "spatial:1192:5",
+      "minX": 15.08,
+      "maxX": 15.72,
+      "minZ": -5.12,
+      "maxZ": -4.4799999999999995
+    },
+    {
+      "id": "spatial:1275:0",
+      "minX": 11.299999999999999,
+      "maxX": 12.1,
+      "minZ": -3.801,
+      "maxZ": -2.9909999999999997
+    },
+    {
+      "id": "spatial:1292:0",
+      "minX": 16.95,
+      "maxX": 17.650000000000002,
+      "minZ": -9.25,
+      "maxZ": -7.3500000000000005
+    },
+    {
+      "id": "spatial:1305:0",
+      "minX": -16.125,
+      "maxX": -13.675,
+      "minZ": 6.539999999999999,
+      "maxZ": 7.66
+    },
+    {
+      "id": "spatial:1305:1",
+      "minX": -15.825000000000001,
+      "maxX": -15.275,
+      "minZ": 7.734999999999999,
+      "maxZ": 8.515
+    },
+    {
+      "id": "spatial:1305:2",
+      "minX": -15.825000000000001,
+      "maxX": -15.275,
+      "minZ": 5.685,
+      "maxZ": 6.465
+    },
+    {
+      "id": "spatial:1305:3",
+      "minX": -14.525,
+      "maxX": -13.975,
+      "minZ": 7.734999999999999,
+      "maxZ": 8.515
+    },
+    {
+      "id": "spatial:1305:4",
+      "minX": -14.525,
+      "maxX": -13.975,
+      "minZ": 5.685,
+      "maxZ": 6.465
+    },
+    {
+      "id": "spatial:1305:5",
+      "minX": -15.22,
+      "maxX": -14.58,
+      "minZ": 6.779999999999999,
+      "maxZ": 7.42
+    },
+    {
+      "id": "spatial:1411:0",
+      "minX": -12.219999999999999,
+      "maxX": -11.18,
+      "minZ": 2.884,
+      "maxZ": 3.924
+    },
+    {
+      "id": "spatial:1428:0",
+      "minX": -17.900000000000002,
+      "maxX": -17.2,
+      "minZ": 6.25,
+      "maxZ": 8.15
+    },
+    {
+      "id": "spatial:1448:0",
+      "minX": 14.850000000000001,
+      "maxX": 15.75,
+      "minZ": 6.75,
+      "maxZ": 7.65
+    },
+    {
+      "id": "spatial:1448:1",
+      "minX": 15.860000000000001,
+      "maxX": 16.740000000000002,
+      "minZ": 6.135000000000001,
+      "maxZ": 6.915000000000001
+    },
+    {
+      "id": "spatial:1448:2",
+      "minX": 13.860000000000001,
+      "maxX": 14.74,
+      "minZ": 6.135,
+      "maxZ": 6.915
+    },
+    {
+      "id": "spatial:1448:3",
+      "minX": 13.780000000000001,
+      "maxX": 14.42,
+      "minZ": 7.48,
+      "maxZ": 8.120000000000001
+    },
+    {
+      "id": "spatial:1531:0",
+      "minX": 12.729999999999999,
+      "maxX": 14.67,
+      "minZ": 3.05,
+      "maxZ": 3.75
+    },
+    {
+      "id": "spatial:1531:1",
+      "minX": 12.924999999999999,
+      "maxX": 14.475,
+      "minZ": 3.44,
+      "maxZ": 4.1
+    },
+    {
+      "id": "spatial:1531:2",
+      "minX": 13.399999999999999,
+      "maxX": 14.1,
+      "minZ": 3.3249999999999997,
+      "maxZ": 3.675
+    },
+    {
+      "id": "spatial:1531:3",
+      "minX": 14.28,
+      "maxX": 14.58,
+      "minZ": 3.54,
+      "maxZ": 3.84
+    },
+    {
+      "id": "spatial:1531:4",
+      "minX": 13.879999999999999,
+      "maxX": 14.52,
+      "minZ": 3.08,
+      "maxZ": 3.7199999999999998
+    },
+    {
+      "id": "spatial:1584:0",
+      "minX": 11.299999999999999,
+      "maxX": 12.1,
+      "minZ": 2.9989999999999997,
+      "maxZ": 3.809
+    },
+    {
+      "id": "spatial:2063:0",
+      "minX": -4.13,
+      "maxX": -3.57,
+      "minZ": -2.22,
+      "maxZ": -1.82
+    },
+    {
+      "id": "spatial:2083:0",
+      "minX": -17.86,
+      "maxX": -17.14,
+      "minZ": -6.93,
+      "maxZ": -6.63
+    },
+    {
+      "id": "spatial:2100:0",
+      "minX": -14.56,
+      "maxX": -13.94,
+      "minZ": 6.79,
+      "maxZ": 7.409999999999999
+    },
+    {
+      "id": "spatial:2106:0",
+      "minX": 15.040000000000001,
+      "maxX": 15.56,
+      "minZ": 6.94,
+      "maxZ": 7.46
+    },
+    {
+      "id": "spatial:2143:0",
+      "minX": -15.76,
+      "maxX": -15.08,
+      "minZ": 6.8549999999999995,
+      "maxZ": 7.384999999999999
+    },
+    {
+      "id": "spatial:1643:0",
+      "minX": -4.05,
+      "maxX": -1.95,
+      "minZ": -7.51,
+      "maxZ": -6.8100000000000005
+    },
+    {
+      "id": "spatial:1676:0",
+      "minX": 14.870000000000001,
+      "maxX": 16.73,
+      "minZ": -11.5,
+      "maxZ": -10.819999999999999
+    },
+    {
+      "id": "spatial:1711:0",
+      "minX": -16.67,
+      "maxX": -14.33,
+      "minZ": 3.27,
+      "maxZ": 4.01
+    },
+    {
+      "id": "spatial:1744:0",
+      "minX": -17.148,
+      "maxX": -15.852,
+      "minZ": -11.040000000000001,
+      "maxZ": -10.56
+    },
+    {
+      "id": "spatial:1776:0",
+      "minX": 4.952,
+      "maxX": 6.247999999999999,
+      "minZ": -7.44,
+      "maxZ": -6.96
+    },
+    {
+      "id": "spatial:1808:0",
+      "minX": -14.693999999999999,
+      "maxX": -13.506,
+      "minZ": -11,
+      "maxZ": -10.600000000000001
+    },
+    {
+      "id": "spatial:1833:0",
+      "minX": 15.506000000000002,
+      "maxX": 16.694000000000003,
+      "minZ": 3.4,
+      "maxZ": 3.8000000000000003
+    },
+    {
+      "id": "spatial:1858:0",
+      "minX": 13.484,
+      "maxX": 14.716,
+      "minZ": -8.700000000000001,
+      "maxZ": -7.9
+    },
+    {
+      "id": "spatial:1885:0",
+      "minX": 15.384,
+      "maxX": 16.616,
+      "minZ": -8.700000000000001,
+      "maxZ": -7.9
+    },
+    {
+      "id": "spatial:1912:0",
+      "minX": 2.384,
+      "maxX": 3.616,
+      "minZ": -7.6000000000000005,
+      "maxZ": -6.8
+    },
+    {
+      "id": "spatial:1939:0",
+      "minX": -17.560000000000002,
+      "maxX": -16.64,
+      "minZ": 10.530000000000001,
+      "maxZ": 11.07
+    },
+    {
+      "id": "spatial:1955:0",
+      "minX": -15.760000000000002,
+      "maxX": -14.84,
+      "minZ": 10.530000000000001,
+      "maxZ": 11.07
+    },
+    {
+      "id": "spatial:1971:0",
+      "minX": 16.54,
+      "maxX": 17.46,
+      "minZ": 10.530000000000001,
+      "maxZ": 11.07
+    },
+    {
+      "id": "spatial:1987:0",
+      "minX": 13.5,
+      "maxX": 14.7,
+      "minZ": 10.4,
+      "maxZ": 11.200000000000001
+    },
+    {
+      "id": "spatial:2011:0",
+      "minX": 15,
+      "maxX": 16.2,
+      "minZ": 10.4,
+      "maxZ": 11.200000000000001
+    },
+    {
+      "id": "spatial:2035:0",
+      "minX": -17.3,
+      "maxX": -16.099999999999998,
+      "minZ": -8.6,
+      "maxZ": -7.799999999999999
+    }
+  ]
+}

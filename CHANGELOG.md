@@ -1,3 +1,10 @@
+## Recuperação R2C — 2026-11-06
+
+- Livros com acabamento de encadernação; filmes como projetores de memória, séries como receptores episódicos, estudos como fólios de pesquisa, atividades físicas como pesos/tapetes de treino e trabalhos como estojos de ofício.
+- Contrato/factories de assets substituíveis preservam IDs, slots, picking e destaques; livro original transporta/abre/retorna por capacidade de animação, sem dependência de variante/hinge concreto. Troca durante transporte é rejeitada com segurança.
+- Faíscas visuais excluídas do fallback físico e roots sobrepostos coletados uma vez; 125 obstáculos no cenário pareado final.
+- Custos geométricos e imagens comparáveis registrados, sem aceite artístico/mobile ou encerramento da recuperação R3–R5.
+
 ## Recuperação R2B — 2026-11-06
 
 - Estantes agregadas por material no mundo composto, preservando entalhes/texturas, picking e vãos físicos; transformações estáticas e caixa arquitetural compartilhada.

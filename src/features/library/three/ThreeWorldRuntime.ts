@@ -59,7 +59,15 @@ import {
   type LibraryRecordPlacement,
 } from "../libraryRecordLayout";
 import { createProceduralLibraryBuilding } from "./proceduralLibraryBuilding";
-import { createLibraryRecordComposition } from "./libraryRecordComposition";
+import {
+  createLibraryRecordComposition,
+  replaceLibraryRecordRepresentation,
+  type LibraryRecordVisual,
+} from "./libraryRecordComposition";
+import type {
+  BookRecordFactory,
+  RecordAssetFactory,
+} from "./recordAssetContract";
 import { FrameMetricsWindow } from "./frameMetrics";
 import {
   CAMERA_REFERENCE_HALF_HEIGHT,
@@ -84,6 +92,7 @@ import { collectSceneTextureMetrics } from "./sceneTextureMetrics";
 import { ThreeWorldInteraction } from "./ThreeWorldInteraction";
 import {
   reconcileReadingAreaBookVisuals,
+  replaceReadingAreaBookRepresentation,
   validateReadingAreaBookSnapshot,
   type ReadingAreaBookVisual,
 } from "./readingAreaBookVisuals";
@@ -429,6 +438,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private lastDiagnosticsPublishedAt: number | undefined;
   private materialTextureReferences = 0;
   private meshes = 0;
+  private readonly recordVisuals = new Map<string, LibraryRecordVisual>();
   private mountStartedAt: number | undefined;
   private mountedWorld: ThreeWorldMount | undefined;
   private navigation: CameraNavigation | undefined;
@@ -689,6 +699,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
         const records = createLibraryRecordComposition(
           this.libraryRecordPlacements ?? [],
         );
+        for (const visual of records.instances)
+          this.recordVisuals.set(visual.instanceId, visual);
         mountedWorld.addLibraryRecords(records.root);
         scene.add(records.root);
         this.sceneProps = createInhabitantSceneProps(building);
@@ -1064,6 +1076,43 @@ export class ThreeWorldRuntime implements WorldRuntime {
   selectObject(id: string | null): void {
     if (this.isTerminal()) return;
     this.mountedWorld?.getInteraction()?.selectObject(id);
+  }
+
+  /** Replace compatible visuals without changing the registered record wrapper. */
+  replaceLibraryRecordRepresentation(
+    instanceId: string,
+    factory: RecordAssetFactory,
+  ): "replaced" | "unavailable" {
+    const visual = this.recordVisuals.get(instanceId);
+    if (this.isTerminal() || !visual || !this.mountedWorld)
+      return "unavailable";
+    replaceLibraryRecordRepresentation(visual, factory);
+    this.mountedWorld
+      .getInteraction()
+      ?.refreshHighlightForSelectedObject(instanceId);
+    this.updateObjectCounts(this.mountedWorld.scene);
+    this.updateMaterialTextureMetrics(this.mountedWorld.scene);
+    this.renderCurrentFrame();
+    this.publishDiagnostics(true);
+    return "replaced";
+  }
+  replaceReadingAreaBookRepresentation(
+    instanceId: string,
+    factory: BookRecordFactory,
+  ): "replaced" | "busy" | "unavailable" {
+    const visual = this.readingAreaBookVisuals.get(instanceId);
+    if (this.isTerminal() || !visual || !this.mountedWorld)
+      return "unavailable";
+    const result = replaceReadingAreaBookRepresentation(visual, factory);
+    if (result === "busy") return result;
+    this.mountedWorld
+      .getInteraction()
+      ?.refreshHighlightForSelectedObject(instanceId);
+    this.updateObjectCounts(this.mountedWorld.scene);
+    this.updateMaterialTextureMetrics(this.mountedWorld.scene);
+    this.renderCurrentFrame();
+    this.publishDiagnostics(true);
+    return result;
   }
 
   /**
@@ -1484,6 +1533,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const mountedWorld = this.mountedWorld;
     this.mountedWorld = undefined;
     this.navigation = undefined;
+    this.recordVisuals.clear();
     this.sessionBooks?.dispose();
     this.sessionBooks = undefined;
     this.agency?.setMode("unavailable");

@@ -2,7 +2,7 @@ import { LivingSession } from "../livingObjects";
 import {
   Box3,
   Box3Helper,
-  BoxGeometry,
+  BufferGeometry,
   Mesh,
   MeshStandardMaterial,
   OrthographicCamera,
@@ -639,11 +639,21 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
     );
     // Observe the actual resource types used by a movie representation.
     // A second invalid model throws after the first valid movie was built.
-    const geometryDisposals = vi.spyOn(BoxGeometry.prototype, "dispose");
+    const geometryDisposals = vi.spyOn(BufferGeometry.prototype, "dispose");
     const materialDisposals = vi.spyOn(
       MeshStandardMaterial.prototype,
       "dispose",
     );
+    // A complete one-asset lifecycle is the reference for partial construction.
+    // Include baked buffers/temporary clones, not only the retired box model.
+    const reference = createLibraryRecordComposition(placements.slice(0, 1));
+    disposeObjectTree(reference.root);
+    const geometryCount = geometryDisposals.mock.calls.length,
+      materialCount = materialDisposals.mock.calls.length;
+    expect(new Set(geometryDisposals.mock.contexts).size).toBe(geometryCount);
+    expect(new Set(materialDisposals.mock.contexts).size).toBe(materialCount);
+    geometryDisposals.mockClear();
+    materialDisposals.mockClear();
     const invalid = {
       ...placements[1],
       modelTypeId: "invalid-record",
@@ -651,8 +661,10 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
     expect(() =>
       createLibraryRecordComposition([placements[0], invalid]),
     ).toThrow("Modelo BF-3 desconhecido");
-    expect(geometryDisposals).toHaveBeenCalledTimes(3);
-    expect(materialDisposals).toHaveBeenCalledTimes(2);
+    expect(geometryDisposals).toHaveBeenCalledTimes(geometryCount);
+    expect(materialDisposals).toHaveBeenCalledTimes(materialCount);
+    expect(new Set(geometryDisposals.mock.contexts).size).toBe(geometryCount);
+    expect(new Set(materialDisposals.mock.contexts).size).toBe(materialCount);
     expect(disposeIndependent).not.toHaveBeenCalled();
     const mesh = firstMesh(independent.root);
     expect(mesh.geometry).toBeDefined();
@@ -729,7 +741,7 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
     vi.stubGlobal("ResizeObserver", TestResizeObserver);
     const renderer = new TestRenderer();
     const sceneAdds = vi.spyOn(Scene.prototype, "add");
-    const geometryDisposals = vi.spyOn(BoxGeometry.prototype, "dispose");
+    const geometryDisposals = vi.spyOn(BufferGeometry.prototype, "dispose");
     const materialDisposals = vi.spyOn(
       MeshStandardMaterial.prototype,
       "dispose",
@@ -778,7 +790,7 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
         add(type, listener, options);
       },
     );
-    const geometryDisposals = vi.spyOn(BoxGeometry.prototype, "dispose");
+    const geometryDisposals = vi.spyOn(BufferGeometry.prototype, "dispose");
     const container = host();
     const runtime = new ThreeWorldRuntime({
       libraryWorldSnapshot: snapshot(),

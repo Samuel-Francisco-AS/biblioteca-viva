@@ -1,10 +1,14 @@
+import {
+  type BookRecordAsset,
+  type BookRecordFactory,
+  type RecordAssetIdentity,
+  validateRecordReplacement,
+} from "./recordAssetContract";
+import { disposeObjectTree } from "./referenceScene";
 import { Group } from "three";
 
 import type { ReadingAreaBook } from "../readingAreaBookContract";
-import {
-  createProceduralBookVolume,
-  type ProceduralBookVolume,
-} from "./proceduralContent";
+import { RECORD_ASSETS } from "./recordAssets";
 import type { ProceduralComposition } from "./proceduralComposition";
 import {
   assignReadingAreaBooksToSlots,
@@ -16,7 +20,7 @@ export interface ReadingAreaBookVisual {
   readonly book: ReadingAreaBook;
   node: Group;
   placement: ReadingAreaBookPlacement;
-  representation: ProceduralBookVolume;
+  representation: BookRecordAsset;
   sessionControlled?: boolean;
 }
 
@@ -73,7 +77,7 @@ function createVisual(
       `O layout aponta para estante ausente: ${placement.hostInstanceId}.`,
     );
   }
-  const representation = createProceduralBookVolume({
+  const representation = RECORD_ASSETS["book-volume"]({
     entryId: book.entryId,
     instanceId: book.instanceId,
     modelTypeId: "book-volume",
@@ -148,4 +152,35 @@ export function reconcileReadingAreaBookVisuals(
       }),
     ),
   });
+}
+
+/** Keep the original registered occurrence. A live journey retains its owner
+ * until return; replacing its articulation halfway is explicitly rejected. */
+export function replaceReadingAreaBookRepresentation(
+  visual: ReadingAreaBookVisual,
+  factory: BookRecordFactory,
+): "replaced" | "busy" {
+  if (visual.sessionControlled) return "busy";
+  const previous = visual.representation;
+  const identity: RecordAssetIdentity<"book-volume"> = {
+    entryId: visual.book.entryId,
+    instanceId: visual.book.instanceId,
+    modelTypeId: "book-volume",
+  };
+  const replacement = factory(identity);
+  if (replacement.root === previous.root)
+    throw new Error("A substituição exige um asset independente.");
+  try {
+    validateRecordReplacement(replacement, identity, previous.dimensions);
+    if (replacement.animation.kind !== "hinged-cover")
+      throw new Error("Livro sem articulação compatível.");
+    replacement.animation.setOpening(0);
+    visual.node.add(replacement.root);
+  } catch (error) {
+    if (!replacement.root.parent) disposeObjectTree(replacement.root);
+    throw error;
+  }
+  visual.representation = replacement;
+  disposeObjectTree(previous.root);
+  return "replaced";
 }
