@@ -1,3 +1,7 @@
+## Integração R4 — 2026-11-07
+
+- R4 e saneamento de leitura integrados após aceite físico dirigido do proprietário, com dívidas preservadas. [Relatório](docs/audits/BV_INTEGRACAO_PR39_R4_2026-11-07.md). R5 não iniciada.
+
 ## Saneamento pós-R4 — leitura (2026-11-07)
 
 - Corrigido o relógio que permanecia visualmente em 0 s: timestamp de redesenho compartilhado por sessões, indicador global e Estudos; pausa/retorno/reabertura preservam a duração derivada do domínio.
@@ -170,14 +174,12 @@
 - Comandos rápidos não perdem pulso por debounce global; links de fichas também solicitam feedback na ativação. Latência percebida Android ainda requer medição física.
 - Evidências, gates e pendências: [relatório R7](docs/BF-5R7_RELATORIO.md). BF-5 permanece aberta.
 
-
 ## BF-5R6 — Códice Iluminado (2026-11-04)
 
 - Reconstrução de linguagem visual de toda a aplicação com fundo ameixa noturna, fólio claro, tinta, gravuras SVG próprias e superfícies artesanais; substituição de frontispícios, dock, seleção de categorias, listagens, editores e controles visuais de todas as áreas.
 - Bridge Android nativa para toque leve e confirmação, com respeito às preferências do sistema e fallback opcional no browser.
 - Campos e capítulos com ergonomia de manuscrito, contraste, navegação com teclado e reduzido movimento. Contratos de dados, mundo, narrativa e seis categorias preservados.
 - Relatório em [BF-5R6_RELATORIO.md](docs/BF-5R6_RELATORIO.md). Sem aprovação artística/hardware ou merge.
-
 
 ## BF-5R5 — candidata (2026-11-04)
 
@@ -187,7 +189,6 @@
 - Notas/citações contextuais nos detalhes, controles/disclosures mais suaves, diálogo/HUD/dock coesos e vibração leve opcional por capacidade, respeitando movimento reduzido.
 - Diagnósticos e apresentação de habitantes isolados de React; contagem da cena acompanha diagnósticos em vez de cada frame. Sem alegação de desempenho físico aprovado. BF-5 aberta, PR #20 draft. [Relatório](docs/BF-5R5_RELATORIO.md).
 
-
 ## BF-5R4 — reconstrução de experiência candidata (2026-11-03)
 
 - Removido zoom por proporção da R3; pátio exterior real e câmera ortográfica recuada para preservar profundidade durante exploração.
@@ -196,14 +197,12 @@
 - Papel/tinta/latão, gravuras locais, superfícies específicas por área e chegada curta sem stagger. Sem schema, dependências ou alterações de backup.
 - [Relatório, limitações e testes](docs/BF-5R4_RELATORIO.md); candidata sem aceite humano e com fluidez entre abas ainda pendente.
 
-
 ## BF-5R3 — câmera de abertura e composição do compêndio (2026-11-03)
 
 - O mundo composto passou a abrir em enquadramento mais aproximado em retrato, evitando margens excessivas que pareciam uma chapa do canvas; zoom manual, pan, orientação e panorama em paisagem permanecem disponíveis.
 - Reformulação estrutural da Coleção (fichas de artefato compactas e símbolos semânticos apenas decorativos), apresentação do detalhe de registro e identidade contextual das demais abas.
 - Hierarquias e transições leves em `src/styles-ritual.css`, com suporte a redução de movimento, toque e telas estreitas, sem novos dados ou dependências.
 - Adicionados testes de câmera e E2E de Coleção/Detalhes, [relatório](docs/BF-5R3_RELATORIO.md) e documentação de ressalvas. Ainda sem aceite visual físico ou merge da PR #20.
-
 
 ## BF-5R2 — imersão sem chapa e interações táteis (2026-11-03)
 
@@ -212,14 +211,12 @@
 - Transições de rota simplificadas para transform/opacidade sem blur de página, removendo backdrops filtrados custosos.
 - Acrescentados teste E2E focalizado e [relatório BF-5R2](docs/BF-5R2_RELATORIO.md). Não há prova física de eliminação de engasgos; código enviado à PR #20 draft, sem merge.
 
-
 ## BF-5R1 — intervenção remota na candidata rejeitada (2026-11-03)
 
 - Proprietário rejeitou o acabamento e a ergonomia da primeira PR #20 no Moto G06. A correção atua na própria branch draft, sem merge.
 - Implantado novo sistema visual arcano em `src/styles-arcane.css`, sigilo SVG editorial, dock flutuante de medalhões, biblioteca full-viewport com bússola para ferramentas acessíveis sob demanda e planos de diálogo RPG mais expressivos.
 - Atualizados teste unitário e E2E para a descoberta das alternativas via hub; acrescentado roteiro de avaliação da candidata em `docs/BF-5R1_RELATORIO.md`.
 - Nenhum schema, dado, motor narrativo, backend ou dependência alterado. Teste físico e novo resultado CI ainda não obtidos nesta alteração.
-
 
 ## BF-5 — candidata de apresentação (2026-11-03)
 
@@ -246,7 +243,6 @@
 - **Método BF-5:** uma grande reforma de interface integrada seguida de refinamentos sucessivos com validação humana, **sem exigir implementação em checkpoints pequenos**; design e detalhes técnicos ainda serão planejados, sem autorização de código nesta alteração.
 - Preservadas as exceções da BF-4: CI global FAIL, issues #4/#11/#15, TalkBack, R-19, folio Lua, finais não testados exaustivamente e desempenho sustentado. Nenhum runtime, asset, dependência, schema, backup, teste ou versão modificado.
 
-
 ## BF-4G / BF-4 — concluídas no escopo dirigido com exceção CI (2026-11-03)
 
 - Consolidação documental dos contratos B–F, matriz de evidências e roteiro curto Moto G06 em `docs/BF-4G_RELATORIO.md`.
@@ -265,7 +261,6 @@
 - Lua pode chamuscar um folio de treino fictício e aceitar ajuda para repará-lo; nada altera os seis tipos de registro ou o Segredo do Pergaminho.
 - Habitantes recolhido oferece atividades/localização, acontecimentos e vínculos sem pontuação; controles F2 interrompem e coordenam as rotinas. Pausa, movimento reduzido e falha WebGL possuem texto fiel e não simulam percursos.
 - 690 Vitest, novo E2E F3 remoto e gates de código/build PASS. Moto G06: Autonomia, Convivência e Integração PASS; **Acidente de Lua NÃO TESTADO** fisicamente. [CI #41542040077](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41542040077) **FAIL global** (21 E2E PASS, 10 FAIL, 1 flaky); ressalva assumida por autorização explícita de encerramento e merge da [PR #16](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/16). TalkBack, R-19, cota sustentada, BF-4G e dívida #4/#11/#15 continuam; BF-4F4 é próxima. [Fechamento](docs/BF-4F3_RELATORIO.md).
-
 
 ## BF-4F2 — concluída no escopo dirigido (2026-11-02)
 
@@ -287,13 +282,11 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 
 **Fechamento BF-4F1 (2026-11-02):** quatro modelos iniciais de Samael, Aryn, Ytha e Lua aprovados no Moto G06; seleção canvas/React confirmada e [PR #13](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/13) autorizada a merge. Microgestos rígidos de cabeça apenas; **F2** permanece responsável por animação corporal e gestos, F3 por IA local, F4 por quests. [CI 41520167206](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41520167206): gates não E2E PASS, 667 unitários; E2E final FAIL (20 PASS, 6 FAIL, 1 flaky), sem alegação de CI global PASS. [Relatório](docs/BF-4F1_RELATORIO.md).
 
-
 ### BF-4F — Plano técnico de F1–F4 sem preflight isolado (documental; 2026-11-02)
 
 - [Plano técnico BF-4F](docs/BF-4F_PLANO_TECNICO.md) aprovado: **F1** produz os quatro habitantes integrados com verificação de GLB/rigging/ownership durante a criação do personagem definitivo, **F2** entrega animações, **F3** autonomia/relações, **F4** diálogos RPG/quests.
 - **Sem spike/preflight de autoria separado**, sem criação de engine de avatares genérica ou benchmark experimental descartável; preservar avaliações visuais e técnicas dentro do trabalho útil. Próxima tarefa autorizável ao Codex é implementar **somente BF-4F1**, com sync seguro, commit, push e PR sem merge.
 - **Documentação apenas:** nenhum modelo, asset, código de produção, teste executado ou PR da BF-4F foi criado nesta atualização.
-
 
 ### BF-4F — Concepção narrativa e quatro habitantes (documental; 2026-11-02)
 
@@ -301,18 +294,15 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 - [ADR-013](docs/decisions/ADR-013-bf-4f-quatro-habitantes-rpg.md) substitui o antigo alvo de três habitantes por quatro e define **conversa offline por três ou quatro respostas predefinidas**, efeitos narrativos/autorizados, desenvolvimento de relações e quests RPG, **sem LLM**. [Concepção completa](docs/BF-4F_CONCEPCAO_HABITANTES.md).
 - Somente documentos alterados: **sem personagem/modelo/IA/quest codificado, build, teste físico ou BF-4F encerrada**.
 
-
 ### BF-4E — Objetos vivos concluídos no escopo dirigido, exceção CI (2026-11-02)
 
 - Dez famílias de objetos vivos com animações, iluminação, estados de sessão e sequência do Segredo do Pergaminho em quatro etapas nos cinco cômodos. Após rejeição da UX inicial com botões, interação primária por toque direto; atmosfera contextual por horário local/estudo/descoberta; React recolhido como alternativa acessível.
 - **Gate Moto G06:** toque, pan, zoom e seleção sem regressões percebidas; segredo completo 4/4, com imagens do progresso. Após hotfix, o usuário confirmou melhora dos alvos de toque de pergaminho/livro, direção correta da gaveta E e desaparecimento da faixa após 4 segundos. Encerramento e merge da [PR #12](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/12) expressamente autorizados.
 - **Exceção CI:** [41438324911](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41438324911) **FAIL global** com 661/661 Vitest, formato/lint/tipos/áudio/build/performance PASS e **20/24 E2E PASS**; coleção cheia 1280/390 px ([#11](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/11)) e `r4-shell` interação/dez ciclos ([#4](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/4)) seguem abertas. Sem CI verde, TalkBack PASS, benchmark sustentado ou release. [Relatório final](docs/BF-4E_RELATORIO.md).
 
-
 ### BF-4E — Registro histórico da visão criativa (2026-11-02)
 
 - Documentada a proposta de dez famílias de objetos interativos, animações de props, iluminação real, eventos interdependentes, três atmosferas e um pequeno segredo encadeado nos cinco cômodos. Sem implementação, teste, APK ou merge de feature; o próximo passo é o prompt Codex sob [contrato BF-4E](docs/BF-4E_VISAO_CONTRATO.md).
-
 
 ### BF-4D — Organização espacial encerrada com exceção CI (2026-11-02)
 
@@ -331,7 +321,6 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 - Biblioteca funcional recebe assoalhos com juntas, pedra, painéis bordô/verde, molduras, pilastras, latão e luz quente em todos os cinco ambientes neutros.
 - Mantidos os quatro acessos, três estantes, livros/registros, seleção e navegação ortográfica. Detalhes repetidos usam instâncias por material com descarte por montagem.
 - **Fechamento dirigido (2026-11-02):** auditoria e [CI PR #8](https://github.com/Samuel-Francisco-AS/biblioteca-viva/actions/runs/41379918451) PASS, APK recompilado instalado e avaliação visual/funcional PASS no Moto G06. Faixas de latão coplanares corrigidas com teste. Leve tremulação/borramento de paredes em movimento adiada como ressalva R-19 não bloqueante; reforma UI React/Three.js futura. Issue #4 e TalkBack seguem abertos; sem benchmark sustentado, beta ou release. [Fechamento BF-4B](docs/BF-4B_RELATORIO.md).
-
 
 ### BF-3F/BF-3 — Fechamento físico-funcional dirigido, com exceção CI — 2026-11-01
 
@@ -1011,6 +1000,7 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 - Dez famílias de objetos ambientais com ações nos cinco cômodos, animações e iluminação local.
 - Três atmosferas e descoberta ficcional do Pergaminho, com ações React disponíveis sem WebGL.
 - Estado somente de sessão; sem mudanças de dados ou backup. Auditoria e gate humano pendentes.
+
 ## 2026-11-05 — BF-5.5B candidata
 
 - Tarefas de interação com estados previsíveis e leases exclusivos recuperáveis.

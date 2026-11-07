@@ -1,3 +1,5 @@
+> **Atualização 07/11/2026:** proprietário autorizou a integração após aceite físico dirigido da R4 e saneamento de leitura no Moto G06. [Relatório de integração](BV_INTEGRACAO_PR39_R4_2026-11-07.md) prevalece sobre estados anteriores de candidata; ressalvas e evidências abaixo permanecem.
+
 > **Continuação pós-R4 de 07/11/2026:** proprietário observou Canvas/seleção/início/saída do livro funcionais e sem regressão de fluidez percebida frente à R3, mas relógio visual parado. Saneamento de UX/cronômetro na mesma PR draft #39, preservando os quatro checkpoints abaixo. Não significa aprovação física integral R4. [Diagnóstico, candidata, gates e roteiro](BV_SANEAMENTO_POS_R4_LEITURA.md). R5 não iniciada.
 
 # Recuperação R4 — Dados, observabilidade, integridade e CI
@@ -47,7 +49,6 @@ WebView: MainActivity apenas registra plugins de arquivos/haptics e configura in
 
 Arquivos: frameMetrics, performanceProbe/test, ThreeWorldRuntime/test, WorldDiagnosticPanel, worldRuntime, WorldHost.test, report-build-performance e docs. APK comum contém painel opt-in; build:diagnostics existente habilita cenários técnicos, sem telemetria.
 
-
 ## R4C — BV-17
 
 Entrada `345ea0b`; saída `b05b0be`. [Matriz dos 17 casos e reprodução](evidence/bv-recovery-r4/backup-matrix.md).
@@ -64,7 +65,6 @@ Gates: conjunto inicial **30 PASS/7 arquivos**; reexecução após ajuste de tip
 
 Arquivos: backupCodec.ts, r4Integrity.test.ts, SettingsPage.test.tsx, docs DATA_MODEL/SECURITY/TESTING/relatório/evidência. Riscos: transações fictícias não reproduzem corte de energia, falta real de storage, seletor Android ou corrupção física. Reabertura de app React/ausência de duplicação no mundo depende também do E2E R4D; sem prova humana de backups pessoais.
 
-
 ## R4D — BV-18
 
 Entrada `b05b0be`; saída identificada pelo commit `R4D`, SHA definitivo na PR/final (não pode ser incluído no próprio conteúdo do commit).
@@ -74,7 +74,6 @@ Investigação inicial antes de nova execução: [extração limitada do trace d
 Pipeline: concurrency por workflow/PR/ref cancela execuções obsoletas; artefatos de falha identificam SHA/shard e mantêm retenção de três dias. retries=0 também na configuração local/CI, coerente com --retries=0 já usado no workflow. Push só main e PR preservados, sem filtros que omitam código relevante ou alteração de proteção. Builds duplicados dos shards permanecem: extração de job/artifact compartilhado não foi necessária para proteger a cota nesta missão. Nenhum dispatch/rerun. Futuro após 01/12: retirar skip somente numa publicação expressamente autorizada com cota, executar todos os gates e ambos shards sem retries, classificar FAIL por trace contra baseline e não supor sucesso desta rodada local.
 
 Gates finais em execução. Primeira format:check capturou novo teste antes de formatação; lint encontrou cinco achados novos (inicializações sobrescritas, dois non-null redundantes e mock async sem await), corrigidos sem supressões. Novo teste de conservação do runtime esperava start, mas contava chamadas antes do efeito ready/seleção; corrigido para aguardar seleção publicada, **27/27 host PASS**. Essas falhas novas de preparação/teste/estática são separadas do E2E histórico. Nenhuma assertion removida ou timeout ampliado.
-
 
 R4B pós-ajuste: **26/26 WorldHost PASS**, typecheck PASS, lint dirigido posteriormente identificado como FAIL (quatro achados estáticos corrigidos em R4D); os outros 52 testes da rodada inicial passaram. Validação ampla final obrigatória antes de R4D.
 
