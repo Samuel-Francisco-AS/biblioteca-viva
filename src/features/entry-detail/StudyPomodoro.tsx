@@ -1,12 +1,9 @@
 import { BVSelectSheet } from "../../ui/BVPicker";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  currentSessionDuration,
-  type Session,
-  type StudyEntry,
-} from "../../domain";
+import { type Session, type StudyEntry } from "../../domain";
 import type { SessionApplication } from "../sessions/SessionPanel";
+import { useSessionClock } from "../sessions/useSessionClock";
 const clockFace = (seconds: number) =>
   `${Math.floor(seconds / 60)
     .toString()
@@ -31,24 +28,10 @@ export function StudyPomodoro({
   ) => Promise<void>;
 }) {
   const [minutes, setMinutes] = useState(25);
-  const [now, setNow] = useState(() => new Date().toISOString());
   const session = open?.entryId === entry.id ? open : undefined;
-  useEffect(() => {
-    const tick = () => setNow(new Date().toISOString());
-    tick();
-    const interval = window.setInterval(tick, 1000);
-    return () => window.clearInterval(interval);
-  }, [session]);
+  const elapsed = useSessionClock(session);
   const duration =
     session?.kind === "study" ? session.focusDurationSeconds : undefined;
-  const elapsed = session
-    ? currentSessionDuration(
-        session,
-        now < (session.activeSince ?? session.startedAt)
-          ? (session.activeSince ?? session.startedAt)
-          : now,
-      )
-    : 0;
   const target = duration ?? minutes * 60;
   const remaining = Math.max(0, target - elapsed);
   const finished = session && duration !== undefined && remaining === 0;

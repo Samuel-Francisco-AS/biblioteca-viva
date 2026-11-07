@@ -1,3 +1,5 @@
+Saneamento ativo: [relógio e fólio de leitura pós-R4](audits/BV_SANEAMENTO_POS_R4_LEITURA.md), sobre R4A–D na PR draft #39; gate humano da candidata pendente.
+
 > **R4 — candidata de 07/11/2026:** main base `d5eb469` integra PRs #32–#38 e aceites físicos dirigidos R2/R3/segurança. R4A–D implementadas na PR draft #39; gates estáticos, 935 unitários, web e APK debug locais PASS. Dados/sessões separados, diagnóstico opt-in e integridade v6 reforçada. Playwright dirigido **3 PASS/1 FAIL** (seleção R2 por deadline, causa não atribuída); sem aprovação física R4 ou CI global verde. [Autoridade canônica e evidências](audits/BV_RECUPERACAO_R4.md). BF-5.5 parcial; R5, F2B/F2C e BF-5.5G não iniciadas. Notas anteriores são cronologia.
 
 > **Recuperação R3:** [relatório de loop, agência e lifecycle](audits/BV_RECUPERACAO_R3.md), candidata na PR draft #38; gate físico R3 e recuperação integral abertos.

@@ -1,0 +1,59 @@
+{
+  "base": "c7497407def956709b3bcda303215a46b9d7b8d2",
+  "fixtures": "Somente livros/registros fictícios em bancos e contexto de navegador descartáveis.",
+  "unit": {
+    "command": "npm run test:run",
+    "status": "PASS",
+    "tests": 946,
+    "files": 149,
+    "seconds": 85.59
+  },
+  "e2e_initial": {
+    "command": "npm run test:e2e -- e2e/post-r4-reading.spec.ts e2e/bf5-parte2b-estudo.spec.ts --grep 'leitura tem relógio|estudo recupera pomodoro' --retries=0",
+    "status": "PASS",
+    "passed": 2,
+    "seconds": 17.7
+  },
+  "e2e_after_visual_review": {
+    "command": "npm run test:e2e -- e2e/post-r4-reading.spec.ts --retries=0",
+    "status": "PASS",
+    "passed": 1,
+    "seconds": 10.4,
+    "reason": "Contraste de disclosure, composição em paisagem e dock durante foco da seção; asserts adicionados."
+  },
+  "previous_r2": {
+    "status": "FAIL preservado, não reexecutado",
+    "classification": "deadline global 30 s; causa não atribuída",
+    "source": "docs/audits/BV_RECUPERACAO_R4.md"
+  },
+  "visual_review": {
+    "viewports": [
+      "390x844",
+      "844x390"
+    ],
+    "screenshots": [
+      "reading-active-portrait.png",
+      "reading-paused-landscape.png",
+      "reading-ready-portrait.png"
+    ],
+    "human_android_acceptance": false
+  },
+  "ci": "Gatilhos conferidos no checkout e main remota. Sem dispatch/rerun; publicação skip ci. Nenhuma CI verde inferida.",
+  "gates": {
+    "format": "PASS",
+    "format_check": "PASS",
+    "lint": "PASS + dirigido dos E2E após ajustes",
+    "typecheck": "PASS",
+    "audio": "PASS",
+    "build": "PASS, aviso conhecido de chunks >500 kB",
+    "performance_report": "PASS, bytes estáticos",
+    "android_debug": "PASS, inclui build/sync",
+    "diff_check": "PASS"
+  },
+  "apk": {
+    "path": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "bytes": 8607490,
+    "sha256": "f4406d958b03f8166875d3931da66ea45e346578416d229ce079c3c364436581",
+    "installed_or_physically_tested": false
+  }
+}

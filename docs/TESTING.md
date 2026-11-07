@@ -1,3 +1,7 @@
+## Saneamento pós-R4 — sessões de leitura (07/11/2026)
+
+Nova regressão cobre o clock de 1 s compartilhado, pausa/retomada, visibilidade DOM/Activity, reabertura, descarte inclusive de listener nativo tardio e um só intervalo entre consumidores. Integração real com Dexie verifica relógio/indicador/duração final, acesso direto no fólio, sessão global concorrente, histórico e cinco tipos restantes. O teste de projeção do Canvas passa a iniciar pela UI. Suíte final **946 testes / 149 arquivos PASS**. E2E dirigido de leitura + Pomodoro **2/2 PASS**; nova execução só da leitura após correção visual **1/1 PASS**, zero retries. Seletores antigos de timer de Estudo passaram a usar seu nome acessível, pois há também um timer global. Asserts funcionais preservados. R2 FAIL histórico por deadline permanece sem reexecução ou causa presumida. [Gates, capturas e limitações físicas](audits/BV_SANEAMENTO_POS_R4_LEITURA.md).
+
 > **R4 — candidata de 07/11/2026:** main base `d5eb469` integra PRs #32–#38 e aceites físicos dirigidos R2/R3/segurança. R4A–D implementadas na PR draft #39; gates estáticos, 935 unitários, web e APK debug locais PASS. Dados/sessões separados, diagnóstico opt-in e integridade v6 reforçada. Playwright dirigido **3 PASS/1 FAIL** (seleção R2 por deadline, causa não atribuída); sem aprovação física R4 ou CI global verde. [Autoridade canônica e evidências](audits/BV_RECUPERACAO_R4.md). BF-5.5 parcial; R5, F2B/F2C e BF-5.5G não iniciadas. Notas anteriores são cronologia.
 
 ## Saneamento de segurança pós-R3 — 07/11/2026

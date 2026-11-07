@@ -218,9 +218,11 @@ export function BookDetailPage({
   application,
   refreshKey = 0,
   secondary,
+  readingSession,
 }: {
   readonly application?: BookDetailApplication;
   readonly refreshKey?: number;
+  readonly readingSession?: (book: BookEntry) => ReactNode;
   readonly secondary?: (
     book: BookEntry,
     onUpdated: (book: BookEntry) => void,
@@ -456,9 +458,10 @@ export function BookDetailPage({
           Corrigir total de páginas
         </Link>
       </section>
+      {readingSession?.(book)}
       <section className="folio-chapter" aria-labelledby="history-title">
         <div className="folio-chapter-heading">
-          <span aria-hidden="true">II</span>
+          <span aria-hidden="true">III</span>
           <h3 id="history-title">Notas e citações</h3>
           <span className="folio-count">{notes.length + quotes.length}</span>
         </div>
@@ -547,7 +550,7 @@ export function BookDetailPage({
         aria-labelledby="share-title"
       >
         <div className="folio-chapter-heading">
-          <span aria-hidden="true">III</span>
+          <span aria-hidden="true">IV</span>
           <h3 id="share-title">Leve uma página com você</h3>
         </div>
         <p>Seu percurso ou uma passagem especial, em uma imagem do Códice.</p>

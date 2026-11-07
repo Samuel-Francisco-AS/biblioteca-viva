@@ -1,3 +1,5 @@
+> **Continuação pós-R4 de 07/11/2026:** proprietário observou Canvas/seleção/início/saída do livro funcionais e sem regressão de fluidez percebida frente à R3, mas relógio visual parado. Saneamento de UX/cronômetro na mesma PR draft #39, preservando os quatro checkpoints abaixo. Não significa aprovação física integral R4. [Diagnóstico, candidata, gates e roteiro](BV_SANEAMENTO_POS_R4_LEITURA.md). R5 não iniciada.
+
 # Recuperação R4 — Dados, observabilidade, integridade e CI
 
 Autoridade operacional desta rodada: missão do proprietário de 07/11/2026 e [integração cumulativa](BV_INTEGRACAO_PR32_38_2026-11-07.md). Base `d5eb469b22dea9d8b604543b408de817aea8b076`. Branch `perf/bv-r4-dados-observabilidade-integridade`. BF-5.5 parcial; R5 não autorizada. Aceites físicos de R2/R3/segurança são baseline, não aprovação física R4.
