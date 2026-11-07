@@ -1,0 +1,637 @@
+{
+  "environment": "Chromium / SwiftShader / DPR1; real runtime, six categories, four GLBs, one scroll; host counters, no Android bytes/FPS",
+  "sourceRef": "working-tree",
+  "cycles": [
+    {
+      "heapAfterGc": {
+        "usedSize": 22948376,
+        "totalSize": 24604672,
+        "embedderHeapUsedSize": 565728,
+        "backingStorageSize": 20612620
+      },
+      "cycle": 1,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 13,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 108,
+            "textures": 3
+          },
+          "contextLost": false,
+          "listeners": 13,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 0,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "contextLost": true,
+        "listeners": 0,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 8,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 23409344,
+        "totalSize": 24342528,
+        "embedderHeapUsedSize": 553416,
+        "backingStorageSize": 20612620
+      },
+      "cycle": 2,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 13,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 118,
+            "textures": 3
+          },
+          "contextLost": false,
+          "listeners": 13,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 0,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "contextLost": true,
+        "listeners": 0,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 9,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 23718684,
+        "totalSize": 24866816,
+        "embedderHeapUsedSize": 518872,
+        "backingStorageSize": 20612620
+      },
+      "cycle": 3,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 13,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 108,
+            "textures": 3
+          },
+          "contextLost": false,
+          "listeners": 13,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 0,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "contextLost": true,
+        "listeners": 0,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 10,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 23843072,
+        "totalSize": 25391104,
+        "embedderHeapUsedSize": 527080,
+        "backingStorageSize": 20612620
+      },
+      "cycle": 4,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 13,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 118,
+            "textures": 3
+          },
+          "contextLost": false,
+          "listeners": 13,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 0,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "contextLost": true,
+        "listeners": 0,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 11,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 24006416,
+        "totalSize": 25128960,
+        "embedderHeapUsedSize": 526088,
+        "backingStorageSize": 20612620
+      },
+      "cycle": 5,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 13,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 108,
+            "textures": 3
+          },
+          "contextLost": false,
+          "listeners": 13,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 0,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "contextLost": true,
+        "listeners": 0,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 12,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 24065308,
+        "totalSize": 25128960,
+        "embedderHeapUsedSize": 524240,
+        "backingStorageSize": 20612620
+      },
+      "cycle": 6,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 13,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 118,
+            "textures": 3
+          },
+          "contextLost": false,
+          "listeners": 13,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 0,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "contextLost": true,
+        "listeners": 0,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 13,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 24104552,
+        "totalSize": 25128960,
+        "embedderHeapUsedSize": 537008,
+        "backingStorageSize": 20612620
+      },
+      "cycle": 7,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 13,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 108,
+            "textures": 3
+          },
+          "contextLost": false,
+          "listeners": 13,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 0,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "contextLost": true,
+        "listeners": 0,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 14,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 24141672,
+        "totalSize": 25391104,
+        "embedderHeapUsedSize": 543800,
+        "backingStorageSize": 20612620
+      },
+      "cycle": 8,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 13,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 118,
+            "textures": 3
+          },
+          "contextLost": false,
+          "listeners": 13,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 0,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "contextLost": true,
+        "listeners": 0,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 15,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 24479144,
+        "totalSize": 25653248,
+        "embedderHeapUsedSize": 553640,
+        "backingStorageSize": 20612620
+      },
+      "cycle": 9,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 13,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 108,
+            "textures": 3
+          },
+          "contextLost": false,
+          "listeners": 13,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 0,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "contextLost": true,
+        "listeners": 0,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 16,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 24765420,
+        "totalSize": 25632768,
+        "embedderHeapUsedSize": 555888,
+        "backingStorageSize": 20612655
+      },
+      "cycle": 10,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 13,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "restored-terminal",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 118,
+            "textures": 3
+          },
+          "contextLost": false,
+          "listeners": 13,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 0,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "failed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "contextLost": true,
+        "listeners": 0,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 17,
+        "jsEventListeners": 13
+      }
+    }
+  ],
+  "pageErrors": []
+}

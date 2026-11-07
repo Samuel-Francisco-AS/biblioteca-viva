@@ -1,3 +1,5 @@
+> **Após R3 — 07/11/2026:** validar candidata A/B/C no Moto G06 pelo [roteiro R3](audits/BV_RECUPERACAO_R3.md#estado-da-candidata-e-gate-físico), incluindo retenção/memória ainda não atribuída no harness. R4/R5 e recuperação integral continuam abertas, sem antecipação de implementação; BF-5.5F2B/F2C permanecem pendentes.
+
 > **R3 em execução — 07/11/2026:** A implementada em candidata; publicar A antes de B (BV-10) e B antes de C (BV-15), conforme [missão vigente](audits/BV_RECUPERACAO_R3.md). Gate Moto G06 depois de R3C; R4/R5 permanecem futuras, sem execução nesta missão.
 
 > **PRÓXIMA ETAPA — 07/11/2026: R3 autorizada para continuação em conversa nova.** R2 e saneamento receberam aceite dirigido no Moto G06: melhora considerável do Canvas, novas representações aprovadas e Livro da Estrela corrigido. Em PR draft #38, sem merge: **R3A BV-05/06/08 (loop/livro/alocações) → R3B BV-10 (agência/interações) → R3C BV-15 (lifecycle/memória)**, cada uma com commit/push. Preservar arte aprovada e R1/R2; R4/R5 e E2E/CI seguem abertas. [Resumo e comandos de retomada](audits/BV_RETOMADA_R3_2026-11-07.md). O teste Moto solicitado nas notas antigas já ocorreu.

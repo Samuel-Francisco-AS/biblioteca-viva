@@ -113,6 +113,7 @@ export interface ThreeWorldRenderer {
   readonly info?: RendererInfo;
   readonly shadowMap: { enabled: boolean };
   dispose(): void;
+  forceContextLoss?(): void;
   render(scene: Scene, camera: OrthographicCamera): void;
   setPixelRatio(value: number): void;
   setSize(width: number, height: number, updateStyle?: boolean): void;
@@ -209,6 +210,7 @@ function createFixtureLoader(): FixtureModelLoader {
 /** Resources that live and are released together for one runtime mount. */
 class ThreeWorldMount {
   private disposed = false;
+  private frameGeneration = 0;
   private readonly fixtures: Object3D[] = [];
   private interaction: ThreeWorldInteraction | undefined;
   private proceduralComposition: ProceduralComposition | undefined;
@@ -253,6 +255,7 @@ class ThreeWorldMount {
       );
     } catch (error) {
       renderer.dispose();
+      renderer.forceContextLoss?.();
       renderer.domElement.remove();
       throw error;
     }
@@ -287,6 +290,8 @@ class ThreeWorldMount {
   }
 
   cancelFrame(): void {
+    // Invalidates queued callbacks even if delivered after a later resume.
+    this.frameGeneration++;
     const frameId = this.frameId;
     this.frameId = undefined;
     if (frameId === undefined) return;
@@ -306,7 +311,12 @@ class ThreeWorldMount {
   }
 
   requestFrame(callback: FrameRequestCallback): void {
-    this.frameId = this.frameScheduler.request(callback);
+    if (this.disposed || this.frameId !== undefined) return;
+    const generation = this.frameGeneration;
+    this.frameId = this.frameScheduler.request((timestamp) => {
+      if (this.disposed || generation !== this.frameGeneration) return;
+      callback(timestamp);
+    });
   }
 
   settleFrame(): void {
@@ -411,6 +421,9 @@ class ThreeWorldMount {
     });
     this.safely(() => this.scene.clear());
     this.safely(() => this.renderer.dispose());
+    // dispose() releases renderer caches, but does not release its WebGL context.
+    // This mount owns the context; resident pauses never take this terminal path.
+    this.safely(() => this.renderer.forceContextLoss?.());
     this.safely(() => this.renderer.domElement.remove());
   }
 

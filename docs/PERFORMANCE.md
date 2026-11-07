@@ -1,3 +1,5 @@
+> **R3C — 07/11/2026:** dez ciclos WebGL com 341 recursos acompanhados por montagem, zero omissões/duplicações no descarte e zero RAF/listeners/observer próprios pendentes. Contexto termina perdido. **Heap/DOM host não declarados estáveis:** resíduo +1 nó/ciclo e heap pós-GC 22,95→24,77 MB, sem retentor causal atribuído; não é medição Android/GPU. [Dados, limites e diagnóstico](audits/BV_RECUPERACAO_R3.md#r3c--bv-15).
+
 > **R3A — 07/11/2026:** em 600 frames determinísticos no host: travessias 600→0, lerps de cor 2.400→0, bounds 1.200→1, clones Vector3 600→0. [Cenário, tradeoffs e reprodução](audits/BV_RECUPERACAO_R3.md). Não é FPS/GC/GPU Android medido; arte e taxas de animação preservadas.
 
 ## Saneamento pós-R2 — redução local (06/11/2026)

@@ -829,7 +829,7 @@ it("R5 pauses a resident host, resumes the same canvas and disposes once", async
   const view = render(<WorldHost runtimeFactory={runtimeFactory} active />);
   await screen.findByText("Ambiente 3D em execução.");
   const canvas = view.container.querySelector("canvas");
-  for (let index = 0; index < 3; index++) {
+  for (let index = 0; index < 10; index++) {
     view.rerender(<WorldHost runtimeFactory={runtimeFactory} active={false} />);
     expect(runtime.pause).toHaveBeenCalledTimes(index + 1);
     expect(runtime.dispose).not.toHaveBeenCalled();
@@ -841,6 +841,49 @@ it("R5 pauses a resident host, resumes the same canvas and disposes once", async
   expect(runtime.mount).toHaveBeenCalledOnce();
   view.unmount();
   expect(runtime.dispose).toHaveBeenCalledOnce();
+});
+
+it("R3 owns one context clock timer through route changes and releases it on unmount", async () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date(2026, 10, 7, 17, 59, 59, 500));
+  try {
+    const runtime = createRuntime();
+    const runtimeFactory = () => Promise.resolve(runtime);
+    const snapshot = projectLibraryWorldEntries([]);
+    const view = render(
+      <WorldHost
+        runtimeFactory={runtimeFactory}
+        libraryWorldSnapshot={snapshot}
+      />,
+    );
+    await act(() => Promise.resolve());
+    expect(runtime.mount).toHaveBeenCalledOnce();
+    expect(vi.getTimerCount()).toBe(1);
+    for (let i = 0; i < 10; i++) {
+      view.rerender(
+        <WorldHost
+          runtimeFactory={runtimeFactory}
+          libraryWorldSnapshot={snapshot}
+          active={false}
+        />,
+      );
+      view.rerender(
+        <WorldHost
+          runtimeFactory={runtimeFactory}
+          libraryWorldSnapshot={snapshot}
+          active
+        />,
+      );
+      expect(vi.getTimerCount()).toBe(1);
+    }
+    await act(() => vi.advanceTimersByTime(500));
+    expect(vi.getTimerCount()).toBe(1);
+    view.unmount();
+    expect(vi.getTimerCount()).toBe(0);
+    expect(runtime.dispose).toHaveBeenCalledOnce();
+  } finally {
+    vi.useRealTimers();
+  }
 });
 
 it("R5 pauses a runtime that finishes loading after leaving the library", async () => {

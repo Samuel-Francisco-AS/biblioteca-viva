@@ -1,3 +1,5 @@
+> **R3 — CANDIDATA IMPLEMENTADA (07/11/2026):** A `f1086b7` e B `a9fc253` publicadas; C conclui matriz dirigida de lifecycle e corrige descarte de runas/RAF antigo, com liberação terminal do contexto. Dez ciclos WebGL PASS; [relatório, testes e retenção host pendente](audits/BV_RECUPERACAO_R3.md). **Gate Moto G06 R3, memória sustentada e CI E2E global permanecem abertos; sem merge ou R4/R5 executadas.**
+
 > **R3B — 07/11/2026:** A publicada (`f1086b7`); BV-10 implementado em candidata, agência recebe estado explícito por fase e catálogo autoral separado, sem duplicar movimento/leases. [Relatório](audits/BV_RECUPERACAO_R3.md). R3C após push B; recuperação integral e gate físico R3 abertos.
 
 > **R3A — 07/11/2026:** BV-05/06/08 implementados em candidata na PR draft #38; menos trabalho ocioso de luz/livro/trilhas e poses por fase, regressões dirigidas PASS. [Evidências e limites](audits/BV_RECUPERACAO_R3.md). R3B/C na sequência após push; recuperação integral/R4/R5 abertas, gate físico R3 pendente e dívida E2E preservada.

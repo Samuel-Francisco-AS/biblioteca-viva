@@ -1,0 +1,6 @@
+{
+  "src/features/library/three/ThreeWorldRuntime.ts": "506f1b8570495efd962f62614d55664448577e35844e8d6a0388559fd65c47cc",
+  "src/features/library/three/referenceScene.ts": "603ee43dd421e1aa03292840ce9dc5a8d574e88925796071ed86920a0a4a30e2",
+  "scripts/check-world-lifecycle.mjs": "a78378dce0803c0668e263cb20e45e2cf13d432f5c69e7f095ca4682f4c60448",
+  "src/features/library/three/r3Loop.probe.test.ts": "b732ee3794f23174db6b3fffe3c0677515020c3d156343feb092c7724d8c51a9"
+}

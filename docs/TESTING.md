@@ -1,3 +1,5 @@
+> **R3C — 07/11/2026:** harness real de dez ciclos PASS (zero retries), perda/restauração WebGL terminal e pointer capture; testes de host residente/timer único, quatro loaders tardios, livros e retomada. [Matriz, falhas de desenvolvimento/instrumentação e limites de memória](audits/BV_RECUPERACAO_R3.md#r3c--bv-15). Não equivale à CI E2E do produto ou gate físico Moto G06.
+
 > **R3B — 07/11/2026:** agência/continuidade/interações/runtime 81 PASS; subconjunto final com contratos novos 23 PASS (sobreposição), incluindo envelope temporário bloqueando e removido, disputa/expiração e oportunidades estáveis. [Evidências](audits/BV_RECUPERACAO_R3.md#r3b--bv-10); gate físico R3 pendente.
 
 > **R3A — 07/11/2026:** regressões de invalidação por matriz/capa, ownership em toda utilização, transições de luz, cauda de pergaminho e poses estáveis. [102 testes distintos e gates, com falha intermediária documentada](audits/BV_RECUPERACAO_R3.md). Sem novo aceite físico R3 ou CI global verde.

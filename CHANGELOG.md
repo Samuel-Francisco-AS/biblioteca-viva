@@ -1,3 +1,5 @@
+> **Recuperação R3C (2026-11-07), candidata:** runas liberam geometria/material; callbacks RAF cancelados não reativam trabalho após retomar; contexto WebGL liberado no descarte terminal. Mundo continua residente e pausado entre abas. [Dez ciclos, regressões e pendências de memória/gate físico](docs/audits/BV_RECUPERACAO_R3.md). Recuperação integral aberta.
+
 > **Recuperação R3B (2026-11-07), candidata:** atividades autorais separadas do coordenador, entradas físicas explícitas por atualização e consulta direta de reservas de superfície. Comportamentos, prioridades e personagens preservados. [Relatório](docs/audits/BV_RECUPERACAO_R3.md).
 
 > **Recuperação R3A (2026-11-07), candidata:** mundo evita travessias/interpolação de luz estável, atualização redundante do livro pessoal e históricos de pergaminhos parados; poses compartilhadas por fase e âncoras mantidas por asset. Livro da Estrela, transições, magia e visuais aprovados preservados. [Evidências](docs/audits/BV_RECUPERACAO_R3.md); sem gate físico R3 ou fechamento da recuperação.

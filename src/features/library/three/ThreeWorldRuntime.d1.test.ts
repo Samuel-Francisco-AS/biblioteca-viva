@@ -883,8 +883,9 @@ describe("BF-4E integrated lifecycle", () => {
     if (!drawer) throw new Error("drawer");
     runtime.selectObject("living:cabinet");
     session.act("living:cabinet", "toggle");
-    const frame = request.mock.calls.at(-1)?.[0];
-    if (!frame) throw new Error("frame");
+    if (!request.mock.calls.at(-1)?.[0]) throw new Error("frame");
+    const frame = (timestamp: number) =>
+      request.mock.calls.at(-1)![0](timestamp);
     frame(0);
     frame(50);
     expect(drawer.position.z).toBeGreaterThan(0);
@@ -1003,7 +1004,7 @@ it("F2 moves the original selectable, tracks highlight bounds and cancels after 
     home = book.position.clone(),
     canvas = renderer.domElement;
   runtime.selectObject(session.instanceId);
-  const frame = request.mock.calls.at(-1)![0];
+  const frame = (timestamp: number) => request.mock.calls.at(-1)![0](timestamp);
   for (let t = 0; t <= 35_000; t += 50) frame(t);
   expect(book.position.equals(home)).toBe(false);
   expect(canvas.dataset.selectedObject).toBe(session.instanceId);
@@ -1061,7 +1062,7 @@ it("post-R2 star book opens, survives pause/resume and closes with selection int
     .children.find(
       (child) => child.type === "Group" && child.name !== "living-page-pivot",
     )!;
-  const frame = request.mock.calls.at(-1)![0];
+  const frame = (timestamp: number) => request.mock.calls.at(-1)![0](timestamp);
   runtime.selectObject("living:book");
   session.act("living:book", "toggle");
   frame(0);

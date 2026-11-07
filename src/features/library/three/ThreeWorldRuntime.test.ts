@@ -44,6 +44,7 @@ function readingBook(index: number, title = `Livro ${index}`) {
 class TestRenderer implements ThreeWorldRenderer {
   readonly domElement = document.createElement("canvas");
   readonly dispose = vi.fn();
+  readonly forceContextLoss = vi.fn();
   readonly info = {
     memory: { geometries: 46, textures: 0 },
     render: { calls: 46, triangles: 546 },
@@ -3000,4 +3001,37 @@ it("R3 shares a detached post-agency snapshot and preserves the prior collision 
   expect(poses.mock.results[3].value).not.toBe(snapshot);
   expect(callbacks.size).toBe(1);
   runtime.dispose();
+});
+
+it("R3 rejects a cancelled RAF delivered after resume without losing the current frame", () => {
+  vi.stubGlobal("ResizeObserver", TestResizeObserver);
+  const callbacks = new Map<number, FrameRequestCallback>();
+  let next = 0;
+  const renderer = new TestRenderer();
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    fixtureLoader: new TestFixtureLoader(),
+    frameScheduler: {
+      request: (cb) => {
+        callbacks.set(++next, cb);
+        return next;
+      },
+      cancel: (id) => {
+        callbacks.delete(id);
+      },
+    },
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  const old = callbacks.values().next().value!;
+  runtime.pause();
+  runtime.resume();
+  const renders = renderer.render.mock.calls.length;
+  old(1_000);
+  expect(renderer.render).toHaveBeenCalledTimes(renders);
+  expect(callbacks.size).toBe(1);
+  expect(renderer.forceContextLoss).not.toHaveBeenCalled();
+  runtime.dispose();
+  expect(callbacks.size).toBe(0);
+  expect(renderer.forceContextLoss).toHaveBeenCalledOnce();
 });

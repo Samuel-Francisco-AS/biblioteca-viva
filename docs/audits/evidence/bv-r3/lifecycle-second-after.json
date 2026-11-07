@@ -1,0 +1,692 @@
+{
+  "environment": "Chromium / SwiftShader / DPR1; real runtime, six categories, four GLBs, one scroll; host counters, no Android bytes/FPS",
+  "sourceRef": "working-tree",
+  "cycles": [
+    {
+      "heapAfterGc": {
+        "usedSize": 22949140,
+        "totalSize": 23556096,
+        "embedderHeapUsedSize": 464528,
+        "backingStorageSize": 20611877
+      },
+      "detachedRootNames": [
+        "CANVAS"
+      ],
+      "cycle": 1,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 26,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 108,
+            "textures": 3
+          },
+          "listeners": 26,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 0,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "listeners": 13,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 8,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 23408420,
+        "totalSize": 24342528,
+        "embedderHeapUsedSize": 521392,
+        "backingStorageSize": 20611877
+      },
+      "detachedRootNames": [
+        "CANVAS",
+        "CANVAS"
+      ],
+      "cycle": 2,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 26,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 118,
+            "textures": 3
+          },
+          "listeners": 26,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 13,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "listeners": 13,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 9,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 23720404,
+        "totalSize": 24866816,
+        "embedderHeapUsedSize": 514808,
+        "backingStorageSize": 20611877
+      },
+      "detachedRootNames": [
+        "CANVAS",
+        "CANVAS",
+        "CANVAS"
+      ],
+      "cycle": 3,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 26,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 108,
+            "textures": 3
+          },
+          "listeners": 26,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 13,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "listeners": 13,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 10,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 23844788,
+        "totalSize": 24866816,
+        "embedderHeapUsedSize": 503312,
+        "backingStorageSize": 20611877
+      },
+      "detachedRootNames": [
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS"
+      ],
+      "cycle": 4,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 26,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 118,
+            "textures": 3
+          },
+          "listeners": 26,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 13,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "listeners": 13,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 11,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 24007004,
+        "totalSize": 24866816,
+        "embedderHeapUsedSize": 509552,
+        "backingStorageSize": 20611877
+      },
+      "detachedRootNames": [
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS"
+      ],
+      "cycle": 5,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 26,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 108,
+            "textures": 3
+          },
+          "listeners": 26,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 13,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "listeners": 13,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 12,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 24066068,
+        "totalSize": 25128960,
+        "embedderHeapUsedSize": 510416,
+        "backingStorageSize": 20611877
+      },
+      "detachedRootNames": [
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS"
+      ],
+      "cycle": 6,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 26,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 118,
+            "textures": 3
+          },
+          "listeners": 26,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 13,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "listeners": 13,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 13,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 24107072,
+        "totalSize": 25391104,
+        "embedderHeapUsedSize": 521072,
+        "backingStorageSize": 20611877
+      },
+      "detachedRootNames": [
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS"
+      ],
+      "cycle": 7,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 26,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 108,
+            "textures": 3
+          },
+          "listeners": 26,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 13,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "listeners": 13,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 14,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 24142980,
+        "totalSize": 25128960,
+        "embedderHeapUsedSize": 667584,
+        "backingStorageSize": 20611877
+      },
+      "detachedRootNames": [
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS"
+      ],
+      "cycle": 8,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 26,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 118,
+            "textures": 3
+          },
+          "listeners": 26,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 13,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "listeners": 13,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 15,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 24479528,
+        "totalSize": 26177536,
+        "embedderHeapUsedSize": 577776,
+        "backingStorageSize": 20611877
+      },
+      "detachedRootNames": [
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS"
+      ],
+      "cycle": 9,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 26,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "not-requested",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 108,
+            "textures": 3
+          },
+          "listeners": 26,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 13,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "disposed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "listeners": 13,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 16,
+        "jsEventListeners": 13
+      }
+    },
+    {
+      "heapAfterGc": {
+        "usedSize": 24765124,
+        "totalSize": 25632768,
+        "embedderHeapUsedSize": 560456,
+        "backingStorageSize": 20611912
+      },
+      "detachedRootNames": [
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS",
+        "CANVAS"
+      ],
+      "cycle": 10,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 26,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "restored-terminal",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 341,
+          "gpuCounters": {
+            "geometries": 118,
+            "textures": 3
+          },
+          "listeners": 26,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 13,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "failed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "listeners": 13,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 17,
+        "jsEventListeners": 13
+      }
+    }
+  ],
+  "pageErrors": []
+}
