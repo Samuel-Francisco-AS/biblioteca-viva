@@ -1,3 +1,5 @@
+> **Saneamento pós-R2 (06/11/2026), PR draft #38:** [Livro da Estrela, quatro representações, custos e gates](audits/BV_SANEAMENTO_POS_R2.md). Feedback físico da R2 recebido; candidata nova requer retorno ao Moto G06. Recuperação integral aberta; R3/R4/R5 não iniciadas nesta rodada, sem merge. STATUS permanece autoridade do presente; notas anteriores abaixo são cronologia.
+
 > **Recuperação vigente — 06/11/2026:** [execução R1–R5 e matriz dos 18 achados](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md), sobre F `254ae15`; [auditoria de origem](audits/BV_AUDITORIA_ARQUITETURA_PERFORMANCE_STACK.md). R1 candidata, R2–R5 pendentes, sem gate físico/CI global verde. STATUS continua sendo a autoridade do presente; notas antigas abaixo são cronologia.
 
 > BF-5.5D candidata: [relatório](BF-5_5D_RELATORIO.md) e [auditoria B/C](BF-5_5D_AUDITORIA_PRELIMINAR.md). Sem aceite físico ou fechamento.

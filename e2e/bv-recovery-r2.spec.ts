@@ -102,6 +102,9 @@ test("R2: six real records retain React selection, highlights and identity after
       .click();
     await expect(canvas).toHaveAttribute("data-selected-object", id);
     await expect(canvas).toHaveAttribute("data-highlighted-object", id);
+    await expect(
+      page.getByRole("link", { name: "Abrir registro", exact: true }),
+    ).toHaveAttribute("href", `/registros/${id.split(":")[1]}?from=%2F`);
   }
   await page.screenshot({ path: testInfo.outputPath("r2-react-world.png") });
   await page.reload();
@@ -126,4 +129,8 @@ test("R2: six real records retain React selection, highlights and identity after
     "data-selected-object",
     "library-work:r2-work",
   );
+  await page.getByRole("link", { name: "Abrir registro", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "R2 trabalho fictício" }),
+  ).toBeVisible();
 });

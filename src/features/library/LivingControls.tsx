@@ -93,6 +93,16 @@ export function LivingControls({
                       className="button button--secondary"
                       key={action}
                       type="button"
+                      aria-pressed={
+                        object.family === "book" && action === "toggle"
+                          ? state.objects[object.objectId]?.active
+                          : undefined
+                      }
+                      disabled={
+                        object.family === "book" &&
+                        action === "turn" &&
+                        !state.objects[object.objectId]?.active
+                      }
                       onClick={() => session.act(object.objectId, action)}
                     >
                       {actionLabels[object.objectId]?.[action] ??
@@ -145,8 +155,18 @@ export function LivingControls({
                   <button
                     className="button button--secondary"
                     type="button"
+                    disabled={
+                      o.family === "book" &&
+                      action === "turn" &&
+                      !state.objects[o.objectId]?.active
+                    }
                     aria-label={`${actionLabels[o.objectId]?.[action] ?? labels[action]} — ${o.label}`}
                     key={action}
+                    aria-pressed={
+                      o.family === "book" && action === "toggle"
+                        ? state.objects[o.objectId]?.active
+                        : undefined
+                    }
                     onClick={() => {
                       onSelect(o.objectId);
                       session.act(o.objectId, action);

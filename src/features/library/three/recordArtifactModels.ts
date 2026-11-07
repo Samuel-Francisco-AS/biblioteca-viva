@@ -3,17 +3,15 @@ import {
   BoxGeometry,
   CatmullRomCurve3,
   CylinderGeometry,
-  ExtrudeGeometry,
   Group,
   Mesh,
   MeshStandardMaterial,
-  Shape,
   TorusGeometry,
   TubeGeometry,
   Vector3,
   type BufferGeometry,
 } from "three";
-import { furnitureBlock, turnedProfile } from "./furnitureGeometry";
+import { furnitureBlock } from "./furnitureGeometry";
 import type {
   LibraryRecordModelTypeId,
   ProceduralLibraryRecordDimensions,
@@ -59,7 +57,7 @@ export function createRecordArtifact(
     }),
   };
   const box = new BoxGeometry(1, 1, 1),
-    soft = furnitureBlock(0.065),
+    soft = furnitureBlock(0.065, type === "series-record" ? 4 : 2),
     cylinder = new CylinderGeometry(0.5, 0.5, 1, 16);
   const used = new Set<MeshStandardMaterial>(),
     geometries = new Set<BufferGeometry>();
@@ -164,7 +162,7 @@ export function createRecordArtifact(
       for (const x of [-0.31, 0.31]) {
         add(
           "projector-reel",
-          new TorusGeometry(0.205, 0.025, 6, 24),
+          new TorusGeometry(0.205, 0.025, 4, 16),
           palette.brass,
           x,
           0.965,
@@ -229,30 +227,55 @@ export function createRecordArtifact(
         0.235,
       );
       glass.rotation.x = Math.PI / 2;
-      arch(
+      block(
         "projector-film-thread",
         palette.ink,
-        [
-          [-0.31, 0.77, -0.02],
-          [-0.42, 0.69, -0.02],
-          [0.1, 0.71, -0.02],
-          [0.31, 0.76, -0.02],
-        ],
-        0.028,
+        0,
+        0.72,
+        -0.02,
+        0.65,
+        0.045,
+        0.04,
+        false,
       );
-      for (let i = 0; i < 3; i++)
-        block(
-          "film-perforation",
-          palette.paper,
-          -0.22 + i * 0.12,
-          0.7,
-          0.011,
-          0.025,
-          0.018,
-          0.012,
-          false,
-        );
-      seal(-0.2, 0.47, 0.153, 0.11);
+      // Solid emissive memory image: no light, transparency, postprocess or frame work.
+      palette.glow.emissiveIntensity = 1.25;
+      const memory = block(
+        "projector-memory-frame",
+        palette.brass,
+        -0.18,
+        0.46,
+        0.17,
+        0.32,
+        0.23,
+        0.025,
+      );
+      memory.rotation.z = -0.08;
+      block(
+        "projector-luminous-frame",
+        palette.glow,
+        -0.18,
+        0.46,
+        0.188,
+        0.27,
+        0.18,
+        0.012,
+        false,
+      );
+      for (const x of [-0.29, -0.07])
+        for (const y of [0.4, 0.51])
+          block(
+            "film-perforation",
+            palette.ink,
+            x,
+            y,
+            0.197,
+            0.025,
+            0.025,
+            0.01,
+            false,
+          );
+      seal(0.05, 0.65, 0.153, 0.045);
       break;
     }
     case "series-record": {
@@ -351,251 +374,344 @@ export function createRecordArtifact(
       break;
     }
     case "study-record": {
-      for (const side of [-1, 1]) {
-        const cover = block(
-          "study-open-cover",
-          palette.body,
-          side * 0.29,
-          0.08,
+      // A personal research desk within the existing slot, with paired notebooks
+      // and a suspended theorem crystal rather than a generic scenic table.
+      block("study-desk-top", palette.body, 0, 0.65, 0, 1.232, 0.09, 0.8);
+      block(
+        "study-desk-edge",
+        palette.brass,
+        0,
+        0.605,
+        0,
+        1.18,
+        0.025,
+        0.75,
+        false,
+      );
+      for (const x of [-0.49, 0.49]) {
+        for (const z of [-0.28, 0.28]) {
+          block("study-desk-leg", palette.body, x, 0.3, z, 0.075, 0.6, 0.075);
+          block(
+            "study-brass-foot",
+            palette.brass,
+            x,
+            0.04,
+            z,
+            0.09,
+            0.08,
+            0.09,
+          );
+        }
+        block(
+          "study-desk-stretcher",
+          palette.brass,
+          x,
+          0.19,
           0,
-          0.61,
-          0.09,
-          0.8,
+          0.035,
+          0.035,
+          0.6,
+          false,
         );
-        cover.rotation.z = side * 0.11;
-        const pages = block(
+      }
+      for (const side of [-1, 1]) {
+        block(
+          "study-notebook-cover",
+          palette.ink,
+          side * 0.19 - 0.13,
+          0.72,
+          0.06,
+          0.35,
+          0.045,
+          0.44,
+        );
+        block(
           "study-open-pages",
           palette.paper,
-          side * 0.28,
-          0.153,
-          0,
-          0.55,
-          0.1,
-          0.72,
+          side * 0.18 - 0.13,
+          0.75,
+          0.06,
+          0.33,
+          0.025,
+          0.41,
+          false,
         );
-        pages.rotation.z = side * 0.11;
-        for (let line = 0; line < 4; line++)
+        for (let line = 0; line < 3; line++)
           block(
             "study-ink-line",
-            palette.ink,
-            side * 0.29,
-            0.22,
-            -0.2 + line * 0.11,
-            0.34,
-            0.008,
+            palette.body,
+            side * 0.18 - 0.13,
+            0.765,
+            -0.04 + line * 0.09,
+            0.23,
+            0.005,
             0.012,
             false,
           );
       }
-      block("study-spine-ribbon", palette.brass, 0, 0.105, 0, 0.05, 0.08, 0.79);
-      disc("study-inkwell", palette.ink, 0.44, 0.31, -0.18, 0.18, 0.22, 0.18);
-      const stem = block(
-        "study-quill-stem",
+      block(
+        "study-stacked-notebook",
+        palette.body,
+        0.31,
+        0.72,
+        -0.2,
+        0.32,
+        0.05,
+        0.27,
+      );
+      block(
+        "study-stacked-pages",
+        palette.paper,
+        0.31,
+        0.754,
+        -0.2,
+        0.29,
+        0.025,
+        0.24,
+        false,
+      );
+      disc("study-inkwell", palette.ink, 0.4, 0.77, 0.21, 0.11, 0.14, 0.11);
+      const quill = block(
+        "study-quill",
         palette.brass,
-        0.37,
-        0.61,
-        -0.18,
+        0.39,
+        0.9,
+        0.21,
         0.018,
-        0.62,
+        0.24,
         0.018,
         false,
       );
-      stem.rotation.z = -0.22;
-      const feather = new Shape();
-      feather.moveTo(0, 0);
-      feather.quadraticCurveTo(-0.2, 0.23, 0.02, 0.49);
-      feather.quadraticCurveTo(0.18, 0.23, 0, 0);
-      const quill = add(
-        "study-quill",
-        new ExtrudeGeometry(feather, {
-          depth: 0.012,
-          bevelEnabled: false,
-          curveSegments: 8,
-        }),
-        palette.paper,
-        0.31,
-        0.55,
-        -0.18,
+      quill.rotation.z = -0.25;
+      const crystal = block(
+        "study-theorem-crystal",
+        palette.glow,
+        0.06,
+        0.98,
+        -0.19,
+        0.1,
+        0.1,
+        0.1,
+        false,
       );
-      quill.rotation.z = -0.22;
-      add(
+      crystal.rotation.z = crystal.rotation.x = Math.PI / 4;
+      const ring = add(
         "study-research-ring",
-        new TorusGeometry(0.12, 0.014, 5, 24),
+        new TorusGeometry(0.11, 0.009, 4, 16),
         palette.brass,
-        -0.39,
-        0.38,
-        -0.16,
+        0.06,
+        0.98,
+        -0.19,
       );
-      seal(-0.39, 0.38, -0.14, 0.065);
+      ring.rotation.x = Math.PI / 2;
       break;
     }
     case "physical-activity-record": {
-      block("training-rolled-mat", palette.body, 0, 0.035, 0, 0.92, 0.07, 0.8);
-      for (const z of [-0.35, 0.35]) {
-        const roll = disc(
-          "training-mat-roll",
-          palette.ink,
-          0,
-          0.07,
-          z,
-          0.12,
-          0.88,
-          0.12,
-        );
-        roll.rotation.z = Math.PI / 2;
-      }
-      const bell = add(
-        "training-kettlebell",
-        turnedProfile([
-          [0, 0],
-          [0.24, 0],
-          [0.39, 0.08],
-          [0.46, 0.3],
-          [0.43, 0.53],
-          [0.24, 0.7],
-          [0.16, 0.73],
-          [0, 0.73],
-        ]),
-        palette.ink,
-        0,
-        0.07,
-        0,
-        1,
-        1,
-        0.54,
-      );
-      bell.userData.design = "cast-iron-training-weight";
-      arch(
-        "training-kettlebell-handle",
-        palette.brass,
-        [
-          [-0.22, 0.65, 0],
-          [-0.28, 0.98, 0],
-          [0, 1.12, 0],
-          [0.28, 0.98, 0],
-          [0.22, 0.65, 0],
-        ],
-        0.045,
-      );
-      for (const x of [-0.24, 0.24])
-        block(
-          "training-handle-binding",
+      // Two recognisable dumbbells on a compact two-tier display rack.
+      block("training-rack-base", palette.body, 0, 0.045, 0, 0.92, 0.09, 0.8);
+      for (const x of [-0.25, 0.25]) {
+        const upright = block(
+          "training-rack-upright",
           palette.body,
           x,
-          0.73,
-          0,
-          0.12,
-          0.14,
-          0.1,
+          0.52,
+          -0.06,
+          0.075,
+          1,
+          0.08,
         );
-      seal(0, 0.42, 0.245, 0.11);
+        upright.rotation.x = -0.32;
+        for (const [y, z] of [
+          [0.35, 0.18],
+          [0.93, -0.13],
+        ])
+          block(
+            "training-rack-cradle",
+            palette.brass,
+            x,
+            y,
+            z,
+            0.11,
+            0.07,
+            0.23,
+          );
+      }
+      const plateGeometry = new CylinderGeometry(0.5, 0.5, 1, 10);
+      for (const [y, z] of [
+        [0.46, 0.18],
+        [1.04, -0.13],
+      ]) {
+        const handle = disc(
+          "training-dumbbell-grip",
+          palette.brass,
+          0,
+          y,
+          z,
+          0.065,
+          0.82,
+          0.065,
+        );
+        handle.rotation.z = Math.PI / 2;
+        for (const side of [-1, 1]) {
+          const plate = add(
+            "training-dumbbell-plate",
+            plateGeometry,
+            palette.ink,
+            side * 0.32,
+            y,
+            z,
+            0.28,
+            0.14,
+            0.28,
+          );
+          plate.rotation.z = Math.PI / 2;
+          const hub = disc(
+            "training-dumbbell-collar",
+            palette.brass,
+            side * 0.41,
+            y,
+            z,
+            0.105,
+            0.025,
+            0.105,
+          );
+          hub.rotation.z = Math.PI / 2;
+        }
+      }
+      seal(0, 0.12, 0.38, 0.045);
       break;
     }
     case "work-record": {
-      block("work-tool-chest", palette.body, 0, 0.24, 0, 1.2, 0.48, 0.8);
-      block(
-        "work-leather-inset",
+      palette.body.color.setHex(0x553b48);
+      block("work-tool-chest", palette.body, 0, 0.22, 0, 1.2, 0.44, 0.8);
+      block("work-tool-tray", palette.ink, 0, 0.45, 0, 1.05, 0.04, 0.66);
+      const lid = block(
+        "work-open-lid",
+        palette.body,
+        0,
+        0.72,
+        -0.32,
+        1.18,
+        0.62,
+        0.07,
+      );
+      lid.rotation.x = -0.18;
+      const inset = block(
+        "work-lid-inset",
         palette.ink,
         0,
-        0.24,
-        0.405,
-        1.06,
-        0.29,
-        0.02,
+        0.72,
+        -0.269,
+        1.01,
+        0.45,
+        0.018,
       );
-      for (const x of [-0.5, 0.5])
+      inset.rotation.x = -0.18;
+      for (const x of [-0.5, 0.5]) {
         block(
           "work-chest-binding",
           palette.brass,
           x,
-          0.24,
-          0.422,
-          0.055,
-          0.42,
+          0.22,
+          0.405,
+          0.045,
+          0.4,
           0.02,
           false,
         );
-      arch(
-        "work-carry-handle",
-        palette.brass,
-        [
-          [-0.28, 0.47, 0],
-          [-0.28, 0.89, 0],
-          [0, 1.025, 0],
-          [0.28, 0.89, 0],
-          [0.28, 0.47, 0],
-        ],
-        0.025,
-      );
+        block(
+          "work-lid-binding",
+          palette.brass,
+          x,
+          0.73,
+          -0.26,
+          0.035,
+          0.52,
+          0.025,
+          false,
+        );
+        block("work-chest-foot", palette.ink, x, 0.025, 0, 0.14, 0.05, 0.64);
+      }
+      for (const x of [-0.24, 0.24])
+        block("work-latch", palette.brass, x, 0.36, 0.415, 0.08, 0.12, 0.025);
       const hammer = block(
         "work-mallet-shaft",
         palette.body,
-        -0.35,
+        -0.36,
         0.65,
-        -0.16,
+        0.04,
         0.05,
-        0.5,
+        0.4,
         0.05,
       );
-      hammer.rotation.z = -0.18;
+      hammer.rotation.z = -0.22;
       block(
         "work-mallet-head",
         palette.brass,
         -0.4,
-        0.89,
-        -0.16,
-        0.28,
-        0.14,
-        0.12,
-      );
-      const roll = disc(
-        "work-blueprint-scroll",
-        palette.paper,
-        0.37,
-        0.59,
+        0.85,
         0.04,
-        0.14,
-        0.54,
-        0.14,
+        0.26,
+        0.13,
+        0.13,
       );
-      roll.rotation.x = Math.PI / 2;
-      for (const z of [-0.15, 0.23]) {
-        const band = disc(
-          "work-scroll-binding",
-          palette.brass,
-          0.37,
-          0.59,
-          z,
-          0.15,
-          0.035,
-          0.15,
-        );
-        band.rotation.x = Math.PI / 2;
-      }
+      block(
+        "work-chisel-grip",
+        palette.body,
+        0.37,
+        0.61,
+        -0.09,
+        0.08,
+        0.24,
+        0.08,
+      );
+      block(
+        "work-chisel-blade",
+        palette.brass,
+        0.37,
+        0.8,
+        -0.09,
+        0.075,
+        0.14,
+        0.025,
+        false,
+      );
       block(
         "work-project-sheet",
         palette.paper,
         0,
         0.49,
-        0.11,
-        0.54,
+        0.13,
+        0.49,
         0.018,
-        0.48,
+        0.42,
         false,
       );
       for (let i = 0; i < 3; i++)
         block(
           "work-project-line",
           palette.body,
-          -0.04,
+          -0.02,
           0.503,
-          -0.05 + i * 0.1,
+          0.03 + i * 0.09,
           0.28 - i * 0.04,
-          0.008,
+          0.006,
           0.012,
           false,
         );
-      seal(0, 0.25, 0.437, 0.1);
+      const rule = block(
+        "work-measuring-rule",
+        palette.brass,
+        0.02,
+        0.53,
+        0.25,
+        0.62,
+        0.025,
+        0.04,
+        false,
+      );
+      rule.rotation.y = -0.18;
+      seal(0, 0.24, 0.416, 0.075);
       break;
     }
   }

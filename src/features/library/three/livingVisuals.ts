@@ -298,11 +298,12 @@ export function createLivingVisuals(
     }
   }
   let elapsed = 0;
+  let bookDisplaced = false;
+  let bookCarried = false;
   const book = selectables.find(
     (item) => item.object.objectId === "living:book",
   );
   const bookRestPosition = book?.root.position.clone();
-  const bookRestRotation = book?.moving.rotation.clone();
   const bookRestQuaternion = book?.root.quaternion.clone();
   const bookRestWorldPosition = book?.root.getWorldPosition(new Vector3());
   const bookRestWorldQuaternion = book?.root.getWorldQuaternion(
@@ -354,7 +355,6 @@ export function createLivingVisuals(
         bookDestination.z,
       ),
     );
-    book.moving.rotation.copy(bookRestRotation ?? book.moving.rotation);
   };
   return {
     selectables,
@@ -397,8 +397,14 @@ export function createLivingVisuals(
         const value = state.objects[item.object.objectId];
         if (!value) continue;
         const target = value.active ? 1 : 0;
-        const approach = (current: number, next: number) =>
-          reduced ? next : current + (next - current) * Math.min(1, delta * 9);
+        const approach = (current: number, next: number) => {
+          const value = reduced
+            ? next
+            : current + (next - current) * Math.min(1, delta * 9);
+          return item.object.family === "book" && Math.abs(next - value) < 1e-5
+            ? next
+            : value;
+        };
         switch (item.object.family) {
           case "lamp":
             if (item.light)
@@ -423,21 +429,22 @@ export function createLivingVisuals(
               : 1 + 0.12 * Math.sin(elapsed * 5);
             break;
           case "book":
+            if (bookCarried) break;
             {
               const pages = item.root.getObjectByName("living-page-pivot");
               if (pages)
                 pages.rotation.x = approach(
                   pages.rotation.x,
-                  value.active ? -(value.turns % 2) * 2.4 : 0,
+                  value.active && item.moving.rotation.z >= 2.09
+                    ? -(value.turns % 2) * 2.4
+                    : 0,
                 );
             }
             item.moving.rotation.z = approach(
               item.moving.rotation.z,
               target * 2.1,
             );
-            item.moving.rotation.x = reduced
-              ? 0
-              : Math.sin(value.turns + elapsed) * 0.04 * target;
+            item.moving.rotation.x = 0;
             break;
           case "cabinet":
             item.moving.position.z = approach(
@@ -527,19 +534,23 @@ export function createLivingVisuals(
       poses: readonly AgentView[],
       getCarryAnchor: (id: string) => import("three").Object3D | null,
     ) {
-      if (!book || !bookRestPosition || !bookRestRotation) return;
+      if (!book || !bookRestPosition) return;
       const interaction = poses.find(
         (pose) =>
           pose.interactionObjectId === "living:book" &&
           pose.interactionState !== null,
       );
+      bookCarried = false;
       if (!interaction) {
+        // Restore the transported root once; cover articulation belongs to update().
+        if (!bookDisplaced) return;
+        bookDisplaced = false;
         book.root.position.copy(bookRestPosition);
         book.root.quaternion.copy(bookRestQuaternion ?? book.root.quaternion);
-        book.moving.rotation.copy(bookRestRotation);
         return;
       }
       if (interaction.interactionState === "placing") {
+        bookDisplaced = true;
         placeBook();
         return;
       }
@@ -549,8 +560,10 @@ export function createLivingVisuals(
         interaction.interactionState !== "returning"
       )
         return;
+      bookCarried = true;
       const anchor = getCarryAnchor(interaction.id);
       if (!anchor) return;
+      bookDisplaced = true;
       anchor.updateWorldMatrix(true, false);
       if (bookCarryOffset) {
         setBookWorldPosition(
@@ -559,6 +572,7 @@ export function createLivingVisuals(
       }
       setBookWorldQuaternion(anchor.getWorldQuaternion(worldQuaternion));
       book.moving.rotation.set(0, 0, 0);
+      book.root.getObjectByName("living-page-pivot")?.rotation.set(0, 0, 0);
     },
   };
 }

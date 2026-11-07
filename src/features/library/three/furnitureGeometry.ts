@@ -7,8 +7,8 @@ import {
 } from "three";
 
 /** A rounded solid with planar support faces. Unit dimensions stay exact. */
-export function furnitureBlock(bevel = 0.06) {
-  const g = new BoxGeometry(1, 1, 1, 4, 4, 4);
+export function furnitureBlock(bevel = 0.06, segments = 4) {
+  const g = new BoxGeometry(1, 1, 1, segments, segments, segments);
   const p = g.attributes.position;
   const half = 0.5 - bevel;
   for (let i = 0; i < p.count; i++) {

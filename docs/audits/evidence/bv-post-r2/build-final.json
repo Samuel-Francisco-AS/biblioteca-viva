@@ -1,0 +1,187 @@
+{
+  "chunks": [
+    {
+      "bytes": 822820,
+      "dynamic": true,
+      "file": "assets/ThreeWorldRuntime-CqVAgSPT.js",
+      "initial": false,
+      "source": "src/features/library/three/ThreeWorldRuntime.ts"
+    },
+    {
+      "bytes": 668393,
+      "dynamic": false,
+      "file": "assets/index-CR1J4Qq6.js",
+      "initial": true,
+      "source": "index.html"
+    },
+    {
+      "bytes": 125368,
+      "dynamic": true,
+      "file": "assets/EntryDetailPage-rQqpTGpS.js",
+      "initial": false,
+      "source": "src/features/entry-detail/EntryDetailPage.tsx"
+    },
+    {
+      "bytes": 24980,
+      "dynamic": false,
+      "file": "assets/EntryEditorPages-DXc8W75U.js",
+      "initial": false,
+      "source": "_EntryEditorPages-DXc8W75U.js"
+    },
+    {
+      "bytes": 20123,
+      "dynamic": true,
+      "file": "assets/SettingsPage-CeWzlw9L.js",
+      "initial": false,
+      "source": "src/features/settings/SettingsPage.tsx"
+    },
+    {
+      "bytes": 14348,
+      "dynamic": false,
+      "file": "assets/entertainment-Bf8ngaYl.css",
+      "initial": false,
+      "source": "_entertainment-Bf8ngaYl.css"
+    },
+    {
+      "bytes": 11850,
+      "dynamic": true,
+      "file": "assets/StatisticsPage-CwasN7-i.js",
+      "initial": false,
+      "source": "src/features/statistics/StatisticsPage.tsx"
+    },
+    {
+      "bytes": 11010,
+      "dynamic": false,
+      "file": "assets/navigationOrigin-4L8oPlKu.css",
+      "initial": false,
+      "source": "_navigationOrigin-4L8oPlKu.css"
+    },
+    {
+      "bytes": 10018,
+      "dynamic": true,
+      "file": "assets/CollectionPage-B_qPOF9L.js",
+      "initial": false,
+      "source": "src/features/collection/CollectionPage.tsx"
+    },
+    {
+      "bytes": 10013,
+      "dynamic": true,
+      "file": "assets/ArchivePage-SB-mdM5M.js",
+      "initial": false,
+      "source": "src/features/archive/ArchivePage.tsx"
+    },
+    {
+      "bytes": 8495,
+      "dynamic": true,
+      "file": "assets/web-0a3OQIAx.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/filesystem/dist/esm/web.js"
+    },
+    {
+      "bytes": 7174,
+      "dynamic": false,
+      "file": "assets/BVPicker-DKsLqKPK.js",
+      "initial": false,
+      "source": "_BVPicker-DKsLqKPK.js"
+    },
+    {
+      "bytes": 4832,
+      "dynamic": true,
+      "file": "assets/NewEntryPage-Co8B8TyL.js",
+      "initial": false,
+      "source": "src/features/entry-editor/NewEntryPage.tsx"
+    },
+    {
+      "bytes": 4485,
+      "dynamic": false,
+      "file": "assets/AnnotationActions-BJeZVWKr.js",
+      "initial": false,
+      "source": "_AnnotationActions-BJeZVWKr.js"
+    },
+    {
+      "bytes": 3965,
+      "dynamic": false,
+      "file": "assets/navigationOrigin-renZK62l.js",
+      "initial": false,
+      "source": "_navigationOrigin-renZK62l.js"
+    },
+    {
+      "bytes": 3627,
+      "dynamic": true,
+      "file": "assets/EditEntryPage-Bfx1E4e5.js",
+      "initial": false,
+      "source": "src/features/entry-editor/EditEntryPage.tsx"
+    },
+    {
+      "bytes": 2692,
+      "dynamic": false,
+      "file": "assets/BVPicker-mP1gmq5R.css",
+      "initial": false,
+      "source": "_BVPicker-mP1gmq5R.css"
+    },
+    {
+      "bytes": 2338,
+      "dynamic": false,
+      "file": "assets/RealmIntro-CUEIzOFL.js",
+      "initial": false,
+      "source": "_RealmIntro-CUEIzOFL.js"
+    },
+    {
+      "bytes": 1324,
+      "dynamic": true,
+      "file": "assets/esm--bYmeKnH.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/filesystem/dist/esm/index.js"
+    },
+    {
+      "bytes": 853,
+      "dynamic": false,
+      "file": "assets/ArtifactGlyph-BnGG5Ek3.js",
+      "initial": false,
+      "source": "_ArtifactGlyph-BnGG5Ek3.js"
+    },
+    {
+      "bytes": 845,
+      "dynamic": true,
+      "file": "assets/web-BeTE_Q-l.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/app/dist/esm/web.js"
+    },
+    {
+      "bytes": 796,
+      "dynamic": false,
+      "file": "assets/bookPresentation-Du5Ruowv.js",
+      "initial": false,
+      "source": "_bookPresentation-Du5Ruowv.js"
+    },
+    {
+      "bytes": 599,
+      "dynamic": false,
+      "file": "assets/useCivilToday-BBFo5jxC.js",
+      "initial": false,
+      "source": "_useCivilToday-BBFo5jxC.js"
+    },
+    {
+      "bytes": 366,
+      "dynamic": true,
+      "file": "assets/web-BA0riJhB.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/share/dist/esm/web.js"
+    },
+    {
+      "bytes": 337,
+      "dynamic": true,
+      "file": "assets/esm-DhdesCGu.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/share/dist/esm/index.js"
+    },
+    {
+      "bytes": 140,
+      "dynamic": true,
+      "file": "assets/androidBackupDocumentPlugin-XbyPfW1h.js",
+      "initial": false,
+      "source": "src/infrastructure/files/androidBackupDocumentPlugin.ts"
+    }
+  ],
+  "initialBytes": 668393
+}

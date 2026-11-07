@@ -21,6 +21,8 @@ const server = await createServer({
           "proceduralLibraryBuilding.ts",
           "proceduralLibraryFurnishing.ts",
           "livingVisuals.ts",
+          "recordArtifactModels.ts",
+          "libraryRecordRepresentations.ts",
         ];
         if (sourceRef && files.some((file) => id.endsWith(`/three/${file}`)))
           return execFileSync(
@@ -203,18 +205,20 @@ try {
       ? ["scroll-flight"]
       : process.argv[5] === "book"
         ? ["record-book-normal", "record-book-near"]
-        : process.argv[5] === "records"
-          ? [
-              "book",
-              "movie",
-              "series",
-              "study",
-              "physical_activity",
-              "work",
-            ].flatMap((type) => [
-              `record-${type}-normal`,
-              `record-${type}-near`,
-            ])
+        : ["records", "post-r2"].includes(process.argv[5])
+          ? ["book", "movie", "series", "study", "physical_activity", "work"]
+              .filter(
+                (type) =>
+                  process.argv[5] !== "post-r2" ||
+                  !["book", "series"].includes(type),
+              )
+              .flatMap((type) => [
+                `record-${type}-normal`,
+                `record-${type}-near`,
+                ...(process.argv[5] === "post-r2"
+                  ? [`record-${type}-selected`]
+                  : []),
+              ])
           : [
               "static",
               "active-four",
@@ -228,178 +232,199 @@ try {
             ];
   const results = [];
   for (const name of scenarios) {
-    const result = await page.evaluate(async (name) => {
-      const p = globalThis.__bvProbe;
-      if (name === "scroll-flight")
-        for (const scroll of p.runtime.scrollVisuals.selectables)
-          scroll.wakeAt = 0;
-      let focusNode = null;
-      if (name.startsWith("record-")) {
-        const [, type, view] = name.split("-");
-        let id;
-        if (type === "book") {
-          id = "reading-book:fiction-book-2";
-          focusNode = p.runtime.readingAreaBookVisuals.get(id).node;
-        } else {
-          const placement = p.runtime.libraryRecordPlacements.find(
-            (record) =>
-              record.modelTypeId ===
-              (type === "physical_activity"
-                ? "physical-activity-record"
-                : `${type}-record`),
-          );
-          id = placement.instanceId;
-          focusNode = p.scene.getObjectByName(`library-record-instance:${id}`);
-        }
-        const { Box3, Vector3 } =
-          await import("/node_modules/three/build/three.module.js");
-        const center = new Box3()
-          .setFromObject(focusNode)
-          .getCenter(new Vector3());
-        p.runtime.navigation.commit({
-          targetX: center.x,
-          targetZ: center.z,
-          zoom: view === "near" ? 2.2 : 1,
-        });
-        p.runtime.selectObject(view === "near" ? id : null);
-      }
-      const stages = {};
-      const originals = [];
-      if (name === "night") p.setHour(22);
-      if (name === "book-transport")
-        p.runtime.applyWorldSession({
-          sessionId: "fiction-session",
-          entryId: "fiction-book-2",
-          instanceId: "reading-book:fiction-book-2",
-          entryType: "book",
-          kind: "reading",
-          status: "active",
-          revision: 1,
-        });
-      if (name === "camera-near") p.runtime.navigation.setZoom(2.5);
-      if (name === "camera-far") p.runtime.navigation.setZoom(0.7);
-      if (name === "return") {
-        p.runtime.pause();
-        p.runtime.resume();
-      }
-      for (const key of [
-        "livingVisuals",
-        "ambientMagic",
-        "scrollVisuals",
-        "sessionBooks",
-      ]) {
-        const owner = p.runtime[key];
-        if (!owner) continue;
-        originals.push([owner, owner.update]);
-        const fn = owner.update.bind(owner);
-        owner.update = (...args) => {
-          const t = globalThis.performance.now();
-          const value = fn(...args);
-          stages[key] = (stages[key] ?? 0) + globalThis.performance.now() - t;
-          return value;
-        };
-      }
-      for (let i = 0; i < 3; i++)
-        p.step(name === "static" || name.startsWith("record-") ? 0 : 50);
-      p.reset();
-      for (const key in stages) stages[key] = 0;
-      const samples = [];
-      for (let i = 0; i < 6; i++)
-        samples.push(
-          p.step(name === "static" || name.startsWith("record-") ? 0 : 50),
-        );
-      const materials = new Set(),
-        geometries = new Set();
-      let meshes = 0,
-        objects = 0,
-        potentialTriangles = 0,
-        visibleObjects = 0,
-        pointLights = 0;
-      p.scene.traverse((o) => {
-        objects++;
-        if (o.isPointLight) pointLights++;
-        if (o.isMesh) {
-          meshes++;
-          geometries.add(o.geometry);
-          for (const m of Array.isArray(o.material) ? o.material : [o.material])
-            materials.add(m);
-          potentialTriangles +=
-            ((o.geometry.index?.count ?? o.geometry.attributes.position.count) /
-              3) *
-            (o.isInstancedMesh ? o.count : 1);
-        }
-      });
-      p.scene.traverseVisible(() => visibleObjects++);
-      for (const [owner, fn] of originals) owner.update = fn;
-      const bufferBytes = [...geometries].reduce(
-        (sum, g) =>
-          sum +
-          (g.index?.array.byteLength ?? 0) +
-          Object.values(g.attributes).reduce(
-            (n, a) => n + a.array.byteLength,
-            0,
-          ),
-        0,
-      );
-      const pct = (key) => {
-        const s = samples.map((v) => v[key]).sort((a, b) => a - b);
-        return { p50: s[3], p95: s[5] };
-      };
-      let focusedTriangles = 0,
-        focusedMeshes = 0;
-      focusNode?.traverse((o) => {
-        if (o.isMesh) {
-          focusedMeshes++;
-          focusedTriangles +=
-            ((o.geometry.index?.count ?? o.geometry.attributes.position.count) /
-              3) *
-            (o.isInstancedMesh ? o.count : 1);
-        }
-      });
-      return {
-        name,
-        focusedTriangles,
-        focusedMeshes,
-        drawCalls: p.renderer.info.render.calls,
-        renderedTriangles: p.renderer.info.render.triangles,
-        gpuGeometries: p.renderer.info.memory.geometries,
-        gpuTextures: p.renderer.info.memory.textures,
-        programs: p.renderer.info.programs.length,
-        bufferBytes,
-        materials: materials.size,
-        geometries: geometries.size,
-        meshes,
-        objects,
-        visibleObjects,
-        potentialTriangles,
-        pointLights,
-        matrixUpdates: p.matrices,
-        frameJsMs: pct("frameJsMs"),
-        renderSubmissionMs: pct("renderSubmissionMs"),
-        otherJsMs: pct("otherJsMs"),
-        stagesTotalMs: stages,
-        book: p.runtime.sessionBooks?.snapshot(),
-        inhabitants: p.runtime.agency?.getPoses().filter((a) => a.available)
-          .length,
-        scrolls: p.runtime.scrollVisuals?.selectables.length,
-        flyingScrolls: p.runtime.scrollVisuals?.selectables.filter(
-          (s) => s.flight,
-        ).length,
-        activePointLights: (() => {
-          let n = 0;
-          p.scene.traverseVisible((o) => {
-            if (o.isPointLight) n++;
+    const result = await page.evaluate(
+      async ({ name, postR2 }) => {
+        const p = globalThis.__bvProbe;
+        if (name === "scroll-flight")
+          for (const scroll of p.runtime.scrollVisuals.selectables)
+            scroll.wakeAt = 0;
+        let focusNode = null;
+        if (name.startsWith("record-")) {
+          const [, type, view] = name.split("-");
+          let id;
+          if (type === "book") {
+            id = "reading-book:fiction-book-2";
+            focusNode = p.runtime.readingAreaBookVisuals.get(id).node;
+          } else {
+            const placement = p.runtime.libraryRecordPlacements.find(
+              (record) =>
+                record.modelTypeId ===
+                (type === "physical_activity"
+                  ? "physical-activity-record"
+                  : `${type}-record`),
+            );
+            id = placement.instanceId;
+            focusNode = p.scene.getObjectByName(
+              `library-record-instance:${id}`,
+            );
+          }
+          const { Vector3 } =
+            await import("/node_modules/three/build/three.module.js");
+          // The stable wrapper pivot keeps before/after cameras identical even
+          // when ornament changes the visual bounds slightly after batching.
+          const center = focusNode.getWorldPosition(new Vector3());
+          p.runtime.navigation.commit({
+            targetX: center.x,
+            targetZ: center.z,
+            zoom: view === "normal" ? 1 : 2.2,
           });
-          return n;
-        })(),
-        viewport: [1280, 900],
-        framebuffer: [
-          p.renderer.domElement.width,
-          p.renderer.domElement.height,
-        ],
-        camera: p.runtime.navigation.getState(),
-      };
-    }, name);
+          p.runtime.selectObject(
+            name.endsWith("selected") || (!postR2 && name.endsWith("near"))
+              ? id
+              : null,
+          );
+        }
+        const stages = {};
+        const originals = [];
+        if (name === "night") p.setHour(22);
+        if (name === "book-transport")
+          p.runtime.applyWorldSession({
+            sessionId: "fiction-session",
+            entryId: "fiction-book-2",
+            instanceId: "reading-book:fiction-book-2",
+            entryType: "book",
+            kind: "reading",
+            status: "active",
+            revision: 1,
+          });
+        if (name === "camera-near") p.runtime.navigation.setZoom(2.5);
+        if (name === "camera-far") p.runtime.navigation.setZoom(0.7);
+        if (name === "return") {
+          p.runtime.pause();
+          p.runtime.resume();
+        }
+        for (const key of [
+          "livingVisuals",
+          "ambientMagic",
+          "scrollVisuals",
+          "sessionBooks",
+        ]) {
+          const owner = p.runtime[key];
+          if (!owner) continue;
+          originals.push([owner, owner.update]);
+          const fn = owner.update.bind(owner);
+          owner.update = (...args) => {
+            const t = globalThis.performance.now();
+            const value = fn(...args);
+            stages[key] = (stages[key] ?? 0) + globalThis.performance.now() - t;
+            return value;
+          };
+        }
+        for (let i = 0; i < 3; i++)
+          p.step(name === "static" || name.startsWith("record-") ? 0 : 50);
+        p.reset();
+        for (const key in stages) stages[key] = 0;
+        const samples = [];
+        for (let i = 0; i < 6; i++)
+          samples.push(
+            p.step(name === "static" || name.startsWith("record-") ? 0 : 50),
+          );
+        const materials = new Set(),
+          geometries = new Set();
+        let meshes = 0,
+          objects = 0,
+          potentialTriangles = 0,
+          visibleObjects = 0,
+          pointLights = 0;
+        p.scene.traverse((o) => {
+          objects++;
+          if (o.isPointLight) pointLights++;
+          if (o.isMesh) {
+            meshes++;
+            geometries.add(o.geometry);
+            for (const m of Array.isArray(o.material)
+              ? o.material
+              : [o.material])
+              materials.add(m);
+            potentialTriangles +=
+              ((o.geometry.index?.count ??
+                o.geometry.attributes.position.count) /
+                3) *
+              (o.isInstancedMesh ? o.count : 1);
+          }
+        });
+        p.scene.traverseVisible(() => visibleObjects++);
+        for (const [owner, fn] of originals) owner.update = fn;
+        const bufferBytes = [...geometries].reduce(
+          (sum, g) =>
+            sum +
+            (g.index?.array.byteLength ?? 0) +
+            Object.values(g.attributes).reduce(
+              (n, a) => n + a.array.byteLength,
+              0,
+            ),
+          0,
+        );
+        const pct = (key) => {
+          const s = samples.map((v) => v[key]).sort((a, b) => a - b);
+          return { p50: s[3], p95: s[5] };
+        };
+        const focusedMaterials = new Set();
+        let focusedTriangles = 0,
+          focusedMeshes = 0;
+        focusNode?.traverse((o) => {
+          if (o.isMesh) {
+            focusedMeshes++;
+            for (const material of Array.isArray(o.material)
+              ? o.material
+              : [o.material])
+              focusedMaterials.add(material);
+            focusedTriangles +=
+              ((o.geometry.index?.count ??
+                o.geometry.attributes.position.count) /
+                3) *
+              (o.isInstancedMesh ? o.count : 1);
+          }
+        });
+        return {
+          name,
+          focusedTriangles,
+          focusedMeshes,
+          focusedMaterials: focusedMaterials.size,
+          selected: p.renderer.domElement.dataset.selectedObject,
+          highlighted: p.renderer.domElement.dataset.highlightedObject,
+          drawCalls: p.renderer.info.render.calls,
+          renderedTriangles: p.renderer.info.render.triangles,
+          gpuGeometries: p.renderer.info.memory.geometries,
+          gpuTextures: p.renderer.info.memory.textures,
+          programs: p.renderer.info.programs.length,
+          bufferBytes,
+          materials: materials.size,
+          geometries: geometries.size,
+          meshes,
+          objects,
+          visibleObjects,
+          potentialTriangles,
+          pointLights,
+          matrixUpdates: p.matrices,
+          frameJsMs: pct("frameJsMs"),
+          renderSubmissionMs: pct("renderSubmissionMs"),
+          otherJsMs: pct("otherJsMs"),
+          stagesTotalMs: stages,
+          book: p.runtime.sessionBooks?.snapshot(),
+          inhabitants: p.runtime.agency?.getPoses().filter((a) => a.available)
+            .length,
+          scrolls: p.runtime.scrollVisuals?.selectables.length,
+          flyingScrolls: p.runtime.scrollVisuals?.selectables.filter(
+            (s) => s.flight,
+          ).length,
+          activePointLights: (() => {
+            let n = 0;
+            p.scene.traverseVisible((o) => {
+              if (o.isPointLight) n++;
+            });
+            return n;
+          })(),
+          viewport: [1280, 900],
+          framebuffer: [
+            p.renderer.domElement.width,
+            p.renderer.domElement.height,
+          ],
+          camera: p.runtime.navigation.getState(),
+        };
+      },
+      { name, postR2: process.argv[5] === "post-r2" },
+    );
     results.push(result);
     await writeFile(
       `${directory}/samples.partial.json`,

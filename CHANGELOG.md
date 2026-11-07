@@ -1,3 +1,9 @@
+## Saneamento pós-R2 — 2026-11-06
+
+- Livro da Estrela abre/fecha sem a restauração de capa concorrente por frame; comandos rápidos seguem a última intenção. Página fechada desabilitada/recusada; página aguarda abertura suficiente. Seleção e menus preservados.
+- Estudo ganha mesinha com cadernos/cristal; Trabalho, estojo aberto com instrumentos; Filmes, lente/memória emissivas; Atividade Física, par de halteres em suporte. IDs, slots e persistência preservados.
+- Menor geometria nas quatro peças, com comparação no mundo completo e regressões dirigidas. [Relatório](docs/audits/BV_SANEAMENTO_POS_R2.md). Recuperação aberta, E2E pendente/FAIL, novo teste Moto G06 recomendado; sem R3 ou merge.
+
 ## Recuperação R2C — 2026-11-06
 
 - Livros com acabamento de encadernação; filmes como projetores de memória, séries como receptores episódicos, estudos como fólios de pesquisa, atividades físicas como pesos/tapetes de treino e trabalhos como estojos de ofício.

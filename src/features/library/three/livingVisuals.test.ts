@@ -151,7 +151,8 @@ describe("living visuals", () => {
     const scene = new Scene();
     const building = createProceduralLibraryBuilding(true);
     scene.add(building);
-    const visuals = createLivingVisuals(building, scene, new LivingSession());
+    const session = new LivingSession();
+    const visuals = createLivingVisuals(building, scene, session);
     const book = visuals.selectables.find(
       (item) => item.descriptor.id === "living:book",
     )!;
@@ -159,6 +160,13 @@ describe("living visuals", () => {
     const anchor = new Object3D();
     anchor.position.set(18, 1, -6);
     scene.add(anchor);
+    session.act("living:book", "toggle");
+    session.act("living:book", "turn");
+    visuals.update(0, true);
+    visuals.update(0, true);
+    expect(book.root.getObjectByName("living-page-pivot")!.rotation.x).toBe(
+      -2.4,
+    );
 
     visuals.driveInhabitantInteractions(
       [
@@ -181,6 +189,10 @@ describe("living visuals", () => {
       ],
       () => anchor,
     );
+    session.act("living:book", "examine");
+    visuals.update(0.05, false);
+    expect(book.moving.rotation.z).toBe(0);
+    expect(book.root.getObjectByName("living-page-pivot")!.rotation.x).toBe(0);
     expect(book.root).toBe(original);
     const carriedBounds = new Box3().setFromObject(book.root);
     expect(carriedBounds.getCenter(new Vector3()).y).toBeCloseTo(
@@ -219,6 +231,8 @@ describe("living visuals", () => {
       SCENIC_BOOK_ANCHORS.destination.x,
       2,
     );
+    visuals.update(0.05, false);
+    expect(book.moving.rotation.z).toBeGreaterThan(0);
 
     visuals.driveInhabitantInteractions(
       [
@@ -244,6 +258,97 @@ describe("living visuals", () => {
     visuals.driveInhabitantInteractions([], () => null);
     expect(book.root.position.x).toBeCloseTo(14.75);
     expect(book.root.position.z).toBeCloseTo(-4.8);
+    for (let i = 0; i < 120; i++) {
+      visuals.driveInhabitantInteractions([], () => null);
+      visuals.update(1 / 60, false);
+    }
+    expect(book.moving.rotation.z).toBe(2.1);
+    expect(session.getSnapshot().objects["living:book"].active).toBe(true);
     disposeObjectTree(scene);
   });
 });
+
+it("converges on the requested star-book cover pose in runtime frame order", () => {
+  const scene = new Scene();
+  const building = createProceduralLibraryBuilding(true);
+  scene.add(building);
+  const session = new LivingSession();
+  const visuals = createLivingVisuals(building, scene, session);
+  const book = visuals.selectables.find(
+    (item) => item.descriptor.id === "living:book",
+  )!;
+  session.act("living:book", "toggle");
+  for (let i = 0; i < 120; i++) {
+    visuals.driveInhabitantInteractions([], () => null);
+    visuals.update(1 / 60, false);
+  }
+  expect(session.getSnapshot().objects["living:book"].active).toBe(true);
+  expect(book.moving.rotation.z).toBeCloseTo(2.1, 5);
+  disposeObjectTree(scene);
+});
+
+it.each([false, true])(
+  "handles rapid reversals, page/examine commands and repeated star-book toggles (reduced=%s)",
+  (reduced) => {
+    const scene = new Scene();
+    const building = createProceduralLibraryBuilding(true);
+    scene.add(building);
+    const session = new LivingSession();
+    const visuals = createLivingVisuals(building, scene, session);
+    const book = visuals.selectables.find(
+      (item) => item.descriptor.id === "living:book",
+    )!;
+    const frame = () => {
+      visuals.driveInhabitantInteractions([], () => null);
+      visuals.update(1 / 60, reduced);
+      expect(book.moving.rotation.z).toBeGreaterThanOrEqual(0);
+      expect(book.moving.rotation.z).toBeLessThanOrEqual(2.1);
+    };
+    const settle = () => {
+      for (let i = 0; i < 120; i++) frame();
+    };
+    const initial = session.getSnapshot();
+    expect(session.act("living:book", "turn")).toEqual([]);
+    expect(session.getSnapshot()).toBe(initial);
+    // A double command before the next frame cancels to closed.
+    session.act("living:book", "toggle");
+    session.act("living:book", "toggle");
+    settle();
+    expect(book.moving.rotation.z).toBe(0);
+    for (let cycle = 0; cycle < 4; cycle++) {
+      session.act("living:book", "toggle");
+      frame();
+      const opening = book.moving.rotation.z;
+      expect(opening).toBeGreaterThan(0);
+      session.act("living:book", "examine");
+      expect(session.getSnapshot().objects["living:book"].active).toBe(true);
+      session.act("living:book", "turn");
+      // Page intent during opening waits for safe cover clearance.
+      frame();
+      if (!reduced)
+        expect(book.root.getObjectByName("living-page-pivot")!.rotation.x).toBe(
+          0,
+        );
+      settle();
+      expect(book.moving.rotation.z).toBeCloseTo(2.1, 5);
+      expect(
+        book.root.getObjectByName("living-page-pivot")!.rotation.x,
+      ).toBeCloseTo(
+        -(session.getSnapshot().objects["living:book"].turns % 2) * 2.4,
+        5,
+      );
+      session.act("living:book", "toggle");
+      frame();
+      session.act("living:book", "toggle"); // Reverse a close already in progress.
+      frame();
+      session.act("living:book", "toggle");
+      settle();
+      expect(book.moving.rotation.z).toBeCloseTo(0, 5);
+      expect(
+        book.root.getObjectByName("living-page-pivot")!.rotation.x,
+      ).toBeCloseTo(0, 5);
+      expect(session.getSnapshot().objects["living:book"].active).toBe(false);
+    }
+    disposeObjectTree(scene);
+  },
+);

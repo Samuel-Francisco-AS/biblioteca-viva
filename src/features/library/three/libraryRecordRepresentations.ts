@@ -62,11 +62,11 @@ export type ProceduralWorkRecord =
   ProceduralLibraryRecordRepresentation<ProceduralWorkRecordIdentity>;
 
 const ASSET_IDS = {
-  "movie-record": "bv:records/memory-projector-v1",
+  "movie-record": "bv:records/memory-projector-v2",
   "series-record": "bv:records/episodic-receiver-v1",
-  "study-record": "bv:records/research-folio-v1",
-  "physical-activity-record": "bv:records/training-weight-v1",
-  "work-record": "bv:records/artisan-toolkit-v1",
+  "study-record": "bv:records/research-desk-v2",
+  "physical-activity-record": "bv:records/training-dumbbells-v2",
+  "work-record": "bv:records/artisan-toolkit-v2",
 } as const;
 function create<T extends ProceduralLibraryRecordIdentity>(
   identity: T,

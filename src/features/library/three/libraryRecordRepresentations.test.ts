@@ -186,13 +186,13 @@ describe("fábricas isoladas dos registros BF-3C1", () => {
     const required = [
       ["projector-body", "projector-reel", "projector-lens-crystal"],
       ["series-bakelite-case", "series-antenna-left", "series-curved-glass"],
-      ["study-open-pages", "study-quill", "study-inkwell"],
+      ["study-desk-top", "study-open-pages", "study-theorem-crystal"],
       [
-        "training-kettlebell",
-        "training-kettlebell-handle",
-        "training-rolled-mat",
+        "training-dumbbell-grip",
+        "training-dumbbell-plate",
+        "training-rack-base",
       ],
-      ["work-tool-chest", "work-carry-handle", "work-blueprint-scroll"],
+      ["work-tool-chest", "work-open-lid", "work-mallet-head"],
     ];
     for (const [i, representation] of createEveryRepresentation().entries()) {
       const parts = meshes(representation.root);

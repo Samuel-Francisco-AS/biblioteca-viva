@@ -1039,3 +1039,47 @@ it("F2 moves the original selectable, tracks highlight bounds and cancels after 
   runtime.dispose();
   expect(renderer.dispose).toHaveBeenCalledOnce();
 });
+
+it("post-R2 star book opens, survives pause/resume and closes with selection intact", () => {
+  vi.stubGlobal("ResizeObserver", TestResizeObserver);
+  const renderer = new TestRenderer();
+  const request = vi
+    .fn<(callback: FrameRequestCallback) => number>()
+    .mockReturnValue(1);
+  const session = new LivingSession();
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    libraryWorldSnapshot: snapshot(),
+    livingSession: session,
+    frameScheduler: { request, cancel: vi.fn() },
+  });
+  runtime.mount(host());
+  runtime.start();
+  const scene = renderer.render.mock.calls[0][0];
+  const cover = scene
+    .getObjectByName("living:book")!
+    .children.find(
+      (child) => child.type === "Group" && child.name !== "living-page-pivot",
+    )!;
+  const frame = request.mock.calls.at(-1)![0];
+  runtime.selectObject("living:book");
+  session.act("living:book", "toggle");
+  frame(0);
+  frame(50);
+  const opening = cover.rotation.z;
+  expect(opening).toBeGreaterThan(0);
+  expect(opening).toBeLessThan(2.1);
+  runtime.pause();
+  frame(10_000);
+  expect(cover.rotation.z).toBe(opening);
+  runtime.resume();
+  for (let t = 10_050; t < 12_050; t += 50) frame(t);
+  expect(cover.rotation.z).toBeCloseTo(2.1, 5);
+  expect(renderer.domElement.dataset.selectedObject).toBe("living:book");
+  expect(renderer.domElement.dataset.highlightedObject).toBe("living:book");
+  session.act("living:book", "toggle");
+  for (let t = 12_050; t < 14_050; t += 50) frame(t);
+  expect(cover.rotation.z).toBeCloseTo(0, 5);
+  expect(session.getSnapshot().objects["living:book"].active).toBe(false);
+  runtime.dispose();
+});

@@ -60,8 +60,10 @@ it.each([
     const targetX = modelTypeId === "study-record" ? 0.15 : 0;
     const targetY =
       modelTypeId === "study-record"
-        ? 0.15
-        : visual.representation.dimensions.height * 0.35;
+        ? 0.65
+        : modelTypeId === "physical-activity-record"
+          ? 0.46
+          : visual.representation.dimensions.height * 0.35;
     camera.position.set(targetX, targetY, 5);
     camera.lookAt(targetX, targetY, 0);
     camera.left = camera.bottom = -1;

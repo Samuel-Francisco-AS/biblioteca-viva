@@ -1,7 +1,7 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { LivingSession } from "./livingObjects";
-import { LivingFeedback } from "./LivingControls";
+import { LivingControls, LivingFeedback } from "./LivingControls";
 
 afterEach(() => vi.useRealTimers());
 
@@ -57,4 +57,44 @@ describe("LivingFeedback", () => {
     view.unmount();
     session.dispose();
   });
+});
+
+it("keeps contextual and accessible star-book actions in sync without toggling on selection", () => {
+  const session = new LivingSession();
+  const onSelect = vi.fn();
+  const view = render(
+    <LivingControls
+      session={session}
+      selected="living:book"
+      onSelect={onSelect}
+    />,
+  );
+  const context = within(
+    screen.getByRole("complementary", { name: "Ações do objeto selecionado" }),
+  );
+  const toggle = context.getByRole("button", { name: "Abrir / fechar livro" });
+  const page = context.getByRole("button", { name: "Virar página" });
+  expect(toggle).toHaveAttribute("aria-pressed", "false");
+  expect(page).toBeDisabled();
+  expect(session.getSnapshot().revision).toBe(0);
+  fireEvent.click(toggle);
+  expect(toggle).toHaveAttribute("aria-pressed", "true");
+  expect(page).toBeEnabled();
+  fireEvent.click(context.getByRole("button", { name: "Examinar" }));
+  expect(toggle).toHaveAttribute("aria-pressed", "true");
+  fireEvent.click(page);
+  expect(session.getSnapshot().objects["living:book"].turns).toBe(1);
+  const fallbackToggle = screen.getByRole("button", {
+    name: "Abrir / fechar livro — Livro da estrela",
+  });
+  fireEvent.click(fallbackToggle);
+  expect(onSelect).toHaveBeenLastCalledWith("living:book");
+  expect(toggle).toHaveAttribute("aria-pressed", "false");
+  expect(page).toBeDisabled();
+  expect(
+    screen.getByRole("button", { name: "Virar página — Livro da estrela" }),
+  ).toBeDisabled();
+  expect(session.getSnapshot().objects["living:book"].active).toBe(false);
+  view.unmount();
+  session.dispose();
 });

@@ -23,3 +23,7 @@ Decoração detalhada inflava obstáculos/grafos; representações pessoais e su
 Troca de aparência respeita identidade, organização, seleção Canvas/React e persistência existentes. Modificar ocupação física continua exigindo revisão do perfil; nenhuma abstração promete que um GLB arbitrário possui sockets/articulação corretos. ADR-010 permanece a autoridade para futuros assets GLB produtivos e R5 continua aberta. As fontes nativas são apropriadas para estas peças pequenas; Blender está disponível, mas não foi necessário produzir/importar GLBs nesta entrega. Isso não substitui eventual autoria adicional exigida pelo aceite humano.
 
 Métricas de host e imagens do runtime completo demonstram redução de trabalho e mudança visual, não desempenho GPU/mobile, TalkBack ou aprovação artística. R3/R4/R5 e o gate Moto G06 permanecem abertos. Não declarar recuperação integral encerrada.
+
+## Refinamento pós-R2 (06/11/2026)
+
+O feedback físico do proprietário motivou o [saneamento focalizado](../audits/BV_SANEAMENTO_POS_R2.md): mesinha de estudos, estojo de ofício aberto, projetor emissivo e dois halteres em suporte substituem apenas as quatro aparências da candidata C. Revisões v2 conservam dimensões, perfil espacial, wrappers/IDs, ownership e batching; série/livro pessoal e stack preservados. Não altera as decisões acima nem inicia R3/R4/R5. Correção do Livro da Estrela elimina disputa de pose entre transporte e animação; é bugfix do controlador existente, sem reescrever a agência. Próximo gate recomendado é novo teste Moto G06; recuperação integral aberta.

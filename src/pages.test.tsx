@@ -1,6 +1,6 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ApplicationError } from "./application";
@@ -912,3 +912,55 @@ it("projects private notes and resolves a selected scroll to its original record
     screen.queryByRole("link", { name: "Abrir conteúdo do pergaminho" }),
   ).not.toBeInTheDocument();
 });
+
+it.each([
+  ["movie", "library-movie:movie-1"],
+  ["study", "library-study:study-1"],
+  ["physical_activity", "library-physical-activity:activity-1"],
+  ["work", "library-work:work-1"],
+])(
+  "post-R2 selects and opens the canonical %s record",
+  async (type, instanceId) => {
+    const entry = sixEntries.find((entry) => entry.type === type)!;
+    const application: LibraryApplication = {
+      queries: {
+        listLibraryEntries: { execute: vi.fn().mockResolvedValue(sixEntries) },
+      },
+    };
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <Routes>
+          <Route path="/" element={<LibraryPage application={application} />} />
+          <Route
+            path={`/registros/${entry.id}`}
+            element={<h1>{entry.title} aberto</h1>}
+          />
+        </Routes>
+      </MemoryRouter>,
+    );
+    await screen.findByTestId("world-host-stub");
+    const descriptor = {
+      id: instanceId,
+      entryId: entry.id,
+      label: entry.title,
+    };
+    act(() => {
+      worldHostProps().onSelectableObjectsChange?.([descriptor]);
+      worldHostProps().onStatusChange?.("ready");
+    });
+    await openIndex();
+    await userEvent.click(selectionButton(entry.title));
+    expect(worldHostProps().selectedObjectId).toBe(instanceId);
+    act(() => worldHostProps().onSelectionChange?.(descriptor));
+    expect(selectionButton(entry.title)).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    const open = screen.getByRole("link", { name: "Abrir registro" });
+    expect(open).toHaveAttribute("href", `/registros/${entry.id}?from=%2F`);
+    await userEvent.click(open);
+    expect(
+      screen.getByRole("heading", { name: `${entry.title} aberto` }),
+    ).toBeVisible();
+  },
+);
