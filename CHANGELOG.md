@@ -1,3 +1,10 @@
+## Segurança pós-R3 — 2026-11-07
+
+- Corrigidas dependências de produção: Capacitor Android/Core/CLI 8.4.3, React Router DOM/Router 7.18.5 e Zod 4.6.7. A correção do proxy nativo requer APK atualizado.
+- Corrigidas ferramentas e dependências transitivas; auditorias completa e de produção passam de 24/4 ocorrências para zero. Overrides de minimatch localizados e regressão de importação adversarial controlada.
+- Corrigida a asserção de preferência restaurada no E2E de backup para o seletor DOM existente, preservando checagens de valor e persistência.
+- [Relatório de segurança, versões, testes e roteiro físico](docs/audits/BV_SANEAMENTO_SEGURANCA_POS_R3.md). R1–R3 preservadas; sem R4/R5, merge ou nova CI presumida.
+
 > **Recuperação R3C (2026-11-07), candidata:** runas liberam geometria/material; callbacks RAF cancelados não reativam trabalho após retomar; contexto WebGL liberado no descarte terminal. Mundo continua residente e pausado entre abas. [Dez ciclos, regressões e pendências de memória/gate físico](docs/audits/BV_RECUPERACAO_R3.md). Recuperação integral aberta.
 
 > **Recuperação R3B (2026-11-07), candidata:** atividades autorais separadas do coordenador, entradas físicas explícitas por atualização e consulta direta de reservas de superfície. Comportamentos, prioridades e personagens preservados. [Relatório](docs/audits/BV_RECUPERACAO_R3.md).

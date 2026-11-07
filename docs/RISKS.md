@@ -1,3 +1,7 @@
+## Saneamento pós-R3 — 07/11/2026
+
+As 24 ocorrências npm foram corrigidas, incluindo proxy WebView crítico, Router, validação Zod e ferramentas de build/testes; [49 advisories e análise de compatibilidade](audits/BV_SANEAMENTO_SEGURANCA_POS_R3.md). Risco residual: overrides de minimatch mudam a major somente nos três consumidores examinados, exigindo revisão futura; novo APK precisa do gate humano de navegação, Back, arquivos e lifecycle. Zero alertas não certifica exploração impossível. Cota Actions esgotada até renovação informada de 01/12/2026: publicação usa `[skip ci]`, checks podem ficar pendentes, dívida CI/E2E e retenção host da R3 preservadas.
+
 # Registro de riscos ativos
 
 | ID   | Risco                                                     | Mitigação atual                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |

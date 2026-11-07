@@ -1,3 +1,21 @@
+## Saneamento de segurança pós-R3 — 07/11/2026
+
+`npm ci`, auditorias produção/completa (zero), format:check, lint, typecheck,
+923 testes/144 arquivos, áudio, build, performance report e APK debug PASS.
+Override localizado de minimatch mantém os mesmos 427 arquivos do lint,
+sem erros/avisos. Fixture adversarial de backup: 512 notas inválidas e limite
+10 MiB + 1 byte, base intacta e sem casts/consumo de memória exaustivo.
+
+Playwright: rodada inicial 7 PASS/2 FAIL; assert antigo de `toHaveValue` no
+botão do seletor de tamanho substituído por exibição + radio checked/value,
+backup final 1/1 PASS. Oito cenários distintos PASS; R2 seleção/highlight
+continua FAIL. Comparação única da base a29f2ca também FAIL em seleção, em
+ponto distinto, sem causa comum presumida ou timeout/retry ampliado.
+Um ciclo real de lifecycle com seis categorias/quatro GLBs/pergaminho PASS.
+[Relatório, comandos, limitações e APK](audits/BV_SANEAMENTO_SEGURANCA_POS_R3.md).
+Sem nova CI (publicação com `[skip ci]`), sem aparelho/teste físico novo;
+aceite humano anterior da R3 preservado, recuperação integral aberta.
+
 > **R3C — 07/11/2026:** harness real de dez ciclos PASS (zero retries), perda/restauração WebGL terminal e pointer capture; testes de host residente/timer único, quatro loaders tardios, livros e retomada. [Matriz, falhas de desenvolvimento/instrumentação e limites de memória](audits/BV_RECUPERACAO_R3.md#r3c--bv-15). Não equivale à CI E2E do produto ou gate físico Moto G06.
 
 > **R3B — 07/11/2026:** agência/continuidade/interações/runtime 81 PASS; subconjunto final com contratos novos 23 PASS (sobreposição), incluindo envelope temporário bloqueando e removido, disputa/expiração e oportunidades estáveis. [Evidências](audits/BV_RECUPERACAO_R3.md#r3b--bv-10); gate físico R3 pendente.
