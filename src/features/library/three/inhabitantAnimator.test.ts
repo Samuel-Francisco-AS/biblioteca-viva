@@ -9,6 +9,7 @@ import {
   InstancedMesh,
   Matrix4,
   Mesh,
+  SkinnedMesh,
   Vector3,
   AnimationMixer,
 } from "three";
@@ -227,9 +228,9 @@ for (const actor of INHABITANTS)
           )
             throw new Error("Unexpected vertex attribute");
           for (let i = 0; i < positions.count; i++) {
-            const p = new Vector3()
-              .fromBufferAttribute(positions, i)
-              .applyMatrix4(o.matrixWorld);
+            const p = new Vector3().fromBufferAttribute(positions, i);
+            if (o instanceof SkinnedMesh) o.applyBoneTransform(i, p);
+            p.applyMatrix4(o.matrixWorld);
             if (Math.hypot(p.x, p.z) > limit)
               excess.push(`${clip.name}:${frame}:${o.name}`);
           }

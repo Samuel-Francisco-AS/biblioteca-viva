@@ -129,15 +129,7 @@ export function createInhabitantVisuals(
       if (cached) return cached;
       const actor = selectables.find(({ descriptor }) => descriptor.id === id);
       if (!actor) return null;
-      let named: Object3D | undefined;
-      actor.root.traverse((node) => {
-        if (
-          !named &&
-          /hand|wrist|grip/i.test(node.name) &&
-          node.type === "Bone"
-        )
-          named = node;
-      });
+      const named = actor.root.getObjectByName("socket_carry");
       if (named) {
         anchors.set(id, named);
         return named;
@@ -146,8 +138,8 @@ export function createInhabitantVisuals(
       if (!anchor) {
         anchor = new Group();
         anchor.name = "interaction-hand-anchor";
-        // The current GLBs expose no hand/wrist bones. This stable transport
-        // point is replaced by a rig anchor when assets gain one.
+        // Compatibility for unavailable/legacy models only. R5 assets expose
+        // socket_carry attached to the deforming HandL bone.
         anchor.position.set(0.28, 1.02, 0.28);
         actor.root.add(anchor);
       }
