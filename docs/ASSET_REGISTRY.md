@@ -1,3 +1,5 @@
+> **Habitantes R5 — candidata (07/11/2026):** os quatro GLBs produtivos foram remodelados com skins reais e oito clips. Inventário exato no [manifest](../assets/3d/source/inhabitants/manifest.json); [pipeline vigente](INHABITANT_ART_PIPELINE.md) e [evidências/limites](audits/BV_RECUPERACAO_R5.md). Arte individual e Moto G06 pendentes; notas antigas dos habitantes abaixo são história.
+
 ## Atlas clássico projetado — vigente
 
 Seis gravuras originais assistidas por ImageGen em [`public/illustrations/atlas-classico/`](../public/illustrations/atlas-classico/): masculino/feminino × frontal/três quartos/passo. WebP 1024 × 1536 com alpha, qualidade 88; [origem, prompts e nomes exatos](../assets/atlas-classico/README.md). Consumo por `ClassicAtlas`, sem fontes remotas em runtime. Rig SVG e coreografias da Parte 2F removidos; seus registros abaixo são cronologia substituída. [ADR-022](decisions/ADR-022-atlas-classico-projetado.md).

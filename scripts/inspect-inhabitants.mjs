@@ -1,3 +1,4 @@
+import process from "node:process";
 // Structural inventory through the same GLTFLoader used by the application.
 import { readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";

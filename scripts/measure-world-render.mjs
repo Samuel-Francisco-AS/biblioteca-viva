@@ -44,12 +44,17 @@ const server = await createServer({
             sourceRef &&
             process.argv[5] === "inhabitants" &&
             /^\/src\/features\/library\/three\/assets\/(samael|aryn|ytha|lua)\.glb$/.test(
-              req.url,
-            )
+              req.url.split("?")[0],
+            ) &&
+            !req.url.includes("import") &&
+            !req.url.includes("url")
           ) {
             res.setHeader("Content-Type", "model/gltf-binary");
             res.end(
-              execFileSync("git", ["show", `${sourceRef}:${req.url.slice(1)}`]),
+              execFileSync("git", [
+                "show",
+                `${sourceRef}:${req.url.slice(1).split("?")[0]}`,
+              ]),
             );
             return;
           }
@@ -216,6 +221,7 @@ try {
   const scenarios =
     process.argv[5] === "inhabitants"
       ? [
+          "all-four",
           "inhabitant-samael",
           "inhabitant-aryn",
           "inhabitant-ytha",
@@ -305,6 +311,8 @@ try {
           });
           p.runtime.selectObject(`character:${key}`);
         }
+        if (name === "all-four")
+          p.runtime.navigation.commit({ targetX: 0, targetZ: 0, zoom: 0.7 });
         const stages = {};
         const originals = [];
         if (name === "night") p.setHour(22);
@@ -325,6 +333,7 @@ try {
           p.runtime.resume();
         }
         for (const key of [
+          "inhabitants",
           "livingVisuals",
           "ambientMagic",
           "scrollVisuals",

@@ -1,10 +1,21 @@
 import { readFileSync } from "node:fs";
-import { AnimationMixer, Group, Mesh, SkinnedMesh, Vector3 } from "three";
+import {
+  AnimationMixer,
+  Group,
+  Mesh,
+  SkinnedMesh,
+  Vector3,
+  type Object3D,
+} from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { expect, it, vi } from "vitest";
 import { INHABITANTS } from "../inhabitants";
 import { disposeObjectTree } from "./referenceScene";
 import { createInhabitantVisuals } from "./inhabitantVisuals";
+
+function isSkinnedMesh(object: Object3D): object is SkinnedMesh {
+  return object instanceof SkinnedMesh;
+}
 
 for (const actor of INHABITANTS) {
   it(`${actor.key}: real weighted deformation, anatomical contacts and skeleton disposal`, async () => {
@@ -19,7 +30,7 @@ for (const actor of INHABITANTS) {
     scene.updateMatrixWorld(true);
     const skins: SkinnedMesh[] = [];
     scene.traverse((o) => {
-      if (o instanceof SkinnedMesh) skins.push(o);
+      if (isSkinnedMesh(o)) skins.push(o);
     });
     expect(skins.length).toBeGreaterThan(0);
     const socket = scene.getObjectByName("socket_carry")!;

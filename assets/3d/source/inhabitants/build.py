@@ -285,3 +285,10 @@ def build(who,height):
  for track in rig.animation_data.nla_tracks:track.mute=False
  bpy.ops.export_scene.gltf(filepath=DEST+'/'+who+'.glb',export_format='GLB',export_animations=True,export_force_sampling=True,export_nla_strips=True,export_skins=True,export_all_influences=False)
 for key,h in [('samael',2),('aryn',1.7),('ytha',1.7),('lua',1.6)]:build(key,h)
+# Manifest always describes the bytes just exported, not an older generation.
+import hashlib, json, struct
+manifest={}
+for key in ['samael','aryn','ytha','lua']:
+ data=open(DEST+'/'+key+'.glb','rb').read();document=json.loads(data[20:20+struct.unpack_from('<I',data,12)[0]])
+ manifest[key]={'file':'src/features/library/three/assets/'+key+'.glb','sha256':hashlib.sha256(data).hexdigest(),'bytes':len(data),'meshes':len(document['meshes']),'triangles':sum(document['accessors'][p['indices']]['count']//3 for m in document['meshes'] for p in m['primitives']),'clips':len(document['animations']),'skins':len(document['skins']),'bones':len(document['skins'][0]['joints'])}
+with open(OUT+'/manifest.json','w') as output:json.dump(manifest,output,indent=2);output.write('\n')

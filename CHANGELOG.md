@@ -1,3 +1,9 @@
+## R5 — candidata, 07/11/2026
+
+- Quatro habitantes remodelados em GLB com superfícies/roupas/acessórios próprios, skinning funcional, sockets de mãos e oito ações reconstruídas.
+- Picking acompanha deformação e descarte libera recursos de Skeleton. Pipeline Blender editável, inventário e comparações reais versionados.
+- Arte e Moto G06 aguardam aceite; leitura sentada/F2B/F2C e recuperação integral continuam abertas. CI remota omitida por cota, sem alegação de verde.
+
 ## Integração R4 — 2026-11-07
 
 - R4 e saneamento de leitura integrados após aceite físico dirigido do proprietário, com dívidas preservadas. [Relatório](docs/audits/BV_INTEGRACAO_PR39_R4_2026-11-07.md). R5 não iniciada.

@@ -1,3 +1,5 @@
+> **R5 — candidata em implementação (07/11/2026):** R5A–D candidatas publicadas na [PR draft #40](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/40), sobre main `7100ff6` integrada com R4. Quatro GLBs remodelados, skins reais, oito clips reconstruídos, sockets explícitos e descarte de Skeleton. 950 unitários PASS; E2E dirigido 0/2 após correção de preparação, sem retries; APK debug gerado; aceite artístico individual/Moto G06 pendentes, assento/F2B/F2C não entregues, CI remota omitida por cota. Recuperação integral aberta. [Relatório vigente](audits/BV_RECUPERACAO_R5.md) · [Pipeline](INHABITANT_ART_PIPELINE.md). Notas abaixo preservam a cronologia.
+
 # Pipeline 3D v1
 
 > Estado: **P3D-B1 concluída documentalmente; P3D-B2–F adiados.** Este é o documento técnico ativo do Pipeline 3D v1. A evidência F4/F5 abaixo permanece como base histórica/experimental sobrevivente; ela não é, por si só, promoção de fixture ou implementação de pipeline.

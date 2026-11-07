@@ -214,7 +214,15 @@ export class ThreeWorldInteraction {
   updateHighlightBounds(): void {
     if (this.disposed || !this.highlight || !this.selectedId) return;
     const root = this.selectableRoots.get(this.selectedId);
-    if (root) this.highlight.box.setFromObject(root);
+    if (root) {
+      root.updateWorldMatrix(true, false);
+      root.updateMatrixWorld(true);
+      // Character meshes deform; cached bind-pose bounds are insufficient.
+      this.highlight.box.setFromObject(
+        root,
+        this.selectedId.startsWith("character:"),
+      );
+    }
   }
 
   setViewport(width: number, height: number): void {
@@ -224,7 +232,12 @@ export class ThreeWorldInteraction {
   }
 
   private applyHighlight(root: Object3D): void {
-    const bounds = new Box3().setFromObject(root);
+    root.updateWorldMatrix(true, false);
+    root.updateMatrixWorld(true);
+    const bounds = new Box3().setFromObject(
+      root,
+      this.selectedId?.startsWith("character:") ?? false,
+    );
     if (bounds.isEmpty()) return;
     const highlight = new Box3Helper(bounds, 0x45d9ff);
     highlight.name = "f1-c-selection-highlight";

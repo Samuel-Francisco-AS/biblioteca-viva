@@ -1,3 +1,4 @@
+import process from "node:process";
 // Actual imported GLBs, paired orthographic views; no synthetic replacement render.
 import { createServer } from "vite";
 import { chromium } from "@playwright/test";
@@ -44,7 +45,7 @@ try {
     });
     r.setSize(600, 700);
     r.setPixelRatio(1);
-    document.body.append(r.domElement);
+    globalThis.document.body.append(r.domElement);
     globalThis.capture = async (key, version, view) => {
       const scene = new T.Scene();
       scene.background = new T.Color("#171a2c");

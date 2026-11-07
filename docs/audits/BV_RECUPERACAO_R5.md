@@ -56,3 +56,48 @@ Oito clips reconstruídos: idle 3,6 s; walk 3,2; turn 2,4; react 1,8; gesture 2,
 - Rosto modelado, sem blendshapes ou rig facial; mãos deformam com bone de palma, dedos não articulam individualmente. Magia de Lua não dispara acidentes repetitivos. Pele/roupa não são simulação física. Não se promete ausência universal de interpenetrações em toda combinação de gesto/móvel.
 
 Falhas novas de desenvolvimento: agrupamento Blender retinha objetos removidos após join, referência de material incorreta, ações órfãs de personagens anteriores exportavam clips extras, bind inverso desatualizado no picking e Facing inicialmente inclinava em vez de girar. Causas corrigidas com evidência dirigida, sem supressões, retries ou aumento de timeout. Separadas do E2E R2 histórico, que não foi reexecutado.
+
+## R5D — pipeline e consolidação
+
+R5C publicada em `2e50bbf` antes da consolidação. [Contrato completo de autoria/exportação/validação/integração](../INHABITANT_ART_PIPELINE.md). Comandos npm `assets:inhabitants:build`, `assets:inhabitants:inspect` e `assets:inhabitants:check` tornam a receita e seus gates explícitos. Manifest voltou a representar a geração vigente; recipe atualiza-o após exportação. `.blend`, fonte e GLBs versionados; terceiros não incorporados. PNGs F1 antigos nas fontes permanecem históricos, não prévias R5.
+
+### Custos observados
+
+| Habitante | Bytes R4 → R5 | Meshes R4 → R5 | Triângulos R4 → R5 | Skin / bones R5 |
+|---|---:|---:|---:|---:|
+| Samael | 315256 → 1312488 | 23 → 9 | 5500 → 26566 | 1 / 15 |
+| Aryn | 344344 → 1852552 | 22 → 9 | 6544 → 44922 | 1 / 15 |
+| Ytha | 395624 → 1913216 | 27 → 11 | 7300 → 44456 | 1 / 17 |
+| Lua | 352352 → 1264600 | 22 → 9 | 6936 → 25034 | 1 / 15 |
+
+Soma GLBs: 1.407.576 → 6.342.856 bytes; 94 → 38 meshes; 26.280 → 140.978 triângulos. Zero texturas nos personagens, 38 materiais no conjunto. Dimensões completas em after.json; asas/corpo/acessórios de Ytha têm largura total em repouso ≈1,508 m, e o teste de todos os vértices deformados de todos os clips conserva o envelope 0,92 m. Os demais raios também não mudaram.
+
+[CPU de animação/carregamento dos quatro simultâneos](evidence/bv-r5/animation-costs.json): 60 frames de aquecimento + 300 amostras, mixers/matrizes/paleta de skin; sem render. P50 conjunto 0,062 → 0,124 ms, P95 0,172 → 0,387 ms; P99 5,923 → 3,224 ms. Parse isolado por GLB ≈13–51 ms antes / 28–37 ms depois, exclui disco/rede/upload. Amostras host com JIT/GC/carga do sistema, sem inferência de significância ou ganho físico. Heap do processo ≈13,4 → 18,6 MB não é retenção após GC, memória GPU ou custo isolado dos assets. Host tinha ≈8,2 GB totais / 2,8 GB disponíveis; **nenhum aparelho ADB conectado**, memória disponível Android desconhecida.
+
+[Capturas e contagens do mundo antes](evidence/bv-r5/world-before/metrics.json) / [depois](evidence/bv-r5/world-after/metrics.json), quatro habitantes carregados, mesmo mundo fictício e câmera por cenário. Nas quatro vistas próximas, draw calls: Samael 137 → 122; Aryn 97 → 84; Ytha 105 → 89; Lua 110 → 97. Triângulos renderizados: 153192 → 174042; 147764 → 186142; 137900 → 175062; 150764 → 168862. Buffers de atributos/indexação inventariados no mundo: 2.187.380 → 5.618.616 bytes. Mais geometria/skin e menos objetos/calls são custos explícitos, não razão preventiva para remover arte. Transparência/paleta/shaders também custam; medir no aparelho. Zero pageerrors e teardown disposed/zero canvases nas duas capturas. CPU SwiftShader não mede GPU Android; tempos de capturas sob carga não são benchmark controlado.
+
+### Gates e investigação de falhas
+
+[Saídas locais completas](evidence/bv-r5/local-gates.json) preservam primeira rodada e verificações finais. Primeira ampla: **948 PASS / 2 FAIL**, ambos timeouts novos nos envelopes deformados Aryn/Ytha sob carga host. A amostragem original recalculava world × inverseBind por influência de cada vértice. Cache por pose preserva todos os vértices, quatro influências, 33 amostras/clip e limites, evitando produto matricial redundante; não ampliou timeout, retirou assert nem mudou geometria. Após correção: **23/23 dirigidos PASS**. Rodada final ampla registrada abaixo quando concluída. Falha E2E R2 histórica preservada, sem retries/sleeps ou alteração arbitrária de prazo.
+
+Lint inicial também apontou imports explícitos de process/performance/globalThis em scripts e tipo genérico inseguro do teste; corrigidos com imports e validação de tipos sem casts cegos ou suppressions. Não foram falhas de CI remota: nenhuma execução solicitada por esta missão.
+
+Rodada ampla corrigida, sem renderer concorrente e com `--maxWorkers=2`: **950/950 testes PASS em 150 arquivos**. Contagens/amostras de envelope preservadas; tempos não são gate de performance Android. Revisão final acrescentou regressão de highlight após gesto e deslocamento: personagens precisam bounds precisos da pose atual, não cache de bind pose. O cálculo percorre somente o personagem selecionado; objetos estáticos conservam seu caminho de bounds. Picking mantém atualização restrita aos selecionáveis.
+
+O gate físico/artístico está em [MOTO_G06.md](evidence/bv-r5/MOTO_G06.md). Nenhum teste manual, instalação, TalkBack, áudio percebido, memória/fluidez sustentada foi alegado. A aceitação histórica de R4 e dos artefatos R2 não aprova esses novos habitantes. F2B/F2C, rig facial/dedos individuais, coreografia de preensão/ocupação de acessórios e assento completo permanecem limitações explícitas.
+
+### Resultado final local e E2E
+
+`npm ci`, audits produção/completo (zero vulnerabilidades), formato, lint global, tipos, áudio, build web, performance:report, Android sync/debug e diff --check **PASS**. Suite ampla corrigida **950/950 PASS**, dirigida de assets **23/23 PASS**, seleção/highlight/interação final **12/12 PASS**. Ver contagens exatas nas saídas preservadas. Após alteração exclusiva dos E2E, lint dirigido e formato repetidos; nenhum produto foi mudado para fazer teste passar. Mantidos warnings de chunk >500 kB e Gradle flatDir.
+
+E2E dirigido (dois cenários BF-4F1 existentes): primeira execução **0 PASS/2 FAIL**. React clicou Samael e abriu a conversa RPG (snapshot mostrava o heading e respostas), enquanto o teste procurava aria-pressed no painel oculto; Canvas projetava com zoom 0,7/distância 1, divergentes do runtime composto 1/10. Testes ajustados para seguir a conversa/adiamento e câmera atual, **mantendo assertions de aria-pressed/seleção/highlight, acrescentando heading e sem ampliar prazos**. Uma única execução após a correção: **0 PASS/2 FAIL por deadline global de 30 s**. React chegou ao assert Canvas de Samael com seleção vazia; Canvas esgotou prazo em boundingBox. A correção da preparação não aprovou os fluxos completos. Não atribuir causa exclusivamente ao runner nem declarar ausência de regressão; permanecem cobertura/investigação E2E abertas, separadas do FAIL R2 histórico (não reexecutado). Traces finais preservados localmente em `test-results/`; contextos sanitizados e logs em evidence/bv-r5. Nenhum retry automático, sleep ou timeout aumentado.
+
+Vista ampla `all-four`: quatro habitantes carregados/atualizados nas posições reais, **não quatro visíveis no mesmo frustum**. Draw calls 369 → 341; triângulos renderizados 197312 → 256540. O culling produtivo foi preservado, sem rearranjar personagens para produzir benchmark artificial. Custo de animação dos quatro é medido separadamente no diagnóstico CPU. Texturas GPU no mundo variam de 4–5 antes para 6–9 depois (paletas de skin alocadas conforme visibilidade, além de texturas ambientais); zero texturas de superfície nos GLBs não significa zero texturas GPU. Os totais CPU da etapa inhabitants são seis frames por cenário, não tempo por frame nem GPU.
+
+APK debug atualizado: `android/app/build/outputs/apk/debug/app-debug.apk`, **10.352.166 bytes**, SHA-256 `725142bb5a890062cec6518cc0a30d215d35d357d6239d52f8c30fb6d0fea5ea`. A autoridade do checksum é [apk.json](evidence/bv-r5/apk.json); não foi instalado. Logs sanitizam prefixos do checkout/home, sem omitir erros. APK, dados pessoais e traces brutos não versionados.
+
+### Publicação e estado
+
+R5A `9cce068134be07f6954b655bd791f125718a1ff1`; R5B `c49b089748b7c142143a99eff5d370eadc0e6639`; R5C `2e50bbf018ea3499f9a91243b4682af4b773b2db`; R5D é o commit que publica esta consolidação, identificável na PR e `git log --format=%H --grep='R5D' -1`. Uma única [PR draft #40](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/40), baseada em main, publicações sequenciais `[skip ci]`. Workflows não alterados, nenhum dispatch/rerun/merge. Consulta de runs de PR associadas a C retornou vazia; ferramenta limitada a runs de PR, não prova aprovação nem auditoria de faturamento. **Sem CI global verde.**
+
+**R5A–D candidata técnica/artística publicada para revisão, não encerrada.** O proprietário deve avaliar os quatro personagens independentemente e executar o roteiro físico; ainda poderá exigir remodelagem/refinamento. Recuperação integral, gate físico/artístico/assistivo, cobertura E2E, memória física e BF-5.5 parcial permanecem abertas. Não há beta, release, dados/schema/backup alterados ou merge na main.

@@ -8,6 +8,7 @@ import {
   AnimationMixer,
   BufferGeometry,
   Box3,
+  Box3Helper,
   Group,
   Mesh,
   MeshBasicMaterial,
@@ -147,6 +148,20 @@ describe("BF-4F1 inhabitants", () => {
       }
       expect(onSelectionChange).toHaveBeenLastCalledWith(actor);
       expect(canvas.dataset.highlightedObject).toBe(actor.id);
+      const helper = scene.getObjectByName("f1-c-selection-highlight");
+      expect(helper).toBeInstanceOf(Box3Helper);
+      mixer
+        .clipAction(gltf.animations.find((c) => c.name === "gesture")!)
+        .play();
+      mixer.setTime(1.4);
+      gltf.scene.position.x += 0.4;
+      interaction.updateHighlightBounds();
+      const expectedBounds = new Box3().setFromObject(gltf.scene, true);
+      if (!(helper instanceof Box3Helper))
+        throw new Error("Missing selection bounds");
+      expect(helper.box.min.distanceTo(expectedBounds.min)).toBeLessThan(1e-5);
+      expect(helper.box.max.distanceTo(expectedBounds.max)).toBeLessThan(1e-5);
+      mixer.stopAllAction();
       interaction.dispose();
       const resources = new Set<object>();
       const disposed = vi.fn();

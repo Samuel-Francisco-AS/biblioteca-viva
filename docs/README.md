@@ -1,3 +1,5 @@
+> **R5 — candidata:** [Renascimento artístico dos habitantes](audits/BV_RECUPERACAO_R5.md), [pipeline autoral](INHABITANT_ART_PIPELINE.md) e [roteiro Moto G06](audits/evidence/bv-r5/MOTO_G06.md). PR draft #40, sem aceite humano ou encerramento da recuperação.
+
 > **Integração R4:** [registro canônico e ressalvas](audits/BV_INTEGRACAO_PR39_R4_2026-11-07.md); R5 não iniciada. As notas anteriores de candidata são cronologia.
 
 Saneamento ativo: [relógio e fólio de leitura pós-R4](audits/BV_SANEAMENTO_POS_R4_LEITURA.md), sobre R4A–D na PR draft #39; gate humano da candidata pendente.
