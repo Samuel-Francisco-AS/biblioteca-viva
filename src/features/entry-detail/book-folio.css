@@ -1,5 +1,6 @@
 /* Book details own their composition; no content-card/entry-detail legacy cascade. */
 .book-folio {
+  container-type: inline-size;
   --folio-paper: #f4ead5;
   --folio-text: #39283d;
   --folio-muted: #70576a;
@@ -525,5 +526,167 @@
     scroll-behavior: auto;
     transition: none;
     animation: none;
+  }
+}
+
+/* A free reading clock, engraved into the same paper as the book. */
+.reading-session {
+  text-align: center;
+}
+.reading-session .folio-chapter-heading {
+  text-align: start;
+}
+.reading-session__dial {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  width: min(100%, 18rem);
+  aspect-ratio: 1;
+  margin: 1.8rem auto;
+  border: 1px solid #9a7955;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 50% 65%, #b995c521, transparent 65%),
+    radial-gradient(circle, #fff8e9 50%, #e4d0ae);
+  color: #39283d;
+  box-shadow:
+    0 0 0 5px var(--folio-paper),
+    0 0 0 6px #aa896a,
+    0 0 0 10px #aa896a20,
+    inset 0 0 0 7px #fff9e566,
+    inset 0 0 0 9px #aa896a60;
+}
+.reading-session__dial::before,
+.reading-session__dial::after {
+  content: "◇";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: #815c3d;
+  background: #f4ead5;
+}
+.reading-session__dial::before {
+  left: -0.5rem;
+}
+.reading-session__dial::after {
+  right: -0.5rem;
+}
+.reading-session__sigil {
+  font-size: 1.7rem;
+  color: #79516b;
+}
+.reading-session__caption {
+  font:
+    0.75rem Georgia,
+    serif;
+  letter-spacing: 0.07em;
+}
+.reading-session__dial strong {
+  font-size: clamp(1.5rem, 10cqi, 2.8rem);
+  font-weight: 500;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.025em;
+}
+.reading-session__dial [role="status"] {
+  font-size: 0.85rem;
+}
+.reading-session__dial[data-state="active"] {
+  box-shadow:
+    0 0 0 5px var(--folio-paper),
+    0 0 0 6px #906441,
+    0 0 24px #9953a526,
+    inset 0 0 0 7px #fff9e566,
+    inset 0 0 0 9px #aa896a60;
+}
+.reading-session__start,
+.reading-session__actions {
+  max-width: 32rem;
+  margin: auto;
+}
+.reading-session__actions .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+.app-shell .reading-session :is(button, summary) {
+  min-height: 48px;
+  scroll-margin-block: 6rem 9rem;
+}
+.reading-session__actions .reading-session__cancel {
+  flex-basis: 100%;
+  color: var(--folio-muted);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.reading-session__hint {
+  color: var(--folio-muted);
+  font:
+    italic 1rem/1.6 Georgia,
+    serif;
+}
+.reading-session__fields {
+  margin-bottom: 1rem;
+  text-align: start;
+}
+.reading-session__history {
+  border-top: 1px solid var(--folio-rule);
+  margin-top: 1.5rem;
+  padding-top: 0.5rem;
+  text-align: start;
+}
+.reading-session__history .session-record {
+  margin-top: 1rem;
+}
+.app-shell[data-high-contrast="true"] .reading-session__dial {
+  background: #24172b;
+  color: #fff8e5;
+  border-color: #eddbbb;
+}
+.app-shell[data-high-contrast="true"] .reading-session__sigil {
+  color: #ffe0ae;
+}
+@media (max-width: 480px) {
+  .reading-session__start > .button,
+  .reading-session__actions .button {
+    width: 100%;
+  }
+}
+
+.app-shell .book-folio .reading-session :is(summary, .reading-session__cancel) {
+  color: var(--folio-text);
+}
+.app-shell:has(.reading-session:focus-within) .primary-dock {
+  transform: translate3d(0, calc(125% + env(safe-area-inset-bottom)), 0);
+  pointer-events: none;
+}
+@container (min-width: 36rem) {
+  .reading-session {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    column-gap: 1.5rem;
+  }
+  .reading-session
+    > :is(.folio-chapter-heading, [role="alert"], .reading-session__history) {
+    grid-column: 1 / -1;
+  }
+  .reading-session__dial {
+    width: min(100%, 16rem);
+    margin-block: 1.5rem;
+  }
+  .reading-session__start,
+  .reading-session__actions {
+    width: 100%;
+    min-width: 0;
+  }
+  .reading-session__actions .button {
+    width: 100%;
   }
 }

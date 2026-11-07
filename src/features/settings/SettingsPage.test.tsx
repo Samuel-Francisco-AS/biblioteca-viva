@@ -449,3 +449,29 @@ describe("Configurações e backup", () => {
     );
   });
 });
+
+it("R4 rejects file read failures and oversized files before inspect or restore", async () => {
+  const app = application();
+  const user = userEvent.setup();
+  render(<SettingsPage application={app} />);
+  const input = screen.getByLabelText("Arquivo de backup");
+  const broken = new File(["{}"], "fixture.json", { type: "application/json" });
+  Object.defineProperty(broken, "text", {
+    value: () => Promise.reject(new Error("Synthetic file failure")),
+  });
+  await user.upload(input, broken);
+  await screen.findByRole("alert");
+  expect(app.backup.inspect).not.toHaveBeenCalled();
+  expect(app.backup.import).not.toHaveBeenCalled();
+  const oversized = new File(["{}"], "large-fixture.json", {
+    type: "application/json",
+  });
+  const text = vi.fn(() => Promise.resolve("{}"));
+  Object.defineProperty(oversized, "size", { value: 10 * 1024 * 1024 + 1 });
+  Object.defineProperty(oversized, "text", { value: text });
+  await user.upload(input, oversized);
+  await screen.findByRole("alert");
+  expect(text).not.toHaveBeenCalled();
+  expect(app.backup.inspect).not.toHaveBeenCalled();
+  expect(app.backup.import).not.toHaveBeenCalled();
+});

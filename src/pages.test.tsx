@@ -964,3 +964,50 @@ it.each([
     ).toBeVisible();
   },
 );
+
+it("R4 session events avoid catalog and annotation queries and retain world identity", async () => {
+  let changed: ((event: { aggregateId: string }) => void) | undefined;
+  const entries = vi.fn(() => Promise.resolve([firstBook]));
+  const notes = vi.fn(() => Promise.resolve([]));
+  const quotes = vi.fn(() => Promise.resolve([]));
+  const session = vi.fn(() => Promise.resolve(undefined));
+  const entry = vi.fn(() => Promise.resolve(firstBook));
+  const application: LibraryApplication = {
+    events: {
+      subscribe: (_type, listener) => {
+        changed = listener;
+        return () => {
+          changed = undefined;
+        };
+      },
+    },
+    queries: {
+      listLibraryEntries: { execute: entries },
+      listAllNotes: { execute: notes },
+      listAllQuotes: { execute: quotes },
+      getOpenSession: { execute: session },
+      getLibraryEntry: { execute: entry },
+    },
+  };
+  render(
+    <MemoryRouter>
+      <LibraryPage application={application} />
+    </MemoryRouter>,
+  );
+  await waitFor(() =>
+    expect(worldHostProps().libraryWorldSnapshot).toBeDefined(),
+  );
+  const initial = worldHostProps().libraryWorldSnapshot;
+  for (let i = 0; i < 4; i++) {
+    await act(async () => {
+      changed?.({ aggregateId: firstBook.id });
+      await Promise.resolve();
+    });
+  }
+  expect(entries).toHaveBeenCalledTimes(1);
+  expect(notes).toHaveBeenCalledTimes(1);
+  expect(quotes).toHaveBeenCalledTimes(1);
+  expect(session).toHaveBeenCalledTimes(5);
+  expect(entry).toHaveBeenCalledTimes(4);
+  expect(worldHostProps().libraryWorldSnapshot).toBe(initial);
+});

@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -53,7 +57,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: bf5-e2e-shard-${{ matrix.shard }}
+          name: e2e-${{ github.sha }}-shard-${{ matrix.shard }}
           path: test-results/
           if-no-files-found: ignore
           retention-days: 3

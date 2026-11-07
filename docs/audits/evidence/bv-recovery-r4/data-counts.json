@@ -1,0 +1,11 @@
+{
+  "method": "Source path counts per confirmed SessionChanged; reproduced by R4 test in src/pages.test.tsx. No Android FPS inference.",
+  "unchangedEntrySessionEvent": {
+    "before": {"catalogLists":1,"noteLists":1,"quoteLists":1,"sessionQueries":1,"pointEntryQueries":0,"entriesProjected":"N","fullSnapshotJSONStringify":4},
+    "after": {"catalogLists":0,"noteLists":0,"quoteLists":0,"sessionQueries":1,"pointEntryQueries":1,"entriesProjected":0,"fullSnapshotJSONStringify":0}
+  },
+  "catalogReturn": {"beforeQueries":4,"afterQueries":4,"reprojects":true,"unchangedSceneRemounts":0},
+  "semanticProgressUpdate": {"beforeSceneRemounts":1,"afterSceneRemounts":0},
+  "physicalIdentityChange": {"beforeSceneRemounts":1,"afterSceneRemounts":1},
+  "limitations":"Changed entry currently reprojects N entries; no CPU/allocation timing or physical profiling. Counts assume all optional production queries available."
+}

@@ -1,18 +1,29 @@
 import { BVDatePicker } from "../../ui/BVPicker";
 import { entryExperience } from "../entry-detail/entryExperience";
 import { ExerciseList } from "../entry-detail/ExerciseList";
-import { useEffect, useState, type FormEvent } from "react";
-
 import {
-  currentSessionDuration,
-  type LibraryEntry,
-  type Session,
-} from "../../domain";
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
+import { Link } from "react-router-dom";
+import { useAppResume } from "../../app/useAppResume";
+import { useSessionClock } from "./useSessionClock";
+
+import { type LibraryEntry, type Session } from "../../domain";
 import type { SessionCompletionResult } from "../../application";
 import { presentApplicationError } from "../entry-editor/errorMessages";
-import { formatSessionDuration } from "./sessionPresentation";
+import {
+  formatSessionClock,
+  formatSessionDuration,
+} from "./sessionPresentation";
 
 export interface SessionApplication {
+  readonly events?: {
+    subscribe(type: "SessionChanged", listener: () => void): () => void;
+  };
   readonly commands: {
     readonly completeSession: {
       execute(input: unknown): Promise<SessionCompletionResult>;
@@ -98,46 +109,69 @@ export function SessionPanel({
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
 
-  async function reload() {
+  const [loading, setLoading] = useState(true);
+  const mounted = useRef(false);
+  const acting = useRef(false);
+  const clockControl = useRef<HTMLButtonElement>(null);
+  const focusAfterAction = useRef(false);
+  const request = useRef(0);
+  const reload = useCallback(async () => {
+    const version = ++request.current;
     const [items, active] = await Promise.all([
       application.queries.listSessionsByEntry.execute({ id: entry.id }),
       application.queries.getOpenSession.execute(),
     ]);
+    if (!mounted.current || version !== request.current) return;
     setSessions(items);
     setOpen(active);
-  }
+    setLoading(false);
+  }, [application, entry.id]);
+  const refresh = useCallback(() => {
+    void reload().catch((failure: unknown) => {
+      if (mounted.current) {
+        setError(presentApplicationError(failure).message);
+        setLoading(true);
+      }
+    });
+  }, [reload]);
+  useAppResume(refresh);
+  useEffect(() => {
+    mounted.current = true;
+    refresh();
+    const unsubscribe = application.events?.subscribe(
+      "SessionChanged",
+      refresh,
+    );
+    const invalidate = () => request.current++;
+    return () => {
+      mounted.current = false;
+      invalidate();
+      unsubscribe?.();
+    };
+  }, [application, refresh]);
 
   useEffect(() => {
-    let active = true;
-    void Promise.all([
-      application.queries.listSessionsByEntry.execute({ id: entry.id }),
-      application.queries.getOpenSession.execute(),
-    ]).then(
-      ([items, current]) => {
-        if (active) {
-          setSessions(items);
-          setOpen(current);
-        }
-      },
-      (failure: unknown) =>
-        active && setError(presentApplicationError(failure).message),
-    );
-    return () => {
-      active = false;
-    };
-  }, [application, entry.id]);
+    if (!busy && focusAfterAction.current) {
+      focusAfterAction.current = false;
+      clockControl.current?.focus();
+    }
+  }, [busy]);
 
-  async function act(operation: () => Promise<unknown>) {
+  async function act(operation: () => Promise<unknown>, focusClock = false) {
+    if (acting.current) return;
+    acting.current = true;
+    focusAfterAction.current = focusClock;
     setBusy(true);
     setError(undefined);
     try {
       await operation();
       await reload();
-      onChanged?.();
+      if (mounted.current) onChanged?.();
     } catch (failure: unknown) {
-      setError(presentApplicationError(failure).message);
+      if (mounted.current) setError(presentApplicationError(failure).message);
     } finally {
-      setBusy(false);
+      acting.current = false;
+      if (mounted.current) setBusy(false);
     }
   }
 
@@ -145,12 +179,14 @@ export function SessionPanel({
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const note = form.get("note");
-    void act(() =>
-      application.commands.startSession.execute({
-        entryId: entry.id,
-        ...specific(entry, form),
-        note: typeof note === "string" && note.trim() ? note : undefined,
-      }),
+    void act(
+      () =>
+        application.commands.startSession.execute({
+          entryId: entry.id,
+          ...specific(entry, form),
+          note: typeof note === "string" && note.trim() ? note : undefined,
+        }),
+      true,
     );
   }
 
@@ -182,6 +218,10 @@ export function SessionPanel({
     ),
   ).size;
   const ownOpen = open?.entryId === entry.id ? open : undefined;
+  const reading = entry.type === "book" && !historyOnly;
+  const elapsed = useSessionClock(ownOpen);
+  const disabled = busy || loading;
+  const HistoryContainer = reading ? "details" : "div";
   function edit(event: FormEvent<HTMLFormElement>, session: Session) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -198,10 +238,45 @@ export function SessionPanel({
     });
   }
   return (
-    <section className="content-card" aria-labelledby="sessions-title">
-      <p className="eyebrow">Seu percurso</p>
-      <h3 id="sessions-title">{copy.sessions}</h3>
-      {!historyOnly && (
+    <section
+      className={reading ? "folio-chapter reading-session" : "content-card"}
+      aria-labelledby="sessions-title"
+    >
+      {reading ? (
+        <div className="folio-chapter-heading">
+          <span aria-hidden="true">II</span>
+          <h3 id="sessions-title">Seu momento de leitura</h3>
+        </div>
+      ) : (
+        <>
+          <p className="eyebrow">Seu percurso</p>
+          <h3 id="sessions-title">{copy.sessions}</h3>
+        </>
+      )}
+      {reading && (
+        <div
+          className="reading-session__dial"
+          data-state={ownOpen?.status ?? "ready"}
+        >
+          <span className="reading-session__sigil" aria-hidden="true">
+            ✦
+          </span>
+          <span className="reading-session__caption">Tempo entre páginas</span>
+          <strong role="timer" aria-label="Tempo de leitura" aria-live="off">
+            {formatSessionClock(elapsed)}
+          </strong>
+          <span role="status">
+            {loading
+              ? "Carregando sessão…"
+              : ownOpen?.status === "active"
+                ? "Em andamento"
+                : ownOpen
+                  ? "Pausado"
+                  : "Pronto para ler"}
+          </span>
+        </div>
+      )}
+      {!historyOnly && !reading && (
         <p>
           {entry.type === "series"
             ? "Registre os episódios que assistiu. Não precisa contar minutos."
@@ -218,28 +293,33 @@ export function SessionPanel({
       )}
       {error && <p role="alert">{error}</p>}
       {ownOpen ? (
-        <div aria-live="polite">
-          <p>
-            <strong>
-              {ownOpen.status === "active"
-                ? "Sessão em andamento"
-                : "Sessão pausada"}
-            </strong>{" "}
-            ·{" "}
-            {formatSessionDuration(
-              currentSessionDuration(ownOpen, new Date().toISOString()),
-            )}
-          </p>
+        <div className={reading ? "reading-session__actions" : undefined}>
+          {!reading && (
+            <p>
+              <strong>
+                {ownOpen.status === "active"
+                  ? "Sessão em andamento"
+                  : "Sessão pausada"}
+              </strong>{" "}
+              ·{" "}
+              <span role="timer" aria-live="off">
+                {formatSessionDuration(elapsed)}
+              </span>
+            </p>
+          )}
           <div className="form-actions">
             {ownOpen.status === "active" ? (
               <button
                 className="button button--secondary"
-                disabled={busy}
+                ref={reading ? clockControl : undefined}
+                disabled={disabled}
                 onClick={() =>
-                  void act(() =>
-                    application.commands.pauseSession.execute({
-                      id: ownOpen.id,
-                    }),
+                  void act(
+                    () =>
+                      application.commands.pauseSession.execute({
+                        id: ownOpen.id,
+                      }),
+                    true,
                   )
                 }
                 type="button"
@@ -249,12 +329,15 @@ export function SessionPanel({
             ) : (
               <button
                 className="button button--secondary"
-                disabled={busy}
+                ref={reading ? clockControl : undefined}
+                disabled={disabled}
                 onClick={() =>
-                  void act(() =>
-                    application.commands.resumeSession.execute({
-                      id: ownOpen.id,
-                    }),
+                  void act(
+                    () =>
+                      application.commands.resumeSession.execute({
+                        id: ownOpen.id,
+                      }),
+                    true,
                   )
                 }
                 type="button"
@@ -264,12 +347,14 @@ export function SessionPanel({
             )}
             <button
               className="button button--primary"
-              disabled={busy}
+              disabled={disabled}
               onClick={() =>
-                void act(() =>
-                  application.commands.completeSession.execute({
-                    id: ownOpen.id,
-                  }),
+                void act(
+                  () =>
+                    application.commands.completeSession.execute({
+                      id: ownOpen.id,
+                    }),
+                  true,
                 )
               }
               type="button"
@@ -277,14 +362,20 @@ export function SessionPanel({
               Concluir sessão
             </button>
             <button
-              className="button button--danger"
-              disabled={busy}
+              className={
+                reading
+                  ? "text-button reading-session__cancel"
+                  : "button button--danger"
+              }
+              disabled={disabled}
               onClick={() =>
                 window.confirm("Cancelar e remover esta sessão?") &&
-                void act(() =>
-                  application.commands.deleteSession.execute({
-                    id: ownOpen.id,
-                  }),
+                void act(
+                  () =>
+                    application.commands.deleteSession.execute({
+                      id: ownOpen.id,
+                    }),
+                  true,
                 )
               }
               type="button"
@@ -293,6 +384,36 @@ export function SessionPanel({
             </button>
           </div>
         </div>
+      ) : reading ? (
+        <form onSubmit={start} className="reading-session__start">
+          <p className="reading-session__hint">
+            Sem pressa, sem limite. O tempo acompanha seu encontro com o livro.
+          </p>
+          <details className="reading-session__fields">
+            <summary>Páginas e nota (opcionais)</summary>
+            <SessionFields entry={entry} />
+            <label className="form-field">
+              Nota opcional
+              <textarea name="note" />
+            </label>
+          </details>
+          <button
+            className="button button--primary"
+            ref={clockControl}
+            disabled={disabled || open !== undefined}
+            type="submit"
+          >
+            Iniciar sessão
+          </button>
+          {open && (
+            <p role="status">
+              Já existe uma sessão em andamento em outro registro.{" "}
+              <Link to={`/registros/${encodeURIComponent(open.entryId)}`}>
+                Abrir sessão em andamento
+              </Link>
+            </p>
+          )}
+        </form>
       ) : !historyOnly ? (
         <details className="session-clock">
           <summary>Usar cronômetro (opcional)</summary>
@@ -305,7 +426,7 @@ export function SessionPanel({
             </label>
             <button
               className="button button--primary"
-              disabled={busy || open !== undefined}
+              disabled={disabled || open !== undefined}
               type="submit"
             >
               Iniciar sessão
@@ -318,156 +439,163 @@ export function SessionPanel({
           </form>
         </details>
       ) : null}
-      {!historyOnly && (
-        <form onSubmit={manual} className="session-record">
-          <h4>{copy.record}</h4>
-          <label className="form-field">
-            Dia da experiência
-            <BVDatePicker name="date" />
-          </label>
-          <p className="field-help">
-            Deixe o dia em branco para registrar agora.
-          </p>
-          <SessionFields entry={entry} />
-          <details className="session-time">
-            <summary>Guardar tempo (opcional)</summary>
+      <HistoryContainer
+        className={reading ? "reading-session__history" : undefined}
+      >
+        {reading && <summary>Histórico de leituras e registro manual</summary>}
+        {!historyOnly && (
+          <form onSubmit={manual} className="session-record">
+            <h4>{copy.record}</h4>
             <label className="form-field">
-              Duração em minutos (opcional)
-              <input min="0" step="any" name="duration" type="number" />
+              Dia da experiência
+              <BVDatePicker name="date" />
             </label>
-          </details>
-          <label className="form-field">
-            Nota opcional
-            <textarea name="note" />
-          </label>
-          <button
-            className="button button--secondary"
-            disabled={busy}
-            type="submit"
-          >
-            {copy.record}
-          </button>
-        </form>
-      )}
-      <h4>Histórico</h4>
-      {entry.type === "physical_activity" && (
-        <p className="practice-frequency">
-          {practiceDays} {practiceDays === 1 ? "dia" : "dias"} de prática ·{" "}
-          {completed.length} {completed.length === 1 ? "execução" : "execuções"}
-        </p>
-      )}
-      {sessions.filter(({ status }) => status === "completed").length === 0 ? (
-        <p>
-          {historyOnly
-            ? "Sem sessões anteriores."
-            : "O primeiro encontro ainda está por vir."}
-        </p>
-      ) : (
-        <ul className="session-history">
-          {sessions
-            .filter(({ status }) => status === "completed")
-            .map((session) => (
-              <li key={session.id}>
-                {new Date(session.startedAt).toLocaleDateString("pt-BR")} ·{" "}
-                {session.accumulatedDuration > 0
-                  ? formatSessionDuration(session.accumulatedDuration)
-                  : "Tempo não informado"}
-                {session.kind === "reading" && (
-                  <p>
-                    Páginas {session.startPage ?? "—"} →{" "}
-                    {session.endPage ?? "—"}
-                  </p>
-                )}
-                {session.kind === "viewing" &&
-                  session.episodesCompleted !== undefined && (
-                    <p>{session.episodesCompleted} episódios concluídos</p>
-                  )}
-                {session.kind === "physical_activity" && (
-                  <>
+            <p className="field-help">
+              Deixe o dia em branco para registrar agora.
+            </p>
+            <SessionFields entry={entry} />
+            <details className="session-time">
+              <summary>Guardar tempo (opcional)</summary>
+              <label className="form-field">
+                Duração em minutos (opcional)
+                <input min="0" step="any" name="duration" type="number" />
+              </label>
+            </details>
+            <label className="form-field">
+              Nota opcional
+              <textarea name="note" />
+            </label>
+            <button
+              className="button button--secondary"
+              disabled={disabled}
+              type="submit"
+            >
+              {copy.record}
+            </button>
+          </form>
+        )}
+        <h4>Histórico</h4>
+        {entry.type === "physical_activity" && (
+          <p className="practice-frequency">
+            {practiceDays} {practiceDays === 1 ? "dia" : "dias"} de prática ·{" "}
+            {completed.length}{" "}
+            {completed.length === 1 ? "execução" : "execuções"}
+          </p>
+        )}
+        {sessions.filter(({ status }) => status === "completed").length ===
+        0 ? (
+          <p>
+            {historyOnly
+              ? "Sem sessões anteriores."
+              : "O primeiro encontro ainda está por vir."}
+          </p>
+        ) : (
+          <ul className="session-history">
+            {sessions
+              .filter(({ status }) => status === "completed")
+              .map((session) => (
+                <li key={session.id}>
+                  {new Date(session.startedAt).toLocaleDateString("pt-BR")} ·{" "}
+                  {session.accumulatedDuration > 0
+                    ? formatSessionDuration(session.accumulatedDuration)
+                    : "Tempo não informado"}
+                  {session.kind === "reading" && (
                     <p>
-                      {session.distanceMeters !== undefined
-                        ? `${session.distanceMeters} m · `
-                        : ""}
-                      {session.perceivedExertion !== undefined
-                        ? `Esforço ${session.perceivedExertion}/10`
-                        : ""}
+                      Páginas {session.startPage ?? "—"} →{" "}
+                      {session.endPage ?? "—"}
                     </p>
-                    {session.exercises && session.exercises.length > 0 && (
-                      <details>
-                        <summary>Ficha desta execução</summary>
-                        <ExerciseList exercises={session.exercises} />
-                      </details>
+                  )}
+                  {session.kind === "viewing" &&
+                    session.episodesCompleted !== undefined && (
+                      <p>{session.episodesCompleted} episódios concluídos</p>
                     )}
-                  </>
-                )}
-                {session.kind === "work" && session.result && (
-                  <p>{session.result}</p>
-                )}
-                {session.note && (
-                  <p className="session-history__note">{session.note}</p>
-                )}
-                {editing === session.id && (
-                  <form
-                    className="session-edit"
-                    onSubmit={(event) => edit(event, session)}
+                  {session.kind === "physical_activity" && (
+                    <>
+                      <p>
+                        {session.distanceMeters !== undefined
+                          ? `${session.distanceMeters} m · `
+                          : ""}
+                        {session.perceivedExertion !== undefined
+                          ? `Esforço ${session.perceivedExertion}/10`
+                          : ""}
+                      </p>
+                      {session.exercises && session.exercises.length > 0 && (
+                        <details>
+                          <summary>Ficha desta execução</summary>
+                          <ExerciseList exercises={session.exercises} />
+                        </details>
+                      )}
+                    </>
+                  )}
+                  {session.kind === "work" && session.result && (
+                    <p>{session.result}</p>
+                  )}
+                  {session.note && (
+                    <p className="session-history__note">{session.note}</p>
+                  )}
+                  {editing === session.id && (
+                    <form
+                      className="session-edit"
+                      onSubmit={(event) => edit(event, session)}
+                    >
+                      <label className="form-field">
+                        Duração em minutos
+                        <input
+                          name="duration"
+                          type="number"
+                          min="0"
+                          step="any"
+                          defaultValue={session.accumulatedDuration / 60}
+                        />
+                      </label>
+                      <label className="form-field">
+                        Nota da experiência
+                        <textarea name="note" defaultValue={session.note} />
+                      </label>
+                      <div className="form-actions">
+                        <button
+                          className="button button--primary"
+                          type="submit"
+                          disabled={disabled}
+                        >
+                          Salvar experiência
+                        </button>
+                        <button
+                          className="button button--secondary"
+                          type="button"
+                          onClick={() => setEditing(undefined)}
+                        >
+                          Cancelar edição
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                  <button
+                    className="text-button"
+                    onClick={() => setEditing(session.id)}
+                    type="button"
                   >
-                    <label className="form-field">
-                      Duração em minutos
-                      <input
-                        name="duration"
-                        type="number"
-                        min="0"
-                        step="any"
-                        defaultValue={session.accumulatedDuration / 60}
-                      />
-                    </label>
-                    <label className="form-field">
-                      Nota da experiência
-                      <textarea name="note" defaultValue={session.note} />
-                    </label>
-                    <div className="form-actions">
-                      <button
-                        className="button button--primary"
-                        type="submit"
-                        disabled={busy}
-                      >
-                        Salvar experiência
-                      </button>
-                      <button
-                        className="button button--secondary"
-                        type="button"
-                        onClick={() => setEditing(undefined)}
-                      >
-                        Cancelar edição
-                      </button>
-                    </div>
-                  </form>
-                )}
-                <button
-                  className="text-button"
-                  onClick={() => setEditing(session.id)}
-                  type="button"
-                >
-                  Editar
-                </button>{" "}
-                <button
-                  className="text-button"
-                  onClick={() =>
-                    window.confirm("Excluir esta sessão?") &&
-                    void act(() =>
-                      application.commands.deleteSession.execute({
-                        id: session.id,
-                      }),
-                    )
-                  }
-                  type="button"
-                >
-                  Excluir
-                </button>
-              </li>
-            ))}
-        </ul>
-      )}
+                    Editar
+                  </button>{" "}
+                  <button
+                    className="text-button"
+                    onClick={() =>
+                      window.confirm("Excluir esta sessão?") &&
+                      void act(() =>
+                        application.commands.deleteSession.execute({
+                          id: session.id,
+                        }),
+                      )
+                    }
+                    type="button"
+                  >
+                    Excluir
+                  </button>
+                </li>
+              ))}
+          </ul>
+        )}
+      </HistoryContainer>
     </section>
   );
 }

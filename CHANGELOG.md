@@ -1,3 +1,11 @@
+## Saneamento pós-R4 — leitura (2026-11-07)
+
+- Corrigido o relógio que permanecia visualmente em 0 s: timestamp de redesenho compartilhado por sessões, indicador global e Estudos; pausa/retorno/reabertura preservam a duração derivada do domínio.
+- Fólio de livro ganha “Seu momento de leitura” direto, círculo livre em HH:MM:SS, estado e controles destacados. Páginas/nota, registro manual e histórico permanecem acessíveis em áreas secundárias; cancelamento confirmado e timer sem anúncios por segundo.
+- Sem schema, backup, assets ou mudança artística 3D; R4A–D preservadas. [Testes, limitações e roteiro Moto G06](docs/audits/BV_SANEAMENTO_POS_R4_LEITURA.md). Sem aceite físico integral R4, CI verde, merge ou R5.
+
+> **R4 — candidata de 07/11/2026:** main base `d5eb469` integra PRs #32–#38 e aceites físicos dirigidos R2/R3/segurança. R4A–D implementadas na PR draft #39; gates estáticos, 935 unitários, web e APK debug locais PASS. Dados/sessões separados, diagnóstico opt-in e integridade v6 reforçada. Playwright dirigido **3 PASS/1 FAIL** (seleção R2 por deadline, causa não atribuída); sem aprovação física R4 ou CI global verde. [Autoridade canônica e evidências](docs/audits/BV_RECUPERACAO_R4.md). BF-5.5 parcial; R5, F2B/F2C e BF-5.5G não iniciadas. Notas anteriores são cronologia.
+
 ## Segurança pós-R3 — 2026-11-07
 
 - Corrigidas dependências de produção: Capacitor Android/Core/CLI 8.4.3, React Router DOM/Router 7.18.5 e Zod 4.6.7. A correção do proxy nativo requer APK atualizado.

@@ -22,17 +22,23 @@ test("estudo recupera pomodoro após suspensão/reload, preserva pausas e regist
   await expect(
     page.getByRole("heading", { name: "Cartografia das estrelas" }),
   ).toBeVisible();
-  await expect(page.getByRole("timer")).toContainText("25:00");
+  await expect(
+    page.getByRole("timer", { name: "Tempo restante" }),
+  ).toContainText("25:00");
   await page.getByRole("button", { name: "Iniciar foco", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Pausar foco", exact: true }),
   ).toBeEnabled();
   await page.clock.setFixedTime(new Date("2026-11-04T12:05:00.000Z"));
   await page.getByRole("button", { name: "Pausar foco", exact: true }).click();
-  await expect(page.getByRole("timer")).toContainText("20:00");
+  await expect(
+    page.getByRole("timer", { name: "Tempo restante" }),
+  ).toContainText("20:00");
   await page.clock.setFixedTime(new Date("2026-11-04T12:15:00.000Z"));
   await page.reload();
-  await expect(page.getByRole("timer")).toContainText("20:00");
+  await expect(
+    page.getByRole("timer", { name: "Tempo restante" }),
+  ).toContainText("20:00");
   await page.getByRole("button", { name: "Retomar foco", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Pausar foco", exact: true }),
@@ -43,7 +49,9 @@ test("estudo recupera pomodoro após suspensão/reload, preserva pausas e regist
   await background.close();
   await page.bringToFront();
   await page.reload();
-  await expect(page.getByRole("timer")).toContainText("00:00");
+  await expect(
+    page.getByRole("timer", { name: "Tempo restante" }),
+  ).toContainText("00:00");
   await page
     .getByRole("button", { name: "Registrar foco", exact: true })
     .click();

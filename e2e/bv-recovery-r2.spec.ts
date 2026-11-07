@@ -72,6 +72,11 @@ test("R2: six real records retain React selection, highlights and identity after
   await page.goto("/");
   const canvas = page.locator("canvas[data-three-world-canvas='true']");
   await expect(canvas).toHaveAttribute("data-fixture-status", "ready");
+  await expect(page.locator(".world-surface")).toHaveAttribute(
+    "data-status",
+    "ready",
+  );
+  await expect(canvas).toHaveAttribute("data-runtime-state", "running");
   await page
     .getByRole("button", { name: "Abrir ferramentas de exploração acessível" })
     .click();
@@ -109,6 +114,11 @@ test("R2: six real records retain React selection, highlights and identity after
   await page.screenshot({ path: testInfo.outputPath("r2-react-world.png") });
   await page.reload();
   await expect(canvas).toHaveAttribute("data-fixture-status", "ready");
+  await expect(page.locator(".world-surface")).toHaveAttribute(
+    "data-status",
+    "ready",
+  );
+  await expect(canvas).toHaveAttribute("data-runtime-state", "running");
   await page
     .getByRole("button", { name: "Abrir ferramentas de exploração acessível" })
     .click();

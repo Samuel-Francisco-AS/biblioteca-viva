@@ -1,3 +1,5 @@
+> **R4 — candidata de 07/11/2026:** main base `d5eb469` integra PRs #32–#38 e aceites físicos dirigidos R2/R3/segurança. R4A–D implementadas na PR draft #39; gates estáticos, 935 unitários, web e APK debug locais PASS. Dados/sessões separados, diagnóstico opt-in e integridade v6 reforçada. Playwright dirigido **3 PASS/1 FAIL** (seleção R2 por deadline, causa não atribuída); sem aprovação física R4 ou CI global verde. [Autoridade canônica e evidências](audits/BV_RECUPERACAO_R4.md). BF-5.5 parcial; R5, F2B/F2C e BF-5.5G não iniciadas. Notas anteriores são cronologia.
+
 > **R3C — lifecycle (07/11/2026):** montagem invalida RAFs cancelados por geração e possui no máximo um agendamento; descarte terminal inclui Line/Points e perde o contexto WebGL após remover listeners. Pausa de aba/background mantém a instância e seus recursos. Context restoration não revive instância terminal. [Evidências e limites de retenção](audits/BV_RECUPERACAO_R3.md#r3c--bv-15).
 
 > **R3B — contrato de composição (07/11/2026):** `AgencyEnvironment` fornece obstáculos/oportunidades readonly a cada `InhabitantAgency.update`. Runtime atualiza livro pessoal antes de amostrar essas entradas e compartilha poses pós-agência entre visuais. Catálogo autoral em `inhabitantActivities`; agência continua única autoridade de movimento, `InteractionCoordinator` única autoridade de reservas e livro pessoal conserva root/capa/devolução. [Estrutura, evidências e limites](audits/BV_RECUPERACAO_R3.md#r3b--bv-10).
@@ -64,3 +66,11 @@ Three.js
 O baseline vigente usa Three.js direto, `WebGLRenderer`, `OrthographicCamera` e GLTF/GLB. R3F não foi adotado e WebGPU não substitui o baseline WebGL. Alternativas não serão implementadas em paralelo e só serão reabertas diante de evidência estrutural futura.
 
 A cena técnica da F1 prova o runtime e a F3 concluiu seu contrato de câmera/interação, mas ela não constitui arquitetura permanente de conteúdo, UX do mundo real ou Biblioteca final. A ADR-010 definiu o contrato documental do Pipeline 3D v1; ingestão produtiva, `AssetManager`/cache, catálogo e persistência espacial continuam fora da arquitetura implementada.
+
+## Reconciliação e diagnóstico R4
+
+A página consulta catálogo/anotações na ativação e sessão+registro por ID nos eventos pós-commit de sessão, em fila limitada ao lifecycle da instância ativa. Snapshots imutáveis usam igualdade estrutural de objetos plain, sem serialização de catálogo. Registro alterado ainda reprojeta catálogo; registro igual conserva a identidade do snapshot.
+
+WorldHost mantém inputs de construção independentes dos metadados: IDs/modelos/ordem dos seis tipos, título/autor dos livros e identidades/vínculos/categorias de pergaminhos. Metadados sem consumidor 3D permanecem atuais no React; não provocam remount. Acrescentar um consumidor visual desses campos exige revisar `worldSceneIdentity`, seus testes e reconciliação; não preservar um estado visual obsoleto. Inserção/exclusão/mudança física ainda usa descarte e montagem pelo único owner; runtime nunca consulta Dexie.
+
+Diagnóstico assina somente com painel aberto. Probe limitada de CPU/long tasks segue assinatura, pausa e descarte; inventário amplo periódico depende de consumidor. Datasets baratos de lifecycle permanecem. GPU/apresentação não são inferidas do relógio CPU. [Métricas e limites](audits/BV_RECUPERACAO_R4.md).

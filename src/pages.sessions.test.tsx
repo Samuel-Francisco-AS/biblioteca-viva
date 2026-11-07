@@ -1,10 +1,17 @@
 import "fake-indexeddb/auto";
 import Dexie from "dexie";
-import { act, render, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { expect, it, vi } from "vitest";
 import { createApplication } from "./app/createApplication";
 import { LibraryPage } from "./pages";
+import { SessionPanel } from "./features/sessions/SessionPanel";
 import type { WorldHostProps } from "./features/library/WorldHost";
 
 let latest: WorldHostProps | undefined;
@@ -24,18 +31,24 @@ it("projects committed session events, preserves the world snapshot, and reconci
   const page = (active: boolean) => (
     <MemoryRouter>
       <LibraryPage application={application} active={active} />
+      <SessionPanel application={application} entry={book} />
     </MemoryRouter>
   );
   const view = render(page(true));
   try {
     await waitFor(() => expect(latest?.libraryWorldSnapshot).toBeDefined());
     const world = latest!.libraryWorldSnapshot;
-    const started = await act(() =>
-      application.commands.startSession.execute({
-        entryId: book.id,
-        entryType: "book",
-      }),
+    const start = await screen.findByRole("button", { name: "Iniciar sessão" });
+    await waitFor(() => expect(start).toBeEnabled());
+    fireEvent.click(start);
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Pausar sessão" }),
+      ).toBeEnabled(),
     );
+    const started = await application.queries.getOpenSession.execute();
+    expect(started).toBeDefined();
+    if (!started) throw new Error("A sessão confirmada deveria existir");
     await waitFor(() =>
       expect(latest?.worldSessionActivity).toMatchObject({
         sessionId: started.id,

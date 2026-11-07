@@ -1,0 +1,109 @@
+{
+  "initial": [
+    {
+      "command": "npm ci",
+      "exitCode": 0,
+      "seconds": 5.69
+    },
+    {
+      "command": "npm audit --omit=dev",
+      "exitCode": 0,
+      "seconds": 0.71
+    },
+    {
+      "command": "npm audit",
+      "exitCode": 0,
+      "seconds": 0.79
+    },
+    {
+      "command": "npm run format:check",
+      "exitCode": 1,
+      "seconds": 9.08
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 1,
+      "seconds": 43.22
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "seconds": 25.3
+    },
+    {
+      "command": "npm run test:run",
+      "exitCode": 1,
+      "seconds": 65.61
+    },
+    {
+      "command": "npm run audio:check",
+      "exitCode": 0,
+      "seconds": 0.21
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "seconds": 25.77
+    },
+    {
+      "command": "npm run performance:report",
+      "exitCode": 0,
+      "seconds": 0.18
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "seconds": 0.01
+    }
+  ],
+  "final": [
+    {
+      "command": "npm run format:check",
+      "exitCode": 0,
+      "seconds": 9.13
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "seconds": 43.53
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "seconds": 24.81
+    },
+    {
+      "command": "npm run test:run",
+      "exitCode": 0,
+      "seconds": 70.99
+    },
+    {
+      "command": "npm run android:build:debug",
+      "exitCode": 0,
+      "seconds": 37.9
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "seconds": 0.03
+    }
+  ],
+  "unit": {
+    "initialPass": 934,
+    "initialFail": 1,
+    "finalPass": 935,
+    "files": 147,
+    "finalFail": 0
+  },
+  "audit": {
+    "productionVulnerabilities": 0,
+    "allVulnerabilities": 0
+  },
+  "apk": {
+    "path": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "bytes": 8610350,
+    "sha256": "e9838fc723e2c3f3f2ac67f9ab8142658cadb53cb15b11c82d3ce6ad31b0e145",
+    "physicalValidation": false
+  },
+  "actions": "No workflow dispatched/rerun; commits skip ci; queried PR runs for A/B/C empty. Final head verification pending publication."
+}

@@ -134,7 +134,15 @@ export function EntryDetailPage({
     return (
       <BookDetailPage
         application={application}
+        key={id}
         refreshKey={refreshKey}
+        readingSession={(book) => (
+          <SessionPanel
+            application={application}
+            entry={book}
+            onChanged={() => setRefreshKey((value) => value + 1)}
+          />
+        )}
         secondary={(book, onUpdated) => (
           <>
             <details className="folio-secondary-flow">
@@ -145,14 +153,6 @@ export function EntryDetailPage({
                 onChange={(updated) => {
                   if (updated.type === "book") onUpdated(updated);
                 }}
-              />
-            </details>
-            <details className="folio-secondary-flow">
-              <summary>Sessões de leitura</summary>
-              <SessionPanel
-                application={application}
-                entry={book}
-                onChanged={() => setRefreshKey((value) => value + 1)}
               />
             </details>
           </>

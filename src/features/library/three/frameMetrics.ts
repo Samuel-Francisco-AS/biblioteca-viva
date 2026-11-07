@@ -1,3 +1,4 @@
+import { distribution } from "./performanceProbe";
 export const FRAME_METRICS_WINDOW_MS = 750;
 
 export interface FrameMetricsSnapshot {
@@ -16,9 +17,20 @@ export class FrameMetricsWindow {
   record(timestamp: number): FrameMetricsSnapshot {
     const previous = this.timestamps.at(-1);
     if (previous !== undefined && timestamp < previous) this.reset();
+    if (this.timestamps.length >= 1024) this.timestamps.shift();
     this.timestamps.push(timestamp);
     this.prune(timestamp);
     return this.snapshot();
+  }
+
+  distribution() {
+    const intervals = this.timestamps
+      .slice(1)
+      .map((t, i) => t - this.timestamps[i]);
+    return Object.freeze({
+      ...distribution(intervals),
+      lateFramesOver33Ms: intervals.filter((t) => t > 33.34).length,
+    });
   }
 
   reset(): void {

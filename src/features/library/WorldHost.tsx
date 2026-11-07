@@ -1,3 +1,4 @@
+import { equalSnapshot, worldSceneIdentity } from "./snapshotEquality";
 import { WorldDiagnosticPanel } from "./WorldDiagnosticPanel";
 import { NarrativePanel } from "./NarrativePanel";
 import { NarrativeSession } from "./narrative/session";
@@ -126,7 +127,7 @@ export function WorldHost({
   active = true,
   inhabitantContinuity,
   nightLightingContinuity,
-  libraryWorldSnapshot,
+  libraryWorldSnapshot: incomingSnapshot,
   worldSessionActivity,
   onSelectableObjectsChange,
   onSelectionChange,
@@ -136,6 +137,14 @@ export function WorldHost({
   runtimeFactory,
   selectedObjectId,
 }: WorldHostProps) {
+  const [sceneInput, setSceneInput] = useState(() => ({
+    snapshot: incomingSnapshot,
+    identity: worldSceneIdentity(incomingSnapshot),
+  }));
+  const identity = worldSceneIdentity(incomingSnapshot);
+  if (!equalSnapshot(sceneInput.identity, identity))
+    setSceneInput({ snapshot: incomingSnapshot, identity });
+  const libraryWorldSnapshot = sceneInput.snapshot;
   const [narrativeSession] = useState(() => new NarrativeSession());
   const [livingSession] = useState(() => new LivingSession());
   const [nightLighting] = useState(() => new NightLightingSession());

@@ -41,7 +41,9 @@ test("seletores DOM confirmam foco e datas, cancelam com Back/Escape e mantêm t
   await sheet.getByRole("button", { name: "Confirmar", exact: true }).click();
   await page.getByRole("button", { name: "Iniciar foco", exact: true }).click();
   await page.reload();
-  await expect(page.getByRole("timer")).toContainText("15:00");
+  await expect(
+    page.getByRole("timer", { name: "Tempo restante" }),
+  ).toContainText("15:00");
   await page.goto("/novo-registro");
   await page.getByRole("button", { name: /Atividade física/ }).click();
   await page.getByLabel("Nome do treino").fill("Ritual da aurora");

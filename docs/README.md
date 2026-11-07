@@ -1,3 +1,7 @@
+Saneamento ativo: [relógio e fólio de leitura pós-R4](audits/BV_SANEAMENTO_POS_R4_LEITURA.md), sobre R4A–D na PR draft #39; gate humano da candidata pendente.
+
+> **R4 — candidata de 07/11/2026:** main base `d5eb469` integra PRs #32–#38 e aceites físicos dirigidos R2/R3/segurança. R4A–D implementadas na PR draft #39; gates estáticos, 935 unitários, web e APK debug locais PASS. Dados/sessões separados, diagnóstico opt-in e integridade v6 reforçada. Playwright dirigido **3 PASS/1 FAIL** (seleção R2 por deadline, causa não atribuída); sem aprovação física R4 ou CI global verde. [Autoridade canônica e evidências](audits/BV_RECUPERACAO_R4.md). BF-5.5 parcial; R5, F2B/F2C e BF-5.5G não iniciadas. Notas anteriores são cronologia.
+
 > **Recuperação R3:** [relatório de loop, agência e lifecycle](audits/BV_RECUPERACAO_R3.md), candidata na PR draft #38; gate físico R3 e recuperação integral abertos.
 
 > **RETOMADA VIGENTE (07/11/2026):** R2 e saneamento aprovados em teste dirigido no Moto G06; melhora considerável da fluidez, remodelagens aprovadas e Livro da Estrela corrigido. **Próxima: R3A–R3C**, na PR draft #38, sem merge; E2E/CI e gate quantitativo pendentes. [Resumo canônico para a próxima conversa](audits/BV_RETOMADA_R3_2026-11-07.md) · [Matriz de recuperação](audits/BV_PLANO_RECUPERACAO_EXECUCAO.md). As notas antigas abaixo preservam a cronologia.

@@ -159,6 +159,9 @@ describe("WorldHost", () => {
     expect(runtime.mount).toHaveBeenCalledOnce();
     expect(runtime.start).toHaveBeenCalledOnce();
     expect(runtime.getSelectableObjects).toHaveBeenCalledOnce();
+    expect(runtime.onDiagnosticsChange).not.toHaveBeenCalled();
+    await openWorldControls();
+    await userEvent.click(screen.getByText("Diagnóstico do mundo"));
     await waitFor(() =>
       expect(runtime.onDiagnosticsChange).toHaveBeenCalledOnce(),
     );
@@ -169,8 +172,6 @@ describe("WorldHost", () => {
         name: "Diagnóstico técnico do ambiente 3D",
       }),
     ).toHaveAttribute("data-runtime-state", "running");
-    await openWorldControls();
-    await userEvent.click(screen.getByText("Diagnóstico do mundo"));
     expect(screen.getByText("60.0")).toBeVisible();
 
     view.unmount();
@@ -980,4 +981,49 @@ it("F2 reconciles confirmed sessions on the same resident Canvas, including whil
   expect(runtime.dispose).not.toHaveBeenCalled();
   view.unmount();
   expect(runtime.dispose).toHaveBeenCalledOnce();
+});
+
+it("R4 keeps the runtime and selection for progress-only updates and disposes on physical identity change", async () => {
+  const { createBook } = await import("../../domain");
+  const book = createBook({
+    id: "r4-fiction",
+    title: "Livro fictício",
+    createdAt: "2026-11-07T12:00:00.000Z",
+  });
+  const runtime = createRuntime();
+  const factory = vi.fn(() => Promise.resolve(runtime));
+  const view = render(
+    <WorldHost
+      runtimeFactory={factory}
+      libraryWorldSnapshot={projectLibraryWorldEntries([book])}
+      selectedObjectId="fixture-pyramid"
+    />,
+  );
+  await waitFor(() => expect(runtime.start).toHaveBeenCalledOnce());
+  await waitFor(() =>
+    expect(runtime.selectObject).toHaveBeenLastCalledWith("fixture-pyramid"),
+  );
+  const calls = runtime.selectObject.mock.calls.length;
+  view.rerender(
+    <WorldHost
+      runtimeFactory={factory}
+      libraryWorldSnapshot={projectLibraryWorldEntries([
+        { ...book, currentPage: 12 },
+      ])}
+      selectedObjectId="fixture-pyramid"
+    />,
+  );
+  expect(factory).toHaveBeenCalledOnce();
+  expect(runtime.dispose).not.toHaveBeenCalled();
+  expect(runtime.selectObject.mock.calls.length).toBe(calls);
+  view.rerender(
+    <WorldHost
+      runtimeFactory={factory}
+      libraryWorldSnapshot={projectLibraryWorldEntries([])}
+      selectedObjectId={null}
+    />,
+  );
+  await waitFor(() => expect(runtime.dispose).toHaveBeenCalledOnce());
+  expect(factory).toHaveBeenCalledTimes(2);
+  view.unmount();
 });
