@@ -5,6 +5,7 @@ import {
   OrthographicCamera,
   Raycaster,
   Scene,
+  SkinnedMesh,
   type Intersection,
   Vector2,
   Vector3,
@@ -460,7 +461,16 @@ export class ThreeWorldInteraction {
     const roots = this.getPickingRoots();
     // Update only selectable hierarchies and their ancestors. This also handles
     // input arriving before the next render after a book/inhabitant moves.
-    for (const root of roots) root.updateWorldMatrix(true, true);
+    for (const root of roots) {
+      root.updateWorldMatrix(true, false);
+      root.updateMatrixWorld(true);
+      root.traverse((node) => {
+        if (node instanceof SkinnedMesh) {
+          node.computeBoundingBox();
+          node.computeBoundingSphere();
+        }
+      });
+    }
     this.raycaster.setFromCamera(this.pickPointer, this.camera);
     this.pickIntersections.length = 0;
     this.raycaster.intersectObjects(roots, true, this.pickIntersections);
