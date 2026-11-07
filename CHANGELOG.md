@@ -1,3 +1,5 @@
+> **R4C (07/11):** backup v6 preserva e valida as chaves existentes de continuidade/ritual e rejeita referências inválidas de anotações/tags/sessões antes da escrita. Schema v14/envelope v6 preservados; rollback/reabertura com fixtures no [relatório R4](docs/audits/BV_RECUPERACAO_R4.md).
+
 > **R4B (07/11):** diagnóstico opt-in, percentis RAF e amostras CPU limitadas; sem travessias periódicas com painel fechado. Métricas e protocolo físico no [relatório R4](docs/audits/BV_RECUPERACAO_R4.md). Sem inferência de FPS/GPU/apresentação Android.
 
 > **07/11/2026 — R4 em execução:** R1–R3 e segurança integradas na main `d5eb469`; R4A separa reconciliação de sessão/catálogo e inputs de construção do mundo. Estado e limites canônicos da R4 no [relatório](docs/audits/BV_RECUPERACAO_R4.md). BF-5.5 parcial; R5 não iniciada; sem aprovação física R4/CI global verde. Notas datadas anteriores preservam a cronologia.

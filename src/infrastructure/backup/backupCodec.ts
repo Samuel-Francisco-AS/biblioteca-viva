@@ -1,3 +1,11 @@
+import {
+  parseInhabitantContinuity,
+  type InhabitantContinuitySnapshot,
+} from "../../features/library/inhabitantContinuity";
+import {
+  parseNightLightingCheckpoint,
+  type NightLightingCheckpoint,
+} from "../../features/library/nightLighting";
 import { posterSchema } from "../database/media";
 import { physicalProfileSchema } from "../../domain/workouts";
 import {
@@ -26,6 +34,18 @@ import {
 
 const digestSchema = z.string().regex(/^[a-f0-9]{64}$/u);
 const backupSettingSchema = z.discriminatedUnion("key", [
+  persistedSettingSchema.extend({
+    key: z.literal("world.inhabitants.continuity.v1"),
+    value: z.custom<InhabitantContinuitySnapshot>(
+      (value) => parseInhabitantContinuity(value) !== undefined,
+    ),
+  }),
+  persistedSettingSchema.extend({
+    key: z.literal("world.night-lighting.ritual.v1"),
+    value: z.custom<NightLightingCheckpoint>(
+      (value) => parseNightLightingCheckpoint(value) !== undefined,
+    ),
+  }),
   persistedSettingSchema.extend({
     key: z.literal("physical.profile.v1"),
     value: physicalProfileSchema,
@@ -183,6 +203,30 @@ function rejectDuplicates(data: BackupData): void {
     throw new BackupError(
       "INVALID_BACKUP_DATA",
       "Capa sem obra correspondente.",
+    );
+  const entries = new Map(
+    data.libraryEntries.map((entry) => [entry.id, entry]),
+  );
+  const tags = new Set(data.tags.map((tag) => tag.id));
+  const invalidTags = [
+    ...data.libraryEntries,
+    ...data.notes,
+    ...data.quotes,
+  ].some((item) => item.tagIds?.some((id) => !tags.has(id)));
+  const invalidAnnotations = [...data.notes, ...data.quotes].some((item) => {
+    const owner = entries.get(item.entryId);
+    return (
+      !owner ||
+      (item.location !== undefined && item.location.type !== owner.type)
+    );
+  });
+  const invalidSessions = data.sessions.some(
+    (session) => entries.get(session.entryId)?.type !== session.entryType,
+  );
+  if (invalidTags || invalidAnnotations || invalidSessions)
+    throw new BackupError(
+      "INVALID_BACKUP_DATA",
+      "O backup contém vínculos sem registro correspondente ou de tipo incompatível.",
     );
   const collections: readonly (readonly string[])[] = [
     (data.media ?? []).map(({ entryId }) => entryId),

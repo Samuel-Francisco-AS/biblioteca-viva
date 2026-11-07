@@ -1,3 +1,5 @@
+> **R4C (07/11):** backup v6 preserva e valida as chaves existentes de continuidade/ritual e rejeita referências inválidas de anotações/tags/sessões antes da escrita. Schema v14/envelope v6 preservados; rollback/reabertura com fixtures no [relatório R4](audits/BV_RECUPERACAO_R4.md).
+
 ## BF-5 Parte 2F — contrato vigente
 
 Dexie **v14**, mesmas dez tabelas/índices v13, marcador atualizado sem reescrever dados. `WorkEntry` mantém `work` e IDs, com metadados opcionais e `plan?` limitado: etapas/tarefas/diário/seleção explícita de próxima tarefa. IDs internos estáveis, ordem em arrays e revisão do agregado; comandos exigem revisão esperada e relêem/gravam em transação, eventos pós-commit. Ownership e duplicatas validados estritamente. Excluir etapa preserva tarefas; excluir proprietário elimina o conjunto e dependentes anteriores. Sessões/notas/mídia e projeção 3D preservadas. Perfil `physical.profile.v1` aceita peso/gênero/preferência visual opcionais; apenas peso entra em MET. Avaliações continuam `BookEntry.rating` / `catalog.rating` inteiras 1–5, sem campo novo.

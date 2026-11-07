@@ -24,7 +24,7 @@ Arquivos: pages.tsx/test, WorldHost.tsx, snapshotEquality.ts/test; relatório/ev
 
 ## R4B — BV-13/14/16
 
-Entrada `8c095c3`; saída: commit `R4B` (SHA registrado no próximo checkpoint). PR draft [#39](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/39).
+Entrada `8c095c3`; saída `345ea0b`. PR draft [#39](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/39).
 
 Anterior: média RAF de 750 ms, renderer.info, inventário e datasets a cada 250 ms; painel assinado mesmo fechado. Agora assinatura somente ao abrir details. Travessia ampla periódica: **3–4/s → 0/s fechado**; ao abrir, inventário imediato e cadência 250 ms, sem recriar a cena. Datasets baratos e publicações de lifecycle preservados. Teste do runtime mede 60 frames fechado, 60 aberto, 60 fechado novamente; zero travessias nos trechos fechados. Inventários também atualizam em mudanças estruturais forçadas.
 
@@ -46,8 +46,25 @@ WebView: MainActivity apenas registra plugins de arquivos/haptics e configura in
 Arquivos: frameMetrics, performanceProbe/test, ThreeWorldRuntime/test, WorldDiagnosticPanel, worldRuntime, WorldHost.test, report-build-performance e docs. APK comum contém painel opt-in; build:diagnostics existente habilita cenários técnicos, sem telemetria.
 
 
-## R4C — pendente
+## R4C — BV-17
+
+Entrada `345ea0b`; saída: commit `R4C` (SHA no checkpoint seguinte). [Matriz dos 17 casos e reprodução](evidence/bv-recovery-r4/backup-matrix.md).
+
+Defeito demonstrado: snapshot Dexie incluía continuidade/ritual mas codec completo rejeitava suas chaves. Testes anteriores apenas read/replace não atravessavam encode/inspect; não comprovavam exportação utilizável. Teste novo falhou antes da correção com discriminador de settings desconhecido. A primeira fixture também tinha dimensões/localização incorretas, corrigidas para JPEG real 720×1080 e tópico de estudo; erro de fixture separado do defeito real das chaves.
+
+Correção compatível com contrato documentado v6: allowlist inclui somente as duas chaves já persistidas, usando parsers estritos existentes (quatro agentes únicos e lâmpadas válidas). Schema v14, envelope v6, IDs e checksum intocados; v6 antigo continua válido, v1–v5 incompatíveis. Preferências desconhecidas continuam rejeitadas, sem aceitação genérica de settings.
+
+Segundo mecanismo corrigido: codec validava ownership de mídia/duplicatas, mas não rejeitava notas/citações órfãs, tags inexistentes ou sessões cujo tipo diverge do registro. Agora valida referências antes de substituir; atividades históricas podem referenciar agregados excluídos e não são tratadas como referências vivas. Ensaios assinam fixtures inválidas com SHA-256 válido para distinguir integridade do envelope de validade referencial; banco destino permanece idêntico.
+
+Atomicidade: replace já usa uma transação de nove tabelas. Falha injetada em bulkAdd de sessões depois de clears e inserções anteriores prova rollback comparando snapshot integral e nova abertura. Validação precede escrita; backup de segurança cancelado/read failure/destino que passou a conter dados recusam operação. Sem limpeza de dados reais. Testes novos usam bases com nome aleatório apenas para isolamento, dados determinísticos fictícios.
+
+Gates: conjunto inicial **30 PASS/7 arquivos**; reexecução após ajuste de tipo da fixture **20 PASS/2 arquivos** (inclui UI Settings). Typecheck inicialmente detectou sessão artificial com discriminantes incompatíveis; fixture passou a usar entryId incompatível com tipo válido, sem cast. UI adicional testa falha de leitura e limite antes de inspect. Resultado final e typecheck registrados abaixo. Nenhuma migração executada.
+
+Arquivos: backupCodec.ts, r4Integrity.test.ts, SettingsPage.test.tsx, docs DATA_MODEL/SECURITY/TESTING/relatório/evidência. Riscos: transações fictícias não reproduzem corte de energia, falta real de storage, seletor Android ou corrupção física. Reabertura de app React/ausência de duplicação no mundo depende também do E2E R4D; sem prova humana de backups pessoais.
+
 
 ## R4D — pendente
 
 R4B pós-ajuste: **26/26 WorldHost PASS**, typecheck PASS, lint dirigido PASS; os outros 52 testes da rodada inicial passaram. Validação ampla final obrigatória antes de R4D.
+
+R4C final: UI **15/15 PASS**, typecheck PASS após fixture compatível, lint dirigido PASS após substituir mocks async sem await por Promise.resolve. Os 6 testes novos de integridade passaram na rodada de 20; checks amplos finais em R4D.
