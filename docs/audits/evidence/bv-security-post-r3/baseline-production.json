@@ -1,0 +1,143 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@capacitor/android": {
+      "name": "@capacitor/android",
+      "severity": "critical",
+      "isDirect": true,
+      "via": [
+        {
+          "source": 1241240,
+          "name": "@capacitor/android",
+          "dependency": "@capacitor/android",
+          "title": "Capacitor Android and iOS: remote content can be loaded at the app origin via the internal HTTP proxy path",
+          "url": "https://github.com/advisories/GHSA-rvm3-566m-v7fv",
+          "severity": "critical",
+          "cwe": [
+            "CWE-346",
+            "CWE-441"
+          ],
+          "cvss": {
+            "score": 9.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N"
+          },
+          "range": ">=8.3.5 <8.4.3"
+        }
+      ],
+      "effects": [],
+      "range": ">=8.3.5 <8.4.3",
+      "nodes": [
+        "node_modules/@capacitor/android"
+      ],
+      "fixAvailable": {
+        "name": "@capacitor/android",
+        "version": "8.6.0",
+        "isSemVerMajor": false
+      }
+    },
+    "react-router": {
+      "name": "react-router",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1138769,
+          "name": "react-router",
+          "dependency": "react-router",
+          "title": "React Router: RSC Mode CSRF Bypass Allows Action Execution Before 400 Response",
+          "url": "https://github.com/advisories/GHSA-qwww-vcr4-c8h2",
+          "severity": "high",
+          "cwe": [
+            "CWE-352"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=7.12.0 <7.18.2"
+        }
+      ],
+      "effects": [
+        "react-router-dom"
+      ],
+      "range": "7.12.0 - 7.18.1",
+      "nodes": [
+        "node_modules/react-router"
+      ],
+      "fixAvailable": {
+        "name": "react-router-dom",
+        "version": "7.18.5",
+        "isSemVerMajor": false
+      }
+    },
+    "react-router-dom": {
+      "name": "react-router-dom",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-router"
+      ],
+      "effects": [],
+      "range": "7.12.0-pre.0 - 7.18.1",
+      "nodes": [
+        "node_modules/react-router-dom"
+      ],
+      "fixAvailable": {
+        "name": "react-router-dom",
+        "version": "7.18.5",
+        "isSemVerMajor": false
+      }
+    },
+    "zod": {
+      "name": "zod",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        {
+          "source": 1243066,
+          "name": "zod",
+          "dependency": "zod",
+          "title": "Zod can exhaust memory while validating oversized constrained collections",
+          "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+          "severity": "high",
+          "cwe": [
+            "CWE-770"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<4.6.6"
+        }
+      ],
+      "effects": [],
+      "range": "<4.6.6",
+      "nodes": [
+        "node_modules/zod"
+      ],
+      "fixAvailable": {
+        "name": "zod",
+        "version": "4.6.7",
+        "isSemVerMajor": false
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 3,
+      "critical": 1,
+      "total": 4
+    },
+    "dependencies": {
+      "prod": 18,
+      "dev": 355,
+      "optional": 36,
+      "peer": 10,
+      "peerOptional": 0,
+      "total": 372
+    }
+  }
+}
