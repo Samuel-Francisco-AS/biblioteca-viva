@@ -1,35 +1,61 @@
-# ADR-020 — Evolução para baralhos e cartas globais
+# ADR-020 — Baralhos e cartas globais: revisão para o Arcanário
 
-- Data: 2026-11-04.
-- Estado: recomendação arquitetural documentada a pedido do proprietário; **sem migração, schema ou minigame implementados**.
-- Complementa ADR-016 e ADR-019; implementação futura exige entrega própria autorizada. Não inicia BF-6 nem cria persistência espacial.
+- Decisão original: 04/11/2026.
+- Revisão de escopo: **08/11/2026**, após concepção do Arcanário com o proprietário.
+- Estado: **aceita como diretriz arquitetural de planejamento da BF-5.6; sem implementação de schema, migração, regras de TCG ou arena**.
+- Complementa ADR-016 (Estudos/flashcards), ADR-019 (mídias), ADR-023 (sequência anterior) e [Plano BF-5.6](../BF-5_6_ARCANARIO_PLANO.md).
+- Mudança explícita da proposta de 04/11: uma carta **não possui mais um único deckId obrigatório**. Ela tem identidade independente e participa de zero, um ou muitos baralhos.
 
-## Evidência atual
+## Contexto verificado na main em 08/11/2026
 
-`StudyEntry.flashCards?` embute até 1.000 cartas `{id, front, back}` por estudo, com frente até 4.000 e verso até 8.000 caracteres. Unicidade é local ao estudo. `SaveFlashCard`/`DeleteFlashCard` reconsultam o estudo em transação e publicam evento após commit. A revisão atual em `StudyFlashCards` embaralha um snapshot em memória, revela verso, conta lembradas e separa cartas para outra rodada; não persiste histórico de revisão nem agenda. Backup v6 já preserva essas cartas. Esse contrato continua canônico nesta candidata.
+- Dexie v14 e backup v6 seguem vigentes, com dados convencionais e seis tipos de registros; não existem contas, backend ou sincronização.
+- StudyEntry.flashCards? embute até 1.000 cartas por estudo, com frente até 4.000 e verso até 8.000 caracteres. IDs de flashcards são locais ao estudo. SaveFlashCard/DeleteFlashCard atualizam a entrada em transação, com evento após commit.
+- Revisão de flashcards existente apresenta frente/verso e roda na UI, sem histórico global de repetição/agenda independente; o contrato atual é canônico **até uma migração implementada e validada**.
+- A ADR original tratava apenas baralhos globais de memória. A BF-5.6 aprovada amplia esse escopo para questões, cartas decorativas, TCG e pacotes oficiais.
 
-## Arquitetura recomendada
+## Decisão: entidades e fronteiras
 
-Criar um subsistema convencional de memória separado dos seis tipos de registro. Um baralho (`Deck`) possui ID estável, título, tema/apresentação e metadados/revisão próprios. Cada carta (`Card`) possui ID global, um `deckId` e frente/verso independentes. A associação opcional a um estudo é referência de origem, nunca condição de existência. Começar com texto validado; conteúdo rico futuro deve ser estrutura limitada/validada, sem HTML arbitrário, URLs remotas obrigatórias ou bytes grandes embutidos. Arte pertence à apresentação e, se persistida, a uma porta própria com ownership e limites explícitos — não ampliar automaticamente a elegibilidade de `RecordImage` desta entrega.
+1. **Card:** ID global estável, tipo discriminado (flashcard, questão, lembrança, combate), revisões/estado editorial, autoria/origem opcional, dados próprios validados. Não embutir bytes de mídias grandes nem HTML/código arbitrário.
+2. **Deck:** ID global, nome, modalidade, apresentação, proprietário/origem, versão e política de seleção. Deck estático associa IDs/versionamento/ordem; deck dinâmico guarda filtros, resolvidos sob demanda pelo acervo instalado. Um Card pode compor vários decks; associação em entidade/índice próprio, sem duplicar a carta.
+3. **CardPack/Manifest:** pacote reinstalável, identidade/versionamento, origem/licença, arquivos, hashes e contagens esperadas/publicadas. Atualizações incrementais idempotentes com validação prévia e transação. Conteúdo oficial diferente de registros pessoais privados.
+4. **KnowledgeTaxonomy/CardTag:** catálogo versionado por área, disciplina, assunto, subassunto e habilidade, com IDs estáveis, sinônimos e distinção de assunto primário/secundários; meta de prova (ano, banca, caderno) não é tag de domínio. Etiquetas pessoais separadas de classificação oficial.
+5. **Session/Attempt/Review:** atividade e respostas independentes de deck e conteúdo vivo; guardar IDs de carta, versão/snapshot necessário para auditar correção, ordem, alternativas apresentadas, respostas e resultados. Revisão de flashcards e duelo TCG são sessões diferentes.
+6. **UserProgress/Report:** derivados de tentativas e revisões; não reescrever histórico diante de edição de questão/gabarito/tag. Recalcular projeções explicitamente, preservar evidência de versões. Distinguir acerto, força da evidência, dificuldade, variedade e tendência; múltiplas tags não multiplicam uma tentativa.
+7. **TCG ruleset:** motor determinístico puro separado dos dados e da UI; atributos, habilidades e custos em operações validadas, sem execução de scripts de usuário; regras/versionamento de partida e formatos Oficial, Criador, Livre independentes dos decks de questões.
 
-Separar o estado da carta do progresso de revisão (`CardReviewState`) e da rodada (`ReviewSession`). Uma rodada seleciona IDs e snapshot das faces/ordem, permite lembrar/rever, interromper e retomar fora do fólio de Estudo. Datas e resultados podem servir a retomada/histórico; algoritmo de repetição espaçada e política de retenção devem ser decididos na entrega funcional, sem comprometer um algoritmo especulativo agora. Não introduzir XP, moedas, streaks, placares, conta ou sincronização.
+Os nomes acima são contratos conceituais, não nomes ou índices de tabelas já implementadas. Definir schema, limites e evolução de dados na etapa A. O TCG tem escopo de duelista invocador (criaturas/feitiços/artefatos), não combate direto de avatar como regra principal.
 
-Domínio define invariantes/transições sem React/DOM/Dexie/Three. Aplicação coordena criar/mover cartas, associar/desassociar origem, montar/retomar/concluir revisão e transações; portas de baralhos/cartas/revisão recebem adaptadores Dexie. UI não acessa banco. Eventos somente após commit, revisão esperada para edição concorrente, cancelamento/rollback sem eventos. Índices iniciais a avaliar na implementação: cartas por baralho, origem opcional e estados por carta; sem tabela espacial.
+## Distribuição e separação de dados
 
-## Transição dos flashcards existentes
+- APK inclui **coleção inicial oficial do TCG com arte e atributos**. Cartas de provas usam visual padronizado para leitura e são distribuídas em **pacotes opcionais instaláveis**. Concluída a instalação, toda prática funciona offline.
+- Pacotes de questões podem ser entregues por lotes, atualizados e reinstalados sem duplicar Cards nem apagar resultados. Novos itens de conteúdo compatível não devem exigir alterar o código. Não assumir que todo pacote está completo; manifest informa progresso editorial.
+- Exemplo almejado: ENEM por ano e quatro áreas de 45 itens, respeitando cadernos, ordenação e línguas estrangeiras. Identidade da questão independente do número no caderno; gabarito/versão revisados e fontes rastreáveis. Direitos de redistribuição e qualidade editorial precisam de checagem antes de publicar.
+- Acervo público reinstalável e mídias opcionais fora do backup pessoal monolítico v6 (atualmente 10 MiB); dados próprios, vínculos, filtros, resultados e mapas de migração cobertos pelo futuro contrato de backup. Backup antigo válido deve seguir importável.
+- Compartilhamento e relatórios de turma são futuros. Arquivos importados são não confiáveis, exigem validação estrita/limites de mídias/checksum; nada é enviado a terceiros sem ação explícita.
 
-Não usar o `card.id` antigo sozinho como chave global: duas origens podem compartilhar esse valor. A migração futura precisa de mapa único e persistido `(studyId, legacyCardId) → globalCardId`, com vínculo de proveniência e política explícita para manter o ID antigo quando não colidir. Preservar IDs dos estudos e texto integral. Um baralho inicial por estudo é uma opção de importação determinística, seguida de organização pelo usuário; o baralho não deve herdar o ciclo de exclusão do estudo.
+## Migração dos flashcards e integridade
 
-Preparar upgrade **aditivo**, idempotente e transacional, em versão de banco e contrato de backup próprios, quando o produto da migração estiver implementado. Testar duas origens com IDs de cartas iguais, abertura interrompida/retomada, repetição sem duplicar, rollback, reabertura, exportação/restauração e conteúdo inválido. Não apagar campos legados no primeiro upgrade. Ao promover cartas, definir uma única fonte canônica e adaptar comandos/telas antigos; evitar duas cópias editáveis ou dual write indefinido. Backup deve representar explicitamente baralhos, cartas, revisão, referências opcionais e mapa de origem; aceitar v6 antigo e migrá-lo apenas após validação/restauração segura. Nunca migrar a base pessoal em teste automatizado.
+- Mapear (studyId, legacyCardId) → cardId global em estrutura durável, para tolerar IDs repetidos entre estudos. Guardar origem opcional e texto integral, sem modificar IDs dos estudos.
+- Planejar upgrade Dexie aditivo, atômico e repetível; não apagar campos legados no primeiro upgrade. No corte de produção, adaptar comandos e telas existentes à **única fonte editável canônica**, proibindo dual-write permanente.
+- A carta global não depende do ciclo de exclusão do estudo: exclusão de origem remove vínculo, não o acervo; exclusão de deck define explicitamente o destino das associações, sem cascade inesperado.
+- Abrangência obrigatória dos testes: colisões de IDs legados, upgrades interrompidos/retomados, rollback, reabertura, exportação/restauração, dados inválidos, pacote reimportado, conteúdo desinstalado com relatório preservado e correção de gabarito sem adulterar tentativas.
+- Nunca testar migração com banco pessoal do proprietário. Eventos apenas após commit. Domain não importa React, Dexie ou Three; application coordena; infrastructure implementa portas; UI não acessa Dexie.
 
-Excluir estudo não deve excluir cartas já independentes: desassociar a referência de origem preservando o baralho. Excluir baralho exigirá decisão explícita sobre suas cartas/revisões e recuperação, com confirmação adequada. Não adotar cascade implícito copiado dos registros atuais.
+## Apresentação, modos e campo 3D
 
-## Jogo e integração futura
+- Acesso pelo fluxo React primeiro. Na etapa F, construção orbital simples abre rota/arena independente sob demanda; WorldHost e runtime do mundo recebem só referência neutra, nunca enunciados/versos pessoais ou mídias pesadas.
+- Cartas educativas priorizam leitura, sem proporção fixa quando o enunciado exigir espaço; suportam toque, seleção de alternativas, correção, labels/foco, movimento reduzido, reabertura e retrato/paisagem.
+- Cartas de fantasia aceitam animações/efeitos 3D e arte original sem depender de cada frame para persistir estado. Não manter renderização contínua de duas cenas completas ao mesmo tempo.
+- Questões/flashcards, lembranças e TCG compartilham infraestrutura de coleção, **não** limites de partida. Duelos educativos híbridos são modalidade opcional e não fonte de vantagem competitiva permanente no formato TCG oficial.
+- Números iniciais do TCG (PV, energia, cartas por deck, zona/cópias) são hipóteses para prototipar na E; não fixados por esta ADR. Não exigir multiplayer, torneio, campanhas completas, contas, backend ou sincronização na BF-5.6.
 
-Acesso convencional independente é o primeiro fluxo funcional recomendado. Uma futura construção/item no Canvas solicita à aplicação abrir um baralho/revisão por ID. O mundo recebe somente uma projeção neutra de referência/estado visual mínimo; não transporta faces privadas, imagens grandes ou snapshots de revisão. `WorldHost`/`ThreeWorldRuntime` continuam os hosts aprovados, com pausa/resume e retorno de foco. A localização definitiva do objeto e sua persistência dependem da fase espacial autorizada.
+## Consequências e estados futuros
 
-Puxar uma carta, virar em 3D, deslizar e acomodar pilha pertencem ao estado de apresentação da rodada, sem alterar domínio a cada frame. Planejar gestos canceláveis e botões equivalentes para toque/teclado/TalkBack, conteúdo longo, movimento reduzido, suspensão/retorno e rotação. Nenhuma capacidade física é presumida insuficiente; medir gargalos depois de uma implementação artística convincente. A avaliação humana aprova arte/ergonomia, enquanto testes verificam estado e integridade.
+- A BF-5.6 divide-se em **A fundação; B oficina/Relicário/flashcards; C Provações/tags/diagnóstico; D pacotes/acervo; E TCG; F arena/artes; G auditoria/fechamento**, conforme plano.
+- Dois marcos integráveis: Educacional (A–D) e Fantástico (E–G). Cada PR/etapa exige testes proporcionais e gate explícito; erros da BF-5.5, CI, HUD paisagem, memória e TalkBack permanecem dívidas, não resultados silenciosamente aprovados.
+- Não foi implementada nenhuma tabela, migração, jogo, pacote ou rede por esta revisão. A execução da BF-5.6A requer tarefa/autorização específica.
+- Visão futura preservada: professor cria deck próprio, alunos importam e respondem, exportam ou enviam resultados com diagnóstico, e professor analisa a turma; contas/permissões/consentimento de menores/correção formal segura são trabalhos futuros, não compromissos de segurança offline.
 
-## Consequências e escopo desta candidata
+## Registro da alteração da ADR-020 original
 
-A fundação entregue é esta decisão documentada, baseada no código vigente. Cartas atuais, persistência, backup, revisão e mundo 3D permanecem operantes. Não há novas tabelas, stubs, migração de cartas ou animação especulativa. O minigame completo fica para entrega própria, com gates de migração/backup, revisão independente, acesso convencional e somente depois a integração autorizada com o Canvas.
+A recomendação de 04/11 permanece rastreável no histórico Git. Mantêm-se a separação domínio/aplicação/infraestrutura, o mapa de IDs legados, migração aditiva, backup compatível e acesso convencional antes do Canvas. **Substituem-se**: a relação exclusiva Card→Deck por associação muitos-para-muitos; a limitação a memória por quatro tipos de carta; e a exclusão de jogos/pontuação (agora autorizados como **escopo de planejamento** da BF-5.6, não como funcionalidades entregues).
