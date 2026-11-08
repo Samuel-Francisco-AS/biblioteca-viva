@@ -1,3 +1,5 @@
+> **FECHAMENTO SUPERVENIENTE — 08/11/2026:** a implementação A–G foi integrada administrativamente após autorização e aceite físico do proprietário, **com ressalvas explícitas**; o diagnóstico de base e os status das candidatas abaixo são históricos. F2 teve PASS físico nos cinco grupos, G recebeu aceite global sem perfeição e sem PASS E2E de HUD paisagem. CI/E2E, memória/TalkBack, limitações de contato e refinamentos futuros preservados. [Relatório canônico](BF-5_5_FECHAMENTO_2026-11-08.md).
+
 # BF-5.5 — O Despertar da Biblioteca | Plano e contrato de fase
 
 **Data:** 05/11/2026  

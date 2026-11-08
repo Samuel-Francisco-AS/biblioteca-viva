@@ -1,3 +1,5 @@
+> **ACEITE FINAL POR RESSALVAS — 08/11/2026:** proprietário avaliou a candidata G no Moto G06 e autorizou consolidação e integração da BF-5.5, ressalvando que o acabamento “não ficou perfeito”. Não foram enviados PASS individuais de voo/andar/HUD paisagem, e o E2E completo de HUD em paisagem continua pendente após ajuste CSS validado por fixture. As limitações abaixo são preservadas, **sem declarar CI global verde nem perfeição artística**. [Fechamento BF-5.5](BF-5_5_FECHAMENTO_2026-11-08.md).
+
 # BF-5.5G — Refinamento do mundo, animações e HUD
 
 Candidata de 08/11/2026, derivada de `feat/bf-5-5f2-interacoes-fisicas` no SHA conferido `d8b2c4eb151f8fe2643cd3e3e0a3ceaf534e53ea`, com checkout inicial limpo. Branch `feat/bf-5-5g-refinamento-consolidacao`; uma nova PR **draft encadeada à F2**, sem merge. A PR #41 permanece draft e intacta. Commits com `[skip ci]` para preservar Actions; checks omitidos não são verdes.

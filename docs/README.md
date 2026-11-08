@@ -1,3 +1,5 @@
+> **08/11/2026 — Fechamento BF-5.5:** o proprietário aceitou a F2 funcionalmente (5/5 grupos no Moto G06) e autorizou encerramento por ressalvas da G após avaliação física. Integração sequencial das PRs #41 e #42, preservando histórico; não declarar CI global verde, HUD paisagem E2E aprovado ou acabamento perfeito. [Registro final de BF-5.5](BF-5_5_FECHAMENTO_2026-11-08.md). Notas anteriores são cronologia.
+
 > **BF-5.5G — candidata atual:** [refinamento de animações, navegação e HUD, resultados e roteiro Moto G06](BF-5_5G_REFINAMENTO.md). F2 aprovada funcionalmente; G aguarda aceite artístico/físico, sem fechamento da BF-5.5 ou merge. STATUS continua autoridade do presente; as notas abaixo são cronologia.
 
 > **08/11/2026 — Fechamento R1–R5:** o programa de recuperação foi aceito pelo proprietário no Moto G06 e integrado via PR #40 com ressalvas documentadas. Quests mantêm engasgo residual; CI/E2E, memória sustentada e TalkBack não foram aprovados. BF-5.5 continua parcial. [Relatório canônico de fechamento](audits/BV_FECHAMENTO_RECUPERACAO_R1_R5_2026-11-08.md). Notas anteriores registram a cronologia.

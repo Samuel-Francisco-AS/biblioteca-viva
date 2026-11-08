@@ -1,3 +1,5 @@
+> **ACEITE FUNCIONAL F2 — 08/11/2026:** proprietário comunicou 5/5 grupos PASS no Moto G06 (leitura, estudo/assentos, trabalho/treino/entretenimento, interrupções/continuidade, fluidez/mundo), registrado na PR #41. A integração em main foi autorizada como parte do fechamento BF-5.5, **sem apagar limites F2A/F2B/F2C, falhas CI ou promover os recursos ausentes**. [Fechamento canônico](BF-5_5_FECHAMENTO_2026-11-08.md).
+
 > **Aceite posterior — 08/11/2026:** proprietário informou PASS funcional no Moto G06 para leitura física, estudo/assentos, trabalho/treino/entretenimento, interrupções/continuidade e fluidez/mundo. A missão [BF-5.5G](BF-5_5G_REFINAMENTO.md) foi autorizada em seguida para refinar animação, navegação e HUD. PR #41 continua draft/sem merge. As indicações de aceite/G pendentes no corpo abaixo registram a entrega original F2; não anulam esse aceite dirigido nem concluem BF-5.5.
 
 # BF-5.5F2 — Interações físicas e atividades reais

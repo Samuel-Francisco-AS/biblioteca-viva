@@ -1,3 +1,11 @@
+## 08/11/2026 — BF-5.5 encerrada com ressalvas (PRs #41 e #42)
+
+- **F2:** leitura com recolhimento original por Samael/Aryn, assentos reversíveis dos quatro, escrita/estudo, trabalho/treino/entretenimento; 5/5 grupos de gate funcional físico PASS no Moto G06.
+- **G:** animação de hover/voo aparente da Ytha, passadas dos terrestres, feedback do dock, marca temporária do Canvas e notificações no topo; aceite final pelo proprietário apesar de resultado não perfeito.
+- **Integração autorizada:** sequência #41→main, #42→main, sem squash de histórico e com `[skip ci]` para poupar Actions.
+- **Dívidas:** HUD integrado em paisagem não comprovado após último ajuste (E2E G 1 PASS/1 timeout), CI/E2E históricos, limitações F2 e refinamentos artísticos, engasgos de quests, TalkBack/termal/memória. BF-6/7 e release não iniciados.
+- [Fechamento BF-5.5](docs/BF-5_5_FECHAMENTO_2026-11-08.md).
+
 > **BF-5.5G — candidata (08/11/2026):** Ytha com hover vertical e asas articuladas; Samael, Aryn e Lua com passadas autorais, apoio dos pés e ritmos próprios. Marca do Canvas por 3 s, notificações no topo acima do mundo, acesso à lista em “Acervo e habitantes” no HUD inferior e feedback visual do dock durante navegação. Banner de sessão e painéis recebem espaço próprio. Preservadas interações F2 aprovadas funcionalmente no Moto G06; refinamento artístico/físico G pendente, sem merge ou BF-5.5 concluída. [Relatório, evidências e roteiro](docs/BF-5_5G_REFINAMENTO.md).
 
 > **BF-5.5F2 — candidata (08/11/2026):** leitura com o volume canônico nas mãos e assento; estudo com consulta/escrita; ocupação exclusiva e saída física dos assentos; respostas próprias de ofício, mobilidade corporal e observação de entretenimento. Quatro rigs R5 ampliados e interrupções reconciliadas pelo coordenador existente. Sem migração, versão nova, merge ou fechamento da BF-5.5. [Evidências e limitações](docs/BF-5_5F2_IMPLEMENTACAO.md).
