@@ -276,6 +276,8 @@ export function WorldHost({
         }
 
         runtime = createdRuntime;
+        if (!performanceScenario && libraryWorldSnapshot)
+          runtime.applyNarrative?.(narrativeSession.getSnapshot());
         runtime.mount(host);
         runtimeRef.current = runtime;
         runtime.applyWorldSession?.(worldSessionRef.current);

@@ -1,3 +1,5 @@
+> **R5Q — inicialização e quests:** [diagnóstico, medições e candidata](audits/BV_SANEAMENTO_R5Q.md). R5P recebeu relato físico de melhora; R5Q corrige primeiro desenho noturno e CPU do toque, com gate físico pendente na mesma PR draft #40.
+
 > **R5P — prioridade fluidez:** [diagnóstico, A/B, candidata e limites](audits/BV_SANEAMENTO_PERFORMANCE_R5P.md). R5E recebeu relato físico de lag; arte suspensa e R5/R5E não aprovadas. Mesma PR draft #40, sem merge.
 
 > **R5E — refinamento candidato:** [arte/comportamento/efeitos e custos](audits/BV_RECUPERACAO_R5E.md) · [roteiro Moto G06](audits/evidence/bv-r5e/MOTO_G06.md). Mesma PR #40, sem merge ou aceite automático.

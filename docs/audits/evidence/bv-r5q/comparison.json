@@ -1,0 +1,634 @@
+{
+  "base": "e3b437ac6c4c2092b8d4db1b3a54b525ed3982e9",
+  "scope": "Host CPU/DOM, empty six-category fixture, four R5P rigs; fresh world per hour/character/path, repeat and already-open follow; routine agency frozen equally; lighting settled identically before B, separate untouched first draws for A. Synthetic event receive/handler/React commit/next RAF are not Android or display latency. 1 ms timer granularity in this browser sample; no statistical replication.",
+  "results": {
+    "before": {
+      "12/canvas/first": {
+        "handlerMs": {
+          "p50": 51,
+          "p95": 65,
+          "p99": 65,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 62,
+          "p95": 75,
+          "p99": 75,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 13,
+          "p95": 26,
+          "p99": 26,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "12/canvas/repeat": {
+        "handlerMs": {
+          "p50": 50,
+          "p95": 66,
+          "p99": 66,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 58,
+          "p95": 75,
+          "p99": 75,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 18,
+          "p95": 27,
+          "p99": 27,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "12/canvas/already-open": {
+        "handlerMs": {
+          "p50": 52,
+          "p95": 57,
+          "p99": 57,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "count": 0
+        },
+        "raycastCpuMs": {
+          "p50": 18,
+          "p95": 25,
+          "p99": 25,
+          "count": 4
+        },
+        "reactCommits": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "12/react/first": {
+        "handlerMs": {
+          "p50": 8,
+          "p95": 10,
+          "p99": 10,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 18,
+          "p95": 21,
+          "p99": 21,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "12/react/repeat": {
+        "handlerMs": {
+          "p50": 4,
+          "p95": 5,
+          "p99": 5,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 12,
+          "p95": 15,
+          "p99": 15,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "12/react/already-open": {
+        "handlerMs": {
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "count": 0
+        },
+        "raycastCpuMs": {
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "count": 4
+        },
+        "reactCommits": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "23/canvas/first": {
+        "handlerMs": {
+          "p50": 56,
+          "p95": 68,
+          "p99": 68,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 66,
+          "p95": 77,
+          "p99": 77,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 13,
+          "p95": 29,
+          "p99": 29,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "23/canvas/repeat": {
+        "handlerMs": {
+          "p50": 49,
+          "p95": 61,
+          "p99": 61,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 57,
+          "p95": 69,
+          "p99": 69,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 11,
+          "p95": 28,
+          "p99": 28,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "23/canvas/already-open": {
+        "handlerMs": {
+          "p50": 43,
+          "p95": 57,
+          "p99": 57,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "count": 0
+        },
+        "raycastCpuMs": {
+          "p50": 11,
+          "p95": 26,
+          "p99": 26,
+          "count": 4
+        },
+        "reactCommits": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "23/react/first": {
+        "handlerMs": {
+          "p50": 8,
+          "p95": 10,
+          "p99": 10,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 18,
+          "p95": 19,
+          "p99": 19,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "23/react/repeat": {
+        "handlerMs": {
+          "p50": 3,
+          "p95": 6,
+          "p99": 6,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 12,
+          "p95": 14,
+          "p99": 14,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "23/react/already-open": {
+        "handlerMs": {
+          "p50": 0,
+          "p95": 1,
+          "p99": 1,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "count": 0
+        },
+        "raycastCpuMs": {
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "count": 4
+        },
+        "reactCommits": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "after": {
+      "12/canvas/first": {
+        "handlerMs": {
+          "p50": 43,
+          "p95": 50,
+          "p99": 50,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 53,
+          "p95": 59,
+          "p99": 59,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 7,
+          "p95": 13,
+          "p99": 13,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "12/canvas/repeat": {
+        "handlerMs": {
+          "p50": 28,
+          "p95": 57,
+          "p99": 57,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 37,
+          "p95": 68,
+          "p99": 68,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 6,
+          "p95": 9,
+          "p99": 9,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "12/canvas/already-open": {
+        "handlerMs": {
+          "p50": 29,
+          "p95": 37,
+          "p99": 37,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "count": 0
+        },
+        "raycastCpuMs": {
+          "p50": 4,
+          "p95": 7,
+          "p99": 7,
+          "count": 4
+        },
+        "reactCommits": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "12/react/first": {
+        "handlerMs": {
+          "p50": 8,
+          "p95": 11,
+          "p99": 11,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 17,
+          "p95": 20,
+          "p99": 20,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "12/react/repeat": {
+        "handlerMs": {
+          "p50": 3,
+          "p95": 7,
+          "p99": 7,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 12,
+          "p95": 14,
+          "p99": 14,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "12/react/already-open": {
+        "handlerMs": {
+          "p50": 0,
+          "p95": 1,
+          "p99": 1,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "count": 0
+        },
+        "raycastCpuMs": {
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "count": 4
+        },
+        "reactCommits": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "23/canvas/first": {
+        "handlerMs": {
+          "p50": 42,
+          "p95": 58,
+          "p99": 58,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 51,
+          "p95": 67,
+          "p99": 67,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 7,
+          "p95": 16,
+          "p99": 16,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "23/canvas/repeat": {
+        "handlerMs": {
+          "p50": 28,
+          "p95": 33,
+          "p99": 33,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 36,
+          "p95": 40,
+          "p99": 40,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 7,
+          "p95": 9,
+          "p99": 9,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "23/canvas/already-open": {
+        "handlerMs": {
+          "p50": 27,
+          "p95": 31,
+          "p99": 31,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "count": 0
+        },
+        "raycastCpuMs": {
+          "p50": 3,
+          "p95": 8,
+          "p99": 8,
+          "count": 4
+        },
+        "reactCommits": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "23/react/first": {
+        "handlerMs": {
+          "p50": 6,
+          "p95": 14,
+          "p99": 14,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 16,
+          "p95": 24,
+          "p99": 24,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "23/react/repeat": {
+        "handlerMs": {
+          "p50": 4,
+          "p95": 6,
+          "p99": 6,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": 12,
+          "p95": 13,
+          "p99": 13,
+          "count": 4
+        },
+        "raycastCpuMs": {
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "count": 4
+        },
+        "reactCommits": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "23/react/already-open": {
+        "handlerMs": {
+          "p50": 1,
+          "p95": 1,
+          "p99": 1,
+          "count": 4
+        },
+        "domCommitMs": {
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "count": 0
+        },
+        "raycastCpuMs": {
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "count": 4
+        },
+        "reactCommits": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  }
+}

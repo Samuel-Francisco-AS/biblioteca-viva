@@ -20,6 +20,7 @@ function isSkin(node: Object3D): node is SkinnedMesh {
 export function withPreparedSkinning<T>(
   roots: readonly Object3D[],
   read: () => T,
+  reuseVertices = false,
 ): T {
   const palettes = new Map<Skeleton, readonly Matrix4[]>();
   const meshes = new Set<SkinnedMesh>();
@@ -47,6 +48,13 @@ export function withPreparedSkinning<T>(
         palettes.set(mesh.skeleton, matrices);
       }
       const prepared = matrices;
+      // Tap reads the same pose for boxes, spheres and triangle intersections.
+      // Float64 preserves the exact CPU result. Frame highlight scans once and
+      // leaves this disabled, avoiding per-frame vertex-buffer allocation.
+      const positions = reuseVertices
+        ? new Float64Array(mesh.geometry.getAttribute("position").count * 3)
+        : null;
+      const populated = positions ? new Uint8Array(positions.length / 3) : null;
       const baseReader = Mesh.prototype.getVertexPosition.bind(mesh);
       const indices = new Vector4(),
         weights = new Vector4(),
@@ -60,6 +68,8 @@ export function withPreparedSkinning<T>(
         configurable: true,
         writable: true,
         value: (index: number, target: Vector3) => {
+          if (positions && populated?.[index])
+            return target.fromArray(positions, index * 3);
           baseReader(index, target);
           indices.set(
             skinIndex.getX(index),
@@ -87,7 +97,12 @@ export function withPreparedSkinning<T>(
                 weight,
               );
           }
-          return target.applyMatrix4(mesh.bindMatrixInverse);
+          target.applyMatrix4(mesh.bindMatrixInverse);
+          if (positions && populated) {
+            target.toArray(positions, index * 3);
+            populated[index] = 1;
+          }
+          return target;
         },
       });
       restore.push(() => {

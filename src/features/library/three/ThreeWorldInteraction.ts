@@ -480,18 +480,22 @@ export class ThreeWorldInteraction {
       root.updateWorldMatrix(true, false);
       root.updateMatrixWorld(true);
     }
-    withPreparedSkinning(roots, () => {
-      for (const root of roots)
-        root.traverse((node) => {
-          if (node instanceof SkinnedMesh) {
-            node.computeBoundingBox();
-            node.computeBoundingSphere();
-          }
-        });
-      this.raycaster.setFromCamera(this.pickPointer, this.camera);
-      this.pickIntersections.length = 0;
-      this.raycaster.intersectObjects(roots, true, this.pickIntersections);
-    });
+    withPreparedSkinning(
+      roots,
+      () => {
+        for (const root of roots)
+          root.traverse((node) => {
+            if (node instanceof SkinnedMesh) {
+              node.computeBoundingBox();
+              node.computeBoundingSphere();
+            }
+          });
+        this.raycaster.setFromCamera(this.pickPointer, this.camera);
+        this.pickIntersections.length = 0;
+        this.raycaster.intersectObjects(roots, true, this.pickIntersections);
+      },
+      true,
+    );
     let priority: Intersection | undefined;
     let environmental: Intersection | undefined;
     let fallback: Intersection | undefined;

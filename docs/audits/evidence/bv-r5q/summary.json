@@ -1,0 +1,125 @@
+{
+  "cpuDom": [
+    {
+      "path": "canvas",
+      "handlerBefore": {
+        "n": 24,
+        "p50": 52,
+        "p95": 66,
+        "max": 68
+      },
+      "handlerAfter": {
+        "n": 24,
+        "p50": 33,
+        "p95": 57,
+        "max": 58
+      },
+      "rayBefore": {
+        "n": 24,
+        "p50": 18,
+        "p95": 28,
+        "max": 29
+      },
+      "rayAfter": {
+        "n": 24,
+        "p50": 7,
+        "p95": 13,
+        "max": 16
+      },
+      "reactDurationBefore": {
+        "n": 24,
+        "p50": 6,
+        "p95": 8,
+        "max": 8
+      },
+      "reactDurationAfter": {
+        "n": 24,
+        "p50": 6,
+        "p95": 9,
+        "max": 10
+      }
+    },
+    {
+      "path": "react",
+      "handlerBefore": {
+        "n": 24,
+        "p50": 4,
+        "p95": 10,
+        "max": 10
+      },
+      "handlerAfter": {
+        "n": 24,
+        "p50": 4,
+        "p95": 12,
+        "max": 14
+      },
+      "rayBefore": {
+        "n": 24,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "rayAfter": {
+        "n": 24,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "reactDurationBefore": {
+        "n": 24,
+        "p50": 6,
+        "p95": 8,
+        "max": 9
+      },
+      "reactDurationAfter": {
+        "n": 24,
+        "p50": 6,
+        "p95": 8,
+        "max": 9
+      }
+    }
+  ],
+  "firstDraw": [
+    {
+      "hour": 12,
+      "minute": 0,
+      "skyBefore": 2,
+      "skyAfter": 2
+    },
+    {
+      "hour": 17,
+      "minute": 59,
+      "skyBefore": 2,
+      "skyAfter": 2
+    },
+    {
+      "hour": 18,
+      "minute": 0,
+      "skyBefore": 2,
+      "skyAfter": 1.08
+    },
+    {
+      "hour": 23,
+      "minute": 0,
+      "skyBefore": 2,
+      "skyAfter": 1.08
+    },
+    {
+      "hour": 3,
+      "minute": 0,
+      "skyBefore": 2,
+      "skyAfter": 1.08
+    }
+  ],
+  "all48SelectionsAndCardsPerVersion": "PASS; validated in harness",
+  "teardownBefore": {
+    "canvases": 0,
+    "state": "disposed"
+  },
+  "teardownAfter": {
+    "canvases": 0,
+    "state": "disposed"
+  },
+  "timerGranularityMs": 1,
+  "physicalGpuAndroidDisplayLatency": "not measured"
+}

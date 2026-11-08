@@ -1,0 +1,33 @@
+{
+  "kind": "Android debug; no physical R5Q installation/test",
+  "sourceBase": "e3b437ac6c4c2092b8d4db1b3a54b525ed3982e9",
+  "path": "android/app/build/outputs/apk/debug/Biblioteca-Viva-R5Q-debug.apk",
+  "canonicalPath": "android/app/build/outputs/apk/debug/app-debug.apk",
+  "bytes": 10641553,
+  "sha256": "61616603429cb544eaf154e053e021d667261288f5e134b676e300053c9707d7",
+  "bundlesMatchDist": {
+    "index.html": {
+      "file": "assets/index-BwpT43G6.js",
+      "sha256": "5a4ed088ddebb9a6340327bf10c89422439d89061eaf192aba4b6cc52f1f130d",
+      "bytes": 687429
+    },
+    "src/features/library/three/ThreeWorldRuntime.ts": {
+      "file": "assets/ThreeWorldRuntime-UNELzJ5a.js",
+      "sha256": "72a44c4b64c72d510a0a28add802462f2fed2fc3d2981338ed096b7549f013be",
+      "bytes": 837177
+    }
+  },
+  "fourGlbsMatchR5PSource": true,
+  "sourceSha256": {
+    "src/features/library/WorldHost.tsx": "3e9c85c6bb3ce1fb7f0a856b8f1b697140dad57b58de7b23ecdf3d60e923ae04",
+    "src/features/library/NarrativePanel.tsx": "3d5e8bfdae4107856429f4f62aebb398fad1982983000d0710ce3cd8d4050465",
+    "src/features/library/narrative/session.ts": "a6d2a09a417a2432fabc51633a9433757d55d761b053c09af4c8eb8e9961dc68",
+    "src/styles.css": "40c62356235553b85fbb8605b0afdb7a1e77acb612cb07983b9b47e19ae69d85",
+    "src/features/library/three/ThreeWorldRuntime.ts": "41dbc36b4ea74b51efd78d23c622eb3d1b9bcf90e4eec64500cd5bc1dac42e98",
+    "src/features/library/three/ThreeWorldInteraction.ts": "baad7984e01de5a14a6ee6666e31d9f2817c5fd35e1fd5584f8e7e95d55f11f4",
+    "src/features/library/three/preparedSkinning.ts": "465f0363deb3dc4cb8e1bd8ec0d98a653aa717350c749d47505b92d131caf398",
+    "src/features/library/three/livingVisuals.ts": "965ebd5c8a5c5f72df53263ee9317da971221d085df4a05990cd2640a62289b8",
+    "src/features/library/three/boundedPointLighting.ts": "271cdacbc63566afb65f46e5ca056a489d742ce295257168b64d610862b6b529",
+    "src/features/library/three/inhabitantPresence.ts": "4a3abebfc39050d4bb4868690f79feb075527ca65c7e6d13114e82d6fb810401"
+  }
+}

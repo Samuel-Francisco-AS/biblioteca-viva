@@ -429,14 +429,19 @@ export function createLivingVisuals(
     reconcileLighting() {
       lightingPending = true;
     },
-    update(delta: number, reduced: boolean, narrativeAtmosphere?: Atmosphere) {
+    update(
+      delta: number,
+      reduced: boolean,
+      narrativeAtmosphere?: Atmosphere,
+      snapLighting = false,
+    ) {
       if (disposed) return;
       delta = Number.isFinite(delta) ? Math.min(Math.max(delta, 0), 0.05) : 0;
       elapsed += delta;
       const state = session.getSnapshot();
       const atmosphere = narrativeAtmosphere ?? state.atmosphere;
       sparks.visible = atmosphere === "encantada";
-      const blend = reduced ? 1 : Math.min(1, delta * 3);
+      const blend = reduced || snapLighting ? 1 : Math.min(1, delta * 3);
       const night = nightLighting?.getSnapshot();
       const pendingLamp = ambientLamps.find(
         (lamp) => !night?.completedLampIds.includes(lamp.fixture.id),

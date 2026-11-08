@@ -1,3 +1,9 @@
+## R5Q — candidata, 08/11/2026
+
+- Biblioteca aplica horário e narrativa antes do primeiro desenho e ao retomar, evitando nascer diurna durante a noite. Anoitecer suave, nove luminárias, ritual e fallback preservados.
+- Seleção por toque reutiliza resultados exatos de skinning dentro da consulta para reduzir trabalho repetido de bounds/raycast; highlight, quest, foco, clips e dados mantidos.
+- [Diagnóstico e limites](docs/audits/BV_SANEAMENTO_R5Q.md); melhora de R5P relatada pelo proprietário, validação física R5Q pendente, sem merge ou R5 concluída.
+
 ## R5P — candidata de fluidez noturna, 07/11/2026
 
 - Mantidas as nove luminárias, cores, emissão e luz de Ytha; shader evita cálculo completo de contribuições pontuais já nulas fora do alcance.

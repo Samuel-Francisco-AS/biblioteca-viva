@@ -1,3 +1,5 @@
+> **R5Q — APK candidato (08/11/2026):** build/sync debug PASS, `android/app/build/outputs/apk/debug/Biblioteca-Viva-R5Q-debug.apk`, 10,641,553 B, SHA-256 `61616603429cb544eaf154e053e021d667261288f5e134b676e300053c9707d7`. Bundles/GLBs conferidos no ZIP, versão inalterada; sem instalação física R5Q e ADB sem aparelho. R5P recebeu relato humano de melhora; R5Q aguarda validação de abertura noturna/quests. [Relatório e roteiro](audits/BV_SANEAMENTO_R5Q.md) · [Proveniência](audits/evidence/bv-r5q/apk.json). Sem merge ou R5 concluída.
+
 > **R5P — APK candidato final (07/11/2026):** sync/build debug PASS; `android/app/build/outputs/apk/debug/Biblioteca-Viva-R5P-debug.apk`, 10,641,553 B, SHA-256 `3e15958db0824a285a1d57cadd3b300e96b4af0189b3feb9e70592d21092c5c0`. Bundle/GLBs conferidos no ZIP. ADB sem aparelhos; não instalado/testado fisicamente pelo agente. [Proveniência](audits/evidence/bv-r5p/apk.json) · [roteiro Moto G06](audits/evidence/bv-r5p/MOTO_G06.md). R5/R5E não aprovadas, fluidez física pendente; sem merge.
 
 # BF-5 Parte 2E — contorno interno dos seletores (2026-11-04)

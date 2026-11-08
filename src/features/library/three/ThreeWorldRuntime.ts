@@ -501,6 +501,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private ambientMagic?: ReturnType<typeof createAmbientMagic>;
   private scrollVisuals?: ReturnType<typeof createLivingScrollVisuals>;
   private readonly scrolls: readonly import("../../../contracts/livingScroll").LivingScroll[];
+  private lightingInitialized = false;
   private livingVisuals?: ReturnType<typeof createLivingVisuals>;
   private livingFrameTime: number | undefined;
   private readonly inhabitantLoader?: InhabitantLoader;
@@ -821,6 +822,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
             root: node,
           }));
       }
+      if (this.narrative) this.applyNarrativeToAgency(this.narrative);
       if (composedWorld) camera.far = 1000;
       this.navigation = new CameraNavigation(
         camera,
@@ -1121,11 +1123,15 @@ export class ThreeWorldRuntime implements WorldRuntime {
   applyNarrative(snapshot: NarrativeSnapshot): void {
     if (
       this.isTerminal() ||
-      !this.agency ||
       (this.narrative && snapshot.revision <= this.narrative.revision)
     )
       return;
     this.narrative = snapshot;
+    this.applyNarrativeToAgency(snapshot);
+  }
+
+  private applyNarrativeToAgency(snapshot: NarrativeSnapshot): void {
+    if (!this.agency) return;
     const node = nodeFor(snapshot);
     const ensemble =
       snapshot.active === "rift" &&
@@ -1531,6 +1537,24 @@ export class ThreeWorldRuntime implements WorldRuntime {
     }
     const { camera, renderer, scene } = mountedWorld;
     try {
+      if (!this.lightingInitialized && this.livingVisuals) {
+        this.livingSession?.refreshContext();
+        this.nightLighting?.refreshContext();
+        const reduced =
+          window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
+          false;
+        this.livingVisuals.update(
+          0,
+          reduced,
+          this.narrative?.scenes.rift &&
+            this.narrative.scenes.rift !== "restored"
+            ? "noturna"
+            : undefined,
+          true,
+        );
+        this.narrativeVisuals?.update(this.narrative, 0, reduced);
+        this.lightingInitialized = true;
+      }
       const start = this.performanceProbe.active ? this.now() : 0;
       if (this.performanceProbe.active && renderer.getContext) {
         const gl = renderer.getContext();
@@ -1584,6 +1608,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.pausedByVisibility = false;
     this.nightLighting?.refreshContext();
     this.livingVisuals?.reconcileLighting();
+    this.lightingInitialized = false;
     this.resetFrameMetrics();
     const timestamp = this.now();
     if (!this.viewportReady) {

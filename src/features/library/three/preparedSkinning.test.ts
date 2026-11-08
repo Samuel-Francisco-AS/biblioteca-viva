@@ -13,8 +13,9 @@ import { expect, it } from "vitest";
 import { withPreparedSkinning } from "./preparedSkinning";
 import { disposeObjectTree } from "./referenceScene";
 
-it("preserves exact deformed bounds, spheres, ray hits and every CPU vertex on four real rigs across clips", async () => {
-  for (const key of ["samael", "aryn", "ytha", "lua"]) {
+it.each(["samael", "aryn", "ytha", "lua"])(
+  "preserves exact bounds, vertices and hits with and without memoization: %s",
+  async (key) => {
     const gltf = await new GLTFLoader().parseAsync(
       new Uint8Array(
         readFileSync(`src/features/library/three/assets/${key}.glb`),
@@ -78,6 +79,7 @@ it("preserves exact deformed bounds, spheres, ray hits and every CPU vertex on f
       const original = read(),
         prepared = withPreparedSkinning([gltf.scene], read);
       expect(prepared).toEqual(original);
+      expect(withPreparedSkinning([gltf.scene], read, true)).toEqual(original);
       hitCount += prepared.hits.length;
       expect(skins.every((s) => !Object.hasOwn(s, "getVertexPosition"))).toBe(
         true,
@@ -99,8 +101,8 @@ it("preserves exact deformed bounds, spheres, ray hits and every CPU vertex on f
     mixer.stopAllAction();
     mixer.uncacheRoot(gltf.scene);
     disposeObjectTree(gltf.scene);
-  }
-});
+  },
+);
 it("leaves non-skinned and custom vertex readers intact, including nested queries", () => {
   const mesh = new Mesh();
   const custom = () => new Vector3(1, 2, 3);

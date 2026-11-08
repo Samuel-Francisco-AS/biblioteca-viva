@@ -1,3 +1,5 @@
+> **Prioridade R5Q (08/11/2026):** verificar no Moto G06 atmosfera correta desde a abertura e seleção/quests sem travamentos, preservando a melhora relatada da R5P. Sem merge, R5 encerrada ou nova fase. [Candidata e roteiro](audits/BV_SANEAMENTO_R5Q.md).
+
 > **Prioridade vigente — R5P (07/11/2026):** comprovar fluidez diurna/noturna da candidata no Moto G06, comparando shader original/candidato pelo diagnóstico sem reconstrução. Só retomar avaliação artística de Samael/Aryn/Ytha/Lua após navegação satisfatória; R5/R5E e recuperação integral abertas. Sem merge ou próxima fase autorizados. [Candidata, limites e roteiro](audits/BV_SANEAMENTO_PERFORMANCE_R5P.md).
 
 > **Após R5E:** reavaliar individualmente os quatro habitantes no Moto G06 e responder ao feedback no escopo R5, mantendo PR #40 draft. R5/R5E não encerradas; R6 não iniciada. Hover não entrega voo livre, assento ou F2B/F2C. [Candidata e roteiro](audits/BV_RECUPERACAO_R5E.md).

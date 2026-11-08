@@ -1,3 +1,4 @@
+import { NightLightingSession, NIGHT_LAMPS } from "../nightLighting";
 import { NarrativeSession } from "../narrative/session";
 import { InhabitantAgency, type AgencySnapshot } from "../inhabitantAgency";
 import { readFileSync } from "node:fs";
@@ -10,6 +11,7 @@ import {
   Box3Helper,
   BoxGeometry,
   Group,
+  HemisphereLight,
   Mesh,
   MeshBasicMaterial,
   Object3D,
@@ -3072,4 +3074,169 @@ it("R5P experiments require diagnostic opt-in, survive pause, and restore normal
   runtime.dispose();
   runtime.setLightingExperiment({ mode: "original", ythaLight: true });
   expect(runtime.getDiagnostics().runtimeState).toBe("disposed");
+});
+
+it.each([
+  [12, 0, false],
+  [17, 59, false],
+  [18, 0, true],
+  [23, 0, true],
+  [3, 0, true],
+] as const)(
+  "R5Q first draw already matches %s:%s, including nine lamps",
+  (hour, minute, dark) => {
+    const date = () => new Date(2026, 10, 8, hour, minute);
+    const renderer = new TestRenderer();
+    const seen: { sky: number; lamps: number[] }[] = [];
+    renderer.render.mockImplementation((scene) => {
+      const sky = scene.children.find(
+        (o): o is HemisphereLight => o instanceof HemisphereLight,
+      );
+      seen.push({
+        sky: sky?.intensity ?? -1,
+        lamps: NIGHT_LAMPS.map((l) => {
+          const light = scene.getObjectByName(`${l.id}:light`);
+          return light &&
+            "intensity" in light &&
+            typeof light.intensity === "number"
+            ? light.intensity
+            : -1;
+        }),
+      });
+    });
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+      libraryWorldSnapshot: projectLibraryWorldEntries([]),
+      livingSession: new LivingSession(date),
+      nightLighting: new NightLightingSession(date),
+      inhabitantLoader: () =>
+        Promise.resolve({ scene: new Group(), animations: [] }),
+      frameScheduler: { request: () => 1, cancel: () => {} },
+    });
+    runtime.mount(createHost());
+    runtime.start();
+    expect(seen.length).toBeGreaterThan(0);
+    expect(seen.every((frame) => frame.sky === (dark ? 1.08 : 2))).toBe(true);
+    const power = dark ? (hour === 18 ? 0.68 : 1) : 0;
+    expect(seen[0].lamps).toEqual(Array(9).fill(4.2 * power));
+    runtime.dispose();
+  },
+);
+
+it("R5Q primes narrative night before mount, resumes at actual hour and keeps live dusk interpolation", () => {
+  let now = new Date(2026, 10, 8, 12);
+  const renderer = new TestRenderer(),
+    living = new LivingSession(() => now),
+    night = new NightLightingSession(() => now);
+  let scheduled: FrameRequestCallback | undefined;
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    fixtureLoader: new TestFixtureLoader(),
+    libraryWorldSnapshot: projectLibraryWorldEntries([]),
+    livingSession: living,
+    nightLighting: night,
+    inhabitantLoader: () =>
+      Promise.resolve({ scene: new Group(), animations: [] }),
+    now: () => 0,
+    frameScheduler: {
+      request: (cb) => {
+        scheduled = cb;
+        return 1;
+      },
+      cancel: () => {
+        scheduled = undefined;
+      },
+    },
+  });
+  const story = new NarrativeSession();
+  story.open("rift");
+  runtime.applyNarrative(story.getSnapshot());
+  const intensities: number[] = [];
+  renderer.render.mockImplementation((scene) => {
+    const sky = scene.children.find(
+      (o): o is HemisphereLight => o instanceof HemisphereLight,
+    );
+    intensities.push(sky?.intensity ?? -1);
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  expect(intensities[0]).toBe(1.08);
+  story.reset();
+  runtime.applyNarrative(story.getSnapshot());
+  runtime.pause();
+  runtime.resume();
+  expect(intensities.at(-1)).toBe(2);
+  scheduled?.(16);
+  now = new Date(2026, 10, 8, 18);
+  living.refreshContext();
+  night.refreshContext();
+  scheduled?.(66);
+  expect(intensities.at(-1)).toBeGreaterThan(1.08);
+  expect(intensities.at(-1)).toBeLessThan(2);
+  runtime.pause();
+  now = new Date(2026, 10, 8, 23);
+  runtime.resume();
+  expect(intensities.at(-1)).toBe(1.08);
+  runtime.pause();
+  now = new Date(2026, 10, 9, 12);
+  runtime.resume();
+  expect(intensities.at(-1)).toBe(2);
+  runtime.dispose();
+  story.dispose();
+  living.dispose();
+});
+
+it("R5Q first reduced-motion draw preserves the restored partial ritual and fallback", () => {
+  const date = () => new Date(2026, 10, 8, 18, 0, 10),
+    night = new NightLightingSession(date);
+  expect(
+    night.restore({
+      version: 1,
+      cycleKey: night.getSnapshot().cycleKey,
+      completedLampIds: [NIGHT_LAMPS[0].id],
+    }),
+  ).toBe(true);
+  const checkpoint = night.capture(),
+    renderer = new TestRenderer();
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn(() => ({
+      matches: true,
+      media: "(prefers-reduced-motion: reduce)",
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => true,
+    })),
+  );
+  let powers: number[] = [];
+  renderer.render.mockImplementation((scene) => {
+    if (powers.length) return;
+    powers = NIGHT_LAMPS.map((l) => {
+      const light = scene.getObjectByName(`${l.id}:light`);
+      return light &&
+        "intensity" in light &&
+        typeof light.intensity === "number"
+        ? light.intensity
+        : -1;
+    });
+  });
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    fixtureLoader: new TestFixtureLoader(),
+    libraryWorldSnapshot: projectLibraryWorldEntries([]),
+    livingSession: new LivingSession(date),
+    nightLighting: night,
+    inhabitantLoader: () =>
+      Promise.resolve({ scene: new Group(), animations: [] }),
+    frameScheduler: { request: () => 1, cancel: () => {} },
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  expect(powers).toEqual(NIGHT_LAMPS.map((_, i) => 4.2 * (i === 0 ? 1 : 0.68)));
+  expect(night.capture()).toEqual(checkpoint);
+  runtime.dispose();
 });
