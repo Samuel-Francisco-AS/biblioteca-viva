@@ -20,6 +20,7 @@ export interface Position {
 }
 export interface NavigationObstacle extends SpatialRectangle {
   readonly id: string;
+  readonly contactOwner?: string;
 }
 export const distance = (a: Position, b: Position) =>
   Math.hypot(a.x - b.x, a.z - b.z);
@@ -105,6 +106,32 @@ for (const sx of [-1, 1])
       for (const offset of [-0.15, 0, 0.15])
         candidates.push({ x: sx * x, z: sz * 4.8 + offset });
 candidates.push({ x: -11.7, z: 5.6 }, { x: -13, z: 10 }, { x: -12.2, z: 6.3 });
+// F2 working aisles and B's inner portal bend, verified with real geometry.
+// These extend the existing static graph, retaining every envelope/edge check.
+candidates.push(
+  { x: -11.5, z: -5 },
+  { x: -3, z: -5 },
+  { x: 13, z: -8 },
+  { x: 16, z: -8 },
+  { x: 12, z: -5 },
+  { x: 8, z: -5 },
+  { x: 8, z: 5 },
+  { x: -12.2, z: -6.8 },
+);
+// F2 chair preserves the canonical activity point and book handoff; pass behind its back.
+candidates.push(
+  { x: 12, z: -8.4 },
+  { x: 16, z: -8.4 },
+  { x: 13.5, z: -6.04 },
+  { x: 17.3, z: -6.04 },
+  { x: 16, z: -6.04 },
+  { x: -2, z: 7.7 },
+  { x: 12.2, z: -6.34 },
+  { x: 12.2, z: -9.86 },
+  { x: 15.8, z: -9.86 },
+  { x: 16, z: -6.34 },
+  { x: 17.3, z: -6.34 },
+);
 // Open hall bays provide passing/meeting space off the main circulation lines.
 for (const x of [-6.5, -2, 2, 6.5])
   for (const z of [-6.5, -3, 0, 3, 6.3]) candidates.push({ x, z });

@@ -6,7 +6,7 @@ import {
   type Object3D,
   type AnimationAction,
 } from "three";
-import type { InhabitantAction } from "../inhabitants";
+import { PHYSICAL_ACTIONS, type InhabitantAction } from "../inhabitants";
 
 /** One principal action; the existing world RAF is its only clock. */
 export function createInhabitantAnimator(
@@ -28,13 +28,16 @@ export function createInhabitantAnimator(
     "work",
     "magic",
     "recover",
+    ...PHYSICAL_ACTIONS,
   ];
   for (const name of names) {
     const clip = clips.find((clip) => clip.name === name);
     if (clip) {
       // F2 authored a demonstration yaw in Facing. Navigation owns world facing.
       const bodyClip =
-        externalPosition && name === "walk" ? clip.clone() : clip;
+        externalPosition && (name === "walk" || name === "carry_walk")
+          ? clip.clone()
+          : clip;
       if (bodyClip !== clip)
         bodyClip.tracks = bodyClip.tracks.filter(
           (t) => t.name !== "Facing.quaternion",
@@ -81,6 +84,19 @@ export function createInhabitantAnimator(
   play("idle");
   return {
     play,
+    /** Phase time belongs to the agency for contact-critical sequences. No
+     * autonomous return to idle while sitting, holding or standing up. */
+    sample(name: InhabitantAction, seconds: number) {
+      if (disposed) return;
+      const action = actions.get(name);
+      if (!action) return;
+      mixer.stopAllAction();
+      action.reset().setEffectiveWeight(1).setLoop(LoopOnce, 1).play();
+      action.clampWhenFinished = true;
+      mixer.update(Math.min(Math.max(0, seconds), action.getClip().duration));
+      current = name;
+      elapsed = seconds;
+    },
     get action() {
       return current;
     },

@@ -1,3 +1,5 @@
+> **Extensão F2 (08/11/2026):** `physical.py` adiciona onze clips aos oito R5, dobra roupas, mantém apoio dos pés e guarda acessórios. Prancha/estilete originais servem a estudo/ofício; IK e poses são exportados, sem solver paralelo no app. Sockets são bones explícitos filhos de HandL/HandR/Pelvis. Fontes, GLBs e manifest são gerados juntos. O contrato vigente e os limites de aceite estão em `docs/INHABITANT_ART_PIPELINE.md` e `docs/BF-5_5F2_IMPLEMENTACAO.md`. As notas abaixo descrevem a base R5.
+
 > **R5E vigente:** a receita carrega `refine.py` com detalhes autorais, fólio aberto e efeitos geométricos separados por materiais FX. Ytha mede 1,32 m de geometria e tem clearance visual de 0,16 m, mantendo root/nav no piso e raio 0,92 m. Seus clips usam poses de hover e oscilação vertical; nenhuma rota aérea ou passagem sobre obstáculos foi criada. `inhabitantPresence` controla emissão/opacity e uma luz local de Ytha sob o RAF existente. [Contrato e evidências R5E](../../../../docs/audits/BV_RECUPERACAO_R5E.md). Notas R5A–D abaixo descrevem a geração anterior.
 
 # Habitantes R5 — fonte autoral editável

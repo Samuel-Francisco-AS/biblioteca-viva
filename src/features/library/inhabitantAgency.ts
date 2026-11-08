@@ -1,3 +1,14 @@
+import type { WorldSessionActivity } from "../../contracts/worldSessionActivity";
+import {
+  SESSION_SEATS,
+  seatForInhabitant,
+  SESSION_STATIONS,
+  type SessionSeat,
+} from "./sessionStations";
+import {
+  LIBRARY_FURNISHING,
+  furnitureWorldPoint,
+} from "./three/libraryFurnishingLayout";
 import { tasks, preferences, type Task } from "./inhabitantActivities";
 import {
   EMPTY_AGENCY_ENVIRONMENT,
@@ -6,6 +17,7 @@ import {
 import {
   INHABITANTS,
   INHABITANT_ENVELOPES,
+  inhabitantActionRadius,
   type InhabitantAction,
   type InhabitantKey,
   type InhabitantId,
@@ -52,6 +64,9 @@ export interface AgentView extends Position {
   readonly facing: number;
   readonly action: InhabitantAction;
   readonly available: boolean;
+  readonly physicalActionTime?: number;
+  readonly physicalSessionId?: string;
+  readonly seatId?: string;
   readonly interactionObjectId: string | null;
   readonly interactionState: InteractionTaskState | null;
 }
@@ -73,6 +88,27 @@ export interface AgencySnapshot {
   readonly relations: readonly RelationView[];
   readonly recent: readonly string[];
   readonly cosmetic: CosmeticState;
+}
+type PhysicalPhase =
+  | "unpick"
+  | "object"
+  | "picking"
+  | "seat"
+  | "docking"
+  | "aligning"
+  | "sitting"
+  | "active"
+  | "standing"
+  | "exiting"
+  | "station";
+interface PhysicalTask {
+  session: WorldSessionActivity;
+  seat: SessionSeat | null;
+  phase: PhysicalPhase;
+  clock: number;
+  resources: readonly string[];
+  leaving: boolean;
+  dockNavigation: InhabitantNavigation;
 }
 interface Agent {
   id: InhabitantId;
@@ -99,6 +135,8 @@ interface Agent {
   lastEvent: number;
   interactionState: InteractionTaskState | null;
   interactionTaskId: string | null;
+  physical: PhysicalTask | null;
+  pendingAction: InhabitantAction | null;
 }
 interface Relation {
   script: EncounterScript;
@@ -125,6 +163,8 @@ export interface AgencyOptions {
   readonly seed?: number;
   readonly onEnvironmentAction?: (key: InhabitantKey, objectId: string) => void;
   readonly nightLighting?: NightLightingSession;
+  readonly canPhysicalActor?: (id: InhabitantId) => boolean;
+  readonly canPhysicalStep?: (pose: AgentView) => boolean;
 }
 const clamp = (v: number, min = 0, max = 12) => Math.min(max, Math.max(min, v));
 /** Session-only agency. No renderer, browser, timers, records or persistence.
@@ -150,6 +190,7 @@ export class InhabitantAgency {
   private environment: AgencyEnvironment = EMPTY_AGENCY_ENVIRONMENT;
   private socialAfter = 12;
   private cooperation = 0;
+  private readonly seatNavigation = new Map<string, InhabitantNavigation>();
   private readonly conversation = new Set<InhabitantKey>();
   readonly interactions = new InteractionCoordinator();
   private narrativeBonds: readonly NarrativeBond[] = [];
@@ -183,6 +224,8 @@ export class InhabitantAgency {
       lastEvent: -30,
       interactionState: null,
       interactionTaskId: null,
+      physical: null,
+      pendingAction: null,
     }));
     this.relations = ENCOUNTERS.map((script, i) => ({
       script,
@@ -357,6 +400,10 @@ export class InhabitantAgency {
     this.mode = mode;
     if (mode !== "running") {
       for (const agent of this.agents) {
+        if (agent.physical) {
+          if (mode === "reduced") this.exitPhysical(agent);
+          continue;
+        }
         if (
           agent.task?.interaction ||
           agent.task?.nightLampId ||
@@ -395,11 +442,18 @@ export class InhabitantAgency {
         ? 0
         : Math.min(0.1, Math.max(0, (time - this.lastTime) / 1000));
     this.lastTime = time;
-    if (this.mode !== "running" || dt === 0) return;
+    if ((this.mode !== "running" && this.mode !== "reduced") || dt === 0)
+      return;
+    if (this.mode === "reduced") {
+      this.elapsed += dt;
+      for (const a of this.agents) if (a.physical) this.updatePhysical(a, dt);
+      this.publish();
+      return;
+    }
     this.elapsed += dt;
     this.applyMagicReaction();
     for (const a of this.agents) {
-      if (!a.interactionTaskId || !a.task) continue;
+      if (a.physical || !a.interactionTaskId || !a.task) continue;
       if (
         !this.interactions.renew(
           a.task.nightLampId ?? a.task.objectId ?? a.task.id,
@@ -418,8 +472,10 @@ export class InhabitantAgency {
         );
       }
     }
+    for (const a of this.agents) if (a.physical) this.updatePhysical(a, dt);
     for (const a of this.agents)
       if (
+        !a.physical &&
         a.available &&
         !this.conversation.has(a.key) &&
         a.state === "navigate"
@@ -428,10 +484,18 @@ export class InhabitantAgency {
     this.logic += dt;
     if (this.logic < 0.25) return;
     this.logic %= 0.25;
-    this.reconcileSessionReader();
+    this.reconcilePhysicalSession();
+    if (!this.environment.readingCandidate?.physical)
+      this.reconcileSessionReader();
     this.updateMeeting();
     for (const a of this.agents) {
-      if (!a.available || a.encounter || this.conversation.has(a.key)) continue;
+      if (
+        a.physical ||
+        !a.available ||
+        a.encounter ||
+        this.conversation.has(a.key)
+      )
+        continue;
       if (a.state === "work" && a.task) this.face(a, a.task.facing);
       if (a.state === "navigate") {
         if (a.blocked >= 3) this.replan(a);
@@ -517,6 +581,12 @@ export class InhabitantAgency {
       this.disposed
     )
       return false;
+    if (a.physical) {
+      a.pendingAction = action;
+      this.exitPhysical(a);
+      this.publish();
+      return true;
+    }
     const e = INHABITANT_ENVELOPES[a.key];
     const radius =
       action === "magic" ? e.magic : action === "work" ? e.work : e.travel;
@@ -556,6 +626,12 @@ export class InhabitantAgency {
     );
     for (const a of this.agents) {
       if (wanted.has(a.key)) {
+        a.pendingAction = null;
+        if (a.physical) {
+          this.conversation.add(a.key);
+          this.exitPhysical(a);
+          continue;
+        }
         if (
           a.task?.interaction ||
           a.task?.nightLampId ||
@@ -591,6 +667,7 @@ export class InhabitantAgency {
         a.destination = null;
         a.manual = false;
       } else if (this.conversation.delete(a.key)) {
+        if (a.physical) continue;
         a.state = "recover";
         a.action = "recover";
         a.activity =
@@ -650,6 +727,7 @@ export class InhabitantAgency {
                 : "room-a";
       for (const a of this.agents) {
         if (
+          a.physical ||
           !a.available ||
           a.key === source ||
           a.manual ||
@@ -716,13 +794,7 @@ export class InhabitantAgency {
     return this.agents
       .filter((b) => b !== a && b.available)
       .flatMap<NavigationObstacle>((b) => {
-        const e = INHABITANT_ENVELOPES[b.key];
-        const radius =
-          (b.action === "magic"
-            ? e.magic
-            : b.action === "work"
-              ? e.work
-              : e.travel) + 0.08;
+        const radius = inhabitantActionRadius(b.key, b.action) + 0.08;
         const points = [
           b,
           ...(includeDestinations && b.destination ? [b.destination] : []),
@@ -735,10 +807,19 @@ export class InhabitantAgency {
           maxZ: p.z + radius,
         }));
       })
-      .concat(this.environment.physicalObstacles);
+      .concat(
+        this.environment.physicalObstacles.filter(
+          (o) => o.contactOwner !== a.id,
+        ),
+      );
   }
   private go(a: Agent, destination: Position) {
-    const route = this.navigation.route(
+    const nav =
+      a.physical &&
+      (a.physical.phase === "docking" || a.physical.phase === "exiting")
+        ? a.physical.dockNavigation
+        : this.navigation;
+    const route = nav.route(
       a,
       destination,
       INHABITANT_ENVELOPES[a.key].travel,
@@ -770,9 +851,22 @@ export class InhabitantAgency {
       x: a.x + ((next.x - a.x) * step) / d,
       z: a.z + ((next.z - a.z) * step) / d,
     };
-    if (!this.navigation.clear(a, p, e.travel, this.occupied(a))) {
+    const nav =
+      a.physical &&
+      (a.physical.phase === "docking" || a.physical.phase === "exiting")
+        ? a.physical.dockNavigation
+        : this.navigation;
+    if (!nav.clear(a, p, e.travel, this.occupied(a))) {
       a.blocked += dt;
       a.action = "idle";
+      return;
+    }
+    if (
+      a.physical &&
+      this.options.canPhysicalStep &&
+      !this.options.canPhysicalStep({ ...this.view(a), x: p.x, z: p.z })
+    ) {
+      a.blocked += dt;
       return;
     }
     a.x = p.x;
@@ -780,7 +874,13 @@ export class InhabitantAgency {
     a.action = "walk";
     a.blocked = 0;
     const target = Math.atan2(next.x - a.x, next.z - a.z);
-    this.face(a, target, dt * 4);
+    this.face(
+      a,
+      a.physical?.phase === "exiting"
+        ? (a.physical.seat?.facing ?? target)
+        : target,
+      dt * 4,
+    );
     if (step === d) a.route = a.route.slice(1);
   }
   private face(a: Agent, target: number, step = 0.45) {
@@ -788,7 +888,16 @@ export class InhabitantAgency {
       Math.sin(target - a.facing),
       Math.cos(target - a.facing),
     );
-    a.facing += Math.max(-step, Math.min(step, diff));
+    const facing = a.facing + Math.max(-step, Math.min(step, diff));
+    if (
+      a.physical &&
+      this.options.canPhysicalStep &&
+      !this.options.canPhysicalStep({ ...this.view(a), facing })
+    ) {
+      a.blocked += step;
+      return;
+    }
+    a.facing = facing;
   }
   private replan(a: Agent) {
     const destination = a.destination;
@@ -808,6 +917,10 @@ export class InhabitantAgency {
     a.task = null;
   }
   private arrive(a: Agent) {
+    if (a.physical) {
+      this.arrivePhysical(a);
+      return;
+    }
     a.destination = null;
     a.route = [];
     a.action = "idle";
@@ -819,6 +932,14 @@ export class InhabitantAgency {
     const task = a.task;
     if (!task) {
       this.stop(a, "Observando o movimento da Biblioteca.", 5);
+      return;
+    }
+    if (
+      task.surfaceId &&
+      this.interactions.isReserved(task.surfaceId, this.interactionTime)
+    ) {
+      this.stop(a, "A superfície está reservada pela sessão confirmada.", 3);
+      a.task = null;
       return;
     }
     const envelope = INHABITANT_ENVELOPES[a.key];
@@ -1073,10 +1194,440 @@ export class InhabitantAgency {
     }
     return false;
   }
+  /** Confirmed F1 sessions enter the SAME agency/route/lease authority. */
+  private reconcilePhysicalSession() {
+    const session = this.environment.sessionActivity;
+    for (const a of this.agents)
+      if (a.physical) {
+        const current =
+          session?.sessionId === a.physical.session.sessionId ? session : null;
+        if (
+          !current ||
+          current.status !== "active" ||
+          (a.physical.session.kind === "reading" &&
+            this.environment.readingCandidate?.sessionId !== current.sessionId)
+        )
+          this.exitPhysical(a);
+        else a.physical.session = current;
+      }
+    if (
+      !session ||
+      session.status !== "active" ||
+      this.agents.some((a) => a.physical)
+    )
+      return;
+    const reading = this.environment.readingCandidate;
+    if (
+      session.kind === "reading" &&
+      (!reading?.physical || reading.sessionId !== session.sessionId)
+    )
+      return;
+    if (reading?.physical?.attachedActor) return;
+    const baseSeat =
+      SESSION_SEATS.find(
+        (s) => s.stationId === SESSION_STATIONS[session.kind],
+      ) ?? null;
+    const station = LIBRARY_FURNISHING.find(
+      (p) => p.id === SESSION_STATIONS[session.kind],
+    )!;
+    const taskId = `physical:${session.sessionId}`;
+    const surface = `surface:${station.id}`;
+    // Let an already-carried scenic object finish safely; block new casual
+    // use of this surface as soon as the confirmed session has priority.
+    if (
+      this.agents.some(
+        (a) =>
+          !a.physical && a.task?.surfaceId === surface && a.interactionTaskId,
+      )
+    )
+      return;
+    for (const a of this.agents)
+      if (!a.physical && a.task?.surfaceId === surface) {
+        this.stop(a, "Libera a superfície para a sessão confirmada.", 1);
+        a.task = null;
+      }
+    const actors = this.agents.filter(
+      (a) =>
+        a.available &&
+        this.options.canPhysicalActor?.(a.id) !== false &&
+        !a.manual &&
+        !a.encounter &&
+        !this.conversation.has(a.key) &&
+        !a.interactionTaskId &&
+        a.state !== "recover" &&
+        a.task?.kind !== "experiment",
+    );
+    actors.sort((a, b) => distance(a, station) - distance(b, station));
+    for (const a of actors) {
+      const seat = baseSeat ? seatForInhabitant(baseSeat, a.key) : null;
+      const pickup = reading?.physical?.approaches[a.key]?.find((p) =>
+        this.navigation.route(
+          a,
+          p.position,
+          INHABITANT_ENVELOPES[a.key].travel,
+          this.occupied(a, true),
+        ),
+      );
+      if (session.kind === "reading" && !pickup) continue;
+      const resources = [
+        session.kind === "reading"
+          ? `reader:${session.instanceId}`
+          : `surface:${station.id}`,
+        ...(seat ? [seat.id] : []),
+      ];
+      const acquired: string[] = [];
+      for (const resource of resources) {
+        if (
+          !this.interactions.reserve(
+            resource,
+            a.key,
+            taskId,
+            this.interactionTime,
+          )
+        )
+          break;
+        acquired.push(resource);
+      }
+      if (acquired.length !== resources.length) {
+        for (const r of acquired) this.interactions.release(r, a.key, taskId);
+        continue;
+      }
+      let nav = this.navigation;
+      if (seat) {
+        nav =
+          this.seatNavigation.get(seat.id) ??
+          new InhabitantNavigation(
+            this.navigation.obstacles.filter(
+              (o) => !o.id.startsWith(`spatial:${seat.id}:`),
+            ),
+          );
+        this.seatNavigation.set(seat.id, nav);
+        if (
+          !nav.clear(
+            seat.approach,
+            seat.dock,
+            INHABITANT_ENVELOPES[a.key].travel,
+            this.occupied(a, true),
+          )
+        ) {
+          for (const r of acquired) this.interactions.release(r, a.key, taskId);
+          continue;
+        }
+      }
+      const position =
+        session.kind === "reading"
+          ? pickup!.position
+          : (seat?.approach ??
+            furnitureWorldPoint(station, {
+              x:
+                session.kind === "viewing"
+                  ? 2.4
+                  : session.kind === "work"
+                    ? 0
+                    : -3.1,
+              y: 0,
+              z:
+                session.kind === "viewing"
+                  ? -2.8
+                  : session.kind === "work"
+                    ? 1.65
+                    : 1.45,
+            }));
+      if (!this.go(a, position)) {
+        for (const r of acquired) this.interactions.release(r, a.key, taskId);
+        continue;
+      }
+      a.task = {
+        id: taskId,
+        kind: session.kind === "reading" ? "reading" : "study",
+        position,
+        facing:
+          session.kind === "reading"
+            ? pickup!.facing
+            : (seat?.facing ??
+              (session.kind === "viewing"
+                ? Math.atan2(station.x - position.x, station.z - position.z)
+                : session.kind === "work"
+                  ? Math.PI
+                  : 0) + station.rotation),
+        label: "Atividade real confirmada",
+        objectId: resources[0],
+        ...(session.kind === "reading"
+          ? {
+              sessionReading: {
+                sessionId: session.sessionId,
+                bookId: session.instanceId,
+                source: reading!.source,
+              },
+            }
+          : {}),
+      };
+      a.interactionTaskId = taskId;
+      a.interactionState = "approaching";
+      a.physical = {
+        session,
+        seat,
+        phase:
+          session.kind === "reading" ? "object" : seat ? "seat" : "station",
+        clock: 0,
+        resources,
+        leaving: false,
+        dockNavigation: nav,
+      };
+      a.activity =
+        "Aproxima-se da estação para acompanhar a sessão confirmada.";
+      return;
+    }
+  }
+  private arrivePhysical(a: Agent) {
+    const p = a.physical;
+    if (!p) return;
+    a.route = [];
+    a.destination = null;
+    a.state = "work";
+    p.clock = 0;
+    if (p.phase === "object") {
+      p.phase = "aligning";
+      a.action = "carry";
+      a.interactionState = "orienting";
+      return;
+    }
+    if (p.phase === "seat") {
+      p.phase = "docking";
+      a.interactionState = "docking";
+      if (!p.seat || !this.go(a, p.seat.dock)) this.exitPhysical(a);
+      return;
+    }
+    if (p.phase === "docking") {
+      p.phase = "aligning";
+      a.action = "carry";
+      a.interactionState = "orienting";
+      return;
+    }
+    if (p.phase === "exiting") {
+      this.finishPhysical(a);
+      return;
+    }
+    p.phase = "aligning";
+    a.action = "carry";
+    a.interactionState = "orienting";
+  }
+  private activePhysical(a: Agent) {
+    const p = a.physical;
+    if (!p) return;
+    const kind = p.session.kind;
+    a.state = "work";
+    a.action =
+      kind === "reading"
+        ? "read_seated"
+        : kind === "study"
+          ? "study_seated"
+          : kind === "work"
+            ? "workshop"
+            : kind === "physical_activity"
+              ? "train"
+              : "watch";
+    a.interactionState =
+      kind === "reading" ? "reading" : p.seat ? "seated" : "reading";
+    a.activity =
+      kind === "reading"
+        ? "Lê sentado o mesmo livro da coleção."
+        : kind === "study"
+          ? "Consulta o fólio e escreve durante a sessão de estudo."
+          : kind === "work"
+            ? "Inspeciona e trabalha manualmente na bancada de ofício."
+            : kind === "physical_activity"
+              ? "Alterna mobilidade corporal e recuperação na estação de treino."
+              : "Acompanha a sessão de entretenimento com atenção e reações.";
+  }
+  private exitPhysical(a: Agent) {
+    const p = a.physical;
+    if (!p || p.leaving) return;
+    p.leaving = true;
+    if (p.phase === "picking") {
+      p.phase = "unpick";
+      a.action = "pickup";
+      a.interactionState = "interrupted";
+      a.state = "work";
+      return;
+    }
+    if (p.phase === "sitting" || (p.phase === "active" && p.seat)) {
+      // stand(t) == sit(duration-t); cancellation never resets the pelvis.
+      p.clock = p.phase === "sitting" ? Math.max(0, 2 - p.clock) : 0;
+      p.phase = "standing";
+      a.interactionState = "standing";
+      a.action = "stand";
+      a.state = "work";
+      return;
+    }
+    if (p.phase === "docking" || (p.phase === "aligning" && p.seat)) {
+      this.leaveSeat(a);
+      return;
+    }
+    // Objects are handed back to their existing controller; no clone/teleport.
+    this.finishPhysical(a);
+  }
+  private leaveSeat(a: Agent) {
+    const p = a.physical;
+    if (!p) return;
+    if (!p.seat) {
+      this.finishPhysical(a);
+      return;
+    }
+    p.phase = "exiting";
+    p.clock = 0;
+    a.interactionState = "exiting";
+    if (!this.go(a, p.seat.approach)) {
+      a.state = "work";
+      a.action = "carry";
+      a.activity = "Aguarda a saída segura do assento.";
+    }
+  }
+  private finishPhysical(a: Agent) {
+    const talking = this.conversation.has(a.key);
+    this.stop(a, "Encerra a atividade física e libera a estação.", 3);
+    a.task = null;
+    if (a.pendingAction && !talking) {
+      a.state = "react";
+      const envelope = INHABITANT_ENVELOPES[a.key];
+      const radius =
+        a.pendingAction === "magic"
+          ? envelope.magic
+          : a.pendingAction === "work"
+            ? envelope.work
+            : envelope.travel;
+      a.action = this.navigation.clear(a, a, radius, this.occupied(a))
+        ? a.pendingAction
+        : "idle";
+      a.pendingAction = null;
+      a.manual = true;
+      a.until = this.elapsed + 7;
+    }
+    if (talking) {
+      a.state = "converse";
+      a.action = "idle";
+      a.activity = "Em conversa, após liberar a estação com segurança.";
+    }
+  }
+  private updatePhysical(a: Agent, dt: number) {
+    const p = a.physical;
+    if (!p) return;
+    const task = a.interactionTaskId;
+    if (!task) return;
+    let owned = true;
+    for (const resource of p.resources)
+      if (
+        !this.interactions.retain(resource, a.key, task, this.interactionTime)
+      )
+        owned = false;
+    if (!owned) {
+      this.exitPhysical(a);
+      if (!a.physical) return;
+    }
+    if (p.phase === "unpick") {
+      p.clock = Math.max(0, p.clock - dt);
+      if (p.clock === 0) this.finishPhysical(a);
+      return;
+    }
+    if (
+      this.options.canPhysicalStep &&
+      !this.options.canPhysicalStep({
+        ...this.view(a),
+        physicalActionTime: p.clock + dt,
+      })
+    ) {
+      a.blocked += dt;
+      if (a.blocked > 3) {
+        if (!p.leaving) this.exitPhysical(a);
+        else a.interactionState = "interrupted";
+      }
+      return;
+    }
+    p.clock += dt;
+    if (p.phase === "active")
+      this.face(a, p.seat?.facing ?? a.task!.facing, dt * 2.4);
+    if (a.state === "navigate") {
+      this.move(a, dt);
+      // A blocked docking keeps its reservation and waits; never abandons a
+      // seated pose or pushes through the actor occupying its exit aisle.
+      if (a.blocked >= 3 && p.phase !== "docking" && p.phase !== "exiting") {
+        if (a.destination && !this.go(a, a.destination)) this.exitPhysical(a);
+      }
+      if (a.state === "navigate")
+        a.action =
+          p.session.kind === "reading" && p.phase !== "object"
+            ? "carry_walk"
+            : "walk";
+      return;
+    }
+    if (p.phase === "aligning") {
+      const facing =
+        p.seat && a.interactionState !== "orienting"
+          ? p.seat.facing
+          : a.task!.facing;
+      const target =
+        p.seat && distance(a, p.seat.dock) < 0.05 ? p.seat.facing : facing;
+      this.face(a, target, dt * 2.4);
+      if (
+        p.clock < 1 ||
+        Math.abs(
+          Math.atan2(Math.sin(target - a.facing), Math.cos(target - a.facing)),
+        ) > 0.02
+      )
+        return;
+      p.clock = 0;
+      if (!p.seat) {
+        p.phase = "active";
+        this.activePhysical(a);
+        return;
+      }
+      if (p.seat && distance(a, p.seat.dock) < 0.05) {
+        if (
+          !this.interactions.occupy(
+            p.seat.id,
+            a.key,
+            task,
+            this.interactionTime,
+          )
+        ) {
+          this.exitPhysical(a);
+          return;
+        }
+        p.phase = "sitting";
+        a.interactionState = "sitting";
+        a.action = "sit";
+      } else {
+        p.phase = "picking";
+        a.interactionState = "picking";
+        a.action = "pickup";
+      }
+    } else if (p.phase === "picking" && p.clock >= 1.6) {
+      if (this.environment.readingCandidate?.physical?.attachedActor !== a.id) {
+        this.exitPhysical(a);
+        return;
+      }
+      p.phase = "seat";
+      p.clock = 0;
+      a.interactionState = "carrying";
+      if (!p.seat || !this.go(a, p.seat.approach)) this.exitPhysical(a);
+    } else if (p.phase === "sitting" && p.clock >= 2) {
+      p.phase = "active";
+      p.clock = 0;
+      this.activePhysical(a);
+    } else if (p.phase === "standing" && p.clock >= 2) this.leaveSeat(a);
+    else if (p.phase === "exiting" && p.clock >= 1) {
+      p.clock = 0;
+      this.leaveSeat(a);
+    } else if (p.phase === "active" && p.session.kind === "physical_activity") {
+      // A slow breathing interval is part of the same physical task.
+      a.action = p.clock % 13 < 9 ? "train" : "watch";
+    }
+  }
+
   private reconcileSessionReader() {
     const candidate = this.environment.readingCandidate;
     for (const a of this.agents) {
-      if (!a.task?.sessionReading) continue;
+      if (a.physical || !a.task?.sessionReading) continue;
       if (
         !a.available ||
         a.task.sessionReading.sessionId !== candidate?.sessionId
@@ -1195,6 +1746,14 @@ export class InhabitantAgency {
       .sort((a, b) => b.score - a.score);
     for (const { task, score } of scored) {
       if (score <= 0) continue;
+      const session = this.environment.sessionActivity;
+      if (
+        task.surfaceId &&
+        (this.interactions.isReserved(task.surfaceId, this.interactionTime) ||
+          (session?.status === "active" &&
+            task.surfaceId === `surface:${SESSION_STATIONS[session.kind]}`))
+      )
+        continue;
       const e = INHABITANT_ENVELOPES[a.key],
         radius =
           task.kind === "experiment"
@@ -1317,6 +1876,11 @@ export class InhabitantAgency {
     a.blocked = 0;
   }
   private releaseInteraction(a: Agent) {
+    if (a.physical && a.interactionTaskId) {
+      for (const resource of a.physical.resources)
+        this.interactions.release(resource, a.key, a.interactionTaskId);
+      a.physical = null;
+    }
     if (a.interactionTaskId) {
       const resourceId = a.task?.nightLampId ?? a.task?.objectId;
       if (resourceId)
@@ -1407,6 +1971,7 @@ export class InhabitantAgency {
       !this.conversation.has(a.key) &&
       !a.encounter &&
       !a.task?.nightLampId &&
+      !a.physical &&
       !a.task?.sessionReading &&
       (!a.interactionState || a.interactionState === "approaching") &&
       (a.state === "idle" ||
@@ -1713,6 +2278,13 @@ export class InhabitantAgency {
         : a.activity,
       action: a.action,
       available: a.available,
+      ...(a.physical
+        ? {
+            physicalActionTime: a.physical.clock,
+            physicalSessionId: a.physical.session.sessionId,
+            ...(a.physical.seat ? { seatId: a.physical.seat.id } : {}),
+          }
+        : {}),
       interactionObjectId: a.interactionState
         ? (a.task?.sessionReading?.bookId ?? a.task?.objectId ?? null)
         : null,

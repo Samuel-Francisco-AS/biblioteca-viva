@@ -1,3 +1,5 @@
+> **BF-5.5F2 — candidata (08/11/2026):** leitura com o volume canônico nas mãos e assento; estudo com consulta/escrita; ocupação exclusiva e saída física dos assentos; respostas próprias de ofício, mobilidade corporal e observação de entretenimento. Quatro rigs R5 ampliados e interrupções reconciliadas pelo coordenador existente. Sem migração, versão nova, merge ou fechamento da BF-5.5. [Evidências e limitações](docs/BF-5_5F2_IMPLEMENTACAO.md).
+
 ## 08/11/2026 — Fechamento da recuperação R1–R5 [PR #40]
 
 - Proprietário aprovou encerramento por exceção técnica no Moto G06: redução considerável do lag, atmosfera noturna correta desde o primeiro frame, efeitos de Samael/Aryn/Ytha/Lua e livro/pergaminho mais perceptíveis, e listra verde de tap→pan corrigida.

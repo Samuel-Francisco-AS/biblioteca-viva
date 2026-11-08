@@ -42,8 +42,8 @@ const INITIAL_LIBRARY_RECORD_DISTRIBUTION: readonly {
     category: "study",
     modelTypeId: "study-record",
     spots: [
-      ["room-c", 14.1, -8.3],
-      ["room-c", 16, -8.3],
+      ["room-c", 14.1, -8.5],
+      ["room-c", 16, -8.47],
       ["room-a", 3, -7.2],
     ],
   },

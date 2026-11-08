@@ -47,7 +47,7 @@ export function navigationBoxes(
     if (box.max.y <= 0.15 || box.min.y > 2.1) return [];
     return [
       {
-        id: `spatial:${object.id}:${index}`,
+        id: `spatial:${object.name.startsWith("seat:") ? object.name : object.id}:${index}`,
         minX: box.min.x,
         maxX: box.max.x,
         minZ: box.min.z,

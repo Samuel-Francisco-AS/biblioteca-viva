@@ -28,7 +28,7 @@ const placements: readonly (readonly [
   ["room-b", "plant", -11.7, -3.4, 0],
   ["room-c", "study", 15.4, -4.8, 0],
   ["room-c", "plant", 11.7, -3.4, 0],
-  ["room-c", "bench", 17.3, -8.3, Math.PI / 2],
+  ["room-c", "bench", 17.5, -8.3, Math.PI / 2],
   ["room-d", "study", -14.9, 7.1, 0],
   ["room-d", "plant", -11.7, 3.4, 0],
   ["room-d", "bench", -17.55, 7.2, Math.PI / 2],

@@ -1,3 +1,4 @@
+import { withPreparedSkinning } from "./preparedSkinning";
 import { readFileSync } from "node:fs";
 import {
   AnimationMixer,
@@ -15,7 +16,7 @@ import {
   createInhabitantPresence,
   inhabitantPresenceLevel,
 } from "./inhabitantPresence";
-import { INHABITANT_ENVELOPES } from "../inhabitants";
+import { INHABITANT_ENVELOPES, PHYSICAL_ACTIONS } from "../inhabitants";
 import { disposeObjectTree } from "./referenceScene";
 
 it("Samael has quiet intervals and finite reaction peaks; Lua's decorative magic is frequent without changing agency actions", () => {
@@ -86,37 +87,59 @@ it("presence modifies only its FX materials/light; reduced motion is static, dis
   expect(dispose).toHaveBeenCalledOnce();
 });
 
-it("Ytha's real hover clips retain clearance, stable X/Z and the 0.92 m navigation envelope", async () => {
-  const gltf = await new GLTFLoader().parseAsync(
-    new Uint8Array(readFileSync("src/features/library/three/assets/ytha.glb"))
-      .buffer,
-    "",
-  );
-  const facing = gltf.scene.getObjectByName("Facing")!;
-  const meshes: SkinnedMesh[] = [];
-  const isSkin = (o: Object3D): o is SkinnedMesh => o instanceof SkinnedMesh;
-  gltf.scene.traverse((o) => {
-    if (isSkin(o) && o.name.includes("Ink_leather")) meshes.push(o);
-  });
-  expect(meshes.length).toBeGreaterThan(0);
-  expect(INHABITANT_ENVELOPES.ytha.travel).toBe(0.92);
-  const p = new Vector3();
-  for (const clip of gltf.animations) {
-    const mixer = new AnimationMixer(gltf.scene);
-    mixer.clipAction(clip).play();
-    for (let frame = 0; frame < 9; frame++) {
-      mixer.setTime((clip.duration * frame) / 9);
-      gltf.scene.updateMatrixWorld(true);
-      expect(facing.position.x).toBeCloseTo(0, 6);
-      expect(facing.position.z).toBeCloseTo(0, 6);
-      for (const mesh of meshes)
-        for (let i = 0; i < mesh.geometry.getAttribute("position").count; i++) {
-          mesh.getVertexPosition(i, p).applyMatrix4(mesh.matrixWorld);
-          expect(p.y).toBeGreaterThan(0.12);
-        }
+it.each([
+  "idle",
+  "walk",
+  "turn",
+  "react",
+  "gesture",
+  "work",
+  "magic",
+  "recover",
+  ...PHYSICAL_ACTIONS,
+])(
+  "Ytha's real hover clips retain clearance, stable X/Z and the 0.92 m navigation envelope [%s]",
+  async (name) => {
+    const gltf = await new GLTFLoader().parseAsync(
+      new Uint8Array(readFileSync("src/features/library/three/assets/ytha.glb"))
+        .buffer,
+      "",
+    );
+    const facing = gltf.scene.getObjectByName("Facing")!;
+    const meshes: SkinnedMesh[] = [];
+    const isSkin = (o: Object3D): o is SkinnedMesh => o instanceof SkinnedMesh;
+    gltf.scene.traverse((o) => {
+      if (isSkin(o) && o.name.includes("Ink_leather")) meshes.push(o);
+    });
+    expect(meshes.length).toBeGreaterThan(0);
+    expect(INHABITANT_ENVELOPES.ytha.travel).toBe(0.92);
+    const p = new Vector3();
+    const clip = gltf.animations.find((c) => c.name === name);
+    expect(clip).toBeDefined();
+    if (!clip) throw new Error("Missing hover clip");
+    {
+      const mixer = new AnimationMixer(gltf.scene);
+      mixer.clipAction(clip).play();
+      for (let frame = 0; frame < 9; frame++) {
+        mixer.setTime((clip.duration * frame) / 9);
+        gltf.scene.updateMatrixWorld(true);
+        expect(facing.position.x).toBeCloseTo(0, 6);
+        expect(facing.position.z).toBeCloseTo(0, 6);
+        withPreparedSkinning(meshes, () => {
+          for (const mesh of meshes)
+            for (
+              let i = 0;
+              i < mesh.geometry.getAttribute("position").count;
+              i++
+            ) {
+              mesh.getVertexPosition(i, p).applyMatrix4(mesh.matrixWorld);
+              expect(p.y).toBeGreaterThan(0.12);
+            }
+        });
+      }
+      mixer.stopAllAction();
+      mixer.uncacheRoot(gltf.scene);
     }
-    mixer.stopAllAction();
-    mixer.uncacheRoot(gltf.scene);
-  }
-  disposeObjectTree(gltf.scene);
-});
+    disposeObjectTree(gltf.scene);
+  },
+);

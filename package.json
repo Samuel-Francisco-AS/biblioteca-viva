@@ -30,7 +30,7 @@
     "android:build:diagnostics": "npm run android:sync:diagnostics && cd android && ./gradlew assembleDebug",
     "assets:inhabitants:build": "blender -b -t 2 --python-exit-code 1 --python assets/3d/source/inhabitants/build.py",
     "assets:inhabitants:inspect": "node scripts/inspect-inhabitants.mjs",
-    "assets:inhabitants:check": "vitest run src/features/library/three/inhabitantRig.test.ts src/features/library/three/inhabitantAnimator.test.ts src/features/library/three/inhabitantVisuals.test.ts src/features/library/three/inhabitantPresence.test.ts"
+    "assets:inhabitants:check": "vitest run src/features/library/three/inhabitantRig.test.ts src/features/library/three/inhabitantAnimator.test.ts src/features/library/three/inhabitantVisuals.test.ts src/features/library/three/inhabitantPresence.test.ts src/features/library/three/inhabitantSeatContact.test.ts src/features/library/three/inhabitantPickupContact.test.ts src/features/library/three/inhabitantToolContact.test.ts"
   },
   "dependencies": {
     "@capacitor/android": "8.4.3",

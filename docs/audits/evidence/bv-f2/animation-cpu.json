@@ -1,0 +1,34 @@
+{
+  "scope": "Node CPU host, parse excludes disk read; four mixers + world matrices + skeleton palette; no GPU or device memory",
+  "node": "v24.18.0",
+  "versions": {
+    "before": {
+      "parseMs": {
+        "samael": 51.11086499999999,
+        "aryn": 19.628171999999978,
+        "ytha": 22.78607600000001,
+        "lua": 17.28590700000001
+      },
+      "animationFrameMs": {
+        "p50": 0.10874300000000403,
+        "p95": 0.1759450000000129,
+        "p99": 0.2298080000000482
+      },
+      "heapUsed": 11522456
+    },
+    "after": {
+      "parseMs": {
+        "samael": 32.68679700000001,
+        "aryn": 28.16884600000003,
+        "ytha": 40.69546699999995,
+        "lua": 23.371410999999966
+      },
+      "animationFrameMs": {
+        "p50": 0.08340800000001991,
+        "p95": 0.14233999999999014,
+        "p99": 0.18689399999999523
+      },
+      "heapUsed": 35644624
+    }
+  }
+}

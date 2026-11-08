@@ -17,6 +17,7 @@ export interface Task {
   readonly facing: number;
   readonly label: string;
   readonly objectId?: string;
+  readonly surfaceId?: string;
   readonly nightLampId?: string;
   readonly sessionReading?: {
     readonly sessionId: string;
@@ -50,6 +51,7 @@ export const tasks: readonly Task[] = [
         kind: z.activity,
         position,
         facing: p.facing,
+        ...(z.furnishingId ? { surfaceId: `surface:${z.furnishingId}` } : {}),
         label:
           z.activity === "study"
             ? "atividade em prop de estudo"
