@@ -10,6 +10,10 @@ React Three Fiber (R3F), WebGPU e renderers alternativos não fazem parte do bas
 
 O baseline atual usa React, Dexie, Vite, Vitest, Playwright, Capacitor e Android. Não existem conta, backend, sincronização, nuvem, social ou analytics.
 
+## Próxima fase planejada
+
+**BF-5.6 — O Arcanário** foi formalizada em 08/11/2026 **somente no planejamento**, antes da BF-6. A proposta integra cartas globais, flashcards, questões/tags/diagnósticos, pacotes oficiais offline opcionais, coleção decorativa e TCG PvE com arena 3D. [Plano e gates](docs/BF-5_6_ARCANARIO_PLANO.md) · [ADR-020 revisada](docs/decisions/ADR-020-baralhos-e-cartas-globais.md). Ainda não existem schema novo, migração, pacotes, cartas oficiais, motor de duelo ou arena da BF-5.6. BF-5.5 está fechada com ressalvas documentadas.
+
 ## Desenvolvimento
 
 ```bash
