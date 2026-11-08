@@ -80,7 +80,7 @@ Cobertura nova: banco v14 vazio, seis tipos intactos, vários flashcards, IDs le
 
 Unitários puros (`domain/arcanarium.test.ts`) validam famílias/taxonomia/manifests. Integração usa **fake-indexeddb/Dexie reais**, fixtures fictícias e transações (não prova armazenamento físico Android). E2E usa Chromium/IndexedDB em origem descartável dedicada, asserts DOM e inspeção das tabelas; não substitui Moto G06/TalkBack.
 
-A rodada ampla foi iniciada antes das últimas correções das fixtures, e não foi repetida integralmente. Nenhum assert antigo foi removido/enfraquecido: expectativas de schema/backup/tabelas foram atualizadas para as versões reais; o teste histórico v10 explicita a promoção ao simular entrada legada após upgrade. Um erro transitório de sintaxe durante edição também foi corrigido antes das rodadas finais. Sem aumento de timeout, retry ou supressão de lint/TS. CI remota será omitida por `[skip ci]` conforme política de cota; sem alegação de CI verde.
+A rodada ampla foi iniciada antes das últimas correções das fixtures, e não foi repetida integralmente. Nenhum assert antigo foi removido/enfraquecido: expectativas de schema/backup/tabelas foram atualizadas para as versões reais; o teste histórico v10 explicita a promoção ao simular entrada legada após upgrade. Um erro transitório de sintaxe durante edição também foi corrigido antes das rodadas finais. Sem aumento de timeout, retry ou supressão de lint/TS. CI remota omitida por `[skip ci]` conforme política de cota; sem alegação de CI verde.
 
 ## Limites e dívidas transferidas
 
@@ -105,4 +105,7 @@ APK debug: `android/app/build/outputs/apk/debug/app-debug.apk` (gerado localment
 
 ## Git e publicação
 
-Commit/PR serão registrados após a revisão final. Branch exclusiva; nenhum commit na main, rebase, assinatura de release, merge ou workflow caro disparado manualmente. APKs, logs temporários e backups de ensaio não integram o Git.
+- [PR **#43 draft**, contra main](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/43): “BF-5.6A — Fundação de Cartas, Baralhos e Persistência”. Aberta, sem merge; aceite do proprietário pendente.
+- Commit de implementação/testes/documentação: `5cac2b8638713bf8d3eeaf76a1f9ccdaf1e104de` — `feat(arcanario): implementar fundacao global BF-5.6A [skip ci]`.
+- Registro da publicação acrescentado em commit documental posterior, consultável no histórico da PR. Não altera o código compilado no APK acima.
+- Push da branch exclusiva realizado; nenhum commit na main, rebase, assinatura de release, merge ou workflow caro disparado manualmente. APKs, logs temporários e backups de ensaio não integram o Git. Árvore revisada e `git diff --check` sem erros.
