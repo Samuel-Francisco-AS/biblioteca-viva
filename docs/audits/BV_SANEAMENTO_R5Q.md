@@ -1,5 +1,7 @@
 # R5Q — Inicialização noturna e fluidez das quests
 
+> **Complemento R5R (08/11/2026):** polimento perceptivo autorizado de quests e legibilidade mágica, sobre `c6ca582`. Header/frame/Adiar integrais no commit e conteúdo em 120 ms sem delay; diagnóstico CSS passa a observar o conteúdo. Halos/emissão reforçam os seis alvos sem novas luzes dinâmicas. R5/arte e comprovação física da suavidade permanecem abertas. [Relatório vigente R5R, capturas e gates](BV_POLIMENTO_R5R.md). O harness agora registra viewport efetivo 800×700; a menção histórica a Canvas 800×480 não correspondia ao min-height produtivo.
+
 > **R5Q residual — aceite físico de 08/11/2026:** proprietário instalou `94bae8b` no Moto G06: **PASS abertura diretamente noturna; PASS fluidez geral preservada; PARCIAL abertura de quests, melhor mas ainda com engasgos**. São observações humanas dirigidas, sem FPS/latência quantitativa. Esta rodada modifica somente o cálculo imediato do highlight e o diagnóstico opt-in de abertura. Iluminação aprovada preservada; R5 e arte continuam pendentes. [Investigação complementar](#complemento--engasgo-residual-das-quests).
 
 08/11/2026. Base local limpa `e3b437ac6c4c2092b8d4db1b3a54b525ed3982e9`, branch `feat/bv-r5-renascimento-artistico`, mesma PR draft #40. Missão expressa do proprietário autoriza saneamento e publicação, sem merge ou nova fase.

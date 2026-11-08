@@ -115,22 +115,6 @@ export function NarrativePanel({
         <article
           className={`rpg-dialogue rpg-dialogue--${node.speakerId}`}
           aria-label="Conversa RPG"
-          onAnimationStart={(event) => {
-            if (event.target === event.currentTarget && state.talkingTo)
-              questProbe?.observeQuest?.({
-                type: "mark",
-                stage: "animationStart",
-                inhabitant: state.talkingTo,
-              });
-          }}
-          onAnimationEnd={(event) => {
-            if (event.target === event.currentTarget && state.talkingTo)
-              questProbe?.observeQuest?.({
-                type: "mark",
-                stage: "animationEnd",
-                inhabitant: state.talkingTo,
-              });
-          }}
         >
           <header>
             <span className="rpg-sigil" aria-hidden="true">
@@ -157,49 +141,71 @@ export function NarrativePanel({
               Adiar ×
             </button>
           </header>
-          <p className="rpg-voice" key={node.nodeId}>
-            {textFor(node, state)}
-          </p>
-          <p className="rpg-objective">
-            <span aria-hidden="true">✦ </span>
-            {node.objective}
-          </p>
-          <div className="rpg-choices">
-            {choices.map((choice, index) => (
-              <button
-                type="button"
-                key={choice.choiceId}
-                onClick={() => session.choose(choice.choiceId, state.revision)}
-              >
-                <span aria-hidden="true">{index + 1}.</span> {choice.text}
-              </button>
-            ))}
-            {node.outcome && (
-              <button
-                type="button"
-                onClick={() => {
-                  session.close();
-                  setJournal(true);
-                }}
-              >
-                Guardar o epílogo no diário
-              </button>
+          <div
+            className="rpg-dialogue-content"
+            onAnimationStart={(event) => {
+              if (event.target === event.currentTarget && state.talkingTo)
+                questProbe?.observeQuest?.({
+                  type: "mark",
+                  stage: "animationStart",
+                  inhabitant: state.talkingTo,
+                });
+            }}
+            onAnimationEnd={(event) => {
+              if (event.target === event.currentTarget && state.talkingTo)
+                questProbe?.observeQuest?.({
+                  type: "mark",
+                  stage: "animationEnd",
+                  inhabitant: state.talkingTo,
+                });
+            }}
+          >
+            <p className="rpg-voice" key={node.nodeId}>
+              {textFor(node, state)}
+            </p>
+            <p className="rpg-objective">
+              <span aria-hidden="true">✦ </span>
+              {node.objective}
+            </p>
+            <div className="rpg-choices">
+              {choices.map((choice, index) => (
+                <button
+                  type="button"
+                  key={choice.choiceId}
+                  onClick={() =>
+                    session.choose(choice.choiceId, state.revision)
+                  }
+                >
+                  <span aria-hidden="true">{index + 1}.</span> {choice.text}
+                </button>
+              ))}
+              {node.outcome && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    session.close();
+                    setJournal(true);
+                  }}
+                >
+                  Guardar o epílogo no diário
+                </button>
+              )}
+            </div>
+            <p className="rpg-feedback" role="status" aria-atomic="true">
+              {state.feedback}
+            </p>
+            {failed && (
+              <p className="rpg-fallback">
+                Modo de leitura: os acontecimentos seguem na ficção. A encenação
+                3D está indisponível; nenhuma animação é confirmada.
+              </p>
+            )}
+            {!failed && (
+              <p className="rpg-fallback">
+                Você pode adiar e retomar esta história durante a visita.
+              </p>
             )}
           </div>
-          <p className="rpg-feedback" role="status" aria-atomic="true">
-            {state.feedback}
-          </p>
-          {failed && (
-            <p className="rpg-fallback">
-              Modo de leitura: os acontecimentos seguem na ficção. A encenação
-              3D está indisponível; nenhuma animação é confirmada.
-            </p>
-          )}
-          {!failed && (
-            <p className="rpg-fallback">
-              Você pode adiar e retomar esta história durante a visita.
-            </p>
-          )}
         </article>
       )}
       {journal && (

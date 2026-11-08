@@ -50,7 +50,7 @@ export function createInhabitantVisuals(
         root.add(scene);
         presence.set(
           descriptor.id,
-          createInhabitantPresence(scene, descriptor.key),
+          createInhabitantPresence(scene, descriptor.key, parent),
         );
         presence.get(descriptor.id)?.setPointLightEnabled(pointLightEnabled);
         // Replace a pre-load fallback with the real rig socket if one exists.

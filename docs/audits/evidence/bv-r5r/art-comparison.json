@@ -1,0 +1,278 @@
+{
+  "samePointsAndCameras": true,
+  "scope": "CPU submission, not GPU/Android/physical presentation",
+  "submitCpu": [
+    {
+      "hour": 12,
+      "before": {
+        "n": 60,
+        "p50": 3,
+        "p95": 5.699999988079071,
+        "p99": 11.900000005960464
+      },
+      "after": {
+        "n": 60,
+        "p50": 2.2000000029802322,
+        "p95": 4,
+        "p99": 7.300000011920929
+      }
+    },
+    {
+      "hour": 23,
+      "before": {
+        "n": 60,
+        "p50": 2.7000000029802322,
+        "p95": 4.5,
+        "p99": 4.9000000059604645
+      },
+      "after": {
+        "n": 60,
+        "p50": 2.7000000029802322,
+        "p95": 5.4000000059604645,
+        "p99": 6.899999991059303
+      }
+    }
+  ],
+  "rows": [
+    {
+      "hour": 12,
+      "target": "samael",
+      "zoom": 0.7,
+      "calls": [301, 307],
+      "triangles": [273726, 274136],
+      "geometries": [101, 107],
+      "textures": [7, 12],
+      "programs": [26, 28]
+    },
+    {
+      "hour": 12,
+      "target": "samael",
+      "zoom": 1.5,
+      "calls": [164, 167],
+      "triangles": [177870, 177876],
+      "geometries": [101, 107],
+      "textures": [7, 12],
+      "programs": [26, 28]
+    },
+    {
+      "hour": 12,
+      "target": "aryn",
+      "zoom": 0.7,
+      "calls": [277, 283],
+      "triangles": [271802, 272212],
+      "geometries": [102, 108],
+      "textures": [7, 12],
+      "programs": [26, 28]
+    },
+    {
+      "hour": 12,
+      "target": "aryn",
+      "zoom": 1.5,
+      "calls": [154, 156],
+      "triangles": [201018, 201022],
+      "geometries": [102, 108],
+      "textures": [7, 12],
+      "programs": [26, 28]
+    },
+    {
+      "hour": 12,
+      "target": "ytha",
+      "zoom": 0.7,
+      "calls": [158, 159],
+      "triangles": [233462, 233464],
+      "geometries": [124, 131],
+      "textures": [9, 15],
+      "programs": [26, 28]
+    },
+    {
+      "hour": 12,
+      "target": "ytha",
+      "zoom": 1.5,
+      "calls": [96, 97],
+      "triangles": [218174, 218176],
+      "geometries": [124, 131],
+      "textures": [9, 15],
+      "programs": [26, 28]
+    },
+    {
+      "hour": 12,
+      "target": "lua",
+      "zoom": 0.7,
+      "calls": [224, 230],
+      "triangles": [263782, 264192],
+      "geometries": [128, 135],
+      "textures": [9, 15],
+      "programs": [26, 28]
+    },
+    {
+      "hour": 12,
+      "target": "lua",
+      "zoom": 1.5,
+      "calls": [110, 112],
+      "triangles": [176650, 177052],
+      "geometries": [128, 135],
+      "textures": [9, 15],
+      "programs": [26, 28]
+    },
+    {
+      "hour": 12,
+      "target": "scroll",
+      "zoom": 0.7,
+      "calls": [305, 311],
+      "triangles": [274030, 274440],
+      "geometries": [128, 135],
+      "textures": [9, 15],
+      "programs": [26, 28]
+    },
+    {
+      "hour": 12,
+      "target": "scroll",
+      "zoom": 1.5,
+      "calls": [195, 199],
+      "triangles": [230672, 230680],
+      "geometries": [128, 135],
+      "textures": [9, 15],
+      "programs": [26, 28]
+    },
+    {
+      "hour": 12,
+      "target": "reading",
+      "zoom": 0.7,
+      "calls": [291, 297],
+      "triangles": [274150, 274560],
+      "geometries": [128, 135],
+      "textures": [9, 15],
+      "programs": [26, 28]
+    },
+    {
+      "hour": 12,
+      "target": "reading",
+      "zoom": 1.5,
+      "calls": [128, 131],
+      "triangles": [173682, 173688],
+      "geometries": [128, 135],
+      "textures": [9, 15],
+      "programs": [26, 28]
+    },
+    {
+      "hour": 23,
+      "target": "samael",
+      "zoom": 0.7,
+      "calls": [309, 315],
+      "triangles": [275070, 275480],
+      "geometries": [129, 136],
+      "textures": [9, 15],
+      "programs": [40, 42]
+    },
+    {
+      "hour": 23,
+      "target": "samael",
+      "zoom": 1.5,
+      "calls": [166, 169],
+      "triangles": [178206, 178212],
+      "geometries": [129, 136],
+      "textures": [9, 15],
+      "programs": [40, 42]
+    },
+    {
+      "hour": 23,
+      "target": "aryn",
+      "zoom": 0.7,
+      "calls": [282, 288],
+      "triangles": [272642, 273052],
+      "geometries": [129, 136],
+      "textures": [9, 15],
+      "programs": [40, 42]
+    },
+    {
+      "hour": 23,
+      "target": "aryn",
+      "zoom": 1.5,
+      "calls": [156, 158],
+      "triangles": [201354, 201358],
+      "geometries": [129, 136],
+      "textures": [9, 15],
+      "programs": [40, 42]
+    },
+    {
+      "hour": 23,
+      "target": "ytha",
+      "zoom": 0.7,
+      "calls": [163, 164],
+      "triangles": [234302, 234304],
+      "geometries": [129, 136],
+      "textures": [9, 15],
+      "programs": [40, 42]
+    },
+    {
+      "hour": 23,
+      "target": "ytha",
+      "zoom": 1.5,
+      "calls": [98, 99],
+      "triangles": [218510, 218512],
+      "geometries": [129, 136],
+      "textures": [9, 15],
+      "programs": [40, 42]
+    },
+    {
+      "hour": 23,
+      "target": "lua",
+      "zoom": 0.7,
+      "calls": [228, 234],
+      "triangles": [264454, 264864],
+      "geometries": [129, 136],
+      "textures": [9, 15],
+      "programs": [40, 42]
+    },
+    {
+      "hour": 23,
+      "target": "lua",
+      "zoom": 1.5,
+      "calls": [111, 113],
+      "triangles": [176818, 177220],
+      "geometries": [129, 136],
+      "textures": [9, 15],
+      "programs": [40, 42]
+    },
+    {
+      "hour": 23,
+      "target": "scroll",
+      "zoom": 0.7,
+      "calls": [313, 319],
+      "triangles": [275374, 275784],
+      "geometries": [129, 136],
+      "textures": [9, 15],
+      "programs": [40, 42]
+    },
+    {
+      "hour": 23,
+      "target": "scroll",
+      "zoom": 1.5,
+      "calls": [198, 202],
+      "triangles": [231176, 231184],
+      "geometries": [129, 136],
+      "textures": [9, 15],
+      "programs": [40, 42]
+    },
+    {
+      "hour": 23,
+      "target": "reading",
+      "zoom": 0.7,
+      "calls": [297, 303],
+      "triangles": [275158, 275568],
+      "geometries": [129, 136],
+      "textures": [9, 15],
+      "programs": [40, 42]
+    },
+    {
+      "hour": 23,
+      "target": "reading",
+      "zoom": 1.5,
+      "calls": [129, 132],
+      "triangles": [173850, 173856],
+      "geometries": [129, 136],
+      "textures": [9, 15],
+      "programs": [40, 42]
+    }
+  ]
+}

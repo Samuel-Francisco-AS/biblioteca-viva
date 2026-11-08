@@ -1,0 +1,419 @@
+{
+  "scope": "Chromium/SwiftShader real world, 800x600 DPR1, same fictional records, fixed poses, camera/lighting/reading stage. CPU render samples NOT GPU/Android or sustained FPS.",
+  "results": [
+    {
+      "hour": 12,
+      "target": "samael",
+      "zoom": 0.7,
+      "camera": {
+        "targetX": -2,
+        "targetZ": 1,
+        "zoom": 0.7
+      },
+      "points": [
+        {
+          "name": "ytha-fey-light",
+          "intensity": 0.13399622722349563,
+          "visible": true
+        },
+        {
+          "name": "bf55f-session-light",
+          "intensity": 0.55,
+          "visible": true
+        },
+        {
+          "name": "",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:1:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:2:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:3:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:6:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:7:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:9:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:12:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:15:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:16:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "",
+          "intensity": 10,
+          "visible": true
+        }
+      ],
+      "calls": 297,
+      "triangles": 271758,
+      "geometries": 99,
+      "textures": 7,
+      "programs": 26,
+      "submitCpuSamples": [
+        5.5999999940395355,
+        4.5,
+        4,
+        3.9000000059604645,
+        5
+      ],
+      "session": {
+        "sessionId": "fiction-session",
+        "instanceId": "reading-book:fiction-book-0",
+        "progress": 5,
+        "opening": 1,
+        "state": "resting"
+      },
+      "file": "idle-12-samael-0.7.jpg"
+    },
+    {
+      "hour": 12,
+      "target": "samael",
+      "zoom": 1.5,
+      "camera": {
+        "targetX": -2,
+        "targetZ": 1,
+        "zoom": 1.5
+      },
+      "points": [
+        {
+          "name": "ytha-fey-light",
+          "intensity": 0.13399622722349563,
+          "visible": true
+        },
+        {
+          "name": "bf55f-session-light",
+          "intensity": 0.55,
+          "visible": true
+        },
+        {
+          "name": "",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:1:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:2:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:3:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:6:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:7:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:9:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:12:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:15:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:16:light",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "",
+          "intensity": 10,
+          "visible": true
+        }
+      ],
+      "calls": 160,
+      "triangles": 175902,
+      "geometries": 99,
+      "textures": 7,
+      "programs": 26,
+      "submitCpuSamples": [
+        4.299999997019768,
+        1.5999999940395355,
+        1.199999988079071,
+        1.4000000059604645,
+        1.7999999970197678
+      ],
+      "session": {
+        "sessionId": "fiction-session",
+        "instanceId": "reading-book:fiction-book-0",
+        "progress": 5,
+        "opening": 1,
+        "state": "resting"
+      },
+      "file": "idle-12-samael-1.5.jpg"
+    },
+    {
+      "hour": 23,
+      "target": "samael",
+      "zoom": 0.7,
+      "camera": {
+        "targetX": -2,
+        "targetZ": 1,
+        "zoom": 0.7
+      },
+      "points": [
+        {
+          "name": "ytha-fey-light",
+          "intensity": 0.13399622722349563,
+          "visible": true
+        },
+        {
+          "name": "bf55f-session-light",
+          "intensity": 0.55,
+          "visible": true
+        },
+        {
+          "name": "",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:1:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:2:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:3:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:6:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:7:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:9:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:12:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:15:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:16:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "",
+          "intensity": 10,
+          "visible": true
+        }
+      ],
+      "calls": 305,
+      "triangles": 273102,
+      "geometries": 100,
+      "textures": 7,
+      "programs": 40,
+      "submitCpuSamples": [
+        3.3999999910593033,
+        3.9000000059604645,
+        3.5,
+        3.5999999940395355,
+        4.4000000059604645
+      ],
+      "session": {
+        "sessionId": "fiction-session",
+        "instanceId": "reading-book:fiction-book-0",
+        "progress": 5,
+        "opening": 1,
+        "state": "resting"
+      },
+      "file": "idle-23-samael-0.7.jpg"
+    },
+    {
+      "hour": 23,
+      "target": "samael",
+      "zoom": 1.5,
+      "camera": {
+        "targetX": -2,
+        "targetZ": 1,
+        "zoom": 1.5
+      },
+      "points": [
+        {
+          "name": "ytha-fey-light",
+          "intensity": 0.13399622722349563,
+          "visible": true
+        },
+        {
+          "name": "bf55f-session-light",
+          "intensity": 0.55,
+          "visible": true
+        },
+        {
+          "name": "",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "",
+          "intensity": 0,
+          "visible": false
+        },
+        {
+          "name": "night-lamp:bf4-prop:1:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:2:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:3:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:6:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:7:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:9:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:12:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:15:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "night-lamp:bf4-prop:16:light",
+          "intensity": 4.2,
+          "visible": true
+        },
+        {
+          "name": "",
+          "intensity": 10,
+          "visible": true
+        }
+      ],
+      "calls": 162,
+      "triangles": 176238,
+      "geometries": 100,
+      "textures": 7,
+      "programs": 40,
+      "submitCpuSamples": [
+        1.8999999910593033,
+        1.4000000059604645,
+        1.2999999970197678,
+        1.7999999970197678,
+        2.6000000089406967
+      ],
+      "session": {
+        "sessionId": "fiction-session",
+        "instanceId": "reading-book:fiction-book-0",
+        "progress": 5,
+        "opening": 1,
+        "state": "resting"
+      },
+      "file": "idle-23-samael-1.5.jpg"
+    }
+  ],
+  "errors": [],
+  "teardown": {
+    "state": "disposed",
+    "canvases": 0
+  },
+  "pose": "idle at 7.5s"
+}

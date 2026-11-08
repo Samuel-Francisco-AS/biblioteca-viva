@@ -95,8 +95,14 @@ it("R5Q observes DOM commit, accessible focus and card animation without changin
   const card = screen.getByRole("article", { name: "Conversa RPG" });
   // jsdom exposes WebkitAnimation but no AnimationEvent, so React registers
   // its vendor-prefixed event names here. Chromium covers native CSS events.
-  fireEvent(card, new Event("webkitAnimationStart", { bubbles: true }));
-  fireEvent(card, new Event("webkitAnimationEnd", { bubbles: true }));
+  fireEvent(
+    card.querySelector(".rpg-dialogue-content")!,
+    new Event("webkitAnimationStart", { bubbles: true }),
+  );
+  fireEvent(
+    card.querySelector(".rpg-dialogue-content")!,
+    new Event("webkitAnimationEnd", { bubbles: true }),
+  );
   expect(observeQuest).toHaveBeenLastCalledWith({
     type: "mark",
     stage: "animationEnd",

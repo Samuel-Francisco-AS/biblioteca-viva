@@ -1,0 +1,134 @@
+{
+  "base": "c6ca58229c14a6a418e460ff54b6bf97d94fd471",
+  "scope": "R5R perceptual quest opening and six magic effects; no new physical Android or GPU/presentation measurement",
+  "unitDirected": {
+    "distinctPassed": 139,
+    "files": 13,
+    "groups": [
+      {
+        "passed": 53,
+        "files": 6,
+        "area": "NarrativePanel/WorldHost/magicHalo/sessionWorld/sessionBook/livingScroll"
+      },
+      {
+        "passed": 25,
+        "files": 5,
+        "area": "presence/inhabitantVisuals/exact picking/preparedSkinning/R3 loop"
+      },
+      {
+        "passed": 61,
+        "files": 2,
+        "area": "ThreeWorldRuntime/performanceProbe, including approved night initialization/lifecycle"
+      }
+    ]
+  },
+  "supplementalOverlapping": [
+    {
+      "passed": 5,
+      "files": 2,
+      "reason": "After final linear filtering/smoke ordering"
+    },
+    {
+      "passed": 1,
+      "deselectedByNameFilter": 2,
+      "reason": "Recover test quiet phase uses valid global15s/actionAge3s; other cases already passed in full final file, no assert or timeout removed"
+    },
+    {
+      "passed": 2,
+      "files": 1,
+      "reason": "After typed DataTexture guard in test fixture"
+    }
+  ],
+  "static": {
+    "format": "PASS",
+    "formatCheck": "PASS",
+    "lintGlobal": "PASS",
+    "lintChangedFixture": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS via android:build:debug",
+    "performanceReport": "PASS",
+    "audioCheck": "PASS",
+    "androidSyncDebug": "PASS",
+    "diffCheck": "PASS"
+  },
+  "intermediateFailures": [
+    {
+      "area": "capture harness setup",
+      "detail": "Wrong reading field name, corrected to readingAreaBookVisuals. Partial initial PNGs removed; paired final artifacts complete."
+    },
+    {
+      "area": "typecheck/build fixture",
+      "detail": "TS18046 map.image unknown in new magicHalo.test.ts. Fixed with instanceof DataTexture guard preserving assert, no cast/any. Typecheck, leaf tests and Android build passed afterward."
+    }
+  ],
+  "visuals": {
+    "mainViewsEachVersion": 24,
+    "idleSamaelViewsEachVersion": 4,
+    "viewport": [
+      800,
+      600
+    ],
+    "dpr": 1,
+    "sameCamerasAndAllPointLightValues": true,
+    "mainFinalCandidateShellExit": 143,
+    "mainFinalCandidateArtifacts": "Complete 24 rows/images, no page errors, runtime teardown disposed and zero Canvas. Signal after artifact write, origin not isolated; not rerun to chase exit status. Runtime lifecycle separately PASS.",
+    "idleFinalShellExit": 0,
+    "ui": "Real NarrativePanel/CSS mobile412x892, H3 focus and prefers-reduced-motion observed, UI not physical display timing.",
+    "costs": "art-comparison.json. New unlit planes/rune/maps have real cost; no added point light/bloom/postprocessing/DPR cut."
+  },
+  "quests": {
+    "casesEachVersion": 64,
+    "scope": "CPU/DOM isolation, renderer double, real rigs/raycast/React, synthetic events; manual scene RAF",
+    "verifiedCanvas": [
+      800,
+      700
+    ],
+    "cardFullOpacityAfterCommit": true,
+    "bodyAnimationMs": 120,
+    "bodyAnimationDelayMs": 0,
+    "commitsEachVersion": 48,
+    "physicalPresentationMeasured": false,
+    "source": "quest-comparison.json"
+  },
+  "lifecycle": {
+    "command": "node scripts/check-world-lifecycle.mjs docs/audits/evidence/bv-r5r/lifecycle 1",
+    "status": "PASS",
+    "cycles": 1,
+    "ownedResourcesTracked": 323,
+    "undisposed": 0,
+    "repeatedDisposals": 0,
+    "ownPendingFramesListenersObservers": 0,
+    "terminalContextLossByDesign": true,
+    "longTermHeapGcProven": false
+  },
+  "e2eAndWide": {
+    "executedThisRound": false,
+    "historicalE2e": "R5Q0/1, scrollIntoViewIfNeeded line60 at unchanged30s deadline; R2/R5P debts open.",
+    "previousWide": "981 PASS/1 timeout Ytha hover; file isolated3/3 PASS. R5R directed presence file passed with unchanged timeout.",
+    "globalCiGreenClaimed": false,
+    "historicalE2eFilesAssertsRetriesTimeoutsChanged": false
+  },
+  "android": {
+    "adbDevices": 0,
+    "agentInstalledOrTested": false,
+    "artifact": "apk.json"
+  },
+  "publication": {
+    "sameBranch": "feat/bv-r5-renascimento-artistico",
+    "pr": 40,
+    "draft": true,
+    "singleCommit": true,
+    "skipCi": true,
+    "workflowsChanged": false,
+    "dispatchOrRerun": false,
+    "merge": false,
+    "newPhase": false
+  },
+  "pending": [
+    "Moto G06 quest perceptual smoothness",
+    "Physical general/night fluidity with new FX",
+    "Human art acceptance of all six effects",
+    "Android driver/compositor cause of residual pause",
+    "Physical GPU/presentation/long-term memory measurements"
+  ]
+}

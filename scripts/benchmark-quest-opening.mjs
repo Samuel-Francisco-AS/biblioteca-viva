@@ -65,7 +65,7 @@ const server = await createServer({
           if (req.url !== "/__r5q") return next();
           res.setHeader("Content-Type", "text/html");
           res.end(
-            '<html><style>body{margin:0}.world-canvas-host{height:480px!important;width:800px!important}</style><body><div class="app-shell" data-route="library"><div id="root" class="library-page" data-tools-open="true"></div></div><script type="module" src="/__r5q-entry.js"></script></body></html>',
+            '<html><style>body{margin:0}</style><body><div class="app-shell" data-route="library"><div id="root" class="library-page" data-tools-open="true"></div></div><script type="module" src="/__r5q-entry.js"></script></body></html>',
           );
         });
       },
@@ -208,6 +208,25 @@ try {
                 focus: globalThis.document.activeElement?.tagName,
                 opacity: card
                   ? globalThis.getComputedStyle(card).opacity
+                  : null,
+                canvasBounds: q.renderer.domElement
+                  .getBoundingClientRect()
+                  .toJSON(),
+                contentStyle: card?.querySelector(".rpg-dialogue-content")
+                  ? {
+                      opacity: globalThis.getComputedStyle(
+                        card.querySelector(".rpg-dialogue-content"),
+                      ).opacity,
+                      duration: globalThis.getComputedStyle(
+                        card.querySelector(".rpg-dialogue-content"),
+                      ).animationDuration,
+                      delay: globalThis.getComputedStyle(
+                        card.querySelector(".rpg-dialogue-content"),
+                      ).animationDelay,
+                      headerOpacity: globalThis.getComputedStyle(
+                        card.querySelector("header"),
+                      ).opacity,
+                    }
                   : null,
                 programs: q.renderer.info.programs?.length ?? null,
                 visualStyle: card

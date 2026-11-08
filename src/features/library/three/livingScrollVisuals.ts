@@ -1,3 +1,4 @@
+import { createMagicHalo } from "./magicHalo";
 import {
   BoxGeometry,
   PlaneGeometry,
@@ -50,17 +51,21 @@ export function createLivingScrollVisuals(
   const paper = new MeshStandardMaterial({
     color: 0xd8b77c,
     roughness: 0.95,
+    emissive: 0x8edcc0,
+    emissiveIntensity: 0.18,
     side: DoubleSide,
   });
   const gold = new MeshStandardMaterial({
     color: 0xa77c36,
     metalness: 0.65,
     roughness: 0.4,
+    emissive: 0xffcf7b,
+    emissiveIntensity: 0.8,
   });
   const ink = new MeshBasicMaterial({
-    color: 0x9cdccd,
+    color: 0xbaffea,
     transparent: true,
-    opacity: 0.65,
+    opacity: 0.96,
   });
   const box = new BoxGeometry(1, 1, 1);
   const roll = new CylinderGeometry(0.035, 0.035, 0.26, 12);
@@ -91,21 +96,27 @@ export function createLivingScrollVisuals(
       cylinder.position.set(0, 0.03, z);
       group.add(cylinder);
     }
-    const seal = new Mesh(new TorusGeometry(0.045, 0.007, 6, 20), gold);
+    const seal = new Mesh(new TorusGeometry(0.06, 0.012, 6, 20), gold);
     seal.rotation.x = -Math.PI / 2;
     seal.position.y = 0.014;
     group.add(seal);
     for (let j = 0; j < 3; j++) {
       const mark = new Mesh(box, ink);
-      mark.scale.set(0.12 - j * 0.02, 0.003, 0.008);
+      mark.scale.set(0.16 - j * 0.02, 0.003, 0.014);
       mark.position.set(0, 0.015, -0.07 + j * 0.025);
       group.add(mark);
     }
+    const halo = createMagicHalo(0x8fffd4, 0.55);
+    halo.name = "scroll-magic-halo";
+    halo.material.opacity = 0.6;
+    halo.position.copy(group.position);
+    halo.position.y += 0.025;
+    root.add(halo);
     const trail = new Group();
     root.add(trail);
     for (let j = 0; j < 9; j++) {
       const mote = new Mesh(box, ink);
-      mote.scale.setScalar(0.012 * (1 - j / 12));
+      mote.scale.setScalar(0.019 * (1 - j / 12));
       trail.add(mote);
     }
     return {
@@ -118,6 +129,7 @@ export function createLivingScrollVisuals(
       surface,
       sheet,
       trail,
+      halo,
       index: i,
       held: false,
       reservedPosition: group.position.clone(),
@@ -276,6 +288,11 @@ export function createLivingScrollVisuals(
             m.position.copy(s.history[(s.historyHead + j * 4) % 36]);
           });
         }
+        s.halo.position.copy(s.root.position);
+        s.halo.position.y += 0.025;
+        s.halo.material.opacity = reduced
+          ? 0.5
+          : 0.5 + intensity * 0.25 + Math.sin(elapsed * 1.1) * 0.08;
         s.trailActive = s.trail.visible;
       }
     },

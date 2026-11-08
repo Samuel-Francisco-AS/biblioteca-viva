@@ -1,3 +1,5 @@
+> **R5R — 08/11/2026:** legibilidade ampliada na camada de apresentação: FX emissivos existentes reforçados, halos pequenos unlit fora das raízes selecionáveis e arco de Lua. GLBs/rigs/clips/sockets permanecem byte a byte iguais à R5Q. Nenhuma PointLight nova; luz de Ytha conserva a curva. Ownership local/disposal e modo reduzido preservados. Arte aguarda Moto G06. [Evidências](audits/BV_POLIMENTO_R5R.md).
+
 > **Extensão R5E:** `refine.py` integra a receita autoral; Ytha tem geometria de 1,32 m e clearance de 0,16 m, root físico em Y=0. Hover/gestos continuam nos oito clips; emissão material/luz usa `inhabitantPresence` no RAF existente, sem mover personagens ou bones. FX têm materiais próprios (`FX`), descartados pelo owner da árvore; a luz de Ytha pertence ao controlador e é removida/descarregada antes da árvore. Raio de navegação 0,92 m intocado. [Evidências e limites](audits/BV_RECUPERACAO_R5E.md).
 
 # Pipeline autoral dos habitantes — R5

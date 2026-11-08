@@ -1,3 +1,10 @@
+## R5R — candidata de polimento, 08/11/2026
+
+- Quests montam frame, speaker e Adiar com opacidade integral; conteúdo entra suavemente em 120 ms, sem delay, mantendo foco, escolhas e Back/Escape. Contato no Canvas recebe feedback do gesto existente.
+- Aura negra/lilás de Samael mais presente, dourado de Aryn junto ao livro, halo/asas feéricas de Ytha e círculo arcano de Lua mais legíveis.
+- Pergaminhos com selo/inscrições/glow mais claros; livro durante leitura com emissão e selo de sessão reforçados.
+- Soluções unlit/emissivas, sem PointLight nova, bloom ou mudança de resolução. Fluidez e arte dependem de aceite no Moto G06; R5 segue aberta. [Relatório](docs/audits/BV_POLIMENTO_R5R.md).
+
 ## R5Q — complemento residual de quests, 08/11/2026
 
 - Aceite físico do proprietário: abertura diretamente noturna e fluidez geral PASS; quests PARCIAL, ainda com engasgos.

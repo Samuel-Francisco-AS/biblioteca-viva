@@ -19,15 +19,15 @@ import { INHABITANT_ENVELOPES } from "../inhabitants";
 import { disposeObjectTree } from "./referenceScene";
 
 it("Samael has quiet intervals and finite reaction peaks; Lua's decorative magic is frequent without changing agency actions", () => {
-  expect(inhabitantPresenceLevel("samael", "idle", 5, 5, false)).toBe(0);
-  expect(inhabitantPresenceLevel("samael", "idle", 17, 17, false)).toBeCloseTo(
-    0.24,
-  );
-  expect(inhabitantPresenceLevel("samael", "idle", 21, 21, false)).toBe(0);
+  expect(inhabitantPresenceLevel("samael", "idle", 0, 0, false)).toBe(0);
+  expect(
+    inhabitantPresenceLevel("samael", "idle", 7.5, 7.5, false),
+  ).toBeCloseTo(0.62);
+  expect(inhabitantPresenceLevel("samael", "idle", 15, 15, false)).toBe(0);
   expect(inhabitantPresenceLevel("samael", "react", 1, 0.9, false)).toBeCloseTo(
     1,
   );
-  expect(inhabitantPresenceLevel("samael", "recover", 4, 3, false)).toBe(0);
+  expect(inhabitantPresenceLevel("samael", "recover", 15, 3, false)).toBe(0);
   expect(
     inhabitantPresenceLevel("lua", "idle", 3.5, 3.5, false),
   ).toBeGreaterThan(0.35);

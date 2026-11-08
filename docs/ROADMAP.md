@@ -1,3 +1,5 @@
+> **Gate R5R (08/11/2026):** proprietário deve avaliar abertura/reabertura/troca de quests e leitura mágica de Samael, Aryn, Ytha, Lua, pergaminho e livro ativo, preservando a fluidez geral/noturna já aprovada nas versões anteriores. Sem merge, nova fase ou R5 concluída. [Candidata e roteiro](audits/BV_POLIMENTO_R5R.md#roteiro-moto-g06).
+
 > **Próximo gate R5Q residual (08/11/2026):** comprovar apenas abertura/reabertura/troca de quests no Moto G06, usando diagnóstico local opt-in se o engasgo persistir. Início noturno e fluidez geral já receberam PASS físico dirigido; preservar esses mecanismos. R5/arte continuam abertas, sem merge ou fase nova. [Roteiro e limites](audits/BV_SANEAMENTO_R5Q.md#roteiro-físico-limitado-às-quests).
 
 > **Prioridade R5Q (08/11/2026):** verificar no Moto G06 atmosfera correta desde a abertura e seleção/quests sem travamentos, preservando a melhora relatada da R5P. Sem merge, R5 encerrada ou nova fase. [Candidata e roteiro](audits/BV_SANEAMENTO_R5Q.md).
