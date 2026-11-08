@@ -1,0 +1,304 @@
+{
+  "base": "d8b2c4eb151f8fe2643cd3e3e0a3ceaf534e53ea",
+  "tolerance": 0.000001,
+  "characters": {
+    "samael": {
+      "changed": [
+        "walk",
+        "carry_walk"
+      ],
+      "checked": [
+        {
+          "name": "carry",
+          "maxDelta": 2.980232238769531e-7
+        },
+        {
+          "name": "gesture",
+          "maxDelta": 0
+        },
+        {
+          "name": "idle",
+          "maxDelta": 0
+        },
+        {
+          "name": "magic",
+          "maxDelta": 0
+        },
+        {
+          "name": "pickup",
+          "maxDelta": 0
+        },
+        {
+          "name": "react",
+          "maxDelta": 0
+        },
+        {
+          "name": "read_seated",
+          "maxDelta": 0
+        },
+        {
+          "name": "recover",
+          "maxDelta": 0
+        },
+        {
+          "name": "seated",
+          "maxDelta": 0
+        },
+        {
+          "name": "sit",
+          "maxDelta": 0
+        },
+        {
+          "name": "stand",
+          "maxDelta": 0
+        },
+        {
+          "name": "study_seated",
+          "maxDelta": 0
+        },
+        {
+          "name": "train",
+          "maxDelta": 0
+        },
+        {
+          "name": "turn",
+          "maxDelta": 0
+        },
+        {
+          "name": "watch",
+          "maxDelta": 1.7881393432617188e-7
+        },
+        {
+          "name": "work",
+          "maxDelta": 0
+        },
+        {
+          "name": "workshop",
+          "maxDelta": 0
+        }
+      ]
+    },
+    "aryn": {
+      "changed": [
+        "walk",
+        "carry_walk"
+      ],
+      "checked": [
+        {
+          "name": "carry",
+          "maxDelta": 5.364418029785156e-7
+        },
+        {
+          "name": "gesture",
+          "maxDelta": 0
+        },
+        {
+          "name": "idle",
+          "maxDelta": 0
+        },
+        {
+          "name": "magic",
+          "maxDelta": 0
+        },
+        {
+          "name": "pickup",
+          "maxDelta": 0
+        },
+        {
+          "name": "react",
+          "maxDelta": 0
+        },
+        {
+          "name": "read_seated",
+          "maxDelta": 0
+        },
+        {
+          "name": "recover",
+          "maxDelta": 0
+        },
+        {
+          "name": "seated",
+          "maxDelta": 0
+        },
+        {
+          "name": "sit",
+          "maxDelta": 0
+        },
+        {
+          "name": "stand",
+          "maxDelta": 0
+        },
+        {
+          "name": "study_seated",
+          "maxDelta": 0
+        },
+        {
+          "name": "train",
+          "maxDelta": 0
+        },
+        {
+          "name": "turn",
+          "maxDelta": 0
+        },
+        {
+          "name": "watch",
+          "maxDelta": 5.364418029785156e-7
+        },
+        {
+          "name": "work",
+          "maxDelta": 0
+        },
+        {
+          "name": "workshop",
+          "maxDelta": 0
+        }
+      ]
+    },
+    "ytha": {
+      "changed": [
+        "walk",
+        "carry_walk",
+        "idle",
+        "turn"
+      ],
+      "checked": [
+        {
+          "name": "carry",
+          "maxDelta": 1.7881393432617188e-7
+        },
+        {
+          "name": "gesture",
+          "maxDelta": 0
+        },
+        {
+          "name": "magic",
+          "maxDelta": 0
+        },
+        {
+          "name": "pickup",
+          "maxDelta": 0
+        },
+        {
+          "name": "react",
+          "maxDelta": 0
+        },
+        {
+          "name": "read_seated",
+          "maxDelta": 0
+        },
+        {
+          "name": "recover",
+          "maxDelta": 0
+        },
+        {
+          "name": "seated",
+          "maxDelta": 0
+        },
+        {
+          "name": "sit",
+          "maxDelta": 0
+        },
+        {
+          "name": "stand",
+          "maxDelta": 0
+        },
+        {
+          "name": "study_seated",
+          "maxDelta": 0
+        },
+        {
+          "name": "train",
+          "maxDelta": 0
+        },
+        {
+          "name": "watch",
+          "maxDelta": 1.7881393432617188e-7
+        },
+        {
+          "name": "work",
+          "maxDelta": 0
+        },
+        {
+          "name": "workshop",
+          "maxDelta": 0
+        }
+      ]
+    },
+    "lua": {
+      "changed": [
+        "walk",
+        "carry_walk"
+      ],
+      "checked": [
+        {
+          "name": "carry",
+          "maxDelta": 5.364418029785156e-7
+        },
+        {
+          "name": "gesture",
+          "maxDelta": 0
+        },
+        {
+          "name": "idle",
+          "maxDelta": 0
+        },
+        {
+          "name": "magic",
+          "maxDelta": 0
+        },
+        {
+          "name": "pickup",
+          "maxDelta": 0
+        },
+        {
+          "name": "react",
+          "maxDelta": 0
+        },
+        {
+          "name": "read_seated",
+          "maxDelta": 0
+        },
+        {
+          "name": "recover",
+          "maxDelta": 0
+        },
+        {
+          "name": "seated",
+          "maxDelta": 0
+        },
+        {
+          "name": "sit",
+          "maxDelta": 0
+        },
+        {
+          "name": "stand",
+          "maxDelta": 0
+        },
+        {
+          "name": "study_seated",
+          "maxDelta": 0
+        },
+        {
+          "name": "train",
+          "maxDelta": 0
+        },
+        {
+          "name": "turn",
+          "maxDelta": 0
+        },
+        {
+          "name": "watch",
+          "maxDelta": 5.364418029785156e-7
+        },
+        {
+          "name": "work",
+          "maxDelta": 0
+        },
+        {
+          "name": "workshop",
+          "maxDelta": 0
+        }
+      ]
+    }
+  }
+}

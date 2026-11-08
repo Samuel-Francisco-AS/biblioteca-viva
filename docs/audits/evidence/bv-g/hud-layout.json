@@ -1,0 +1,185 @@
+{
+  "description": "CSS integration fixture, fictional content, no WebGL or physical acceptance",
+  "cases": [
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "long": false,
+      "boxes": {
+        "toast": {
+          "x": 16,
+          "y": 124.59375,
+          "width": 358,
+          "height": 40.390625
+        },
+        "session": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 112.59375
+        },
+        "panel": {
+          "x": 13.59375,
+          "y": 172.984375,
+          "width": 362.796875,
+          "height": 413.5625
+        },
+        "access": {
+          "x": 13.59375,
+          "y": 674.84375,
+          "width": 119.90625,
+          "height": 46.390625
+        },
+        "quests": {
+          "x": 185.8125,
+          "y": 598.546875,
+          "width": 193.796875,
+          "height": 122.6875
+        },
+        "dock": {
+          "x": 8.796875,
+          "y": 748.421875,
+          "width": 372.40625,
+          "height": 86.78125
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "long": true,
+      "boxes": {
+        "toast": {
+          "x": 16,
+          "y": 124.59375,
+          "width": 358,
+          "height": 144
+        },
+        "session": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 112.59375
+        },
+        "panel": {
+          "x": 13.59375,
+          "y": 276.59375,
+          "width": 362.796875,
+          "height": 309.953125
+        },
+        "access": {
+          "x": 13.59375,
+          "y": 674.84375,
+          "width": 119.90625,
+          "height": 46.390625
+        },
+        "quests": {
+          "x": 185.8125,
+          "y": 598.546875,
+          "width": 193.796875,
+          "height": 122.6875
+        },
+        "dock": {
+          "x": 8.796875,
+          "y": 748.421875,
+          "width": 372.40625,
+          "height": 86.78125
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "long": false,
+      "boxes": {
+        "toast": {
+          "x": 182,
+          "y": 94.59375,
+          "width": 480,
+          "height": 40.390625
+        },
+        "session": {
+          "x": 0,
+          "y": 0,
+          "width": 844,
+          "height": 82.59375
+        },
+        "panel": {
+          "x": 13.59375,
+          "y": 142.984375,
+          "width": 400,
+          "height": 85.65625
+        },
+        "access": {
+          "x": 13.59375,
+          "y": 259.25,
+          "width": 119.90625,
+          "height": 46.390625
+        },
+        "quests": {
+          "x": 370.3125,
+          "y": 240.640625,
+          "width": 457.6875,
+          "height": 65
+        },
+        "dock": {
+          "x": 371.203125,
+          "y": 316.828125,
+          "width": 464,
+          "height": 64.375
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "long": true,
+      "boxes": {
+        "toast": {
+          "x": 182,
+          "y": 94.59375,
+          "width": 480,
+          "height": 64
+        },
+        "session": {
+          "x": 0,
+          "y": 0,
+          "width": 844,
+          "height": 82.59375
+        },
+        "panel": {
+          "x": 13.59375,
+          "y": 166.59375,
+          "width": 400,
+          "height": 62.046875
+        },
+        "access": {
+          "x": 13.59375,
+          "y": 259.25,
+          "width": 119.90625,
+          "height": 46.390625
+        },
+        "quests": {
+          "x": 370.3125,
+          "y": 240.640625,
+          "width": 457.6875,
+          "height": 65
+        },
+        "dock": {
+          "x": 371.203125,
+          "y": 316.828125,
+          "width": 464,
+          "height": 64.375
+        }
+      }
+    }
+  ]
+}

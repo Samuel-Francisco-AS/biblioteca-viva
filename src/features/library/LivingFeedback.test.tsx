@@ -98,3 +98,45 @@ it("keeps contextual and accessible star-book actions in sync without toggling o
   view.unmount();
   session.dispose();
 });
+
+it("reserves the real notification height after text wraps and releases the lane and observer when the toast expires", async () => {
+  vi.useFakeTimers();
+  let resize: (() => void) | undefined;
+  const disconnect = vi.fn();
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      constructor(callback: () => void) {
+        resize = callback;
+      }
+      observe() {}
+      disconnect = disconnect;
+    },
+  );
+  const session = new LivingSession();
+  const view = render(
+    <section className="library-page">
+      <LivingFeedback session={session} />
+    </section>,
+  );
+  try {
+    await act(() => session.actPrimary("living:lamp"));
+    const feedback = screen.getByTestId("living-feedback");
+    const page = view.container.querySelector<HTMLElement>(".library-page")!;
+    const rect = vi
+      .spyOn(feedback, "getBoundingClientRect")
+      .mockReturnValue(new DOMRect(0, 0, 358, 72));
+    resize?.();
+    expect(page.style.getPropertyValue("--canvas-notice-height")).toBe("72px");
+    rect.mockReturnValue(new DOMRect(0, 0, 600, 40));
+    resize?.();
+    expect(page.style.getPropertyValue("--canvas-notice-height")).toBe("40px");
+    await act(() => vi.advanceTimersByTime(4000));
+    expect(page.style.getPropertyValue("--canvas-notice-height")).toBe("");
+    expect(disconnect).toHaveBeenCalledOnce();
+  } finally {
+    view.unmount();
+    session.dispose();
+    vi.unstubAllGlobals();
+  }
+});

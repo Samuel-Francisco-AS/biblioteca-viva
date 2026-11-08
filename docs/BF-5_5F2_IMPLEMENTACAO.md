@@ -1,3 +1,5 @@
+> **Aceite posterior — 08/11/2026:** proprietário informou PASS funcional no Moto G06 para leitura física, estudo/assentos, trabalho/treino/entretenimento, interrupções/continuidade e fluidez/mundo. A missão [BF-5.5G](BF-5_5G_REFINAMENTO.md) foi autorizada em seguida para refinar animação, navegação e HUD. PR #41 continua draft/sem merge. As indicações de aceite/G pendentes no corpo abaixo registram a entrega original F2; não anulam esse aceite dirigido nem concluem BF-5.5.
+
 # BF-5.5F2 — Interações físicas e atividades reais
 
 Candidata de implementação sobre `main` integrada `5b4be9a2495d74797dabe519242492f2d8562e8f`, em `feat/bf-5-5f2-interacoes-fisicas`. Preparação: fetch de `origin/main`, fast-forward local, HEAD conferido e worktree limpa antes de criar a branch. Uma PR draft, sem merge; commits com `[skip ci]`. **BF-5.5 não concluída. BF-5.5G não iniciada.**

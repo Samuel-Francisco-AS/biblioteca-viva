@@ -35,7 +35,8 @@ export function createInhabitantAnimator(
     if (clip) {
       // F2 authored a demonstration yaw in Facing. Navigation owns world facing.
       const bodyClip =
-        externalPosition && (name === "walk" || name === "carry_walk")
+        externalPosition &&
+        (name === "walk" || name === "carry_walk" || name === "turn")
           ? clip.clone()
           : clip;
       if (bodyClip !== clip)

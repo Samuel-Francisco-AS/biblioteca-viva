@@ -1,0 +1,259 @@
+{
+  "generatedAt": "2026-11-08T14:24:00.917919+00:00",
+  "base": "d8b2c4eb151f8fe2643cd3e3e0a3ceaf534e53ea",
+  "branch": "feat/bf-5-5g-refinamento-consolidacao",
+  "apk": "android/app/build/outputs/apk/debug/Biblioteca-Viva-BF-5.5G-debug.apk",
+  "bytes": 11641875,
+  "sha256": "f8dc746d6cddd027f0ef290caff02cd34f27e92df188cde3dc391f7487c42fdc",
+  "sourceFilesFingerprint": "4d7a45b9e59e0b40b72c6f9f201b98491154347ad9102c3d80513fb1787629c6",
+  "sourceFileCount": 455,
+  "allRuntimeDistFilesMatchApk": true,
+  "excludedBuildMetadata": [
+    ".vite/manifest.json"
+  ],
+  "distRuntimeFileCount": 48,
+  "assets": [
+    {
+      "file": "assets/AnnotationActions-Du1ccJMD.js",
+      "bytes": 4485,
+      "sha256": "1417aaa6eb57b269ab08e2527f83967daeab1e5ee15ddb7669e89a18918b5b86"
+    },
+    {
+      "file": "assets/ArchivePage-BhahwpFq.js",
+      "bytes": 10013,
+      "sha256": "618124b30fa77ba206d93866ff4edf73c68ea6cc753d857c60cbd9746dfcb540"
+    },
+    {
+      "file": "assets/ArtifactGlyph-B0GBLBtd.js",
+      "bytes": 853,
+      "sha256": "15537cb0fe87e1f1b95f2f558434756f3ee318c6bd8b221d6a175b68808d0eb7"
+    },
+    {
+      "file": "assets/BVPicker-BLqcz1sT.js",
+      "bytes": 7174,
+      "sha256": "2a0c723552f2251ee8f467156548557d74d54c1574b42c3270ba9354194415c4"
+    },
+    {
+      "file": "assets/BVPicker-mP1gmq5R.css",
+      "bytes": 2692,
+      "sha256": "15b4a1ca909f49dfe5dabe8f644c28e63c0590b28604ba6e1d03332dc3df6b80"
+    },
+    {
+      "file": "assets/CollectionPage-tC96PT25.js",
+      "bytes": 10021,
+      "sha256": "07dd805c9ee3d70f4b19d4ac9e0d68db42a5c005637d1c5809f54be27cafca4d"
+    },
+    {
+      "file": "assets/EditEntryPage-CuDBUWtQ.js",
+      "bytes": 3627,
+      "sha256": "cf270aa5cc63630e54b1fe6112f699b44f2636d95c069c4d269e8f96ed7068df"
+    },
+    {
+      "file": "assets/EntryDetailPage-DcaORXvY.css",
+      "bytes": 36203,
+      "sha256": "92fe144563ace43d338f98dd7f096497ee12cbd52e0bd3d9eeddff6e684abe07"
+    },
+    {
+      "file": "assets/EntryDetailPage-Du23jddR.js",
+      "bytes": 127377,
+      "sha256": "7d66bc8e4407d7ae64e137abf1cb3c6b1d158f720bdd279c959e45b6d57a5c99"
+    },
+    {
+      "file": "assets/EntryEditorPages-CFAkg-Kk.js",
+      "bytes": 24984,
+      "sha256": "49dbfbe96a7946734044a6321bb126ee17302e0430796ae53b786f91dae7f6c7"
+    },
+    {
+      "file": "assets/NewEntryPage-beoiBctg.js",
+      "bytes": 4832,
+      "sha256": "75a162555cf4693ae1d99c4c216cd3439487f12b6a18cd7399344d29ee4b2842"
+    },
+    {
+      "file": "assets/RealmIntro-DDmz6DEY.js",
+      "bytes": 2338,
+      "sha256": "d886b241bd47790a21fe60565819807c78e2558ef83c64f694c4c75a3d0e787d"
+    },
+    {
+      "file": "assets/SettingsPage-BPTh4eQR.js",
+      "bytes": 20123,
+      "sha256": "5ea330a463c50a6f28139151ceb309718260b032eb913b1ba894fd9bf6e7270a"
+    },
+    {
+      "file": "assets/StatisticsPage-sCYw5Io6.js",
+      "bytes": 11855,
+      "sha256": "be8626eb4725429ab98d21fbadb33f0ac3f92a60f8dba23824234f85397e6f56"
+    },
+    {
+      "file": "assets/ThreeWorldRuntime-beaQCWCb.js",
+      "bytes": 861399,
+      "sha256": "83b6610d8093b47dd94605a387b1d6e004e4a531d38c5b650d98bd03d139b5e5"
+    },
+    {
+      "file": "assets/androidBackupDocumentPlugin-D1KkIVqf.js",
+      "bytes": 138,
+      "sha256": "ccdf911b9e1c0c0c61546dd5096e1472a8fe556ede7b6f97e6ce359e0b3a81c0"
+    },
+    {
+      "file": "assets/aryn-Co7dN7VL.glb",
+      "bytes": 3649176,
+      "sha256": "4ae06a99689484cc1a633b57c69a01db72a34c2086f548f968bb1e41a00f7b43"
+    },
+    {
+      "file": "assets/bookPresentation-Du5Ruowv.js",
+      "bytes": 796,
+      "sha256": "d0b8f3a6a19efcc3218423d2fe37e8c228636693e998a9e57b3da326a151cf27"
+    },
+    {
+      "file": "assets/dist-Cnp6P8yH.js",
+      "bytes": 7756,
+      "sha256": "0f6bb3f95952d298e307c5c8904cb90844ce19a7c21943f35f7ee8dbfc6cba9a"
+    },
+    {
+      "file": "assets/entertainment-Bf8ngaYl.css",
+      "bytes": 14348,
+      "sha256": "39772e01e74e5616fae8498cf05dad6176072976bce2dcf3370d68691f1b6803"
+    },
+    {
+      "file": "assets/esm-DqX20w7L.js",
+      "bytes": 345,
+      "sha256": "8031446b743c44f72d928325f74b397bef3d92b4f45ae12f20a170bfa2802390"
+    },
+    {
+      "file": "assets/esm-DzPM45RH.js",
+      "bytes": 1332,
+      "sha256": "b2eccfdcd3857f212a33178673adfcf053fcfbdd0a4a489ac8757312b3ae95bc"
+    },
+    {
+      "file": "assets/index-Dow20Hn4.css",
+      "bytes": 141453,
+      "sha256": "61201bdeda20db3b3c898ca48e4af8bf296d16caa9a9656429b3729cee71610e"
+    },
+    {
+      "file": "assets/index-jdq_cfvn.js",
+      "bytes": 692048,
+      "sha256": "0be8df10a6bca5f56616fb78c24f6f27acac1f53ff7a3abca12500fa18974b14"
+    },
+    {
+      "file": "assets/lua-RiiO5Wmt.glb",
+      "bytes": 3082276,
+      "sha256": "7e1bed7352e55ba8fbd40914295207b22350d6c3933d0b92cdcb26a449c3a4c7"
+    },
+    {
+      "file": "assets/navigationOrigin-4L8oPlKu.css",
+      "bytes": 11010,
+      "sha256": "720ed1d9ce200d6d270f274130672a4a95ffa16f397283e0d15487447791bd0f"
+    },
+    {
+      "file": "assets/navigationOrigin-607pum3P.js",
+      "bytes": 3965,
+      "sha256": "851b080ff237a2107435535a0655169ff265cf5e2043163d2c2161c4848d565a"
+    },
+    {
+      "file": "assets/preload-helper-Czpn1I53.js",
+      "bytes": 1196,
+      "sha256": "aba87f2a53e45ecdc9113fc30387d16e449d1676428cf5f82dd624c1df97d152"
+    },
+    {
+      "file": "assets/samael-qNiDDB3i.glb",
+      "bytes": 3034128,
+      "sha256": "839036cd5e54f42f0902291e468e0b4bc755fb2cf1c6e8491e0f899d93e9aa6f"
+    },
+    {
+      "file": "assets/useCivilToday-DqJW4TMi.js",
+      "bytes": 599,
+      "sha256": "c0a659e5e7009b3c4cc1fe5c7c9b91b6434379ad19957b845f35bd7a9bb457c4"
+    },
+    {
+      "file": "assets/web-BdIekyOK.js",
+      "bytes": 8492,
+      "sha256": "c54681bec3ad46877e6ccbb1b786fab928dc1690dd3b487d7fa257b4f1f01656"
+    },
+    {
+      "file": "assets/web-DAzmpyAc.js",
+      "bytes": 364,
+      "sha256": "87596af535078c1113d05a7d2041eb85cb29c9d17ad4fd98e64a0ea6bd9ad3fe"
+    },
+    {
+      "file": "assets/web-DF9anjsZ.js",
+      "bytes": 843,
+      "sha256": "3ba79ceb5fcd90fe96400a4d2e3aec38031e204ea084f1f342c40ec8aa57b3c1"
+    },
+    {
+      "file": "assets/ytha-C0l5DyIH.glb",
+      "bytes": 4253152,
+      "sha256": "bfbe41d82f75a821142e91a2f5263c13cae994a49edeb6b6c85b2ba3686c9653"
+    },
+    {
+      "file": "audio/book-completed.wav",
+      "bytes": 36206,
+      "sha256": "fd3c7864b1db510af84238a5d71e414197089e351fc421dcef4a4729f0d890ca"
+    },
+    {
+      "file": "audio/ui-page.wav",
+      "bytes": 6218,
+      "sha256": "60ec8e01eebb4a4ee41f5af6166fdf373f199fee25826159d8eed417e086e063"
+    },
+    {
+      "file": "illustrations/atlas-classico/feminino-frontal.webp",
+      "bytes": 327768,
+      "sha256": "ddc39381ef3f28f082e785e973bd117134beab3e346133ca2103cdfcdb29fbbe"
+    },
+    {
+      "file": "illustrations/atlas-classico/feminino-movimento.webp",
+      "bytes": 340720,
+      "sha256": "d3fc504e1b63ee99128c859cedcb63b7a2b4c63fa3ba39a5dae6f478f59b3a71"
+    },
+    {
+      "file": "illustrations/atlas-classico/feminino-tres-quartos.webp",
+      "bytes": 287124,
+      "sha256": "fdee735a75e5eee70d646b1ddc125c493e50bc52259bd2e2bff2c7e1e72271f0"
+    },
+    {
+      "file": "illustrations/atlas-classico/masculino-frontal.webp",
+      "bytes": 333430,
+      "sha256": "36f7cd006b6b68cca111ac1beb37d716002146839f2bd701139b150bba0610f9"
+    },
+    {
+      "file": "illustrations/atlas-classico/masculino-movimento.webp",
+      "bytes": 387228,
+      "sha256": "637f2bbb8302b149502f6ef419dbae1a944429f9b223eb44e49c2fa031b1c429"
+    },
+    {
+      "file": "illustrations/atlas-classico/masculino-tres-quartos.webp",
+      "bytes": 322682,
+      "sha256": "c5429f2d80f27a05923f40a27068880b79b7af3b399b560e2b0382b3fabf746b"
+    },
+    {
+      "file": "illustrations/corpo-em-movimento.webp",
+      "bytes": 348602,
+      "sha256": "f56467a0f8228dd5b1e5702c7befa35c0615a1aa643a015a14b3b56f6b844c12"
+    },
+    {
+      "file": "index.html",
+      "bytes": 2948,
+      "sha256": "9bae52b7a6fb18d5ca2e012efd21efc0407843a2f62ac40e7ca65cbc46d949de"
+    },
+    {
+      "file": "ornaments/astral-veil.svg",
+      "bytes": 1043,
+      "sha256": "d969d02f4ae56b6da6e2880f9dcc757cf375f7d486d2c69978d889a308f5d654"
+    },
+    {
+      "file": "ornaments/folio-corners.svg",
+      "bytes": 1161,
+      "sha256": "6cfc8f286874c6715b0e6b0f7aa2a57fcbb835c6d4e53f1dc0ed7915cf975db7"
+    },
+    {
+      "file": "ornaments/illuminated-spine.svg",
+      "bytes": 547,
+      "sha256": "43bf6818373bbb90141d8f556ba8e8b23abb5187e39ab674643cf9b5510b6e25"
+    },
+    {
+      "file": "ornaments/ritual-rule.svg",
+      "bytes": 526,
+      "sha256": "3bce84244b963981887b02cc74cd609c19ab68f46554f8e43304f9346ede88e5"
+    }
+  ],
+  "physicalTest": "not performed; owner acceptance pending",
+  "versionChanged": false
+}

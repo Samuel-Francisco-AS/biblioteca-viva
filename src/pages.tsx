@@ -1,5 +1,5 @@
 import { equalSnapshot } from "./features/library/snapshotEquality";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { projectLivingScrolls } from "./application/livingScrolls";
@@ -22,6 +22,7 @@ import type {
 } from "./features/library/worldRuntime";
 import { isDiagnosticsEnabled } from "./app/diagnosticsAvailability";
 import { completeStartupExperience } from "./startupExperience";
+import { CanvasWelcome } from "./features/library/CanvasWelcome";
 
 const diagnosticsBuildEnabled =
   import.meta.env.VITE_ENABLE_DIAGNOSTICS === "true";
@@ -159,6 +160,7 @@ function LibraryPageContent({
   const [worldStatusState, setWorldStatusState] =
     useState<ApplicationBound<WorldHostStatus>>();
   const [toolsOpen, setToolsOpen] = useState(false);
+  const pageRef = useRef<HTMLElement>(null);
 
   // Do not let a previous application instance lend its data, error, catalog
   // or selected entry to the next one during the render before its effect runs.
@@ -187,6 +189,23 @@ function LibraryPageContent({
     application && worldStatusState?.application === application
       ? worldStatusState.value
       : "initializing";
+
+  useEffect(() => {
+    const page = pageRef.current;
+    if (!active || !page || typeof ResizeObserver === "undefined") return;
+    const tools = [
+      ...page.querySelectorAll<HTMLElement>(".rpg-tools, .canvas-access"),
+    ];
+    const resize = () =>
+      page.style.setProperty(
+        "--canvas-tools-height",
+        `${Math.max(0, ...tools.map((tool) => tool.getBoundingClientRect().height))}px`,
+      );
+    resize();
+    const observer = new ResizeObserver(resize);
+    tools.forEach((tool) => observer.observe(tool));
+    return () => observer.disconnect();
+  }, [active, worldStatus]);
 
   function handleWorldSelection(nextSelection: WorldSelection): void {
     if (!application) return;
@@ -377,20 +396,15 @@ function LibraryPageContent({
   return (
     <section
       className="library-page"
+      ref={pageRef}
       aria-labelledby="library-title"
       data-tools-open={toolsOpen || worldStatus === "failed"}
     >
       <div className="library-scene-vignette" aria-hidden="true" />
-      <div className="exploration-header">
-        <span className="exploration-header__eyebrow">
-          <span className="exploration-header__star" aria-hidden="true">
-            ✦
-          </span>
-          MUNDO VIVO
-        </span>
-        <h2 id="library-title">Biblioteca Viva</h2>
-        <p>O santuário das histórias</p>
-      </div>
+      <h2 id="library-title" className="visually-hidden">
+        Biblioteca Viva
+      </h2>
+      {active && worldStatus === "ready" && <CanvasWelcome />}
       {worldStatus !== "failed" && (
         <button
           aria-controls="library-access-panels"
@@ -400,37 +414,14 @@ function LibraryPageContent({
               ? "Recolher ferramentas de exploração"
               : "Abrir ferramentas de exploração acessível"
           }
-          className="exploration-compass"
+          className="canvas-access"
           onClick={() => setToolsOpen((open) => !open)}
           type="button"
         >
-          <svg aria-hidden="true" fill="none" viewBox="0 0 32 32">
-            <circle
-              cx="16"
-              cy="16"
-              r="11.5"
-              stroke="currentColor"
-              strokeWidth="1.2"
-            />
-            <path
-              d="m19.5 12.5-3 7-4-4 7-3Z"
-              fill="currentColor"
-              opacity=".9"
-            />
-            <path
-              d="M16 2v4m0 20v4M2 16h4m20 0h4"
-              stroke="currentColor"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-            />
-          </svg>
-          <span>{toolsOpen ? "Fechar painel" : "Explorar por lista"}</span>
+          <span aria-hidden="true">☷</span>
+          <span>{toolsOpen ? "Fechar painel" : "Acervo e habitantes"}</span>
         </button>
       )}
-      <div className="exploration-lore" aria-hidden="true">
-        <span className="exploration-lore__line" />
-        <span>TOQUE PARA DESCOBRIR</span>
-      </div>
       <div className="library-access-panels" id="library-access-panels">
         {diagnosticsActive ? (
           <Suspense

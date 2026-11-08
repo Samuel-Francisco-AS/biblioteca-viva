@@ -1,8 +1,18 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App } from "./App";
+
+beforeEach(() => {
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      observe() {}
+      disconnect() {}
+    },
+  );
+});
 
 vi.mock("@capacitor/core", () => ({
   Capacitor: { isNativePlatform: () => false },
@@ -160,4 +170,50 @@ it("cards never show pending pressure, acknowledge confirmed clicks and keep key
     }),
   );
   expect(card).not.toHaveAttribute("data-tap-confirmed");
+});
+
+it("reserves the measured banner and dock layout without counting the folio's temporary dock translation", () => {
+  let resize: (() => void) | undefined;
+  const disconnect = vi.fn();
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      readonly callback: () => void;
+      isShell = false;
+      constructor(callback: () => void) {
+        this.callback = callback;
+      }
+      observe(element: Element) {
+        if (element.classList.contains("session-strip")) {
+          resize = this.callback;
+          this.isShell = true;
+        }
+      }
+      disconnect() {
+        if (this.isShell) disconnect();
+      }
+    },
+  );
+  const view = render(
+    <MemoryRouter>
+      <App />
+    </MemoryRouter>,
+  );
+  const strip = view.container.querySelector<HTMLElement>(".session-strip")!;
+  const dock = view.container.querySelector<HTMLElement>(".primary-dock")!;
+  const shell = view.container.querySelector<HTMLElement>(".app-shell")!;
+  vi.spyOn(strip, "getBoundingClientRect").mockReturnValue(
+    new DOMRect(0, 0, 390, 72),
+  );
+  // A focused folio translates the dock below the viewport, but its layout
+  // still occupies 90 px plus the normal 8 px bottom clearance on return.
+  vi.spyOn(dock, "getBoundingClientRect").mockReturnValue(
+    new DOMRect(0, 900, 390, 90),
+  );
+  dock.style.bottom = "8px";
+  resize?.();
+  expect(shell.style.getPropertyValue("--canvas-session-height")).toBe("72px");
+  expect(shell.style.getPropertyValue("--canvas-dock-height")).toBe("98px");
+  view.unmount();
+  expect(disconnect).toHaveBeenCalledOnce();
 });

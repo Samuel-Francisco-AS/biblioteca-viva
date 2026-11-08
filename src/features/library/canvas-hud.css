@@ -1,0 +1,203 @@
+/* BF-5.5G: top announcements, bottom actions, full-size resident Canvas. */
+.app-shell {
+  --canvas-tools-gap: 1.7rem;
+  --canvas-top: calc(
+    env(safe-area-inset-top, 0px) + var(--canvas-session-height, 0px) + 0.75rem
+  );
+}
+.library-page {
+  --dock-height: var(--canvas-dock-height, 6.3rem);
+  --canvas-tools-bottom: calc(
+    var(--dock-height) + var(--canvas-tools-gap) +
+      var(--canvas-tools-height, 8rem) + 0.75rem + env(safe-area-inset-bottom)
+  );
+}
+[data-route="library"] .session-strip {
+  position: fixed;
+  z-index: 20;
+  top: env(safe-area-inset-top, 0px);
+  left: env(safe-area-inset-left, 0px);
+  right: env(safe-area-inset-right, 0px);
+}
+[data-route="library"] .active-session {
+  background: #142131;
+  color: #f5e8dc;
+  border-bottom-color: #d2b7bd83;
+}
+[data-route="library"] .active-session .text-link {
+  color: #f3d2a0;
+}
+.library-page .exploration-header {
+  top: var(--canvas-top);
+  width: auto;
+  max-width: calc(100vw - 2rem);
+  transition: opacity 220ms ease-out;
+}
+.library-page .exploration-header__title {
+  color: #fff0dc;
+  font: 400 clamp(1.28rem, 4vw, 2rem)/1.05 var(--arc-serif);
+  margin: 0.3rem 0 0.1rem;
+  letter-spacing: 0;
+}
+.library-page .exploration-header[data-phase="fading"],
+.library-page:has(.living-world-feedback) .exploration-header,
+.library-page:has(.rpg-dialogue, .rpg-journal) .exploration-header,
+.library-page[data-tools-open="true"] .exploration-header {
+  opacity: 0;
+}
+.app-shell .library-page .living-world-feedback {
+  top: var(--canvas-top);
+  bottom: auto;
+  left: max(1rem, env(safe-area-inset-left));
+  right: max(1rem, env(safe-area-inset-right));
+  width: min(
+    30rem,
+    calc(100vw - 2rem - env(safe-area-inset-left) - env(safe-area-inset-right))
+  );
+  max-height: min(25dvh, 9rem);
+  overflow: auto;
+  pointer-events: auto;
+  z-index: 46;
+}
+.library-page .canvas-access {
+  position: fixed;
+  z-index: 14;
+  left: max(0.85rem, env(safe-area-inset-left));
+  bottom: calc(var(--dock-height) + 1.7rem + env(safe-area-inset-bottom));
+  min-height: 2.9rem;
+  max-width: min(38vw, 12rem);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d2b7bd83;
+  border-radius: 0.65rem 1.3rem 0.65rem 1.3rem;
+  background: #101d30ed;
+  color: #f5e8dc;
+  font-size: 0.75rem;
+  line-height: 1.25;
+}
+.library-page .canvas-access[aria-expanded="true"] {
+  border-color: #ecc9ff;
+}
+.app-shell .library-page .rpg-tools {
+  max-width: calc(
+    100vw - min(38vw, 12rem) - 3rem - env(safe-area-inset-left) -
+      env(safe-area-inset-right)
+  );
+}
+.app-shell .library-page .rpg-tools button {
+  max-width: 100%;
+}
+.library-page:has(.rpg-dialogue, .rpg-journal) .canvas-access {
+  visibility: hidden;
+}
+.app-shell .library-page[data-tools-open="true"] .library-access-panels {
+  top: var(--canvas-top);
+  bottom: var(--canvas-tools-bottom);
+  z-index: 13;
+}
+/* Selection lives above the tools; tall content scrolls instead of covering them. */
+.app-shell .library-page :is(.living-context, .reading-area-selection) {
+  bottom: var(--canvas-tools-bottom);
+  max-height: max(
+    4rem,
+    calc(100dvh - var(--canvas-top) - var(--canvas-tools-bottom) - 1rem)
+  );
+  overflow: auto;
+}
+.app-shell .library-page[data-tools-open="true"] .living-context {
+  max-height: none;
+}
+.app-shell
+  .library-page[data-tools-open="true"]:has(.living-world-feedback)
+  .library-access-panels {
+  top: calc(
+    var(--canvas-top) + var(--canvas-notice-height, min(25dvh, 9rem)) + 0.5rem
+  );
+}
+.app-shell .library-page :is(.rpg-dialogue, .rpg-journal) {
+  max-height: calc(
+    100dvh - var(--canvas-top) - var(--dock-height) - 2rem -
+      env(safe-area-inset-bottom)
+  );
+}
+/* A notification takes its own top lane even above a tall narrative panel. */
+.app-shell
+  .library-page:has(.living-world-feedback)
+  :is(.rpg-dialogue, .rpg-journal) {
+  max-height: calc(
+    75dvh - var(--canvas-top) - var(--dock-height) - 2rem -
+      env(safe-area-inset-bottom)
+  );
+}
+.primary-dock__link[data-pending="true"] .primary-dock__medallion {
+  color: #fff0dc;
+  background: #a978bd52;
+  box-shadow:
+    0 0 0 2px #e4c5ed,
+    0 0 18px #b58ed466;
+}
+.primary-dock__link:active .primary-dock__medallion {
+  transform: scale(0.94);
+}
+.primary-dock__medallion {
+  transition:
+    background-color 100ms ease-out,
+    box-shadow 100ms ease-out,
+    transform 100ms ease-out;
+}
+.library-residence:not([hidden]) .library-scene-vignette {
+  animation: canvas-arrive 150ms ease-out;
+}
+@keyframes canvas-arrive {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (orientation: landscape) and (max-height: 550px) {
+  .app-shell {
+    --canvas-tools-gap: 0.7rem;
+  }
+  .app-shell .library-page .living-world-feedback {
+    max-height: 4rem;
+  }
+  .app-shell .library-page[data-tools-open="true"] .library-access-panels {
+    bottom: var(--canvas-tools-bottom);
+  }
+  .app-shell
+    .library-page[data-tools-open="true"]:has(.living-world-feedback)
+    .library-access-panels {
+    top: calc(var(--canvas-top) + var(--canvas-notice-height, 4rem) + 0.5rem);
+  }
+  .library-page .canvas-access {
+    bottom: calc(var(--dock-height) + 0.7rem + env(safe-area-inset-bottom));
+  }
+  .library-page .exploration-header p {
+    display: block;
+  }
+  .app-shell .library-page :is(.living-context, .reading-area-selection) {
+    bottom: var(--canvas-tools-bottom);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .library-page .exploration-header,
+  .primary-dock__medallion {
+    transition: none;
+  }
+  .library-residence:not([hidden]) .library-scene-vignette {
+    animation: none;
+  }
+}
+[data-reduced-motion="true"] .exploration-header,
+[data-reduced-motion="true"] .primary-dock__medallion {
+  transition: none;
+}
+[data-reduced-motion="true"]
+  .library-residence:not([hidden])
+  .library-scene-vignette {
+  animation: none;
+}

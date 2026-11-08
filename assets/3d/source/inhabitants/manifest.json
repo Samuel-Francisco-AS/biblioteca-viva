@@ -1,7 +1,7 @@
 {
   "samael": {
     "file": "src/features/library/three/assets/samael.glb",
-    "sha256": "030e59f9385ba08a48d03631d4141ed2a5ab415fa5f12b104ad59beb40c81986",
+    "sha256": "839036cd5e54f42f0902291e468e0b4bc755fb2cf1c6e8491e0f899d93e9aa6f",
     "bytes": 3034128,
     "meshes": 11,
     "triangles": 25914,
@@ -11,7 +11,7 @@
   },
   "aryn": {
     "file": "src/features/library/three/assets/aryn.glb",
-    "sha256": "d2b9ffeaad6d4707ccda1573c538e23427b68f09747cb0e13b5f2271a391d906",
+    "sha256": "4ae06a99689484cc1a633b57c69a01db72a34c2086f548f968bb1e41a00f7b43",
     "bytes": 3649176,
     "meshes": 10,
     "triangles": 46858,
@@ -21,7 +21,7 @@
   },
   "ytha": {
     "file": "src/features/library/three/assets/ytha.glb",
-    "sha256": "c2eb4e4d98e3d505b50c0c3732a62e8fb1b375c4d23214f98b946bfb65f13ede",
+    "sha256": "bfbe41d82f75a821142e91a2f5263c13cae994a49edeb6b6c85b2ba3686c9653",
     "bytes": 4253152,
     "meshes": 12,
     "triangles": 61358,
@@ -31,7 +31,7 @@
   },
   "lua": {
     "file": "src/features/library/three/assets/lua.glb",
-    "sha256": "c8e4a4671ac36632b73810caf529134f84f93175d882df8ced8bc0299c3885ec",
+    "sha256": "7e1bed7352e55ba8fbd40914295207b22350d6c3933d0b92cdcb26a449c3a4c7",
     "bytes": 3082276,
     "meshes": 10,
     "triangles": 27866,

@@ -443,11 +443,10 @@ export function WorldHost({
           data-testid="three-world-host"
           ref={hostRef}
         />
-
-        {!performanceScenario && libraryWorldSnapshot && (
-          <LivingFeedback session={livingSession} />
-        )}
       </div>
+      {!performanceScenario && libraryWorldSnapshot && (
+        <LivingFeedback session={livingSession} />
+      )}
       {!performanceScenario && libraryWorldSnapshot && (
         <NarrativePanel
           session={narrativeSession}

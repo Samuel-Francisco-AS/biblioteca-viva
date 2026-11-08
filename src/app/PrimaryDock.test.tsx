@@ -1,0 +1,20 @@
+import { fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import { expect, it, vi } from "vitest";
+import { PrimaryDock } from "./PrimaryDock";
+import { preloadRoute } from "./routeModules";
+vi.mock("./routeModules", () => ({ preloadRoute: vi.fn() }));
+it("acknowledges navigation while pending, warms on contact and clears feedback permanently on commit and return", () => {
+  const view = render(<PrimaryDock pathname="/" />, { wrapper: MemoryRouter });
+  const link = screen.getByRole("link", { name: "Coleção" });
+  fireEvent.pointerDown(link);
+  expect(preloadRoute).toHaveBeenCalledWith("/colecao");
+  fireEvent.click(link);
+  expect(link).toHaveAttribute("data-pending", "true");
+  view.rerender(<PrimaryDock pathname="/colecao" />);
+  expect(link).toHaveAttribute("data-pending", "false");
+  view.rerender(<PrimaryDock pathname="/" />);
+  expect(link).toHaveAttribute("data-pending", "false");
+  fireEvent.click(link, { ctrlKey: true });
+  expect(link).toHaveAttribute("data-pending", "false");
+});

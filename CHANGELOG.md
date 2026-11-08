@@ -1,3 +1,5 @@
+> **BF-5.5G — candidata (08/11/2026):** Ytha com hover vertical e asas articuladas; Samael, Aryn e Lua com passadas autorais, apoio dos pés e ritmos próprios. Marca do Canvas por 3 s, notificações no topo acima do mundo, acesso à lista em “Acervo e habitantes” no HUD inferior e feedback visual do dock durante navegação. Banner de sessão e painéis recebem espaço próprio. Preservadas interações F2 aprovadas funcionalmente no Moto G06; refinamento artístico/físico G pendente, sem merge ou BF-5.5 concluída. [Relatório, evidências e roteiro](docs/BF-5_5G_REFINAMENTO.md).
+
 > **BF-5.5F2 — candidata (08/11/2026):** leitura com o volume canônico nas mãos e assento; estudo com consulta/escrita; ocupação exclusiva e saída física dos assentos; respostas próprias de ofício, mobilidade corporal e observação de entretenimento. Quatro rigs R5 ampliados e interrupções reconciliadas pelo coordenador existente. Sem migração, versão nova, merge ou fechamento da BF-5.5. [Evidências e limitações](docs/BF-5_5F2_IMPLEMENTACAO.md).
 
 ## 08/11/2026 — Fechamento da recuperação R1–R5 [PR #40]
