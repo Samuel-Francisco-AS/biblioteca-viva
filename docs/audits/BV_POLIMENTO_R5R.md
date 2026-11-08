@@ -1,5 +1,7 @@
 # R5R — Polimento de abertura das quests e legibilidade mágica
 
+> **Atualização física e reparo pontual — 08/11/2026:** proprietário reconheceu melhora perceptível da luminosidade/detalhes mágicos, mas quests ainda engasgam. Listra clara de borda reproduzida por CSS sem WebGL e retirada por remoção do outline de tap. Efeitos e navegação intactos; aprovação Moto G06 deste reparo pendente. [Complemento e evidências](#complemento--contorno-do-canvas).
+
 08/11/2026. Base limpa `c6ca58229c14a6a418e460ff54b6bf97d94fd471`, branch `feat/bv-r5-renascimento-artistico`, mesma PR draft #40. Missão expressa autoriza um único commit/publicação, sem merge ou nova fase. Dados fictícios nas evidências.
 
 O proprietário relata que a R5Q complementar melhorou o fluxo Canvas → quest, mas ainda há engasgada no Moto G06. Também considera fracos os efeitos dos quatro habitantes, pergaminho e livro em leitura. Aceites dirigidos anteriores de início noturno e fluidez geral preservados; arte e R5 continuam abertas. Esta rodada é **polimento perceptivo autorizado**, não declaração de que um bloqueio de JS/driver foi resolvido.
@@ -82,3 +84,46 @@ Formato/check, lint global e da fixture corrigida, tipos, build, áudio, perform
 2. Na câmera habitual e depois aproximada: observar Samael em idle por cerca de 16 s e em reação/magia; dourado junto ao livro de Aryn, asas/halo de Ytha e círculo/feitiços de Lua. Dia/noite conforme ocasião, sem alterar relógio ou dados pessoais. Procurar presença clara sem encobrir a silhueta.
 3. Observar um pergaminho existente em repouso/voo e o livro durante sessão de leitura ativa na mesa, depois pausada/encerrada. Verificar brilho, navegação, seleção e continuidade da sessão. Repetir trecho curto com movimento reduzido e após background/retorno.
 4. Informar separadamente suavidade da abertura, leitura dos seis efeitos e fluidez geral/noturna. **Candidata aguardando validação física e artística; R5 permanece aberta.**
+
+## Complemento — contorno do Canvas
+
+Base limpa `34f1c02470273abb52c8fb641934b06075895812`, mesma branch/PR draft #40. Feedback humano do proprietário: **melhoria perceptível de luminosidade e detalhes mágicos da R5R**; abertura de quests continua com engasgos; movimento brusco de câmera mostra brevemente uma listra branca/esverdeada à esquerda. Melhora artística parcial registrada, sem promover R5 ou considerar quests resolvidas.
+
+A única alteração de produto remove quatro linhas de styles-atelier.css: outline 2px solid #b5e9df, offset -2px, de `.three-world-canvas[data-gesture="tap"]`. Não se adicionou `outline:none`, nem regra global que apague foco. Optou-se por remover o feedback de moldura: o highlight real e os controles acessíveis já oferecem feedback de seleção. Nenhum JS de produção, material, rig, shader, luz, navegação, efeito mágico, narrativa ou diagnóstico foi alterado.
+
+### Causa e reprodução dirigida
+
+ThreeWorldInteraction inicia um contato único em tap. Só após ultrapassar o limiar de arrasto passa a pan; portanto um pan brusco também pode ter uma fase inicial tap. Nessa fase o seletor R5R desenhava a moldura **dentro** do Canvas fullscreen. A borda esquerda é parte dessa moldura, compatível com a listra/cor relatadas. Não é necessário um renderer ou driver WebGL para produzi-la.
+
+`scripts/check-canvas-outline.mjs` usa CSS produtivo completo, ThreeWorldInteraction e CameraNavigation reais, em Chromium 412×892/DPR1, com Canvas de fundo CSS e **sem criar renderer/contexto WebGL**. Controle positivo serve styles-atelier.css da base pelo Git; candidata serve arquivo atual. Um pointerdown real produz tap e registra estilos/captura; um único movimento de 200 px produz pan e altera a câmera. Depois verifica release, pinch de PointerEvents sintéticos, roda de zoom e foco com Tab. O contato inicial é mantido apenas no harness para observar a regra: não há sleep, novo timer, delay de produto, aumento de timeout ou prova de apresentação física do Moto G06.
+
+| Estado/observação        | Base                                      | Reparo                   |
+| ------------------------ | ----------------------------------------- | ------------------------ |
+| tap no Canvas fullscreen | solid, 2px, rgb(181,233,223), offset -2px | outline-style:none       |
+| pan e release            | sem contorno                              | sem contorno             |
+| Tab no botão acessível   | focus-visible, solid 2px                  | focus-visible, solid 2px |
+| Pan / pinch / zoom       | câmera e zoom mudam                       | câmera e zoom mudam      |
+| Renderer/WebGL           | não criado                                | não criado               |
+
+[Captura tap antes](evidence/bv-r5r/canvas-outline/before/tap.png) / [depois](evidence/bv-r5r/canvas-outline/after/tap.png), [foco antes](evidence/bv-r5r/canvas-outline/before/keyboard-focus.png) / [depois](evidence/bv-r5r/canvas-outline/after/keyboard-focus.png), [observações base](evidence/bv-r5r/canvas-outline/before/reproduction.json) / [candidata](evidence/bv-r5r/canvas-outline/after/reproduction.json). Reprodução confirma **a origem CSS da moldura e a janela tap→pan**; correspondência com a apresentação transitória exata do aparelho ainda requer o teste físico. Não se atribui a listra a WebGL nem se altera renderer.
+
+A primeira execução do harness esperava outline-width:0 em pan; Chromium retorna a largura default medium (3px) mesmo com outline-style:none. Corrigida a expectativa para o estilo que determina se existe traço, preservando os asserts de tap, gesto, câmera, pinch/zoom e foco. Controle positivo e candidata completos: PASS/exit 0, sem erros da página. Não houve alteração de testes existentes ou prazos.
+
+```bash
+node scripts/check-canvas-outline.mjs docs/audits/evidence/bv-r5r/canvas-outline/before before
+node scripts/check-canvas-outline.mjs docs/audits/evidence/bv-r5r/canvas-outline/after
+```
+
+### Gates e escopo preservado
+
+**69 testes dirigidos PASS/3 arquivos**: ThreeWorldInteraction (quatro GLBs e seleção exata), ThreeWorldRuntime (gestos/lifecycle/iluminação/diagnóstico) e NarrativePanel (foco/escolhas/Back/Escape). Formato, lint, tipos, build e Android debug registrados em [gates](evidence/bv-r5r/canvas-outline/local-gates.json). E2E global e ampla não foram repetidos; dívidas históricas permanecem abertas, sem CI global verde. Nenhuma nova investigação/otimização das quests nesta rodada. Código dos seis efeitos e diagnóstico opt-in R5Q comparado com os hashes da R5R; somente styles-atelier.css difere entre as fontes produtivas.
+
+Publicação com [skip ci], mesma PR draft #40, workflows inalterados e nenhum dispatch/rerun. Não houve merge, nova fase ou alteração de versão/persistência. O APK e sua CSS empacotada foram conferidos contra dist, incluindo ausência do seletor removido e manutenção das regras de focus-visible, em [apk.json](evidence/bv-r5r/canvas-outline/apk.json). Agente sem teste físico novo; aprovação depende do proprietário.
+
+Verificação local final deste complemento: formato/check, lint, tipos, build, Android sync/debug e diff PASS. Warnings existentes de chunks >500 kB e Gradle flatDir mantidos. O hash do bundle do runtime mudou pelo nome importado do entrypoint; substituindo somente esse nome de dependência, seus **842.516 bytes são idênticos** à R5R. As 88 fontes produtivas anteriores foram verificadas: apenas styles-atelier.css mudou. GLBs também idênticos no APK/base. Não houve mudança escondida no código dos efeitos ou navegação.
+
+APK de verificação: `android/app/build/outputs/apk/debug/Biblioteca-Viva-R5R-contorno-debug.apk`, **10,641,553 B**, SHA-256 `cb0fba8e15d06a55d27abbc8221069ddee32c88d7c99005c2100c92d3b415662`. ADB sem aparelhos, sem instalação/teste físico pelo agente. Candidata aguarda o Moto G06.
+
+### Teste Moto G06 deste reparo
+
+Instalar o APK de verificação preservando dados. Fazer pans bruscos em ambas as direções, iniciando perto da borda esquerda e do centro; a listra não deve aparecer. Conferir pinch/zoom e seleção/highlight, além de foco com teclado quando disponível. A melhora mágica deve permanecer; **engasgo das quests é pendência separada e não foi tratado aqui**. Se a listra persistir, registrar em qual gesto/posição ocorre para discriminar outras causas, sem presumir defeito de WebGL. R5 e aceite artístico final permanecem abertos.

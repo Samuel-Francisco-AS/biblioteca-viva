@@ -1979,10 +1979,6 @@
     transform: none;
   }
 }
-.three-world-canvas[data-gesture="tap"] {
-  outline: 2px solid #b5e9df;
-  outline-offset: -2px;
-}
 @media (prefers-reduced-motion: reduce) {
   .app-shell .rpg-dialogue-content {
     animation: none;

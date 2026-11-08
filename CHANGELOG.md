@@ -1,3 +1,9 @@
+## R5R — reparo pontual do contorno, 08/11/2026
+
+- Removido o outline de tela inteira no estado inicial de toque do Canvas, responsável pela borda clara antes de reconhecer um pan.
+- Foco por teclado, highlight, seleção, pan/pinch/zoom e diagnóstico mantidos. Efeitos mágicos R5R preservados após relato físico de melhora; engasgo das quests permanece pendente.
+- [Reprodução antes/depois e verificação](docs/audits/BV_POLIMENTO_R5R.md#complemento--contorno-do-canvas). Aprovação física do reparo pendente; sem merge ou R5 concluída.
+
 ## R5R — candidata de polimento, 08/11/2026
 
 - Quests montam frame, speaker e Adiar com opacidade integral; conteúdo entra suavemente em 120 ms, sem delay, mantendo foco, escolhas e Back/Escape. Contato no Canvas recebe feedback do gesto existente.
