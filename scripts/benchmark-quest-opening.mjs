@@ -8,6 +8,7 @@ if (!directory) throw new Error("Expected evidence directory");
 await mkdir(directory, { recursive: true });
 const root = process.env.BV_R5Q_ROOT;
 const gpu = process.env.BV_R5Q_WEBGL === "1";
+const questProbe = process.env.BV_R5Q_QUEST_PROBE === "1";
 const server = await createServer({
   root,
   cacheDir: root ? "/tmp/bv-r5q-base-vite" : "/tmp/bv-r5q-current-vite",
@@ -37,6 +38,8 @@ const server = await createServer({
  import {LivingSession} from '/src/features/library/livingObjects.ts';
  import {NightLightingSession} from '/src/features/library/nightLighting.ts';
  import '/src/styles.css';
+ import '/src/styles-legacy.css';
+ import '/src/styles-atelier.css';
  const q=globalThis.__q={trace:null,firstFrames:[],THREE,scheduled:null,timestamp:0};
  const mark=(stage,start)=>{if(q.trace){const v=q.trace.stages[stage]??{count:0,totalMs:0};v.count++;v.totalMs+=globalThis.performance.now()-start;q.trace.stages[stage]=v;}};
  const wrap=(object,name,stage)=>{const original=object[name];object[name]=function(...args){const t=globalThis.performance.now();try{return original.apply(this,args);}finally{mark(stage,t);}};};
@@ -54,7 +57,7 @@ const server = await createServer({
  const profiler=(_id,_phase,duration,_base,_start,commitTime)=>{if(q.trace){q.trace.commits.push({duration,commitTime,dialogue:!!globalThis.document.querySelector('.rpg-dialogue')});if(globalThis.document.querySelector('.rpg-dialogue')&&q.trace.domCommitAt===null)q.trace.domCommitAt=globalThis.performance.now();}};
  q.root=createRoot(globalThis.document.getElementById('root'));q.root.render(React.createElement(Profiler,{id:'world',onRender:profiler},React.createElement(WorldHost,{libraryWorldSnapshot:snapshot,runtimeFactory:factory})));
  q.step=()=>{q.timestamp+=16.667;const cb=q.scheduled;q.scheduled=null;cb?.(q.timestamp);};
- q.prepare=()=>{q.runtime.agency.update=()=>{};for(let i=0;i<400;i++)q.runtime.livingVisuals.update(1/60,false);q.step();for(const summary of globalThis.document.querySelectorAll('summary'))if(['Explorar · habitantes e objetos','Habitantes da Biblioteca'].includes(summary.textContent.trim()))summary.parentElement.open=true;const interaction=q.runtime.mountedWorld.getInteraction();wrap(interaction.raycaster,'intersectObjects','raycastCpu');wrap(interaction,'onSelectionChange','selectionPublishCpu');wrap(q.runtime,'applyNarrative','narrativeApplyCpu');wrap(q.runtime.agency,'interrupt','agencyInterruptCpu');wrap(q.runtime.agency,'setConversation','agencyConversationCpu');};
+ q.prepare=()=>{${questProbe ? "q.runtime.onDiagnosticsChange(()=>{});q.runtime.setQuestProbeEnabled?.(true);" : ""}q.runtime.agency.update=()=>{};for(let i=0;i<400;i++)q.runtime.livingVisuals.update(1/60,false);q.step();for(const summary of globalThis.document.querySelectorAll('summary'))if(['Explorar · habitantes e objetos','Habitantes da Biblioteca'].includes(summary.textContent.trim()))summary.parentElement.open=true;const interaction=q.runtime.mountedWorld.getInteraction();wrap(interaction.raycaster,'intersectObjects','raycastCpu');wrap(interaction,'onSelectionChange','selectionPublishCpu');wrap(q.runtime,'applyNarrative','narrativeApplyCpu');wrap(q.runtime.agency,'interrupt','agencyInterruptCpu');wrap(q.runtime.agency,'setConversation','agencyConversationCpu');};
  `;
       },
       configureServer(s) {
@@ -62,7 +65,7 @@ const server = await createServer({
           if (req.url !== "/__r5q") return next();
           res.setHeader("Content-Type", "text/html");
           res.end(
-            '<html><style>body{margin:0}.world-canvas-host{height:480px!important;width:800px!important}</style><body><div id="root" class="library-page"></div><script type="module" src="/__r5q-entry.js"></script></body></html>',
+            '<html><style>body{margin:0}.world-canvas-host{height:480px!important;width:800px!important}</style><body><div class="app-shell" data-route="library"><div id="root" class="library-page" data-tools-open="true"></div></div><script type="module" src="/__r5q-entry.js"></script></body></html>',
           );
         });
       },
@@ -106,13 +109,18 @@ try {
         );
         await page.evaluate(() => globalThis.__q.prepare());
         for (const kind of gpu
-          ? ["first", "repeat"]
-          : ["first", "repeat", "already-open"]) {
+          ? ["first", "repeat", "switch"]
+          : ["first", "repeat", "already-open", "switch"]) {
           await page.evaluate(
             ({ key, kind }) => {
               const q = globalThis.__q;
               q.trace = null;
-              if (kind !== "already-open") {
+              if (kind === "switch") {
+                const other = key === "lua" ? "aryn" : "lua";
+                q.runtime.selectObject("character:" + other);
+                q.session.talk(other);
+                q.step();
+              } else if (kind !== "already-open") {
                 q.session?.close();
                 q.runtime.selectObject(null);
               }
@@ -186,7 +194,9 @@ try {
               await new Promise((r) => globalThis.requestAnimationFrame(r));
               t.secondRafAt = globalThis.performance.now();
               const card = globalThis.document.querySelector(".rpg-dialogue");
+              const localQuest = q.runtime.getDiagnostics().questProbe;
               const out = {
+                localQuest,
                 hour,
                 key,
                 path,
@@ -200,6 +210,18 @@ try {
                   ? globalThis.getComputedStyle(card).opacity
                   : null,
                 programs: q.renderer.info.programs?.length ?? null,
+                visualStyle: card
+                  ? {
+                      animation:
+                        globalThis.getComputedStyle(card).animationName,
+                      duration:
+                        globalThis.getComputedStyle(card).animationDuration,
+                      backdropFilter:
+                        globalThis.getComputedStyle(card).backdropFilter,
+                      background:
+                        globalThis.getComputedStyle(card).backgroundImage,
+                    }
+                  : null,
               };
               q.trace = null;
               return out;
@@ -211,6 +233,18 @@ try {
             row.heading?.toLowerCase() !== key
           )
             throw new Error("Selection/card mismatch");
+          if (row.focus !== "H3")
+            throw new Error("Quest heading did not receive focus");
+          const observed = row.localQuest?.observations.at(-1);
+          if (
+            observed &&
+            (observed.inhabitant !== key ||
+              observed.source !==
+                (path === "canvas" ? "canvas" : "accessible") ||
+              observed.marks.reactCommit === undefined ||
+              observed.marks.submitEnd === undefined)
+          )
+            throw new Error("Incomplete local quest observation");
           results.push(row);
         }
       }

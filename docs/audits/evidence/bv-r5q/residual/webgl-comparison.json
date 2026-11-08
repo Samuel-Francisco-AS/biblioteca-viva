@@ -1,0 +1,137 @@
+{
+  "scope": "Single samples, CPU WebGL submission including possible driver waits. SwiftShader NOT Android GPU/display. No consistent renderer improvement claimed.",
+  "rows": [
+    {
+      "hour": 12,
+      "path": "canvas",
+      "kind": "first",
+      "beforeCpuSubmit": 469,
+      "afterCpuSubmit": 400,
+      "beforeHandler": 64,
+      "afterHandler": 55,
+      "beforePrograms": [21, 22],
+      "afterPrograms": [21, 22]
+    },
+    {
+      "hour": 12,
+      "path": "canvas",
+      "kind": "repeat",
+      "beforeCpuSubmit": 8,
+      "afterCpuSubmit": 17,
+      "beforeHandler": 45,
+      "afterHandler": 41,
+      "beforePrograms": [21, 22],
+      "afterPrograms": [21, 22]
+    },
+    {
+      "hour": 12,
+      "path": "canvas",
+      "kind": "switch",
+      "beforeCpuSubmit": 5,
+      "afterCpuSubmit": 9,
+      "beforeHandler": 29,
+      "afterHandler": 28,
+      "beforePrograms": [21, 22],
+      "afterPrograms": [21, 22]
+    },
+    {
+      "hour": 12,
+      "path": "react",
+      "kind": "first",
+      "beforeCpuSubmit": 6,
+      "afterCpuSubmit": 11,
+      "beforeHandler": 10,
+      "afterHandler": 8,
+      "beforePrograms": [21, 22],
+      "afterPrograms": [21, 22]
+    },
+    {
+      "hour": 12,
+      "path": "react",
+      "kind": "repeat",
+      "beforeCpuSubmit": 8,
+      "afterCpuSubmit": 8,
+      "beforeHandler": 3,
+      "afterHandler": 7,
+      "beforePrograms": [21, 22],
+      "afterPrograms": [21, 22]
+    },
+    {
+      "hour": 12,
+      "path": "react",
+      "kind": "switch",
+      "beforeCpuSubmit": 9,
+      "afterCpuSubmit": 5,
+      "beforeHandler": 5,
+      "afterHandler": 4,
+      "beforePrograms": [21, 22],
+      "afterPrograms": [21, 22]
+    },
+    {
+      "hour": 23,
+      "path": "canvas",
+      "kind": "first",
+      "beforeCpuSubmit": 36,
+      "afterCpuSubmit": 79,
+      "beforeHandler": 57,
+      "afterHandler": 63,
+      "beforePrograms": [21, 22],
+      "afterPrograms": [21, 22]
+    },
+    {
+      "hour": 23,
+      "path": "canvas",
+      "kind": "repeat",
+      "beforeCpuSubmit": 10,
+      "afterCpuSubmit": 30,
+      "beforeHandler": 39,
+      "afterHandler": 52,
+      "beforePrograms": [21, 22],
+      "afterPrograms": [21, 22]
+    },
+    {
+      "hour": 23,
+      "path": "canvas",
+      "kind": "switch",
+      "beforeCpuSubmit": 7,
+      "afterCpuSubmit": 2531,
+      "beforeHandler": 52,
+      "afterHandler": 64,
+      "beforePrograms": [21, 22],
+      "afterPrograms": [21, 22]
+    },
+    {
+      "hour": 23,
+      "path": "react",
+      "kind": "first",
+      "beforeCpuSubmit": 323,
+      "afterCpuSubmit": 124,
+      "beforeHandler": 28,
+      "afterHandler": 10,
+      "beforePrograms": [21, 22],
+      "afterPrograms": [21, 22]
+    },
+    {
+      "hour": 23,
+      "path": "react",
+      "kind": "repeat",
+      "beforeCpuSubmit": 11,
+      "afterCpuSubmit": 16,
+      "beforeHandler": 14,
+      "afterHandler": 6,
+      "beforePrograms": [21, 22],
+      "afterPrograms": [21, 22]
+    },
+    {
+      "hour": 23,
+      "path": "react",
+      "kind": "switch",
+      "beforeCpuSubmit": 2404,
+      "afterCpuSubmit": 6,
+      "beforeHandler": 24,
+      "afterHandler": 4,
+      "beforePrograms": [21, 22],
+      "afterPrograms": [21, 22]
+    }
+  ]
+}

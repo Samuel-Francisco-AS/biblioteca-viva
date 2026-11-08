@@ -1,4 +1,12 @@
+import { readFileSync } from "node:fs";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { disposeObjectTree } from "./referenceScene";
 import {
+  AnimationMixer,
+  Box3,
+  Box3Helper,
+  SkinnedMesh,
+  Vector3,
   BoxGeometry,
   Group,
   Mesh,
@@ -190,3 +198,70 @@ describe("R1: picking without scene-wide matrix forcing or duplicate rays", () =
     expect(selection).toHaveBeenCalledTimes(5);
   });
 });
+
+it.each(["samael", "aryn", "ytha", "lua"])(
+  "R5Q shares exact tap vertices with highlight and restores before publication: %s",
+  async (key) => {
+    const gltf = await new GLTFLoader().parseAsync(
+      new Uint8Array(
+        readFileSync(`src/features/library/three/assets/${key}.glb`),
+      ).buffer,
+      "",
+    );
+    const h = setup(),
+      actor = h.add(`character:${key}`);
+    actor.root.remove(actor.mesh);
+    actor.root.add(gltf.scene);
+    const skins: SkinnedMesh[] = [];
+    const isSkin = (node: Object3D): node is SkinnedMesh =>
+      node instanceof SkinnedMesh;
+    gltf.scene.traverse((node) => {
+      if (isSkin(node)) skins.push(node);
+    });
+    const mixer = new AnimationMixer(gltf.scene);
+    const { interaction, selection, tap } = h.mount();
+    selection.mockImplementation(() => {
+      expect(
+        skins.every((skin) => !Object.hasOwn(skin, "getVertexPosition")),
+      ).toBe(true);
+    });
+    const reader = vi.spyOn(Mesh.prototype, "getVertexPosition");
+    for (const clipName of ["idle", "walk", "magic"]) {
+      interaction.selectObject(null);
+      mixer.stopAllAction();
+      const clip = gltf.animations.find((c) => c.name === clipName)!;
+      mixer.clipAction(clip).play();
+      mixer.setTime(clip.duration * 0.31);
+      actor.root.updateMatrixWorld(true);
+      const expected = new Box3().setFromObject(actor.root, true);
+      const center = expected.getCenter(new Vector3());
+      h.camera.position.set(center.x, center.y, expected.max.z + 10);
+      h.camera.lookAt(center);
+      reader.mockClear();
+      tap();
+      expect(selection).toHaveBeenLastCalledWith({
+        id: `character:${key}`,
+        label: `character:${key}`,
+      });
+      const helper = h.scene.getObjectByName("f1-c-selection-highlight");
+      expect(helper).toBeInstanceOf(Box3Helper);
+      if (!(helper instanceof Box3Helper))
+        throw new Error("Missing exact highlight");
+      expect(helper.box).toEqual(expected);
+      // The base/morph reader runs once per vertex, not again for highlight.
+      expect(
+        reader.mock.instances.filter(
+          (instance) => instance instanceof SkinnedMesh,
+        ),
+      ).toHaveLength(
+        skins.reduce(
+          (total, skin) => total + skin.geometry.getAttribute("position").count,
+          0,
+        ),
+      );
+    }
+    mixer.stopAllAction();
+    mixer.uncacheRoot(gltf.scene);
+    disposals.push(() => disposeObjectTree(gltf.scene));
+  },
+);

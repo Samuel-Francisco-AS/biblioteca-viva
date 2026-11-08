@@ -3240,3 +3240,43 @@ it("R5Q first reduced-motion draw preserves the restored partial ritual and fall
   expect(night.capture()).toEqual(checkpoint);
   runtime.dispose();
 });
+
+it("R5Q quest diagnostics stop on unsubscribe and never join frames across pause", () => {
+  let time = 0;
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => new TestRenderer(),
+    fixtureLoader: new TestFixtureLoader(),
+    frameScheduler: { request: () => 1, cancel: () => {} },
+    now: () => time,
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  const unsubscribe = runtime.onDiagnosticsChange(() => {});
+  runtime.setQuestProbeEnabled(true);
+  runtime.observeQuest({ type: "begin", source: "accessible" });
+  time = 3;
+  runtime.observeQuest({
+    type: "mark",
+    stage: "talkStart",
+    inhabitant: "samael",
+  });
+  expect(
+    runtime.getDiagnostics().questProbe?.observations[0].marks.talkStart,
+  ).toBe(3);
+  runtime.pause();
+  runtime.resume();
+  runtime.observeQuest({
+    type: "mark",
+    stage: "reactCommit",
+    inhabitant: "samael",
+  });
+  expect(
+    runtime.getDiagnostics().questProbe?.observations[0].marks.reactCommit,
+  ).toBeUndefined();
+  unsubscribe();
+  expect(runtime.getDiagnostics().questProbe).toEqual({
+    enabled: false,
+    observations: [],
+  });
+  runtime.dispose();
+});

@@ -1,3 +1,5 @@
+> **R5Q residual — 08/11/2026:** proprietário testou `94bae8b` no Moto G06: **PASS início diretamente noturno; PASS fluidez geral; PARCIAL quests**, melhores mas ainda com engasgos. Complemento reaproveita os vértices exatos do toque também no highlight imediato; host Canvas P50 primeira 52→46 ms, troca 42→31 ms. Diagnóstico local opt-in limitado a 12 aberturas discrimina JS/DOM/foco/cena/submissão/CSS; não mede apresentação. Causa dominante residual Android e novo gate físico pendentes. Mesma PR draft #40, sem merge, R5/arte abertas. [Relatório e roteiro só de quests](audits/BV_SANEAMENTO_R5Q.md#complemento--engasgo-residual-das-quests). Notas abaixo preservam a cronologia.
+
 > **R5Q — inicialização e quests:** [diagnóstico, medições e candidata](audits/BV_SANEAMENTO_R5Q.md). R5P recebeu relato físico de melhora; R5Q corrige primeiro desenho noturno e CPU do toque, com gate físico pendente na mesma PR draft #40.
 
 > **R5P — prioridade fluidez:** [diagnóstico, A/B, candidata e limites](audits/BV_SANEAMENTO_PERFORMANCE_R5P.md). R5E recebeu relato físico de lag; arte suspensa e R5/R5E não aprovadas. Mesma PR draft #40, sem merge.

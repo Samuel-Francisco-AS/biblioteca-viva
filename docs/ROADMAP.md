@@ -1,3 +1,5 @@
+> **Próximo gate R5Q residual (08/11/2026):** comprovar apenas abertura/reabertura/troca de quests no Moto G06, usando diagnóstico local opt-in se o engasgo persistir. Início noturno e fluidez geral já receberam PASS físico dirigido; preservar esses mecanismos. R5/arte continuam abertas, sem merge ou fase nova. [Roteiro e limites](audits/BV_SANEAMENTO_R5Q.md#roteiro-físico-limitado-às-quests).
+
 > **Prioridade R5Q (08/11/2026):** verificar no Moto G06 atmosfera correta desde a abertura e seleção/quests sem travamentos, preservando a melhora relatada da R5P. Sem merge, R5 encerrada ou nova fase. [Candidata e roteiro](audits/BV_SANEAMENTO_R5Q.md).
 
 > **Prioridade vigente — R5P (07/11/2026):** comprovar fluidez diurna/noturna da candidata no Moto G06, comparando shader original/candidato pelo diagnóstico sem reconstrução. Só retomar avaliação artística de Samael/Aryn/Ytha/Lua após navegação satisfatória; R5/R5E e recuperação integral abertas. Sem merge ou próxima fase autorizados. [Candidata, limites e roteiro](audits/BV_SANEAMENTO_PERFORMANCE_R5P.md).

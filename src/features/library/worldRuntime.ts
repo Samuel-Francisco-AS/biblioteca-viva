@@ -30,6 +30,9 @@ export type WorldRuntimeState =
 export type WorldFixtureStatus = "idle" | "loading" | "ready" | "error";
 
 export interface WorldRuntimeDiagnostics {
+  readonly questProbe?: ReturnType<
+    import("./three/performanceProbe").PerformanceProbe["questSnapshot"]
+  >;
   readonly shaderPrograms?: number | null;
   readonly activePointLights?: number;
   readonly gpuTimer?: ReturnType<
@@ -82,6 +85,10 @@ export type WorldDiagnosticsListener = (
  * owner disposes it before mounting a replacement for that host.
  */
 export interface WorldRuntime {
+  setQuestProbeEnabled?(enabled: boolean): void;
+  observeQuest?(
+    event: import("./three/performanceProbe").QuestProbeEvent,
+  ): void;
   setLightingExperiment?(
     value: import("./three/lightingExperiment").LightingExperiment | null,
   ): void;

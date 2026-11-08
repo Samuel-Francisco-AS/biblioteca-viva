@@ -195,6 +195,27 @@ export function WorldHost({
     selectableObjectsChangeRef.current?.(objects);
   };
 
+  const talkTo = useCallback(
+    (key: Parameters<NarrativeSession["talk"]>[0]) => {
+      const runtime = runtimeRef.current;
+      runtime?.observeQuest?.({
+        type: "mark",
+        stage: "talkStart",
+        inhabitant: key,
+      });
+      try {
+        narrativeSession.talk(key);
+      } finally {
+        runtime?.observeQuest?.({
+          type: "mark",
+          stage: "talkEnd",
+          inhabitant: key,
+        });
+      }
+    },
+    [narrativeSession],
+  );
+
   const publishSelection = useCallback(
     (nextSelection: WorldSelection): void => {
       setSelection(nextSelection);
@@ -204,12 +225,12 @@ export function WorldHost({
       );
       if (!performanceScenario && libraryWorldSnapshot) {
         const inhabitant = INHABITANTS.find((a) => a.id === nextSelection?.id);
-        if (inhabitant) narrativeSession.talk(inhabitant.key);
+        if (inhabitant) talkTo(inhabitant.key);
         else if (nextSelection) narrativeSession.close();
       }
       selectionChangeRef.current?.(nextSelection);
     },
-    [narrativeSession, performanceScenario, libraryWorldSnapshot],
+    [narrativeSession, talkTo, performanceScenario, libraryWorldSnapshot],
   );
 
   const publishStatus = (nextStatus: WorldHostStatus): void => {
@@ -288,7 +309,7 @@ export function WorldHost({
           };
           unsubscribeInhabitantActivation = runtime.onInhabitantActivate?.(
             (key) => {
-              if (active) narrativeSession.talk(key);
+              if (active) talkTo(key);
             },
           );
           unsubscribeNarrative = narrativeSession.subscribe(applyNarrative);
@@ -353,6 +374,7 @@ export function WorldHost({
     inhabitantContinuity,
     nightLightingContinuity,
     publishSelection,
+    talkTo,
     performanceScenario,
     readingAreaBooks,
     libraryWorldSnapshot,
@@ -429,6 +451,7 @@ export function WorldHost({
       {!performanceScenario && libraryWorldSnapshot && (
         <NarrativePanel
           session={narrativeSession}
+          questProbe={viewRuntime ?? undefined}
           enabled={active}
           failed={status === "failed"}
         />
@@ -493,10 +516,18 @@ export function WorldHost({
                   type="button"
                   aria-pressed={selection?.id === inhabitant.id}
                   onClick={() => {
+                    runtimeRef.current?.observeQuest?.({
+                      type: "begin",
+                      source: "accessible",
+                    });
                     if (status === "ready")
                       runtimeRef.current?.selectObject(inhabitant.id);
                     else publishSelection(inhabitant);
-                    narrativeSession.talk(inhabitant.key);
+                    talkTo(inhabitant.key);
+                    runtimeRef.current?.observeQuest?.({
+                      type: "mark",
+                      stage: "handlerEnd",
+                    });
                   }}
                 >
                   {inhabitant.label}

@@ -72,7 +72,7 @@ import type {
   BookRecordFactory,
   RecordAssetFactory,
 } from "./recordAssetContract";
-import { PerformanceProbe } from "./performanceProbe";
+import { type QuestProbeEvent, PerformanceProbe } from "./performanceProbe";
 import { FrameMetricsWindow } from "./frameMetrics";
 import {
   CAMERA_REFERENCE_HALF_HEIGHT,
@@ -595,6 +595,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       lightingExperiment: this.lightingExperiment,
       frameIntervals: this.frameMetrics.distribution(),
       cpuMetrics: this.performanceProbe.snapshot(),
+      questProbe: this.performanceProbe.questSnapshot(),
       gpuTimer: this.gpuTimer?.snapshot(),
       longTasksSupported: this.performanceProbe.longTasksSupported,
       jsHeapUsedBytes: this.readJsHeap(),
@@ -871,6 +872,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       ]);
       this.refreshSelectableObjects();
       const interaction = new ThreeWorldInteraction({
+        probe: this.performanceProbe,
+        onPickStart: () =>
+          this.observeQuest({ type: "begin", source: "canvas" }),
         camera,
         canvas: renderer.domElement,
         catalog: this.selectableObjects,
@@ -982,6 +986,22 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.publishDiagnostics(true);
   }
 
+  setQuestProbeEnabled(enabled: boolean): void {
+    this.performanceProbe.setQuestEnabled(enabled);
+    this.publishDiagnostics(true);
+  }
+
+  observeQuest(event: QuestProbeEvent): void {
+    if (event.type === "begin")
+      this.performanceProbe.beginQuest(
+        event.source,
+        this.narrative?.talkingTo ?? null,
+        Boolean(this.narrative?.active),
+        this.mountedWorld?.renderer.info?.programs?.length ?? null,
+      );
+    else this.performanceProbe.markQuest(event.stage, event.inhabitant);
+  }
+
   resetPerformanceProbe(): void {
     this.gpuTimer?.dispose();
     this.gpuTimer = undefined;
@@ -1000,6 +1020,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.diagnosticsListeners.delete(listener);
       if (this.diagnosticsListeners.size === 0) {
         this.performanceProbe.stop();
+        this.performanceProbe.setQuestEnabled(false);
         this.gpuTimer?.dispose();
         this.gpuTimer = undefined;
         this.setLightingExperiment(null);
@@ -1126,8 +1147,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
       (this.narrative && snapshot.revision <= this.narrative.revision)
     )
       return;
+    this.performanceProbe.markQuest("narrativeStart");
     this.narrative = snapshot;
     this.applyNarrativeToAgency(snapshot);
+    this.performanceProbe.markQuest("narrativeEnd");
   }
 
   private applyNarrativeToAgency(snapshot: NarrativeSnapshot): void {
@@ -1283,6 +1306,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     }
 
     this.state = "disposed";
+    this.performanceProbe.setQuestEnabled(false);
     this.releaseMount();
     this.resetRuntimeData();
     this.failureListeners.clear();
@@ -1426,6 +1450,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const mountedWorld = this.mountedWorld;
     if (!mountedWorld) return;
     mountedWorld.settleFrame();
+    this.performanceProbe.markQuest("sceneStart");
     const cpuStart = this.performanceProbe.active ? this.now() : 0;
     let bookEnd: number;
     let agencyEnd: number;
@@ -1505,6 +1530,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.failRuntime();
       return;
     }
+    this.performanceProbe.markQuest("sceneEnd");
     if (this.performanceProbe.active) {
       const end = this.now();
       this.performanceProbe.record("updateCpu", end - cpuStart);
@@ -1564,6 +1590,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         }
       }
       try {
+        this.performanceProbe.markQuest("submitStart");
         renderer.render(scene, camera);
       } finally {
         this.gpuTimer?.end();
@@ -1571,6 +1598,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       if (this.performanceProbe.active) {
         this.performanceProbe.record("submitCpu", this.now() - start);
         this.performanceProbe.submitted();
+        this.performanceProbe.questSubmitted(
+          renderer.info?.programs?.length ?? null,
+        );
       }
     } catch {
       this.failRuntime();
@@ -1756,6 +1786,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
 
   private clearListeners(): void {
     this.performanceProbe.stop();
+    this.performanceProbe.setQuestEnabled(false);
     this.gpuTimer?.dispose();
     this.gpuTimer = undefined;
     this.diagnosticsListeners.clear();

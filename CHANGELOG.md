@@ -1,3 +1,10 @@
+## R5Q — complemento residual de quests, 08/11/2026
+
+- Aceite físico do proprietário: abertura diretamente noturna e fluidez geral PASS; quests PARCIAL, ainda com engasgos.
+- Toque compartilha vértices exatos também com o highlight imediato, sem repetir skinning ou mudar seleção, arte, animação, foco e narrativa.
+- Diagnóstico de abertura opt-in no painel existente, até 12 registros locais em memória, apagados ao fechar; sem telemetria/persistência. Separa marcos CPU/DOM/foco/submissão/CSS, sem alegar apresentação no display.
+- [Evidências e roteiro](docs/audits/BV_SANEAMENTO_R5Q.md#complemento--engasgo-residual-das-quests). Causa dominante e melhora residual no Moto G06 pendentes; R5 não concluída, sem merge.
+
 ## R5Q — candidata, 08/11/2026
 
 - Biblioteca aplica horário e narrativa antes do primeiro desenho e ao retomar, evitando nascer diurna durante a noite. Anoitecer suave, nove luminárias, ritual e fallback preservados.

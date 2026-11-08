@@ -47,6 +47,7 @@ export function WorldDiagnosticPanel({
     return () => {
       unsubscribe();
       runtime.setLightingExperiment?.(null);
+      runtime.setQuestProbeEnabled?.(false);
     };
   }, [runtime, open]);
   return (
@@ -62,6 +63,49 @@ export function WorldDiagnosticPanel({
         data-testid="world-diagnostics"
       >
         <h3>Diagnóstico local</h3>
+        {runtime?.setQuestProbeEnabled && (
+          <fieldset>
+            <legend>R5Q · abertura de quests (experimental, opt-in)</legend>
+            <label>
+              <input
+                type="checkbox"
+                checked={diagnostics.questProbe?.enabled ?? false}
+                onChange={(event) =>
+                  runtime.setQuestProbeEnabled?.(event.target.checked)
+                }
+              />
+              Registrar próximas seleções localmente
+            </label>
+            <p>
+              Até 12 toques/cliques. Sem textos pessoais, persistência ou envio.
+              Fechar este diagnóstico desativa e apaga os registros. Adie a
+              conversa para voltar aqui. Compare Canvas e botões, primeira
+              abertura, reabertura e troca de habitante. Zerar amostras inicia
+              outra rodada.
+            </p>
+            <p>
+              marks: milissegundos desde o início do handler de toque
+              confirmado/click. Pares Start/End delimitam CPU síncrona;
+              reactCommit observa o commit DOM, scene/submit seguem a RAF
+              existente, animation registra eventos CSS. Nenhum deles mede
+              apresentação física. Campos ausentes não foram observados;
+              programas adicionais não provam compilação cara. Long tasks:
+              primeiro segundo.
+            </p>
+            <label>
+              Registros locais R5Q (selecione para copiar)
+              <textarea
+                readOnly
+                rows={12}
+                value={JSON.stringify(
+                  diagnostics.questProbe?.observations ?? [],
+                  null,
+                  2,
+                )}
+              />
+            </label>
+          </fieldset>
+        )}
         {runtime?.setLightingExperiment && (
           <fieldset>
             <legend>R5P · iluminação experimental (temporária)</legend>
