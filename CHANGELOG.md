@@ -1,3 +1,10 @@
+## 08/11/2026 — Fechamento da recuperação R1–R5 [PR #40]
+
+- Proprietário aprovou encerramento por exceção técnica no Moto G06: redução considerável do lag, atmosfera noturna correta desde o primeiro frame, efeitos de Samael/Aryn/Ytha/Lua e livro/pergaminho mais perceptíveis, e listra verde de tap→pan corrigida.
+- R5 incluiu rigs e animações, shader noturno por alcance, consultas exatas de skinning/picking e transição leve das quests; as etapas R1–R4 já estavam integradas.
+- **Ressalvas mantidas:** engasgo perceptível residual das quests aceito, CI/E2E sem verde global, memória heap/DOM sustentada e TalkBack pendentes. Sem release, migração, fechamento de BF-5.5F2B/F2C/G ou início de BF-6.
+- [Registro canônico de aceites, decisões e evidências](docs/audits/BV_FECHAMENTO_RECUPERACAO_R1_R5_2026-11-08.md).
+
 ## R5R — reparo pontual do contorno, 08/11/2026
 
 - Removido o outline de tela inteira no estado inicial de toque do Canvas, responsável pela borda clara antes de reconhecer um pan.
