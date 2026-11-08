@@ -14,14 +14,7 @@ import {
   type FurnishingPlacement,
 } from "./libraryFurnishingLayout";
 
-/** Only existing pieces of furniture may serve as session stages. */
-const STATIONS = {
-  reading: "bf4-prop:2",
-  viewing: "bf4-prop:6",
-  study: "bf4-prop:9",
-  physical_activity: "bf4-prop:14",
-  work: "bf4-prop:16",
-} as const satisfies Record<WorldSessionActivity["kind"], string>;
+import { SESSION_STATIONS as STATIONS } from "../sessionStations";
 
 const COLORS = {
   reading: 0xf1ba70,

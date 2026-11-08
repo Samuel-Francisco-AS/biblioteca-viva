@@ -780,6 +780,19 @@ export class ThreeWorldRuntime implements WorldRuntime {
           now: () => this.agencyClock,
           hour: () => new Date().getHours(),
           nightLighting: this.nightLighting,
+          canPhysicalActor: (id) =>
+            this.inhabitants?.hasPhysicalActions(id) ?? false,
+          canPhysicalStep: (pose) => {
+            if (pose.interactionObjectId?.startsWith("reading-book:"))
+              return (
+                this.inhabitants?.probePhysicalPose(
+                  pose,
+                  (socket) =>
+                    this.sessionBooks?.checkHandPose(socket, pose) ?? true,
+                ) ?? false
+              );
+            return true;
+          },
           onEnvironmentAction: (key, objectId) => {
             this.livingSession?.actFromInhabitant(key, objectId);
           },
@@ -795,6 +808,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
           now: () => this.agency?.interactionTime ?? 0,
           canDepart: () => !this.scrollVisuals?.hasFlight(),
           occupiedSurfaces: () => this.scrollVisuals?.occupiedSurfaces() ?? [],
+          navigation: inhabitantNavigation,
+          pickupProfiles: () =>
+            this.inhabitants?.getPickupProfiles() ?? new Map(),
         });
         this.sessionBooks.apply(this.worldSessionActivity);
         if (this.continuity) {
@@ -1123,6 +1139,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)
       return "reduced";
     if (this.agency && !this.agency.interrupt(id, action)) return "unavailable";
+    if (this.agency?.getPoses().find((p) => p.id === id)?.physicalSessionId)
+      return "playing";
     return this.inhabitants?.play(id, action) ?? "unavailable";
   }
 
@@ -1476,6 +1494,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.sessionBooks?.update(delta, reduced, this.agency?.getPoses() ?? []);
       bookEnd = this.performanceProbe.active ? this.now() : 0;
       this.agency?.update({
+        sessionActivity: this.worldSessionActivity,
         physicalObstacles: this.sessionBooks?.navigationObstacles() ?? [],
         readingCandidate: this.sessionBooks?.candidate() ?? null,
         scrollCandidates: this.scrollVisuals?.candidates() ?? [],
@@ -1485,6 +1504,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       // share one detached snapshot, never mutable Agent objects.
       const poses = this.agency?.getPoses() ?? [];
       this.checkpointInhabitants(false, poses);
+      this.sessionBooks?.reconcileCarrier(poses);
       this.inhabitants?.drive(poses);
       if (this.agency && this.livingVisuals && this.inhabitants)
         this.livingVisuals.driveInhabitantInteractions(
@@ -1492,6 +1512,11 @@ export class ThreeWorldRuntime implements WorldRuntime {
           (id) => this.inhabitants?.getCarryAnchor(id) ?? null,
         );
       this.inhabitants?.update(delta, reduced);
+      this.sessionBooks?.followInhabitant(
+        delta,
+        poses,
+        (id) => this.inhabitants?.getSocket(id, "socket_carry") ?? null,
+      );
       this.ambientMagic?.update(delta, reduced);
       this.scrollVisuals?.update(
         delta,

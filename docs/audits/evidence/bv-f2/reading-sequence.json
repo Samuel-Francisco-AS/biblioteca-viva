@@ -1,0 +1,215 @@
+[
+  {
+    "marker": "held",
+    "time": 33050,
+    "actor": {
+      "id": "character:aryn",
+      "key": "aryn",
+      "label": "Aryn",
+      "x": -4.34781972855893,
+      "z": 7.617867481594344,
+      "facing": -3.1415926535897936,
+      "state": "work",
+      "activity": "Aproxima-se da estação para acompanhar a sessão confirmada.",
+      "action": "pickup",
+      "available": true,
+      "physicalActionTime": 0.8000000000000002,
+      "physicalSessionId": "fiction-session",
+      "seatId": "seat:bf4-prop:2:reader",
+      "interactionObjectId": "reading-book:fiction",
+      "interactionState": "picking",
+      "room": "CÔMODO A",
+      "destination": null
+    },
+    "book": {
+      "sessionId": "fiction-session",
+      "instanceId": "reading-book:fiction",
+      "progress": 5,
+      "opening": 0,
+      "state": "resting"
+    },
+    "parent": "socket_carry",
+    "canonical": true,
+    "cpu": {
+      "scope": "Headless host CPU simulation phases; no render/Android frame-rate claim",
+      "samples": 661,
+      "phases": {
+        "book": {
+          "p50": 0,
+          "p95": 0.10000000894069672
+        },
+        "agency": {
+          "p50": 0.19999998807907104,
+          "p95": 0.6000000089406967
+        },
+        "pose": {
+          "p50": 0.20000000298023224,
+          "p95": 0.30000001192092896
+        },
+        "follow": {
+          "p50": 0,
+          "p95": 0
+        }
+      }
+    },
+    "render": {
+      "calls": 67,
+      "triangles": 181716
+    }
+  },
+  {
+    "marker": "sitting",
+    "time": 47400,
+    "actor": {
+      "id": "character:aryn",
+      "key": "aryn",
+      "label": "Aryn",
+      "x": -6.3,
+      "z": 6.746999999999998,
+      "facing": 3.141592653589793,
+      "state": "work",
+      "activity": "Aproxima-se da estação para acompanhar a sessão confirmada.",
+      "action": "sit",
+      "available": true,
+      "physicalActionTime": 0.9000000000000002,
+      "physicalSessionId": "fiction-session",
+      "seatId": "seat:bf4-prop:2:reader",
+      "interactionObjectId": "reading-book:fiction",
+      "interactionState": "sitting",
+      "room": "CÔMODO A",
+      "destination": null
+    },
+    "book": {
+      "sessionId": "fiction-session",
+      "instanceId": "reading-book:fiction",
+      "progress": 5,
+      "opening": 0,
+      "state": "resting"
+    },
+    "parent": "socket_carry",
+    "canonical": true,
+    "cpu": {
+      "scope": "Headless host CPU simulation phases; no render/Android frame-rate claim",
+      "samples": 948,
+      "phases": {
+        "book": {
+          "p50": 0,
+          "p95": 0.10000000894069672
+        },
+        "agency": {
+          "p50": 0.29999999701976776,
+          "p95": 0.7000000029802322
+        },
+        "pose": {
+          "p50": 0.19999998807907104,
+          "p95": 0.30000001192092896
+        },
+        "follow": {
+          "p50": 0,
+          "p95": 0.09999999403953552
+        }
+      }
+    },
+    "render": {
+      "calls": 67,
+      "triangles": 181672
+    }
+  },
+  {
+    "marker": "reading",
+    "time": 49900,
+    "actor": {
+      "id": "character:aryn",
+      "key": "aryn",
+      "label": "Aryn",
+      "x": -6.3,
+      "z": 6.746999999999998,
+      "facing": 3.141592653589793,
+      "state": "work",
+      "activity": "Lê sentado o mesmo livro da coleção.",
+      "action": "read_seated",
+      "available": true,
+      "physicalActionTime": 1.4000000000000006,
+      "physicalSessionId": "fiction-session",
+      "seatId": "seat:bf4-prop:2:reader",
+      "interactionObjectId": "reading-book:fiction",
+      "interactionState": "reading",
+      "room": "CÔMODO A",
+      "destination": null
+    },
+    "book": {
+      "sessionId": "fiction-session",
+      "instanceId": "reading-book:fiction",
+      "progress": 5,
+      "opening": 0.9099999999999995,
+      "state": "resting"
+    },
+    "parent": "socket_carry",
+    "canonical": true,
+    "cpu": {
+      "scope": "Headless host CPU simulation phases; no render/Android frame-rate claim",
+      "samples": 998,
+      "phases": {
+        "book": {
+          "p50": 0,
+          "p95": 0.10000000894069672
+        },
+        "agency": {
+          "p50": 0.29999999701976776,
+          "p95": 0.7000000029802322
+        },
+        "pose": {
+          "p50": 0.19999998807907104,
+          "p95": 0.30000001192092896
+        },
+        "follow": {
+          "p50": 0,
+          "p95": 0.09999999403953552
+        }
+      }
+    },
+    "render": {
+      "calls": 67,
+      "triangles": 181672
+    }
+  },
+  {
+    "marker": "returned",
+    "time": 104500,
+    "book": {
+      "sessionId": null,
+      "instanceId": null,
+      "progress": 0,
+      "opening": 0,
+      "state": "shelf"
+    },
+    "parent": "procedural-content-instance",
+    "canonical": true,
+    "cpu": {
+      "scope": "Headless host CPU simulation phases; no render/Android frame-rate claim",
+      "samples": 2090,
+      "phases": {
+        "book": {
+          "p50": 0,
+          "p95": 0.10000000894069672
+        },
+        "agency": {
+          "p50": 0.09999999403953552,
+          "p95": 0.6000000089406967
+        },
+        "pose": {
+          "p50": 0.10000000894069672,
+          "p95": 0.29999999701976776
+        },
+        "follow": {
+          "p50": 0,
+          "p95": 0.09999999403953552
+        }
+      }
+    },
+    "render": {
+      "calls": 104,
+      "triangles": 215280
+    }
+  }
+]

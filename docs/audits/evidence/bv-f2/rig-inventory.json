@@ -1,0 +1,580 @@
+{
+  "samael": {
+    "sha256": "030e59f9385ba08a48d03631d4141ed2a5ab415fa5f12b104ad59beb40c81986",
+    "bytes": 3034128,
+    "meshes": 11,
+    "skins": [
+      {
+        "inverseBindMatrices": 5,
+        "joints": [
+          25,
+          23,
+          13,
+          0,
+          6,
+          5,
+          4,
+          1,
+          2,
+          3,
+          12,
+          11,
+          10,
+          7,
+          8,
+          9,
+          17,
+          15,
+          14,
+          16,
+          21,
+          19,
+          18,
+          20,
+          22,
+          24
+        ],
+        "name": "samaelRig"
+      }
+    ],
+    "min": [
+      -0.5517281993010659,
+      -1.1451342674819143e-08,
+      -0.25114223361015414
+    ],
+    "max": [
+      0.5444765712004047,
+      1.9999998807907104,
+      0.3013707028198733
+    ],
+    "animations": [
+      {
+        "name": "carry",
+        "duration": 3.0333333015441895
+      },
+      {
+        "name": "carry_walk",
+        "duration": 3.2333333492279053
+      },
+      {
+        "name": "gesture",
+        "duration": 2.8333332538604736
+      },
+      {
+        "name": "idle",
+        "duration": 3.633333444595337
+      },
+      {
+        "name": "magic",
+        "duration": 3.633333444595337
+      },
+      {
+        "name": "pickup",
+        "duration": 1.6333333253860474
+      },
+      {
+        "name": "react",
+        "duration": 1.8333333730697632
+      },
+      {
+        "name": "read_seated",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "recover",
+        "duration": 2.433333396911621
+      },
+      {
+        "name": "seated",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "sit",
+        "duration": 2.0333333015441895
+      },
+      {
+        "name": "stand",
+        "duration": 2.0333333015441895
+      },
+      {
+        "name": "study_seated",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "train",
+        "duration": 5.0333333015441895
+      },
+      {
+        "name": "turn",
+        "duration": 2.433333396911621
+      },
+      {
+        "name": "walk",
+        "duration": 3.2333333492279053
+      },
+      {
+        "name": "watch",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "work",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "workshop",
+        "duration": 4.0333333015441895
+      }
+    ],
+    "sockets": [
+      {
+        "name": "socket_carry",
+        "type": "Bone",
+        "parent": "HandL"
+      },
+      {
+        "name": "socket_hand_right",
+        "type": "Bone",
+        "parent": "HandR"
+      },
+      {
+        "name": "socket_seat",
+        "type": "Bone",
+        "parent": "Pelvis"
+      }
+    ]
+  },
+  "aryn": {
+    "sha256": "d2b9ffeaad6d4707ccda1573c538e23427b68f09747cb0e13b5f2271a391d906",
+    "bytes": 3649176,
+    "meshes": 10,
+    "skins": [
+      {
+        "inverseBindMatrices": 5,
+        "joints": [
+          25,
+          23,
+          13,
+          0,
+          6,
+          5,
+          4,
+          1,
+          2,
+          3,
+          12,
+          11,
+          10,
+          7,
+          8,
+          9,
+          17,
+          15,
+          14,
+          16,
+          21,
+          19,
+          18,
+          20,
+          22,
+          24
+        ],
+        "name": "arynRig"
+      }
+    ],
+    "min": [
+      -0.3454966849750085,
+      -1.0705145883892139e-08,
+      -0.24538105726242157
+    ],
+    "max": [
+      0.4185930352175778,
+      1.7000000251908625,
+      0.3067264413519232
+    ],
+    "animations": [
+      {
+        "name": "carry",
+        "duration": 3.0333333015441895
+      },
+      {
+        "name": "carry_walk",
+        "duration": 3.2333333492279053
+      },
+      {
+        "name": "gesture",
+        "duration": 2.8333332538604736
+      },
+      {
+        "name": "idle",
+        "duration": 3.633333444595337
+      },
+      {
+        "name": "magic",
+        "duration": 3.633333444595337
+      },
+      {
+        "name": "pickup",
+        "duration": 1.6333333253860474
+      },
+      {
+        "name": "react",
+        "duration": 1.8333333730697632
+      },
+      {
+        "name": "read_seated",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "recover",
+        "duration": 2.433333396911621
+      },
+      {
+        "name": "seated",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "sit",
+        "duration": 2.0333333015441895
+      },
+      {
+        "name": "stand",
+        "duration": 2.0333333015441895
+      },
+      {
+        "name": "study_seated",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "train",
+        "duration": 5.0333333015441895
+      },
+      {
+        "name": "turn",
+        "duration": 2.433333396911621
+      },
+      {
+        "name": "walk",
+        "duration": 3.2333333492279053
+      },
+      {
+        "name": "watch",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "work",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "workshop",
+        "duration": 4.0333333015441895
+      }
+    ],
+    "sockets": [
+      {
+        "name": "socket_carry",
+        "type": "Bone",
+        "parent": "HandL"
+      },
+      {
+        "name": "socket_hand_right",
+        "type": "Bone",
+        "parent": "HandR"
+      },
+      {
+        "name": "socket_seat",
+        "type": "Bone",
+        "parent": "Pelvis"
+      }
+    ]
+  },
+  "ytha": {
+    "sha256": "c2eb4e4d98e3d505b50c0c3732a62e8fb1b375c4d23214f98b946bfb65f13ede",
+    "bytes": 4253152,
+    "meshes": 12,
+    "skins": [
+      {
+        "inverseBindMatrices": 5,
+        "joints": [
+          27,
+          25,
+          15,
+          0,
+          6,
+          5,
+          4,
+          1,
+          2,
+          3,
+          7,
+          13,
+          12,
+          11,
+          8,
+          9,
+          10,
+          14,
+          19,
+          17,
+          16,
+          18,
+          23,
+          21,
+          20,
+          22,
+          24,
+          26
+        ],
+        "name": "ythaRig"
+      }
+    ],
+    "min": [
+      -0.5917240790585726,
+      0.16000001814273723,
+      -0.15312185883522136
+    ],
+    "max": [
+      0.5917240790585726,
+      1.4799999296665192,
+      0.2282908154286143
+    ],
+    "animations": [
+      {
+        "name": "carry",
+        "duration": 3.0333333015441895
+      },
+      {
+        "name": "carry_walk",
+        "duration": 3.2333333492279053
+      },
+      {
+        "name": "gesture",
+        "duration": 2.8333332538604736
+      },
+      {
+        "name": "idle",
+        "duration": 3.633333444595337
+      },
+      {
+        "name": "magic",
+        "duration": 3.633333444595337
+      },
+      {
+        "name": "pickup",
+        "duration": 1.6333333253860474
+      },
+      {
+        "name": "react",
+        "duration": 1.8333333730697632
+      },
+      {
+        "name": "read_seated",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "recover",
+        "duration": 2.433333396911621
+      },
+      {
+        "name": "seated",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "sit",
+        "duration": 2.0333333015441895
+      },
+      {
+        "name": "stand",
+        "duration": 2.0333333015441895
+      },
+      {
+        "name": "study_seated",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "train",
+        "duration": 5.0333333015441895
+      },
+      {
+        "name": "turn",
+        "duration": 2.433333396911621
+      },
+      {
+        "name": "walk",
+        "duration": 3.2333333492279053
+      },
+      {
+        "name": "watch",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "work",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "workshop",
+        "duration": 4.0333333015441895
+      }
+    ],
+    "sockets": [
+      {
+        "name": "socket_carry",
+        "type": "Bone",
+        "parent": "HandL"
+      },
+      {
+        "name": "socket_hand_right",
+        "type": "Bone",
+        "parent": "HandR"
+      },
+      {
+        "name": "socket_seat",
+        "type": "Bone",
+        "parent": "Pelvis"
+      }
+    ]
+  },
+  "lua": {
+    "sha256": "c8e4a4671ac36632b73810caf529134f84f93175d882df8ced8bc0299c3885ec",
+    "bytes": 3082276,
+    "meshes": 10,
+    "skins": [
+      {
+        "inverseBindMatrices": 5,
+        "joints": [
+          25,
+          23,
+          13,
+          0,
+          6,
+          5,
+          4,
+          1,
+          2,
+          3,
+          12,
+          11,
+          10,
+          7,
+          8,
+          9,
+          17,
+          15,
+          14,
+          16,
+          21,
+          19,
+          18,
+          20,
+          22,
+          24
+        ],
+        "name": "luaRig"
+      }
+    ],
+    "min": [
+      -0.363508939743042,
+      -1.0903479293032533e-08,
+      -0.24726098775863647
+    ],
+    "max": [
+      0.38983888604055567,
+      1.600000023841858,
+      0.2771362447246998
+    ],
+    "animations": [
+      {
+        "name": "carry",
+        "duration": 3.0333333015441895
+      },
+      {
+        "name": "carry_walk",
+        "duration": 3.2333333492279053
+      },
+      {
+        "name": "gesture",
+        "duration": 2.8333332538604736
+      },
+      {
+        "name": "idle",
+        "duration": 3.633333444595337
+      },
+      {
+        "name": "magic",
+        "duration": 3.633333444595337
+      },
+      {
+        "name": "pickup",
+        "duration": 1.6333333253860474
+      },
+      {
+        "name": "react",
+        "duration": 1.8333333730697632
+      },
+      {
+        "name": "read_seated",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "recover",
+        "duration": 2.433333396911621
+      },
+      {
+        "name": "seated",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "sit",
+        "duration": 2.0333333015441895
+      },
+      {
+        "name": "stand",
+        "duration": 2.0333333015441895
+      },
+      {
+        "name": "study_seated",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "train",
+        "duration": 5.0333333015441895
+      },
+      {
+        "name": "turn",
+        "duration": 2.433333396911621
+      },
+      {
+        "name": "walk",
+        "duration": 3.2333333492279053
+      },
+      {
+        "name": "watch",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "work",
+        "duration": 4.0333333015441895
+      },
+      {
+        "name": "workshop",
+        "duration": 4.0333333015441895
+      }
+    ],
+    "sockets": [
+      {
+        "name": "socket_carry",
+        "type": "Bone",
+        "parent": "HandL"
+      },
+      {
+        "name": "socket_hand_right",
+        "type": "Bone",
+        "parent": "HandR"
+      },
+      {
+        "name": "socket_seat",
+        "type": "Bone",
+        "parent": "Pelvis"
+      }
+    ]
+  }
+}

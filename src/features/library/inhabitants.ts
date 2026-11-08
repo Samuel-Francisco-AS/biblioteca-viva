@@ -42,7 +42,38 @@ export const INHABITANTS = [
 ] as const;
 
 export type InhabitantAction =
-  "idle" | "walk" | "turn" | "react" | "gesture" | "work" | "magic" | "recover";
+  | "idle"
+  | "walk"
+  | "turn"
+  | "react"
+  | "gesture"
+  | "work"
+  | "magic"
+  | "recover"
+  | "pickup"
+  | "carry"
+  | "carry_walk"
+  | "sit"
+  | "seated"
+  | "read_seated"
+  | "study_seated"
+  | "stand"
+  | "workshop"
+  | "train"
+  | "watch";
+export const PHYSICAL_ACTIONS = [
+  "pickup",
+  "carry",
+  "carry_walk",
+  "sit",
+  "seated",
+  "read_seated",
+  "study_seated",
+  "stand",
+  "workshop",
+  "train",
+  "watch",
+] as const satisfies readonly InhabitantAction[];
 export const INHABITANT_ACTIONS = [
   ["walk", "Caminhar"],
   ["turn", "Girar"],
@@ -86,3 +117,34 @@ export const INHABITANT_GROUND_CLEARANCE = {
   ytha: 0.16,
   lua: 0,
 } as const;
+
+/** Outward-rounded measurements of the new contact clips, including clothes,
+ * wings and props. R5 travel/magic envelopes remain unchanged. */
+export const INHABITANT_PHYSICAL_ENVELOPES = {
+  samael: { pickup: 1.25, seated: 0.7 },
+  aryn: { pickup: 1.0, seated: 0.62 },
+  ytha: { pickup: 0.92, seated: 0.92 },
+  lua: { pickup: 0.94, seated: 0.67 },
+} as const;
+export function inhabitantActionRadius(
+  key: InhabitantKey,
+  action: InhabitantAction,
+): number {
+  const e = INHABITANT_ENVELOPES[key],
+    p = INHABITANT_PHYSICAL_ENVELOPES[key];
+  if (action === "pickup") return Math.max(e.travel, p.pickup);
+  if (
+    ["sit", "stand", "seated", "read_seated", "study_seated"].some(
+      (name) => name === action,
+    )
+  )
+    return Math.max(e.travel, p.seated);
+  return action === "magic" ? e.magic : action === "work" ? e.work : e.travel;
+}
+
+/** Pickup/contact certified against the current table. Other anatomies keep
+ * the autonomous original-book fallback until their pickup contacts pass. */
+export const SESSION_BOOK_HANDLERS: readonly InhabitantKey[] = [
+  "samael",
+  "aryn",
+];

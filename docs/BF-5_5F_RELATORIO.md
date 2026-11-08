@@ -1,3 +1,5 @@
+> **BF-5.5F2 — candidata integrada, 08/11/2026:** nova missão autorizada sobre a main R1–R5 `5b4be9a`. Complemento F2A por mão/livro original, assentos e estudo F2B, respostas próprias F2C, reservas/recuperação e fontes GLB ampliadas compõem uma única PR draft. [Implementação, evidências, gates e limites atuais](BF-5_5F2_IMPLEMENTACAO.md). **Não encerra BF-5.5 nem inicia G.** As descrições de F2B/F2C não implementadas abaixo são cronologia anterior à integração R5 e a esta candidata. Verificação final: 266/266 dirigidos (31 arquivos), um E2E PASS sem retries, formato/lint/TypeScript/áudio/build/report/sync/debug e diff PASS; contato/fluidez no Moto G06 pendentes.
+
 # BF-5.5F — Resposta às sessões e ações reais
 
 **Início da implementação:** 05/11/2026. **Estado:** candidata F1 + núcleo físico F2A (F2 parcial), **sem aceite final**, sem merge e sem avaliação física. Base: BF-5.5E (PR #36), dependente da stack BF-5.5A–D (PRs #32–35).

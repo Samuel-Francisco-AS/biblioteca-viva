@@ -1,6 +1,11 @@
 import type { InhabitantKey } from "./inhabitants";
 
 export type InteractionTaskState =
+  | "docking"
+  | "sitting"
+  | "seated"
+  | "standing"
+  | "exiting"
   | "queued"
   | "approaching"
   | "orienting"
@@ -38,6 +43,23 @@ export interface InteractionLease {
  */
 export class InteractionCoordinator {
   private readonly leases = new Map<string, InteractionLease>();
+  private readonly occupants = new Map<string, InteractionLease>();
+  occupy(
+    resourceId: string,
+    owner: InhabitantKey,
+    taskId: string,
+    now: number,
+  ): boolean {
+    if (!this.owns(resourceId, owner, taskId, now)) return false;
+    this.occupants.set(resourceId, this.leases.get(resourceId)!);
+    return true;
+  }
+  occupancy(resourceId: string, now: number): InteractionLease | null {
+    this.reclaim(now);
+    return this.occupants.has(resourceId)
+      ? (this.leases.get(resourceId) ?? null)
+      : null;
+  }
 
   /** Validate ownership on every use, extend only near expiry. Returned leases
    * are immutable; no consumer can retain a reference that changes underneath it. */
@@ -120,13 +142,18 @@ export class InteractionCoordinator {
     taskId: string,
   ): void {
     const lease = this.leases.get(resourceId);
-    if (lease?.owner === owner && lease.taskId === taskId)
+    if (lease?.owner === owner && lease.taskId === taskId) {
       this.leases.delete(resourceId);
+      this.occupants.delete(resourceId);
+    }
   }
 
   reclaim(now: number): void {
     for (const [resourceId, lease] of this.leases)
-      if (lease.expiresAt <= now) this.leases.delete(resourceId);
+      if (lease.expiresAt <= now) {
+        this.leases.delete(resourceId);
+        this.occupants.delete(resourceId);
+      }
   }
 
   /** Query one resource without allocating a diagnostic lease snapshot. */
@@ -135,6 +162,7 @@ export class InteractionCoordinator {
     if (!lease) return false;
     if (lease.expiresAt <= now) {
       this.leases.delete(resourceId);
+      this.occupants.delete(resourceId);
       return false;
     }
     return true;

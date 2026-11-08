@@ -2,10 +2,11 @@
 All shapes are authored here; no third-party asset or texture. Run from repo root.
 """
 import bpy, math, os
-from mathutils import Vector
+from mathutils import Vector, Matrix
 ROOT=os.getcwd(); OUT=ROOT+'/assets/3d/source/inhabitants'; DEST=ROOT+'/src/features/library/three/assets'
 TAU=math.tau
 exec(compile(open(OUT+'/refine.py').read(), OUT+'/refine.py', 'exec'))
+exec(compile(open(OUT+'/physical.py').read(), OUT+'/physical.py', 'exec'))
 
 def mat(name,c,metal=0,rough=.55,alpha=1,glow=0):
  m=bpy.data.materials.new(name);m.diffuse_color=(*c,alpha);m.use_nodes=True
@@ -216,6 +217,7 @@ def build(who,height):
   ell('Loose side knot',(-.145,.055,headz+.18),(.07,.065,.085),hair,'Head')
   for i in range(5):
    strand('Swept mage fringe',[(.07-i*.025,-.02,headz+.31),(.10-i*.034,-.10,headz+.26),(.09-i*.035,-.116,headz+.20-i*.008)],[.02,.027,.001],hair,'Head')
+ physical_tools(w,ink,ivory,metal)
  refine_character(who,w,headz,skin,hair,cloth,silk,metal,ivory,ink,glow)
  # Normalize all authored surfaces BEFORE binding. Identity pivot on floor.
  meshes=[o for o in bpy.context.scene.objects if o.type=='MESH'];hi=max(v.co.z for o in meshes for v in o.data.vertices);factor=height/hi
@@ -235,9 +237,12 @@ def build(who,height):
  bpy.ops.object.mode_set(mode='OBJECT')
  for o in meshes:
   mod=o.modifiers.new('Anatomical skin','ARMATURE');mod.object=rig;o.parent=rig
- # Explicit named contact sockets inherit a real deform bone, no name search heuristic.
- for name,bone,xyz in [('socket_carry','HandL',(-w-.115,-.135,.77)),('socket_hand_right','HandR',(w+.115,-.135,.77)),('socket_seat','Pelvis',(0,.03,.80))]:
-  o=bpy.data.objects.new(name,None);bpy.context.collection.objects.link(o);o.parent=rig;o.parent_type='BONE';o.parent_bone=bone;bpy.context.view_layer.update();o.matrix_world.translation=Vector(xyz)*factor+Vector((0,0,.16 if fairy else 0))
+ # Named contact bones use explicit rest-space coordinates. Bone parenting
+ # of an Empty formerly introduced a tail offset in exported hand contacts.
+ bpy.context.view_layer.objects.active=rig;bpy.ops.object.mode_set(mode='EDIT')
+ for name,parent,xyz in [('socket_carry','HandL',(-w-.115,-.135,.77)),('socket_hand_right','HandR',(w+.115,-.135,.77)),('socket_seat','Pelvis',(0,.03,.705))]:
+  socket=rigdata.edit_bones.new(name);socket.head=Vector(xyz)*factor+Vector((0,0,.16 if fairy else 0));socket.tail=socket.head+Vector((0,0,.025));socket.parent=rigdata.edit_bones[parent]
+ bpy.ops.object.mode_set(mode='OBJECT')
  # Eight agency-compatible actions; no competing root translation.
  durations={'idle':3.6,'walk':3.2,'turn':2.4,'react':1.8,'gesture':2.8,'work':4.,'magic':3.6,'recover':2.4};bpy.context.scene.render.fps=30
  for clip,duration in durations.items():
@@ -299,6 +304,7 @@ def build(who,height):
   for f in action.fcurves:
    for k in f.keyframe_points:k.interpolation='BEZIER'
   track=rig.animation_data.nla_tracks.new();track.name=clip;strip=track.strips.new(clip,1,action);strip.name=clip;rig.animation_data.action=None;track.mute=True
+ physical_clips(rig,meshes,factor,who)
  for b in rig.pose.bones:b.rotation_euler=(0,0,0);b.location=(0,0,0)
  bpy.context.scene.frame_set(1);bpy.context.preferences.filepaths.save_version=0
  bpy.ops.wm.save_as_mainfile(filepath=OUT+'/'+who+'.blend')

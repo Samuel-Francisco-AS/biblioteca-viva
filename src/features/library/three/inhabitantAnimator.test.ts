@@ -16,8 +16,9 @@ import {
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import {
   INHABITANTS,
+  PHYSICAL_ACTIONS,
+  inhabitantActionRadius,
   INHABITANT_WALK_DISTANCE,
-  INHABITANT_ENVELOPES,
   type InhabitantAction,
 } from "../inhabitants";
 import { createInhabitantAnimator } from "./inhabitantAnimator";
@@ -64,10 +65,10 @@ const names: InhabitantAction[] = [
   "recover",
 ];
 for (const actor of INHABITANTS) {
-  it(`${actor.key}: eight real clips, articulated limbs, finite transitions, repeated selection, reduced motion and disposal`, async () => {
+  it(`${actor.key}: nineteen real clips, articulated limbs, finite transitions, repeated selection, reduced motion and disposal`, async () => {
     const gltf = await model(actor.key);
     expect(gltf.animations.map((c) => c.name).sort()).toEqual(
-      [...names].sort(),
+      [...names, ...PHYSICAL_ACTIONS].sort(),
     );
     const wrapper = new Group();
     wrapper.add(gltf.scene);
@@ -213,7 +214,6 @@ it("F3 external navigation owns translation and yaw; body walk loops, manual act
 for (const actor of INHABITANTS)
   it(`F3 ${actor.key}: measured radial envelopes include wings, props and every authored action`, async () => {
     const gltf = await model(actor.key);
-    const e = INHABITANT_ENVELOPES[actor.key];
     const excess: string[] = [];
     const p = new Vector3();
     const baseVertex = new Vector3();
@@ -221,12 +221,12 @@ for (const actor of INHABITANTS)
     for (const clip of gltf.animations) {
       const mixer = new AnimationMixer(gltf.scene);
       mixer.clipAction(clip).play();
-      const limit =
-        clip.name === "magic"
-          ? e.magic
-          : clip.name === "work"
-            ? e.work
-            : e.travel;
+      const name = [...names, ...PHYSICAL_ACTIONS].find(
+        (name) => name === clip.name,
+      );
+      expect(name).toBeDefined();
+      if (!name) throw new Error("Unknown exported action");
+      const limit = inhabitantActionRadius(actor.key, name);
       for (let frame = 0; frame <= 32; frame++) {
         mixer.setTime((clip.duration * frame) / 32);
         gltf.scene.updateMatrixWorld(true);

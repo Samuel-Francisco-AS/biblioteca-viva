@@ -1,7 +1,9 @@
+import { SESSION_SEATS } from "../sessionStations";
 import { freezeLocalTransform } from "./staticVisuals";
 import { setSpatialComponents, spatialBox } from "./spatialComponents";
 import {
   BoxGeometry,
+  Box3,
   CylinderGeometry,
   SphereGeometry,
   TorusGeometry,
@@ -274,6 +276,9 @@ export function createLibraryFurnishing(interactive = false): Group {
         }
     }
     function chair(x: number, z: number, facing: number, soft = false) {
+      const functional = SESSION_SEATS.find((seat) => seat.stationId === p.id);
+      if (functional && (p.kind === "lounge" || x === -0.65) && facing === 1)
+        return;
       const w = soft ? 0.88 : 0.55;
       solid(x, 0.7, z + facing * 0.025, w, 1.4, 0.78);
       legs(x, z, w, 0.65, 0.42);
@@ -966,6 +971,65 @@ export function createLibraryFurnishing(interactive = false): Group {
         }
         break;
     }
+    const seat = SESSION_SEATS.find((seat) => seat.stationId === p.id);
+    if (seat) {
+      const contact = new Group();
+      contact.name = seat.id;
+      contact.position.set(seat.local.x, 0, seat.local.z);
+      contact.rotation.y = seat.facing - Math.PI - p.rotation;
+      island.add(contact);
+      const seatPhysical: ReturnType<typeof spatialBox>[] = [];
+      const add = (
+        name: string,
+        y: number,
+        z: number,
+        w: number,
+        h: number,
+        d: number,
+        material: MeshPhongMaterial,
+        x = 0,
+      ) => {
+        const piece = new Mesh(
+          geometries[name === "functional-cushion" ? "soft" : "edge"],
+          material,
+        );
+        piece.name = name;
+        piece.position.set(x, y, z);
+        piece.scale.set(w, h, d);
+        contact.add(piece);
+        seatPhysical.push(spatialBox(x, y, z, w, h, d));
+        usedMaterials.add(material);
+        usedGeometries.add(piece.geometry);
+      };
+      add("functional-cushion", 0.355, 0.1, 1.06, 0.13, 0.36, upholstery);
+      add("functional-seat-frame", 0.27, 0.1, 1.12, 0.12, 0.36, m.timber);
+      // Low, open lumbar support leaves wings and draped clothing clear.
+      add("functional-lumbar", 0.59, 0.65, 1.12, 0.28, 0.09, m.timber);
+      for (const x of [-0.48, 0.48]) {
+        add("functional-back-rail", 0.27, 0.37, 0.1, 0.12, 0.64, m.timber, x);
+        add("functional-back-post", 0.48, 0.65, 0.1, 0.5, 0.09, m.timber, x);
+      }
+      for (const dx of [-0.43, 0.43])
+        for (const dz of [0, 0.24]) {
+          const leg = new Mesh(geometries.leg, m.timber);
+          leg.name = "functional-seat-leg";
+          leg.position.set(dx, 0, dz);
+          leg.scale.set(0.7, 0.24, 0.7);
+          contact.add(leg);
+          seatPhysical.push(spatialBox(dx, 0.12, dz, 0.112, 0.24, 0.112));
+          usedMaterials.add(m.timber);
+          usedGeometries.add(leg.geometry);
+        }
+      const volume = seatPhysical.reduce(
+        (bounds, part) => bounds.union(part),
+        new Box3(),
+      );
+      setSpatialComponents(contact, {
+        physical: seatPhysical,
+        navigation: [volume],
+        mobility: "static",
+      });
+    }
     setSpatialComponents(island, {
       physical,
       navigation: physical,
@@ -1001,7 +1065,14 @@ export function createLibraryFurnishing(interactive = false): Group {
         navigation: [],
         mobility: "static",
       });
-      batch.userData.placements = parts.map((part) => part.parent?.name);
+      batch.userData.placements = parts.map((part) => {
+        for (let owner = part.parent; owner; owner = owner.parent)
+          if (owner.name.startsWith("bf4-prop:")) return owner.name;
+        return part.parent?.name;
+      });
+      batch.userData.contacts = parts.map((part) =>
+        part.parent?.name.startsWith("seat:") ? part.parent.name : null,
+      );
       batch.userData.parts = parts.map((part) => part.name);
       parts.forEach((part, index) => {
         batch.setMatrixAt(index, new Matrix4().copy(part.matrixWorld));
