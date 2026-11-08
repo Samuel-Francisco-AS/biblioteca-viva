@@ -86,7 +86,7 @@ Capturas Chromium local de produção com conteúdo fictício, movimento reduzid
 
 O cenário do mesmo Canvas passou antes das alterações dirigidas dos controles de formulário; esses reparos não alteram WorldHost/runtime. Falhas intermediárias novas da B estão registradas acima; não foram atribuídas às dívidas históricas. A ampla não foi repetida por cota. A falha nova de navegação na ampla continua resultado dessa execução, embora as execuções dirigidas da UI tenham PASS.
 
-Não há alegação de ampla/CI global verde. CI remota será omitida por cota via `[skip ci]`, sem workflow caro manual. Testes em origens/bancos descartáveis, com textos e imagem fictícios; nenhum backup pessoal usado.
+Não há alegação de ampla/CI global verde. Commits publicados usam `[skip ci]` pela política de cota; sem alegação de CI remota verde, sem workflow caro manual. Testes em origens/bancos descartáveis, com textos e imagem fictícios; nenhum backup pessoal usado.
 
 ## APK debug e proveniência
 
@@ -95,6 +95,7 @@ Não há alegação de ampla/CI global verde. CI remota será omitida por cota v
 - **11.642.677 bytes**; SHA-256 **04adb6a85333c4e0b88338fd983a139c691a232749e137adfc3d7219be0f1fe9**.
 - Código produtivo do commit **7cce3a4f45b6087fe766305b0cfbbd7473a75b99** sobre A **e6b8b2c53adf26779c8e3f9b4cd33a998256c6ea**. Commits posteriores de auditoria/documentação não alteram o código produtivo compilado.
 - Auditoria final reforçou o fixture v7 para usar somente os campos existentes na A (frente/verso, sem aparência nova): o caso dirigido de round-trip v8/restore v7 original teve **1 PASS**; os outros 11 casos do arquivo não foram selecionados nessa execução, já contemplados nas rodadas anteriores. Não houve remoção de asserts.
+- Os **57 arquivos web públicos** do APK foram comparados byte a byte com `dist`: todos correspondem (o manifest de build interno `.vite` não é asset público do APK).
 - Artefato debug local para instalação dirigida; nenhuma publicação de release, instalação em dados pessoais ou teste físico executados pelo agente.
 - Arquivos, diff e capturas revisados: apenas conteúdo fictício; nenhum backup/exportação pessoal, credencial ou keystore versionado. Árvore de produção revisada sem alterações 3D ou dependências novas.
 
@@ -118,3 +119,12 @@ Não há alegação de ampla/CI global verde. CI remota será omitida por cota v
 - Sem agenda espaçada, motor/editor de questões, filtros dinâmicos executáveis ou diagnóstico (C); sem instalador/catálogo/pacotes oficiais (D); sem TCG/atributos/IA (E); sem construção orbital/arena 3D (F) ou fechamento (G).
 - Históricos/imagens têm retenção deliberada e podem alcançar 10 MiB; a B não cria compactação/descarte de versões. Escala de grandes acervos e pacotes continua para avaliação própria.
 - Rascunhos são recuperação no aparelho, fora do backup; limpeza do armazenamento pelo sistema/usuário os remove. Erro de quota é anunciado. Importação autoral v1 não preserva identidade nem funde histórico.
+
+
+## Publicação da candidata
+
+[PR **#44 draft — BF-5.6B — Oficina de Cartas, Ecos e Relicário**](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/44), aberta em 08/11/2026 contra `feat/bf-5-6a-arcanario-foundation`. Dependente da [#43](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/43), que permanece aberta/draft/sem merge no SHA A informado acima. `main` permanece `5aab64ca04ab691c8f253bdc97906a99cda6ebdb`.
+
+- Código/arte/testes/documentação: **7cce3a4f45b6087fe766305b0cfbbd7473a75b99**.
+- Auditoria do fixture v7 e registro do APK: **7385a1af1dbf4430b313f037f435ce349fa44a3e**; sem alteração produtiva.
+- Registro desta publicação em commit documental posterior, consultável na PR. Push exclusivo da B; sem alteração da branch/PR A, merge, squash, rebase ou force push. A/B continuam abertas, aguardando gate físico conjunto e decisão expressa do proprietário.
