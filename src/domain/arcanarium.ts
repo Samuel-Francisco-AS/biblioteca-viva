@@ -34,10 +34,17 @@ export const classificationSchema = z
       !value.primarySubjectId ||
       value.knowledgeTagIds.includes(value.primarySubjectId),
   );
+export const cardAppearanceSchema = z.strictObject({
+  theme: z.enum(["astral", "verdant", "ember", "parchment"]),
+  frame: z.enum(["constellation", "herbarium", "illuminated"]),
+});
+export type CardAppearance = z.infer<typeof cardAppearanceSchema>;
 export const cardContentSchema = z.discriminatedUnion("type", [
   z.strictObject({
     type: z.literal("flashcard"),
     front: text.max(4000),
+    title: text.max(160).optional(),
+    appearance: cardAppearanceSchema.optional(),
     back: text.max(8000),
   }),
   z
@@ -69,6 +76,9 @@ export const cardContentSchema = z.discriminatedUnion("type", [
     title: text,
     text: text.optional(),
     entryIds: uniqueIds,
+    appearance: cardAppearanceSchema.optional(),
+    category: text.max(80).optional(),
+    imageId: id.optional(),
   }),
   z.strictObject({
     type: z.literal("combat"),

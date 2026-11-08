@@ -27,6 +27,7 @@ import {
   DATABASE_SCHEMA_V13,
   DATABASE_SCHEMA_V14,
   DATABASE_SCHEMA_V15,
+  DATABASE_SCHEMA_V16,
   SCHEMA_MARKER_KEY,
   type PersistedActivity,
   type PersistedLibraryEntry,
@@ -42,6 +43,10 @@ import {
 const MIGRATION_TIMESTAMP = "1970-01-01T00:00:00.000Z";
 
 export class BibliotecaDatabase extends Dexie {
+  cardMedia!: EntityTable<
+    import("../../application/cardMedia").CardMedia,
+    "id"
+  >;
   arcanariumCards!: EntityTable<Card, "id">;
   arcanariumVersions!: import("dexie").Table<CardVersion, [string, number]>;
   arcanariumDecks!: EntityTable<Deck, "id">;
@@ -229,6 +234,15 @@ export class BibliotecaDatabase extends Dexie {
         await transaction.table<PersistedMetadata>("metadata").put({
           key: SCHEMA_MARKER_KEY,
           value: "15",
+          updatedAt: MIGRATION_TIMESTAMP,
+        });
+      });
+    this.version(16)
+      .stores(DATABASE_SCHEMA_V16)
+      .upgrade(async (transaction) => {
+        await transaction.table<PersistedMetadata>("metadata").put({
+          key: SCHEMA_MARKER_KEY,
+          value: "16",
           updatedAt: MIGRATION_TIMESTAMP,
         });
       });

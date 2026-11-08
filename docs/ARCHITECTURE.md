@@ -1,3 +1,7 @@
+## BF-5.6B — Oficina e navegação do Arcanário (candidata)
+
+Rota lazy `/arcanario/*`, portal/salas React e cartas SVG/CSS autorais; WorldHost continua residente e pausado fora da Biblioteca, sem novo Canvas. `ArcanariumWorkshop` coordena carta/versão, links de Estudos, decks e mídia em uma transação; eventos após commit. `CardExchange` coordena cópias atômicas e codec estrito na infraestrutura; React não acessa Dexie. Rascunhos privados locais passam por porta própria e validação ao recuperar. [ADR-026](decisions/ADR-026-arcanario-oficina-midias-troca.md), [relatório B](BF-5_6B_OFICINA_COLECOES_IMPLEMENTACAO.md). As descrições da A abaixo são a cronologia da fundação preservada.
+
 ## BF-5.6A — fundação do Arcanário em candidata
 
 `domain/arcanarium` define dados semânticos discriminados, versões, seleção de baralhos, classificação, sessões e invariantes puras; não conhece renderer ou armazenamento. `ArcanariumService` coordena a porta `ArcanariumRepository` e transações, revisões esperadas e consultas globais. `DexieArcanariumRepository` valida as linhas; upgrade e restore compartilham `promoteLegacyFlashCards`. Dexie v15 e backup v7 seguem a [ADR-025](decisions/ADR-025-arcanario-fundacao-persistencia.md).

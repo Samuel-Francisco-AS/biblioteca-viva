@@ -88,3 +88,8 @@ Os itens abaixo são espécimes externos normalizados para o gate F4-B, não ass
 - **autoria/licença:** Quaternius; CC0 1.0, conforme `Quaternius-License.txt` original preservado;
 - **modificações:** escala `0,5` incorporada ao asset, footprint centralizado, base em `Z=0`, root `F4_Quaternius_Bookshelf` em identidade e export GLB normalizado;
 - **finalidade/estado:** prova experimental F4-B; não-final, sem uso pela cena técnica. F4-C confirmou material efetivo por fatores: a imagem da fonte não participa dele, o mesh não requer UV e a ausência de imagem no GLB é legítima, não perda material.
+
+
+## Arcanário BF-5.6B (08/11/2026, candidata)
+
+`src/features/arcanarium/ArcanaArt.tsx` e `arcanarium.css`: três selos (Eco, Relicário, Oficina), três molduras (Constelação, Herbário, Iluminura), quatro materiais e composição de portal. Autoria original em código nesta entrega, sob a licença do repositório, sem imagens de terceiros/fontes remotas/novo Canvas. A imagem dos testes é o JPEG fictício já registrado em `e2e/fixtures/entertainment/ceu-ficticio.jpg`; fotos pessoais não são distribuídas. Aceite artístico pendente.

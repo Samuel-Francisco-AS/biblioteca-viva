@@ -275,7 +275,7 @@ it("upgrades v13 verbatim, preserves old sessions/notes/profile, round-trips new
   const db = new BibliotecaDatabase(name);
   dbs.push(db);
   await db.open();
-  expect(db.verno).toBe(15);
+  expect(db.verno).toBe(16);
   expect(await db.libraryEntries.get("w")).toEqual(work);
   expect(await db.sessions.get("s")).toEqual(session);
   expect(await db.notes.get("n")).toEqual(note);
@@ -316,7 +316,7 @@ it("upgrades v13 verbatim, preserves old sessions/notes/profile, round-trips new
     data: await store.read(),
   });
   const restored = await codec.inspect(backup.content);
-  expect(restored.summary.formatVersion).toBe(7);
+  expect(restored.summary.formatVersion).toBe(8);
   await store.replace(restored.data);
   db.close();
   await db.open();

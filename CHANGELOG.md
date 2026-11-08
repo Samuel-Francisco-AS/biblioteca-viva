@@ -1,3 +1,11 @@
+## 08/11/2026 — BF-5.6B candidata: Oficina, Ecos e Relicário
+
+- Portal React próprio do Arcanário, acervo com busca, cartas ornamentadas e gestão de baralhos estáticos compartilhados/ordenados.
+- Oficina com prévia frente/verso, temas/molduras, rascunhos recuperáveis e revisão esperada; integração canônica com Estudos.
+- Ecos globais com respostas persistidas, retomada, resultado e histórico; Relicário autoral com referências opcionais e imagens locais de propriedade própria.
+- Dexie v16, backup v8 (importa v6/v7; 10 MiB preservados), troca local autoral v1 validada, importada como cópia atômica.
+- [Relatório B](docs/BF-5_6B_OFICINA_COLECOES_IMPLEMENTACAO.md). Dependente da A/PR #43, sem merge ou aceite físico; C–G não iniciadas.
+
 ## 08/11/2026 — BF-5.6A candidata: fundação do Arcanário
 
 - Flashcards de Estudos promovidos ao acervo global com mapa de IDs por origem, arquivo legado preservado e edição única pelas telas existentes.

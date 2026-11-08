@@ -1,3 +1,4 @@
+import { validateCardMediaOwnership, type CardMediaPort } from "./cardMedia";
 import { z } from "zod";
 import {
   cardContentSchema,
@@ -27,7 +28,10 @@ import {
 export type ArcanariumDependencies = Pick<
   ApplicationDependencies,
   "clock" | "ids" | "events" | "libraryEntries" | "transaction"
-> & { readonly arcanarium: ArcanariumRepository };
+> & {
+  readonly arcanarium: ArcanariumRepository;
+  readonly cardMedia?: CardMediaPort;
+};
 const id = z.string().min(1);
 const expected = z.int().positive();
 export function requireRevision(actual: number, revision: number) {
@@ -67,8 +71,13 @@ export class ArcanariumService {
   private async validate() {
     const entries = await this.deps.libraryEntries.list();
     try {
+      const data = await this.deps.arcanarium.read();
+      validateCardMediaOwnership(
+        data.versions,
+        (await this.deps.cardMedia?.list()) ?? [],
+      );
       validateArcanarium(
-        await this.deps.arcanarium.read(),
+        data,
         new Set(entries.filter((e) => e.type === "study").map((e) => e.id)),
       );
     } catch {
@@ -140,6 +149,11 @@ export class ArcanariumService {
       const previous =
         (await this.deps.arcanarium.getCard(cardId)) ?? missing();
       requireRevision(previous.revision, expectedRevision);
+      if (previous.origin.kind === "official")
+        throw new ApplicationError(
+          "VALIDATION_FAILED",
+          "Carta oficial não é autoral.",
+        );
       const card = cardSchema.parse({
         ...reviseCard(previous, content ?? previous.content, now),
         archived: archive || previous.archived,
@@ -187,8 +201,14 @@ export class ArcanariumService {
     return runTransaction(this.deps, async () => {
       const previous = await this.deps.arcanarium.getDeck(deckId);
       if (parsed.id && !previous) missing();
-      if (previous)
+      if (previous) {
+        if (previous.origin.kind === "official")
+          throw new ApplicationError(
+            "VALIDATION_FAILED",
+            "Baralho oficial não é autoral.",
+          );
         requireRevision(previous.revision, parsed.expectedRevision ?? 0);
+      }
       const deck = deckSchema.parse({
         id: deckId,
         name: parsed.name,
@@ -210,6 +230,11 @@ export class ArcanariumService {
     );
     await runTransaction(this.deps, async () => {
       const deck = (await this.deps.arcanarium.getDeck(parsed.id)) ?? missing();
+      if (deck.origin.kind === "official")
+        throw new ApplicationError(
+          "VALIDATION_FAILED",
+          "Baralho oficial não é autoral.",
+        );
       requireRevision(deck.revision, parsed.expectedRevision);
       await this.deps.arcanarium.deleteDeck(deck.id);
     });

@@ -46,6 +46,10 @@ import {
 } from "./app/routeModules";
 import { completeStartupExperience } from "./startupExperience";
 
+const ArcanariumPage = lazy(
+  () => import("./features/arcanarium/ArcanariumPage"),
+);
+
 const CollectionPage = lazy(async () => ({
   default: (await routeModules.collection()).CollectionPage,
 }));
@@ -129,6 +133,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
     (route) => route.path === location.pathname,
   );
   const sectionTitle =
+    (location.pathname.startsWith("/arcanario") ? "O Arcanário" : undefined) ??
     activeRoute?.title ??
     (location.pathname.endsWith("/editar")
       ? "Editar registro"
@@ -343,6 +348,10 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           >
             <Routes>
               <Route path={APP_ROUTE_PATHS.library} element={null} />
+              <Route
+                path="/arcanario/*"
+                element={<ArcanariumPage application={application} />}
+              />
               <Route
                 path={APP_ROUTE_PATHS.collection}
                 element={<CollectionPage application={application} />}

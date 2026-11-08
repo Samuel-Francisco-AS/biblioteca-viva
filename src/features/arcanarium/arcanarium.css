@@ -1,0 +1,1037 @@
+/* Original BF-5.6B engravings and materials: CSS/SVG, no remote assets or render loop. */
+.arcanarium {
+  --arcana-gold: #e4c58d;
+  --arcana-muted: #c3b5cf;
+  color: #f1e7f7;
+  padding: 0.25rem 0 2rem;
+  min-width: 0;
+}
+.arcanarium * {
+  box-sizing: border-box;
+}
+.arcanarium h2,
+.arcanarium h3,
+.arcanarium p {
+  overflow-wrap: anywhere;
+}
+.arcanarium h2 {
+  color: #f6e9d1;
+  font-family: Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(1.9rem, 5vw, 3rem);
+  line-height: 1.12;
+  margin: 0.4rem 0 0.9rem;
+}
+.arcanarium h3 {
+  color: #f2dfbb;
+  font-family: Georgia, serif;
+  font-weight: 500;
+}
+.arcanarium a {
+  color: #ebd5aa;
+  text-underline-offset: 0.25em;
+}
+.arcanarium button,
+.arcanarium .button {
+  min-height: 48px;
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #a18aaf;
+  background: #30233e;
+  color: #f6eaf7;
+  font: inherit;
+  cursor: pointer;
+  text-align: center;
+}
+.arcanarium .button--primary {
+  background: linear-gradient(135deg, #704a8d, #482e66);
+  border-color: #cbaae0;
+  color: #fff4e5;
+  box-shadow:
+    inset 0 1px #ffffff20,
+    0 4px 16px #0003;
+  text-decoration: none;
+}
+.arcanarium .button--secondary {
+  background: #201a31;
+}
+.arcanarium button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.arcanarium :is(a, button, input, textarea, select, summary):focus-visible {
+  outline: 3px solid #f5d591;
+  outline-offset: 4px;
+}
+.arcanarium label {
+  display: grid;
+  gap: 0.45rem;
+  color: #e3d4ec;
+  margin: 0.7rem 0;
+  font-size: 0.95rem;
+  min-width: 0;
+}
+.arcanarium input:not([type="checkbox"], [type="radio"], [type="file"]),
+.arcanarium textarea,
+.arcanarium select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.8rem;
+  min-height: 48px;
+  color: #fcf4fc;
+  background: #130f20;
+  border: 1px solid #8c779e;
+  border-radius: 8px;
+  font: inherit;
+}
+.arcanarium input[type="file"] {
+  width: 100%;
+  max-width: 100%;
+  font: inherit;
+  padding: 0.7rem 0;
+}
+.arcanarium input::file-selector-button {
+  min-height: 44px;
+  background: #352442;
+  border: 1px solid #a18aaf;
+  color: #fff4eb;
+  border-radius: 6px;
+  font: inherit;
+  margin-right: 0.6rem;
+}
+.arcanarium textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+.arcanarium input:is([type="radio"], [type="checkbox"]) {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  accent-color: #c8a4ee;
+}
+.arcanarium small {
+  display: block;
+  color: #c9bad3;
+  font-size: 0.8rem;
+}
+.arcanarium fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.arcanarium legend {
+  font-family: Georgia, serif;
+  font-size: 1.25rem;
+  color: #e4c58d;
+  padding-bottom: 0.5rem;
+}
+.arcana-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.4rem 0 0.8rem;
+}
+.arcana-topline > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.arcana-topline > span {
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: #c6b0d2;
+  text-align: right;
+}
+.arcana-nav {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  border-top: 1px solid #8b6b944d;
+  border-bottom: 1px solid #8b6b9477;
+  padding: 0.4rem 0;
+  margin-bottom: 1.3rem;
+}
+.arcana-nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 0.9rem;
+  min-height: 46px;
+  text-decoration: none;
+  border-radius: 6px;
+  color: #d6c7e0;
+}
+.arcana-nav a.active {
+  color: #ffebbb;
+  background: #75538b40;
+  box-shadow: inset 0 -2px #e0bd7d;
+}
+.arcana-eyebrow {
+  font-size: 0.67rem;
+  text-transform: uppercase;
+  letter-spacing: 0.19em;
+  color: var(--arcana-gold);
+  line-height: 1.6;
+}
+.arcana-muted {
+  color: var(--arcana-muted);
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+.arcana-hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  min-height: 420px;
+  padding: clamp(1.1rem, 4vw, 3rem);
+  border: 1px solid #aa85be6b;
+  border-radius: 4px 30px 4px 30px;
+  background:
+    radial-gradient(ellipse at 80% 20%, #7c4c8938, transparent 60%),
+    linear-gradient(145deg, #241b35, #110f20 75%);
+  box-shadow:
+    inset 0 0 0 6px #b89bce07,
+    0 20px 50px #0002;
+  overflow: hidden;
+}
+.arcana-hero:before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid #b7996233;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 2px 18px 2px 18px;
+}
+.arcana-hero__copy {
+  z-index: 2;
+}
+.arcana-hero__copy h2 {
+  font-size: clamp(2.7rem, 6vw, 4.5rem);
+  letter-spacing: -0.04em;
+}
+.arcana-hero__copy > p:not(.arcana-eyebrow, .arcana-census) {
+  color: #d4c2dd;
+  font-family: Georgia, serif;
+  line-height: 1.8;
+  margin-bottom: 1.7rem;
+  font-size: 1.08rem;
+}
+.arcana-census {
+  color: #bda6c9;
+  font-size: 0.76rem;
+  margin-top: 1.5rem;
+}
+.arcana-hero__art {
+  position: relative;
+  height: 350px;
+  min-width: 0;
+}
+.arcana-orbit {
+  position: absolute;
+  inset: 0 -15% 0 0;
+  border: 1px solid #c7a66a40;
+  border-radius: 50%;
+  transform: rotate(-25deg);
+}
+.arcana-orbit:after {
+  content: "✧";
+  color: #e8c185;
+  position: absolute;
+  top: 7%;
+  right: 12%;
+  font-size: 2rem;
+}
+.arcana-hero__echo,
+.arcana-hero__memory {
+  position: absolute;
+  width: 175px;
+  top: 0;
+  left: 7%;
+  transform: rotate(-13deg);
+}
+.arcana-hero__memory {
+  transform: rotate(12deg);
+  top: 50px;
+  left: 40%;
+}
+.arcana-hero__art .arcana-card {
+  pointer-events: none;
+}
+.arcana-portals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.arcana-portal {
+  position: relative;
+  display: block;
+  padding: 1.5rem;
+  border: 1px solid #8e72974f;
+  background: linear-gradient(160deg, #2b2037aa, #151220);
+  text-decoration: none;
+  border-radius: 18px 3px 18px 3px;
+  transition:
+    transform 0.2s,
+    border-color 0.2s;
+}
+.arcana-portal:hover {
+  transform: translateY(-3px);
+  border-color: #c7ab76;
+}
+.arcana-portal > .arcana-seal {
+  width: 96px;
+  float: right;
+  margin: -0.6rem -0.6rem 0.5rem 0.2rem;
+  opacity: 0.65;
+}
+.arcana-portal h3 {
+  clear: both;
+  font-size: 1.35rem;
+  margin: 1rem 0 0.6rem;
+}
+.arcana-portal p {
+  color: #c8b8d3;
+  line-height: 1.7;
+  font-size: 0.92rem;
+}
+.arcana-portal > span:last-child {
+  display: block;
+  margin-top: 1.4rem;
+  font-size: 0.82rem;
+}
+.arcana-seal {
+  width: 150px;
+  max-width: 100%;
+  aspect-ratio: 1;
+  color: #d6b781;
+  stroke-width: 1.2;
+}
+.arcana-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.4rem;
+  margin: 1.5rem 0;
+}
+.arcana-heading > div {
+  min-width: 0;
+}
+.arcana-heading > div > p:not(.arcana-eyebrow) {
+  line-height: 1.75;
+  color: #cdbbd8;
+  max-width: 65ch;
+}
+.arcana-heading > .arcana-seal {
+  flex: 0 0 120px;
+  opacity: 0.75;
+}
+.arcana-heading .button {
+  flex-shrink: 0;
+}
+.arcana-filters {
+  display: flex;
+  gap: 1rem;
+  align-items: end;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background: #271c33a0;
+  border: 1px solid #73588255;
+  border-radius: 12px;
+}
+.arcana-filters > label:first-child {
+  flex: 1 1 200px;
+}
+.arcanarium .arcana-check {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 48px;
+  margin: 0;
+  padding: 0.55rem 0.4rem;
+  line-height: 1.4;
+}
+.arcana-check span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.arcana-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem 1.1rem;
+  align-items: start;
+  margin: 1.5rem 0;
+}
+.arcana-card-link {
+  display: block;
+  text-decoration: none;
+  min-width: 0;
+  border-radius: 20px;
+}
+.arcana-card-link:hover .arcana-card {
+  transform: translateY(-4px);
+}
+.arcana-card-caption {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin: 0.7rem 0 0.2rem;
+  overflow-wrap: anywhere;
+}
+.arcana-card {
+  --card-accent: #dec498;
+  --card-light: #4e365e;
+  --card-dark: #171326;
+  width: 100%;
+  max-width: 370px;
+  margin-inline: auto;
+  color: var(--card-accent);
+  perspective: 1400px;
+  transition: transform 0.25s;
+}
+[data-theme="verdant"] {
+  --card-accent: #d8d69c;
+  --card-light: #2d5147;
+  --card-dark: #101f23;
+}
+[data-theme="ember"] {
+  --card-accent: #f0cd98;
+  --card-light: #623849;
+  --card-dark: #261326;
+}
+[data-theme="parchment"] {
+  --card-accent: #f6d69c;
+  --card-light: #5e4b38;
+  --card-dark: #261f27;
+}
+.arcana-card__turn {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 0.48s cubic-bezier(0.22, 0.7, 0.2, 1);
+}
+.arcana-card[data-flipped="true"] .arcana-card__turn {
+  transform: rotateY(180deg);
+}
+.arcana-face {
+  grid-area: 1/1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 440px;
+  padding: 34px;
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 50% 15%, var(--card-light), transparent 72%),
+    repeating-linear-gradient(135deg, transparent 0 4px, #ffffff02 5px 6px),
+    var(--card-dark);
+  box-shadow:
+    0 12px 28px #0006,
+    inset 0 0 26px #0005;
+  backface-visibility: hidden;
+  border: 1px solid #ad906a;
+  overflow: hidden;
+}
+.arcana-face:after {
+  content: "";
+  position: absolute;
+  inset: 23px;
+  border: 1px solid #d9c18d22;
+  border-radius: 60px 60px 4px 4px;
+  pointer-events: none;
+}
+.arcana-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.85;
+  stroke-width: 1;
+}
+.arcana-face--back {
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(ellipse at 50% 85%, var(--card-light), transparent 90%),
+    var(--card-dark);
+}
+.arcana-card__family {
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  text-align: center;
+  z-index: 1;
+  color: var(--card-accent);
+  padding: 0.3rem 0 0.8rem;
+  overflow-wrap: anywhere;
+}
+.arcana-face > .arcana-seal {
+  width: clamp(110px, 15vw, 190px);
+  margin: 10px auto 18px;
+  flex-shrink: 0;
+  color: var(--card-accent);
+}
+.arcana-card__writing {
+  color: #fff4e6;
+  z-index: 1;
+  margin: auto 0;
+  max-height: 52vh;
+  overflow: auto;
+  scrollbar-width: thin;
+  padding: 0.4rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.arcana-card__writing h3 {
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-weight: 500;
+  line-height: 1.6;
+  text-align: center;
+  color: #fff4e6;
+  margin: 0;
+}
+.arcana-card__writing p {
+  font:
+    1.05rem/1.8 Georgia,
+    serif;
+  margin: 0;
+}
+.arcana-card__foot {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  font-size: 0.54rem;
+  letter-spacing: 0.13em;
+  text-align: center;
+  border-top: 1px solid #d9c18d50;
+  z-index: 1;
+}
+.arcana-card__image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.2;
+  object-fit: cover;
+  border: 1px solid #d4b88266;
+  border-radius: 45% 45% 3px 3px;
+  margin: 0.4rem 0 1rem;
+  z-index: 1;
+}
+.arcana-card--compact {
+  max-width: 265px;
+}
+.arcana-card--compact .arcana-face {
+  min-height: 300px;
+  padding: 25px;
+}
+.arcana-card--compact .arcana-face > .arcana-seal {
+  width: 96px;
+  margin: 5px auto 12px;
+}
+.arcana-card--compact .arcana-card__writing {
+  max-height: 95px;
+  overflow: hidden;
+}
+.arcana-card--compact .arcana-card__writing h3 {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.arcana-card--compact .arcana-card__family {
+  font-size: 0.55rem;
+}
+.arcana-card--compact .arcana-card__foot {
+  font-size: 0.46rem;
+  padding-top: 0.6rem;
+}
+.arcana-detail {
+  display: grid;
+  grid-template-columns: minmax(250px, 370px) minmax(0, 1fr);
+  gap: 2.2rem;
+  margin: 1.5rem 0;
+  align-items: start;
+}
+.arcana-detail__object {
+  display: grid;
+  gap: 1rem;
+}
+.arcana-detail__info h2 {
+  font-size: 2rem;
+  line-height: 1.4;
+}
+.arcana-detail__info h3 {
+  margin-top: 1.8rem;
+}
+.arcana-list {
+  padding-left: 1.2rem;
+  line-height: 1.7;
+}
+.arcana-list > li {
+  margin: 0.6rem 0;
+  overflow-wrap: anywhere;
+}
+.arcana-list a {
+  display: inline-block;
+  padding: 0.35rem 0;
+}
+.arcana-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.arcana-actions > a:not(.button) {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.arcanarium .arcana-danger {
+  background: transparent;
+  color: #ffc6c0;
+  border-color: #aa727a;
+  margin: 0.6rem 0;
+}
+.arcana-panel {
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid #8a6d9955;
+  background: linear-gradient(160deg, #292035cc, #171322);
+  border-radius: 14px 3px 14px 3px;
+  margin: 1rem 0;
+  min-width: 0;
+}
+.arcana-panel p {
+  line-height: 1.7;
+}
+.arcana-error {
+  padding: 1rem;
+  border: 1px solid #c88c8f;
+  border-radius: 10px;
+  color: #ffdfda;
+  background: #432431;
+  overflow-wrap: anywhere;
+}
+.arcana-notice {
+  padding: 1rem;
+  border-left: 2px solid #c7b57f;
+  background: #3b314c;
+  color: #f5dfb4;
+}
+.arcana-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  margin: 1rem 0;
+  border: 1px dashed #a18aaf55;
+  border-radius: 14px;
+  color: #cdbbd8;
+}
+.arcana-empty > .arcana-seal {
+  width: 120px;
+  opacity: 0.65;
+}
+.arcana-empty p {
+  max-width: 50ch;
+  margin-inline: auto;
+  line-height: 1.7;
+}
+.arcana-deck-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.3rem;
+  margin: 1.5rem 0;
+}
+.arcana-deck {
+  position: relative;
+  padding: 1.5rem 1.5rem 1.5rem 2rem;
+  background: linear-gradient(
+    90deg,
+    #513d44 0 8px,
+    #241c30 9px,
+    #21192f 95%,
+    #473746
+  );
+  border: 1px solid #aa8f6855;
+  border-radius: 4px 12px 12px 4px;
+  box-shadow:
+    4px 5px #ad927333,
+    7px 8px #1d1924;
+  text-decoration: none;
+}
+.arcana-deck > .arcana-seal {
+  width: 100px;
+  display: block;
+  margin: 0 auto 1rem;
+}
+.arcana-deck h3 {
+  font-size: 1.4rem;
+}
+.arcana-deck p {
+  color: #cbbcd6;
+  font-size: 0.9rem;
+}
+.arcana-deck > span:last-child {
+  font-size: 0.8rem;
+  display: block;
+  margin-top: 1.5rem;
+}
+.arcana-deck-order {
+  padding: 0;
+  list-style: none;
+  counter-reset: cards;
+}
+.arcana-deck-order li {
+  counter-increment: cards;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid #9779a344;
+  padding: 0.7rem 0;
+  flex-wrap: wrap;
+}
+.arcana-deck-order li:before {
+  content: counter(cards, decimal-leading-zero);
+  color: #ae9681;
+  font:
+    0.8rem Georgia,
+    serif;
+}
+.arcana-deck-order li > span {
+  flex: 1;
+  min-width: 120px;
+  overflow-wrap: anywhere;
+}
+.arcana-deck-order .arcana-actions {
+  gap: 0.4rem;
+  margin: 0.2rem 0;
+}
+.arcana-deck-order button {
+  padding: 0.6rem;
+  min-width: 44px;
+}
+.arcana-choice-list {
+  max-height: 320px;
+  overflow: auto;
+  padding: 0.4rem;
+  margin: 0.5rem 0 1rem;
+  scrollbar-width: thin;
+}
+.arcana-kind {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+.arcana-kind a {
+  min-height: 48px;
+  padding: 0.8rem 1rem;
+  border: 1px solid #81668c;
+  border-radius: 8px;
+  text-decoration: none;
+}
+.arcana-kind a[aria-current="page"] {
+  background: #5a3c6b;
+  border-color: #dcbd87;
+  color: #ffebbd;
+}
+.arcana-workshop {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: 2rem;
+  align-items: start;
+}
+.arcana-editor {
+  margin-top: 1.2rem;
+}
+.arcana-editor > fieldset > label {
+  margin-bottom: 1.4rem;
+}
+.arcana-preview {
+  display: grid;
+  gap: 1rem;
+  text-align: center;
+  padding-top: 1rem;
+  position: sticky;
+  top: 1rem;
+}
+.arcana-preview > .arcana-eyebrow {
+  margin: 0.5rem;
+}
+.arcana-preview > .arcana-muted {
+  max-width: 36ch;
+  margin-inline: auto;
+}
+.arcana-preview > button {
+  max-width: 370px;
+  width: 100%;
+  margin-inline: auto;
+}
+.arcanarium .arcana-themes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+}
+.arcanarium .arcana-themes legend {
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.arcanarium .arcana-swatch {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  border: 1px solid var(--card-accent, #ccb0e2);
+  border-radius: 8px;
+  padding: 0.7rem;
+  background: var(--card-light, #453154);
+  color: #fff4e5;
+  font-size: 0.85rem;
+}
+.arcanarium details {
+  border-top: 1px solid #8e72974f;
+  margin-top: 1rem;
+  padding: 0.4rem 0;
+}
+.arcanarium summary {
+  min-height: 48px;
+  cursor: pointer;
+  padding: 0.8rem 0.3rem;
+  color: #ebd5aa;
+}
+.arcana-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1.3rem;
+  margin: 1rem 0;
+  background: linear-gradient(110deg, #382641, #1b1a2a);
+  border: 1px solid #93719b55;
+  border-radius: 12px;
+}
+.arcana-stats span {
+  text-align: center;
+  color: #d1bed9;
+  font-size: 0.8rem;
+}
+.arcana-stats strong {
+  display: block;
+  color: #f1d19b;
+  font:
+    2rem Georgia,
+    serif;
+  margin-bottom: 0.4rem;
+}
+.arcana-history {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+}
+.arcana-session-link {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1.2rem;
+  border: 1px solid #9477a060;
+  background: #251c31;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.arcana-session-link strong {
+  color: #efe0f7;
+  font-weight: 500;
+}
+.arcana-review {
+  max-width: 480px;
+  margin: 1rem auto;
+  display: grid;
+  gap: 1.2rem;
+}
+.arcana-review progress {
+  width: 100%;
+  height: 8px;
+  accent-color: #d3a8ef;
+}
+.arcana-review__answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+.arcana-result {
+  max-width: 620px;
+  margin: 1rem auto;
+  padding: 1.5rem;
+  background: radial-gradient(ellipse at top, #4d345866, transparent), #1c1729;
+  border: 1px solid #99774e77;
+  border-radius: 15px;
+}
+.arcana-result > .arcana-seal {
+  display: block;
+  margin: auto;
+}
+.arcana-result > p {
+  line-height: 1.8;
+}
+@media (max-width: 700px) {
+  .arcana-hero {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+  .arcana-hero__art {
+    height: 285px;
+    margin-top: 1.5rem;
+    max-width: 380px;
+    width: 100%;
+    justify-self: center;
+  }
+  .arcana-hero__echo,
+  .arcana-hero__memory {
+    width: 150px;
+  }
+  .arcana-hero__art .arcana-face {
+    min-height: 250px;
+  }
+  .arcana-portals {
+    grid-template-columns: 1fr;
+  }
+  .arcana-portal {
+    padding: 1.2rem;
+  }
+  .arcana-portal > .arcana-seal {
+    width: 75px;
+  }
+  .arcana-portal h3 {
+    clear: none;
+  }
+  .arcana-heading {
+    align-items: start;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .arcana-heading > .arcana-seal {
+    display: none;
+  }
+  .arcana-topline > span {
+    display: none;
+  }
+  .arcana-nav {
+    gap: 0.2rem;
+  }
+  .arcana-nav a {
+    flex: 1 0 28%;
+    padding: 0.6rem 0.4rem;
+    font-size: 0.88rem;
+  }
+  .arcana-workshop,
+  .arcana-detail {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .arcana-preview {
+    position: static;
+    grid-row: 1;
+  }
+  .arcana-preview > .arcana-card {
+    max-width: 290px;
+  }
+  .arcana-preview .arcana-face {
+    min-height: 365px;
+  }
+  .arcana-preview .arcana-face > .arcana-seal {
+    width: 130px;
+    margin: 5px auto;
+  }
+  .arcana-preview > .arcana-muted {
+    display: none;
+  }
+  .arcana-preview > .arcana-danger {
+    margin-bottom: 0;
+  }
+  .arcana-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.3rem 0.65rem;
+  }
+  .arcana-card--compact .arcana-face {
+    padding: 20px;
+    min-height: 265px;
+  }
+  .arcana-card--compact .arcana-face > .arcana-seal {
+    width: 75px;
+  }
+  .arcana-card--compact .arcana-card__writing h3 {
+    font-size: 0.87rem;
+  }
+  .arcana-card--compact .arcana-card__family {
+    letter-spacing: 0.04em;
+    font-size: 0.48rem;
+  }
+  .arcana-stats {
+    padding: 1rem 0.6rem;
+    gap: 0.5rem;
+  }
+  .arcana-detail__object {
+    max-width: 350px;
+    width: 100%;
+    margin: auto;
+  }
+}
+@media (max-width: 360px) {
+  .arcana-grid {
+    grid-template-columns: 1fr;
+  }
+  .arcana-themes {
+    grid-template-columns: 1fr !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arcanarium * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+[data-reduced-motion="true"] .arcanarium * {
+  transition: none !important;
+  animation: none !important;
+}
+[data-high-contrast="true"] .arcanarium {
+  --arcana-muted: #f2e6ff;
+}
+[data-high-contrast="true"]
+  .arcanarium
+  :is(
+    button,
+    input,
+    textarea,
+    select,
+    .arcana-panel,
+    .arcana-nav,
+    .arcana-deck,
+    .arcana-portal
+  ) {
+  border-color: #f0d29b;
+}
+[data-high-contrast="true"]
+  .arcanarium
+  :is(p, small, .arcana-muted, .arcana-card__family, .arcana-card__foot) {
+  color: #fff3e0;
+}
+@media (orientation: landscape) and (max-height: 550px) {
+  .arcana-preview {
+    position: static;
+  }
+  .arcana-card__writing {
+    max-height: 70vh;
+  }
+}
+
+.arcanarium .arcana-add-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 0.5rem 0;
+  overflow-wrap: anywhere;
+}

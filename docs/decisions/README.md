@@ -4,6 +4,7 @@ Este índice distingue as decisões vigentes das preservadas para contexto. O re
 
 | ID      | Decisão                                    | Estado                  |
 | ------- | ------------------------------------------ | ----------------------- |
+| ADR-026 | [Oficina, mídias e troca autoral](ADR-026-arcanario-oficina-midias-troca.md) | candidata BF-5.6B; gate A+B pendente |
 | ADR-025 | [Fundação persistente do Arcanário](ADR-025-arcanario-fundacao-persistencia.md) | candidata BF-5.6A; aceite pendente |
 | ADR-001 | produto local-first e privado por padrão   | aceita                  |
 | ADR-002 | arquitetura híbrida anterior               | substituída por ADR-008 |

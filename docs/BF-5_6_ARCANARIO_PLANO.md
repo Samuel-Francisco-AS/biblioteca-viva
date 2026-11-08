@@ -1,3 +1,5 @@
+> **Atualização específica de 08/11/2026:** B foi autorizada pelo proprietário e implementada como candidata dependente da A, com gate físico conjunto adiado para A+B; ambas seguem abertas, sem merge/aceite. [Relatório B](BF-5_6B_OFICINA_COLECOES_IMPLEMENTACAO.md). C–G continuam somente planejadas. As restrições de sequência abaixo antecedem essa exceção explícita.
+
 # BF-5.6 — O Arcanário | Plano e contrato de escopo
 
 - Data da decisão: 08/11/2026.

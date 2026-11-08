@@ -1,4 +1,5 @@
 export type AppRouteId =
+  | "arcanarium"
   | "library"
   | "collection"
   | "new-entry"
@@ -24,6 +25,7 @@ export interface AppRoute {
 }
 
 export const APP_ROUTE_PATHS = {
+  arcanarium: "/arcanario",
   archive: "/arquivo",
   collection: "/colecao",
   entryDetail: "/registros/:id",
@@ -38,6 +40,12 @@ export const APP_ROUTE_PATHS = {
 } as const;
 
 export const appRoutes: readonly AppRoute[] = [
+  {
+    id: "arcanarium",
+    path: APP_ROUTE_PATHS.arcanarium,
+    title: "O Arcanário",
+    description: "Cartas, Ecos e lembranças",
+  },
   {
     description: "Experiência visual da Biblioteca em reformulação",
     id: "library",
@@ -112,6 +120,8 @@ export const primaryAppRoutes = appRoutes.filter(
 export function appRouteForPath(pathname: string): AppRoute | undefined {
   const exact = appRoutes.find((route) => route.path === pathname);
   if (exact) return exact;
+  if (pathname.startsWith("/arcanario/"))
+    return appRoutes.find((r) => r.id === "arcanarium");
   if (
     pathname.startsWith("/registros/") ||
     pathname.startsWith("/livros/") ||

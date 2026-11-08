@@ -220,6 +220,9 @@ export function CollectionPage({
           title="Acervo encantado"
           description="Tudo o que você lê, descobre e constrói."
         />
+        <Link className="text-link" to="/arcanario">
+          ✧ Cartas, Ecos e Relicário · abrir o Arcanário
+        </Link>
         <p className="eyebrow">Coleção vazia</p>
         <h2 id="empty-collection-title">Seu primeiro registro começa aqui</h2>
         <p>Registre algo que você lê, assiste, aprende, pratica ou constrói.</p>
@@ -246,6 +249,9 @@ export function CollectionPage({
         title="Acervo encantado"
         description="Tudo o que você lê, descobre e constrói."
       />
+      <Link className="text-link" to="/arcanario">
+        ✧ Cartas, Ecos e Relicário · abrir o Arcanário
+      </Link>
       <div className="section-heading">
         <div>
           <p className="eyebrow">Seus registros</p>
