@@ -90,6 +90,24 @@ function publicError(error: unknown): string {
 function Counts({ counts }: { readonly counts: BackupCounts }) {
   return (
     <dl className="backup-counts">
+      {(counts.arcanariumCards ?? 0) > 0 && (
+        <div>
+          <dt>Cartas do Arcanário</dt>
+          <dd>{counts.arcanariumCards}</dd>
+        </div>
+      )}
+      {(counts.arcanariumDecks ?? 0) > 0 && (
+        <div>
+          <dt>Baralhos</dt>
+          <dd>{counts.arcanariumDecks}</dd>
+        </div>
+      )}
+      {(counts.cardSessions ?? 0) > 0 && (
+        <div>
+          <dt>Revisões de cartas</dt>
+          <dd>{counts.cardSessions}</dd>
+        </div>
+      )}
       {Boolean(counts.media) && (
         <div>
           <dt>Posters locais</dt>

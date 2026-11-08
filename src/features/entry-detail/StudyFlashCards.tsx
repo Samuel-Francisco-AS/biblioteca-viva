@@ -1,8 +1,10 @@
+import type { ArcanariumService } from "../../application/arcanarium";
 import { useRef, useState, type FormEvent } from "react";
 import type { FlashCard, StudyEntry } from "../../domain";
 import { presentApplicationError } from "../entry-editor/errorMessages";
 
 export interface FlashCardApplication {
+  readonly arcanarium: Pick<ArcanariumService, "startReview" | "answerReview">;
   readonly commands: {
     readonly saveFlashCard: { execute(input: unknown): Promise<StudyEntry> };
     readonly deleteFlashCard: { execute(input: unknown): Promise<StudyEntry> };
@@ -21,6 +23,8 @@ export function StudyFlashCards({
   const [front, setFront] = useState("");
   const [back, setBack] = useState("");
   const [editing, setEditing] = useState<string>();
+  const [editingRevision, setEditingRevision] = useState<number>();
+  const [reviewId, setReviewId] = useState<string>();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string>();
   const [message, setMessage] = useState("");
@@ -39,6 +43,7 @@ export function StudyFlashCards({
     setFront("");
     setBack("");
     setEditing(undefined);
+    setEditingRevision(undefined);
   };
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -51,6 +56,7 @@ export function StudyFlashCards({
         await application.commands.saveFlashCard.execute({
           entryId: entry.id,
           cardId: editing,
+          expectedRevision: editingRevision,
           front,
           back,
         }),
@@ -68,27 +74,60 @@ export function StudyFlashCards({
       setBusy(false);
     }
   }
-  function review(selection: readonly FlashCard[]) {
-    // Shuffle a snapshot; the persisted deck and its order remain untouched.
-    const shuffled = [...selection];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  async function review(selection: readonly FlashCard[]) {
+    if (saving.current) return;
+    saving.current = true;
+    setBusy(true);
+    setError(undefined);
+    try {
+      // Shuffle a snapshot; the persisted deck and its order remain untouched.
+      const shuffled = [...selection];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      const refs = shuffled.map((item) => {
+        if (!item.globalCardId || !item.revision)
+          throw new Error("Missing canonical card reference");
+        return { cardId: item.globalCardId, revision: item.revision };
+      });
+      const session = await application.arcanarium.startReview(refs);
+      setReviewId(session.id);
+      setDeck(shuffled);
+      setIndex(0);
+      setFlipped(false);
+      setRemembered(0);
+      setAgain([]);
+      window.requestAnimationFrame(() => cardButton.current?.focus());
+    } catch (failure: unknown) {
+      setError(presentApplicationError(failure).message);
+    } finally {
+      saving.current = false;
+      setBusy(false);
     }
-    setDeck(shuffled);
-    setIndex(0);
-    setFlipped(false);
-    setRemembered(0);
-    setAgain([]);
-    window.requestAnimationFrame(() => cardButton.current?.focus());
   }
-  function next(recalled: boolean) {
-    if (!card || !flipped) return;
-    if (recalled) setRemembered((value) => value + 1);
-    else setAgain((value) => [...value, card]);
-    setFlipped(false);
-    setIndex((value) => value + 1);
-    window.requestAnimationFrame(() => cardButton.current?.focus());
+  async function next(recalled: boolean) {
+    if (!card || !flipped || !reviewId || saving.current) return;
+    saving.current = true;
+    setBusy(true);
+    setError(undefined);
+    try {
+      await application.arcanarium.answerReview({
+        sessionId: reviewId,
+        index,
+        recalled,
+      });
+      if (recalled) setRemembered((value) => value + 1);
+      else setAgain((value) => [...value, card]);
+      setFlipped(false);
+      setIndex((value) => value + 1);
+      window.requestAnimationFrame(() => cardButton.current?.focus());
+    } catch (failure: unknown) {
+      setError(presentApplicationError(failure).message);
+    } finally {
+      saving.current = false;
+      setBusy(false);
+    }
   }
   return (
     <section
@@ -116,8 +155,8 @@ export function StudyFlashCards({
         <button
           className="button button--primary"
           ref={reviewButton}
-          disabled={cards.length === 0}
-          onClick={() => review(cards)}
+          disabled={busy || cards.length === 0}
+          onClick={() => void review(cards)}
           type="button"
         >
           Revisar cartas
@@ -164,24 +203,24 @@ export function StudyFlashCards({
               <div className="study-review-controls">
                 <button
                   className="button button--secondary"
-                  disabled={!flipped}
+                  disabled={busy || !flipped}
                   type="button"
-                  onClick={() => next(false)}
+                  onClick={() => void next(false)}
                 >
                   Rever depois →
                 </button>
                 <button
                   className="button button--primary"
-                  disabled={!flipped}
+                  disabled={busy || !flipped}
                   type="button"
-                  onClick={() => next(true)}
+                  onClick={() => void next(true)}
                 >
                   Lembrei →
                 </button>
               </div>
               <p className="study-hint">
-                Revele o verso antes de escolher. As escolhas valem apenas para
-                esta rodada.
+                Revele o verso antes de escolher. Suas respostas são guardadas
+                no histórico de revisão.
               </p>
             </>
           ) : (
@@ -202,7 +241,8 @@ export function StudyFlashCards({
                 <button
                   className="button button--primary"
                   type="button"
-                  onClick={() => review(again)}
+                  disabled={busy}
+                  onClick={() => void review(again)}
                 >
                   Revisitar {again.length} cartas
                 </button>
@@ -210,7 +250,8 @@ export function StudyFlashCards({
               <button
                 className="button button--secondary"
                 type="button"
-                onClick={() => review(cards)}
+                disabled={busy}
+                onClick={() => void review(cards)}
               >
                 Nova rodada
               </button>
@@ -218,6 +259,7 @@ export function StudyFlashCards({
           )}
           <button
             className="text-button"
+            disabled={busy}
             type="button"
             onClick={() => {
               setDeck(undefined);
@@ -306,6 +348,7 @@ export function StudyFlashCards({
                       )
                         return;
                       setEditing(item.id);
+                      setEditingRevision(item.revision);
                       setFront(item.front);
                       setBack(item.back);
                       window.requestAnimationFrame(() =>
@@ -320,22 +363,35 @@ export function StudyFlashCards({
                     type="button"
                     disabled={busy}
                     onClick={() => {
-                      if (!window.confirm("Excluir esta carta de revisão?"))
+                      if (saving.current) return;
+                      if (
+                        !window.confirm(
+                          "Retirar esta carta deste estudo? Ela continuará no acervo global.",
+                        )
+                      )
                         return;
+                      saving.current = true;
                       setBusy(true);
                       setError(undefined);
                       void application.commands.deleteFlashCard
-                        .execute({ entryId: entry.id, cardId: item.id })
+                        .execute({
+                          entryId: entry.id,
+                          cardId: item.id,
+                          expectedRevision: item.revision,
+                        })
                         .then(
                           (updated) => {
                             onChange(updated);
                             if (editing === item.id) reset();
-                            setMessage("Carta excluída.");
+                            setMessage("Carta retirada deste estudo.");
                           },
                           (failure: unknown) =>
                             setError(presentApplicationError(failure).message),
                         )
-                        .finally(() => setBusy(false));
+                        .finally(() => {
+                          saving.current = false;
+                          setBusy(false);
+                        });
                     }}
                   >
                     Excluir carta

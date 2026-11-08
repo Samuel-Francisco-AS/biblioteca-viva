@@ -1,3 +1,12 @@
+import type {
+  Card,
+  CardVersion,
+  Deck,
+  StudyCardLink,
+  KnowledgeTag,
+  CardSession,
+} from "../../domain/arcanarium";
+import { promoteLegacyFlashCards } from "./promoteLegacyFlashCards";
 import type { LocalPoster } from "../../application/media";
 import Dexie, { type EntityTable } from "dexie";
 
@@ -17,6 +26,7 @@ import {
   DATABASE_SCHEMA_V12,
   DATABASE_SCHEMA_V13,
   DATABASE_SCHEMA_V14,
+  DATABASE_SCHEMA_V15,
   SCHEMA_MARKER_KEY,
   type PersistedActivity,
   type PersistedLibraryEntry,
@@ -32,6 +42,12 @@ import {
 const MIGRATION_TIMESTAMP = "1970-01-01T00:00:00.000Z";
 
 export class BibliotecaDatabase extends Dexie {
+  arcanariumCards!: EntityTable<Card, "id">;
+  arcanariumVersions!: import("dexie").Table<CardVersion, [string, number]>;
+  arcanariumDecks!: EntityTable<Deck, "id">;
+  studyCardLinks!: import("dexie").Table<StudyCardLink, [string, string]>;
+  knowledgeTags!: EntityTable<KnowledgeTag, "id">;
+  cardSessions!: EntityTable<CardSession, "id">;
   media!: EntityTable<LocalPoster, "entryId">;
   libraryEntries!: EntityTable<PersistedLibraryEntry, "id">;
   notes!: EntityTable<PersistedNote, "id">;
@@ -203,6 +219,16 @@ export class BibliotecaDatabase extends Dexie {
         await transaction.table<PersistedMetadata>("metadata").put({
           key: SCHEMA_MARKER_KEY,
           value: "14",
+          updatedAt: MIGRATION_TIMESTAMP,
+        });
+      });
+    this.version(15)
+      .stores(DATABASE_SCHEMA_V15)
+      .upgrade(async (transaction) => {
+        await promoteLegacyFlashCards(transaction);
+        await transaction.table<PersistedMetadata>("metadata").put({
+          key: SCHEMA_MARKER_KEY,
+          value: "15",
           updatedAt: MIGRATION_TIMESTAMP,
         });
       });

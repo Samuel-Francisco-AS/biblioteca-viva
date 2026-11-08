@@ -104,6 +104,9 @@ export interface StudyEntry extends LibraryEntryBase {
 }
 
 export interface FlashCard {
+  /** Read projection from the Arcanarium; absent in the preserved legacy archive. */
+  readonly globalCardId?: string;
+  readonly revision?: number;
   readonly id: string;
   readonly front: string;
   readonly back: string;

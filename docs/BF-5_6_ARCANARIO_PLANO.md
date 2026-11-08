@@ -1,7 +1,7 @@
 # BF-5.6 — O Arcanário | Plano e contrato de escopo
 
 - Data da decisão: 08/11/2026.
-- Estado: **planejamento autorizado e formalizado; nenhuma implementação iniciada**.
+- Estado: **A em candidata por autorização específica de implementação de 08/11/2026; aceite pendente. B–G somente planejadas**. [Relatório A](BF-5_6A_FUNDACAO_IMPLEMENTACAO.md).
 - Ordem aprovada: **BF-5 (fechada) → BF-5.5 (fechada com ressalvas) → BF-5.6 (planejada) → BF-6 (RPG/mundo) → BF-7 (consolidação)**.
 - Autoridade de modelagem: [ADR-020 revista](decisions/ADR-020-baralhos-e-cartas-globais.md). Este documento descreve objetivos, etapas e gates; contratos de código, formato de pacotes e regras numéricas finais exigem implementação e validação próprias.
 - Base de integração: main após fechamento BF-5.5 (#41 e #42). Não reabrir BF-5.5 nem ocultar suas dívidas.
@@ -105,4 +105,4 @@ Compartilhamento online de baralhos; contas/turmas; professora criando deck de 1
 - Formatos de relatório e retenção; critérios estatísticos para domínio; acessibilidade específica.
 - Ordem fina das subentregas e gates por PR, ajustada conforme evidência do repositório.
 
-**Resultado deste registro:** escopo e sequência BF-5.6 aprovados em planejamento, sem novas tabelas, engine, cartas ou cenas implementadas; BF-6/7 permanecem futuros.
+**Resultado original deste plano:** escopo e sequência aprovados sem implementação pela formalização. A candidata A posterior está registrada separadamente; B–G e BF-6/7 permanecem futuros.

@@ -1,4 +1,9 @@
 import {
+  arcanariumDataSchema,
+  emptyArcanarium,
+  validateArcanarium,
+} from "../../domain/arcanarium";
+import {
   parseInhabitantContinuity,
   type InhabitantContinuitySnapshot,
 } from "../../features/library/inhabitantContinuity";
@@ -67,6 +72,7 @@ const backupSettingSchema = z.discriminatedUnion("key", [
   }),
 ]);
 const dataSchema = z.strictObject({
+  arcanarium: arcanariumDataSchema.optional(),
   media: z.array(posterSchema).optional(),
   libraryEntries: z.array(persistedLibraryEntrySchema),
   notes: z.array(persistedNoteSchema),
@@ -79,7 +85,7 @@ const dataSchema = z.strictObject({
 });
 const unsignedSchema = z.strictObject({
   kind: z.literal(BACKUP_KIND),
-  formatVersion: z.literal(BACKUP_FORMAT_VERSION),
+  formatVersion: z.union([z.literal(6), z.literal(BACKUP_FORMAT_VERSION)]),
   createdAt: z.iso.datetime({ offset: false }),
   appVersion: z.string().trim().min(1),
   databaseVersion: z.int().positive(),
@@ -153,6 +159,11 @@ function byteLength(content: string): number {
 
 function counts(data: BackupData): BackupCounts {
   return Object.freeze({
+    ...(data.arcanarium !== undefined && {
+      arcanariumCards: data.arcanarium.cards.length,
+      arcanariumDecks: data.arcanarium.decks.length,
+      cardSessions: data.arcanarium.sessions.length,
+    }),
     ...(data.media?.length && { media: data.media.length }),
     libraryEntries: data.libraryEntries.length,
     notes: data.notes.length,
@@ -171,6 +182,7 @@ function sorted(data: BackupData): BackupData {
       [...values].sort((left, right) => left.id.localeCompare(right.id)),
     );
   return Object.freeze({
+    ...(data.arcanarium !== undefined && { arcanarium: data.arcanarium }),
     ...(data.media !== undefined && {
       media: Object.freeze(
         [...data.media].sort((a, b) => a.entryId.localeCompare(b.entryId)),
@@ -191,7 +203,39 @@ function sorted(data: BackupData): BackupData {
   });
 }
 
-function rejectDuplicates(data: BackupData): void {
+export function validateBackupData(data: BackupData): void {
+  if (data.arcanarium) {
+    try {
+      const mappings = new Set(
+        data.arcanarium.studyLinks.map((link) =>
+          JSON.stringify([link.studyId, link.legacyCardId]),
+        ),
+      );
+      if (
+        data.libraryEntries.some(
+          (entry) =>
+            entry.type === "study" &&
+            entry.flashCards?.some(
+              (card) => !mappings.has(JSON.stringify([entry.id, card.id])),
+            ),
+        )
+      )
+        throw new Error("Missing legacy mapping");
+      validateArcanarium(
+        data.arcanarium,
+        new Set(
+          data.libraryEntries
+            .filter((entry) => entry.type === "study")
+            .map((entry) => entry.id),
+        ),
+      );
+    } catch {
+      throw new BackupError(
+        "INVALID_BACKUP_DATA",
+        "O Arcanário contém vínculos ou revisões inválidas.",
+      );
+    }
+  }
   const owners = new Set(
     data.libraryEntries
       .filter(
@@ -255,6 +299,7 @@ export class JsonBackupCodec implements BackupCodecPort {
   }): Promise<BackupArtifact> {
     const data = sorted(
       dataSchema.parse({
+        arcanarium: input.data.arcanarium ?? emptyArcanarium(),
         media: input.data.media,
         libraryEntries: input.data.libraryEntries,
         notes: input.data.notes,
@@ -266,7 +311,7 @@ export class JsonBackupCodec implements BackupCodecPort {
         tags: input.data.tags,
       }),
     );
-    rejectDuplicates(data);
+    validateBackupData(data);
     const unsigned = unsignedSchema.parse({
       kind: BACKUP_KIND,
       formatVersion: BACKUP_FORMAT_VERSION,
@@ -331,7 +376,7 @@ export class JsonBackupCodec implements BackupCodecPort {
         "FUTURE_FORMAT_VERSION",
         "O backup usa um formato futuro.",
       );
-    if (formatVersion !== BACKUP_FORMAT_VERSION)
+    if (formatVersion !== 6 && formatVersion !== BACKUP_FORMAT_VERSION)
       throw new BackupError(
         "UNSUPPORTED_FORMAT_VERSION",
         "Backups produzidos antes do WORLD RESET não são compatíveis com este aplicativo.",
@@ -342,7 +387,11 @@ export class JsonBackupCodec implements BackupCodecPort {
         "O backup não contém checksum de integridade.",
       );
     const parsed = envelopeSchema.safeParse(raw);
-    if (!parsed.success)
+    if (
+      !parsed.success ||
+      (formatVersion === 6 && parsed.data.data.arcanarium !== undefined) ||
+      (formatVersion === 7 && parsed.data.data.arcanarium === undefined)
+    )
       throw new BackupError(
         "INVALID_BACKUP_DATA",
         "O backup contém dados inválidos.",
@@ -355,14 +404,14 @@ export class JsonBackupCodec implements BackupCodecPort {
         "A integridade do backup não confere.",
       );
     const data = sorted(parsed.data.data);
-    rejectDuplicates(data);
+    validateBackupData(data);
     return Object.freeze({
       data,
       summary: Object.freeze({
         createdAt: parsed.data.createdAt,
         appVersion: parsed.data.appVersion,
         databaseVersion: parsed.data.databaseVersion,
-        formatVersion: BACKUP_FORMAT_VERSION,
+        formatVersion: parsed.data.formatVersion,
         policy: "replace" as const,
         counts: counts(data),
         warnings: Object.freeze(

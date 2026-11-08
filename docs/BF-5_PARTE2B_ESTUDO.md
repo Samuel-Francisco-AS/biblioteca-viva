@@ -1,3 +1,5 @@
+> **Contrato de cartas atualizado pela BF-5.6A candidata:** armazenamento global e projeção no fólio substituem a lista local editável; foco/tempo/estilos preservados. [ADR-025](decisions/ADR-025-arcanario-fundacao-persistencia.md) · [migração e compatibilidade](BF-5_6A_FUNDACAO_IMPLEMENTACAO.md). A descrição original abaixo registra a Parte 2B.
+
 # BF-5 — Parte 2B: fólio de Estudo, pomodoro e flash cards
 
 Data: 2026-11-04. **Candidata de implementação; BF-5 e issue #24 abertas. Sem merge automático ou aceite artístico/físico.**

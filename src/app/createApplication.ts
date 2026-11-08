@@ -1,3 +1,5 @@
+import { ArcanariumService } from "../application/arcanarium";
+import { DexieArcanariumRepository } from "../infrastructure/database/arcanariumRepository";
 import { SaveEndeavor } from "../application/endeavors";
 import { SaveEntertainment } from "../application/entertainment";
 import type { PosterPort } from "../application/media";
@@ -138,6 +140,7 @@ export interface ApplicationDiagnostics {
 export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 
 export interface ApplicationRuntime {
+  readonly arcanarium: ArcanariumService;
   readonly inhabitantContinuity: InhabitantContinuityPort;
   readonly nightLightingContinuity: NightLightingPort;
   readonly physicalProfile: PhysicalProfilePort;
@@ -275,6 +278,7 @@ export async function createApplication(
     PRODUCT_MILESTONE_DEFINITIONS,
   );
   const dependencies = {
+    arcanarium: new DexieArcanariumRepository(database),
     activities,
     clock,
     events,
@@ -340,6 +344,7 @@ export async function createApplication(
     options.annotationShare ?? new PlatformAnnotationShare();
 
   return {
+    arcanarium: new ArcanariumService(dependencies),
     inhabitantContinuity: new DexieInhabitantContinuityRepository(database),
     nightLightingContinuity: new DexieNightLightingRepository(database),
     physicalProfile,

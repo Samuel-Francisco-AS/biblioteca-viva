@@ -1,3 +1,4 @@
+import { promoteLegacyFlashCards } from "./promoteLegacyFlashCards";
 // @vitest-environment node
 import "fake-indexeddb/auto";
 import Dexie from "dexie";
@@ -40,7 +41,7 @@ it("upgrades v9 without rewriting entries, restores v6 backups with and without 
   legacy.close();
   const db = new BibliotecaDatabase(name);
   await db.open();
-  expect(db.verno).toBe(14);
+  expect(db.verno).toBe(15);
   expect(await db.libraryEntries.get(entry.id)).toEqual(entry);
   expect(await db.sessions.get(session.id)).toEqual(session);
   const codec = new JsonBackupCodec();
@@ -62,6 +63,10 @@ it("upgrades v9 without rewriting entries, restores v6 backups with and without 
   const timed = { ...session, focusDurationSeconds: 1500 };
   await db.libraryEntries.put(updated);
   await db.sessions.put(timed);
+  // This synthetic write models legacy input after upgrade; production restore uses the same promotion.
+  await db.transaction("rw", db.tables, (transaction) =>
+    promoteLegacyFlashCards(transaction),
+  );
   db.close();
   await db.open();
   expect(await db.libraryEntries.get(entry.id)).toEqual(updated);
@@ -73,7 +78,7 @@ it("upgrades v9 without rewriting entries, restores v6 backups with and without 
     data: await snapshots.read(),
   });
   const restored = await codec.inspect(backup.content);
-  expect(restored.summary.formatVersion).toBe(6);
+  expect(restored.summary.formatVersion).toBe(7);
   expect(restored.data.libraryEntries).toEqual([updated]);
   expect(restored.data.sessions).toEqual([timed]);
   expect(

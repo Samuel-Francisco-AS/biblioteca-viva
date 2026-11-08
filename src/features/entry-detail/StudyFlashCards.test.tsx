@@ -11,7 +11,15 @@ it("reveals the back, advances with a slide, revisits missed cards, and keeps dr
       progressUnit: "hours",
       createdAt: "2026-11-04T12:00:00.000Z",
     }),
-    flashCards: [{ id: "a", front: "Uma pista?", back: "Uma descoberta" }],
+    flashCards: [
+      {
+        id: "a",
+        globalCardId: "global:a",
+        revision: 1,
+        front: "Uma pista?",
+        back: "Uma descoberta",
+      },
+    ],
   };
   const save = vi.fn().mockRejectedValue(new Error("failed"));
   render(
@@ -19,6 +27,10 @@ it("reveals the back, advances with a slide, revisits missed cards, and keeps dr
       entry={entry}
       onChange={vi.fn()}
       application={{
+        arcanarium: {
+          startReview: vi.fn().mockResolvedValue({ id: "review" }),
+          answerReview: vi.fn().mockResolvedValue({}),
+        },
         commands: {
           saveFlashCard: { execute: save },
           deleteFlashCard: { execute: vi.fn() },
@@ -27,7 +39,9 @@ it("reveals the back, advances with a slide, revisits missed cards, and keeps dr
     />,
   );
   fireEvent.click(screen.getByRole("button", { name: "Revisar cartas" }));
-  const front = screen.getByRole("button", { name: /Pergunta: Uma pista/ });
+  const front = await screen.findByRole("button", {
+    name: /Pergunta: Uma pista/,
+  });
   expect(front).toHaveAttribute("aria-pressed", "false");
   expect(screen.getByRole("button", { name: "Lembrei →" })).toBeDisabled();
   fireEvent.click(front);
@@ -36,14 +50,16 @@ it("reveals the back, advances with a slide, revisits missed cards, and keeps dr
   ).toHaveAttribute("data-flipped", "true");
   fireEvent.click(screen.getByRole("button", { name: "Rever depois →" }));
   expect(
-    screen.getByText(
+    await screen.findByText(
       "0 de 1 cartas lembradas. As outras merecem um reencontro.",
     ),
   ).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "Revisitar 1 cartas" }));
-  fireEvent.click(screen.getByRole("button", { name: /Pergunta: Uma pista/ }));
+  fireEvent.click(
+    await screen.findByRole("button", { name: /Pergunta: Uma pista/ }),
+  );
   fireEvent.click(screen.getByRole("button", { name: "Lembrei →" }));
-  expect(screen.getByText(/1 de 1 cartas lembradas/)).toBeVisible();
+  expect(await screen.findByText(/1 de 1 cartas lembradas/)).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "Encerrar revisão" }));
   fireEvent.click(screen.getByText("Inscrever uma nova carta"));
   fireEvent.change(screen.getByLabelText("Frente · pergunta ou pista"), {
