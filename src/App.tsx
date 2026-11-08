@@ -37,6 +37,7 @@ import { measureStartupPhase } from "./startupPerformance";
 import "./styles.css";
 import "./styles-legacy.css";
 import "./styles-atelier.css";
+import "./features/library/canvas-hud.css";
 import { pulseTouch } from "./app/touchFeedback";
 import {
   preloadRoute,
@@ -117,6 +118,8 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   const [libraryVisited, setLibraryVisited] = useState(libraryActive);
   if (libraryActive && !libraryVisited) setLibraryVisited(true);
   const mainRef = useRef<HTMLElement>(null);
+  const shellRef = useRef<HTMLDivElement>(null);
+  const sessionStripRef = useRef<HTMLDivElement>(null);
   const previousPathRef = useRef(location.pathname);
   const pressedRef = useRef<HTMLElement | null>(null);
   const pressedOriginRef = useRef<{ id: number; x: number; y: number } | null>(
@@ -149,6 +152,37 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
     if (shellStartedAt !== undefined)
       measureStartupPhase("react-shell", shellStartedAt);
   }, [shellStartedAt]);
+
+  useLayoutEffect(() => {
+    const strip = sessionStripRef.current;
+    if (!strip) return;
+    const dock = shellRef.current?.querySelector<HTMLElement>(".primary-dock");
+    const resize = () => {
+      shellRef.current?.style.setProperty(
+        "--canvas-session-height",
+        `${strip.getBoundingClientRect().height}px`,
+      );
+      if (dock) {
+        const bottom = Number.parseFloat(window.getComputedStyle(dock).bottom);
+        shellRef.current?.style.setProperty(
+          "--canvas-dock-height",
+          `${dock.getBoundingClientRect().height + (Number.isFinite(bottom) ? bottom : 0)}px`,
+        );
+      }
+    };
+    resize();
+    const observer =
+      typeof ResizeObserver === "undefined"
+        ? undefined
+        : new ResizeObserver(resize);
+    observer?.observe(strip);
+    if (dock) observer?.observe(dock);
+    window.addEventListener("resize", resize);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
 
   useEffect(() => {
     let cancelWarmup: (() => void) | undefined;
@@ -217,6 +251,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   return (
     <div
       className="app-shell"
+      ref={shellRef}
       onPointerDownCapture={revealTap}
       onPointerMoveCapture={(event) => {
         const origin = pressedOriginRef.current;
@@ -270,7 +305,9 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
         }
         title={sectionTitle}
       />
-      <ActiveSessionIndicator application={application} />
+      <div className="session-strip" ref={sessionStripRef}>
+        <ActiveSessionIndicator application={application} />
+      </div>
       <main
         className="app-content"
         id="main-content"

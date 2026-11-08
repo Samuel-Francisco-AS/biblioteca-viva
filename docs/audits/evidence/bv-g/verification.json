@@ -1,0 +1,54 @@
+{
+  "base": "d8b2c4eb151f8fe2643cd3e3e0a3ceaf534e53ea",
+  "branch": "feat/bf-5-5g-refinamento-consolidacao",
+  "integratedVitest": {
+    "files": 29,
+    "passed": 277,
+    "timeout": 1,
+    "timeoutCase": "Ytha exhaustive animation envelope, existing 5000ms deadline"
+  },
+  "isolatedAnimator": {
+    "passed": 13,
+    "failed": 0
+  },
+  "distinctIntegratedCasesPassedAcrossRuns": 278,
+  "finalHudVitest": {
+    "files": 6,
+    "passed": 66
+  },
+  "addedFeedbackRegression": {
+    "passed": 5,
+    "overlap": 4
+  },
+  "addedShellRegression": {
+    "passed": 6,
+    "overlap": 5
+  },
+  "cssFixture": {
+    "passed": 4,
+    "scope": "real styles with fictional DOM; no WebGL"
+  },
+  "e2e": {
+    "passed": 1,
+    "failed": 1,
+    "retries": 0,
+    "pass": "temporary brand, same resident Canvas and four tab returns",
+    "failure": "30s global deadline refreshing a real object action after landscape resize",
+    "afterFailure": "measured HUD spacing and banner contrast corrected; CSS fixture PASS; integrated E2E not repeated"
+  },
+  "gates": {
+    "format": "PASS",
+    "format:check": "PASS",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "audio:check": "PASS",
+    "webBuild": "PASS",
+    "performanceReport": "PASS",
+    "androidSync": "PASS",
+    "androidDebug": "PASS",
+    "diffCheck": "PASS"
+  },
+  "remoteCI": "not run; skip ci, historical global debt remains",
+  "physicalG": "pending owner Moto G06",
+  "bf55Complete": false
+}

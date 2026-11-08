@@ -7,6 +7,7 @@ ROOT=os.getcwd(); OUT=ROOT+'/assets/3d/source/inhabitants'; DEST=ROOT+'/src/feat
 TAU=math.tau
 exec(compile(open(OUT+'/refine.py').read(), OUT+'/refine.py', 'exec'))
 exec(compile(open(OUT+'/physical.py').read(), OUT+'/physical.py', 'exec'))
+exec(compile(open(OUT+'/locomotion.py').read(), OUT+'/locomotion.py', 'exec'))
 
 def mat(name,c,metal=0,rough=.55,alpha=1,glow=0):
  m=bpy.data.materials.new(name);m.diffuse_color=(*c,alpha);m.use_nodes=True
@@ -305,6 +306,7 @@ def build(who,height):
    for k in f.keyframe_points:k.interpolation='BEZIER'
   track=rig.animation_data.nla_tracks.new();track.name=clip;strip=track.strips.new(clip,1,action);strip.name=clip;rig.animation_data.action=None;track.mute=True
  physical_clips(rig,meshes,factor,who)
+ refine_locomotion(rig,factor,who)
  for b in rig.pose.bones:b.rotation_euler=(0,0,0);b.location=(0,0,0)
  bpy.context.scene.frame_set(1);bpy.context.preferences.filepaths.save_version=0
  bpy.ops.wm.save_as_mainfile(filepath=OUT+'/'+who+'.blend')

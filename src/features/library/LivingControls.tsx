@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import {
   LIVING_OBJECTS,
   type LivingSession,
@@ -32,6 +38,28 @@ export function LivingFeedback({ session }: { session: LivingSession }) {
   const previousObjects = useRef(state.objects);
   const [visible, setVisible] = useState(false);
   const [fading, setFading] = useState(false);
+  const feedbackRef = useRef<HTMLParagraphElement>(null);
+
+  useLayoutEffect(() => {
+    const feedback = feedbackRef.current;
+    const page = feedback?.closest<HTMLElement>(".library-page");
+    if (!visible || !feedback || !page) return;
+    const resize = () =>
+      page.style.setProperty(
+        "--canvas-notice-height",
+        `${feedback.getBoundingClientRect().height}px`,
+      );
+    resize();
+    const observer =
+      typeof ResizeObserver === "undefined"
+        ? undefined
+        : new ResizeObserver(resize);
+    observer?.observe(feedback);
+    return () => {
+      observer?.disconnect();
+      page.style.removeProperty("--canvas-notice-height");
+    };
+  }, [visible, state.message]);
 
   useEffect(() => {
     // Context-only clock updates preserve the objects map: no stale toast.
@@ -51,6 +79,7 @@ export function LivingFeedback({ session }: { session: LivingSession }) {
   return (
     <p
       className="living-world-feedback"
+      ref={feedbackRef}
       data-fading={fading}
       role="status"
       aria-live="polite"

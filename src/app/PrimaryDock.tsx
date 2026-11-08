@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { preloadRoute } from "./routeModules";
 
 import {
@@ -58,6 +59,9 @@ function DockIcon({ name }: { readonly name: PrimaryNavigationIcon }) {
 
 export function PrimaryDock({ pathname }: { readonly pathname: string }) {
   const activeRouteId = primaryRouteIdForPath(pathname);
+  const [passage, setPassage] = useState<{ from: string; to: string }>();
+  if (passage && passage.from !== pathname) setPassage(undefined);
+  const pending = passage?.from === pathname && passage.to !== pathname;
 
   return (
     <nav aria-label="Navegação principal" className="primary-dock">
@@ -76,7 +80,22 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                 aria-current={active ? "page" : undefined}
                 aria-label={route.primaryNavigation.accessibleLabel}
                 className="primary-dock__link"
+                data-pending={pending && passage.to === route.path}
                 to={route.path}
+                onPointerDown={() => preloadRoute(route.path)}
+                onClick={(event) => {
+                  if (
+                    event.button !== 0 ||
+                    event.metaKey ||
+                    event.ctrlKey ||
+                    event.shiftKey ||
+                    event.altKey ||
+                    event.defaultPrevented
+                  )
+                    return;
+                  preloadRoute(route.path);
+                  setPassage({ from: pathname, to: route.path });
+                }}
                 onPointerEnter={() => preloadRoute(route.path)}
                 onFocus={() => preloadRoute(route.path)}
               >
