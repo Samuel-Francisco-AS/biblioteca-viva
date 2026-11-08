@@ -413,7 +413,12 @@ it("round-trips v8 with images and history; restores a checksummed original v7 w
   await target.db.open();
   expect(await target.api.getCard(c.id)).toEqual(c);
   const legacy = await setup();
-  await legacy.api.createCard(echo);
+  const originalV7Card = {
+    type: "flashcard" as const,
+    front: echo.front,
+    back: echo.back,
+  };
+  await legacy.api.createCard(originalV7Card);
   const {
     cardMedia: _media,
     isEmpty: _empty,
@@ -434,7 +439,7 @@ it("round-trips v8 with images and history; restores a checksummed original v7 w
   expect(validated.summary.formatVersion).toBe(7);
   await target.snapshots.replace(validated.data);
   expect(await target.media.list()).toHaveLength(0);
-  expect((await target.api.list()).cards[0].content).toEqual(echo);
+  expect((await target.api.list()).cards[0].content).toEqual(originalV7Card);
 });
 it("rejects corrupt image graphs and restores atomically on failure after clearing v8 destination", async () => {
   const { workshop, snapshots, backup, db } = await setup();

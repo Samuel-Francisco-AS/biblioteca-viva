@@ -88,6 +88,16 @@ O cenário do mesmo Canvas passou antes das alterações dirigidas dos controles
 
 Não há alegação de ampla/CI global verde. CI remota será omitida por cota via `[skip ci]`, sem workflow caro manual. Testes em origens/bancos descartáveis, com textos e imagem fictícios; nenhum backup pessoal usado.
 
+## APK debug e proveniência
+
+`npm run android:build:debug` **PASS**, incluindo build web, Capacitor sync e Gradle assembleDebug (`BUILD SUCCESSFUL`, 184 tasks). APK local, ignorado pelo Git: `android/app/build/outputs/apk/debug/app-debug.apk`.
+
+- **11.642.677 bytes**; SHA-256 **04adb6a85333c4e0b88338fd983a139c691a232749e137adfc3d7219be0f1fe9**.
+- Código produtivo do commit **7cce3a4f45b6087fe766305b0cfbbd7473a75b99** sobre A **e6b8b2c53adf26779c8e3f9b4cd33a998256c6ea**. Commits posteriores de auditoria/documentação não alteram o código produtivo compilado.
+- Auditoria final reforçou o fixture v7 para usar somente os campos existentes na A (frente/verso, sem aparência nova): o caso dirigido de round-trip v8/restore v7 original teve **1 PASS**; os outros 11 casos do arquivo não foram selecionados nessa execução, já contemplados nas rodadas anteriores. Não houve remoção de asserts.
+- Artefato debug local para instalação dirigida; nenhuma publicação de release, instalação em dados pessoais ou teste físico executados pelo agente.
+- Arquivos, diff e capturas revisados: apenas conteúdo fictício; nenhum backup/exportação pessoal, credencial ou keystore versionado. Árvore de produção revisada sem alterações 3D ou dependências novas.
+
 ## Roteiro físico conjunto A+B
 
 1. **Antes da instalação:** exportar e guardar backup v6 pelo APK atualmente instalado, conferir acesso ao arquivo e manter recuperação externa. Registrar versão/commit da candidata. **Não desinstalar, limpar dados ou fazer downgrade. Não existe downgrade suportado após migração para v15/v16.** Se já usa A, guardar também seu v7.
