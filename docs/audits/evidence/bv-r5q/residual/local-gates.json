@@ -1,0 +1,109 @@
+{
+  "sourceBase": "94bae8bbf95863d6e847b18cbdff4fae24e545e0",
+  "scope": "R5Q residual quest opening only; no new Android physical measurement",
+  "physicalOwnerFeedback": {
+    "testedSource": "94bae8bbf95863d6e847b18cbdff4fae24e545e0",
+    "device": "Moto G06",
+    "nightStartup": "PASS",
+    "generalFluidity": "PASS",
+    "questOpening": "PARTIAL: improved, still stutters",
+    "kind": "Qualitative owner report supplied in task; no invented timing or art acceptance"
+  },
+  "directed": {
+    "command": "npm run test:run -- src/features/library/three/performanceProbe.test.ts src/features/library/three/ThreeWorldRuntime.test.ts src/features/library/three/ThreeWorldInteraction.test.ts src/features/library/WorldHost.test.tsx src/features/library/NarrativePanel.test.tsx src/features/library/three/preparedSkinning.test.ts src/features/library/narrative/session.test.ts --maxWorkers=2",
+    "passed": 120,
+    "files": 7
+  },
+  "wideOnce": {
+    "command": "npm run test:run -- --maxWorkers=2",
+    "passed": 981,
+    "failed": 1,
+    "files": 154,
+    "failure": "inhabitantPresence.test.ts:89, real Ytha hover test exceeded unchanged 5000 ms timeout (6119 ms reported). New occurrence this round; not classified as historical E2E. WebGL benchmark overlapped; contention plausible but not established cause."
+  },
+  "focusedPresence": {
+    "command": "npm run test:run -- src/features/library/three/inhabitantPresence.test.ts --maxWorkers=1",
+    "passed": 3,
+    "files": 1,
+    "note": "One focused run without WebGL benchmark, unchanged test/assertions/timeout. Not a second green wide suite."
+  },
+  "finalProbeAndRuntime": {
+    "passed": 61,
+    "files": 2,
+    "note": "After overlap attribution/terminal clear adjustments; overlaps earlier counts."
+  },
+  "distinctUnitCasesPassedAcrossRuns": 982,
+  "intermediateFailures": [
+    {
+      "kind": "new test fixture",
+      "result": "113 PASS/1 FAIL, animation dispatch in jsdom with WebkitAnimation/no AnimationEvent. Corrected prefix in fixture, assertions preserved. Panel rerun 3/3 PASS."
+    },
+    {
+      "kind": "new test lint",
+      "result": "5 errors in mock types/unbound method/SkinnedMesh narrowing; fixed with typed mocks/local reference/type guard, no disabled lint or blind casts."
+    }
+  ],
+  "benchmarks": {
+    "cpuDom": {
+      "beforeCases": 64,
+      "afterCases": 64,
+      "scope": "Chromium dev React, renderer double, exact real GLBs, final CSS layers/ancestors. Synthetic events, manual scene RAF; NOT Android latency."
+    },
+    "webgl": {
+      "beforeCases": 12,
+      "afterCases": 12,
+      "scope": "Real Chromium/SwiftShader; bounded existing GPU probe enabled both versions, candidate quest probe too. CPU submission is not GPU/display timing. No renderer win claimed."
+    },
+    "assertions": "152 recorded cases replay-checked for selected id, quest heading/focus, no page errors, disposed teardown; candidate traces checked for source/inhabitant/commit/submit. No new browser loop."
+  },
+  "lifecycle": {
+    "command": "node scripts/check-world-lifecycle.mjs docs/audits/evidence/bv-r5q/residual/lifecycle 1",
+    "status": "PASS",
+    "cycles": 1,
+    "ownPendingListenersObserversFrames": 0,
+    "undisposedResources": 0,
+    "repeatedDisposals": 0,
+    "scope": "Real WebGL host, context loss terminal by design. Not long-term heap/GC or Android proof."
+  },
+  "staticBuild": {
+    "format": "PASS",
+    "formatCheck": "PASS",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS (via android:build:debug)",
+    "audioCheck": "PASS",
+    "performanceReport": "PASS",
+    "androidSyncDebug": "PASS",
+    "diffCheck": "PASS",
+    "warnings": ["Vite chunks >500 kB", "Gradle flatDir, existing"]
+  },
+  "e2e": {
+    "executedThisRound": false,
+    "preservedHistoricalStatus": "R5Q 0/1 at scrollIntoViewIfNeeded line 60, 30 s global deadline. R2/R5P debts remain open. No retry/assert/timeout changes; no global CI green claimed."
+  },
+  "android": {
+    "adbDevices": 0,
+    "agentPhysicalTest": false,
+    "artifact": "apk.json"
+  },
+  "publication": {
+    "singleCommit": true,
+    "skipCi": true,
+    "workflowChanges": false,
+    "dispatchOrRerun": false,
+    "merge": false,
+    "newPhase": false
+  },
+  "unmeasured": [
+    "Moto G06 input latency",
+    "Android GPU time",
+    "physical presentation",
+    "raster/compositor",
+    "long-term heap/GC"
+  ],
+  "finalProbeOnly": {
+    "passed": 5,
+    "files": 1,
+    "note": "After early-return on marks already recorded; removes repeated per-frame diagnostic stage processing. Overlaps earlier tests. Android rebuilt afterward."
+  }
+}

@@ -1,0 +1,14 @@
+# Gate físico e artístico R5 — pendente
+
+Instalar manualmente `android/app/build/outputs/apk/debug/app-debug.apk` preservando dados e estratégia de recuperação. Conferir SHA em `apk.json`. Não limpar banco nem restaurar backup pessoal para testar arte. O proprietário avalia cada personagem independentemente; aprovação de um não aprova os outros.
+
+1. Com a mesma câmera, comparar [R4/R5](comparison.png), aproximar e afastar no mundo. Registrar para Samael: massa/chifres/rosto/garras/café/notebook/aura; Aryn: origem élfica, orelhas/cabelo/óculos/vestes/restauração; Ytha: delicadeza/asas/padrões/pétalas/leitura noturna; Lua: rosto/cabelo/gola/grimório/identidade experimental. Para cada um: APROVAR / AJUSTAR e observação concreta. As imagens são GLBs reais, mas não substituem o aparelho.
+2. Selecionar os quatro via toque Canvas e lista React; confirmar mesmo nome/highlight, inclusive depois de caminhar/girar. Testar o contorno em extremidades, cabelo, mãos e asas. Alternar zoom/retrato/paisagem e retornar de fólio.
+3. Executar caminhar, girar, cumprimento, atividade, magia e recuperação; observar cotovelos/joelhos/cintura, integridade da roupa, gestos e transições. Comparar ritmo/personalidade. Observar se acessórios se interpenetram ou ocultam contato; preensão de dedos e rig facial não estão entregues.
+4. Deixar os quatro autônomos juntos, acompanhar aproximação/orientação, reserva e transporte/devolução do livro cenográfico, pergaminhos e passagens. Conferir asas de Ytha sem atravessar obstáculo; rota indisponível deve continuar indisponível, sem raio artificialmente menor. O livro pessoal ainda voa à mesa: não há leitura sentada.
+5. Iniciar leitura real, pausar/retomar/concluir; conferir fólio/cronômetro e livro original, sem clone ou mudança de ID. Observar magia, dia/noite/nove luminárias e escolher ações de Lua sem exigir acidentes repetitivos. Conferir os seis tipos pessoais aprovados R2.
+6. Durante deslocamento/atividade, background/tela apagada/retorno; mudar de abas e reabrir. Confirmar continuidade sem salto e ausência de callbacks após sair. Repetir montagem/saída algumas vezes; registrar travamento, aquecimento e duração observada, sem converter percepção em FPS.
+7. Ativar movimento reduzido: percursos/animação ornamental suspendem sem teletransporte; texto semântico permanece verdadeiro. Testar texto ampliado, contraste, foco e TalkBack separadamente; os testes automatizados não aprovaram esses gates humanos.
+8. Se necessário, abrir diagnóstico opt-in R4 e anotar cenário/hora/duração, percentis e comportamento, sem conteúdo pessoal. ADB/WebView/GPU/memória/temperatura só com medição real; não inferir pelo nome Moto G06.
+
+Não aprovar assento: não está implementado. Não fechar BF-5.5F2B/F2C, BF-5.5G ou recuperação integral por consequência deste teste. Aceite final e eventual merge dependem de instrução expressa do proprietário. Nenhum merge automático.

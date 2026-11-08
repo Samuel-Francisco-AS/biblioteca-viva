@@ -1,3 +1,5 @@
+import type { PerformanceProbe } from "./performanceProbe";
+import { withPreparedSkinning } from "./preparedSkinning";
 import {
   Box3,
   Box3Helper,
@@ -5,6 +7,7 @@ import {
   OrthographicCamera,
   Raycaster,
   Scene,
+  SkinnedMesh,
   type Intersection,
   Vector2,
   Vector3,
@@ -34,6 +37,8 @@ interface ActivePointer {
 }
 
 interface ThreeWorldInteractionOptions {
+  readonly probe?: PerformanceProbe;
+  readonly onPickStart?: () => void;
   readonly camera: OrthographicCamera;
   readonly canvas: HTMLCanvasElement;
   readonly catalog: readonly WorldSelectableObject[];
@@ -49,6 +54,8 @@ interface ThreeWorldInteractionOptions {
 const TEST_PICK_OBJECT_ID = "crate-01";
 
 export class ThreeWorldInteraction {
+  private readonly probe?: PerformanceProbe;
+  private readonly onPickStart?: () => void;
   private readonly activePointers = new Map<number, ActivePointer>();
   private readonly camera: OrthographicCamera;
   private readonly canvas: HTMLCanvasElement;
@@ -86,6 +93,8 @@ export class ThreeWorldInteraction {
   private readonly navigation: CameraNavigation;
 
   constructor(options: ThreeWorldInteractionOptions) {
+    this.probe = options.probe;
+    this.onPickStart = options.onPickStart;
     this.camera = options.camera;
     this.canvas = options.canvas;
     this.navigation = options.navigation;
@@ -179,7 +188,7 @@ export class ThreeWorldInteraction {
     this.pickIntersections.length = 0;
   }
 
-  selectObject(id: string | null): void {
+  selectObject(id: string | null, preparedBounds?: Box3): void {
     if (this.disposed) return;
     const nextId =
       id !== null && this.selectableDescriptors.has(id) ? id : null;
@@ -188,12 +197,14 @@ export class ThreeWorldInteraction {
     this.selectedId = nextId;
     this.clearHighlight();
     const root = nextId === null ? undefined : this.selectableRoots.get(nextId);
-    if (root) this.applyHighlight(root);
+    if (root) this.applyHighlight(root, preparedBounds);
     this.canvas.dataset.selectedObject = nextId ?? "";
     this.canvas.dataset.highlightedObject = root ? (nextId ?? "") : "";
+    this.probe?.markQuest("publishStart");
     this.onSelectionChange(
       nextId === null ? null : (this.selectableDescriptors.get(nextId) ?? null),
     );
+    this.probe?.markQuest("publishEnd");
     this.render();
     this.updateDiagnostics();
   }
@@ -213,7 +224,16 @@ export class ThreeWorldInteraction {
   updateHighlightBounds(): void {
     if (this.disposed || !this.highlight || !this.selectedId) return;
     const root = this.selectableRoots.get(this.selectedId);
-    if (root) this.highlight.box.setFromObject(root);
+    if (root) {
+      root.updateWorldMatrix(true, false);
+      root.updateMatrixWorld(true);
+      // Character meshes deform; cached bind-pose bounds are insufficient.
+      const box = this.highlight.box;
+      const precise = this.selectedId.startsWith("character:");
+      if (precise)
+        withPreparedSkinning([root], () => box.setFromObject(root, true));
+      else box.setFromObject(root);
+    }
   }
 
   setViewport(width: number, height: number): void {
@@ -222,13 +242,22 @@ export class ThreeWorldInteraction {
     this.updateDiagnostics();
   }
 
-  private applyHighlight(root: Object3D): void {
-    const bounds = new Box3().setFromObject(root);
+  private applyHighlight(root: Object3D, preparedBounds?: Box3): void {
+    this.probe?.markQuest("highlightStart");
+    root.updateWorldMatrix(true, false);
+    root.updateMatrixWorld(true);
+    const bounds = preparedBounds ?? new Box3();
+    if (!preparedBounds) {
+      if (this.selectedId?.startsWith("character:"))
+        withPreparedSkinning([root], () => bounds.setFromObject(root, true));
+      else bounds.setFromObject(root);
+    }
     if (bounds.isEmpty()) return;
     const highlight = new Box3Helper(bounds, 0x45d9ff);
     highlight.name = "f1-c-selection-highlight";
     this.scene.add(highlight);
     this.highlight = highlight;
+    this.probe?.markQuest("highlightEnd");
     this.canvas.dataset.highlightedObject = this.selectedId ?? "";
   }
 
@@ -317,7 +346,11 @@ export class ThreeWorldInteraction {
 
     this.activePointers.delete(event.pointerId);
     this.releasePointer(event.pointerId);
-    if (shouldPick) this.pick(pointer.current);
+    if (shouldPick) {
+      this.onPickStart?.();
+      this.pick(pointer.current);
+      this.probe?.markQuest("handlerEnd");
+    }
     this.continueAfterPointerEnd();
   };
 
@@ -442,6 +475,7 @@ export class ThreeWorldInteraction {
   }
 
   private pick(position: PointerPosition): void {
+    this.probe?.markQuest("pickStart");
     const bounds = this.canvas.getBoundingClientRect();
     const { height, width } = bounds;
     if (
@@ -460,52 +494,85 @@ export class ThreeWorldInteraction {
     const roots = this.getPickingRoots();
     // Update only selectable hierarchies and their ancestors. This also handles
     // input arriving before the next render after a book/inhabitant moves.
-    for (const root of roots) root.updateWorldMatrix(true, true);
-    this.raycaster.setFromCamera(this.pickPointer, this.camera);
-    this.pickIntersections.length = 0;
-    this.raycaster.intersectObjects(roots, true, this.pickIntersections);
-    let priority: Intersection | undefined;
-    let environmental: Intersection | undefined;
-    let fallback: Intersection | undefined;
-    for (const hit of this.pickIntersections) {
-      const id = this.findSelectableId(hit.object);
-      if (!id) continue;
-      fallback ??= hit;
-      if (
-        !priority &&
-        this.belongsToPickingRoots(hit.object, this.pickingPriorityRootSet)
-      )
-        priority = hit;
-      if (
-        !environmental &&
-        this.belongsToPickingRoots(hit.object, this.environmentalRootSet)
-      )
-        environmental = hit;
+    for (const root of roots) {
+      root.updateWorldMatrix(true, false);
+      root.updateMatrixWorld(true);
     }
-    // Keep the original 2 cm depth tolerance, record precedence, and fallback.
-    const chosen =
-      environmental &&
-      (!priority || environmental.distance + 0.02 < priority.distance)
-        ? environmental
-        : priority;
-    const hit = chosen ?? fallback;
-    // A projected, larger hit target is considered only after 3D geometry misses.
-    // Existing books, shelves and every direct ray hit keep their precedence.
-    const selectedId = hit
-      ? this.findSelectableId(hit.object)
-      : findExpandedLivingTap(
-          this.selectableRoots,
-          this.camera,
-          bounds,
-          position,
-        );
+    const { selectedId, preparedBounds } = withPreparedSkinning(
+      roots,
+      () => {
+        for (const root of roots)
+          root.traverse((node) => {
+            if (node instanceof SkinnedMesh) {
+              node.computeBoundingBox();
+              node.computeBoundingSphere();
+            }
+          });
+        this.probe?.markQuest("prepared");
+        this.raycaster.setFromCamera(this.pickPointer, this.camera);
+        this.pickIntersections.length = 0;
+        this.probe?.markQuest("raycastStart");
+        this.raycaster.intersectObjects(roots, true, this.pickIntersections);
+        this.probe?.markQuest("raycastEnd");
+        let priority: Intersection | undefined;
+        let environmental: Intersection | undefined;
+        let fallback: Intersection | undefined;
+        for (const hit of this.pickIntersections) {
+          const id = this.findSelectableId(hit.object);
+          if (!id) continue;
+          fallback ??= hit;
+          if (
+            !priority &&
+            this.belongsToPickingRoots(hit.object, this.pickingPriorityRootSet)
+          )
+            priority = hit;
+          if (
+            !environmental &&
+            this.belongsToPickingRoots(hit.object, this.environmentalRootSet)
+          )
+            environmental = hit;
+        }
+        // Keep the original 2 cm depth tolerance, record precedence, and fallback.
+        const chosen =
+          environmental &&
+          (!priority || environmental.distance + 0.02 < priority.distance)
+            ? environmental
+            : priority;
+        const hit = chosen ?? fallback;
+        // A projected, larger hit target is considered only after 3D geometry misses.
+        // Existing books, shelves and every direct ray hit keep their precedence.
+        const selectedId = hit
+          ? this.findSelectableId(hit.object)
+          : findExpandedLivingTap(
+              this.selectableRoots,
+              this.camera,
+              bounds,
+              position,
+            );
+        const root =
+          selectedId &&
+          selectedId !== this.selectedId &&
+          selectedId.startsWith("character:")
+            ? this.selectableRoots.get(selectedId)
+            : undefined;
+        // Reuse the tap's exact vertices for the immediate highlight too. Return
+        // only the detached box; restore readers BEFORE semantic callbacks run.
+        if (root) this.probe?.markQuest("highlightStart");
+        const preparedBounds = root
+          ? new Box3().setFromObject(root, true)
+          : undefined;
+        return { selectedId, preparedBounds };
+      },
+      true,
+    );
     this.pickIntersections.length = 0;
-    this.selectObject(selectedId ?? null);
+    this.selectObject(selectedId ?? null, preparedBounds);
     if (
       selectedId?.startsWith("living:") ||
       selectedId?.startsWith("character:")
     )
       this.onTapObject?.(selectedId);
+    this.probe?.markQuest("pickEnd");
   }
 
   private belongsToPickingRoots(

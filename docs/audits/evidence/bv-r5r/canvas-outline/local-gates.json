@@ -1,0 +1,67 @@
+{
+  "base": "34f1c02470273abb52c8fb641934b06075895812",
+  "ownerFeedback": {
+    "R5RMagic": "Perceptible improvement in luminosity/magical detail, partial human acceptance",
+    "quests": "Stutter remains, not addressed this round",
+    "artifact": "Brief pale green/white left border during abrupt camera motion"
+  },
+  "productChange": "Only four CSS lines removed from src/styles-atelier.css; no replacement whole-screen outline or blanket outline:none",
+  "reproduction": {
+    "commandBefore": "node scripts/check-canvas-outline.mjs docs/audits/evidence/bv-r5r/canvas-outline/before before",
+    "commandAfter": "node scripts/check-canvas-outline.mjs docs/audits/evidence/bv-r5r/canvas-outline/after",
+    "bothExit": 0,
+    "scope": "Chromium412x892 DPR1, real CSS and interaction/navigation, renderer not created; initial tap held to observe CSS, no physical frame timing",
+    "beforeTap": "solid 2px rgb(181,233,223), offset -2px",
+    "afterTap": "none",
+    "pan": "none in both versions, camera movement asserted",
+    "pinchWheel": "Zoom changed in both versions",
+    "keyboard": "focus-visible solid2px in both versions",
+    "pageErrors": 0,
+    "initialFixtureFailure": "Expected pan outline-width0; browser reports default medium3px with style none. Assert corrected to painting style, no timeout/production change, remaining gesture/zoom/focus checks retained.",
+    "sameGestureCameraTrajectory": true
+  },
+  "directedTests": {
+    "command": "npm run test:run -- src/features/library/three/ThreeWorldInteraction.test.ts src/features/library/three/ThreeWorldRuntime.test.ts src/features/library/NarrativePanel.test.tsx --maxWorkers=2",
+    "passed": 69,
+    "files": 3
+  },
+  "gates": {
+    "format": "PASS",
+    "formatCheck": "PASS",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS via android:build:debug",
+    "androidSyncDebug": "PASS",
+    "diffCheck": "PASS"
+  },
+  "preservation": {
+    "checkedOriginalProductionSources": 88,
+    "onlyChangedOriginalSource": "src/styles-atelier.css",
+    "runtimeCodeIdenticalAfterEntryDependencyFilenameRename": true,
+    "originalGlbsMatch": true,
+    "newQuestOptimization": false,
+    "diagnosticR5QChanged": false,
+    "narrativeOrPersistenceChanged": false,
+    "workflowsChanged": false
+  },
+  "e2eWide": {
+    "rerun": false,
+    "historicalDebtsPreserved": true,
+    "globalCiGreenClaimed": false
+  },
+  "apk": "apk.json",
+  "device": {
+    "adbConnected": 0,
+    "agentPhysicalTest": false,
+    "MotoG06ApprovalPending": true
+  },
+  "publication": {
+    "sameBranch": "feat/bv-r5-renascimento-artistico",
+    "pr": 40,
+    "draft": true,
+    "skipCi": true,
+    "dispatch": false,
+    "merge": false,
+    "R5Complete": false
+  }
+}

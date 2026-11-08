@@ -1,0 +1,734 @@
+{
+  "scope": "Chromium/SwiftShader real WebGL; synchronous CPU submission NOT GPU/Android; manual scene RAF, real React/CSS",
+  "browser": "151.0.7922.34",
+  "hours": [
+    12,
+    23
+  ],
+  "initial": [
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      }
+    ],
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      }
+    ]
+  ],
+  "results": [
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 15
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 74
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 129
+        }
+      },
+      "commits": [
+        {
+          "duration": 13,
+          "commitTime": 9051,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 9053,
+      "submissions": 1,
+      "programsBefore": 22,
+      "receivedAt": 8963,
+      "handlerEndAt": 9038,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 9095,
+      "afterSceneAt": 9229,
+      "secondRafAt": 9233,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.790775",
+      "programs": 23
+    },
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 15
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 67
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 8
+        }
+      },
+      "commits": [
+        {
+          "duration": 10,
+          "commitTime": 9347,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 9350,
+      "submissions": 1,
+      "programsBefore": 22,
+      "receivedAt": 9270,
+      "handlerEndAt": 9337,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 9353,
+      "afterSceneAt": 9366,
+      "secondRafAt": 9376,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.238192",
+      "programs": 23
+    },
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 5
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 14273,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 14275,
+      "submissions": 1,
+      "programsBefore": 22,
+      "receivedAt": 14258,
+      "handlerEndAt": 14265,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 14280,
+      "afterSceneAt": 14294,
+      "secondRafAt": 14305,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.123143",
+      "programs": 23
+    },
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 6
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 14337,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 14338,
+      "submissions": 1,
+      "programsBefore": 22,
+      "receivedAt": 14323,
+      "handlerEndAt": 14329,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 14342,
+      "afterSceneAt": 14351,
+      "secondRafAt": 14352,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.123399",
+      "programs": 23
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 15
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 56
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 14
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 25204,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 25206,
+      "submissions": 1,
+      "programsBefore": 22,
+      "receivedAt": 25138,
+      "handlerEndAt": 25196,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 25209,
+      "afterSceneAt": 25229,
+      "secondRafAt": 25232,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.123541",
+      "programs": 23
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 15
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 46
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 5
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 25305,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 25306,
+      "submissions": 1,
+      "programsBefore": 22,
+      "receivedAt": 25251,
+      "handlerEndAt": 25297,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 25313,
+      "afterSceneAt": 25321,
+      "secondRafAt": 25329,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.1231",
+      "programs": 23
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 11
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 51
+        }
+      },
+      "commits": [
+        {
+          "duration": 10,
+          "commitTime": 32293,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 32295,
+      "submissions": 1,
+      "programsBefore": 22,
+      "receivedAt": 32274,
+      "handlerEndAt": 32283,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 32297,
+      "afterSceneAt": 32360,
+      "secondRafAt": 32368,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0",
+      "programs": 23
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 7
+        }
+      },
+      "commits": [
+        {
+          "duration": 12,
+          "commitTime": 32423,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 32426,
+      "submissions": 1,
+      "programsBefore": 22,
+      "receivedAt": 32403,
+      "handlerEndAt": 32409,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 32430,
+      "afterSceneAt": 32444,
+      "secondRafAt": 32450,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.123257",
+      "programs": 23
+    }
+  ],
+  "errors": [],
+  "teardown": {
+    "canvases": 0,
+    "state": "disposed"
+  },
+  "presentationLimit": "DOM commit and next native RAF opportunities only; actual display/compositor/input-to-photon not measured. Synthetic events exclude hardware input latency."
+}

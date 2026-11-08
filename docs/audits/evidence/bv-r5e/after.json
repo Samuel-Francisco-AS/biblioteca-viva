@@ -1,0 +1,7656 @@
+{
+  "samael": {
+    "sha256": "217f54d26b4bd32c6f06a12e7903b6a2bc26fcec014ba5489f84239b0ecc46f7",
+    "bytes": 1296796,
+    "nodes": [
+      {
+        "name": "Scene",
+        "type": "Group"
+      },
+      {
+        "name": "samaelRig",
+        "type": "Object3D",
+        "parent": "Scene"
+      },
+      {
+        "name": "samael_Aged_brass",
+        "type": "SkinnedMesh",
+        "parent": "samaelRig"
+      },
+      {
+        "name": "samael_Carved_hair",
+        "type": "SkinnedMesh",
+        "parent": "samaelRig"
+      },
+      {
+        "name": "samael_FX_shadow",
+        "type": "SkinnedMesh",
+        "parent": "samaelRig"
+      },
+      {
+        "name": "samael_FX_signature",
+        "type": "SkinnedMesh",
+        "parent": "samaelRig"
+      },
+      {
+        "name": "samael_Ink_leather",
+        "type": "SkinnedMesh",
+        "parent": "samaelRig"
+      },
+      {
+        "name": "samael_Ivory_linen",
+        "type": "SkinnedMesh",
+        "parent": "samaelRig"
+      },
+      {
+        "name": "samael_Lip_and_ear_blush",
+        "type": "SkinnedMesh",
+        "parent": "samaelRig"
+      },
+      {
+        "name": "samael_Obsidian_skin",
+        "type": "SkinnedMesh",
+        "parent": "samaelRig"
+      },
+      {
+        "name": "samael_Signature_crystal",
+        "type": "SkinnedMesh",
+        "parent": "samaelRig"
+      },
+      {
+        "name": "samael_Silk_lining",
+        "type": "SkinnedMesh",
+        "parent": "samaelRig"
+      },
+      {
+        "name": "samael_Woven_velvet",
+        "type": "SkinnedMesh",
+        "parent": "samaelRig"
+      },
+      {
+        "name": "Facing",
+        "type": "Bone",
+        "parent": "samaelRig"
+      },
+      {
+        "name": "Pelvis",
+        "type": "Bone",
+        "parent": "Facing"
+      },
+      {
+        "name": "Torso",
+        "type": "Bone",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "Head",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "ShoulderL",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowL",
+        "type": "Bone",
+        "parent": "ShoulderL"
+      },
+      {
+        "name": "HandL",
+        "type": "Bone",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "socket_carry",
+        "type": "Object3D",
+        "parent": "HandL"
+      },
+      {
+        "name": "ShoulderR",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowR",
+        "type": "Bone",
+        "parent": "ShoulderR"
+      },
+      {
+        "name": "HandR",
+        "type": "Bone",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "socket_hand_right",
+        "type": "Object3D",
+        "parent": "HandR"
+      },
+      {
+        "name": "HipL",
+        "type": "Bone",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "KneeL",
+        "type": "Bone",
+        "parent": "HipL"
+      },
+      {
+        "name": "HipR",
+        "type": "Bone",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "KneeR",
+        "type": "Bone",
+        "parent": "HipR"
+      },
+      {
+        "name": "socket_seat",
+        "type": "Object3D",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "Magic",
+        "type": "Bone",
+        "parent": "Facing"
+      }
+    ],
+    "meshes": 11,
+    "materials": [
+      {
+        "doubleSided": true,
+        "name": "Aged brass",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.550000011920929,
+            0.3199999928474426,
+            0.11500000208616257,
+            1
+          ],
+          "metallicFactor": 0.7200000286102295,
+          "roughnessFactor": 0.3400000035762787
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Carved hair",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.024000000208616257,
+            0.01600000075995922,
+            0.03799999877810478,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.4000000059604645
+        }
+      },
+      {
+        "alphaMode": "BLEND",
+        "doubleSided": true,
+        "name": "FX shadow",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.02500000037252903,
+            0.006000000052154064,
+            0.05000000074505806,
+            0.2800000011920929
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.949999988079071
+        }
+      },
+      {
+        "alphaMode": "BLEND",
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.5,
+          0.09999999627470976,
+          1
+        ],
+        "extensions": {
+          "KHR_materials_emissive_strength": {
+            "emissiveStrength": 1.439999983310699
+          }
+        },
+        "name": "FX signature",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.4000000059604645,
+            0.07999999821186066,
+            0.800000011920929,
+            0.699999988079071
+          ],
+          "metallicFactor": 0.05000000074505806,
+          "roughnessFactor": 0.3499999940395355
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Ink leather",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.017999999225139618,
+            0.014000000432133675,
+            0.02500000037252903,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.4699999988079071
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Ivory linen",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.8399999737739563,
+            0.7400000095367432,
+            0.5299999713897705,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.8500000238418579
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Lip and ear blush",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.2800000011920929,
+            0.10999999940395355,
+            0.1899999976158142,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.699999988079071
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Obsidian skin",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.17000000178813934,
+            0.10499999672174454,
+            0.20000000298023224,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.6200000047683716
+        }
+      },
+      {
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.3839999971389769,
+          0.10399999773502344,
+          0.7360000243186953
+        ],
+        "name": "Signature crystal",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.47999998927116394,
+            0.12999999523162842,
+            0.9200000166893005,
+            1
+          ],
+          "metallicFactor": 0.15000000596046448,
+          "roughnessFactor": 0.2800000011920929
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Silk lining",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.14000000059604645,
+            0.054999999701976776,
+            0.1599999964237213,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.44999998807907104
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Woven velvet",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.03500000014901161,
+            0.019999999552965164,
+            0.054999999701976776,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.800000011920929
+        }
+      }
+    ],
+    "textures": [],
+    "skins": [
+      {
+        "inverseBindMatrices": 5,
+        "joints": [
+          17,
+          15,
+          9,
+          0,
+          4,
+          3,
+          2,
+          8,
+          7,
+          6,
+          11,
+          10,
+          13,
+          12,
+          16
+        ],
+        "name": "samaelRig"
+      }
+    ],
+    "triangles": 25782,
+    "bufferBytes": 607816,
+    "dimensions": [
+      1.096204591687438,
+      1.9999998807907136,
+      0.49324333667755127
+    ],
+    "min": [
+      -0.5517281098940493,
+      -3.219646771412954e-15,
+      -0.2511422336101532
+    ],
+    "max": [
+      0.5444764817933885,
+      1.9999998807907104,
+      0.24210110306739807
+    ],
+    "animations": [
+      {
+        "name": "gesture",
+        "duration": 2.8333332538604736,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 85
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 85
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 85
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 85
+          },
+          {
+            "name": "Torso.position",
+            "keys": 85
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 85
+          },
+          {
+            "name": "Head.position",
+            "keys": 85
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Head.scale",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 85
+          },
+          {
+            "name": "HandL.position",
+            "keys": 85
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 85
+          },
+          {
+            "name": "HandR.position",
+            "keys": 85
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 85
+          },
+          {
+            "name": "HipL.position",
+            "keys": 85
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 85
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 85
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 85
+          },
+          {
+            "name": "HipR.position",
+            "keys": 85
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 85
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 85
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 85
+          },
+          {
+            "name": "Magic.position",
+            "keys": 85
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 85
+          }
+        ]
+      },
+      {
+        "name": "idle",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 109
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 109
+          },
+          {
+            "name": "Torso.position",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 109
+          },
+          {
+            "name": "Head.position",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandL.position",
+            "keys": 109
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandR.position",
+            "keys": 109
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipL.position",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipR.position",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 109
+          },
+          {
+            "name": "Magic.position",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "magic",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 109
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 109
+          },
+          {
+            "name": "Torso.position",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 109
+          },
+          {
+            "name": "Head.position",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandL.position",
+            "keys": 109
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandR.position",
+            "keys": 109
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipL.position",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipR.position",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 109
+          },
+          {
+            "name": "Magic.position",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "react",
+        "duration": 1.8333333730697632,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 55
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 55
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 55
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 55
+          },
+          {
+            "name": "Torso.position",
+            "keys": 55
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 55
+          },
+          {
+            "name": "Head.position",
+            "keys": 55
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Head.scale",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 55
+          },
+          {
+            "name": "HandL.position",
+            "keys": 55
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 55
+          },
+          {
+            "name": "HandR.position",
+            "keys": 55
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 55
+          },
+          {
+            "name": "HipL.position",
+            "keys": 55
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 55
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 55
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 55
+          },
+          {
+            "name": "HipR.position",
+            "keys": 55
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 55
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 55
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 55
+          },
+          {
+            "name": "Magic.position",
+            "keys": 55
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 55
+          }
+        ]
+      },
+      {
+        "name": "recover",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 73
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 73
+          },
+          {
+            "name": "Torso.position",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 73
+          },
+          {
+            "name": "Head.position",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandL.position",
+            "keys": 73
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandR.position",
+            "keys": 73
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipL.position",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipR.position",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 73
+          },
+          {
+            "name": "Magic.position",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "turn",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 73
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 73
+          },
+          {
+            "name": "Torso.position",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 73
+          },
+          {
+            "name": "Head.position",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandL.position",
+            "keys": 73
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandR.position",
+            "keys": 73
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipL.position",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipR.position",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 73
+          },
+          {
+            "name": "Magic.position",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "walk",
+        "duration": 3.2333333492279053,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 97
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 97
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 97
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 97
+          },
+          {
+            "name": "Torso.position",
+            "keys": 97
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 97
+          },
+          {
+            "name": "Head.position",
+            "keys": 97
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Head.scale",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 97
+          },
+          {
+            "name": "HandL.position",
+            "keys": 97
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 97
+          },
+          {
+            "name": "HandR.position",
+            "keys": 97
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 97
+          },
+          {
+            "name": "HipL.position",
+            "keys": 97
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 97
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 97
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 97
+          },
+          {
+            "name": "HipR.position",
+            "keys": 97
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 97
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 97
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 97
+          },
+          {
+            "name": "Magic.position",
+            "keys": 97
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 97
+          }
+        ]
+      },
+      {
+        "name": "work",
+        "duration": 4.0333333015441895,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 121
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 121
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 121
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 121
+          },
+          {
+            "name": "Torso.position",
+            "keys": 121
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 121
+          },
+          {
+            "name": "Head.position",
+            "keys": 121
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Head.scale",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 121
+          },
+          {
+            "name": "HandL.position",
+            "keys": 121
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 121
+          },
+          {
+            "name": "HandR.position",
+            "keys": 121
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 121
+          },
+          {
+            "name": "HipL.position",
+            "keys": 121
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 121
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 121
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 121
+          },
+          {
+            "name": "HipR.position",
+            "keys": 121
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 121
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 121
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 121
+          },
+          {
+            "name": "Magic.position",
+            "keys": 121
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 121
+          }
+        ]
+      }
+    ]
+  },
+  "aryn": {
+    "sha256": "19b4d6df3034521d4e28522366f163927cd749e008fca1528b528eb7f2c0c69d",
+    "bytes": 1911848,
+    "nodes": [
+      {
+        "name": "Scene",
+        "type": "Group"
+      },
+      {
+        "name": "arynRig",
+        "type": "Object3D",
+        "parent": "Scene"
+      },
+      {
+        "name": "aryn_Aged_brass",
+        "type": "SkinnedMesh",
+        "parent": "arynRig"
+      },
+      {
+        "name": "aryn_Carved_hair",
+        "type": "SkinnedMesh",
+        "parent": "arynRig"
+      },
+      {
+        "name": "aryn_FX_signature",
+        "type": "SkinnedMesh",
+        "parent": "arynRig"
+      },
+      {
+        "name": "aryn_Ink_leather",
+        "type": "SkinnedMesh",
+        "parent": "arynRig"
+      },
+      {
+        "name": "aryn_Ivory_linen",
+        "type": "SkinnedMesh",
+        "parent": "arynRig"
+      },
+      {
+        "name": "aryn_Lip_and_ear_blush",
+        "type": "SkinnedMesh",
+        "parent": "arynRig"
+      },
+      {
+        "name": "aryn_Signature_crystal",
+        "type": "SkinnedMesh",
+        "parent": "arynRig"
+      },
+      {
+        "name": "aryn_Silk_lining",
+        "type": "SkinnedMesh",
+        "parent": "arynRig"
+      },
+      {
+        "name": "aryn_Warm_porcelain",
+        "type": "SkinnedMesh",
+        "parent": "arynRig"
+      },
+      {
+        "name": "aryn_Woven_velvet",
+        "type": "SkinnedMesh",
+        "parent": "arynRig"
+      },
+      {
+        "name": "Facing",
+        "type": "Bone",
+        "parent": "arynRig"
+      },
+      {
+        "name": "Pelvis",
+        "type": "Bone",
+        "parent": "Facing"
+      },
+      {
+        "name": "Torso",
+        "type": "Bone",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "Head",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "ShoulderL",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowL",
+        "type": "Bone",
+        "parent": "ShoulderL"
+      },
+      {
+        "name": "HandL",
+        "type": "Bone",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "socket_carry",
+        "type": "Object3D",
+        "parent": "HandL"
+      },
+      {
+        "name": "ShoulderR",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowR",
+        "type": "Bone",
+        "parent": "ShoulderR"
+      },
+      {
+        "name": "HandR",
+        "type": "Bone",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "socket_hand_right",
+        "type": "Object3D",
+        "parent": "HandR"
+      },
+      {
+        "name": "HipL",
+        "type": "Bone",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "KneeL",
+        "type": "Bone",
+        "parent": "HipL"
+      },
+      {
+        "name": "HipR",
+        "type": "Bone",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "KneeR",
+        "type": "Bone",
+        "parent": "HipR"
+      },
+      {
+        "name": "socket_seat",
+        "type": "Object3D",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "Magic",
+        "type": "Bone",
+        "parent": "Facing"
+      }
+    ],
+    "meshes": 10,
+    "materials": [
+      {
+        "doubleSided": true,
+        "name": "Aged brass",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.550000011920929,
+            0.3199999928474426,
+            0.11500000208616257,
+            1
+          ],
+          "metallicFactor": 0.7200000286102295,
+          "roughnessFactor": 0.3400000035762787
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Carved hair",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.026000000536441803,
+            0.03500000014901161,
+            0.04500000178813934,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.4000000059604645
+        }
+      },
+      {
+        "alphaMode": "BLEND",
+        "doubleSided": true,
+        "emissiveFactor": [
+          1,
+          0.673684203921923,
+          0.23157894901951925
+        ],
+        "extensions": {
+          "KHR_materials_emissive_strength": {
+            "emissiveStrength": 1.7099999332427984
+          }
+        },
+        "name": "FX signature",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.949999988079071,
+            0.6399999856948853,
+            0.2199999988079071,
+            0.699999988079071
+          ],
+          "metallicFactor": 0.05000000074505806,
+          "roughnessFactor": 0.3499999940395355
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Ink leather",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.017999999225139618,
+            0.014000000432133675,
+            0.02500000037252903,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.4699999988079071
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Ivory linen",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.8399999737739563,
+            0.7400000095367432,
+            0.5299999713897705,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.8500000238418579
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Lip and ear blush",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.47999998927116394,
+            0.1899999976158142,
+            0.23000000417232513,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.699999988079071
+        }
+      },
+      {
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.6000000089406967,
+          0.4719999860525128,
+          0.17600000166893004
+        ],
+        "name": "Signature crystal",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.75,
+            0.5899999737739563,
+            0.2199999988079071,
+            1
+          ],
+          "metallicFactor": 0.15000000596046448,
+          "roughnessFactor": 0.2800000011920929
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Silk lining",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.11999999731779099,
+            0.28999999165534973,
+            0.20999999344348907,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.44999998807907104
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Warm porcelain",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.800000011920929,
+            0.6399999856948853,
+            0.5299999713897705,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.6200000047683716
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Woven velvet",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.02500000037252903,
+            0.13500000536441803,
+            0.10499999672174454,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.800000011920929
+        }
+      }
+    ],
+    "textures": [],
+    "skins": [
+      {
+        "inverseBindMatrices": 5,
+        "joints": [
+          17,
+          15,
+          9,
+          0,
+          4,
+          3,
+          2,
+          8,
+          7,
+          6,
+          11,
+          10,
+          13,
+          12,
+          16
+        ],
+        "name": "arynRig"
+      }
+    ],
+    "triangles": 46726,
+    "bufferBytes": 1098328,
+    "dimensions": [
+      0.7640897797970247,
+      1.7000000251908656,
+      0.5521075092069988
+    ],
+    "min": [
+      -0.3454966849750085,
+      -3.219646771412954e-15,
+      -0.24538105726242065
+    ],
+    "max": [
+      0.41859309482201623,
+      1.7000000251908625,
+      0.30672645194457815
+    ],
+    "animations": [
+      {
+        "name": "gesture",
+        "duration": 2.8333332538604736,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 85
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 85
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 85
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 85
+          },
+          {
+            "name": "Torso.position",
+            "keys": 85
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 85
+          },
+          {
+            "name": "Head.position",
+            "keys": 85
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Head.scale",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 85
+          },
+          {
+            "name": "HandL.position",
+            "keys": 85
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 85
+          },
+          {
+            "name": "HandR.position",
+            "keys": 85
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 85
+          },
+          {
+            "name": "HipL.position",
+            "keys": 85
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 85
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 85
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 85
+          },
+          {
+            "name": "HipR.position",
+            "keys": 85
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 85
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 85
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 85
+          },
+          {
+            "name": "Magic.position",
+            "keys": 85
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 85
+          }
+        ]
+      },
+      {
+        "name": "idle",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 109
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 109
+          },
+          {
+            "name": "Torso.position",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 109
+          },
+          {
+            "name": "Head.position",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandL.position",
+            "keys": 109
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandR.position",
+            "keys": 109
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipL.position",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipR.position",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 109
+          },
+          {
+            "name": "Magic.position",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "magic",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 109
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 109
+          },
+          {
+            "name": "Torso.position",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 109
+          },
+          {
+            "name": "Head.position",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandL.position",
+            "keys": 109
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandR.position",
+            "keys": 109
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipL.position",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipR.position",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 109
+          },
+          {
+            "name": "Magic.position",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "react",
+        "duration": 1.8333333730697632,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 55
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 55
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 55
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 55
+          },
+          {
+            "name": "Torso.position",
+            "keys": 55
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 55
+          },
+          {
+            "name": "Head.position",
+            "keys": 55
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Head.scale",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 55
+          },
+          {
+            "name": "HandL.position",
+            "keys": 55
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 55
+          },
+          {
+            "name": "HandR.position",
+            "keys": 55
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 55
+          },
+          {
+            "name": "HipL.position",
+            "keys": 55
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 55
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 55
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 55
+          },
+          {
+            "name": "HipR.position",
+            "keys": 55
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 55
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 55
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 55
+          },
+          {
+            "name": "Magic.position",
+            "keys": 55
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 55
+          }
+        ]
+      },
+      {
+        "name": "recover",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 73
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 73
+          },
+          {
+            "name": "Torso.position",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 73
+          },
+          {
+            "name": "Head.position",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandL.position",
+            "keys": 73
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandR.position",
+            "keys": 73
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipL.position",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipR.position",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 73
+          },
+          {
+            "name": "Magic.position",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "turn",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 73
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 73
+          },
+          {
+            "name": "Torso.position",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 73
+          },
+          {
+            "name": "Head.position",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandL.position",
+            "keys": 73
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandR.position",
+            "keys": 73
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipL.position",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipR.position",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 73
+          },
+          {
+            "name": "Magic.position",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "walk",
+        "duration": 3.2333333492279053,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 97
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 97
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 97
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 97
+          },
+          {
+            "name": "Torso.position",
+            "keys": 97
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 97
+          },
+          {
+            "name": "Head.position",
+            "keys": 97
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Head.scale",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 97
+          },
+          {
+            "name": "HandL.position",
+            "keys": 97
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 97
+          },
+          {
+            "name": "HandR.position",
+            "keys": 97
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 97
+          },
+          {
+            "name": "HipL.position",
+            "keys": 97
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 97
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 97
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 97
+          },
+          {
+            "name": "HipR.position",
+            "keys": 97
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 97
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 97
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 97
+          },
+          {
+            "name": "Magic.position",
+            "keys": 97
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 97
+          }
+        ]
+      },
+      {
+        "name": "work",
+        "duration": 4.0333333015441895,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 121
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 121
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 121
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 121
+          },
+          {
+            "name": "Torso.position",
+            "keys": 121
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 121
+          },
+          {
+            "name": "Head.position",
+            "keys": 121
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Head.scale",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 121
+          },
+          {
+            "name": "HandL.position",
+            "keys": 121
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 121
+          },
+          {
+            "name": "HandR.position",
+            "keys": 121
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 121
+          },
+          {
+            "name": "HipL.position",
+            "keys": 121
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 121
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 121
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 121
+          },
+          {
+            "name": "HipR.position",
+            "keys": 121
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 121
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 121
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 121
+          },
+          {
+            "name": "Magic.position",
+            "keys": 121
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 121
+          }
+        ]
+      }
+    ]
+  },
+  "ytha": {
+    "sha256": "2927850b827cda10ff45fb739158b829228f8d8ca10a1293a80cfe204b752071",
+    "bytes": 2411544,
+    "nodes": [
+      {
+        "name": "Scene",
+        "type": "Group"
+      },
+      {
+        "name": "ythaRig",
+        "type": "Object3D",
+        "parent": "Scene"
+      },
+      {
+        "name": "ytha_Aged_brass",
+        "type": "SkinnedMesh",
+        "parent": "ythaRig"
+      },
+      {
+        "name": "ytha_Carved_hair",
+        "type": "SkinnedMesh",
+        "parent": "ythaRig"
+      },
+      {
+        "name": "ytha_FX_signature",
+        "type": "SkinnedMesh",
+        "parent": "ythaRig"
+      },
+      {
+        "name": "ytha_Ink_leather",
+        "type": "SkinnedMesh",
+        "parent": "ythaRig"
+      },
+      {
+        "name": "ytha_Ivory_linen",
+        "type": "SkinnedMesh",
+        "parent": "ythaRig"
+      },
+      {
+        "name": "ytha_Lip_and_ear_blush",
+        "type": "SkinnedMesh",
+        "parent": "ythaRig"
+      },
+      {
+        "name": "ytha_Opaline_membrane",
+        "type": "SkinnedMesh",
+        "parent": "ythaRig"
+      },
+      {
+        "name": "ytha_Rose_membrane",
+        "type": "SkinnedMesh",
+        "parent": "ythaRig"
+      },
+      {
+        "name": "ytha_Signature_crystal",
+        "type": "SkinnedMesh",
+        "parent": "ythaRig"
+      },
+      {
+        "name": "ytha_Silk_lining",
+        "type": "SkinnedMesh",
+        "parent": "ythaRig"
+      },
+      {
+        "name": "ytha_Warm_porcelain",
+        "type": "SkinnedMesh",
+        "parent": "ythaRig"
+      },
+      {
+        "name": "ytha_Woven_velvet",
+        "type": "SkinnedMesh",
+        "parent": "ythaRig"
+      },
+      {
+        "name": "Facing",
+        "type": "Bone",
+        "parent": "ythaRig"
+      },
+      {
+        "name": "Pelvis",
+        "type": "Bone",
+        "parent": "Facing"
+      },
+      {
+        "name": "Torso",
+        "type": "Bone",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "Head",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "ShoulderL",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowL",
+        "type": "Bone",
+        "parent": "ShoulderL"
+      },
+      {
+        "name": "HandL",
+        "type": "Bone",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "socket_carry",
+        "type": "Object3D",
+        "parent": "HandL"
+      },
+      {
+        "name": "WingL",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "ShoulderR",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowR",
+        "type": "Bone",
+        "parent": "ShoulderR"
+      },
+      {
+        "name": "HandR",
+        "type": "Bone",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "socket_hand_right",
+        "type": "Object3D",
+        "parent": "HandR"
+      },
+      {
+        "name": "WingR",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "HipL",
+        "type": "Bone",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "KneeL",
+        "type": "Bone",
+        "parent": "HipL"
+      },
+      {
+        "name": "HipR",
+        "type": "Bone",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "KneeR",
+        "type": "Bone",
+        "parent": "HipR"
+      },
+      {
+        "name": "socket_seat",
+        "type": "Object3D",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "Magic",
+        "type": "Bone",
+        "parent": "Facing"
+      }
+    ],
+    "meshes": 12,
+    "materials": [
+      {
+        "doubleSided": true,
+        "name": "Aged brass",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.550000011920929,
+            0.3199999928474426,
+            0.11500000208616257,
+            1
+          ],
+          "metallicFactor": 0.7200000286102295,
+          "roughnessFactor": 0.3400000035762787
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Carved hair",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.49000000953674316,
+            0.11999999731779099,
+            0.3199999928474426,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.4000000059604645
+        }
+      },
+      {
+        "alphaMode": "BLEND",
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.4947368470585578,
+          1,
+          0.6947368784294239
+        ],
+        "extensions": {
+          "KHR_materials_emissive_strength": {
+            "emissiveStrength": 1.7099999332427984
+          }
+        },
+        "name": "FX signature",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.4699999988079071,
+            0.949999988079071,
+            0.6600000262260437,
+            0.699999988079071
+          ],
+          "metallicFactor": 0.05000000074505806,
+          "roughnessFactor": 0.3499999940395355
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Ink leather",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.017999999225139618,
+            0.014000000432133675,
+            0.02500000037252903,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.4699999988079071
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Ivory linen",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.8399999737739563,
+            0.7400000095367432,
+            0.5299999713897705,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.8500000238418579
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Lip and ear blush",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.47999998927116394,
+            0.1899999976158142,
+            0.23000000417232513,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.699999988079071
+        }
+      },
+      {
+        "alphaMode": "BLEND",
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.14279999704360957,
+          0.26039999387264245,
+          0.2225999810338024
+        ],
+        "name": "Opaline membrane",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.3400000035762787,
+            0.6200000047683716,
+            0.5299999713897705,
+            0.6600000262260437
+          ],
+          "metallicFactor": 0.10000000149011612,
+          "roughnessFactor": 0.3499999940395355
+        }
+      },
+      {
+        "alphaMode": "BLEND",
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.06200000140070916,
+          0.023000000759959227,
+          0.04499999947845934
+        ],
+        "name": "Rose membrane",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.6200000047683716,
+            0.23000000417232513,
+            0.44999998807907104,
+            0.7200000286102295
+          ],
+          "metallicFactor": 0.10000000149011612,
+          "roughnessFactor": 0.3499999940395355
+        }
+      },
+      {
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.3520000033378601,
+          0.6400000190734865,
+          0.4560000010728835
+        ],
+        "name": "Signature crystal",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.4399999976158142,
+            0.800000011920929,
+            0.5699999928474426,
+            1
+          ],
+          "metallicFactor": 0.15000000596046448,
+          "roughnessFactor": 0.2800000011920929
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Silk lining",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.5600000023841858,
+            0.23000000417232513,
+            0.38999998569488525,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.44999998807907104
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Warm porcelain",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.8399999737739563,
+            0.5899999737739563,
+            0.5699999928474426,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.6200000047683716
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Woven velvet",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.23999999463558197,
+            0.07500000298023224,
+            0.28999999165534973,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.800000011920929
+        }
+      }
+    ],
+    "textures": [],
+    "skins": [
+      {
+        "inverseBindMatrices": 5,
+        "joints": [
+          19,
+          17,
+          11,
+          0,
+          4,
+          3,
+          2,
+          5,
+          9,
+          8,
+          7,
+          10,
+          13,
+          12,
+          15,
+          14,
+          18
+        ],
+        "name": "ythaRig"
+      }
+    ],
+    "triangles": 61226,
+    "bufferBytes": 1439152,
+    "dimensions": [
+      1.1834481581171452,
+      1.3199998971497253,
+      0.3128693848848343
+    ],
+    "min": [
+      -0.5917240790585726,
+      0.16000003251679382,
+      -0.15312185883522034
+    ],
+    "max": [
+      0.5917240790585726,
+      1.4799999296665192,
+      0.15974752604961395
+    ],
+    "animations": [
+      {
+        "name": "gesture",
+        "duration": 2.8333332538604736,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 85
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 85
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 85
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 85
+          },
+          {
+            "name": "Torso.position",
+            "keys": 85
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 85
+          },
+          {
+            "name": "Head.position",
+            "keys": 85
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Head.scale",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 85
+          },
+          {
+            "name": "HandL.position",
+            "keys": 85
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 85
+          },
+          {
+            "name": "WingL.position",
+            "keys": 85
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "WingL.scale",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 85
+          },
+          {
+            "name": "HandR.position",
+            "keys": 85
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 85
+          },
+          {
+            "name": "WingR.position",
+            "keys": 85
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "WingR.scale",
+            "keys": 85
+          },
+          {
+            "name": "HipL.position",
+            "keys": 85
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 85
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 85
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 85
+          },
+          {
+            "name": "HipR.position",
+            "keys": 85
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 85
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 85
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 85
+          },
+          {
+            "name": "Magic.position",
+            "keys": 85
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 85
+          }
+        ]
+      },
+      {
+        "name": "idle",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 109
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 109
+          },
+          {
+            "name": "Torso.position",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 109
+          },
+          {
+            "name": "Head.position",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandL.position",
+            "keys": 109
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 109
+          },
+          {
+            "name": "WingL.position",
+            "keys": 109
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "WingL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandR.position",
+            "keys": 109
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 109
+          },
+          {
+            "name": "WingR.position",
+            "keys": 109
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "WingR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipL.position",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipR.position",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 109
+          },
+          {
+            "name": "Magic.position",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "magic",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 109
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 109
+          },
+          {
+            "name": "Torso.position",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 109
+          },
+          {
+            "name": "Head.position",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandL.position",
+            "keys": 109
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 109
+          },
+          {
+            "name": "WingL.position",
+            "keys": 109
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "WingL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandR.position",
+            "keys": 109
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 109
+          },
+          {
+            "name": "WingR.position",
+            "keys": 109
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "WingR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipL.position",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipR.position",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 109
+          },
+          {
+            "name": "Magic.position",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "react",
+        "duration": 1.8333333730697632,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 55
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 55
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 55
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 55
+          },
+          {
+            "name": "Torso.position",
+            "keys": 55
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 55
+          },
+          {
+            "name": "Head.position",
+            "keys": 55
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Head.scale",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 55
+          },
+          {
+            "name": "HandL.position",
+            "keys": 55
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 55
+          },
+          {
+            "name": "WingL.position",
+            "keys": 55
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "WingL.scale",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 55
+          },
+          {
+            "name": "HandR.position",
+            "keys": 55
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 55
+          },
+          {
+            "name": "WingR.position",
+            "keys": 55
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "WingR.scale",
+            "keys": 55
+          },
+          {
+            "name": "HipL.position",
+            "keys": 55
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 55
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 55
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 55
+          },
+          {
+            "name": "HipR.position",
+            "keys": 55
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 55
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 55
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 55
+          },
+          {
+            "name": "Magic.position",
+            "keys": 55
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 55
+          }
+        ]
+      },
+      {
+        "name": "recover",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 73
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 73
+          },
+          {
+            "name": "Torso.position",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 73
+          },
+          {
+            "name": "Head.position",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandL.position",
+            "keys": 73
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 73
+          },
+          {
+            "name": "WingL.position",
+            "keys": 73
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "WingL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandR.position",
+            "keys": 73
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 73
+          },
+          {
+            "name": "WingR.position",
+            "keys": 73
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "WingR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipL.position",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipR.position",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 73
+          },
+          {
+            "name": "Magic.position",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "turn",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 73
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 73
+          },
+          {
+            "name": "Torso.position",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 73
+          },
+          {
+            "name": "Head.position",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandL.position",
+            "keys": 73
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 73
+          },
+          {
+            "name": "WingL.position",
+            "keys": 73
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "WingL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandR.position",
+            "keys": 73
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 73
+          },
+          {
+            "name": "WingR.position",
+            "keys": 73
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "WingR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipL.position",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipR.position",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 73
+          },
+          {
+            "name": "Magic.position",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "walk",
+        "duration": 3.2333333492279053,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 97
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 97
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 97
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 97
+          },
+          {
+            "name": "Torso.position",
+            "keys": 97
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 97
+          },
+          {
+            "name": "Head.position",
+            "keys": 97
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Head.scale",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 97
+          },
+          {
+            "name": "HandL.position",
+            "keys": 97
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 97
+          },
+          {
+            "name": "WingL.position",
+            "keys": 97
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "WingL.scale",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 97
+          },
+          {
+            "name": "HandR.position",
+            "keys": 97
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 97
+          },
+          {
+            "name": "WingR.position",
+            "keys": 97
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "WingR.scale",
+            "keys": 97
+          },
+          {
+            "name": "HipL.position",
+            "keys": 97
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 97
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 97
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 97
+          },
+          {
+            "name": "HipR.position",
+            "keys": 97
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 97
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 97
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 97
+          },
+          {
+            "name": "Magic.position",
+            "keys": 97
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 97
+          }
+        ]
+      },
+      {
+        "name": "work",
+        "duration": 4.0333333015441895,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 121
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 121
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 121
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 121
+          },
+          {
+            "name": "Torso.position",
+            "keys": 121
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 121
+          },
+          {
+            "name": "Head.position",
+            "keys": 121
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Head.scale",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 121
+          },
+          {
+            "name": "HandL.position",
+            "keys": 121
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 121
+          },
+          {
+            "name": "WingL.position",
+            "keys": 121
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "WingL.scale",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 121
+          },
+          {
+            "name": "HandR.position",
+            "keys": 121
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 121
+          },
+          {
+            "name": "WingR.position",
+            "keys": 121
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "WingR.scale",
+            "keys": 121
+          },
+          {
+            "name": "HipL.position",
+            "keys": 121
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 121
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 121
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 121
+          },
+          {
+            "name": "HipR.position",
+            "keys": 121
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 121
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 121
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 121
+          },
+          {
+            "name": "Magic.position",
+            "keys": 121
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 121
+          }
+        ]
+      }
+    ]
+  },
+  "lua": {
+    "sha256": "c184c1957105f03435d2507710f115fc83aba828047d7dccc697a7a66dd10449",
+    "bytes": 1344812,
+    "nodes": [
+      {
+        "name": "Scene",
+        "type": "Group"
+      },
+      {
+        "name": "luaRig",
+        "type": "Object3D",
+        "parent": "Scene"
+      },
+      {
+        "name": "lua_Aged_brass",
+        "type": "SkinnedMesh",
+        "parent": "luaRig"
+      },
+      {
+        "name": "lua_Carved_hair",
+        "type": "SkinnedMesh",
+        "parent": "luaRig"
+      },
+      {
+        "name": "lua_FX_signature",
+        "type": "SkinnedMesh",
+        "parent": "luaRig"
+      },
+      {
+        "name": "lua_Ink_leather",
+        "type": "SkinnedMesh",
+        "parent": "luaRig"
+      },
+      {
+        "name": "lua_Ivory_linen",
+        "type": "SkinnedMesh",
+        "parent": "luaRig"
+      },
+      {
+        "name": "lua_Lip_and_ear_blush",
+        "type": "SkinnedMesh",
+        "parent": "luaRig"
+      },
+      {
+        "name": "lua_Signature_crystal",
+        "type": "SkinnedMesh",
+        "parent": "luaRig"
+      },
+      {
+        "name": "lua_Silk_lining",
+        "type": "SkinnedMesh",
+        "parent": "luaRig"
+      },
+      {
+        "name": "lua_Warm_porcelain",
+        "type": "SkinnedMesh",
+        "parent": "luaRig"
+      },
+      {
+        "name": "lua_Woven_velvet",
+        "type": "SkinnedMesh",
+        "parent": "luaRig"
+      },
+      {
+        "name": "Facing",
+        "type": "Bone",
+        "parent": "luaRig"
+      },
+      {
+        "name": "Pelvis",
+        "type": "Bone",
+        "parent": "Facing"
+      },
+      {
+        "name": "Torso",
+        "type": "Bone",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "Head",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "ShoulderL",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowL",
+        "type": "Bone",
+        "parent": "ShoulderL"
+      },
+      {
+        "name": "HandL",
+        "type": "Bone",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "socket_carry",
+        "type": "Object3D",
+        "parent": "HandL"
+      },
+      {
+        "name": "ShoulderR",
+        "type": "Bone",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowR",
+        "type": "Bone",
+        "parent": "ShoulderR"
+      },
+      {
+        "name": "HandR",
+        "type": "Bone",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "socket_hand_right",
+        "type": "Object3D",
+        "parent": "HandR"
+      },
+      {
+        "name": "HipL",
+        "type": "Bone",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "KneeL",
+        "type": "Bone",
+        "parent": "HipL"
+      },
+      {
+        "name": "HipR",
+        "type": "Bone",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "KneeR",
+        "type": "Bone",
+        "parent": "HipR"
+      },
+      {
+        "name": "socket_seat",
+        "type": "Object3D",
+        "parent": "Pelvis"
+      },
+      {
+        "name": "Magic",
+        "type": "Bone",
+        "parent": "Facing"
+      }
+    ],
+    "meshes": 10,
+    "materials": [
+      {
+        "doubleSided": true,
+        "name": "Aged brass",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.550000011920929,
+            0.3199999928474426,
+            0.11500000208616257,
+            1
+          ],
+          "metallicFactor": 0.7200000286102295,
+          "roughnessFactor": 0.3400000035762787
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Carved hair",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.07500000298023224,
+            0.0949999988079071,
+            0.23000000417232513,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.4000000059604645
+        }
+      },
+      {
+        "alphaMode": "BLEND",
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.36000001430511475,
+          0.5299999713897705,
+          1
+        ],
+        "extensions": {
+          "KHR_materials_emissive_strength": {
+            "emissiveStrength": 1.7999999523162842
+          }
+        },
+        "name": "FX signature",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.36000001430511475,
+            0.5299999713897705,
+            1,
+            0.699999988079071
+          ],
+          "metallicFactor": 0.05000000074505806,
+          "roughnessFactor": 0.3499999940395355
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Ink leather",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.017999999225139618,
+            0.014000000432133675,
+            0.02500000037252903,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.4699999988079071
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Ivory linen",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.8399999737739563,
+            0.7400000095367432,
+            0.5299999713897705,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.8500000238418579
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Lip and ear blush",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.47999998927116394,
+            0.1899999976158142,
+            0.23000000417232513,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.699999988079071
+        }
+      },
+      {
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.22400000429153444,
+          0.3839999971389769,
+          0.7600000017881392
+        ],
+        "name": "Signature crystal",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.2800000011920929,
+            0.47999998927116394,
+            0.949999988079071,
+            1
+          ],
+          "metallicFactor": 0.15000000596046448,
+          "roughnessFactor": 0.2800000011920929
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Silk lining",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.11999999731779099,
+            0.1599999964237213,
+            0.3100000023841858,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.44999998807907104
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Warm porcelain",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.8399999737739563,
+            0.5899999737739563,
+            0.5699999928474426,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.6200000047683716
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Woven velvet",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.2199999988079071,
+            0.02500000037252903,
+            0.10000000149011612,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.800000011920929
+        }
+      }
+    ],
+    "textures": [],
+    "skins": [
+      {
+        "inverseBindMatrices": 5,
+        "joints": [
+          17,
+          15,
+          9,
+          0,
+          4,
+          3,
+          2,
+          8,
+          7,
+          6,
+          11,
+          10,
+          13,
+          12,
+          16
+        ],
+        "name": "luaRig"
+      }
+    ],
+    "triangles": 27734,
+    "bufferBytes": 645304,
+    "dimensions": [
+      0.7533477661778418,
+      1.600000023841861,
+      0.4960842877626419
+    ],
+    "min": [
+      -0.363508939743042,
+      -2.9976021664879227e-15,
+      -0.24726098775863647
+    ],
+    "max": [
+      0.3898388264347998,
+      1.600000023841858,
+      0.24882330000400543
+    ],
+    "animations": [
+      {
+        "name": "gesture",
+        "duration": 2.8333332538604736,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 85
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 85
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 85
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 85
+          },
+          {
+            "name": "Torso.position",
+            "keys": 85
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 85
+          },
+          {
+            "name": "Head.position",
+            "keys": 85
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Head.scale",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 85
+          },
+          {
+            "name": "HandL.position",
+            "keys": 85
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 85
+          },
+          {
+            "name": "HandR.position",
+            "keys": 85
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 85
+          },
+          {
+            "name": "HipL.position",
+            "keys": 85
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 85
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 85
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 85
+          },
+          {
+            "name": "HipR.position",
+            "keys": 85
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 85
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 85
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 85
+          },
+          {
+            "name": "Magic.position",
+            "keys": 85
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 85
+          }
+        ]
+      },
+      {
+        "name": "idle",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 109
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 109
+          },
+          {
+            "name": "Torso.position",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 109
+          },
+          {
+            "name": "Head.position",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandL.position",
+            "keys": 109
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandR.position",
+            "keys": 109
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipL.position",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipR.position",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 109
+          },
+          {
+            "name": "Magic.position",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "magic",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 109
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 109
+          },
+          {
+            "name": "Torso.position",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 109
+          },
+          {
+            "name": "Head.position",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandL.position",
+            "keys": 109
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HandR.position",
+            "keys": 109
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipL.position",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 109
+          },
+          {
+            "name": "HipR.position",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 109
+          },
+          {
+            "name": "Magic.position",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "react",
+        "duration": 1.8333333730697632,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 55
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 55
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 55
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 55
+          },
+          {
+            "name": "Torso.position",
+            "keys": 55
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 55
+          },
+          {
+            "name": "Head.position",
+            "keys": 55
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Head.scale",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 55
+          },
+          {
+            "name": "HandL.position",
+            "keys": 55
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 55
+          },
+          {
+            "name": "HandR.position",
+            "keys": 55
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 55
+          },
+          {
+            "name": "HipL.position",
+            "keys": 55
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 55
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 55
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 55
+          },
+          {
+            "name": "HipR.position",
+            "keys": 55
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 55
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 55
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 55
+          },
+          {
+            "name": "Magic.position",
+            "keys": 55
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 55
+          }
+        ]
+      },
+      {
+        "name": "recover",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 73
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 73
+          },
+          {
+            "name": "Torso.position",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 73
+          },
+          {
+            "name": "Head.position",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandL.position",
+            "keys": 73
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandR.position",
+            "keys": 73
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipL.position",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipR.position",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 73
+          },
+          {
+            "name": "Magic.position",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "turn",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 73
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 73
+          },
+          {
+            "name": "Torso.position",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 73
+          },
+          {
+            "name": "Head.position",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandL.position",
+            "keys": 73
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HandR.position",
+            "keys": 73
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipL.position",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 73
+          },
+          {
+            "name": "HipR.position",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 73
+          },
+          {
+            "name": "Magic.position",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "walk",
+        "duration": 3.2333333492279053,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 97
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 97
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 97
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 97
+          },
+          {
+            "name": "Torso.position",
+            "keys": 97
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 97
+          },
+          {
+            "name": "Head.position",
+            "keys": 97
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Head.scale",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 97
+          },
+          {
+            "name": "HandL.position",
+            "keys": 97
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 97
+          },
+          {
+            "name": "HandR.position",
+            "keys": 97
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 97
+          },
+          {
+            "name": "HipL.position",
+            "keys": 97
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 97
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 97
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 97
+          },
+          {
+            "name": "HipR.position",
+            "keys": 97
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 97
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 97
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 97
+          },
+          {
+            "name": "Magic.position",
+            "keys": 97
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 97
+          }
+        ]
+      },
+      {
+        "name": "work",
+        "duration": 4.0333333015441895,
+        "tracks": [
+          {
+            "name": "Facing.position",
+            "keys": 121
+          },
+          {
+            "name": "Facing.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Facing.scale",
+            "keys": 121
+          },
+          {
+            "name": "Pelvis.position",
+            "keys": 121
+          },
+          {
+            "name": "Pelvis.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Pelvis.scale",
+            "keys": 121
+          },
+          {
+            "name": "Torso.position",
+            "keys": 121
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Torso.scale",
+            "keys": 121
+          },
+          {
+            "name": "Head.position",
+            "keys": 121
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Head.scale",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.position",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.scale",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.position",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.scale",
+            "keys": 121
+          },
+          {
+            "name": "HandL.position",
+            "keys": 121
+          },
+          {
+            "name": "HandL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HandL.scale",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.position",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.scale",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.position",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.scale",
+            "keys": 121
+          },
+          {
+            "name": "HandR.position",
+            "keys": 121
+          },
+          {
+            "name": "HandR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HandR.scale",
+            "keys": 121
+          },
+          {
+            "name": "HipL.position",
+            "keys": 121
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipL.scale",
+            "keys": 121
+          },
+          {
+            "name": "KneeL.position",
+            "keys": 121
+          },
+          {
+            "name": "KneeL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "KneeL.scale",
+            "keys": 121
+          },
+          {
+            "name": "HipR.position",
+            "keys": 121
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipR.scale",
+            "keys": 121
+          },
+          {
+            "name": "KneeR.position",
+            "keys": 121
+          },
+          {
+            "name": "KneeR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "KneeR.scale",
+            "keys": 121
+          },
+          {
+            "name": "Magic.position",
+            "keys": 121
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 121
+          }
+        ]
+      }
+    ]
+  }
+}

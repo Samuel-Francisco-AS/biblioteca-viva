@@ -97,7 +97,13 @@ export function createSessionWorldVisuals(building: Group) {
       material.color.setHex(color);
       light.color.setHex(color);
       root.visible = true;
-      material.opacity = session.status === "active" ? 0.65 : 0.22;
+      ring.scale.setScalar(session.kind === "reading" ? 1.3 : 1);
+      material.opacity =
+        session.status === "active"
+          ? session.kind === "reading"
+            ? 0.9
+            : 0.65
+          : 0.22;
       light.intensity = session.status === "active" ? 0.55 : 0.06;
     },
   };

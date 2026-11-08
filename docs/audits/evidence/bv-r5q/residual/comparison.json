@@ -1,0 +1,550 @@
+{
+  "scope": "host Chromium CPU/DOM, synthetic input, all productive styles; no Android/GPU/presentation measurement",
+  "beforeSource": "94bae8bbf95863d6e847b18cbdff4fae24e545e0",
+  "groups": [
+    {
+      "path": "canvas",
+      "kind": "first",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 52,
+          "p95": 97
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 51,
+          "p95": 96
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 11,
+          "p95": 23
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 7,
+          "p95": 21
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 8,
+          "p95": 14
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 63,
+          "p95": 114
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 46,
+          "p95": 79
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 45,
+          "p95": 77
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 10,
+          "p95": 20
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 1
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 9,
+          "p95": 15
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 56,
+          "p95": 97
+        }
+      }
+    },
+    {
+      "path": "canvas",
+      "kind": "repeat",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 48,
+          "p95": 65
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 48,
+          "p95": 64
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 8,
+          "p95": 20
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 5,
+          "p95": 8
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 8,
+          "p95": 13
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 60,
+          "p95": 78
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 40,
+          "p95": 58
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 40,
+          "p95": 58
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 9,
+          "p95": 19
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 1
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 10,
+          "p95": 16
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 58,
+          "p95": 73
+        }
+      }
+    },
+    {
+      "path": "canvas",
+      "kind": "already-open",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 39,
+          "p95": 53
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 38,
+          "p95": 53
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 5,
+          "p95": 14
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 42,
+          "p95": 56
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 41,
+          "p95": 56
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 5,
+          "p95": 16
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        }
+      }
+    },
+    {
+      "path": "canvas",
+      "kind": "switch",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 42,
+          "p95": 56
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 41,
+          "p95": 56
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 3,
+          "p95": 9
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 3,
+          "p95": 8
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 9,
+          "p95": 12
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 50,
+          "p95": 66
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 31,
+          "p95": 43
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 31,
+          "p95": 42
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 4,
+          "p95": 10
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 9,
+          "p95": 11
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 45,
+          "p95": 56
+        }
+      }
+    },
+    {
+      "path": "react",
+      "kind": "first",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 10,
+          "p95": 24
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 8,
+          "p95": 20
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 10,
+          "p95": 15
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 23,
+          "p95": 40
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 11,
+          "p95": 23
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 9,
+          "p95": 21
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 9,
+          "p95": 13
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 21,
+          "p95": 38
+        }
+      }
+    },
+    {
+      "path": "react",
+      "kind": "repeat",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 6,
+          "p95": 9
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 6,
+          "p95": 8
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 10,
+          "p95": 13
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 21,
+          "p95": 23
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 6,
+          "p95": 9
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 5,
+          "p95": 8
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 9,
+          "p95": 14
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 21,
+          "p95": 25
+        }
+      }
+    },
+    {
+      "path": "react",
+      "kind": "already-open",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 1,
+          "p95": 1
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 1
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        }
+      }
+    },
+    {
+      "path": "react",
+      "kind": "switch",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 5,
+          "p95": 10
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 4,
+          "p95": 10
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 9,
+          "p95": 13
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 15,
+          "p95": 22
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 5,
+          "p95": 12
+        },
+        "pickCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "raycastCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "highlightHelperCpu": {
+          "n": 8,
+          "p50": 4,
+          "p95": 10
+        },
+        "reactActual": {
+          "n": 8,
+          "p50": 8,
+          "p95": 14
+        },
+        "commitOffset": {
+          "n": 8,
+          "p50": 18,
+          "p95": 21
+        }
+      }
+    }
+  ]
+}

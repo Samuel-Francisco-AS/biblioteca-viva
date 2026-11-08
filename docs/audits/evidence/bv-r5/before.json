@@ -1,0 +1,2949 @@
+{
+  "samael": {
+    "sha256": "6da80a68315bb73506f593128cc475296f52bff6045750371cb179b0e678c6b3",
+    "bytes": 315256,
+    "nodes": [
+      {
+        "name": "Scene",
+        "type": "Group"
+      },
+      {
+        "name": "samael",
+        "type": "Object3D",
+        "parent": "Scene"
+      },
+      {
+        "name": "Facing",
+        "type": "Object3D",
+        "parent": "samael"
+      },
+      {
+        "name": "HipL",
+        "type": "Object3D",
+        "parent": "Facing"
+      },
+      {
+        "name": "HipL-Cloth",
+        "type": "Mesh",
+        "parent": "HipL"
+      },
+      {
+        "name": "HipL-Ink",
+        "type": "Mesh",
+        "parent": "HipL"
+      },
+      {
+        "name": "HipR",
+        "type": "Object3D",
+        "parent": "Facing"
+      },
+      {
+        "name": "HipR-Cloth",
+        "type": "Mesh",
+        "parent": "HipR"
+      },
+      {
+        "name": "HipR-Ink",
+        "type": "Mesh",
+        "parent": "HipR"
+      },
+      {
+        "name": "Torso",
+        "type": "Object3D",
+        "parent": "Facing"
+      },
+      {
+        "name": "Head",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "Head-Hair",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Ink",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Paper_and_linen",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Signature",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Skin",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Magic",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "Magic-Shadow_aura",
+        "type": "Mesh",
+        "parent": "Magic"
+      },
+      {
+        "name": "Magic-Signature",
+        "type": "Mesh",
+        "parent": "Magic"
+      },
+      {
+        "name": "ShoulderL",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowL",
+        "type": "Object3D",
+        "parent": "ShoulderL"
+      },
+      {
+        "name": "ElbowL-Cloth",
+        "type": "Mesh",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "ElbowL-Paper_and_linen",
+        "type": "Mesh",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "ElbowL-Skin",
+        "type": "Mesh",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "ShoulderL-Cloth",
+        "type": "Mesh",
+        "parent": "ShoulderL"
+      },
+      {
+        "name": "ShoulderR",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowR",
+        "type": "Object3D",
+        "parent": "ShoulderR"
+      },
+      {
+        "name": "ElbowR-Cloth",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ElbowR-Ink",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ElbowR-Signature",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ElbowR-Skin",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ShoulderR-Cloth",
+        "type": "Mesh",
+        "parent": "ShoulderR"
+      },
+      {
+        "name": "Torso-Cloth",
+        "type": "Mesh",
+        "parent": "Torso"
+      },
+      {
+        "name": "Torso-Embroidery",
+        "type": "Mesh",
+        "parent": "Torso"
+      },
+      {
+        "name": "Torso-Skin",
+        "type": "Mesh",
+        "parent": "Torso"
+      }
+    ],
+    "meshes": 23,
+    "materials": [
+      {
+        "doubleSided": true,
+        "name": "Cloth",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.03500000014901161,
+            0.02500000037252903,
+            0.054999999701976776,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Ink",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.017999999225139618,
+            0.014999999664723873,
+            0.02500000037252903,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Hair",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.02500000037252903,
+            0.019999999552965164,
+            0.03999999910593033,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Paper and linen",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.8500000238418579,
+            0.7699999809265137,
+            0.5699999928474426,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.2220000116825105,
+          0.07200000125169748,
+          0.3900000011920923
+        ],
+        "name": "Signature",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.3700000047683716,
+            0.11999999731779099,
+            0.6499999761581421,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Skin",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.07000000029802322,
+            0.054999999701976776,
+            0.09000000357627869,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "alphaMode": "BLEND",
+        "doubleSided": true,
+        "name": "Shadow aura",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.017999999225139618,
+            0.008999999612569809,
+            0.029999999329447746,
+            0.3400000035762787
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Embroidery",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.5799999833106995,
+            0.3700000047683716,
+            0.11999999731779099,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      }
+    ],
+    "textures": [],
+    "skins": [],
+    "triangles": 5500,
+    "bufferBytes": 117024,
+    "dimensions": [
+      1.1419188976287842,
+      2,
+      0.5075002908706665
+    ],
+    "min": [
+      -0.5709594488143921,
+      0,
+      -0.2536276578903198
+    ],
+    "max": [
+      0.5709594488143921,
+      2,
+      0.2538726329803467
+    ],
+    "animations": [
+      {
+        "name": "gesture",
+        "duration": 2.8333332538604736,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 85
+          }
+        ]
+      },
+      {
+        "name": "idle",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "magic",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "react",
+        "duration": 1.8333333730697632,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 55
+          }
+        ]
+      },
+      {
+        "name": "recover",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "turn",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "walk",
+        "duration": 3.2333333492279053,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 97
+          }
+        ]
+      },
+      {
+        "name": "work",
+        "duration": 4.0333333015441895,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 121
+          }
+        ]
+      }
+    ]
+  },
+  "aryn": {
+    "sha256": "bbf5d4cdcf3b56ec5b0a61a5dfc242ad105455b01d5b25f2138d0fe683991b14",
+    "bytes": 344344,
+    "nodes": [
+      {
+        "name": "Scene",
+        "type": "Group"
+      },
+      {
+        "name": "aryn",
+        "type": "Object3D",
+        "parent": "Scene"
+      },
+      {
+        "name": "Facing",
+        "type": "Object3D",
+        "parent": "aryn"
+      },
+      {
+        "name": "HipL",
+        "type": "Object3D",
+        "parent": "Facing"
+      },
+      {
+        "name": "HipL-Cloth001",
+        "type": "Mesh",
+        "parent": "HipL"
+      },
+      {
+        "name": "HipL-Ink001",
+        "type": "Mesh",
+        "parent": "HipL"
+      },
+      {
+        "name": "HipR",
+        "type": "Object3D",
+        "parent": "Facing"
+      },
+      {
+        "name": "HipR-Cloth001",
+        "type": "Mesh",
+        "parent": "HipR"
+      },
+      {
+        "name": "HipR-Ink001",
+        "type": "Mesh",
+        "parent": "HipR"
+      },
+      {
+        "name": "Torso",
+        "type": "Object3D",
+        "parent": "Facing"
+      },
+      {
+        "name": "Head",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "Head-Embroidery001",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Hair001",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Ink001",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Paper_and_linen001",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Signature001",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Skin001",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Magic",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "Magic-Signature001",
+        "type": "Mesh",
+        "parent": "Magic"
+      },
+      {
+        "name": "ShoulderL",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowL",
+        "type": "Object3D",
+        "parent": "ShoulderL"
+      },
+      {
+        "name": "ElbowL-Cloth001",
+        "type": "Mesh",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "ElbowL-Skin001",
+        "type": "Mesh",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "ShoulderL-Cloth001",
+        "type": "Mesh",
+        "parent": "ShoulderL"
+      },
+      {
+        "name": "ShoulderR",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowR",
+        "type": "Object3D",
+        "parent": "ShoulderR"
+      },
+      {
+        "name": "ElbowR-Cloth001",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ElbowR-Paper_and_linen001",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ElbowR-Skin001",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ShoulderR-Cloth001",
+        "type": "Mesh",
+        "parent": "ShoulderR"
+      },
+      {
+        "name": "Torso-Cloth001",
+        "type": "Mesh",
+        "parent": "Torso"
+      },
+      {
+        "name": "Torso-Embroidery001",
+        "type": "Mesh",
+        "parent": "Torso"
+      },
+      {
+        "name": "Torso-Paper_and_linen001",
+        "type": "Mesh",
+        "parent": "Torso"
+      },
+      {
+        "name": "Torso-Skin001",
+        "type": "Mesh",
+        "parent": "Torso"
+      }
+    ],
+    "meshes": 22,
+    "materials": [
+      {
+        "doubleSided": true,
+        "name": "Cloth.001",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.054999999701976776,
+            0.20000000298023224,
+            0.14000000059604645,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Ink.001",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.017999999225139618,
+            0.014999999664723873,
+            0.02500000037252903,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Embroidery.001",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.5799999833106995,
+            0.3700000047683716,
+            0.11999999731779099,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Hair.001",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.03500000014901161,
+            0.02500000037252903,
+            0.02500000037252903,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Paper and linen.001",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.8500000238418579,
+            0.7699999809265137,
+            0.5699999928474426,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.5100000345706945,
+          0.42600000405311533,
+          0.204000010251999
+        ],
+        "name": "Signature.001",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.8500000238418579,
+            0.7099999785423279,
+            0.3400000035762787,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Skin.001",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.7799999713897705,
+            0.5799999833106995,
+            0.4699999988079071,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      }
+    ],
+    "textures": [],
+    "skins": [],
+    "triangles": 6544,
+    "bufferBytes": 137952,
+    "dimensions": [
+      0.7372426688671112,
+      1.6999999284744263,
+      0.4648864418268204
+    ],
+    "min": [
+      -0.3544941544532776,
+      0,
+      -0.2323310226202011
+    ],
+    "max": [
+      0.3827485144138336,
+      1.6999999284744263,
+      0.23255541920661926
+    ],
+    "animations": [
+      {
+        "name": "gesture",
+        "duration": 2.8333332538604736,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 85
+          }
+        ]
+      },
+      {
+        "name": "idle",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "magic",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "react",
+        "duration": 1.8333333730697632,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 55
+          }
+        ]
+      },
+      {
+        "name": "recover",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "turn",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "walk",
+        "duration": 3.2333333492279053,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 97
+          }
+        ]
+      },
+      {
+        "name": "work",
+        "duration": 4.0333333015441895,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 121
+          }
+        ]
+      }
+    ]
+  },
+  "ytha": {
+    "sha256": "dd9ce72bc3db682933e63d5c1ced7470d1a584d680775a6779791c75cc977e03",
+    "bytes": 395624,
+    "nodes": [
+      {
+        "name": "Scene",
+        "type": "Group"
+      },
+      {
+        "name": "ytha",
+        "type": "Object3D",
+        "parent": "Scene"
+      },
+      {
+        "name": "Facing",
+        "type": "Object3D",
+        "parent": "ytha"
+      },
+      {
+        "name": "HipL",
+        "type": "Object3D",
+        "parent": "Facing"
+      },
+      {
+        "name": "HipL-Cloth002",
+        "type": "Mesh",
+        "parent": "HipL"
+      },
+      {
+        "name": "HipL-Ink002",
+        "type": "Mesh",
+        "parent": "HipL"
+      },
+      {
+        "name": "HipR",
+        "type": "Object3D",
+        "parent": "Facing"
+      },
+      {
+        "name": "HipR-Cloth002",
+        "type": "Mesh",
+        "parent": "HipR"
+      },
+      {
+        "name": "HipR-Ink002",
+        "type": "Mesh",
+        "parent": "HipR"
+      },
+      {
+        "name": "Torso",
+        "type": "Object3D",
+        "parent": "Facing"
+      },
+      {
+        "name": "Head",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "Head-Hair002",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Ink002",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Paper_and_linen002",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Signature002",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Skin002",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Magic",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "Magic-Signature002",
+        "type": "Mesh",
+        "parent": "Magic"
+      },
+      {
+        "name": "ShoulderL",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowL",
+        "type": "Object3D",
+        "parent": "ShoulderL"
+      },
+      {
+        "name": "ElbowL-Cloth002",
+        "type": "Mesh",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "ElbowL-Skin002",
+        "type": "Mesh",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "ShoulderL-Cloth002",
+        "type": "Mesh",
+        "parent": "ShoulderL"
+      },
+      {
+        "name": "ShoulderR",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowR",
+        "type": "Object3D",
+        "parent": "ShoulderR"
+      },
+      {
+        "name": "ElbowR-Cloth002",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ElbowR-Hair002",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ElbowR-Signature002",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ElbowR-Skin002",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ShoulderR-Cloth002",
+        "type": "Mesh",
+        "parent": "ShoulderR"
+      },
+      {
+        "name": "Torso-Cloth002",
+        "type": "Mesh",
+        "parent": "Torso"
+      },
+      {
+        "name": "Torso-Embroidery002",
+        "type": "Mesh",
+        "parent": "Torso"
+      },
+      {
+        "name": "Torso-Skin002",
+        "type": "Mesh",
+        "parent": "Torso"
+      },
+      {
+        "name": "WingL",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "WingL-Cloth002",
+        "type": "Mesh",
+        "parent": "WingL"
+      },
+      {
+        "name": "WingL-Paper_and_linen002",
+        "type": "Mesh",
+        "parent": "WingL"
+      },
+      {
+        "name": "WingL-Translucent_wing",
+        "type": "Mesh",
+        "parent": "WingL"
+      },
+      {
+        "name": "WingR",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "WingR-Cloth002",
+        "type": "Mesh",
+        "parent": "WingR"
+      },
+      {
+        "name": "WingR-Paper_and_linen002",
+        "type": "Mesh",
+        "parent": "WingR"
+      },
+      {
+        "name": "WingR-Translucent_wing",
+        "type": "Mesh",
+        "parent": "WingR"
+      }
+    ],
+    "meshes": 27,
+    "materials": [
+      {
+        "doubleSided": true,
+        "name": "Cloth.002",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.3499999940395355,
+            0.20000000298023224,
+            0.41999998688697815,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Ink.002",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.017999999225139618,
+            0.014999999664723873,
+            0.02500000037252903,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Hair.002",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.550000011920929,
+            0.1899999976158142,
+            0.41999998688697815,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Paper and linen.002",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.8500000238418579,
+            0.7699999809265137,
+            0.5699999928474426,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.240000013113022,
+          0.3840000066757199,
+          0.19200000333785994
+        ],
+        "name": "Signature.002",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.4000000059604645,
+            0.6399999856948853,
+            0.3199999928474426,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Skin.002",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.7799999713897705,
+            0.5799999833106995,
+            0.4699999988079071,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Embroidery.002",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.5799999833106995,
+            0.3700000047683716,
+            0.11999999731779099,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "alphaMode": "BLEND",
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.057000001549720736,
+          0.09300000441074374,
+          0.06450000363588337
+        ],
+        "name": "Translucent wing",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.3799999952316284,
+            0.6200000047683716,
+            0.4300000071525574,
+            0.5799999833106995
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      }
+    ],
+    "textures": [],
+    "skins": [],
+    "triangles": 7300,
+    "bufferBytes": 156576,
+    "dimensions": [
+      1.5803437232971191,
+      1.6999999284744263,
+      0.4648864418268204
+    ],
+    "min": [
+      -0.7901718616485596,
+      0,
+      -0.2323310226202011
+    ],
+    "max": [
+      0.7901718616485596,
+      1.6999999284744263,
+      0.23255541920661926
+    ],
+    "animations": [
+      {
+        "name": "gesture",
+        "duration": 2.8333332538604736,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 85
+          }
+        ]
+      },
+      {
+        "name": "idle",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "magic",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "react",
+        "duration": 1.8333333730697632,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 55
+          }
+        ]
+      },
+      {
+        "name": "recover",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "turn",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "walk",
+        "duration": 3.2333333492279053,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 97
+          }
+        ]
+      },
+      {
+        "name": "work",
+        "duration": 4.0333333015441895,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "WingL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "WingR.quaternion",
+            "keys": 121
+          }
+        ]
+      }
+    ]
+  },
+  "lua": {
+    "sha256": "e6d1ec703dc6aab3d24b7b34af737ea2ab2f34fcffe47573da1b5c639c454b56",
+    "bytes": 352352,
+    "nodes": [
+      {
+        "name": "Scene",
+        "type": "Group"
+      },
+      {
+        "name": "lua",
+        "type": "Object3D",
+        "parent": "Scene"
+      },
+      {
+        "name": "Facing",
+        "type": "Object3D",
+        "parent": "lua"
+      },
+      {
+        "name": "HipL",
+        "type": "Object3D",
+        "parent": "Facing"
+      },
+      {
+        "name": "HipL-Cloth003",
+        "type": "Mesh",
+        "parent": "HipL"
+      },
+      {
+        "name": "HipL-Ink003",
+        "type": "Mesh",
+        "parent": "HipL"
+      },
+      {
+        "name": "HipR",
+        "type": "Object3D",
+        "parent": "Facing"
+      },
+      {
+        "name": "HipR-Cloth003",
+        "type": "Mesh",
+        "parent": "HipR"
+      },
+      {
+        "name": "HipR-Ink003",
+        "type": "Mesh",
+        "parent": "HipR"
+      },
+      {
+        "name": "Torso",
+        "type": "Object3D",
+        "parent": "Facing"
+      },
+      {
+        "name": "Head",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "Head-Embroidery003",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Hair003",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Ink003",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Paper_and_linen003",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Signature003",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Head-Skin003",
+        "type": "Mesh",
+        "parent": "Head"
+      },
+      {
+        "name": "Magic",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "Magic-Signature003",
+        "type": "Mesh",
+        "parent": "Magic"
+      },
+      {
+        "name": "ShoulderL",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowL",
+        "type": "Object3D",
+        "parent": "ShoulderL"
+      },
+      {
+        "name": "ElbowL-Cloth003",
+        "type": "Mesh",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "ElbowL-Embroidery003",
+        "type": "Mesh",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "ElbowL-Skin003",
+        "type": "Mesh",
+        "parent": "ElbowL"
+      },
+      {
+        "name": "ShoulderL-Cloth003",
+        "type": "Mesh",
+        "parent": "ShoulderL"
+      },
+      {
+        "name": "ShoulderR",
+        "type": "Object3D",
+        "parent": "Torso"
+      },
+      {
+        "name": "ElbowR",
+        "type": "Object3D",
+        "parent": "ShoulderR"
+      },
+      {
+        "name": "ElbowR-Cloth003",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ElbowR-Paper_and_linen003",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ElbowR-Skin003",
+        "type": "Mesh",
+        "parent": "ElbowR"
+      },
+      {
+        "name": "ShoulderR-Cloth003",
+        "type": "Mesh",
+        "parent": "ShoulderR"
+      },
+      {
+        "name": "Torso-Cloth003",
+        "type": "Mesh",
+        "parent": "Torso"
+      },
+      {
+        "name": "Torso-Embroidery003",
+        "type": "Mesh",
+        "parent": "Torso"
+      },
+      {
+        "name": "Torso-Skin003",
+        "type": "Mesh",
+        "parent": "Torso"
+      }
+    ],
+    "meshes": 22,
+    "materials": [
+      {
+        "doubleSided": true,
+        "name": "Cloth.003",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.23999999463558197,
+            0.03500000014901161,
+            0.10999999940395355,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Ink.003",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.017999999225139618,
+            0.014999999664723873,
+            0.02500000037252903,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Embroidery.003",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.5799999833106995,
+            0.3700000047683716,
+            0.11999999731779099,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Hair.003",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.12999999523162842,
+            0.15000000596046448,
+            0.25999999046325684,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Paper and linen.003",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.8500000238418579,
+            0.7699999809265137,
+            0.5699999928474426,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "emissiveFactor": [
+          0.19200000333785994,
+          0.2340000007152554,
+          0.480000026226044
+        ],
+        "name": "Signature.003",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.3199999928474426,
+            0.38999998569488525,
+            0.800000011920929,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Skin.003",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.7799999713897705,
+            0.5799999833106995,
+            0.4699999988079071,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.7200000286102295
+        }
+      }
+    ],
+    "textures": [],
+    "skins": [],
+    "triangles": 6936,
+    "bufferBytes": 143904,
+    "dimensions": [
+      0.7421369552612305,
+      1.600000023841858,
+      0.5043274909257889
+    ],
+    "min": [
+      -0.37106847763061523,
+      0,
+      -0.24327485263347626
+    ],
+    "max": [
+      0.37106847763061523,
+      1.600000023841858,
+      0.2610526382923126
+    ],
+    "animations": [
+      {
+        "name": "gesture",
+        "duration": 2.8333332538604736,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 85
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 85
+          }
+        ]
+      },
+      {
+        "name": "idle",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "magic",
+        "duration": 3.633333444595337,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 109
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 109
+          }
+        ]
+      },
+      {
+        "name": "react",
+        "duration": 1.8333333730697632,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 55
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 55
+          }
+        ]
+      },
+      {
+        "name": "recover",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "turn",
+        "duration": 2.433333396911621,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 73
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 73
+          }
+        ]
+      },
+      {
+        "name": "walk",
+        "duration": 3.2333333492279053,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 97
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 97
+          }
+        ]
+      },
+      {
+        "name": "work",
+        "duration": 4.0333333015441895,
+        "tracks": [
+          {
+            "name": "Facing.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "HipR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Torso.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Head.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Magic.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "Magic.scale",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowL.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ShoulderR.quaternion",
+            "keys": 121
+          },
+          {
+            "name": "ElbowR.quaternion",
+            "keys": 121
+          }
+        ]
+      }
+    ]
+  }
+}

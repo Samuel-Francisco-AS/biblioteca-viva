@@ -1,0 +1,24 @@
+{
+  "scope": "Real NarrativePanel/final CSS, mobile412x892 DPR1, fictional Lua card. Static layout/native CSS observations, NOT input latency or physical presentation.",
+  "styles": [
+    {
+      "reduced": false,
+      "animation": "living-panel-arrive",
+      "duration": "0.155s",
+      "opacity": "0.668996",
+      "contentAnimation": null,
+      "contentDuration": null,
+      "focus": "H3"
+    },
+    {
+      "reduced": true,
+      "animation": "none",
+      "duration": "0s",
+      "opacity": "1",
+      "contentAnimation": null,
+      "contentDuration": null,
+      "focus": "H3"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,7 @@
+{
+  "initialHarnessEntry": "First manual entry did not reach readiness; replaced with a Vite virtual module so React imports pass through the dependency pipeline. No metrics from that preparation used.",
+  "controlledProtocol": "Fresh world per hour/character/input path; routine agency frozen equally. Lighting settled identically before quest measurements, while untouched first draws separately capture startup. Early exploratory sequence not used in final comparison.",
+  "testFixtureFailure": "Wide run 972 PASS/1 FAIL: vi.spyOn called on undefined jsdom matchMedia in the newly added reduced-motion test. Corrected to explicit MediaQueryList fixture, without product/assert/timeout changes; runtime file rerun 55 PASS.",
+  "lintPreparation": "Unqualified browser document in diagnostic script corrected to globalThis.document; final global lint PASS.",
+  "e2eRetries": 0
+}

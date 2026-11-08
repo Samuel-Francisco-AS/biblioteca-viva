@@ -1,0 +1,301 @@
+{
+  "scope": "Single-pass Chromium CPU/DOM. Not Android latency or physical presentation; effective canvas800x700 recorded. CSS timing/perception, no input delay added.",
+  "groups": [
+    {
+      "path": "canvas",
+      "kind": "first",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 43,
+          "p95": 73
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 8,
+          "p95": 15
+        },
+        "domCommitOffset": {
+          "n": 8,
+          "p50": 53,
+          "p95": 89
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 41,
+          "p95": 70
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 8,
+          "p95": 18
+        },
+        "domCommitOffset": {
+          "n": 8,
+          "p50": 52,
+          "p95": 92
+        }
+      }
+    },
+    {
+      "path": "canvas",
+      "kind": "repeat",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 44,
+          "p95": 60
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 10,
+          "p95": 14
+        },
+        "domCommitOffset": {
+          "n": 8,
+          "p50": 57,
+          "p95": 78
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 38,
+          "p95": 48
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 8,
+          "p95": 13
+        },
+        "domCommitOffset": {
+          "n": 8,
+          "p50": 47,
+          "p95": 59
+        }
+      }
+    },
+    {
+      "path": "canvas",
+      "kind": "already-open",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 38,
+          "p95": 48
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "domCommitOffset": {
+          "n": 0
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 41,
+          "p95": 58
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "domCommitOffset": {
+          "n": 0
+        }
+      }
+    },
+    {
+      "path": "canvas",
+      "kind": "switch",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 31,
+          "p95": 57
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 10,
+          "p95": 12
+        },
+        "domCommitOffset": {
+          "n": 8,
+          "p50": 41,
+          "p95": 68
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 31,
+          "p95": 45
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 7,
+          "p95": 12
+        },
+        "domCommitOffset": {
+          "n": 8,
+          "p50": 39,
+          "p95": 58
+        }
+      }
+    },
+    {
+      "path": "react",
+      "kind": "first",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 10,
+          "p95": 16
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 9,
+          "p95": 17
+        },
+        "domCommitOffset": {
+          "n": 8,
+          "p50": 20,
+          "p95": 33
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 8,
+          "p95": 18
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 8,
+          "p95": 14
+        },
+        "domCommitOffset": {
+          "n": 8,
+          "p50": 18,
+          "p95": 36
+        }
+      }
+    },
+    {
+      "path": "react",
+      "kind": "repeat",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 8,
+          "p95": 12
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 12,
+          "p95": 14
+        },
+        "domCommitOffset": {
+          "n": 8,
+          "p50": 20,
+          "p95": 29
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 5,
+          "p95": 19
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 7,
+          "p95": 12
+        },
+        "domCommitOffset": {
+          "n": 8,
+          "p50": 14,
+          "p95": 28
+        }
+      }
+    },
+    {
+      "path": "react",
+      "kind": "already-open",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 1
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "domCommitOffset": {
+          "n": 0
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 0,
+          "p95": 1
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "domCommitOffset": {
+          "n": 0
+        }
+      }
+    },
+    {
+      "path": "react",
+      "kind": "switch",
+      "before": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 6,
+          "p95": 16
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 11,
+          "p95": 13
+        },
+        "domCommitOffset": {
+          "n": 8,
+          "p50": 18,
+          "p95": 31
+        }
+      },
+      "after": {
+        "handlerCpu": {
+          "n": 8,
+          "p50": 5,
+          "p95": 10
+        },
+        "reactDuration": {
+          "n": 8,
+          "p50": 11,
+          "p95": 13
+        },
+        "domCommitOffset": {
+          "n": 8,
+          "p50": 18,
+          "p95": 23
+        }
+      }
+    }
+  ]
+}

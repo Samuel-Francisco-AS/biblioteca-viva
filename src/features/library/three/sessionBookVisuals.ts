@@ -439,7 +439,7 @@ export function createSessionBookVisuals(options: {
           write(j, b);
         }
       }
-      const glow = active ? 0.12 + j.opening * 0.16 : 0.025;
+      const glow = active ? 0.4 + j.opening * 0.65 : 0.07;
       if (j.glow !== glow) {
         j.glow = glow;
         lightMaterials(j.visual, glow);

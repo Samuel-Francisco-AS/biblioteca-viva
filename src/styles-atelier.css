@@ -1960,3 +1960,30 @@
 .app-shell .passage-preparing p {
   margin: 0;
 }
+
+/* R5R: the frame, speaker and close action are fully present at the DOM commit.
+   One short content animation preserves continuity without scheduling a delay. */
+.app-shell .rpg-dialogue {
+  animation: none;
+}
+.app-shell .rpg-dialogue-content {
+  animation: quest-content-arrive 120ms cubic-bezier(0.2, 0.75, 0.3, 1) both;
+}
+@keyframes quest-content-arrive {
+  from {
+    opacity: 0.92;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-shell .rpg-dialogue-content {
+    animation: none;
+  }
+}
+.app-shell[data-reduced-motion="true"] .rpg-dialogue-content {
+  animation: none;
+}

@@ -1,3 +1,19 @@
+> **08/11/2026 — Fechamento R1–R5:** o programa de recuperação foi aceito pelo proprietário no Moto G06 e integrado via PR #40 com ressalvas documentadas. Quests mantêm engasgo residual; CI/E2E, memória sustentada e TalkBack não foram aprovados. BF-5.5 continua parcial. [Relatório canônico de fechamento](audits/BV_FECHAMENTO_RECUPERACAO_R1_R5_2026-11-08.md). Notas anteriores registram a cronologia.
+
+> **R5R — reparo pontual do contorno (08/11/2026):** proprietário confirmou melhora perceptível da luminosidade/detalhes mágicos, mas quests ainda engasgam e surgiu listra clara na borda ao mover a câmera. Reprodução sem WebGL confirmou o outline fullscreen durante o estado inicial tap; removida somente essa regra. Foco por teclado/seleção e navegação preservados; magia e diagnóstico R5Q intactos. Verificação física do reparo pendente, R5 aberta, mesma PR draft #40. [Causa, pares e gates](audits/BV_POLIMENTO_R5R.md#complemento--contorno-do-canvas).
+
+> **R5R — candidata de polimento (08/11/2026):** proprietário ainda percebe engasgo nas quests e magia discreta no Moto G06. Frame/header/Adiar ficam integrais no commit, conteúdo entra em 120 ms sem delay; feedback de contato usa o gesto existente. Halos unlit, contraste emissivo, pergaminho e livro ativo mais legíveis, sem novas PointLights ou alteração dos ganhos R5P/Q. Candidata exige aceite físico de suavidade/fluidez e arte; R5 aberta, mesma PR draft #40, sem merge ou fase nova. [Comparações, custos e roteiro](audits/BV_POLIMENTO_R5R.md). Notas anteriores são cronologia.
+
+> **R5Q residual — 08/11/2026:** proprietário testou `94bae8b` no Moto G06: **PASS início diretamente noturno; PASS fluidez geral; PARCIAL quests**, melhores mas ainda com engasgos. Complemento reaproveita os vértices exatos do toque também no highlight imediato; host Canvas P50 primeira 52→46 ms, troca 42→31 ms. Diagnóstico local opt-in limitado a 12 aberturas discrimina JS/DOM/foco/cena/submissão/CSS; não mede apresentação. Causa dominante residual Android e novo gate físico pendentes. Mesma PR draft #40, sem merge, R5/arte abertas. [Relatório e roteiro só de quests](audits/BV_SANEAMENTO_R5Q.md#complemento--engasgo-residual-das-quests). Notas abaixo preservam a cronologia.
+
+> **R5Q — inicialização e quests:** [diagnóstico, medições e candidata](audits/BV_SANEAMENTO_R5Q.md). R5P recebeu relato físico de melhora; R5Q corrige primeiro desenho noturno e CPU do toque, com gate físico pendente na mesma PR draft #40.
+
+> **R5P — prioridade fluidez:** [diagnóstico, A/B, candidata e limites](audits/BV_SANEAMENTO_PERFORMANCE_R5P.md). R5E recebeu relato físico de lag; arte suspensa e R5/R5E não aprovadas. Mesma PR draft #40, sem merge.
+
+> **R5E — refinamento candidato:** [arte/comportamento/efeitos e custos](audits/BV_RECUPERACAO_R5E.md) · [roteiro Moto G06](audits/evidence/bv-r5e/MOTO_G06.md). Mesma PR #40, sem merge ou aceite automático.
+
+> **R5 — candidata:** [Renascimento artístico dos habitantes](audits/BV_RECUPERACAO_R5.md), [pipeline autoral](INHABITANT_ART_PIPELINE.md) e [roteiro Moto G06](audits/evidence/bv-r5/MOTO_G06.md). PR draft #40, sem aceite humano ou encerramento da recuperação.
+
 > **Integração R4:** [registro canônico e ressalvas](audits/BV_INTEGRACAO_PR39_R4_2026-11-07.md); R5 não iniciada. As notas anteriores de candidata são cronologia.
 
 Saneamento ativo: [relógio e fólio de leitura pós-R4](audits/BV_SANEAMENTO_POS_R4_LEITURA.md), sobre R4A–D na PR draft #39; gate humano da candidata pendente.

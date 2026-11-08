@@ -1,34 +1,42 @@
 {
   "samael": {
     "file": "src/features/library/three/assets/samael.glb",
-    "sha256": "6da80a68315bb73506f593128cc475296f52bff6045750371cb179b0e678c6b3",
-    "bytes": 315256,
-    "meshes": 23,
-    "triangles": 5500,
-    "clips": 8
+    "sha256": "217f54d26b4bd32c6f06a12e7903b6a2bc26fcec014ba5489f84239b0ecc46f7",
+    "bytes": 1296796,
+    "meshes": 11,
+    "triangles": 25782,
+    "clips": 8,
+    "skins": 1,
+    "bones": 15
   },
   "aryn": {
     "file": "src/features/library/three/assets/aryn.glb",
-    "sha256": "bbf5d4cdcf3b56ec5b0a61a5dfc242ad105455b01d5b25f2138d0fe683991b14",
-    "bytes": 344344,
-    "meshes": 22,
-    "triangles": 6544,
-    "clips": 8
+    "sha256": "19b4d6df3034521d4e28522366f163927cd749e008fca1528b528eb7f2c0c69d",
+    "bytes": 1911848,
+    "meshes": 10,
+    "triangles": 46726,
+    "clips": 8,
+    "skins": 1,
+    "bones": 15
   },
   "ytha": {
     "file": "src/features/library/three/assets/ytha.glb",
-    "sha256": "dd9ce72bc3db682933e63d5c1ced7470d1a584d680775a6779791c75cc977e03",
-    "bytes": 395624,
-    "meshes": 27,
-    "triangles": 7300,
-    "clips": 8
+    "sha256": "2927850b827cda10ff45fb739158b829228f8d8ca10a1293a80cfe204b752071",
+    "bytes": 2411544,
+    "meshes": 12,
+    "triangles": 61226,
+    "clips": 8,
+    "skins": 1,
+    "bones": 17
   },
   "lua": {
     "file": "src/features/library/three/assets/lua.glb",
-    "sha256": "e6d1ec703dc6aab3d24b7b34af737ea2ab2f34fcffe47573da1b5c639c454b56",
-    "bytes": 352352,
-    "meshes": 22,
-    "triangles": 6936,
-    "clips": 8
+    "sha256": "c184c1957105f03435d2507710f115fc83aba828047d7dccc697a7a66dd10449",
+    "bytes": 1344812,
+    "meshes": 10,
+    "triangles": 27734,
+    "clips": 8,
+    "skins": 1,
+    "bones": 15
   }
 }

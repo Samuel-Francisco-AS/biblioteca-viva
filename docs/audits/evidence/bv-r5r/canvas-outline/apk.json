@@ -1,0 +1,33 @@
+{
+  "kind": "R5R canvas outline repair, Android debug; no physical test by agent",
+  "sourceBase": "34f1c02470273abb52c8fb641934b06075895812",
+  "path": "android/app/build/outputs/apk/debug/Biblioteca-Viva-R5R-contorno-debug.apk",
+  "bytes": 10641553,
+  "sha256": "cb0fba8e15d06a55d27abbc8221069ddee32c88d7c99005c2100c92d3b415662",
+  "apkFilesMatchDist": {
+    "index.html": {
+      "bytes": 2948,
+      "sha256": "388344b1b40df886a78a86acf8de69748d3d89e295b9be857bba0dd27455e6cd"
+    },
+    "assets/index-CX8NUv_N.js": {
+      "bytes": 689743,
+      "sha256": "2ad183b274104b3ef9ae9c5681dceba201733f8c29f71982798b8ab0144e5da1"
+    },
+    "assets/ThreeWorldRuntime-BWwCqUcx.js": {
+      "bytes": 842516,
+      "sha256": "1fc72e081fd00d3fc192f7c04179596f3e4e5d0d23be9db101dbc90fc9d378af"
+    },
+    "assets/index-uzG0g79Y.css": {
+      "bytes": 136646,
+      "sha256": "42a4c1ea2b9c8590b81d0a8030d6ae2699a2c6f1fee992afb0749168fe4784cd"
+    }
+  },
+  "removedTapSelectorAbsentFromBundledCss": true,
+  "focusVisibleAndQuestAnimationRulesPreserved": true,
+  "runtimeBundleMatchesOriginalR5R": false,
+  "fourGlbsMatchR5RAndApk": true,
+  "originalProductionSourcesChecked": 88,
+  "onlyChangedOriginalProductionSource": ["src/styles-atelier.css"],
+  "cssSourceSha256": "9058bd6046f8c0886c026c3d7b165a1aea6ec6cdfc39324d6aad21542b5e4c65",
+  "runtimeBodyIdenticalAfterEntryDependencyRename": true
+}

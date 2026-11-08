@@ -1,3 +1,5 @@
+> **R5E — refinamento autorizado (07/11/2026):** o proprietário observou melhora na R5D no Moto G06, mas considerou a arte insuficiente para a fase. A candidata R5E refina os quatro habitantes na mesma PR #40, com Ytha menor (1,32 m de geometria) e suspensa 0,16 m acima do piso; raio físico 0,92 m preservado. Não há novo aceite, fechamento R5 ou F2B/F2C. [Relatório vigente](audits/BV_RECUPERACAO_R5E.md). Notas anteriores são cronologia.
+
 # BF-4F — Bíblia dos quatro habitantes: concepção, narrativa e interação
 
 > Atualização BF-4F1 (2026-11-02): quatro modelos candidatos implementados e integrados, com fontes Blender, GLB animado por nó e seleção React/canvas. **F1 aberta** para revisão independente, refinamento de aura/asas e aceite artístico/físico. Trechos anteriores sobre ausência de código BF-4F descrevem a situação prévia. [Entrega, testes e pendências](BF-4F1_RELATORIO.md).

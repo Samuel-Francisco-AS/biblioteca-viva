@@ -1,0 +1,140 @@
+{
+  "scope": "Chromium mobile412x892 DPR1, productive CSS and ThreeWorldInteraction/CameraNavigation; no renderer/WebGL context. Held initial tap exposes the CSS frame; not Moto G06 physical frame timing.",
+  "before": true,
+  "idle": {
+    "gesture": "idle",
+    "outline": "none",
+    "width": "3px",
+    "color": "rgb(246, 233, 215)",
+    "offset": "0px",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 412,
+      "height": 892,
+      "top": 0,
+      "right": 412,
+      "bottom": 892,
+      "left": 0
+    },
+    "camera": {
+      "targetX": 0,
+      "targetZ": 0,
+      "zoom": 1
+    },
+    "rendererCreated": false,
+    "focusVisible": false,
+    "activeTag": "BODY"
+  },
+  "tap": {
+    "gesture": "tap",
+    "outline": "solid",
+    "width": "2px",
+    "color": "rgb(181, 233, 223)",
+    "offset": "-2px",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 412,
+      "height": 892,
+      "top": 0,
+      "right": 412,
+      "bottom": 892,
+      "left": 0
+    },
+    "camera": {
+      "targetX": 0,
+      "targetZ": 0,
+      "zoom": 1
+    },
+    "rendererCreated": false,
+    "focusVisible": false,
+    "activeTag": "BODY"
+  },
+  "pan": {
+    "gesture": "pan",
+    "outline": "none",
+    "width": "3px",
+    "color": "rgb(246, 233, 215)",
+    "offset": "0px",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 412,
+      "height": 892,
+      "top": 0,
+      "right": 412,
+      "bottom": 892,
+      "left": 0
+    },
+    "camera": {
+      "targetX": -7.0262569960022825,
+      "targetZ": 6.022505996573388,
+      "zoom": 1
+    },
+    "rendererCreated": false,
+    "focusVisible": false,
+    "activeTag": "BODY"
+  },
+  "released": {
+    "gesture": "idle",
+    "outline": "none",
+    "width": "3px",
+    "color": "rgb(246, 233, 215)",
+    "offset": "0px",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 412,
+      "height": 892,
+      "top": 0,
+      "right": 412,
+      "bottom": 892,
+      "left": 0
+    },
+    "camera": {
+      "targetX": -7.0262569960022825,
+      "targetZ": 6.022505996573388,
+      "zoom": 1
+    },
+    "rendererCreated": false,
+    "focusVisible": false,
+    "activeTag": "BODY"
+  },
+  "pinch": {
+    "gesture": "pinch",
+    "initialZoom": 1,
+    "zoom": 1.6666666666666667
+  },
+  "wheel": {
+    "gesture": "idle",
+    "outline": "none",
+    "width": "3px",
+    "color": "rgb(246, 233, 215)",
+    "offset": "0px",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 412,
+      "height": 892,
+      "top": 0,
+      "right": 412,
+      "bottom": 892,
+      "left": 0
+    },
+    "camera": {
+      "targetX": -9.18439129961258,
+      "targetZ": 6.927529947610233,
+      "zoom": 1.3921170190187868
+    },
+    "rendererCreated": false,
+    "focusVisible": false,
+    "activeTag": "BODY"
+  },
+  "focus": {
+    "visible": true,
+    "style": "solid",
+    "width": "2px"
+  },
+  "errors": []
+}

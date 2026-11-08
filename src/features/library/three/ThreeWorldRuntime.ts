@@ -1,3 +1,6 @@
+import { createBoundedPointLighting } from "./boundedPointLighting";
+import { GpuTimer } from "./gpuTimer";
+import type { LightingExperiment } from "./lightingExperiment";
 import { batchStaticBookshelf } from "./staticVisuals";
 import { createSessionBookVisuals } from "./sessionBookVisuals";
 import { createAmbientMagic } from "./ambientMagic";
@@ -32,6 +35,7 @@ import {
   Group,
   HemisphereLight,
   Mesh,
+  PointLight,
   Object3D,
   OrthographicCamera,
   Scene,
@@ -68,7 +72,7 @@ import type {
   BookRecordFactory,
   RecordAssetFactory,
 } from "./recordAssetContract";
-import { PerformanceProbe } from "./performanceProbe";
+import { type QuestProbeEvent, PerformanceProbe } from "./performanceProbe";
 import { FrameMetricsWindow } from "./frameMetrics";
 import {
   CAMERA_REFERENCE_HALF_HEIGHT,
@@ -99,6 +103,7 @@ import {
 } from "./readingAreaBookVisuals";
 
 interface RendererInfo {
+  readonly programs?: readonly unknown[] | null;
   readonly memory: {
     readonly geometries: number;
     readonly textures: number;
@@ -115,6 +120,7 @@ export interface ThreeWorldRenderer {
   readonly shadowMap: { enabled: boolean };
   dispose(): void;
   forceContextLoss?(): void;
+  getContext?(): WebGLRenderingContext | WebGL2RenderingContext;
   render(scene: Scene, camera: OrthographicCamera): void;
   setPixelRatio(value: number): void;
   setSize(width: number, height: number, updateStyle?: boolean): void;
@@ -448,6 +454,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private fixtureStatus: WorldFixtureStatus = "idle";
   private failureReported = false;
   private readonly performanceProbe = new PerformanceProbe(() => this.now());
+  private readonly boundedPointLighting = createBoundedPointLighting();
+  private activePointLights = 0;
+  private gpuTimer?: GpuTimer;
+  private lightingExperiment: LightingExperiment | null = null;
   private readonly frameMetrics = new FrameMetricsWindow();
   private geometries = 0;
   private lastDiagnosticsPublishedAt: number | undefined;
@@ -491,6 +501,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private ambientMagic?: ReturnType<typeof createAmbientMagic>;
   private scrollVisuals?: ReturnType<typeof createLivingScrollVisuals>;
   private readonly scrolls: readonly import("../../../contracts/livingScroll").LivingScroll[];
+  private lightingInitialized = false;
   private livingVisuals?: ReturnType<typeof createLivingVisuals>;
   private livingFrameTime: number | undefined;
   private readonly inhabitantLoader?: InhabitantLoader;
@@ -578,8 +589,14 @@ export class ThreeWorldRuntime implements WorldRuntime {
   getDiagnostics(): WorldRuntimeDiagnostics {
     const frameMetrics = this.frameMetrics.snapshot();
     return Object.freeze({
+      shaderPrograms:
+        this.mountedWorld?.renderer.info?.programs?.length ?? null,
+      activePointLights: this.activePointLights,
+      lightingExperiment: this.lightingExperiment,
       frameIntervals: this.frameMetrics.distribution(),
       cpuMetrics: this.performanceProbe.snapshot(),
+      questProbe: this.performanceProbe.questSnapshot(),
+      gpuTimer: this.gpuTimer?.snapshot(),
       longTasksSupported: this.performanceProbe.longTasksSupported,
       jsHeapUsedBytes: this.readJsHeap(),
       activeFrameLoops:
@@ -694,6 +711,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
           scene,
           this.inhabitantLoader,
           (id) => {
+            const actor = scene.getObjectByName(id);
+            if (actor) this.boundedPointLighting.apply(actor);
             mountedWorld
               .getInteraction()
               ?.refreshHighlightForSelectedObject(id);
@@ -804,6 +823,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
             root: node,
           }));
       }
+      if (this.narrative) this.applyNarrativeToAgency(this.narrative);
       if (composedWorld) camera.far = 1000;
       this.navigation = new CameraNavigation(
         camera,
@@ -812,6 +832,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         composedWorld ? 10 : 1,
       );
 
+      if (composedWorld) this.boundedPointLighting.apply(scene);
       renderer.shadowMap.enabled = false;
       renderer.domElement.className = "three-world-canvas";
       renderer.domElement.dataset.fixtureStatus = "loading";
@@ -851,6 +872,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       ]);
       this.refreshSelectableObjects();
       const interaction = new ThreeWorldInteraction({
+        probe: this.performanceProbe,
+        onPickStart: () =>
+          this.observeQuest({ type: "begin", source: "canvas" }),
         camera,
         canvas: renderer.domElement,
         catalog: this.selectableObjects,
@@ -929,6 +953,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (document.hidden) {
       this.state = "paused";
       this.performanceProbe.stop();
+      this.gpuTimer?.dispose();
+      this.gpuTimer = undefined;
       this.livingFrameTime = undefined;
       this.pausedByVisibility = true;
       this.resetFrameMetrics();
@@ -940,6 +966,49 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.activateLoop();
   }
 
+  setLightingExperiment(value: LightingExperiment | null): void {
+    if (this.isTerminal() || (value && this.diagnosticsListeners.size === 0))
+      return;
+    this.lightingExperiment = value;
+    if (this.mountedWorld)
+      this.boundedPointLighting.setEnabled(
+        value === null || value.mode === "candidate",
+        this.mountedWorld.scene,
+      );
+    const target = this.navigation?.getState();
+    this.livingVisuals?.setLightingExperiment(
+      value,
+      target?.targetX,
+      target?.targetZ,
+    );
+    this.inhabitants?.setPointLightEnabled(value?.ythaLight ?? true);
+    this.resetPerformanceProbe();
+    this.publishDiagnostics(true);
+  }
+
+  setQuestProbeEnabled(enabled: boolean): void {
+    this.performanceProbe.setQuestEnabled(enabled);
+    this.publishDiagnostics(true);
+  }
+
+  observeQuest(event: QuestProbeEvent): void {
+    if (event.type === "begin")
+      this.performanceProbe.beginQuest(
+        event.source,
+        this.narrative?.talkingTo ?? null,
+        Boolean(this.narrative?.active),
+        this.mountedWorld?.renderer.info?.programs?.length ?? null,
+      );
+    else this.performanceProbe.markQuest(event.stage, event.inhabitant);
+  }
+
+  resetPerformanceProbe(): void {
+    this.gpuTimer?.dispose();
+    this.gpuTimer = undefined;
+    this.performanceProbe.reset();
+    this.frameMetrics.reset();
+  }
+
   onDiagnosticsChange(listener: WorldDiagnosticsListener): () => void {
     if (this.isTerminal()) return () => undefined;
     this.diagnosticsListeners.add(listener);
@@ -949,7 +1018,13 @@ export class ThreeWorldRuntime implements WorldRuntime {
     listener(this.getDiagnostics());
     return () => {
       this.diagnosticsListeners.delete(listener);
-      if (this.diagnosticsListeners.size === 0) this.performanceProbe.stop();
+      if (this.diagnosticsListeners.size === 0) {
+        this.performanceProbe.stop();
+        this.performanceProbe.setQuestEnabled(false);
+        this.gpuTimer?.dispose();
+        this.gpuTimer = undefined;
+        this.setLightingExperiment(null);
+      }
     };
   }
 
@@ -979,6 +1054,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (document.hidden) {
       this.state = "paused";
       this.performanceProbe.stop();
+      this.gpuTimer?.dispose();
+      this.gpuTimer = undefined;
       this.livingFrameTime = undefined;
       this.pausedByVisibility = true;
       this.publishDiagnostics(true);
@@ -1067,11 +1144,17 @@ export class ThreeWorldRuntime implements WorldRuntime {
   applyNarrative(snapshot: NarrativeSnapshot): void {
     if (
       this.isTerminal() ||
-      !this.agency ||
       (this.narrative && snapshot.revision <= this.narrative.revision)
     )
       return;
+    this.performanceProbe.markQuest("narrativeStart");
     this.narrative = snapshot;
+    this.applyNarrativeToAgency(snapshot);
+    this.performanceProbe.markQuest("narrativeEnd");
+  }
+
+  private applyNarrativeToAgency(snapshot: NarrativeSnapshot): void {
+    if (!this.agency) return;
     const node = nodeFor(snapshot);
     const ensemble =
       snapshot.active === "rift" &&
@@ -1116,6 +1199,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (this.isTerminal() || !visual || !this.mountedWorld)
       return "unavailable";
     replaceLibraryRecordRepresentation(visual, factory);
+    this.boundedPointLighting.apply(visual.node);
     this.mountedWorld
       .getInteraction()
       ?.refreshHighlightForSelectedObject(instanceId);
@@ -1134,6 +1218,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       return "unavailable";
     const result = replaceReadingAreaBookRepresentation(visual, factory);
     if (result === "busy") return result;
+    this.boundedPointLighting.apply(visual.node);
     this.mountedWorld
       .getInteraction()
       ?.refreshHighlightForSelectedObject(instanceId);
@@ -1202,6 +1287,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.refreshSelectableObjects();
     }
     for (const visual of reconciliation.visible) {
+      this.boundedPointLighting.apply(visual.node);
       interaction?.refreshHighlightForSelectedObject(visual.book.instanceId);
     }
 
@@ -1220,12 +1306,15 @@ export class ThreeWorldRuntime implements WorldRuntime {
     }
 
     this.state = "disposed";
+    this.performanceProbe.setQuestEnabled(false);
     this.releaseMount();
     this.resetRuntimeData();
     this.failureListeners.clear();
     this.selectionListeners.clear();
     this.publishDiagnostics(true);
     this.performanceProbe.stop();
+    this.gpuTimer?.dispose();
+    this.gpuTimer = undefined;
     this.diagnosticsListeners.clear();
   }
 
@@ -1361,6 +1450,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const mountedWorld = this.mountedWorld;
     if (!mountedWorld) return;
     mountedWorld.settleFrame();
+    this.performanceProbe.markQuest("sceneStart");
     const cpuStart = this.performanceProbe.active ? this.now() : 0;
     let bookEnd: number;
     let agencyEnd: number;
@@ -1440,6 +1530,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.failRuntime();
       return;
     }
+    this.performanceProbe.markQuest("sceneEnd");
     if (this.performanceProbe.active) {
       const end = this.now();
       this.performanceProbe.record("updateCpu", end - cpuStart);
@@ -1450,6 +1541,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (!this.renderCurrentFrame()) return;
     if (this.state !== "running") return;
     this.renderedFrames += 1;
+    this.performanceProbe.frame(timestamp);
     this.frameMetrics.record(timestamp);
     mountedWorld.requestFrame(this.renderFrame);
     if (this.state !== "running") {
@@ -1471,11 +1563,44 @@ export class ThreeWorldRuntime implements WorldRuntime {
     }
     const { camera, renderer, scene } = mountedWorld;
     try {
+      if (!this.lightingInitialized && this.livingVisuals) {
+        this.livingSession?.refreshContext();
+        this.nightLighting?.refreshContext();
+        const reduced =
+          window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
+          false;
+        this.livingVisuals.update(
+          0,
+          reduced,
+          this.narrative?.scenes.rift &&
+            this.narrative.scenes.rift !== "restored"
+            ? "noturna"
+            : undefined,
+          true,
+        );
+        this.narrativeVisuals?.update(this.narrative, 0, reduced);
+        this.lightingInitialized = true;
+      }
       const start = this.performanceProbe.active ? this.now() : 0;
-      renderer.render(scene, camera);
+      if (this.performanceProbe.active && renderer.getContext) {
+        const gl = renderer.getContext();
+        if ("beginQuery" in gl) {
+          this.gpuTimer ??= new GpuTimer(gl);
+          this.gpuTimer.begin();
+        }
+      }
+      try {
+        this.performanceProbe.markQuest("submitStart");
+        renderer.render(scene, camera);
+      } finally {
+        this.gpuTimer?.end();
+      }
       if (this.performanceProbe.active) {
         this.performanceProbe.record("submitCpu", this.now() - start);
         this.performanceProbe.submitted();
+        this.performanceProbe.questSubmitted(
+          renderer.info?.programs?.length ?? null,
+        );
       }
     } catch {
       this.failRuntime();
@@ -1513,6 +1638,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.pausedByVisibility = false;
     this.nightLighting?.refreshContext();
     this.livingVisuals?.reconcileLighting();
+    this.lightingInitialized = false;
     this.resetFrameMetrics();
     const timestamp = this.now();
     if (!this.viewportReady) {
@@ -1523,6 +1649,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     if (!this.renderCurrentFrame()) return;
     if (this.state !== "running") return;
     this.renderedFrames += 1;
+    this.performanceProbe.frame(timestamp);
     this.frameMetrics.record(timestamp);
     this.publishDiagnostics(true, timestamp);
   }
@@ -1532,6 +1659,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.mountedWorld?.cancelFrame();
     this.state = "paused";
     this.performanceProbe.stop();
+    this.gpuTimer?.dispose();
+    this.gpuTimer = undefined;
     this.agency?.setMode("paused");
     this.livingFrameTime = undefined;
     this.resetFrameMetrics();
@@ -1628,6 +1757,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.fixtureLoadStartedAt = undefined;
     this.drawCalls = 0;
     this.geometries = 0;
+    this.activePointLights = 0;
     this.meshes = 0;
     this.materialTextureReferences = 0;
     this.performanceScenarioAssetsLoaded = 0;
@@ -1656,6 +1786,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
 
   private clearListeners(): void {
     this.performanceProbe.stop();
+    this.performanceProbe.setQuestEnabled(false);
+    this.gpuTimer?.dispose();
+    this.gpuTimer = undefined;
     this.diagnosticsListeners.clear();
     this.failureListeners.clear();
     this.selectionListeners.clear();
@@ -1734,11 +1867,14 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private updateObjectCounts(scene: Scene): void {
     let meshes = 0;
     let sceneObjects = 0;
+    let pointLights = 0;
     scene.traverseVisible((object) => {
       if (object === scene) return;
       sceneObjects += 1;
       if (object instanceof Mesh) meshes += 1;
+      if (object instanceof PointLight) pointLights += 1;
     });
+    this.activePointLights = pointLights;
     this.meshes = meshes;
     this.sceneObjects = sceneObjects;
   }

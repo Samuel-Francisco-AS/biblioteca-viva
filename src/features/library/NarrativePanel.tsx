@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import type { WorldRuntime } from "./worldRuntime";
 import { INHABITANTS } from "./inhabitants";
 import {
   matches,
@@ -12,10 +19,12 @@ export function NarrativePanel({
   session,
   failed,
   enabled = true,
+  questProbe,
 }: {
   readonly session: NarrativeSession;
   readonly failed: boolean;
   readonly enabled?: boolean;
+  readonly questProbe?: Pick<WorldRuntime, "observeQuest">;
 }) {
   const state = useSyncExternalStore(session.subscribe, session.getSnapshot);
   const node = nodeFor(state);
@@ -27,6 +36,14 @@ export function NarrativePanel({
   const choices =
     node?.choices.filter((c) => matches(c.condition, state)) ?? [];
   const speaker = INHABITANTS.find((a) => a.key === node?.speakerId);
+  useLayoutEffect(() => {
+    if (enabled && state.active && state.talkingTo)
+      questProbe?.observeQuest?.({
+        type: "mark",
+        stage: "reactCommit",
+        inhabitant: state.talkingTo,
+      });
+  }, [enabled, state.active, state.revision, state.talkingTo, questProbe]);
   useEffect(() => {
     if (!enabled) return;
     if (state.active) {
@@ -35,11 +52,23 @@ export function NarrativePanel({
         document.activeElement instanceof HTMLElement
       )
         opener.current = document.activeElement;
+      if (state.talkingTo)
+        questProbe?.observeQuest?.({
+          type: "mark",
+          stage: "focusStart",
+          inhabitant: state.talkingTo,
+        });
       heading.current?.focus({ preventScroll: true });
+      if (state.talkingTo)
+        questProbe?.observeQuest?.({
+          type: "mark",
+          stage: "focusEnd",
+          inhabitant: state.talkingTo,
+        });
     } else if (previousActive.current)
       opener.current?.focus({ preventScroll: true });
     previousActive.current = Boolean(state.active);
-  }, [state.revision, state.active, enabled]);
+  }, [state.revision, state.active, state.talkingTo, enabled, questProbe]);
   useEffect(() => {
     if (!enabled || (!state.active && !journal)) return;
     const close = (event: Event) => {
@@ -112,49 +141,71 @@ export function NarrativePanel({
               Adiar ×
             </button>
           </header>
-          <p className="rpg-voice" key={node.nodeId}>
-            {textFor(node, state)}
-          </p>
-          <p className="rpg-objective">
-            <span aria-hidden="true">✦ </span>
-            {node.objective}
-          </p>
-          <div className="rpg-choices">
-            {choices.map((choice, index) => (
-              <button
-                type="button"
-                key={choice.choiceId}
-                onClick={() => session.choose(choice.choiceId, state.revision)}
-              >
-                <span aria-hidden="true">{index + 1}.</span> {choice.text}
-              </button>
-            ))}
-            {node.outcome && (
-              <button
-                type="button"
-                onClick={() => {
-                  session.close();
-                  setJournal(true);
-                }}
-              >
-                Guardar o epílogo no diário
-              </button>
+          <div
+            className="rpg-dialogue-content"
+            onAnimationStart={(event) => {
+              if (event.target === event.currentTarget && state.talkingTo)
+                questProbe?.observeQuest?.({
+                  type: "mark",
+                  stage: "animationStart",
+                  inhabitant: state.talkingTo,
+                });
+            }}
+            onAnimationEnd={(event) => {
+              if (event.target === event.currentTarget && state.talkingTo)
+                questProbe?.observeQuest?.({
+                  type: "mark",
+                  stage: "animationEnd",
+                  inhabitant: state.talkingTo,
+                });
+            }}
+          >
+            <p className="rpg-voice" key={node.nodeId}>
+              {textFor(node, state)}
+            </p>
+            <p className="rpg-objective">
+              <span aria-hidden="true">✦ </span>
+              {node.objective}
+            </p>
+            <div className="rpg-choices">
+              {choices.map((choice, index) => (
+                <button
+                  type="button"
+                  key={choice.choiceId}
+                  onClick={() =>
+                    session.choose(choice.choiceId, state.revision)
+                  }
+                >
+                  <span aria-hidden="true">{index + 1}.</span> {choice.text}
+                </button>
+              ))}
+              {node.outcome && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    session.close();
+                    setJournal(true);
+                  }}
+                >
+                  Guardar o epílogo no diário
+                </button>
+              )}
+            </div>
+            <p className="rpg-feedback" role="status" aria-atomic="true">
+              {state.feedback}
+            </p>
+            {failed && (
+              <p className="rpg-fallback">
+                Modo de leitura: os acontecimentos seguem na ficção. A encenação
+                3D está indisponível; nenhuma animação é confirmada.
+              </p>
+            )}
+            {!failed && (
+              <p className="rpg-fallback">
+                Você pode adiar e retomar esta história durante a visita.
+              </p>
             )}
           </div>
-          <p className="rpg-feedback" role="status" aria-atomic="true">
-            {state.feedback}
-          </p>
-          {failed && (
-            <p className="rpg-fallback">
-              Modo de leitura: os acontecimentos seguem na ficção. A encenação
-              3D está indisponível; nenhuma animação é confirmada.
-            </p>
-          )}
-          {!failed && (
-            <p className="rpg-fallback">
-              Você pode adiar e retomar esta história durante a visita.
-            </p>
-          )}
         </article>
       )}
       {journal && (

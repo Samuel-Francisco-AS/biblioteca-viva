@@ -1,0 +1,68 @@
+{
+  "directedInitial": {
+    "passed": 126,
+    "files": 9
+  },
+  "wide": {
+    "passed": 972,
+    "failed": 1,
+    "files": 154,
+    "failure": "new reduced-motion fixture attempted spying on undefined jsdom matchMedia"
+  },
+  "correctedRuntimeFile": {
+    "passed": 55,
+    "failed": 0
+  },
+  "distinctUnitCasesPassingAcrossRuns": 973,
+  "secondWideRun": false,
+  "format": "PASS",
+  "formatCheck": "PASS",
+  "lintGlobal": "PASS",
+  "typecheck": "PASS",
+  "build": "PASS",
+  "audio": "PASS",
+  "performanceReport": "PASS; static bytes only",
+  "androidSyncDebug": "PASS",
+  "firstFrameHours": [
+    12,
+    "17:59",
+    18,
+    23,
+    3
+  ],
+  "cpuDomPerVersion": {
+    "cases": 48,
+    "selectionCardAssertions": "PASS"
+  },
+  "swiftShaderPerVersion": {
+    "cases": 8,
+    "selectionCardAssertions": "PASS",
+    "submissionsDuringHandler": 0,
+    "gpuOrDisplayMeasured": false
+  },
+  "lifecycleCycles": 1,
+  "e2e": {
+    "result": "0/1 PASS",
+    "file": "e2e/bf4-inhabitants.spec.ts",
+    "line": 60,
+    "failure": "30 s deadline scrollIntoViewIfNeeded waiting element stable",
+    "historical": "same scenario/step recorded in R5P; no common cause or absence of regression inferred",
+    "retries": 0,
+    "assertsOrTimeoutsEdited": false
+  },
+  "remoteActionsDispatched": false,
+  "physicalR5QTest": false,
+  "adbDevices": [],
+  "warnings": [
+    "Vite chunk >500 kB",
+    "Gradle flatDir"
+  ],
+  "preserved": "R5P gains, GLBs/clips, Dexie14, backup6, IDs/checkpoints, six types, narrative rules/CSS animations",
+  "publication": {
+    "branch": "feat/bv-r5-renascimento-artistico",
+    "pr": 40,
+    "draft": true,
+    "skipCi": true,
+    "merge": false
+  }
+}

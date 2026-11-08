@@ -8,6 +8,7 @@ import {
   AnimationMixer,
   BufferGeometry,
   Box3,
+  Box3Helper,
   Group,
   Mesh,
   MeshBasicMaterial,
@@ -19,7 +20,7 @@ import {
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { describe, expect, it, vi } from "vitest";
-import { INHABITANTS } from "../inhabitants";
+import { INHABITANTS, INHABITANT_GROUND_CLEARANCE } from "../inhabitants";
 import { createInhabitantVisuals } from "./inhabitantVisuals";
 import { disposeObjectTree } from "./referenceScene";
 
@@ -71,7 +72,10 @@ describe("BF-4F1 inhabitants", () => {
       const bounds = new Box3().setFromObject(gltf.scene);
       const size = bounds.getSize(new Vector3());
       expect(size.y).toBeCloseTo(actor.height, 2);
-      expect(bounds.min.y).toBeCloseTo(0, 4);
+      expect(bounds.min.y).toBeCloseTo(
+        INHABITANT_GROUND_CLEARANCE[actor.key],
+        4,
+      );
       expect(size.x).toBeGreaterThan(0.3);
       expect(size.z).toBeGreaterThan(0.1);
       expect(gltf.animations.length).toBeGreaterThan(0);
@@ -79,7 +83,7 @@ describe("BF-4F1 inhabitants", () => {
       gltf.animations.forEach((clip) => mixer.clipAction(clip).play());
       mixer.update(0.5);
       expect(new Box3().setFromObject(gltf.scene).max.y).toBeLessThan(
-        actor.height + 0.05,
+        actor.height + INHABITANT_GROUND_CLEARANCE[actor.key] + 0.05,
       );
       const placed = bounds.clone().translate(new Vector3(actor.x, 0, actor.z));
       expect(
@@ -147,6 +151,20 @@ describe("BF-4F1 inhabitants", () => {
       }
       expect(onSelectionChange).toHaveBeenLastCalledWith(actor);
       expect(canvas.dataset.highlightedObject).toBe(actor.id);
+      const helper = scene.getObjectByName("f1-c-selection-highlight");
+      expect(helper).toBeInstanceOf(Box3Helper);
+      mixer
+        .clipAction(gltf.animations.find((c) => c.name === "gesture")!)
+        .play();
+      mixer.setTime(1.4);
+      gltf.scene.position.x += 0.4;
+      interaction.updateHighlightBounds();
+      const expectedBounds = new Box3().setFromObject(gltf.scene, true);
+      if (!(helper instanceof Box3Helper))
+        throw new Error("Missing selection bounds");
+      expect(helper.box.min.distanceTo(expectedBounds.min)).toBeLessThan(1e-5);
+      expect(helper.box.max.distanceTo(expectedBounds.max)).toBeLessThan(1e-5);
+      mixer.stopAllAction();
       interaction.dispose();
       const resources = new Set<object>();
       const disposed = vi.fn();

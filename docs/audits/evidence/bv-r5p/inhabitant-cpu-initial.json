@@ -1,0 +1,48 @@
+{
+  "scope": "Node host CPU; 8 warmup + 32 samples; actual GLBs, idle clips, presence, world/palettes, precise selected-character bounds and all-four tap bounds. No renderer/RAF/GPU/Android. Highlights measured individually, not four selected simultaneously. These paths are unchanged by R5P.",
+  "node": "v24.18.0",
+  "milliseconds": {
+    "animationAndPresence": {
+      "count": 32,
+      "p50": 0.2429709999996703,
+      "p95": 0.5488129999998819,
+      "p99": 0.5508050000003095,
+      "max": 0.5508050000003095
+    },
+    "tapBoundsAllFour": {
+      "count": 32,
+      "p50": 76.11897800000042,
+      "p95": 77.0342840000003,
+      "p99": 80.01390400000037,
+      "max": 80.01390400000037
+    },
+    "highlight:samael": {
+      "count": 32,
+      "p50": 6.337800000000243,
+      "p95": 6.758480000000418,
+      "p99": 7.067199000000073,
+      "max": 7.067199000000073
+    },
+    "highlight:aryn": {
+      "count": 32,
+      "p50": 11.333870999999817,
+      "p95": 11.721107999999731,
+      "p99": 11.752865999999813,
+      "max": 11.752865999999813
+    },
+    "highlight:ytha": {
+      "count": 32,
+      "p50": 15.049418999999943,
+      "p95": 15.618926000000101,
+      "p99": 15.678021000000172,
+      "max": 15.678021000000172
+    },
+    "highlight:lua": {
+      "count": 32,
+      "p50": 6.77584300000035,
+      "p95": 7.068399000000227,
+      "p99": 7.427789000000303,
+      "max": 7.427789000000303
+    }
+  }
+}

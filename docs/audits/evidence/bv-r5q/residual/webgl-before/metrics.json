@@ -1,0 +1,979 @@
+{
+  "scope": "Chromium/SwiftShader real WebGL; synchronous CPU submission NOT GPU/Android; manual scene RAF, real React/CSS",
+  "browser": "151.0.7922.34",
+  "hours": [12, 23],
+  "initial": [
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          }
+        ],
+        "background": 1586221
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          }
+        ],
+        "background": 1586221
+      }
+    ],
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 1.08,
+            "color": 10602751
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          }
+        ],
+        "background": 1189436
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 1.08,
+            "color": 10602751
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          }
+        ],
+        "background": 1189436
+      }
+    ]
+  ],
+  "results": [
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 62
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 469
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 5984,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 5985,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 5910,
+      "handlerEndAt": 5974,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 6047,
+      "afterSceneAt": 6526,
+      "secondRafAt": 6528,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 44
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 8
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 6616,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 6618,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 6563,
+      "handlerEndAt": 6608,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 6624,
+      "afterSceneAt": 6636,
+      "secondRafAt": 6640,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.732065",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "switch",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 29
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 5
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 6711,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 6713,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 6675,
+      "handlerEndAt": 6704,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 6720,
+      "afterSceneAt": 6729,
+      "secondRafAt": 6736,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.963258",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 12
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 6
+        }
+      },
+      "commits": [
+        {
+          "duration": 15,
+          "commitTime": 11468,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 11470,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 11443,
+      "handlerEndAt": 11453,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 11475,
+      "afterSceneAt": 11494,
+      "secondRafAt": 11504,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.669039",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 8
+        }
+      },
+      "commits": [
+        {
+          "duration": 10,
+          "commitTime": 11556,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 11558,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 11542,
+      "handlerEndAt": 11545,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 11561,
+      "afterSceneAt": 11576,
+      "secondRafAt": 11584,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.669055",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "switch",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 9
+        }
+      },
+      "commits": [
+        {
+          "duration": 11,
+          "commitTime": 11652,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 11653,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 11635,
+      "handlerEndAt": 11640,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 11654,
+      "afterSceneAt": 11669,
+      "secondRafAt": 11680,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.963373",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 56
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 36
+        }
+      },
+      "commits": [
+        {
+          "duration": 12,
+          "commitTime": 22599,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 22601,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 22530,
+      "handlerEndAt": 22587,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 22606,
+      "afterSceneAt": 22648,
+      "secondRafAt": 22659,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 39
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 10
+        }
+      },
+      "commits": [
+        {
+          "duration": 12,
+          "commitTime": 22743,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 22745,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 22692,
+      "handlerEndAt": 22731,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 22750,
+      "afterSceneAt": 22766,
+      "secondRafAt": 22772,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.668736",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "switch",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 51
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 7
+        }
+      },
+      "commits": [
+        {
+          "duration": 12,
+          "commitTime": 22885,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 22887,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 22820,
+      "handlerEndAt": 22872,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 22891,
+      "afterSceneAt": 22904,
+      "secondRafAt": 22912,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 20
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 2
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 19
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 323
+        }
+      },
+      "commits": [
+        {
+          "duration": 20,
+          "commitTime": 41994,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 41998,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 41945,
+      "handlerEndAt": 41973,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 42004,
+      "afterSceneAt": 42348,
+      "secondRafAt": 42356,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 14
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 11
+        }
+      },
+      "commits": [
+        {
+          "duration": 26,
+          "commitTime": 42466,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 42473,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 42424,
+      "handlerEndAt": 42438,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 42480,
+      "afterSceneAt": 42497,
+      "secondRafAt": 42516,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.731989",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "switch",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 23
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 14
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 2404
+        }
+      },
+      "commits": [
+        {
+          "duration": 30,
+          "commitTime": 42704,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 42707,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 42649,
+      "handlerEndAt": 42673,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 42714,
+      "afterSceneAt": 45134,
+      "secondRafAt": 45137,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    }
+  ],
+  "errors": [],
+  "teardown": {
+    "canvases": 0,
+    "state": "disposed"
+  },
+  "presentationLimit": "DOM commit and next native RAF opportunities only; actual display/compositor/input-to-photon not measured. Synthetic events exclude hardware input latency."
+}

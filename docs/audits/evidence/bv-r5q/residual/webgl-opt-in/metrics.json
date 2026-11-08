@@ -1,0 +1,1814 @@
+{
+  "scope": "Chromium/SwiftShader real WebGL; synchronous CPU submission NOT GPU/Android; manual scene RAF, real React/CSS",
+  "browser": "151.0.7922.34",
+  "hours": [12, 23],
+  "initial": [
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          }
+        ],
+        "background": 1586221
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          }
+        ],
+        "background": 1586221
+      }
+    ],
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 1.08,
+            "color": 10602751
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          }
+        ],
+        "background": 1189436
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 1.08,
+            "color": 10602751
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          }
+        ],
+        "background": 1189436
+      }
+    ]
+  ],
+  "results": [
+    {
+      "localQuest": {
+        "enabled": true,
+        "observations": [
+          {
+            "sequence": 1,
+            "source": "canvas",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "pickStart": 0,
+              "prepared": 40,
+              "raycastStart": 40,
+              "raycastEnd": 49,
+              "highlightStart": 49,
+              "highlightEnd": 52,
+              "publishStart": 52,
+              "talkStart": 53,
+              "narrativeStart": 53,
+              "narrativeEnd": 53,
+              "talkEnd": 53,
+              "publishEnd": 53,
+              "pickEnd": 53,
+              "handlerEnd": 53,
+              "reactCommit": 67,
+              "focusStart": 67,
+              "focusEnd": 96,
+              "sceneStart": 100,
+              "sceneEnd": 109,
+              "submitStart": 109,
+              "submitEnd": 509,
+              "animationStart": 510,
+              "animationEnd": 511
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          }
+        ]
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 53
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 400
+        }
+      },
+      "commits": [
+        {
+          "duration": 11,
+          "commitTime": 7111,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 7113,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 7045,
+      "handlerEndAt": 7100,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 7146,
+      "afterSceneAt": 7555,
+      "secondRafAt": 7569,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": true,
+        "observations": [
+          {
+            "sequence": 1,
+            "source": "canvas",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "pickStart": 0,
+              "prepared": 40,
+              "raycastStart": 40,
+              "raycastEnd": 49,
+              "highlightStart": 49,
+              "highlightEnd": 52,
+              "publishStart": 52,
+              "talkStart": 53,
+              "narrativeStart": 53,
+              "narrativeEnd": 53,
+              "talkEnd": 53,
+              "publishEnd": 53,
+              "pickEnd": 53,
+              "handlerEnd": 53,
+              "reactCommit": 67,
+              "focusStart": 67,
+              "focusEnd": 96,
+              "sceneStart": 100,
+              "sceneEnd": 109,
+              "submitStart": 109,
+              "submitEnd": 509,
+              "animationStart": 510,
+              "animationEnd": 511
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          },
+          {
+            "sequence": 2,
+            "source": "canvas",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "pickStart": 0,
+              "prepared": 32,
+              "raycastStart": 32,
+              "raycastEnd": 39,
+              "highlightStart": 39,
+              "highlightEnd": 40,
+              "publishStart": 41,
+              "talkStart": 41,
+              "narrativeStart": 41,
+              "narrativeEnd": 41,
+              "talkEnd": 41,
+              "publishEnd": 41,
+              "pickEnd": 41,
+              "handlerEnd": 41,
+              "reactCommit": 54,
+              "focusStart": 54,
+              "focusEnd": 56,
+              "sceneStart": 58,
+              "sceneEnd": 65,
+              "submitStart": 65,
+              "submitEnd": 82,
+              "animationStart": 83
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          }
+        ]
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 41
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 17
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 7657,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 7659,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 7605,
+      "handlerEndAt": 7646,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 7663,
+      "afterSceneAt": 7687,
+      "secondRafAt": 7696,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.731735",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": true,
+        "observations": [
+          {
+            "sequence": 1,
+            "source": "canvas",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "pickStart": 0,
+              "prepared": 40,
+              "raycastStart": 40,
+              "raycastEnd": 49,
+              "highlightStart": 49,
+              "highlightEnd": 52,
+              "publishStart": 52,
+              "talkStart": 53,
+              "narrativeStart": 53,
+              "narrativeEnd": 53,
+              "talkEnd": 53,
+              "publishEnd": 53,
+              "pickEnd": 53,
+              "handlerEnd": 53,
+              "reactCommit": 67,
+              "focusStart": 67,
+              "focusEnd": 96,
+              "sceneStart": 100,
+              "sceneEnd": 109,
+              "submitStart": 109,
+              "submitEnd": 509,
+              "animationStart": 510,
+              "animationEnd": 511
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          },
+          {
+            "sequence": 2,
+            "source": "canvas",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "pickStart": 0,
+              "prepared": 32,
+              "raycastStart": 32,
+              "raycastEnd": 39,
+              "highlightStart": 39,
+              "highlightEnd": 40,
+              "publishStart": 41,
+              "talkStart": 41,
+              "narrativeStart": 41,
+              "narrativeEnd": 41,
+              "talkEnd": 41,
+              "publishEnd": 41,
+              "pickEnd": 41,
+              "handlerEnd": 41,
+              "reactCommit": 54,
+              "focusStart": 54,
+              "focusEnd": 56,
+              "sceneStart": 58,
+              "sceneEnd": 65,
+              "submitStart": 65,
+              "submitEnd": 82,
+              "animationStart": 83
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          },
+          {
+            "sequence": 3,
+            "source": "canvas",
+            "previous": "lua",
+            "cardWasOpen": true,
+            "inhabitant": "samael",
+            "marks": {
+              "pickStart": 0,
+              "prepared": 23,
+              "raycastStart": 23,
+              "raycastEnd": 25,
+              "highlightStart": 25,
+              "highlightEnd": 26,
+              "publishStart": 26,
+              "talkStart": 27,
+              "narrativeStart": 27,
+              "narrativeEnd": 27,
+              "talkEnd": 27,
+              "publishEnd": 27,
+              "pickEnd": 27,
+              "handlerEnd": 27,
+              "reactCommit": 39,
+              "focusStart": 39,
+              "focusEnd": 39,
+              "sceneStart": 44,
+              "sceneEnd": 50,
+              "submitStart": 50,
+              "submitEnd": 59
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          }
+        ]
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "switch",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 27
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 9
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 7786,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 7788,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 7748,
+      "handlerEndAt": 7776,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 7793,
+      "afterSceneAt": 7808,
+      "secondRafAt": 7825,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.999241",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": true,
+        "observations": [
+          {
+            "sequence": 1,
+            "source": "accessible",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "highlightStart": 0,
+              "highlightEnd": 6,
+              "publishStart": 6,
+              "talkStart": 7,
+              "narrativeStart": 7,
+              "narrativeEnd": 7,
+              "talkEnd": 7,
+              "publishEnd": 7,
+              "handlerEnd": 7,
+              "reactCommit": 21,
+              "focusStart": 21,
+              "focusEnd": 25,
+              "sceneStart": 27,
+              "sceneEnd": 32,
+              "submitStart": 32,
+              "submitEnd": 43,
+              "animationStart": 44
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          }
+        ]
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 11
+        }
+      },
+      "commits": [
+        {
+          "duration": 12,
+          "commitTime": 13784,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 13785,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 13763,
+      "handlerEndAt": 13771,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 13791,
+      "afterSceneAt": 13807,
+      "secondRafAt": 13809,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.668976",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": true,
+        "observations": [
+          {
+            "sequence": 1,
+            "source": "accessible",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "highlightStart": 0,
+              "highlightEnd": 6,
+              "publishStart": 6,
+              "talkStart": 7,
+              "narrativeStart": 7,
+              "narrativeEnd": 7,
+              "talkEnd": 7,
+              "publishEnd": 7,
+              "handlerEnd": 7,
+              "reactCommit": 21,
+              "focusStart": 21,
+              "focusEnd": 25,
+              "sceneStart": 27,
+              "sceneEnd": 32,
+              "submitStart": 32,
+              "submitEnd": 43,
+              "animationStart": 44
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          },
+          {
+            "sequence": 2,
+            "source": "accessible",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "highlightStart": 0,
+              "highlightEnd": 5,
+              "publishStart": 5,
+              "talkStart": 6,
+              "narrativeStart": 6,
+              "narrativeEnd": 6,
+              "talkEnd": 6,
+              "publishEnd": 6,
+              "handlerEnd": 6,
+              "reactCommit": 20,
+              "focusStart": 20,
+              "focusEnd": 23,
+              "sceneStart": 25,
+              "sceneEnd": 32,
+              "submitStart": 32,
+              "submitEnd": 40,
+              "animationStart": 41
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          }
+        ]
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 8
+        }
+      },
+      "commits": [
+        {
+          "duration": 11,
+          "commitTime": 13864,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 13866,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 13845,
+      "handlerEndAt": 13852,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 13871,
+      "afterSceneAt": 13886,
+      "secondRafAt": 13889,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.668858",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": true,
+        "observations": [
+          {
+            "sequence": 1,
+            "source": "accessible",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "highlightStart": 0,
+              "highlightEnd": 6,
+              "publishStart": 6,
+              "talkStart": 7,
+              "narrativeStart": 7,
+              "narrativeEnd": 7,
+              "talkEnd": 7,
+              "publishEnd": 7,
+              "handlerEnd": 7,
+              "reactCommit": 21,
+              "focusStart": 21,
+              "focusEnd": 25,
+              "sceneStart": 27,
+              "sceneEnd": 32,
+              "submitStart": 32,
+              "submitEnd": 43,
+              "animationStart": 44
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          },
+          {
+            "sequence": 2,
+            "source": "accessible",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "highlightStart": 0,
+              "highlightEnd": 5,
+              "publishStart": 5,
+              "talkStart": 6,
+              "narrativeStart": 6,
+              "narrativeEnd": 6,
+              "talkEnd": 6,
+              "publishEnd": 6,
+              "handlerEnd": 6,
+              "reactCommit": 20,
+              "focusStart": 20,
+              "focusEnd": 23,
+              "sceneStart": 25,
+              "sceneEnd": 32,
+              "submitStart": 32,
+              "submitEnd": 40,
+              "animationStart": 41
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          },
+          {
+            "sequence": 3,
+            "source": "accessible",
+            "previous": "lua",
+            "cardWasOpen": true,
+            "inhabitant": "samael",
+            "marks": {
+              "highlightStart": 0,
+              "highlightEnd": 2,
+              "publishStart": 2,
+              "talkStart": 2,
+              "narrativeStart": 3,
+              "narrativeEnd": 3,
+              "talkEnd": 3,
+              "publishEnd": 3,
+              "handlerEnd": 3,
+              "reactCommit": 16,
+              "focusStart": 16,
+              "focusEnd": 16,
+              "sceneStart": 17,
+              "sceneEnd": 22,
+              "submitStart": 22,
+              "submitEnd": 27
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          }
+        ]
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "switch",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 5
+        }
+      },
+      "commits": [
+        {
+          "duration": 11,
+          "commitTime": 13955,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 13956,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 13939,
+      "handlerEndAt": 13943,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 13957,
+      "afterSceneAt": 13967,
+      "secondRafAt": 13969,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.930286",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": true,
+        "observations": [
+          {
+            "sequence": 1,
+            "source": "canvas",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "pickStart": 0,
+              "prepared": 47,
+              "raycastStart": 47,
+              "raycastEnd": 57,
+              "highlightStart": 57,
+              "highlightEnd": 60,
+              "publishStart": 60,
+              "talkStart": 61,
+              "narrativeStart": 61,
+              "narrativeEnd": 61,
+              "talkEnd": 61,
+              "publishEnd": 61,
+              "pickEnd": 62,
+              "handlerEnd": 62,
+              "reactCommit": 80,
+              "focusStart": 80,
+              "focusEnd": 85,
+              "sceneStart": 88,
+              "sceneEnd": 100,
+              "submitStart": 100,
+              "submitEnd": 179
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          }
+        ]
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 10
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 62
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 10
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 79
+        }
+      },
+      "commits": [
+        {
+          "duration": 15,
+          "commitTime": 26881,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 26884,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 26803,
+      "handlerEndAt": 26866,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 26892,
+      "afterSceneAt": 26984,
+      "secondRafAt": 26994,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": true,
+        "observations": [
+          {
+            "sequence": 1,
+            "source": "canvas",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "pickStart": 0,
+              "prepared": 47,
+              "raycastStart": 47,
+              "raycastEnd": 57,
+              "highlightStart": 57,
+              "highlightEnd": 60,
+              "publishStart": 60,
+              "talkStart": 61,
+              "narrativeStart": 61,
+              "narrativeEnd": 61,
+              "talkEnd": 61,
+              "publishEnd": 61,
+              "pickEnd": 62,
+              "handlerEnd": 62,
+              "reactCommit": 80,
+              "focusStart": 80,
+              "focusEnd": 85,
+              "sceneStart": 88,
+              "sceneEnd": 100,
+              "submitStart": 100,
+              "submitEnd": 179,
+              "animationStart": 194
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          },
+          {
+            "sequence": 2,
+            "source": "canvas",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "pickStart": 0,
+              "prepared": 37,
+              "raycastStart": 37,
+              "raycastEnd": 49,
+              "highlightStart": 49,
+              "highlightEnd": 51,
+              "publishStart": 51,
+              "talkStart": 52,
+              "narrativeStart": 52,
+              "narrativeEnd": 52,
+              "talkEnd": 52,
+              "publishEnd": 52,
+              "pickEnd": 52,
+              "handlerEnd": 52,
+              "reactCommit": 64,
+              "focusStart": 64,
+              "focusEnd": 66,
+              "sceneStart": 67,
+              "sceneEnd": 74,
+              "submitStart": 74,
+              "submitEnd": 104,
+              "animationStart": 114
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          }
+        ]
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 12
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 52
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 30
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 27142,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 27145,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 27081,
+      "handlerEndAt": 27133,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 27148,
+      "afterSceneAt": 27185,
+      "secondRafAt": 27201,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.789821",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": true,
+        "observations": [
+          {
+            "sequence": 1,
+            "source": "canvas",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "pickStart": 0,
+              "prepared": 47,
+              "raycastStart": 47,
+              "raycastEnd": 57,
+              "highlightStart": 57,
+              "highlightEnd": 60,
+              "publishStart": 60,
+              "talkStart": 61,
+              "narrativeStart": 61,
+              "narrativeEnd": 61,
+              "talkEnd": 61,
+              "publishEnd": 61,
+              "pickEnd": 62,
+              "handlerEnd": 62,
+              "reactCommit": 80,
+              "focusStart": 80,
+              "focusEnd": 85,
+              "sceneStart": 88,
+              "sceneEnd": 100,
+              "submitStart": 100,
+              "submitEnd": 179,
+              "animationStart": 194
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          },
+          {
+            "sequence": 2,
+            "source": "canvas",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "pickStart": 0,
+              "prepared": 37,
+              "raycastStart": 37,
+              "raycastEnd": 49,
+              "highlightStart": 49,
+              "highlightEnd": 51,
+              "publishStart": 51,
+              "talkStart": 52,
+              "narrativeStart": 52,
+              "narrativeEnd": 52,
+              "talkEnd": 52,
+              "publishEnd": 52,
+              "pickEnd": 52,
+              "handlerEnd": 52,
+              "reactCommit": 64,
+              "focusStart": 64,
+              "focusEnd": 66,
+              "sceneStart": 67,
+              "sceneEnd": 74,
+              "submitStart": 74,
+              "submitEnd": 104,
+              "animationStart": 114
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          },
+          {
+            "sequence": 3,
+            "source": "canvas",
+            "previous": "lua",
+            "cardWasOpen": true,
+            "inhabitant": "samael",
+            "marks": {
+              "pickStart": 0,
+              "prepared": 52,
+              "raycastStart": 52,
+              "raycastEnd": 57,
+              "highlightStart": 58,
+              "highlightEnd": 62,
+              "publishStart": 62,
+              "talkStart": 62,
+              "narrativeStart": 62,
+              "narrativeEnd": 62,
+              "talkEnd": 62,
+              "publishEnd": 62,
+              "pickEnd": 63,
+              "handlerEnd": 63,
+              "reactCommit": 88,
+              "focusStart": 89,
+              "focusEnd": 89,
+              "sceneStart": 93,
+              "sceneEnd": 102,
+              "submitStart": 102,
+              "submitEnd": 2636
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          }
+        ]
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "switch",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 63
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 2531
+        }
+      },
+      "commits": [
+        {
+          "duration": 21,
+          "commitTime": 27353,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 27355,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 27266,
+      "handlerEndAt": 27330,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 27360,
+      "afterSceneAt": 29903,
+      "secondRafAt": 29906,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": true,
+        "observations": [
+          {
+            "sequence": 1,
+            "source": "accessible",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "highlightStart": 0,
+              "highlightEnd": 8,
+              "publishStart": 8,
+              "talkStart": 9,
+              "narrativeStart": 9,
+              "narrativeEnd": 9,
+              "talkEnd": 9,
+              "publishEnd": 9,
+              "handlerEnd": 9,
+              "reactCommit": 22,
+              "focusStart": 22,
+              "focusEnd": 28,
+              "sceneStart": 29,
+              "sceneEnd": 48,
+              "submitStart": 48,
+              "submitEnd": 172
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          }
+        ]
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 17
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 124
+        }
+      },
+      "commits": [
+        {
+          "duration": 11,
+          "commitTime": 38364,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 38366,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 38343,
+      "handlerEndAt": 38353,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 38372,
+      "afterSceneAt": 38516,
+      "secondRafAt": 38531,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": true,
+        "observations": [
+          {
+            "sequence": 1,
+            "source": "accessible",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "highlightStart": 0,
+              "highlightEnd": 8,
+              "publishStart": 8,
+              "talkStart": 9,
+              "narrativeStart": 9,
+              "narrativeEnd": 9,
+              "talkEnd": 9,
+              "publishEnd": 9,
+              "handlerEnd": 9,
+              "reactCommit": 22,
+              "focusStart": 22,
+              "focusEnd": 28,
+              "sceneStart": 29,
+              "sceneEnd": 48,
+              "submitStart": 48,
+              "submitEnd": 172
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          },
+          {
+            "sequence": 2,
+            "source": "accessible",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "highlightStart": 0,
+              "highlightEnd": 4,
+              "publishStart": 4,
+              "talkStart": 4,
+              "narrativeStart": 4,
+              "narrativeEnd": 4,
+              "talkEnd": 4,
+              "publishEnd": 4,
+              "handlerEnd": 4,
+              "reactCommit": 18,
+              "focusStart": 18,
+              "focusEnd": 20,
+              "sceneStart": 21,
+              "sceneEnd": 26,
+              "submitStart": 26,
+              "submitEnd": 42,
+              "animationStart": 43
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          }
+        ]
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 16
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 38578,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 38581,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 38562,
+      "handlerEndAt": 38568,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 38584,
+      "afterSceneAt": 38605,
+      "secondRafAt": 38609,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.668819",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": true,
+        "observations": [
+          {
+            "sequence": 1,
+            "source": "accessible",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "highlightStart": 0,
+              "highlightEnd": 8,
+              "publishStart": 8,
+              "talkStart": 9,
+              "narrativeStart": 9,
+              "narrativeEnd": 9,
+              "talkEnd": 9,
+              "publishEnd": 9,
+              "handlerEnd": 9,
+              "reactCommit": 22,
+              "focusStart": 22,
+              "focusEnd": 28,
+              "sceneStart": 29,
+              "sceneEnd": 48,
+              "submitStart": 48,
+              "submitEnd": 172
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          },
+          {
+            "sequence": 2,
+            "source": "accessible",
+            "previous": null,
+            "cardWasOpen": false,
+            "inhabitant": "samael",
+            "marks": {
+              "highlightStart": 0,
+              "highlightEnd": 4,
+              "publishStart": 4,
+              "talkStart": 4,
+              "narrativeStart": 4,
+              "narrativeEnd": 4,
+              "talkEnd": 4,
+              "publishEnd": 4,
+              "handlerEnd": 4,
+              "reactCommit": 18,
+              "focusStart": 18,
+              "focusEnd": 20,
+              "sceneStart": 21,
+              "sceneEnd": 26,
+              "submitStart": 26,
+              "submitEnd": 42,
+              "animationStart": 43
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          },
+          {
+            "sequence": 3,
+            "source": "accessible",
+            "previous": "lua",
+            "cardWasOpen": true,
+            "inhabitant": "samael",
+            "marks": {
+              "highlightStart": 0,
+              "highlightEnd": 4,
+              "publishStart": 4,
+              "talkStart": 4,
+              "narrativeStart": 4,
+              "narrativeEnd": 4,
+              "talkEnd": 4,
+              "publishEnd": 4,
+              "handlerEnd": 4,
+              "reactCommit": 16,
+              "focusStart": 16,
+              "focusEnd": 16,
+              "sceneStart": 19,
+              "sceneEnd": 23,
+              "submitStart": 23,
+              "submitEnd": 29
+            },
+            "programsBefore": 21,
+            "programsAfter": 22,
+            "longTasks": 0,
+            "longestTask": 0
+          }
+        ]
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "switch",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 6
+        }
+      },
+      "commits": [
+        {
+          "duration": 10,
+          "commitTime": 38658,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 38659,
+      "submissions": 1,
+      "programsBefore": 21,
+      "receivedAt": 38643,
+      "handlerEndAt": 38647,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 38661,
+      "afterSceneAt": 38672,
+      "secondRafAt": 38689,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.930112",
+      "programs": 22,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    }
+  ],
+  "errors": [],
+  "teardown": {
+    "canvases": 0,
+    "state": "disposed"
+  },
+  "presentationLimit": "DOM commit and next native RAF opportunities only; actual display/compositor/input-to-photon not measured. Synthetic events exclude hardware input latency."
+}

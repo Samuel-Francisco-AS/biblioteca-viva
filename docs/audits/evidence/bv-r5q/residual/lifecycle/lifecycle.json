@@ -1,0 +1,70 @@
+{
+  "environment": "Chromium / SwiftShader / DPR1; real runtime, six categories, four GLBs, one scroll; host counters, no Android bytes/FPS",
+  "sourceRef": "working-tree",
+  "cycles": [
+    {
+      "heapAfterGc": {
+        "usedSize": 24067852,
+        "totalSize": 25264128,
+        "embedderHeapUsedSize": 474120,
+        "backingStorageSize": 21434573
+      },
+      "cycle": 1,
+      "paused": {
+        "state": "paused",
+        "frames": 0,
+        "canvas": 1,
+        "gesture": "idle",
+        "capturedBefore": true,
+        "capturedAfter": false,
+        "listeners": 13,
+        "observers": 1,
+        "inactiveForegroundState": "paused"
+      },
+      "resumed": {
+        "state": "running",
+        "frames": 1,
+        "backgroundFrames": 0,
+        "sameCanvas": true,
+        "selection": "living:book",
+        "staleFrameIgnored": true
+      },
+      "contextLoss": "restored-terminal",
+      "disposed": {
+        "mounted": {
+          "ownedResources": 303,
+          "gpuCounters": {
+            "geometries": 72,
+            "textures": 5
+          },
+          "contextLost": false,
+          "listeners": 13,
+          "observers": 1
+        },
+        "baseline": {
+          "listeners": 0,
+          "observers": 0
+        },
+        "frames": 0,
+        "canvas": 0,
+        "state": "failed",
+        "leases": 0,
+        "undisposed": 0,
+        "repeatedDisposals": 0,
+        "gpuCounters": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "contextLost": true,
+        "listeners": 0,
+        "observers": 0
+      },
+      "domAfterGc": {
+        "documents": 1,
+        "nodes": 8,
+        "jsEventListeners": 13
+      }
+    }
+  ],
+  "pageErrors": []
+}

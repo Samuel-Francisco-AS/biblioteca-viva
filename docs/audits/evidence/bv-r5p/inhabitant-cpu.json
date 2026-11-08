@@ -1,0 +1,94 @@
+{
+  "scope": "Node host CPU; 8 warmup + 32 samples; actual GLBs, idle clips, presence, world/palettes, precise selected-character bounds and all-four tap bounds. No renderer/RAF/GPU/Android. Highlights measured individually, not four selected simultaneously. Original and prepared paths use the same exact Three bounding/raycast readers; preparation costs included.",
+  "node": "v24.18.0",
+  "milliseconds": {
+    "original": {
+      "animationAndPresence": {
+        "count": 32,
+        "p50": 0.22203000000081374,
+        "p95": 0.40371399999980895,
+        "p99": 0.4910300000001371,
+        "max": 0.4910300000001371
+      },
+      "tapBoundsAllFour": {
+        "count": 32,
+        "p50": 75.83101099999976,
+        "p95": 78.24406399999998,
+        "p99": 79.73479300000008,
+        "max": 79.73479300000008
+      },
+      "highlight:samael": {
+        "count": 32,
+        "p50": 6.347692999999936,
+        "p95": 6.762846000000536,
+        "p99": 6.844763999999941,
+        "max": 6.844763999999941
+      },
+      "highlight:aryn": {
+        "count": 32,
+        "p50": 11.381794999999784,
+        "p95": 12.006434999999783,
+        "p99": 12.785105999999814,
+        "max": 12.785105999999814
+      },
+      "highlight:ytha": {
+        "count": 32,
+        "p50": 14.931332999999995,
+        "p95": 15.63039899999967,
+        "p99": 15.7725089999999,
+        "max": 15.7725089999999
+      },
+      "highlight:lua": {
+        "count": 32,
+        "p50": 6.734958000000006,
+        "p95": 7.144652999999835,
+        "p99": 7.346774000000096,
+        "max": 7.346774000000096
+      }
+    },
+    "prepared": {
+      "animationAndPresence": {
+        "count": 32,
+        "p50": 0.13650800000050367,
+        "p95": 0.16329700000005687,
+        "p99": 0.17156900000009045,
+        "max": 0.17156900000009045
+      },
+      "tapBoundsAllFour": {
+        "count": 32,
+        "p50": 28.21069500000067,
+        "p95": 28.734261000000515,
+        "p99": 29.040459999999257,
+        "max": 29.040459999999257
+      },
+      "highlight:samael": {
+        "count": 32,
+        "p50": 2.5364620000000286,
+        "p95": 2.754783000000316,
+        "p99": 2.8434950000000754,
+        "max": 2.8434950000000754
+      },
+      "highlight:aryn": {
+        "count": 32,
+        "p50": 4.538743000000068,
+        "p95": 4.824343999999655,
+        "p99": 5.2140559999998,
+        "max": 5.2140559999998
+      },
+      "highlight:ytha": {
+        "count": 32,
+        "p50": 6.00574400000005,
+        "p95": 6.118232000000717,
+        "p99": 6.147899000000507,
+        "max": 6.147899000000507
+      },
+      "highlight:lua": {
+        "count": 32,
+        "p50": 2.7003640000002633,
+        "p95": 2.8166549999996278,
+        "p99": 2.8200479999995878,
+        "max": 2.8200479999995878
+      }
+    }
+  }
+}

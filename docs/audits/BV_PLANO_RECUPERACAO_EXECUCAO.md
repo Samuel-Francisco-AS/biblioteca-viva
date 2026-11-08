@@ -1,3 +1,5 @@
+> **FECHAMENTO CANÔNICO — 08/11/2026:** R1–R5 encerradas pelo proprietário após gates dirigidos no Moto G06 e correções R5P/Q/R. R1–R4 integradas anteriormente; R5 via PR #40. Engasgo residual nas quests, falhas E2E/CI, retenção heap/DOM, TalkBack e BF-5.5F2B/F2C/G permanecem pendentes de fases próprias. Não usar a matriz histórica abaixo como situação corrente. [Decisão final e evidências](BV_FECHAMENTO_RECUPERACAO_R1_R5_2026-11-08.md).
+
 > **Autoridade atual R4 — 07/11/2026:** PRs #32–#38 integradas em main `d5eb469`, com aceites físicos dirigidos R2/R3/segurança. R4 executada em branch própria/PR draft #39; consultar [relatório canônico](BV_RECUPERACAO_R4.md) para gates e limitações. R5 não iniciada. As descrições abaixo das PRs abertas e gates anteriores são cronologia.
 
 > **R3C — 07/11/2026:** A `f1086b7`, B `a9fc253` publicadas; C candidata com descarte de runas, RAF por geração e contexto terminal, dez ciclos dirigidos PASS. [Relatório e retenção host ainda sem atribuição](BV_RECUPERACAO_R3.md). Memória física, CI E2E global e recuperação integral abertas; R4/R5 não executadas.

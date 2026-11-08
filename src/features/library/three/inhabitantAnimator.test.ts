@@ -9,6 +9,7 @@ import {
   InstancedMesh,
   Matrix4,
   Mesh,
+  SkinnedMesh,
   Vector3,
   AnimationMixer,
 } from "three";
@@ -27,6 +28,17 @@ import { createLibraryRecordComposition } from "./libraryRecordComposition";
 import { INITIAL_LIBRARY_RECORD_SLOTS } from "../libraryRecordLayout";
 import { disposeObjectTree } from "./referenceScene";
 
+function vertexAttribute(geometry: unknown, name: string) {
+  if (!(geometry instanceof BufferGeometry))
+    throw new Error("Unexpected geometry");
+  const value: unknown = geometry.getAttribute(name);
+  if (
+    !(value instanceof BufferAttribute) &&
+    !(value instanceof InterleavedBufferAttribute)
+  )
+    throw new Error(`Missing vertex attribute: ${name}`);
+  return value;
+}
 async function model(key: string) {
   return new GLTFLoader().parseAsync(
     new Uint8Array(readFileSync(`src/features/library/three/assets/${key}.glb`))
@@ -203,6 +215,9 @@ for (const actor of INHABITANTS)
     const gltf = await model(actor.key);
     const e = INHABITANT_ENVELOPES[actor.key];
     const excess: string[] = [];
+    const p = new Vector3();
+    const baseVertex = new Vector3();
+    const influencedVertex = new Vector3();
     for (const clip of gltf.animations) {
       const mixer = new AnimationMixer(gltf.scene);
       mixer.clipAction(clip).play();
@@ -226,10 +241,39 @@ for (const actor of INHABITANTS)
             !(positions instanceof InterleavedBufferAttribute)
           )
             throw new Error("Unexpected vertex attribute");
+          // Cache the per-bone matrix product once per sampled pose, not once
+          // per vertex. Same weighted deformation, every vertex/frame retained.
+          const palette =
+            o instanceof SkinnedMesh
+              ? o.skeleton.bones.map((bone, index) =>
+                  new Matrix4().multiplyMatrices(
+                    bone.matrixWorld,
+                    o.skeleton.boneInverses[index],
+                  ),
+                )
+              : null;
+          const weights = palette
+            ? vertexAttribute(geometry, "skinWeight")
+            : null;
+          const indices = palette
+            ? vertexAttribute(geometry, "skinIndex")
+            : null;
           for (let i = 0; i < positions.count; i++) {
-            const p = new Vector3()
-              .fromBufferAttribute(positions, i)
-              .applyMatrix4(o.matrixWorld);
+            p.fromBufferAttribute(positions, i);
+            if (o instanceof SkinnedMesh && palette && weights && indices) {
+              baseVertex.copy(p).applyMatrix4(o.bindMatrix);
+              p.set(0, 0, 0);
+              for (let influence = 0; influence < 4; influence++) {
+                const weight = weights.getComponent(i, influence);
+                if (weight === 0) continue;
+                influencedVertex
+                  .copy(baseVertex)
+                  .applyMatrix4(palette[indices.getComponent(i, influence)]);
+                p.addScaledVector(influencedVertex, weight);
+              }
+              p.applyMatrix4(o.bindMatrixInverse);
+            }
+            p.applyMatrix4(o.matrixWorld);
             if (Math.hypot(p.x, p.z) > limit)
               excess.push(`${clip.name}:${frame}:${o.name}`);
           }

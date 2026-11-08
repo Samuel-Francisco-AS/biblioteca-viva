@@ -1,3 +1,4 @@
+import { NightLightingSession, NIGHT_LAMPS } from "../nightLighting";
 import { NarrativeSession } from "../narrative/session";
 import { InhabitantAgency, type AgencySnapshot } from "../inhabitantAgency";
 import { readFileSync } from "node:fs";
@@ -10,6 +11,7 @@ import {
   Box3Helper,
   BoxGeometry,
   Group,
+  HemisphereLight,
   Mesh,
   MeshBasicMaterial,
   Object3D,
@@ -3041,4 +3043,240 @@ it("R3 rejects a cancelled RAF delivered after resume without losing the current
   runtime.dispose();
   expect(callbacks.size).toBe(0);
   expect(renderer.forceContextLoss).toHaveBeenCalledOnce();
+});
+
+it("R5P experiments require diagnostic opt-in, survive pause, and restore normal state on close", () => {
+  const renderer = new TestRenderer();
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    fixtureLoader: new TestFixtureLoader(),
+    livingSession: new LivingSession(),
+    frameScheduler: { request: () => 1, cancel: () => {} },
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  runtime.setLightingExperiment({ mode: "no-lamps", ythaLight: false });
+  expect(runtime.getDiagnostics().lightingExperiment).toBeNull();
+  const unsubscribe = runtime.onDiagnosticsChange(() => {});
+  runtime.setLightingExperiment({ mode: "limited", ythaLight: false });
+  expect(runtime.getDiagnostics().lightingExperiment).toEqual({
+    mode: "limited",
+    ythaLight: false,
+  });
+  const canvas = renderer.domElement;
+  runtime.pause();
+  runtime.resume();
+  expect(renderer.domElement).toBe(canvas);
+  expect(runtime.getDiagnostics().lightingExperiment?.mode).toBe("limited");
+  unsubscribe();
+  expect(runtime.getDiagnostics().lightingExperiment).toBeNull();
+  expect(runtime.getDiagnostics().cpuMetrics).toEqual({});
+  runtime.dispose();
+  runtime.setLightingExperiment({ mode: "original", ythaLight: true });
+  expect(runtime.getDiagnostics().runtimeState).toBe("disposed");
+});
+
+it.each([
+  [12, 0, false],
+  [17, 59, false],
+  [18, 0, true],
+  [23, 0, true],
+  [3, 0, true],
+] as const)(
+  "R5Q first draw already matches %s:%s, including nine lamps",
+  (hour, minute, dark) => {
+    const date = () => new Date(2026, 10, 8, hour, minute);
+    const renderer = new TestRenderer();
+    const seen: { sky: number; lamps: number[] }[] = [];
+    renderer.render.mockImplementation((scene) => {
+      const sky = scene.children.find(
+        (o): o is HemisphereLight => o instanceof HemisphereLight,
+      );
+      seen.push({
+        sky: sky?.intensity ?? -1,
+        lamps: NIGHT_LAMPS.map((l) => {
+          const light = scene.getObjectByName(`${l.id}:light`);
+          return light &&
+            "intensity" in light &&
+            typeof light.intensity === "number"
+            ? light.intensity
+            : -1;
+        }),
+      });
+    });
+    const runtime = new ThreeWorldRuntime({
+      createRenderer: () => renderer,
+      fixtureLoader: new TestFixtureLoader(),
+      libraryWorldSnapshot: projectLibraryWorldEntries([]),
+      livingSession: new LivingSession(date),
+      nightLighting: new NightLightingSession(date),
+      inhabitantLoader: () =>
+        Promise.resolve({ scene: new Group(), animations: [] }),
+      frameScheduler: { request: () => 1, cancel: () => {} },
+    });
+    runtime.mount(createHost());
+    runtime.start();
+    expect(seen.length).toBeGreaterThan(0);
+    expect(seen.every((frame) => frame.sky === (dark ? 1.08 : 2))).toBe(true);
+    const power = dark ? (hour === 18 ? 0.68 : 1) : 0;
+    expect(seen[0].lamps).toEqual(Array(9).fill(4.2 * power));
+    runtime.dispose();
+  },
+);
+
+it("R5Q primes narrative night before mount, resumes at actual hour and keeps live dusk interpolation", () => {
+  let now = new Date(2026, 10, 8, 12);
+  const renderer = new TestRenderer(),
+    living = new LivingSession(() => now),
+    night = new NightLightingSession(() => now);
+  let scheduled: FrameRequestCallback | undefined;
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    fixtureLoader: new TestFixtureLoader(),
+    libraryWorldSnapshot: projectLibraryWorldEntries([]),
+    livingSession: living,
+    nightLighting: night,
+    inhabitantLoader: () =>
+      Promise.resolve({ scene: new Group(), animations: [] }),
+    now: () => 0,
+    frameScheduler: {
+      request: (cb) => {
+        scheduled = cb;
+        return 1;
+      },
+      cancel: () => {
+        scheduled = undefined;
+      },
+    },
+  });
+  const story = new NarrativeSession();
+  story.open("rift");
+  runtime.applyNarrative(story.getSnapshot());
+  const intensities: number[] = [];
+  renderer.render.mockImplementation((scene) => {
+    const sky = scene.children.find(
+      (o): o is HemisphereLight => o instanceof HemisphereLight,
+    );
+    intensities.push(sky?.intensity ?? -1);
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  expect(intensities[0]).toBe(1.08);
+  story.reset();
+  runtime.applyNarrative(story.getSnapshot());
+  runtime.pause();
+  runtime.resume();
+  expect(intensities.at(-1)).toBe(2);
+  scheduled?.(16);
+  now = new Date(2026, 10, 8, 18);
+  living.refreshContext();
+  night.refreshContext();
+  scheduled?.(66);
+  expect(intensities.at(-1)).toBeGreaterThan(1.08);
+  expect(intensities.at(-1)).toBeLessThan(2);
+  runtime.pause();
+  now = new Date(2026, 10, 8, 23);
+  runtime.resume();
+  expect(intensities.at(-1)).toBe(1.08);
+  runtime.pause();
+  now = new Date(2026, 10, 9, 12);
+  runtime.resume();
+  expect(intensities.at(-1)).toBe(2);
+  runtime.dispose();
+  story.dispose();
+  living.dispose();
+});
+
+it("R5Q first reduced-motion draw preserves the restored partial ritual and fallback", () => {
+  const date = () => new Date(2026, 10, 8, 18, 0, 10),
+    night = new NightLightingSession(date);
+  expect(
+    night.restore({
+      version: 1,
+      cycleKey: night.getSnapshot().cycleKey,
+      completedLampIds: [NIGHT_LAMPS[0].id],
+    }),
+  ).toBe(true);
+  const checkpoint = night.capture(),
+    renderer = new TestRenderer();
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn(() => ({
+      matches: true,
+      media: "(prefers-reduced-motion: reduce)",
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => true,
+    })),
+  );
+  let powers: number[] = [];
+  renderer.render.mockImplementation((scene) => {
+    if (powers.length) return;
+    powers = NIGHT_LAMPS.map((l) => {
+      const light = scene.getObjectByName(`${l.id}:light`);
+      return light &&
+        "intensity" in light &&
+        typeof light.intensity === "number"
+        ? light.intensity
+        : -1;
+    });
+  });
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    fixtureLoader: new TestFixtureLoader(),
+    libraryWorldSnapshot: projectLibraryWorldEntries([]),
+    livingSession: new LivingSession(date),
+    nightLighting: night,
+    inhabitantLoader: () =>
+      Promise.resolve({ scene: new Group(), animations: [] }),
+    frameScheduler: { request: () => 1, cancel: () => {} },
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  expect(powers).toEqual(NIGHT_LAMPS.map((_, i) => 4.2 * (i === 0 ? 1 : 0.68)));
+  expect(night.capture()).toEqual(checkpoint);
+  runtime.dispose();
+});
+
+it("R5Q quest diagnostics stop on unsubscribe and never join frames across pause", () => {
+  let time = 0;
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => new TestRenderer(),
+    fixtureLoader: new TestFixtureLoader(),
+    frameScheduler: { request: () => 1, cancel: () => {} },
+    now: () => time,
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  const unsubscribe = runtime.onDiagnosticsChange(() => {});
+  runtime.setQuestProbeEnabled(true);
+  runtime.observeQuest({ type: "begin", source: "accessible" });
+  time = 3;
+  runtime.observeQuest({
+    type: "mark",
+    stage: "talkStart",
+    inhabitant: "samael",
+  });
+  expect(
+    runtime.getDiagnostics().questProbe?.observations[0].marks.talkStart,
+  ).toBe(3);
+  runtime.pause();
+  runtime.resume();
+  runtime.observeQuest({
+    type: "mark",
+    stage: "reactCommit",
+    inhabitant: "samael",
+  });
+  expect(
+    runtime.getDiagnostics().questProbe?.observations[0].marks.reactCommit,
+  ).toBeUndefined();
+  unsubscribe();
+  expect(runtime.getDiagnostics().questProbe).toEqual({
+    enabled: false,
+    observations: [],
+  });
+  runtime.dispose();
 });

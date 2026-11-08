@@ -1,0 +1,3147 @@
+{
+  "scope": "Chromium CPU/DOM isolation; real scene/rigs/raycast/React/CSS, renderer double, manual scene RAF; NOT GPU/Android latency",
+  "browser": "151.0.7922.34",
+  "hours": [
+    12,
+    17,
+    18,
+    23,
+    3
+  ],
+  "initial": [
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      }
+    ],
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      }
+    ],
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      }
+    ],
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      }
+    ],
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          },
+          {
+            "kind": "lamp",
+            "intensity": 0
+          }
+        ],
+        "background": 1586221
+      }
+    ]
+  ],
+  "results": [
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 13
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 49
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 2144,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 2145,
+      "submissions": 1,
+      "receivedAt": 2083,
+      "handlerEndAt": 2134,
+      "firstRafAt": 2197,
+      "afterSceneAt": 2201,
+      "secondRafAt": 2208,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 18
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 66
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 2320,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 2321,
+      "submissions": 1,
+      "receivedAt": 2246,
+      "handlerEndAt": 2312,
+      "firstRafAt": 2324,
+      "afterSceneAt": 2327,
+      "secondRafAt": 2337,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.123015",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 18
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 53
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 2360,
+      "handlerEndAt": 2413,
+      "firstRafAt": 2416,
+      "afterSceneAt": 2419,
+      "secondRafAt": 2433,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.716585",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 4209,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 4210,
+      "submissions": 1,
+      "receivedAt": 4194,
+      "handlerEndAt": 4201,
+      "firstRafAt": 4214,
+      "afterSceneAt": 4223,
+      "secondRafAt": 4224,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.122787",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 6,
+          "commitTime": 4253,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 4254,
+      "submissions": 1,
+      "receivedAt": 4243,
+      "handlerEndAt": 4246,
+      "firstRafAt": 4257,
+      "afterSceneAt": 4260,
+      "secondRafAt": 4272,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.123513",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 4296,
+      "handlerEndAt": 4296,
+      "firstRafAt": 4305,
+      "afterSceneAt": 4308,
+      "secondRafAt": 4321,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "BUTTON",
+      "opacity": "0.448996",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 19
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 58
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 4296,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 4297,
+      "submissions": 1,
+      "receivedAt": 4228,
+      "handlerEndAt": 4288,
+      "firstRafAt": 4304,
+      "afterSceneAt": 4309,
+      "secondRafAt": 4320,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.12347",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 20
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 49
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 4396,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 4397,
+      "submissions": 1,
+      "receivedAt": 4339,
+      "handlerEndAt": 4389,
+      "firstRafAt": 4400,
+      "afterSceneAt": 4405,
+      "secondRafAt": 4416,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.123029",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 19
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 52
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 4440,
+      "handlerEndAt": 4492,
+      "firstRafAt": 4496,
+      "afterSceneAt": 4501,
+      "secondRafAt": 4513,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.716904",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "aryn",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 5557,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 5558,
+      "submissions": 1,
+      "receivedAt": 5540,
+      "handlerEndAt": 5549,
+      "firstRafAt": 5562,
+      "afterSceneAt": 5572,
+      "secondRafAt": 5585,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.123065",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "aryn",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 6,
+          "commitTime": 5614,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 5615,
+      "submissions": 1,
+      "receivedAt": 5603,
+      "handlerEndAt": 5608,
+      "firstRafAt": 5618,
+      "afterSceneAt": 5623,
+      "secondRafAt": 5632,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.123321",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "aryn",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 5655,
+      "handlerEndAt": 5656,
+      "firstRafAt": 5664,
+      "afterSceneAt": 5671,
+      "secondRafAt": 5680,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "BUTTON",
+      "opacity": "0.448835",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 26
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 64
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 6238,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 6239,
+      "submissions": 1,
+      "receivedAt": 6164,
+      "handlerEndAt": 6229,
+      "firstRafAt": 6243,
+      "afterSceneAt": 6252,
+      "secondRafAt": 6256,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.123335",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 27
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 60
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 6343,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 6344,
+      "submissions": 1,
+      "receivedAt": 6276,
+      "handlerEndAt": 6336,
+      "firstRafAt": 6352,
+      "afterSceneAt": 6361,
+      "secondRafAt": 6368,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.123363",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 25
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 57
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 6393,
+      "handlerEndAt": 6450,
+      "firstRafAt": 6465,
+      "afterSceneAt": 6473,
+      "secondRafAt": 6480,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.790557",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "ytha",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 7175,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 7177,
+      "submissions": 1,
+      "receivedAt": 7156,
+      "handlerEndAt": 7166,
+      "firstRafAt": 7181,
+      "afterSceneAt": 7192,
+      "secondRafAt": 7200,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.123385",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "ytha",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 7232,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 7233,
+      "submissions": 1,
+      "receivedAt": 7218,
+      "handlerEndAt": 7223,
+      "firstRafAt": 7237,
+      "afterSceneAt": 7244,
+      "secondRafAt": 7249,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "ytha",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 7270,
+      "handlerEndAt": 7271,
+      "firstRafAt": 7280,
+      "afterSceneAt": 7289,
+      "secondRafAt": 7297,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "BUTTON",
+      "opacity": "0.346703",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 11
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 45
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 7801,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 7802,
+      "submissions": 1,
+      "receivedAt": 7747,
+      "handlerEndAt": 7793,
+      "firstRafAt": 7808,
+      "afterSceneAt": 7812,
+      "secondRafAt": 7824,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.122887",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 39
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 6,
+          "commitTime": 7891,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 7893,
+      "submissions": 1,
+      "receivedAt": 7845,
+      "handlerEndAt": 7884,
+      "firstRafAt": 7895,
+      "afterSceneAt": 7899,
+      "secondRafAt": 7905,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 40
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 7927,
+      "handlerEndAt": 7967,
+      "firstRafAt": 7969,
+      "afterSceneAt": 7973,
+      "secondRafAt": 7984,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.545478",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "lua",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 8834,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 8836,
+      "submissions": 1,
+      "receivedAt": 8818,
+      "handlerEndAt": 8826,
+      "firstRafAt": 8839,
+      "afterSceneAt": 8848,
+      "secondRafAt": 8865,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.123235",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "lua",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 6,
+          "commitTime": 8893,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 8894,
+      "submissions": 1,
+      "receivedAt": 8882,
+      "handlerEndAt": 8886,
+      "firstRafAt": 8897,
+      "afterSceneAt": 8900,
+      "secondRafAt": 8912,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.123491",
+      "programs": null
+    },
+    {
+      "hour": 12,
+      "key": "lua",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 8936,
+      "handlerEndAt": 8937,
+      "firstRafAt": 8944,
+      "afterSceneAt": 8948,
+      "secondRafAt": 8960,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "BUTTON",
+      "opacity": "0.448978",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 13
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 57
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 11126,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 11127,
+      "submissions": 1,
+      "receivedAt": 11060,
+      "handlerEndAt": 11117,
+      "firstRafAt": 11130,
+      "afterSceneAt": 11135,
+      "secondRafAt": 11137,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 11
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 48
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 6,
+          "commitTime": 11210,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 11211,
+      "submissions": 1,
+      "receivedAt": 11154,
+      "handlerEndAt": 11203,
+      "firstRafAt": 11217,
+      "afterSceneAt": 11220,
+      "secondRafAt": 11232,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.122737",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 11
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 43
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 11255,
+      "handlerEndAt": 11298,
+      "firstRafAt": 11312,
+      "afterSceneAt": 11315,
+      "secondRafAt": 11329,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.716232",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 10
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 12069,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 12071,
+      "submissions": 1,
+      "receivedAt": 12052,
+      "handlerEndAt": 12060,
+      "firstRafAt": 12074,
+      "afterSceneAt": 12086,
+      "secondRafAt": 12096,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.122965",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 6,
+          "commitTime": 12126,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 12127,
+      "submissions": 1,
+      "receivedAt": 12116,
+      "handlerEndAt": 12119,
+      "firstRafAt": 12130,
+      "afterSceneAt": 12133,
+      "secondRafAt": 12144,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.123207",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 12167,
+      "handlerEndAt": 12167,
+      "firstRafAt": 12177,
+      "afterSceneAt": 12183,
+      "secondRafAt": 12192,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "BUTTON",
+      "opacity": "0.449145",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 20
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 56
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 13059,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 13061,
+      "submissions": 1,
+      "receivedAt": 12995,
+      "handlerEndAt": 13051,
+      "firstRafAt": 13064,
+      "afterSceneAt": 13069,
+      "secondRafAt": 13072,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 20
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 52
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 5,
+          "commitTime": 13149,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 13150,
+      "submissions": 1,
+      "receivedAt": 13090,
+      "handlerEndAt": 13142,
+      "firstRafAt": 13153,
+      "afterSceneAt": 13159,
+      "secondRafAt": 13169,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.12342",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 19
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 49
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 13189,
+      "handlerEndAt": 13238,
+      "firstRafAt": 13248,
+      "afterSceneAt": 13254,
+      "secondRafAt": 13265,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.716373",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "aryn",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 10
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 13890,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 13892,
+      "submissions": 1,
+      "receivedAt": 13874,
+      "handlerEndAt": 13883,
+      "firstRafAt": 13895,
+      "afterSceneAt": 13906,
+      "secondRafAt": 13920,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.238393",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "aryn",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 13952,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 13953,
+      "submissions": 1,
+      "receivedAt": 13940,
+      "handlerEndAt": 13945,
+      "firstRafAt": 13956,
+      "afterSceneAt": 13960,
+      "secondRafAt": 13969,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "aryn",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 13990,
+      "handlerEndAt": 13991,
+      "firstRafAt": 14000,
+      "afterSceneAt": 14006,
+      "secondRafAt": 14017,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "BUTTON",
+      "opacity": "0.346633",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 29
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 67
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 14702,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 14703,
+      "submissions": 1,
+      "receivedAt": 14626,
+      "handlerEndAt": 14694,
+      "firstRafAt": 14706,
+      "afterSceneAt": 14716,
+      "secondRafAt": 14720,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.123456",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 28
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 61
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 5,
+          "commitTime": 14806,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 14808,
+      "submissions": 1,
+      "receivedAt": 14739,
+      "handlerEndAt": 14800,
+      "firstRafAt": 14816,
+      "afterSceneAt": 14824,
+      "secondRafAt": 14833,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.123015",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 26
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 57
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 14855,
+      "handlerEndAt": 14912,
+      "firstRafAt": 14928,
+      "afterSceneAt": 14936,
+      "secondRafAt": 14944,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.790628",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "ytha",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 15701,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 15702,
+      "submissions": 1,
+      "receivedAt": 15683,
+      "handlerEndAt": 15693,
+      "firstRafAt": 15706,
+      "afterSceneAt": 15714,
+      "secondRafAt": 15728,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.123221",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "ytha",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 6,
+          "commitTime": 15760,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 15761,
+      "submissions": 1,
+      "receivedAt": 15747,
+      "handlerEndAt": 15753,
+      "firstRafAt": 15763,
+      "afterSceneAt": 15769,
+      "secondRafAt": 15777,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.123235",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "ytha",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 10
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 15799,
+      "handlerEndAt": 15799,
+      "firstRafAt": 15809,
+      "afterSceneAt": 15819,
+      "secondRafAt": 15825,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "BUTTON",
+      "opacity": "0.44936",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 12
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 46
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 16331,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 16332,
+      "submissions": 1,
+      "receivedAt": 16276,
+      "handlerEndAt": 16323,
+      "firstRafAt": 16336,
+      "afterSceneAt": 16340,
+      "secondRafAt": 16352,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.123413",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 10
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 40
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 16418,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 16419,
+      "submissions": 1,
+      "receivedAt": 16371,
+      "handlerEndAt": 16411,
+      "firstRafAt": 16422,
+      "afterSceneAt": 16426,
+      "secondRafAt": 16432,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.1232",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 10
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 41
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 16456,
+      "handlerEndAt": 16497,
+      "firstRafAt": 16512,
+      "afterSceneAt": 16516,
+      "secondRafAt": 16529,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.716547",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "lua",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 17410,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 17412,
+      "submissions": 1,
+      "receivedAt": 17395,
+      "handlerEndAt": 17402,
+      "firstRafAt": 17415,
+      "afterSceneAt": 17424,
+      "secondRafAt": 17440,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.123278",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "lua",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 6,
+          "commitTime": 17470,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 17472,
+      "submissions": 1,
+      "receivedAt": 17460,
+      "handlerEndAt": 17463,
+      "firstRafAt": 17473,
+      "afterSceneAt": 17477,
+      "secondRafAt": 17488,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0",
+      "programs": null
+    },
+    {
+      "hour": 23,
+      "key": "lua",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "receivedAt": 17512,
+      "handlerEndAt": 17512,
+      "firstRafAt": 17521,
+      "afterSceneAt": 17525,
+      "secondRafAt": 17536,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "BUTTON",
+      "opacity": "0.347026",
+      "programs": null
+    }
+  ],
+  "errors": [],
+  "teardown": {
+    "canvases": 0,
+    "state": "disposed"
+  },
+  "presentationLimit": "DOM commit and next native RAF opportunities only; actual display/compositor/input-to-photon not measured. Synthetic events exclude hardware input latency."
+}

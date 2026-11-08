@@ -1,3 +1,57 @@
+## 08/11/2026 — Fechamento da recuperação R1–R5 [PR #40]
+
+- Proprietário aprovou encerramento por exceção técnica no Moto G06: redução considerável do lag, atmosfera noturna correta desde o primeiro frame, efeitos de Samael/Aryn/Ytha/Lua e livro/pergaminho mais perceptíveis, e listra verde de tap→pan corrigida.
+- R5 incluiu rigs e animações, shader noturno por alcance, consultas exatas de skinning/picking e transição leve das quests; as etapas R1–R4 já estavam integradas.
+- **Ressalvas mantidas:** engasgo perceptível residual das quests aceito, CI/E2E sem verde global, memória heap/DOM sustentada e TalkBack pendentes. Sem release, migração, fechamento de BF-5.5F2B/F2C/G ou início de BF-6.
+- [Registro canônico de aceites, decisões e evidências](docs/audits/BV_FECHAMENTO_RECUPERACAO_R1_R5_2026-11-08.md).
+
+## R5R — reparo pontual do contorno, 08/11/2026
+
+- Removido o outline de tela inteira no estado inicial de toque do Canvas, responsável pela borda clara antes de reconhecer um pan.
+- Foco por teclado, highlight, seleção, pan/pinch/zoom e diagnóstico mantidos. Efeitos mágicos R5R preservados após relato físico de melhora; engasgo das quests permanece pendente.
+- [Reprodução antes/depois e verificação](docs/audits/BV_POLIMENTO_R5R.md#complemento--contorno-do-canvas). Aprovação física do reparo pendente; sem merge ou R5 concluída.
+
+## R5R — candidata de polimento, 08/11/2026
+
+- Quests montam frame, speaker e Adiar com opacidade integral; conteúdo entra suavemente em 120 ms, sem delay, mantendo foco, escolhas e Back/Escape. Contato no Canvas recebe feedback do gesto existente.
+- Aura negra/lilás de Samael mais presente, dourado de Aryn junto ao livro, halo/asas feéricas de Ytha e círculo arcano de Lua mais legíveis.
+- Pergaminhos com selo/inscrições/glow mais claros; livro durante leitura com emissão e selo de sessão reforçados.
+- Soluções unlit/emissivas, sem PointLight nova, bloom ou mudança de resolução. Fluidez e arte dependem de aceite no Moto G06; R5 segue aberta. [Relatório](docs/audits/BV_POLIMENTO_R5R.md).
+
+## R5Q — complemento residual de quests, 08/11/2026
+
+- Aceite físico do proprietário: abertura diretamente noturna e fluidez geral PASS; quests PARCIAL, ainda com engasgos.
+- Toque compartilha vértices exatos também com o highlight imediato, sem repetir skinning ou mudar seleção, arte, animação, foco e narrativa.
+- Diagnóstico de abertura opt-in no painel existente, até 12 registros locais em memória, apagados ao fechar; sem telemetria/persistência. Separa marcos CPU/DOM/foco/submissão/CSS, sem alegar apresentação no display.
+- [Evidências e roteiro](docs/audits/BV_SANEAMENTO_R5Q.md#complemento--engasgo-residual-das-quests). Causa dominante e melhora residual no Moto G06 pendentes; R5 não concluída, sem merge.
+
+## R5Q — candidata, 08/11/2026
+
+- Biblioteca aplica horário e narrativa antes do primeiro desenho e ao retomar, evitando nascer diurna durante a noite. Anoitecer suave, nove luminárias, ritual e fallback preservados.
+- Seleção por toque reutiliza resultados exatos de skinning dentro da consulta para reduzir trabalho repetido de bounds/raycast; highlight, quest, foco, clips e dados mantidos.
+- [Diagnóstico e limites](docs/audits/BV_SANEAMENTO_R5Q.md); melhora de R5P relatada pelo proprietário, validação física R5Q pendente, sem merge ou R5 concluída.
+
+## R5P — candidata de fluidez noturna, 07/11/2026
+
+- Mantidas as nove luminárias, cores, emissão e luz de Ytha; shader evita cálculo completo de contribuições pontuais já nulas fora do alcance.
+- Consultas de skinning preparam matrizes por Skeleton, reduzindo CPU de seleção/toque sem alterar os vértices, bounds ou raycasts precisos.
+- Diagnóstico opt-in permite comparar dia/noite, três pontos, ausência de pontos e luz de Ytha, além da candidata com nove pontos; fechar restaura o ciclo normal, sem persistência.
+- Percentis acumulados, long tasks, contadores e timer WebGL assíncrono quando suportado. Visual pareado preservado; ganho de fluidez no Moto G06 ainda depende de comprovação.
+- R5/R5E não aprovadas; avaliação artística suspensa. [Relatório](docs/audits/BV_SANEAMENTO_PERFORMANCE_R5P.md). Sem merge, schema/backup/IDs ou fase nova.
+
+## R5E — refinamento candidato, 07/11/2026
+
+- Samael mais largo e demoníaco, com aura negra/lilás intermitente e reações de tensão.
+- Ytha menor, suspensa e animada em hover, asas curvas com laceado e luz feérica própria; envelope de 0,92 m preservado.
+- Aryn com fólio aberto, folhas curvas, gestos de consulta e sutura dourada; Lua com capa/cachos e presença arcana mais frequente.
+- Mesma PR #40, sem merge; arte aguarda novo aceite, R5 e F2B/F2C continuam abertas.
+
+## R5 — candidata, 07/11/2026
+
+- Quatro habitantes remodelados em GLB com superfícies/roupas/acessórios próprios, skinning funcional, sockets de mãos e oito ações reconstruídas.
+- Picking acompanha deformação e descarte libera recursos de Skeleton. Pipeline Blender editável, inventário e comparações reais versionados.
+- Arte e Moto G06 aguardam aceite; leitura sentada/F2B/F2C e recuperação integral continuam abertas. CI remota omitida por cota, sem alegação de verde.
+
 ## Integração R4 — 2026-11-07
 
 - R4 e saneamento de leitura integrados após aceite físico dirigido do proprietário, com dívidas preservadas. [Relatório](docs/audits/BV_INTEGRACAO_PR39_R4_2026-11-07.md). R5 não iniciada.

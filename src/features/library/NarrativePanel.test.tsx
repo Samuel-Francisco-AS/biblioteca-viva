@@ -1,6 +1,7 @@
-import { act, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
+import type { QuestProbeEvent } from "./three/performanceProbe";
 import { NarrativePanel } from "./NarrativePanel";
 import { NarrativeSession } from "./narrative/session";
 it("supports keyboard choices, focus, interruption, completion and journal with no WebGL", async () => {
@@ -71,5 +72,51 @@ it("consumes native Back for the journal and active conversation", async () => {
   });
   expect(dialogueBack.defaultPrevented).toBe(true);
   expect(session.getSnapshot().active).toBeNull();
+  session.dispose();
+});
+
+it("R5Q observes DOM commit, accessible focus and card animation without changing narrative", () => {
+  const session = new NarrativeSession();
+  const observeQuest = vi.fn<(event: QuestProbeEvent) => void>();
+  render(
+    <NarrativePanel
+      session={session}
+      failed={false}
+      questProbe={{ observeQuest }}
+    />,
+  );
+  act(() => session.talk("aryn"));
+  expect(screen.getByRole("heading", { name: "Aryn" })).toHaveFocus();
+  expect(
+    observeQuest.mock.calls.map(([event]) =>
+      event.type === "mark" ? event.stage : event.type,
+    ),
+  ).toEqual(["reactCommit", "focusStart", "focusEnd"]);
+  const card = screen.getByRole("article", { name: "Conversa RPG" });
+  // jsdom exposes WebkitAnimation but no AnimationEvent, so React registers
+  // its vendor-prefixed event names here. Chromium covers native CSS events.
+  fireEvent(
+    card.querySelector(".rpg-dialogue-content")!,
+    new Event("webkitAnimationStart", { bubbles: true }),
+  );
+  fireEvent(
+    card.querySelector(".rpg-dialogue-content")!,
+    new Event("webkitAnimationEnd", { bubbles: true }),
+  );
+  expect(observeQuest).toHaveBeenLastCalledWith({
+    type: "mark",
+    stage: "animationEnd",
+    inhabitant: "aryn",
+  });
+  const count = observeQuest.mock.calls.length;
+  fireEvent(
+    card.querySelector("h3")!,
+    new Event("webkitAnimationStart", { bubbles: true }),
+  );
+  expect(observeQuest).toHaveBeenCalledTimes(count);
+  act(() => session.close());
+  expect(
+    screen.queryByRole("article", { name: "Conversa RPG" }),
+  ).not.toBeInTheDocument();
   session.dispose();
 });

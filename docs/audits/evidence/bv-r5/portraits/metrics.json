@@ -1,0 +1,165 @@
+{
+  "metrics": {
+    "samael-before-front": {
+      "calls": 24,
+      "triangles": 5716,
+      "geometries": 23
+    },
+    "samael-before-three-quarter": {
+      "calls": 24,
+      "triangles": 5716,
+      "geometries": 46
+    },
+    "samael-before-night": {
+      "calls": 24,
+      "triangles": 5716,
+      "geometries": 69
+    },
+    "samael-before-magic": {
+      "calls": 24,
+      "triangles": 5716,
+      "geometries": 92
+    },
+    "samael-after-front": {
+      "calls": 9,
+      "triangles": 26566,
+      "geometries": 101
+    },
+    "samael-after-three-quarter": {
+      "calls": 9,
+      "triangles": 26566,
+      "geometries": 110
+    },
+    "samael-after-night": {
+      "calls": 9,
+      "triangles": 26566,
+      "geometries": 119
+    },
+    "samael-after-magic": {
+      "calls": 9,
+      "triangles": 26566,
+      "geometries": 128
+    },
+    "aryn-before-front": {
+      "calls": 22,
+      "triangles": 6544,
+      "geometries": 150
+    },
+    "aryn-before-three-quarter": {
+      "calls": 22,
+      "triangles": 6544,
+      "geometries": 172
+    },
+    "aryn-before-night": {
+      "calls": 22,
+      "triangles": 6544,
+      "geometries": 194
+    },
+    "aryn-before-magic": {
+      "calls": 22,
+      "triangles": 6544,
+      "geometries": 216
+    },
+    "aryn-after-front": {
+      "calls": 9,
+      "triangles": 44922,
+      "geometries": 225
+    },
+    "aryn-after-three-quarter": {
+      "calls": 9,
+      "triangles": 44922,
+      "geometries": 234
+    },
+    "aryn-after-night": {
+      "calls": 9,
+      "triangles": 44922,
+      "geometries": 243
+    },
+    "aryn-after-magic": {
+      "calls": 9,
+      "triangles": 44922,
+      "geometries": 252
+    },
+    "ytha-before-front": {
+      "calls": 29,
+      "triangles": 7312,
+      "geometries": 279
+    },
+    "ytha-before-three-quarter": {
+      "calls": 29,
+      "triangles": 7312,
+      "geometries": 306
+    },
+    "ytha-before-night": {
+      "calls": 29,
+      "triangles": 7312,
+      "geometries": 333
+    },
+    "ytha-before-magic": {
+      "calls": 29,
+      "triangles": 7312,
+      "geometries": 360
+    },
+    "ytha-after-front": {
+      "calls": 13,
+      "triangles": 44474,
+      "geometries": 371
+    },
+    "ytha-after-three-quarter": {
+      "calls": 13,
+      "triangles": 44474,
+      "geometries": 382
+    },
+    "ytha-after-night": {
+      "calls": 13,
+      "triangles": 44474,
+      "geometries": 393
+    },
+    "ytha-after-magic": {
+      "calls": 13,
+      "triangles": 44474,
+      "geometries": 404
+    },
+    "lua-before-front": {
+      "calls": 22,
+      "triangles": 6936,
+      "geometries": 426
+    },
+    "lua-before-three-quarter": {
+      "calls": 22,
+      "triangles": 6936,
+      "geometries": 448
+    },
+    "lua-before-night": {
+      "calls": 22,
+      "triangles": 6936,
+      "geometries": 470
+    },
+    "lua-before-magic": {
+      "calls": 22,
+      "triangles": 6936,
+      "geometries": 492
+    },
+    "lua-after-front": {
+      "calls": 9,
+      "triangles": 25034,
+      "geometries": 501
+    },
+    "lua-after-three-quarter": {
+      "calls": 9,
+      "triangles": 25034,
+      "geometries": 510
+    },
+    "lua-after-night": {
+      "calls": 9,
+      "triangles": 25034,
+      "geometries": 519
+    },
+    "lua-after-magic": {
+      "calls": 9,
+      "triangles": 25034,
+      "geometries": 528
+    }
+  },
+  "errors": []
+}

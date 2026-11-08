@@ -1,0 +1,4725 @@
+{
+  "scope": "Chromium CPU/DOM isolation; real scene/rigs/raycast/React/CSS, renderer double, manual scene RAF; NOT GPU/Android latency",
+  "browser": "151.0.7922.34",
+  "hours": [12, 17, 18, 23, 3],
+  "initial": [
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          }
+        ],
+        "background": 1586221
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          }
+        ],
+        "background": 1586221
+      }
+    ],
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          }
+        ],
+        "background": 1586221
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 2,
+            "color": 16772562
+          }
+        ],
+        "background": 1586221
+      }
+    ],
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 1.08,
+            "color": 10602751
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          }
+        ],
+        "background": 1189436
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 1.08,
+            "color": 10602751
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          },
+          {
+            "kind": "lamp",
+            "intensity": 2.8560000000000003
+          }
+        ],
+        "background": 1189436
+      }
+    ],
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 1.08,
+            "color": 10602751
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          }
+        ],
+        "background": 1189436
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 1.08,
+            "color": 10602751
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          }
+        ],
+        "background": 1189436
+      }
+    ],
+    [
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 1.08,
+            "color": 10602751
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          }
+        ],
+        "background": 1189436
+      },
+      {
+        "lights": [
+          {
+            "kind": "sky",
+            "intensity": 1.08,
+            "color": 10602751
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          },
+          {
+            "kind": "lamp",
+            "intensity": 4.2
+          }
+        ],
+        "background": 1189436
+      }
+    ]
+  ],
+  "results": [
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 47
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 11
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 2700,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 2702,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 2643,
+      "handlerEndAt": 2691,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 2752,
+      "afterSceneAt": 2765,
+      "secondRafAt": 2769,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.668736",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 40
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 10,
+          "commitTime": 2856,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 2858,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 2806,
+      "handlerEndAt": 2846,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 2860,
+      "afterSceneAt": 2864,
+      "secondRafAt": 2880,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 25
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 2901,
+      "handlerEndAt": 2928,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 2944,
+      "afterSceneAt": 2947,
+      "secondRafAt": 2960,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "switch",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 28
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 3034,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 3035,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 2996,
+      "handlerEndAt": 3026,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 3041,
+      "afterSceneAt": 3044,
+      "secondRafAt": 3056,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 12
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 7283,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 7285,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 7266,
+      "handlerEndAt": 7274,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 7289,
+      "afterSceneAt": 7303,
+      "secondRafAt": 7312,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.668996",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 12,
+          "commitTime": 7369,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 7373,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 7351,
+      "handlerEndAt": 7357,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 7376,
+      "afterSceneAt": 7382,
+      "secondRafAt": 7393,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.668878",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 7421,
+      "handlerEndAt": 7422,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 7424,
+      "afterSceneAt": 7429,
+      "secondRafAt": 7440,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.842408",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "samael",
+      "path": "react",
+      "kind": "switch",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 11,
+          "commitTime": 7494,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 7496,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 7478,
+      "handlerEndAt": 7481,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 7497,
+      "afterSceneAt": 7502,
+      "secondRafAt": 7505,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.987152",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 20
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 77
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 19
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 15,
+          "commitTime": 6616,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 6618,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 6521,
+      "handlerEndAt": 6600,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 6628,
+      "afterSceneAt": 6649,
+      "secondRafAt": 6657,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.731829",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 29
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 10,
+          "commitTime": 6716,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 6718,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 6676,
+      "handlerEndAt": 6706,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 6722,
+      "afterSceneAt": 6727,
+      "secondRafAt": 6737,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 43
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 6761,
+      "handlerEndAt": 6805,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 7934,
+      "afterSceneAt": 7938,
+      "secondRafAt": 7952,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "switch",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 31
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 8025,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 8026,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 7987,
+      "handlerEndAt": 8018,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 8032,
+      "afterSceneAt": 8037,
+      "secondRafAt": 8048,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "aryn",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 12
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 20
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 10,
+          "commitTime": 8754,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 8757,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 8730,
+      "handlerEndAt": 8744,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 8764,
+      "afterSceneAt": 8786,
+      "secondRafAt": 8802,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "aryn",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 13,
+          "commitTime": 8856,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 8858,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 8836,
+      "handlerEndAt": 8843,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 8863,
+      "afterSceneAt": 8872,
+      "secondRafAt": 8881,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "aryn",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 8901,
+      "handlerEndAt": 8902,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 8912,
+      "afterSceneAt": 8920,
+      "secondRafAt": 8928,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.789884",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "aryn",
+      "path": "react",
+      "kind": "switch",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 8976,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 8977,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 8962,
+      "handlerEndAt": 8967,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 8980,
+      "afterSceneAt": 8985,
+      "secondRafAt": 8992,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.963311",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 14
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 52
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 10
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 11552,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 11553,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 11490,
+      "handlerEndAt": 11543,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 11560,
+      "afterSceneAt": 11572,
+      "secondRafAt": 11584,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.731764",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 15
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 54
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 10
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 11684,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 11686,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 11620,
+      "handlerEndAt": 11675,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 11690,
+      "afterSceneAt": 11701,
+      "secondRafAt": 11712,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.668882",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 12
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 50
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 10
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 11737,
+      "handlerEndAt": 11789,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 11792,
+      "afterSceneAt": 11803,
+      "secondRafAt": 11808,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.963353",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "switch",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 10
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 37
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 11889,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 11891,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 11842,
+      "handlerEndAt": 11880,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 11893,
+      "afterSceneAt": 11900,
+      "secondRafAt": 11904,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "ytha",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 15
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 18
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 10,
+          "commitTime": 11962,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 11966,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 11932,
+      "handlerEndAt": 11951,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 11973,
+      "afterSceneAt": 11993,
+      "secondRafAt": 12001,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.669039",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "ytha",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 12
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 12051,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 12052,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 12038,
+      "handlerEndAt": 12044,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 12055,
+      "afterSceneAt": 12070,
+      "secondRafAt": 12080,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.668921",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "ytha",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 13171,
+      "handlerEndAt": 13171,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 13184,
+      "afterSceneAt": 13193,
+      "secondRafAt": 13200,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "ytha",
+      "path": "react",
+      "kind": "switch",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 13254,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 13255,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 13237,
+      "handlerEndAt": 13245,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 13255,
+      "afterSceneAt": 13261,
+      "secondRafAt": 13265,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 13
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 71
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 11,
+          "commitTime": 13830,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 13831,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 13747,
+      "handlerEndAt": 13819,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 13837,
+      "afterSceneAt": 13843,
+      "secondRafAt": 13856,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.668901",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 31
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 10,
+          "commitTime": 13917,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 13918,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 13875,
+      "handlerEndAt": 13907,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 13921,
+      "afterSceneAt": 13925,
+      "secondRafAt": 13937,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.668783",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 30
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 13966,
+      "handlerEndAt": 13996,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 14001,
+      "afterSceneAt": 14004,
+      "secondRafAt": 14016,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.889781",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "switch",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 42
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 11,
+          "commitTime": 14126,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 14128,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 14072,
+      "handlerEndAt": 14115,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 14958,
+      "afterSceneAt": 14961,
+      "secondRafAt": 14976,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "lua",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 13
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 15540,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 15541,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 15524,
+      "handlerEndAt": 15531,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 15547,
+      "afterSceneAt": 15561,
+      "secondRafAt": 15568,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.669102",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "lua",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 11,
+          "commitTime": 15625,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 15626,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 15605,
+      "handlerEndAt": 15613,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 15629,
+      "afterSceneAt": 15632,
+      "secondRafAt": 15648,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.66885",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "lua",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 15677,
+      "handlerEndAt": 15677,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 15681,
+      "afterSceneAt": 15685,
+      "secondRafAt": 15696,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.842489",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 12,
+      "key": "lua",
+      "path": "react",
+      "kind": "switch",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 14,
+          "commitTime": 15783,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 15785,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 15764,
+      "handlerEndAt": 15769,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 15789,
+      "afterSceneAt": 15796,
+      "secondRafAt": 15809,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 35
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 19552,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 19553,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 19507,
+      "handlerEndAt": 19543,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 19559,
+      "afterSceneAt": 19565,
+      "secondRafAt": 19569,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.669023",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 16
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 40
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 16,
+          "commitTime": 19644,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 19646,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 19588,
+      "handlerEndAt": 19628,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 19650,
+      "afterSceneAt": 19656,
+      "secondRafAt": 19665,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 43
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 19686,
+      "handlerEndAt": 19729,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 19744,
+      "afterSceneAt": 19747,
+      "secondRafAt": 19761,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.930161",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "canvas",
+      "kind": "switch",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 35
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 11,
+          "commitTime": 19840,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 19841,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 19793,
+      "handlerEndAt": 19829,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 20541,
+      "afterSceneAt": 20544,
+      "secondRafAt": 20560,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 21363,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 21364,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 21347,
+      "handlerEndAt": 21354,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 21370,
+      "afterSceneAt": 21380,
+      "secondRafAt": 21393,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.668913",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 21421,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 21423,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 21411,
+      "handlerEndAt": 21414,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 21427,
+      "afterSceneAt": 21432,
+      "secondRafAt": 21440,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 21462,
+      "handlerEndAt": 21462,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 21472,
+      "afterSceneAt": 21478,
+      "secondRafAt": 21489,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.789785",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "samael",
+      "path": "react",
+      "kind": "switch",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 11,
+          "commitTime": 21545,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 21547,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 21529,
+      "handlerEndAt": 21533,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 21550,
+      "afterSceneAt": 21555,
+      "secondRafAt": 21568,
+      "selected": "character:samael",
+      "card": "rpg-dialogue rpg-dialogue--samael",
+      "heading": "Samael",
+      "focus": "H3",
+      "opacity": "0.963373",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 10
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 43
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 23735,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 23736,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 23684,
+      "handlerEndAt": 23727,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 23742,
+      "afterSceneAt": 23751,
+      "secondRafAt": 23761,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.669043",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 18
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 55
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 13,
+          "commitTime": 23867,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 23869,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 23799,
+      "handlerEndAt": 23854,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 23873,
+      "afterSceneAt": 23880,
+      "secondRafAt": 23889,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.669067",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 39
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 23916,
+      "handlerEndAt": 23956,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 23968,
+      "afterSceneAt": 23973,
+      "secondRafAt": 23984,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.963434",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "aryn",
+      "path": "canvas",
+      "kind": "switch",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 42
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 11,
+          "commitTime": 24072,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 24073,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 24018,
+      "handlerEndAt": 24061,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 24076,
+      "afterSceneAt": 24084,
+      "secondRafAt": 24096,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "aryn",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 21
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 22
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 13,
+          "commitTime": 24234,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 24236,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 24198,
+      "handlerEndAt": 24221,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 24244,
+      "afterSceneAt": 24267,
+      "secondRafAt": 24274,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.731917",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "aryn",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 7
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 24313,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 24314,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 24293,
+      "handlerEndAt": 24302,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 24318,
+      "afterSceneAt": 24327,
+      "secondRafAt": 24336,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "0.668913",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "aryn",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 24359,
+      "handlerEndAt": 24359,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 24370,
+      "afterSceneAt": 24379,
+      "secondRafAt": 25004,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "aryn",
+      "path": "react",
+      "kind": "switch",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 25037,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 25038,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 25026,
+      "handlerEndAt": 25030,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 25040,
+      "afterSceneAt": 25045,
+      "secondRafAt": 25056,
+      "selected": "character:aryn",
+      "card": "rpg-dialogue rpg-dialogue--aryn",
+      "heading": "Aryn",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 14
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 45
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 11
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 25801,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 25802,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 25746,
+      "handlerEndAt": 25792,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 25809,
+      "afterSceneAt": 25820,
+      "secondRafAt": 25824,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.668701",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 19
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 58
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 12,
+          "commitTime": 25917,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 25919,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 25846,
+      "handlerEndAt": 25904,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 25923,
+      "afterSceneAt": 25929,
+      "secondRafAt": 25936,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.66885",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 16
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 56
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 12
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 25959,
+      "handlerEndAt": 26015,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 26016,
+      "afterSceneAt": 26029,
+      "secondRafAt": 26035,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.96328",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "ytha",
+      "path": "canvas",
+      "kind": "switch",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 29
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 26881,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 26882,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 26844,
+      "handlerEndAt": 26874,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 26884,
+      "afterSceneAt": 26892,
+      "secondRafAt": 26896,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "ytha",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 12
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 27623,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 27624,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 27603,
+      "handlerEndAt": 27614,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 27628,
+      "afterSceneAt": 27641,
+      "secondRafAt": 27648,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.669012",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "ytha",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 1
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 6,
+          "commitTime": 27696,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 27697,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 27683,
+      "handlerEndAt": 27689,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 27701,
+      "afterSceneAt": 27708,
+      "secondRafAt": 27713,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "ytha",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 11
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 27738,
+      "handlerEndAt": 27739,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 27744,
+      "afterSceneAt": 27757,
+      "secondRafAt": 27760,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.789981",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "ytha",
+      "path": "react",
+      "kind": "switch",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 10
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 8,
+          "commitTime": 27832,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 27833,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 27812,
+      "handlerEndAt": 27824,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 27840,
+      "afterSceneAt": 27850,
+      "secondRafAt": 27856,
+      "selected": "character:ytha",
+      "card": "rpg-dialogue rpg-dialogue--ytha",
+      "heading": "Ytha",
+      "focus": "H3",
+      "opacity": "0.999265",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "first",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 40
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 6
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 30180,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 30182,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 30130,
+      "handlerEndAt": 30172,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 30187,
+      "afterSceneAt": 30194,
+      "secondRafAt": 30209,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.668756",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "repeat",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 9
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 54
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 4
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 12,
+          "commitTime": 30318,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 30319,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 30251,
+      "handlerEndAt": 30305,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 30324,
+      "afterSceneAt": 30330,
+      "secondRafAt": 30336,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.668905",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "already-open",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 41
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 8
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 30365,
+      "handlerEndAt": 30407,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 30417,
+      "afterSceneAt": 30426,
+      "secondRafAt": 30432,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.963425",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "lua",
+      "path": "canvas",
+      "kind": "switch",
+      "stages": {
+        "raycastCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "pickCpu": {
+          "count": 1,
+          "totalMs": 31
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 10,
+          "commitTime": 30515,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 30517,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 30472,
+      "handlerEndAt": 30503,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 30520,
+      "afterSceneAt": 30525,
+      "secondRafAt": 30529,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "lua",
+      "path": "react",
+      "kind": "first",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 11
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 1
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 18
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 9,
+          "commitTime": 30601,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 30602,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 30579,
+      "handlerEndAt": 30592,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 30608,
+      "afterSceneAt": 30627,
+      "secondRafAt": 30640,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.731724",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "lua",
+      "path": "react",
+      "kind": "repeat",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "agencyInterruptCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 5
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 14,
+          "commitTime": 30699,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 30703,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 30678,
+      "handlerEndAt": 30684,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 30707,
+      "afterSceneAt": 30713,
+      "secondRafAt": 31279,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "0.6",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "lua",
+      "path": "react",
+      "kind": "already-open",
+      "stages": {
+        "talkCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [],
+      "domCommitAt": null,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 31287,
+      "handlerEndAt": 31287,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 31296,
+      "afterSceneAt": 31301,
+      "secondRafAt": 31312,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    },
+    {
+      "localQuest": {
+        "enabled": false,
+        "observations": []
+      },
+      "hour": 23,
+      "key": "lua",
+      "path": "react",
+      "kind": "switch",
+      "stages": {
+        "highlightCpu": {
+          "count": 1,
+          "totalMs": 3
+        },
+        "agencyConversationCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "narrativeApplyCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "talkCpu": {
+          "count": 2,
+          "totalMs": 0
+        },
+        "selectionPublishCpu": {
+          "count": 1,
+          "totalMs": 0
+        },
+        "highlightFollowCpu": {
+          "count": 1,
+          "totalMs": 2
+        },
+        "rendererSubmitCpu": {
+          "count": 1,
+          "totalMs": 0
+        }
+      },
+      "commits": [
+        {
+          "duration": 7,
+          "commitTime": 31359,
+          "dialogue": true
+        }
+      ],
+      "domCommitAt": 31360,
+      "submissions": 1,
+      "programsBefore": null,
+      "receivedAt": 31347,
+      "handlerEndAt": 31352,
+      "synchronousSubmissions": 0,
+      "firstRafAt": 31362,
+      "afterSceneAt": 31365,
+      "secondRafAt": 31377,
+      "selected": "character:lua",
+      "card": "rpg-dialogue rpg-dialogue--lua",
+      "heading": "Lua",
+      "focus": "H3",
+      "opacity": "1",
+      "programs": null,
+      "visualStyle": {
+        "animation": "living-panel-arrive",
+        "duration": "0.155s",
+        "backdropFilter": "none",
+        "background": "url(\"http://127.0.0.1:4189/ornaments/folio-corners.svg\"), linear-gradient(130deg, rgb(59, 37, 62), rgb(33, 27, 52) 76%)"
+      }
+    }
+  ],
+  "errors": [],
+  "teardown": {
+    "canvases": 0,
+    "state": "disposed"
+  },
+  "presentationLimit": "DOM commit and next native RAF opportunities only; actual display/compositor/input-to-photon not measured. Synthetic events exclude hardware input latency."
+}

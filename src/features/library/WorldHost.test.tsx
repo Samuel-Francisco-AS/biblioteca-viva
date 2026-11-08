@@ -1027,3 +1027,64 @@ it("R4 keeps the runtime and selection for progress-only updates and disposes on
   expect(factory).toHaveBeenCalledTimes(2);
   view.unmount();
 });
+
+it("R5Q primes the current narrative before mounting, including a retained rift on scene replacement", async () => {
+  const first = createRuntime(),
+    second = createRuntime();
+  const prime = vi.fn<NonNullable<WorldRuntime["applyNarrative"]>>();
+  second.applyNarrative = prime;
+  const initialFactory = () => Promise.resolve(first),
+    nextFactory = () => Promise.resolve(second);
+  const snapshot = projectLibraryWorldEntries([]);
+  const view = render(
+    <WorldHost
+      libraryWorldSnapshot={snapshot}
+      runtimeFactory={initialFactory}
+    />,
+  );
+  await waitFor(() => expect(first.start).toHaveBeenCalledOnce());
+  await userEvent.click(
+    screen.getByRole("button", { name: "A Noite da Fenda Lilás" }),
+  );
+  view.rerender(
+    <WorldHost libraryWorldSnapshot={snapshot} runtimeFactory={nextFactory} />,
+  );
+  await waitFor(() => expect(second.start).toHaveBeenCalledOnce());
+  expect(prime.mock.invocationCallOrder[0]).toBeLessThan(
+    second.mount.mock.invocationCallOrder[0],
+  );
+  expect(prime.mock.calls[0][0]).toMatchObject({
+    active: "rift",
+    scenes: { rift: "troubled" },
+  });
+  expect(screen.getByRole("article", { name: "Conversa RPG" })).toBeVisible();
+  view.unmount();
+  expect(first.dispose).toHaveBeenCalledOnce();
+  expect(second.dispose).toHaveBeenCalledOnce();
+});
+
+it("R5Q quest observation requires explicit opt-in and clears on diagnostic close", async () => {
+  createThreeWorldRuntime.mockReset();
+  const runtime = createRuntime();
+  const setQuestProbeEnabled = vi.fn<(enabled: boolean) => void>();
+  runtime.setQuestProbeEnabled = setQuestProbeEnabled;
+  createThreeWorldRuntime.mockResolvedValue(runtime);
+  const user = userEvent.setup();
+  const view = render(<WorldHost />);
+  await waitFor(() => expect(runtime.start).toHaveBeenCalledOnce());
+  await openWorldControls();
+  const summary = screen.getByText("Diagnóstico do mundo");
+  await user.click(summary);
+  await user.click(
+    screen.getByRole("checkbox", {
+      name: "Registrar próximas seleções localmente",
+    }),
+  );
+  expect(setQuestProbeEnabled).toHaveBeenLastCalledWith(true);
+  await user.click(summary);
+  await waitFor(() =>
+    expect(setQuestProbeEnabled).toHaveBeenLastCalledWith(false),
+  );
+  view.unmount();
+  expect(runtime.dispose).toHaveBeenCalledOnce();
+});

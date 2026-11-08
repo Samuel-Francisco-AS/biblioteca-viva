@@ -21,6 +21,15 @@ for (const fallback of [false, true]) {
         exact: true,
       });
       await button.click();
+      await expect(
+        page.getByRole("heading", { name: actor.label, exact: true }),
+      ).toBeVisible();
+      await page
+        .getByRole("button", { name: "Adiar conversa e voltar ao mundo" })
+        .click();
+      await openWorldTools(page);
+      if ((await panel.getAttribute("open")) === null)
+        await panel.locator(":scope > summary").click();
       await expect(button).toHaveAttribute("aria-pressed", "true");
       if (!fallback)
         await expect(
@@ -46,13 +55,17 @@ test("BF-4F1 canvas selects all four loaded models", async ({ page }) => {
   const canvas = page.locator("canvas[data-three-world-canvas]");
   await expect(canvas).toHaveAttribute("data-inhabitants-ready", "4");
   await canvas.scrollIntoViewIfNeeded();
-  const box = await canvas.boundingBox();
-  if (!box) throw new Error("Canvas ausente");
-  const camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 100);
-  const navigation = new CameraNavigation(camera, 0.7, LIBRARY_ROOMS);
-  navigation.setViewport(Math.round(box.width), Math.round(box.height));
-  camera.updateMatrixWorld();
   for (const actor of INHABITANTS) {
+    // The composed world uses the current runtime camera, not F1 framing.
+    await canvas.scrollIntoViewIfNeeded();
+    const box = await canvas.boundingBox();
+    if (!box) throw new Error("Canvas ausente");
+    const zoom = Number(await canvas.getAttribute("data-camera-zoom"));
+    expect(Number.isFinite(zoom)).toBe(true);
+    const camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 1000);
+    const navigation = new CameraNavigation(camera, zoom, LIBRARY_ROOMS, 10);
+    navigation.setViewport(Math.round(box.width), Math.round(box.height));
+    camera.updateMatrixWorld();
     const point = new Vector3(actor.x, actor.height * 0.6, actor.z).project(
       camera,
     );
@@ -62,6 +75,12 @@ test("BF-4F1 canvas selects all four loaded models", async ({ page }) => {
     );
     await expect(canvas).toHaveAttribute("data-selected-object", actor.id);
     await expect(canvas).toHaveAttribute("data-highlighted-object", actor.id);
+    await expect(
+      page.getByRole("heading", { name: actor.label, exact: true }),
+    ).toBeVisible();
+    await page
+      .getByRole("button", { name: "Adiar conversa e voltar ao mundo" })
+      .click();
   }
 });
 

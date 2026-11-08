@@ -5,6 +5,8 @@ import {
   InstancedMesh,
   HemisphereLight,
   Mesh,
+  SkinnedMesh,
+  Skeleton,
   Line,
   Points,
   MeshStandardMaterial,
@@ -262,9 +264,11 @@ export function disposeObjectTree(root: Object3D): void {
   const geometries = new Set<BufferGeometry>();
   const materials = new Set<Material>();
   const textures = new Set<Texture>();
+  const skeletons = new Set<Skeleton>();
 
   root.traverse((object) => {
     if (object instanceof InstancedMesh) object.dispose();
+    if (object instanceof SkinnedMesh) skeletons.add(object.skeleton);
     if (!isDisposableRenderable(object)) return;
     geometries.add(object.geometry);
     const meshMaterials = Array.isArray(object.material)
@@ -276,6 +280,7 @@ export function disposeObjectTree(root: Object3D): void {
     }
   });
 
+  for (const skeleton of skeletons) skeleton.dispose();
   for (const texture of textures) texture.dispose();
   for (const material of materials) material.dispose();
   for (const geometry of geometries) geometry.dispose();

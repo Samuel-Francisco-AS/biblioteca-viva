@@ -10,6 +10,7 @@ const sourceRef = process.argv[4] || undefined;
 if (!directory) throw new Error("Expected evidence directory");
 await mkdir(directory, { recursive: true });
 const server = await createServer({
+  cacheDir: "/tmp/bv-world-probe-vite",
   server: { host: "127.0.0.1", port: 4178, strictPort: true },
   plugins: [
     {
@@ -18,6 +19,8 @@ const server = await createServer({
       transform(code, id) {
         const files = [
           "ThreeWorldRuntime.ts",
+          "inhabitantVisuals.ts",
+          "inhabitantAnimator.ts",
           "proceduralLibraryBuilding.ts",
           "proceduralLibraryFurnishing.ts",
           "livingVisuals.ts",
@@ -40,6 +43,27 @@ const server = await createServer({
       name: "recovery-diagnostic-page",
       configureServer(server) {
         server.middlewares.use((req, res, next) => {
+          if (
+            sourceRef &&
+            process.argv[5] === "inhabitants" &&
+            /^\/src\/features\/library\/three\/assets\/(samael|aryn|ytha|lua)\.glb$/.test(
+              req.url.split("?")[0],
+            ) &&
+            !req.url.includes("import") &&
+            !req.url.includes("url")
+          ) {
+            res.setHeader("Content-Type", "model/gltf-binary");
+            const ref = `${sourceRef}:${req.url.slice(1).split("?")[0]}`;
+            const bytes = Number(
+              execFileSync("git", ["cat-file", "-s", ref], {
+                encoding: "utf8",
+              }),
+            );
+            res.end(
+              execFileSync("git", ["show", ref], { maxBuffer: bytes + 1024 }),
+            );
+            return;
+          }
           if (req.url !== "/__bv_render_probe") return next();
           res.setHeader("Content-Type", "text/html");
           res.end(
@@ -201,35 +225,44 @@ try {
       "4",
   );
   const scenarios =
-    process.argv[5] === "flight"
-      ? ["scroll-flight"]
-      : process.argv[5] === "book"
-        ? ["record-book-normal", "record-book-near"]
-        : ["records", "post-r2"].includes(process.argv[5])
-          ? ["book", "movie", "series", "study", "physical_activity", "work"]
-              .filter(
-                (type) =>
-                  process.argv[5] !== "post-r2" ||
-                  !["book", "series"].includes(type),
-              )
-              .flatMap((type) => [
-                `record-${type}-normal`,
-                `record-${type}-near`,
-                ...(process.argv[5] === "post-r2"
-                  ? [`record-${type}-selected`]
-                  : []),
-              ])
-          : [
-              "static",
-              "active-four",
-              "night",
-              "scrolls-active",
-              "book-transport",
-              "camera-near",
-              "camera-far",
-              "reduced",
-              "return",
-            ];
+    process.argv[5] === "inhabitants"
+      ? [
+          "all-four",
+          "inhabitant-samael",
+          "inhabitant-aryn",
+          "inhabitant-ytha",
+          "inhabitant-lua",
+          "night",
+        ]
+      : process.argv[5] === "flight"
+        ? ["scroll-flight"]
+        : process.argv[5] === "book"
+          ? ["record-book-normal", "record-book-near"]
+          : ["records", "post-r2"].includes(process.argv[5])
+            ? ["book", "movie", "series", "study", "physical_activity", "work"]
+                .filter(
+                  (type) =>
+                    process.argv[5] !== "post-r2" ||
+                    !["book", "series"].includes(type),
+                )
+                .flatMap((type) => [
+                  `record-${type}-normal`,
+                  `record-${type}-near`,
+                  ...(process.argv[5] === "post-r2"
+                    ? [`record-${type}-selected`]
+                    : []),
+                ])
+            : [
+                "static",
+                "active-four",
+                "night",
+                "scrolls-active",
+                "book-transport",
+                "camera-near",
+                "camera-far",
+                "reduced",
+                "return",
+              ];
   const results = [];
   for (const name of scenarios) {
     const result = await page.evaluate(
@@ -274,6 +307,18 @@ try {
               : null,
           );
         }
+        if (name.startsWith("inhabitant-")) {
+          const key = name.slice("inhabitant-".length);
+          const actor = p.scene.getObjectByName(`character:${key}`);
+          p.runtime.navigation.commit({
+            targetX: actor.position.x,
+            targetZ: actor.position.z,
+            zoom: 2.5,
+          });
+          p.runtime.selectObject(`character:${key}`);
+        }
+        if (name === "all-four")
+          p.runtime.navigation.commit({ targetX: 0, targetZ: 0, zoom: 0.7 });
         const stages = {};
         const originals = [];
         if (name === "night") p.setHour(22);
@@ -294,6 +339,7 @@ try {
           p.runtime.resume();
         }
         for (const key of [
+          "inhabitants",
           "livingVisuals",
           "ambientMagic",
           "scrollVisuals",

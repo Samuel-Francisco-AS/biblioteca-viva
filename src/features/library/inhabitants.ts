@@ -24,10 +24,11 @@ export const INHABITANTS = [
     id: "character:ytha",
     key: "ytha",
     label: "Ytha",
-    height: 1.7,
+    height: 1.32,
     x: 12.4,
     z: -10.4,
-    description: "Fada de 1,70 m, cabelo rosa, asas de borboleta e flor.",
+    description:
+      "Fada delicada de 1,32 m, pairando com asas luminosas, cabelo rosa e flor.",
   },
   {
     id: "character:lua",
@@ -76,4 +77,12 @@ export const INHABITANT_ENVELOPES = {
   aryn: { travel: 0.62, work: 0.66, magic: 1.3, speed: 1.22 },
   ytha: { travel: 0.92, work: 0.92, magic: 1.3, speed: 1.02 },
   lua: { travel: 0.58, work: 0.62, magic: 1.24, speed: 1.13 },
+} as const;
+
+/** Visual clearance, not elevation of the agency navigation plane. */
+export const INHABITANT_GROUND_CLEARANCE = {
+  samael: 0,
+  aryn: 0,
+  ytha: 0.16,
+  lua: 0,
 } as const;
