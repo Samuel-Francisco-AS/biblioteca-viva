@@ -1,3 +1,4 @@
+import { ProvationsService } from "../application/provations";
 import { ArcanariumWorkshop } from "../application/arcanariumWorkshop";
 import { CardExchange } from "../application/cardExchange";
 import { DexieCardMedia } from "../infrastructure/database/cardMedia";
@@ -149,9 +150,14 @@ export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 export interface ApplicationRuntime {
   readonly arcanarium: ArcanariumService;
   readonly workshop: ArcanariumWorkshop;
+  readonly provations: ProvationsService;
   readonly cardExchange: CardExchange;
   readonly workshopDrafts: WorkshopDrafts;
   readonly prepareCardImage: typeof importLocalImage;
+  readonly saveLearningReport: (
+    content: string,
+    format: "json" | "csv",
+  ) => Promise<string>;
   readonly saveDeckFile: (content: string) => Promise<string>;
   readonly inhabitantContinuity: InhabitantContinuityPort;
   readonly nightLightingContinuity: NightLightingPort;
@@ -359,9 +365,23 @@ export async function createApplication(
   return {
     arcanarium: new ArcanariumService(dependencies),
     workshop: new ArcanariumWorkshop(dependencies),
+    provations: new ProvationsService(dependencies),
     cardExchange: new CardExchange(dependencies, new JsonCardExchangeCodec()),
     workshopDrafts: new BrowserWorkshopDrafts(database.name),
     prepareCardImage: importLocalImage,
+    saveLearningReport: async (content, format) => {
+      const file = {
+        name: `biblioteca-viva-relatorio.${format}`,
+        content,
+        mimeType:
+          format === "csv"
+            ? ("text/csv" as const)
+            : ("application/json" as const),
+      };
+      return fileSave
+        ? fileSave.saveBackupFile(file)
+        : fileShare.shareBackupFile(file);
+    },
     saveDeckFile: async (content) => {
       const file = { name: "biblioteca-viva-baralho.json", content };
       return fileSave

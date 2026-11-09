@@ -1,4 +1,5 @@
 import { validateCardMediaOwnership, type CardMediaPort } from "./cardMedia";
+import { normalizeKnowledge } from "../domain/provations";
 import { z } from "zod";
 import {
   cardContentSchema,
@@ -255,6 +256,35 @@ export class ArcanariumService {
         throw new ApplicationError(
           "CONFLICT",
           "Versão ou identidade da classificação inválida.",
+        );
+      const all = (await this.deps.arcanarium.read()).tags;
+      const names = [tag.label, ...tag.synonyms].map(normalizeKnowledge);
+      const siblings = all.filter(
+        (t) =>
+          t.id !== tag.id &&
+          t.namespace === tag.namespace &&
+          JSON.stringify([...t.parentIds].sort()) ===
+            JSON.stringify([...tag.parentIds].sort()),
+      );
+      const levels = ["area", "discipline", "subject", "subsubject", "skill"];
+      if (
+        new Set(names).size !== names.length ||
+        siblings.some((t) =>
+          [t.label, ...t.synonyms].some((n) =>
+            names.includes(normalizeKnowledge(n)),
+          ),
+        ) ||
+        (tag.namespace === "personal" && tag.parentIds.length > 0) ||
+        (tag.namespace === "editorial" &&
+          (tag.level === "area"
+            ? tag.parentIds.length !== 0
+            : tag.parentIds.length !== 1 ||
+              all.find((t) => t.id === tag.parentIds[0])?.level !==
+                levels[levels.indexOf(tag.level) - 1]))
+      )
+        throw new ApplicationError(
+          "VALIDATION_FAILED",
+          "Classificação duplicada, sinônimo repetido ou hierarquia inválida. Escolha um pai do nível imediatamente anterior.",
         );
       await this.deps.arcanarium.putTag(tag);
       await this.validate();

@@ -53,11 +53,16 @@ it("creates a canonical card from a real editor, previews both faces and keeps a
   const a = await app(),
     u = userEvent.setup(),
     view = mount(a, "/arcanario/oficina/nova");
-  const front = await screen.findByLabelText("Frente · pergunta ou pista");
+  const front = await screen.findByLabelText(
+    "Frente da carta — pergunta ou pista",
+  );
   fireEvent.change(front, { target: { value: echo.front } });
-  fireEvent.change(screen.getByLabelText("Verso · resposta ou descoberta"), {
-    target: { value: echo.back },
-  });
+  fireEvent.change(
+    screen.getByLabelText("Verso da carta — resposta ou descoberta"),
+    {
+      target: { value: echo.back },
+    },
+  );
   await u.click(screen.getByRole("button", { name: /Virar prévia/ }));
   expect(
     within(screen.getByLabelText("Prévia da carta")).getByText(echo.back),
@@ -66,9 +71,9 @@ it("creates a canonical card from a real editor, previews both faces and keeps a
   expect((await a.arcanarium.list()).cards).toHaveLength(0);
   mount(a, "/arcanario/oficina/nova");
   expect(await screen.findByText(/Rascunho recuperado/)).toBeVisible();
-  expect(screen.getByLabelText("Frente · pergunta ou pista")).toHaveValue(
-    echo.front,
-  );
+  expect(
+    screen.getByLabelText("Frente da carta — pergunta ou pista"),
+  ).toHaveValue(echo.front);
   await u.click(
     screen.getByRole("button", { name: "Guardar carta no acervo" }),
   );
@@ -81,7 +86,9 @@ it("preserves typed work on a genuine revision conflict and lets the user choose
     u = userEvent.setup(),
     c = await a.arcanarium.createCard(echo);
   mount(a, `/arcanario/oficina/${encodeURIComponent(c.id)}`);
-  const front = await screen.findByLabelText("Frente · pergunta ou pista");
+  const front = await screen.findByLabelText(
+    "Frente da carta — pergunta ou pista",
+  );
   fireEvent.change(front, { target: { value: "Meu texto preservado" } });
   await a.arcanarium.updateCard({
     cardId: c.id,
@@ -153,4 +160,193 @@ it("creates a static deck with real references and reorganizes without copying c
     kind: "static",
     cards: [{ cardId: c.id }],
   });
+});
+it("B-R1/B-R2: three native-dialog-free frames update preview, recover draft, persist and cancel without changing saved faces", async () => {
+  const a = await app(),
+    u = userEvent.setup();
+  let view = mount(a, "/arcanario/oficina/nova");
+  const front = await screen.findByLabelText(
+    "Frente da carta — pergunta ou pista",
+  );
+  fireEvent.change(front, { target: { value: "Texto da frente" } });
+  fireEvent.change(
+    screen.getByLabelText("Verso da carta — resposta ou descoberta"),
+    { target: { value: "Texto do verso" } },
+  );
+  fireEvent.change(
+    screen.getByLabelText("Nome da carta no acervo (opcional)"),
+    { target: { value: "Nome independente" } },
+  );
+  const preview = screen.getByLabelText("Prévia da carta");
+  for (const [name, frame] of [
+    [/Constelação · traços celestes/, "constellation"],
+    [/Herbário · ramos e folhas/, "herbarium"],
+    [/Iluminura · ouro geométrico/, "illuminated"],
+  ] as const) {
+    await u.click(screen.getByRole("radio", { name }));
+    expect(screen.getByRole("radio", { name })).toBeChecked();
+    expect(preview.querySelector(`[data-frame="${frame}"]`)).not.toBeNull();
+    expect(front).toHaveValue("Texto da frente");
+  }
+  expect(document.querySelector("select")).toBeNull();
+  view.unmount();
+  view = mount(a, "/arcanario/oficina/nova");
+  await screen.findByText(/Rascunho recuperado/);
+  expect(screen.getByRole("radio", { name: /Iluminura/ })).toBeChecked();
+  await u.click(
+    screen.getByRole("button", { name: "Guardar carta no acervo" }),
+  );
+  await screen.findByRole("link", { name: "Editar na Oficina" });
+  const c = (await a.arcanarium.list()).cards[0];
+  expect(c.content).toMatchObject({
+    title: "Nome independente",
+    front: "Texto da frente",
+    back: "Texto do verso",
+    appearance: { frame: "illuminated" },
+  });
+  await u.click(screen.getByRole("link", { name: "Editar na Oficina" }));
+  await screen.findByLabelText("Frente da carta — pergunta ou pista");
+  await u.click(screen.getByRole("radio", { name: /Herbário/ }));
+  view.unmount();
+  expect((await a.arcanarium.getCard(c.id))?.content).toEqual(c.content);
+  mount(a, `/arcanario/oficina/${encodeURIComponent(c.id)}`);
+  await screen.findByText(/Rascunho recuperado/);
+  expect(screen.getByRole("radio", { name: /Herbário/ })).toBeChecked();
+});
+it("B-R1: family filter is a keyboard-accessible radio group without a select", async () => {
+  const a = await app(),
+    u = userEvent.setup();
+  await a.arcanarium.createCard(echo);
+  await a.arcanarium.createCard({
+    type: "memory",
+    title: "Lembrança fictícia",
+    entryIds: [],
+  });
+  mount(a, "/arcanario/acervo");
+  await screen.findByRole("heading", { name: "Acervo global" });
+  await u.click(screen.getByRole("radio", { name: "Lembrança" }));
+  expect(screen.getByRole("radio", { name: "Lembrança" })).toBeChecked();
+  expect(screen.getAllByRole("link", { name: /Abrir Lembrança/ })).toHaveLength(
+    1,
+  );
+  expect(screen.queryByRole("link", { name: /Abrir Pista/ })).toBeNull();
+  expect(document.querySelector("select")).toBeNull();
+});
+it("C: recovers question draft, reorders stable alternatives, saves metadata and reopens an author question", async () => {
+  const a = await app(),
+    u = userEvent.setup();
+  const view = mount(a, "/arcanario/oficina/nova?tipo=question");
+  await screen.findByRole("heading", { name: "Criar questão autoral" });
+  fireEvent.change(
+    screen.getByLabelText("Nome da questão no acervo (opcional)"),
+    { target: { value: "Identificação fictícia" } },
+  );
+  fireEvent.change(screen.getByLabelText("Enunciado da questão"), {
+    target: { value: "Enunciado independente" },
+  });
+  fireEvent.change(screen.getByLabelText("Alternativa A"), {
+    target: { value: "Alternativa correta fictícia" },
+  });
+  fireEvent.change(screen.getByLabelText("Alternativa B"), {
+    target: { value: "Alternativa incorreta fictícia" },
+  });
+  await u.click(screen.getByRole("radio", { name: "Gabarito A" }));
+  fireEvent.change(screen.getByLabelText("Explicação da resolução"), {
+    target: { value: "Explicação após resposta" },
+  });
+  await u.click(screen.getByRole("button", { name: "Descer alternativa 1" }));
+  expect(screen.getByRole("radio", { name: "Gabarito B" })).toBeChecked();
+  view.unmount();
+  mount(a, "/arcanario/oficina/nova?tipo=question");
+  await screen.findByText(/Rascunho de questão recuperado/);
+  expect(screen.getByLabelText("Enunciado da questão")).toHaveValue(
+    "Enunciado independente",
+  );
+  expect(screen.getByRole("radio", { name: "Gabarito B" })).toBeChecked();
+  await u.click(
+    screen.getByRole("button", { name: "Guardar questão no acervo" }),
+  );
+  await screen.findByRole("link", { name: "Editar na Oficina" });
+  const c = (await a.arcanarium.list()).cards[0];
+  expect(c.content).toMatchObject({
+    type: "question",
+    title: "Identificação fictícia",
+    statement: "Enunciado independente",
+    explanation: "Explicação após resposta",
+  });
+  expect(a.workshopDrafts.read("nova:question")).toBeUndefined();
+  await u.click(screen.getByRole("link", { name: "Editar na Oficina" }));
+  expect(await screen.findByLabelText("Enunciado da questão")).toHaveValue(
+    "Enunciado independente",
+  );
+});
+it("C: response UI reveals no explanation before confirmation, persists correction and resumes from saved position", async () => {
+  const a = await app(),
+    u = userEvent.setup(),
+    c = await a.arcanarium.createCard({
+      type: "question",
+      statement: "Enunciado fictício",
+      alternatives: [
+        { id: "a", text: "Certa" },
+        { id: "b", text: "Outra" },
+      ],
+      correctAlternativeId: "a",
+      explanation: "Explicação reservada",
+      classification: { knowledgeTagIds: [], personalTagIds: [] },
+    });
+  const s = await a.provations.start({
+    selection: { kind: "static", cards: [{ cardId: c.id }] },
+  });
+  const view = mount(a, `/arcanario/provacoes/${s.id}`);
+  await screen.findByRole("heading", { name: "Questão 1 de 1" });
+  expect(screen.queryByText("Explicação reservada")).toBeNull();
+  expect(
+    screen.getByRole("button", { name: "Confirmar resposta" }),
+  ).toBeDisabled();
+  await u.click(screen.getByRole("radio", { name: /A Certa/ }));
+  await u.click(screen.getByRole("button", { name: "Confirmar resposta" }));
+  expect(await screen.findByText("Explicação reservada")).toBeVisible();
+  await u.click(screen.getByRole("button", { name: "Pausar e sair" }));
+  await screen.findByRole("heading", { name: "Provações" });
+  view.unmount();
+  mount(a, `/arcanario/provacoes/${s.id}`);
+  await screen.findByRole("heading", { name: "Provação pausada" });
+  await u.click(screen.getByRole("button", { name: "Retomar Provação" }));
+  await screen.findByText("Explicação reservada");
+  await u.click(screen.getByRole("button", { name: "Concluir Provação" }));
+  expect(
+    await screen.findByRole("heading", { name: "Resultado da Provação" }),
+  ).toBeVisible();
+  expect(screen.getByText("100%")).toBeVisible();
+});
+it("C: genuine question conflicts keep all typed fields", async () => {
+  const a = await app(),
+    u = userEvent.setup(),
+    c = await a.arcanarium.createCard({
+      type: "question",
+      statement: "Original",
+      alternatives: [
+        { id: "a", text: "Certa" },
+        { id: "b", text: "Outra" },
+      ],
+      correctAlternativeId: "a",
+      classification: { knowledgeTagIds: [], personalTagIds: [] },
+    });
+  mount(a, `/arcanario/oficina/${encodeURIComponent(c.id)}`);
+  const statement = await screen.findByLabelText("Enunciado da questão");
+  fireEvent.change(statement, {
+    target: { value: "Meu enunciado preservado" },
+  });
+  await a.arcanarium.updateCard({
+    cardId: c.id,
+    expectedRevision: 1,
+    content: { ...c.content, statement: "Outra janela" },
+  });
+  await u.click(
+    screen.getByRole("button", { name: "Guardar questão no acervo" }),
+  );
+  await screen.findByRole("alert");
+  expect(statement).toHaveValue("Meu enunciado preservado");
+  expect((await a.arcanarium.getCard(c.id))?.revision).toBe(2);
+  expect(a.workshopDrafts.read(c.id)).toContain("Meu enunciado preservado");
 });

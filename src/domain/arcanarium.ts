@@ -50,6 +50,9 @@ export const cardContentSchema = z.discriminatedUnion("type", [
   z
     .strictObject({
       type: z.literal("question"),
+      title: text.max(160).optional(),
+      difficulty: z.enum(["easy", "medium", "hard"]).optional(),
+      provenance: text.max(1000).optional(),
       statement: text,
       alternatives: z.array(z.strictObject({ id, text })).min(2),
       correctAlternativeId: id,
@@ -122,6 +125,37 @@ export const cardVersionSchema = z
 export type CardVersion = z.infer<typeof cardVersionSchema>;
 export const cardReferenceSchema = z.strictObject({ cardId: id, revision });
 export type CardReference = z.infer<typeof cardReferenceSchema>;
+export const dynamicCriteriaSchema = z.discriminatedUnion("version", [
+  z.strictObject({
+    version: z.literal(1),
+    types: z.array(z.enum(["flashcard", "question", "memory", "combat"])),
+    knowledgeTagIds: uniqueIds,
+    personalTagIds: uniqueIds,
+  }),
+  z
+    .strictObject({
+      version: z.literal(2),
+      types: z.array(z.enum(["flashcard", "question", "memory", "combat"])),
+      knowledgeTagIds: uniqueIds,
+      personalTagIds: uniqueIds,
+      exam: text.max(160).optional(),
+      year: z.int().min(1).max(9999).optional(),
+      board: text.max(160).optional(),
+      origin: z.enum(["local", "study", "official", "imported"]).optional(),
+      difficulty: z.enum(["easy", "medium", "hard"]).optional(),
+      history: z.enum(["all", "never", "incorrect", "answered"]),
+      minAttempts: z.int().nonnegative().optional(),
+      maxAttempts: z.int().nonnegative().optional(),
+      limit: z.int().min(1).max(500),
+    })
+    .refine(
+      (c) =>
+        c.minAttempts === undefined ||
+        c.maxAttempts === undefined ||
+        c.minAttempts <= c.maxAttempts,
+    ),
+]);
+export type DynamicCriteria = z.infer<typeof dynamicCriteriaSchema>;
 export const deckSelectionSchema = z.discriminatedUnion("kind", [
   z
     .strictObject({
@@ -136,12 +170,7 @@ export const deckSelectionSchema = z.discriminatedUnion("kind", [
     ),
   z.strictObject({
     kind: z.literal("dynamic"),
-    criteria: z.strictObject({
-      version: z.literal(1),
-      types: z.array(z.enum(["flashcard", "question", "memory", "combat"])),
-      knowledgeTagIds: uniqueIds,
-      personalTagIds: uniqueIds,
-    }),
+    criteria: dynamicCriteriaSchema,
   }),
 ]);
 export const deckSchema = z
@@ -190,6 +219,23 @@ export const knowledgeTagSchema = z
       (tag.namespace !== "editorial" || tag.level !== "label"),
   );
 export type KnowledgeTag = z.infer<typeof knowledgeTagSchema>;
+export const trialStateSchema = z.strictObject({
+  version: z.literal(1),
+  revision: z.int().positive(),
+  status: z.enum(["active", "paused", "completed", "abandoned"]),
+  position: z.int().nonnegative(),
+  updatedAt: z.iso.datetime(),
+  endedAt: z.iso.datetime().optional(),
+  deck: z.strictObject({ id, name: text, revision }).optional(),
+  taxonomy: z.array(knowledgeTagSchema),
+  answers: z.array(
+    z.strictObject({
+      alternativeId: id,
+      correct: z.boolean(),
+      answeredAt: z.iso.datetime(),
+    }),
+  ),
+});
 export const cardSessionSchema = z.discriminatedUnion("kind", [
   z
     .strictObject({
@@ -214,6 +260,7 @@ export const cardSessionSchema = z.discriminatedUnion("kind", [
     kind: z.literal("question_session"),
     startedAt: z.iso.datetime(),
     cards: z.array(cardReferenceSchema),
+    trial: trialStateSchema.optional(),
   }),
   z.strictObject({
     id,
@@ -381,6 +428,59 @@ export function validateArcanarium(
   }
   for (const session of data.sessions) {
     session.cards.forEach(requireRef);
+    if (session.kind === "question_session" && session.trial) {
+      const t = session.trial;
+      unique(session.cards.map((r) => r.cardId));
+      unique(t.taxonomy.map((tag) => tag.id));
+      validateArcanarium({ ...emptyArcanarium(), tags: t.taxonomy }, new Set());
+      if (
+        !session.cards.length ||
+        t.position >= session.cards.length ||
+        t.answers.length > session.cards.length ||
+        t.answers.length < t.position ||
+        (t.answers.length > t.position + 1 && t.status !== "completed") ||
+        t.updatedAt < session.startedAt ||
+        (t.endedAt !== undefined &&
+          (t.endedAt !== t.updatedAt || t.endedAt < session.startedAt)) ||
+        ["completed", "abandoned"].includes(t.status) !== !!t.endedAt
+      )
+        throw new Error("Invalid trial state");
+      const historicalTags = new Map(t.taxonomy.map((tag) => [tag.id, tag]));
+      for (const [i, ref] of session.cards.entries()) {
+        const q = versions.get(
+          JSON.stringify([ref.cardId, ref.revision]),
+        )?.content;
+        if (q?.type !== "question") throw new Error("Invalid trial question");
+        if (
+          q.classification.knowledgeTagIds.some(
+            (id) => historicalTags.get(id)?.namespace !== "editorial",
+          ) ||
+          q.classification.personalTagIds.some(
+            (id) => historicalTags.get(id)?.namespace !== "personal",
+          )
+        )
+          throw new Error("Missing historical classification");
+        const answer = t.answers[i];
+        if (
+          answer &&
+          (!q.alternatives.some((a) => a.id === answer.alternativeId) ||
+            answer.correct !==
+              (answer.alternativeId === q.correctAlternativeId) ||
+            answer.answeredAt <
+              (i ? t.answers[i - 1].answeredAt : session.startedAt) ||
+            answer.answeredAt > t.updatedAt)
+        )
+          throw new Error("Invalid historical answer");
+      }
+      for (const tag of t.taxonomy)
+        if (
+          [...tag.parentIds, ...tag.relatedIds].some(
+            (id) => !historicalTags.has(id),
+          )
+        )
+          throw new Error("Missing historical taxonomy");
+    }
+
     if (
       session.kind === "flashcard_review" &&
       session.cards.some(

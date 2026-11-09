@@ -1,3 +1,6 @@
+import { Provations, TrialSession } from "./Provations";
+import { Taxonomy } from "./Taxonomy";
+import { Diagnosis } from "./Diagnosis";
 import { useCallback, useEffect, useState } from "react";
 import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
 import type { ApplicationRuntime } from "../../app/createApplication";
@@ -73,6 +76,9 @@ export default function ArcanariumPage({
         <NavLink to="/arcanario/baralhos">Baralhos</NavLink>
         <NavLink to="/arcanario/oficina/nova">Oficina</NavLink>
         <NavLink to="/arcanario/ecos">Ecos</NavLink>
+        <NavLink to="/arcanario/provacoes">Provações</NavLink>
+        <NavLink to="/arcanario/assuntos">Assuntos</NavLink>
+        <NavLink to="/arcanario/diagnostico">Diagnóstico</NavLink>
         <NavLink to="/arcanario/relicario">Relicário</NavLink>
       </nav>
       {error && (
@@ -100,6 +106,10 @@ export default function ArcanariumPage({
             <Route path="oficina/:id" element={<Workshop />} />
             <Route path="ecos" element={<Echoes />} />
             <Route path="ecos/:id" element={<Review />} />
+            <Route path="provacoes" element={<Provations />} />
+            <Route path="provacoes/:id" element={<TrialSession />} />
+            <Route path="assuntos" element={<Taxonomy />} />
+            <Route path="diagnostico" element={<Diagnosis />} />
             <Route path="importar" element={<DeckImport />} />
             <Route
               path="*"
@@ -161,6 +171,13 @@ function Portal({ data }: { readonly data: ArcanaContext["data"] }) {
             />
           </div>
         </div>
+      </div>
+      <div className="arcana-actions">
+        <Link className="button button--primary" to="/arcanario/provacoes">
+          ◇ Entrar nas Provações
+        </Link>
+        <Link to="/arcanario/assuntos">A árvore dos saberes</Link>
+        <Link to="/arcanario/diagnostico">Diagnóstico local</Link>
       </div>
       <div className="arcana-portals">
         {[

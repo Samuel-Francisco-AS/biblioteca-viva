@@ -1,3 +1,5 @@
+> **Execução posterior autorizada — C (08/11/2026):** o proprietário autorizou implementar/publicar a candidata C e os reparos B-R1/B-R2 sobre B/PR #44. [Relatório C](BF-5_6C_PROVACOES_DIAGNOSTICO_IMPLEMENTACAO.md) · [ADR-027](decisions/ADR-027-provacao-taxonomia-diagnostico.md). Próximo gate físico A+B+C; sem merge ou início de D–G. O texto original abaixo é o plano, não descrição do código vigente.
+
 > **Atualização específica de 08/11/2026:** B foi autorizada pelo proprietário e implementada como candidata dependente da A, com gate físico conjunto adiado para A+B; ambas seguem abertas, sem merge/aceite. [Relatório B](BF-5_6B_OFICINA_COLECOES_IMPLEMENTACAO.md). C–G continuam somente planejadas. As restrições de sequência abaixo antecedem essa exceção explícita.
 
 # BF-5.6 — O Arcanário | Plano e contrato de escopo

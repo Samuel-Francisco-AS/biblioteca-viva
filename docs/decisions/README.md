@@ -1,3 +1,5 @@
+**BF-5.6C candidata (08/11/2026):** [ADR-027 — Provações, taxonomia histórica e diagnóstico](ADR-027-provacao-taxonomia-diagnostico.md) complementa ADR-020/025/026. Dexie v17/backup v9; A+B+C aguardam auditoria/gate/aceite, sem merge ou início de D–G.
+
 # Decisões arquiteturais
 
 Este índice distingue as decisões vigentes das preservadas para contexto. O registro monolítico anterior está em `../history/legacy/DECISIONS_LEGACY.md`.

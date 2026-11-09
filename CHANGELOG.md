@@ -1,3 +1,12 @@
+## BF-5.6C — candidata (2026-11-08)
+
+- Oficina: molduras selecionáveis sem picker nativo; nome no acervo distinto da frente/verso, com ajuda e prévia explícitas. Família e revisões usam opções acessíveis.
+- Questões autorais, IDs de alternativas, explicações/metadados, taxonomia hierárquica e etiquetas pessoais locais.
+- Baralhos dinâmicos executáveis, revisões estáticas fixáveis, Provações com correção, pausa/retomada e histórico imutável.
+- Diagnóstico descritivo com distintas/repetições/evidência e exportação explícita JSON v1/CSV.
+- Dexie v17/backup v9, importação v6/v7/v8 e troca autoral v1 preservadas; formatos de relatório aceitos pelo salvamento Android.
+- Candidata dependente A+B, sem merge/aceite físico. [Relatório](docs/BF-5_6C_PROVACOES_DIAGNOSTICO_IMPLEMENTACAO.md).
+
 ## 08/11/2026 — BF-5.6B candidata: Oficina, Ecos e Relicário
 
 - Portal React próprio do Arcanário, acervo com busca, cartas ornamentadas e gestão de baralhos estáticos compartilhados/ordenados.

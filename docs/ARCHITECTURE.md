@@ -1,3 +1,7 @@
+## BF-5.6C — Provações (candidata)
+
+`domain/provations.ts` contém seleção determinística, transições, DTO sem gabarito antes da confirmação, pontuação e diagnóstico puro. `application/provations.ts` coordena início/comandos com leitura e escrita transacionais pela porta Arcanarium, revisão esperada e persistência antes de avanço. Oficina reutiliza o agregado global de questões. React usa as portas de aplicação e rascunhos privados; não acessa Dexie. Sessões fotografam taxonomia e fixam revisões imutáveis; relatórios distinguem repetições e evidência. UI em fólio natural e radios visíveis; sem mudança de Three/WorldHost. [Contrato completo e limites](decisions/ADR-027-provacao-taxonomia-diagnostico.md).
+
 ## BF-5.6B — Oficina e navegação do Arcanário (candidata)
 
 Rota lazy `/arcanario/*`, portal/salas React e cartas SVG/CSS autorais; WorldHost continua residente e pausado fora da Biblioteca, sem novo Canvas. `ArcanariumWorkshop` coordena carta/versão, links de Estudos, decks e mídia em uma transação; eventos após commit. `CardExchange` coordena cópias atômicas e codec estrito na infraestrutura; React não acessa Dexie. Rascunhos privados locais passam por porta própria e validação ao recuperar. [ADR-026](decisions/ADR-026-arcanario-oficina-midias-troca.md), [relatório B](BF-5_6B_OFICINA_COLECOES_IMPLEMENTACAO.md). As descrições da A abaixo são a cronologia da fundação preservada.

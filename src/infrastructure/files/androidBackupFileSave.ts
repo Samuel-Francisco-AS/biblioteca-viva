@@ -6,7 +6,7 @@ export interface AndroidDocumentSaveGateway {
     this: void,
     input: {
       readonly contentUtf8: string;
-      readonly mimeType: "application/json";
+      readonly mimeType: "application/json" | "text/csv";
       readonly suggestedName: string;
     },
   ): Promise<{ readonly status: "saved" | "cancelled" }>;
@@ -18,11 +18,12 @@ export class AndroidBackupFileSave implements BackupFileSavePort {
   async saveBackupFile(file: {
     readonly name: string;
     readonly content: string;
+    readonly mimeType?: "application/json" | "text/csv";
   }): Promise<SaveBackupResult> {
     try {
       const result = await this.documents.saveUtf8Document({
         contentUtf8: file.content,
-        mimeType: "application/json",
+        mimeType: file.mimeType ?? "application/json",
         suggestedName: file.name,
       });
       return result.status;

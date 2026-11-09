@@ -1,3 +1,4 @@
+import { QuestionEditor } from "./QuestionEditor";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Link,
@@ -12,6 +13,7 @@ import {
   type CardContent,
 } from "../../domain/arcanarium";
 import { ApplicationError } from "../../application/errors";
+import { Choices } from "./Choices";
 import { ArcanaCard } from "./ArcanaCard";
 import { ArcanaSeal } from "./ArcanaArt";
 import { arcanaError, cardPath, useArcana } from "./context";
@@ -54,13 +56,24 @@ export function Workshop() {
   const { data } = useArcana();
   const card = id === "nova" ? undefined : data.cards.find((c) => c.id === id);
   const type =
-    card?.type ?? (params.get("tipo") === "memory" ? "memory" : "flashcard");
+    card?.type ??
+    (params.get("tipo") === "question"
+      ? "question"
+      : params.get("tipo") === "memory"
+        ? "memory"
+        : "flashcard");
   if (id !== "nova" && !card)
     return (
       <p role="alert">
         Carta indisponível. Seu rascunho local permanece preservado.
       </p>
     );
+  if (
+    type === "question" &&
+    !card?.archived &&
+    card?.origin.kind !== "official"
+  )
+    return <QuestionEditor key={id} card={card} />;
   if (
     (type !== "flashcard" && type !== "memory") ||
     card?.archived ||
@@ -325,6 +338,9 @@ function Editor({
           >
             ❧ Lembrança · Relicário
           </Link>
+          <Link to="/arcanario/oficina/nova?tipo=question">
+            ◇ Questão · Provações
+          </Link>
         </div>
       )}
       {notice && (
@@ -377,39 +393,54 @@ function Editor({
             <label>
               {type === "memory"
                 ? "Título da lembrança"
-                : "Título do Eco (opcional)"}
+                : "Nome da carta no acervo (opcional)"}
               <input
                 required={type === "memory"}
                 maxLength={160}
+                aria-describedby={
+                  type === "flashcard" ? "card-name-help" : undefined
+                }
                 value={draft.title}
                 onChange={(e) => patch({ title: e.target.value })}
               />
             </label>
+            {type === "flashcard" && (
+              <p id="card-name-help">
+                Usado para identificar e encontrar a carta nas coleções. Não
+                substitui o texto da frente.
+              </p>
+            )}
             {type === "flashcard" ? (
               <>
                 <label>
-                  Frente · pergunta ou pista
+                  Frente da carta — pergunta ou pista
                   <textarea
                     required
                     rows={5}
                     maxLength={4000}
-                    aria-label="Frente · pergunta ou pista"
+                    aria-label="Frente da carta — pergunta ou pista"
                     value={draft.front}
                     onChange={(e) => patch({ front: e.target.value })}
                   />
-                  <small>{draft.front.length}/4000</small>
+                  <small>
+                    Este texto aparece na face frontal durante a revisão.{" "}
+                    {draft.front.length}/4000
+                  </small>
                 </label>
                 <label>
-                  Verso · resposta ou descoberta
+                  Verso da carta — resposta ou descoberta
                   <textarea
                     required
                     rows={7}
                     maxLength={8000}
-                    aria-label="Verso · resposta ou descoberta"
+                    aria-label="Verso da carta — resposta ou descoberta"
                     value={draft.back}
                     onChange={(e) => patch({ back: e.target.value })}
                   />
-                  <small>{draft.back.length}/8000</small>
+                  <small>
+                    Este texto aparece quando você vira a carta.{" "}
+                    {draft.back.length}/8000
+                  </small>
                 </label>
               </>
             ) : (
@@ -491,25 +522,29 @@ function Editor({
                 </label>
               ))}
             </fieldset>
-            <label>
-              Moldura
-              <select
-                aria-label="Moldura"
-                value={draft.appearance.frame}
-                onChange={(e) => {
-                  const frame = cardAppearanceSchema.shape.frame.parse(
-                    e.target.value,
-                  );
-                  patch({ appearance: { ...draft.appearance, frame } });
-                }}
-              >
-                <option value="constellation">
-                  Constelação · traços celestes
-                </option>
-                <option value="herbarium">Herbário · ramos e folhas</option>
-                <option value="illuminated">Iluminura · ouro geométrico</option>
-              </select>
-            </label>
+            <Choices
+              label="Moldura"
+              value={draft.appearance.frame}
+              options={[
+                {
+                  value: "constellation",
+                  label: "✧ Constelação · traços celestes",
+                },
+                { value: "herbarium", label: "❧ Herbário · ramos e folhas" },
+                {
+                  value: "illuminated",
+                  label: "◇ Iluminura · ouro geométrico",
+                },
+              ]}
+              onChange={(value) =>
+                patch({
+                  appearance: {
+                    ...draft.appearance,
+                    frame: cardAppearanceSchema.shape.frame.parse(value),
+                  },
+                })
+              }
+            />
             <details>
               <summary>
                 {type === "flashcard"
@@ -611,6 +646,12 @@ function Editor({
         </form>
         <aside className="arcana-preview" aria-label="Prévia da carta">
           <p className="arcana-eyebrow">A carta que está nascendo</p>
+          {type === "flashcard" && (
+            <p>
+              Nome no acervo: {draft.title || "Sem nome"} · Prévia da face{" "}
+              {flipped ? "verso" : "frontal"}
+            </p>
+          )}
           <ArcanaCard
             content={preview}
             app={app}

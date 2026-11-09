@@ -4,16 +4,17 @@ export class BrowserFileDelivery implements BackupFileSharePort {
   async shareBackupFile(file: {
     readonly name: string;
     readonly content: string;
+    readonly mimeType?: "application/json" | "text/csv";
   }): Promise<ShareBackupResult> {
     const blob = new Blob([file.content], {
-      type: "application/json;charset=utf-8",
+      type: `${file.mimeType ?? "application/json"};charset=utf-8`,
     });
     const nativeFile = new File([blob], file.name, { type: blob.type });
     if (navigator.share && navigator.canShare?.({ files: [nativeFile] })) {
       try {
         await navigator.share({
           files: [nativeFile],
-          title: "Backup da Biblioteca Viva",
+          title: file.name,
         });
         return "flow-finished";
       } catch (error) {

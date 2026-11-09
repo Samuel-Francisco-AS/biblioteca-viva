@@ -128,3 +128,8 @@ Não há alegação de ampla/CI global verde. Commits publicados usam `[skip ci]
 - Código/arte/testes/documentação: **7cce3a4f45b6087fe766305b0cfbbd7473a75b99**.
 - Auditoria do fixture v7 e registro do APK: **7385a1af1dbf4430b313f037f435ce349fa44a3e**; sem alteração produtiva.
 - Registro desta publicação em commit documental posterior, consultável na PR. Push exclusivo da B; sem alteração da branch/PR A, merge, squash, rebase ou force push. A/B continuam abertas, aguardando gate físico conjunto e decisão expressa do proprietário.
+
+
+## Continuidade autorizada na C
+
+O [registro físico B-R1/B-R2](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/44#issuecomment-6730345156) permanece rastreável. A correção técnica é entregue na candidata C, sobre a ponta B `76cf4c7`, sem alterar esta PR/branch B. [Implementação, testes e roteiro conjunto A+B+C](BF-5_6C_PROVACOES_DIAGNOSTICO_IMPLEMENTACAO.md). Não implica revalidação física nem encerramento dos defeitos no Moto G06.

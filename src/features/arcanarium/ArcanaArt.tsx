@@ -38,6 +38,7 @@ export function CardFrame({ frame }: { readonly frame: string }) {
   return (
     <svg
       className="arcana-frame"
+      data-frame={frame}
       viewBox="0 0 300 420"
       preserveAspectRatio="none"
       aria-hidden="true"

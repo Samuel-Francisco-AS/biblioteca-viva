@@ -7,7 +7,7 @@ interface BackupDocumentPluginResult {
 interface BackupDocumentPlugin {
   saveBackupFile(options: {
     readonly contentUtf8: string;
-    readonly mimeType: "application/json";
+    readonly mimeType: "application/json" | "text/csv";
     readonly suggestedName: string;
   }): Promise<BackupDocumentPluginResult>;
 }
@@ -16,7 +16,7 @@ const BackupDocument = registerPlugin<BackupDocumentPlugin>("BackupDocument");
 
 export function saveBackupDocument(options: {
   readonly contentUtf8: string;
-  readonly mimeType: "application/json";
+  readonly mimeType: "application/json" | "text/csv";
   readonly suggestedName: string;
 }): Promise<BackupDocumentPluginResult> {
   return BackupDocument.saveBackupFile(options);

@@ -5,12 +5,12 @@ import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
 async function echo(page: Page, title: string, deck?: string) {
   await page.goto("/arcanario/oficina/nova");
-  await page.getByLabel("Título do Eco (opcional)").fill(title);
+  await page.getByLabel("Nome da carta no acervo (opcional)").fill(title);
   await page
-    .getByRole("textbox", { name: /Frente · pergunta ou pista/ })
+    .getByRole("textbox", { name: /Frente da carta — pergunta ou pista/ })
     .fill(`Pergunta de ${title}?`);
   await page
-    .getByRole("textbox", { name: /Verso · resposta ou descoberta/ })
+    .getByRole("textbox", { name: /Verso da carta — resposta ou descoberta/ })
     .fill(`Resposta de ${title}.`);
   if (deck) {
     await page.getByText("Baralhos & coleções", { exact: true }).click();
@@ -113,7 +113,9 @@ test("B: Relicário com imagem, rascunho, retrato/paisagem, edição e arquivame
     .setInputFiles("e2e/fixtures/entertainment/ceu-ficticio.jpg");
   await expect(page.locator(".arcana-preview img")).toBeVisible();
   await page.getByRole("radio", { name: "Pergaminho · ouro" }).check();
-  await page.getByLabel("Moldura", { exact: true }).selectOption("illuminated");
+  await page
+    .getByRole("radio", { name: /Iluminura · ouro geométrico/ })
+    .check();
   await page.reload();
   await expect(page.getByText(/Rascunho recuperado/)).toBeVisible();
   await expect(page.getByLabel("Título da lembrança")).toHaveValue(

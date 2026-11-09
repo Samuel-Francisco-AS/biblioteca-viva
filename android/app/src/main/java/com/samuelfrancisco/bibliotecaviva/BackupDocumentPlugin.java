@@ -26,19 +26,20 @@ public class BackupDocumentPlugin extends Plugin {
         String mimeType = call.getString("mimeType");
         String contentUtf8 = call.getString("contentUtf8");
 
-        if (
-            suggestedName == null ||
-            !suggestedName.matches("biblioteca-viva-backup-[A-Za-z0-9._-]+\\.json") ||
-            !JSON_MIME_TYPE.equals(mimeType) ||
-            contentUtf8 == null
-        ) {
+        boolean allowedJson = suggestedName != null && JSON_MIME_TYPE.equals(mimeType) &&
+            (suggestedName.matches("biblioteca-viva-backup-[A-Za-z0-9._-]+\\.json") ||
+             suggestedName.equals("biblioteca-viva-baralho.json") ||
+             suggestedName.equals("biblioteca-viva-relatorio.json"));
+        boolean allowedCsv = "text/csv".equals(mimeType) &&
+            "biblioteca-viva-relatorio.csv".equals(suggestedName);
+        if ((!allowedJson && !allowedCsv) || contentUtf8 == null) {
             call.reject("Não foi possível preparar o salvamento.", "INVALID_SAVE_REQUEST");
             return;
         }
 
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType(JSON_MIME_TYPE);
+        intent.setType(mimeType);
         intent.putExtra(Intent.EXTRA_TITLE, suggestedName);
 
         try {

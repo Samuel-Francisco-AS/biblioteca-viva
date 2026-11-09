@@ -1,5 +1,12 @@
+import { Choices } from "./Choices";
+import { DynamicDeckEditor } from "./Provations";
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import type { Deck } from "../../domain/arcanarium";
 import { ArcanaSeal } from "./ArcanaArt";
 import { cardTitle, familyLabels } from "./presentation";
@@ -21,6 +28,9 @@ export function Decks() {
           Criar baralho
         </Link>
       </div>
+      <Link to="/arcanario/baralhos/novo?tipo=dynamic">
+        Criar baralho dinâmico →
+      </Link>
       <Link to="/arcanario/importar">Importar baralho autoral →</Link>
       <div className="arcana-deck-grid">
         {data.decks.map((d) => (
@@ -29,13 +39,13 @@ export function Decks() {
             <span className="arcana-eyebrow">
               {d.selection.kind === "static"
                 ? "Coleção estática"
-                : "Contrato dinâmico · reservado à C"}
+                : "Baralho dinâmico"}
             </span>
             <h3>{d.name}</h3>
             <p>
               {d.selection.kind === "static"
                 ? `${d.selection.cards.length} cartas · revisão ${d.revision}`
-                : "Filtros ainda não executáveis"}
+                : "Filtros executados ao iniciar Provação"}
             </p>
             <span>Abrir baralho →</span>
           </Link>
@@ -52,21 +62,16 @@ export function Decks() {
   );
 }
 export function DeckEditor() {
+  const [params] = useSearchParams();
   const { id } = useParams();
   const { data } = useArcana();
   const deck = id ? data.decks.find((d) => d.id === id) : undefined;
   if (id && !deck) return <p role="alert">Baralho indisponível.</p>;
-  if (deck?.selection.kind === "dynamic")
-    return (
-      <>
-        <h2>{deck.name}</h2>
-        <p>
-          Este baralho preserva critérios dinâmicos da fundação. O motor de
-          filtros pertence à BF-5.6C; não há seleção executável nesta etapa.
-        </p>
-        <Link to="/arcanario/baralhos">Voltar aos baralhos</Link>
-      </>
-    );
+  if (
+    deck?.selection.kind === "dynamic" ||
+    (!deck && params.get("tipo") === "dynamic")
+  )
+    return <DynamicDeckEditor key={deck?.id ?? "new"} deck={deck} />;
   return <StaticDeck key={deck?.id ?? "new"} deck={deck} />;
 }
 function StaticDeck({ deck }: { readonly deck?: Deck }) {
@@ -208,34 +213,60 @@ function StaticDeck({ deck }: { readonly deck?: Deck }) {
                   </small>
                 </span>
                 {!readonly && (
-                  <div className="arcana-actions">
-                    <button
-                      type="button"
-                      disabled={i === 0}
-                      aria-label={`Subir carta ${i + 1}`}
-                      onClick={() => move(i, -1)}
-                    >
-                      ↑
-                    </button>
-                    <button
-                      type="button"
-                      disabled={i === selection.length - 1}
-                      aria-label={`Descer carta ${i + 1}`}
-                      onClick={() => move(i, 1)}
-                    >
-                      ↓
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setSelection((s) =>
-                          s.filter((r) => r.cardId !== ref.cardId),
+                  <div>
+                    <Choices
+                      label={`Revisão da carta ${i + 1}`}
+                      value={ref.revision ? String(ref.revision) : ""}
+                      options={[
+                        { value: "", label: "Acompanhar revisão atual" },
+                        ...data.versions
+                          .filter((v) => v.cardId === ref.cardId)
+                          .map((v) => ({
+                            value: String(v.revision),
+                            label: `Fixar revisão ${v.revision}`,
+                          })),
+                      ]}
+                      onChange={(value) =>
+                        setSelection((old) =>
+                          old.map((r) =>
+                            r.cardId === ref.cardId
+                              ? value
+                                ? { cardId: r.cardId, revision: Number(value) }
+                                : { cardId: r.cardId }
+                              : r,
+                          ),
                         )
                       }
-                      aria-label={`Retirar carta ${i + 1} deste baralho`}
-                    >
-                      Retirar
-                    </button>
+                    />
+                    <div className="arcana-actions">
+                      <button
+                        type="button"
+                        disabled={i === 0}
+                        aria-label={`Subir carta ${i + 1}`}
+                        onClick={() => move(i, -1)}
+                      >
+                        ↑
+                      </button>
+                      <button
+                        type="button"
+                        disabled={i === selection.length - 1}
+                        aria-label={`Descer carta ${i + 1}`}
+                        onClick={() => move(i, 1)}
+                      >
+                        ↓
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setSelection((s) =>
+                            s.filter((r) => r.cardId !== ref.cardId),
+                          )
+                        }
+                        aria-label={`Retirar carta ${i + 1} deste baralho`}
+                      >
+                        Retirar
+                      </button>
+                    </div>
                   </div>
                 )}
               </li>
@@ -296,6 +327,11 @@ function StaticDeck({ deck }: { readonly deck?: Deck }) {
       </form>
       {base && (
         <div className="arcana-actions arcana-panel">
+          <Link
+            to={`/arcanario/provacoes?baralho=${encodeURIComponent(base.id)}`}
+          >
+            Preparar Provação deste baralho
+          </Link>
           <button disabled={busy || dirty} onClick={start}>
             Revisar Ecos do baralho
           </button>
