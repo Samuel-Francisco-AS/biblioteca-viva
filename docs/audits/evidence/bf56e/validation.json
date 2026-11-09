@@ -12,7 +12,11 @@
     "build": "PASS",
     "performance:report": "PASS",
     "duelArtIntegrity": "PASS",
-    "git diff --check": "PASS"
+    "git diff --check": "PASS",
+    "android:sync": "PASS",
+    "android:build:debug": "PASS",
+    "runtimeWebFilesDistAndroidApk": "110/110 PASS",
+    "apkIllustrations": "48/48 PASS"
   },
   "unitWide": {
     "pass": 1144,
@@ -96,5 +100,6 @@
     "human TalkBack",
     "sustained Android GPU/memory/thermal",
     "restore over personal data"
-  ]
+  ],
+  "productionCommit": "8bc290b0edc7e4d6f32157c1a51a0d91db177e0a"
 }

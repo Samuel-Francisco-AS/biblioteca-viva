@@ -108,4 +108,13 @@ Não executados/certificados: CI global remota completa, toda a suíte E2E hist�
 
 Verificação final adicional: duelo por controles reais contra **Lua/Caos** após o evento explícito de rolagem, **1/1 E2E PASS** em 33,6 s. Formato, lint, TypeScript, áudio, packs, build, relatório estático de performance, integridade das 48 artes e diff PASS. [Matriz verificável](audits/evidence/bf56e/validation.json) · [bundles](audits/evidence/bf56e/build-performance.json). Build inicial JS: 581.652 B; página Arcanário dinâmica ~151 kB e Three dinâmico 861.399 B; warning de chunk >500 kB preservado. Não são métricas Android.
 
-O commit E4 contém a implementação final usada para gerar o APK. Hash/bytes e comparação dist→Android→ZIP serão registrados em `apk.json` num commit documental posterior, sem alterar código de produção. Publicação: uma única PR draft contra main; sem merge/tag/release/fechamento BF-5.6 ou início de F/G/BF-6.
+O commit E4 contém a implementação final usada para gerar o APK. Hash/bytes e comparação dist→Android→ZIP estão registrados em `apk.json` no commit documental posterior, sem alterar código de produção. Publicação: uma única PR draft contra main; sem merge/tag/release/fechamento BF-5.6 ou início de F/G/BF-6.
+
+
+## APK debug e proveniência final
+
+`npm run android:build:debug` PASS (inclui build web e Android sync); Gradle `assembleDebug` PASS em 35 s. APK local: `android/app/build/outputs/apk/debug/Biblioteca-Viva-BF56E-debug.apk`, **11.647.318 bytes**, SHA-256 **`76de2a5cd3b3e827f939e7e82792a3984f47a579cc792f24fb531d077c8d970b`**. Fonte limpa **`8bc290b0edc7e4d6f32157c1a51a0d91db177e0a`** (E4), árvore `d0fb9a0ef9e78a0c960d41077024d938c78d8651`. Commit posterior altera somente documentação/evidência. [Proveniência completa](audits/evidence/bf56e/apk.json).
+
+Conferência binária **110/110 arquivos web de runtime** iguais entre dist, assets Android e ZIP, incluindo as **48/48 gravuras**, catálogo e GLBs; `.vite/manifest.json` excluído explicitamente por ser metadado de build. Versão JS `0.2.0-alpha.1`, versionName nativo `1.0` e versionCode `1` preservados; nenhum bump, assinatura de release, tag ou publicação de release. Warnings existentes de chunk >500 kB e `flatDir` continuam. APK não versionado e não instalado fisicamente pelo agente.
+
+Checkpoint E1 `9088fb8`; E2 `5c9e30b`; E3 `9d167cd`; E4 `8bc290b`. Branch `feat/bf-5-6e-arcanario-duelo-arcano`. Gate humano/artístico, TalkBack e desempenho sustentado seguem pendentes; nada nesta candidata aprova merge ou inicia F/G/BF-6.
