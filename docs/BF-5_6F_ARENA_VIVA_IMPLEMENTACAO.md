@@ -1,3 +1,5 @@
+> **Refinamento F/R1–R4 autorizado — 09/11/2026:** proprietário testou F2 no Moto G06 e não percebeu defeitos mecânicos relevantes; UX melhorou, mas orbital estático/abstrato, arena, cartas e efeitos exigem retrabalho artístico. Esse relato é aceite mecânico dirigido, não aceite artístico final, TalkBack ou benchmark. Rodada continua na mesma branch/PR draft #48, motor/dados preservados, sem merge/G.
+
 # BF-5.6F2 — Arena Viva e construção orbital
 
 Data: 09/11/2026. Candidata na **mesma PR draft #48**, branch `feat/bf-5-6f-arena-orbital`, continuando F1 remota `4e23b6d`. Sem merge, aceite artístico/físico ou início da G. A–E e suas ressalvas permanecem. [Handoff F1 preservado](BF-5_6F_F1_HANDOFF.md).
