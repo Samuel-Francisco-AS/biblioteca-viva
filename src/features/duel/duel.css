@@ -859,3 +859,58 @@
     min-height: 4.5rem;
   }
 }
+.combat-editor-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(14rem, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+.combat-editor-layout aside {
+  position: sticky;
+  top: 6rem;
+  display: grid;
+  justify-items: center;
+  gap: 0.7rem;
+}
+.combat-editor-layout aside p {
+  font-size: 0.8rem;
+  color: #cbbbd5;
+}
+.combat-attributes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+.combat-ability-editor {
+  border: 1px solid #b8a27488;
+  padding: 1rem;
+  border-radius: 0.6rem;
+  margin-block: 1rem;
+}
+.combat-effect-editor {
+  background: #0a112644;
+  padding: 0.7rem;
+  margin-block: 1rem;
+  border: 1px solid #a897b855;
+}
+.combat-ability-explanation {
+  background: #302738;
+  padding: 0.75rem;
+  border-left: 2px solid #d8be8c;
+  line-height: 1.6;
+}
+.combat-power {
+  padding: 1rem;
+  border: 1px solid #b9a57b77;
+  border-radius: 0.6rem;
+  margin-block: 1rem;
+}
+@media (max-width: 800px) {
+  .combat-editor-layout {
+    grid-template-columns: 1fr;
+  }
+  .combat-editor-layout aside {
+    position: static;
+    grid-row: 1;
+  }
+}

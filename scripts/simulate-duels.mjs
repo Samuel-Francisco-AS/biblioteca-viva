@@ -1,3 +1,6 @@
+import process from "node:process";
+import console from "node:console";
+import { performance } from "node:perf_hooks";
 import fs from "node:fs";
 import { createServer } from "vite";
 const server = await createServer({

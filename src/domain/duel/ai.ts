@@ -2,6 +2,7 @@ import type { DuelAction, DuelEffect, DuelMatch } from "./contracts";
 import {
   abilityEffects,
   canAttack,
+  effectTargets,
   cardAt,
   legalActions,
   randomStep,
@@ -198,8 +199,13 @@ export function chooseDuelAction(match: DuelMatch): DuelAction {
           c.abilities.reduce(
             (v, b) =>
               v +
-              effectsScore(b.effects, a.card) *
-                (b.trigger === "start" ? 2 : 1.1),
+              Math.max(
+                ...effectTargets(m, p, b.effects).map((target) =>
+                  effectsScore(b.effects, a.card, target),
+                ),
+                0,
+              ) *
+                (b.trigger === "start" ? 2 : 1.25),
             0,
           ) +
           1 -

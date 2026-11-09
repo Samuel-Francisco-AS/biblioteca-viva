@@ -1,3 +1,6 @@
+import process from "node:process";
+import { Buffer } from "node:buffer";
+import console from "node:console";
 /** Original editable vector engravings for Biblioteca Viva. No external image sources. */
 import fs from "node:fs";
 import crypto from "node:crypto";

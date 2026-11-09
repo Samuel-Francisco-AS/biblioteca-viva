@@ -293,7 +293,7 @@ it("backup v10 omits unreferenced public content, restores history and receipts,
       data: await x.backup.read(),
     });
   const valid = await codec.inspect(artifact.content);
-  expect(valid.summary.formatVersion).toBe(10);
+  expect(valid.summary.formatVersion).toBe(11);
   expect(valid.data.arcanarium?.cards).toHaveLength(1);
   expect(valid.data.arcanarium?.packs?.[0].items).toHaveLength(4);
   const y = await setup();
@@ -340,7 +340,7 @@ it("upgrade v17 is additive and preserves existing rows; identity distinguishes 
     value: { preserve: true },
     updatedAt: now,
   });
-  expect(db.verno).toBe(18);
+  expect(db.verno).toBe(19);
   const q = (await new JsonEducationalPackCodec().inspect(v1)).lots[0].lot
     .questions[0];
   expect(educationalCardId(q.identity)).not.toBe(

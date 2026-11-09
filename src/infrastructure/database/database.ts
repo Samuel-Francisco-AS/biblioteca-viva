@@ -275,13 +275,11 @@ export class BibliotecaDatabase extends Dexie {
     this.version(19)
       .stores(DATABASE_SCHEMA_V19)
       .upgrade(async (tx) => {
-        await tx
-          .table<PersistedMetadata>("metadata")
-          .put({
-            key: SCHEMA_MARKER_KEY,
-            value: "19",
-            updatedAt: MIGRATION_TIMESTAMP,
-          });
+        await tx.table<PersistedMetadata>("metadata").put({
+          key: SCHEMA_MARKER_KEY,
+          value: "19",
+          updatedAt: MIGRATION_TIMESTAMP,
+        });
       });
   }
 }

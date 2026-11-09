@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useDuelDraft } from "./drafts";
+import { useState } from "react";
 import {
   Link,
   useNavigate,
@@ -51,19 +52,12 @@ export function DuelDeckEditor() {
   });
   const [draft, setDraft] = useState(recovery.draft),
     [error, setError] = useState(""),
-    [storageError, setStorageError] = useState(""),
     [busy, setBusy] = useState(false),
     [search, setSearch] = useState(""),
-    [inspect, setInspect] = useState<string>();
-  useEffect(() => {
-    try {
-      app.workshopDrafts.write(key, JSON.stringify(draft));
-    } catch {
-      setStorageError(
-        "Rascunho não está protegido neste aparelho; salve antes de sair.",
-      );
-    }
-  }, [app, key, draft]);
+    [inspect, setInspect] = useState<string>(),
+    [savedId, setSavedId] = useState("");
+  const { storageError, finish } = useDuelDraft(app.workshopDrafts, key, draft);
+
   const total = Object.values(draft.combat.copies).reduce((v, n) => v + n, 0);
   if (id !== "novo" && !deck)
     return (
@@ -84,6 +78,22 @@ export function DuelDeckEditor() {
         >
           Criar cópia pessoal
         </Link>
+        <div className="duel-gallery">
+          {deck.selection.kind === "static" &&
+            deck.selection.cards.map((r) => {
+              const card = data.cards.find((c) => c.id === r.cardId);
+              return card?.content.type === "combat" && card.content.combat ? (
+                <div key={r.cardId}>
+                  <CombatCard
+                    name={card.content.name}
+                    definition={card.content.combat}
+                    official
+                  />
+                  <p>2 cópias · revisão {r.revision ?? card.revision}</p>
+                </div>
+              ) : null;
+            })}
+        </div>
       </div>
     );
   const c = data.cards.find((c) => c.id === inspect);
@@ -109,10 +119,11 @@ export function DuelDeckEditor() {
               name: draft.name,
               combat: draft.combat,
             })
-            .then(async () => {
-              app.workshopDrafts.remove(key);
+            .then(async (saved) => {
+              setSavedId(saved.id);
+              finish();
               await reload();
-              navigate("/arcanario/duelos");
+              void navigate("/arcanario/duelos");
             })
             .catch((e) => setError(arcanaError(e)))
             .finally(() => setBusy(false));
@@ -249,14 +260,14 @@ export function DuelDeckEditor() {
         </div>
         {error && <p role="alert">{error}</p>}
         <div className="duel-actions">
-          <button type="submit" disabled={busy}>
+          <button type="submit" disabled={busy || !!savedId}>
             {busy ? "Salvando…" : "Salvar baralho validado"}
           </button>
           <button
             type="button"
             onClick={() => {
-              app.workshopDrafts.remove(key);
-              navigate("/arcanario/duelos");
+              finish();
+              void navigate("/arcanario/duelos");
             }}
           >
             Descartar rascunho

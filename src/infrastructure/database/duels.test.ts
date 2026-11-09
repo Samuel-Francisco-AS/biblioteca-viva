@@ -243,3 +243,299 @@ it("installs the bundled catalogue idempotently, protects official cards and val
   });
   expect(session.duel?.mode).toBe("official");
 });
+it("author workshop revisions preserve creators, reject arbitrary effects and allow explicit Free budget exceptions", async () => {
+  const s = await setup();
+  const { ArcanariumWorkshop } =
+      await import("../../application/arcanariumWorkshop"),
+    { DexieCardMedia } = await import("./cardMedia");
+  const workshop = new ArcanariumWorkshop({
+    ...s.deps,
+    cardMedia: new DexieCardMedia(s.db),
+  });
+  const content = {
+    type: "combat",
+    name: "Criatura fictícia",
+    attributes: {},
+    effects: [],
+    combat: {
+      version: 1,
+      kind: "creature",
+      affinity: "ruin",
+      cost: 2,
+      attack: 2,
+      health: 3,
+      keywords: [],
+      abilities: [],
+      flavor: "Autoria fictícia",
+      artId: "cinder-imp",
+    },
+  };
+  const first = await workshop.save({ content, studyIds: [], decks: [] });
+  const edited = await workshop.save({
+    cardId: first.id,
+    expectedRevision: 1,
+    content: { ...content, name: "Nova revisão fictícia" },
+    studyIds: [],
+    decks: [],
+  });
+  expect(edited.revision).toBe(2);
+  expect((await s.api.getVersion(first.id, 1))?.card.content).toEqual(content);
+  await expect(
+    workshop.save({
+      cardId: first.id,
+      expectedRevision: 1,
+      content,
+      studyIds: [],
+      decks: [],
+    }),
+  ).rejects.toMatchObject({ code: "CONFLICT" });
+  const powerful = {
+    ...content,
+    combat: { ...content.combat, cost: 1, attack: 8, health: 10 },
+  };
+  await expect(
+    workshop.save({ content: powerful, studyIds: [], decks: [] }),
+  ).rejects.toMatchObject({ code: "VALIDATION_FAILED" });
+  await expect(
+    workshop.save({
+      content: powerful,
+      studyIds: [],
+      decks: [],
+      combatMode: "free",
+    }),
+  ).resolves.toMatchObject({ type: "combat" });
+  await expect(
+    workshop.save({
+      content: {
+        ...content,
+        combat: {
+          ...content.combat,
+          abilities: [
+            {
+              id: "evil",
+              trigger: "play",
+              cost: 0,
+              effects: [
+                {
+                  definitionId: "execute",
+                  value: 1,
+                  target: "enemy",
+                  duration: "permanent",
+                },
+              ],
+            },
+          ],
+        },
+      },
+      studyIds: [],
+      decks: [],
+      combatMode: "free",
+    }),
+  ).rejects.toMatchObject({ code: "VALIDATION_FAILED" });
+  await s.duels.ensureCatalogue();
+  const d = (await s.api.list()).decks[0];
+  if (!d.combat) throw new Error("Missing deck");
+  const personal = await s.duels.saveDeck({
+    name: "Fictício",
+    combat: d.combat,
+  });
+  await expect(
+    workshop.save({
+      content,
+      studyIds: [],
+      decks: [{ id: personal.id, expectedRevision: 1, included: true }],
+    }),
+  ).rejects.toMatchObject({ code: "VALIDATION_FAILED" });
+  await s.api.archiveCard({ cardId: first.id, expectedRevision: 2 });
+  expect((await s.api.getVersion(first.id, 1))?.card.archived).toBe(false);
+});
+it("imports original v6–v10 envelopes, rejects checksum tampering and verifies combat replay at backup boundaries", async () => {
+  const s = await setup();
+  const { canonicalize, checksumMaterial } =
+    await import("../backup/backupCodec");
+  async function sign(raw: object) {
+    const digest = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(canonicalize(checksumMaterial(raw))),
+    );
+    return JSON.stringify({
+      ...raw,
+      integrity: {
+        algorithm: "SHA-256",
+        digest: [...new Uint8Array(digest)]
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join(""),
+      },
+    });
+  }
+  for (const formatVersion of [6, 7, 8, 9, 10]) {
+    const raw = {
+      kind: "biblioteca-viva-backup",
+      formatVersion,
+      createdAt: now,
+      appVersion: "test",
+      databaseVersion: 18,
+      metadata: { policy: "replace" },
+      data: {
+        libraryEntries: [],
+        notes: [],
+        quotes: [],
+        activities: [],
+        settings: [],
+        milestones: [],
+        sessions: [],
+        tags: [],
+        ...(formatVersion >= 7 && {
+          arcanarium: {
+            cards: [],
+            versions: [],
+            decks: [],
+            studyLinks: [],
+            tags: [],
+            sessions: [],
+            ...(formatVersion >= 10 && { packs: [] }),
+          },
+        }),
+        ...(formatVersion >= 8 && { cardMedia: [] }),
+      },
+    };
+    const file = await sign(raw);
+    expect((await s.codec.inspect(file)).summary.formatVersion).toBe(
+      formatVersion,
+    );
+    await expect(
+      s.codec.inspect(
+        file.replace('"appVersion":"test"', '"appVersion":"tampered"'),
+      ),
+    ).rejects.toThrow();
+  }
+  const d = await deck(s);
+  await s.duels.start({
+    deckId: d.id,
+    opponentId: d.id,
+    mode: "creator",
+    seed: 10,
+  });
+  const snapshot = await s.store.read();
+  const session = snapshot.arcanarium?.sessions[0];
+  if (session?.kind !== "combat_match" || !session.duel)
+    throw new Error("Missing session");
+  session.duel.players[0].life = 19;
+  await expect(
+    s.codec.encode({
+      data: snapshot,
+      appVersion: "test",
+      createdAt: now,
+      databaseVersion: 19,
+    }),
+  ).rejects.toMatchObject({ code: "INVALID_BACKUP_DATA" });
+});
+it("round-trips a completed official match with combat events and frozen revisions in canonical backup", async () => {
+  const s = await setup();
+  await s.duels.ensureCatalogue();
+  let session = await s.duels.start({
+    deckId: "arcane-deck:chaos",
+    opponentId: "arcane-deck:ruin",
+    mode: "official",
+    seed: 27,
+  });
+  const { chooseDuelAction } = await import("../../domain/duel/ai");
+  while (session.duel && !session.duel.result) {
+    const m = session.duel;
+    session = await s.duels.command(
+      session.id,
+      m.revision,
+      `official-${m.revision}`,
+      m.active,
+      chooseDuelAction(m),
+    );
+  }
+  expect(session.duel?.result).toBeDefined();
+  expect(
+    session.duel?.history.some((h) => h.events.some((e) => e.source)),
+  ).toBe(true);
+  const file = await s.codec.encode({
+    data: await s.store.read(),
+    appVersion: "test",
+    createdAt: now,
+    databaseVersion: 19,
+  });
+  const valid = await s.codec.inspect(file.content);
+  const target = await setup();
+  await target.store.replace(valid.data);
+  expect(await target.duels.get(session.id)).toEqual(session);
+});
+it("keeps educational reviews, questions and memories independent while an official duel is paused", async () => {
+  const s = await setup();
+  await s.duels.ensureCatalogue();
+  let duel = await s.duels.start({
+    deckId: "arcane-deck:bloom",
+    opponentId: "arcane-deck:chaos",
+    mode: "official",
+    seed: 42,
+  });
+  duel = await s.duels.command(duel.id, 0, "pause", 0, { type: "pause" });
+  const { ArcanariumWorkshop } =
+      await import("../../application/arcanariumWorkshop"),
+    { DexieCardMedia } = await import("./cardMedia"),
+    { ProvationsService } = await import("../../application/provations");
+  const workshop = new ArcanariumWorkshop({
+      ...s.deps,
+      cardMedia: new DexieCardMedia(s.db),
+    }),
+    trials = new ProvationsService(s.deps);
+  const echo = await workshop.save({
+    content: {
+      type: "flashcard",
+      front: "Pista fictícia",
+      back: "Resposta fictícia",
+    },
+    studyIds: [],
+    decks: [],
+  });
+  const memory = await workshop.save({
+    content: { type: "memory", title: "Lembrança fictícia", entryIds: [] },
+    studyIds: [],
+    decks: [],
+  });
+  expect(memory.content.type).toBe("memory");
+  const review = await s.api.startReview([{ cardId: echo.id, revision: 1 }]);
+  await s.api.answerReview({ sessionId: review.id, index: 0, recalled: true });
+  const question = await workshop.save({
+    content: {
+      type: "question",
+      statement: "Questão fictícia",
+      alternatives: [
+        { id: "a", text: "Correta" },
+        { id: "b", text: "Incorreta" },
+      ],
+      correctAlternativeId: "a",
+      classification: { knowledgeTagIds: [], personalTagIds: [] },
+    },
+    studyIds: [],
+    decks: [],
+  });
+  const d = await s.api.saveDeck({
+    name: "Questões fictícias",
+    selection: { kind: "static", cards: [{ cardId: question.id }] },
+  });
+  let trial = await trials.start({ deckId: d.id });
+  trial = await trials.command({
+    sessionId: trial.id,
+    expectedRevision: trial.trial.revision,
+    command: { kind: "answer", alternativeId: "a" },
+  });
+  expect(trial.trial.answers[0].correct).toBe(true);
+  expect(await s.duels.get(duel.id)).toEqual(duel);
+  expect((await s.duels.list()).map((s) => s.id)).toEqual([duel.id]);
+  const file = await s.codec.encode({
+    data: await s.store.read(),
+    appVersion: "test",
+    createdAt: now,
+    databaseVersion: 19,
+  });
+  const target = await setup();
+  await target.store.replace((await s.codec.inspect(file.content)).data);
+  expect(await target.duels.get(duel.id)).toEqual(duel);
+  expect((await target.api.list()).sessions).toHaveLength(3);
+});

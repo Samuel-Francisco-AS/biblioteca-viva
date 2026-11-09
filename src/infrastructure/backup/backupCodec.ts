@@ -1,3 +1,4 @@
+import { replayDuel, validateMatch } from "../../domain/duel/engine";
 import { privateArcanarium } from "../../domain/packBackup";
 import { cardMediaSchema } from "../database/cardMedia";
 import { validateCardMediaOwnership } from "../../application/cardMedia";
@@ -247,6 +248,16 @@ export function validateBackupData(data: BackupData): void {
         )
       )
         throw new Error("Missing legacy mapping");
+      for (const session of data.arcanarium?.sessions ?? []) {
+        if (session.kind === "combat_match" && session.duel) {
+          const match = validateMatch(session.duel);
+          if (
+            canonicalize(checksumMaterial(replayDuel(match))) !==
+            canonicalize(checksumMaterial(match))
+          )
+            throw new Error("Duel replay does not match the recorded state");
+        }
+      }
       validateArcanarium(
         data.arcanarium,
         new Set(

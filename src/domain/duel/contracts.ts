@@ -45,6 +45,23 @@ export const targetSchema = z.enum([
   "all-allies",
 ]);
 export type TargetKind = z.infer<typeof targetSchema>;
+
+export const allowedEffectTargets: Record<
+  (typeof effectIds)[number],
+  readonly TargetKind[]
+> = {
+  damage: ["ally", "enemy", "enemy-unit", "enemy-any", "all-enemies", "self"],
+  heal: ["ally", "ally-unit", "self"],
+  draw: ["ally"],
+  shield: ["ally-unit", "self"],
+  empower: ["ally-unit", "self", "all-allies"],
+  summon: ["ally"],
+  drain: ["enemy", "enemy-unit", "enemy-any"],
+  chaos: ["enemy", "enemy-unit", "enemy-any", "all-enemies"],
+  scout: ["ally"],
+  exhaust: ["enemy-unit"],
+  shatter: ["enemy"],
+};
 export const effectSchema = z
   .strictObject({
     definitionId: z.enum(effectIds),
@@ -53,33 +70,18 @@ export const effectSchema = z
     duration: z.enum(["permanent", "turn"]),
   })
   .superRefine((e, ctx) => {
-    const allowed: Record<typeof e.definitionId, readonly TargetKind[]> = {
-      damage: [
-        "ally",
-        "enemy",
-        "enemy-unit",
-        "enemy-any",
-        "all-enemies",
-        "self",
-      ],
-      heal: ["ally", "ally-unit", "self"],
-      draw: ["ally"],
-      shield: ["ally-unit", "self"],
-      empower: ["ally-unit", "self", "all-allies"],
-      summon: ["ally"],
-      drain: ["enemy", "enemy-unit", "enemy-any"],
-      chaos: ["enemy", "enemy-unit", "enemy-any", "all-enemies"],
-      scout: ["ally"],
-      exhaust: ["enemy-unit"],
-      shatter: ["enemy"],
-    };
     if (
-      !allowed[e.definitionId].includes(e.target) ||
+      !allowedEffectTargets[e.definitionId].includes(e.target) ||
       (e.duration === "turn" && e.definitionId !== "empower")
     )
       ctx.addIssue({
         code: "custom",
         message: "Alvo ou duração incompatível com o efeito.",
+      });
+    if (["exhaust", "shatter"].includes(e.definitionId) && e.value !== 1)
+      ctx.addIssue({
+        code: "custom",
+        message: "Exaustão e destruição têm valor fixo 1.",
       });
     if (["draw", "summon"].includes(e.definitionId) && e.value > 2)
       ctx.addIssue({
@@ -224,6 +226,9 @@ const unitSchema = z.strictObject({
   activated: z.array(z.string()).max(2),
 });
 const playerSchema = z.strictObject({
+  id: z.enum(["p0", "p1"]),
+  deckId: z.string().min(1),
+  deckRevision: z.int().positive(),
   name: z.string().min(1).max(160),
   affinity: affinitySchema,
   deckName: z.string().min(1).max(160),
@@ -258,6 +263,7 @@ export const duelEventSchema = z.strictObject({
     "scout",
     "death",
     "fatigue",
+    "roll",
     "turn",
     "result",
     "pause",
@@ -272,6 +278,7 @@ export const duelEventSchema = z.strictObject({
 export type DuelEvent = z.infer<typeof duelEventSchema>;
 export const matchSchema = z.strictObject({
   ruleset: z.literal(RULESET),
+  phase: z.literal("main"),
   seed: z.int().min(0).max(0xffffffff),
   rng: z.int().min(0).max(0xffffffff),
   mode: modeSchema,

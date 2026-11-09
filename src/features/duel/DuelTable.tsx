@@ -19,7 +19,7 @@ import { kindNames, modeNames } from "../../domain/duel/text";
 import { useAppResume } from "../../app/useAppResume";
 import { arcanaError, useArcana } from "../arcanarium/context";
 import { CombatCard } from "./CombatCard";
-export function eventText(m: DuelMatch, e: DuelEvent): string {
+function eventText(m: DuelMatch, e: DuelEvent): string {
   const who = m.players[e.player].name;
   const name = (id?: string) =>
     id === "p0"
@@ -56,6 +56,8 @@ export function eventText(m: DuelMatch, e: DuelEvent): string {
       return `${who} reorganizou até ${e.value} cartas do topo.`;
     case "death":
       return `${name(e.target)} foi derrotada.`;
+    case "roll":
+      return `${name(e.source)}: resultado arcano ${e.value}.`;
     case "fatigue":
       return `${who} sofreu ${e.value} de fadiga.`;
     case "turn":

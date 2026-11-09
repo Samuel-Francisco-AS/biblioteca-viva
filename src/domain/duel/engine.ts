@@ -68,6 +68,8 @@ export function validateDuelDeck(
   }
 }
 export interface DuelSetup {
+  deckId?: string;
+  deckRevision?: number;
   name: string;
   affinity: Affinity;
   deckName: string;
@@ -98,6 +100,9 @@ export function createDuel(
       [deck[i], deck[j]] = [deck[j], deck[i]];
     }
     return {
+      id: p === 0 ? "p0" : "p1",
+      deckId: s.deckId ?? `snapshot:${p}`,
+      deckRevision: s.deckRevision ?? 1,
       name: s.name,
       affinity: s.affinity,
       deckName: s.deckName,
@@ -116,6 +121,7 @@ export function createDuel(
     second = players[1];
   return matchSchema.parse({
     ruleset: RULESET,
+    phase: "main",
     seed,
     rng,
     mode,
@@ -346,6 +352,7 @@ export function transition(
         const roll = randomStep(m.rng);
         m.rng = roll.state;
         value = 1 + Math.floor(roll.value * value);
+        emit("roll", owner, target, value, source);
       }
       const targets =
         e.target === "ally"
@@ -556,6 +563,15 @@ function newUnit(id: string, turn: number): DuelUnit {
 export function validateMatch(value: unknown): DuelMatch {
   const m = matchSchema.parse(value);
   const ids = new Set(m.cards.map((c) => c.id));
+  const originals = m.initial.flat();
+  if (
+    m.players[0].id !== "p0" ||
+    m.players[1].id !== "p1" ||
+    new Set(originals).size !== originals.length ||
+    originals.length !==
+      m.cards.filter((c) => !c.id.startsWith("token:")).length
+  )
+    throw new DuelRuleError("Identidades iniciais inconsistentes.");
   if (
     ids.size !== m.cards.length ||
     m.history.length !== m.revision ||
@@ -594,16 +610,15 @@ export function validateMatch(value: unknown): DuelMatch {
 }
 /** Replay uses frozen initial snapshots and original commands, including PRNG outcomes. */
 export function replayDuel(m: DuelMatch): DuelMatch {
-  const initial = createDuel(
-    [0, 1].map((p) => ({
-      name: m.players[p].name,
-      affinity: m.players[p].affinity,
-      deckName: m.players[p].deckName,
-      cards: m.initial[p].map((id) => cardAt(m, id)),
-    })) as [DuelSetup, DuelSetup],
-    m.seed,
-    m.mode,
-  );
+  const setup = (p: number): DuelSetup => ({
+    deckId: m.players[p].deckId,
+    deckRevision: m.players[p].deckRevision,
+    name: m.players[p].name,
+    affinity: m.players[p].affinity,
+    deckName: m.players[p].deckName,
+    cards: m.initial[p].map((id) => cardAt(m, id)),
+  });
+  const initial = createDuel([setup(0), setup(1)], m.seed, m.mode);
   return m.history.reduce(
     (state, h) => transition(state, h.command).state,
     initial,

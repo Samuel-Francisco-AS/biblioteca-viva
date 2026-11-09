@@ -1,3 +1,9 @@
+## BF-5.6E — custo do TCG 2D
+
+48 gravuras SVG individuais totalizam 711.545 B, distribuídas localmente e carregadas por `img loading=lazy decoding=async`; Portal não decodifica a coleção inteira. Mesa usa DOM/CSS e efeitos de duração finita, sem WebGL/Canvas/RAF residente novo. Mundo Three existente permanece com o lifecycle anterior. IA agenda uma decisão por vez e persiste antes da próxima; pausa/visibilidade cancela timer, retorno reconsulta. PRNG e regras não aguardam animação. Histórico guarda comandos/eventos e snapshots deliberadamente; não há poda automática de dados. Backup pode atingir 10 MiB e bloquear exportação sem apagar dados.
+
+Simulação final: 192 partidas em aproximadamente 8,8 s de CPU/host observado, média 19,45 turnos, máximo 131 comandos e dez eventos em uma ação; essas medidas não são FPS/latência Android. Retenção de histórico e leitura integral do acervo merecem acompanhamento conforme uso real. Tamanhos finais de bundle/APK e limites estão no [relatório E](BF-5_6E_TCG_DUELO_ARCANO_IMPLEMENTACAO.md). Fluidez, memória prolongada, termal e ergonomia dependem do Moto G06; nenhuma redução artística por contagem preventiva.
+
 ## BF-5.6D — volume sintético da candidata
 
 Host/fake-indexeddb, rodada dirigida final; somente fixtures descartáveis. Portal lê resumo, Acervo pagina 24 itens e memoiza filtros, seleção consulta disponibilidade por conjunto de IDs. Nenhuma mídia pública nova ou modificação de Three.

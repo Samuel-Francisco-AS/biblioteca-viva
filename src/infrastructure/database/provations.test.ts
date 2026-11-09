@@ -140,7 +140,7 @@ it("upgrades original v16 rows unchanged and reopens v17 idempotently", async ()
     .add({ cardId: row.id, revision: 1, card: row });
   old.close();
   const { db, api } = await setup(name);
-  expect(db.verno).toBe(18);
+  expect(db.verno).toBe(19);
   expect(await api.getCard(row.id)).toEqual(row);
   db.close();
   await db.open();
@@ -401,7 +401,7 @@ it("round-trips v9 trials with snapshots and answers, rejects forged results and
       databaseVersion: 17,
       createdAt: now,
     });
-  expect(file.summary.formatVersion).toBe(10);
+  expect(file.summary.formatVersion).toBe(11);
   await b.snapshots.replace((await b.backup.inspect(file.content)).data);
   expect(await b.snapshots.read()).toEqual(before);
   b.db.close();

@@ -1,3 +1,9 @@
+## BF-5.6E — Dexie v19 / backup v11 (candidata)
+
+V19 mantém integralmente tabelas/índices v18 e grava apenas o marcador de schema. `content.combat?` v1 fornece tipo (criatura/feitiço/artefato), afinidade, custo, atributos exclusivos de criatura, palavras-chave, até duas habilidades com até dois efeitos tipados, flavor e artId seguro. `attributes/effects` reservados da A continuam legíveis; novas cartas executáveis usam o catálogo tipado, sem scripts. `deck.combat?` v1 guarda modo, afinidade e contagens por identidade da seleção estática, sem duplicar cartas. `combat_match.duel?` fotografa os dois decks e suas revisões, instâncias, mãos/ordem/campo/cemitério, recursos/vida/fadiga, turno/fase principal, PRNG, efeitos/durações, comandos/eventos e resultado. Placeholders antigos não ganham resultados inventados.
+
+Backup v11 importa originais v6–v10, conferindo checksum antes de transformação. Retém cartas pessoais, decks pessoais e partidas completas; omite decks iniciais e cartas oficiais reinstaláveis sem referência pessoal. Cadeias referenciadas por deck/sessão são compartilhadas; snapshots preservam interpretação após edição/arquivamento. Artes públicas não entram no envelope. Grafo e replay são conferidos. Limite de 10 MiB bloqueia explicitamente excesso sem apagar/truncar dados. Replace protegido, rollback e ausência de downgrade preservados. [Contrato v1](decisions/ADR-029-duelo-arcano-regulamento.md).
+
 > **BF-5.6D — candidata em implementação (09/11/2026):** execução D1/D2/D3 autorizada; Dexie v18 aditivo e backup v10 (importa v6–v9, 10 MiB). [Contrato e resultados](BF-5_6D_PACOTES_OFICIAIS_IMPLEMENTACAO.md). A+B+C integradas com gate parcial, reparos físicos pendentes; sem merge D, encerramento BF-5.6 ou E–G. Notas abaixo são cronologia.
 
 ## BF-5.6D — contrato executável

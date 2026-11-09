@@ -60,24 +60,26 @@ it("AI chooses immediate lethal, defends and never uses the opponent hidden hand
   m.players[0].units[0].attacked = true;
   expect(chooseDuelAction(m)).toEqual({ type: "end" });
 });
-it("AI completes seeded matches across all four affinities using legal actions with bounded histories", () => {
-  for (let i = 0; i < 4; i++)
-    for (let j = 0; j < 4; j++) {
-      let m = createDuel([officialSetup(i), officialSetup(j)], 100 + i * 4 + j);
-      let commands = 0;
-      while (!m.result && commands++ < 1000) {
-        const action = chooseDuelAction(m);
-        expect(legalActions(m)).toContainEqual(action);
-        m = transition(m, {
-          id: `ai-${m.revision}`,
-          revision: m.revision,
-          player: m.active,
-          action,
-        }).state;
-      }
-      expect(m.result).toBeDefined();
-      expect(m.revision).toBeLessThan(1000);
-      validateMatch(m);
-      expect(replayDuel(m)).toEqual(m);
+it.each(
+  Array.from({ length: 16 }, (_, n) => [Math.floor(n / 4), n % 4] as const),
+)(
+  "AI completes affinity %i vs %i with legal actions, bounded history and exact replay",
+  (i, j) => {
+    let m = createDuel([officialSetup(i), officialSetup(j)], 100 + i * 4 + j);
+    let commands = 0;
+    while (!m.result && commands++ < 1000) {
+      const action = chooseDuelAction(m);
+      expect(legalActions(m)).toContainEqual(action);
+      m = transition(m, {
+        id: `ai-${m.revision}`,
+        revision: m.revision,
+        player: m.active,
+        action,
+      }).state;
     }
-});
+    expect(m.result).toBeDefined();
+    expect(m.revision).toBeLessThan(1000);
+    validateMatch(m);
+    expect(replayDuel(m)).toEqual(m);
+  },
+);

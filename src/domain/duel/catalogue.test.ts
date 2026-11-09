@@ -1,3 +1,4 @@
+import { z } from "zod";
 // @vitest-environment node
 import fs from "node:fs";
 import { createHash } from "node:crypto";
@@ -44,17 +45,21 @@ it("contains 48 stable, distinct official cards, all three types and four comple
   );
 });
 it("ships 48 original safe illustrations with exact provenance hashes and distinct subjects", () => {
-  const manifest = JSON.parse(
-    fs.readFileSync("assets/duel/source/manifest.json", "utf8"),
-  ) as {
-    illustrations: {
-      id: string;
-      subject: string;
-      file: string;
-      sha256: string;
-      bytes: number;
-    }[];
-  };
+  const manifest = z
+    .object({
+      illustrations: z.array(
+        z.object({
+          id: z.string(),
+          subject: z.string(),
+          file: z.string(),
+          sha256: z.string().regex(/^[a-f0-9]{64}$/),
+          bytes: z.int().positive(),
+        }),
+      ),
+    })
+    .parse(
+      JSON.parse(fs.readFileSync("assets/duel/source/manifest.json", "utf8")),
+    );
   expect(manifest.illustrations).toHaveLength(48);
   expect(new Set(manifest.illustrations.map((a) => a.subject)).size).toBe(48);
   for (const a of manifest.illustrations) {

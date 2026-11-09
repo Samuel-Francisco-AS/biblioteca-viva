@@ -140,12 +140,16 @@ export class DuelService {
       const duel = createDuel(
         [
           {
+            deckId: deck.id,
+            deckRevision: deck.revision,
             name: "Você",
             affinity: deck.combat.affinity,
             deckName: deck.name,
             cards: own,
           },
           {
+            deckId: opponent.id,
+            deckRevision: opponent.revision,
             name: opponent.name.split(" · ")[0],
             affinity: opponent.combat.affinity,
             deckName: opponent.name,

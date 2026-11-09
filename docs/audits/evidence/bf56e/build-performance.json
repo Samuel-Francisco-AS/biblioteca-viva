@@ -1,0 +1,293 @@
+{
+  "measurementScope": "Static bundle bytes; no CPU, GPU, presentation or Android FPS measurement",
+  "chunks": [
+    {
+      "bytes": 861399,
+      "dynamic": true,
+      "file": "assets/ThreeWorldRuntime-CyEiykFT.js",
+      "initial": false,
+      "source": "src/features/library/three/ThreeWorldRuntime.ts"
+    },
+    {
+      "bytes": 581652,
+      "dynamic": false,
+      "file": "assets/index-Cv0Ek75V.js",
+      "initial": true,
+      "source": "index.html"
+    },
+    {
+      "bytes": 150855,
+      "dynamic": true,
+      "file": "assets/ArcanariumPage-D_rvAGO8.js",
+      "initial": false,
+      "source": "src/features/arcanarium/ArcanariumPage.tsx"
+    },
+    {
+      "bytes": 128292,
+      "dynamic": true,
+      "file": "assets/EntryDetailPage-Bmmm15Uz.js",
+      "initial": false,
+      "source": "src/features/entry-detail/EntryDetailPage.tsx"
+    },
+    {
+      "bytes": 95870,
+      "dynamic": false,
+      "file": "assets/schemas-DnRL1CMH.js",
+      "initial": false,
+      "source": "_schemas-DnRL1CMH.js"
+    },
+    {
+      "bytes": 40924,
+      "dynamic": false,
+      "file": "assets/application-CcyOKUPU.js",
+      "initial": false,
+      "source": "_application-CcyOKUPU.js"
+    },
+    {
+      "bytes": 40423,
+      "dynamic": false,
+      "file": "assets/internal-DMPYqI9Q.js",
+      "initial": false,
+      "source": "_internal-DMPYqI9Q.js"
+    },
+    {
+      "bytes": 30168,
+      "dynamic": false,
+      "file": "assets/arcanarium-Btc-sWE5.js",
+      "initial": false,
+      "source": "_arcanarium-Btc-sWE5.js"
+    },
+    {
+      "bytes": 25102,
+      "dynamic": false,
+      "file": "assets/EntryEditorPages-Dug0VnHS.js",
+      "initial": false,
+      "source": "_EntryEditorPages-Dug0VnHS.js"
+    },
+    {
+      "bytes": 20820,
+      "dynamic": true,
+      "file": "assets/SettingsPage-B2qyOmJh.js",
+      "initial": false,
+      "source": "src/features/settings/SettingsPage.tsx"
+    },
+    {
+      "bytes": 14348,
+      "dynamic": false,
+      "file": "assets/entertainment-Bf8ngaYl.css",
+      "initial": false,
+      "source": "_entertainment-Bf8ngaYl.css"
+    },
+    {
+      "bytes": 12890,
+      "dynamic": true,
+      "file": "assets/bundledContent-DjwcsPeC.js",
+      "initial": false,
+      "source": "src/infrastructure/packs/bundledContent.ts"
+    },
+    {
+      "bytes": 11972,
+      "dynamic": true,
+      "file": "assets/StatisticsPage-DX1cqpr8.js",
+      "initial": false,
+      "source": "src/features/statistics/StatisticsPage.tsx"
+    },
+    {
+      "bytes": 11010,
+      "dynamic": false,
+      "file": "assets/navigationOrigin-4L8oPlKu.css",
+      "initial": false,
+      "source": "_navigationOrigin-4L8oPlKu.css"
+    },
+    {
+      "bytes": 10331,
+      "dynamic": true,
+      "file": "assets/CollectionPage-CRtEbVT4.js",
+      "initial": false,
+      "source": "src/features/collection/CollectionPage.tsx"
+    },
+    {
+      "bytes": 10091,
+      "dynamic": true,
+      "file": "assets/ArchivePage-PlzcosKK.js",
+      "initial": false,
+      "source": "src/features/archive/ArchivePage.tsx"
+    },
+    {
+      "bytes": 8852,
+      "dynamic": false,
+      "file": "assets/catalogue-EKAsCM86.js",
+      "initial": false,
+      "source": "_catalogue-EKAsCM86.js"
+    },
+    {
+      "bytes": 8488,
+      "dynamic": true,
+      "file": "assets/web-DYLSnnVb.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/filesystem/dist/esm/web.js"
+    },
+    {
+      "bytes": 7756,
+      "dynamic": false,
+      "file": "assets/dist-Cnp6P8yH.js",
+      "initial": false,
+      "source": "_dist-Cnp6P8yH.js"
+    },
+    {
+      "bytes": 7259,
+      "dynamic": false,
+      "file": "assets/BVPicker-JoqJNY3J.js",
+      "initial": false,
+      "source": "_BVPicker-JoqJNY3J.js"
+    },
+    {
+      "bytes": 4911,
+      "dynamic": true,
+      "file": "assets/NewEntryPage-C0oGmJjo.js",
+      "initial": false,
+      "source": "src/features/entry-editor/NewEntryPage.tsx"
+    },
+    {
+      "bytes": 4564,
+      "dynamic": false,
+      "file": "assets/AnnotationActions-CqnIRLOf.js",
+      "initial": false,
+      "source": "_AnnotationActions-CqnIRLOf.js"
+    },
+    {
+      "bytes": 4078,
+      "dynamic": false,
+      "file": "assets/navigationOrigin-FlHzbP1n.js",
+      "initial": false,
+      "source": "_navigationOrigin-FlHzbP1n.js"
+    },
+    {
+      "bytes": 3705,
+      "dynamic": true,
+      "file": "assets/EditEntryPage-DAjLcuEY.js",
+      "initial": false,
+      "source": "src/features/entry-editor/EditEntryPage.tsx"
+    },
+    {
+      "bytes": 2692,
+      "dynamic": false,
+      "file": "assets/BVPicker-mP1gmq5R.css",
+      "initial": false,
+      "source": "_BVPicker-mP1gmq5R.css"
+    },
+    {
+      "bytes": 2576,
+      "dynamic": false,
+      "file": "assets/backup-C3CCqiQW.js",
+      "initial": false,
+      "source": "_backup-C3CCqiQW.js"
+    },
+    {
+      "bytes": 2341,
+      "dynamic": false,
+      "file": "assets/RealmIntro-Ch-n6DGj.js",
+      "initial": false,
+      "source": "_RealmIntro-Ch-n6DGj.js"
+    },
+    {
+      "bytes": 1196,
+      "dynamic": false,
+      "file": "assets/preload-helper-Czpn1I53.js",
+      "initial": false,
+      "source": "_preload-helper-Czpn1I53.js"
+    },
+    {
+      "bytes": 1085,
+      "dynamic": true,
+      "file": "assets/esm-Cr55IfNh.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/filesystem/dist/esm/index.js"
+    },
+    {
+      "bytes": 856,
+      "dynamic": false,
+      "file": "assets/ArtifactGlyph-ojni7LJu.js",
+      "initial": false,
+      "source": "_ArtifactGlyph-ojni7LJu.js"
+    },
+    {
+      "bytes": 843,
+      "dynamic": true,
+      "file": "assets/web-DF9anjsZ.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/app/dist/esm/web.js"
+    },
+    {
+      "bytes": 796,
+      "dynamic": false,
+      "file": "assets/bookPresentation-Du5Ruowv.js",
+      "initial": false,
+      "source": "_bookPresentation-Du5Ruowv.js"
+    },
+    {
+      "bytes": 694,
+      "dynamic": false,
+      "file": "assets/rolldown-runtime-QTnfLwEv.js",
+      "initial": false,
+      "source": "_rolldown-runtime-QTnfLwEv.js"
+    },
+    {
+      "bytes": 479,
+      "dynamic": false,
+      "file": "assets/useAppResume-CkN9LDCr.js",
+      "initial": false,
+      "source": "_useAppResume-CkN9LDCr.js"
+    },
+    {
+      "bytes": 364,
+      "dynamic": true,
+      "file": "assets/web-DAzmpyAc.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/share/dist/esm/web.js"
+    },
+    {
+      "bytes": 361,
+      "dynamic": false,
+      "file": "assets/useCivilToday-D99UkRVX.js",
+      "initial": false,
+      "source": "_useCivilToday-D99UkRVX.js"
+    },
+    {
+      "bytes": 352,
+      "dynamic": false,
+      "file": "assets/definitions-DlpntO5o.js",
+      "initial": false,
+      "source": "_definitions-DlpntO5o.js"
+    },
+    {
+      "bytes": 345,
+      "dynamic": true,
+      "file": "assets/esm-DqX20w7L.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/share/dist/esm/index.js"
+    },
+    {
+      "bytes": 337,
+      "dynamic": false,
+      "file": "assets/esm-CUxGTWVc.js",
+      "initial": false,
+      "source": "_esm-CUxGTWVc.js"
+    },
+    {
+      "bytes": 138,
+      "dynamic": true,
+      "file": "assets/androidBackupDocumentPlugin-D1KkIVqf.js",
+      "initial": false,
+      "source": "src/infrastructure/files/androidBackupDocumentPlugin.ts"
+    },
+    {
+      "bytes": 136,
+      "dynamic": false,
+      "file": "assets/iso-BaOeGNPn.js",
+      "initial": false,
+      "source": "_iso-BaOeGNPn.js"
+    }
+  ],
+  "initialBytes": 581652
+}

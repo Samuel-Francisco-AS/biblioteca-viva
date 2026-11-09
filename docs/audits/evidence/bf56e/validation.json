@@ -1,0 +1,100 @@
+{
+  "candidate": "BF-5.6E",
+  "base": "6babce2",
+  "integratedDMerge": "b3db5d87ce7e327e2ab88420681c4feaf99b1d6e",
+  "checks": {
+    "format": "PASS",
+    "format:check": "PASS",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "audio:check": "PASS",
+    "packs:check": "PASS",
+    "build": "PASS",
+    "performance:report": "PASS",
+    "duelArtIntegrity": "PASS",
+    "git diff --check": "PASS"
+  },
+  "unitWide": {
+    "pass": 1144,
+    "fail": 13,
+    "files": 178,
+    "repeated": false,
+    "remainingUnrevalidatedFailures": [
+      "inhabitantAnimator: Aryn 5s timeout",
+      "inhabitantAnimator: Ytha 5s timeout"
+    ],
+    "correctedOrDirectedPass": "7 current-version expectations corrected; UI isolated 9/9; AI 16 cases preserving assertions and timeout"
+  },
+  "directedRegression": {
+    "pass": 158,
+    "fail": 1,
+    "files": 19,
+    "uiIsolated": {
+      "pass": 9,
+      "fail": 0,
+      "files": 1
+    },
+    "distinctCasesWithPassAcrossBothRuns": 159
+  },
+  "finalTCG": {
+    "pass": 44,
+    "fail": 0,
+    "files": 5,
+    "notes": "Includes creator/free, all affinities, deterministic replay, explicit random roll, complete-match backup, upgrade/reopen/rollback and educational coexistence"
+  },
+  "e2eConsolidated": {
+    "pass": 13,
+    "fail": 0,
+    "educational": 10,
+    "tcg": 3,
+    "seconds": 108
+  },
+  "e2eFinalAudit": {
+    "pass": 1,
+    "fail": 0,
+    "seconds": 33.6,
+    "opponent": "Lua / Caos",
+    "notes": "Full match by controls after explicit roll event; exact pause/reload/result/history and keyboard/reduced-motion assertions"
+  },
+  "canvasDirected": {
+    "pass": 1,
+    "fail": 0,
+    "seconds": 14.7,
+    "notes": "One residency scenario; not entire Canvas suite or physical certification"
+  },
+  "simulations": {
+    "executed": 576,
+    "balanceAdjustmentRounds": 1,
+    "gamesPerBatch": 192,
+    "seeds": "1–12 for 16 ordered pairs",
+    "finalMeanTurns": 19.447916666666668,
+    "finalConditions": {
+      "life": 185,
+      "fatigue": 7
+    },
+    "residualBalanceDebt": "Ruin 59/72, Knowledge 19/72, Bloom 32/72, Chaos 34/72 against distinct affinities"
+  },
+  "dexieVersion": 19,
+  "backupVersion": 11,
+  "previousBackupVersions": [
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "officialCards": 48,
+  "starterDecks": 4,
+  "vectorIllustrations": 48,
+  "vectorBytes": 711545,
+  "privateDataUsed": false,
+  "remoteGlobalCI": "not certified",
+  "physicalMotoG06": "pending",
+  "notExecuted": [
+    "entire historical E2E suite",
+    "physical installation and artistic acceptance",
+    "human TalkBack",
+    "sustained Android GPU/memory/thermal",
+    "restore over personal data"
+  ]
+}

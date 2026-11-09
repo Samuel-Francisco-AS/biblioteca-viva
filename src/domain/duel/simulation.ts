@@ -72,7 +72,7 @@ export function simulateDuels(seeds: readonly number[]) {
           }
         }
         validateMatch(m);
-        const r = m.result!;
+        const r = m.result;
         games.push({
           first: a.affinity,
           second: b.affinity,

@@ -1,3 +1,4 @@
+import { validateCreation } from "../domain/duel/contracts";
 import { packOwned } from "../domain/educationalPacks";
 import { z } from "zod";
 import {
@@ -48,6 +49,7 @@ export const workshopSaveSchema = z.strictObject({
     .max(500)
     .refine((v) => new Set(v.map((d) => d.id)).size === v.length),
   image: imageSchema.nullable().optional(),
+  combatMode: z.enum(["creator", "free"]).optional(),
 });
 export type WorkshopSave = z.infer<typeof workshopSaveSchema>;
 export type WorkshopDependencies = ArcanariumDependencies & {
@@ -63,7 +65,8 @@ export class ArcanariumWorkshop {
     if (
       p.content.type !== "flashcard" &&
       p.content.type !== "memory" &&
-      p.content.type !== "question"
+      p.content.type !== "question" &&
+      p.content.type !== "combat"
     )
       throw new ApplicationError(
         "VALIDATION_FAILED",
@@ -95,6 +98,29 @@ export class ArcanariumWorkshop {
         "VALIDATION_FAILED",
         "Use de 2 a 5 alternativas (até 4.000 caracteres), enunciado e explicação até 16.000 caracteres.",
       );
+    if (p.content.type === "combat") {
+      if (
+        !p.content.combat ||
+        Object.keys(p.content.attributes).length ||
+        p.content.effects.length
+      )
+        throw new ApplicationError(
+          "VALIDATION_FAILED",
+          "Escolha uma definição de combate do catálogo tipado.",
+        );
+      if (p.combatMode !== "free") {
+        try {
+          validateCreation(p.content.combat);
+        } catch (error) {
+          throw new ApplicationError(
+            "VALIDATION_FAILED",
+            error instanceof Error
+              ? error.message
+              : "Carta acima do orçamento.",
+          );
+        }
+      }
+    }
     const now = await currentTime(this.deps);
     const cardId = p.cardId ?? `local:${await generatedId(this.deps, "card")}`;
     const mediaId = p.image

@@ -59,3 +59,6 @@ Os nomes acima são contratos conceituais, não nomes ou índices de tabelas já
 ## Registro da alteração da ADR-020 original
 
 A recomendação de 04/11 permanece rastreável no histórico Git. Mantêm-se a separação domínio/aplicação/infraestrutura, o mapa de IDs legados, migração aditiva, backup compatível e acesso convencional antes do Canvas. **Substituem-se**: a relação exclusiva Card→Deck por associação muitos-para-muitos; a limitação a memória por quatro tipos de carta; e a exclusão de jogos/pontuação (agora autorizados como **escopo de planejamento** da BF-5.6, não como funcionalidades entregues).
+## Complemento rastreável — BF-5.6E (09/11/2026)
+
+A autorização específica E evolui a família `combat`, sem segundo acervo, preservando identidade/revisão e associação muitos-para-muitos. Metadados TCG de baralho guardam contagens, e sessões separam regras/resultados educativos e de combate. Regulamento, contratos de efeitos, snapshots, IA e dados estão na [ADR-029](ADR-029-duelo-arcano-regulamento.md). Texto de planejamento acima preservado; sem arena F ou merge automático.

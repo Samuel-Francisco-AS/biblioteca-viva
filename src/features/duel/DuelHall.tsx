@@ -12,7 +12,7 @@ import { modeNames } from "../../domain/duel/text";
 import { Choices } from "../arcanarium/Choices";
 import { arcanaError, editorPath, useArcana } from "../arcanarium/context";
 import { CombatCard } from "./CombatCard";
-export const duelPath = (id: string) =>
+const duelPath = (id: string) =>
   `/arcanario/duelos/partida/${encodeURIComponent(id)}`;
 export function DuelHall() {
   const { app, data, reload } = useArcana(),
@@ -24,7 +24,8 @@ export function DuelHall() {
     [deckId, setDeckId] = useState("arcane-deck:ruin"),
     [opponent, setOpponent] = useState("arcane-deck:knowledge"),
     [filter, setFilter] = useState<Affinity | "all">("all"),
-    [showCollection, setShowCollection] = useState(false);
+    [showCollection, setShowCollection] = useState(false),
+    [historyLimit, setHistoryLimit] = useState(30);
   useEffect(() => {
     let active = true;
     void app.duels
@@ -106,7 +107,7 @@ export function DuelHall() {
             .start({ deckId, opponentId: opponent, mode, seed })
             .then(async (s) => {
               await reload();
-              navigate(duelPath(s.id));
+              void navigate(duelPath(s.id));
             })
             .catch((e) => setError(arcanaError(e)))
             .finally(() => setBusy(false));
@@ -255,11 +256,15 @@ export function DuelHall() {
       )}
       <section aria-label="Histórico de duelos">
         <h3>Memória dos círculos</h3>
+        <p>
+          {sessions.length} duelos guardados · até {historyLimit} por modo nesta
+          página.
+        </p>
         {!sessions.length && <p>Nenhum duelo foi iniciado ainda.</p>}
-        {["official", "creator", "free"].map((mode) => (
+        {(["official", "creator", "free"] as const).map((mode) => (
           <div key={mode}>
             <h4>
-              {modeNames[mode as DuelMode]}
+              {modeNames[mode]}
               {mode !== "official" ? " · experimental" : " · local"}
             </h4>
             <ul className="duel-history">
@@ -267,7 +272,7 @@ export function DuelHall() {
                 .filter(
                   (s) => s.kind === "combat_match" && s.duel?.mode === mode,
                 )
-                .slice(0, 30)
+                .slice(0, historyLimit)
                 .map((s) => {
                   if (s.kind !== "combat_match" || !s.duel) return null;
                   const m = s.duel;
@@ -295,6 +300,16 @@ export function DuelHall() {
             </ul>
           </div>
         ))}
+        {(["official", "creator", "free"] as const).some(
+          (mode) =>
+            sessions.filter(
+              (s) => s.kind === "combat_match" && s.duel?.mode === mode,
+            ).length > historyLimit,
+        ) && (
+          <button onClick={() => setHistoryLimit((n) => n + 30)}>
+            Mostrar mais duelos guardados
+          </button>
+        )}
       </section>
     </section>
   );

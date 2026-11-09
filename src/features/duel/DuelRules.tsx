@@ -33,7 +33,7 @@ export function DuelRules() {
         ],
         [
           "Habilidades",
-          "Ao jogar ativa na entrada; Início do seu turno é automático em artefatos; Ativar exige botão, custo adicional e permite uma vez por habilidade no seu turno, inclusive na entrada. Efeitos exigem alvos válidos antes do pagamento. Uma ação usa o mesmo alvo para seus efeitos direcionados. Efeitos globais seguem ordem de entrada. Não existem respostas, scripts ou gatilhos de morte recursivos.",
+          "Ao jogar ativa na entrada; Início do seu turno é automático em artefatos; Ativar exige botão, custo adicional e permite uma vez por habilidade no seu turno, inclusive na entrada. Efeitos exigem alvos válidos antes do pagamento. Uma ação usa o mesmo alvo para seus efeitos direcionados. Criaturas derrotadas saem após cada efeito; cura posterior não as ressuscita. Efeitos globais seguem ordem de entrada. Não existem respostas, scripts ou gatilhos de morte recursivos.",
         ],
         [
           "O catálogo de magia",
