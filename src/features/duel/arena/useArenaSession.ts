@@ -21,7 +21,7 @@ export function useArenaSession(sessionId: string) {
   const [visible, setVisible] = useState(
     () => document.visibilityState !== "hidden",
   );
-  const current = useRef<DuelSession>();
+  const current = useRef<DuelSession | undefined>(undefined);
   const mounted = useRef(false);
   const locked = useRef(false);
 
@@ -49,7 +49,6 @@ export function useArenaSession(sessionId: string) {
   useEffect(() => {
     mounted.current = true;
     current.current = undefined;
-    setSession(undefined);
     void refresh();
     const onVisibility = () => {
       const next = document.visibilityState !== "hidden";
@@ -62,7 +61,8 @@ export function useArenaSession(sessionId: string) {
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [refresh]);
-  useAppResume(() => { void refresh(); });
+  const onResume = useCallback(() => { void refresh(); }, [refresh]);
+  useAppResume(onResume);
 
   const submit = useCallback(async (action: DuelAction, player = 0) => {
     const snapshot = current.current;
@@ -114,8 +114,8 @@ export function useArenaSession(sessionId: string) {
   }, [session, visible, busy, error, submit]);
 
   const view = useMemo(
-    () => (session?.duel ? projectArena(session.duel) : undefined),
-    [session],
+    () => (session?.id === sessionId && session.duel ? projectArena(session.duel) : undefined),
+    [session, sessionId],
   );
 
   return { view, busy, error, visible, submit, refresh };
