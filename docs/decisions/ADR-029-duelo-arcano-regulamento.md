@@ -1,3 +1,5 @@
+> **Estado atualizado — 09/11/2026:** regulamento v1 integrado à `main` via PR #47 (merge `19eb076a`) após aceite funcional inicial no Moto G06, **sem aceite final de UI/UX, arte ou balanceamento**. [Fechamento E](../BF-5_6E_FECHAMENTO_2026-11-09.md). O texto original de “candidata” abaixo é registro histórico e não descreve o estado atual; BF-5.6, F/G e redesenho transversal permanecem pendentes.
+
 # ADR-029 — Duelo Arcano, regulamento e contratos v1
 
 Data: 09/11/2026. Estado: implementação autorizada BF-5.6E em candidata; gate físico/artístico e merge pendentes. Complementa ADR-020/025–028. Não autoriza F/G/BF-6.
