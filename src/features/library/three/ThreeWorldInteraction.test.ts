@@ -217,6 +217,10 @@ describe("R4: no skinned raycast for avatar selections", () => {
     actor.root.rotation.y = Math.PI / 2;
     const rescan = vi.spyOn(Box3.prototype, "setFromObject");
     interaction.updateHighlightBounds();
+    // The former screen coordinate must now MISS, and the new one HIT.
+    // A stale lastCall would otherwise let this regression pass incorrectly.
+    tap(200, 200);
+    expect(selection).toHaveBeenLastCalledWith(null);
     tap(350, 200);
     expect(selection.mock.lastCall?.[0]?.id).toBe("character:lua");
     expect(rescan).not.toHaveBeenCalled();
