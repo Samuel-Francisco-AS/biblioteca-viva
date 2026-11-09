@@ -12,7 +12,7 @@
 | --- | --- | --- |
 | D1 | `1f16170` | Contratos, validação, persistência transacional, identidade, revisões, retenção e backup privado |
 | D2 | `3a43319` | Biblioteca de Provas, importação, lotes, gestão, filtros, navegação e evidências |
-| D3 | commit `feat(arcanario): consolidar conteúdo seguro e validação D3` no histórico desta branch | Verificação editorial, volume, regressões, contratos finais, documentação e candidata Android |
+| D3 | `d0fe166` | Verificação editorial, volume, regressões, contratos finais, documentação e candidata Android |
 
 Commit documental posterior registra o SHA de produção, APK, resultados finais e PR, sem mudar código produtivo. Não houve PR ou pedido de autorização entre checkpoints.
 
@@ -144,4 +144,10 @@ E/F/G permanecem **planejadas, sem implementação autorizada por esta entrega**
 
 ## Registro de publicação
 
-A completar com o APK, SHA de produção, checks finais e URL da única PR draft após construção e conferência.
+- Produção: `d0fe1664a4fd7c08e04b1dee6f62541e8bccea4b`; commits posteriores somente documentação/proveniência. Branch `feat/bf-5-6d-arcanario-pacotes-oficiais`, publicação em uma PR draft contra main. URL remota informada na entrega da missão; sem merge/release.
+- **PASS:** `npm run format`, `format:check`, `lint`, `typecheck`, `packs:check`, `audio:check`, `build`, `performance:report`, `android:sync`, `android:build:debug`, `git diff --check`. Scripts unitários/E2E têm as ressalvas e resultados distintos registrados acima; não foram declarados globalmente PASS.
+- APK debug: `android/app/build/outputs/apk/debug/Biblioteca-Viva-BF56D-debug.apk`, **11,642,770 bytes**; SHA-256 `5937c585158cd96e3107603b5223844604f6312bc0d30819195add855508d1e8`. APK e keystore não versionados; sem publicação de release ou instalação física.
+- **58/58 arquivos web de runtime** conferidos byte a byte entre dist, assets Android e ZIP do APK, incluindo o chunk local de pacotes. `.vite/manifest.json` é metadado de build, explicitamente excluído pelo empacotamento Android e não contado como asset de runtime. O verificador inicialmente tentou conferir esse metadado como runtime e foi ajustado para explicitar a exclusão; nenhum arquivo necessário foi omitido.
+- [Proveniência estruturada](audits/evidence/bf56d/apk.json) · [matriz de checks](audits/evidence/bf56d/validation.json) · [roteiro Moto G06](audits/evidence/bf56d/MOTO_G06.md).
+- Revisão final: checkout de produção limpo, 74 arquivos alterados revisados, sem credenciais/keystore/APK/backup pessoal no diff. Conteúdo distribuído autoral e fixtures identificadas. CI remota omitida por cota com `[skip ci]`, conforme política vigente até 01/12/2026; não foi chamada de verde.
+- Pendente: gate físico, aceite artístico/assistivo, Canvas E2E e decisão humana de merge; impedimentos editoriais oficiais e dívidas históricas preservados.

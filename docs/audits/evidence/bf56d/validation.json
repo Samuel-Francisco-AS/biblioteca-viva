@@ -1,0 +1,57 @@
+{
+  "candidate": "BF-5.6D",
+  "productionCommit": "d0fe1664a4fd7c08e04b1dee6f62541e8bccea4b",
+  "checks": {
+    "format": "PASS",
+    "format:check": "PASS",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "packs:check": "PASS",
+    "audio:check": "PASS",
+    "build": "PASS",
+    "performance:report": "PASS",
+    "android:sync": "PASS",
+    "android:build:debug": "PASS",
+    "git diff --check": "PASS"
+  },
+  "unitWide": {
+    "pass": 1120,
+    "fail": 11,
+    "files": 173,
+    "repeated": false,
+    "note": "9 old schema/backup expectations repaired; Workshop wait passes directed; Ytha timeout remains unmodified"
+  },
+  "directedRegression": {
+    "pass": 92,
+    "fail": 0,
+    "files": 16
+  },
+  "directedFinalPackagesVolumeDomainUI": {
+    "pass": 33,
+    "fail": 0,
+    "files": 4
+  },
+  "archivedMemoryUI": {
+    "pass": 4,
+    "fail": 0
+  },
+  "e2eConsolidated": {
+    "pass": 8,
+    "fail": 2,
+    "note": "Archive label regression repaired; pause navigation fixture wait repaired"
+  },
+  "e2eFinalRepair": {
+    "pass": 3,
+    "fail": 0,
+    "distinctEducationalScenariosWithPassAcrossRuns": 10
+  },
+  "canvasE2E": {
+    "status": "FAIL",
+    "causeObserved": "30s timeout before entering Arcanarium; historical caveat preserved; no renderer changes or timeout increase"
+  },
+  "remoteCI": "skipped, not green",
+  "physicalMotoG06": "pending",
+  "authenticOfficialQuestionsDistributed": 0,
+  "originalDemonstrationQuestionsDistributed": 4,
+  "privateDataUsed": false
+}
