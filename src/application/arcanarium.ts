@@ -1,3 +1,4 @@
+import { packOwned } from "../domain/educationalPacks";
 import { validateCardMediaOwnership, type CardMediaPort } from "./cardMedia";
 import { normalizeKnowledge } from "../domain/provations";
 import { z } from "zod";
@@ -150,7 +151,7 @@ export class ArcanariumService {
       const previous =
         (await this.deps.arcanarium.getCard(cardId)) ?? missing();
       requireRevision(previous.revision, expectedRevision);
-      if (previous.origin.kind === "official")
+      if (previous.origin.kind === "official" || packOwned(previous))
         throw new ApplicationError(
           "VALIDATION_FAILED",
           "Carta oficial não é autoral.",
@@ -203,7 +204,7 @@ export class ArcanariumService {
       const previous = await this.deps.arcanarium.getDeck(deckId);
       if (parsed.id && !previous) missing();
       if (previous) {
-        if (previous.origin.kind === "official")
+        if (previous.origin.kind === "official" || packOwned(previous))
           throw new ApplicationError(
             "VALIDATION_FAILED",
             "Baralho oficial não é autoral.",

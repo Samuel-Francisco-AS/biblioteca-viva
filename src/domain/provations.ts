@@ -1,3 +1,4 @@
+import { cardAvailable, gradable } from "./educationalPacks";
 import {
   cardSessionSchema,
   validateArcanarium,
@@ -47,6 +48,12 @@ export function questionAt(data: ArcanariumData, ref: CardReference): Question {
   return content;
 }
 export function attempts(data: ArcanariumData) {
+  const versions = new Map(
+    data.versions.map((v) => [
+      JSON.stringify([v.cardId, v.revision]),
+      v.card.content,
+    ]),
+  );
   return data.sessions
     .filter(isTrial)
     .flatMap((s) =>
@@ -55,7 +62,13 @@ export function attempts(data: ArcanariumData) {
         sessionId: s.id,
         cardId: s.cards[i].cardId,
         revision: s.cards[i].revision,
-        classification: questionAt(data, s.cards[i]).classification,
+        classification: (() => {
+          const q = versions.get(
+            JSON.stringify([s.cards[i].cardId, s.cards[i].revision]),
+          );
+          if (q?.type !== "question") throw new Error("Revisão indisponível");
+          return q.classification;
+        })(),
         taxonomy: s.trial.taxonomy,
       })),
     )
@@ -83,7 +96,10 @@ export function selectDeck(
           )?.card
         : current;
       if (!card) throw new Error("Referência de baralho indisponível.");
-      return current && !current.archived && !card.archived
+      return current &&
+        cardAvailable(current, data) &&
+        !card.archived &&
+        gradable(card)
         ? [{ cardId: card.id, revision: card.revision }]
         : [];
     });
@@ -97,7 +113,11 @@ export function selectDeck(
   const history = attempts(data);
   const cards = data.cards
     .filter((card) => {
-      if (card.archived || (c.types.length && !c.types.includes(card.type)))
+      if (
+        !cardAvailable(card, data) ||
+        !gradable(card) ||
+        (c.types.length && !c.types.includes(card.type))
+      )
         return false;
       const q = card.content.type === "question" ? card.content : undefined;
       const closure = taxonomyClosure(
@@ -153,8 +173,13 @@ export function createTrial(
   )
     throw new Error("Selecione de 1 a 500 questões distintas.");
   refs.forEach((ref) => {
-    questionAt(data, ref);
-    if (!data.cards.some((c) => c.id === ref.cardId && !c.archived))
+    const q = questionAt(data, ref);
+    if (
+      q.editorial &&
+      (q.editorial.status !== "valid" || q.editorial.answerKey !== "final")
+    )
+      throw new Error("Questão sem gabarito definitivo válido.");
+    if (!data.cards.some((c) => c.id === ref.cardId && cardAvailable(c, data)))
       throw new Error("Questão arquivada.");
   });
   const session = cardSessionSchema.parse({

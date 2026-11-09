@@ -1,3 +1,5 @@
+> **BF-5.6D — candidata em implementação (09/11/2026):** execução D1/D2/D3 autorizada; Dexie v18 aditivo e backup v10 (importa v6–v9, 10 MiB). [Contrato e resultados](BF-5_6D_PACOTES_OFICIAIS_IMPLEMENTACAO.md). A+B+C integradas com gate parcial, reparos físicos pendentes; sem merge D, encerramento BF-5.6 ou E–G. Notas abaixo são cronologia.
+
 ## BF-5.6C — Dexie v17, backup v9 (candidata)
 
 V17 mantém tabelas/índices v16 e atualiza somente o marcador. Questão recebe identificação, dificuldade e proveniência opcionais, sem modificar versões antigas. Critérios dinâmicos v1 continuam executáveis; v2 acrescenta filtros reais. `question_session.trial?` v1 guarda estado, revisão concorrente, posição, respostas/correções e snapshot de taxonomia. As referências fixadas de questões preservam alternativas e gabarito. Placeholders antigos sem trial não ganham resultados. Backup v9 inclui esses contratos, importa originais v6/v7/v8, mantém checksum/10 MiB/replace e rollback. Sem downgrade. Troca autoral v1 continua Ecos/lembranças; relatório JSON v1/CSV é exportação distinta do backup. [ADR-027](decisions/ADR-027-provacao-taxonomia-diagnostico.md).

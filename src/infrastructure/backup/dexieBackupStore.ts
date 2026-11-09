@@ -61,6 +61,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
         this.database.knowledgeTags,
         this.database.cardSessions,
         this.database.cardMedia,
+        this.database.educationalPacks,
       ],
       () =>
         Promise.all([
@@ -152,6 +153,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
         this.database.knowledgeTags,
         this.database.cardSessions,
         this.database.cardMedia,
+        this.database.educationalPacks,
       ],
       async (transaction) => {
         await Promise.all([
@@ -162,6 +164,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
           this.database.knowledgeTags.clear(),
           this.database.cardSessions.clear(),
           this.database.cardMedia.clear(),
+          this.database.educationalPacks.clear(),
           this.database.libraryEntries.clear(),
           this.database.notes.clear(),
           this.database.quotes.clear(),
@@ -182,6 +185,12 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
         await this.database.sessions.bulkAdd(valid.sessions);
         await this.database.media.bulkAdd(valid.media);
         await this.database.cardMedia.bulkAdd(valid.cardMedia);
+        await this.database.educationalPacks.bulkAdd(
+          (valid.arcanarium.packs ?? []).map((p) => ({
+            ...p,
+            status: p.status === "removed" ? "removed" : "restore-required",
+          })),
+        );
         await this.database.arcanariumCards.bulkAdd(valid.arcanarium.cards);
         await this.database.arcanariumVersions.bulkAdd(
           valid.arcanarium.versions,

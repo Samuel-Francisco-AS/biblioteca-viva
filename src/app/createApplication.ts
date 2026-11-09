@@ -1,3 +1,6 @@
+import { EducationalPacksService } from "../application/educationalPacks";
+import { DexiePackStore } from "../infrastructure/database/packStore";
+import { JsonEducationalPackCodec } from "../infrastructure/packs/packCodec";
 import { ProvationsService } from "../application/provations";
 import { ArcanariumWorkshop } from "../application/arcanariumWorkshop";
 import { CardExchange } from "../application/cardExchange";
@@ -149,6 +152,7 @@ export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 
 export interface ApplicationRuntime {
   readonly arcanarium: ArcanariumService;
+  readonly educationalPacks: EducationalPacksService;
   readonly workshop: ArcanariumWorkshop;
   readonly provations: ProvationsService;
   readonly cardExchange: CardExchange;
@@ -364,6 +368,11 @@ export async function createApplication(
 
   return {
     arcanarium: new ArcanariumService(dependencies),
+    educationalPacks: new EducationalPacksService(
+      dependencies,
+      new DexiePackStore(database),
+      new JsonEducationalPackCodec(),
+    ),
     workshop: new ArcanariumWorkshop(dependencies),
     provations: new ProvationsService(dependencies),
     cardExchange: new CardExchange(dependencies, new JsonCardExchangeCodec()),

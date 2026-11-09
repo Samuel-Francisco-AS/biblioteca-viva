@@ -18,7 +18,7 @@ import type { BibliotecaDatabase } from "./database";
 export class DexieArcanariumRepository implements ArcanariumRepository {
   constructor(private readonly db: BibliotecaDatabase) {}
   async read() {
-    const [cards, versions, decks, studyLinks, tags, sessions] =
+    const [cards, versions, decks, studyLinks, tags, sessions, packs] =
       await Promise.all([
         this.db.arcanariumCards.toArray(),
         this.db.arcanariumVersions.toArray(),
@@ -26,8 +26,10 @@ export class DexieArcanariumRepository implements ArcanariumRepository {
         this.db.studyCardLinks.toArray(),
         this.db.knowledgeTags.toArray(),
         this.db.cardSessions.toArray(),
+        this.db.educationalPacks.toArray(),
       ]);
     return arcanariumDataSchema.parse({
+      ...(packs.length ? { packs } : {}),
       cards,
       versions,
       decks,

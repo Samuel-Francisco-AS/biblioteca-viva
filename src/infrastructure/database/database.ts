@@ -29,6 +29,7 @@ import {
   DATABASE_SCHEMA_V15,
   DATABASE_SCHEMA_V16,
   DATABASE_SCHEMA_V17,
+  DATABASE_SCHEMA_V18,
   SCHEMA_MARKER_KEY,
   type PersistedActivity,
   type PersistedLibraryEntry,
@@ -44,6 +45,10 @@ import {
 const MIGRATION_TIMESTAMP = "1970-01-01T00:00:00.000Z";
 
 export class BibliotecaDatabase extends Dexie {
+  educationalPacks!: EntityTable<
+    import("../../domain/packManifest").PackReceipt,
+    "id"
+  >;
   cardMedia!: EntityTable<
     import("../../application/cardMedia").CardMedia,
     "id"
@@ -256,6 +261,17 @@ export class BibliotecaDatabase extends Dexie {
           value: "17",
           updatedAt: MIGRATION_TIMESTAMP,
         });
+      });
+    this.version(18)
+      .stores(DATABASE_SCHEMA_V18)
+      .upgrade(async (tx) => {
+        await tx
+          .table<PersistedMetadata>("metadata")
+          .put({
+            key: SCHEMA_MARKER_KEY,
+            value: "18",
+            updatedAt: MIGRATION_TIMESTAMP,
+          });
       });
   }
 }

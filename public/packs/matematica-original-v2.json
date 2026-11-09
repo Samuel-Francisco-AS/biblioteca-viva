@@ -1,0 +1,70 @@
+{
+  "kind": "biblioteca-viva-educational-pack",
+  "formatVersion": 1,
+  "manifest": {
+    "id": "arcanario-matematica-original",
+    "formatVersion": 1,
+    "editorialVersion": 2,
+    "name": "Aritmética dos pequenos arquivos",
+    "description": "Exercícios originais para experimentar pacotes e lotes. Não são questões do ENEM ou de concursos. Seleção parcial de uma coleção demonstrativa expansível.",
+    "category": "author-demo",
+    "institution": "Projeto Biblioteca Viva",
+    "exam": "Exercícios originais do Arcanário",
+    "year": 2026,
+    "application": "Demonstração autoral",
+    "booklet": "Matemática 01",
+    "language": "pt-BR",
+    "areas": [
+      "Matemática"
+    ],
+    "expectedCount": 10,
+    "publishedCount": 4,
+    "completeness": "partial",
+    "sources": [
+      "https://github.com/Samuel-Francisco-AS/biblioteca-viva"
+    ],
+    "rights": {
+      "status": "original",
+      "basis": "Enunciados, alternativas e comentários criados para a BF-5.6D pelo projeto, sem imagens ou excertos de terceiros. Redistribuição autorizada como parte do código do projeto. Não é material oficial de exame.",
+      "evidence": [
+        "https://github.com/Samuel-Francisco-AS/biblioteca-viva"
+      ],
+      "thirdPartyMedia": "none"
+    },
+    "verifiedAt": "2026-11-09T12:00:00.000Z",
+    "changes": [
+      {
+        "version": 1,
+        "date": "2026-11-09T12:00:00.000Z",
+        "note": "Primeiro lote autoral: duas questões originais.",
+        "source": "https://github.com/Samuel-Francisco-AS/biblioteca-viva"
+      },
+      {
+        "version": 2,
+        "date": "2026-11-09T12:00:00.000Z",
+        "note": "Segundo lote autoral: mais duas questões, sem alterar o lote 1.",
+        "source": "https://github.com/Samuel-Francisco-AS/biblioteca-viva"
+      }
+    ],
+    "lots": [
+      {
+        "id": "lote-1",
+        "path": "lote-1.json",
+        "sha256": "6c9690f5d4e69dc3ba32ed8b025895c75a2dc2069825819be7d3053cac5a176a",
+        "bytes": 2318,
+        "count": 2
+      },
+      {
+        "id": "lote-2",
+        "path": "lote-2.json",
+        "sha256": "790be65478a9878cbdb2331357df2be3a57b1225cadd549d6f139f8154828277",
+        "bytes": 2346,
+        "count": 2
+      }
+    ]
+  },
+  "files": {
+    "lote-1.json": "{\"formatVersion\":1,\"packId\":\"arcanario-matematica-original\",\"lotId\":\"lote-1\",\"tags\":[{\"id\":\"pack:arcanario-matematica-original:matematica\",\"revision\":1,\"label\":\"Matemática · exercícios originais\",\"namespace\":\"editorial\",\"level\":\"area\",\"parentIds\":[],\"relatedIds\":[],\"synonyms\":[]}],\"questions\":[{\"identity\":{\"exam\":\"Exercícios originais do Arcanário\",\"year\":2026,\"application\":\"Demonstração autoral\",\"booklet\":\"Matemática 01\",\"language\":\"pt-BR\",\"number\":1},\"revision\":1,\"publishedAt\":\"2026-11-09T12:00:00.000Z\",\"content\":{\"type\":\"question\",\"title\":\"Matemática original · 01\",\"statement\":\"Uma estante contém 12 livros. Mais 8 livros são guardados. Quantos livros há agora?\",\"alternatives\":[{\"id\":\"a\",\"text\":\"16\"},{\"id\":\"b\",\"text\":\"18\"},{\"id\":\"c\",\"text\":\"20\"},{\"id\":\"d\",\"text\":\"22\"}],\"correctAlternativeId\":\"c\",\"explanation\":\"12 + 8 = 20.\",\"classification\":{\"knowledgeTagIds\":[\"pack:arcanario-matematica-original:matematica\"],\"personalTagIds\":[]},\"source\":{\"exam\":\"Exercícios originais do Arcanário\",\"year\":2026,\"institution\":\"Projeto Biblioteca Viva\",\"booklet\":\"Matemática 01\"},\"editorial\":{\"status\":\"valid\",\"answerKey\":\"final\",\"commentary\":\"Arcanário\",\"sourceUrl\":\"https://github.com/Samuel-Francisco-AS/biblioteca-viva\"}},\"source\":\"https://github.com/Samuel-Francisco-AS/biblioteca-viva\"},{\"identity\":{\"exam\":\"Exercícios originais do Arcanário\",\"year\":2026,\"application\":\"Demonstração autoral\",\"booklet\":\"Matemática 01\",\"language\":\"pt-BR\",\"number\":2},\"revision\":1,\"publishedAt\":\"2026-11-09T12:00:00.000Z\",\"content\":{\"type\":\"question\",\"title\":\"Matemática original · 02\",\"statement\":\"Um caderno custa R$ 15,00. Dois cadernos iguais custam quanto?\",\"alternatives\":[{\"id\":\"a\",\"text\":\"R$ 17,00\"},{\"id\":\"b\",\"text\":\"R$ 25,00\"},{\"id\":\"c\",\"text\":\"R$ 30,00\"},{\"id\":\"d\",\"text\":\"R$ 45,00\"}],\"correctAlternativeId\":\"c\",\"explanation\":\"2 × 15 = 30.\",\"classification\":{\"knowledgeTagIds\":[\"pack:arcanario-matematica-original:matematica\"],\"personalTagIds\":[]},\"source\":{\"exam\":\"Exercícios originais do Arcanário\",\"year\":2026,\"institution\":\"Projeto Biblioteca Viva\",\"booklet\":\"Matemática 01\"},\"editorial\":{\"status\":\"valid\",\"answerKey\":\"final\",\"commentary\":\"Arcanário\",\"sourceUrl\":\"https://github.com/Samuel-Francisco-AS/biblioteca-viva\"}},\"source\":\"https://github.com/Samuel-Francisco-AS/biblioteca-viva\"}]}",
+    "lote-2.json": "{\"formatVersion\":1,\"packId\":\"arcanario-matematica-original\",\"lotId\":\"lote-2\",\"tags\":[{\"id\":\"pack:arcanario-matematica-original:matematica\",\"revision\":1,\"label\":\"Matemática · exercícios originais\",\"namespace\":\"editorial\",\"level\":\"area\",\"parentIds\":[],\"relatedIds\":[],\"synonyms\":[]}],\"questions\":[{\"identity\":{\"exam\":\"Exercícios originais do Arcanário\",\"year\":2026,\"application\":\"Demonstração autoral\",\"booklet\":\"Matemática 01\",\"language\":\"pt-BR\",\"number\":3},\"revision\":1,\"publishedAt\":\"2026-11-09T12:00:00.000Z\",\"content\":{\"type\":\"question\",\"title\":\"Matemática original · 03\",\"statement\":\"Um arquivo tem 40 questões. Um quarto foi revisado. Quantas questões foram revisadas?\",\"alternatives\":[{\"id\":\"a\",\"text\":\"4\"},{\"id\":\"b\",\"text\":\"8\"},{\"id\":\"c\",\"text\":\"10\"},{\"id\":\"d\",\"text\":\"20\"}],\"correctAlternativeId\":\"c\",\"explanation\":\"40 ÷ 4 = 10.\",\"classification\":{\"knowledgeTagIds\":[\"pack:arcanario-matematica-original:matematica\"],\"personalTagIds\":[]},\"source\":{\"exam\":\"Exercícios originais do Arcanário\",\"year\":2026,\"institution\":\"Projeto Biblioteca Viva\",\"booklet\":\"Matemática 01\"},\"editorial\":{\"status\":\"valid\",\"answerKey\":\"final\",\"commentary\":\"Arcanário\",\"sourceUrl\":\"https://github.com/Samuel-Francisco-AS/biblioteca-viva\"}},\"source\":\"https://github.com/Samuel-Francisco-AS/biblioteca-viva\"},{\"identity\":{\"exam\":\"Exercícios originais do Arcanário\",\"year\":2026,\"application\":\"Demonstração autoral\",\"booklet\":\"Matemática 01\",\"language\":\"pt-BR\",\"number\":4},\"revision\":1,\"publishedAt\":\"2026-11-09T12:00:00.000Z\",\"content\":{\"type\":\"question\",\"title\":\"Matemática original · 04\",\"statement\":\"Uma coleção com 50 questões recebe um acréscimo de 20%. Qual é a nova quantidade?\",\"alternatives\":[{\"id\":\"a\",\"text\":\"55\"},{\"id\":\"b\",\"text\":\"60\"},{\"id\":\"c\",\"text\":\"65\"},{\"id\":\"d\",\"text\":\"70\"}],\"correctAlternativeId\":\"b\",\"explanation\":\"20% de 50 é 10. A nova quantidade é 60.\",\"classification\":{\"knowledgeTagIds\":[\"pack:arcanario-matematica-original:matematica\"],\"personalTagIds\":[]},\"source\":{\"exam\":\"Exercícios originais do Arcanário\",\"year\":2026,\"institution\":\"Projeto Biblioteca Viva\",\"booklet\":\"Matemática 01\"},\"editorial\":{\"status\":\"valid\",\"answerKey\":\"final\",\"commentary\":\"Arcanário\",\"sourceUrl\":\"https://github.com/Samuel-Francisco-AS/biblioteca-viva\"}},\"source\":\"https://github.com/Samuel-Francisco-AS/biblioteca-viva\"}]}"
+  }
+}
