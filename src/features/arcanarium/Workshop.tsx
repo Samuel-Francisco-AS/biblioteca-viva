@@ -117,7 +117,10 @@ function Editor({
       .map((l) => l.studyId),
     decks: data.decks
       .filter(
-        (d) => d.selection.kind === "static" && d.origin.kind !== "official",
+        (d) =>
+          d.selection.kind === "static" &&
+          !d.combat &&
+          d.origin.kind !== "official",
       )
       .map((d) => ({
         id: d.id,
@@ -291,7 +294,9 @@ function Editor({
         decks: all.decks
           .filter(
             (d) =>
-              d.selection.kind === "static" && d.origin.kind !== "official",
+              d.selection.kind === "static" &&
+              !d.combat &&
+              d.origin.kind !== "official",
           )
           .map((d) => ({
             id: d.id,

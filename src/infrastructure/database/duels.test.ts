@@ -180,3 +180,66 @@ it("rolls back a failed save after write and restores v11 into a disposable data
   await target.store.replace(inspected.data);
   expect(await target.duels.get(session.id)).toEqual(session);
 });
+it("installs the bundled catalogue idempotently, protects official cards and validates all deck constraints", async () => {
+  const s = await setup();
+  await s.duels.ensureCatalogue();
+  await s.duels.ensureCatalogue();
+  const data = await s.api.list();
+  expect(data.cards).toHaveLength(48);
+  expect(data.decks).toHaveLength(4);
+  expect(data.versions).toHaveLength(48);
+  const official = data.cards[0];
+  await expect(
+    s.api.updateCard({
+      cardId: official.id,
+      expectedRevision: 1,
+      content: official.content,
+    }),
+  ).rejects.toMatchObject({ code: "VALIDATION_FAILED" });
+  const starter = data.decks[0];
+  if (!starter.combat) throw new Error("Missing starter definition");
+  for (const combat of [
+    { ...starter.combat, copies: {} },
+    {
+      ...starter.combat,
+      copies: { ...starter.combat.copies, [official.id]: 3 },
+    },
+    { ...starter.combat, affinity: "knowledge" },
+  ])
+    await expect(
+      s.duels.saveDeck({ name: "Inválido", combat }),
+    ).rejects.toThrow();
+  const personal = await s.duels.saveDeck({
+    name: "Meu baralho",
+    combat: starter.combat,
+  });
+  expect(personal.combat).toEqual(starter.combat);
+  await expect(
+    s.api.saveDeck({
+      id: personal.id,
+      expectedRevision: 1,
+      name: "Mistura",
+      selection: { kind: "static", cards: [{ cardId: official.id }] },
+    }),
+  ).rejects.toMatchObject({ code: "VALIDATION_FAILED" });
+  const artifact = await s.codec.encode({
+    data: await s.store.read(),
+    appVersion: "test",
+    databaseVersion: 19,
+    createdAt: now,
+  });
+  const inspected = await s.codec.inspect(artifact.content);
+  expect(inspected.data.arcanarium?.decks).toHaveLength(1);
+  expect(inspected.data.arcanarium?.cards).toHaveLength(12);
+  const target = await setup();
+  await target.store.replace(inspected.data);
+  await target.duels.ensureCatalogue();
+  expect((await target.api.list()).cards).toHaveLength(48);
+  const session = await target.duels.start({
+    deckId: personal.id,
+    opponentId: "arcane-deck:chaos",
+    mode: "official",
+    seed: 100,
+  });
+  expect(session.duel?.mode).toBe("official");
+});

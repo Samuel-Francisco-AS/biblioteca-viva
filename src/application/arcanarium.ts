@@ -213,6 +213,21 @@ export class ArcanariumService {
     return runTransaction(this.deps, async () => {
       const previous = await this.deps.arcanarium.getDeck(deckId);
       if (parsed.id && !previous) missing();
+      if (
+        previous?.combat ||
+        (parsed.selection.kind === "static" &&
+          (
+            await Promise.all(
+              parsed.selection.cards.map((r) =>
+                this.deps.arcanarium.getCard(r.cardId),
+              ),
+            )
+          ).some((c) => c?.content.type === "combat" && c.content.combat))
+      )
+        throw new ApplicationError(
+          "VALIDATION_FAILED",
+          "Organize cartas de combate nos baralhos do Duelo Arcano.",
+        );
       if (previous) {
         if (previous.origin.kind === "official" || packOwned(previous))
           throw new ApplicationError(

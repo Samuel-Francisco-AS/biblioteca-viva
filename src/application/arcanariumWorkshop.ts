@@ -212,6 +212,7 @@ export class ArcanariumWorkshop {
         const deck = await repo.getDeck(choice.id);
         if (
           !deck ||
+          deck.combat ||
           deck.selection.kind !== "static" ||
           deck.origin.kind === "official"
         )

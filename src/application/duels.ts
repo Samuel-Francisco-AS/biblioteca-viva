@@ -54,6 +54,33 @@ export class DuelService {
       }
     });
   }
+  async ensureCatalogue() {
+    const { officialCards, starterDecks } =
+      await import("../domain/duel/catalogue");
+    await this.transaction(async () => {
+      for (const card of officialCards) {
+        const existing = await this.deps.arcanarium.getCard(card.id);
+        if (existing && JSON.stringify(existing) !== JSON.stringify(card))
+          throw new DuelRuleError(
+            "Catálogo oficial divergente. Preserve o backup e revise a instalação.",
+          );
+        if (!existing) {
+          await this.deps.arcanarium.addVersion({
+            cardId: card.id,
+            revision: card.revision,
+            card,
+          });
+          await this.deps.arcanarium.putCard(card);
+        }
+      }
+      for (const deck of starterDecks) {
+        const existing = await this.deps.arcanarium.getDeck(deck.id);
+        if (existing && JSON.stringify(existing) !== JSON.stringify(deck))
+          throw new DuelRuleError("Baralho oficial divergente.");
+        if (!existing) await this.deps.arcanarium.putDeck(deck);
+      }
+    });
+  }
   async list() {
     return (await this.deps.arcanarium.read()).sessions.filter(
       (s): s is DuelSession => s.kind === "combat_match" && !!s.duel,
@@ -92,6 +119,7 @@ export class DuelService {
       }),
       input,
     );
+    const { officialCards } = await import("../domain/duel/catalogue");
     const id = `duel:${await generatedId(this.deps, "duel")}`,
       now = await currentTime(this.deps);
     return this.transaction(async () => {
@@ -105,6 +133,20 @@ export class DuelService {
         throw new DuelRuleError("Baralho de combate não encontrado.");
       const own = await this.resolveDeck(deck),
         other = await this.resolveDeck(opponent);
+      for (const c of [...own, ...other].filter((c) => c.official)) {
+        const pinned = officialCards.find((card) => card.id === c.cardId);
+        if (
+          !pinned ||
+          pinned.content.type !== "combat" ||
+          JSON.stringify(pinned.content.combat) !==
+            JSON.stringify(c.definition) ||
+          pinned.content.name !== c.name ||
+          pinned.revision !== c.revision
+        )
+          throw new DuelRuleError(
+            "Revisão oficial não corresponde ao catálogo validado.",
+          );
+      }
       validateDuelDeck(own, deck.combat.affinity, p.mode);
       validateDuelDeck(other, opponent.combat.affinity, p.mode);
       const duel = createDuel(

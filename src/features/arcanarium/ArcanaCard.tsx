@@ -1,3 +1,4 @@
+import { CombatCard } from "../duel/CombatCard";
 import { useEffect, useState } from "react";
 import type { CardContent } from "../../domain/arcanarium";
 import type { ApplicationRuntime } from "../../app/createApplication";
@@ -37,6 +38,14 @@ export function ArcanaCard({
       active = false;
     };
   }, [app, imageId]);
+  if (content.type === "combat" && content.combat)
+    return (
+      <CombatCard
+        name={content.name}
+        definition={content.combat}
+        compact={compact}
+      />
+    );
   const appearance =
     content.type === "flashcard" || content.type === "memory"
       ? content.appearance
