@@ -170,37 +170,37 @@ export default function ArcanariumPage({
             }
           >
             <Routes>
-            <Route
-              index
-              element={<Portal data={snapshot.data} counts={snapshot.counts} />}
-            />
-            <Route path="duelos" element={<DuelHall />} />
-            <Route path="duelos/arena/:id" element={<ArenaDuel />} />
-            <Route path="duelos/regras" element={<DuelRules />} />
-            <Route path="duelos/baralhos/:id" element={<DuelDeckEditor />} />
-            <Route
-              path="duelos/partida/:id"
-              element={<DuelTable key={location.pathname} />}
-            />
-            <Route path="acervo" element={<Catalogue />} />
-            <Route path="pacotes" element={<PackLibrary />} />
-            <Route path="relicario" element={<Catalogue memories />} />
-            <Route path="cartas/:id" element={<CardDetail />} />
-            <Route path="baralhos" element={<Decks />} />
-            <Route path="baralhos/novo" element={<DeckEditor />} />
-            <Route path="baralhos/:id" element={<DeckEditor />} />
-            <Route path="oficina/:id" element={<Workshop />} />
-            <Route path="ecos" element={<Echoes />} />
-            <Route path="ecos/:id" element={<Review />} />
-            <Route path="provacoes" element={<Provations />} />
-            <Route path="provacoes/:id" element={<TrialSession />} />
-            <Route path="assuntos" element={<Taxonomy />} />
-            <Route path="diagnostico" element={<Diagnosis />} />
-            <Route path="importar" element={<DeckImport />} />
-            <Route
-              path="*"
-              element={<p>Este caminho não existe. Retorne ao portal.</p>}
-            />
+              <Route
+                index
+                element={<Portal data={snapshot.data} counts={snapshot.counts} />}
+              />
+              <Route path="duelos" element={<DuelHall />} />
+              <Route path="duelos/arena/:id" element={<ArenaDuel />} />
+              <Route path="duelos/regras" element={<DuelRules />} />
+              <Route path="duelos/baralhos/:id" element={<DuelDeckEditor />} />
+              <Route
+                path="duelos/partida/:id"
+                element={<DuelTable key={location.pathname} />}
+              />
+              <Route path="acervo" element={<Catalogue />} />
+              <Route path="pacotes" element={<PackLibrary />} />
+              <Route path="relicario" element={<Catalogue memories />} />
+              <Route path="cartas/:id" element={<CardDetail />} />
+              <Route path="baralhos" element={<Decks />} />
+              <Route path="baralhos/novo" element={<DeckEditor />} />
+              <Route path="baralhos/:id" element={<DeckEditor />} />
+              <Route path="oficina/:id" element={<Workshop />} />
+              <Route path="ecos" element={<Echoes />} />
+              <Route path="ecos/:id" element={<Review />} />
+              <Route path="provacoes" element={<Provations />} />
+              <Route path="provacoes/:id" element={<TrialSession />} />
+              <Route path="assuntos" element={<Taxonomy />} />
+              <Route path="diagnostico" element={<Diagnosis />} />
+              <Route path="importar" element={<DeckImport />} />
+              <Route
+                path="*"
+                element={<p>Este caminho não existe. Retorne ao portal.</p>}
+              />
             </Routes>
           </Suspense>
         </Arcana.Provider>

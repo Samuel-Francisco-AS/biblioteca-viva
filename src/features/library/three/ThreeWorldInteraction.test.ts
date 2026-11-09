@@ -24,6 +24,7 @@ const disposals: (() => void)[] = [];
 afterEach(() => {
   for (const dispose of disposals.splice(0)) dispose();
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 function setup() {
   const canvas = document.createElement("canvas");
@@ -60,10 +61,11 @@ function setup() {
     });
     return { root, mesh };
   };
-  const mount = () => {
+  const mount = (deferPicking = false) => {
     const selection = vi.fn<(selection: WorldSelection) => void>();
     const activation = vi.fn();
     const interaction = new ThreeWorldInteraction({
+      deferPicking,
       camera,
       canvas,
       scene,
@@ -124,6 +126,47 @@ describe("Touch continuity", () => {
     emit("pointerup", 200);
     expect(host.dataset.worldTouch).toBe("released");
     host.remove();
+  });
+});
+
+describe("R2: confirmed gesture scheduling", () => {
+  it("presents feedback before picking, then publishes once", () => {
+    const callbacks: FrameRequestCallback[] = [];
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+      callbacks.push(cb);
+      return callbacks.length;
+    });
+    vi.stubGlobal("cancelAnimationFrame", vi.fn());
+    vi.spyOn(document, "hidden", "get").mockReturnValue(false);
+    const h = setup();
+    h.add("character:lua");
+    const { tap, selection, activation } = h.mount(true);
+    tap();
+    expect(selection).not.toHaveBeenCalled();
+    expect(activation).not.toHaveBeenCalled();
+    callbacks.shift()?.(0);
+    expect(selection).not.toHaveBeenCalled();
+    callbacks.shift()?.(16);
+    expect(selection.mock.lastCall?.[0]?.id).toBe("character:lua");
+    expect(activation).toHaveBeenCalledOnce();
+  });
+
+  it("does not select after gesture teardown", () => {
+    const callbacks: FrameRequestCallback[] = [];
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+      callbacks.push(cb);
+      return callbacks.length;
+    });
+    vi.stubGlobal("cancelAnimationFrame", vi.fn());
+    vi.spyOn(document, "hidden", "get").mockReturnValue(false);
+    const h = setup();
+    h.add("character:lua");
+    const { tap, selection, interaction } = h.mount(true);
+    tap();
+    callbacks.shift()?.(0);
+    interaction.cancelActiveGestures();
+    callbacks.shift()?.(16);
+    expect(selection).not.toHaveBeenCalled();
   });
 });
 

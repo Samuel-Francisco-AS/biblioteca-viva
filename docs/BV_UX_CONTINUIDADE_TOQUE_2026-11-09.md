@@ -15,6 +15,17 @@ O objetivo não é simplesmente reduzir a latência absoluta ou diminuir a arte 
 5. **Links internos comuns:** um véu fixo sem captura de ponteiro/foco conecta a saída e a entrada; `App` reconhece mudanças de rota e remove o estado quando termina a animação. O conteúdo de destino continua livre para carregar em seu próprio tempo.
 6. **Acessibilidade/lifecycle:** `prefers-reduced-motion` e preferência interna desativam animações e não esperam os frames de apresentação; ARIA, foco existente, botão Voltar, rotas e residência da Biblioteca preservados.
 
+## Rodada R2 — intervenção na execução
+
+O proprietário testou a R1 no Moto G06: a animação era perceptível, mas o engasgo após o toque permaneceu claro. **R1 não foi aprovada como solução de fluidez.** A R2 não amplia simplesmente o véu; modifica a execução:
+
+- **Destaque 3D dos personagens e portal:** a seleção inicial conserva bounds precisos, mas o efeito decorativo acompanha a matriz de transformação usando envelope conservador estável, sem revarrer/skinnar a malha de todos os personagens a cada frame. Picking e o resultado da seleção seguem precisos. Possível trade-off: o contorno pode ficar um pouco mais amplo que asas/braços em movimento extremo.
+- **Gestos:** na montagem real do mundo, o `pointerup` reconhece a intenção e permite a pintura de feedback; só depois o raycast e as notificações React rodam, sem um atraso de tempo fixo. Se outro gesto começar ou o mundo pausar, a seleção pendente é cancelada. Testes tradicionais continuam síncronos, mas foram adicionados dois cenários para o modo diferido. Movimento reduzido evita adiamento.
+- **Pausas de rota:** loop 3D para imediatamente, mas a serialização dos agentes aguarda a ociosidade do navegador, com fallback por temporizador curto somente sem `requestIdleCallback`. As garantias de checkpoint imediato em ocultação, `pagehide` e descarte persistem; retorno antes da captura cancela o trabalho antigo.
+- **Arcanário:** separação da importação dos duelistas, arena, cartas, biblioteca de provas, oficinas e outras salas em chunks lazy. O portal deixa de carregar todos esses componentes no primeiro acesso e há um fallback visual acessível enquanto a sala solicitada é carregada.
+
+**Limite técnico:** o raycast preciso ainda exige CPU quando finalmente executado; estas mudanças removem a concorrência com o evento inicial e o custo visual repetido, mas não garantem que nenhum quadro isolado será longo. R2 ainda não foi medida no Moto G06. O estado é **candidata**, não correção certificada.
+
 ## Limites do que foi confirmado
 
 - **Confirmado:** inspeção do código da `main`, preparação das modificações em branch separada, commit remoto e adição de testes de interface e de gesto. A mudança é isolada em apresentação/navegação, sem alteração de schema, arte de personagens, regras de quest ou motor do duelo.

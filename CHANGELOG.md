@@ -1,3 +1,8 @@
+## 09/11/2026 — BV-UXC R2: sanar interrupções no gesto (PR #49 draft)
+
+- Feedback físico confirmou que R1 era insuficiente. R2 muda a sequência de execução: picking diferido e cancelável após feedback visual; destaque 3D de personagens/portal acompanha envelope em vez de fazer CPU skinning a cada quadro; checkpoint de pausa fora da transição de rota; carregamento dos componentes do Arcanário sob demanda por sala.
+- Testes de gesto cancelado e latência visual escritos (não executados), sem novas dependências ou mudanças no banco. Nenhum merge/release, CI sem cota, validação Moto G06 pendente. [Relatório](docs/BV_UX_CONTINUIDADE_TOQUE_2026-11-09.md).
+
 ## 09/11/2026 — BV-UXC candidata: continuidade do toque (sem merge)
 
 - Início de feedback circular no Canvas antes do picking; cancelamento coerente com pan/pinch; conversa RPG e navegação entre rotas com passagem leve; dock e portal orbital cedem um frame de apresentação ao gesto antes da montagem da próxima área.
