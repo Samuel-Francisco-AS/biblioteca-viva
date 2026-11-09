@@ -151,3 +151,16 @@ Recursos de cenário são agrupados por material; partículas/halos dinâmicos m
 O relato físico anterior de mecânica sem defeitos relevantes é preservado. O refinamento visual atual exige nova avaliação artística/física; não representa aceite final da F nem da G.
 
 Último dirigido após o polimento de recursos: **21/21 PASS**, quatro arquivos (orbital, runtime, efeitos e cena). A capa do grimório lunar reutiliza a pintura do arquivo, além das ferragens/páginas em 3D; fase inicial lateral dá melhor leitura do anel após zoom-out. Captura `lua-anel-mundo.png` usa a câmera real com zoom-out; `lua-detalhe-3d.png` é uma vista isolada do mesmo modelo com iluminação de inspeção, não evidência de desempenho ou execução física. Nenhum recurso desses previews foi incorporado como fundo estático.
+
+### APK do refinamento — proveniência final
+
+Fluxo oficial `npm run android:build:debug` **PASS**, incluindo TypeScript/Vite, sync Capacitor e `assembleDebug` (Gradle 21 s, máximo dois workers, paralelismo/daemon persistente desativados). Fonte limpa **`a6f8bb3a0393f1f388e706e4b5742b0737b9a2df`**, árvore `376b11bf36fc2170e6e2cce852bfe50ab06e05b1`. O commit seguinte altera somente documentação/evidências, sem alterar o produto empacotado.
+
+- APK local não versionado: `android/app/build/outputs/apk/debug/Biblioteca-Viva-BF56F-Refinamento-debug.apk`.
+- Tamanho: **13.040.885 bytes**.
+- SHA-256: **`a68b3ecad2388f3b3df2a7cbad8064c763431acc83749c6c6e1dc814ad0f606e`**.
+- **161/161 arquivos web idênticos** entre dist, assets Android e ZIP; 48 pinturas WebP e 48 SVG anteriores preservados, atlas-fonte excluídos. Somente `.vite/manifest.json` é metadado de build excluído da comparação.
+- `apksigner verify` PASS; mesmo certificado debug das candidatas E/F2, mesmo applicationId `com.samuelfrancisco.bibliotecaviva`, versionCode 1/versionName 1.0. Preparado para atualização sobre esses APKs, sem operação sobre dados pessoais. Instalação/preservação real dos dados ainda dependem do gate Moto G06. Dexie v19/backup v11 inalterados.
+- Warnings de chunks >500 kB e `flatDir` permanecem registrados; não são falha do build nem medição de FPS.
+
+[Proveniência verificável](audits/evidence/bf56f-refinement/apk.json) · [Matriz local](audits/evidence/bf56f-refinement/validation.json) · [Arte, fontes e prompts](../assets/duel/source/refinement/README.md). R1 `b09b8f6`, R2 `12bebd1`, R3 `ef0a175`, R4 `a6f8bb3`. Mesma PR draft #48; sem merge/main/G.

@@ -7,7 +7,8 @@
   "commits": {
     "R1": "b09b8f6",
     "R2": "12bebd1",
-    "R3": "ef0a175"
+    "R3": "ef0a175",
+    "R4": "a6f8bb3a0393f1f388e706e4b5742b0737b9a2df"
   },
   "engineChanges": false,
   "schemaVersion": 19,
@@ -122,5 +123,6 @@
   "previews": {
     "lua-detalhe-3d.png": "isolated model with inspection lighting",
     "lua-anel-mundo.png": "actual world with zoom-out; not physical evidence"
-  }
+  },
+  "apk": "docs/audits/evidence/bf56f-refinement/apk.json"
 }

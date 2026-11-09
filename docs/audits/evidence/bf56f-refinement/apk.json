@@ -1,0 +1,43 @@
+{
+  "candidate": "BF-5.6F artistic refinement R1-R4",
+  "builtAtUtc": "2026-11-09T16:49:33.528766+00:00",
+  "sourceCommit": "a6f8bb3a0393f1f388e706e4b5742b0737b9a2df",
+  "sourceTree": "376b11bf36fc2170e6e2cce852bfe50ab06e05b1",
+  "sourceState": "clean tracked tree at official Android build; following commit only docs/evidence",
+  "branch": "feat/bf-5-6f-arena-orbital",
+  "apk": "android/app/build/outputs/apk/debug/Biblioteca-Viva-BF56F-Refinamento-debug.apk",
+  "bytes": 13040885,
+  "sha256": "a68b3ecad2388f3b3df2a7cbad8064c763431acc83749c6c6e1dc814ad0f606e",
+  "build": "npm run android:build:debug PASS",
+  "workersMaximum": 2,
+  "parallel": false,
+  "daemon": false,
+  "java": "Android Studio bundled JBR",
+  "applicationId": "com.samuelfrancisco.bibliotecaviva",
+  "androidVersionCode": 1,
+  "androidVersionName": "1.0",
+  "appVersion": "0.2.0-alpha.1",
+  "signerSha256": "b788958be4c919889fc30813f13f1aceb5b6b69670514c82e16288f4b60b83b3",
+  "sameDebugSignerAsBF56EAndF2": true,
+  "runtimeWebFilesMatchedDistAndroidApk": 161,
+  "preservedSvgIllustrations": 48,
+  "paintedIllustrations": 48,
+  "paintedIllustrationBytes": 1979146,
+  "sourceAtlasesExcludedFromApk": true,
+  "excludedBuildMetadata": [
+    ".vite/manifest.json"
+  ],
+  "dexieVersion": 19,
+  "backupFormatVersion": 11,
+  "compatibleBackupVersions": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "physicalInstallation": "not performed; overlay installation and data preservation remain Moto G06 human gate",
+  "release": false,
+  "gradleSeconds": 21
+}
