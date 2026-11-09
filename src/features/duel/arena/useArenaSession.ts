@@ -136,7 +136,7 @@ export function useArenaSession(sessionId: string) {
       else void handle.remove();
     });
     return () => {
-      ++generation.current;
+      generation.current = token + 1;
       foreground.current = false;
       document.removeEventListener("visibilitychange", browserVisibility);
       void native?.remove();

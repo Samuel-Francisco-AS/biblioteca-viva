@@ -78,3 +78,7 @@ Codex recebe este documento e a branch/PR em estado draft e completa **F2 na mes
 ## F2-A — revisão local (09/11/2026)
 
 Checkout remoto confirmado em `4e23b6d`, branch limpa e rastreada. Gates iniciais: TypeScript PASS; 49 testes de projeção/motor/IA/catálogo/persistência PASS. F1 tinha cinco arquivos fora do Prettier e um erro ESLint `set-state-in-effect`. Revisão F2 adiciona isolamento de respostas por geração/ID, pausa serializada após comando em trânsito, bloqueio imediato da IA em background e reconciliação após conflito sem retry de comando. Definições públicas das cartas visíveis acompanham a projeção para inspeção. Não muda schema/regras.
+
+## F2-B — apresentação Three.js
+
+Cena independente carregada sob demanda: plataforma octogonal suspensa, alvenaria em camadas, incrustações, círculos, quatro obeliscos, constelações e ruínas flutuantes. Cartas públicas recebem lâminas físicas com gravuras existentes e aparições por tradição. Câmera ortográfica oblíqua reenquadra zonas por proporção; controles semânticos usam a mesma projeção. Renderer pertence à montagem da arena, com ResizeObserver, pausa de RAF, recuperação explícita de contexto e descarte de GPU. Recursos de cenário e geometrias compartilhados; resolução reduz somente após amostra de frames lentos. Nenhuma sombra dinâmica nem luz pontual adicional. Gate artístico/físico permanece humano.
