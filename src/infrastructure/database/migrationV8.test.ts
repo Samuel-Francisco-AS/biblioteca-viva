@@ -47,6 +47,11 @@ describe("migração Dexie v7 para v8", () => {
     await migrated.open();
     expect(migrated.tables.map(({ name: table }) => table).sort()).toEqual([
       "activities",
+      "arcanariumCards",
+      "arcanariumDecks",
+      "arcanariumVersions",
+      "cardSessions",
+      "knowledgeTags",
       "libraryEntries",
       "media",
       "metadata",
@@ -55,12 +60,13 @@ describe("migração Dexie v7 para v8", () => {
       "quotes",
       "sessions",
       "settings",
+      "studyCardLinks",
       "tags",
     ]);
     expect(await migrated.libraryEntries.count()).toBe(0);
     expect(await migrated.settings.count()).toBe(0);
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-      value: "14",
+      value: "15",
     });
 
     const fresh = createBook({

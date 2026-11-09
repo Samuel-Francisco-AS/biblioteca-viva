@@ -15,6 +15,12 @@ export class DexieTransactionRunner implements ApplicationTransactionRunner {
         this.database.milestones,
         this.database.tags,
         this.database.sessions,
+        this.database.arcanariumCards,
+        this.database.arcanariumVersions,
+        this.database.arcanariumDecks,
+        this.database.studyCardLinks,
+        this.database.knowledgeTags,
+        this.database.cardSessions,
       ],
       operation,
     );

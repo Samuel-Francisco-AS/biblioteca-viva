@@ -1,3 +1,4 @@
+import { DexieArcanariumRepository } from "./arcanariumRepository";
 import type {
   Activity,
   ActivityRepository,
@@ -78,10 +79,47 @@ function chronological<
 export class DexieLibraryEntryRepository implements LibraryEntryRepository {
   constructor(private readonly database: BibliotecaDatabase) {}
 
+  private async project(entry: LibraryEntry): Promise<LibraryEntry> {
+    if (entry.type !== "study") return entry;
+    const repo = new DexieArcanariumRepository(this.database);
+    const allLinks = await repo.linksForStudy(entry.id);
+    if (allLinks.length === 0 && entry.flashCards === undefined) return entry;
+    const links = allLinks
+      .filter((link) => link.active)
+      .sort((a, b) => a.position - b.position);
+    const flashCards = [];
+    for (const link of links) {
+      const card = await repo.getCard(link.cardId);
+      if (!card || card.content.type !== "flashcard")
+        throw readFailure("study_card_reference");
+      if (!card.archived)
+        flashCards.push({
+          id: link.legacyCardId,
+          globalCardId: card.id,
+          revision: card.revision,
+          front: card.content.front,
+          back: card.content.back,
+        });
+    }
+    return Object.freeze({ ...entry, flashCards: Object.freeze(flashCards) });
+  }
+
   async getById(id: string): Promise<LibraryEntry | undefined> {
     try {
-      const stored: unknown = await this.database.libraryEntries.get(id);
-      return stored === undefined ? undefined : immutableEntry(stored);
+      return await this.database.transaction(
+        "r",
+        [
+          this.database.libraryEntries,
+          this.database.studyCardLinks,
+          this.database.arcanariumCards,
+        ],
+        async () => {
+          const stored: unknown = await this.database.libraryEntries.get(id);
+          return stored === undefined
+            ? undefined
+            : await this.project(immutableEntry(stored));
+        },
+      );
     } catch (error: unknown) {
       if (error instanceof InfrastructureError) throw error;
       throw readFailure("get_book");
@@ -90,15 +128,28 @@ export class DexieLibraryEntryRepository implements LibraryEntryRepository {
 
   async list(): Promise<readonly LibraryEntry[]> {
     try {
-      const stored: unknown[] = await this.database.libraryEntries.toArray();
-      const books = stored
-        .map(immutableEntry)
-        .sort(
-          (left, right) =>
-            left.createdAt.localeCompare(right.createdAt) ||
-            left.id.localeCompare(right.id),
-        );
-      return Object.freeze(books);
+      return await this.database.transaction(
+        "r",
+        [
+          this.database.libraryEntries,
+          this.database.studyCardLinks,
+          this.database.arcanariumCards,
+        ],
+        async () => {
+          const stored: unknown[] =
+            await this.database.libraryEntries.toArray();
+          const books = stored
+            .map(immutableEntry)
+            .sort(
+              (left, right) =>
+                left.createdAt.localeCompare(right.createdAt) ||
+                left.id.localeCompare(right.id),
+            );
+          return Object.freeze(
+            await Promise.all(books.map((entry) => this.project(entry))),
+          );
+        },
+      );
     } catch (error: unknown) {
       if (error instanceof InfrastructureError) throw error;
       throw readFailure("list_books");
@@ -109,9 +160,27 @@ export class DexieLibraryEntryRepository implements LibraryEntryRepository {
     const parsed = persistedLibraryEntrySchema.safeParse(entry);
     if (!parsed.success) throw writeFailure("save_book");
     try {
-      await this.database.libraryEntries.put({
-        ...parsed.data,
-      } satisfies PersistedLibraryEntry);
+      await this.database.transaction(
+        "rw",
+        this.database.libraryEntries,
+        async () => {
+          const stored = await this.database.libraryEntries.get(entry.id);
+          if (parsed.data.type === "study") {
+            // flashCards on reads is a projection. Never persist it over the frozen legacy archive.
+            const { flashCards: _projection, ...fields } = parsed.data;
+            void _projection;
+            await this.database.libraryEntries.put({
+              ...fields,
+              ...(stored?.type === "study" && stored.flashCards !== undefined
+                ? { flashCards: stored.flashCards }
+                : {}),
+            });
+          } else
+            await this.database.libraryEntries.put(
+              parsed.data satisfies PersistedLibraryEntry,
+            );
+        },
+      );
     } catch {
       throw writeFailure("save_book");
     }

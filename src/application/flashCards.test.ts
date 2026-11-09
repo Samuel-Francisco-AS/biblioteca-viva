@@ -1,3 +1,4 @@
+import { DexieArcanariumRepository } from "../infrastructure/database/arcanariumRepository";
 // @vitest-environment node
 import "fake-indexeddb/auto";
 import Dexie from "dexie";
@@ -35,6 +36,7 @@ it("stores editable cards on their study, rejects foreign/blank input, preserves
   });
   let sequence = 0;
   const deps = {
+    arcanarium: new DexieArcanariumRepository(db),
     libraryEntries: entries,
     transaction: new DexieTransactionRunner(db),
     clock: { now: () => Promise.resolve(now) },

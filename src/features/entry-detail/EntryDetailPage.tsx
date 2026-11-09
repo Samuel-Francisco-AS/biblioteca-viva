@@ -27,6 +27,7 @@ import {
 } from "../tags/OrganizationPanel";
 
 export interface EntryDetailApplication extends BookDetailApplication {
+  readonly arcanarium: FlashCardApplication["arcanarium"];
   readonly posters?: EntertainmentApplication["posters"];
   readonly physicalProfile?: WorkoutApplication["physicalProfile"];
   readonly commands: BookDetailApplication["commands"] &

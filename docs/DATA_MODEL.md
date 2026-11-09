@@ -1,3 +1,20 @@
+## BF-5.6A — contrato da candidata (08/11/2026)
+
+Dexie **v15 aditiva** preserva as dez tabelas v14 e acrescenta:
+
+| Tabela | Chave e índices | Conteúdo |
+| --- | --- | --- |
+| `arcanariumCards` | `&id,type` | Estado atual das quatro famílias, origem, revisão e arquivamento |
+| `arcanariumVersions` | `&[cardId+revision],cardId` | Versões completas imutáveis |
+| `arcanariumDecks` | `&id` | Agregado com referências estáticas ordenadas ou critérios dinâmicos v1 |
+| `studyCardLinks` | `&[studyId+legacyCardId],studyId,cardId` | Mapa durável, ordem e vínculo ativo/tombstone |
+| `knowledgeTags` | `&id,namespace` | Classificação editorial/pessoal, níveis, sinônimos e relações |
+| `cardSessions` | `&id,kind,startedAt` | Revisões e respostas; contratos distintos para questões/partidas |
+
+`StudyEntry.flashCards` físico é arquivo legado preservado, sem novas edições. Na leitura pela porta, o mesmo campo é uma projeção do acervo global, com `globalCardId` e `revision`; não é regravado no Estudo. Exclusão do Estudo/vínculo preserva cartas e histórico. Revisão guarda IDs/versões/ordem; progresso deriva das respostas. Sem histórico anterior inventado, sem agenda espaçada ou retomada automática de rodada.
+
+Backup vigente **v7**, `data.arcanarium` estrito, grafo e versões validados; importa **v6** original, promovendo cartas durante o restore mesmo após o upgrade. SHA-256, replace protegido e 10 MiB mantidos. Sem conteúdo oficial/mídia nova automático, sem downgrade. [ADR-025](decisions/ADR-025-arcanario-fundacao-persistencia.md) · [relatório](BF-5_6A_FUNDACAO_IMPLEMENTACAO.md). Contratos anteriores abaixo são baselines históricos.
+
 > **R4 — candidata de 07/11/2026:** main base `d5eb469` integra PRs #32–#38 e aceites físicos dirigidos R2/R3/segurança. R4A–D implementadas na PR draft #39; gates estáticos, 935 unitários, web e APK debug locais PASS. Dados/sessões separados, diagnóstico opt-in e integridade v6 reforçada. Playwright dirigido **3 PASS/1 FAIL** (seleção R2 por deadline, causa não atribuída); sem aprovação física R4 ou CI global verde. [Autoridade canônica e evidências](audits/BV_RECUPERACAO_R4.md). BF-5.5 parcial; R5, F2B/F2C e BF-5.5G não iniciadas. Notas anteriores são cronologia.
 
 ## BF-5 Parte 2F — contrato vigente

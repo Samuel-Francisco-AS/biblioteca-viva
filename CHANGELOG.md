@@ -1,3 +1,11 @@
+## 08/11/2026 — BF-5.6A candidata: fundação do Arcanário
+
+- Flashcards de Estudos promovidos ao acervo global com mapa de IDs por origem, arquivo legado preservado e edição única pelas telas existentes.
+- Cartas tipadas/versionadas, baralhos compartilhados/ordenados e critérios dinâmicos persistíveis; classificação editorial/pessoal separada e contratos de pacotes/questões/combate.
+- Revisões novas guardam respostas e versões históricas. Retirar carta do Estudo e excluir origem preservam o acervo.
+- Dexie **v15**, backup **v7**, importação v6 com promoção transacional também após upgrade; integridade, proteção de restore e limite de 10 MiB preservados.
+- [Relatório e gates](docs/BF-5_6A_FUNDACAO_IMPLEMENTACAO.md). Aceite Moto G06 pendente; sem merge ou início da B.
+
 ## 08/11/2026 — BF-5.5 encerrada com ressalvas (PRs #41 e #42)
 
 - **F2:** leitura com recolhimento original por Samael/Aryn, assentos reversíveis dos quatro, escrita/estudo, trabalho/treino/entretenimento; 5/5 grupos de gate funcional físico PASS no Moto G06.

@@ -1,3 +1,5 @@
+> **BF-5.6A — candidata autorizada em 08/11/2026:** a implementação específica da fundação foi solicitada pelo proprietário, com Dexie v15/backup v7. Ler [relatório](docs/BF-5_6A_FUNDACAO_IMPLEMENTACAO.md) e [ADR-025](docs/decisions/ADR-025-arcanario-fundacao-persistencia.md). Aceite/merge pendentes; a autorização não se estende a B–G/BF-6/BF-7. As notas de planejamento abaixo antecedem esta candidata.
+
 # Regras de contribuição automatizada
 
 > **Atualização de planejamento — 08/11/2026:** BF-5.5 foi encerrada com ressalvas. A fase **BF-5.6 — O Arcanário** foi aprovada **somente como plano**, inserida antes da BF-6 (RPG) e BF-7 (consolidação). Ler [plano BF-5.6](docs/BF-5_6_ARCANARIO_PLANO.md) e [ADR-020 revisada](docs/decisions/ADR-020-baralhos-e-cartas-globais.md). As regras históricas de sequência BF-5→BF-6 nesta página não superam essa decisão. Não iniciar implementação A–G sem pedido próprio; nenhuma migração, backend, conta, jogo ou arena foi criada pela formalização. Dívidas BF-5.5 seguem abertas como ressalvas.

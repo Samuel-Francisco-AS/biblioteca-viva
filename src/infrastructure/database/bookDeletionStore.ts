@@ -19,11 +19,16 @@ export class DexieLibraryEntryDeletionStore implements LibraryEntryDeletionStore
           this.database.activities,
           this.database.sessions,
           this.database.media,
+          this.database.studyCardLinks,
         ],
         async () => {
           const existing = await this.database.libraryEntries.get(id);
           if (existing === undefined) return "not-found";
 
+          await this.database.studyCardLinks
+            .where("studyId")
+            .equals(id)
+            .modify({ active: false });
           await this.database.libraryEntries.delete(id);
           await this.database.media.delete(id);
           await this.database.notes.where("entryId").equals(id).delete();

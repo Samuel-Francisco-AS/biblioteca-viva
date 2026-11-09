@@ -8,7 +8,7 @@ import type {
   Tag,
 } from "../domain";
 
-export const BACKUP_FORMAT_VERSION = 6;
+export const BACKUP_FORMAT_VERSION = 7;
 export const BACKUP_KIND = "biblioteca-viva-backup";
 export const MAX_BACKUP_BYTES = 10 * 1024 * 1024;
 
@@ -19,6 +19,7 @@ export interface BackupSetting {
 }
 
 export interface BackupData {
+  readonly arcanarium?: import("../domain/arcanarium").ArcanariumData;
   readonly media?: readonly import("./media").LocalPoster[];
   readonly libraryEntries: readonly LibraryEntry[];
   readonly milestones: readonly ReachedMilestone[];
@@ -36,6 +37,8 @@ export interface BackupSnapshot extends BackupData {
 
 export function hasRelevantRestoreData(data: BackupData): boolean {
   return (
+    (data.arcanarium !== undefined &&
+      Object.values(data.arcanarium).some((items) => items.length > 0)) ||
     (data.media?.length ?? 0) > 0 ||
     data.libraryEntries.length > 0 ||
     data.notes.length > 0 ||
@@ -49,6 +52,9 @@ export function hasRelevantRestoreData(data: BackupData): boolean {
 }
 
 export interface BackupCounts {
+  readonly arcanariumCards?: number;
+  readonly arcanariumDecks?: number;
+  readonly cardSessions?: number;
   readonly media?: number;
   readonly libraryEntries: number;
   readonly milestones: number;
@@ -64,7 +70,7 @@ export interface BackupSummary {
   readonly createdAt: string;
   readonly appVersion: string;
   readonly databaseVersion: number;
-  readonly formatVersion: 6;
+  readonly formatVersion: 6 | 7;
   readonly policy: "replace";
   readonly counts: BackupCounts;
   readonly warnings: readonly string[];

@@ -105,6 +105,8 @@ export const exercisePlanSchema = z
   .max(80);
 
 export const flashCardSchema = z.strictObject({
+  globalCardId: z.string().min(1).optional(),
+  revision: z.int().positive().optional(),
   id: z.string().trim().min(1).max(160),
   front: z.string().trim().min(1).max(4000),
   back: z.string().trim().min(1).max(8000),

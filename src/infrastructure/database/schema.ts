@@ -27,7 +27,7 @@ import {
 import { z } from "zod";
 
 export const DATABASE_NAME = "biblioteca-viva";
-export const DATABASE_VERSION = 14;
+export const DATABASE_VERSION = 15;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
 export const DATABASE_SCHEMA_V1 = {
@@ -88,6 +88,16 @@ export const DATABASE_SCHEMA_V12 = {
 export const DATABASE_SCHEMA_V13 = { ...DATABASE_SCHEMA_V12 } as const;
 
 export const DATABASE_SCHEMA_V14 = { ...DATABASE_SCHEMA_V13 } as const;
+
+export const DATABASE_SCHEMA_V15 = {
+  ...DATABASE_SCHEMA_V14,
+  arcanariumCards: "&id,type",
+  arcanariumVersions: "&[cardId+revision],cardId",
+  arcanariumDecks: "&id",
+  studyCardLinks: "&[studyId+legacyCardId],studyId,cardId",
+  knowledgeTags: "&id,namespace",
+  cardSessions: "&id,kind,startedAt",
+} as const;
 
 const isoUtc = z.iso.datetime({ offset: false });
 const entityMetadata = {
