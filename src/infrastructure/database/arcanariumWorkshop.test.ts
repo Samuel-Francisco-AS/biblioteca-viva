@@ -124,7 +124,7 @@ it("upgrades v15 to current v17, preserving every existing aggregate and reopens
   await old.table("libraryEntries").add(book);
   old.close();
   const { db, api } = await setup(name);
-  expect(db.verno).toBe(18);
+  expect(db.verno).toBe(19);
   expect(await db.libraryEntries.get("book")).toEqual(book);
   expect(await db.cardMedia.count()).toBe(0);
   const card = await api.createCard(echo);
@@ -404,7 +404,7 @@ it("round-trips v9 with B images and history; restores a checksummed original v7
     databaseVersion: 16,
     createdAt: now,
   });
-  expect(encoded.summary.formatVersion).toBe(10);
+  expect(encoded.summary.formatVersion).toBe(11);
   await target.snapshots.replace(
     (await target.backup.inspect(encoded.content)).data,
   );

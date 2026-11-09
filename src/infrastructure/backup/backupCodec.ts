@@ -1,3 +1,4 @@
+import { replayDuel, validateMatch } from "../../domain/duel/engine";
 import { privateArcanarium } from "../../domain/packBackup";
 import { cardMediaSchema } from "../database/cardMedia";
 import { validateCardMediaOwnership } from "../../application/cardMedia";
@@ -94,6 +95,7 @@ const unsignedSchema = z.strictObject({
     z.literal(7),
     z.literal(8),
     z.literal(9),
+    z.literal(10),
     z.literal(BACKUP_FORMAT_VERSION),
   ]),
   createdAt: z.iso.datetime({ offset: false }),
@@ -246,6 +248,16 @@ export function validateBackupData(data: BackupData): void {
         )
       )
         throw new Error("Missing legacy mapping");
+      for (const session of data.arcanarium?.sessions ?? []) {
+        if (session.kind === "combat_match" && session.duel) {
+          const match = validateMatch(session.duel);
+          if (
+            canonicalize(checksumMaterial(replayDuel(match))) !==
+            canonicalize(checksumMaterial(match))
+          )
+            throw new Error("Duel replay does not match the recorded state");
+        }
+      }
       validateArcanarium(
         data.arcanarium,
         new Set(
@@ -409,6 +421,7 @@ export class JsonBackupCodec implements BackupCodecPort {
       formatVersion !== 7 &&
       formatVersion !== 8 &&
       formatVersion !== 9 &&
+      formatVersion !== 10 &&
       formatVersion !== BACKUP_FORMAT_VERSION
     )
       throw new BackupError(
@@ -429,7 +442,7 @@ export class JsonBackupCodec implements BackupCodecPort {
       (formatVersion < 8 && parsed.data.data.cardMedia !== undefined) ||
       (formatVersion < 10 &&
         parsed.data.data.arcanarium?.packs !== undefined) ||
-      (formatVersion === 10 && parsed.data.data.arcanarium?.packs === undefined)
+      (formatVersion >= 10 && parsed.data.data.arcanarium?.packs === undefined)
     )
       throw new BackupError(
         "INVALID_BACKUP_DATA",

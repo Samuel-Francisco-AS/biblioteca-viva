@@ -1,3 +1,4 @@
+import { DuelService } from "../application/duels";
 import type { PackCataloguePort } from "../application/packCatalogue";
 import { LocalPackCatalogue } from "../infrastructure/packs/localCatalogue";
 import { EducationalPacksService } from "../application/educationalPacks";
@@ -154,6 +155,7 @@ export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 
 export interface ApplicationRuntime {
   readonly arcanarium: ArcanariumService;
+  readonly duels: DuelService;
   readonly educationalPacks: EducationalPacksService;
   readonly packCatalogue: PackCataloguePort;
   readonly workshop: ArcanariumWorkshop;
@@ -371,6 +373,7 @@ export async function createApplication(
 
   return {
     arcanarium: new ArcanariumService(dependencies),
+    duels: new DuelService(dependencies),
     packCatalogue: new LocalPackCatalogue(),
     educationalPacks: new EducationalPacksService(
       dependencies,

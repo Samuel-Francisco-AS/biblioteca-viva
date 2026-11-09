@@ -93,3 +93,7 @@ Os itens abaixo são espécimes externos normalizados para o gate F4-B, não ass
 ## Arcanário BF-5.6B (08/11/2026, candidata)
 
 `src/features/arcanarium/ArcanaArt.tsx` e `arcanarium.css`: três selos (Eco, Relicário, Oficina), três molduras (Constelação, Herbário, Iluminura), quatro materiais e composição de portal. Autoria original em código nesta entrega, sob a licença do repositório, sem imagens de terceiros/fontes remotas/novo Canvas. A imagem dos testes é o JPEG fictício já registrado em `e2e/fixtures/entertainment/ceu-ficticio.jpg`; fotos pessoais não são distribuídas. Aceite artístico pendente.
+
+## BF-5.6E — Duelo Arcano
+
+48 gravuras SVG originais em `public/assets/duel` (711.545 B), geradas por `scripts/generate-duel-art.mjs`; [manifesto com hashes/procedência](../assets/duel/source/manifest.json) e [fontes/limites](../assets/duel/source/README.md). Sem terceiros, imagens remotas ou runtime novo. Aprovação artística humana pendente.

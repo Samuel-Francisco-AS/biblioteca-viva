@@ -1,3 +1,7 @@
+## BF-5.6E — cartas fantásticas em candidata
+
+O Duelo Arcano recebe 48 gravuras vetoriais autorais distinguíveis: criaturas com anatomias próprias, magia e artefatos; Ruína negro/lilás/brasas, Conhecimento azul/ouro/runas, Florescimento verde/dourado/pétalas, Caos violeta/magenta/fragmentos e neutras azul ardósia/pergaminho. Molduras específicas, variações por tipo, custo e atributos fora da arte. [Fontes editáveis/procedência](../assets/duel/source/README.md). Não são fotografias nem pinturas raster; acabamento estilizado de gravura, sem assets de franquias/terceiros. A inspeção automatizada/local não substitui aprovação artística humana. Arena e habitantes 3D permanecem para F/fases próprias.
+
 > **BF-5.6C — arte candidata:** Provações usam fólio claro de leitura livre, inscrição violeta/dourada, alternativas amplas, correção comentada e diagnóstico integrado ao arquivo. Questões longas não são comprimidas em carta de proporção fixa. Radios de moldura exibem os nomes/ornamentos e estado selecionado. [Capturas C e gate artístico A+B+C](BF-5_6C_PROVACOES_DIAGNOSTICO_IMPLEMENTACAO.md). Sem novo aceite humano.
 
 > **BF-5.6B — arte candidata:** portal de arquivo arcano, volumes de coleção, três gravuras de selos, três molduras vetoriais e quatro materiais cromáticos autorais, com giro de carta e modo reduzido. SVG/CSS locais de autoria desta implementação, sem assets externos. [Evidências B](BF-5_6B_OFICINA_COLECOES_IMPLEMENTACAO.md). Aceite artístico no Moto G06 pendente.

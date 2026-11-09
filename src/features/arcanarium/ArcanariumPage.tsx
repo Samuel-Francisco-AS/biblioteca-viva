@@ -1,3 +1,7 @@
+import { DuelHall } from "../duel/DuelHall";
+import { DuelTable } from "../duel/DuelTable";
+import { DuelDeckEditor } from "../duel/DuelDecks";
+import { DuelRules } from "../duel/DuelRules";
 import { emptyArcanarium } from "../../domain/arcanarium";
 import { PackLibrary } from "./PackLibrary";
 import { cardAvailable } from "../../domain/educationalPacks";
@@ -89,6 +93,7 @@ export default function ArcanariumPage({
         <NavLink to="/arcanario/baralhos">Baralhos</NavLink>
         <NavLink to="/arcanario/oficina/nova">Oficina</NavLink>
         <NavLink to="/arcanario/ecos">Ecos</NavLink>
+        <NavLink to="/arcanario/duelos">Duelo Arcano</NavLink>
         <NavLink to="/arcanario/provacoes">Provações</NavLink>
         <NavLink to="/arcanario/pacotes">Biblioteca de Provas</NavLink>
         <NavLink to="/arcanario/assuntos">Assuntos</NavLink>
@@ -113,6 +118,13 @@ export default function ArcanariumPage({
             <Route
               index
               element={<Portal data={snapshot.data} counts={snapshot.counts} />}
+            />
+            <Route path="duelos" element={<DuelHall />} />
+            <Route path="duelos/regras" element={<DuelRules />} />
+            <Route path="duelos/baralhos/:id" element={<DuelDeckEditor />} />
+            <Route
+              path="duelos/partida/:id"
+              element={<DuelTable key={location.pathname} />}
             />
             <Route path="acervo" element={<Catalogue />} />
             <Route path="pacotes" element={<PackLibrary />} />
@@ -208,6 +220,13 @@ function Portal({
       </div>
       <div className="arcana-portals">
         {[
+          {
+            to: "duelos",
+            title: "O Duelo Arcano",
+            text: "Quatro tradições, criaturas impossíveis e escolhas que mudam o círculo. Duele offline.",
+            kind: "workshop" as const,
+            label: "05 · CONJURAR",
+          },
           {
             to: "pacotes",
             title: "Biblioteca de Provas",

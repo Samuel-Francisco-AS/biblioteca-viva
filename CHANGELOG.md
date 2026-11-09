@@ -1,3 +1,11 @@
+## 09/11/2026 — BF-5.6E candidata: Duelo Arcano
+
+- TCG offline de invocadores, regulamento próprio v1, 20 PV, 24 cartas, energia até seis; criaturas, feitiços, artefatos, alvos, ataques/proteção, fadiga, vitória/derrota/empate e abandono.
+- 48 cartas oficiais originais com gravuras vetoriais individuais e quatro decks de afinidades; construtor pessoal, Oficina de combate com efeitos declarativos, rascunhos e revisões globais.
+- Mesa 2D por toque/teclado, quatro oponentes de IA local sem acesso a cartas ocultas, modos Oficial/Criador/Livre, pausa/retomada, histórico separado e confirmação após persistência.
+- Dexie v19 aditiva, backup v11 lê v6–v10; catálogo/artes reinstaláveis separados do backup pessoal, 10 MiB e rollback preservados.
+- Simulações apontam desequilíbrio residual entre Ruína e Conhecimento; candidata sem aceite físico/artístico, sem merge/fechamento da BF-5.6. [Relatório completo](docs/BF-5_6E_TCG_DUELO_ARCANO_IMPLEMENTACAO.md).
+
 ## 09/11/2026 — BF-5.6D integrada: marco educacional A–D consolidado
 
 - Proprietário confirmou **6/6 grupos PASS** no Moto G06: preservação de dados, reparos C, Biblioteca de Provas, Provações offline, lotes/remoção e interface/Canvas; nenhum defeito novo relatado.

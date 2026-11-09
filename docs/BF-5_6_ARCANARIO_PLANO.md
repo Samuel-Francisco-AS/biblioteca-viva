@@ -114,3 +114,6 @@ Compartilhamento online de baralhos; contas/turmas; professora criando deck de 1
 - Ordem fina das subentregas e gates por PR, ajustada conforme evidência do repositório.
 
 **Resultado original deste plano:** escopo e sequência aprovados sem implementação pela formalização. A candidata A posterior está registrada separadamente; B–G e BF-6/7 permanecem futuros.
+## Execução específica posterior — E (09/11/2026)
+
+O proprietário autorizou a implementação contínua E1–E4, commits/push/APK e uma PR draft sobre main `6babce2`, com #46 integrada. [Relatório E](BF-5_6E_TCG_DUELO_ARCANO_IMPLEMENTACAO.md) e [ADR-029](decisions/ADR-029-duelo-arcano-regulamento.md). Não encerra BF-5.6 nem autoriza F/G/BF-6 ou merge. O corpo anterior continua como cronologia/plano.

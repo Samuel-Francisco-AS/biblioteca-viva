@@ -1,0 +1,34 @@
+{
+  "candidate": "BF-5.6E",
+  "builtAtUtc": "2026-11-09T12:19:58.442615+00:00",
+  "sourceCommit": "8bc290b0edc7e4d6f32157c1a51a0d91db177e0a",
+  "sourceTree": "d0fb9a0ef9e78a0c960d41077024d938c78d8651",
+  "sourceState": "clean at build; subsequent commit only documentation/evidence",
+  "branch": "feat/bf-5-6e-arcanario-duelo-arcano",
+  "apk": "android/app/build/outputs/apk/debug/Biblioteca-Viva-BF56E-debug.apk",
+  "bytes": 11647318,
+  "sha256": "76de2a5cd3b3e827f939e7e82792a3984f47a579cc792f24fb531d077c8d970b",
+  "appVersion": "0.2.0-alpha.1",
+  "androidVersionName": "1.0",
+  "androidVersionCode": 1,
+  "applicationId": "com.samuelfrancisco.bibliotecaviva",
+  "dexieVersion": 19,
+  "backupFormatVersion": 11,
+  "compatibleBackupVersions": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "runtimeWebFilesMatchedDistAndroidApk": 110,
+  "excludedBuildMetadata": [
+    ".vite/manifest.json"
+  ],
+  "illustrationsMatched": 48,
+  "officialCards": 48,
+  "starterDecks": 4,
+  "physicalGate": "pending; no physical install or artistic approval claimed",
+  "release": false
+}
