@@ -599,6 +599,7 @@ export class ThreeWorldInteraction {
     // The small-prop expanded hit target is retained as a separate fallback.
     if (roots.length === 0) {
       this.canvas.dataset.pickCandidateRoots = "0";
+      this.canvas.dataset.pickSkippedRoots = String(allRoots.length);
       this.selectObject(
         findExpandedLivingTap(
           this.selectableRoots,
@@ -611,6 +612,7 @@ export class ThreeWorldInteraction {
       return;
     }
     this.canvas.dataset.pickCandidateRoots = String(roots.length);
+    this.canvas.dataset.pickSkippedRoots = String(allRoots.length - roots.length);
     // Update only candidate hierarchies and their ancestors. This also handles
     // input arriving before the next render after a book/inhabitant moves.
     for (const root of roots) {

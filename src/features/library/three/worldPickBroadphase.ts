@@ -7,7 +7,6 @@ import {
   Object3D,
   Points,
   SkinnedMesh,
-  Sphere,
   Vector3,
   type Ray,
 } from "three";
@@ -28,8 +27,8 @@ export class WorldPickBroadphase {
   private readonly inverse = new Matrix4();
   private readonly transform = new Matrix4();
   private readonly worldBounds = new Box3();
-  private readonly center = new Vector3();
-  private readonly sphere = new Sphere();
+  private readonly size = new Vector3();
+  private readonly actorBounds = new Box3();
 
   /** Compute static bounds once when registering, never in a tap callback. */
   register(root: Object3D, id: string): void {
@@ -39,6 +38,7 @@ export class WorldPickBroadphase {
     // frozen into a static box; they keep the exact fallback until supported
     // by a dedicated conservative authored envelope.
     if (id.startsWith("living:") || id === "portal:duelo-arcano") return;
+    try {
     root.updateWorldMatrix(true, true);
     this.inverse.copy(root.matrixWorld).invert();
     const bounds = new Box3();
@@ -82,14 +82,24 @@ export class WorldPickBroadphase {
       hasGeometry = true;
     });
     if (hasGeometry && !hasUnknownRaycast) {
-      const size = bounds.getSize(this.center);
+      const size = bounds.getSize(this.size);
       const expansion = Math.max(0.3, Math.max(size.x, size.y, size.z) * 0.3);
       bounds.expandByScalar(expansion);
     }
+    if (
+      ![bounds.min.x, bounds.min.y, bounds.min.z,
+        bounds.max.x, bounds.max.y, bounds.max.z]
+        .every(Number.isFinite)
+    ) hasUnknownRaycast = true;
     this.cached.set(root, {
       bounds: hasGeometry && !hasUnknownRaycast ? bounds : null,
       childCount: root.children.length,
     });
+    } catch {
+      // An optimization must never turn an otherwise valid world into a
+      // failed mount. Exotic/custom nodes keep the legacy exact raycast.
+      this.cached.set(root, { bounds: null, childCount: root.children.length });
+    }
   }
 
   invalidate(root: Object3D): void {
@@ -102,16 +112,15 @@ export class WorldPickBroadphase {
     const actor = INHABITANTS.find((item) => item.id === id);
     if (actor) {
       const limits = INHABITANT_ENVELOPES[actor.key];
-      // Rigs, wings, props and full action clips are contained by a generous
-      // envelope around the authored character origin. Agent translation is
-      // applied every touch, but no skinned vertex is evaluated for misses.
-      const radial = Math.max(limits.magic, limits.work, limits.travel);
-      const radius =
-        Math.hypot(radial * 2 + 1, actor.height * 1.5 + 1) *
-        root.matrixWorld.getMaxScaleOnAxis();
-      this.center.set(0, actor.height * 0.6, 0).applyMatrix4(root.matrixWorld);
-      this.sphere.set(this.center, radius);
-      return ray.intersectsSphere(this.sphere);
+      // These radial limits are measured from the real animated assets.
+      // Add a generous touch margin, but use a box rather than an oversized
+      // sphere: empty taps near the actors must remain genuinely cheap.
+      const radial = Math.max(limits.magic, limits.work, limits.travel) + 0.65;
+      this.actorBounds.min.set(-radial, -0.65, -radial);
+      this.actorBounds.max.set(radial, actor.height + 1.1, radial);
+      return ray.intersectsBox(
+        this.worldBounds.copy(this.actorBounds).applyMatrix4(root.matrixWorld),
+      );
     }
     const cached = this.cached.get(root);
     // No trusted proxy: keep exact hit testing, never drop an unknown root.

@@ -1,3 +1,9 @@
+## 09/11/2026 — BV-UXC R3: broadphase para toques vazios (PR draft #49)
+
+- Teste físico R2: melhora parcial, mas o halo e as animações do mundo ainda travavam ao tocar repetidamente áreas vazias.
+- Evitado o raycast de todas as malhas/skinning em qualquer toque: broadphase com envelopes geométricos conservadores fora do gesto e volumes autorais dos habitantes; somente candidatos usam raycast exato. Halo conclui a reação sem aguardar a seleção.
+- Candidato remoto sem CI/compilação/APK/gate R3; `main` intacta. [Registro](docs/BV_UX_CONTINUIDADE_TOQUE_2026-11-09.md).
+
 ## 09/11/2026 — BV-UXC R2: sanar interrupções no gesto (PR #49 draft)
 
 - Feedback físico confirmou que R1 era insuficiente. R2 muda a sequência de execução: picking diferido e cancelável após feedback visual; destaque 3D de personagens/portal acompanha envelope em vez de fazer CPU skinning a cada quadro; checkpoint de pausa fora da transição de rota; carregamento dos componentes do Arcanário sob demanda por sala.

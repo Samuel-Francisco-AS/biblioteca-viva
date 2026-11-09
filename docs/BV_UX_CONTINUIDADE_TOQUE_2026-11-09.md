@@ -37,3 +37,21 @@ O proprietário testou a R1 no Moto G06: a animação era perceptível, mas o en
 Repetir o toque em cada um dos quatro habitantes e a abertura/fechamento de diálogos (incluindo toques consecutivos); o primeiro sinal deve aparecer antes do painel, sem quadro congelado aparente ou diálogo duplicado. Alternar Biblioteca ↔ Coleção/Arquivo/Ajustes pelo dock, repetindo rapidamente e usando Voltar. Entrar pelo grimório/lua orbital no Arcanário, sair e retornar; conferir se o cenário residente volta corretamente e se o duelo não perde estado. Exercitar pan/pinch, toque cancelado, retrato/paisagem, segundo plano/retorno, toque no vazio e redução de movimento. Registrar **suavidade percebida, qualquer engasgo residual e regressões**, separadamente dos testes automatizados.
 
 **Critério de aceite:** sensação contínua no Moto G06, sem toques perdidos, gestos fantasmas, sobreposição persistente, bloqueio de interface ou quebra de dados. Proprietário decide aceitação/merge somente após seu gate; sem integração automática da PR e sem declarar encerramento de BF-5.6G.
+
+
+## Rodada R3 — eliminar geometria de toques no vazio
+
+**Evidência física R2 (Moto G06):** melhorou, porém um toque no vazio ainda interrompe a conclusão do halo; cliques rápidos em áreas vazias também afetam o movimento do mundo e dos personagens. Portanto, a R2 tampouco é considerada concluída.
+
+**Achado no código:** `ThreeWorldInteraction.pick()` chamava `updateMatrixWorld(true)`, preparava todas as `SkinnedMesh` com `computeBoundingBox()` e `computeBoundingSphere()` e executava `intersectObjects()` para todos os roots. Isso ocorria até quando não havia nada sob o toque.
+
+**R3:**
+
+- Novo `worldPickBroadphase.ts`: pré-calcula envelopes conservadores de objetos estáticos fora do gesto; para habitantes, usa os limites de animação já medidos (`INHABITANT_ENVELOPES`) e a posição atual, sem consultar vértices articulados.
+- Na versão Android real, primeiro filtra os roots que o raio sequer poderia tocar. Somente os candidatos passam pelo raycast original, incluindo prioridade, profundidade, oclusão e seleção exata. Objetos sem limite confiável continuam no caminho preciso, evitando falsos negativos; objetos com geometria substituída devem invalidar o envelope.
+- Em toques claramente vazios, nenhuma preparação de esqueleto nem raycast de triângulos é feita. A seleção ampliada das pequenas peças vivas continua disponível.
+- O halo passa imediatamente a `released` no `pointerup`, independentemente da conclusão do raycast. O cálculo do alvo ainda ocorre após oportunidade de apresentação e pode ser cancelado por outro gesto.
+- Diagnóstico mínimo por Canvas: `data-pick-candidate-roots` e `data-pick-skipped-roots` permitem conferir se a poda realmente foi ativada.
+- O modo é opt-in só no mundo do aplicativo; testes históricos de resultado exato continuam com o caminho antigo, e três novos testes cobrem descarte de miss, alvo movido e seleção aninhada.
+
+**Limites:** isto é uma intervenção concreta, mas não demonstra FPS/latência sem teste no Moto G06. Envelopes conservadores dos habitantes devem ser conferidos nas animações mais expansivas e nas diferentes escalas da câmera; a malha continua exata quando candidata. Não há CI nem build local nesta operação remota. **Não aprovar merge sem gate R3**.
