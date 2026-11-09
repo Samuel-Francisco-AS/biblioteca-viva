@@ -55,3 +55,7 @@ Repetir o toque em cada um dos quatro habitantes e a abertura/fechamento de diá
 - O modo é opt-in só no mundo do aplicativo; testes históricos de resultado exato continuam com o caminho antigo, e três novos testes cobrem descarte de miss, alvo movido e seleção aninhada.
 
 **Limites:** isto é uma intervenção concreta, mas não demonstra FPS/latência sem teste no Moto G06. Envelopes conservadores dos habitantes devem ser conferidos nas animações mais expansivas e nas diferentes escalas da câmera; a malha continua exata quando candidata. Não há CI nem build local nesta operação remota. **Não aprovar merge sem gate R3**.
+
+### R3 complemento — alvo pequeno ampliado
+
+O fallback de seleção expandida (`findExpandedLivingTap`) ainda calculava `Box3.setFromObject()` dos objetos `living:book` e `living:table` em todo toque vazio, mesmo quando o toque ocorria longe deles. Agora ele projeta primeiro a origem do objeto e só lê seus limites completos se estiver dentro de um envelope amplo (3 unidades de mundo, mais o raio em pixels). Isso preserva a verificação exata perto das peças e evita nova travessia de geometria no vazio. Há teste de regressão para este comportamento; não executado remotamente.

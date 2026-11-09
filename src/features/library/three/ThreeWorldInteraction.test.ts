@@ -157,6 +157,15 @@ describe("R3: candidate rejection for empty-world taps", () => {
     expect(activation).toHaveBeenCalledOnce();
   });
 
+  it("does not rebuild the living furniture bounds for a far-away empty tap", () => {
+    const h = setup();
+    h.add("living:table");
+    const bboxRead = vi.spyOn(Box3.prototype, "setFromObject");
+    const { tap } = h.mount(false, true);
+    tap(390, 30);
+    expect(bboxRead).not.toHaveBeenCalled();
+  });
+
   it("does not discard a nested registered target when the broadphase root is its parent", () => {
     const h = setup();
     const actor = h.add("character:lua");
