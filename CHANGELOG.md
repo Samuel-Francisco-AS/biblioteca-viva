@@ -1,3 +1,10 @@
+## 09/11/2026 — BF-5.6F integrada: Arena Viva 3D e refinamento da lua arcana
+
+- A [PR #48](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/48), única aberta na consulta, foi **mesclada na `main` após autorização expressa**, merge `690be5b5798d34e6436610bf9d209ede38629fd7`. Etapas **F1, F2 e R1–R4 encerradas por aceite funcional/artístico dirigido Moto G06**; BF-5.6 global permanece aberta para G.
+- Duelo Arcano 3D fullscreen em um viewport sem rolagem, HUD contextual, cenário de observatório ritual, 48 pinturas WebP/molduras novas, feitiços/combates com efeitos aprimorados e construção lunar orbitante com grimório giratório. Motor E, Dexie v19 e backup v11 preservados.
+- Ressalvas: novo E2E do portal lunar FAIL/timeout (duas tentativas), ampla F2 anterior 1.174 PASS/12 FAIL com seis timeouts gráficos, CI Actions sem cota, lint global/TalkBack/FPS/memória/termal não certificados; UI/UX das outras áreas do Arcanário e balanceamento TCG pendentes.
+- [Fechamento formal e dívidas](docs/BF-5_6F_FECHAMENTO_2026-11-09.md). Nenhum release, BF-5.6G não iniciada.
+
 > **BF-5.6F — refinamento artístico R1–R4 (09/11/2026):** grimório lunar orbitante/giratório, arena como observatório ritual, 48 pinturas novas, cartas com encadernação por afinidade e efeitos confirmados mais expressivos. Mecânica e dados E preservados; palco continua sem scroll. [Relatório](docs/BF-5_6F_ARENA_VIVA_IMPLEMENTACAO.md). Candidata na mesma PR draft #48; sem release/merge/G.
 
 > **BF-5.6F2 — candidata de 09/11/2026:** Duelo Arcano ganha arena 3D original, HUD de jogo sem scroll, composição retrato/paisagem, mão completa, inspeção temporária, seleção/alvos/contexto, efeitos confirmados, pausa/retomada e acesso por santuário orbital. F1 revisada para lifecycle e concorrência. Motor E, dados v19/backup v11 e mundo residente preservados. [Relatório](docs/BF-5_6F_ARENA_VIVA_IMPLEMENTACAO.md). Sem release/aceite físico/merge.
