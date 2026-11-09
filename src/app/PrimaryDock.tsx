@@ -61,7 +61,15 @@ function DockIcon({ name }: { readonly name: PrimaryNavigationIcon }) {
 export function PrimaryDock({ pathname }: { readonly pathname: string }) {
   const navigate = useNavigate();
   const flight = useRef<(() => void) | null>(null);
+  const flightOrigin = useRef<string | null>(null);
   useEffect(() => () => flight.current?.(), []);
+  useEffect(() => {
+    if (flightOrigin.current !== null && flightOrigin.current !== pathname) {
+      flight.current?.();
+      flight.current = null;
+      flightOrigin.current = null;
+    }
+  }, [pathname]);
   const activeRouteId = primaryRouteIdForPath(pathname);
   const [passage, setPassage] = useState<{ from: string; to: string }>();
   if (passage && passage.from !== pathname) setPassage(undefined);
@@ -99,10 +107,12 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                   event.preventDefault();
                   if (active) return;
                   flight.current?.();
+                  flightOrigin.current = pathname;
                   setPassage({ from: pathname, to: route.path });
                   beginPassage();
                   flight.current = afterFeedbackFrame(() => {
                     flight.current = null;
+                    flightOrigin.current = null;
                     preloadRoute(route.path);
                     void navigate(route.path);
                   });
