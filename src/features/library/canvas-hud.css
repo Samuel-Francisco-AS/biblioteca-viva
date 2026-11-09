@@ -217,7 +217,12 @@
   height: 3.8rem;
   border: 1px solid #eacfa8c0;
   border-radius: 50%;
-  background: radial-gradient(circle, #f6d8a24d, #d3a3e817 50%, transparent 72%);
+  background: radial-gradient(
+    circle,
+    #f6d8a24d,
+    #d3a3e817 50%,
+    transparent 72%
+  );
   pointer-events: none;
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.55);
@@ -233,10 +238,20 @@
   animation: bv-touch-release 270ms ease-out both;
 }
 @keyframes bv-touch-release {
-  from { opacity: 0.75; transform: translate(-50%, -50%) scale(0.86); }
-  to { opacity: 0; transform: translate(-50%, -50%) scale(1.55); }
+  from {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(0.86);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.55);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .world-host::after { content: none; }
+  .world-host::after {
+    content: none;
+  }
 }
-[data-reduced-motion="true"] .world-host::after { content: none; }
+[data-reduced-motion="true"] .world-host::after {
+  content: none;
+}

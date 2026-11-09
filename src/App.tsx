@@ -304,6 +304,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           !control.hasAttribute("download") &&
           (!control.target || control.target === "_self") &&
           control.getAttribute("href")?.startsWith("/") &&
+          !control.getAttribute("href")?.startsWith("//") &&
           (control.pathname !== location.pathname ||
             control.search !== location.search)
         )

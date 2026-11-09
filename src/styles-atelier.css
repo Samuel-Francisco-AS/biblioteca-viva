@@ -2004,12 +2004,20 @@
   animation: bv-passage-unfold 250ms cubic-bezier(0.19, 0.75, 0.25, 1) both;
 }
 @keyframes bv-passage-fold {
-  from { opacity: 0; }
-  to { opacity: 0.5; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5;
+  }
 }
 @keyframes bv-passage-unfold {
-  from { opacity: 0.5; }
-  to { opacity: 0; }
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 /* The speaker panel itself unfolds; the header and Adiar remain in the DOM. */
@@ -2017,18 +2025,28 @@
   animation: bv-dialogue-unfold 205ms cubic-bezier(0.16, 0.78, 0.26, 1) both;
 }
 @keyframes bv-dialogue-unfold {
-  from { opacity: 0.86; transform: translate3d(0, 7px, 0) scale(0.994); }
-  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  from {
+    opacity: 0.86;
+    transform: translate3d(0, 7px, 0) scale(0.994);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .app-shell > .passage-veil,
   .app-shell .rpg-dialogue {
     animation: none;
   }
-  .app-shell > .passage-veil { opacity: 0; }
+  .app-shell > .passage-veil {
+    opacity: 0;
+  }
 }
 .app-shell[data-reduced-motion="true"] > .passage-veil,
 .app-shell[data-reduced-motion="true"] .rpg-dialogue {
   animation: none;
 }
-.app-shell[data-reduced-motion="true"] > .passage-veil { opacity: 0; }
+.app-shell[data-reduced-motion="true"] > .passage-veil {
+  opacity: 0;
+}

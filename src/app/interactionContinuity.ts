@@ -12,7 +12,10 @@ export function afterFeedbackFrame(action: () => void): () => void {
   };
   if (
     typeof requestAnimationFrame !== "function" ||
-    document.visibilityState === "hidden"
+    document.visibilityState === "hidden" ||
+    document.querySelector(".app-shell[data-reduced-motion='true']") !== null ||
+    (typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches)
   ) {
     queueMicrotask(commit);
   } else {

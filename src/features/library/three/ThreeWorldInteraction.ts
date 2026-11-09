@@ -270,7 +270,10 @@ export class ThreeWorldInteraction {
     this.continueAfterPointerEnd();
   };
 
-  private touchEcho(state: "pressed" | "released" | "cancelled", event?: PointerEvent): void {
+  private touchEcho(
+    state: "pressed" | "released" | "cancelled",
+    event?: PointerEvent,
+  ): void {
     const host = this.canvas.parentElement;
     if (!host?.classList.contains("world-host")) return;
     if (event) {

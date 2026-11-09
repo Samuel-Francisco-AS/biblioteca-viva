@@ -1,3 +1,9 @@
+## 09/11/2026 — BV-UXC candidata: continuidade do toque (sem merge)
+
+- Início de feedback circular no Canvas antes do picking; cancelamento coerente com pan/pinch; conversa RPG e navegação entre rotas com passagem leve; dock e portal orbital cedem um frame de apresentação ao gesto antes da montagem da próxima área.
+- Sem simplificação da cena 3D, alteração de motor, regras, Dexie ou backup. Contrato de [continuidade e gate](docs/BV_UX_CONTINUIDADE_TOQUE_2026-11-09.md).
+- **Não validado fisicamente nem por CI.** Cota de Actions esgotada; novos testes escritos, mas não executados; PR remota draft e `main` intacta.
+
 ## 09/11/2026 — BF-5.6F integrada: Arena Viva 3D e refinamento da lua arcana
 
 - A [PR #48](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/48), única aberta na consulta, foi **mesclada na `main` após autorização expressa**, merge `690be5b5798d34e6436610bf9d209ede38629fd7`. Etapas **F1, F2 e R1–R4 encerradas por aceite funcional/artístico dirigido Moto G06**; BF-5.6 global permanece aberta para G.

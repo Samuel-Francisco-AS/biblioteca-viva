@@ -3,6 +3,7 @@ import { afterFeedbackFrame, beginPassage } from "./interactionContinuity";
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
   document.querySelector(".app-shell")?.remove();
 });
 
@@ -14,10 +15,7 @@ describe("continuity frame", () => {
       return callbacks.length;
     });
     vi.stubGlobal("cancelAnimationFrame", vi.fn());
-    Object.defineProperty(document, "visibilityState", {
-      configurable: true,
-      value: "visible",
-    });
+    vi.spyOn(document, "visibilityState", "get").mockReturnValue("visible");
     const action = vi.fn();
     const cancel = afterFeedbackFrame(action);
     expect(action).not.toHaveBeenCalled();
