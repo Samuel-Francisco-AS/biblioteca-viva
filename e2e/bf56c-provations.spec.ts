@@ -410,3 +410,35 @@ test("B-R1/B-R2: all frame previews, independent catalogue name, recovery and fa
   await expect(page.locator(".arcana-card-link")).toHaveCount(1);
   await expect(page.locator("select")).toHaveCount(0);
 });
+
+test("C hotfix: inline personal tag creation, Enter safety and readable question summary", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/arcanario/oficina/nova?tipo=question");
+  const search = page.getByLabel("Buscar classificações já cadastradas");
+  await search.fill("Potenciação");
+  await expect(
+    page.getByRole("button", { name: 'Criar e marcar etiqueta "Potenciação"' }),
+  ).toBeEnabled();
+  await search.press("Enter");
+  await expect(page).toHaveURL(/\/arcanario\/oficina\/nova/);
+  await page
+    .getByRole("button", { name: 'Criar e marcar etiqueta "Potenciação"' })
+    .click();
+  await expect(
+    page.getByRole("checkbox", { name: /Potenciação/ }),
+  ).toBeChecked();
+  await page.getByLabel("Enunciado da questão").fill("Quanto é 2³?");
+  await page.getByLabel("Alternativa A", { exact: true }).fill("8");
+  await page.getByLabel("Alternativa B", { exact: true }).fill("9");
+  await page.getByRole("radio", { name: "Gabarito A" }).check();
+  await page.getByRole("button", { name: "Guardar questão no acervo" }).click();
+  await expect(
+    page.getByRole("link", { name: "Editar na Oficina" }),
+  ).toBeVisible();
+  const summary = page.getByText("Gabarito e resolução (Oficina)");
+  await expect(summary).toBeVisible();
+  await expect(summary).toHaveCSS("color", "rgb(64, 34, 79)");
+  await expect(summary).toHaveCSS("background-color", "rgb(224, 207, 173)");
+});
