@@ -57,7 +57,9 @@ export function ClassificationEditor({
       });
       await reload();
       setSearch("");
-      setMessage(`Etiqueta "${tag.label}" criada e marcada nesta questão. Guarde a questão para conservar o vínculo.`);
+      setMessage(
+        `Etiqueta "${tag.label}" criada e marcada nesta questão. Guarde a questão para conservar o vínculo.`,
+      );
     } catch (cause) {
       setError(arcanaError(cause));
     } finally {
@@ -68,15 +70,15 @@ export function ClassificationEditor({
     <fieldset>
       <legend>Conhecimentos e etiquetas</legend>
       <p>
-        A pesquisa encontra classificações que você já cadastrou. Digitar
-        um nome não cria uma classificação nem associa a questão: marque
-        a caixa de uma opção existente ou crie uma etiqueta abaixo.
+        A pesquisa encontra classificações que você já cadastrou. Digitar um
+        nome não cria uma classificação nem associa a questão: marque a caixa de
+        uma opção existente ou crie uma etiqueta abaixo.
       </p>
       <p>
-        Para organizar por Área → Disciplina → Assunto e escolher um
-        assunto principal, use{" "}
-        <Link to="/arcanario/assuntos">Organizar classificações</Link>.
-        O rascunho da questão é preservado ao sair.
+        Para organizar por Área → Disciplina → Assunto e escolher um assunto
+        principal, use{" "}
+        <Link to="/arcanario/assuntos">Organizar classificações</Link>. O
+        rascunho da questão é preservado ao sair.
       </p>
       <label>
         Buscar classificações já cadastradas
@@ -99,8 +101,8 @@ export function ClassificationEditor({
         />
       </label>
       <p id="arcana-tag-search-help" className="arcana-muted">
-        Escolha uma das classificações listadas. A busca apenas filtra
-        a lista; ela não funciona como seletor nativo.
+        Escolha uma das classificações listadas. A busca apenas filtra a lista;
+        ela não funciona como seletor nativo.
       </p>
       <div className="arcana-choice-list">
         {matching.map((t) => (
@@ -149,8 +151,8 @@ export function ClassificationEditor({
           <strong>Etiqueta pessoal rápida</strong>
         </p>
         <p className="arcana-muted">
-          Escreva um nome acima e toque em criar. Ela ficará marcada
-          nesta questão, sem exigir uma hierarquia completa.
+          Escreva um nome acima e toque em criar. Ela ficará marcada nesta
+          questão, sem exigir uma hierarquia completa.
         </p>
         <button
           type="button"
@@ -172,7 +174,11 @@ export function ClassificationEditor({
             Essa etiqueta já existe. Marque sua caixa na lista acima.
           </p>
         )}
-        {error && <p role="alert" className="arcana-error">{error}</p>}
+        {error && (
+          <p role="alert" className="arcana-error">
+            {error}
+          </p>
+        )}
         {message && <p role="status">{message}</p>}
       </div>
       <Choices

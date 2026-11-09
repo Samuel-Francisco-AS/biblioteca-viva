@@ -1,5 +1,11 @@
 > **BF-5.6D — candidata em implementação (09/11/2026):** execução D1/D2/D3 autorizada; Dexie v18 aditivo e backup v10 (importa v6–v9, 10 MiB). [Contrato e resultados](BF-5_6D_PACOTES_OFICIAIS_IMPLEMENTACAO.md). A+B+C integradas com gate parcial, reparos físicos pendentes; sem merge D, encerramento BF-5.6 ou E–G. Notas abaixo são cronologia.
 
+## BF-5.6D — contrato executável
+
+V18 mantém as 17 tabelas v17 e acrescenta `educationalPacks` (`&id,status`): manifesto v1, lotes/hashes/bytes/contagens, assurance de origem e itens com identidade/revisão/fingerprint. Disponibilidade é separada de `archived`; remover não cria revisão nem apaga respostas. Revisões locais são integralmente retidas nesta candidata, com custo explicitado. Questões recebem estado editorial opcional (válida/anulada/sem chave), natureza do gabarito e fontes/canonicalId/equivalências explícitas; gabarito ausente só é admitido para estado não corrigível. Filtros v2 recebem `packId?`; contrato v1 continua legível. Manifesto inclui esperado/publicado, completude, direitos e variantes.
+
+Backup v10 conserva dados privados, registros de pacotes e cadeias das cartas públicas referenciadas por sessões/decks estáticos, sem copiar todo catálogo. Pacotes ativos restauram como `restore-required`; removidos continuam removidos. Arquivos públicos/CacheStorage não entram no envelope. V6–v9 originais são conferidos antes de transformação. 10 MiB/rollback/replace protegido e ausência de downgrade permanecem. [ADR-028](decisions/ADR-028-pacotes-educacionais-retencao.md).
+
 ## BF-5.6C — Dexie v17, backup v9 (candidata)
 
 V17 mantém tabelas/índices v16 e atualiza somente o marcador. Questão recebe identificação, dificuldade e proveniência opcionais, sem modificar versões antigas. Critérios dinâmicos v1 continuam executáveis; v2 acrescenta filtros reais. `question_session.trial?` v1 guarda estado, revisão concorrente, posição, respostas/correções e snapshot de taxonomia. As referências fixadas de questões preservam alternativas e gabarito. Placeholders antigos sem trial não ganham resultados. Backup v9 inclui esses contratos, importa originais v6/v7/v8, mantém checksum/10 MiB/replace e rollback. Sem downgrade. Troca autoral v1 continua Ecos/lembranças; relatório JSON v1/CSV é exportação distinta do backup. [ADR-027](decisions/ADR-027-provacao-taxonomia-diagnostico.md).

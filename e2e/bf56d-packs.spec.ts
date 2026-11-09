@@ -12,7 +12,8 @@ async function records(page: Page) {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
       const r = indexedDB.open("biblioteca-viva");
       r.onsuccess = () => resolve(r.result);
-      r.onerror = () => reject(r.error);
+      r.onerror = () =>
+        reject(r.error ?? new Error("Falha no IndexedDB de teste"));
     });
     const tx = db.transaction([
       "arcanariumCards",
@@ -24,7 +25,8 @@ async function records(page: Page) {
       new Promise<unknown[]>((resolve, reject) => {
         const r = tx.objectStore(name).getAll();
         r.onsuccess = () => resolve(r.result);
-        r.onerror = () => reject(r.error);
+        r.onerror = () =>
+          reject(r.error ?? new Error("Falha no IndexedDB de teste"));
       });
     const [cards, versions, sessions, packs] = await Promise.all(
       [
@@ -115,6 +117,9 @@ test("D: partial catalog, lots, idempotence, trial, offline, removal and coheren
   await page
     .getByRole("button", { name: "Pausar e sair", exact: true })
     .click();
+  await expect(
+    page.getByRole("heading", { name: "Provações", exact: true, level: 2 }),
+  ).toBeVisible();
   await page.reload();
   await page.getByRole("link", { name: /Pausada .*1\/4 respostas/ }).click();
   await expect(

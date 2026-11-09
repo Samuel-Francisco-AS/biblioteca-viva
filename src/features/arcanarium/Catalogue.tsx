@@ -1,12 +1,13 @@
 import {
   cardAvailable,
+  availablePackCardIds,
   packOwned,
   gradable,
 } from "../../domain/educationalPacks";
 import { QuestionFolio } from "./QuestionEditor";
 import { attempts } from "../../domain/provations";
 import { Choices } from "./Choices";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Link,
   useNavigate,
@@ -46,29 +47,47 @@ export function Catalogue({
     if (key !== "pagina") next.delete("pagina");
     setParams(next, { replace: true });
   };
-  const cards = data.cards.filter(
-    (c) =>
-      c.archived === archived &&
-      cardAvailable(c, data) &&
-      (!packId ||
-        ((c.origin.kind === "official" || c.origin.kind === "imported") &&
-          c.origin.packId === packId)) &&
-      (!origin || c.origin.kind === origin) &&
-      (!year ||
-        (c.content.type === "question" &&
-          c.content.source?.year === Number(year))) &&
-      (!exam ||
-        (c.content.type === "question" &&
-          (c.content.source?.exam ?? "")
+  const available = useMemo(() => availablePackCardIds(data), [data]);
+  const cards = useMemo(
+    () =>
+      data.cards.filter(
+        (c) =>
+          c.archived === archived &&
+          (archived
+            ? !packOwned(c) || available.has(c.id)
+            : cardAvailable(c, data, available)) &&
+          (!packId ||
+            ((c.origin.kind === "official" || c.origin.kind === "imported") &&
+              c.origin.packId === packId)) &&
+          (!origin || c.origin.kind === origin) &&
+          (!year ||
+            (c.content.type === "question" &&
+              c.content.source?.year === Number(year))) &&
+          (!exam ||
+            (c.content.type === "question" &&
+              (c.content.source?.exam ?? "")
+                .toLocaleLowerCase("pt-BR")
+                .includes(exam.toLocaleLowerCase("pt-BR")))) &&
+          (!tag ||
+            (c.content.type === "question" &&
+              c.content.classification.knowledgeTagIds.includes(tag))) &&
+          (family === "all" || c.type === family) &&
+          JSON.stringify(c.content)
             .toLocaleLowerCase("pt-BR")
-            .includes(exam.toLocaleLowerCase("pt-BR")))) &&
-      (!tag ||
-        (c.content.type === "question" &&
-          c.content.classification.knowledgeTagIds.includes(tag))) &&
-      (family === "all" || c.type === family) &&
-      JSON.stringify(c.content)
-        .toLocaleLowerCase("pt-BR")
-        .includes(search.toLocaleLowerCase("pt-BR")),
+            .includes(search.toLocaleLowerCase("pt-BR")),
+      ),
+    [
+      data,
+      available,
+      archived,
+      packId,
+      origin,
+      year,
+      exam,
+      tag,
+      family,
+      search,
+    ],
   );
   return (
     <>
@@ -366,12 +385,12 @@ function Detail({
         <div className="arcana-detail__info">
           <p className="arcana-eyebrow">
             {familyLabels[card.type]} ·{" "}
-            {!cardAvailable(card, data)
-              ? "Conteúdo indisponível para novas sessões · histórico preservado"
-              : packOwned(card)
-                ? "Coleção instalada"
-                : card.archived
-                  ? "Arquivada"
+            {card.archived
+              ? "Arquivada"
+              : !cardAvailable(card, data)
+                ? "Conteúdo indisponível para novas sessões · histórico preservado"
+                : packOwned(card)
+                  ? "Coleção instalada"
                   : "Acervo pessoal"}
           </p>
           <h2>{cardTitle(card.content)}</h2>

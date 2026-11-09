@@ -54,9 +54,23 @@ export function packOwned(card: Pick<Card, "id" | "origin">) {
     (card.origin.kind === "official" || card.origin.kind === "imported")
   );
 }
-export function cardAvailable(card: Card, data: ArcanariumData) {
+export function availablePackCardIds(
+  data: ArcanariumData,
+): ReadonlySet<string> {
+  return new Set(
+    (data.packs ?? [])
+      .filter((p) => p.status === "installed")
+      .flatMap((p) => p.items.map((i) => i.cardId)),
+  );
+}
+export function cardAvailable(
+  card: Card,
+  data: ArcanariumData,
+  available?: ReadonlySet<string>,
+) {
   if (card.archived) return false;
   if (!packOwned(card)) return true;
+  if (available) return available.has(card.id);
   const origin = card.origin;
   if (origin.kind !== "official" && origin.kind !== "imported") return false;
   return (

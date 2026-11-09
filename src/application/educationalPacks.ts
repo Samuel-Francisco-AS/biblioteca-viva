@@ -90,6 +90,12 @@ export class EducationalPacksService {
           "CONFLICT",
           "Manifesto conflitante ou versão editorial anterior. Nenhum dado foi alterado.",
         );
+      const existingVersions = new Map(
+        data.versions.map((v) => [
+          JSON.stringify([v.cardId, v.revision]),
+          v.card,
+        ]),
+      );
       const lots = new Map(previous?.installedLots.map((l) => [l.id, l]) ?? []);
       const items = new Map(previous?.items.map((i) => [i.cardId, i]) ?? []);
       // A newer manifest must still describe all existing lots (no implicit content deletion).
@@ -121,7 +127,16 @@ export class EducationalPacksService {
           oldLot?.sha256 === file.sha256 &&
           previous?.status !== "restore-required" &&
           file.lot.questions.every((q) =>
-            data.cards.some((c) => c.id === educationalCardId(q.identity)),
+            (() => {
+              const c = existingVersions.get(
+                JSON.stringify([educationalCardId(q.identity), q.revision]),
+              );
+              return (
+                c &&
+                JSON.stringify(c.content) === JSON.stringify(q.content) &&
+                c.updatedAt === q.publishedAt
+              );
+            })(),
           )
         )
           continue;

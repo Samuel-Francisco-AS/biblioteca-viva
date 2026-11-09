@@ -1,4 +1,4 @@
-import { packReceiptSchema } from "./packManifest";
+import { packReceiptSchema, packManifestSchema } from "./packManifest";
 import { z } from "zod";
 
 const id = z.string().min(1);
@@ -63,6 +63,8 @@ export const cardContentSchema = z.discriminatedUnion("type", [
           answerKey: z.enum(["final", "preliminary", "none"]),
           commentary: z.literal("Arcanário").optional(),
           sourceUrl: z.url().optional(),
+          canonicalId: z.string().min(1).max(160).optional(),
+          equivalentTo: z.array(z.string().min(1).max(160)).max(20).optional(),
           correctionSource: z.url().optional(),
         })
         .optional(),
@@ -286,23 +288,8 @@ export const cardSessionSchema = z.discriminatedUnion("kind", [
   }),
 ]);
 export type CardSession = z.infer<typeof cardSessionSchema>;
-/** Contract only; installation/catalogue and media belong to BF-5.6D. */
-export const cardPackManifestSchema = z
-  .strictObject({
-    id,
-    version: text,
-    origin: z.enum(["official", "external"]),
-    license: text,
-    expectedCount: z.int().nonnegative(),
-    publishedCount: z.int().nonnegative(),
-    files: z.array(
-      z.strictObject({
-        path: text,
-        sha256: z.string().regex(/^[a-f0-9]{64}$/u),
-      }),
-    ),
-  })
-  .refine((pack) => pack.publishedCount <= pack.expectedCount);
+/** D replaces the reserved A contract with the executable, versioned manifest. */
+export const cardPackManifestSchema = packManifestSchema;
 export type CardPackManifest = z.infer<typeof cardPackManifestSchema>;
 export const arcanariumDataSchema = z.strictObject({
   packs: z.array(packReceiptSchema).optional(),

@@ -1,3 +1,7 @@
+## BF-5.6D — pacotes educacionais (candidata)
+
+`EducationalPacksService` coordena porta de pacotes, repositório global e transações; `JsonEducationalPackCodec` valida manifesto/lotes e SHA-256 antes da escrita. Dexie v18 acrescenta registro de instalação separado de cartas/revisões; disponibilidade não altera correção histórica. `LocalPackCatalogue` distribui metadados e conteúdo sob demanda, com pins e cache web opcional somente público. Backup v10 projeta apenas dados privados/revisões referenciadas e recibos reinstaláveis. React abre `/arcanario/pacotes`, usa a aplicação, pagina o Acervo e reutiliza o motor da C; Portal consulta resumo. Nenhum runtime Three/Canvas novo. [ADR-028](decisions/ADR-028-pacotes-educacionais-retencao.md) e [limites/gates](BF-5_6D_PACOTES_OFICIAIS_IMPLEMENTACAO.md).
+
 ## BF-5.6C — Provações (candidata)
 
 `domain/provations.ts` contém seleção determinística, transições, DTO sem gabarito antes da confirmação, pontuação e diagnóstico puro. `application/provations.ts` coordena início/comandos com leitura e escrita transacionais pela porta Arcanarium, revisão esperada e persistência antes de avanço. Oficina reutiliza o agregado global de questões. React usa as portas de aplicação e rascunhos privados; não acessa Dexie. Sessões fotografam taxonomia e fixam revisões imutáveis; relatórios distinguem repetições e evidência. UI em fólio natural e radios visíveis; sem mudança de Three/WorldHost. [Contrato completo e limites](decisions/ADR-027-provacao-taxonomia-diagnostico.md).

@@ -48,8 +48,8 @@ async function setup() {
     arcanarium: repo,
     libraryEntries: new DexieLibraryEntryRepository(db),
     transaction: new DexieTransactionRunner(db),
-    clock: { now: async () => now },
-    ids: { generate: async () => crypto.randomUUID() },
+    clock: { now: () => Promise.resolve(now) },
+    ids: { generate: () => Promise.resolve(crypto.randomUUID()) },
     events: { publish: async () => {} },
   };
   return {
@@ -146,8 +146,8 @@ it.each([
   "active",
 ])("rejects %s before writing", async (kind) => {
   const x = await setup();
-  let e = envelope(),
-    text: string;
+  const e = envelope();
+  let text: string;
   if (kind === "hash") e.files["lote-1.json"] += " ";
   if (kind === "format") e.formatVersion = 20;
   if (kind === "count") e.manifest.publishedCount = 5;
@@ -384,4 +384,74 @@ it("imports original v9, checks checksum before restore and rejects a future bac
   await expect(
     codec.inspect(raw.replace('"formatVersion":9', '"formatVersion":99')),
   ).rejects.toMatchObject({ code: "FUTURE_FORMAT_VERSION" });
+});
+it("synthetic official provenance integrates filters; preliminary, absent rights and missing primary references are rejected/excluded", async () => {
+  const x = await setup();
+  const official = envelope();
+  official.manifest.category = "official";
+  official.manifest.rights.status = "permitted";
+  official.manifest.rights.basis =
+    "Synthetic test declaration only; no real official text.";
+  await x.service.install(JSON.stringify(official));
+  expect(
+    (await x.repo.read()).cards.every((c) => c.origin.kind === "official"),
+  ).toBe(true);
+  expect(
+    await x.trials.preview({
+      selection: {
+        ...selection,
+        criteria: {
+          ...selection.criteria,
+          origin: "official",
+          year: 2026,
+          packId: id,
+        },
+      },
+    }),
+  ).toHaveLength(2);
+  const invalid = await editLot((l) => {
+    if (l.questions[0].content.type === "question")
+      l.questions[0].content.classification.primarySubjectId = l.tags[0].id;
+  });
+  await expect(x.codec.inspect(invalid)).rejects.toMatchObject({
+    code: "INVALID",
+  });
+  const missing = envelope();
+  missing.manifest.sources = [];
+  await expect(x.codec.inspect(JSON.stringify(missing))).rejects.toMatchObject({
+    code: "INVALID",
+  });
+  const y = await setup();
+  const preliminary = await editLot((l) => {
+    l.questions.forEach((q) => {
+      if (q.content.type === "question" && q.content.editorial)
+        q.content.editorial.answerKey = "preliminary";
+    });
+  });
+  await y.service.install(preliminary);
+  expect(await y.trials.preview({ selection })).toHaveLength(0);
+});
+it("backup restore rollback includes pack receipts after clearing; content corruption is diagnosed and refuses silent rewrite", async () => {
+  const x = await setup();
+  await x.service.install(v1);
+  const before = await x.repo.read(),
+    snapshot = await x.backup.read();
+  const bulk = vi
+    .spyOn(x.db.educationalPacks, "bulkAdd")
+    .mockRejectedValueOnce(new Error("disk full"));
+  await expect(x.backup.replace(snapshot)).rejects.toThrow();
+  expect(await x.repo.read()).toEqual(before);
+  bulk.mockRestore();
+  const card = before.cards[0];
+  if (card.content.type !== "question") throw new Error();
+  await x.db.arcanariumVersions.put({
+    cardId: card.id,
+    revision: 1,
+    card: {
+      ...card,
+      content: { ...card.content, statement: "Corrupted synthetic storage" },
+    },
+  });
+  expect((await x.service.integrity(id)).corrupt).toBe(1);
+  await expect(x.service.install(v1)).rejects.toThrow();
 });

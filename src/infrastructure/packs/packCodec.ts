@@ -10,7 +10,13 @@ import {
   educationalCardId,
   type PackQuestion,
 } from "../../domain/educationalPacks";
-import { emptyArcanarium, validateArcanarium } from "../../domain/arcanarium";
+import {
+  emptyArcanarium,
+  validateArcanarium,
+  cardSchema,
+  type Card,
+  type CardVersion,
+} from "../../domain/arcanarium";
 export const MAX_PACK_BYTES = 10 * 1024 * 1024;
 const envelope = z.strictObject({
   kind: z.literal("biblioteca-viva-educational-pack"),
@@ -62,7 +68,12 @@ export class JsonEducationalPackCodec implements PackCodec {
       raw &&
       typeof raw === "object" &&
       "formatVersion" in raw &&
-      raw.formatVersion !== 1
+      (raw.formatVersion !== 1 ||
+        ("manifest" in raw &&
+          raw.manifest &&
+          typeof raw.manifest === "object" &&
+          "formatVersion" in raw.manifest &&
+          raw.manifest.formatVersion !== 1))
     )
       throw new PackError("INCOMPATIBLE", "Versão de pacote incompatível.");
     const parsed = envelope.safeParse(raw);
@@ -109,6 +120,8 @@ export class JsonEducationalPackCodec implements PackCodec {
       }
       if (lot.packId !== manifest.id || lot.lotId !== m.id)
         throw new PackError("INVALID", "Referência de lote inválida.");
+      if (new Set(lot.tags.map((t) => t.id)).size !== lot.tags.length)
+        throw new PackError("INVALID", "Classificação duplicada no lote.");
       const revisions = new Map<string, number>();
       for (const q of lot.questions) {
         const id = educationalCardId(q.identity),
@@ -124,6 +137,9 @@ export class JsonEducationalPackCodec implements PackCodec {
           q.content.source.year !== manifest.year ||
           q.content.source.booklet !== manifest.booklet ||
           !q.content.editorial ||
+          q.content.editorial.canonicalId !== q.identity.canonicalId ||
+          JSON.stringify(q.content.editorial.equivalentTo) !==
+            JSON.stringify(q.identity.equivalentTo) ||
           q.content.editorial.sourceUrl !== q.source ||
           q.content.editorial.correctionSource !== q.correctionSource ||
           q.content.classification.personalTagIds.length ||
@@ -178,12 +194,44 @@ export class JsonEducationalPackCodec implements PackCodec {
         )
           throw new PackError("INVALID", "Classificação ausente.");
     try {
+      const cards = new Map<string, Card>(),
+        versions: CardVersion[] = [];
+      for (const { lot } of lots)
+        for (const q of lot.questions) {
+          const id = educationalCardId(q.identity),
+            previous = cards.get(id);
+          const card = cardSchema.parse({
+            id,
+            revision: q.revision,
+            type: "question",
+            origin: {
+              kind: manifest.category === "official" ? "official" : "imported",
+              packId: manifest.id,
+              itemId: id,
+              version: "format-1",
+            },
+            createdAt: previous?.createdAt ?? q.publishedAt,
+            updatedAt: q.publishedAt,
+            archived: false,
+            content: q.content,
+          });
+          cards.set(id, card);
+          versions.push({ cardId: id, revision: q.revision, card });
+        }
       validateArcanarium(
-        { ...emptyArcanarium(), tags: [...tags.values()] },
+        {
+          ...emptyArcanarium(),
+          cards: [...cards.values()],
+          versions,
+          tags: [...tags.values()],
+        },
         new Set(),
       );
     } catch {
-      throw new PackError("INVALID", "Grafo de classificações inválido.");
+      throw new PackError(
+        "INVALID",
+        "Grafo de questões, revisões ou classificações inválido.",
+      );
     }
     return { manifest, lots };
   }

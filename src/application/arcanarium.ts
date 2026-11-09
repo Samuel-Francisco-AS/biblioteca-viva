@@ -253,6 +253,11 @@ export class ArcanariumService {
   }
   async saveTag(input: unknown, expectedRevision?: number) {
     const tag = parseInput(knowledgeTagSchema, input);
+    if (tag.id.startsWith("pack:"))
+      throw new ApplicationError(
+        "VALIDATION_FAILED",
+        "Classificações de pacote são editoriais. Crie uma etiqueta pessoal separada.",
+      );
     return runTransaction(this.deps, async () => {
       const previous = (await this.deps.arcanarium.read()).tags.find(
         (t) => t.id === tag.id,

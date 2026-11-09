@@ -101,7 +101,9 @@ it("file validation has no side effects and recoverable errors leave install usa
   );
   const file = new File([content], "seguro.json", { type: "application/json" });
   // jsdom's File lacks Blob.text; use the same bytes the real picker supplies.
-  Object.defineProperty(file, "text", { value: async () => content });
+  Object.defineProperty(file, "text", {
+    value: () => Promise.resolve(content),
+  });
   await u.upload(input, file);
   await screen.findByRole("button", { name: "Instalar arquivo conferido" });
   expect((await a.arcanarium.list()).cards).toHaveLength(0);
@@ -135,4 +137,31 @@ it("portal uses a summary and never reads all question revisions", async () => {
   await screen.findByRole("heading", { name: "O Arcanário" });
   expect(screen.getByText(/4 cartas/)).toBeInTheDocument();
   expect(fullRead).not.toHaveBeenCalled();
+});
+it("archived personal memories remain identifiable and visible in the archived collection", async () => {
+  const a = await setup();
+  const memory = await a.arcanarium.createCard({
+    type: "memory",
+    title: "Lembrança arquivada de teste",
+    entryIds: [],
+  });
+  await a.arcanarium.archiveCard({
+    cardId: memory.id,
+    expectedRevision: memory.revision,
+  });
+  const u = userEvent.setup();
+  await u.click(await screen.findByRole("link", { name: "Portal" }));
+  await screen.findByRole("heading", { name: "O Arcanário" });
+  await u.click(await screen.findByRole("link", { name: "Relicário" }));
+  await screen.findByRole("heading", { name: "O Relicário" });
+  await u.click(screen.getByLabelText("Ver arquivadas"));
+  await u.click(
+    await screen.findByRole("link", {
+      name: "Abrir Lembrança arquivada de teste",
+    }),
+  );
+  expect(await screen.findByText(/Lembrança · Arquivada/)).toBeInTheDocument();
+  expect(
+    screen.queryByText(/Conteúdo indisponível para novas sessões/),
+  ).not.toBeInTheDocument();
 });

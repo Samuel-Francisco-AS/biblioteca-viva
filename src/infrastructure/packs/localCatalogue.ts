@@ -1,3 +1,4 @@
+import contentHashes from "./contentHashes.json";
 import { sha256Bytes } from "./packCodec";
 import type { PackCataloguePort } from "../../application/packCatalogue";
 import { PackError } from "../../application/educationalPacks";
@@ -56,8 +57,8 @@ function reference(exam: "ENEM" | "CPNU", url: string): PackManifest {
   });
 }
 export class LocalPackCatalogue implements PackCataloguePort {
-  async list() {
-    return [
+  list() {
+    return Promise.resolve([
       {
         manifest: packManifestSchema.parse(manifest),
         editions: [
@@ -67,15 +68,14 @@ export class LocalPackCatalogue implements PackCataloguePort {
       },
       { manifest: reference("ENEM", enem), editions: [] },
       { manifest: reference("CPNU", cnu), editions: [] },
-    ];
+    ]);
   }
   async load(id: string, version: number) {
     if (id !== manifest.id || ![1, 2].includes(version))
       throw new PackError("INVALID", "Edição indisponível no catálogo local.");
-    const hashes = new Map([
-      [1, "d27663305da68c924f80b258de1b6b2ef58af07738d3bec052b717ba2c4bc1c8"],
-      [2, "84a1fadf267a71c837f7684bd95a9eecbb80da7cbeff26969d6ce21f809be29a"],
-    ]);
+    const hashes = new Map(
+      Object.entries(contentHashes).map(([v, digest]) => [Number(v), digest]),
+    );
     const key = (v: number) =>
       new URL(
         `/__biblioteca-pack-cache/${id}/${v}`,

@@ -7,7 +7,7 @@ import { ArcanaSeal } from "./ArcanaArt";
 import { useArcana, arcanaError } from "./context";
 const bytes = (n: number) =>
   n < 1024 ? `${n} B` : `${(n / 1024).toFixed(1)} KiB`;
-export function packState(m: PackManifest, r?: PackReceipt) {
+function packState(m: PackManifest, r?: PackReceipt) {
   if (m.category === "reference") return "Indisponível · referência oficial";
   if (!r) return "Disponível para instalar";
   if (r.status === "removed") return "Desinstalado";
@@ -65,7 +65,7 @@ export function PackLibrary() {
               : "Inválido"
           : "Erro recuperável",
       );
-      setError(arcanaError(e));
+      setError(e instanceof PackError ? e.message : arcanaError(e));
     } finally {
       setBusy("");
     }

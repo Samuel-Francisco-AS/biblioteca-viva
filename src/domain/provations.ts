@@ -1,4 +1,8 @@
-import { cardAvailable, gradable } from "./educationalPacks";
+import {
+  cardAvailable,
+  gradable,
+  availablePackCardIds,
+} from "./educationalPacks";
 import {
   cardSessionSchema,
   validateArcanarium,
@@ -87,6 +91,7 @@ export function selectDeck(
   data: ArcanariumData,
   selection: Deck["selection"],
 ): CardReference[] {
+  const available = availablePackCardIds(data);
   if (selection.kind === "static")
     return selection.cards.flatMap((ref) => {
       const current = data.cards.find((c) => c.id === ref.cardId);
@@ -97,7 +102,8 @@ export function selectDeck(
         : current;
       if (!card) throw new Error("Referência de baralho indisponível.");
       return current &&
-        cardAvailable(current, data) &&
+        cardAvailable(current, data, available) &&
+        gradable(current) &&
         !card.archived &&
         gradable(card)
         ? [{ cardId: card.id, revision: card.revision }]
@@ -111,10 +117,16 @@ export function selectDeck(
     if (!data.tags.some((t) => t.id === id && t.namespace === "personal"))
       throw new Error("Etiqueta pessoal inexistente.");
   const history = attempts(data);
+  const byCard = new Map<string, typeof history>();
+  for (const a of history) {
+    const h = byCard.get(a.cardId) ?? [];
+    h.push(a);
+    byCard.set(a.cardId, h);
+  }
   const cards = data.cards
     .filter((card) => {
       if (
-        !cardAvailable(card, data) ||
+        !cardAvailable(card, data, available) ||
         !gradable(card) ||
         (c.types.length && !c.types.includes(card.type))
       )
@@ -132,7 +144,7 @@ export function selectDeck(
       )
         return false;
       if (c.version === 1) return true;
-      const h = history.filter((a) => a.cardId === card.id);
+      const h = byCard.get(card.id) ?? [];
       if (
         (c.origin && card.origin.kind !== c.origin) ||
         (c.packId &&
@@ -183,7 +195,11 @@ export function createTrial(
       (q.editorial.status !== "valid" || q.editorial.answerKey !== "final")
     )
       throw new Error("Questão sem gabarito definitivo válido.");
-    if (!data.cards.some((c) => c.id === ref.cardId && cardAvailable(c, data)))
+    if (
+      !data.cards.some(
+        (c) => c.id === ref.cardId && cardAvailable(c, data) && gradable(c),
+      )
+    )
       throw new Error("Questão arquivada.");
   });
   const session = cardSessionSchema.parse({

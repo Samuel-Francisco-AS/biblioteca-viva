@@ -22,17 +22,17 @@
     "evidence": ["https://github.com/Samuel-Francisco-AS/biblioteca-viva"],
     "thirdPartyMedia": "none"
   },
-  "verifiedAt": "2026-11-09T12:00:00.000Z",
+  "verifiedAt": "2026-11-09T04:25:00.000Z",
   "changes": [
     {
       "version": 1,
-      "date": "2026-11-09T12:00:00.000Z",
+      "date": "2026-11-09T04:25:00.000Z",
       "note": "Primeiro lote autoral: duas questões originais.",
       "source": "https://github.com/Samuel-Francisco-AS/biblioteca-viva"
     },
     {
       "version": 2,
-      "date": "2026-11-09T12:00:00.000Z",
+      "date": "2026-11-09T04:25:00.000Z",
       "note": "Segundo lote autoral: mais duas questões, sem alterar o lote 1.",
       "source": "https://github.com/Samuel-Francisco-AS/biblioteca-viva"
     }
@@ -41,14 +41,14 @@
     {
       "id": "lote-1",
       "path": "lote-1.json",
-      "sha256": "6c9690f5d4e69dc3ba32ed8b025895c75a2dc2069825819be7d3053cac5a176a",
+      "sha256": "e5c78a7abd55a8d2f4245551d676d486d56fa4db7607c42632e6d87506456ab4",
       "bytes": 2318,
       "count": 2
     },
     {
       "id": "lote-2",
       "path": "lote-2.json",
-      "sha256": "790be65478a9878cbdb2331357df2be3a57b1225cadd549d6f139f8154828277",
+      "sha256": "4b0d88dbebe1d6e8d9a5cdc0d53ba42389502b0c82e77a0bfb78586337d96948",
       "bytes": 2346,
       "count": 2
     }
