@@ -89,3 +89,17 @@ Aceite artístico, ergonomia física, TalkBack e memória/termal dependem do pro
 - **Gates estáticos:** build/TypeScript, formato, lint de todos os arquivos alterados, áudio e hashes dos pacotes locais conferidos. Duas tentativas finais de lint global foram interrompidas com exit 143 sem diagnóstico; não se declara lint global final certificado. A verificação dirigida posterior terminou com exit 0, sem avisos ou regras desativadas. Relatório de performance é exclusivamente de bytes, não FPS Android.
 
 Evidências: [bundles](audits/evidence/bf56f/build-performance.json), [matriz local](audits/evidence/bf56f/validation.json) e capturas fictícias em `docs/audits/evidence/bf56f/`. Nenhuma execução/retry de Actions solicitada; limite de cota é distinto de falha técnica do produto. Não há CI global verde.
+
+## APK debug e proveniência final
+
+`npm run android:build:debug` PASS (build web, Capacitor sync e Gradle `assembleDebug`, 21 s). Execução com JBR do Android Studio, máximo de dois workers, paralelismo/daemon desativados. APK não versionado: `android/app/build/outputs/apk/debug/Biblioteca-Viva-BF56F2-debug.apk`.
+
+- **Bytes:** 11,647,409.
+- **SHA-256:** `59dc52ed2dfa6358da7bcf090479146abc0c6e8fa07b81edf867162220272d70`.
+- **Commit fonte:** `5f433e6cff636d511bbb5c809af8739634e9020a` (F2-D), árvore `7da139e9bdcfd03ae3adcf364723b4fd99ae29e3`; checkout rastreado limpo durante o build. Commit posterior muda somente documentação/evidências.
+- **Integridade:** 111/111 arquivos web iguais em dist → assets Android → ZIP, incluindo 48/48 gravuras; `.vite/manifest.json` é metadado de build excluído explicitamente.
+- **Atualização sobre E:** mesmo applicationId `com.samuelfrancisco.bibliotecaviva`, versionCode 1/versionName 1.0 e mesmo certificado debug verificado por `apksigner`. Preparado para instalação sobre o APK E assinado com essa chave, preservando o banco; instalação física e confirmação dos dados continuam pendentes. Sem bump, tag, release, keystore versionado ou operações sobre dados pessoais.
+
+[Proveniência binária verificável](audits/evidence/bf56f/apk.json). Warnings conhecidos de chunks >500 kB e `flatDir` permanecem. Bundles iniciais ~612 kB JS e Three dinâmico ~724 kB são bytes estáticos, não medidas de fluidez física. As capturas `campo-cheio-*` representam o dimensionamento final; `intermediario-combate-*` preservam explicitamente a revisão visual anterior ao reparo de escala/zonas.
+
+Commits: F2-A `0a33ef0`; F2-B `7fff152`; F2-C `035d259`; F2-D `5f433e6`. Publicação somente na mesma PR draft #48, sem merge/main/G.

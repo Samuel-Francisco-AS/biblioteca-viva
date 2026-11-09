@@ -122,5 +122,11 @@
     "inhabitantPickupContact Aryn timeout (no isolated attribution)",
     "sessionBookPhysical timeout (no isolated attribution)",
     "libraryRecordLayout timeout (no isolated attribution)"
-  ]
+  ],
+  "apk": {
+    "status": "PASS",
+    "sourceCommit": "5f433e6cff636d511bbb5c809af8739634e9020a",
+    "sha256": "59dc52ed2dfa6358da7bcf090479146abc0c6e8fa07b81edf867162220272d70",
+    "metadata": "apk.json"
+  }
 }
