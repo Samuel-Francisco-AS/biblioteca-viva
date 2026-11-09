@@ -43,6 +43,10 @@ import "./features/duel/arena/arena.css";
 import { pulseTouch } from "./app/touchFeedback";
 import { beginPassage } from "./app/interactionContinuity";
 import {
+  recordUiActionStart,
+  recordUiRouteCommit,
+} from "./app/uiActionProbe";
+import {
   routeModules,
   warmCollectionWhenIdle,
 } from "./app/routeModules";
@@ -210,6 +214,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
     if (previousPassagePathRef.current === location.pathname) return;
     previousPassagePathRef.current = location.pathname;
     shellRef.current?.setAttribute("data-passage", "arriving");
+    recordUiRouteCommit(location.pathname);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -293,6 +298,25 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           return;
         if (control.matches(".book-card__link"))
           control.setAttribute("data-tap-confirmed", "true");
+        // Global opt-in diagnostic: measure the next two RAF callbacks for
+        // ordinary buttons and links, even outside the resident Canvas.
+        const localHref =
+          control instanceof HTMLAnchorElement &&
+          control.origin === window.location.origin
+            ? control.pathname
+            : null;
+        recordUiActionStart({
+          source: control.closest(".primary-dock")
+            ? "dock"
+            : control.closest(".arcanarium")
+              ? "arcanarium"
+              : control.closest(".library-page")
+                ? "library-controls"
+                : "other",
+          kind: control instanceof HTMLAnchorElement ? "link" : "control",
+          from: location.pathname,
+          to: localHref !== location.pathname ? localHref : null,
+        });
         if (
           control instanceof HTMLAnchorElement &&
           event.button === 0 &&
