@@ -1,3 +1,5 @@
+> **ATUALIZAÇÃO PÓS-CANDIDATA — 09/11/2026:** proprietário aprovou o gate dirigido no Moto G06 com **6/6 PASS** e autorizou o merge da [PR #46](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/46), integrado à `main` no commit `b3db5d87ce7e327e2ab88420681c4feaf99b1d6e`. [Fechamento formal com ressalvas](BF-5_6D_FECHAMENTO_2026-11-09.md). Notas de “candidata/pendente” abaixo são histórico anterior ao merge; **não** declarar CI/TalkBack/termal aprovados nem BF-5.6 encerrada.
+
 # BF-5.6D — Biblioteca de Pacotes e Acervo Oficial Expansível
 
 - Data: **09/11/2026**. Candidata autorizada expressamente pelo proprietário, em execução contínua **D1 → D2 → D3**, com uma única PR draft contra main; sem merge, release, fechamento da BF-5.6 ou implementação E–G.
