@@ -90,3 +90,19 @@ describe("AndroidBackupFileSave", () => {
     ).rejects.toEqual(new BackupFileError("DOCUMENT_WRITE_FAILED"));
   });
 });
+it("preserves explicit CSV MIME and educational-report bytes for the Android document flow", async () => {
+  const saveUtf8Document = vi.fn<
+    AndroidDocumentSaveGateway["saveUtf8Document"]
+  >(() => Promise.resolve({ status: "saved" }));
+  const content = '\ufeff"Assunto","Acertos"\r\n"Fictício","1"';
+  await new AndroidBackupFileSave(gateway(saveUtf8Document)).saveBackupFile({
+    name: "biblioteca-viva-relatorio.csv",
+    content,
+    mimeType: "text/csv",
+  });
+  expect(saveUtf8Document).toHaveBeenCalledWith({
+    contentUtf8: content,
+    mimeType: "text/csv",
+    suggestedName: "biblioteca-viva-relatorio.csv",
+  });
+});

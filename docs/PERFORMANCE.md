@@ -1,3 +1,5 @@
+> **BF-5.6C candidata:** filtros/diagnóstico são projeções locais determinísticas; sessões fixam revisões e taxonomia para integridade histórica. Sem alteração de Three/RAF/meshes, budgets inventados ou otimização baseada em timeout. Relatório de build mede bytes, não desempenho físico. Retenção de versões/snapshots permanece sujeita ao limite explícito de 10 MiB no backup. [Resultados e gate de fluidez A+B+C](BF-5_6C_PROVACOES_DIAGNOSTICO_IMPLEMENTACAO.md).
+
 ## BF-5.6B — custo estático da candidata
 
 Arcanário carregado sob demanda, com SVG/CSS estáticos e transições disparadas por interação, sem outro Canvas ou loop. Relatório local de build: chunk ArcanariumPage cerca de 46 kB (gzip ~13,3 kB), entrypoint ~552 kB e ThreeWorldRuntime ~861 kB; warnings de chunks grandes preservados. Esses números são inventário, não medição de FPS, GPU, memória sustentada ou teto artístico Android. Imagens locais são reencodadas/limitadas, com retenção histórica explícita. [Relatório B, evidências e gate conjunto A+B](BF-5_6B_OFICINA_COLECOES_IMPLEMENTACAO.md).

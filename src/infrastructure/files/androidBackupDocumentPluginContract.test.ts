@@ -46,3 +46,17 @@ describe("contrato do seletor Android local", () => {
     );
   });
 });
+it("allows only named deck/report JSON and CSV exports, preserving the backup filename constraint", () => {
+  expect(plugin).toContain(
+    'suggestedName.equals("biblioteca-viva-baralho.json")',
+  );
+  expect(plugin).toContain(
+    'suggestedName.equals("biblioteca-viva-relatorio.json")',
+  );
+  expect(plugin).toContain(
+    '"biblioteca-viva-relatorio.csv".equals(suggestedName)',
+  );
+  expect(plugin).toContain('"text/csv".equals(mimeType)');
+  expect(plugin).toContain("!allowedJson && !allowedCsv");
+  expect(plugin).toContain("intent.setType(mimeType)");
+});

@@ -1,0 +1,26 @@
+{
+  "kind": "biblioteca-viva-debug-apk-provenance",
+  "sourceCommit": "a858f1f3643993c44eafb3813bfbd5896c13832a",
+  "baseB": "76cf4c7328c5d61da57d8d72e6422f99ead18540",
+  "baseA": "e6b8b2c53adf26779c8e3f9b4cd33a998256c6ea",
+  "verifiedAtUTC": "2026-11-09T02:33:18.358712+00:00",
+  "command": "npm run android:build:debug",
+  "result": "PASS",
+  "file": "android/app/build/outputs/apk/debug/app-debug.apk",
+  "bytes": 11642677,
+  "sha256": "632058cf14f655432654ad394d08b9341eb3e8fcd7782be782068f0fd99e58ad",
+  "webPublicAssets": 57,
+  "matchingWebAssets": 57,
+  "capacitorGeneratedAssets": [
+    "cordova.js",
+    "cordova_plugins.js"
+  ],
+  "packagedPublicAssets": 59,
+  "matchingSyncedAssets": 59,
+  "mismatches": 0,
+  "databaseVersion": 17,
+  "backupVersion": 9,
+  "appVersion": "0.2.0-alpha.1",
+  "physicalAcceptance": "pending; no installation or device validation by agent",
+  "pullRequest": "https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/45"
+}

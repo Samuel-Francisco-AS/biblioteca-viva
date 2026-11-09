@@ -1035,3 +1035,255 @@
   margin: 0.5rem 0;
   overflow-wrap: anywhere;
 }
+
+/* BF-5.6C: visible choices and a reading folio, without fixed card proportions. */
+.arcanarium .arcana-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  padding: 1rem;
+  min-width: 0;
+}
+.arcanarium .arcana-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 48px;
+  padding: 0.8rem 1rem;
+  border: 1px solid #9f83b9;
+  border-radius: 0.7rem;
+  cursor: pointer;
+  background: #251b38;
+  color: #f6edff;
+  overflow-wrap: anywhere;
+}
+.arcanarium .arcana-choice[data-selected="true"] {
+  border: 2px solid #f2d084;
+  background: #443054;
+}
+.arcanarium .arcana-choice:focus-within,
+.arcanarium .arcana-answer:focus-within {
+  outline: 3px solid #f2d084;
+  outline-offset: 3px;
+}
+.arcanarium .arcana-folio {
+  padding: clamp(1rem, 4vw, 2.5rem);
+  margin: 1.5rem 0;
+  border: 1px solid #d8b66d;
+  border-radius: 1rem;
+  background: linear-gradient(145deg, #f7edda, #eadcc0);
+  color: #30223a;
+  box-shadow: 0 12px 35px #100b2233;
+  line-height: 1.7;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.arcanarium .arcana-folio h3,
+.arcanarium .arcana-folio h4 {
+  color: #462955;
+}
+.arcanarium .arcana-folio fieldset {
+  border-color: #917b9a;
+  min-width: 0;
+}
+.arcanarium .arcana-folio legend,
+.arcanarium .arcana-folio .arcana-eyebrow {
+  color: #59386e;
+}
+.arcanarium .arcana-statement,
+.arcanarium .arcana-question-text p,
+.arcanarium .arcana-question-text li,
+.arcanarium .arcana-correction p,
+.arcanarium .arcana-answer span {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.arcanarium .arcana-answer {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  min-height: 52px;
+  margin: 0.8rem 0;
+  padding: 1rem;
+  border: 2px solid #a38ca7;
+  border-radius: 0.7rem;
+  background: #fff9eb;
+  color: #30223a;
+  cursor: pointer;
+}
+.arcanarium .arcana-answer input {
+  flex-shrink: 0;
+}
+.arcanarium .arcana-answer[data-selected="true"] {
+  border-color: #6c3d87;
+  box-shadow: inset 5px 0 #6c3d87;
+}
+.arcanarium .arcana-answer[data-correct="true"] {
+  border: 3px double #266042;
+}
+.arcanarium .arcana-answer:has(input:disabled) {
+  opacity: 1;
+}
+.arcanarium .arcana-correction {
+  padding: 1rem;
+  border-left: 4px solid #8d6832;
+  background: #fff7e6;
+  margin-top: 1.5rem;
+}
+.arcanarium .arcana-score {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+}
+.arcanarium .arcana-score div {
+  padding: 1rem;
+  border: 1px solid #b99568;
+  border-radius: 0.7rem;
+  background: #30213e;
+}
+.arcanarium .arcana-score dt {
+  font-size: 0.9rem;
+  color: #f0ddbc;
+}
+.arcanarium .arcana-score dd {
+  margin: 0.2rem 0;
+  font-size: 1.5rem;
+  color: #fff1cf;
+}
+.arcanarium .arcana-alternative-editor {
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid #9f83b9;
+  border-radius: 0.7rem;
+}
+.arcanarium .arcana-question-editor {
+  max-width: 900px;
+  margin-inline: auto;
+}
+.arcanarium .arcana-question-editor textarea {
+  line-height: 1.6;
+}
+.arcanarium .arcana-trial-sigil {
+  font-size: clamp(1.5rem, 5vw, 3rem);
+  color: #e5c47d;
+}
+.arcanarium .arcana-table-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.arcanarium table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.arcanarium td,
+.arcanarium th {
+  padding: 0.7rem;
+  text-align: left;
+  border-bottom: 1px solid #9f83b9;
+}
+.arcanarium .arcana-list p {
+  margin-block: 0.4rem;
+}
+.arcanarium .arcana-detail:has(.arcana-folio) {
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (max-width: 600px) {
+  .arcanarium .arcana-choices {
+    flex-direction: column;
+  }
+  .arcanarium .arcana-answer {
+    padding: 0.8rem;
+    gap: 0.5rem;
+  }
+  .arcanarium .arcana-answer span {
+    min-width: 0;
+  }
+  .arcanarium .arcana-score {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+[data-high-contrast="true"] .arcanarium .arcana-folio {
+  background: #fff;
+  color: #171020;
+  border: 2px solid #704220;
+}
+@media (forced-colors: active) {
+  .arcanarium .arcana-choice[data-selected="true"],
+  .arcanarium .arcana-answer[data-selected="true"] {
+    outline: 3px solid Highlight;
+  }
+}
+.arcanarium .arcana-disclosure {
+  border-block: 1px solid #9f83b955;
+  margin-block: 0.8rem;
+  padding-block: 0.6rem;
+}
+.arcanarium .arcana-disclosure__toggle {
+  width: 100%;
+  text-align: left;
+  white-space: normal;
+}
+.arcanarium .arcana-disclosure > div {
+  padding-block: 1rem;
+}
+.arcanarium [hidden] {
+  display: none !important;
+}
+.arcanarium .arcana-folio input[type="radio"] {
+  appearance: auto;
+  color-scheme: light;
+  accent-color: #6c3d87;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
+  padding: 0;
+  margin: 0;
+  align-self: center;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.arcanarium .arcana-folio :focus-visible {
+  outline-color: #643f7a;
+}
+
+/* BF-5.6C Moto G06: explicit labels and strong contrast on light question paper.
+   Dark-theme gold links and summaries must not leak into the cream folio. */
+.arcanarium .arcana-folio details {
+  border-top-color: #846c8e;
+}
+.arcanarium .arcana-folio summary {
+  color: #40224f;
+  background: #e0cfad;
+  border: 1px solid #a48d77;
+  border-radius: 0.55rem;
+  padding: 0.8rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.arcanarium .arcana-folio summary:hover,
+.arcanarium .arcana-folio summary:focus-visible {
+  color: #281633;
+  background: #d2b98d;
+}
+.arcanarium .arcana-folio details[open] > summary {
+  border-color: #684a76;
+}
+.arcanarium .arcana-tag-tools {
+  margin: 0.8rem 0 1.2rem;
+  padding: 0.85rem;
+  background: #241b32;
+  border: 1px solid #a48ab9;
+  border-radius: 0.75rem;
+}
+.arcanarium .arcana-tag-tools p {
+  margin: 0.45rem 0;
+}
+.arcanarium .arcana-tag-tools .button {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: left;
+}

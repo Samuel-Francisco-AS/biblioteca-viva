@@ -110,7 +110,7 @@ async function signed(value: object) {
     },
   });
 }
-it("upgrades v15 to v16, preserving every existing aggregate and reopens without rewriting", async () => {
+it("upgrades v15 to current v17, preserving every existing aggregate and reopens without rewriting", async () => {
   const name = `v15-${crypto.randomUUID()}`,
     old = new Dexie(name);
   opened.push(old);
@@ -124,7 +124,7 @@ it("upgrades v15 to v16, preserving every existing aggregate and reopens without
   await old.table("libraryEntries").add(book);
   old.close();
   const { db, api } = await setup(name);
-  expect(db.verno).toBe(16);
+  expect(db.verno).toBe(17);
   expect(await db.libraryEntries.get("book")).toEqual(book);
   expect(await db.cardMedia.count()).toBe(0);
   const card = await api.createCard(echo);
@@ -388,7 +388,7 @@ it("snapshots a round, rejects duplicate responses, reopens and resumes at the f
   expect(await api.progress(a.id)).toMatchObject({ reviews: 1, recalled: 1 });
   expect(await api.progress(b.id)).toMatchObject({ reviews: 1, recalled: 0 });
 });
-it("round-trips v8 with images and history; restores a checksummed original v7 without new fields", async () => {
+it("round-trips v9 with B images and history; restores a checksummed original v7 without new fields", async () => {
   const source = await setup(),
     target = await setup();
   const c = await source.workshop.save({
@@ -404,7 +404,7 @@ it("round-trips v8 with images and history; restores a checksummed original v7 w
     databaseVersion: 16,
     createdAt: now,
   });
-  expect(encoded.summary.formatVersion).toBe(8);
+  expect(encoded.summary.formatVersion).toBe(9);
   await target.snapshots.replace(
     (await target.backup.inspect(encoded.content)).data,
   );

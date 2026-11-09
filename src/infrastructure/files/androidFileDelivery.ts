@@ -18,7 +18,7 @@ export interface AndroidShareGateway {
     input: {
       readonly dialogTitle: string;
       readonly fileUri: string;
-      readonly mimeType: "application/json";
+      readonly mimeType: "application/json" | "text/csv";
       readonly title: string;
     },
   ): Promise<"closed" | "cancelled">;
@@ -38,6 +38,7 @@ export class AndroidFileDelivery implements BackupFileSharePort {
   async shareBackupFile(file: {
     readonly name: string;
     readonly content: string;
+    readonly mimeType?: "application/json" | "text/csv";
   }): Promise<ShareBackupResult> {
     let uri: string;
     try {
@@ -53,7 +54,7 @@ export class AndroidFileDelivery implements BackupFileSharePort {
       const result = await this.share.shareFile({
         dialogTitle: "Exportar backup da Biblioteca Viva",
         fileUri: uri,
-        mimeType: "application/json",
+        mimeType: file.mimeType ?? "application/json",
         title: file.name,
       });
       return result === "cancelled" ? "cancelled" : "flow-finished";

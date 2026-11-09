@@ -93,10 +93,10 @@ it("upgrades v11 verbatim, reopens legacy sessions and adds one poster table wit
   const db = new BibliotecaDatabase(name);
   dbs.push(db);
   await db.open();
-  expect(db.verno).toBe(16);
+  expect(db.verno).toBe(17);
   expect(await db.libraryEntries.toArray()).toEqual([movie, series]);
   expect(await db.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-    value: "16",
+    value: "17",
   });
   const store = new DexiePosters(db);
   await store.save(await poster(movie.id));
@@ -189,7 +189,7 @@ it("round-trips v6 with bounded posters and catalog, restores old v6 without med
   const snapshot = await s.backup.read();
   const artifact = await encode(snapshot);
   const parsed = await s.codec.inspect(artifact.content);
-  expect(parsed.summary.formatVersion).toBe(8);
+  expect(parsed.summary.formatVersion).toBe(9);
   expect(parsed.data.media).toHaveLength(2);
   await s.backup.replace(parsed.data);
   expect(await s.entries.getById("m")).toEqual(movie);

@@ -91,6 +91,7 @@ const unsignedSchema = z.strictObject({
   formatVersion: z.union([
     z.literal(6),
     z.literal(7),
+    z.literal(8),
     z.literal(BACKUP_FORMAT_VERSION),
   ]),
   createdAt: z.iso.datetime({ offset: false }),
@@ -402,6 +403,7 @@ export class JsonBackupCodec implements BackupCodecPort {
     if (
       formatVersion !== 6 &&
       formatVersion !== 7 &&
+      formatVersion !== 8 &&
       formatVersion !== BACKUP_FORMAT_VERSION
     )
       throw new BackupError(
@@ -418,8 +420,8 @@ export class JsonBackupCodec implements BackupCodecPort {
       !parsed.success ||
       (formatVersion === 6 && parsed.data.data.arcanarium !== undefined) ||
       (formatVersion >= 7 && parsed.data.data.arcanarium === undefined) ||
-      (formatVersion === 8 && parsed.data.data.cardMedia === undefined) ||
-      (formatVersion !== 8 && parsed.data.data.cardMedia !== undefined)
+      (formatVersion >= 8 && parsed.data.data.cardMedia === undefined) ||
+      (formatVersion < 8 && parsed.data.data.cardMedia !== undefined)
     )
       throw new BackupError(
         "INVALID_BACKUP_DATA",

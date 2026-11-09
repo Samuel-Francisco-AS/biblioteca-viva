@@ -1,3 +1,7 @@
+## BF-5.6C — verificação da candidata
+
+Novas suítes de domínio, Dexie/fake-indexeddb e React verificam seleção, taxonomia, IDs estáveis/gabarito, histórico/snapshots, dez questões, correção, conflitos, pausa/reabertura, rollback/backup v9 e importação v8 original. Regressões A+B preservam v6/v7, mídia e troca v1. E2E `bf56c-provations.spec.ts` percorre editor/taxonomia, dez respostas com pausa/reload, diagnóstico/download JSON/CSV e reparos de molduras/família/nome. Dados estritamente fictícios. [Resultados exatos, falhas intermediárias e gate físico A+B+C](BF-5_6C_PROVACOES_DIAGNOSTICO_IMPLEMENTACAO.md). Nenhum resultado automatizado certifica TalkBack ou Android físico.
+
 ## BF-5.6B — verificação da candidata
 
 `arcanariumWorkshop.test.ts` usa Dexie/fake-indexeddb reais para upgrade v15→v16, Oficina transacional, mídia/ownership, referências órfãs, rollback, fonte canônica, sessões, v8/v7 e troca v1. Regressão da A cobre v14→atual, IDs legados e restore v6. `ArcanariumPage.test.tsx` exercita editor/rascunho/conflito/baralho/retomada com aplicação e banco reais; `bf56b-workshop.spec.ts` cobre navegação/Canvas residente, teclado, duas respostas com reabertura, Relicário/mídia/retrato-paisagem e download/importação real. Não há retries ou ampliação de timeouts. [Resultados, falhas e roteiro físico](BF-5_6B_OFICINA_COLECOES_IMPLEMENTACAO.md). Nenhum PASS Android/TalkBack/artístico é inferido.

@@ -1,3 +1,6 @@
+import { QuestionFolio } from "./QuestionEditor";
+import { attempts } from "../../domain/provations";
+import { Choices } from "./Choices";
 import { useState } from "react";
 import {
   Link,
@@ -71,20 +74,18 @@ export function Catalogue({
           />
         </label>
         {!memories && (
-          <label>
-            Família
-            <select
-              value={family}
-              onChange={(e) => patch("family", e.target.value)}
-            >
-              <option value="all">Todas as famílias</option>
-              {Object.entries(familyLabels).map(([v, l]) => (
-                <option value={v} key={v}>
-                  {l}
-                </option>
-              ))}
-            </select>
-          </label>
+          <Choices
+            label="Família"
+            value={family}
+            options={[
+              { value: "all", label: "Todas as famílias" },
+              ...Object.entries(familyLabels).map(([value, label]) => ({
+                value,
+                label,
+              })),
+            ]}
+            onChange={(value) => patch("family", value)}
+          />
         )}
         <label className="arcana-check">
           <input
@@ -216,14 +217,39 @@ function Detail({
       </Link>
       <div className="arcana-detail">
         <div className="arcana-detail__object">
-          <ArcanaCard content={shown.content} app={app} flipped={flipped} />
-          <button
-            className="button button--secondary"
-            onClick={() => setFlipped((v) => !v)}
-            aria-pressed={flipped}
-          >
-            Virar carta · {flipped ? "mostrar frente" : "mostrar verso"}
-          </button>
+          {shown.content.type === "question" ? (
+            <section className="arcana-folio">
+              <QuestionFolio question={shown.content} />
+              <details>
+                <summary>Gabarito e resolução (Oficina)</summary>
+                <p>
+                  Correta:{" "}
+                  {String.fromCharCode(
+                    65 +
+                      shown.content.alternatives.findIndex(
+                        (a) =>
+                          shown.content.type === "question" &&
+                          a.id === shown.content.correctAlternativeId,
+                      ),
+                  )}
+                </p>
+                <p>
+                  {shown.content.explanation ?? "Sem explicação cadastrada."}
+                </p>
+              </details>
+            </section>
+          ) : (
+            <ArcanaCard content={shown.content} app={app} flipped={flipped} />
+          )}
+          {shown.content.type !== "question" && (
+            <button
+              className="button button--secondary"
+              onClick={() => setFlipped((v) => !v)}
+              aria-pressed={flipped}
+            >
+              Virar carta · {flipped ? "mostrar frente" : "mostrar verso"}
+            </button>
+          )}
         </div>
         <div className="arcana-detail__info">
           <p className="arcana-eyebrow">
@@ -247,7 +273,9 @@ function Detail({
           <div className="arcana-actions">
             {!card.archived &&
               card.origin.kind !== "official" &&
-              (card.type === "flashcard" || card.type === "memory") && (
+              (card.type === "flashcard" ||
+                card.type === "memory" ||
+                card.type === "question") && (
                 <Link
                   className="button button--primary"
                   to={editorPath(card.id)}
@@ -274,6 +302,30 @@ function Detail({
               </button>
             )}
           </div>
+          {card.type === "question" && (
+            <section>
+              <h3>Histórico da questão</h3>
+              <p>
+                {attempts(data).filter((a) => a.cardId === card.id).length}{" "}
+                tentativas confirmadas.
+              </p>
+              <ul>
+                {attempts(data)
+                  .filter((a) => a.cardId === card.id)
+                  .map((a) => (
+                    <li key={`${a.sessionId}:${a.revision}`}>
+                      <Link
+                        to={`/arcanario/provacoes/${encodeURIComponent(a.sessionId)}`}
+                      >
+                        {a.correct ? "Correta" : "Incorreta"} · revisão{" "}
+                        {a.revision} ·{" "}
+                        {new Date(a.answeredAt).toLocaleString("pt-BR")}
+                      </Link>
+                    </li>
+                  ))}
+              </ul>
+            </section>
+          )}
           <h3>Baralhos & coleções</h3>
           {decks.length ? (
             <ul className="arcana-list">
@@ -325,22 +377,17 @@ function Detail({
               </ul>
             </>
           )}
-          <label>
-            Revisão exibida
-            <select
-              value={version}
-              onChange={(e) => setVersion(Number(e.target.value))}
-            >
-              {data.versions
-                .filter((v) => v.cardId === card.id)
-                .map((v) => (
-                  <option key={v.revision} value={v.revision}>
-                    Revisão {v.revision} ·{" "}
-                    {new Date(v.card.updatedAt).toLocaleString("pt-BR")}
-                  </option>
-                ))}
-            </select>
-          </label>
+          <Choices
+            label="Revisão exibida"
+            value={String(version)}
+            options={data.versions
+              .filter((v) => v.cardId === card.id)
+              .map((v) => ({
+                value: String(v.revision),
+                label: `Revisão ${v.revision} · ${new Date(v.card.updatedAt).toLocaleString("pt-BR")}`,
+              }))}
+            onChange={(v) => setVersion(Number(v))}
+          />
           {card.type === "flashcard" && (
             <>
               <h3>Memória dos Ecos</h3>

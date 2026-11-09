@@ -59,10 +59,14 @@ export class ArcanariumWorkshop {
   }
   async save(input: unknown) {
     const p = parseInput(workshopSaveSchema, input);
-    if (p.content.type !== "flashcard" && p.content.type !== "memory")
+    if (
+      p.content.type !== "flashcard" &&
+      p.content.type !== "memory" &&
+      p.content.type !== "question"
+    )
       throw new ApplicationError(
         "VALIDATION_FAILED",
-        "A Oficina cria Ecos e lembranças nesta etapa.",
+        "A Oficina cria Ecos, questões e lembranças.",
       );
     if (
       p.content.type === "memory" &&
@@ -78,6 +82,17 @@ export class ArcanariumWorkshop {
       throw new ApplicationError(
         "VALIDATION_FAILED",
         "Somente lembranças recebem imagem.",
+      );
+    if (
+      p.content.type === "question" &&
+      (p.content.statement.length > 16000 ||
+        (p.content.explanation?.length ?? 0) > 16000 ||
+        p.content.alternatives.length > 5 ||
+        p.content.alternatives.some((a) => a.text.length > 4000))
+    )
+      throw new ApplicationError(
+        "VALIDATION_FAILED",
+        "Use de 2 a 5 alternativas (até 4.000 caracteres), enunciado e explicação até 16.000 caracteres.",
       );
     const now = await currentTime(this.deps);
     const cardId = p.cardId ?? `local:${await generatedId(this.deps, "card")}`;

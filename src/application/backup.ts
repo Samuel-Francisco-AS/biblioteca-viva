@@ -8,7 +8,7 @@ import type {
   Tag,
 } from "../domain";
 
-export const BACKUP_FORMAT_VERSION = 8;
+export const BACKUP_FORMAT_VERSION = 9;
 export const BACKUP_KIND = "biblioteca-viva-backup";
 export const MAX_BACKUP_BYTES = 10 * 1024 * 1024;
 
@@ -73,7 +73,7 @@ export interface BackupSummary {
   readonly createdAt: string;
   readonly appVersion: string;
   readonly databaseVersion: number;
-  readonly formatVersion: 6 | 7 | 8;
+  readonly formatVersion: 6 | 7 | 8 | 9;
   readonly policy: "replace";
   readonly counts: BackupCounts;
   readonly warnings: readonly string[];
@@ -134,6 +134,7 @@ export interface BackupFileSavePort {
   saveBackupFile(file: {
     readonly name: string;
     readonly content: string;
+    readonly mimeType?: "application/json" | "text/csv";
   }): Promise<SaveBackupResult>;
 }
 
@@ -141,6 +142,7 @@ export interface BackupFileSharePort {
   shareBackupFile(file: {
     readonly name: string;
     readonly content: string;
+    readonly mimeType?: "application/json" | "text/csv";
   }): Promise<ShareBackupResult>;
 }
 

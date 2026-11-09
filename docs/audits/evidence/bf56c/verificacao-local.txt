@@ -1,0 +1,71 @@
+BF-5.6C — verificações locais; resultados por execução, sem somar sobreposições.
+Código produtivo: a858f1f3643993c44eafb3813bfbd5896c13832a
+Base B: 76cf4c7328c5d61da57d8d72e6422f99ead18540
+
+Ampla única: 1104 PASS / 3 FAIL / 1107 testes / 170 arquivos.
+Falhas: duas esperas UI Oficina (teste preexistente e teste novo de molduras); envelope Aryn excedeu 5000ms.
+E2E estável A+B+C: 6 PASS / 2 FAIL; Canvas pendente, C filtros reparado depois.
+Primeira execução E2E inválida: build/preview concorrentes, ENOENT/servidor fechado, 8 FAIL.
+C filtros expandido por React: execução seguinte parou em reload antes da navegação; espera explícita corrigida.
+E2E no build final: central C PASS; helper check de família falhou apesar de snapshot correto.
+E2E reparos final: clique + assert checked/contagem PASS, sem retry/timeout alterados.
+
+Regressão dirigida A+B+C
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:run
+npm notice run vitest run src/domain/provations.test.ts src/infrastructure/database/provations.test.ts src/infrastructure/database/arcanarium.test.ts src/infrastructure/database/arcanariumWorkshop.test.ts src/features/arcanarium/ArcanariumPage.test.tsx src/infrastructure/backup src/infrastructure/files src/application/flashCards.test.ts src/features/entry-detail/StudyFlashCards.test.tsx
+ Test Files  17 passed (17)
+      Tests  103 passed (103)
+   Start at  23:16:43
+   Duration  9.74s (transform 6.32s, setup 4.72s, import 12.17s, tests 14.54s, environment 15.38s)
+
+Dirigida final
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:run
+npm notice run vitest run src/domain/provations.test.ts src/infrastructure/database/provations.test.ts src/features/arcanarium/ArcanariumPage.test.tsx src/infrastructure/files/androidBackupFileSave.test.ts src/infrastructure/files/androidBackupDocumentPluginContract.test.ts src/infrastructure/database/schema.test.ts
+ Test Files  6 passed (6)
+      Tests  40 passed (40)
+   Start at  23:22:57
+   Duration  7.72s (transform 2.45s, setup 1.96s, import 4.31s, tests 5.39s, environment 6.49s)
+
+Domínio/persistência após alterações finais
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:run
+npm notice run vitest run src/domain/provations.test.ts src/infrastructure/database/provations.test.ts
+ Test Files  2 passed (2)
+      Tests  17 passed (17)
+   Start at  23:28:48
+   Duration  1.45s (transform 439ms, setup 288ms, import 721ms, tests 582ms, environment 835ms)
+
+React final
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:run
+npm notice run vitest run src/features/arcanarium/ArcanariumPage.test.tsx
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  23:29:55
+   Duration  5.53s (transform 714ms, setup 162ms, import 1.06s, tests 3.33s, environment 800ms)
+
+E2E central no build final
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:e2e
+npm notice run playwright test e2e/bf56c-provations.spec.ts --grep real dynamic filters|all frame previews
+[WebServer] npm notice run biblioteca-viva@0.2.0-alpha.1 preview
+[WebServer] npm notice run vite preview --host 127.0.0.1 --port 4173
+[WebServer] npm notice run biblioteca-viva@0.2.0-alpha.1 dev
+[WebServer] npm notice run vite --host 127.0.0.1 --port 4174
+  ✓  1 [chromium] › e2e/bf56c-provations.spec.ts:192:1 › C: real dynamic filters, ten questions, correction, pause/reload, history and downloaded JSON/CSV (10.5s)
+  ✘  2 [chromium] › e2e/bf56c-provations.spec.ts:343:1 › B-R1/B-R2: all frame previews, independent catalogue name, recovery and family filter without native picker (4.1s)
+  1 failed
+  1 passed (16.9s)
+
+E2E reparos final
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:e2e
+npm notice run playwright test e2e/bf56c-provations.spec.ts --grep all frame previews
+[WebServer] npm notice run biblioteca-viva@0.2.0-alpha.1 preview
+[WebServer] npm notice run vite preview --host 127.0.0.1 --port 4173
+[WebServer] npm notice run biblioteca-viva@0.2.0-alpha.1 dev
+[WebServer] npm notice run vite --host 127.0.0.1 --port 4174
+  ✓  1 [chromium] › e2e/bf56c-provations.spec.ts:343:1 › B-R1/B-R2: all frame previews, independent catalogue name, recovery and family filter without native picker (3.3s)
+  1 passed (5.5s)
+
+Gates locais finais: formato, lint, tipos, áudio, build, performance, sync, debug e diff PASS.
+Android: BUILD SUCCESSFUL in 29s; 184 tasks (30 executed, 154 up-to-date).
+APK SHA-256: 632058cf14f655432654ad394d08b9341eb3e8fcd7782be782068f0fd99e58ad
+Assets: 57/57 web, 59/59 sincronizados, zero divergências.
+Sem CI global verde; sem aceite físico/TalkBack; sem merge.

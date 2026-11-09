@@ -41,7 +41,7 @@ it("upgrades v9 without rewriting entries, restores v6 backups with and without 
   legacy.close();
   const db = new BibliotecaDatabase(name);
   await db.open();
-  expect(db.verno).toBe(16);
+  expect(db.verno).toBe(17);
   expect(await db.libraryEntries.get(entry.id)).toEqual(entry);
   expect(await db.sessions.get(session.id)).toEqual(session);
   const codec = new JsonBackupCodec();
@@ -78,7 +78,7 @@ it("upgrades v9 without rewriting entries, restores v6 backups with and without 
     data: await snapshots.read(),
   });
   const restored = await codec.inspect(backup.content);
-  expect(restored.summary.formatVersion).toBe(8);
+  expect(restored.summary.formatVersion).toBe(9);
   expect(restored.data.libraryEntries).toEqual([updated]);
   expect(restored.data.sessions).toEqual([timed]);
   expect(
