@@ -1,3 +1,5 @@
+> **BF-5.6F2 — candidata de 09/11/2026:** Duelo Arcano ganha arena 3D original, HUD de jogo sem scroll, composição retrato/paisagem, mão completa, inspeção temporária, seleção/alvos/contexto, efeitos confirmados, pausa/retomada e acesso por santuário orbital. F1 revisada para lifecycle e concorrência. Motor E, dados v19/backup v11 e mundo residente preservados. [Relatório](docs/BF-5_6F_ARENA_VIVA_IMPLEMENTACAO.md). Sem release/aceite físico/merge.
+
 ## 09/11/2026 — BF-5.6E integrada com aceite funcional inicial e dívida visual prioritária
 
 - PR [#47](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/47) integrada à `main` após autorização do proprietário, merge `19eb076a949c8d7e8728bc2b1ecff9186bd333b9`. TCG 2D com 48 SVGs/cartas, quatro afinidades e decks, IA, Oficina, partidas/replay/retomada.

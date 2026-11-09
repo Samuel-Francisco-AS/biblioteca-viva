@@ -1,3 +1,5 @@
+> **F2 implementada em candidata (09/11/2026):** arena e construção orbital ativas na mesma branch/PR draft #48. [Relatório final de implementação, validações e roteiro Moto G06](BF-5_6F_ARENA_VIVA_IMPLEMENTACAO.md). A descrição F1 abaixo é histórica; os adendos F2-A/B/C registram as revisões. Sem merge, aceite físico/artístico ou G.
+
 # BF-5.6F — Arena Viva | Entrega F1 e contrato para F2
 
 Data: 09/11/2026. **Status: F1 implementada em branch dedicada; F2 ainda NÃO iniciada.** Esta PR é **uma única candidata draft compartilhada** para F1 e F2. Nenhuma alteração da F é integrada à `main` antes do gate e da autorização do proprietário.
@@ -86,3 +88,7 @@ Cena independente carregada sob demanda: plataforma octogonal suspensa, alvenari
 ## F2-C — arena ativa e acesso orbital
 
 Salão inicia/retoma pela rota 3D. Mesa E permanece em sua URL legada. HUD compacto e composição própria por orientação, mão inteira, inspeção modal, seleção e realce de alvos usando ações legais, confirmação contextual, turno/energia/PV, pausa persistida, abandono confirmado e resultado. Voltar nativo fecha inspeção, cancela seleção, pausa e depois permite retornar à Biblioteca. Construção orbital original fora dos volumes caminháveis, registrada no picking e no catálogo acessível existentes; seleção abre o Salão. WorldHost residente continua sob `active=false` fora da Biblioteca, sem reconstrução por navegação. Novos testes cobrem concorrência, pausa, StrictMode, projeção de câmera, descarte, posição orbital e acesso.
+
+## F2-D — fechamento local da candidata
+
+Motor/IA/sessões/Dexie/replay, arena/órbita e residência: 124/124 dirigidos PASS; reconciliação editorial/sessão 20/20 PASS. E2E A–E: 14/14 PASS. Arena: partida completa PASS e gates de campo cheio 390×844, 360×640 e 844×390 PASS, incluindo zero scroll/interseção entre alvos, oito cartas na mão, background/resume e recriação após perda de contexto. Geometria/hitboxes centrais e larguras em paisagem corrigidas a partir de evidências; sem aumentar timeouts ou esconder asserts. Ampla única: 1.174 PASS/12 FAIL; seis timeouts gráficos permanecem sem encerramento, enquanto duas contagens de portal e quatro esperas de UI passaram nos dirigidos posteriores. Build/TypeScript, lint dos arquivos alterados, formato, áudio, pacotes e diff conferidos; lint global final interrompido duas vezes (143), não certificado. Actions não reexecutado por cota. [Resultados completos, limitações e APK](BF-5_6F_ARENA_VIVA_IMPLEMENTACAO.md). Moto G06/TalkBack/arte/termal continuam pendentes; sem merge/G.

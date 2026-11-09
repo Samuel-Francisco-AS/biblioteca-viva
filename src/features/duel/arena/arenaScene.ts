@@ -1,10 +1,11 @@
 import * as T from "three";
+import type { Affinity } from "../../../domain/duel/contracts";
 import type { ArenaCardView, ArenaView } from "./arenaModel";
 
-export const arenaColors: Record<string, number> = {
+export const arenaColors: Record<Affinity, number> = {
   ruin: 0xff7757,
-  order: 0x78cfff,
-  knowledge: 0x72f1c8,
+  bloom: 0x8fdb93,
+  knowledge: 0x78cfff,
   chaos: 0xc49aff,
   neutral: 0xe5cca0,
 };
@@ -22,7 +23,7 @@ export function arenaSlot(
   return new T.Vector3(
     artifact ? (index - 0.5) * 3.6 : (index - 1.5) * 1.65,
     0.34,
-    (player === 0 ? 1 : -1) * (artifact ? 0.55 : landscape ? 1.65 : 2.15),
+    (player === 0 ? 1 : -1) * (artifact ? 0.85 : landscape ? 2.1 : 2.15),
   );
 }
 
@@ -244,6 +245,7 @@ export function createArenaScene() {
   const zones = new T.Group();
   root.add(zones);
   const cards = new Map<string, T.Group>();
+  const artifactIds = new Set<string>();
   const effectRoot = new T.Group();
   scene.add(effectRoot);
   const fxMaterial = mat(
@@ -288,9 +290,31 @@ export function createArenaScene() {
   function texture(id: string) {
     let value = textures.get(id);
     if (!value) {
-      value = new T.TextureLoader().load(`/assets/duel/${id}.svg`, (t) => {
-        if (disposed) t.dispose();
-      });
+      value = new T.TextureLoader().load(
+        `/assets/duel/${id}.svg`,
+        (t: T.Texture) => {
+          if (disposed) {
+            t.dispose();
+            return;
+          }
+          // SVGs have a viewBox but no intrinsic pixel dimensions. Rasterize once
+          // at a bounded size before GPU upload (also reliable in Android WebView).
+          const source: unknown = t.image;
+          if (source instanceof HTMLImageElement) {
+            source.width = 384;
+            source.height = 288;
+            const canvas = document.createElement("canvas");
+            canvas.width = 384;
+            canvas.height = 288;
+            const context = canvas.getContext("2d");
+            if (context) {
+              context.drawImage(source, 0, 0, 384, 288);
+              t.image = canvas;
+              t.needsUpdate = true;
+            }
+          }
+        },
+      );
       value.colorSpace = T.SRGBColorSpace;
       textures.set(id, value);
     }
@@ -333,7 +357,7 @@ export function createArenaScene() {
             0.8,
             0.4,
           ).rotation.z = sign * -0.4;
-      else if (card.affinity === "order")
+      else if (card.affinity === "bloom")
         for (const sign of [-1, 1])
           mesh(
             box,
@@ -361,7 +385,9 @@ export function createArenaScene() {
   function highlight() {
     for (const [id, group] of cards) {
       const active = selected === id || targets.has(id);
-      group.scale.setScalar(active ? 1.08 : 1);
+      group.scale.setScalar(
+        (artifactIds.has(id) ? 0.7 : 1) * (active ? 1.08 : 1),
+      );
       group.position.y = active ? 0.55 : 0.24;
     }
   }
@@ -371,6 +397,7 @@ export function createArenaScene() {
       [p.units, p.artifacts].forEach((items, kind) =>
         items.forEach((c, i) => {
           wanted.add(c.id);
+          if (c.kind === "artifact") artifactIds.add(c.id);
           let g = cards.get(c.id);
           if (!g) {
             g = populate(c);
@@ -427,6 +454,7 @@ export function createArenaScene() {
         });
         root.remove(g);
         cards.delete(id);
+        artifactIds.delete(id);
       }
     last = view;
     highlight();

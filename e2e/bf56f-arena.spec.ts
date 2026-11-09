@@ -65,7 +65,24 @@ test("F2: complete game through legal touch actions; viewport, rotation, pause, 
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    const random = crypto.getRandomValues.bind(crypto);
+    crypto.getRandomValues = (array) => {
+      const result = random(array);
+      if (array instanceof Uint32Array && array.length === 1) array[0] = 17;
+      return result;
+    };
+  });
   await page.goto("/arcanario/duelos");
+  await page
+    .getByRole("group", { name: "Seu deck", exact: true })
+    .getByLabel("Ytha · Florescimento", { exact: true })
+    .check();
+
+  await page
+    .getByRole("group", { name: "Adversário PvE", exact: true })
+    .getByLabel("Lua · Caos", { exact: true })
+    .check();
   await page.getByRole("button", { name: "Iniciar duelo PvE" }).click();
   const table = page.getByTestId("arena-duel");
   await expect(table).toHaveAttribute("data-revision", "0");
@@ -187,3 +204,191 @@ test("F2: complete game through legal touch actions; viewport, rotation, pause, 
     description: JSON.stringify({ summons, attacks, spells, artifacts }),
   });
 });
+
+for (const size of [
+  { width: 390, height: 844 },
+  { width: 844, height: 390 },
+  { width: 360, height: 640 },
+]) {
+  test(`F2: dense ${size.width}x${size.height}, full hand, background and context recovery`, async ({
+    page,
+  }) => {
+    // Prepare only this disposable browser's valid replay using the production engine.
+    const { transition, legalActions, cardAt } =
+      await import("../src/domain/duel/engine");
+    const { cardSessionSchema } = await import("../src/domain/arcanarium");
+    await page.addInitScript(() => {
+      const random = crypto.getRandomValues.bind(crypto);
+      crypto.getRandomValues = (array) => {
+        const result = random(array);
+        if (array instanceof Uint32Array && array.length === 1) array[0] = 17;
+        return result;
+      };
+    });
+    await page.goto("/arcanario/duelos");
+    await page
+      .getByRole("group", { name: "Seu deck", exact: true })
+      .getByLabel("Ytha · Florescimento", { exact: true })
+      .check();
+
+    await page.getByRole("button", { name: "Iniciar duelo PvE" }).click();
+    await expect(page.getByTestId("arena-duel")).toHaveAttribute(
+      "data-revision",
+      "0",
+    );
+    const raw: unknown = await page.evaluate(async () => {
+      const db = await new Promise<IDBDatabase>((resolve) => {
+        const r = indexedDB.open("biblioteca-viva");
+        r.onsuccess = () => resolve(r.result);
+      });
+      const rows = await new Promise<unknown[]>((resolve) => {
+        const r = db
+          .transaction("cardSessions")
+          .objectStore("cardSessions")
+          .getAll();
+        r.onsuccess = () => resolve(r.result);
+      });
+      db.close();
+      return rows[0];
+    });
+    const session = cardSessionSchema.parse(raw);
+    if (session.kind !== "combat_match" || !session.duel)
+      throw new Error("Fixture duel missing");
+    let match = session.duel;
+    for (let i = 0; i < 150 && match.turn < 41; i++) {
+      if (
+        match.active === 0 &&
+        match.players[0].hand.length === 8 &&
+        match.players[0].units.length === 4 &&
+        match.players[0].artifacts.length === 2
+      )
+        break;
+      const actions = legalActions(match);
+      const play = actions.find(
+        (a) =>
+          a.type === "play" &&
+          !a.target &&
+          ["creature", "artifact"].includes(
+            cardAt(match, a.card).definition.kind,
+          ),
+      );
+      match = transition(match, {
+        id: `dense-${i}`,
+        revision: match.revision,
+        player: match.active,
+        action: play ?? { type: "end" },
+      }).state;
+    }
+    expect(match.players[0].hand).toHaveLength(8);
+    expect(match.players[0].units).toHaveLength(4);
+    expect(match.players[0].artifacts).toHaveLength(2);
+    await page.evaluate(
+      async (value) => {
+        const db = await new Promise<IDBDatabase>((resolve) => {
+          const r = indexedDB.open("biblioteca-viva");
+          r.onsuccess = () => resolve(r.result);
+        });
+        await new Promise<void>((resolve, reject) => {
+          const tx = db.transaction("cardSessions", "readwrite");
+          tx.objectStore("cardSessions").put(value);
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(new Error("Fixture write failed"));
+        });
+        db.close();
+      },
+      { ...session, duel: match },
+    );
+    await page.reload();
+    await expect(page.locator(".arena-hand-card")).toHaveCount(8);
+    await page.setViewportSize(size);
+    await fit(page);
+    // Test every hit rectangle for reachability and pairwise separation.
+    const rectangles = await page
+      .locator(".arena-piece")
+      .evaluateAll((elements) =>
+        elements.map((el) => {
+          const r = el.getBoundingClientRect();
+          const hit = document.elementFromPoint(
+            r.x + r.width / 2,
+            r.y + r.height / 2,
+          );
+          return {
+            x: r.x,
+            y: r.y,
+            w: r.width,
+            h: r.height,
+            reachable: hit === el || el.contains(hit),
+          };
+        }),
+      );
+    expect(rectangles.every((r) => r.reachable)).toBe(true);
+    for (let i = 0; i < rectangles.length; i++)
+      for (let j = i + 1; j < rectangles.length; j++) {
+        const a = rectangles[i],
+          b = rectangles[j];
+        const overlap =
+          Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) *
+          Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+        expect(overlap).toBeLessThan(1);
+      }
+    for (const region of [
+      "Criaturas e artefatos adversários",
+      "Suas criaturas e artefatos",
+    ]) {
+      await page
+        .getByRole("region", { name: region, exact: true })
+        .getByRole("button")
+        .first()
+        .click();
+      await expect(
+        page.getByRole("button", { name: /^Inspecionar / }),
+      ).toBeVisible();
+      await page
+        .getByRole("button", { name: "Cancelar seleção", exact: true })
+        .click();
+    }
+    await capture(page, `campo-cheio-${size.width}x${size.height}`);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    expect(
+      await page
+        .locator(".arena-hand-card")
+        .first()
+        .evaluate((el) => getComputedStyle(el).animationName),
+    ).toBe("none");
+    await page.evaluate(() => {
+      Object.defineProperty(document, "visibilityState", {
+        configurable: true,
+        value: "hidden",
+      });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    await page.evaluate(() => {
+      Object.defineProperty(document, "visibilityState", {
+        configurable: true,
+        value: "visible",
+      });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    await expect(page.getByTestId("arena-duel")).toHaveAttribute(
+      "data-state",
+      "paused",
+    );
+    await page.getByRole("button", { name: "Retomar duelo salvo" }).click();
+    await page
+      .locator(".arena-canvas canvas")
+      .evaluate((el) =>
+        el.dispatchEvent(new Event("webglcontextlost", { cancelable: true })),
+      );
+    await expect(page.getByRole("alert")).toContainText(
+      "campo gráfico foi interrompido",
+    );
+    const oldCanvas = await page
+      .locator(".arena-canvas canvas")
+      .elementHandle();
+    await page.getByRole("button", { name: "Recriar campo 3D" }).click();
+    await expect
+      .poll(() => oldCanvas?.evaluate((el) => el.isConnected))
+      .toBe(false);
+    await expect(page.locator(".arena-canvas canvas")).toBeVisible();
+  });
+}

@@ -46,6 +46,8 @@ test("E: real touch controls, exact resume, full PvE match, result and new histo
     .getByLabel("Lua · Caos", { exact: true })
     .check();
   await page.getByRole("button", { name: "Iniciar duelo PvE" }).click();
+  await page.waitForURL(/\/arena\//);
+  await page.goto(page.url().replace("/arena/", "/partida/"));
   const table = page.getByTestId("duel-table");
   await expect(table).toHaveAttribute("data-revision", "0");
   const before = await persisted(page);
@@ -152,6 +154,8 @@ test("E: real touch controls, exact resume, full PvE match, result and new histo
   expect(await persisted(page)).toEqual(finished);
   await page.getByRole("link", { name: "Histórico & novo duelo" }).click();
   await page.getByRole("button", { name: "Iniciar duelo PvE" }).click();
+  await page.waitForURL(/\/arena\//);
+  await page.goto(page.url().replace("/arena/", "/partida/"));
   await expect(table).toHaveAttribute("data-revision", "0");
   expect(await persisted(page)).toHaveLength(2);
   await page.getByRole("button", { name: "Abandonar duelo…" }).click();
@@ -295,7 +299,7 @@ test("E: combat workshop creates all three types, keeps drafts and enters Creato
     .getByLabel("Círculo autoral fictício", { exact: true })
     .check();
   await page.getByRole("button", { name: "Iniciar duelo PvE" }).click();
-  await expect(page.getByTestId("duel-table")).toHaveAttribute(
+  await expect(page.getByTestId("arena-duel")).toHaveAttribute(
     "data-state",
     "active",
   );

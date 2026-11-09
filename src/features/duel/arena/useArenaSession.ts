@@ -144,6 +144,14 @@ export function useArenaSession(sessionId: string) {
   }, [refresh, pause]);
 
   useEffect(() => {
+    if (session?.duel?.status !== "active" || visible) return;
+    const timer = window.setTimeout(() => {
+      void pause();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [session, visible, pause]);
+
+  useEffect(() => {
     const duel = session?.duel;
     if (
       !duel ||
@@ -162,7 +170,7 @@ export function useArenaSession(sessionId: string) {
       )
         return;
       void submit(chooseDuelAction(duel), 1);
-    }, 650);
+    }, 380);
     return () => window.clearTimeout(timer);
   }, [session, sessionId, visible, busy, error, submit]);
 

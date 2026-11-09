@@ -56,6 +56,7 @@ export function ArenaCanvas({
         const reduced = () =>
           reduce.matches ||
           document.querySelector('[data-reduced-motion="true"]') !== null;
+        let contextLost = false;
         let raf = 0,
           lastFrame = 0,
           samples = 0,
@@ -64,6 +65,7 @@ export function ArenaCanvas({
         const draw = (time: number) => {
           if (
             disposed ||
+            contextLost ||
             !state.current.active ||
             document.visibilityState === "hidden"
           ) {
@@ -76,8 +78,8 @@ export function ArenaCanvas({
           }
           lastFrame = time;
           if (samples === 120) {
-            if (slow > 60 && ratio > 1) {
-              ratio = Math.max(1, ratio - 0.25);
+            if (slow > 60 && ratio > 0.75) {
+              ratio = Math.max(0.75, ratio - 0.25);
               renderer.setPixelRatio(ratio);
             }
             samples = 0;
@@ -91,13 +93,25 @@ export function ArenaCanvas({
           if (raf) cancelAnimationFrame(raf);
           raf = 0;
           lastFrame = 0;
-          if (state.current.active && document.visibilityState !== "hidden")
+          if (
+            !contextLost &&
+            state.current.active &&
+            document.visibilityState !== "hidden"
+          )
             raf = requestAnimationFrame(draw);
         };
         const update = () => {
           world.update(state.current.view);
           world.select(state.current.selected, new Set(state.current.targets));
           state.current.onAnchors(world.anchors());
+          if (
+            !contextLost &&
+            !state.current.active &&
+            document.visibilityState !== "hidden"
+          ) {
+            world.animate(performance.now(), true);
+            renderer.render(world.scene, world.camera);
+          }
         };
         const resize = () => {
           const { width, height } = container.getBoundingClientRect();
@@ -109,6 +123,7 @@ export function ArenaCanvas({
         };
         const loss = (e: Event) => {
           e.preventDefault();
+          contextLost = true;
           cancelAnimationFrame(raf);
           raf = 0;
           setFailure("O campo gráfico foi interrompido. Seu duelo está salvo.");

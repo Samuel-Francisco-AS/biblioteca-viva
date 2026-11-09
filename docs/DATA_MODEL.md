@@ -1,3 +1,5 @@
+> **F2 — 09/11/2026:** evolução apenas de apresentação; Dexie v19, backup v11 e snapshots/replay E permanecem inalterados, sem dados espaciais ou migração. [ADR-030](decisions/ADR-030-arena-viva-apresentacao-lifecycle.md).
+
 ## BF-5.6E — Dexie v19 / backup v11 (candidata)
 
 V19 mantém integralmente tabelas/índices v18 e grava apenas o marcador de schema. `content.combat?` v1 fornece tipo (criatura/feitiço/artefato), afinidade, custo, atributos exclusivos de criatura, palavras-chave, até duas habilidades com até dois efeitos tipados, flavor e artId seguro. `attributes/effects` reservados da A continuam legíveis; novas cartas executáveis usam o catálogo tipado, sem scripts. `deck.combat?` v1 guarda modo, afinidade e contagens por identidade da seleção estática, sem duplicar cartas. `combat_match.duel?` fotografa os dois decks e suas revisões, instâncias, mãos/ordem/campo/cemitério, recursos/vida/fadiga, turno/fase principal, PRNG, efeitos/durações, comandos/eventos e resultado. Placeholders antigos não ganham resultados inventados.

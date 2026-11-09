@@ -1,9 +1,6 @@
 import type { ReactNode } from "react";
 
-/**
- * F2 mounts its visual arena and touch/accessible HUD into this full-viewport
- * stage. F1 intentionally does not ship a second scene or a mock battle UI.
- */
+/** Full-viewport safe-area shell for the ephemeral arena and accessible HUD. */
 export function ArenaFrame({
   children,
   onExit,

@@ -1,4 +1,4 @@
-/** Reserved F2 address. F1 redirects it to the existing working 2D table. */
+/** Immersive F2 address; the legacy table retains its separate URL. */
 const ARENA_ROUTE = /^\/arcanario\/duelos\/arena\/[^/]+\/?$/;
 
 export function isArenaRoute(pathname: string): boolean {

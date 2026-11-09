@@ -8,7 +8,12 @@ import {
 } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { DuelAction } from "../../../domain/duel/contracts";
-import { kindNames, rulesText } from "../../../domain/duel/text";
+import {
+  abilityText,
+  kindNames,
+  modeNames,
+  rulesText,
+} from "../../../domain/duel/text";
 import { traditions } from "../../../domain/duel/catalogue";
 import type { ArenaAnchor } from "./arenaScene";
 import { ArenaCanvas } from "./ArenaCanvas";
@@ -210,6 +215,7 @@ function ArenaSession({ id }: { readonly id: string }) {
     <button
       className={`arena-duelist ${own ? "arena-own" : "arena-enemy"}`}
       data-target={targets.has(p.id)}
+      data-aimed={target === p.id}
       aria-label={`${p.name}, vida ${p.life}, energia ${p.energy} de ${p.maximum}${targets.has(p.id) ? ", alvo válido" : ""}`}
       onClick={() => {
         if (targets.has(p.id)) setTarget(p.id);
@@ -220,7 +226,7 @@ function ArenaSession({ id }: { readonly id: string }) {
         data-affinity={p.affinity}
         aria-hidden="true"
       >
-        {traditions[p.affinity as keyof typeof traditions]?.symbol ?? "◇"}
+        {traditions[p.affinity]?.symbol ?? "◇"}
       </span>
       <span className="arena-duelist-name">
         {p.name}
@@ -252,6 +258,7 @@ function ArenaSession({ id }: { readonly id: string }) {
           className="arena-game"
           data-testid="arena-duel"
           data-state={view.status}
+          data-mode={view.mode}
           data-active={view.active}
           data-revision={view.revision}
         >
@@ -259,6 +266,10 @@ function ArenaSession({ id }: { readonly id: string }) {
             {duelist(view.opponent, false)}
             <span className="arena-turn" aria-live="polite">
               {view.turn} · {view.active === 0 ? "Seu turno" : "Rival"}
+              <small>
+                {modeNames[view.mode]}
+                {view.mode !== "official" ? " · experimental" : ""}
+              </small>
             </span>
           </header>
           <div className="arena-board" data-testid="arena-board">
@@ -291,6 +302,7 @@ function ArenaSession({ id }: { readonly id: string }) {
                         }}
                         data-selected={selection === c.id}
                         data-target={targets.has(c.id)}
+                        data-aimed={target === c.id}
                         data-ready={
                           side === 1 &&
                           (c.canAttack ||
@@ -346,14 +358,22 @@ function ArenaSession({ id }: { readonly id: string }) {
                     <button
                       className="arena-primary"
                       key={i}
+                      aria-label={`${actionName(a, card)}${
+                        a.type === "activate"
+                          ? `: ${card.definition.abilities
+                              .filter((b) => b.id === a.ability)
+                              .map(abilityText)
+                              .join(" ")}`
+                          : ""
+                      }${"target" in a && a.target ? ` → ${name(a.target)}` : ""}`}
                       disabled={busy || view.status !== "active"}
                       onClick={() => void command(a)}
                     >
                       {actionName(a, card)}
-                      {"target" in a && a.target ? ` → ${name(a.target)}` : ""}
+                      {"target" in a && a.target ? " → ◎" : ""}
                       {a.type === "activate" &&
                       offered.filter((x) => x.type === "activate").length > 1
-                        ? ` · ${a.ability}`
+                        ? ` · ${card.definition.abilities.findIndex((b) => b.id === a.ability) + 1}`
                         : ""}
                     </button>
                   ))}

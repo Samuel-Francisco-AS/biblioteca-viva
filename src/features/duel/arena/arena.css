@@ -97,11 +97,9 @@
 }
 .arena-game {
   display: grid;
-  grid-template-rows: 3.8rem minmax(0, 1fr) 2.8rem 4.5rem clamp(
-      5.5rem,
-      14dvh,
-      8rem
-    ) 3.3rem;
+  grid-template-rows:
+    3.8rem minmax(0, 1fr) 2.8rem 4.5rem clamp(5.5rem, 14dvh, 8rem)
+    3.3rem;
   height: 100%;
   min-width: 0;
   overflow: hidden;
@@ -171,7 +169,7 @@
 .arena-portrait[data-affinity="ruin"] {
   color: #ff9a80;
 }
-.arena-portrait[data-affinity="order"] {
+.arena-portrait[data-affinity="bloom"] {
   color: #91d6ff;
 }
 .arena-portrait[data-affinity="knowledge"] {
@@ -225,11 +223,12 @@
 }
 .arena-game .arena-piece {
   position: absolute;
-  transform: translate(-50%, -25%);
+  transform: translate(-50%, -50%);
   width: 18%;
   max-width: 7rem;
-  height: 20%;
-  max-height: 5rem;
+  height: 14%;
+  min-height: 2.75rem;
+  max-height: 3.75rem;
   pointer-events: auto;
   border-color: #ddc59350;
   background: linear-gradient(transparent 15%, #0d122066 60%, #101426ed);
@@ -255,8 +254,8 @@
 }
 .arena-game .arena-piece--artifact {
   width: 17%;
-  height: 13%;
-  max-height: 3.5rem;
+  height: 2.75rem;
+  max-height: 2.75rem;
 }
 .arena-piece[data-ready="true"] {
   border-bottom: 2px solid #85ead6;
@@ -558,6 +557,7 @@
   }
   .arena-board {
     grid-area: 2 / 1;
+    container-type: size;
   }
   .arena-own {
     grid-area: 3 / 1;
@@ -588,7 +588,7 @@
     padding: 0.2rem;
   }
   .arena-context-buttons .arena-primary {
-    min-width: 5rem;
+    min-width: 0;
   }
   .arena-hand {
     grid-area: 2 / 2;
@@ -609,12 +609,12 @@
     padding-inline: 0.35rem;
   }
   .arena-game .arena-piece {
-    width: 17%;
-    height: 24%;
+    width: clamp(2.75rem, 24cqh, 6rem);
+    height: 18%;
   }
   .arena-game .arena-piece--artifact {
-    width: 15%;
-    height: 18%;
+    width: clamp(2.75rem, 21cqh, 5.5rem);
+    height: 2.75rem;
   }
   .arena-piece-name {
     font-size: 0.63rem;
@@ -641,4 +641,23 @@
 }
 [data-text-size="large"] .arena-game {
   font-size: 1.1em;
+}
+@media (max-width: 370px) and (orientation: portrait) {
+  .arena-game:has(.arena-hand > :nth-child(7)) {
+    grid-template-rows: 3.2rem minmax(0, 1fr) 2.75rem 4.4rem 6.8rem 3rem;
+  }
+  .arena-hand:has(> :nth-child(7)) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+  }
+}
+.arena-turn small {
+  display: block;
+  font-size: 0.55rem;
+  color: #c9bdd7;
+}
+
+.arena-game [data-aimed="true"] {
+  outline: 2px solid #ffe4a4;
+  outline-offset: 2px;
 }

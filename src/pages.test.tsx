@@ -1014,7 +1014,9 @@ it("R4 session events avoid catalog and annotation queries and retain world iden
 
 it("F2 opens the duel hall from the canonical orbital selection", async () => {
   const application: LibraryApplication = {
-    queries: { listLibraryEntries: { execute: vi.fn(async () => []) } },
+    queries: {
+      listLibraryEntries: { execute: vi.fn(() => Promise.resolve([])) },
+    },
   };
   render(
     <MemoryRouter>

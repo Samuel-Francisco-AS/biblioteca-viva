@@ -25,7 +25,7 @@ export interface ArenaCardView {
   readonly revision: number;
   readonly name: string;
   readonly kind: "creature" | "spell" | "artifact";
-  readonly affinity: string;
+  readonly affinity: CombatDefinition["affinity"];
   readonly artId: string;
   readonly cost: number;
   readonly attack?: number;
@@ -40,7 +40,7 @@ export interface ArenaCardView {
 export interface ArenaPlayerView {
   readonly id: "p0" | "p1";
   readonly name: string;
-  readonly affinity: string;
+  readonly affinity: CombatDefinition["affinity"];
   readonly life: number;
   readonly energy: number;
   readonly maximum: number;
