@@ -88,7 +88,7 @@ export function WorldDiagnosticPanel({
           </label>
           <p>
             Ative, navegue pelo dock e pelas salas do Arcanário e retorne a
-            este diagnóstico. Até 20 ações, somente origem/tipo/caminho e
+            este diagnóstico. Até 20 ações, somente origem/tipo/categoria de rota e
             tempos relativos ao clique. Não registra textos, conteúdos,
             dados pessoais nem envia nada. Desative ou feche para zerar.
           </p>
