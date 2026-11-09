@@ -1,3 +1,5 @@
+**ESTADO — 09/11/2026: BF-5.6A–F integradas à `main`.** A PR #48 (F1+F2+R1–R4) foi aprovada pelo proprietário e integrada no merge `690be5b5798d34e6436610bf9d209ede38629fd7`. [Fechamento formal F com ressalvas](BF-5_6F_FECHAMENTO_2026-11-09.md): arena de game fullscreen, lua arcana orbitante e cartas/efeitos refinados; E2E de acesso orbital e timeouts gráficos pendentes, CI sem cota. A fase global BF-5.6 continua aberta para a G, ainda não iniciada. Notas anteriores de “candidata/PR draft” abaixo são cronologia.
+
 [BF-5.6F2 — Arena Viva e construção orbital](BF-5_6F_ARENA_VIVA_IMPLEMENTACAO.md): candidata PR #48, arquitetura, evidências e roteiro físico.
 
 **BF-5.6F1 — fundação técnica em branch/PR dedicada (09/11/2026):** [contratos, rota e handoff para F2](BF-5_6F_F1_HANDOFF.md). O Duelo Arcano 2D permanece público; a arena 3D ainda não existe. F1 não foi integrada à main nem certificada por Android/CI; F2 continuará na mesma PR draft. Experiência-alvo: game fullscreen, sem scroll ou instruções persistentes, HUD contextual com safe areas do Moto G06 e mundo 3D residente preservado.
