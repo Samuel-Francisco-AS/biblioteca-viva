@@ -4,7 +4,7 @@
 
 ## Base, rastreabilidade e publicação
 
-`git fetch origin` executado antes da implementação; checkout inicial limpo. GitHub confirmou [A/#43](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/43) e [B/#44](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/44) abertas, draft e sem merge. A: `e6b8b2c53adf26779c8e3f9b4cd33a998256c6ea`. Base exata da C: B **76cf4c7328c5d61da57d8d72e6422f99ead18540**, branch **feat/bf-5-6b-arcanario-workshop**. C criada diretamente dessa ponta em **feat/bf-5-6c-arcanario-provacoes**, sem rebase, alteração da main ou descarte de trabalho. PR draft da C terá B como base. [ADR-027](decisions/ADR-027-provacao-taxonomia-diagnostico.md) define o contrato complementar; relatórios [A](BF-5_6A_FUNDACAO_IMPLEMENTACAO.md)/[B](BF-5_6B_OFICINA_COLECOES_IMPLEMENTACAO.md) e ADR-020/025/026 preservados.
+`git fetch origin` executado antes da implementação; checkout inicial limpo. GitHub confirmou [A/#43](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/43) e [B/#44](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/44) abertas, draft e sem merge. A: `e6b8b2c53adf26779c8e3f9b4cd33a998256c6ea`. Base exata da C: B **76cf4c7328c5d61da57d8d72e6422f99ead18540**, branch **feat/bf-5-6b-arcanario-workshop**. C criada diretamente dessa ponta em **feat/bf-5-6c-arcanario-provacoes**, sem rebase, alteração da main ou descarte de trabalho. [PR #45 draft](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/45) publicada com B como base. [ADR-027](decisions/ADR-027-provacao-taxonomia-diagnostico.md) define o contrato complementar; relatórios [A](BF-5_6A_FUNDACAO_IMPLEMENTACAO.md)/[B](BF-5_6B_OFICINA_COLECOES_IMPLEMENTACAO.md) e ADR-020/025/026 preservados.
 
 ## Reparos B-R1 e B-R2
 
@@ -88,7 +88,9 @@ Somente bancos/origens descartáveis e dados fictícios. Nenhum dado pessoal foi
 | React após foco no início de cada questão | **9 PASS / 1 arquivo**, sobreposto |
 | E2E A + B + C, rodada estável | **6 PASS / 2 FAIL** |
 | E2E dirigido de filtros após correção + Canvas | 0 PASS / 2 FAIL, causas discriminadas abaixo |
-| E2E final central da C | **1 PASS**, 10 questões, pausa/reload, 50%, JSON/CSV, paisagem |
+| E2E central após correção de espera | **1 PASS**, 10 questões, pausa/reload, 50%, JSON/CSV, paisagem |
+| E2E no build final do APK | **1 PASS / 1 FAIL**: central da C PASS em 10,5 s com foco/retrato/paisagem; família teve corrida do check, discriminada abaixo |
+| E2E final dos reparos B-R1/B-R2 | **1 PASS**, 3,3 s; três molduras, prévia, teclado, recuperação, nome independente e filtro de família |
 
 Os três cenários novos da C têm PASS entre execuções; são **7 cenários distintos PASS entre os 8 dirigidos**, sem arredondar rodadas sobrepostas como uma suíte única verde. O E2E de Canvas permanece pendente.
 
@@ -99,9 +101,10 @@ Falhas novas/intermediárias:
 - E2E de filtros encontrou grupo nativo fechado depois do clique; grupos novos foram substituídos por expansão React com `aria-expanded`. Teste seguinte avançou até pausa. O reload do teste precedia o fim da navegação assíncrona e reabria a própria sessão pausada (respostas preservadas); adicionada espera pela tela de Provações antes do reload, sem mudar timeout/assert funcional. O cenário completo então PASS em 9,5 s.
 - Ampla: dois testes da Oficina esgotaram a espera de navegação para “Editar na Oficina” (um preexistente e o novo de molduras); dirigidas correspondentes PASS. Não declarar a ampla aprovada nem atribuir causa sem evidência.
 - Ampla: timeout de **5 s no envelope da Aryn**, não da Ytha nesta execução. Runtime/animação não modificados. É uma falha observada nesta candidata na classe de suíte que já possui dívida de timeout; não declarar a causa igual à histórica da Ytha. Sem segunda ampla para buscar verde.
+- No build final, o helper Playwright `check()` do filtro de família falhou na verificação imediata, mas o próprio snapshot mostrava Questão marcada e zero cartas corretos após navegação por query string. Substituído por clique + assert explícito `toBeChecked` e assert de contagem, preservando a verificação funcional. Caso final PASS sem retry/timeout alterado; nenhuma mudança produtiva/novo APK foi necessária.
 - E2E de residência B: primeira rodada estável não encontrou Canvas no prazo; execução dirigida posterior chegou ao Canvas mas esgotou na navegação Coleção. As duas falhas e pontos distintos permanecem registrados, sem atribuição causal/ajuste de timeout/retry ou mudança especulativa de Three. Preservação física do Canvas/retorno exige o gate conjunto.
 
-Formato, lint, tipos, áudio, build e relatório de performance executados com PASS; warning de chunks >500 kB permanece. Relatório estático não mede CPU/GPU/FPS Android. Empacotamento Android, conferência final de assets/hash e referência final de publicação são registrados no complemento de proveniência abaixo. **Sem CI global verde**, sem novo workflow remoto caro; publicação com `[skip ci]` conforme política de cota vigente. Falhas históricas BF-5.5/CI/TalkBack/memória/termal permanecem separadas e abertas.
+Formato, lint, tipos, áudio, build e relatório de performance executados com PASS; warning de chunks >500 kB permanece. Relatório estático não mede CPU/GPU/FPS Android. Empacotamento Android e conferência final de assets/hash estão registrados abaixo. A PR draft registra a publicação sem merge. **Sem CI global verde**, sem novo workflow remoto caro; publicação com `[skip ci]` conforme política de cota vigente. Falhas históricas BF-5.5/CI/TalkBack/memória/termal permanecem separadas e abertas.
 
 ## Evidências visuais
 
@@ -111,14 +114,21 @@ Capturas Chromium de produção, dados fictícios, 390×844/844×390, movimento 
 - [Editor/prévia de questão](audits/evidence/bf56c/editor-retrato.png).
 - [Taxonomia autoral](audits/evidence/bf56c/taxonomia-retrato.png).
 - [Filtros dinâmicos](audits/evidence/bf56c/filtros-retrato.png).
-- [Resolução em fólio](audits/evidence/bf56c/provacao-retrato.png).
+- [Resolução em fólio retrato](audits/evidence/bf56c/provacao-retrato.png) e [paisagem](audits/evidence/bf56c/provacao-paisagem.png).
 - [Correção comentada](audits/evidence/bf56c/correcao-retrato.png).
 - [Resultado](audits/evidence/bf56c/resultado-retrato.png).
 - [Diagnóstico retrato](audits/evidence/bf56c/diagnostico-retrato.png) e [paisagem](audits/evidence/bf56c/diagnostico-paisagem.png).
 
 ## APK debug e proveniência
 
-Empacotamento consolidado A+B+C em andamento na sequência desta implementação. O complemento final registrará commit produtivo exato, comando/resultado Android, tamanho, SHA-256 e conferência dos assets. Não distribuir um APK anterior da B como se fosse C. Nenhum APK/keystore é versionado, nenhuma release é criada e nenhuma instalação em base pessoal é executada pelo agente.
+`npm run android:build:debug` **PASS**, incluindo `npm run android:sync`, build web, Capacitor sync e Gradle assembleDebug: **BUILD SUCCESSFUL in 29s**, 184 tasks (30 executadas, 154 up-to-date). Java 21.0.10. Nenhuma instalação/teste físico executado pelo agente.
+
+- APK local consolidado A+B+C: `android/app/build/outputs/apk/debug/app-debug.apk`.
+- **11,642,677 bytes**; SHA-256 **632058cf14f655432654ad394d08b9341eb3e8fcd7782be782068f0fd99e58ad**.
+- Código produtivo compilado: **a858f1f3643993c44eafb3813bfbd5896c13832a**, sobre B **76cf4c7328c5d61da57d8d72e6422f99ead18540** e A **e6b8b2c53adf26779c8e3f9b4cd33a998256c6ea**. Complementos posteriores desta candidata alteram somente teste E2E/evidências/documentação, sem modificar código produtivo do APK.
+- **57/57 assets web** de `dist` correspondem byte a byte aos do APK. Capacitor acrescenta `cordova.js` e `cordova_plugins.js`; **59/59 assets públicos sincronizados** correspondem ao APK, zero divergências. A primeira comparação identificou esses dois arquivos gerados extras, explicitados na conferência final (não são arquivos web omitidos).
+- [Manifesto de proveniência verificável](audits/evidence/bf56c/apk-provenance.json). Versão do app permanece **0.2.0-alpha.1**, Dexie **17**, backup **9**; nenhum APK/keystore versionado e nenhuma release criada.
+- Formato/lint/tipos/áudio/build/performance/sync/debug/diff com PASS local nos escopos registrados. [Resumo executável das verificações](audits/evidence/bf56c/verificacao-local.txt). Ampla/CI global não verdes.
 
 ## Roteiro Moto G06 — gate conjunto A+B+C
 

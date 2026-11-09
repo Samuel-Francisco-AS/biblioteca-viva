@@ -398,9 +398,15 @@ test("B-R1/B-R2: all frame previews, independent catalogue name, recovery and fa
     }),
   ).toBeVisible();
   await page.goto("/arcanario/acervo");
-  await page.getByRole("radio", { name: "Questão", exact: true }).check();
+  await page.getByRole("radio", { name: "Questão", exact: true }).click();
+  await expect(
+    page.getByRole("radio", { name: "Questão", exact: true }),
+  ).toBeChecked();
   await expect(page.locator(".arcana-card-link")).toHaveCount(0);
-  await page.getByRole("radio", { name: "Eco", exact: true }).check();
+  await page.getByRole("radio", { name: "Eco", exact: true }).click();
+  await expect(
+    page.getByRole("radio", { name: "Eco", exact: true }),
+  ).toBeChecked();
   await expect(page.locator(".arcana-card-link")).toHaveCount(1);
   await expect(page.locator("select")).toHaveCount(0);
 });
