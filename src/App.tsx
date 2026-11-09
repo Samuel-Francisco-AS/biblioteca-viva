@@ -22,6 +22,7 @@ import { AppErrorBoundary } from "./app/AppErrorBoundary";
 import { AppHeader } from "./app/AppHeader";
 import { DevelopmentDiagnostics } from "./app/DevelopmentDiagnostics";
 import { PrimaryDock } from "./app/PrimaryDock";
+import { isArenaRoute } from "./features/duel/arena/arenaRoute";
 import type {
   ApplicationDiagnostics,
   ApplicationRuntime,
@@ -38,6 +39,7 @@ import "./styles.css";
 import "./styles-legacy.css";
 import "./styles-atelier.css";
 import "./features/library/canvas-hud.css";
+import "./features/duel/arena/arena.css";
 import { pulseTouch } from "./app/touchFeedback";
 import {
   preloadRoute,
@@ -119,6 +121,7 @@ const unsafeContextGuidance =
 export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   const location = useLocation();
   const libraryActive = location.pathname === APP_ROUTE_PATHS.library;
+  const arenaActive = isArenaRoute(location.pathname);
   const [libraryVisited, setLibraryVisited] = useState(libraryActive);
   if (libraryActive && !libraryVisited) setLibraryVisited(true);
   const mainRef = useRef<HTMLElement>(null);
@@ -296,6 +299,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
       data-route={
         location.pathname === "/" ? "library" : location.pathname.split("/")[1]
       }
+      data-arena-route={arenaActive ? "true" : undefined}
       data-high-contrast={effectiveExperience.highContrast}
       data-reduced-motion={effectiveExperience.reducedMotion}
       data-text-size={effectiveExperience.textSize}
