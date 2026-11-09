@@ -1,7 +1,8 @@
+import { combatSnapshot } from "../domain/duel/cards";
+export { combatSnapshot } from "../domain/duel/cards";
 import { z } from "zod";
 import {
   cardSessionSchema,
-  type Card,
   type Deck,
   type CardSession,
 } from "../domain/arcanarium";
@@ -28,19 +29,6 @@ import {
 import { requireRevision, type ArcanariumDependencies } from "./arcanarium";
 import { ApplicationError } from "./errors";
 export type DuelSession = Extract<CardSession, { kind: "combat_match" }>;
-export function combatSnapshot(card: Card): DuelCard {
-  if (card.content.type !== "combat" || !card.content.combat || card.archived)
-    throw new DuelRuleError("Carta de combate indisponível.");
-  return {
-    id: card.id,
-    cardId: card.id,
-    revision: card.revision,
-    name: card.content.name,
-    official:
-      card.origin.kind === "official" && card.id.startsWith("arcane-v1:"),
-    definition: card.content.combat,
-  };
-}
 export class DuelService {
   constructor(private readonly deps: ArcanariumDependencies) {}
   private transaction<T>(operation: () => Promise<T>): Promise<T> {

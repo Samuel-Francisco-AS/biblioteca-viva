@@ -404,7 +404,7 @@ export function transition(
               keywords: [],
               abilities: [],
               flavor: "Uma centelha tomou forma.",
-              artId: "neutral-sentinel",
+              artId: "stone-sentinel",
             },
           });
           pl.units.push(newUnit(id, m.turn));

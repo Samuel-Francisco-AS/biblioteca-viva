@@ -1,6 +1,5 @@
-import { expect, it } from "vitest";
-import { type DuelCard } from "./contracts";
-import { createDuel, type DuelSetup } from "./engine";
+import { type DuelCard } from "../domain/duel/contracts";
+import { createDuel, type DuelSetup } from "../domain/duel/engine";
 export function fixtureCards(): DuelCard[] {
   return Array.from({ length: 24 }, (_, i) => ({
     id: `fixture-${i}`,
@@ -31,5 +30,3 @@ export function fixtureMatch(seed = 17) {
   };
   return createDuel([setup, setup], seed);
 }
-it("uses fictional deck identities only", () =>
-  expect(fixtureCards()).toHaveLength(24));

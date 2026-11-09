@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fixtureMatch } from "./fixtures.test";
+import { fixtureMatch } from "../../test/duelFixtures";
 import {
   cardAt,
   createDuel,

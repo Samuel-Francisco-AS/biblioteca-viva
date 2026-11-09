@@ -19,3 +19,13 @@ Validação E1: 12 testes dirigidos PASS (motor + Dexie); TypeScript PASS. Prime
 Catálogo instala idempotentemente ao entrar no salão; instalação detecta divergência em vez de sobrescrever. Backup omite decks iniciais e conteúdo oficial sem referência pessoal; preserva cadeias compartilhadas necessárias. Restore em base descartável seguido da reinstalação do catálogo foi testado.
 
 Validação E2: 7 testes dirigidos PASS (catálogo/arte/decks + Dexie), verificação exata das 48 artes PASS; 15 testes acumulados antes do teste adicional de reinstalação PASS. TypeScript anterior PASS; rodada consolidada posterior incluirá o construtor.
+
+## E3 — mesa 2D, IA e partidas completas
+
+Rotas próprias no Arcanário: salão, regulamento, baralhos e partida. Campo 2D com vida/energia, criaturas, artefatos, mão, inspeção, alvos e botões explícitos, ataques, ativações, pausa, confirmação de abandono, resultado e histórico por modo. Mão adversária é contagem; registro de compra não revela conteúdo oculto. Cartas podem ser inspecionadas por toque/teclado. Redução de movimento respeita preferência CSS; arte/efeitos não controlam regras nem salvamento. Mesa retrato usa rolagem e navegação compacta, sem drag obrigatório.
+
+Um nível de IA local, determinístico: pondera letal, valor de ameaças/trocas, risco de derrota, Guardião, recursos, cura, compra, buffs e artefatos. `observeDuel` remove mãos/decks ocultos, conteúdo futuro e histórico antes da avaliação; desempates derivam da seed/revisão. Quatro oponentes usam os decks das tradições, sem bônus ocultos. Cadência visual de 380 ms entre decisões; cada decisão é salva individualmente. Background suspende agendamento; retorno reconsulta a persistência, sem reaplicar efeitos. Falha de escrita exige reconsulta explícita, evitando retry cego.
+
+Testes E3: dois testes de IA PASS, incluindo 16 confrontos completos com ações legais e replay; build web PASS. E2E dirigido **2/2 PASS** em 58,8 s: partida completa por controles reais em 390 px, pausa/reload e igualdade do estado persistido, resultado/reload, paisagem, novo histórico e abandono cancelado/confirmado; construtor, rascunho e rejeição de deck curto. Capturas locais fictícias produzidas. Sem aparelho, TalkBack humano ou aceite artístico.
+
+Primeiro ensaio de equilíbrio: 192 partidas, seeds 1–12, 16 pares ordenados. Todos os duelos terminaram; média 19,03 turnos; 185 por vida, 7 por fadiga, sem empate; maior histórico 179 comandos. Entre afinidades distintas: Ruína 57/72 vitórias, Conhecimento 16/72, Florescimento 34/72, Caos 37/72. Primeira posição 67 vs segunda 77. Três artefatos nunca escolhidos pela heurística. Esses sinais exigem uma rodada fundamentada de ajuste na E4; não constituem equilíbrio competitivo aprovado.
