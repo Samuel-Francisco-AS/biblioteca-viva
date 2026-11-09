@@ -52,6 +52,7 @@ describe("migração Dexie v7 para v8", () => {
       "arcanariumVersions",
       "cardMedia",
       "cardSessions",
+      "educationalPacks",
       "knowledgeTags",
       "libraryEntries",
       "media",
@@ -67,7 +68,7 @@ describe("migração Dexie v7 para v8", () => {
     expect(await migrated.libraryEntries.count()).toBe(0);
     expect(await migrated.settings.count()).toBe(0);
     expect(await migrated.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-      value: "17",
+      value: "18",
     });
 
     const fresh = createBook({

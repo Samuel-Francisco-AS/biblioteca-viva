@@ -1,3 +1,4 @@
+import { privateArcanarium } from "../../domain/packBackup";
 import { cardMediaSchema } from "../database/cardMedia";
 import { validateCardMediaOwnership } from "../../application/cardMedia";
 import {
@@ -92,6 +93,7 @@ const unsignedSchema = z.strictObject({
     z.literal(6),
     z.literal(7),
     z.literal(8),
+    z.literal(9),
     z.literal(BACKUP_FORMAT_VERSION),
   ]),
   createdAt: z.iso.datetime({ offset: false }),
@@ -322,7 +324,9 @@ export class JsonBackupCodec implements BackupCodecPort {
   }): Promise<BackupArtifact> {
     const data = sorted(
       dataSchema.parse({
-        arcanarium: input.data.arcanarium ?? emptyArcanarium(),
+        arcanarium: privateArcanarium(
+          input.data.arcanarium ?? emptyArcanarium(),
+        ),
         cardMedia: input.data.cardMedia ?? [],
         media: input.data.media,
         libraryEntries: input.data.libraryEntries,
@@ -404,6 +408,7 @@ export class JsonBackupCodec implements BackupCodecPort {
       formatVersion !== 6 &&
       formatVersion !== 7 &&
       formatVersion !== 8 &&
+      formatVersion !== 9 &&
       formatVersion !== BACKUP_FORMAT_VERSION
     )
       throw new BackupError(
@@ -421,7 +426,10 @@ export class JsonBackupCodec implements BackupCodecPort {
       (formatVersion === 6 && parsed.data.data.arcanarium !== undefined) ||
       (formatVersion >= 7 && parsed.data.data.arcanarium === undefined) ||
       (formatVersion >= 8 && parsed.data.data.cardMedia === undefined) ||
-      (formatVersion < 8 && parsed.data.data.cardMedia !== undefined)
+      (formatVersion < 8 && parsed.data.data.cardMedia !== undefined) ||
+      (formatVersion < 10 &&
+        parsed.data.data.arcanarium?.packs !== undefined) ||
+      (formatVersion === 10 && parsed.data.data.arcanarium?.packs === undefined)
     )
       throw new BackupError(
         "INVALID_BACKUP_DATA",

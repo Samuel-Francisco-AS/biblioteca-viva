@@ -1,3 +1,15 @@
+## BF-5.6D — volume sintético da candidata
+
+Host/fake-indexeddb, rodada dirigida final; somente fixtures descartáveis. Portal lê resumo, Acervo pagina 24 itens e memoiza filtros, seleção consulta disponibilidade por conjunto de IDs. Nenhuma mídia pública nova ou modificação de Three.
+
+| Questões | Instalar ms | Ler grafo ms | Filtrar ms | Reabrir/resumo ms | Backup ms | Backup B | Grafo lógico B | Delta heap B |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 200 | 433 | 49 | 3 | 44 | 49 | 68158 | 549715 | 26531696 |
+| 1000 | 1120 | 124 | 5 | 83 | 151 | 326565 | 2743327 | 75722544 |
+| 3000 | 2650 | 312 | 10 | 195 | 362 | 975523 | 8239865 | 117980280 |
+
+Não é medição Android/flash/FPS. Delta de heap inclui alocações transitórias e GC não controlado; não é pico nem evidência de memória sustentada. Bytes lógicos não medem overhead físico. Retenção integral local após remover é deliberada; backup exclui enunciados públicos não referenciados, mas conserva metadados de reinstalação. [Dados e limites](BF-5_6D_PACOTES_OFICIAIS_IMPLEMENTACAO.md#volume-e-desempenho).
+
 > **BF-5.6C candidata:** filtros/diagnóstico são projeções locais determinísticas; sessões fixam revisões e taxonomia para integridade histórica. Sem alteração de Three/RAF/meshes, budgets inventados ou otimização baseada em timeout. Relatório de build mede bytes, não desempenho físico. Retenção de versões/snapshots permanece sujeita ao limite explícito de 10 MiB no backup. [Resultados e gate de fluidez A+B+C](BF-5_6C_PROVACOES_DIAGNOSTICO_IMPLEMENTACAO.md).
 
 ## BF-5.6B — custo estático da candidata

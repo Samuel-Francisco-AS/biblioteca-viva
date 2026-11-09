@@ -1,3 +1,4 @@
+import { packReceiptSchema, packManifestSchema } from "./packManifest";
 import { z } from "zod";
 
 const id = z.string().min(1);
@@ -55,7 +56,18 @@ export const cardContentSchema = z.discriminatedUnion("type", [
       provenance: text.max(1000).optional(),
       statement: text,
       alternatives: z.array(z.strictObject({ id, text })).min(2),
-      correctAlternativeId: id,
+      correctAlternativeId: id.optional(),
+      editorial: z
+        .strictObject({
+          status: z.enum(["valid", "annulled", "no-valid-key"]),
+          answerKey: z.enum(["final", "preliminary", "none"]),
+          commentary: z.literal("Arcanário").optional(),
+          sourceUrl: z.url().optional(),
+          canonicalId: z.string().min(1).max(160).optional(),
+          equivalentTo: z.array(z.string().min(1).max(160)).max(20).optional(),
+          correctionSource: z.url().optional(),
+        })
+        .optional(),
       explanation: text.optional(),
       classification: classificationSchema,
       source: z
@@ -72,7 +84,11 @@ export const cardContentSchema = z.discriminatedUnion("type", [
       (value) =>
         new Set(value.alternatives.map((a) => a.id)).size ===
           value.alternatives.length &&
-        value.alternatives.some((a) => a.id === value.correctAlternativeId),
+        (value.editorial && value.editorial.status !== "valid"
+          ? value.correctAlternativeId === undefined
+          : value.alternatives.some(
+              (a) => a.id === value.correctAlternativeId,
+            )),
     ),
   z.strictObject({
     type: z.literal("memory"),
@@ -142,6 +158,7 @@ export const dynamicCriteriaSchema = z.discriminatedUnion("version", [
       year: z.int().min(1).max(9999).optional(),
       board: text.max(160).optional(),
       origin: z.enum(["local", "study", "official", "imported"]).optional(),
+      packId: z.string().min(1).max(120).optional(),
       difficulty: z.enum(["easy", "medium", "hard"]).optional(),
       history: z.enum(["all", "never", "incorrect", "answered"]),
       minAttempts: z.int().nonnegative().optional(),
@@ -271,25 +288,11 @@ export const cardSessionSchema = z.discriminatedUnion("kind", [
   }),
 ]);
 export type CardSession = z.infer<typeof cardSessionSchema>;
-/** Contract only; installation/catalogue and media belong to BF-5.6D. */
-export const cardPackManifestSchema = z
-  .strictObject({
-    id,
-    version: text,
-    origin: z.enum(["official", "external"]),
-    license: text,
-    expectedCount: z.int().nonnegative(),
-    publishedCount: z.int().nonnegative(),
-    files: z.array(
-      z.strictObject({
-        path: text,
-        sha256: z.string().regex(/^[a-f0-9]{64}$/u),
-      }),
-    ),
-  })
-  .refine((pack) => pack.publishedCount <= pack.expectedCount);
+/** D replaces the reserved A contract with the executable, versioned manifest. */
+export const cardPackManifestSchema = packManifestSchema;
 export type CardPackManifest = z.infer<typeof cardPackManifestSchema>;
 export const arcanariumDataSchema = z.strictObject({
+  packs: z.array(packReceiptSchema).optional(),
   cards: z.array(cardSchema),
   versions: z.array(cardVersionSchema),
   decks: z.array(deckSchema),
@@ -352,13 +355,19 @@ export function validateArcanarium(
     )
       throw new Error("Missing card reference");
   };
+  const histories = new Map<string, CardVersion[]>();
+  for (const v of data.versions) {
+    const h = histories.get(v.cardId) ?? [];
+    h.push(v);
+    histories.set(v.cardId, h);
+  }
   for (const card of data.cards) {
     const stored = versions.get(JSON.stringify([card.id, card.revision]));
     if (!stored || JSON.stringify(stored) !== JSON.stringify(card))
       throw new Error("Missing current revision");
-    const history = data.versions
-      .filter((version) => version.cardId === card.id)
-      .sort((a, b) => a.revision - b.revision);
+    const history = (histories.get(card.id) ?? []).sort(
+      (a, b) => a.revision - b.revision,
+    );
     if (
       history.length !== card.revision ||
       history.some(
@@ -371,6 +380,21 @@ export function validateArcanarium(
       )
     )
       throw new Error("Invalid revision history");
+  }
+  unique((data.packs ?? []).map((p) => p.id));
+  for (const p of data.packs ?? []) {
+    for (const item of p.items) {
+      const card = cards.get(item.cardId);
+      if (p.status === "installed" && !card)
+        throw new Error("Missing installed question");
+      if (
+        card &&
+        ((card.origin.kind !== "official" && card.origin.kind !== "imported") ||
+          card.origin.packId !== p.id ||
+          card.revision !== item.revision)
+      )
+        throw new Error("Invalid package ownership");
+    }
   }
   for (const version of data.versions) {
     const current = cards.get(version.cardId);

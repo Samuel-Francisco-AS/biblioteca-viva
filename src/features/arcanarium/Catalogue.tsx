@@ -1,7 +1,13 @@
+import {
+  cardAvailable,
+  availablePackCardIds,
+  packOwned,
+  gradable,
+} from "../../domain/educationalPacks";
 import { QuestionFolio } from "./QuestionEditor";
 import { attempts } from "../../domain/provations";
 import { Choices } from "./Choices";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Link,
   useNavigate,
@@ -29,18 +35,59 @@ export function Catalogue({
   const search = params.get("q") ?? "";
   const family = memories ? "memory" : (params.get("family") ?? "all");
   const archived = params.get("archived") === "true";
+  const packId = params.get("pacote") ?? "";
+  const year = params.get("ano") ?? "";
+  const origin = params.get("origem") ?? "";
+  const exam = params.get("prova") ?? "";
+  const tag = params.get("assunto") ?? "";
+  const page = Math.max(1, Number(params.get("pagina")) || 1);
   const patch = (key: string, value: string) => {
     const next = new URLSearchParams(params);
     next.set(key, value);
+    if (key !== "pagina") next.delete("pagina");
     setParams(next, { replace: true });
   };
-  const cards = data.cards.filter(
-    (c) =>
-      c.archived === archived &&
-      (family === "all" || c.type === family) &&
-      JSON.stringify(c.content)
-        .toLocaleLowerCase("pt-BR")
-        .includes(search.toLocaleLowerCase("pt-BR")),
+  const available = useMemo(() => availablePackCardIds(data), [data]);
+  const cards = useMemo(
+    () =>
+      data.cards.filter(
+        (c) =>
+          c.archived === archived &&
+          (archived
+            ? !packOwned(c) || available.has(c.id)
+            : cardAvailable(c, data, available)) &&
+          (!packId ||
+            ((c.origin.kind === "official" || c.origin.kind === "imported") &&
+              c.origin.packId === packId)) &&
+          (!origin || c.origin.kind === origin) &&
+          (!year ||
+            (c.content.type === "question" &&
+              c.content.source?.year === Number(year))) &&
+          (!exam ||
+            (c.content.type === "question" &&
+              (c.content.source?.exam ?? "")
+                .toLocaleLowerCase("pt-BR")
+                .includes(exam.toLocaleLowerCase("pt-BR")))) &&
+          (!tag ||
+            (c.content.type === "question" &&
+              c.content.classification.knowledgeTagIds.includes(tag))) &&
+          (family === "all" || c.type === family) &&
+          JSON.stringify(c.content)
+            .toLocaleLowerCase("pt-BR")
+            .includes(search.toLocaleLowerCase("pt-BR")),
+      ),
+    [
+      data,
+      available,
+      archived,
+      packId,
+      origin,
+      year,
+      exam,
+      tag,
+      family,
+      search,
+    ],
   );
   return (
     <>
@@ -96,13 +143,90 @@ export function Catalogue({
           Ver arquivadas
         </label>
       </div>
+      {!memories && (
+        <details className="arcana-panel">
+          <summary>Filtrar por coleção, prova, ano e origem</summary>
+          <Choices
+            label="Coleção no Acervo"
+            value={packId}
+            options={[
+              { value: "", label: "Todas as coleções" },
+              ...(data.packs ?? [])
+                .filter((p) => p.status === "installed")
+                .map((p) => ({ value: p.id, label: p.manifest.name })),
+            ]}
+            onChange={(v) => patch("pacote", v)}
+          />
+          <label>
+            Prova no Acervo
+            <input
+              value={exam}
+              onChange={(e) => patch("prova", e.target.value)}
+              maxLength={160}
+            />
+          </label>
+          <label>
+            Ano no Acervo
+            <input
+              type="number"
+              min={1900}
+              max={9999}
+              value={year}
+              onChange={(e) => patch("ano", e.target.value)}
+            />
+          </label>
+          <Choices
+            label="Origem no Acervo"
+            value={origin}
+            options={[
+              { value: "", label: "Todas" },
+              { value: "local", label: "Autoral local" },
+              { value: "imported", label: "Importada / demonstração" },
+              { value: "official", label: "Oficial · origem declarada" },
+              { value: "study", label: "Estudo" },
+            ]}
+            onChange={(v) => patch("origem", v)}
+          />
+          <Choices
+            label="Conhecimento no Acervo"
+            value={tag}
+            options={[
+              { value: "", label: "Todos os conhecimentos" },
+              ...data.tags
+                .filter((t) => t.namespace === "editorial")
+                .map((t) => ({ value: t.id, label: t.label })),
+            ]}
+            onChange={(v) => patch("assunto", v)}
+          />
+        </details>
+      )}
       <p className="arcana-muted" role="status">
         {cards.length}{" "}
         {cards.length === 1 ? "carta encontrada" : "cartas encontradas"}
       </p>
+      {cards.length > 24 && (
+        <nav aria-label="Páginas do Acervo">
+          <button
+            disabled={page <= 1}
+            onClick={() => patch("pagina", String(page - 1))}
+          >
+            Página anterior
+          </button>
+          <span>
+            {" "}
+            Página {page} de {Math.ceil(cards.length / 24)}{" "}
+          </span>
+          <button
+            disabled={page * 24 >= cards.length}
+            onClick={() => patch("pagina", String(page + 1))}
+          >
+            Próxima página
+          </button>
+        </nav>
+      )}
       {cards.length ? (
         <div className="arcana-grid">
-          {cards.map((c) => (
+          {cards.slice((page - 1) * 24, page * 24).map((c) => (
             <Link
               className="arcana-card-link"
               key={c.id}
@@ -221,17 +345,24 @@ function Detail({
             <section className="arcana-folio">
               <QuestionFolio question={shown.content} />
               <details>
-                <summary>Gabarito e resolução (Oficina)</summary>
+                <summary>
+                  {packOwned(card)
+                    ? "Gabarito e comentário editorial"
+                    : "Gabarito e resolução (Oficina)"}
+                </summary>
                 <p>
-                  Correta:{" "}
-                  {String.fromCharCode(
-                    65 +
-                      shown.content.alternatives.findIndex(
-                        (a) =>
-                          shown.content.type === "question" &&
-                          a.id === shown.content.correctAlternativeId,
-                      ),
-                  )}
+                  {gradable(shown)
+                    ? "Correta: "
+                    : "Questão anulada, sem gabarito válido ou preliminar; excluída de novas Provações. "}{" "}
+                  {shown.content.correctAlternativeId &&
+                    String.fromCharCode(
+                      65 +
+                        shown.content.alternatives.findIndex(
+                          (a) =>
+                            shown.content.type === "question" &&
+                            a.id === shown.content.correctAlternativeId,
+                        ),
+                    )}
                 </p>
                 <p>
                   {shown.content.explanation ?? "Sem explicação cadastrada."}
@@ -254,7 +385,13 @@ function Detail({
         <div className="arcana-detail__info">
           <p className="arcana-eyebrow">
             {familyLabels[card.type]} ·{" "}
-            {card.archived ? "Arquivada" : "Acervo pessoal"}
+            {card.archived
+              ? "Arquivada"
+              : !cardAvailable(card, data)
+                ? "Conteúdo indisponível para novas sessões · histórico preservado"
+                : packOwned(card)
+                  ? "Coleção instalada"
+                  : "Acervo pessoal"}
           </p>
           <h2>{cardTitle(card.content)}</h2>
           <p className="arcana-muted">
@@ -270,9 +407,22 @@ function Detail({
               {error}
             </p>
           )}
+          {packOwned(card) && (
+            <p>
+              Item de pacote preservado com revisão editorial imutável.{" "}
+              <Link to="/arcanario/pacotes">
+                Gerenciar coleção e procedência
+              </Link>
+              .{" "}
+              {shown.content.type === "question" &&
+                shown.content.editorial?.commentary === "Arcanário" &&
+                "Explicação independente: comentário editorial do Arcanário."}
+            </p>
+          )}
           <div className="arcana-actions">
             {!card.archived &&
               card.origin.kind !== "official" &&
+              !packOwned(card) &&
               (card.type === "flashcard" ||
                 card.type === "memory" ||
                 card.type === "question") && (
@@ -414,28 +564,30 @@ function Detail({
               </ul>
             </>
           )}
-          {!card.archived && card.origin.kind !== "official" && (
-            <button
-              className="arcana-danger"
-              disabled={busy}
-              onClick={() => {
-                if (
-                  window.confirm(
-                    "Arquivar esta carta global? Ela sai do acervo ativo e dos Estudos. Baralhos, versões e histórico são preservados.",
+          {!card.archived &&
+            card.origin.kind !== "official" &&
+            !packOwned(card) && (
+              <button
+                className="arcana-danger"
+                disabled={busy}
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      "Arquivar esta carta global? Ela sai do acervo ativo e dos Estudos. Baralhos, versões e histórico são preservados.",
+                    )
                   )
-                )
-                  void act(async () => {
-                    await app.arcanarium.archiveCard({
-                      cardId: card.id,
-                      expectedRevision: card.revision,
+                    void act(async () => {
+                      await app.arcanarium.archiveCard({
+                        cardId: card.id,
+                        expectedRevision: card.revision,
+                      });
+                      await reload();
                     });
-                    await reload();
-                  });
-              }}
-            >
-              Arquivar carta global
-            </button>
-          )}
+                }}
+              >
+                Arquivar carta global
+              </button>
+            )}
         </div>
       </div>
     </>

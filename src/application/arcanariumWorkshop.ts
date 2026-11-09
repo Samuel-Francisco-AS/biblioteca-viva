@@ -1,3 +1,4 @@
+import { packOwned } from "../domain/educationalPacks";
 import { z } from "zod";
 import {
   cardContentSchema,
@@ -111,6 +112,7 @@ export class ArcanariumWorkshop {
         requireRevision(previous.revision, p.expectedRevision ?? 0);
         if (
           previous.origin.kind === "official" ||
+          packOwned(previous) ||
           previous.archived ||
           previous.type !== p.content.type
         )

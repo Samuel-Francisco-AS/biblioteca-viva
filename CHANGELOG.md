@@ -1,3 +1,11 @@
+## 09/11/2026 — BF-5.6D candidata: Biblioteca de Provas e pacotes
+
+- Catálogo local de coleções, origem/direitos, completude e lotes; instalar, atualizar, remover e reinstalar, com prévia de arquivo e integridade SHA-256.
+- Acervo por coleção/prova/ano/origem/conhecimento, paginação e Provações no motor existente, sem apagar respostas/história ao remover conteúdo.
+- Dexie v18 aditivo e backup v10 privado: importa v6–v9, conserva recibos e revisões referenciadas, exclui catálogo reinstalável não referenciado e mantém 10 MiB.
+- Demonstração original de Matemática: dois lotes, 2 → 4 questões; ENEM 2024/CNU 2024 apenas referências, sem enunciados redistribuídos por insuficiência de confirmação editorial.
+- Etiquetas/contraste da C passaram no E2E dirigido; revalidação física segue pendente. Canvas/CI global e dívidas anteriores não encerrados. [Relatório, fontes e gate](docs/BF-5_6D_PACOTES_OFICIAIS_IMPLEMENTACAO.md).
+
 ## 09/11/2026 — BF-5.6A+B+C integradas com ressalvas
 
 - **PRs #43 → #44 → #45:** merges ordenados autorizados na `main` (`0e1d9e9`, `69a474b`, `782d17c`); cartas globais, Oficina/Relicário/Ecos e Provações/diagnóstico tornam-se a base integrada da BF-5.6.

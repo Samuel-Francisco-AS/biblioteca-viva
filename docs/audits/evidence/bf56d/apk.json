@@ -1,0 +1,29 @@
+{
+  "candidate": "BF-5.6D",
+  "builtAtUtc": "2026-11-09T04:41:39.520979+00:00",
+  "sourceCommit": "d0fe1664a4fd7c08e04b1dee6f62541e8bccea4b",
+  "sourceState": "clean at build; subsequent commits documentation/evidence only",
+  "branch": "feat/bf-5-6d-arcanario-pacotes-oficiais",
+  "apk": "android/app/build/outputs/apk/debug/Biblioteca-Viva-BF56D-debug.apk",
+  "bytes": 11642770,
+  "sha256": "5937c585158cd96e3107603b5223844604f6312bc0d30819195add855508d1e8",
+  "appVersion": "0.2.0-alpha.1",
+  "dexieVersion": 18,
+  "backupFormatVersion": 10,
+  "compatibleBackupVersions": [
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "runtimeWebFilesMatchedDistAndroidApk": 58,
+  "excludedBuildMetadata": [
+    ".vite/manifest.json"
+  ],
+  "bundledContentChunks": [
+    "assets/public/assets/bundledContent-DjwcsPeC.js"
+  ],
+  "physicalGate": "pending; APK not installed on personal device",
+  "release": false
+}

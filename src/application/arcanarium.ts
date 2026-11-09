@@ -1,3 +1,4 @@
+import { packOwned } from "../domain/educationalPacks";
 import { validateCardMediaOwnership, type CardMediaPort } from "./cardMedia";
 import { normalizeKnowledge } from "../domain/provations";
 import { z } from "zod";
@@ -65,6 +66,16 @@ export class ArcanariumService {
   }
   async getDeck(deckId: string) {
     return this.deps.arcanarium.getDeck(parseInput(id, deckId));
+  }
+  async overview() {
+    if (this.deps.arcanarium.overview) return this.deps.arcanarium.overview();
+    const data = await this.list();
+    return {
+      cards: data.cards.filter((c) => !c.archived).length,
+      decks: data.decks.length,
+      reviews: data.sessions.filter((s) => s.kind === "flashcard_review")
+        .length,
+    };
   }
   async list() {
     return runTransaction(this.deps, () => this.deps.arcanarium.read());
@@ -150,7 +161,7 @@ export class ArcanariumService {
       const previous =
         (await this.deps.arcanarium.getCard(cardId)) ?? missing();
       requireRevision(previous.revision, expectedRevision);
-      if (previous.origin.kind === "official")
+      if (previous.origin.kind === "official" || packOwned(previous))
         throw new ApplicationError(
           "VALIDATION_FAILED",
           "Carta oficial não é autoral.",
@@ -203,7 +214,7 @@ export class ArcanariumService {
       const previous = await this.deps.arcanarium.getDeck(deckId);
       if (parsed.id && !previous) missing();
       if (previous) {
-        if (previous.origin.kind === "official")
+        if (previous.origin.kind === "official" || packOwned(previous))
           throw new ApplicationError(
             "VALIDATION_FAILED",
             "Baralho oficial não é autoral.",
@@ -242,6 +253,11 @@ export class ArcanariumService {
   }
   async saveTag(input: unknown, expectedRevision?: number) {
     const tag = parseInput(knowledgeTagSchema, input);
+    if (tag.id.startsWith("pack:"))
+      throw new ApplicationError(
+        "VALIDATION_FAILED",
+        "Classificações de pacote são editoriais. Crie uma etiqueta pessoal separada.",
+      );
     return runTransaction(this.deps, async () => {
       const previous = (await this.deps.arcanarium.read()).tags.find(
         (t) => t.id === tag.id,

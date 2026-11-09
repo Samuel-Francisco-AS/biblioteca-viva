@@ -17,8 +17,27 @@ import {
 import type { BibliotecaDatabase } from "./database";
 export class DexieArcanariumRepository implements ArcanariumRepository {
   constructor(private readonly db: BibliotecaDatabase) {}
+  async overview() {
+    const packs = await this.db.educationalPacks.toArray();
+    const available = new Set(
+      packs
+        .filter((p) => p.status === "installed")
+        .flatMap((p) => p.items.map((i) => i.cardId)),
+    );
+    const [cards, decks, reviews] = await Promise.all([
+      this.db.arcanariumCards
+        .filter(
+          (c) =>
+            !c.archived && (!c.id.startsWith("exam:") || available.has(c.id)),
+        )
+        .count(),
+      this.db.arcanariumDecks.count(),
+      this.db.cardSessions.where("kind").equals("flashcard_review").count(),
+    ]);
+    return { cards, decks, reviews };
+  }
   async read() {
-    const [cards, versions, decks, studyLinks, tags, sessions] =
+    const [cards, versions, decks, studyLinks, tags, sessions, packs] =
       await Promise.all([
         this.db.arcanariumCards.toArray(),
         this.db.arcanariumVersions.toArray(),
@@ -26,8 +45,10 @@ export class DexieArcanariumRepository implements ArcanariumRepository {
         this.db.studyCardLinks.toArray(),
         this.db.knowledgeTags.toArray(),
         this.db.cardSessions.toArray(),
+        this.db.educationalPacks.toArray(),
       ]);
     return arcanariumDataSchema.parse({
+      ...(packs.length ? { packs } : {}),
       cards,
       versions,
       decks,

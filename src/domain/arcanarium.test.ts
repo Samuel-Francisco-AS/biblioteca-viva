@@ -152,12 +152,46 @@ it("validates taxonomy references, multiple classifications, personal/editorial 
 it("defines bounded package publication/integrity contracts without installing content", () => {
   const manifest = {
     id: "sample",
-    version: "1",
-    origin: "official",
-    license: "Licença fictícia",
+    formatVersion: 1,
+    editorialVersion: 1,
+    name: "Synthetic",
+    description: "Synthetic test content",
+    category: "author-demo",
+    institution: "Synthetic project",
+    exam: "Synthetic exam",
+    year: 2026,
+    application: "Synthetic application",
+    booklet: "A",
+    language: "pt-BR",
+    areas: ["Matemática"],
     expectedCount: 10,
     publishedCount: 2,
-    files: [{ path: "cards.json", sha256: "a".repeat(64) }],
+    completeness: "partial",
+    sources: ["https://example.com/source"],
+    rights: {
+      status: "original",
+      basis: "Synthetic original fixture",
+      evidence: ["https://example.com/source"],
+      thirdPartyMedia: "none",
+    },
+    verifiedAt: "2026-11-09T04:25:00.000Z",
+    changes: [
+      {
+        version: 1,
+        date: "2026-11-09T04:25:00.000Z",
+        note: "Synthetic fixture",
+        source: "https://example.com/source",
+      },
+    ],
+    lots: [
+      {
+        id: "lot-1",
+        path: "cards.json",
+        sha256: "a".repeat(64),
+        bytes: 100,
+        count: 2,
+      },
+    ],
   };
   expect(cardPackManifestSchema.safeParse(manifest).success).toBe(true);
   expect(
@@ -167,7 +201,15 @@ it("defines bounded package publication/integrity contracts without installing c
   expect(
     cardPackManifestSchema.safeParse({
       ...manifest,
-      files: [{ path: "cards.json", sha256: "invalid" }],
+      lots: [
+        {
+          id: "lot-1",
+          path: "cards.json",
+          sha256: "invalid",
+          bytes: 100,
+          count: 2,
+        },
+      ],
     }).success,
   ).toBe(false);
 });

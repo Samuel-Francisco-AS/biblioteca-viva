@@ -1,0 +1,1 @@
+{"fixture":"BF56D synthetic, host/fake-indexeddb, not Android","count":1000,"installMs":1120,"readMs":124,"filterMs":5,"backupMs":151,"reopenMs":83,"packBytes":1142730,"logicalGraphBytes":2743327,"backupBytes":326565,"heapDeltaBytes":75722544}

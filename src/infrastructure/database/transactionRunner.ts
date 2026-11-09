@@ -22,6 +22,7 @@ export class DexieTransactionRunner implements ApplicationTransactionRunner {
         this.database.knowledgeTags,
         this.database.cardSessions,
         this.database.cardMedia,
+        this.database.educationalPacks,
       ],
       operation,
     );

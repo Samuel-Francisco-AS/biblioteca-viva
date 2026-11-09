@@ -1,3 +1,7 @@
+## BF-5.6D — verificação da candidata
+
+`educationalPacks.test.ts` exercita schema/hash/versão/contagens, colisões, rollback, idempotência, incremento, correção/anulação, remoção/reinstalação e backup v10/v9. Regressões A–C conservam originais v6/v7/v8. `educationalPacksVolume.test.ts` usa 200/1.000/3.000 questões sintéticas em bancos descartáveis e grava métricas em `/tmp`, sem conteúdo fictício no catálogo. `PackLibrary.test.tsx` cobre gestão, prévia sem escrita, erros, Portal resumido e arquivadas. E2E D usa arquivos reais locais e rede offline, retrato/paisagem e histórico. `npm run packs:check` confere bytes/pins do conteúdo embarcado. [Resultados exatos, falhas e roteiro físico](BF-5_6D_PACOTES_OFICIAIS_IMPLEMENTACAO.md). Ampla 1.120 PASS/11 FAIL antes dos reparos dirigidos; não inferir CI global verde. Canvas histórico e gates físicos permanecem pendentes.
+
 ## BF-5.6C — verificação da candidata
 
 Novas suítes de domínio, Dexie/fake-indexeddb e React verificam seleção, taxonomia, IDs estáveis/gabarito, histórico/snapshots, dez questões, correção, conflitos, pausa/reabertura, rollback/backup v9 e importação v8 original. Regressões A+B preservam v6/v7, mídia e troca v1. E2E `bf56c-provations.spec.ts` percorre editor/taxonomia, dez respostas com pausa/reload, diagnóstico/download JSON/CSV e reparos de molduras/família/nome. Dados estritamente fictícios. [Resultados exatos, falhas intermediárias e gate físico A+B+C](BF-5_6C_PROVACOES_DIAGNOSTICO_IMPLEMENTACAO.md). Nenhum resultado automatizado certifica TalkBack ou Android físico.
