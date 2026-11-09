@@ -232,6 +232,34 @@ describe("R4: no skinned raycast for avatar selections", () => {
   });
 });
 
+it.each(["samael", "aryn", "ytha", "lua"])(
+  "R4 never reads skinned vertices when tapping the loaded %s rig",
+  async (key) => {
+    const gltf = await new GLTFLoader().parseAsync(
+      new Uint8Array(
+        readFileSync(`src/features/library/three/assets/${key}.glb`),
+      ).buffer,
+      "",
+    );
+    const h = setup();
+    const actor = h.add(`character:${key}`);
+    actor.root.remove(actor.mesh);
+    actor.root.add(gltf.scene);
+    const meshReader = vi.spyOn(Mesh.prototype, "getVertexPosition");
+    const skinReader = vi.spyOn(SkinnedMesh.prototype, "getVertexPosition");
+    const exactBox = vi.spyOn(Box3.prototype, "setFromObject");
+    const { tap, selection } = h.mount(false, true, true);
+    h.camera.position.set(0, 1, 10);
+    h.camera.lookAt(0, 1, 0);
+    tap();
+    expect(selection.mock.lastCall?.[0]?.id).toBe(`character:${key}`);
+    expect(meshReader).not.toHaveBeenCalled();
+    expect(skinReader).not.toHaveBeenCalled();
+    expect(exactBox).not.toHaveBeenCalled();
+    disposals.push(() => disposeObjectTree(gltf.scene));
+  },
+);
+
 describe("R2: confirmed gesture scheduling", () => {
   it("presents feedback before picking, then publishes once", () => {
     const callbacks: FrameRequestCallback[] = [];

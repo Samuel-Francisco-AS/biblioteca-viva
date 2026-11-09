@@ -663,6 +663,8 @@ export class ThreeWorldInteraction {
         this.raycaster.intersectObjects(exactRoots, true, this.pickIntersections);
         // Only mathematical ray/box tests for avatars. Preserve the common
         // distance ordering with all exact meshes and original priority rules.
+        // Keep the precision of authored/static objects while using a
+        // separate cheap interaction volume for animated inhabitants.
         for (const root of actorRoots) {
           const id = this.selectableRootIds.get(root);
           if (!id) continue;
@@ -740,11 +742,12 @@ export class ThreeWorldInteraction {
         const root =
           selectedId &&
           selectedId !== this.selectedId &&
-          selectedId.startsWith("character:")
+          selectedId.startsWith("character:") &&
+          !this.inhabitantVolumePicking
             ? this.selectableRoots.get(selectedId)
             : undefined;
-        // Reuse the tap's exact vertices for the immediate highlight too. Return
-        // only the detached box; restore readers BEFORE semantic callbacks run.
+        // Legacy exact path reuses skinned vertices for its bounds. R4's
+        // production volume path NEVER asks the avatar's rig for vertices.
         if (root) this.probe?.markQuest("highlightStart");
         const preparedBounds = root
           ? new Box3().setFromObject(root, true)
