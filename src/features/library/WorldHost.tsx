@@ -64,6 +64,7 @@ const createRuntime = async (
   return createThreeWorldRuntime(
     libraryWorldSnapshot
       ? {
+          deferPicking: true,
           libraryWorldSnapshot,
           livingSession,
           nightLighting,
@@ -78,7 +79,7 @@ const createRuntime = async (
               }
             : {}),
         }
-      : { readingAreaBooks },
+      : { deferPicking: true, readingAreaBooks },
   );
 };
 

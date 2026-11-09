@@ -141,6 +141,8 @@ export interface FixtureModelLoader {
 }
 
 export interface ThreeWorldRuntimeDependencies {
+  /** Host-mounted production scenes allow touch feedback to paint before picking. */
+  readonly deferPicking?: boolean;
   readonly livingSession?: LivingSession;
   readonly nightLighting?: NightLightingSession;
   readonly inhabitantLoader?: InhabitantLoader;
@@ -495,6 +497,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly fixtureLoader: FixtureModelLoader;
   private readonly frameScheduler: FrameScheduler;
   private readonly now: () => number;
+  private readonly deferPicking: boolean;
 
   private readonly livingSession?: LivingSession;
   private readonly nightLighting?: NightLightingSession;
@@ -531,6 +534,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private sessionBooks?: ReturnType<typeof createSessionBookVisuals>;
   private sessionVisuals?: ReturnType<typeof createSessionWorldVisuals>;
   constructor(dependencies: ThreeWorldRuntimeDependencies = {}) {
+    this.deferPicking = dependencies.deferPicking ?? false;
     this.inhabitantLoader = dependencies.inhabitantLoader;
     this.scrolls = dependencies.libraryWorldSnapshot?.scrolls ?? [];
     this.continuity = dependencies.inhabitantContinuity;
@@ -900,7 +904,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.refreshSelectableObjects();
       const interaction = new ThreeWorldInteraction({
         probe: this.performanceProbe,
-        deferPicking: true,
+        deferPicking: this.deferPicking,
         onPickStart: () =>
           this.observeQuest({ type: "begin", source: "canvas" }),
         camera,
