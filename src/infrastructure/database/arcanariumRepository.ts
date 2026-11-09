@@ -37,25 +37,39 @@ export class DexieArcanariumRepository implements ArcanariumRepository {
     return { cards, decks, reviews };
   }
   async read() {
-    const [cards, versions, decks, studyLinks, tags, sessions, packs] =
-      await Promise.all([
-        this.db.arcanariumCards.toArray(),
-        this.db.arcanariumVersions.toArray(),
-        this.db.arcanariumDecks.toArray(),
-        this.db.studyCardLinks.toArray(),
-        this.db.knowledgeTags.toArray(),
-        this.db.cardSessions.toArray(),
-        this.db.educationalPacks.toArray(),
-      ]);
-    return arcanariumDataSchema.parse({
-      ...(packs.length ? { packs } : {}),
-      cards,
-      versions,
-      decks,
-      studyLinks,
-      tags,
-      sessions,
-    });
+    return this.db.transaction(
+      "r",
+      [
+        this.db.arcanariumCards,
+        this.db.arcanariumVersions,
+        this.db.arcanariumDecks,
+        this.db.studyCardLinks,
+        this.db.knowledgeTags,
+        this.db.cardSessions,
+        this.db.educationalPacks,
+      ],
+      async () => {
+        const [cards, versions, decks, studyLinks, tags, sessions, packs] =
+          await Promise.all([
+            this.db.arcanariumCards.toArray(),
+            this.db.arcanariumVersions.toArray(),
+            this.db.arcanariumDecks.toArray(),
+            this.db.studyCardLinks.toArray(),
+            this.db.knowledgeTags.toArray(),
+            this.db.cardSessions.toArray(),
+            this.db.educationalPacks.toArray(),
+          ]);
+        return arcanariumDataSchema.parse({
+          ...(packs.length ? { packs } : {}),
+          cards,
+          versions,
+          decks,
+          studyLinks,
+          tags,
+          sessions,
+        });
+      },
+    );
   }
   async getCard(id: string) {
     const value = await this.db.arcanariumCards.get(id);

@@ -1,5 +1,6 @@
 import {
   Box3,
+  BufferGeometry,
   InstancedMesh,
   Line,
   Matrix4,
@@ -39,72 +40,81 @@ export class WorldPickBroadphase {
     // by a dedicated conservative authored envelope.
     if (id.startsWith("living:") || id === "portal:duelo-arcano") return;
     try {
-    root.updateWorldMatrix(true, true);
-    this.inverse.copy(root.matrixWorld).invert();
-    const bounds = new Box3();
-    let hasGeometry = false;
-    let hasUnknownRaycast = false;
-    let raycastMargin = 0;
-    root.traverse((node) => {
-      if (node instanceof SkinnedMesh) {
-        hasUnknownRaycast = true;
-        return;
+      root.updateWorldMatrix(true, true);
+      this.inverse.copy(root.matrixWorld).invert();
+      const bounds = new Box3();
+      let hasGeometry = false;
+      let hasUnknownRaycast = false;
+      let raycastMargin = 0;
+      root.traverse((node) => {
+        if (node instanceof SkinnedMesh) {
+          hasUnknownRaycast = true;
+          return;
+        }
+        if (
+          !(node instanceof Mesh) &&
+          !(node instanceof Line) &&
+          !(node instanceof Points)
+        ) {
+          if (node.raycast !== Object3D.prototype.raycast) {
+            // Sprites or custom hit-test readers need the precise fallback.
+            hasUnknownRaycast = true;
+          }
+          return;
+        }
+        if (node instanceof Line || node instanceof Points) {
+          // Three's raycaster accepts a wider world-space hit threshold for
+          // lines and point sprites than their geometric bounding boxes.
+          raycastMargin = Math.max(raycastMargin, 1.2);
+        }
+        const geometry: unknown = node.geometry;
+        if (
+          !(geometry instanceof BufferGeometry) ||
+          geometry.morphAttributes.position?.length
+        ) {
+          hasUnknownRaycast = true;
+          return;
+        }
+        let box: Box3 | null;
+        if (node instanceof InstancedMesh) {
+          if (!node.boundingBox) node.computeBoundingBox();
+          box = node.boundingBox;
+        } else {
+          if (!geometry.boundingBox) geometry.computeBoundingBox();
+          box = geometry.boundingBox;
+        }
+        if (!box || box.isEmpty()) {
+          hasUnknownRaycast = true;
+          return;
+        }
+        this.transform.multiplyMatrices(this.inverse, node.matrixWorld);
+        bounds.union(box.clone().applyMatrix4(this.transform));
+        hasGeometry = true;
+      });
+      if (hasGeometry && !hasUnknownRaycast) {
+        const size = bounds.getSize(this.size);
+        const expansion = Math.max(
+          0.3,
+          raycastMargin,
+          Math.max(size.x, size.y, size.z) * 0.3,
+        );
+        bounds.expandByScalar(expansion);
       }
       if (
-        !(node instanceof Mesh) &&
-        !(node instanceof Line) &&
-        !(node instanceof Points)
-      ) {
-        if (node.raycast !== Object3D.prototype.raycast) {
-          // Sprites or custom hit-test readers need the precise fallback.
-          hasUnknownRaycast = true;
-        }
-        return;
-      }
-      if (node instanceof Line || node instanceof Points) {
-        // Three's raycaster accepts a wider world-space hit threshold for
-        // lines and point sprites than their geometric bounding boxes.
-        raycastMargin = Math.max(raycastMargin, 1.2);
-      }
-      const geometry = node.geometry;
-      if (!geometry || geometry.morphAttributes?.position?.length) {
+        ![
+          bounds.min.x,
+          bounds.min.y,
+          bounds.min.z,
+          bounds.max.x,
+          bounds.max.y,
+          bounds.max.z,
+        ].every(Number.isFinite)
+      )
         hasUnknownRaycast = true;
-        return;
-      }
-      let box: Box3 | null;
-      if (node instanceof InstancedMesh) {
-        if (!node.boundingBox) node.computeBoundingBox();
-        box = node.boundingBox;
-      } else {
-        if (!geometry.boundingBox) geometry.computeBoundingBox();
-        box = geometry.boundingBox;
-      }
-      if (!box || box.isEmpty()) {
-        hasUnknownRaycast = true;
-        return;
-      }
-      this.transform.multiplyMatrices(this.inverse, node.matrixWorld);
-      bounds.union(box.clone().applyMatrix4(this.transform));
-      hasGeometry = true;
-    });
-    if (hasGeometry && !hasUnknownRaycast) {
-      const size = bounds.getSize(this.size);
-      const expansion = Math.max(
-        0.3,
-        raycastMargin,
-        Math.max(size.x, size.y, size.z) * 0.3,
-      );
-      bounds.expandByScalar(expansion);
-    }
-    if (
-      ![bounds.min.x, bounds.min.y, bounds.min.z,
-        bounds.max.x, bounds.max.y, bounds.max.z]
-        .every(Number.isFinite)
-    ) hasUnknownRaycast = true;
-    this.cached.set(root, {
-      bounds: hasGeometry && !hasUnknownRaycast ? bounds : null,
-      childCount: root.children.length,
-    });
+      this.cached.set(root, {
+        bounds: hasGeometry && !hasUnknownRaycast ? bounds : null,
+        childCount: root.children.length,
+      });
     } catch {
       // An optimization must never turn an otherwise valid world into a
       // failed mount. Exotic/custom nodes keep the legacy exact raycast.

@@ -1,32 +1,13 @@
-/**
- * Let the touch feedback reach one painted frame before mounting a new route.
- * This is a frame boundary, never a fixed loading delay or a performance claim.
- * A cancelled/unmounted interaction must not navigate later.
+/** Coalesce same-turn intentions without imposing animation-frame latency.
+ * Lazy loading and React own destination scheduling; feedback owns no delay.
  */
-export function afterFeedbackFrame(action: () => void): () => void {
+export function schedulePassage(action: () => void): () => void {
   let cancelled = false;
-  let first = 0;
-  let second = 0;
-  const commit = () => {
+  queueMicrotask(() => {
     if (!cancelled) action();
-  };
-  if (
-    typeof requestAnimationFrame !== "function" ||
-    document.visibilityState === "hidden" ||
-    document.querySelector(".app-shell[data-reduced-motion='true']") !== null ||
-    (typeof window.matchMedia === "function" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-  ) {
-    queueMicrotask(commit);
-  } else {
-    first = requestAnimationFrame(() => {
-      second = requestAnimationFrame(commit);
-    });
-  }
+  });
   return () => {
     cancelled = true;
-    if (first) cancelAnimationFrame(first);
-    if (second) cancelAnimationFrame(second);
   };
 }
 

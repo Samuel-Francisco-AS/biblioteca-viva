@@ -1,3 +1,5 @@
+> **Continuidade atual — R5, 09/11/2026:** a missão foi ampliada pelo proprietário para desempenho do APK inteiro. [Relatório global, implementação, métricas, falhas e gate](audits/BV_UXC_R5_DESEMPENHO_GLOBAL_2026-11-09.md). R4 foi executada em regressões locais; espera de dois RAFs do dock/portal foi substituída, provedor/consultas/drafts/arena corrigidos. Estes fatos atualizam os “testes não executados” históricos abaixo; não aprovam fluidez física, CI ou merge.
+
 # BV-UXC — Continuidade entre toque e ação
 
 **Candidata de 09/11/2026 — PR draft separada, não integrada.**

@@ -1,5 +1,14 @@
 ## 09/11/2026 — BV-UXC R4 (PR draft #49): volumes de toque e diagnóstico entre telas
 
+## BV-UXC R5 — candidata de desempenho global (2026-11-09)
+
+- Salas do Arcanário reutilizam o snapshot da visita; navegação do dock/portal não espera dois RAFs.
+- Drafts agrupam digitação e preservam flush ao sair; seleção da arena não reconcilia novamente um campo inalterado.
+- Consultas de estudos agrupam vínculos/cards; leitura do Arcanário usa transação readonly consistente. Picking R4 e qualidade visual preservados.
+- Diagnóstico local ampliado com intervalos RAF/long tasks/React; sem telemetria ou alteração de dados/schema/backup.
+- [Resultados, APK e gate físico pendente](docs/audits/BV_UXC_R5_DESEMPENHO_GLOBAL_2026-11-09.md). PR #49 draft, sem merge/CI verde.
+
+
 - Os 12 registros físicos da R3 mostraram CPU de 53–117 ms apenas preparando geometria em vários toques, com raycasts de ~23–42 ms e destaque de personagem em ~7–19 ms. R3 resolveu toques no vazio, não ações válidas.
 - R4 separa geometria animada de interação: volumes matemáticos por habitante (seguem posição/rotação), raycast preciso preservado em objetos, destaque sem CPU skinning e seleção imediata em produção, sem dois RAFs de espera.
 - Adicionado diagnóstico volátil opt-in de 20 ações (dock, Arcanário e botões) com próximos RAFs e commit de rota, sem armazenar IDs dinâmicos ou textos.

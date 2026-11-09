@@ -58,3 +58,36 @@ describe("AppErrorBoundary", () => {
     expect(reloadApplication).toHaveBeenCalledOnce();
   });
 });
+
+it("preserves healthy child state across paths and recovers an actual error on navigation", () => {
+  vi.spyOn(console, "error").mockImplementation(() => undefined);
+  shouldThrow = false;
+  const view = render(
+    <AppErrorBoundary resetKey="/arcanario/acervo">
+      <Broken />
+    </AppErrorBoundary>,
+  );
+  const original = screen.getByText("recuperado");
+  view.rerender(
+    <AppErrorBoundary resetKey="/arcanario/baralhos">
+      <Broken />
+    </AppErrorBoundary>,
+  );
+  expect(screen.getByText("recuperado")).toBe(original);
+  shouldThrow = true;
+  view.rerender(
+    <AppErrorBoundary resetKey="/arcanario/baralhos">
+      <Broken />
+    </AppErrorBoundary>,
+  );
+  expect(
+    screen.getByRole("heading", { name: "A tela encontrou um problema" }),
+  ).toBeVisible();
+  shouldThrow = false;
+  view.rerender(
+    <AppErrorBoundary resetKey="/arcanario/ecos">
+      <Broken />
+    </AppErrorBoundary>,
+  );
+  expect(screen.getByText("recuperado")).toBeVisible();
+});

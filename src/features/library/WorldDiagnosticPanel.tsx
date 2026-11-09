@@ -51,6 +51,7 @@ export function WorldDiagnosticPanel({
     getUiActionProbeSnapshot,
     getUiActionProbeSnapshot,
   );
+  useEffect(() => () => setUiActionProbeEnabled(false), []);
   useEffect(() => {
     if (!open && uiProbe.enabled) setUiActionProbeEnabled(false);
   }, [open, uiProbe.enabled]);
@@ -77,33 +78,41 @@ export function WorldDiagnosticPanel({
       >
         <h3>Diagnóstico local</h3>
         <fieldset>
-          <legend>BV-UXC R4 · ações de interface (opt-in)</legend>
+          <legend>BV-UXC R5 · ações de interface (opt-in)</legend>
           <label>
             <input
               type="checkbox"
               checked={uiProbe.enabled}
-              onChange={(event) => setUiActionProbeEnabled(event.target.checked)}
+              onChange={(event) =>
+                setUiActionProbeEnabled(event.target.checked)
+              }
             />
             Medir dock, Arcanário e controles do React
           </label>
           <p>
-            Ative, navegue pelo dock e pelas salas do Arcanário e retorne a
-            este diagnóstico. Até 20 ações, somente origem/tipo/categoria de rota e
-            tempos relativos ao clique. Não registra textos, conteúdos,
-            dados pessoais nem envia nada. Desative ou feche para zerar.
+            Ative, navegue pelo dock e pelas salas do Arcanário e retorne a este
+            diagnóstico. Até 20 ações, somente origem/tipo/categoria de rota e
+            tempos relativos ao clique. Não registra textos, conteúdos, dados
+            pessoais nem envia nada. Desative ou feche para zerar.
           </p>
           <p>
-            firstRafMs/secondRafMs medem a chegada das callbacks de quadros,
-            não os pixels apresentados. routeCommitMs indica mudança de rota
-            no React; não garante que a sala lazy já terminou de carregar.
-            Valores nulos não foram observados.
+            firstRafMs/secondRafMs medem a chegada das callbacks de quadros, não
+            os pixels apresentados. routeCommitMs indica mudança de rota no
+            React; não garante que a sala lazy já terminou de carregar.
+            routeContentCommitMs observa a subárvore após Suspense, sem garantir
+            dados prontos. frameIntervals inclui P50/P95/P99 de intervalos RAF
+            (até 600). Long tasks são globais e não atribuem causa ao último
+            clique. reactRenderMs/commits exigem build diagnostics ou
+            desenvolvimento, medem reconciliação e não duração do commit; zero
+            pode indicar instrumentação indisponível. Correlação de um segundo,
+            não causalidade. Valores nulos não foram observados.
           </p>
           <label>
             Amostras locais de ações (selecione para copiar)
             <textarea
               readOnly
               rows={10}
-              value={JSON.stringify(uiProbe.observations, null, 2)}
+              value={JSON.stringify(uiProbe, null, 2)}
             />
           </label>
         </fieldset>

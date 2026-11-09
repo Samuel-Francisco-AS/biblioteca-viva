@@ -1,0 +1,595 @@
+{
+  "measurementScope": "Static bundle bytes; no CPU, GPU, presentation or Android FPS measurement",
+  "chunks": [
+    {
+      "bytes": 724461,
+      "dynamic": true,
+      "file": "assets/three.module-DZlTWqWi.js",
+      "initial": false,
+      "source": "node_modules/three/build/three.module.js"
+    },
+    {
+      "bytes": 571036,
+      "dynamic": false,
+      "file": "assets/index-CdZT8u5k.js",
+      "initial": true,
+      "source": "index.html"
+    },
+    {
+      "bytes": 258768,
+      "dynamic": true,
+      "file": "assets/ThreeWorldRuntime-d1Ohm3fc.js",
+      "initial": false,
+      "source": "src/features/library/three/ThreeWorldRuntime.ts"
+    },
+    {
+      "bytes": 128276,
+      "dynamic": true,
+      "file": "assets/EntryDetailPage-vP-X_IUA.js",
+      "initial": false,
+      "source": "src/features/entry-detail/EntryDetailPage.tsx"
+    },
+    {
+      "bytes": 95870,
+      "dynamic": false,
+      "file": "assets/schemas-DnRL1CMH.js",
+      "initial": false,
+      "source": "_schemas-DnRL1CMH.js"
+    },
+    {
+      "bytes": 40924,
+      "dynamic": false,
+      "file": "assets/application-DCmWDelf.js",
+      "initial": false,
+      "source": "_application-DCmWDelf.js"
+    },
+    {
+      "bytes": 29790,
+      "dynamic": false,
+      "file": "assets/errors-Dma89ias.js",
+      "initial": false,
+      "source": "_errors-Dma89ias.js"
+    },
+    {
+      "bytes": 25085,
+      "dynamic": false,
+      "file": "assets/EntryEditorPages-BCuSpsah.js",
+      "initial": false,
+      "source": "_EntryEditorPages-BCuSpsah.js"
+    },
+    {
+      "bytes": 24051,
+      "dynamic": false,
+      "file": "assets/arcanarium-tKRp0j2g.js",
+      "initial": false,
+      "source": "_arcanarium-tKRp0j2g.js"
+    },
+    {
+      "bytes": 23578,
+      "dynamic": true,
+      "file": "assets/Workshop-DbN2YJbn.js",
+      "initial": false,
+      "source": "src/features/arcanarium/Workshop.tsx"
+    },
+    {
+      "bytes": 20811,
+      "dynamic": true,
+      "file": "assets/SettingsPage-D1KFjNn9.js",
+      "initial": false,
+      "source": "src/features/settings/SettingsPage.tsx"
+    },
+    {
+      "bytes": 18887,
+      "dynamic": true,
+      "file": "assets/ArenaDuel-JBROXtEN.js",
+      "initial": false,
+      "source": "src/features/duel/arena/ArenaDuel.tsx"
+    },
+    {
+      "bytes": 16704,
+      "dynamic": false,
+      "file": "assets/CombatCard-D9cJeAWg.css",
+      "initial": false,
+      "source": "_CombatCard-D9cJeAWg.css"
+    },
+    {
+      "bytes": 15431,
+      "dynamic": true,
+      "file": "assets/Provations-_6yeLkMO.js",
+      "initial": false,
+      "source": "src/features/arcanarium/Provations.tsx"
+    },
+    {
+      "bytes": 14348,
+      "dynamic": false,
+      "file": "assets/entertainment-Bf8ngaYl.css",
+      "initial": false,
+      "source": "_entertainment-Bf8ngaYl.css"
+    },
+    {
+      "bytes": 14052,
+      "dynamic": true,
+      "file": "assets/DuelTable-Dy6raunp.js",
+      "initial": false,
+      "source": "src/features/duel/DuelTable.tsx"
+    },
+    {
+      "bytes": 13705,
+      "dynamic": true,
+      "file": "assets/arenaScene-BmbzyVdU.js",
+      "initial": false,
+      "source": "src/features/duel/arena/arenaScene.ts"
+    },
+    {
+      "bytes": 12890,
+      "dynamic": true,
+      "file": "assets/bundledContent-DjwcsPeC.js",
+      "initial": false,
+      "source": "src/infrastructure/packs/bundledContent.ts"
+    },
+    {
+      "bytes": 12800,
+      "dynamic": true,
+      "file": "assets/ArcanariumPage-Ba0wvc8k.js",
+      "initial": false,
+      "source": "src/features/arcanarium/ArcanariumPage.tsx"
+    },
+    {
+      "bytes": 11928,
+      "dynamic": true,
+      "file": "assets/StatisticsPage-tDOg8YSk.js",
+      "initial": false,
+      "source": "src/features/statistics/StatisticsPage.tsx"
+    },
+    {
+      "bytes": 11926,
+      "dynamic": true,
+      "file": "assets/Catalogue-CHrOd-Ta.js",
+      "initial": false,
+      "source": "src/features/arcanarium/Catalogue.tsx"
+    },
+    {
+      "bytes": 11010,
+      "dynamic": false,
+      "file": "assets/navigationOrigin-4L8oPlKu.css",
+      "initial": false,
+      "source": "_navigationOrigin-4L8oPlKu.css"
+    },
+    {
+      "bytes": 10826,
+      "dynamic": false,
+      "file": "assets/QuestionEditor-D3uq9IG5.js",
+      "initial": false,
+      "source": "_QuestionEditor-D3uq9IG5.js"
+    },
+    {
+      "bytes": 10318,
+      "dynamic": true,
+      "file": "assets/CollectionPage-lS0HmkPN.js",
+      "initial": false,
+      "source": "src/features/collection/CollectionPage.tsx"
+    },
+    {
+      "bytes": 10046,
+      "dynamic": true,
+      "file": "assets/ArchivePage-BrZ8bUkD.js",
+      "initial": false,
+      "source": "src/features/archive/ArchivePage.tsx"
+    },
+    {
+      "bytes": 9510,
+      "dynamic": true,
+      "file": "assets/PackLibrary-CWfZXx-t.js",
+      "initial": false,
+      "source": "src/features/arcanarium/PackLibrary.tsx"
+    },
+    {
+      "bytes": 8847,
+      "dynamic": false,
+      "file": "assets/catalogue-CQz0NFdF.js",
+      "initial": false,
+      "source": "_catalogue-CQz0NFdF.js"
+    },
+    {
+      "bytes": 8535,
+      "dynamic": false,
+      "file": "assets/jsx-runtime-KJkY8l8U.js",
+      "initial": false,
+      "source": "_jsx-runtime-KJkY8l8U.js"
+    },
+    {
+      "bytes": 8488,
+      "dynamic": true,
+      "file": "assets/web-DYLSnnVb.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/filesystem/dist/esm/web.js"
+    },
+    {
+      "bytes": 8407,
+      "dynamic": false,
+      "file": "assets/provations-DUC1mkRO.js",
+      "initial": false,
+      "source": "_provations-DUC1mkRO.js"
+    },
+    {
+      "bytes": 7825,
+      "dynamic": true,
+      "file": "assets/Decks-CqJsyTP9.js",
+      "initial": false,
+      "source": "src/features/arcanarium/Decks.tsx"
+    },
+    {
+      "bytes": 7783,
+      "dynamic": false,
+      "file": "assets/Taxonomy-BhDSzYuQ.js",
+      "initial": false,
+      "source": "_Taxonomy-BhDSzYuQ.js"
+    },
+    {
+      "bytes": 7756,
+      "dynamic": false,
+      "file": "assets/dist-Cnp6P8yH.js",
+      "initial": false,
+      "source": "_dist-Cnp6P8yH.js"
+    },
+    {
+      "bytes": 7345,
+      "dynamic": true,
+      "file": "assets/Diagnosis-Blwk5LT3.js",
+      "initial": false,
+      "source": "src/features/arcanarium/Diagnosis.tsx"
+    },
+    {
+      "bytes": 7323,
+      "dynamic": false,
+      "file": "assets/arcanarium-1ZkNZUo4.js",
+      "initial": false,
+      "source": "_arcanarium-1ZkNZUo4.js"
+    },
+    {
+      "bytes": 7216,
+      "dynamic": false,
+      "file": "assets/BVPicker-DJ9z-X8F.js",
+      "initial": false,
+      "source": "_BVPicker-DJ9z-X8F.js"
+    },
+    {
+      "bytes": 6949,
+      "dynamic": true,
+      "file": "assets/DuelHall-C6gw2siz.js",
+      "initial": false,
+      "source": "src/features/duel/DuelHall.tsx"
+    },
+    {
+      "bytes": 6523,
+      "dynamic": true,
+      "file": "assets/Echoes-DDJBqBsa.js",
+      "initial": false,
+      "source": "src/features/arcanarium/Echoes.tsx"
+    },
+    {
+      "bytes": 6440,
+      "dynamic": false,
+      "file": "assets/staticVisuals-BJmN-JDz.js",
+      "initial": false,
+      "source": "_staticVisuals-BJmN-JDz.js"
+    },
+    {
+      "bytes": 6290,
+      "dynamic": false,
+      "file": "assets/contracts-CiWJ8lS1.js",
+      "initial": false,
+      "source": "_contracts-CiWJ8lS1.js"
+    },
+    {
+      "bytes": 6016,
+      "dynamic": true,
+      "file": "assets/DuelDecks-cKzAZlNG.js",
+      "initial": false,
+      "source": "src/features/duel/DuelDecks.tsx"
+    },
+    {
+      "bytes": 5197,
+      "dynamic": true,
+      "file": "assets/DuelRules-Dg9TCFX6.js",
+      "initial": false,
+      "source": "src/features/duel/DuelRules.tsx"
+    },
+    {
+      "bytes": 4901,
+      "dynamic": true,
+      "file": "assets/NewEntryPage-BS3rfX64.js",
+      "initial": false,
+      "source": "src/features/entry-editor/NewEntryPage.tsx"
+    },
+    {
+      "bytes": 4521,
+      "dynamic": false,
+      "file": "assets/AnnotationActions-7u6jOrLz.js",
+      "initial": false,
+      "source": "_AnnotationActions-7u6jOrLz.js"
+    },
+    {
+      "bytes": 4069,
+      "dynamic": false,
+      "file": "assets/navigationOrigin-BFDtnS7H.js",
+      "initial": false,
+      "source": "_navigationOrigin-BFDtnS7H.js"
+    },
+    {
+      "bytes": 3659,
+      "dynamic": true,
+      "file": "assets/EditEntryPage-DrftyOdg.js",
+      "initial": false,
+      "source": "src/features/entry-editor/EditEntryPage.tsx"
+    },
+    {
+      "bytes": 3585,
+      "dynamic": false,
+      "file": "assets/CombatCard-B0xGNBZV.js",
+      "initial": false,
+      "source": "_CombatCard-B0xGNBZV.js"
+    },
+    {
+      "bytes": 3220,
+      "dynamic": false,
+      "file": "assets/ai-B7cxBqHe.js",
+      "initial": false,
+      "source": "_ai-B7cxBqHe.js"
+    },
+    {
+      "bytes": 3009,
+      "dynamic": true,
+      "file": "assets/DeckImport-Cpx-boni.js",
+      "initial": false,
+      "source": "src/features/arcanarium/DeckImport.tsx"
+    },
+    {
+      "bytes": 2876,
+      "dynamic": false,
+      "file": "assets/internal-fRWWPR66.js",
+      "initial": false,
+      "source": "_internal-fRWWPR66.js"
+    },
+    {
+      "bytes": 2692,
+      "dynamic": false,
+      "file": "assets/BVPicker-mP1gmq5R.css",
+      "initial": false,
+      "source": "_BVPicker-mP1gmq5R.css"
+    },
+    {
+      "bytes": 2576,
+      "dynamic": false,
+      "file": "assets/backup-C3CCqiQW.js",
+      "initial": false,
+      "source": "_backup-C3CCqiQW.js"
+    },
+    {
+      "bytes": 2461,
+      "dynamic": false,
+      "file": "assets/ArcanaCard-0Jrs-JM8.js",
+      "initial": false,
+      "source": "_ArcanaCard-0Jrs-JM8.js"
+    },
+    {
+      "bytes": 2343,
+      "dynamic": false,
+      "file": "assets/RealmIntro-BrujmjMc.js",
+      "initial": false,
+      "source": "_RealmIntro-BrujmjMc.js"
+    },
+    {
+      "bytes": 2083,
+      "dynamic": false,
+      "file": "assets/ArcanaArt-CLPl1COB.js",
+      "initial": false,
+      "source": "_ArcanaArt-CLPl1COB.js"
+    },
+    {
+      "bytes": 1556,
+      "dynamic": false,
+      "file": "assets/educationalPacks-HT9_y2e_.js",
+      "initial": false,
+      "source": "_educationalPacks-HT9_y2e_.js"
+    },
+    {
+      "bytes": 1196,
+      "dynamic": false,
+      "file": "assets/preload-helper-Czpn1I53.js",
+      "initial": false,
+      "source": "_preload-helper-Czpn1I53.js"
+    },
+    {
+      "bytes": 1085,
+      "dynamic": true,
+      "file": "assets/esm-Cr55IfNh.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/filesystem/dist/esm/index.js"
+    },
+    {
+      "bytes": 972,
+      "dynamic": false,
+      "file": "assets/presentation-MX2xZG4X.js",
+      "initial": false,
+      "source": "_presentation-MX2xZG4X.js"
+    },
+    {
+      "bytes": 858,
+      "dynamic": false,
+      "file": "assets/ArtifactGlyph-D3lTTDt8.js",
+      "initial": false,
+      "source": "_ArtifactGlyph-D3lTTDt8.js"
+    },
+    {
+      "bytes": 843,
+      "dynamic": true,
+      "file": "assets/web-DF9anjsZ.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/app/dist/esm/web.js"
+    },
+    {
+      "bytes": 796,
+      "dynamic": false,
+      "file": "assets/bookPresentation-Du5Ruowv.js",
+      "initial": false,
+      "source": "_bookPresentation-Du5Ruowv.js"
+    },
+    {
+      "bytes": 743,
+      "dynamic": false,
+      "file": "assets/context-Da6kIbIP.js",
+      "initial": false,
+      "source": "_context-Da6kIbIP.js"
+    },
+    {
+      "bytes": 723,
+      "dynamic": false,
+      "file": "assets/duelArt-dERf-VyV.js",
+      "initial": false,
+      "source": "_duelArt-dERf-VyV.js"
+    },
+    {
+      "bytes": 694,
+      "dynamic": false,
+      "file": "assets/drafts-C1FJA-te.js",
+      "initial": false,
+      "source": "_drafts-C1FJA-te.js"
+    },
+    {
+      "bytes": 510,
+      "dynamic": false,
+      "file": "assets/Choices-CbJaf_t2.js",
+      "initial": false,
+      "source": "_Choices-CbJaf_t2.js"
+    },
+    {
+      "bytes": 437,
+      "dynamic": false,
+      "file": "assets/useAppResume-D_m5mLjB.js",
+      "initial": false,
+      "source": "_useAppResume-D_m5mLjB.js"
+    },
+    {
+      "bytes": 364,
+      "dynamic": true,
+      "file": "assets/web-DAzmpyAc.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/share/dist/esm/web.js"
+    },
+    {
+      "bytes": 353,
+      "dynamic": false,
+      "file": "assets/useCivilToday-aqIbTJVX.js",
+      "initial": false,
+      "source": "_useCivilToday-aqIbTJVX.js"
+    },
+    {
+      "bytes": 352,
+      "dynamic": false,
+      "file": "assets/definitions-DlpntO5o.js",
+      "initial": false,
+      "source": "_definitions-DlpntO5o.js"
+    },
+    {
+      "bytes": 345,
+      "dynamic": true,
+      "file": "assets/esm-DqX20w7L.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/share/dist/esm/index.js"
+    },
+    {
+      "bytes": 337,
+      "dynamic": false,
+      "file": "assets/esm-CUxGTWVc.js",
+      "initial": false,
+      "source": "_esm-CUxGTWVc.js"
+    },
+    {
+      "bytes": 138,
+      "dynamic": true,
+      "file": "assets/androidBackupDocumentPlugin-D1KkIVqf.js",
+      "initial": false,
+      "source": "src/infrastructure/files/androidBackupDocumentPlugin.ts"
+    },
+    {
+      "bytes": 136,
+      "dynamic": false,
+      "file": "assets/iso-BaOeGNPn.js",
+      "initial": false,
+      "source": "_iso-BaOeGNPn.js"
+    }
+  ],
+  "initialBytes": 571036,
+  "initialStaticGraphBytes": 967816,
+  "initialStaticGraph": [
+    {
+      "file": "assets/application-DCmWDelf.js",
+      "bytes": 40924
+    },
+    {
+      "file": "assets/arcanarium-1ZkNZUo4.js",
+      "bytes": 7323
+    },
+    {
+      "file": "assets/arcanarium-tKRp0j2g.js",
+      "bytes": 24051
+    },
+    {
+      "file": "assets/backup-C3CCqiQW.js",
+      "bytes": 2576
+    },
+    {
+      "file": "assets/contracts-CiWJ8lS1.js",
+      "bytes": 6290
+    },
+    {
+      "file": "assets/dist-Cnp6P8yH.js",
+      "bytes": 7756
+    },
+    {
+      "file": "assets/educationalPacks-HT9_y2e_.js",
+      "bytes": 1556
+    },
+    {
+      "file": "assets/errors-Dma89ias.js",
+      "bytes": 29790
+    },
+    {
+      "file": "assets/esm-CUxGTWVc.js",
+      "bytes": 337
+    },
+    {
+      "file": "assets/index-CdZT8u5k.js",
+      "bytes": 571036
+    },
+    {
+      "file": "assets/index-CzOd9OQ5.css",
+      "bytes": 159157
+    },
+    {
+      "file": "assets/internal-fRWWPR66.js",
+      "bytes": 2876
+    },
+    {
+      "file": "assets/iso-BaOeGNPn.js",
+      "bytes": 136
+    },
+    {
+      "file": "assets/jsx-runtime-KJkY8l8U.js",
+      "bytes": 8535
+    },
+    {
+      "file": "assets/preload-helper-Czpn1I53.js",
+      "bytes": 1196
+    },
+    {
+      "file": "assets/provations-DUC1mkRO.js",
+      "bytes": 8407
+    },
+    {
+      "file": "assets/schemas-DnRL1CMH.js",
+      "bytes": 95870
+    }
+  ]
+}

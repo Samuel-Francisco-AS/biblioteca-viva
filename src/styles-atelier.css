@@ -1984,7 +1984,6 @@
   animation: none;
 }
 
-
 /* A compositor-only passage: no forced loading pause, no focus trap or blur. */
 .app-shell > .passage-veil {
   position: fixed;

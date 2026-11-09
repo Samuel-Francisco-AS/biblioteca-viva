@@ -47,8 +47,13 @@ export class InhabitantTouchVolumes {
     worldRay: Ray,
   ): { distance: number; point: Vector3; object: Object3D } | null {
     const volumes = this.volumes.get(id);
-    if (!volumes || !root.visible || root.userData.loadState === "error" ||
-        root.userData.loadState === "loading") return null;
+    if (
+      !volumes ||
+      !root.visible ||
+      root.userData.loadState === "error" ||
+      root.userData.loadState === "loading"
+    )
+      return null;
     root.updateWorldMatrix(true, false);
     this.inverse.copy(root.matrixWorld).invert();
     this.localRay.copy(worldRay).applyMatrix4(this.inverse);

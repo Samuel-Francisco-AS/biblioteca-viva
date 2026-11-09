@@ -1,3 +1,4 @@
+import "fake-indexeddb/auto";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -15,7 +16,8 @@ beforeEach(() => {
 });
 
 vi.mock("@capacitor/core", () => ({
-  Capacitor: { isNativePlatform: () => false },
+  registerPlugin: vi.fn(() => ({})),
+  Capacitor: { isNativePlatform: () => false, getPlatform: () => "web" },
 }));
 vi.mock("@capacitor/app", () => ({
   App: {
@@ -234,4 +236,52 @@ it("reserves the measured banner and dock layout without counting the folio's te
   expect(shell.style.getPropertyValue("--canvas-dock-height")).toBe("98px");
   view.unmount();
   expect(disconnect).toHaveBeenCalledOnce();
+});
+
+it("keeps the Arcanarium snapshot mounted between rooms and debounces the real workshop", async () => {
+  const { createApplication } = await import("./app/createApplication");
+  const { default: Dexie } = await import("dexie");
+  const name = `perf-shell-fiction-${crypto.randomUUID()}`;
+  const application = await createApplication({ databaseName: name });
+  const list = vi.spyOn(application.arcanarium, "list");
+  const { waitFor } = await import("@testing-library/react");
+  const view = render(
+    <MemoryRouter initialEntries={["/arcanario/acervo"]}>
+      <App application={application} />
+    </MemoryRouter>,
+  );
+  try {
+    await screen.findByRole("heading", { name: "Acervo global" });
+    for (const [link, title] of [
+      ["Baralhos", "Baralhos & coleções"],
+      ["Ecos", "Ecos do conhecimento"],
+      ["Acervo", "Acervo global"],
+    ]) {
+      fireEvent.click(
+        within(
+          screen.getByRole("navigation", { name: "Salas do Arcanário" }),
+        ).getByRole("link", { name: link }),
+      );
+      await screen.findByRole("heading", { name: title });
+    }
+    expect(list).toHaveBeenCalledOnce();
+    fireEvent.click(screen.getByRole("link", { name: "Oficina" }));
+    const field = await screen.findByLabelText(
+      "Frente da carta — pergunta ou pista",
+    );
+    const write = vi.spyOn(application.workshopDrafts, "write");
+    for (const value of ["P", "Pi", "Pista fictícia"])
+      fireEvent.change(field, { target: { value } });
+    expect(write).not.toHaveBeenCalled();
+    await waitFor(() => expect(write).toHaveBeenCalledOnce());
+    fireEvent.change(field, { target: { value: "Última pista fictícia" } });
+    view.unmount();
+    expect(application.workshopDrafts.read("nova:flashcard")).toContain(
+      "Última pista fictícia",
+    );
+  } finally {
+    view.unmount();
+    application.close();
+    await Dexie.delete(name);
+  }
 });

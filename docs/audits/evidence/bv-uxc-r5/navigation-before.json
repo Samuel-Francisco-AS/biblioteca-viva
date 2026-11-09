@@ -1,0 +1,67 @@
+{
+  "scope": "Chromium headless, fresh synthetic empty DB, mobile viewport, no CPU throttling; automation/observer overhead included; content observed after heading and two RAF callbacks, not presentation or exact readiness; not Android",
+  "samples": [
+    {
+      "path": "/arcanario/baralhos",
+      "automationElapsedMs": 950.6999999880791,
+      "clickToObservedContentMs": 860.0999999940395,
+      "transactions": 2,
+      "reads": 8
+    },
+    {
+      "path": "/arcanario/ecos",
+      "automationElapsedMs": 847.5,
+      "clickToObservedContentMs": 813.2000000178814,
+      "transactions": 2,
+      "reads": 8
+    },
+    {
+      "path": "/arcanario/acervo",
+      "automationElapsedMs": 114.10000002384186,
+      "clickToObservedContentMs": 81.80000001192093,
+      "transactions": 2,
+      "reads": 8
+    },
+    {
+      "path": "/arcanario/baralhos",
+      "automationElapsedMs": 315.19999998807907,
+      "clickToObservedContentMs": 65.69999998807907,
+      "transactions": 2,
+      "reads": 8
+    },
+    {
+      "path": "/arcanario/ecos",
+      "automationElapsedMs": 308.40000000596046,
+      "clickToObservedContentMs": 59.69999998807907,
+      "transactions": 2,
+      "reads": 8
+    },
+    {
+      "path": "/arcanario/acervo",
+      "automationElapsedMs": 345.09999999403954,
+      "clickToObservedContentMs": 92,
+      "transactions": 2,
+      "reads": 8
+    }
+  ],
+  "draftWrites": 36,
+  "longTasks": [
+    {
+      "start": 575.1000000238419,
+      "duration": 360
+    },
+    {
+      "start": 976.7000000178814,
+      "duration": 63
+    },
+    {
+      "start": 1878.9000000059605,
+      "duration": 52
+    }
+  ],
+  "rafPercentiles": [
+    16.699999999999818,
+    16.799999999999272,
+    33.299999999999955
+  ]
+}

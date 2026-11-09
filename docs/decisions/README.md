@@ -54,3 +54,5 @@ ADR-008 permanece a autoridade do WORLD RESET. [`ADR-009`](ADR-009-three-foundat
 [`ADR-023`](ADR-023-bf-5-5-despertar-da-biblioteca.md) insere a **BF-5.5** após o fechamento da BF-5, antes da BF-6, sem alterar escopo/número da BF-6 ou BF-7. Seu contrato de implementação futura está em [BF-5.5](../BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md). A BF-5.6 foi inserida posteriormente em 08/11/2026 entre BF-5.5 e BF-6 pelo [plano do Arcanário](../BF-5_6_ARCANARIO_PLANO.md) e a [revisão da ADR-020](ADR-020-baralhos-e-cartas-globais.md); a ADR-014 permanece registro válido da decisão anterior.
 
 Uma nova decisão recebe o próximo número. Substituição preserva a decisão anterior com estado e link para a sucessora.
+
+- [ADR-030 — desempenho de rotas, consultas e drafts](ADR-030-desempenho-rotas-consultas.md): candidata PR #49, gate físico pendente.

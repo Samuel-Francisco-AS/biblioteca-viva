@@ -3,7 +3,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { projectLivingScrolls } from "./application/livingScrolls";
-import { afterFeedbackFrame, beginPassage } from "./app/interactionContinuity";
+import { schedulePassage, beginPassage } from "./app/interactionContinuity";
 import { projectWorldSessionActivity } from "./application/projectWorldSessionActivity";
 import type { WorldSessionActivity } from "./contracts/worldSessionActivity";
 import type { LibraryEntry, Note, Quote, Session } from "./domain";
@@ -149,8 +149,13 @@ function LibraryPageContent({
     import.meta.env.DEV,
     import.meta.env.VITE_ENABLE_DIAGNOSTICS,
   );
-  const diagnosticsActive = diagnosticsEnabled && PerformanceScenarioHarness;
   const location = useLocation();
+  // A profiling APK must exercise the user's real world by default. The old
+  // F5 synthetic scenes remain available through an explicit diagnostics URL.
+  const diagnosticsActive =
+    diagnosticsEnabled &&
+    PerformanceScenarioHarness &&
+    new URLSearchParams(location.search).get("worldScenario") === "true";
   const navigate = useNavigate();
   const [snapshot, setSnapshot] = useState<LibraryPageSnapshot>();
   const [selectableObjectsState, setSelectableObjectsState] =
@@ -222,7 +227,7 @@ function LibraryPageContent({
     if (nextSelection?.id === "portal:duelo-arcano") {
       if (portalFlight.current) return;
       beginPassage();
-      portalFlight.current = afterFeedbackFrame(() => {
+      portalFlight.current = schedulePassage(() => {
         portalFlight.current = null;
         void navigate("/arcanario/duelos");
       });
@@ -261,15 +266,14 @@ function LibraryPageContent({
     const loadSnapshot = async (): Promise<void> => {
       const request = ++generation;
       try {
-        const entries = await application.queries.listLibraryEntries.execute();
-        cachedEntries = entries;
-        if (!current || request !== generation) return;
-        const [notes, quotes, openSession] = await Promise.all([
+        const [entries, notes, quotes, openSession] = await Promise.all([
+          application.queries.listLibraryEntries.execute(),
           application.queries.listAllNotes?.execute() ?? [],
           application.queries.listAllQuotes?.execute() ?? [],
           application.queries.getOpenSession?.execute() ?? undefined,
         ]);
         if (!current || request !== generation) return;
+        cachedEntries = entries;
         const world = Object.freeze({
           ...projectLibraryWorldEntries(entries),
           scrolls: projectLivingScrolls(entries, notes, quotes),

@@ -1,7 +1,8 @@
 import "fake-indexeddb/auto";
 import Dexie from "dexie";
-import { afterEach, expect, it } from "vitest";
+import { afterEach, expect, it, vi } from "vitest";
 import {
+  act,
   cleanup,
   fireEvent,
   render,
@@ -349,4 +350,25 @@ it("C: genuine question conflicts keep all typed fields", async () => {
   expect(statement).toHaveValue("Meu enunciado preservado");
   expect((await a.arcanarium.getCard(c.id))?.revision).toBe(2);
   expect(a.workshopDrafts.read(c.id)).toContain("Meu enunciado preservado");
+});
+
+it("ignores a late full-snapshot read after navigating to the lightweight portal", async () => {
+  const a = await app();
+  const data = await a.arcanarium.list();
+  let resolve: ((value: typeof data) => void) | undefined;
+  vi.spyOn(a.arcanarium, "list").mockImplementationOnce(
+    () =>
+      new Promise((r) => {
+        resolve = r;
+      }),
+  );
+  mount(a, "/arcanario/acervo");
+  await userEvent.click(screen.getByRole("link", { name: "Portal" }));
+  await screen.findByRole("heading", { name: "O Arcanário" });
+  await act(async () => {
+    resolve?.(data);
+    await Promise.resolve();
+  });
+  expect(screen.getByRole("heading", { name: "O Arcanário" })).toBeVisible();
+  expect(screen.queryByRole("heading", { name: "Acervo global" })).toBeNull();
 });

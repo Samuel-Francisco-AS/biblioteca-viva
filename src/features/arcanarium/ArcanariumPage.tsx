@@ -1,7 +1,17 @@
+import { recordUiRouteContentCommit } from "../../app/uiActionProbe";
 import { isArenaRoute } from "../duel/arena/arenaRoute";
 import { emptyArcanarium } from "../../domain/arcanarium";
 import { cardAvailable } from "../../domain/educationalPacks";
-import { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
 import type { ApplicationRuntime } from "../../app/createApplication";
 import { Arcana, arcanaError, type ArcanaContext } from "./context";
@@ -64,6 +74,14 @@ const Echoes = lazy(async () => ({
 const Review = lazy(async () => ({
   default: (await import("./Echoes")).Review,
 }));
+function RoomCommitted() {
+  const location = useLocation();
+  useEffect(
+    () => recordUiRouteContentCommit(location.pathname),
+    [location.pathname],
+  );
+  return null;
+}
 export default function ArcanariumPage({
   application: app,
 }: {
@@ -71,51 +89,73 @@ export default function ArcanariumPage({
 }) {
   const [snapshot, setSnapshot] = useState<
     Omit<ArcanaContext, "reload"> & {
-      scope: boolean;
+      scope: "portal" | "arena" | "full";
       counts?: { cards: number; decks: number; reviews: number };
     }
   >();
   const [error, setError] = useState("");
   const location = useLocation();
   const atPortal = location.pathname.replace(/\/$/, "") === "/arcanario";
-  const lightScope = atPortal || isArenaRoute(location.pathname);
-  const readSnapshot = useCallback(async () => {
+  const scope = atPortal
+    ? "portal"
+    : isArenaRoute(location.pathname)
+      ? "arena"
+      : "full";
+  const readSnapshot = useCallback(async (): Promise<typeof snapshot> => {
     if (!app) return undefined;
-    if (lightScope) {
+    if (scope !== "full") {
       // The 3D arena reads its match through DuelService, not a global
       // materialization of every card, note and personal record.
       const counts = atPortal ? await app.arcanarium.overview() : undefined;
-      return { app, data: emptyArcanarium(), entries: [], scope: true, counts };
+      return { app, data: emptyArcanarium(), entries: [], scope, counts };
     }
     const [data, entries] = await Promise.all([
       app.arcanarium.list(),
       app.queries.listLibraryEntries.execute(),
     ]);
-    return { app, data, entries, scope: false };
-  }, [app, atPortal, lightScope]);
+    return { app, data, entries, scope };
+  }, [app, atPortal, scope]);
+  const request = useRef(0);
+  const mounted = useRef(false);
+  const invalidateReads = useCallback(() => {
+    request.current++;
+  }, []);
+  const read = useRef(readSnapshot);
+  useLayoutEffect(() => {
+    read.current = readSnapshot;
+    // Invalidate old-scope reads before passive effects or lazy rooms run.
+    request.current++;
+  }, [readSnapshot]);
   const reload = useCallback(async () => {
-    if (!app) return;
-    setSnapshot(await readSnapshot());
-    setError("");
-  }, [app, readSnapshot]);
+    if (!mounted.current) return;
+    const token = ++request.current;
+    try {
+      const value = await read.current();
+      if (!mounted.current || token !== request.current) return;
+      setSnapshot(value);
+      setError("");
+    } catch (cause) {
+      if (mounted.current && token === request.current)
+        setError(arcanaError(cause));
+      throw cause;
+    }
+  }, []);
   useEffect(() => {
-    if (!app) return;
-    let active = true;
-    void readSnapshot()
-      .then((value) => {
-        if (active) setSnapshot(value);
-      })
-      .catch((e) => {
-        if (active) setError(arcanaError(e));
-      });
+    mounted.current = true;
+    void reload().catch(() => undefined);
     return () => {
-      active = false;
+      mounted.current = false;
+      invalidateReads();
     };
-  }, [app, readSnapshot]);
+  }, [readSnapshot, reload, invalidateReads]);
+  const context = useMemo(
+    () => (snapshot ? { ...snapshot, reload } : undefined),
+    [snapshot, reload],
+  );
   useEffect(() => {
     const refresh = () => {
       if (document.visibilityState === "visible")
-        void reload().catch((e) => setError(arcanaError(e)));
+        void reload().catch(() => undefined);
     };
     document.addEventListener("visibilitychange", refresh);
     return () => document.removeEventListener("visibilitychange", refresh);
@@ -150,17 +190,15 @@ export default function ArcanariumPage({
       {error && (
         <div role="alert" className="arcana-error">
           <p>{error}</p>
-          <button
-            onClick={() => void reload().catch((e) => setError(arcanaError(e)))}
-          >
+          <button onClick={() => void reload().catch(() => undefined)}>
             Tentar carregar novamente
           </button>
         </div>
       )}
-      {!snapshot || snapshot.scope !== lightScope ? (
+      {!snapshot || snapshot.app !== app || snapshot.scope !== scope ? (
         !error && <p role="status">Abrindo os arquivos do Arcanário…</p>
       ) : (
-        <Arcana.Provider value={{ ...snapshot, reload }}>
+        <Arcana.Provider value={context}>
           <Suspense
             fallback={
               <div className="arcana-room-opening" role="status">
@@ -172,7 +210,9 @@ export default function ArcanariumPage({
             <Routes>
               <Route
                 index
-                element={<Portal data={snapshot.data} counts={snapshot.counts} />}
+                element={
+                  <Portal data={snapshot.data} counts={snapshot.counts} />
+                }
               />
               <Route path="duelos" element={<DuelHall />} />
               <Route path="duelos/arena/:id" element={<ArenaDuel />} />
@@ -202,6 +242,7 @@ export default function ArcanariumPage({
                 element={<p>Este caminho não existe. Retorne ao portal.</p>}
               />
             </Routes>
+            <RoomCommitted />
           </Suspense>
         </Arcana.Provider>
       )}

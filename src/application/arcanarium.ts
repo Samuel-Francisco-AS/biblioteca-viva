@@ -78,7 +78,14 @@ export class ArcanariumService {
     };
   }
   async list() {
-    return runTransaction(this.deps, () => this.deps.arcanarium.read());
+    try {
+      return await this.deps.arcanarium.read();
+    } catch {
+      throw new ApplicationError(
+        "PERSISTENCE_FAILED",
+        "Não foi possível consultar o Arcanário.",
+      );
+    }
   }
   private async validate() {
     const entries = await this.deps.libraryEntries.list();

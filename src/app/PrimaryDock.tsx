@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { afterFeedbackFrame, beginPassage } from "./interactionContinuity";
+import { schedulePassage, beginPassage } from "./interactionContinuity";
 import { preloadRoute } from "./routeModules";
 
 import {
@@ -105,12 +105,15 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                   )
                     return;
                   event.preventDefault();
-                  if (active) return;
                   flight.current?.();
+                  if (active) {
+                    setPassage(undefined);
+                    return;
+                  }
                   flightOrigin.current = pathname;
                   setPassage({ from: pathname, to: route.path });
                   beginPassage();
-                  flight.current = afterFeedbackFrame(() => {
+                  flight.current = schedulePassage(() => {
                     flight.current = null;
                     flightOrigin.current = null;
                     preloadRoute(route.path);

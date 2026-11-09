@@ -1,0 +1,109 @@
+{
+  "date": "2026-11-09",
+  "baselineCommit": "00edaf745ee6167946819c7ff2ea2916c4db7c5a",
+  "baseMain": "a637bc8b8466fd1012a6b3edfff3fe1075f179a6",
+  "scope": "Local targeted checks; not remote CI, physical Android, full suite or release certification",
+  "baseline": {
+    "build": "PASS",
+    "tests": {
+      "files": 6,
+      "passed": 65,
+      "failed": 4
+    },
+    "failureClassification": [
+      "two stale WorldHost opt-in expectations",
+      "keyboard order changed by diagnostic controls",
+      "cancelled deferred callback still delivered by test scheduler; explicit guard added"
+    ]
+  },
+  "integrated": {
+    "command": "npx vitest run --maxWorkers=2 src/app src/App.test.tsx src/pages.test.tsx src/pages.sessions.test.tsx src/features/arcanarium src/features/duel src/features/library/WorldHost.test.tsx src/features/library/three/ThreeWorldInteraction.test.ts src/features/library/three/ThreeWorldRuntime.test.ts src/features/library/three/worldPickBroadphase.test.ts src/infrastructure/database/arcanarium.test.ts src/infrastructure/database/arcanariumWorkshop.test.ts src/infrastructure/database/duels.test.ts src/infrastructure/database/provations.test.ts src/infrastructure/database/educationalPacks.test.ts src/infrastructure/database/database.test.ts src/infrastructure/backup src/application/flashCards.test.ts src/application/sessions.test.ts",
+    "files": 47,
+    "passed": 420,
+    "failed": 0,
+    "durationSeconds": 56.8,
+    "filters": [
+      "src/app",
+      "src/App.test.tsx",
+      "src/pages.test.tsx",
+      "src/pages.sessions.test.tsx",
+      "src/features/arcanarium",
+      "src/features/duel",
+      "src/features/library/WorldHost.test.tsx",
+      "src/features/library/three/ThreeWorldInteraction.test.ts",
+      "src/features/library/three/ThreeWorldRuntime.test.ts",
+      "src/features/library/three/worldPickBroadphase.test.ts",
+      "src/infrastructure/database/arcanarium.test.ts",
+      "src/infrastructure/database/arcanariumWorkshop.test.ts",
+      "src/infrastructure/database/duels.test.ts",
+      "src/infrastructure/database/provations.test.ts",
+      "src/infrastructure/database/educationalPacks.test.ts",
+      "src/infrastructure/database/database.test.ts",
+      "src/infrastructure/backup",
+      "src/application/flashCards.test.ts",
+      "src/application/sessions.test.ts"
+    ]
+  },
+  "supplement": {
+    "files": 6,
+    "passed": 82,
+    "failed": 0,
+    "durationSeconds": 14.21,
+    "scope": "Final probe, pure distribution utility, GLBs/zoom/rotation, stale read, shell and WorldHost"
+  },
+  "diagnosticDefault": {
+    "files": 4,
+    "passed": 39,
+    "failed": 0,
+    "durationSeconds": 8.27,
+    "scope": "Real Library by default in profiling APK, explicit F5 opt-in, pages/session/stale-read regression"
+  },
+  "testCountsOverlap": true,
+  "e2e": {
+    "firstAttempt": {
+      "passed": 0,
+      "failed": 1,
+      "cause": "30 s total journey budget exhausted at final Canvas identity evaluation"
+    },
+    "secondAttempt": {
+      "passed": 1,
+      "failed": 1,
+      "cause": "UI tour passed; split 3D lifecycle test exceeded 30 s at final active-loop assertion; Canvas identity and paused/running checks reached"
+    },
+    "retries": 0,
+    "timeoutIncreased": false,
+    "assertionsRemoved": false,
+    "furtherGraphicalAttempts": false,
+    "scope": "Chromium headless; new graphics failure preserved, not classified as a physical regression"
+  },
+  "checks": {
+    "productionBuildAndTypecheck": "PASS",
+    "diagnosticBuildAndTypecheck": "PASS",
+    "lint": "PASS npm run lint, whole repository",
+    "format": "PASS npm run format:check, whole configured scope",
+    "audioAssets": "PASS",
+    "diff": "PASS git diff --check",
+    "capacitorSync": "PASS normal and diagnostics",
+    "androidAssembleDebug": "PASS normal and diagnostics"
+  },
+  "measurements": {
+    "roomReadsBefore": 48,
+    "roomReadsAfter": 0,
+    "roomTransactionsBefore": 12,
+    "roomTransactionsAfter": 0,
+    "draftWritesBefore": 36,
+    "draftWritesAfter": 1,
+    "timeComparisonControlled": false,
+    "temporalLimit": "Different concurrent host validation load; timing samples are exploratory and cannot establish speedup/regression; raw worse frame tails retained"
+  },
+  "pending": [
+    "Moto G06 R4/R5 responsiveness and target accuracy",
+    "Android CPU/GPU/compositor trace and input-to-photon",
+    "sustained heap/GC/thermal and TalkBack",
+    "full-suite/remote-CI certification",
+    "merge/owner acceptance"
+  ],
+  "remoteWorkflowsRequested": false,
+  "mergePerformed": false,
+  "deviceConnected": false
+}

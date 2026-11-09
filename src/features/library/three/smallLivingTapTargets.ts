@@ -46,10 +46,10 @@ export function findExpandedLivingTap(
     const originScreenY =
       bounds.top + ((1 - projectedOrigin.y) * bounds.height) / 2;
     if (
-      (pointer.x - originScreenX) ** 2 +
-        (pointer.y - originScreenY) ** 2 >
+      (pointer.x - originScreenX) ** 2 + (pointer.y - originScreenY) ** 2 >
       safeDistanceSquared
-    ) continue;
+    )
+      continue;
     const box = new Box3().setFromObject(root);
     if (box.isEmpty()) continue;
     const projected = box.getCenter(new Vector3()).project(camera);

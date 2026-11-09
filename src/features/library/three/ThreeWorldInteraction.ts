@@ -285,7 +285,7 @@ export class ThreeWorldInteraction {
         : null;
     const bounds = actorBounds
       ? actorBounds.applyMatrix4(root.matrixWorld)
-      : preparedBounds ?? new Box3();
+      : (preparedBounds ?? new Box3());
     if (!actorBounds) {
       root.updateMatrixWorld(true);
       if (!preparedBounds) {
@@ -301,9 +301,9 @@ export class ThreeWorldInteraction {
     ) {
       const local = actorBounds
         ? this.inhabitantTouchVolumes.bounds(this.selectedId ?? "")
-        : bounds.clone().applyMatrix4(
-            new Matrix4().copy(root.matrixWorld).invert(),
-          );
+        : bounds
+            .clone()
+            .applyMatrix4(new Matrix4().copy(root.matrixWorld).invert());
       if (!local) return;
       const size = local.getSize(new Vector3());
       // The envelope covers arm gestures and grimoire rotation without
@@ -444,14 +444,18 @@ export class ThreeWorldInteraction {
         !document.hidden &&
         typeof requestAnimationFrame === "function"
       ) {
+        let cancelled = false;
         let nextFrame = 0;
         const firstFrame = requestAnimationFrame(() => {
+          if (cancelled) return;
           nextFrame = requestAnimationFrame(() => {
+            if (cancelled) return;
             this.pendingPickCancel = undefined;
             finish();
           });
         });
         this.pendingPickCancel = () => {
+          cancelled = true;
           cancelAnimationFrame(firstFrame);
           if (nextFrame) cancelAnimationFrame(nextFrame);
           this.touchEcho("cancelled");
@@ -640,7 +644,9 @@ export class ThreeWorldInteraction {
       return;
     }
     this.canvas.dataset.pickCandidateRoots = String(roots.length);
-    this.canvas.dataset.pickSkippedRoots = String(allRoots.length - roots.length);
+    this.canvas.dataset.pickSkippedRoots = String(
+      allRoots.length - roots.length,
+    );
     // Update only exact raycast candidates. Updating an avatar's whole rig
     // tree synchronously here would reintroduce the R3 50–140 ms spike.
     for (const root of exactRoots) {
@@ -660,7 +666,11 @@ export class ThreeWorldInteraction {
         this.probe?.markQuest("prepared");
         this.pickIntersections.length = 0;
         this.probe?.markQuest("raycastStart");
-        this.raycaster.intersectObjects(exactRoots, true, this.pickIntersections);
+        this.raycaster.intersectObjects(
+          exactRoots,
+          true,
+          this.pickIntersections,
+        );
         // Only mathematical ray/box tests for avatars. Preserve the common
         // distance ordering with all exact meshes and original priority rules.
         // Keep the precision of authored/static objects while using a
@@ -673,7 +683,7 @@ export class ThreeWorldInteraction {
             id,
             this.raycaster.ray,
           );
-          if (hit) this.pickIntersections.push(hit as Intersection);
+          if (hit) this.pickIntersections.push(hit);
         }
         if (actorRoots.length > 0)
           this.pickIntersections.sort((a, b) => a.distance - b.distance);
@@ -702,8 +712,11 @@ export class ThreeWorldInteraction {
               const hit = this.pickIntersections[i];
               if (
                 hit &&
-                nestedAvatarIds.has(this.selectableRootIds.get(hit.object) ?? "")
-              ) this.pickIntersections.splice(i, 1);
+                nestedAvatarIds.has(
+                  this.selectableRootIds.get(hit.object) ?? "",
+                )
+              )
+                this.pickIntersections.splice(i, 1);
             }
         }
         let priority: Intersection | undefined;
@@ -716,11 +729,13 @@ export class ThreeWorldInteraction {
           if (
             !priority &&
             this.belongsToPickingRoots(hit.object, this.pickingPriorityRootSet)
-          ) priority = hit;
+          )
+            priority = hit;
           if (
             !environmental &&
             this.belongsToPickingRoots(hit.object, this.environmentalRootSet)
-          ) environmental = hit;
+          )
+            environmental = hit;
         }
         // Keep the original 2 cm depth tolerance, record precedence, and fallback.
         const chosen =

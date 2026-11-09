@@ -1,6 +1,12 @@
 import { CombatEditor } from "../duel/CombatEditor";
 import { QuestionEditor } from "./QuestionEditor";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Link,
   useNavigate,
@@ -177,31 +183,33 @@ function Editor({
     setDraft((d) => ({ ...d, ...change }));
     setNotice("");
   };
+  const store = useCallback(() => {
+    if (finished.current) return;
+    try {
+      app.workshopDrafts.write(draftKey, JSON.stringify(pending.current));
+      setStorageError("");
+    } catch {
+      setStorageError(
+        "Não foi possível guardar o rascunho local. Mantenha esta tela aberta e salve a carta antes de sair.",
+      );
+    }
+  }, [app, draftKey]);
   useEffect(() => {
-    const store = () => {
-      if (finished.current) return;
-      try {
-        app.workshopDrafts.write(draftKey, JSON.stringify(pending.current));
-        setStorageError("");
-      } catch {
-        setStorageError(
-          "Não foi possível guardar o rascunho local. Mantenha esta tela aberta e salve a carta antes de sair.",
-        );
-      }
-    };
     const handle = window.setTimeout(store, 250);
+    return () => window.clearTimeout(handle);
+  }, [draft, store]);
+  useEffect(() => {
     window.addEventListener("pagehide", store);
     const visibility = () => {
       if (document.visibilityState === "hidden") store();
     };
     document.addEventListener("visibilitychange", visibility);
     return () => {
-      window.clearTimeout(handle);
       window.removeEventListener("pagehide", store);
       document.removeEventListener("visibilitychange", visibility);
       store();
     };
-  }, [app, draftKey, draft]);
+  }, [store]);
   useEffect(() => {
     const warn = (event: BeforeUnloadEvent) => {
       if (storageError && !finished.current) {

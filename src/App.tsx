@@ -1,4 +1,5 @@
 import {
+  Profiler,
   lazy,
   Suspense,
   useEffect,
@@ -45,11 +46,10 @@ import { beginPassage } from "./app/interactionContinuity";
 import {
   recordUiActionStart,
   recordUiRouteCommit,
+  recordUiReactRender,
+  recordUiRouteContentCommit,
 } from "./app/uiActionProbe";
-import {
-  routeModules,
-  warmCollectionWhenIdle,
-} from "./app/routeModules";
+import { routeModules, warmCollectionWhenIdle } from "./app/routeModules";
 import { completeStartupExperience } from "./startupExperience";
 
 const ArcanariumPage = lazy(
@@ -80,6 +80,11 @@ const EntryDetailPage = lazy(async () => ({
 
 // Effects in this Suspense subtree commit only once the destination is mounted.
 function RouteStartupReady({ active }: { readonly active: boolean }) {
+  const location = useLocation();
+  useEffect(() => {
+    if (active && !location.pathname.startsWith("/arcanario"))
+      recordUiRouteContentCommit(location.pathname);
+  }, [active, location.pathname]);
   useEffect(() => {
     if (active) completeStartupExperience();
   }, [active]);
@@ -114,6 +119,21 @@ interface AppProps {
   readonly application?: ApplicationRuntime;
   readonly diagnostics?: ApplicationDiagnostics;
   readonly shellStartedAt?: number;
+}
+
+function EntryRoute({
+  application,
+  edit = false,
+}: {
+  readonly application?: ApplicationRuntime;
+  readonly edit?: boolean;
+}) {
+  const { id } = useParams();
+  return edit ? (
+    <EditEntryPage key={id} application={application} />
+  ) : (
+    <EntryDetailPage key={id} application={application} />
+  );
 }
 
 const diagnosticsBuildEnabled =
@@ -171,17 +191,22 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
     if (!strip) return;
     const dock = shellRef.current?.querySelector<HTMLElement>(".primary-dock");
     const resize = () => {
-      shellRef.current?.style.setProperty(
-        "--canvas-session-height",
-        `${strip.getBoundingClientRect().height}px`,
-      );
-      if (dock) {
-        const bottom = Number.parseFloat(window.getComputedStyle(dock).bottom);
-        shellRef.current?.style.setProperty(
-          "--canvas-dock-height",
-          `${dock.getBoundingClientRect().height + (Number.isFinite(bottom) ? bottom : 0)}px`,
-        );
-      }
+      // Finish all geometry reads before changing variables used by layout.
+      const sessionHeight = `${strip.getBoundingClientRect().height}px`;
+      const bottom = dock
+        ? Number.parseFloat(window.getComputedStyle(dock).bottom)
+        : 0;
+      const dockHeight = dock
+        ? `${dock.getBoundingClientRect().height + (Number.isFinite(bottom) ? bottom : 0)}px`
+        : undefined;
+      const style = shellRef.current?.style;
+      if (style?.getPropertyValue("--canvas-session-height") !== sessionHeight)
+        style?.setProperty("--canvas-session-height", sessionHeight);
+      if (
+        dockHeight &&
+        style?.getPropertyValue("--canvas-dock-height") !== dockHeight
+      )
+        style?.setProperty("--canvas-dock-height", dockHeight);
     };
     resize();
     const observer =
@@ -380,77 +405,81 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
             inert={!libraryActive}
             className="library-residence"
           >
-            <LibraryPage application={application} active={libraryActive} />
+            <Profiler id="library" onRender={recordUiReactRender}>
+              <LibraryPage application={application} active={libraryActive} />
+            </Profiler>
           </div>
         )}
-        <AppErrorBoundary embedded key={location.pathname}>
-          <Suspense
-            fallback={
-              <section
-                className="passage-preparing"
-                role="status"
-                aria-live="polite"
-              >
-                <span aria-hidden="true">✧</span>
-                <p>Desdobrando as páginas do Códice…</p>
-              </section>
-            }
-          >
-            <Routes>
-              <Route path={APP_ROUTE_PATHS.library} element={null} />
-              <Route
-                path="/arcanario/*"
-                element={<ArcanariumPage application={application} />}
-              />
-              <Route
-                path={APP_ROUTE_PATHS.collection}
-                element={<CollectionPage application={application} />}
-              />
-              <Route
-                path={APP_ROUTE_PATHS.archive}
-                element={<ArchivePage application={application} />}
-              />
-              <Route
-                path={APP_ROUTE_PATHS.statistics}
-                element={<StatisticsPage application={application} />}
-              />
-              <Route
-                path={APP_ROUTE_PATHS.settings}
-                element={
-                  <SettingsPage
-                    application={application}
-                    diagnostics={diagnostics}
-                  />
-                }
-              />
-              <Route
-                path={APP_ROUTE_PATHS.newEntry}
-                element={<NewEntryPage application={application} />}
-              />
-              <Route
-                path={APP_ROUTE_PATHS.entryEdit}
-                element={<EditEntryPage application={application} />}
-              />
-              <Route
-                path={APP_ROUTE_PATHS.entryDetail}
-                element={<EntryDetailPage application={application} />}
-              />
-              <Route
-                path={APP_ROUTE_PATHS.legacyNewBook}
-                element={<Navigate replace to={APP_ROUTE_PATHS.newEntry} />}
-              />
-              <Route
-                path={APP_ROUTE_PATHS.legacyBookEdit}
-                element={<LegacyEntryRedirect edit />}
-              />
-              <Route
-                path={APP_ROUTE_PATHS.legacyBookDetail}
-                element={<LegacyEntryRedirect />}
-              />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-            <RouteStartupReady active={!libraryActive} />
-          </Suspense>
+        <AppErrorBoundary embedded resetKey={location.pathname}>
+          <Profiler id="route" onRender={recordUiReactRender}>
+            <Suspense
+              fallback={
+                <section
+                  className="passage-preparing"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <span aria-hidden="true">✧</span>
+                  <p>Desdobrando as páginas do Códice…</p>
+                </section>
+              }
+            >
+              <Routes>
+                <Route path={APP_ROUTE_PATHS.library} element={null} />
+                <Route
+                  path="/arcanario/*"
+                  element={<ArcanariumPage application={application} />}
+                />
+                <Route
+                  path={APP_ROUTE_PATHS.collection}
+                  element={<CollectionPage application={application} />}
+                />
+                <Route
+                  path={APP_ROUTE_PATHS.archive}
+                  element={<ArchivePage application={application} />}
+                />
+                <Route
+                  path={APP_ROUTE_PATHS.statistics}
+                  element={<StatisticsPage application={application} />}
+                />
+                <Route
+                  path={APP_ROUTE_PATHS.settings}
+                  element={
+                    <SettingsPage
+                      application={application}
+                      diagnostics={diagnostics}
+                    />
+                  }
+                />
+                <Route
+                  path={APP_ROUTE_PATHS.newEntry}
+                  element={<NewEntryPage application={application} />}
+                />
+                <Route
+                  path={APP_ROUTE_PATHS.entryEdit}
+                  element={<EntryRoute edit application={application} />}
+                />
+                <Route
+                  path={APP_ROUTE_PATHS.entryDetail}
+                  element={<EntryRoute application={application} />}
+                />
+                <Route
+                  path={APP_ROUTE_PATHS.legacyNewBook}
+                  element={<Navigate replace to={APP_ROUTE_PATHS.newEntry} />}
+                />
+                <Route
+                  path={APP_ROUTE_PATHS.legacyBookEdit}
+                  element={<LegacyEntryRedirect edit />}
+                />
+                <Route
+                  path={APP_ROUTE_PATHS.legacyBookDetail}
+                  element={<LegacyEntryRedirect />}
+                />
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+              <RouteStartupReady active={!libraryActive} />
+            </Suspense>
+          </Profiler>
         </AppErrorBoundary>
         {diagnosticsBuildEnabled &&
           isDiagnosticsEnabled(

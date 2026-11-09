@@ -252,11 +252,25 @@ it.each(["samael", "aryn", "ytha", "lua"])(
     const meshReader = vi.spyOn(Mesh.prototype, "getVertexPosition");
     const skinReader = vi.spyOn(SkinnedMesh.prototype, "getVertexPosition");
     const exactBox = vi.spyOn(Box3.prototype, "setFromObject");
-    const { tap, selection } = h.mount(false, true, true);
+    const { tap, selection, interaction } = h.mount(false, true, true);
     h.camera.position.set(0, 1, 10);
     h.camera.lookAt(0, 1, 0);
-    tap();
-    expect(selection.mock.lastCall?.[0]?.id).toBe(`character:${key}`);
+    const mixer = new AnimationMixer(gltf.scene);
+    for (const clip of gltf.animations.filter((c) => /magic|walk/.test(c.name)))
+      mixer.clipAction(clip).play();
+    for (const [zoom, yaw] of [
+      [0.7, 0],
+      [2.4, Math.PI / 2],
+    ]) {
+      h.camera.zoom = zoom;
+      h.camera.updateProjectionMatrix();
+      actor.root.rotation.y = yaw;
+      mixer.update(0.3);
+      interaction.selectObject(null);
+      tap();
+      expect(selection.mock.lastCall?.[0]?.id).toBe(`character:${key}`);
+    }
+    mixer.stopAllAction();
     expect(meshReader).not.toHaveBeenCalled();
     expect(skinReader).not.toHaveBeenCalled();
     expect(exactBox).not.toHaveBeenCalled();

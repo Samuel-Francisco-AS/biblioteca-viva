@@ -5,6 +5,7 @@ import { completeStartupExperience } from "../startupExperience";
 interface Props {
   readonly children: ReactNode;
   readonly embedded?: boolean;
+  readonly resetKey?: string;
   readonly reloadApplication?: () => void;
 }
 interface State {
@@ -23,6 +24,12 @@ export class AppErrorBoundary extends Component<Props, State> {
     completeStartupExperience();
     if (import.meta.env.DEV)
       console.error("Falha de renderização sanitizada na interface.");
+  }
+
+  componentDidUpdate(previous: Props): void {
+    // Navigation recovers an actual failure without remounting healthy rooms.
+    if (this.state.failed && previous.resetKey !== this.props.resetKey)
+      this.retry();
   }
 
   private retry = () =>
