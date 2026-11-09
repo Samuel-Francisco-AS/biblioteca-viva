@@ -1,3 +1,12 @@
+## 09/11/2026 — BF-5.6A+B+C integradas com ressalvas
+
+- **PRs #43 → #44 → #45:** merges ordenados autorizados na `main` (`0e1d9e9`, `69a474b`, `782d17c`); cartas globais, Oficina/Relicário/Ecos e Provações/diagnóstico tornam-se a base integrada da BF-5.6.
+- **Correção do relato Moto G06:** busca de classificações na Oficina agora explica que filtra somente tags existentes e permite **criar e marcar etiqueta pessoal** sem sair da questão; Enter não submete inadvertidamente o formulário.
+- **Contraste:** resumo “Gabarito e resolução (Oficina)” ganhou texto escuro e fundo distinguível no fólio bege.
+- **Gate:** molduras reparadas anteriormente aprovadas no aparelho; preservação de dados e exportação de backup observadas; demais testes parciais. Reparos novos possuem cobertura E2E adicionada, **não executada no ambiente do assistente nem revalidada fisicamente**. Suíte ampla e Canvas/CI/TalkBack não certificados.
+- **Dados:** versão integrada Dexie v17/backup v9, leitura de v6/v7/v8; sem downgrade suportado. [Registro físico e dívidas](docs/BF-5_6ABC_GATE_PARCIAL_REPAROS_2026-11-09.md).
+- A BF-5.6 **permanece aberta** para refinamento e etapas D–G; nenhuma certificação global/release foi declarada.
+
 ## BF-5.6C — candidata (2026-11-08)
 
 - Oficina: molduras selecionáveis sem picker nativo; nome no acervo distinto da frente/verso, com ajuda e prévia explícitas. Família e revisões usam opções acessíveis.
