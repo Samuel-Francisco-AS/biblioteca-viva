@@ -1,3 +1,4 @@
+import { duelArtUrl } from "../../duel/duelArt";
 import {
   BoxGeometry,
   BufferGeometry,
@@ -10,6 +11,9 @@ import {
   Points,
   PointsMaterial,
   TorusGeometry,
+  PlaneGeometry,
+  TextureLoader,
+  SRGBColorSpace,
 } from "three";
 import { batchStaticVisual } from "./staticVisuals";
 export const ORBITAL_ARENA_ID = "portal:duelo-arcano";
@@ -110,6 +114,16 @@ export function createOrbitalArena() {
       -Math.PI / 4;
   }
   add(book, box, bronze, -0.6, 0, 0, 0.08, 1.7, 0.38);
+  const coverTexture = new TextureLoader().load(duelArtUrl("unwritten-book"));
+  coverTexture.colorSpace = SRGBColorSpace;
+  const cover = new MeshBasicMaterial({ map: coverTexture });
+  const coverGeometry = new PlaneGeometry(0.94, 1.28);
+  for (const sign of [-1, 1]) {
+    const face = new Mesh(coverGeometry, cover);
+    face.position.z = sign * 0.205;
+    if (sign < 0) face.rotation.y = Math.PI;
+    book.add(face);
+  }
   const rings = new Group();
   rings.position.y = 0.8;
   root.add(rings);
@@ -147,7 +161,7 @@ export function createOrbitalArena() {
   batchStaticVisual(body, root);
   let elapsed = 0;
   const place = () => {
-    const angle = 0.72 + (elapsed * Math.PI * 2) / ORBITAL_PERIOD_SECONDS;
+    const angle = 1.8 + (elapsed * Math.PI * 2) / ORBITAL_PERIOD_SECONDS;
     root.position.set(
       Math.sin(angle) * ORBITAL_RADIUS,
       5.4 + Math.sin((elapsed * Math.PI) / 3) * 0.18,

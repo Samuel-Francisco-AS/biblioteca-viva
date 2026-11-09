@@ -128,6 +128,8 @@ export function createArenaEffects(scene: T.Scene) {
   root.add(particles);
   const transform = new T.Object3D(),
     direction = new T.Vector3(),
+    normal = new T.Vector3(),
+    offset = new T.Vector3(),
     up = new T.Vector3(0, 1, 0),
     tint = new T.Color();
   let lastRevision = -1;
@@ -179,6 +181,18 @@ export function createArenaEffects(scene: T.Scene) {
       return channels.some((c) => c.duration > 0 && time - c.born < c.duration);
     },
     update(time: number, reduced: boolean) {
+      if (
+        reduced ||
+        !channels.some(
+          (c) => c.duration > 0 && time >= c.born && time - c.born < c.duration,
+        )
+      ) {
+        channels.forEach((c) => {
+          c.root.visible = false;
+        });
+        particles.visible = false;
+        return;
+      }
       let any = false;
       channels.forEach((c, index) => {
         const t = (time - c.born) / c.duration,
@@ -242,7 +256,7 @@ export function createArenaEffects(scene: T.Scene) {
           c.beam.position.y += 0.65;
           c.beam.quaternion.setFromUnitVectors(
             up,
-            direction.clone().normalize(),
+            normal.copy(direction).normalize(),
           );
           c.beam.scale.set(
             0.5 + Math.sin(Math.PI * t),
@@ -295,9 +309,7 @@ export function createArenaEffects(scene: T.Scene) {
           if (attack)
             transform.position
               .lerpVectors(c.from, c.to, Math.min(1, t + j * 0.035))
-              .add(
-                new T.Vector3(Math.sin(a) * 0.08, 0.6 + Math.cos(a) * 0.08, 0),
-              );
+              .add(offset.set(Math.sin(a) * 0.08, 0.6 + Math.cos(a) * 0.08, 0));
           transform.scale.set(0.035, empower ? 0.24 : 0.07, 0.035);
           transform.rotation.set(a, a * 2, t * 4);
           transform.updateMatrix();

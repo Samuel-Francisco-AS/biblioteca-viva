@@ -1,3 +1,5 @@
+> **F/R3 — apresentação refinada (09/11/2026):** `duelArtUrl` resolve WebP sem mudar snapshots/identidades. `arenaScenery` e `arenaEffects` são recursos pertencentes à cena efêmera; eventos confirmados dirigem efeitos finitos. `orbitalArena.update(delta,reduced)` usa o RAF residente e atualiza matrizes antes do picking/highlight; root continua pertencente ao building. Sem alteração de domínio/schema/backend. [Relatório](BF-5_6F_ARENA_VIVA_IMPLEMENTACAO.md).
+
 > **Contrato F2 — 09/11/2026:** `ArenaDuel` + `useArenaSession` consomem projeção pública/ações legais do serviço E; cena Three.js efêmera carregada sob demanda e controles semânticos pela mesma câmera. Mundo residente pausa por `active=false`, arena descarta GPU/RAF ao sair. Portal orbital pertence ao building e picking existentes, sem estado espacial persistido. [ADR-030](decisions/ADR-030-arena-viva-apresentacao-lifecycle.md) · [relatório](BF-5_6F_ARENA_VIVA_IMPLEMENTACAO.md). Sem mudança de dados/regras.
 
 ## BF-5.6E — Duelo Arcano (candidata autorizada)

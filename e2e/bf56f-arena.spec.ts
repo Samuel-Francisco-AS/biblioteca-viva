@@ -16,28 +16,42 @@ async function fit(page: Page) {
   expect(board!.y).toBeGreaterThanOrEqual(0);
   expect(board!.x + board!.width).toBeLessThanOrEqual(viewport.width + 1);
   expect(board!.y + board!.height).toBeLessThanOrEqual(viewport.height + 1);
-  for (const locator of [
+  await expect(
     page.getByRole("button", { name: "Pausar e salvar", exact: true }),
+  ).toHaveCount(1);
+  await expect(
     page.getByRole("button", { name: "Encerrar turno", exact: true }),
-    ...(await page.locator(".arena-hand-card").all()),
-  ]) {
-    const r = await locator.boundingBox();
+  ).toHaveCount(1);
+  const controls = await page
+    .locator(".arena-frame__exit, .arena-commands button, .arena-hand-card")
+    .evaluateAll((elements) =>
+      elements.map((el) => {
+        const r = el.getBoundingClientRect();
+        const top = document.elementFromPoint(
+          r.x + r.width / 2,
+          r.y + r.height / 2,
+        );
+        return {
+          x: r.x,
+          y: r.y,
+          width: r.width,
+          height: r.height,
+          reachable: top === el || el.contains(top),
+        };
+      }),
+    );
+  expect(controls).toHaveLength(
+    (await page.locator(".arena-hand-card").count()) + 2,
+  );
+  for (const r of controls) {
     expect(r).not.toBeNull();
-    expect(r!.x).toBeGreaterThanOrEqual(0);
-    expect(r!.y).toBeGreaterThanOrEqual(0);
-    expect(r!.x + r!.width).toBeLessThanOrEqual(viewport.width + 1);
-    expect(r!.y + r!.height).toBeLessThanOrEqual(viewport.height + 1);
-    expect(r!.width).toBeGreaterThanOrEqual(40);
-    expect(r!.height).toBeGreaterThanOrEqual(40);
-    const reachable = await locator.evaluate((el) => {
-      const r = el.getBoundingClientRect();
-      const top = document.elementFromPoint(
-        r.x + r.width / 2,
-        r.y + r.height / 2,
-      );
-      return top === el || el.contains(top);
-    });
-    expect(reachable).toBe(true);
+    expect(r.x).toBeGreaterThanOrEqual(0);
+    expect(r.y).toBeGreaterThanOrEqual(0);
+    expect(r.x + r.width).toBeLessThanOrEqual(viewport.width + 1);
+    expect(r.y + r.height).toBeLessThanOrEqual(viewport.height + 1);
+    expect(r.width).toBeGreaterThanOrEqual(40);
+    expect(r.height).toBeGreaterThanOrEqual(40);
+    expect(r.reachable).toBe(true);
   }
   await expect(page.getByTestId("arena-duel")).not.toContainText(
     /Toque em uma carta|Selecione uma criatura|Nenhuma ação depende|O outro lado ainda/,

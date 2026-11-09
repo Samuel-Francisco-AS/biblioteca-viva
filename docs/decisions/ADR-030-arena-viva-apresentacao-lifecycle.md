@@ -17,3 +17,9 @@ Uma manifestação orbital do building usa catálogo/picking existentes e abre o
 Câmeras/enquadramento e slots visuais não têm significado de regra. Orientação/redimensionamento não escrevem dados. Inputs por toque e teclado confirmam somente ações legais e não dependem de drag. Scroll é reservado a overlays de leitura; jogo inteiro ocupa um viewport seguro. Mesa E legada continua disponível para compatibilidade.
 
 Dexie v19/backup v11/regulamento v1 inalterados, sem migração. Assets procedurais originais e gravuras públicas existentes; SVG rasterizado em memória para upload WebGL previsível, sem mudar fontes/hashes. Testes locais não aprovam arte, TalkBack, fluidez ou temperatura Android; o gate Moto G06 permanece humano. G e merge não autorizados por esta ADR.
+
+## Adendo F/R1–R4 — 09/11/2026
+
+A root orbital agora se move no anel arquitetônico existente, pelo delta do mesmo scheduler do mundo, mantendo seleção/picking e isolamento de regiões caminháveis. Pausa/redução congelam a fase; não há relógio/RAF externo, nova persistência ou alteração da câmera. Matrizes de filhos agrupados são propagadas antes de raycast/highlight.
+
+A arte pintada é resolvida fora do domínio, sem trocar `artId`, revisões ou regras; SVGs originais permanecem. Recursos de cenário e efeitos pertencem à cena efêmera. Resultado pode desenhar efeito finito confirmado antes de parar o loop; reabertura não repete a animação. Refinamento não encerra a G nem autoriza merge/aceite artístico.

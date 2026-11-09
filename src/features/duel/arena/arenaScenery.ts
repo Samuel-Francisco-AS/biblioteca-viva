@@ -1,3 +1,4 @@
+import { batchStaticVisual } from "../../library/three/staticVisuals";
 import * as T from "three";
 import type { Affinity } from "../../../domain/duel/contracts";
 
@@ -6,7 +7,7 @@ export function createArenaScenery(parent: T.Group) {
   const root = new T.Group();
   root.name = "ritual-observatory";
   parent.add(root);
-  const geos = new Set<T.BufferGeometry>(),
+  const geos = new Set<{ dispose(): void }>(),
     mats = new Set<T.Material>();
   const geo = <G extends T.BufferGeometry>(g: G) => {
     geos.add(g);
@@ -204,10 +205,7 @@ export function createArenaScenery(parent: T.Group) {
     chaos: 0xd3acff,
     neutral: 0xe4ce9a,
   };
-  const foci = new Map<
-    Affinity,
-    { root: T.Group; light: T.MeshBasicMaterial; halo: T.Mesh }
-  >();
+  const foci = new Map<Affinity, { light: T.MeshBasicMaterial }>();
   (["ruin", "knowledge", "bloom", "chaos"] as const).forEach((affinity, i) => {
     const focus = new T.Group();
     focus.position.set((i % 2 ? 1 : -1) * 4.22, 0.15, (i < 2 ? -1 : 1) * 3.1);
@@ -289,7 +287,7 @@ export function createArenaScenery(parent: T.Group) {
     }
     const halo = add(ring, light, focus, 0, 1.75, 0, 0.52);
     halo.rotation.x = Math.PI / 2;
-    foci.set(affinity, { root: focus, light, halo });
+    foci.set(affinity, { light });
   });
   // Distant circular galleries establish scale without crowding selectable zones.
   for (let i = 0; i < 10; i++) {
@@ -303,7 +301,7 @@ export function createArenaScenery(parent: T.Group) {
       add(ring, bronze, tower, 0, j * 1.3 + 0.4, 0, 0.55).rotation.x =
         Math.PI / 2;
   }
-  const moon = add(
+  add(
     geo(new T.SphereGeometry(2, 24, 16)),
     mat(new T.MeshBasicMaterial({ color: 0x8dacae })),
     root,
@@ -335,6 +333,17 @@ export function createArenaScenery(parent: T.Group) {
     ),
   );
   root.add(stars);
+  stars.removeFromParent();
+  batchStaticVisual(root);
+  root.add(stars);
+  // The batch owner disposed the original geometries; retain only live batches.
+  geos.clear();
+  root.traverse((o) => {
+    if (o instanceof T.Mesh || o instanceof T.Points) {
+      const geometry: unknown = o.geometry;
+      if (geometry instanceof T.BufferGeometry) geos.add(geometry);
+    }
+  });
   let active: Affinity = "neutral";
   return {
     root,
@@ -344,11 +353,10 @@ export function createArenaScenery(parent: T.Group) {
     update(time: number, reduced: boolean) {
       const t = reduced ? 0 : time * 0.001;
       stars.rotation.y = t * 0.006;
-      moon.rotation.y = t * 0.012;
+
       for (const [a, f] of foci) {
         f.light.opacity =
           0.52 + (a === active ? 0.23 : 0.08) * (1 + Math.sin(t * 1.3));
-        f.halo.rotation.z = t * (a === "chaos" ? -0.35 : 0.18);
       }
     },
     dispose() {

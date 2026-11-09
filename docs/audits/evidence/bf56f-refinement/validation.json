@@ -1,0 +1,126 @@
+{
+  "candidate": "BF-5.6F refinement R1-R4",
+  "baseRemote": "8931a2b12e822db96212b9d87ada3b6789064cc0",
+  "branch": "feat/bf-5-6f-arena-orbital",
+  "pr": 48,
+  "draft": true,
+  "commits": {
+    "R1": "b09b8f6",
+    "R2": "12bebd1",
+    "R3": "ef0a175"
+  },
+  "engineChanges": false,
+  "schemaVersion": 19,
+  "backupVersion": 11,
+  "paintedArt": {
+    "count": 48,
+    "runtimeBytes": 1979146,
+    "tool": "built-in image_gen",
+    "prompts": "assets/duel/source/refinement/prompts.json",
+    "manifest": "assets/duel/source/refinement/manifest.json",
+    "originalSvgPreserved": true,
+    "snapshotsUnchanged": true
+  },
+  "orbital": {
+    "radius": 28,
+    "periodSeconds": 420,
+    "frameLoop": "resident scheduler only",
+    "fullOrbitRaycastAndBounds": "PASS",
+    "pauseAndReducedMotion": "PASS",
+    "matrixPropagation": "explicit before picking/highlight"
+  },
+  "directed": [
+    {
+      "scope": "TCG, sessions, persisted replay, art, arena, world host/runtime/picking and React navigation",
+      "pass": 139,
+      "fail": 0,
+      "files": 15
+    },
+    {
+      "scope": "post-batching integration",
+      "pass": 29,
+      "fail": 0,
+      "files": 7
+    },
+    {
+      "scope": "final orbital/renderer/effects",
+      "pass": 21,
+      "fail": 0,
+      "files": 4
+    }
+  ],
+  "directedCountsOverlap": true,
+  "e2e": {
+    "completeGame": {
+      "pass": true,
+      "seconds": 168,
+      "seed": 17,
+      "player": "Ytha",
+      "opponent": "Lua"
+    },
+    "dense": [
+      {
+        "width": 390,
+        "height": 844,
+        "pass": true,
+        "seconds": 20.8
+      },
+      {
+        "width": 844,
+        "height": 390,
+        "pass": true,
+        "seconds": 24.7
+      },
+      {
+        "width": 360,
+        "height": 640,
+        "pass": true,
+        "seconds": 25.7
+      }
+    ],
+    "newOrbitalAccess": {
+      "pass": false,
+      "reason": "30 second test deadline while advancing accessible exploration controls",
+      "attempts": 2,
+      "retryLimitReached": true,
+      "assertionsRemoved": false,
+      "timeoutRaised": false
+    },
+    "intermediate": "three dense deadlines corrected by static geometry batching and equivalent batched DOM layout reads"
+  },
+  "broad": {
+    "executedThisRound": false,
+    "reason": "art/presentation scope, directed regression and existing broad history",
+    "previousF2": {
+      "pass": 1174,
+      "fail": 12,
+      "remainingGraphicsTimeouts": 6
+    }
+  },
+  "static": {
+    "typecheckBuild": "PASS",
+    "lintChangedFiles": "PASS",
+    "formatChangedFiles": "PASS",
+    "audio": "PASS",
+    "packHashes": "PASS",
+    "diffCheck": "PASS"
+  },
+  "remoteCI": {
+    "executed": false,
+    "ownerQuotaExhausted": true,
+    "globallyGreen": false,
+    "workflowsChanged": false
+  },
+  "physical": {
+    "previousF2Mechanics": "owner reported no relevant defects on Moto G06",
+    "currentArtisticApproval": "pending",
+    "currentInstallation": "not performed",
+    "TalkBack": "pending",
+    "thermalMemory": "pending",
+    "currentFluidity": "pending"
+  },
+  "previews": {
+    "lua-detalhe-3d.png": "isolated model with inspection lighting",
+    "lua-anel-mundo.png": "actual world with zoom-out; not physical evidence"
+  }
+}

@@ -1,3 +1,5 @@
+> **F/R2 — Lua do Arcanário (09/11/2026):** o santuário estático da F2 evoluiu para um grimório lunar que percorre o anel arquitetônico existente de raio 28 em 420 s. Núcleo, anéis, poeira e pulsação partilham o scheduler residente; movimento congela fora da rota/visibilidade e em redução de movimento. Picking canônico preservado, bounds verificados pela volta inteira fora das salas. [Relatório](BF-5_6F_ARENA_VIVA_IMPLEMENTACAO.md). Sem novo mundo ou persistência espacial.
+
 > **F2 — candidata orbital (09/11/2026):** santuário suspenso no limite norte externo da Biblioteca, integrado ao building/picking e acesso ao Salão. Fora dos volumes caminháveis, sem persistência espacial nova. Arena usa renderer efêmero, com Biblioteca residente pausada. [Relatório](BF-5_6F_ARENA_VIVA_IMPLEMENTACAO.md) · [ADR-030](decisions/ADR-030-arena-viva-apresentacao-lifecycle.md).
 
 ## Saneamento pós-R2 — contrato da candidata (06/11/2026)

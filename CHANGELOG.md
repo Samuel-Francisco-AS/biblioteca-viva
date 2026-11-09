@@ -1,3 +1,5 @@
+> **BF-5.6F — refinamento artístico R1–R4 (09/11/2026):** grimório lunar orbitante/giratório, arena como observatório ritual, 48 pinturas novas, cartas com encadernação por afinidade e efeitos confirmados mais expressivos. Mecânica e dados E preservados; palco continua sem scroll. [Relatório](docs/BF-5_6F_ARENA_VIVA_IMPLEMENTACAO.md). Candidata na mesma PR draft #48; sem release/merge/G.
+
 > **BF-5.6F2 — candidata de 09/11/2026:** Duelo Arcano ganha arena 3D original, HUD de jogo sem scroll, composição retrato/paisagem, mão completa, inspeção temporária, seleção/alvos/contexto, efeitos confirmados, pausa/retomada e acesso por santuário orbital. F1 revisada para lifecycle e concorrência. Motor E, dados v19/backup v11 e mundo residente preservados. [Relatório](docs/BF-5_6F_ARENA_VIVA_IMPLEMENTACAO.md). Sem release/aceite físico/merge.
 
 ## 09/11/2026 — BF-5.6E integrada com aceite funcional inicial e dívida visual prioritária
