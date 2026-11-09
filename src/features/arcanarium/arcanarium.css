@@ -1432,3 +1432,40 @@
     transition: none;
   }
 }
+
+/* Heavy rooms no longer need to parse before this compact transition paints. */
+.arcana-room-opening {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.5rem;
+  min-height: min(40dvh, 18rem);
+  color: #ecd7b8;
+  text-align: center;
+  animation: arcana-room-bloom 200ms ease-out both;
+}
+.arcana-room-opening > span {
+  font: 2.3rem/1 Georgia, serif;
+  color: #dfb8ff;
+}
+.arcana-room-opening p {
+  margin: 0;
+}
+@keyframes arcana-room-bloom {
+  from {
+    opacity: 0.55;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arcana-room-opening {
+    animation: none;
+  }
+}
+[data-reduced-motion="true"] .arcana-room-opening {
+  animation: none;
+}

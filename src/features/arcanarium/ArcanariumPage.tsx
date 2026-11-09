@@ -1,27 +1,69 @@
-import { DuelHall } from "../duel/DuelHall";
-import { DuelTable } from "../duel/DuelTable";
-import { DuelDeckEditor } from "../duel/DuelDecks";
-import { DuelRules } from "../duel/DuelRules";
-import { ArenaDuel } from "../duel/arena/ArenaDuel";
 import { isArenaRoute } from "../duel/arena/arenaRoute";
 import { emptyArcanarium } from "../../domain/arcanarium";
-import { PackLibrary } from "./PackLibrary";
 import { cardAvailable } from "../../domain/educationalPacks";
-import { Provations, TrialSession } from "./Provations";
-import { Taxonomy } from "./Taxonomy";
-import { Diagnosis } from "./Diagnosis";
-import { useCallback, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
 import type { ApplicationRuntime } from "../../app/createApplication";
 import { Arcana, arcanaError, type ArcanaContext } from "./context";
 import { ArcanaSeal } from "./ArcanaArt";
 import { ArcanaCard } from "./ArcanaCard";
-import { Catalogue, CardDetail } from "./Catalogue";
-import { DeckEditor, Decks } from "./Decks";
-import { Workshop } from "./Workshop";
-import { Echoes, Review } from "./Echoes";
-import { DeckImport } from "./DeckImport";
 import "./arcanarium.css";
+
+// A room is fetched only when entered; portal rendering stays independent.
+const DuelHall = lazy(async () => ({
+  default: (await import("../duel/DuelHall")).DuelHall,
+}));
+const DuelTable = lazy(async () => ({
+  default: (await import("../duel/DuelTable")).DuelTable,
+}));
+const DuelDeckEditor = lazy(async () => ({
+  default: (await import("../duel/DuelDecks")).DuelDeckEditor,
+}));
+const DuelRules = lazy(async () => ({
+  default: (await import("../duel/DuelRules")).DuelRules,
+}));
+const ArenaDuel = lazy(async () => ({
+  default: (await import("../duel/arena/ArenaDuel")).ArenaDuel,
+}));
+const PackLibrary = lazy(async () => ({
+  default: (await import("./PackLibrary")).PackLibrary,
+}));
+const Taxonomy = lazy(async () => ({
+  default: (await import("./Taxonomy")).Taxonomy,
+}));
+const Diagnosis = lazy(async () => ({
+  default: (await import("./Diagnosis")).Diagnosis,
+}));
+const Workshop = lazy(async () => ({
+  default: (await import("./Workshop")).Workshop,
+}));
+const DeckImport = lazy(async () => ({
+  default: (await import("./DeckImport")).DeckImport,
+}));
+const Provations = lazy(async () => ({
+  default: (await import("./Provations")).Provations,
+}));
+const TrialSession = lazy(async () => ({
+  default: (await import("./Provations")).TrialSession,
+}));
+const Catalogue = lazy(async () => ({
+  default: (await import("./Catalogue")).Catalogue,
+}));
+const CardDetail = lazy(async () => ({
+  default: (await import("./Catalogue")).CardDetail,
+}));
+const Decks = lazy(async () => ({
+  default: (await import("./Decks")).Decks,
+}));
+const DeckEditor = lazy(async () => ({
+  default: (await import("./Decks")).DeckEditor,
+}));
+const Echoes = lazy(async () => ({
+  default: (await import("./Echoes")).Echoes,
+}));
+const Review = lazy(async () => ({
+  default: (await import("./Echoes")).Review,
+}));
 export default function ArcanariumPage({
   application: app,
 }: {
@@ -119,7 +161,15 @@ export default function ArcanariumPage({
         !error && <p role="status">Abrindo os arquivos do Arcanário…</p>
       ) : (
         <Arcana.Provider value={{ ...snapshot, reload }}>
-          <Routes>
+          <Suspense
+            fallback={
+              <div className="arcana-room-opening" role="status">
+                <span aria-hidden="true">✧</span>
+                <p>Abrindo a próxima sala do Arcanário…</p>
+              </div>
+            }
+          >
+            <Routes>
             <Route
               index
               element={<Portal data={snapshot.data} counts={snapshot.counts} />}
@@ -151,7 +201,8 @@ export default function ArcanariumPage({
               path="*"
               element={<p>Este caminho não existe. Retorne ao portal.</p>}
             />
-          </Routes>
+            </Routes>
+          </Suspense>
         </Arcana.Provider>
       )}
     </section>
