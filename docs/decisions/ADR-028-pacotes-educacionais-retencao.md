@@ -1,3 +1,5 @@
+> **Estado atualizado em 09/11/2026:** implementação da ADR-028 **integrada na `main`** após gate Moto G06 6/6 PASS e merge PR #46 `b3db5d87`; [fechamento com ressalvas](../BF-5_6D_FECHAMENTO_2026-11-09.md). O campo “Estado: implementação candidata” abaixo é registro histórico da redação inicial. E–G permanecem fora do escopo desta ADR.
+
 # ADR-028 — Pacotes educacionais e retenção histórica
 
 - Data: 09/11/2026.
