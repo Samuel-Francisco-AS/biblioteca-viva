@@ -1,3 +1,5 @@
+> **Estado atualizado — 09/11/2026:** decisão ADR-030 implementada/integrada na `main` após aceite físico/artístico dirigido do proprietário e merge da PR #48 (`690be5b5798d34e6436610bf9d209ede38629fd7`). [Fechamento F e ressalvas](../BF-5_6F_FECHAMENTO_2026-11-09.md). O estado original “candidata draft, sem aceite/merge” abaixo é histórico da primeira redação. E2E orbital e testes gráficos/CI/TalkBack/termal ainda têm dívidas; BF-5.6 global aguardando G.
+
 # ADR-030 — Arena Viva: apresentação e ciclo de vida
 
 Data: 09/11/2026. Estado: implementada em candidata F2 por missão específica, PR draft #48; sem aceite físico/artístico ou merge. Complementa ADR-009, ADR-015 e ADR-029.
