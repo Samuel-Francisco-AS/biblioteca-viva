@@ -14,73 +14,167 @@ export function ClassificationEditor({
     v: Extract<CardContent, { type: "question" }>["classification"],
   ) => void;
 }) {
-  const { data } = useArcana();
+  const { data, app, reload } = useArcana();
   const [search, setSearch] = useState("");
+  const [creating, setCreating] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const normalizedSearch = search.trim().replace(/\s+/gu, " ");
+  const matching = data.tags.filter((t) =>
+    `${tagPath(t, data.tags)} ${t.synonyms.join(" ")}`
+      .toLocaleLowerCase("pt-BR")
+      .includes(normalizedSearch.toLocaleLowerCase("pt-BR")),
+  );
+  const existingPersonal = data.tags.some(
+    (t) =>
+      t.namespace === "personal" &&
+      t.label.toLocaleLowerCase("pt-BR") ===
+        normalizedSearch.toLocaleLowerCase("pt-BR"),
+  );
   const toggle = (ids: string[], id: string) =>
     ids.includes(id) ? ids.filter((v) => v !== id) : [...ids, id];
+  const createPersonalLabel = async () => {
+    if (!normalizedSearch || normalizedSearch.length > 160 || creating) return;
+    setCreating(true);
+    setError("");
+    setMessage("");
+    try {
+      const tag = await app.arcanarium.saveTag({
+        id: `local:tag:${crypto.randomUUID()}`,
+        revision: 1,
+        label: normalizedSearch,
+        namespace: "personal",
+        level: "label",
+        parentIds: [],
+        relatedIds: [],
+        synonyms: [],
+      });
+      // Select the persisted tag in the question draft; the question itself is
+      // saved only when the user explicitly saves the whole editor.
+      onChange({
+        ...value,
+        personalTagIds: [...new Set([...value.personalTagIds, tag.id])],
+      });
+      await reload();
+      setSearch("");
+      setMessage(`Etiqueta "${tag.label}" criada e marcada nesta questão. Guarde a questão para conservar o vínculo.`);
+    } catch (cause) {
+      setError(arcanaError(cause));
+    } finally {
+      setCreating(false);
+    }
+  };
   return (
     <fieldset>
       <legend>Conhecimentos e etiquetas</legend>
       <p>
-        Hierarquia editorial e etiquetas pessoais são independentes dos
-        metadados da prova.
+        A pesquisa encontra classificações que você já cadastrou. Digitar
+        um nome não cria uma classificação nem associa a questão: marque
+        a caixa de uma opção existente ou crie uma etiqueta abaixo.
       </p>
-      <Link to="/arcanario/assuntos">Organizar classificações →</Link>
+      <p>
+        Para organizar por Área → Disciplina → Assunto e escolher um
+        assunto principal, use{" "}
+        <Link to="/arcanario/assuntos">Organizar classificações</Link>.
+        O rascunho da questão é preservado ao sair.
+      </p>
       <label>
-        Pesquisar classificações
+        Buscar classificações já cadastradas
         <input
-          type="search"
+          type="text"
+          autoComplete="off"
+          maxLength={160}
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setError("");
+            setMessage("");
+          }}
+          onKeyDown={(e) => {
+            // Enter from Android's keyboard must never submit the question.
+            if (e.key === "Enter") e.preventDefault();
+          }}
+          placeholder="Ex.: Potenciação"
+          aria-describedby="arcana-tag-search-help"
         />
       </label>
+      <p id="arcana-tag-search-help" className="arcana-muted">
+        Escolha uma das classificações listadas. A busca apenas filtra
+        a lista; ela não funciona como seletor nativo.
+      </p>
       <div className="arcana-choice-list">
-        {data.tags
-          .filter((t) =>
-            `${tagPath(t, data.tags)} ${t.synonyms.join(" ")}`
-              .toLocaleLowerCase()
-              .includes(search.toLocaleLowerCase()),
-          )
-          .map((t) => (
-            <label className="arcana-check" key={t.id}>
-              <input
-                type="checkbox"
-                checked={(t.namespace === "editorial"
-                  ? value.knowledgeTagIds
-                  : value.personalTagIds
-                ).includes(t.id)}
-                onChange={() => {
-                  const next = {
-                    ...value,
-                    [t.namespace === "editorial"
-                      ? "knowledgeTagIds"
-                      : "personalTagIds"]: toggle(
-                      t.namespace === "editorial"
-                        ? value.knowledgeTagIds
-                        : value.personalTagIds,
-                      t.id,
-                    ),
-                  };
-                  if (
-                    next.primarySubjectId &&
-                    !next.knowledgeTagIds.includes(next.primarySubjectId)
-                  )
-                    delete next.primarySubjectId;
-                  onChange(next);
-                }}
-              />
-              <span>
-                {tagPath(t, data.tags)} <small>{levelNames[t.level]}</small>
-              </span>
-            </label>
-          ))}
+        {matching.map((t) => (
+          <label className="arcana-check" key={t.id}>
+            <input
+              type="checkbox"
+              checked={(t.namespace === "editorial"
+                ? value.knowledgeTagIds
+                : value.personalTagIds
+              ).includes(t.id)}
+              onChange={() => {
+                const next = {
+                  ...value,
+                  [t.namespace === "editorial"
+                    ? "knowledgeTagIds"
+                    : "personalTagIds"]: toggle(
+                    t.namespace === "editorial"
+                      ? value.knowledgeTagIds
+                      : value.personalTagIds,
+                    t.id,
+                  ),
+                };
+                if (
+                  next.primarySubjectId &&
+                  !next.knowledgeTagIds.includes(next.primarySubjectId)
+                )
+                  delete next.primarySubjectId;
+                onChange(next);
+              }}
+            />
+            <span>
+              {tagPath(t, data.tags)} <small>{levelNames[t.level]}</small>
+            </span>
+          </label>
+        ))}
       </div>
-      {!data.tags.length && (
-        <p>
-          Ainda sem classificações. Crie sua primeira área em Organizar
-          classificações; seu rascunho será guardado.
+      {!matching.length && (
+        <p role="status">
+          {data.tags.length
+            ? "Nenhuma classificação cadastrada corresponde à busca."
+            : "Ainda não existem classificações. Crie uma etiqueta pessoal aqui ou monte a hierarquia em Organizar classificações."}
         </p>
       )}
+      <div className="arcana-tag-tools">
+        <p>
+          <strong>Etiqueta pessoal rápida</strong>
+        </p>
+        <p className="arcana-muted">
+          Escreva um nome acima e toque em criar. Ela ficará marcada
+          nesta questão, sem exigir uma hierarquia completa.
+        </p>
+        <button
+          type="button"
+          className="button button--secondary"
+          disabled={
+            creating ||
+            !normalizedSearch ||
+            normalizedSearch.length > 160 ||
+            existingPersonal
+          }
+          onClick={() => void createPersonalLabel()}
+        >
+          {creating
+            ? "Criando etiqueta…"
+            : `Criar e marcar etiqueta${normalizedSearch ? ` "${normalizedSearch}"` : ""}`}
+        </button>
+        {existingPersonal && (
+          <p className="arcana-muted">
+            Essa etiqueta já existe. Marque sua caixa na lista acima.
+          </p>
+        )}
+        {error && <p role="alert" className="arcana-error">{error}</p>}
+        {message && <p role="status">{message}</p>}
+      </div>
       <Choices
         label="Assunto principal"
         value={value.primarySubjectId ?? ""}
@@ -104,9 +198,16 @@ export function ClassificationEditor({
           );
         }}
       />
+      {!data.tags.some((t) => ["subject", "subsubject"].includes(t.level)) && (
+        <p className="arcana-muted">
+          O assunto principal exige uma hierarquia editorial existente.
+          Etiquetas pessoais já podem ser usadas independentemente.
+        </p>
+      )}
     </fieldset>
   );
 }
+
 export function Taxonomy() {
   const { data, app, reload } = useArcana();
   const [editing, setEditing] = useState<KnowledgeTag>();
