@@ -302,7 +302,10 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
     const scene = renderer.render.mock.calls.at(-1)?.[0];
     const camera = renderer.render.mock.calls.at(-1)?.[1];
     const catalog = runtime.getSelectableObjects();
-    expect(catalog).toHaveLength(90);
+    expect(catalog).toHaveLength(91);
+    expect(
+      catalog.find(({ id }) => id === "portal:duelo-arcano"),
+    ).toMatchObject({ label: "Arena orbital · abrir Duelo Arcano" });
     expect(
       catalog.filter(({ id }) => id.startsWith("character:")),
     ).toHaveLength(4);
@@ -870,7 +873,7 @@ describe("BF-4E integrated lifecycle", () => {
     });
     runtime.mount(host());
     runtime.start();
-    expect(runtime.getSelectableObjects()).toHaveLength(100);
+    expect(runtime.getSelectableObjects()).toHaveLength(101);
     const beforeSelection = renderer.render.mock.calls.length;
     runtime.selectObject("living:lamp");
     expect(renderer.domElement.dataset.selectedObject).toBe("living:lamp");

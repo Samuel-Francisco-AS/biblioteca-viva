@@ -60,6 +60,22 @@ export function createArenaScene() {
       metalness: 0.35,
     }),
   );
+  // Small procedural stone texture is bundled as code and never fetches remote art.
+  const grain = new Uint8Array(128 * 128 * 4);
+  for (let i = 0; i < 128 * 128; i++) {
+    const x = i % 128,
+      y = Math.floor(i / 128);
+    const seam = x % 32 === 0 || y % 32 === 0;
+    const value = seam ? 35 : 105 + ((i * 73 + y * 37) % 35);
+    grain.set([value, value, value, 255], i * 4);
+  }
+  const masonry = new T.DataTexture(grain, 128, 128);
+  masonry.needsUpdate = true;
+  masonry.wrapS = masonry.wrapT = T.RepeatWrapping;
+  masonry.repeat.set(3, 3);
+  stone.bumpMap = masonry;
+  stone.bumpScale = 0.09;
+  textures.set("masonry", masonry);
   const edge = mat(
     new T.MeshStandardMaterial({
       color: 0x746591,
@@ -114,6 +130,54 @@ export function createArenaScene() {
   circle.rotation.x = Math.PI / 2;
   const inner = mesh(torus, glow, root, 0, 0.08, 0, 1.15);
   inner.rotation.x = Math.PI / 2;
+  const joints: number[] = [];
+  for (let i = 0; i < 24; i++) {
+    const a = (i / 24) * Math.PI * 2;
+    joints.push(
+      Math.sin(a) * 3.65,
+      0.07,
+      Math.cos(a) * 3.65,
+      Math.sin(a) * 4.5,
+      0.07,
+      Math.cos(a) * 4.5,
+    );
+  }
+  const jointGeo = geo(new T.BufferGeometry());
+  jointGeo.setAttribute("position", new T.Float32BufferAttribute(joints, 3));
+  root.add(
+    new T.LineSegments(
+      jointGeo,
+      mat(
+        new T.LineBasicMaterial({
+          color: 0xaaa1ba,
+          transparent: true,
+          opacity: 0.36,
+        }),
+      ),
+    ),
+  );
+  // Broken vaulted gates stand beyond the play surface, leaving targets uncluttered.
+  for (const sign of [-1, 1]) {
+    for (let i = 0; i < 7; i++) {
+      const a = (i / 8) * Math.PI + Math.PI / 8;
+      const voussoir = mesh(
+        box,
+        i % 2 ? stone : edge,
+        root,
+        Math.cos(a) * 2,
+        1.25 + Math.sin(a) * 2,
+        sign * 4.8,
+        0.6,
+        0.45,
+        0.55,
+      );
+      voussoir.rotation.z = a - Math.PI / 2;
+    }
+    for (const x of [-2, 2]) {
+      mesh(box, stone, root, x, 0.5, sign * 4.8, 0.48, 1.5, 0.55);
+      mesh(octagon, gold, root, x, 1.3, sign * 4.8, 0.4, 0.12, 0.4);
+    }
+  }
   for (let i = 0; i < 32; i++) {
     const a = (i / 32) * Math.PI * 2;
     const rune = mesh(
@@ -195,6 +259,21 @@ export function createArenaScene() {
   pulse.visible = false;
   const bolt = mesh(box, fxMaterial, effectRoot, 0, 0.65, 0);
   bolt.visible = false;
+  const sparks = new T.InstancedMesh(crystal, fxMaterial, 24);
+  sparks.visible = false;
+  effectRoot.add(sparks);
+  const shieldGeo = geo(new T.SphereGeometry(1, 12, 8));
+  const shieldMat = mat(
+    new T.MeshBasicMaterial({
+      color: 0x92eaff,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.5,
+    }),
+  );
+  const barrier = mesh(shieldGeo, shieldMat, effectRoot, 0, 0.6, 0);
+  barrier.visible = false;
+  const fxTransform = new T.Object3D();
   let last: ArenaView | undefined,
     landscape = false,
     fxStart = -10000,
@@ -406,7 +485,43 @@ export function createArenaScene() {
       stars.rotation.y = reduced ? 0 : time * 0.000008;
       const t = (time - fxStart) / 850;
       pulse.visible = !reduced && t >= 0 && t < 1;
-      bolt.visible = pulse.visible && fxType === "attack";
+      bolt.visible =
+        pulse.visible && ["attack", "spell", "roll"].includes(fxType);
+      sparks.visible = pulse.visible && !["shield", "attack"].includes(fxType);
+      barrier.visible = pulse.visible && fxType === "shield";
+      if (barrier.visible) {
+        barrier.position.copy(fxTarget);
+        barrier.position.y = 0.8;
+        barrier.scale.setScalar(0.8 + t * 0.4);
+        shieldMat.opacity = (1 - t) * 0.65;
+      }
+      if (sparks.visible)
+        for (let i = 0; i < 24; i++) {
+          const a = i * 2.39996 + (fxType === "roll" ? time * 0.008 : 0);
+          const r =
+            fxType === "death"
+              ? t * 1.6
+              : fxType === "heal"
+                ? 0.4
+                : fxType === "exhaust"
+                  ? 0.7
+                  : t * 0.9;
+          fxTransform.position.set(
+            fxTarget.x + Math.cos(a) * r,
+            0.3 +
+              (fxType === "heal" || fxType === "empower"
+                ? t * 2
+                : fxType === "exhaust"
+                  ? (1 - t) * 1.4
+                  : Math.sin(a) * t),
+            fxTarget.z + Math.sin(a) * r,
+          );
+          fxTransform.scale.set(0.04, fxType === "empower" ? 0.3 : 0.08, 0.04);
+          fxTransform.rotation.set(a, a * 2, a);
+          fxTransform.updateMatrix();
+          sparks.setMatrixAt(i, fxTransform.matrix);
+        }
+      if (sparks.visible) sparks.instanceMatrix.needsUpdate = true;
       if (pulse.visible) {
         fxMaterial.color.setHex(
           (

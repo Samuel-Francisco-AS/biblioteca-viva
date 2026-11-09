@@ -20,9 +20,9 @@ export function ArenaFrame({
         type="button"
         className="arena-frame__exit"
         onClick={onExit}
-        aria-label="Sair da arena e voltar ao salão; duelo salvo"
+        aria-label="Pausar e salvar"
       >
-        <span aria-hidden="true">←</span>
+        <span aria-hidden="true">Ⅱ</span>
       </button>
     </section>
   );

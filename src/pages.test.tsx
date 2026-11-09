@@ -1011,3 +1011,30 @@ it("R4 session events avoid catalog and annotation queries and retain world iden
   expect(entry).toHaveBeenCalledTimes(4);
   expect(worldHostProps().libraryWorldSnapshot).toBe(initial);
 });
+
+it("F2 opens the duel hall from the canonical orbital selection", async () => {
+  const application: LibraryApplication = {
+    queries: { listLibraryEntries: { execute: vi.fn(async () => []) } },
+  };
+  render(
+    <MemoryRouter>
+      <Routes>
+        <Route path="/" element={<LibraryPage application={application} />} />
+        <Route
+          path="/arcanario/duelos"
+          element={<h1>Salão orbital fictício</h1>}
+        />
+      </Routes>
+    </MemoryRouter>,
+  );
+  await screen.findByTestId("world-host-stub");
+  act(() =>
+    worldHostProps().onSelectionChange?.({
+      id: "portal:duelo-arcano",
+      label: "Arena orbital · abrir Duelo Arcano",
+    }),
+  );
+  expect(
+    await screen.findByRole("heading", { name: "Salão orbital fictício" }),
+  ).toBeInTheDocument();
+});

@@ -12,8 +12,7 @@ import { modeNames } from "../../domain/duel/text";
 import { Choices } from "../arcanarium/Choices";
 import { arcanaError, editorPath, useArcana } from "../arcanarium/context";
 import { CombatCard } from "./CombatCard";
-const duelPath = (id: string) =>
-  `/arcanario/duelos/partida/${encodeURIComponent(id)}`;
+import { arenaRouteFor as duelPath } from "./arena/arenaRoute";
 export function DuelHall() {
   const { app, data, reload } = useArcana(),
     navigate = useNavigate();

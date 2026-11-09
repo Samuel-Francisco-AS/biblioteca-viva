@@ -1,3 +1,4 @@
+import { createOrbitalArena } from "./orbitalArena";
 import { createBoundedPointLighting } from "./boundedPointLighting";
 import { GpuTimer } from "./gpuTimer";
 import type { LightingExperiment } from "./lightingExperiment";
@@ -706,6 +707,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
         readonly descriptor: WorldSelectableObject;
         readonly root: Object3D;
       }[] = [];
+      const orbitalSelectables =
+        composedWorld && !this.performanceScenarioDiagnosticsEnabled
+          ? [createOrbitalArena()]
+          : [];
       if (composedWorld) {
         this.inhabitants = createInhabitantVisuals(
           scene,
@@ -727,6 +732,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         const building = createProceduralLibraryBuilding(
           Boolean(this.livingSession),
         );
+        for (const orbital of orbitalSelectables) building.add(orbital.root);
         mountedWorld.addLibraryBuilding(building);
         scene.add(building);
         this.sessionVisuals = createSessionWorldVisuals(building);
@@ -868,6 +874,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
       this.baseSelectableObjects = Object.freeze([
+        ...orbitalSelectables.map(({ descriptor }) => descriptor),
         ...(this.inhabitants?.selectables ?? []).map(
           ({ descriptor }) => descriptor,
         ),
@@ -905,6 +912,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
               listener(actor.key);
         },
         pickingPriorityRoots: [
+          ...orbitalSelectables.map(({ root }) => root),
           ...proceduralSelectables.map(({ root }) => root),
           ...libraryRecordSelectables.map(({ root }) => root),
         ],
@@ -917,6 +925,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         },
         scene,
         selectables: [
+          ...orbitalSelectables,
           ...(this.inhabitants?.selectables ?? []),
           ...(this.livingVisuals?.selectables ?? []),
           ...(this.scrollVisuals?.selectables ?? []),

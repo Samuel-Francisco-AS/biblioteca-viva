@@ -82,3 +82,7 @@ Checkout remoto confirmado em `4e23b6d`, branch limpa e rastreada. Gates iniciai
 ## F2-B — apresentação Three.js
 
 Cena independente carregada sob demanda: plataforma octogonal suspensa, alvenaria em camadas, incrustações, círculos, quatro obeliscos, constelações e ruínas flutuantes. Cartas públicas recebem lâminas físicas com gravuras existentes e aparições por tradição. Câmera ortográfica oblíqua reenquadra zonas por proporção; controles semânticos usam a mesma projeção. Renderer pertence à montagem da arena, com ResizeObserver, pausa de RAF, recuperação explícita de contexto e descarte de GPU. Recursos de cenário e geometrias compartilhados; resolução reduz somente após amostra de frames lentos. Nenhuma sombra dinâmica nem luz pontual adicional. Gate artístico/físico permanece humano.
+
+## F2-C — arena ativa e acesso orbital
+
+Salão inicia/retoma pela rota 3D. Mesa E permanece em sua URL legada. HUD compacto e composição própria por orientação, mão inteira, inspeção modal, seleção e realce de alvos usando ações legais, confirmação contextual, turno/energia/PV, pausa persistida, abandono confirmado e resultado. Voltar nativo fecha inspeção, cancela seleção, pausa e depois permite retornar à Biblioteca. Construção orbital original fora dos volumes caminháveis, registrada no picking e no catálogo acessível existentes; seleção abre o Salão. WorldHost residente continua sob `active=false` fora da Biblioteca, sem reconstrução por navegação. Novos testes cobrem concorrência, pausa, StrictMode, projeção de câmera, descarte, posição orbital e acesso.

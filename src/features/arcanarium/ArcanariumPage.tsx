@@ -2,7 +2,8 @@ import { DuelHall } from "../duel/DuelHall";
 import { DuelTable } from "../duel/DuelTable";
 import { DuelDeckEditor } from "../duel/DuelDecks";
 import { DuelRules } from "../duel/DuelRules";
-import { isArenaRoute, legacyDuelRouteFor } from "../duel/arena/arenaRoute";
+import { ArenaDuel } from "../duel/arena/ArenaDuel";
+import { isArenaRoute } from "../duel/arena/arenaRoute";
 import { emptyArcanarium } from "../../domain/arcanarium";
 import { PackLibrary } from "./PackLibrary";
 import { cardAvailable } from "../../domain/educationalPacks";
@@ -10,15 +11,7 @@ import { Provations, TrialSession } from "./Provations";
 import { Taxonomy } from "./Taxonomy";
 import { Diagnosis } from "./Diagnosis";
 import { useCallback, useEffect, useState } from "react";
-import {
-  Link,
-  NavLink,
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
-  useParams,
-} from "react-router-dom";
+import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
 import type { ApplicationRuntime } from "../../app/createApplication";
 import { Arcana, arcanaError, type ArcanaContext } from "./context";
 import { ArcanaSeal } from "./ArcanaArt";
@@ -132,10 +125,7 @@ export default function ArcanariumPage({
               element={<Portal data={snapshot.data} counts={snapshot.counts} />}
             />
             <Route path="duelos" element={<DuelHall />} />
-            <Route
-              path="duelos/arena/:id"
-              element={<ReservedArenaFallback />}
-            />
+            <Route path="duelos/arena/:id" element={<ArenaDuel />} />
             <Route path="duelos/regras" element={<DuelRules />} />
             <Route path="duelos/baralhos/:id" element={<DuelDeckEditor />} />
             <Route
@@ -167,12 +157,6 @@ export default function ArcanariumPage({
     </section>
   );
 }
-/** Until F2, direct arena URLs safely open the working 2D duel instead. */
-function ReservedArenaFallback() {
-  const { id = "" } = useParams();
-  return <Navigate replace to={legacyDuelRouteFor(id)} />;
-}
-
 function Portal({
   data,
   counts,
