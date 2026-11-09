@@ -305,7 +305,7 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
     expect(catalog).toHaveLength(91);
     expect(
       catalog.find(({ id }) => id === "portal:duelo-arcano"),
-    ).toMatchObject({ label: "Arena orbital · abrir Duelo Arcano" });
+    ).toMatchObject({ label: "Lua do Arcanário · abrir Duelo Arcano" });
     expect(
       catalog.filter(({ id }) => id.startsWith("character:")),
     ).toHaveLength(4);

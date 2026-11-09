@@ -105,3 +105,9 @@ Evidências: [bundles](audits/evidence/bf56f/build-performance.json), [matriz lo
 [Proveniência binária verificável](audits/evidence/bf56f/apk.json). Warnings conhecidos de chunks >500 kB e `flatDir` permanecem. Bundles iniciais ~612 kB JS e Three dinâmico ~724 kB são bytes estáticos, não medidas de fluidez física. As capturas `campo-cheio-*` representam o dimensionamento final; `intermediario-combate-*` preservam explicitamente a revisão visual anterior ao reparo de escala/zonas.
 
 Commits: F2-A `0a33ef0`; F2-B `7fff152`; F2-C `035d259`; F2-D `5f433e6`. Publicação somente na mesma PR draft #48, sem merge/main/G.
+
+## Refinamento R2 — Lua do Arcanário
+
+O antigo objeto estático foi substituído por um grimório encadernado, crescente de bronze, base de pedra, anéis articulados e poeira estelar. Orbita no anel arquitetônico existente de raio 28, em 420 segundos; núcleo gira continuamente, anéis precessionam e emissão pulsa. Usa somente o scheduler/delta ativo do `ThreeWorldRuntime`, sem RAF/listeners adicionais. Pausa preserva fase, retomada não usa relógio de parede e redução de movimento congela o movimento. Corpo estático agrupado por material; sem luz nova.
+
+Mantém `portal:duelo-arcano` e picking canônico; highlight acompanha a root móvel. Teste geométrico percorre a volta inteira, garante distância das salas/altura segura, identidade estável e raycast em posições diferentes. Fonte permanece pertencente ao building e é descartada no mesmo ciclo de vida. Aparência e suavidade no aparelho exigem nova avaliação humana; câmera/limites de navegação não foram alterados.

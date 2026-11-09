@@ -500,6 +500,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly nightLighting?: NightLightingSession;
   private inhabitants?: ReturnType<typeof createInhabitantVisuals>;
   private ambientMagic?: ReturnType<typeof createAmbientMagic>;
+  private orbital?: ReturnType<typeof createOrbitalArena>;
   private scrollVisuals?: ReturnType<typeof createLivingScrollVisuals>;
   private readonly scrolls: readonly import("../../../contracts/livingScroll").LivingScroll[];
   private lightingInitialized = false;
@@ -711,6 +712,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         composedWorld && !this.performanceScenarioDiagnosticsEnabled
           ? [createOrbitalArena()]
           : [];
+      this.orbital = orbitalSelectables[0];
       if (composedWorld) {
         this.inhabitants = createInhabitantVisuals(
           scene,
@@ -1527,6 +1529,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
         (id) => this.inhabitants?.getSocket(id, "socket_carry") ?? null,
       );
       this.ambientMagic?.update(delta, reduced);
+      this.orbital?.update(delta, reduced);
+      if (this.selection?.id === "portal:duelo-arcano")
+        mountedWorld.getInteraction()?.updateHighlightBounds();
       this.scrollVisuals?.update(
         delta,
         reduced,
@@ -1776,6 +1781,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.livingVisuals = undefined;
     this.scrollVisuals = undefined;
     this.ambientMagic = undefined;
+    this.orbital = undefined;
     this.narrativeVisuals = undefined;
     this.narrative = undefined;
     this.livingFrameTime = undefined;
