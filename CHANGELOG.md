@@ -1,3 +1,10 @@
+## 09/11/2026 — BF-5.6E integrada com aceite funcional inicial e dívida visual prioritária
+
+- PR [#47](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/47) integrada à `main` após autorização do proprietário, merge `19eb076a949c8d7e8728bc2b1ecff9186bd333b9`. TCG 2D com 48 SVGs/cartas, quatro afinidades e decks, IA, Oficina, partidas/replay/retomada.
+- Proprietário **não percebeu defeitos técnicos/mecânicos** no gate físico breve Moto G06, mas **rejeitou a qualidade final da UI/UX do Arcanário**: controles sobrepostos, cartas truncadas, navegação cansativa e rolagem excessiva; ilustrações procedurais ainda abstratas. Reformulação artística/UX transversal ficou como trabalho posterior prioritário, não realizada neste merge.
+- Balanceamento não certificado (Ruína 59/72; Conhecimento 19/72); ampla 1.144 PASS/13 FAIL e dívidas CI/3D/TalkBack/termal preservadas. Dexie v19/backup v11, importação v6–v10. [Fechamento com evidências](docs/BF-5_6E_FECHAMENTO_2026-11-09.md).
+- BF-5.6 continua aberta para F/G e reestruturação visual posterior; sem release.
+
 ## 09/11/2026 — BF-5.6E candidata: Duelo Arcano
 
 - TCG offline de invocadores, regulamento próprio v1, 20 PV, 24 cartas, energia até seis; criaturas, feitiços, artefatos, alvos, ataques/proteção, fadiga, vitória/derrota/empate e abandono.
