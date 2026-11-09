@@ -36,5 +36,7 @@
       "installed": false,
       "physicalGate": "pending"
     }
-  ]
+  ],
+  "sourceCommit": "446b571d4791080a894f9d2a344fdebb3663c647",
+  "sourceProvenance": "Runtime sources match the committed tree fingerprint; later metadata-only commit records provenance. Payloads verified against their builds after Gradle completion."
 }

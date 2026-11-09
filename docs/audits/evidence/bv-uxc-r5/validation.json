@@ -105,5 +105,6 @@
   ],
   "remoteWorkflowsRequested": false,
   "mergePerformed": false,
-  "deviceConnected": false
+  "deviceConnected": false,
+  "sourceCommit": "446b571d4791080a894f9d2a344fdebb3663c647"
 }

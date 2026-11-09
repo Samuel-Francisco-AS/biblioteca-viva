@@ -75,7 +75,7 @@ Resíduos priorizados para o aparelho: (1) distinguir avaliação de módulo, pa
 
 ## Validação e artefato
 
-Resultados finais e proveniência do APK em [validation.json](evidence/bv-uxc-r5/validation.json) e [apk.json](evidence/bv-uxc-r5/apk.json). Não são CI remota ou certificação global.
+Fontes dos dois APKs conferidas no commit `446b571d4791080a894f9d2a344fdebb3663c647`; o commit posterior registra somente proveniência documental. Resultados finais e proveniência do APK em [validation.json](evidence/bv-uxc-r5/validation.json) e [apk.json](evidence/bv-uxc-r5/apk.json). Não são CI remota ou certificação global.
 
 | Verificação | Resultado local |
 | --- | --- |
