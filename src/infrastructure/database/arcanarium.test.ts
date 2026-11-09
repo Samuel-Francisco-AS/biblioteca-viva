@@ -111,7 +111,7 @@ it("upgrades an empty v14 additively and preserves all six record types", async 
     [...records].sort((a, b) => a.id.localeCompare(b.id)),
   );
   expect(await repo.read()).toEqual(emptyArcanarium());
-  expect(db.verno).toBe(15);
+  expect(db.verno).toBe(16);
 });
 it("promotes multiple cards, disambiguates equal legacy IDs, preserves bytes/archive and reopens idempotently", async () => {
   const original = [
@@ -391,7 +391,7 @@ it("round-trips v7 cards, tags, dynamic/static decks, tombstones, revisions and 
     databaseVersion: 15,
     data,
   });
-  expect(artifact.summary.formatVersion).toBe(7);
+  expect(artifact.summary.formatVersion).toBe(8);
   await expect(
     source.codec.encode({
       appVersion: "test",
@@ -432,8 +432,14 @@ it("round-trips v7 cards, tags, dynamic/static decks, tombstones, revisions and 
 it("imports an actual checksummed v6 after v15 is installed, promotes twice without duplicates, and replaces safely", async () => {
   const source = await setup();
   const snapshot = await source.snapshots.read();
-  const { arcanarium: _ignored, isEmpty: _empty, ...data } = snapshot;
+  const {
+    arcanarium: _ignored,
+    cardMedia: _media,
+    isEmpty: _empty,
+    ...data
+  } = snapshot;
   void _ignored;
+  void _media;
   void _empty;
   const unsigned = {
     kind: "biblioteca-viva-backup",

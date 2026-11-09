@@ -54,7 +54,7 @@ it("upgrades v10 verbatim, reopens and round-trips/restores v6 with schedule, da
   old.close();
   const db = new BibliotecaDatabase(name);
   await db.open();
-  expect(db.verno).toBe(15);
+  expect(db.verno).toBe(16);
   expect(await db.libraryEntries.get(entry.id)).toEqual(entry);
   expect(await db.libraryEntries.get(study.id)).toEqual(study);
   expect(await db.sessions.get(session.id)).toEqual(session);
@@ -93,7 +93,7 @@ it("upgrades v10 verbatim, reopens and round-trips/restores v6 with schedule, da
     data: await store.read(),
   });
   const parsed = await codec.inspect(backup.content);
-  expect(parsed.summary.formatVersion).toBe(7);
+  expect(parsed.summary.formatVersion).toBe(8);
   await store.replace(parsed.data);
   expect(await db.libraryEntries.get(entry.id)).toEqual(updated);
   expect(await profile.load()).toEqual({ weightKg: 70 });

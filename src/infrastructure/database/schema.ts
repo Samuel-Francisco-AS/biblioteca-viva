@@ -27,7 +27,7 @@ import {
 import { z } from "zod";
 
 export const DATABASE_NAME = "biblioteca-viva";
-export const DATABASE_VERSION = 15;
+export const DATABASE_VERSION = 16;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
 export const DATABASE_SCHEMA_V1 = {
@@ -97,6 +97,11 @@ export const DATABASE_SCHEMA_V15 = {
   studyCardLinks: "&[studyId+legacyCardId],studyId,cardId",
   knowledgeTags: "&id,namespace",
   cardSessions: "&id,kind,startedAt",
+} as const;
+
+export const DATABASE_SCHEMA_V16 = {
+  ...DATABASE_SCHEMA_V15,
+  cardMedia: "&id,cardId",
 } as const;
 
 const isoUtc = z.iso.datetime({ offset: false });

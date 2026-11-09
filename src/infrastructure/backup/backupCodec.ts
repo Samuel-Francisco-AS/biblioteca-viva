@@ -1,3 +1,5 @@
+import { cardMediaSchema } from "../database/cardMedia";
+import { validateCardMediaOwnership } from "../../application/cardMedia";
 import {
   arcanariumDataSchema,
   emptyArcanarium,
@@ -72,6 +74,7 @@ const backupSettingSchema = z.discriminatedUnion("key", [
   }),
 ]);
 const dataSchema = z.strictObject({
+  cardMedia: z.array(cardMediaSchema).optional(),
   arcanarium: arcanariumDataSchema.optional(),
   media: z.array(posterSchema).optional(),
   libraryEntries: z.array(persistedLibraryEntrySchema),
@@ -85,7 +88,11 @@ const dataSchema = z.strictObject({
 });
 const unsignedSchema = z.strictObject({
   kind: z.literal(BACKUP_KIND),
-  formatVersion: z.union([z.literal(6), z.literal(BACKUP_FORMAT_VERSION)]),
+  formatVersion: z.union([
+    z.literal(6),
+    z.literal(7),
+    z.literal(BACKUP_FORMAT_VERSION),
+  ]),
   createdAt: z.iso.datetime({ offset: false }),
   appVersion: z.string().trim().min(1),
   databaseVersion: z.int().positive(),
@@ -159,6 +166,9 @@ function byteLength(content: string): number {
 
 function counts(data: BackupData): BackupCounts {
   return Object.freeze({
+    ...((data.cardMedia?.length ?? 0) > 0 && {
+      cardMedia: data.cardMedia?.length,
+    }),
     ...(data.arcanarium !== undefined && {
       arcanariumCards: data.arcanarium.cards.length,
       arcanariumDecks: data.arcanarium.decks.length,
@@ -183,6 +193,7 @@ function sorted(data: BackupData): BackupData {
     );
   return Object.freeze({
     ...(data.arcanarium !== undefined && { arcanarium: data.arcanarium }),
+    ...(data.cardMedia !== undefined && { cardMedia: byId(data.cardMedia) }),
     ...(data.media !== undefined && {
       media: Object.freeze(
         [...data.media].sort((a, b) => a.entryId.localeCompare(b.entryId)),
@@ -204,6 +215,17 @@ function sorted(data: BackupData): BackupData {
 }
 
 export function validateBackupData(data: BackupData): void {
+  try {
+    validateCardMediaOwnership(
+      data.arcanarium?.versions ?? [],
+      data.cardMedia ?? [],
+    );
+  } catch {
+    throw new BackupError(
+      "INVALID_BACKUP_DATA",
+      "Imagens do Relicário sem revisão proprietária ou ausentes.",
+    );
+  }
   if (data.arcanarium) {
     try {
       const mappings = new Set(
@@ -300,6 +322,7 @@ export class JsonBackupCodec implements BackupCodecPort {
     const data = sorted(
       dataSchema.parse({
         arcanarium: input.data.arcanarium ?? emptyArcanarium(),
+        cardMedia: input.data.cardMedia ?? [],
         media: input.data.media,
         libraryEntries: input.data.libraryEntries,
         notes: input.data.notes,
@@ -376,7 +399,11 @@ export class JsonBackupCodec implements BackupCodecPort {
         "FUTURE_FORMAT_VERSION",
         "O backup usa um formato futuro.",
       );
-    if (formatVersion !== 6 && formatVersion !== BACKUP_FORMAT_VERSION)
+    if (
+      formatVersion !== 6 &&
+      formatVersion !== 7 &&
+      formatVersion !== BACKUP_FORMAT_VERSION
+    )
       throw new BackupError(
         "UNSUPPORTED_FORMAT_VERSION",
         "Backups produzidos antes do WORLD RESET não são compatíveis com este aplicativo.",
@@ -390,7 +417,9 @@ export class JsonBackupCodec implements BackupCodecPort {
     if (
       !parsed.success ||
       (formatVersion === 6 && parsed.data.data.arcanarium !== undefined) ||
-      (formatVersion === 7 && parsed.data.data.arcanarium === undefined)
+      (formatVersion >= 7 && parsed.data.data.arcanarium === undefined) ||
+      (formatVersion === 8 && parsed.data.data.cardMedia === undefined) ||
+      (formatVersion !== 8 && parsed.data.data.cardMedia !== undefined)
     )
       throw new BackupError(
         "INVALID_BACKUP_DATA",

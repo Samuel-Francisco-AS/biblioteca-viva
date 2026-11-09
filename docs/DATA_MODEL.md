@@ -1,3 +1,7 @@
+## BF-5.6B — Dexie v16, backup v8 (candidata)
+
+Upgrade aditivo v15→v16: `cardMedia` (`&id,cardId`) contém imagens JPEG locais pertencentes a cartas de lembrança; `media` de capas permanece independente. Conteúdo opcional versionado: aparência (tema/moldura), título do flashcard, categoria e `imageId` da lembrança. Bytes fora das cartas/settings, retidos enquanto qualquer revisão os referencia. Referências a registros são opcionais e toleram exclusão da origem. Backup v8 inclui `cardMedia`, continua importando originais v6/v7 e mantém 10 MiB/replace protegido. Troca autoral v1 é cópia de conteúdo atual/revisão fixada com novos IDs, sem histórico/vínculos privados. [ADR-026](decisions/ADR-026-arcanario-oficina-midias-troca.md). Contratos anteriores abaixo são históricos.
+
 ## BF-5.6A — contrato da candidata (08/11/2026)
 
 Dexie **v15 aditiva** preserva as dez tabelas v14 e acrescenta:

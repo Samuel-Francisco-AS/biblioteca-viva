@@ -605,6 +605,9 @@ function LibraryPageContent({
           </>
         )}
         <div className="placeholder-actions">
+          <Link className="button button--secondary" to="/arcanario">
+            ✧ Abrir o Arcanário
+          </Link>
           <Link className="button button--primary" to="/colecao">
             Abrir Coleção
           </Link>

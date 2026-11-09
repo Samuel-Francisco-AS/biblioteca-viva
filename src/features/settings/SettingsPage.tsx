@@ -102,6 +102,12 @@ function Counts({ counts }: { readonly counts: BackupCounts }) {
           <dd>{counts.arcanariumDecks}</dd>
         </div>
       )}
+      {(counts.cardMedia ?? 0) > 0 && (
+        <div>
+          <dt>Imagens do Relicário</dt>
+          <dd>{counts.cardMedia}</dd>
+        </div>
+      )}
       {(counts.cardSessions ?? 0) > 0 && (
         <div>
           <dt>Revisões de cartas</dt>

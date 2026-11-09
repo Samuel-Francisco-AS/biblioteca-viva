@@ -1,3 +1,10 @@
+import { ArcanariumWorkshop } from "../application/arcanariumWorkshop";
+import { CardExchange } from "../application/cardExchange";
+import { DexieCardMedia } from "../infrastructure/database/cardMedia";
+import { JsonCardExchangeCodec } from "../infrastructure/files/cardExchangeCodec";
+import { BrowserWorkshopDrafts } from "../infrastructure/files/workshopDrafts";
+import { importLocalImage } from "../infrastructure/files/localImage";
+import type { WorkshopDrafts } from "../application/workshopDrafts";
 import { ArcanariumService } from "../application/arcanarium";
 import { DexieArcanariumRepository } from "../infrastructure/database/arcanariumRepository";
 import { SaveEndeavor } from "../application/endeavors";
@@ -141,6 +148,11 @@ export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 
 export interface ApplicationRuntime {
   readonly arcanarium: ArcanariumService;
+  readonly workshop: ArcanariumWorkshop;
+  readonly cardExchange: CardExchange;
+  readonly workshopDrafts: WorkshopDrafts;
+  readonly prepareCardImage: typeof importLocalImage;
+  readonly saveDeckFile: (content: string) => Promise<string>;
   readonly inhabitantContinuity: InhabitantContinuityPort;
   readonly nightLightingContinuity: NightLightingPort;
   readonly physicalProfile: PhysicalProfilePort;
@@ -279,6 +291,7 @@ export async function createApplication(
   );
   const dependencies = {
     arcanarium: new DexieArcanariumRepository(database),
+    cardMedia: new DexieCardMedia(database),
     activities,
     clock,
     events,
@@ -345,6 +358,16 @@ export async function createApplication(
 
   return {
     arcanarium: new ArcanariumService(dependencies),
+    workshop: new ArcanariumWorkshop(dependencies),
+    cardExchange: new CardExchange(dependencies, new JsonCardExchangeCodec()),
+    workshopDrafts: new BrowserWorkshopDrafts(database.name),
+    prepareCardImage: importLocalImage,
+    saveDeckFile: async (content) => {
+      const file = { name: "biblioteca-viva-baralho.json", content };
+      return fileSave
+        ? fileSave.saveBackupFile(file)
+        : fileShare.shareBackupFile(file);
+    },
     inhabitantContinuity: new DexieInhabitantContinuityRepository(database),
     nightLightingContinuity: new DexieNightLightingRepository(database),
     physicalProfile,

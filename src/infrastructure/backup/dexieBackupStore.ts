@@ -1,3 +1,4 @@
+import { cardMediaSchema } from "../database/cardMedia";
 import {
   arcanariumDataSchema,
   emptyArcanarium,
@@ -40,6 +41,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
       sessions,
       media,
       arcanarium,
+      cardMedia,
     ] = await this.database.transaction(
       "r",
       [
@@ -58,6 +60,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
         this.database.studyCardLinks,
         this.database.knowledgeTags,
         this.database.cardSessions,
+        this.database.cardMedia,
       ],
       () =>
         Promise.all([
@@ -71,10 +74,12 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
           this.database.sessions.toArray(),
           this.database.media.toArray(),
           new DexieArcanariumRepository(this.database).read(),
+          this.database.cardMedia.toArray(),
         ]),
     );
     const data: BackupData = {
       arcanarium,
+      cardMedia: cardMedia.map((m) => cardMediaSchema.parse(m)),
       media: Object.freeze(media.map((p) => posterSchema.parse(p))),
       libraryEntries: Object.freeze(
         libraryEntries.map((item) => persistedLibraryEntrySchema.parse(item)),
@@ -104,6 +109,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
 
   async replace(data: BackupData): Promise<void> {
     const valid = {
+      cardMedia: (data.cardMedia ?? []).map((m) => cardMediaSchema.parse(m)),
       arcanarium: arcanariumDataSchema.parse(
         data.arcanarium ?? emptyArcanarium(),
       ),
@@ -145,6 +151,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
         this.database.studyCardLinks,
         this.database.knowledgeTags,
         this.database.cardSessions,
+        this.database.cardMedia,
       ],
       async (transaction) => {
         await Promise.all([
@@ -154,6 +161,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
           this.database.studyCardLinks.clear(),
           this.database.knowledgeTags.clear(),
           this.database.cardSessions.clear(),
+          this.database.cardMedia.clear(),
           this.database.libraryEntries.clear(),
           this.database.notes.clear(),
           this.database.quotes.clear(),
@@ -173,6 +181,7 @@ export class DexieBackupSnapshotStore implements BackupSnapshotPort {
         await this.database.tags.bulkAdd(valid.tags);
         await this.database.sessions.bulkAdd(valid.sessions);
         await this.database.media.bulkAdd(valid.media);
+        await this.database.cardMedia.bulkAdd(valid.cardMedia);
         await this.database.arcanariumCards.bulkAdd(valid.arcanarium.cards);
         await this.database.arcanariumVersions.bulkAdd(
           valid.arcanarium.versions,

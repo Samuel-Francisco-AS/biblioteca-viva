@@ -83,7 +83,10 @@ export class SaveFlashCard {
           throw new ApplicationError("NOT_FOUND", "Carta não encontrada.");
         if (parsed.expectedRevision !== undefined)
           requireRevision(previous.revision, parsed.expectedRevision);
-        await persistCard(repo, reviseCard(previous, content, now));
+        await persistCard(
+          repo,
+          reviseCard(previous, { ...previous.content, ...content }, now),
+        );
       } else {
         if (
           links.some((l) => l.legacyCardId === alias) ||

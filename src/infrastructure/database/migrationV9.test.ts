@@ -97,7 +97,7 @@ it("v8 → current preserves six types, annotations, sessions, tags, preferences
   legacy.close();
   const upgraded = new BibliotecaDatabase(name);
   await upgraded.open();
-  expect(upgraded.verno).toBe(15);
+  expect(upgraded.verno).toBe(16);
   expect(await upgraded.libraryEntries.toArray()).toEqual(
     [...entries].sort((a, b) => a.id.localeCompare(b.id)),
   );
@@ -107,7 +107,7 @@ it("v8 → current preserves six types, annotations, sessions, tags, preferences
   expect(await upgraded.tags.get("tag")).toEqual(tag);
   expect(await upgraded.settings.get(setting.key)).toEqual(setting);
   expect(await upgraded.metadata.get(SCHEMA_MARKER_KEY)).toMatchObject({
-    value: "15",
+    value: "16",
   });
   const exercises = [
     { name: "Supino fictício", sets: 3, repetitions: 10, loadKg: 12.5 },

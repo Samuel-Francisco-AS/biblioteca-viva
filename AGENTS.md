@@ -1,3 +1,5 @@
+> **BF-5.6B — implementação autorizada em 08/11/2026:** Oficina, coleções, Ecos e Relicário em candidata sobre a ponta da A/PR #43. Dexie v16, backup v8 e troca autoral v1; ver [relatório B](docs/BF-5_6B_OFICINA_COLECOES_IMPLEMENTACAO.md) e [ADR-026](docs/decisions/ADR-026-arcanario-oficina-midias-troca.md). Gate Moto G06 conjunto A+B pendente; sem merge/fechamento de A/B ou início de C–G. Esta autorização específica supera as notas históricas abaixo no escopo B.
+
 > **BF-5.6A — candidata autorizada em 08/11/2026:** a implementação específica da fundação foi solicitada pelo proprietário, com Dexie v15/backup v7. Ler [relatório](docs/BF-5_6A_FUNDACAO_IMPLEMENTACAO.md) e [ADR-025](docs/decisions/ADR-025-arcanario-fundacao-persistencia.md). Aceite/merge pendentes; a autorização não se estende a B–G/BF-6/BF-7. As notas de planejamento abaixo antecedem esta candidata.
 
 # Regras de contribuição automatizada
