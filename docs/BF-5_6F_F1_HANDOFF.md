@@ -33,6 +33,7 @@ O Duelo Arcano deve ser uma experiência **de jogo** inspirada na legibilidade e
 - `src/features/duel/arena/arenaRoute.ts`: `arenaRouteFor(id)`, `legacyDuelRouteFor(id)` e `isArenaRoute(path)`.
 - `src/features/duel/arena/ArenaFrame.tsx`: contêiner sem scroll com `stage` para arena/overlay e controle acessível de saída. F2 injeta elementos interativos e gráficos nesse palco.
 - `src/features/duel/arena/arena.css` e `src/App.tsx`: o atributo `data-arena-route` ativa o isolamento de viewport, oculta dock, cabeçalho e navegação do Arcanário **apenas** na nova rota, respeitando `env(safe-area-inset-*)`.
+- A rota da arena usa **escopo mínimo** no `ArcanariumPage`, sem materializar todas as cartas/entradas pessoais antes de carregar uma partida; a futura cena lê seu estado diretamente do serviço.
 - A URL `/arcanario/duelos/arena/:id` está **reservada, mas não divulgada**; em F1 ela redireciona com `replace` para a mesa 2D `/arcanario/duelos/partida/:id`. Assim, nenhuma arena incompleta fica acessível e o comportamento público segue intacto.
 - O mundo 3D da Biblioteca e o `WorldHost` não foram alterados. Nenhum segundo Canvas/RAF/Three.Scene foi iniciado pela F1.
 
