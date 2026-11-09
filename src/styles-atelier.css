@@ -1961,11 +1961,7 @@
   margin: 0;
 }
 
-/* R5R: the frame, speaker and close action are fully present at the DOM commit.
-   One short content animation preserves continuity without scheduling a delay. */
-.app-shell .rpg-dialogue {
-  animation: none;
-}
+/* R5R: content remains independently animated as choices change. */
 .app-shell .rpg-dialogue-content {
   animation: quest-content-arrive 120ms cubic-bezier(0.2, 0.75, 0.3, 1) both;
 }
@@ -1987,3 +1983,52 @@
 .app-shell[data-reduced-motion="true"] .rpg-dialogue-content {
   animation: none;
 }
+
+
+/* A compositor-only passage: no forced loading pause, no focus trap or blur. */
+.app-shell > .passage-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(ellipse at 50% 85%, #9471af42, transparent 60%),
+    linear-gradient(135deg, #161020b8, #241a36ab);
+  transform: translate3d(0, 0, 0);
+}
+.app-shell[data-passage="departing"] > .passage-veil {
+  animation: bv-passage-fold 160ms ease-out both;
+}
+.app-shell[data-passage="arriving"] > .passage-veil {
+  animation: bv-passage-unfold 250ms cubic-bezier(0.19, 0.75, 0.25, 1) both;
+}
+@keyframes bv-passage-fold {
+  from { opacity: 0; }
+  to { opacity: 0.5; }
+}
+@keyframes bv-passage-unfold {
+  from { opacity: 0.5; }
+  to { opacity: 0; }
+}
+
+/* The speaker panel itself unfolds; the header and Adiar remain in the DOM. */
+.app-shell .rpg-dialogue {
+  animation: bv-dialogue-unfold 205ms cubic-bezier(0.16, 0.78, 0.26, 1) both;
+}
+@keyframes bv-dialogue-unfold {
+  from { opacity: 0.86; transform: translate3d(0, 7px, 0) scale(0.994); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-shell > .passage-veil,
+  .app-shell .rpg-dialogue {
+    animation: none;
+  }
+  .app-shell > .passage-veil { opacity: 0; }
+}
+.app-shell[data-reduced-motion="true"] > .passage-veil,
+.app-shell[data-reduced-motion="true"] .rpg-dialogue {
+  animation: none;
+}
+.app-shell[data-reduced-motion="true"] > .passage-veil { opacity: 0; }

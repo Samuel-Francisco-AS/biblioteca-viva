@@ -98,6 +98,24 @@ it("R7 releases touch feedback on scroll, cancellation and release without early
   expect(link).not.toHaveAttribute("data-tap-active");
 });
 
+it("shows a non-blocking passage for same-tab navigation, not modified clicks", () => {
+  render(
+    <MemoryRouter>
+      <App />
+    </MemoryRouter>,
+  );
+  const link = screen.getByRole("link", { name: "Coleção" });
+  const shell = document.querySelector(".app-shell");
+  fireEvent.click(link, { ctrlKey: true });
+  expect(shell).not.toHaveAttribute("data-passage");
+  fireEvent.click(link);
+  expect(shell).toHaveAttribute("data-passage", "departing");
+  expect(document.querySelector(".passage-veil")).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+});
+
 it("R9 only pulses for confirmed clicks, including consecutive keyboard activations", () => {
   const vibrate = vi.fn();
   Object.defineProperty(navigator, "vibrate", {

@@ -8,7 +8,8 @@ it("acknowledges navigation while pending, warms on contact and clears feedback 
   const view = render(<PrimaryDock pathname="/" />, { wrapper: MemoryRouter });
   const link = screen.getByRole("link", { name: "Coleção" });
   fireEvent.pointerDown(link);
-  expect(preloadRoute).toHaveBeenCalledWith("/colecao");
+  // Touch must not parse the next route before the press is visible.
+  expect(preloadRoute).not.toHaveBeenCalledWith("/colecao");
   fireEvent.click(link);
   expect(link).toHaveAttribute("data-pending", "true");
   view.rerender(<PrimaryDock pathname="/colecao" />);

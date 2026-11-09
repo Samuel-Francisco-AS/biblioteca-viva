@@ -180,6 +180,7 @@ export class ThreeWorldInteraction {
       this.handlePointerCancel,
     );
     this.canvas.removeEventListener("wheel", this.handleWheel);
+    this.canvas.parentElement?.removeAttribute("data-world-touch");
     this.clearHighlight();
     this.selectableRoots.clear();
     this.selectableRootIds.clear();
@@ -269,6 +270,17 @@ export class ThreeWorldInteraction {
     this.continueAfterPointerEnd();
   };
 
+  private touchEcho(state: "pressed" | "released" | "cancelled", event?: PointerEvent): void {
+    const host = this.canvas.parentElement;
+    if (!host?.classList.contains("world-host")) return;
+    if (event) {
+      // Offset coordinates are already CSS pixels; avoid layout reads on down.
+      host.style.setProperty("--world-touch-x", `${event.offsetX}px`);
+      host.style.setProperty("--world-touch-y", `${event.offsetY}px`);
+    }
+    host.dataset.worldTouch = state;
+  }
+
   private readonly handlePointerDown = (event: PointerEvent): void => {
     if (
       this.disposed ||
@@ -290,6 +302,7 @@ export class ThreeWorldInteraction {
     if (this.activePointers.size === 1) {
       this.beginTapCandidate(event.pointerId);
       this.gestureMode = "tap";
+      this.touchEcho("pressed", event);
     } else {
       this.beginPinch();
     }
@@ -346,6 +359,7 @@ export class ThreeWorldInteraction {
 
     this.activePointers.delete(event.pointerId);
     this.releasePointer(event.pointerId);
+    this.touchEcho(shouldPick ? "released" : "cancelled");
     if (shouldPick) {
       this.onPickStart?.();
       this.pick(pointer.current);
@@ -455,6 +469,7 @@ export class ThreeWorldInteraction {
   private invalidateTapCandidate(): void {
     this.tapCandidatePointerId = undefined;
     this.tapEligible = false;
+    this.touchEcho("cancelled");
   }
 
   private remainsTapEligible(pointer: ActivePointer): boolean {
@@ -645,7 +660,10 @@ export class ThreeWorldInteraction {
   }
 
   private resetGesture(): void {
-    this.invalidateTapCandidate();
+    this.tapCandidatePointerId = undefined;
+    this.tapEligible = false;
+    if (this.canvas.parentElement?.dataset.worldTouch === "pressed")
+      this.touchEcho("cancelled");
     this.gestureMode = "idle";
     this.pinchPreviousDistance = 0;
     this.pinchPreviousMidpoint = undefined;

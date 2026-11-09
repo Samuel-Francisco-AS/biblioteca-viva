@@ -97,6 +97,36 @@ function setup() {
   return { canvas, scene, camera, add, mount, priority };
 }
 
+describe("Touch continuity", () => {
+  it("acknowledges a candidate before raycast and cancels the echo on a drag", () => {
+    const h = setup();
+    const host = document.createElement("div");
+    host.className = "world-host";
+    host.append(h.canvas);
+    h.mount();
+    const emit = (type: string, x: number) => {
+      const e = new MouseEvent(type, {
+        bubbles: true,
+        clientX: x,
+        clientY: 20,
+        cancelable: true,
+      });
+      Object.defineProperty(e, "pointerId", { value: 1 });
+      h.canvas.dispatchEvent(e);
+    };
+    emit("pointerdown", 20);
+    expect(host.dataset.worldTouch).toBe("pressed");
+    emit("pointermove", 50);
+    expect(host.dataset.worldTouch).toBe("cancelled");
+    emit("pointerup", 50);
+    emit("pointerdown", 200);
+    expect(host.dataset.worldTouch).toBe("pressed");
+    emit("pointerup", 200);
+    expect(host.dataset.worldTouch).toBe("released");
+    host.remove();
+  });
+});
+
 describe("R1: picking without scene-wide matrix forcing or duplicate rays", () => {
   it("tests nested books only once, excludes decorations, and keeps instance/entry identity", () => {
     const h = setup();

@@ -41,8 +41,8 @@ import "./styles-atelier.css";
 import "./features/library/canvas-hud.css";
 import "./features/duel/arena/arena.css";
 import { pulseTouch } from "./app/touchFeedback";
+import { beginPassage } from "./app/interactionContinuity";
 import {
-  preloadRoute,
   routeModules,
   warmCollectionWhenIdle,
 } from "./app/routeModules";
@@ -128,6 +128,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   const shellRef = useRef<HTMLDivElement>(null);
   const sessionStripRef = useRef<HTMLDivElement>(null);
   const previousPathRef = useRef(location.pathname);
+  const previousPassagePathRef = useRef(location.pathname);
   const pressedRef = useRef<HTMLElement | null>(null);
   const pressedOriginRef = useRef<{ id: number; x: number; y: number } | null>(
     null,
@@ -205,6 +206,12 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
     };
   }, []);
 
+  useLayoutEffect(() => {
+    if (previousPassagePathRef.current === location.pathname) return;
+    previousPassagePathRef.current = location.pathname;
+    shellRef.current?.setAttribute("data-passage", "arriving");
+  }, [location.pathname]);
+
   useEffect(() => {
     if (previousPathRef.current !== location.pathname) {
       mainRef.current?.focus();
@@ -243,8 +250,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
     )
       return;
 
-    if (control instanceof HTMLAnchorElement)
-      preloadRoute(control.getAttribute("href") ?? "");
+    // Do not parse a destination module before the pressed state can paint.
     // Cards acknowledge semantic clicks only: pointerdown may begin a scroll.
     if (!control.matches(".book-card__link"))
       control.setAttribute("data-tap-active", "true");
@@ -287,6 +293,21 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           return;
         if (control.matches(".book-card__link"))
           control.setAttribute("data-tap-confirmed", "true");
+        if (
+          control instanceof HTMLAnchorElement &&
+          event.button === 0 &&
+          !event.metaKey &&
+          !event.ctrlKey &&
+          !event.altKey &&
+          !event.shiftKey &&
+          !event.defaultPrevented &&
+          !control.hasAttribute("download") &&
+          (!control.target || control.target === "_self") &&
+          control.getAttribute("href")?.startsWith("/") &&
+          (control.pathname !== location.pathname ||
+            control.search !== location.search)
+        )
+          beginPassage();
         pulseTouch(
           effectiveExperience.reducedMotion,
           control.matches(
@@ -414,6 +435,14 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           location.pathname === APP_ROUTE_PATHS.settings &&
           diagnostics && <DevelopmentDiagnostics diagnostics={diagnostics} />}
       </main>
+      <div
+        className="passage-veil"
+        aria-hidden="true"
+        onAnimationEnd={(event) => {
+          if (event.target === event.currentTarget)
+            shellRef.current?.removeAttribute("data-passage");
+        }}
+      />
       <PrimaryDock pathname={location.pathname} />
     </div>
   );

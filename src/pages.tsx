@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { projectLivingScrolls } from "./application/livingScrolls";
+import { afterFeedbackFrame, beginPassage } from "./app/interactionContinuity";
 import { projectWorldSessionActivity } from "./application/projectWorldSessionActivity";
 import type { WorldSessionActivity } from "./contracts/worldSessionActivity";
 import type { LibraryEntry, Note, Quote, Session } from "./domain";
@@ -162,6 +163,14 @@ function LibraryPageContent({
     useState<ApplicationBound<WorldHostStatus>>();
   const [toolsOpen, setToolsOpen] = useState(false);
   const pageRef = useRef<HTMLElement>(null);
+  const portalFlight = useRef<(() => void) | null>(null);
+  useEffect(() => () => portalFlight.current?.(), []);
+  useEffect(() => {
+    if (!active) {
+      portalFlight.current?.();
+      portalFlight.current = null;
+    }
+  }, [active]);
 
   // Do not let a previous application instance lend its data, error, catalog
   // or selected entry to the next one during the render before its effect runs.
@@ -211,7 +220,12 @@ function LibraryPageContent({
   function handleWorldSelection(nextSelection: WorldSelection): void {
     if (!application) return;
     if (nextSelection?.id === "portal:duelo-arcano") {
-      void navigate("/arcanario/duelos");
+      if (portalFlight.current) return;
+      beginPassage();
+      portalFlight.current = afterFeedbackFrame(() => {
+        portalFlight.current = null;
+        void navigate("/arcanario/duelos");
+      });
       return;
     }
     setSelectionState({ application, value: nextSelection });
