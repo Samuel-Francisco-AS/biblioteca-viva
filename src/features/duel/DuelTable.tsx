@@ -1,3 +1,4 @@
+import { duelArtUrl } from "./duelArt";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { DuelSession } from "../../application/duels";
@@ -250,7 +251,7 @@ export function DuelTable() {
       >
         <img
           loading="lazy"
-          src={`/assets/duel/${c.definition.artId}.svg`}
+          src={duelArtUrl(c.definition.artId)}
           alt=""
           width="160"
           height="120"
@@ -473,7 +474,7 @@ export function DuelTable() {
               >
                 <span className="duel-hand-cost">{c.definition.cost}</span>
                 <img
-                  src={`/assets/duel/${c.definition.artId}.svg`}
+                  src={duelArtUrl(c.definition.artId)}
                   alt=""
                   width="160"
                   height="120"

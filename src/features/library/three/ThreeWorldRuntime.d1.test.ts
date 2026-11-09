@@ -302,7 +302,10 @@ describe("BF-3D1/D2/D3: montagem, seleção e robustez", () => {
     const scene = renderer.render.mock.calls.at(-1)?.[0];
     const camera = renderer.render.mock.calls.at(-1)?.[1];
     const catalog = runtime.getSelectableObjects();
-    expect(catalog).toHaveLength(90);
+    expect(catalog).toHaveLength(91);
+    expect(
+      catalog.find(({ id }) => id === "portal:duelo-arcano"),
+    ).toMatchObject({ label: "Lua do Arcanário · abrir Duelo Arcano" });
     expect(
       catalog.filter(({ id }) => id.startsWith("character:")),
     ).toHaveLength(4);
@@ -870,7 +873,7 @@ describe("BF-4E integrated lifecycle", () => {
     });
     runtime.mount(host());
     runtime.start();
-    expect(runtime.getSelectableObjects()).toHaveLength(100);
+    expect(runtime.getSelectableObjects()).toHaveLength(101);
     const beforeSelection = renderer.render.mock.calls.length;
     runtime.selectObject("living:lamp");
     expect(renderer.domElement.dataset.selectedObject).toBe("living:lamp");
@@ -1083,4 +1086,42 @@ it("post-R2 star book opens, survives pause/resume and closes with selection int
   expect(cover.rotation.z).toBeCloseTo(0, 5);
   expect(session.getSnapshot().objects["living:book"].active).toBe(false);
   runtime.dispose();
+});
+
+it("F refinement drives the same orbital selectable with the resident scheduler and freezes on pause", () => {
+  vi.stubGlobal("ResizeObserver", TestResizeObserver);
+  const renderer = new TestRenderer();
+  const request = vi
+    .fn<(cb: FrameRequestCallback) => number>()
+    .mockReturnValue(1);
+  const runtime = new ThreeWorldRuntime({
+    libraryWorldSnapshot: snapshot(),
+    createRenderer: () => renderer,
+    frameScheduler: { request, cancel: vi.fn() },
+  });
+  runtime.mount(host());
+  runtime.start();
+  const scene = renderer.render.mock.calls[0]?.[0];
+  const orbital = scene?.getObjectByName("portal:duelo-arcano");
+  if (!orbital) throw new Error("Orbital missing");
+  const initial = orbital.position.clone();
+  request.mock.calls.at(-1)![0](0);
+  request.mock.calls.at(-1)![0](50);
+  expect(orbital.position.distanceTo(initial)).toBeGreaterThan(0);
+  const paused = orbital.position.clone();
+  runtime.pause();
+  request.mock.calls.at(-1)![0](900000);
+  expect(orbital.position.equals(paused)).toBe(true);
+  runtime.resume();
+  request.mock.calls.at(-1)![0](900050);
+  expect(orbital.position.equals(paused)).toBe(true);
+  request.mock.calls.at(-1)![0](900100);
+  expect(orbital.position.distanceTo(paused)).toBeLessThan(0.04);
+  runtime.selectObject("portal:duelo-arcano");
+  expect(renderer.domElement.dataset.highlightedObject).toBe(
+    "portal:duelo-arcano",
+  );
+  expect(scene?.getObjectByName("portal:duelo-arcano")).toBe(orbital);
+  runtime.dispose();
+  expect(renderer.dispose).toHaveBeenCalledOnce();
 });

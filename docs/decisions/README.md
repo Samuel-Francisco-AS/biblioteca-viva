@@ -1,3 +1,5 @@
+[ADR-030 — Arena Viva: apresentação e ciclo de vida](ADR-030-arena-viva-apresentacao-lifecycle.md): candidata F2/PR #48, mesmo motor E e mundo residente pausado.
+
 [ADR-029 — Duelo Arcano, regulamento e contratos v1](ADR-029-duelo-arcano-regulamento.md): implementação autorizada BF-5.6E; gate físico/merge pendentes.
 
 [ADR-028 — Pacotes educacionais e retenção histórica](ADR-028-pacotes-educacionais-retencao.md): candidata BF-5.6D, manifesto v1/Dexie v18/backup v10.

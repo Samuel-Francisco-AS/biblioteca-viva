@@ -1,3 +1,4 @@
+import { duelArtUrl } from "./duelArt";
 import type { CombatDefinition } from "../../domain/duel/contracts";
 import { traditions } from "../../domain/duel/catalogue";
 import { kindNames, rulesText } from "../../domain/duel/text";
@@ -7,13 +8,21 @@ export function CombatCard({
   definition: c,
   compact = false,
   official = false,
+  liveStats,
 }: {
   readonly name: string;
   readonly definition: CombatDefinition;
   readonly compact?: boolean;
   readonly official?: boolean;
+  readonly liveStats?: {
+    readonly attack?: number;
+    readonly health?: number;
+    readonly shield?: number;
+  };
 }) {
   const tradition = traditions[c.affinity];
+  const attack = liveStats?.attack ?? c.attack;
+  const health = liveStats?.health ?? c.health;
   return (
     <article
       className={`combat-card ${compact ? "combat-card--compact" : ""}`}
@@ -32,7 +41,7 @@ export function CombatCard({
       </header>
       <div className="combat-card__illustration">
         <img
-          src={`/assets/duel/${c.artId}.svg`}
+          src={duelArtUrl(c.artId)}
           alt={`Ilustração de ${name}`}
           loading="lazy"
           decoding="async"
@@ -50,9 +59,10 @@ export function CombatCard({
       <footer>
         <small>{official ? "ARQUIVO OFICIAL · I" : "CRIAÇÃO AUTORAL"}</small>
         {c.kind === "creature" && (
-          <strong aria-label={`${c.attack} ataque, ${c.health} resistência`}>
-            <span>⚔ {c.attack}</span>
-            <span>◆ {c.health}</span>
+          <strong aria-label={`${attack} ataque, ${health} resistência`}>
+            <span>⚔ {attack}</span>
+            <span>◆ {health}</span>
+            {!!liveStats?.shield && <span>◉ {liveStats.shield}</span>}
           </strong>
         )}
       </footer>

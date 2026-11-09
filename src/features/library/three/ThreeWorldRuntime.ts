@@ -1,3 +1,4 @@
+import { createOrbitalArena } from "./orbitalArena";
 import { createBoundedPointLighting } from "./boundedPointLighting";
 import { GpuTimer } from "./gpuTimer";
 import type { LightingExperiment } from "./lightingExperiment";
@@ -499,6 +500,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly nightLighting?: NightLightingSession;
   private inhabitants?: ReturnType<typeof createInhabitantVisuals>;
   private ambientMagic?: ReturnType<typeof createAmbientMagic>;
+  private orbital?: ReturnType<typeof createOrbitalArena>;
   private scrollVisuals?: ReturnType<typeof createLivingScrollVisuals>;
   private readonly scrolls: readonly import("../../../contracts/livingScroll").LivingScroll[];
   private lightingInitialized = false;
@@ -706,6 +708,11 @@ export class ThreeWorldRuntime implements WorldRuntime {
         readonly descriptor: WorldSelectableObject;
         readonly root: Object3D;
       }[] = [];
+      const orbitalSelectables =
+        composedWorld && !this.performanceScenarioDiagnosticsEnabled
+          ? [createOrbitalArena()]
+          : [];
+      this.orbital = orbitalSelectables[0];
       if (composedWorld) {
         this.inhabitants = createInhabitantVisuals(
           scene,
@@ -727,6 +734,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         const building = createProceduralLibraryBuilding(
           Boolean(this.livingSession),
         );
+        for (const orbital of orbitalSelectables) building.add(orbital.root);
         mountedWorld.addLibraryBuilding(building);
         scene.add(building);
         this.sessionVisuals = createSessionWorldVisuals(building);
@@ -868,6 +876,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
       this.baseSelectableObjects = Object.freeze([
+        ...orbitalSelectables.map(({ descriptor }) => descriptor),
         ...(this.inhabitants?.selectables ?? []).map(
           ({ descriptor }) => descriptor,
         ),
@@ -905,6 +914,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
               listener(actor.key);
         },
         pickingPriorityRoots: [
+          ...orbitalSelectables.map(({ root }) => root),
           ...proceduralSelectables.map(({ root }) => root),
           ...libraryRecordSelectables.map(({ root }) => root),
         ],
@@ -917,6 +927,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         },
         scene,
         selectables: [
+          ...orbitalSelectables,
           ...(this.inhabitants?.selectables ?? []),
           ...(this.livingVisuals?.selectables ?? []),
           ...(this.scrollVisuals?.selectables ?? []),
@@ -1518,6 +1529,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
         (id) => this.inhabitants?.getSocket(id, "socket_carry") ?? null,
       );
       this.ambientMagic?.update(delta, reduced);
+      this.orbital?.update(delta, reduced);
+      if (this.selection?.id === "portal:duelo-arcano")
+        mountedWorld.getInteraction()?.updateHighlightBounds();
       this.scrollVisuals?.update(
         delta,
         reduced,
@@ -1767,6 +1781,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.livingVisuals = undefined;
     this.scrollVisuals = undefined;
     this.ambientMagic = undefined;
+    this.orbital = undefined;
     this.narrativeVisuals = undefined;
     this.narrative = undefined;
     this.livingFrameTime = undefined;

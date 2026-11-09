@@ -1,0 +1,132 @@
+{
+  "candidate": "BF-5.6F2",
+  "branch": "feat/bf-5-6f-arena-orbital",
+  "pr": 48,
+  "draft": true,
+  "f1RemoteSource": "4e23b6d86b078ca6e29f670b633c5db4557b3750",
+  "schema": 19,
+  "backup": 11,
+  "ruleset": "duelo-arcano/1.0.0",
+  "initial": {
+    "typecheck": "PASS",
+    "duelTests": {
+      "pass": 49,
+      "fail": 0
+    },
+    "format": "5 files corrected",
+    "lint": "F1 hook error corrected"
+  },
+  "broadOnce": {
+    "command": "npm run test:run",
+    "files": 182,
+    "pass": 1174,
+    "fail": 12,
+    "seconds": 172.45,
+    "repeated": false,
+    "correctedPortalCounts": 2,
+    "uiWaitsPassedLater": 4,
+    "remainingGraphicsTimeouts": 6
+  },
+  "directed": [
+    {
+      "scope": "arena, TCG engine/effects/AI/catalogue, Dexie/replay, orbital, pages, WorldHost/runtime",
+      "pass": 124,
+      "fail": 0,
+      "files": 12
+    },
+    {
+      "scope": "UI/session reconciliation plus arena",
+      "pass": 20,
+      "fail": 0,
+      "files": 6
+    },
+    {
+      "scope": "final camera and command lifecycle",
+      "pass": 4,
+      "fail": 0,
+      "files": 2
+    }
+  ],
+  "e2e": {
+    "educationalAndLegacyTCG": {
+      "pass": 14,
+      "fail": 0
+    },
+    "arenaCompleteGame": {
+      "pass": 1,
+      "seconds": 138,
+      "seed": 17,
+      "player": "Ytha",
+      "opponent": "Lua"
+    },
+    "denseViewportGates": [
+      {
+        "width": 390,
+        "height": 844,
+        "pass": true,
+        "seconds": 21.9
+      },
+      {
+        "width": 360,
+        "height": 640,
+        "pass": true,
+        "seconds": 23.5
+      },
+      {
+        "width": 844,
+        "height": 390,
+        "pass": true,
+        "seconds": 21.3
+      }
+    ],
+    "denseAssertions": [
+      "8 hand cards",
+      "4 creatures + 2 artifacts per side",
+      "no page scroll",
+      "dock hidden",
+      "all controls reachable",
+      "no intersecting field hit rectangles",
+      "visibility pause/resume",
+      "context lost/recreate"
+    ],
+    "nativeBack": "shell cancelable event simulation; physical Android pending",
+    "fullHistoricalSuite": "not executed",
+    "contextRecreationDetachedOldCanvas": "PASS, landscape 844x390, 23.8s, separate final check"
+  },
+  "checks": {
+    "format": "PASS",
+    "lintChangedFiles": "PASS; no disabled rules",
+    "lintGlobalFinal": "interrupted twice, exit 143; not certified",
+    "typecheckBuild": "PASS",
+    "audio": "PASS",
+    "educationalPackHashes": "PASS",
+    "diffCheck": "PASS"
+  },
+  "remoteCI": {
+    "executed": false,
+    "reason": "owner reports exhausted GitHub Actions quota",
+    "globallyGreen": false,
+    "workflowsChanged": false
+  },
+  "physical": {
+    "installation": "not performed",
+    "MotoG06": "pending owner gate",
+    "TalkBack": "pending",
+    "thermalMemory": "pending",
+    "artisticApproval": "pending"
+  },
+  "residualBroadFailures": [
+    "inhabitantAnimator Aryn timeout (previous E occurrence)",
+    "inhabitantAnimator Ytha timeout (previous E occurrence)",
+    "inhabitantRig Ytha timeout (no isolated attribution)",
+    "inhabitantPickupContact Aryn timeout (no isolated attribution)",
+    "sessionBookPhysical timeout (no isolated attribution)",
+    "libraryRecordLayout timeout (no isolated attribution)"
+  ],
+  "apk": {
+    "status": "PASS",
+    "sourceCommit": "5f433e6cff636d511bbb5c809af8739634e9020a",
+    "sha256": "59dc52ed2dfa6358da7bcf090479146abc0c6e8fa07b81edf867162220272d70",
+    "metadata": "apk.json"
+  }
+}

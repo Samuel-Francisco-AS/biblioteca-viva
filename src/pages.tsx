@@ -1,6 +1,6 @@
 import { equalSnapshot } from "./features/library/snapshotEquality";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { projectLivingScrolls } from "./application/livingScrolls";
 import { projectWorldSessionActivity } from "./application/projectWorldSessionActivity";
@@ -150,6 +150,7 @@ function LibraryPageContent({
   );
   const diagnosticsActive = diagnosticsEnabled && PerformanceScenarioHarness;
   const location = useLocation();
+  const navigate = useNavigate();
   const [snapshot, setSnapshot] = useState<LibraryPageSnapshot>();
   const [selectableObjectsState, setSelectableObjectsState] =
     useState<ApplicationBound<readonly WorldSelectableObject[]>>();
@@ -209,6 +210,10 @@ function LibraryPageContent({
 
   function handleWorldSelection(nextSelection: WorldSelection): void {
     if (!application) return;
+    if (nextSelection?.id === "portal:duelo-arcano") {
+      void navigate("/arcanario/duelos");
+      return;
+    }
     setSelectionState({ application, value: nextSelection });
     setRequestedSelectionState({
       application,
@@ -605,6 +610,9 @@ function LibraryPageContent({
           </>
         )}
         <div className="placeholder-actions">
+          <Link className="button button--secondary" to="/arcanario/duelos">
+            ◈ Arena orbital · Duelo Arcano
+          </Link>
           <Link className="button button--secondary" to="/arcanario">
             ✧ Abrir o Arcanário
           </Link>

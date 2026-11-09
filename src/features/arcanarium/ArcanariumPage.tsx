@@ -2,6 +2,8 @@ import { DuelHall } from "../duel/DuelHall";
 import { DuelTable } from "../duel/DuelTable";
 import { DuelDeckEditor } from "../duel/DuelDecks";
 import { DuelRules } from "../duel/DuelRules";
+import { ArenaDuel } from "../duel/arena/ArenaDuel";
+import { isArenaRoute } from "../duel/arena/arenaRoute";
 import { emptyArcanarium } from "../../domain/arcanarium";
 import { PackLibrary } from "./PackLibrary";
 import { cardAvailable } from "../../domain/educationalPacks";
@@ -34,10 +36,13 @@ export default function ArcanariumPage({
   const [error, setError] = useState("");
   const location = useLocation();
   const atPortal = location.pathname.replace(/\/$/, "") === "/arcanario";
+  const lightScope = atPortal || isArenaRoute(location.pathname);
   const readSnapshot = useCallback(async () => {
     if (!app) return undefined;
-    if (atPortal) {
-      const counts = await app.arcanarium.overview();
+    if (lightScope) {
+      // The 3D arena reads its match through DuelService, not a global
+      // materialization of every card, note and personal record.
+      const counts = atPortal ? await app.arcanarium.overview() : undefined;
       return { app, data: emptyArcanarium(), entries: [], scope: true, counts };
     }
     const [data, entries] = await Promise.all([
@@ -45,7 +50,7 @@ export default function ArcanariumPage({
       app.queries.listLibraryEntries.execute(),
     ]);
     return { app, data, entries, scope: false };
-  }, [app, atPortal]);
+  }, [app, atPortal, lightScope]);
   const reload = useCallback(async () => {
     if (!app) return;
     setSnapshot(await readSnapshot());
@@ -110,7 +115,7 @@ export default function ArcanariumPage({
           </button>
         </div>
       )}
-      {!snapshot || snapshot.scope !== atPortal ? (
+      {!snapshot || snapshot.scope !== lightScope ? (
         !error && <p role="status">Abrindo os arquivos do Arcanário…</p>
       ) : (
         <Arcana.Provider value={{ ...snapshot, reload }}>
@@ -120,6 +125,7 @@ export default function ArcanariumPage({
               element={<Portal data={snapshot.data} counts={snapshot.counts} />}
             />
             <Route path="duelos" element={<DuelHall />} />
+            <Route path="duelos/arena/:id" element={<ArenaDuel />} />
             <Route path="duelos/regras" element={<DuelRules />} />
             <Route path="duelos/baralhos/:id" element={<DuelDeckEditor />} />
             <Route

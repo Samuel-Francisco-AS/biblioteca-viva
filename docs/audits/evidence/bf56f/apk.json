@@ -1,0 +1,38 @@
+{
+  "candidate": "BF-5.6F2",
+  "builtAtUtc": "2026-11-09T15:10:56.075683+00:00",
+  "sourceCommit": "5f433e6cff636d511bbb5c809af8739634e9020a",
+  "sourceTree": "7da139e9bdcfd03ae3adcf364723b4fd99ae29e3",
+  "sourceState": "clean tracked tree at official Android build; following commit only docs/evidence",
+  "branch": "feat/bf-5-6f-arena-orbital",
+  "apk": "android/app/build/outputs/apk/debug/Biblioteca-Viva-BF56F2-debug.apk",
+  "bytes": 11647409,
+  "sha256": "59dc52ed2dfa6358da7bcf090479146abc0c6e8fa07b81edf867162220272d70",
+  "build": "npm run android:build:debug PASS; assembleDebug 21 seconds",
+  "workersMaximum": 2,
+  "parallel": false,
+  "java": "Android Studio bundled JBR",
+  "applicationId": "com.samuelfrancisco.bibliotecaviva",
+  "androidVersionName": "1.0",
+  "androidVersionCode": 1,
+  "appVersion": "0.2.0-alpha.1",
+  "signerSha256": "b788958be4c919889fc30813f13f1aceb5b6b69670514c82e16288f4b60b83b3",
+  "sameDebugSignerAsBF56E": true,
+  "runtimeWebFilesMatchedDistAndroidApk": 111,
+  "illustrationsMatched": 48,
+  "excludedBuildMetadata": [
+    ".vite/manifest.json"
+  ],
+  "dexieVersion": 19,
+  "backupFormatVersion": 11,
+  "compatibleBackupVersions": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "physicalInstallation": "not performed; overlay install and personal data preservation require Moto G06 confirmation",
+  "release": false
+}

@@ -914,3 +914,124 @@
     grid-row: 1;
   }
 }
+
+/* F/R3: illuminated folios, painted portraits and affinity-specific bindings. */
+.combat-card {
+  --ink: #a7c5bd;
+  --metal: #d2b580;
+  padding: 0.6rem;
+  border: 2px solid #bba06d;
+  background:
+    radial-gradient(at 15% 0%, #c1a16b45, transparent 48%),
+    linear-gradient(135deg, #403a2d, var(--tint) 35%, #111923);
+  box-shadow:
+    0 14px 32px #0008,
+    inset 0 0 0 2px #111822,
+    inset 0 0 0 4px #c0a87599,
+    inset 0 0 20px #0008;
+}
+.combat-card::before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  inset: 0.2rem;
+  border: 1px solid #e6d2a36b;
+  border-radius: inherit;
+  z-index: 2;
+}
+.combat-card[data-affinity="ruin"] {
+  --ink: #f0a078;
+  --tint: #422323;
+  --metal: #e0b48a;
+}
+.combat-card[data-affinity="knowledge"] {
+  --ink: #9dd9ed;
+  --tint: #1a3546;
+  --metal: #ead29a;
+}
+.combat-card[data-affinity="bloom"] {
+  --ink: #a9dbab;
+  --tint: #234137;
+  --metal: #d4c28f;
+}
+.combat-card[data-affinity="chaos"] {
+  --ink: #cda7f1;
+  --tint: #342641;
+  --metal: #d9bded;
+}
+.combat-card__title {
+  background: linear-gradient(90deg, #0b1524c9, #2c334455, #0b1524c9);
+  border: 1px solid #d8c29755;
+  border-radius: 0.4rem 0.4rem 0.15rem 0.15rem;
+  padding: 0.35rem;
+}
+.combat-card__title h3 {
+  text-shadow: 0 2px 3px #000;
+  letter-spacing: 0.015em;
+}
+.combat-card__cost {
+  box-shadow:
+    inset 0 0 0 2px #133346,
+    inset 0 0 14px #b3e8ff60,
+    0 2px 6px #0008;
+}
+.combat-card__sigil {
+  border-radius: 50%;
+  border: 1px solid #d6bb8355;
+  padding: 0.1rem 0.2rem;
+  font-size: 1.25rem;
+}
+.combat-card__illustration {
+  margin-top: 0.35rem;
+  border: 2px solid var(--metal);
+  box-shadow:
+    0 0 0 2px #101724,
+    0 0 0 3px #c4ae7866;
+}
+.combat-card__illustration img {
+  aspect-ratio: 1 / 1;
+  object-position: center;
+}
+.combat-card__illustration > span {
+  background: linear-gradient(90deg, #15202b, var(--tint), #15202b);
+  text-align: center;
+  font-variant: small-caps;
+}
+.combat-card__rules {
+  background: linear-gradient(130deg, #f1e6cce8, #d3c5a9eb);
+  color: #272d33;
+  border: 1px solid #a58c63;
+  margin-top: 0.4rem;
+  padding: 0.65rem 0.7rem;
+  box-shadow: inset 0 0 15px #a3835544;
+}
+.combat-card__rules p {
+  color: #272d33;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.combat-card__rules .combat-card__flavor {
+  color: #595044;
+}
+.combat-card footer {
+  padding: 0.5rem 0.2rem 0.1rem;
+  color: #e2d3ad;
+}
+.combat-card footer strong {
+  display: flex;
+  gap: 0.4rem;
+}
+.combat-card footer strong span {
+  border: 1px solid #cbb27c88;
+  border-radius: 0.3rem;
+  background: #0e1825;
+  padding: 0.15rem 0.4rem;
+  box-shadow: inset 0 0 6px #d3c39830;
+}
+.combat-card[data-kind="spell"] {
+  border-top-width: 4px;
+}
+.combat-card[data-kind="artifact"] {
+  border-style: double;
+  border-width: 4px;
+}

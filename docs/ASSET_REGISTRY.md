@@ -1,3 +1,5 @@
+> **F/R3 — 48 pinturas WebP (09/11/2026):** `public/assets/duel/painted`, 360×360 por imagem, 1.979.146 B. Quatro atlas originais gerados pelo tool integrado `image_gen`; fontes, prompts completos e hashes em [refinement](../assets/duel/source/refinement/README.md). Consumidos por resolvedor visual sem alterar IDs/catálogo. SVG E preservado. Sem aprovação artística humana desta candidata.
+
 > **R5E:** quatro GLBs/fontes refinados; Ytha 1,32 m de geometria + 0,16 m de clearance visual, envelope 0,92 m. FX próprios, fólio aberto e luz local; [manifest vigente](../assets/3d/source/inhabitants/manifest.json) e [evidências](audits/BV_RECUPERACAO_R5E.md). Sem novo aceite artístico.
 
 > **Habitantes R5 — candidata (07/11/2026):** os quatro GLBs produtivos foram remodelados com skins reais e oito clips. Inventário exato no [manifest](../assets/3d/source/inhabitants/manifest.json); [pipeline vigente](INHABITANT_ART_PIPELINE.md) e [evidências/limites](audits/BV_RECUPERACAO_R5.md). Arte individual e Moto G06 pendentes; notas antigas dos habitantes abaixo são história.
