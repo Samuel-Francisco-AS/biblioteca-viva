@@ -59,3 +59,7 @@ Repetir o toque em cada um dos quatro habitantes e a abertura/fechamento de diá
 ### R3 complemento — alvo pequeno ampliado
 
 O fallback de seleção expandida (`findExpandedLivingTap`) ainda calculava `Box3.setFromObject()` dos objetos `living:book` e `living:table` em todo toque vazio, mesmo quando o toque ocorria longe deles. Agora ele projeta primeiro a origem do objeto e só lê seus limites completos se estiver dentro de um envelope amplo (3 unidades de mundo, mais o raio em pixels). Isso preserva a verificação exata perto das peças e evita nova travessia de geometria no vazio. Há teste de regressão para este comportamento; não executado remotamente.
+
+### R3 complemento — halo na camada de composição
+
+A posição do halo antes alterava `left/top` de um pseudo-elemento e usava apenas `scale()` na transformação. Agora a origem é fixa e a posição do toque entra diretamente em `translate3d()`, com `will-change` restrito ao pequeno halo. Assim a reação usa `transform` e `opacity` em vez de animar a posição de layout; o efeito visual permanece reduzido/desativado pela preferência de movimento reduzido.
