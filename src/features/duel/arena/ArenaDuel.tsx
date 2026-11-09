@@ -1,3 +1,5 @@
+import { CombatCard } from "../CombatCard";
+import { duelArtUrl } from "../duelArt";
 import {
   useCallback,
   useEffect,
@@ -8,12 +10,7 @@ import {
 } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { DuelAction } from "../../../domain/duel/contracts";
-import {
-  abilityText,
-  kindNames,
-  modeNames,
-  rulesText,
-} from "../../../domain/duel/text";
+import { abilityText, kindNames, modeNames } from "../../../domain/duel/text";
 import { traditions } from "../../../domain/duel/catalogue";
 import type { ArenaAnchor } from "./arenaScene";
 import { ArenaCanvas } from "./ArenaCanvas";
@@ -277,7 +274,7 @@ function ArenaSession({ id }: { readonly id: string }) {
               view={view}
               selected={selection}
               targets={targets}
-              active={visible && view.status === "active" && !inspect && !log}
+              active={visible && view.status !== "paused" && !inspect && !log}
               onAnchors={setAnchors}
             />
             <div className="arena-hit-layer">
@@ -309,6 +306,8 @@ function ArenaSession({ id }: { readonly id: string }) {
                             arenaActionsForSelection(view, c.id).length > 0)
                         }
                         data-exhausted={c.exhausted}
+                        data-affinity={c.affinity}
+                        data-kind={c.kind}
                         aria-pressed={selection === c.id}
                         aria-label={`${targets.has(c.id) ? "Alvo: " : "Selecionar "}${c.name}${c.kind === "creature" ? `, ataque ${c.attack}, resistência ${c.health}, escudo ${c.shield ?? 0}${c.guard ? ", Guardião" : ""}${c.exhausted ? ", Exausta" : ""}` : ", Artefato"}`}
                         onClick={() => select(c.id)}
@@ -409,6 +408,8 @@ function ArenaSession({ id }: { readonly id: string }) {
               <button
                 key={c.id}
                 className="arena-hand-card"
+                data-affinity={c.affinity}
+                data-kind={c.kind}
                 data-selected={selection === c.id}
                 data-playable={view.actions.some(
                   (a) => a.type === "play" && a.card === c.id,
@@ -418,11 +419,11 @@ function ArenaSession({ id }: { readonly id: string }) {
                 onClick={() => select(c.id)}
               >
                 <span className="arena-hand-cost">{c.cost}</span>
-                <img src={`/assets/duel/${c.artId}.svg`} alt="" />
+                <img src={duelArtUrl(c.artId)} alt="" />
                 <strong>{c.name}</strong>
                 <small>
                   {c.kind === "creature"
-                    ? `${c.attack} / ${c.health}`
+                    ? `⚔ ${c.attack}  ◆ ${c.health}`
                     : kindNames[c.kind]}
                 </small>
               </button>
@@ -459,20 +460,18 @@ function ArenaSession({ id }: { readonly id: string }) {
               label={`Inspecionar ${card.name}`}
               onClose={() => setInspect(false)}
             >
-              <img
-                className="arena-inspect-art"
-                src={`/assets/duel/${card.artId}.svg`}
-                alt={`Gravura de ${card.name}`}
-              />
-              <h2>{card.name}</h2>
-              <p>
-                ✦ {card.cost} · {kindNames[card.kind]}
-                {card.kind === "creature"
-                  ? ` · ⚔ ${card.attack} ◆ ${card.health} ◉ ${card.shield ?? 0}`
-                  : ""}
-              </p>
-              <p>{rulesText(card.definition)}</p>
-              <p className="arena-flavor">{card.definition.flavor}</p>
+              <div className="arena-inspection">
+                <CombatCard
+                  name={card.name}
+                  definition={card.definition}
+                  official={card.cardId.startsWith("arcane-v1:")}
+                  liveStats={{
+                    attack: card.attack,
+                    health: card.health,
+                    shield: card.shield,
+                  }}
+                />
+              </div>
             </ArenaDialog>
           )}
           {log && (
@@ -564,7 +563,11 @@ function ArenaSession({ id }: { readonly id: string }) {
               label="Resultado do duelo"
               onClose={() => void navigate("/arcanario/duelos")}
             >
-              <div className="arena-result-sigil" aria-hidden="true">
+              <div
+                className="arena-result-sigil"
+                data-victory={view.result.winner === 0}
+                aria-hidden="true"
+              >
                 {view.result.winner === 0 ? "✧" : "◇"}
               </div>
               <h2>

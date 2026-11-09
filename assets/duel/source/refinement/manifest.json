@@ -1,0 +1,521 @@
+{
+  "version": 1,
+  "source": "built-in image_gen, original fantasy illustration, 09/11/2026",
+  "processing": "Exact 4x3 panel extraction, 360x360 WebP quality 86; no card data changes.",
+  "atlases": [
+    {
+      "affinity": "ruin",
+      "file": "assets/duel/source/refinement/ruin-atlas.webp",
+      "width": 1448,
+      "height": 1086,
+      "sha256": "c1f99678d69c1f7ff1be16892f9056b0548d7e52f3812711260dff47405c7269",
+      "originalPngSha256": "d7a02eef1841ca1bc87548eaae44e1d1404d9eac539b2d67c2fe2ff7b8d2fc4f"
+    },
+    {
+      "affinity": "knowledge",
+      "file": "assets/duel/source/refinement/knowledge-atlas.webp",
+      "width": 1448,
+      "height": 1086,
+      "sha256": "b6d3b066b8b0a4edf6458b0dcf7e253af5c4ed2d26277b712a7c13d8d5d72d89",
+      "originalPngSha256": "0394003c13b1dec470525f601f050e61e9001586da71590af62ee066350a66fd"
+    },
+    {
+      "affinity": "bloom",
+      "file": "assets/duel/source/refinement/bloom-atlas.webp",
+      "width": 1448,
+      "height": 1086,
+      "sha256": "b4cdb30686a2b493565b461ec2c5fddd8902cbacebd59b1ef658e17a90ac8a03",
+      "originalPngSha256": "5c1e14d0ec22524cfea4d8d1ae8769ba77e6e2cf196808314921932485af41ab"
+    },
+    {
+      "affinity": "chaos",
+      "file": "assets/duel/source/refinement/chaos-atlas.webp",
+      "width": 1448,
+      "height": 1086,
+      "sha256": "f40b7bb12ba9e9e527966c31016e61d40317f5a2ba3bc7059aed4da3d46b60d6",
+      "originalPngSha256": "45b6220f85ce410951a769a3c43713e16258a83a33f067a88edd29a03acfd6cf"
+    }
+  ],
+  "illustrations": [
+    {
+      "id": "cinder-imp",
+      "file": "public/assets/duel/painted/cinder-imp.webp",
+      "atlas": "ruin",
+      "panel": 0,
+      "width": 360,
+      "height": 360,
+      "bytes": 42858,
+      "sha256": "bc1bcfadb59f6c755f0d98e49ef7b2dca109c4b0ca86a35d53f93b56b87820e2"
+    },
+    {
+      "id": "basalt-warden",
+      "file": "public/assets/duel/painted/basalt-warden.webp",
+      "atlas": "ruin",
+      "panel": 1,
+      "width": 360,
+      "height": 360,
+      "bytes": 36834,
+      "sha256": "9f0213312863abd11ef76c09c0e7b5708e6ef94b1855ea66974dc72f89fd0289"
+    },
+    {
+      "id": "ash-serpent",
+      "file": "public/assets/duel/painted/ash-serpent.webp",
+      "atlas": "ruin",
+      "panel": 2,
+      "width": 360,
+      "height": 360,
+      "bytes": 35016,
+      "sha256": "354724db00aec743717dfc04816abaa6ec9ac05abcf38c066f04b219e5bfa2a9"
+    },
+    {
+      "id": "ember-wraith",
+      "file": "public/assets/duel/painted/ember-wraith.webp",
+      "atlas": "ruin",
+      "panel": 3,
+      "width": 360,
+      "height": 360,
+      "bytes": 32666,
+      "sha256": "fdadb038b916a38cfb72855d001747314782f474669894ed8fd057351c77a430"
+    },
+    {
+      "id": "cathedral-devil",
+      "file": "public/assets/duel/painted/cathedral-devil.webp",
+      "atlas": "ruin",
+      "panel": 4,
+      "width": 360,
+      "height": 360,
+      "bytes": 39532,
+      "sha256": "8beae9ace3174213617b50d804723b00589501c98b3a932432451d8b5953527a"
+    },
+    {
+      "id": "fissure",
+      "file": "public/assets/duel/painted/fissure.webp",
+      "atlas": "ruin",
+      "panel": 5,
+      "width": 360,
+      "height": 360,
+      "bytes": 46016,
+      "sha256": "92ceeb2d03b091791428ba2f214a185f7f42fee9612fc07d85120231e4492fb9"
+    },
+    {
+      "id": "blood-pact",
+      "file": "public/assets/duel/painted/blood-pact.webp",
+      "atlas": "ruin",
+      "panel": 6,
+      "width": 360,
+      "height": 360,
+      "bytes": 33218,
+      "sha256": "04f2b7304e3e367ed7c43c59dbfeb440219f5d07a5ee5804974ac128b80bd854"
+    },
+    {
+      "id": "last-pyre",
+      "file": "public/assets/duel/painted/last-pyre.webp",
+      "atlas": "ruin",
+      "panel": 7,
+      "width": 360,
+      "height": 360,
+      "bytes": 34040,
+      "sha256": "d64020962167ec4818543665e6844689263a78bde48da323cec36723327847a5"
+    },
+    {
+      "id": "funeral-censer",
+      "file": "public/assets/duel/painted/funeral-censer.webp",
+      "atlas": "ruin",
+      "panel": 8,
+      "width": 360,
+      "height": 360,
+      "bytes": 30992,
+      "sha256": "348b3dcf2bfec688b14c211126b2edc67b7c49ba3f9477017537518b1504535b"
+    },
+    {
+      "id": "ember-hourglass",
+      "file": "public/assets/duel/painted/ember-hourglass.webp",
+      "atlas": "ruin",
+      "panel": 9,
+      "width": 360,
+      "height": 360,
+      "bytes": 31634,
+      "sha256": "041d4fd660fbccb47db1290eeca8bf707203ccf0d43631472b875990b14bdec9"
+    },
+    {
+      "id": "clock-beetle",
+      "file": "public/assets/duel/painted/clock-beetle.webp",
+      "atlas": "ruin",
+      "panel": 10,
+      "width": 360,
+      "height": 360,
+      "bytes": 43328,
+      "sha256": "ebd0a34e51b50faac9bb1a64bf52d7ee6f3e4a2cded281fa72690dd049170d4b"
+    },
+    {
+      "id": "candle-fox",
+      "file": "public/assets/duel/painted/candle-fox.webp",
+      "atlas": "ruin",
+      "panel": 11,
+      "width": 360,
+      "height": 360,
+      "bytes": 27098,
+      "sha256": "6ca678ceeea5540f708c56c2459f68708ff91005c55c2dfd7ace1fbd30793111"
+    },
+    {
+      "id": "paper-owl",
+      "file": "public/assets/duel/painted/paper-owl.webp",
+      "atlas": "knowledge",
+      "panel": 0,
+      "width": 360,
+      "height": 360,
+      "bytes": 48958,
+      "sha256": "d3c0c1be6f55b42030fa78ba26a593a97c01a8d99eb070657602f94a1ea0c713"
+    },
+    {
+      "id": "scroll-knight",
+      "file": "public/assets/duel/painted/scroll-knight.webp",
+      "atlas": "knowledge",
+      "panel": 1,
+      "width": 360,
+      "height": 360,
+      "bytes": 45360,
+      "sha256": "b7cdf57759cbb617e35a7a8b22b00ff823a0a5eed5cc410822d303d818aabaa9"
+    },
+    {
+      "id": "star-whale",
+      "file": "public/assets/duel/painted/star-whale.webp",
+      "atlas": "knowledge",
+      "panel": 2,
+      "width": 360,
+      "height": 360,
+      "bytes": 47624,
+      "sha256": "75992d73bc1f11227d1da0ff0c29cabcb3b6027a3eea42013c9324aef5929ebd"
+    },
+    {
+      "id": "brass-scribe",
+      "file": "public/assets/duel/painted/brass-scribe.webp",
+      "atlas": "knowledge",
+      "panel": 3,
+      "width": 360,
+      "height": 360,
+      "bytes": 37846,
+      "sha256": "43f2ea6d07501edee625832b7af38efd578cc405bc41e720190277de211d2fc1"
+    },
+    {
+      "id": "rune-sphinx",
+      "file": "public/assets/duel/painted/rune-sphinx.webp",
+      "atlas": "knowledge",
+      "panel": 4,
+      "width": 360,
+      "height": 360,
+      "bytes": 50122,
+      "sha256": "2b81b49c4f436d7266f3a8594536b2eea2498c0d968cb20ebb090e924f49ea78"
+    },
+    {
+      "id": "deep-reading",
+      "file": "public/assets/duel/painted/deep-reading.webp",
+      "atlas": "knowledge",
+      "panel": 5,
+      "width": 360,
+      "height": 360,
+      "bytes": 42034,
+      "sha256": "3c8bfdd379f49f7951ae6d9c69d8038c616f285af6a905d917855b964cf45b15"
+    },
+    {
+      "id": "still-sigil",
+      "file": "public/assets/duel/painted/still-sigil.webp",
+      "atlas": "knowledge",
+      "panel": 6,
+      "width": 360,
+      "height": 360,
+      "bytes": 38826,
+      "sha256": "94864d57378b5804ed0cbe7d3bf201c4d53d0dc4188d3d598152dd09671c5bed"
+    },
+    {
+      "id": "astral-lance",
+      "file": "public/assets/duel/painted/astral-lance.webp",
+      "atlas": "knowledge",
+      "panel": 7,
+      "width": 360,
+      "height": 360,
+      "bytes": 51526,
+      "sha256": "e98ccd598cec919dbc16d3263bc550fe00da8f606ba95ef93730fa02dabe4596"
+    },
+    {
+      "id": "unwritten-book",
+      "file": "public/assets/duel/painted/unwritten-book.webp",
+      "atlas": "knowledge",
+      "panel": 8,
+      "width": 360,
+      "height": 360,
+      "bytes": 48736,
+      "sha256": "57d49ccbbd84784701722b68ca959397016dff72d4ffb1def30c0f0259aa0c38"
+    },
+    {
+      "id": "moon-astrolabe",
+      "file": "public/assets/duel/painted/moon-astrolabe.webp",
+      "atlas": "knowledge",
+      "panel": 9,
+      "width": 360,
+      "height": 360,
+      "bytes": 45536,
+      "sha256": "3ff8e7b13b99a305c6ba7b302d872b6b77aaa81d1a26bad47f11ddd4af5caa32"
+    },
+    {
+      "id": "stone-sentinel",
+      "file": "public/assets/duel/painted/stone-sentinel.webp",
+      "atlas": "knowledge",
+      "panel": 10,
+      "width": 360,
+      "height": 360,
+      "bytes": 44672,
+      "sha256": "a3bab5d5ad43b5b63c2d93d78815c3a08793f09e9816835a47819f7a3f7c2085"
+    },
+    {
+      "id": "comet-ray",
+      "file": "public/assets/duel/painted/comet-ray.webp",
+      "atlas": "knowledge",
+      "panel": 11,
+      "width": 360,
+      "height": 360,
+      "bytes": 43632,
+      "sha256": "900439f060c7f90ce8351b4a69a6546a6b8eef6d83bc6c81ee742ecd5e996171"
+    },
+    {
+      "id": "budling",
+      "file": "public/assets/duel/painted/budling.webp",
+      "atlas": "bloom",
+      "panel": 0,
+      "width": 360,
+      "height": 360,
+      "bytes": 42116,
+      "sha256": "3255c24e8b84bae87adf8714e7e86c5a49f4b88fc58e7e6f30d2c7754df625b3"
+    },
+    {
+      "id": "orchid-stag",
+      "file": "public/assets/duel/painted/orchid-stag.webp",
+      "atlas": "bloom",
+      "panel": 1,
+      "width": 360,
+      "height": 360,
+      "bytes": 45896,
+      "sha256": "2949ad56b4cc415ae334381537f750cc48d2904587586c6e4903e6973e559d69"
+    },
+    {
+      "id": "pollen-moth",
+      "file": "public/assets/duel/painted/pollen-moth.webp",
+      "atlas": "bloom",
+      "panel": 2,
+      "width": 360,
+      "height": 360,
+      "bytes": 46026,
+      "sha256": "d9cbef122958c9b1d72ec80bd0d24e676371e24d509f563ae172b4991f72bffd"
+    },
+    {
+      "id": "thorn-treant",
+      "file": "public/assets/duel/painted/thorn-treant.webp",
+      "atlas": "bloom",
+      "panel": 3,
+      "width": 360,
+      "height": 360,
+      "bytes": 54108,
+      "sha256": "b8c9b5a3bbd521c53cb5a3a1b12c96eecddeedecb6c991b0c5b8edcb770a83a9"
+    },
+    {
+      "id": "petal-dryad",
+      "file": "public/assets/duel/painted/petal-dryad.webp",
+      "atlas": "bloom",
+      "panel": 4,
+      "width": 360,
+      "height": 360,
+      "bytes": 43792,
+      "sha256": "b61bc337616e04cce63872bd3bca18cc53021bd20319aaeab65bb70f456531c1"
+    },
+    {
+      "id": "dew",
+      "file": "public/assets/duel/painted/dew.webp",
+      "atlas": "bloom",
+      "panel": 5,
+      "width": 360,
+      "height": 360,
+      "bytes": 32688,
+      "sha256": "51c40e3f97f5df21ab22117eb6af3bbb4317980e0fe30e4a4a2ee68ffd53db9d"
+    },
+    {
+      "id": "root-oath",
+      "file": "public/assets/duel/painted/root-oath.webp",
+      "atlas": "bloom",
+      "panel": 6,
+      "width": 360,
+      "height": 360,
+      "bytes": 55810,
+      "sha256": "11d58c2fd8367c284906f92fa02483f9d889f36bb7c77e0be837a3acb79f6761"
+    },
+    {
+      "id": "petal-storm",
+      "file": "public/assets/duel/painted/petal-storm.webp",
+      "atlas": "bloom",
+      "panel": 7,
+      "width": 360,
+      "height": 360,
+      "bytes": 46008,
+      "sha256": "d7e98aac15ced4a2721309d1941821eb49168550b37af6774d579a8adc822597"
+    },
+    {
+      "id": "seed-crown",
+      "file": "public/assets/duel/painted/seed-crown.webp",
+      "atlas": "bloom",
+      "panel": 8,
+      "width": 360,
+      "height": 360,
+      "bytes": 40262,
+      "sha256": "420b28475695a6937cfc5750f80b6630cc428655ad8dcb88422ad547e712d6cd"
+    },
+    {
+      "id": "spring-chalice",
+      "file": "public/assets/duel/painted/spring-chalice.webp",
+      "atlas": "bloom",
+      "panel": 9,
+      "width": 360,
+      "height": 360,
+      "bytes": 47532,
+      "sha256": "dff96fe7be07c7e9ad92102427f093cf0417d789b5eaea3574c5cda62ab911c7"
+    },
+    {
+      "id": "unbinding",
+      "file": "public/assets/duel/painted/unbinding.webp",
+      "atlas": "bloom",
+      "panel": 10,
+      "width": 360,
+      "height": 360,
+      "bytes": 39568,
+      "sha256": "c3a5341728ebf9bd791f7981e37bdece9e6e63c37fc875eb63fb07da95cb1999"
+    },
+    {
+      "id": "quiet-pulse",
+      "file": "public/assets/duel/painted/quiet-pulse.webp",
+      "atlas": "bloom",
+      "panel": 11,
+      "width": 360,
+      "height": 360,
+      "bytes": 49160,
+      "sha256": "daa012610bb9af413fddf7032734d6125a35ccfe659cd2e3711c02be811f988d"
+    },
+    {
+      "id": "prism-jelly",
+      "file": "public/assets/duel/painted/prism-jelly.webp",
+      "atlas": "chaos",
+      "panel": 0,
+      "width": 360,
+      "height": 360,
+      "bytes": 40312,
+      "sha256": "14b6804b8b69c58ce211efe7eb51f5a338b14aa26a273a7244af975427ba29d8"
+    },
+    {
+      "id": "mirror-cat",
+      "file": "public/assets/duel/painted/mirror-cat.webp",
+      "atlas": "chaos",
+      "panel": 1,
+      "width": 360,
+      "height": 360,
+      "bytes": 34326,
+      "sha256": "925edd463ce561a50fb23f7be1864a3ec3c591977ba6e9424714c564865b79b8"
+    },
+    {
+      "id": "shard-chimera",
+      "file": "public/assets/duel/painted/shard-chimera.webp",
+      "atlas": "chaos",
+      "panel": 2,
+      "width": 360,
+      "height": 360,
+      "bytes": 40686,
+      "sha256": "aa9e5ba33f08a6cffd595ca370ea098f7e5259a0ae33053e74d06be5154a0d9a"
+    },
+    {
+      "id": "mirror-bird",
+      "file": "public/assets/duel/painted/mirror-bird.webp",
+      "atlas": "chaos",
+      "panel": 3,
+      "width": 360,
+      "height": 360,
+      "bytes": 41978,
+      "sha256": "38879d2a9b73050dfb6ed588e972b5b8526c823ffebeec9f9379012460791c41"
+    },
+    {
+      "id": "rift-leviathan",
+      "file": "public/assets/duel/painted/rift-leviathan.webp",
+      "atlas": "chaos",
+      "panel": 4,
+      "width": 360,
+      "height": 360,
+      "bytes": 38934,
+      "sha256": "83e881ca02b90017e1c53bc8fcb933dfb40013b0a7fe04a4cd8b595a37b3aa5b"
+    },
+    {
+      "id": "dice-comet",
+      "file": "public/assets/duel/painted/dice-comet.webp",
+      "atlas": "chaos",
+      "panel": 5,
+      "width": 360,
+      "height": 360,
+      "bytes": 35560,
+      "sha256": "3ec6fc1f853b1d8e2da8ebc640d7bf45dde8b0bfaedfff6b677c13a13602bab6"
+    },
+    {
+      "id": "borrowed-shape",
+      "file": "public/assets/duel/painted/borrowed-shape.webp",
+      "atlas": "chaos",
+      "panel": 6,
+      "width": 360,
+      "height": 360,
+      "bytes": 35692,
+      "sha256": "546b90647f34d44a0232de79267e932a21a209954b8df54e776492d71dfd98bd"
+    },
+    {
+      "id": "fractured-moment",
+      "file": "public/assets/duel/painted/fractured-moment.webp",
+      "atlas": "chaos",
+      "panel": 7,
+      "width": 360,
+      "height": 360,
+      "bytes": 39760,
+      "sha256": "b1693e5963b5fd7c9376290fd001703ee7cf60c5e487faa63848d15baefc3d1a"
+    },
+    {
+      "id": "laughing-mask",
+      "file": "public/assets/duel/painted/laughing-mask.webp",
+      "atlas": "chaos",
+      "panel": 8,
+      "width": 360,
+      "height": 360,
+      "bytes": 31462,
+      "sha256": "beb045dbd504ad16e3f7438b9afbd2e9aa66df1417853d44f0ed219626f1105e"
+    },
+    {
+      "id": "broken-prism",
+      "file": "public/assets/duel/painted/broken-prism.webp",
+      "atlas": "chaos",
+      "panel": 9,
+      "width": 360,
+      "height": 360,
+      "bytes": 36862,
+      "sha256": "355af7a3f037c5bc05d98ab72767d0456fe4b868c0ad04fe9a6f953baa5e5fae"
+    },
+    {
+      "id": "wayfarer-lantern",
+      "file": "public/assets/duel/painted/wayfarer-lantern.webp",
+      "atlas": "chaos",
+      "panel": 10,
+      "width": 360,
+      "height": 360,
+      "bytes": 39852,
+      "sha256": "6b0951e0b34957fe211aeffc7b288a80f428ae7ee5668dfbd044a7f64ec033f9"
+    },
+    {
+      "id": "lost-compass",
+      "file": "public/assets/duel/painted/lost-compass.webp",
+      "atlas": "chaos",
+      "panel": 11,
+      "width": 360,
+      "height": 360,
+      "bytes": 42652,
+      "sha256": "dbcd30bef20f09a126565660d74fbd6da2b318b94253e3f4c5613f3b1dc40ba0"
+    }
+  ]
+}

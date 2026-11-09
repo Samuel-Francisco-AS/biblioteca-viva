@@ -87,7 +87,12 @@ export function ArenaCanvas({
           }
           world.animate(time, reduced());
           renderer.render(world.scene, world.camera);
-          raf = requestAnimationFrame(draw);
+          if (
+            state.current.view.status !== "completed" ||
+            world.effectsActive(time)
+          )
+            raf = requestAnimationFrame(draw);
+          else raf = 0;
         };
         const activity = () => {
           if (raf) cancelAnimationFrame(raf);

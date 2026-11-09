@@ -150,7 +150,7 @@ export function createOrbitalArena() {
     const angle = 0.72 + (elapsed * Math.PI * 2) / ORBITAL_PERIOD_SECONDS;
     root.position.set(
       Math.sin(angle) * ORBITAL_RADIUS,
-      5.4 + Math.sin(elapsed * 0.65) * 0.18,
+      5.4 + Math.sin((elapsed * Math.PI) / 3) * 0.18,
       Math.cos(angle) * ORBITAL_RADIUS,
     );
     book.rotation.y = 0.3 + elapsed * 0.4;
@@ -158,6 +158,8 @@ export function createOrbitalArena() {
     rings.rotation.z = Math.sin(elapsed * 0.17) * 0.12;
     motes.rotation.y = -elapsed * 0.16;
     glow.opacity = 0.5 + Math.sin(elapsed * 1.4) * 0.16;
+    // Update batched static children before picking/highlight, not only at render.
+    root.updateMatrixWorld(true);
   };
   place();
   return {

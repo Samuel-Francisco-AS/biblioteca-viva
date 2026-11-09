@@ -1,3 +1,7 @@
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+import { createArenaScenery } from "./arenaScenery";
+import { createArenaEffects } from "./arenaEffects";
+import { duelArtUrl } from "../duelArt";
 import * as T from "three";
 import type { Affinity } from "../../../domain/duel/contracts";
 import type { ArenaCardView, ArenaView } from "./arenaModel";
@@ -56,7 +60,7 @@ export function createArenaScene() {
   };
   const stone = mat(
     new T.MeshStandardMaterial({
-      color: 0x292a46,
+      color: 0x27353c,
       roughness: 0.83,
       metalness: 0.35,
     }),
@@ -79,7 +83,7 @@ export function createArenaScene() {
   textures.set("masonry", masonry);
   const edge = mat(
     new T.MeshStandardMaterial({
-      color: 0x746591,
+      color: 0x8b784d,
       metalness: 0.8,
       roughness: 0.32,
     }),
@@ -98,9 +102,7 @@ export function createArenaScene() {
       opacity: 0.65,
     }),
   );
-  const box = geo(new T.BoxGeometry(1, 1, 1));
   const octagon = geo(new T.CylinderGeometry(1, 1, 1, 8));
-  const crystal = geo(new T.OctahedronGeometry(1));
   const torus = geo(new T.TorusGeometry(1, 0.018, 6, 80));
   const mesh = (
     g: T.BufferGeometry,
@@ -125,196 +127,72 @@ export function createArenaScene() {
   mesh(octagon, stone, root, 0, -0.52, 0, 5.05, 0.72, 4.7);
   mesh(octagon, edge, root, 0, -0.12, 0, 4.87, 0.13, 4.53);
   mesh(octagon, stone, root, 0, -0.015, 0, 4.7, 0.12, 4.38);
-  const core = mesh(torus, glow, root, 0, -0.25, 0, 4.85);
-  core.rotation.x = Math.PI / 2;
-  const circle = mesh(torus, gold, root, 0, 0.065, 0, 3.4);
-  circle.rotation.x = Math.PI / 2;
-  const inner = mesh(torus, glow, root, 0, 0.08, 0, 1.15);
-  inner.rotation.x = Math.PI / 2;
-  const joints: number[] = [];
-  for (let i = 0; i < 24; i++) {
-    const a = (i / 24) * Math.PI * 2;
-    joints.push(
-      Math.sin(a) * 3.65,
-      0.07,
-      Math.cos(a) * 3.65,
-      Math.sin(a) * 4.5,
-      0.07,
-      Math.cos(a) * 4.5,
-    );
-  }
-  const jointGeo = geo(new T.BufferGeometry());
-  jointGeo.setAttribute("position", new T.Float32BufferAttribute(joints, 3));
-  root.add(
-    new T.LineSegments(
-      jointGeo,
-      mat(
-        new T.LineBasicMaterial({
-          color: 0xaaa1ba,
-          transparent: true,
-          opacity: 0.36,
-        }),
-      ),
-    ),
-  );
-  // Broken vaulted gates stand beyond the play surface, leaving targets uncluttered.
-  for (const sign of [-1, 1]) {
-    for (let i = 0; i < 7; i++) {
-      const a = (i / 8) * Math.PI + Math.PI / 8;
-      const voussoir = mesh(
-        box,
-        i % 2 ? stone : edge,
-        root,
-        Math.cos(a) * 2,
-        1.25 + Math.sin(a) * 2,
-        sign * 4.8,
-        0.6,
-        0.45,
-        0.55,
-      );
-      voussoir.rotation.z = a - Math.PI / 2;
-    }
-    for (const x of [-2, 2]) {
-      mesh(box, stone, root, x, 0.5, sign * 4.8, 0.48, 1.5, 0.55);
-      mesh(octagon, gold, root, x, 1.3, sign * 4.8, 0.4, 0.12, 0.4);
-    }
-  }
-  for (let i = 0; i < 32; i++) {
-    const a = (i / 32) * Math.PI * 2;
-    const rune = mesh(
-      box,
-      i % 4 ? gold : glow,
-      root,
-      Math.sin(a) * 3.5,
-      0.08,
-      Math.cos(a) * 3.5,
-      0.025,
-      0.016,
-      i % 4 ? 0.12 : 0.25,
-    );
-    rune.rotation.y = a;
-  }
-  for (let i = 0; i < 4; i++) {
-    const x = (i % 2 ? 1 : -1) * 4.1,
-      z = (i < 2 ? -1 : 1) * 3.2;
-    mesh(octagon, stone, root, x, 0.23, z, 0.43, 0.6, 0.43);
-    mesh(box, edge, root, x, 0.9, z, 0.2, 1.35, 0.25).rotation.z = x * 0.018;
-    mesh(crystal, glow, root, x, 1.8, z, 0.22, 0.48, 0.22);
-    const orbit = mesh(torus, gold, root, x, 1.8, z, 0.48);
-    orbit.rotation.x = 0.8;
-    orbit.rotation.y = i;
-  }
-  for (let i = 0; i < 18; i++) {
-    const a = i * 2.39996;
-    const rubble = mesh(
-      octagon,
-      stone,
-      root,
-      Math.sin(a) * (5.3 + (i % 3)),
-      -1.5 - (i % 4),
-      Math.cos(a) * (5.3 + (i % 3)),
-      0.25 + (i % 3) * 0.14,
-      0.4,
-      0.6,
-    );
-    rubble.rotation.set(a, a / 3, a / 2);
-  }
-  const starsGeo = geo(new T.BufferGeometry());
-  const positions = new Float32Array(180 * 3);
-  for (let i = 0; i < 180; i++) {
-    const a = i * 2.39996,
-      r = 5 + (i % 13);
-    positions.set(
-      [Math.cos(a) * r, -3 + (i % 17) * 0.45, Math.sin(a) * r],
-      i * 3,
-    );
-  }
-  starsGeo.setAttribute("position", new T.BufferAttribute(positions, 3));
-  const stars = new T.Points(
-    starsGeo,
-    mat(
-      new T.PointsMaterial({
-        color: 0x9cbbe4,
-        size: 0.035,
-        transparent: true,
-        opacity: 0.75,
-      }),
-    ),
-  );
-  scene.add(stars);
+  const scenery = createArenaScenery(root);
   const zones = new T.Group();
   root.add(zones);
   const cards = new Map<string, T.Group>();
   const artifactIds = new Set<string>();
-  const effectRoot = new T.Group();
-  scene.add(effectRoot);
-  const fxMaterial = mat(
-    new T.MeshBasicMaterial({
-      color: 0xffc77c,
-      transparent: true,
-      opacity: 0.8,
-      depthWrite: false,
-    }),
-  );
-  const pulse = mesh(torus, fxMaterial, effectRoot, 0, 0.5, 0);
-  pulse.rotation.x = Math.PI / 2;
-  pulse.visible = false;
-  const bolt = mesh(box, fxMaterial, effectRoot, 0, 0.65, 0);
-  bolt.visible = false;
-  const sparks = new T.InstancedMesh(crystal, fxMaterial, 24);
-  sparks.visible = false;
-  effectRoot.add(sparks);
-  const shieldGeo = geo(new T.SphereGeometry(1, 12, 8));
-  const shieldMat = mat(
-    new T.MeshBasicMaterial({
-      color: 0x92eaff,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.5,
-    }),
-  );
-  const barrier = mesh(shieldGeo, shieldMat, effectRoot, 0, 0.6, 0);
-  barrier.visible = false;
-  const fxTransform = new T.Object3D();
+  const effects = createArenaEffects(scene);
   let last: ArenaView | undefined,
-    landscape = false,
-    fxStart = -10000,
-    fxType = "",
-    fxOrigin = new T.Vector3(),
-    fxTarget = new T.Vector3();
+    landscape = false;
   let selected: string | undefined,
     targets = new Set<string>();
   const cardMaterials = new Map<string, T.MeshStandardMaterial>();
   const cardGeometry = geo(new T.BoxGeometry(1.26, 0.12, 1.48));
-  const artPlane = geo(new T.PlaneGeometry(1.18, 1.35));
+  const artPlane = geo(new T.PlaneGeometry(1.08, 1.2));
+  const framePieces: T.BufferGeometry[] = [],
+    cornerPieces: T.BufferGeometry[] = [];
+  for (const sign of [-1, 1]) {
+    framePieces.push(
+      new T.BoxGeometry(0.035, 0.045, 1.39).translate(sign * 0.58, 0.075, 0),
+    );
+    framePieces.push(
+      new T.BoxGeometry(1.16, 0.045, 0.035).translate(0, 0.075, sign * 0.67),
+    );
+    for (const other of [-1, 1])
+      cornerPieces.push(
+        new T.OctahedronGeometry(1)
+          .scale(0.06, 0.035, 0.06)
+          .translate(sign * 0.53, 0.12, other * 0.62),
+      );
+  }
+  const mergedFrame = mergeGeometries(framePieces),
+    mergedCorners = mergeGeometries(cornerPieces);
+  [...framePieces, ...cornerPieces].forEach((g) => g.dispose());
+  if (!mergedFrame || !mergedCorners)
+    throw new Error("Moldura da arena incompatível.");
+  const frameGeometry = geo(mergedFrame),
+    cornerGeometry = geo(mergedCorners);
+
   function texture(id: string) {
     let value = textures.get(id);
     if (!value) {
-      value = new T.TextureLoader().load(
-        `/assets/duel/${id}.svg`,
-        (t: T.Texture) => {
-          if (disposed) {
-            t.dispose();
-            return;
+      value = new T.TextureLoader().load(duelArtUrl(id), (t: T.Texture) => {
+        if (disposed) {
+          t.dispose();
+          return;
+        }
+        // SVGs have a viewBox but no intrinsic pixel dimensions. Rasterize once
+        // at a bounded size before GPU upload (also reliable in Android WebView).
+        const source: unknown = t.image;
+        if (
+          id &&
+          duelArtUrl(id).endsWith(".svg") &&
+          source instanceof HTMLImageElement
+        ) {
+          source.width = 384;
+          source.height = 288;
+          const canvas = document.createElement("canvas");
+          canvas.width = 384;
+          canvas.height = 288;
+          const context = canvas.getContext("2d");
+          if (context) {
+            context.drawImage(source, 0, 0, 384, 288);
+            t.image = canvas;
+            t.needsUpdate = true;
           }
-          // SVGs have a viewBox but no intrinsic pixel dimensions. Rasterize once
-          // at a bounded size before GPU upload (also reliable in Android WebView).
-          const source: unknown = t.image;
-          if (source instanceof HTMLImageElement) {
-            source.width = 384;
-            source.height = 288;
-            const canvas = document.createElement("canvas");
-            canvas.width = 384;
-            canvas.height = 288;
-            const context = canvas.getContext("2d");
-            if (context) {
-              context.drawImage(source, 0, 0, 384, 288);
-              t.image = canvas;
-              t.needsUpdate = true;
-            }
-          }
-        },
-      );
+        }
+      });
       value.colorSpace = T.SRGBColorSpace;
       textures.set(id, value);
     }
@@ -341,40 +219,12 @@ export function createArenaScene() {
       new T.MeshBasicMaterial({ map: texture(card.artId), toneMapped: false }),
     );
     mesh(artPlane, art, g, 0, 0.066, 0).rotation.x = -Math.PI / 2;
-    // An apparition rises above the physical grimoire: each tradition has its own silhouette.
-    if (card.kind === "creature") {
-      const ghost = mesh(crystal, border, g, 0, 0.6, -0.17, 0.2, 0.5, 0.18);
-      if (card.affinity === "ruin")
-        for (const sign of [-1, 1])
-          mesh(
-            crystal,
-            border,
-            ghost,
-            sign * 1.2,
-            0.8,
-            0,
-            0.45,
-            0.8,
-            0.4,
-          ).rotation.z = sign * -0.4;
-      else if (card.affinity === "bloom")
-        for (const sign of [-1, 1])
-          mesh(
-            box,
-            border,
-            ghost,
-            sign * 1.7,
-            0.2,
-            0,
-            1.4,
-            0.22,
-            0.2,
-          ).rotation.z = sign * -0.6;
-      else {
-        const halo = mesh(torus, border, ghost, 0, 0.7, 0, 1.7);
-        halo.rotation.x = card.affinity === "chaos" ? 0.5 : Math.PI / 2;
-      }
-    } else mesh(crystal, border, g, 0, 0.6, 0, 0.24, 0.45, 0.24);
+    mesh(frameGeometry, gold, g, 0, 0, 0);
+    mesh(cornerGeometry, border, g, 0, 0, 0);
+    if (card.kind === "artifact") {
+      const relic = mesh(torus, border, g, 0, 0.14, 0, 0.5);
+      relic.rotation.x = Math.PI / 2;
+    }
     return g;
   }
   function locate(id?: string) {
@@ -408,38 +258,11 @@ export function createArenaScene() {
         }),
       );
     });
-    if (last && view.revision > last.revision) {
-      const e =
-        view.events.find((e) =>
-          ["attack", "spell", "summon", "artifact", "activate"].includes(
-            e.type,
-          ),
-        ) ?? view.events[0];
-      if (e && !["pause", "resume", "turn", "draw"].includes(e.type)) {
-        fxType = view.events.some((e) => e.type === "roll")
-          ? "roll"
-          : view.events.some((e) => e.type === "heal")
-            ? "heal"
-            : view.events.some((e) => e.type === "shield")
-              ? "shield"
-              : view.events.some((e) => e.type === "empower")
-                ? "empower"
-                : view.events.some((e) => e.type === "exhaust")
-                  ? "exhaust"
-                  : view.events.some((e) =>
-                        ["death", "shatter"].includes(e.type),
-                      )
-                    ? "death"
-                    : e.type;
-        fxOrigin = locate(e.source);
-        fxTarget = locate(
-          view.events.find((x) =>
-            ["damage", "heal", "shield", "empower", "exhaust"].includes(x.type),
-          )?.target ?? e.target,
-        );
-        fxStart = time;
-      }
-    }
+    if (last && view.revision > last.revision)
+      effects.confirm(view, locate, time);
+    scenery.setAffinity(
+      (view.active === 0 ? view.player : view.opponent).affinity,
+    );
     for (const [id, g] of cards)
       if (!wanted.has(id)) {
         // Shared geometry/materials survive; each per-card art material is released now.
@@ -509,75 +332,17 @@ export function createArenaScene() {
         return { id, x: (p.x + 1) * 50, y: (1 - p.y) * 50 };
       });
     },
+    effectsActive(time: number) {
+      return effects.active(time);
+    },
     animate(time: number, reduced: boolean) {
-      stars.rotation.y = reduced ? 0 : time * 0.000008;
-      const t = (time - fxStart) / 850;
-      pulse.visible = !reduced && t >= 0 && t < 1;
-      bolt.visible =
-        pulse.visible && ["attack", "spell", "roll"].includes(fxType);
-      sparks.visible = pulse.visible && !["shield", "attack"].includes(fxType);
-      barrier.visible = pulse.visible && fxType === "shield";
-      if (barrier.visible) {
-        barrier.position.copy(fxTarget);
-        barrier.position.y = 0.8;
-        barrier.scale.setScalar(0.8 + t * 0.4);
-        shieldMat.opacity = (1 - t) * 0.65;
-      }
-      if (sparks.visible)
-        for (let i = 0; i < 24; i++) {
-          const a = i * 2.39996 + (fxType === "roll" ? time * 0.008 : 0);
-          const r =
-            fxType === "death"
-              ? t * 1.6
-              : fxType === "heal"
-                ? 0.4
-                : fxType === "exhaust"
-                  ? 0.7
-                  : t * 0.9;
-          fxTransform.position.set(
-            fxTarget.x + Math.cos(a) * r,
-            0.3 +
-              (fxType === "heal" || fxType === "empower"
-                ? t * 2
-                : fxType === "exhaust"
-                  ? (1 - t) * 1.4
-                  : Math.sin(a) * t),
-            fxTarget.z + Math.sin(a) * r,
-          );
-          fxTransform.scale.set(0.04, fxType === "empower" ? 0.3 : 0.08, 0.04);
-          fxTransform.rotation.set(a, a * 2, a);
-          fxTransform.updateMatrix();
-          sparks.setMatrixAt(i, fxTransform.matrix);
-        }
-      if (sparks.visible) sparks.instanceMatrix.needsUpdate = true;
-      if (pulse.visible) {
-        fxMaterial.color.setHex(
-          (
-            {
-              heal: 0x6effbb,
-              shield: 0x7cdfff,
-              empower: 0xffdf75,
-              exhaust: 0x8e80d6,
-              death: 0xff626d,
-              roll: 0xe38fff,
-            } as Record<string, number>
-          )[fxType] ?? 0xffac66,
-        );
-        fxMaterial.opacity = (1 - t) * 0.9;
-        pulse.position.copy(fxTarget);
-        pulse.position.y = fxType === "summon" ? 0.25 + t * 1.7 : 0.4;
-        pulse.rotation.x = fxType === "shield" ? 0 : Math.PI / 2;
-        pulse.scale.setScalar(
-          fxType === "death" ? 1.7 * (1 - t) : 0.2 + t * 1.7,
-        );
-        bolt.position.lerpVectors(fxOrigin, fxTarget, t);
-        bolt.position.y = 0.7;
-        bolt.scale.set(0.12, 0.12, 1.3);
-        bolt.lookAt(fxTarget.x, 0.7, fxTarget.z);
-      }
+      scenery.update(time, reduced);
+      effects.update(time, reduced);
     },
     dispose() {
       disposed = true;
+      scenery.dispose();
+      effects.dispose();
       geometries.forEach((g) => g.dispose());
       materials.forEach((m) => m.dispose());
       textures.forEach((t) => t.dispose());

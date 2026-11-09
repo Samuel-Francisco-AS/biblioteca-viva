@@ -48,3 +48,31 @@ it("places only public confirmed creatures and releases unique materials on remo
   world.dispose();
   vi.restoreAllMocks();
 });
+
+it("plays committed multi-effect feedback once, expires it and does not replay after reconcile or reopen", () => {
+  vi.spyOn(TextureLoader.prototype, "load").mockReturnValue(new Texture());
+  const world = createArenaScene(),
+    match = fixtureMatch();
+  world.resize(390, 480);
+  world.update(projectArena(match), 1000);
+  expect(world.effectsActive(1000)).toBe(false);
+  const played = transition(match, {
+    id: "art-confirm",
+    revision: 0,
+    player: 0,
+    action: { type: "play", card: match.players[0].hand[0] },
+  }).state;
+  world.update(projectArena(played), 1100);
+  expect(world.effectsActive(1200)).toBe(true);
+  world.animate(1200, false);
+  world.update(projectArena(played), 1800);
+  world.resize(650, 300);
+  expect(world.effectsActive(2300)).toBe(false);
+  world.animate(2300, true);
+  world.dispose();
+  const reopened = createArenaScene();
+  reopened.update(projectArena(played), 2400);
+  expect(reopened.effectsActive(2400)).toBe(false);
+  reopened.dispose();
+  vi.restoreAllMocks();
+});

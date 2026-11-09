@@ -661,3 +661,214 @@
   outline: 2px solid #ffe4a4;
   outline-offset: 2px;
 }
+
+/* F/R3 keeps the viewport grid and touch rectangles: only their finish changes. */
+.arena-game {
+  background: radial-gradient(ellipse at 50% 25%, #33434a, #0a1520 70%);
+}
+.arena-top,
+.arena-own {
+  background: linear-gradient(
+    90deg,
+    #101c2bf5,
+    #27393df0,
+    #101c2bf5
+  ) !important;
+  box-shadow:
+    inset 0 -1px #d2b77f66,
+    0 3px 12px #0005;
+}
+.arena-portrait {
+  background: radial-gradient(at 30% 20%, #8fa4a6, #182c3b 65%);
+  box-shadow:
+    inset 0 0 0 2px #14202b,
+    0 0 0 1px #d8bf83aa,
+    0 0 16px #91ceba25;
+}
+.arena-context {
+  background: linear-gradient(90deg, #101b29, #263237, #101b29);
+  border-color: #c4aa7166;
+}
+.arena-seal {
+  color: #c2c2ae;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+}
+.arena-hand {
+  background: radial-gradient(at 50% 100%, #41504a, #14212d 80%);
+  border-top: 1px solid #b59c6a80;
+}
+.arena-game [data-affinity="ruin"] {
+  --card-accent: #e9a079;
+  --card-body: #452b30;
+}
+.arena-game [data-affinity="knowledge"] {
+  --card-accent: #99d3ec;
+  --card-body: #213b50;
+}
+.arena-game [data-affinity="bloom"] {
+  --card-accent: #b0d3a4;
+  --card-body: #2b4439;
+}
+.arena-game [data-affinity="chaos"] {
+  --card-accent: #c8a6e9;
+  --card-body: #3c2d50;
+}
+.arena-game [data-affinity="neutral"] {
+  --card-accent: #dbc89c;
+  --card-body: #3d403e;
+}
+.arena-game .arena-hand-card {
+  border: 1px solid var(--card-accent, #dbc89c);
+  background: linear-gradient(
+    145deg,
+    #a38c5d,
+    var(--card-body, #233442) 25%,
+    #101a25 85%
+  );
+  padding: 0.22rem 0.15rem 0.1rem;
+  border-radius: 0.5rem 0.5rem 0.2rem 0.2rem;
+  box-shadow:
+    0 3px 8px #0009,
+    inset 0 0 0 1px #d6bd7b77,
+    inset 0 0 0 3px #101722;
+}
+.arena-hand-card::after {
+  content: "";
+  position: absolute;
+  inset: 0.12rem;
+  border: 1px solid #e6c98c66;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.arena-hand-card img {
+  border: 1px solid #d6bd8377;
+  border-radius: 0.22rem;
+  opacity: 1;
+}
+.arena-hand-card[data-kind="creature"] img {
+  border-radius: 0.55rem 0.55rem 0.15rem 0.15rem;
+}
+.arena-hand-card[data-kind="spell"] img {
+  border-radius: 35% 35% 0.15rem 0.15rem / 10% 10% 0.15rem 0.15rem;
+}
+.arena-hand-card[data-kind="artifact"] {
+  border-style: double;
+}
+.arena-hand-card strong {
+  font-family: Georgia, serif;
+  font-weight: 600;
+  color: #fff3d6;
+  padding-top: 0.1rem;
+}
+.arena-hand-card small {
+  color: #f2e2b9;
+  font-weight: 700;
+  text-shadow: 0 1px 3px #000;
+}
+.arena-hand-cost {
+  border-radius: 50% 50% 40% 40%;
+  background: radial-gradient(at 30% 20%, #a7d2da, #17344c 60%, #101c30);
+  border-color: #ecd59c;
+  box-shadow:
+    0 2px 4px #000b,
+    inset 0 0 3px #b0e8ef;
+}
+.arena-game .arena-piece {
+  border-color: var(--card-accent, #c9ba98);
+  border-radius: 0.35rem;
+  background: linear-gradient(transparent 25%, #101b2944 50%, #0c1725e8 80%);
+  box-shadow: inset 0 0 0 1px #d7bd7d44;
+}
+.arena-piece-name {
+  font-family: Georgia, serif;
+  font-weight: 600;
+  text-shadow: 0 2px 3px #000;
+  color: #f2e9ce;
+}
+.arena-piece strong {
+  background: #0c1924d9;
+  border-top: 1px solid #c9b17f66;
+  border-radius: 0 0 0.2rem 0.2rem;
+  font-size: 0.77rem;
+}
+.arena-game .arena-piece--artifact {
+  border-radius: 0.55rem 0.15rem 0.55rem 0.15rem;
+  border-style: double;
+}
+.arena-game [data-selected="true"] {
+  box-shadow:
+    0 0 0 2px #f4d99b,
+    0 0 20px #e5ca7a66;
+}
+.arena-game [data-target="true"] {
+  border-color: #bbf7de;
+  box-shadow:
+    inset 0 0 10px #99e8cc33,
+    0 0 12px #95f6d788;
+}
+.arena-game [data-aimed="true"] {
+  outline: 2px solid #ffdfa0;
+  box-shadow:
+    0 0 0 3px #42371c,
+    0 0 22px #ffdc8888;
+}
+.arena-commands {
+  background: linear-gradient(90deg, #111c2b, #293337);
+  border-top: 1px solid #bcaa7655;
+}
+.arena-game .arena-primary,
+.arena-dialog .arena-primary {
+  background: linear-gradient(155deg, #a58b55, #6c563a 40%, #343540);
+  box-shadow:
+    inset 0 1px #ead4a3,
+    inset 0 0 0 2px #1a2532,
+    inset 0 0 0 3px #c7ad7855,
+    0 3px 8px #0006;
+}
+.arena-inspection {
+  margin: -0.4rem -0.4rem 0;
+}
+.arena-inspection .combat-card {
+  max-width: 100%;
+}
+.arena-inspection .combat-card__illustration img {
+  max-height: 36dvh;
+}
+.arena-result-sigil {
+  position: relative;
+  width: 6rem;
+  height: 6rem;
+  display: grid;
+  place-items: center;
+  margin: 0.5rem auto 1.5rem;
+  border: 1px solid #cbb682aa;
+  border-radius: 50%;
+  color: #d1cedd;
+  box-shadow:
+    0 0 0 6px #b7a37422,
+    inset 0 0 20px #c4ba9233,
+    0 0 35px #b4a16b33;
+}
+.arena-result-sigil::before,
+.arena-result-sigil::after {
+  content: "";
+  position: absolute;
+  inset: -0.8rem;
+  border: 1px solid #c6ae7d88;
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+.arena-result-sigil::after {
+  inset: -0.4rem;
+  transform: rotate(15deg);
+  border-style: dotted;
+}
+.arena-result-sigil[data-victory="true"] {
+  color: #ffe6a7;
+  text-shadow: 0 0 18px #ffdb77;
+  box-shadow:
+    0 0 0 6px #f1d89822,
+    inset 0 0 20px #f2d69f44,
+    0 0 45px #f1cc6c55;
+}

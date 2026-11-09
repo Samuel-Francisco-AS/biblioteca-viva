@@ -44,8 +44,10 @@ async function fit(page: Page) {
   );
 }
 async function capture(page: Page, name: string) {
-  await mkdir("docs/audits/evidence/bf56f", { recursive: true });
-  await page.screenshot({ path: `docs/audits/evidence/bf56f/${name}.png` });
+  await mkdir("docs/audits/evidence/bf56f-refinement", { recursive: true });
+  await page.screenshot({
+    path: `docs/audits/evidence/bf56f-refinement/${name}.png`,
+  });
 }
 async function nativeBack(page: Page) {
   expect(
@@ -64,6 +66,12 @@ test("F2: complete game through legal touch actions; viewport, rotation, pause, 
   test.setTimeout(180_000); // Complete PvE turns include the intentional AI cadence.
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
+  page.on("response", (response) => {
+    if (response.status() >= 400 && response.url().includes("/assets/duel/"))
+      errors.push(
+        `Asset ${response.status()}: ${new URL(response.url()).pathname}`,
+      );
+  });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.addInitScript(() => {
     const random = crypto.getRandomValues.bind(crypto);
@@ -98,6 +106,10 @@ test("F2: complete game through legal touch actions; viewport, rotation, pause, 
   await expect(
     page.getByRole("dialog", { name: /^Inspecionar / }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("dialog").locator(".combat-card img"),
+  ).toHaveAttribute("src", /\.webp$/);
+  await capture(page, "inspecao-pintada");
   await nativeBack(page);
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await nativeBack(page); // Clears selection first.

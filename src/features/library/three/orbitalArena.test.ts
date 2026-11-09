@@ -29,6 +29,12 @@ it("orbits the middle library ring outside every room, keeping the same pickable
           bounds.min.x > room.maxX ||
           bounds.max.z < room.minZ ||
           bounds.min.z > room.maxZ,
+        JSON.stringify({
+          position: orbital.root.position.toArray(),
+          min: bounds.min.toArray(),
+          max: bounds.max.toArray(),
+          room,
+        }),
       ).toBe(true);
     const center = bounds.getCenter(new Vector3());
     const ray = new Raycaster(

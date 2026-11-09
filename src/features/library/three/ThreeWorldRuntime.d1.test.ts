@@ -1087,3 +1087,41 @@ it("post-R2 star book opens, survives pause/resume and closes with selection int
   expect(session.getSnapshot().objects["living:book"].active).toBe(false);
   runtime.dispose();
 });
+
+it("F refinement drives the same orbital selectable with the resident scheduler and freezes on pause", () => {
+  vi.stubGlobal("ResizeObserver", TestResizeObserver);
+  const renderer = new TestRenderer();
+  const request = vi
+    .fn<(cb: FrameRequestCallback) => number>()
+    .mockReturnValue(1);
+  const runtime = new ThreeWorldRuntime({
+    libraryWorldSnapshot: snapshot(),
+    createRenderer: () => renderer,
+    frameScheduler: { request, cancel: vi.fn() },
+  });
+  runtime.mount(host());
+  runtime.start();
+  const scene = renderer.render.mock.calls[0]?.[0];
+  const orbital = scene?.getObjectByName("portal:duelo-arcano");
+  if (!orbital) throw new Error("Orbital missing");
+  const initial = orbital.position.clone();
+  request.mock.calls.at(-1)![0](0);
+  request.mock.calls.at(-1)![0](50);
+  expect(orbital.position.distanceTo(initial)).toBeGreaterThan(0);
+  const paused = orbital.position.clone();
+  runtime.pause();
+  request.mock.calls.at(-1)![0](900000);
+  expect(orbital.position.equals(paused)).toBe(true);
+  runtime.resume();
+  request.mock.calls.at(-1)![0](900050);
+  expect(orbital.position.equals(paused)).toBe(true);
+  request.mock.calls.at(-1)![0](900100);
+  expect(orbital.position.distanceTo(paused)).toBeLessThan(0.04);
+  runtime.selectObject("portal:duelo-arcano");
+  expect(renderer.domElement.dataset.highlightedObject).toBe(
+    "portal:duelo-arcano",
+  );
+  expect(scene?.getObjectByName("portal:duelo-arcano")).toBe(orbital);
+  runtime.dispose();
+  expect(renderer.dispose).toHaveBeenCalledOnce();
+});

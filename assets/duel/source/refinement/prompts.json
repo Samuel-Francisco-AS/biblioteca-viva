@@ -1,0 +1,70 @@
+{
+  "ruin": {
+    "ids": [
+      "cinder-imp",
+      "basalt-warden",
+      "ash-serpent",
+      "ember-wraith",
+      "cathedral-devil",
+      "fissure",
+      "blood-pact",
+      "last-pyre",
+      "funeral-censer",
+      "ember-hourglass",
+      "clock-beetle",
+      "candle-fox"
+    ],
+    "prompt": "Use case: stylized-concept. Asset type: production illustration atlas for an original supernatural fantasy trading card game, Biblioteca Viva. Create ONE landscape image, exactly 4 columns by 3 rows of TWELVE equally sized square illustration panels, edge-to-edge regular grid, no gutters, no borders, no rounded corners, no text, no numbers, no watermarks. The grid must be geometrically exact: each panel is one quarter of total width and one third of total height. Requested canvas aspect ratio 4:3, preferably 2048x1536. Each panel is a distinct richly painted fantasy illustration with one readable central subject, tactile materials, confident anatomy, cinematic chiaroscuro, atmospheric depth, crisp silhouette and strong focal lighting; premium hand-painted fantasy game concept art rather than abstract icons, vector symbols or generic crystals. Original designs only; no recognizable franchise characters or proprietary card frames. Each subject remains centered with breathing room, and no subject crosses into neighboring panels. Consistent finish and medium across all panels. The last two panels are neutral ivory/brass companions, keep their colors. Subjects in exact row-major order, left to right then top to bottom:\n1. a mischievous coal imp with glowing coal eyes and ragged bat wings in a ruined hearth.\n2. a massive armored basalt sentinel split by glowing lava fissures.\n3. a charcoal serpent coiled around a broken cathedral bell.\n4. a veiled ember wraith rising from a vacant funeral pyre.\n5. a towering horned cathedral demon with ruined gothic arches as armor.\n6. a scarlet fissure tearing through ancient stone, sparks erupting.\n7. two spectral hands binding a black ember pact above an altar.\n8. an empty blazing pyre with ashes turning into ghostly birds.\n9. an ornate suspended funerary censer trailing faces in red smoke.\n10. a carved charcoal hourglass with molten amber grains and brass fittings.\n11. an intricate clockwork beetle crawling across a parchment manuscript.\n12. a graceful fox made of ivory moon-wax with a luminous candle flame tail.\nOverall palette for panels 1-10: charcoal, dark crimson, molten amber and aged bronze; haunting ruined cathedral atmosphere. No text anywhere. Four columns, three rows, twelve panels, exact rectangular grid."
+  },
+  "knowledge": {
+    "ids": [
+      "paper-owl",
+      "scroll-knight",
+      "star-whale",
+      "brass-scribe",
+      "rune-sphinx",
+      "deep-reading",
+      "still-sigil",
+      "astral-lance",
+      "unwritten-book",
+      "moon-astrolabe",
+      "stone-sentinel",
+      "comet-ray"
+    ],
+    "prompt": "Use case: stylized-concept. Asset type: production illustration atlas for an original supernatural fantasy trading card game, Biblioteca Viva. Create ONE landscape image, exactly 4 columns by 3 rows of TWELVE equally sized square illustration panels, edge-to-edge regular grid, no gutters, no borders, no rounded corners, no text, no numbers, no watermarks. The grid must be geometrically exact: each panel is one quarter of total width and one third of total height. Requested canvas aspect ratio 4:3, preferably 2048x1536. Each panel is a distinct richly painted fantasy illustration with one readable central subject, tactile materials, confident anatomy, cinematic chiaroscuro, atmospheric depth, crisp silhouette and strong focal lighting; premium hand-painted fantasy game concept art rather than abstract icons, vector symbols or generic crystals. Original designs only; no recognizable franchise characters or proprietary card frames. Each subject remains centered with breathing room, and no subject crosses into neighboring panels. Consistent finish and medium across all panels. The last two panels are neutral ivory/brass companions, keep their colors. Subjects in exact row-major order, left to right then top to bottom:\n1. a great owl made of folded manuscript pages flying above an ancient library.\n2. a noble knight in layered parchment armor wielding a luminous quill spear.\n3. a celestial whale swimming through constellations above bookshelves.\n4. an expressive brass automaton scribe with a quill and floating manuscript.\n5. a regal winged sphinx with star-map markings on its dark fur.\n6. an open ancient book whose illuminated margins reveal a luminous stairway.\n7. a suspended blue-gold sigil freezing droplets and falling pages in midair.\n8. a precise white-blue astral lance piercing a star chart.\n9. a levitating leather grimoire with pages opening into future constellations.\n10. an elaborate brass astrolabe encircled by nine small moons.\n11. a weathered stone guardian before a keyless arched doorway.\n12. a celestial manta ray trailing threads of starlight through space.\nOverall palette for panels 1-10: midnight blue, clean cyan starlight, ivory parchment and antique brass; celestial library atmosphere. No text anywhere. Four columns, three rows, twelve panels, exact rectangular grid."
+  },
+  "bloom": {
+    "ids": [
+      "budling",
+      "orchid-stag",
+      "pollen-moth",
+      "thorn-treant",
+      "petal-dryad",
+      "dew",
+      "root-oath",
+      "petal-storm",
+      "seed-crown",
+      "spring-chalice",
+      "unbinding",
+      "quiet-pulse"
+    ],
+    "prompt": "Use case: stylized-concept. Asset type: production illustration atlas for an original supernatural fantasy trading card game, Biblioteca Viva. Create ONE landscape image, exactly 4 columns by 3 rows of TWELVE equally sized square illustration panels, edge-to-edge regular grid, no gutters, no borders, no rounded corners, no text, no numbers, no watermarks. The grid must be geometrically exact: each panel is one quarter of total width and one third of total height. Requested canvas aspect ratio 4:3, preferably 2048x1536. Each panel is a distinct richly painted fantasy illustration with one readable central subject, tactile materials, confident anatomy, cinematic chiaroscuro, atmospheric depth, crisp silhouette and strong focal lighting; premium hand-painted fantasy game concept art rather than abstract icons, vector symbols or generic crystals. Original designs only; no recognizable franchise characters or proprietary card frames. Each subject remains centered with breathing room, and no subject crosses into neighboring panels. Consistent finish and medium across all panels. The last two panels are neutral ivory/brass companions, keep their colors. Subjects in exact row-major order, left to right then top to bottom:\n1. a charming small plant spirit with expressive golden eyes and leaf ears.\n2. a majestic dark stag with flowering orchid antlers beneath moonlight.\n3. a jewel-green moth with pollen-dusted wings in a bioluminescent garden.\n4. an ancient protective thorn treant with a kind face and carved bark armor.\n5. a graceful dryad emerging from an immense luminous night-blooming flower.\n6. a dew drop filled with stars resting on an emerald leaf.\n7. ancient roots weaving into a protective living oath around a stone.\n8. a spiraling tempest of luminous rose and ivory petals.\n9. an intricate ancient crown woven from sprouting seeds and aged gold.\n10. a silver-green chalice overflowing with living spring water.\n11. spectral fingers untying a luminous knot of magic above a manuscript.\n12. a gentle silver pulse crossing the threshold of two ancient doorways.\nOverall palette for panels 1-10: deep forest emerald, jade, ivory flowers and warm gold; lush nocturnal enchanted garden atmosphere. No text anywhere. Four columns, three rows, twelve panels, exact rectangular grid."
+  },
+  "chaos": {
+    "ids": [
+      "prism-jelly",
+      "mirror-cat",
+      "shard-chimera",
+      "mirror-bird",
+      "rift-leviathan",
+      "dice-comet",
+      "borrowed-shape",
+      "fractured-moment",
+      "laughing-mask",
+      "broken-prism",
+      "wayfarer-lantern",
+      "lost-compass"
+    ],
+    "prompt": "Use case: stylized-concept. Asset type: production illustration atlas for an original supernatural fantasy trading card game, Biblioteca Viva. Create ONE landscape image, exactly 4 columns by 3 rows of TWELVE equally sized square illustration panels, edge-to-edge regular grid, no gutters, no borders, no rounded corners, no text, no numbers, no watermarks. The grid must be geometrically exact: each panel is one quarter of total width and one third of total height. Requested canvas aspect ratio 4:3, preferably 2048x1536. Each panel is a distinct richly painted fantasy illustration with one readable central subject, tactile materials, confident anatomy, cinematic chiaroscuro, atmospheric depth, crisp silhouette and strong focal lighting; premium hand-painted fantasy game concept art rather than abstract icons, vector symbols or generic crystals. Original designs only; no recognizable franchise characters or proprietary card frames. Each subject remains centered with breathing room, and no subject crosses into neighboring panels. Consistent finish and medium across all panels. The last two panels are neutral ivory/brass companions, keep their colors. Subjects in exact row-major order, left to right then top to bottom:\n1. a translucent violet jellyfish drifting upside down among impossible stars.\n2. an elegant three-eyed midnight cat seen amid fractured mirror reflections.\n3. a majestic chimera assembled from dark glass shards and spectral anatomy.\n4. an iridescent bird bursting out of a shattered mirror.\n5. an immense serpentine leviathan emerging from a violet lightning rift.\n6. a faceted dice-like comet splitting into branching possible trajectories.\n7. a mysterious spectral creature transforming between two fluid silhouettes.\n8. a clock-like moment shattered into floating glowing fragments.\n9. an ornate theatrical laughing mask tilted above a violet void.\n10. a broken prism refracting impossible rainbow lightning.\n11. an antique brass lantern lighting a winding path through misty ruins.\n12. a beautifully crafted antique compass pointing toward a distant illuminated home.\nOverall palette for panels 1-10: ink violet, amethyst, magenta and opalescent highlights; impossible reflective dream atmosphere. No text anywhere. Four columns, three rows, twelve panels, exact rectangular grid."
+  }
+}
