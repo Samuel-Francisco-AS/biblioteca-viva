@@ -1,3 +1,11 @@
+## 09/11/2026 — BF-5.6D integrada: marco educacional A–D consolidado
+
+- Proprietário confirmou **6/6 grupos PASS** no Moto G06: preservação de dados, reparos C, Biblioteca de Provas, Provações offline, lotes/remoção e interface/Canvas; nenhum defeito novo relatado.
+- Merge **PR #46 → main** autorizado e confirmado, SHA `b3db5d87ce7e327e2ab88420681c4feaf99b1d6e`; commits D1/D2/D3 preservados.
+- Dexie **v18**, backup **v10** (importa v6–v9); catálogo/instalação local/offline e retenção de histórico; **4 exercícios autorais**. ENEM/CNU permanecem referências sem questões redistribuídas.
+- Gate físico PASS **não** equivale a CI global verde: ampla 1.120 PASS/11 FAIL, E2E Canvas headless FAIL, TalkBack e memoria/termal não certificados; remoção conserva revisões no armazenamento.
+- [Fechamento com ressalvas](docs/BF-5_6D_FECHAMENTO_2026-11-09.md). BF-5.6 ainda aberta para E–G, sem release.
+
 ## 09/11/2026 — BF-5.6D candidata: Biblioteca de Provas e pacotes
 
 - Catálogo local de coleções, origem/direitos, completude e lotes; instalar, atualizar, remover e reinstalar, com prévia de arquivo e integridade SHA-256.
