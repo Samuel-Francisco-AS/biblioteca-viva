@@ -136,7 +136,7 @@ describe("R3: candidate rejection for empty-world taps", () => {
     const character = h.add("character:lua");
     const skinRay = vi.spyOn(character.mesh, "raycast");
     const { tap, selection, activation } = h.mount(false, true);
-    tap(390, 30);
+    tap(390, 390);
     expect(skinRay).not.toHaveBeenCalled();
     expect(selection).not.toHaveBeenCalled();
     tap(200, 200);
@@ -162,6 +162,11 @@ describe("R3: candidate rejection for empty-world taps", () => {
     h.add("living:table");
     const bboxRead = vi.spyOn(Box3.prototype, "setFromObject");
     const { tap } = h.mount(false, true);
+    // Zoom out so that the 3-world-unit safety margin is smaller than
+    // the far-away location in CSS pixels.
+    h.camera.left = h.camera.bottom = -20;
+    h.camera.right = h.camera.top = 20;
+    h.camera.updateProjectionMatrix();
     tap(390, 30);
     expect(bboxRead).not.toHaveBeenCalled();
   });

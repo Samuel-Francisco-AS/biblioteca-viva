@@ -44,6 +44,7 @@ export class WorldPickBroadphase {
     const bounds = new Box3();
     let hasGeometry = false;
     let hasUnknownRaycast = false;
+    let raycastMargin = 0;
     root.traverse((node) => {
       if (node instanceof SkinnedMesh) {
         hasUnknownRaycast = true;
@@ -59,6 +60,11 @@ export class WorldPickBroadphase {
           hasUnknownRaycast = true;
         }
         return;
+      }
+      if (node instanceof Line || node instanceof Points) {
+        // Three's raycaster accepts a wider world-space hit threshold for
+        // lines and point sprites than their geometric bounding boxes.
+        raycastMargin = Math.max(raycastMargin, 1.2);
       }
       const geometry = node.geometry;
       if (!geometry || geometry.morphAttributes?.position?.length) {
@@ -83,7 +89,11 @@ export class WorldPickBroadphase {
     });
     if (hasGeometry && !hasUnknownRaycast) {
       const size = bounds.getSize(this.size);
-      const expansion = Math.max(0.3, Math.max(size.x, size.y, size.z) * 0.3);
+      const expansion = Math.max(
+        0.3,
+        raycastMargin,
+        Math.max(size.x, size.y, size.z) * 0.3,
+      );
       bounds.expandByScalar(expansion);
     }
     if (
