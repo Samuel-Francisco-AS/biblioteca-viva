@@ -1,3 +1,5 @@
+> **Atualização após gate e merge (09/11/2026):** proprietário aprovou a BF-5.6E **como primeira versão funcional** no Moto G06 e autorizou integrar a PR #47 à `main`; merge `19eb076a949c8d7e8728bc2b1ecff9186bd333b9`. **Não relatou defeitos técnicos/mecânicos no escopo experimentado**, mas **não aprovou a UI/UX nem o acabamento artístico**: Arcanário exige retrabalho transversal e as ilustrações SVG procedurais ainda são abstratas. [Fechamento formal e pendências](BF-5_6E_FECHAMENTO_2026-11-09.md). Declarações de candidata/pendência de aceite abaixo são históricas. BF-5.6 permanece aberta, sem CI global/TalkBack/termal certificados.
+
 # BF-5.6E — Duelo Arcano: implementação candidata
 
 Autorização específica do proprietário em 09/11/2026: execução contínua E1–E4, commits/push/APK e uma PR draft. Sem merge, encerramento BF-5.6 ou F/G/BF-6. Base `6babce2`, merge D `b3db5d87ce7e327e2ab88420681c4feaf99b1d6e` confirmado ancestral. Branch `feat/bf-5-6e-arcanario-duelo-arcano`; checkout inicial limpo.
