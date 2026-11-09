@@ -1,0 +1,85 @@
+/* F1 shell contract; only active on the reserved F2 arena route.
+   Existing /duelos/partida/:id stays completely unchanged. */
+.app-shell[data-arena-route="true"] {
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.app-shell[data-arena-route="true"] .top-bar,
+.app-shell[data-arena-route="true"] .session-strip,
+.app-shell[data-arena-route="true"] .primary-dock,
+.app-shell[data-arena-route="true"] .arcana-topline,
+.app-shell[data-arena-route="true"] .arcana-nav {
+  display: none;
+}
+
+.app-shell[data-arena-route="true"] .app-content,
+.app-shell[data-arena-route="true"] .app-content > section,
+.app-shell[data-arena-route="true"] .arcanarium {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.arena-frame {
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  color: #f7ecff;
+  background: #100e20;
+  padding: env(safe-area-inset-top, 0px)
+    env(safe-area-inset-right, 0px)
+    env(safe-area-inset-bottom, 0px)
+    env(safe-area-inset-left, 0px);
+  touch-action: manipulation;
+}
+
+.arena-frame__stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.arena-frame__exit {
+  position: absolute;
+  z-index: 10;
+  top: calc(env(safe-area-inset-top, 0px) + 0.5rem);
+  right: calc(env(safe-area-inset-right, 0px) + 0.5rem);
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid #e4c58d;
+  border-radius: 50%;
+  background: #19172ded;
+  color: #fff0ce;
+  font-size: 1.4rem;
+}
+
+.arena-frame__exit:focus-visible {
+  outline: 3px solid #ffe1a0;
+  outline-offset: 3px;
+}
+
+/* F2 is responsible for resizing the board composition, not scrolling the
+   document. Overlays for reading long rules must be independently dismissible. */
+@media (orientation: landscape) and (max-height: 450px) {
+  .arena-frame__exit {
+    width: 44px;
+    height: 44px;
+  }
+}
