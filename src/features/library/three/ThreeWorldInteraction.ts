@@ -28,6 +28,7 @@ import { CAMERA_TARGET_Y } from "./cameraMath";
 import type { ReferenceSelectableObject } from "./referenceScene";
 import { findExpandedLivingTap } from "./smallLivingTapTargets";
 import { WorldPickBroadphase } from "./worldPickBroadphase";
+import { InhabitantTouchVolumes } from "./inhabitantTouchVolumes";
 
 type GestureMode = "idle" | "tap" | "pan" | "pinch";
 
@@ -45,6 +46,8 @@ interface ThreeWorldInteractionOptions {
   readonly deferPicking?: boolean;
   /** Enable conservative root-level rejection before exact triangle testing. */
   readonly fastPicking?: boolean;
+  /** R4 production opt-in: stable mobile hitboxes instead of CPU skinning. */
+  readonly inhabitantVolumePicking?: boolean;
   readonly camera: OrthographicCamera;
   readonly canvas: HTMLCanvasElement;
   readonly catalog: readonly WorldSelectableObject[];
@@ -64,6 +67,8 @@ export class ThreeWorldInteraction {
   private readonly onPickStart?: () => void;
   private readonly deferPicking: boolean;
   private readonly fastPicking: boolean;
+  private readonly inhabitantVolumePicking: boolean;
+  private readonly inhabitantTouchVolumes = new InhabitantTouchVolumes();
   private readonly broadphase = new WorldPickBroadphase();
   private pendingPickCancel?: () => void;
   private highlightFollower?: { root: Object3D; local: Box3 };
@@ -108,6 +113,7 @@ export class ThreeWorldInteraction {
     this.onPickStart = options.onPickStart;
     this.deferPicking = options.deferPicking ?? false;
     this.fastPicking = options.fastPicking ?? false;
+    this.inhabitantVolumePicking = options.inhabitantVolumePicking ?? false;
     this.camera = options.camera;
     this.canvas = options.canvas;
     this.navigation = options.navigation;
@@ -273,21 +279,32 @@ export class ThreeWorldInteraction {
   private applyHighlight(root: Object3D, preparedBounds?: Box3): void {
     this.probe?.markQuest("highlightStart");
     root.updateWorldMatrix(true, false);
-    root.updateMatrixWorld(true);
-    const bounds = preparedBounds ?? new Box3();
-    if (!preparedBounds) {
-      if (this.selectedId?.startsWith("character:"))
-        withPreparedSkinning([root], () => bounds.setFromObject(root, true));
-      else bounds.setFromObject(root);
+    const actorBounds =
+      this.inhabitantVolumePicking && this.selectedId
+        ? this.inhabitantTouchVolumes.bounds(this.selectedId)
+        : null;
+    const bounds = actorBounds
+      ? actorBounds.applyMatrix4(root.matrixWorld)
+      : preparedBounds ?? new Box3();
+    if (!actorBounds) {
+      root.updateMatrixWorld(true);
+      if (!preparedBounds) {
+        if (this.selectedId?.startsWith("character:"))
+          withPreparedSkinning([root], () => bounds.setFromObject(root, true));
+        else bounds.setFromObject(root);
+      }
     }
     if (bounds.isEmpty()) return;
     if (
       this.selectedId?.startsWith("character:") ||
       this.selectedId === "portal:duelo-arcano"
     ) {
-      const local = bounds.clone().applyMatrix4(
-        new Matrix4().copy(root.matrixWorld).invert(),
-      );
+      const local = actorBounds
+        ? this.inhabitantTouchVolumes.bounds(this.selectedId ?? "")
+        : bounds.clone().applyMatrix4(
+            new Matrix4().copy(root.matrixWorld).invert(),
+          );
+      if (!local) return;
       const size = local.getSize(new Vector3());
       // The envelope covers arm gestures and grimoire rotation without
       // precise per-vertex CPU scans while the frame loop is running.
@@ -422,6 +439,7 @@ export class ThreeWorldInteraction {
       // geometry + React publication. Tests may opt into immediate selection.
       if (
         this.deferPicking &&
+        !this.inhabitantVolumePicking &&
         !reduced &&
         !document.hidden &&
         typeof requestAnimationFrame === "function"
@@ -595,6 +613,16 @@ export class ThreeWorldInteraction {
           ),
         )
       : allRoots;
+    // Test each inhabitant against an invisible authored interaction volume.
+    // These roots must never descend into SkinnedMesh geometry during picking.
+    const actorRoots = this.inhabitantVolumePicking
+      ? roots.filter((root) =>
+          this.inhabitantTouchVolumes.has(this.selectableRootIds.get(root)),
+        )
+      : [];
+    const exactRoots = actorRoots.length
+      ? roots.filter((root) => !actorRoots.includes(root))
+      : roots;
     // A broadphase miss does not prepare skeletons or intersect any triangles.
     // The small-prop expanded hit target is retained as a separate fallback.
     if (roots.length === 0) {
@@ -613,16 +641,16 @@ export class ThreeWorldInteraction {
     }
     this.canvas.dataset.pickCandidateRoots = String(roots.length);
     this.canvas.dataset.pickSkippedRoots = String(allRoots.length - roots.length);
-    // Update only candidate hierarchies and their ancestors. This also handles
-    // input arriving before the next render after a book/inhabitant moves.
-    for (const root of roots) {
+    // Update only exact raycast candidates. Updating an avatar's whole rig
+    // tree synchronously here would reintroduce the R3 50–140 ms spike.
+    for (const root of exactRoots) {
       root.updateWorldMatrix(true, false);
       root.updateMatrixWorld(true);
     }
     const { selectedId, preparedBounds } = withPreparedSkinning(
-      roots,
+      exactRoots,
       () => {
-        for (const root of roots)
+        for (const root of exactRoots)
           root.traverse((node) => {
             if (node instanceof SkinnedMesh) {
               node.computeBoundingBox();
@@ -632,8 +660,50 @@ export class ThreeWorldInteraction {
         this.probe?.markQuest("prepared");
         this.pickIntersections.length = 0;
         this.probe?.markQuest("raycastStart");
-        this.raycaster.intersectObjects(roots, true, this.pickIntersections);
+        this.raycaster.intersectObjects(exactRoots, true, this.pickIntersections);
+        // Only mathematical ray/box tests for avatars. Preserve the common
+        // distance ordering with all exact meshes and original priority rules.
+        for (const root of actorRoots) {
+          const id = this.selectableRootIds.get(root);
+          if (!id) continue;
+          const hit = this.inhabitantTouchVolumes.intersect(
+            root,
+            id,
+            this.raycaster.ray,
+          );
+          if (hit) this.pickIntersections.push(hit as Intersection);
+        }
+        if (actorRoots.length > 0)
+          this.pickIntersections.sort((a, b) => a.distance - b.distance);
+        this.canvas.dataset.pickActorVolumes = String(actorRoots.length);
         this.probe?.markQuest("raycastEnd");
+        // A separately registered child of an avatar (for example a book
+        // attached to a character) takes precedence over the synthetic
+        // avatar volume. This is independent of proxy-box front faces.
+        if (this.inhabitantVolumePicking) {
+          const nestedAvatarIds = new Set<string>();
+          for (const hit of this.pickIntersections) {
+            const id = this.findSelectableId(hit.object);
+            if (!id || this.inhabitantTouchVolumes.has(id)) continue;
+            let parent: Object3D | null = hit.object.parent;
+            while (parent) {
+              const parentId = this.selectableRootIds.get(parent);
+              if (parentId && this.inhabitantTouchVolumes.has(parentId)) {
+                nestedAvatarIds.add(parentId);
+                break;
+              }
+              parent = parent.parent;
+            }
+          }
+          if (nestedAvatarIds.size)
+            for (let i = this.pickIntersections.length - 1; i >= 0; i--) {
+              const hit = this.pickIntersections[i];
+              if (
+                hit &&
+                nestedAvatarIds.has(this.selectableRootIds.get(hit.object) ?? "")
+              ) this.pickIntersections.splice(i, 1);
+            }
+        }
         let priority: Intersection | undefined;
         let environmental: Intersection | undefined;
         let fallback: Intersection | undefined;
@@ -644,13 +714,11 @@ export class ThreeWorldInteraction {
           if (
             !priority &&
             this.belongsToPickingRoots(hit.object, this.pickingPriorityRootSet)
-          )
-            priority = hit;
+          ) priority = hit;
           if (
             !environmental &&
             this.belongsToPickingRoots(hit.object, this.environmentalRootSet)
-          )
-            environmental = hit;
+          ) environmental = hit;
         }
         // Keep the original 2 cm depth tolerance, record precedence, and fallback.
         const chosen =
@@ -718,7 +786,18 @@ export class ThreeWorldInteraction {
     this.pickingRoots = [...candidates].filter((root) => {
       let parent = root.parent;
       while (parent) {
-        if (candidates.has(parent)) return false;
+        if (candidates.has(parent)) {
+          // An avatar proxy cannot descend to a separately selectable book
+          // or accessory. Keep its registered child in the exact candidates.
+          if (
+            this.inhabitantVolumePicking &&
+            this.inhabitantTouchVolumes.has(this.selectableRootIds.get(parent))
+          ) {
+            parent = parent.parent;
+            continue;
+          }
+          return false;
+        }
         parent = parent.parent;
       }
       return true;

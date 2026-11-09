@@ -61,12 +61,17 @@ function setup() {
     });
     return { root, mesh };
   };
-  const mount = (deferPicking = false, fastPicking = false) => {
+  const mount = (
+    deferPicking = false,
+    fastPicking = false,
+    inhabitantVolumePicking = false,
+  ) => {
     const selection = vi.fn<(selection: WorldSelection) => void>();
     const activation = vi.fn();
     const interaction = new ThreeWorldInteraction({
       deferPicking,
       fastPicking,
+      inhabitantVolumePicking,
       camera,
       canvas,
       scene,
@@ -177,6 +182,52 @@ describe("R3: candidate rejection for empty-world taps", () => {
     h.add("record:book", 0.2, actor.root);
     const { tap, selection } = h.mount(false, true);
     tap(200, 200);
+    expect(selection.mock.lastCall?.[0]?.id).toBe("record:book");
+  });
+});
+
+describe("R4: no skinned raycast for avatar selections", () => {
+  it("uses a lightweight animated-root proxy instead of traversing the visual mesh", () => {
+    const h = setup();
+    const actor = h.add("character:lua");
+    const ray = vi.spyOn(actor.mesh, "raycast");
+    const box = vi.spyOn(Box3.prototype, "setFromObject");
+    const { tap, selection, activation } = h.mount(true, true, true);
+    const callbacks: FrameRequestCallback[] = [];
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+      callbacks.push(cb);
+      return callbacks.length;
+    });
+    tap();
+    expect(selection.mock.lastCall?.[0]?.id).toBe("character:lua");
+    expect(activation).toHaveBeenCalledOnce();
+    expect(ray).not.toHaveBeenCalled();
+    expect(box).not.toHaveBeenCalled();
+    expect(callbacks).toHaveLength(0);
+  });
+
+  it("tracks character movement and rotation using only root transforms", () => {
+    const h = setup();
+    const actor = h.add("character:lua");
+    const { tap, selection, interaction } = h.mount(false, true, true);
+    tap();
+    const initial = h.scene.getObjectByName("f1-c-selection-highlight");
+    expect(initial).toBeInstanceOf(Box3Helper);
+    actor.root.position.x = 1.5;
+    actor.root.rotation.y = Math.PI / 2;
+    const rescan = vi.spyOn(Box3.prototype, "setFromObject");
+    interaction.updateHighlightBounds();
+    tap(350, 200);
+    expect(selection.mock.lastCall?.[0]?.id).toBe("character:lua");
+    expect(rescan).not.toHaveBeenCalled();
+  });
+
+  it("keeps a separately registered object inside an avatar pickable", () => {
+    const h = setup();
+    const actor = h.add("character:lua");
+    h.add("record:book", 0.2, actor.root);
+    const { tap, selection } = h.mount(false, true, true);
+    tap();
     expect(selection.mock.lastCall?.[0]?.id).toBe("record:book");
   });
 });

@@ -906,6 +906,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         probe: this.performanceProbe,
         deferPicking: this.deferPicking,
         fastPicking: this.deferPicking,
+        inhabitantVolumePicking: this.deferPicking,
         onPickStart: () =>
           this.observeQuest({ type: "begin", source: "canvas" }),
         camera,
