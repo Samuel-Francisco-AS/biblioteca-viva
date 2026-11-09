@@ -1248,3 +1248,42 @@
 .arcanarium .arcana-folio :focus-visible {
   outline-color: #643f7a;
 }
+
+/* BF-5.6C Moto G06: explicit labels and strong contrast on light question paper.
+   Dark-theme gold links and summaries must not leak into the cream folio. */
+.arcanarium .arcana-folio details {
+  border-top-color: #846c8e;
+}
+.arcanarium .arcana-folio summary {
+  color: #40224f;
+  background: #e0cfad;
+  border: 1px solid #a48d77;
+  border-radius: 0.55rem;
+  padding: 0.8rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.arcanarium .arcana-folio summary:hover,
+.arcanarium .arcana-folio summary:focus-visible {
+  color: #281633;
+  background: #d2b98d;
+}
+.arcanarium .arcana-folio details[open] > summary {
+  border-color: #684a76;
+}
+.arcanarium .arcana-tag-tools {
+  margin: 0.8rem 0 1.2rem;
+  padding: 0.85rem;
+  background: #241b32;
+  border: 1px solid #a48ab9;
+  border-radius: 0.75rem;
+}
+.arcanarium .arcana-tag-tools p {
+  margin: 0.45rem 0;
+}
+.arcanarium .arcana-tag-tools .button {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
