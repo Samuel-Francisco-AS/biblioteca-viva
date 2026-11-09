@@ -74,3 +74,7 @@ O Duelo Arcano deve ser uma experiência **de jogo** inspirada na legibilidade e
 ## Próximo passo
 
 Codex recebe este documento e a branch/PR em estado draft e completa **F2 na mesma PR**, com testes. Após gate humano e aceite expresso, a PR F inteira poderá ser integrada à `main`. BF-5.6G (auditoria final) permanece independente.
+
+## F2-A — revisão local (09/11/2026)
+
+Checkout remoto confirmado em `4e23b6d`, branch limpa e rastreada. Gates iniciais: TypeScript PASS; 49 testes de projeção/motor/IA/catálogo/persistência PASS. F1 tinha cinco arquivos fora do Prettier e um erro ESLint `set-state-in-effect`. Revisão F2 adiciona isolamento de respostas por geração/ID, pausa serializada após comando em trânsito, bloqueio imediato da IA em background e reconciliação após conflito sem retry de comando. Definições públicas das cartas visíveis acompanham a projeção para inspeção. Não muda schema/regras.

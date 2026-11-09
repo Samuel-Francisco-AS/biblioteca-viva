@@ -1,5 +1,15 @@
-import type { DuelAction, DuelEvent, DuelMatch } from "../../../domain/duel/contracts";
-import { cardAt, legalActions, unitStats, canAttack } from "../../../domain/duel/engine";
+import type {
+  CombatDefinition,
+  DuelAction,
+  DuelEvent,
+  DuelMatch,
+} from "../../../domain/duel/contracts";
+import {
+  cardAt,
+  legalActions,
+  unitStats,
+  canAttack,
+} from "../../../domain/duel/engine";
 
 /**
  * BF-5.6F1 — Read-only game presentation contract.
@@ -9,6 +19,7 @@ import { cardAt, legalActions, unitStats, canAttack } from "../../../domain/duel
  * Do not add rules or mutate the match here; F2 consumes this projection.
  */
 export interface ArenaCardView {
+  readonly definition: CombatDefinition;
   readonly id: string;
   readonly cardId: string;
   readonly revision: number;
@@ -67,6 +78,7 @@ function cardView(match: DuelMatch, id: string): ArenaCardView {
   const c = cardAt(match, id);
   return {
     id,
+    definition: structuredClone(c.definition),
     cardId: c.cardId,
     revision: c.revision,
     name: c.name,
@@ -137,7 +149,10 @@ export function projectArena(match: DuelMatch): ArenaView {
     player: playerView(match, 0),
     opponent: playerView(match, 1),
     hand: match.players[0].hand.map((id) => cardView(match, id)),
-    actions: match.active === 0 && match.status === "active" ? legalActions(match, 0) : [],
+    actions:
+      match.active === 0 && match.status === "active"
+        ? legalActions(match, 0)
+        : [],
     events: (match.history.at(-1)?.events ?? []).map(publicEvent),
   };
 }
@@ -160,11 +175,15 @@ export function arenaActionsForSelection(
   return view.actions.filter(
     (a) =>
       (a.type === "play" && a.card === selectedId) ||
-      ((a.type === "attack" || a.type === "activate") && a.source === selectedId),
+      ((a.type === "attack" || a.type === "activate") &&
+        a.source === selectedId),
   );
 }
 
-export function arenaActionIsLegal(view: ArenaView, action: DuelAction): boolean {
+export function arenaActionIsLegal(
+  view: ArenaView,
+  action: DuelAction,
+): boolean {
   return view.actions.some(
     (candidate) =>
       candidate.type === action.type &&

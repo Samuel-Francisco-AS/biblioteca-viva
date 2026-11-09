@@ -39,10 +39,8 @@
   overflow: hidden;
   color: #f7ecff;
   background: #100e20;
-  padding: env(safe-area-inset-top, 0px)
-    env(safe-area-inset-right, 0px)
-    env(safe-area-inset-bottom, 0px)
-    env(safe-area-inset-left, 0px);
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+    env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
   touch-action: manipulation;
 }
 

@@ -10,7 +10,15 @@ import { Provations, TrialSession } from "./Provations";
 import { Taxonomy } from "./Taxonomy";
 import { Diagnosis } from "./Diagnosis";
 import { useCallback, useEffect, useState } from "react";
-import { Link, NavLink, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
+import {
+  Link,
+  NavLink,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 import type { ApplicationRuntime } from "../../app/createApplication";
 import { Arcana, arcanaError, type ArcanaContext } from "./context";
 import { ArcanaSeal } from "./ArcanaArt";
@@ -124,7 +132,10 @@ export default function ArcanariumPage({
               element={<Portal data={snapshot.data} counts={snapshot.counts} />}
             />
             <Route path="duelos" element={<DuelHall />} />
-            <Route path="duelos/arena/:id" element={<ReservedArenaFallback />} />
+            <Route
+              path="duelos/arena/:id"
+              element={<ReservedArenaFallback />}
+            />
             <Route path="duelos/regras" element={<DuelRules />} />
             <Route path="duelos/baralhos/:id" element={<DuelDeckEditor />} />
             <Route

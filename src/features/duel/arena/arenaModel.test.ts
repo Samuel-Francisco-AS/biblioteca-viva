@@ -34,9 +34,17 @@ describe("BF-5.6F1 — contrato de apresentação da arena", () => {
     const choices = arenaActionsForSelection(view, firstPlay.card);
     expect(choices).toContainEqual(firstPlay);
     expect(choices.every((a) => arenaActionIsLegal(view, a))).toBe(true);
-    expect(arenaActionsForSelection(view, match.players[1].hand[0])).toEqual([]);
+    expect(arenaActionsForSelection(view, match.players[1].hand[0])).toEqual(
+      [],
+    );
     expect(arenaActionIsLegal(view, { type: "end" })).toBe(true);
-    expect(arenaActionIsLegal(view, { type: "attack", source: "fake", target: "p1" })).toBe(false);
+    expect(
+      arenaActionIsLegal(view, {
+        type: "attack",
+        source: "fake",
+        target: "p1",
+      }),
+    ).toBe(false);
   });
 
   it("disables local gameplay actions while the opponent acts", () => {
@@ -54,13 +62,25 @@ describe("BF-5.6F1 — contrato de apresentação da arena", () => {
 
   it("redacts hidden IDs from confirmation events", () => {
     const match = structuredClone(fixtureMatch());
-    match.history = [{
-      command: { id: "synthetic", revision: 0, player: 0, action: { type: "end" } },
-      events: [
-        { type: "draw", player: 1, target: match.players[1].hand[0] },
-        { type: "scout", player: 1, source: match.players[1].hand[1], value: 2 },
-      ],
-    }];
+    match.history = [
+      {
+        command: {
+          id: "synthetic",
+          revision: 0,
+          player: 0,
+          action: { type: "end" },
+        },
+        events: [
+          { type: "draw", player: 1, target: match.players[1].hand[0] },
+          {
+            type: "scout",
+            player: 1,
+            source: match.players[1].hand[1],
+            value: 2,
+          },
+        ],
+      },
+    ];
     const events = projectArena(match).events;
     expect(events).toEqual([
       { type: "draw", player: 1, value: undefined },
