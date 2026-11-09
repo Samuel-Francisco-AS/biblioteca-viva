@@ -95,6 +95,23 @@ export function TrialFilters({
         )}
       </Disclosure>
       <Disclosure label="Origem, prova e dificuldade">
+        <Choices
+          label="Coleção instalada"
+          value={value.packId ?? ""}
+          options={[
+            { value: "", label: "Todas as coleções" },
+            ...(data.packs ?? []).map((p) => ({
+              value: p.id,
+              label: p.manifest.name,
+            })),
+          ]}
+          onChange={(v) => {
+            const next = { ...value };
+            if (v) next.packId = v;
+            else delete next.packId;
+            onChange(next);
+          }}
+        />
         <label>
           Prova (filtro)
           <input

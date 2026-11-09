@@ -14,21 +14,15 @@
     "application": "Demonstração autoral",
     "booklet": "Matemática 01",
     "language": "pt-BR",
-    "areas": [
-      "Matemática"
-    ],
+    "areas": ["Matemática"],
     "expectedCount": 10,
     "publishedCount": 4,
     "completeness": "partial",
-    "sources": [
-      "https://github.com/Samuel-Francisco-AS/biblioteca-viva"
-    ],
+    "sources": ["https://github.com/Samuel-Francisco-AS/biblioteca-viva"],
     "rights": {
       "status": "original",
       "basis": "Enunciados, alternativas e comentários criados para a BF-5.6D pelo projeto, sem imagens ou excertos de terceiros. Redistribuição autorizada como parte do código do projeto. Não é material oficial de exame.",
-      "evidence": [
-        "https://github.com/Samuel-Francisco-AS/biblioteca-viva"
-      ],
+      "evidence": ["https://github.com/Samuel-Francisco-AS/biblioteca-viva"],
       "thirdPartyMedia": "none"
     },
     "verifiedAt": "2026-11-09T12:00:00.000Z",

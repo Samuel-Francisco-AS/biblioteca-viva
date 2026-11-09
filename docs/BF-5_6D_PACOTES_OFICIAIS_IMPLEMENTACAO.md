@@ -11,3 +11,9 @@ Testes dirigidos: primeira rodada integrada 93 PASS/1 FAIL (expectativa antiga d
 ## D2 e D3
 
 Em execução; resultados, fontes, evidências e roteiro serão registrados nesta mesma missão antes da publicação.
+
+## Verificação D2 em andamento
+
+React: 3/3 novos casos PASS; regressão conjunta inicial 36 PASS/1 FAIL de fixture de rota no teste do Portal, corrigida e 3/3 PASS na suíte nova. Build web PASS. Primeiro E2E foi interrompido por coordenação incorreta com build ainda ativo; não conta como gate. Rodada válida seguinte: 2 PASS/2 FAIL — reparos C de etiqueta/Enter/contraste e arquivos inválidos/recuperação PASS; Canvas histórico expira antes do Arcanário; reinstalação web offline após reload revelou módulo lazy ainda dependente de rede. Correção acrescenta cache web opcional de arquivos públicos, com hashes do envelope fixados no aplicativo; assets do APK continuam locais. Revalidação dirigida do fluxo D após correção registrada adiante. Sem repetição especulativa do Canvas, timeout ampliado ou remoção de asserts.
+
+D2 final: 19/19 pacotes + UI PASS; E2E D 2/2 PASS após cache público e seletor inequívoco do título h2 no último assert. Instalar lote 1, reimportar sem duplicar, acrescentar lote 2, abrir Acervo, responder/pausar/reabrir, praticar offline, remover/reinstalar offline, preservar IDs/respostas e paisagem sem overflow comprovados. Gate físico e Canvas continuam pendentes. Capturas em `docs/audits/evidence/bf56d/`.

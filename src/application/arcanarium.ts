@@ -67,6 +67,16 @@ export class ArcanariumService {
   async getDeck(deckId: string) {
     return this.deps.arcanarium.getDeck(parseInput(id, deckId));
   }
+  async overview() {
+    if (this.deps.arcanarium.overview) return this.deps.arcanarium.overview();
+    const data = await this.list();
+    return {
+      cards: data.cards.filter((c) => !c.archived).length,
+      decks: data.decks.length,
+      reviews: data.sessions.filter((s) => s.kind === "flashcard_review")
+        .length,
+    };
+  }
   async list() {
     return runTransaction(this.deps, () => this.deps.arcanarium.read());
   }

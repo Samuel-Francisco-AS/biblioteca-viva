@@ -21,8 +21,14 @@ import {
 } from "../../domain/provations";
 import { DATABASE_SCHEMA_V17 } from "./schema";
 const now = "2026-11-09T12:00:00.000Z";
-const v1 = readFileSync("public/packs/matematica-original-v1.json", "utf8"),
-  v2 = readFileSync("public/packs/matematica-original-v2.json", "utf8");
+const v1 = readFileSync(
+    "src/infrastructure/packs/content/matematica-original-v1.json",
+    "utf8",
+  ),
+  v2 = readFileSync(
+    "src/infrastructure/packs/content/matematica-original-v2.json",
+    "utf8",
+  );
 const id = "arcanario-matematica-original";
 const dbs: BibliotecaDatabase[] = [];
 afterEach(async () => {

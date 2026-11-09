@@ -1,3 +1,6 @@
+import { emptyArcanarium } from "../../domain/arcanarium";
+import { PackLibrary } from "./PackLibrary";
+import { cardAvailable } from "../../domain/educationalPacks";
 import { Provations, TrialSession } from "./Provations";
 import { Taxonomy } from "./Taxonomy";
 import { Diagnosis } from "./Diagnosis";
@@ -18,27 +21,38 @@ export default function ArcanariumPage({
 }: {
   readonly application?: ApplicationRuntime;
 }) {
-  const [snapshot, setSnapshot] = useState<Omit<ArcanaContext, "reload">>();
+  const [snapshot, setSnapshot] = useState<
+    Omit<ArcanaContext, "reload"> & {
+      scope: boolean;
+      counts?: { cards: number; decks: number; reviews: number };
+    }
+  >();
   const [error, setError] = useState("");
   const location = useLocation();
-  const reload = useCallback(async () => {
-    if (!app) return;
+  const atPortal = location.pathname.replace(/\/$/, "") === "/arcanario";
+  const readSnapshot = useCallback(async () => {
+    if (!app) return undefined;
+    if (atPortal) {
+      const counts = await app.arcanarium.overview();
+      return { app, data: emptyArcanarium(), entries: [], scope: true, counts };
+    }
     const [data, entries] = await Promise.all([
       app.arcanarium.list(),
       app.queries.listLibraryEntries.execute(),
     ]);
-    setSnapshot({ app, data, entries });
+    return { app, data, entries, scope: false };
+  }, [app, atPortal]);
+  const reload = useCallback(async () => {
+    if (!app) return;
+    setSnapshot(await readSnapshot());
     setError("");
-  }, [app]);
+  }, [app, readSnapshot]);
   useEffect(() => {
     if (!app) return;
     let active = true;
-    void Promise.all([
-      app.arcanarium.list(),
-      app.queries.listLibraryEntries.execute(),
-    ])
-      .then(([data, entries]) => {
-        if (active) setSnapshot({ app, data, entries });
+    void readSnapshot()
+      .then((value) => {
+        if (active) setSnapshot(value);
       })
       .catch((e) => {
         if (active) setError(arcanaError(e));
@@ -46,7 +60,7 @@ export default function ArcanariumPage({
     return () => {
       active = false;
     };
-  }, [app]);
+  }, [app, readSnapshot]);
   useEffect(() => {
     const refresh = () => {
       if (document.visibilityState === "visible")
@@ -55,7 +69,6 @@ export default function ArcanariumPage({
     document.addEventListener("visibilitychange", refresh);
     return () => document.removeEventListener("visibilitychange", refresh);
   }, [reload]);
-  const atPortal = location.pathname.replace(/\/$/, "") === "/arcanario";
   if (!app)
     return (
       <p role="alert">O armazenamento do Arcanário não está disponível.</p>
@@ -77,6 +90,7 @@ export default function ArcanariumPage({
         <NavLink to="/arcanario/oficina/nova">Oficina</NavLink>
         <NavLink to="/arcanario/ecos">Ecos</NavLink>
         <NavLink to="/arcanario/provacoes">Provações</NavLink>
+        <NavLink to="/arcanario/pacotes">Biblioteca de Provas</NavLink>
         <NavLink to="/arcanario/assuntos">Assuntos</NavLink>
         <NavLink to="/arcanario/diagnostico">Diagnóstico</NavLink>
         <NavLink to="/arcanario/relicario">Relicário</NavLink>
@@ -91,13 +105,17 @@ export default function ArcanariumPage({
           </button>
         </div>
       )}
-      {!snapshot ? (
+      {!snapshot || snapshot.scope !== atPortal ? (
         !error && <p role="status">Abrindo os arquivos do Arcanário…</p>
       ) : (
         <Arcana.Provider value={{ ...snapshot, reload }}>
           <Routes>
-            <Route index element={<Portal data={snapshot.data} />} />
+            <Route
+              index
+              element={<Portal data={snapshot.data} counts={snapshot.counts} />}
+            />
             <Route path="acervo" element={<Catalogue />} />
+            <Route path="pacotes" element={<PackLibrary />} />
             <Route path="relicario" element={<Catalogue memories />} />
             <Route path="cartas/:id" element={<CardDetail />} />
             <Route path="baralhos" element={<Decks />} />
@@ -121,8 +139,14 @@ export default function ArcanariumPage({
     </section>
   );
 }
-function Portal({ data }: { readonly data: ArcanaContext["data"] }) {
-  const cards = data.cards.filter((c) => !c.archived);
+function Portal({
+  data,
+  counts,
+}: {
+  readonly data: ArcanaContext["data"];
+  readonly counts?: { cards: number; decks: number; reviews: number };
+}) {
+  const cards = data.cards.filter((c) => cardAvailable(c, data));
   return (
     <>
       <div className="arcana-hero">
@@ -140,8 +164,11 @@ function Portal({ data }: { readonly data: ArcanaContext["data"] }) {
             ✧ Abrir a Oficina de Cartas
           </Link>
           <p className="arcana-census">
-            {cards.length} cartas · {data.decks.length} baralhos ·{" "}
-            {data.sessions.filter((s) => s.kind === "flashcard_review").length}{" "}
+            {counts?.cards ?? cards.length} cartas ·{" "}
+            {counts?.decks ?? data.decks.length} baralhos ·{" "}
+            {counts?.reviews ??
+              data.sessions.filter((s) => s.kind === "flashcard_review")
+                .length}{" "}
             rodadas guardadas
           </p>
         </div>
@@ -181,6 +208,13 @@ function Portal({ data }: { readonly data: ArcanaContext["data"] }) {
       </div>
       <div className="arcana-portals">
         {[
+          {
+            to: "pacotes",
+            title: "Biblioteca de Provas",
+            text: "Descubra volumes, instale novos lotes e preserve a memória de cada Provação.",
+            kind: "workshop" as const,
+            label: "04 · EXPANDIR",
+          },
           {
             to: "acervo",
             title: "Acervo & baralhos",

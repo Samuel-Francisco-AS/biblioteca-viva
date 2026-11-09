@@ -1,3 +1,5 @@
+import type { PackCataloguePort } from "../application/packCatalogue";
+import { LocalPackCatalogue } from "../infrastructure/packs/localCatalogue";
 import { EducationalPacksService } from "../application/educationalPacks";
 import { DexiePackStore } from "../infrastructure/database/packStore";
 import { JsonEducationalPackCodec } from "../infrastructure/packs/packCodec";
@@ -153,6 +155,7 @@ export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 export interface ApplicationRuntime {
   readonly arcanarium: ArcanariumService;
   readonly educationalPacks: EducationalPacksService;
+  readonly packCatalogue: PackCataloguePort;
   readonly workshop: ArcanariumWorkshop;
   readonly provations: ProvationsService;
   readonly cardExchange: CardExchange;
@@ -368,6 +371,7 @@ export async function createApplication(
 
   return {
     arcanarium: new ArcanariumService(dependencies),
+    packCatalogue: new LocalPackCatalogue(),
     educationalPacks: new EducationalPacksService(
       dependencies,
       new DexiePackStore(database),

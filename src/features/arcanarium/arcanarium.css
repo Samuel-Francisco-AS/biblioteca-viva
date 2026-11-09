@@ -1287,3 +1287,148 @@
   overflow-wrap: anywhere;
   text-align: left;
 }
+
+/* Biblioteca de Provas: volumes do arquivo, com papel legível e selos próprios. */
+.arcana-pack-heading {
+  align-items: center;
+}
+.arcana-pack-heading > svg {
+  width: 7rem;
+  max-width: 25%;
+}
+.arcana-pack-shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: 1.25rem;
+  margin-block: 1.25rem 2rem;
+}
+.arcana-pack-volume {
+  position: relative;
+  isolation: isolate;
+  padding: 1.5rem 1.35rem 1.5rem 1.9rem;
+  border: 1px solid #b59154;
+  border-radius: 0.35rem 1rem 1rem 0.35rem;
+  background: linear-gradient(
+    95deg,
+    #482e5b 0 0.7rem,
+    #d2af72 0.7rem 0.85rem,
+    #f2e5c7 0.85rem,
+    #fff5dc 90%,
+    #deca9e
+  );
+  color: #342139;
+  box-shadow:
+    0 8px 24px #160c2426,
+    inset -4px 0 0 #98744545;
+  transition: box-shadow 180ms ease;
+  overflow-wrap: anywhere;
+}
+.arcana-pack-volume--reference {
+  background: linear-gradient(
+    95deg,
+    #4b455b 0 0.7rem,
+    #b1a27c 0.7rem 0.85rem,
+    #eee7d5 0.85rem,
+    #f5eedf 90%,
+    #d2c9b2
+  );
+}
+.arcanarium .arcana-pack-volume h3 {
+  color: #432452;
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.6rem;
+  margin-block: 0.5rem;
+}
+.arcanarium .arcana-pack-volume .arcana-eyebrow {
+  color: #664521;
+}
+.arcanarium .arcana-pack-volume a {
+  color: #572269;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+.arcanarium .arcana-pack-volume button {
+  color: #3a2049;
+  border-color: #80633a;
+  background: #f6e5c3;
+  min-height: 44px;
+}
+.arcanarium .arcana-pack-volume .button--primary {
+  color: #fff3d3;
+  background: #4d295e;
+}
+.arcanarium .arcana-pack-volume .button--secondary {
+  color: #442052;
+  background: #e5d3ee;
+  border: 1px solid #674577;
+}
+.arcana-pack-seal {
+  float: right;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 2px double #95713c;
+  border-radius: 50%;
+  color: #5b316f;
+  font-size: 1.8rem;
+  box-shadow: 0 0 0 4px #b7934d22;
+}
+.arcana-pack-state {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid #8c6a3a;
+  border-radius: 2rem;
+  background: #e6d8b7;
+  color: #472651;
+  font-weight: 700;
+}
+.arcana-pack-metadata {
+  margin-block: 1rem;
+}
+.arcana-pack-metadata div {
+  padding-block: 0.45rem;
+  border-bottom: 1px solid #886a3c40;
+}
+.arcana-pack-metadata dt {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #624321;
+}
+.arcana-pack-metadata dd {
+  margin: 0.15rem 0 0;
+  line-height: 1.5;
+}
+.arcana-pack-volume details summary {
+  padding-block: 0.65rem;
+  color: #4c285b;
+  cursor: pointer;
+}
+.arcana-pack-volume .arcana-actions {
+  align-items: stretch;
+  margin-top: 1rem;
+}
+.arcana-pack-hash {
+  display: block;
+  word-break: break-all;
+  font-size: 0.7rem;
+}
+.arcana-pack-feedback {
+  white-space: pre-line;
+}
+.arcana-pack-feedback:empty {
+  display: none;
+}
+.arcana-pack-preview {
+  border-left: 3px solid #b89550;
+  padding: 1rem;
+  margin-block: 1rem;
+}
+.arcana-pack-import input[type="file"] {
+  max-width: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .arcana-pack-volume {
+    transition: none;
+  }
+}

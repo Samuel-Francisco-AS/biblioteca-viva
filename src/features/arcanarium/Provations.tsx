@@ -27,7 +27,10 @@ export function Provations() {
   const { app, data, reload } = useArcana();
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const [criteria, setCriteria] = useState(defaultCriteria),
+  const [criteria, setCriteria] = useState(() => ({
+      ...defaultCriteria,
+      ...(params.get("pacote") ? { packId: params.get("pacote")! } : {}),
+    })),
     [deckId, setDeckId] = useState(params.get("baralho") ?? ""),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
@@ -65,6 +68,7 @@ export function Provations() {
       </div>
       <div className="arcana-actions">
         <Link to="/arcanario/oficina/nova?tipo=question">Criar questão</Link>
+        <Link to="/arcanario/pacotes">Biblioteca de Provas</Link>
         <Link to="/arcanario/assuntos">Organizar assuntos</Link>
         <Link to="/arcanario/diagnostico">Diagnóstico e relatórios</Link>
         <Link to="/arcanario/baralhos/novo?tipo=dynamic">

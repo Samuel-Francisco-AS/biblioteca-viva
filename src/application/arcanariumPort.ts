@@ -9,6 +9,7 @@ import type {
 } from "../domain/arcanarium";
 export interface ArcanariumRepository {
   read(): Promise<ArcanariumData>;
+  overview?(): Promise<{ cards: number; decks: number; reviews: number }>;
   getCard(id: string): Promise<Card | undefined>;
   getVersion(
     cardId: string,

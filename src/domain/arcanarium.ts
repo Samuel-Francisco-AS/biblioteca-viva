@@ -156,6 +156,7 @@ export const dynamicCriteriaSchema = z.discriminatedUnion("version", [
       year: z.int().min(1).max(9999).optional(),
       board: text.max(160).optional(),
       origin: z.enum(["local", "study", "official", "imported"]).optional(),
+      packId: z.string().min(1).max(120).optional(),
       difficulty: z.enum(["easy", "medium", "hard"]).optional(),
       history: z.enum(["all", "never", "incorrect", "answered"]),
       minAttempts: z.int().nonnegative().optional(),

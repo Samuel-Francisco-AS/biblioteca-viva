@@ -135,6 +135,10 @@ export function selectDeck(
       const h = history.filter((a) => a.cardId === card.id);
       if (
         (c.origin && card.origin.kind !== c.origin) ||
+        (c.packId &&
+          ((card.origin.kind !== "official" &&
+            card.origin.kind !== "imported") ||
+            card.origin.packId !== c.packId)) ||
         (c.exam &&
           normalizeKnowledge(q?.source?.exam ?? "") !==
             normalizeKnowledge(c.exam)) ||
