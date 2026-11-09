@@ -61,11 +61,12 @@ function setup() {
     });
     return { root, mesh };
   };
-  const mount = (deferPicking = false) => {
+  const mount = (deferPicking = false, fastPicking = false) => {
     const selection = vi.fn<(selection: WorldSelection) => void>();
     const activation = vi.fn();
     const interaction = new ThreeWorldInteraction({
       deferPicking,
+      fastPicking,
       camera,
       canvas,
       scene,
@@ -126,6 +127,43 @@ describe("Touch continuity", () => {
     emit("pointerup", 200);
     expect(host.dataset.worldTouch).toBe("released");
     host.remove();
+  });
+});
+
+describe("R3: candidate rejection for empty-world taps", () => {
+  it("avoids skeletal raycasts on empty taps, but retains precise hits nearby", () => {
+    const h = setup();
+    const character = h.add("character:lua");
+    const skinRay = vi.spyOn(character.mesh, "raycast");
+    const { tap, selection, activation } = h.mount(false, true);
+    tap(390, 30);
+    expect(skinRay).not.toHaveBeenCalled();
+    expect(selection).not.toHaveBeenCalled();
+    tap(200, 200);
+    expect(skinRay).toHaveBeenCalledOnce();
+    expect(selection.mock.lastCall?.[0]?.id).toBe("character:lua");
+    expect(activation).toHaveBeenCalledOnce();
+  });
+
+  it("keeps translated character targets selectable and rejects their old location", () => {
+    const h = setup();
+    const actor = h.add("character:lua");
+    const { tap, selection, activation } = h.mount(false, true);
+    actor.root.position.x += 1;
+    tap(200, 200);
+    expect(selection).not.toHaveBeenCalled();
+    tap(300, 200);
+    expect(selection.mock.lastCall?.[0]?.id).toBe("character:lua");
+    expect(activation).toHaveBeenCalledOnce();
+  });
+
+  it("does not discard a nested registered target when the broadphase root is its parent", () => {
+    const h = setup();
+    const actor = h.add("character:lua");
+    h.add("record:book", 0.2, actor.root);
+    const { tap, selection } = h.mount(false, true);
+    tap(200, 200);
+    expect(selection.mock.lastCall?.[0]?.id).toBe("record:book");
   });
 });
 

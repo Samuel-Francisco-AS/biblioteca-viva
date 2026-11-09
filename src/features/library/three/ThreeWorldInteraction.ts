@@ -27,6 +27,7 @@ import { CameraNavigation } from "./CameraNavigation";
 import { CAMERA_TARGET_Y } from "./cameraMath";
 import type { ReferenceSelectableObject } from "./referenceScene";
 import { findExpandedLivingTap } from "./smallLivingTapTargets";
+import { WorldPickBroadphase } from "./worldPickBroadphase";
 
 type GestureMode = "idle" | "tap" | "pan" | "pinch";
 
@@ -42,6 +43,8 @@ interface ThreeWorldInteractionOptions {
   readonly onPickStart?: () => void;
   /** Runtime opt-in: let pressed feedback paint before CPU picking. */
   readonly deferPicking?: boolean;
+  /** Enable conservative root-level rejection before exact triangle testing. */
+  readonly fastPicking?: boolean;
   readonly camera: OrthographicCamera;
   readonly canvas: HTMLCanvasElement;
   readonly catalog: readonly WorldSelectableObject[];
@@ -60,6 +63,8 @@ export class ThreeWorldInteraction {
   private readonly probe?: PerformanceProbe;
   private readonly onPickStart?: () => void;
   private readonly deferPicking: boolean;
+  private readonly fastPicking: boolean;
+  private readonly broadphase = new WorldPickBroadphase();
   private pendingPickCancel?: () => void;
   private highlightFollower?: { root: Object3D; local: Box3 };
   private readonly activePointers = new Map<number, ActivePointer>();
@@ -102,6 +107,7 @@ export class ThreeWorldInteraction {
     this.probe = options.probe;
     this.onPickStart = options.onPickStart;
     this.deferPicking = options.deferPicking ?? false;
+    this.fastPicking = options.fastPicking ?? false;
     this.camera = options.camera;
     this.canvas = options.canvas;
     this.navigation = options.navigation;
@@ -144,6 +150,7 @@ export class ThreeWorldInteraction {
     this.selectableDescriptors.set(descriptor.id, descriptor);
     this.registerSelectableRoot(descriptor.id, root);
     if (this.selectedId === descriptor.id) {
+      this.clearHighlight();
       this.applyHighlight(root);
       this.render();
     }
@@ -159,6 +166,7 @@ export class ThreeWorldInteraction {
       this.selectableRoots.delete(id);
       this.selectableRootIds.delete(root);
       this.environmentalRootSet.delete(root);
+      this.broadphase.invalidate(root);
       this.pickingRootsDirty = true;
     }
     if (this.selectedId === id) this.selectObject(null);
@@ -225,9 +233,11 @@ export class ThreeWorldInteraction {
 
   /** Rebuilds only the active helper after a stable selectable root changes. */
   refreshHighlightForSelectedObject(id: string): void {
-    if (this.disposed || this.selectedId !== id) return;
+    if (this.disposed) return;
     const root = this.selectableRoots.get(id);
     if (!root) return;
+    if (this.fastPicking) this.broadphase.register(root, id);
+    if (this.selectedId !== id) return;
     this.clearHighlight();
     this.applyHighlight(root);
     this.render();
@@ -393,7 +403,9 @@ export class ThreeWorldInteraction {
 
     this.activePointers.delete(event.pointerId);
     this.releasePointer(event.pointerId);
-    this.touchEcho(shouldPick ? "resolving" : "cancelled");
+    // The halo completes on compositor time, independently of hit-testing.
+    // An empty tap must not wait for the second RAF or a raycast to release.
+    this.touchEcho(shouldPick ? "released" : "cancelled");
     if (shouldPick) {
       this.onPickStart?.();
       const position = { ...pointer.current };
@@ -401,7 +413,6 @@ export class ThreeWorldInteraction {
         if (this.disposed) return;
         this.pick(position);
         this.probe?.markQuest("handlerEnd");
-        this.touchEcho("released");
       };
       const reduced =
         document.querySelector('[data-reduced-motion="true"]') !== null ||
@@ -573,8 +584,34 @@ export class ThreeWorldInteraction {
       -((position.y - bounds.top) / height) * 2 + 1,
     );
     this.camera.updateMatrixWorld();
-    const roots = this.getPickingRoots();
-    // Update only selectable hierarchies and their ancestors. This also handles
+    this.raycaster.setFromCamera(this.pickPointer, this.camera);
+    const allRoots = this.getPickingRoots();
+    const roots = this.fastPicking
+      ? allRoots.filter((root) =>
+          this.broadphase.mayIntersect(
+            root,
+            this.selectableRootIds.get(root),
+            this.raycaster.ray,
+          ),
+        )
+      : allRoots;
+    // A broadphase miss does not prepare skeletons or intersect any triangles.
+    // The small-prop expanded hit target is retained as a separate fallback.
+    if (roots.length === 0) {
+      this.canvas.dataset.pickCandidateRoots = "0";
+      this.selectObject(
+        findExpandedLivingTap(
+          this.selectableRoots,
+          this.camera,
+          bounds,
+          position,
+        ) ?? null,
+      );
+      this.probe?.markQuest("pickEnd");
+      return;
+    }
+    this.canvas.dataset.pickCandidateRoots = String(roots.length);
+    // Update only candidate hierarchies and their ancestors. This also handles
     // input arriving before the next render after a book/inhabitant moves.
     for (const root of roots) {
       root.updateWorldMatrix(true, false);
@@ -591,7 +628,6 @@ export class ThreeWorldInteraction {
             }
           });
         this.probe?.markQuest("prepared");
-        this.raycaster.setFromCamera(this.pickPointer, this.camera);
         this.pickIntersections.length = 0;
         this.probe?.markQuest("raycastStart");
         this.raycaster.intersectObjects(roots, true, this.pickIntersections);
@@ -704,6 +740,7 @@ export class ThreeWorldInteraction {
     if (previous) {
       this.selectableRootIds.delete(previous);
       this.environmentalRootSet.delete(previous);
+      this.broadphase.invalidate(previous);
     }
     if (
       id.startsWith("living:") ||
@@ -712,6 +749,7 @@ export class ThreeWorldInteraction {
     )
       this.environmentalRootSet.add(root);
     this.selectableRoots.set(id, root);
+    if (this.fastPicking) this.broadphase.register(root, id);
     this.pickingRootsDirty = true;
     this.selectableRootIds.set(root, id);
   }

@@ -905,6 +905,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       const interaction = new ThreeWorldInteraction({
         probe: this.performanceProbe,
         deferPicking: this.deferPicking,
+        fastPicking: this.deferPicking,
         onPickStart: () =>
           this.observeQuest({ type: "begin", source: "canvas" }),
         camera,
