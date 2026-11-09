@@ -63,3 +63,35 @@ O fallback de seleção expandida (`findExpandedLivingTap`) ainda calculava `Box
 ### R3 complemento — halo na camada de composição
 
 A posição do halo antes alterava `left/top` de um pseudo-elemento e usava apenas `scale()` na transformação. Agora a origem é fixa e a posição do toque entra diretamente em `translate3d()`, com `will-change` restrito ao pequeno halo. Assim a reação usa `transform` e `opacity` em vez de animar a posição de layout; o efeito visual permanece reduzido/desativado pela preferência de movimento reduzido.
+
+## Rodada R4 — separar detecção de toques e malha articulada
+
+**Evidência no Moto G06 após R3:** o usuário confirmou que toques no vazio pararam de travar. Mas tocar em personagens, objetos, dock e salas do Arcanário continuava com engasgos. O diagnóstico R5Q capturou 12 gestos. Exemplos: gesto #3 Samael, preparação 97,6 ms, raycast 22,9 ms, cálculo de destaque 19,0 ms; gesto #4 Ytha, preparação 72,5 ms, raycast 42,0 ms, destaque 13,2 ms; gesto #12 Aryn, preparação 53,1 ms, raycast 33,8 ms, destaque 13,2 ms. Houve long tasks registradas, com maior duração observada 580 ms, **não atribuível integralmente ao picking sem perfil adicional**. A submissão do renderizador levou cerca de 14–16 ms nos exemplos, sem medir tempo GPU diretamente.
+
+**Causa identificada (Canvas):** a R3 excluía os roots distantes, mas a seleção de um personagem ainda chamava `computeBoundingBox`, `computeBoundingSphere`, `intersectObjects` sobre `SkinnedMesh` e um `Box3.setFromObject(root,true)` para o destaque, todos com custo de CPU alto. A R2 ainda impunha dois RAFs antes de um toque válido.
+
+### Implementação remota R4
+
+1. `inhabitantTouchVolumes.ts` cria volumes invisíveis em coordenadas locais para cada habitante. Projeta o raio para o espaço local a partir da matriz do root e calcula interseção com dois `Box3` simples (corpo + área superior de acessórios/magia). Os volumes se movem e giram com o root, sem percorrer a malha/rig e sem criar geometria WebGL. Os envelopes conservadores existentes da R3 continuam pré-filtrando candidatos.
+2. `ThreeWorldInteraction` separa roots de habitantes dos roots de objetos: o primeiro grupo passa exclusivamente pelos volumes matemáticos; o segundo mantém o raycast preciso e suas regras de profundidade, fallback e prioridade. O resultado do volume entra na ordenação de interseções; filhos registrados separadamente sob o root de um habitante seguem selecionáveis com seu raycast preciso. O modo antigo de testes/demonstrações permanece sem alteração por padrão.
+3. O destaque de personagem usa a união dos volumes transformados, e seu acompanhamento por quadro depende somente da matriz do root. Não roda `withPreparedSkinning`, `setFromObject(root,true)` nem coleta vértices do GLB para criar o destaque no caminho R4; os assets e animações permanecem intactos.
+4. O modo de produção R4 executa a seleção no evento confirmado sem a espera artificial de dois RAFs da R2, preservando halo independente, sem atraso de navegação e sem duplicar eventos. A espera anterior segue disponível nos modos sem opt-in.
+5. `uiActionProbe.ts`, no shell do React, permite diagnóstico **opt-in e apenas em memória** de até 20 cliques em dock, Arcanário e controles comuns. Mede `firstRafMs`, `secondRafMs` e `routeCommitMs` (quando aplicável); categoriza rotas sem IDs dinâmicos ou textos. Acesse na Biblioteca pelo **Diagnóstico do mundo → BV-UXC R4 · ações de interface**, ative, navegue e volte. Fechar ou desativar limpa as amostras. **RAF não é apresentação GPU nem garantia de carregamento final da sala.**
+
+### Testes de regressão escritos
+
+- Toque no habitante usa proxy sem qualquer `mesh.raycast` ou `Box3.setFromObject`; seleção e ativação são publicadas sem RAFs de atraso.
+- Volumes acompanham translação/rotação do personagem, e o destaque não varre malhas por quadro.
+- Item registrado dentro da hierarquia de habitante permanece selecionável.
+- Quatro GLBs reais (Samael/Aryn/Ytha/Lua): seleção não lê vértices via `Mesh.getVertexPosition` ou `SkinnedMesh.getVertexPosition`.
+- Probe de ações: 1º/2º RAF, commit de rota, limpeza e anonimização de IDs.
+
+**Status:** alteração publicada na PR draft #49, sem merge. **Não houve execução remota de `npm ci`, Vitest, lint, tipos, build, E2E nem testes Android; todos os resultados de teste são pendentes**. Commits com `[skip ci]`, sem disparo deliberado de workflows, pois a cota CI está limitada.
+
+### Gate físico exigido (Moto G06)
+
+- Comparar R3 e R4 para o mesmo roteiro: 10–15 toques no vazio, toques em cada um dos quatro habitantes (parados/andando/usando magia), seleção por Canvas e pelo painel acessível, tocar duas vezes no mesmo personagem, girar/arrastar/zoom, retrato/paisagem.
+- Testar objeto sobreposto/próximo a habitante, livros, pergaminhos, luzes e portal; verificar que não há alvos falsos, invisíveis demais ou impossíveis de selecionar e que destaque/ação seguem o personagem.
+- Testar troca de abas pelo dock, acesso e saída do Arcanário, salas internas e retornos repetidos; usar o novo probe para separar latência do shell e latência de RAF. Confirmar que não há travamentos persistentes ou reinicialização do mundo.
+- Recolher as 12 amostras de R5Q após R4 e comparar `pickStart`→`prepared`, `prepared`→`raycastEnd`, `highlightStart`→`highlightEnd` e `handlerEnd`/long tasks. Esperado: abandonar o custo de skinning para habitantes; números reais só após execução no dispositivo.
+- **Não realizar merge** antes dos gates. Se os controles do Arcanário ainda travarem, usar as medições de ações para corrigir esse caminho especificamente, sem inferir causa de Canvas.

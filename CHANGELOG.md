@@ -1,3 +1,10 @@
+## 09/11/2026 — BV-UXC R4 (PR draft #49): volumes de toque e diagnóstico entre telas
+
+- Os 12 registros físicos da R3 mostraram CPU de 53–117 ms apenas preparando geometria em vários toques, com raycasts de ~23–42 ms e destaque de personagem em ~7–19 ms. R3 resolveu toques no vazio, não ações válidas.
+- R4 separa geometria animada de interação: volumes matemáticos por habitante (seguem posição/rotação), raycast preciso preservado em objetos, destaque sem CPU skinning e seleção imediata em produção, sem dois RAFs de espera.
+- Adicionado diagnóstico volátil opt-in de 20 ações (dock, Arcanário e botões) com próximos RAFs e commit de rota, sem armazenar IDs dinâmicos ou textos.
+- Testes de regressão adicionados, **não executados neste ambiente remoto**; APK e gate físico pendentes; `main` intacta. [Detalhe](docs/BV_UX_CONTINUIDADE_TOQUE_2026-11-09.md).
+
 ## 09/11/2026 — BV-UXC R3: broadphase para toques vazios (PR draft #49)
 
 - Teste físico R2: melhora parcial, mas o halo e as animações do mundo ainda travavam ao tocar repetidamente áreas vazias.

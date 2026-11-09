@@ -1,3 +1,5 @@
+> **BV-UXC R4 — candidato sem gate (09/11/2026):** eliminar skinning no caminho de toque dos habitantes; preservar modelos/efeitos, seleção de objetos e detalhes narrativos. Instrumentar separadamente dock/Arcanário. Próxima decisão depende de APK no Moto G06 e comparação dos tempos R3/R4. PR #49 draft, sem merge/CI. [Detalhes](BV_UX_CONTINUIDADE_TOQUE_2026-11-09.md).
+
 > **BV-UXC R2 (09/11/2026):** candidato de reparo agressivo de fluidez em PR #49, sem merge. Critério: nenhuma pausa visual claramente perceptível após toques nos habitantes, dock ou acesso ao Arcanário; se persistir, medir amostras de long tasks e perfis no Moto G06, sem alargar apenas a animação. Preservar o projeto de BF-5.6G como etapa futura distinta. [Relatório R2](BV_UX_CONTINUIDADE_TOQUE_2026-11-09.md).
 
 > **Rodada paralela autorizada — BV-UXC (09/11/2026):** melhorar continuidade percebida do toque em personagens, dock e Arcanário, preservando o peso artístico. Candidata de PR separada, sem merge. Próximo passo: gates locais disponíveis fora do CI e validação física no Moto G06; a BF-5.6G permanece distinta e não iniciada. [Detalhes e pendências](BV_UX_CONTINUIDADE_TOQUE_2026-11-09.md).
