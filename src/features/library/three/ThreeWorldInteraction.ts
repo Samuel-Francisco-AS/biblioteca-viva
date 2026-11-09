@@ -3,6 +3,7 @@ import { withPreparedSkinning } from "./preparedSkinning";
 import {
   Box3,
   Box3Helper,
+  Matrix4,
   Object3D,
   OrthographicCamera,
   Raycaster,
@@ -39,6 +40,8 @@ interface ActivePointer {
 interface ThreeWorldInteractionOptions {
   readonly probe?: PerformanceProbe;
   readonly onPickStart?: () => void;
+  /** Runtime opt-in: let pressed feedback paint before CPU picking. */
+  readonly deferPicking?: boolean;
   readonly camera: OrthographicCamera;
   readonly canvas: HTMLCanvasElement;
   readonly catalog: readonly WorldSelectableObject[];
@@ -56,6 +59,9 @@ const TEST_PICK_OBJECT_ID = "crate-01";
 export class ThreeWorldInteraction {
   private readonly probe?: PerformanceProbe;
   private readonly onPickStart?: () => void;
+  private readonly deferPicking: boolean;
+  private pendingPickCancel?: () => void;
+  private highlightFollower?: { root: Object3D; local: Box3 };
   private readonly activePointers = new Map<number, ActivePointer>();
   private readonly camera: OrthographicCamera;
   private readonly canvas: HTMLCanvasElement;
@@ -95,6 +101,7 @@ export class ThreeWorldInteraction {
   constructor(options: ThreeWorldInteractionOptions) {
     this.probe = options.probe;
     this.onPickStart = options.onPickStart;
+    this.deferPicking = options.deferPicking ?? false;
     this.camera = options.camera;
     this.canvas = options.canvas;
     this.navigation = options.navigation;
@@ -160,6 +167,7 @@ export class ThreeWorldInteraction {
 
   cancelActiveGestures(): void {
     if (this.disposed) return;
+    this.cancelPendingPick();
     for (const pointerId of this.activePointers.keys()) {
       this.releasePointer(pointerId);
     }
@@ -187,6 +195,11 @@ export class ThreeWorldInteraction {
     this.environmentalRootSet.clear();
     this.pickingRoots = [];
     this.pickIntersections.length = 0;
+  }
+
+  private cancelPendingPick(): void {
+    this.pendingPickCancel?.();
+    this.pendingPickCancel = undefined;
   }
 
   selectObject(id: string | null, preparedBounds?: Box3): void {
@@ -227,13 +240,17 @@ export class ThreeWorldInteraction {
     const root = this.selectableRoots.get(this.selectedId);
     if (root) {
       root.updateWorldMatrix(true, false);
-      root.updateMatrixWorld(true);
-      // Character meshes deform; cached bind-pose bounds are insufficient.
-      const box = this.highlight.box;
-      const precise = this.selectedId.startsWith("character:");
-      if (precise)
-        withPreparedSkinning([root], () => box.setFromObject(root, true));
-      else box.setFromObject(root);
+      // Only visual decoration: reuse a slightly generous local envelope
+      // for articulated inhabitants and orbiting constructions. Exact
+      // skinning remains in picking, not in every animation frame.
+      if (this.highlightFollower?.root === root) {
+        this.highlight.box
+          .copy(this.highlightFollower.local)
+          .applyMatrix4(root.matrixWorld);
+      } else {
+        root.updateMatrixWorld(true);
+        this.highlight.box.setFromObject(root);
+      }
     }
   }
 
@@ -254,6 +271,19 @@ export class ThreeWorldInteraction {
       else bounds.setFromObject(root);
     }
     if (bounds.isEmpty()) return;
+    if (
+      this.selectedId?.startsWith("character:") ||
+      this.selectedId === "portal:duelo-arcano"
+    ) {
+      const local = bounds.clone().applyMatrix4(
+        new Matrix4().copy(root.matrixWorld).invert(),
+      );
+      const size = local.getSize(new Vector3());
+      // The envelope covers arm gestures and grimoire rotation without
+      // precise per-vertex CPU scans while the frame loop is running.
+      local.expandByScalar(Math.max(size.x, size.y, size.z) * 0.09);
+      this.highlightFollower = { root, local };
+    }
     const highlight = new Box3Helper(bounds, 0x45d9ff);
     highlight.name = "f1-c-selection-highlight";
     this.scene.add(highlight);
@@ -271,7 +301,7 @@ export class ThreeWorldInteraction {
   };
 
   private touchEcho(
-    state: "pressed" | "released" | "cancelled",
+    state: "pressed" | "resolving" | "released" | "cancelled",
     event?: PointerEvent,
   ): void {
     const host = this.canvas.parentElement;
@@ -292,6 +322,7 @@ export class ThreeWorldInteraction {
       return;
     }
     if (this.activePointers.size >= 2) return;
+    this.cancelPendingPick();
     event.preventDefault();
     const position = { x: event.clientX, y: event.clientY };
     this.activePointers.set(event.pointerId, {
@@ -362,11 +393,43 @@ export class ThreeWorldInteraction {
 
     this.activePointers.delete(event.pointerId);
     this.releasePointer(event.pointerId);
-    this.touchEcho(shouldPick ? "released" : "cancelled");
+    this.touchEcho(shouldPick ? "resolving" : "cancelled");
     if (shouldPick) {
       this.onPickStart?.();
-      this.pick(pointer.current);
-      this.probe?.markQuest("handlerEnd");
+      const position = { ...pointer.current };
+      const finish = () => {
+        if (this.disposed) return;
+        this.pick(position);
+        this.probe?.markQuest("handlerEnd");
+        this.touchEcho("released");
+      };
+      const reduced =
+        document.querySelector('[data-reduced-motion="true"]') !== null ||
+        (typeof window.matchMedia === "function" &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      // In production, separate the visual acknowledgement from the costly
+      // geometry + React publication. Tests may opt into immediate selection.
+      if (
+        this.deferPicking &&
+        !reduced &&
+        !document.hidden &&
+        typeof requestAnimationFrame === "function"
+      ) {
+        let nextFrame = 0;
+        const firstFrame = requestAnimationFrame(() => {
+          nextFrame = requestAnimationFrame(() => {
+            this.pendingPickCancel = undefined;
+            finish();
+          });
+        });
+        this.pendingPickCancel = () => {
+          cancelAnimationFrame(firstFrame);
+          if (nextFrame) cancelAnimationFrame(nextFrame);
+          this.touchEcho("cancelled");
+        };
+      } else {
+        finish();
+      }
     }
     this.continueAfterPointerEnd();
   };
@@ -438,6 +501,7 @@ export class ThreeWorldInteraction {
   }
 
   private clearHighlight(): void {
+    this.highlightFollower = undefined;
     if (!this.highlight) return;
     this.highlight.removeFromParent();
     this.highlight.geometry.dispose();

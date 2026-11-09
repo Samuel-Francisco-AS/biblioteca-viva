@@ -898,6 +898,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.refreshSelectableObjects();
       const interaction = new ThreeWorldInteraction({
         probe: this.performanceProbe,
+        deferPicking: true,
         onPickStart: () =>
           this.observeQuest({ type: "begin", source: "canvas" }),
         camera,

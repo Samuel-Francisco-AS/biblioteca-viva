@@ -127,6 +127,25 @@ describe("Touch continuity", () => {
   });
 });
 
+describe("R2: stable visual highlight", () => {
+  it("follows the character root without rescanning articulated triangles per frame", () => {
+    const h = setup();
+    const character = h.add("character:lua");
+    const { interaction, tap } = h.mount();
+    tap();
+    const helper = h.scene.getObjectByName("f1-c-selection-highlight");
+    expect(helper).toBeInstanceOf(Box3Helper);
+    if (!(helper instanceof Box3Helper)) return;
+    const before = helper.box.getCenter(new Vector3());
+    const expensive = vi.spyOn(Box3.prototype, "setFromObject");
+    character.root.position.x += 1;
+    interaction.updateHighlightBounds();
+    const after = helper.box.getCenter(new Vector3());
+    expect(after.x).toBeGreaterThan(before.x);
+    expect(expensive).not.toHaveBeenCalled();
+  });
+});
+
 describe("R1: picking without scene-wide matrix forcing or duplicate rays", () => {
   it("tests nested books only once, excludes decorations, and keeps instance/entry identity", () => {
     const h = setup();

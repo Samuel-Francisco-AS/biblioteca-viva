@@ -234,6 +234,10 @@
   opacity: 0.8;
   transform: translate(-50%, -50%) scale(0.86);
 }
+.world-host[data-world-touch="resolving"]::after {
+  opacity: 0.75;
+  transform: translate(-50%, -50%) scale(1.04);
+}
 .world-host[data-world-touch="released"]::after {
   animation: bv-touch-release 270ms ease-out both;
 }
