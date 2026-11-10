@@ -46,6 +46,7 @@ import {
   beginPassage,
   cancelPassage,
   completePassageAnimation,
+  completePassageDeparture,
   notifyPassageLocation,
   schedulePassage,
   signalPassageReady,
@@ -91,7 +92,11 @@ function RouteStartupReady({ active }: { readonly active: boolean }) {
   useEffect(() => {
     if (active && !location.pathname.startsWith("/arcanario")) {
       recordUiRouteContentCommit(location.pathname);
-      signalPassageReady(location.pathname);
+      // A lazy module mounting is not the same as its data having loaded.
+      // Data-backed folios signal readiness from their own loaded state.
+      const dataBacked = ["/colecao", "/arquivo", "/estatisticas"].includes(location.pathname) ||
+        /^\/(registros|livros)\/[^/]+(?:\/editar)?$/.test(location.pathname);
+      if (!dataBacked) signalPassageReady(location.pathname);
     }
   }, [active, location.pathname]);
   useEffect(() => {
@@ -378,9 +383,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           control.origin === window.location.origin &&
           control.getAttribute("href")?.startsWith("/") &&
           !control.getAttribute("href")?.startsWith("//") &&
-          (control.pathname !== location.pathname ||
-            control.search !== location.search ||
-            control.hash !== location.hash)
+          control.pathname !== location.pathname
         ) {
           event.preventDefault();
           pendingNavigationRef.current?.();
@@ -542,6 +545,10 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
             event.target === event.currentTarget &&
             event.animationName === "bv-passage-unfold"
           ) completePassageAnimation();
+          if (
+            event.target === event.currentTarget &&
+            event.animationName === "bv-passage-fold"
+          ) completePassageDeparture();
         }}
       />
       <PrimaryDock pathname={location.pathname} />

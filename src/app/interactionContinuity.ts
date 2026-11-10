@@ -66,7 +66,10 @@ export function notifyPassageLocation(pathname: string): void {
   active.target = pathname;
   active.arrivedAt = pathname;
   active.ready = false;
-  shell()?.setAttribute("data-passage", "waiting");
+  // Keep the 400ms fold alive even if this route commits very quickly.
+  // The CSS animationend marks the waiting phase without an opacity jump.
+  if (shell()?.dataset.passage !== "departing")
+    shell()?.setAttribute("data-passage", "waiting");
 }
 /** Called by the destination only after its known data and lazy module are ready. */
 export function signalPassageReady(pathname: string): void {
@@ -74,6 +77,11 @@ export function signalPassageReady(pathname: string): void {
   if (!current || current.arrivedAt !== pathname || current.target !== pathname) return;
   current.ready = true;
   tryReveal();
+}
+/** The departure fold finishes before switching to the held-loading loop. */
+export function completePassageDeparture(): void {
+  if (active && shell()?.dataset.passage === "departing")
+    shell()?.setAttribute("data-passage", "waiting");
 }
 /** CSS animationend cleanup, with background/no-event timer fallback. */
 export function completePassageAnimation(): void {
