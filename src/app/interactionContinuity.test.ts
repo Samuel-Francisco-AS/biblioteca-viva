@@ -32,8 +32,8 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe("R6: ready-gated passage choreography", () => {
-  it("starts feedback before route work and holds until real readiness", () => {
+describe("R6.1: seamless, readiness-gated passage", () => {
+  it("does not even start route work until the initial curtain has fully sealed", () => {
     vi.useFakeTimers();
     const { shell, frames } = setup();
     const navigate = vi.fn();
@@ -41,18 +41,19 @@ describe("R6: ready-gated passage choreography", () => {
     schedulePassage(navigate);
     expect(shell.dataset.passage).toBe("departing");
     expect(navigate).not.toHaveBeenCalled();
-    frames.shift()?.(0);
+    expect(frames).toHaveLength(0);
+
+    completePassageDeparture(); // CSS fold animationend
+    expect(shell.dataset.passage).toBe("waiting");
+    expect(frames).toHaveLength(1);
+    frames.shift()?.(560);
     expect(navigate).not.toHaveBeenCalled();
-    frames.shift()?.(16);
+    frames.shift()?.(576);
     expect(navigate).toHaveBeenCalledOnce();
 
     notifyPassageLocation("/colecao");
-    // Route commit alone cannot finish or reveal the transition.
-    completePassageDeparture();
-    expect(shell.dataset.passage).toBe("waiting");
     vi.advanceTimersByTime(2500);
     expect(shell.dataset.passage).toBe("waiting");
-
     signalPassageReady("/colecao");
     vi.advanceTimersByTime(0);
     expect(shell.dataset.passage).toBe("arriving");
@@ -60,57 +61,73 @@ describe("R6: ready-gated passage choreography", () => {
     expect(shell).not.toHaveAttribute("data-passage");
   });
 
-  it("ignores stale readiness and stale scheduled handlers after a new gesture", () => {
+  it("keeps the solid cover while a destination is loading, with no early reveal", () => {
+    vi.useFakeTimers();
+    const { shell } = setup();
+    beginPassage("/arcanario/acervo");
+    notifyPassageLocation("/arcanario/acervo");
+    signalPassageReady("/arcanario/duelos"); // stale room
+    vi.advanceTimersByTime(720); // fallback for missing CSS animationend
+    expect(shell.dataset.passage).toBe("waiting");
+    vi.advanceTimersByTime(10000);
+    expect(shell.dataset.passage).toBe("waiting");
+    signalPassageReady("/arcanario/acervo");
+    vi.advanceTimersByTime(0);
+    expect(shell.dataset.passage).toBe("arriving");
+  });
+
+  it("ignores an old gesture after a new one starts", () => {
     vi.useFakeTimers();
     const { shell, frames } = setup();
     const first = vi.fn();
     const second = vi.fn();
     beginPassage("/arquivo");
     schedulePassage(first);
-    frames.shift()?.(0);
     beginPassage("/colecao");
     schedulePassage(second);
-    frames.shift()?.(16); // delivered callback belonging to the cancelled route
-    frames.shift()?.(32);
-    frames.shift()?.(48);
+    completePassageDeparture();
+    frames.shift()?.(560);
+    frames.shift()?.(576);
     expect(first).not.toHaveBeenCalled();
     expect(second).toHaveBeenCalledOnce();
     notifyPassageLocation("/colecao");
     signalPassageReady("/arquivo");
     vi.advanceTimersByTime(2000);
-    expect(shell.dataset.passage).not.toBe("arriving");
+    expect(shell.dataset.passage).toBe("waiting");
     signalPassageReady("/colecao");
     vi.advanceTimersByTime(0);
     expect(shell.dataset.passage).toBe("arriving");
   });
 
-  it("does not let a delayed click override Android Back before route commit", () => {
+  it("lets external Back cancel work before the covered navigation begins", () => {
     const { shell, frames } = setup();
     const routeWork = vi.fn();
     beginPassage("/colecao");
     schedulePassage(routeWork);
-    // External Back reaches the old route before our scheduled work starts.
     notifyPassageLocation("/arquivo");
-    frames.shift()?.(16);
+    completePassageDeparture();
     expect(routeWork).not.toHaveBeenCalled();
+    expect(frames).toHaveLength(0);
     expect(shell).not.toHaveAttribute("data-passage");
   });
 
-  it("keeps the minimum opening choreography but not an arbitrary loading deadline", () => {
+  it("honors the minimum gentle opening duration after early readiness", () => {
     vi.useFakeTimers();
     const { shell } = setup();
     beginPassage("/colecao");
     notifyPassageLocation("/colecao");
     signalPassageReady("/colecao");
-    vi.advanceTimersByTime(559);
-    expect(shell.dataset.passage).not.toBe("arriving");
+    vi.advanceTimersByTime(560);
+    completePassageDeparture();
+    vi.advanceTimersByTime(179);
+    expect(shell.dataset.passage).toBe("waiting");
     vi.advanceTimersByTime(1);
     expect(shell.dataset.passage).toBe("arriving");
-    vi.advanceTimersByTime(540);
+    vi.advanceTimersByTime(820);
     expect(shell).not.toHaveAttribute("data-passage");
   });
 
-  it("respects reduced-motion without waiting two painted frames", async () => {
+  it("skips prolonged visuals for reduced motion", async () => {
     const { shell, frames } = setup();
     shell.dataset.reducedMotion = "true";
     const run = vi.fn();
@@ -124,15 +141,15 @@ describe("R6: ready-gated passage choreography", () => {
     expect(shell).not.toHaveAttribute("data-passage");
   });
 
-  it("cancels an aborted or unmounted navigation without executing it", () => {
+  it("cancels queued work and cleanup on unmount", () => {
     const { frames, shell } = setup();
     const action = vi.fn();
     beginPassage("/colecao");
     const cancel = schedulePassage(action);
-    frames.shift()?.(0);
     cancel();
+    completePassageDeparture();
     cancelPassage();
-    frames.shift()?.(16);
+    expect(frames).toHaveLength(0);
     expect(action).not.toHaveBeenCalled();
     expect(shell).not.toHaveAttribute("data-passage");
   });

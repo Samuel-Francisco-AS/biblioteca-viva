@@ -307,12 +307,19 @@ it("R6 animates before navigating and does not replay a link twice", async () =>
     expect(shell).toHaveAttribute("data-passage", "departing");
     expect(shell).toHaveAttribute("data-route", "library");
 
-    // First frame can paint the curtain; the router is still on the origin.
-    await act(async () => callbacks.shift()?.(0));
+    // No route work is even queued while the cover is translucent.
+    expect(callbacks).toHaveLength(0);
+    expect(shell).toHaveAttribute("data-route", "library");
+    const veil = view.container.querySelector(".passage-veil");
+    fireEvent.animationEnd(veil!, { animationName: "bv-passage-fold" });
+    expect(shell).toHaveAttribute("data-passage", "waiting");
     expect(shell).toHaveAttribute("data-route", "library");
 
-    // The original Link is replayed once, retaining React Router semantics.
-    await act(async () => callbacks.shift()?.(16));
+    // The full-opacity cover is now committed. Its queued callbacks may
+    // navigate, but the visible underlay cannot leak during preparation.
+    await act(async () => callbacks.shift()?.(560));
+    expect(shell).toHaveAttribute("data-route", "library");
+    await act(async () => callbacks.shift()?.(576));
     expect(shell).toHaveAttribute("data-route", "colecao");
   } finally {
     view.unmount();
