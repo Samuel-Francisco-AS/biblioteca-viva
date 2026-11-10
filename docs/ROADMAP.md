@@ -1,3 +1,5 @@
+> **BV-UXC R6.1 (10/11/2026):** próximo gate Moto G06 deve verificar que não há flashes de telas novas sob a cortina, que o sigilo gira sem saltos e que a navegação continua funcional em Back, toques rápidos e movimento reduzido. PR #49 draft sem merge/CI. [Registro](audits/BV_UXC_R61_CONTINUIDADE_TRANSICAO_2026-11-10.md).
+
 > **BV-UXC R6 — candidata de transição visual (10/11/2026):** validar no Moto G06 resposta visual imediata, montagem assíncrona coberta e esperas prolongadas somente enquanto destinos realmente carregam. Conferir navegação rápida/Voltar e regressões R4/R5. PR #49 draft, sem merge/CI. [Relatório](audits/BV_UXC_R6_TRANSICOES_2026-11-10.md).
 
 > **Prioridade autorizada BV-UXC R5 (09/11/2026):** candidata global na PR draft #49; próxima ação é o [gate Moto G06](audits/BV_UXC_R5_DESEMPENHO_GLOBAL_2026-11-09.md#gate-curto--moto-g06--android-15), comparando ações comuns, salas frias/quentes, drafts, arena, lifecycle e jank. Resolver resíduos somente com hipótese medida. Não iniciar CI/merge nem BF-5.6G por esta entrega; melhorias de contagem local não encerram desempenho físico.

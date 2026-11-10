@@ -1,3 +1,9 @@
+## 10/11/2026 — BV-UXC R6.1: cortina opaca e transição mais suave (PR draft #49)
+
+- Corrigido vazamento visual: a R6 liberava processamento da próxima rota após apenas dois RAFs e mantinha a cortina a 97% de opacidade. R6.1 aguarda a cobertura completa (560 ms) antes de processar a navegação e mantém a tela totalmente coberta até prontidão.
+- Saída e entrada com easing mais suave; saída 560 ms, espera opaca variável, revelação 660 ms. Rotação do sigilo contínua entre fases; gestos consecutivos não reiniciam a cortina do zero.
+- Testes de fluxo escritos, **não executados remotamente**. Moto G06/CI/build pendentes; main preservada. [Relatório](docs/audits/BV_UXC_R61_CONTINUIDADE_TRANSICAO_2026-11-10.md).
+
 ## 10/11/2026 — BV-UXC R6: transições longas prontidão-dependentes (PR draft #49)
 
 - A transição de navegação reage ao clique, aguarda a primeira apresentação antes de iniciar trabalho de rota e mantém o sigilo de carregamento até o componente/snapshot declarar prontidão.
