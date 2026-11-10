@@ -1,3 +1,10 @@
+## 10/11/2026 — BV-UXC R1–R6.2 encerrada por aceite com ressalvas (PR #49)
+
+- Proprietário testou no Moto G06, confirmou evolução substancial da fluidez e da continuidade de toque desde R1 e **autorizou integração e fechamento da fase**, com microengasgos residuais nas quests.
+- Consolidação: broadphase/proxies de interação, melhorias globais de dados/React/arena, cortina de transição com opacidade integral e prontidão de telas, estilos/foco otimizados no card narrativo.
+- Evidência local R5: 420 PASS dirigidos, builds e E2E UI PASS; E2E lifecycle 3D timeout. R6–R6.2 sem nova suíte/build nesta sessão remota; métricas P95/P99 Moto G06 e CI global não certificadas. BF-5.6G continua futura.
+- [Fechamento canônico](docs/BV_UXC_FECHAMENTO_2026-11-10.md) · [PR #49](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/49).
+
 ## 10/11/2026 — BV-UXC R6.2: abertura das quests dos habitantes
 
 - Após gate informal positivo da R6.1, engasgo residual concentrado no card de quest.
