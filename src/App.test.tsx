@@ -1,5 +1,5 @@
 import "fake-indexeddb/auto";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -283,5 +283,40 @@ it("keeps the Arcanarium snapshot mounted between rooms and debounces the real w
     view.unmount();
     application.close();
     await Dexie.delete(name);
+  }
+});
+
+it("R6 animates before navigating and does not replay a link twice", async () => {
+  const callbacks: FrameRequestCallback[] = [];
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+    callbacks.push(callback);
+    return callbacks.length;
+  });
+  vi.stubGlobal("cancelAnimationFrame", vi.fn());
+  const visible = vi.spyOn(document, "visibilityState", "get");
+  visible.mockReturnValue("visible");
+  const view = render(
+    <MemoryRouter>
+      <App />
+    </MemoryRouter>,
+  );
+  try {
+    const link = screen.getByRole("link", { name: "Coleção" });
+    fireEvent.click(link);
+    const shell = view.container.querySelector(".app-shell");
+    expect(shell).toHaveAttribute("data-passage", "departing");
+    expect(screen.getByRole("banner")).toHaveTextContent("Biblioteca");
+
+    // First frame can paint the curtain; the router is still on the origin.
+    await act(async () => callbacks.shift()?.(0));
+    expect(screen.getByRole("banner")).toHaveTextContent("Biblioteca");
+
+    // The original Link is replayed once, retaining React Router semantics.
+    await act(async () => callbacks.shift()?.(16));
+    expect(screen.getByRole("banner")).toHaveTextContent("Coleção");
+  } finally {
+    view.unmount();
+    visible.mockRestore();
+    vi.unstubAllGlobals();
   }
 });
