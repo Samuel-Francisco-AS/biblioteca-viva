@@ -8,11 +8,11 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, expect, it, vi } from "vitest";
-
-afterEach(() => vi.unstubAllGlobals());
 import type { QuestProbeEvent } from "./three/performanceProbe";
 import { NarrativePanel } from "./NarrativePanel";
 import { NarrativeSession } from "./narrative/session";
+
+afterEach(() => vi.unstubAllGlobals());
 it("supports keyboard choices, focus, interruption, completion and journal with no WebGL", async () => {
   const session = new NarrativeSession(),
     user = userEvent.setup();

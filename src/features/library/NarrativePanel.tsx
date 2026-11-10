@@ -72,7 +72,15 @@ export function NarrativePanel({
       });
   }, [enabled, state.active, state.revision, state.talkingTo, questProbe]);
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled) {
+      if (focusFrame.current !== null &&
+          typeof cancelAnimationFrame === "function")
+        cancelAnimationFrame(focusFrame.current);
+      focusFrame.current = null;
+      previousActive.current = false;
+      focusedSpeaker.current = null;
+      return;
+    }
     if (state.active) {
       if (
         !previousActive.current &&
