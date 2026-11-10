@@ -1984,7 +1984,9 @@
   animation: none;
 }
 
-/* A compositor-only passage: no forced loading pause, no focus trap or blur. */
+/* BV-UXC R6: extended, readiness-held transition. The initial veil
+   responds immediately; it never waits for a lazy module to show feedback.
+   Only opacity/transform animate; the Three world is not remounted. */
 .app-shell > .passage-veil {
   position: fixed;
   inset: 0;
@@ -1992,31 +1994,72 @@
   pointer-events: none;
   opacity: 0;
   background:
-    radial-gradient(ellipse at 50% 85%, #9471af42, transparent 60%),
-    linear-gradient(135deg, #161020b8, #241a36ab);
+    radial-gradient(ellipse at 50% 50%, #47335b 0%, #171323 58%, #090d12 100%);
   transform: translate3d(0, 0, 0);
+  will-change: opacity;
+}
+.app-shell > .passage-veil::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(30vw, 8rem);
+  aspect-ratio: 1;
+  border: 2px solid #d3ae7188;
+  border-top-color: #f7dca4;
+  border-radius: 50%;
+  box-shadow: inset 0 0 1rem #dba76a35, 0 0 2.4rem #d4ad6940;
+  transform: translate3d(-50%, -50%, 0);
+  opacity: 0;
+}
+.app-shell > .passage-veil::after {
+  content: "✦   DESDOBRANDO AS PÁGINAS   ✦";
+  position: absolute;
+  left: 50%;
+  top: calc(50% + min(20vw, 5.7rem));
+  width: min(90vw, 22rem);
+  color: #f4dcb3;
+  font: 0.75rem/1.5 Georgia, serif;
+  letter-spacing: 0.13em;
+  text-align: center;
+  transform: translate3d(-50%, 0, 0);
+  opacity: 0;
 }
 .app-shell[data-passage="departing"] > .passage-veil {
-  animation: bv-passage-fold 160ms ease-out both;
+  animation: bv-passage-fold 400ms cubic-bezier(0.15, 0.7, 0.2, 1) both;
+}
+.app-shell[data-passage="waiting"] > .passage-veil {
+  opacity: 0.97;
+}
+.app-shell[data-passage="departing"] > .passage-veil::before,
+.app-shell[data-passage="waiting"] > .passage-veil::before {
+  opacity: 1;
+  animation: bv-passage-sigil 2.2s linear infinite;
+}
+.app-shell[data-passage="departing"] > .passage-veil::after,
+.app-shell[data-passage="waiting"] > .passage-veil::after {
+  opacity: 1;
 }
 .app-shell[data-passage="arriving"] > .passage-veil {
-  animation: bv-passage-unfold 250ms cubic-bezier(0.19, 0.75, 0.25, 1) both;
+  animation: bv-passage-unfold 440ms cubic-bezier(0.16, 0.82, 0.28, 1) both;
+}
+.app-shell[data-passage="arriving"] > .passage-veil::before {
+  opacity: 1;
+}
+.app-shell[data-passage="arriving"] > .passage-veil::after {
+  opacity: 1;
 }
 @keyframes bv-passage-fold {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 0.5;
-  }
+  from { opacity: 0; }
+  to { opacity: 0.97; }
 }
 @keyframes bv-passage-unfold {
-  from {
-    opacity: 0.5;
-  }
-  to {
-    opacity: 0;
-  }
+  from { opacity: 0.97; }
+  to { opacity: 0; }
+}
+@keyframes bv-passage-sigil {
+  from { transform: translate3d(-50%, -50%, 0) rotate(0deg); }
+  to { transform: translate3d(-50%, -50%, 0) rotate(360deg); }
 }
 
 /* The speaker panel itself unfolds; the header and Adiar remain in the DOM. */
@@ -2038,14 +2081,20 @@
   .app-shell .rpg-dialogue {
     animation: none;
   }
-  .app-shell > .passage-veil {
+  .app-shell > .passage-veil,
+  .app-shell > .passage-veil::before,
+  .app-shell > .passage-veil::after {
     opacity: 0;
+    animation: none;
   }
 }
 .app-shell[data-reduced-motion="true"] > .passage-veil,
 .app-shell[data-reduced-motion="true"] .rpg-dialogue {
   animation: none;
 }
-.app-shell[data-reduced-motion="true"] > .passage-veil {
+.app-shell[data-reduced-motion="true"] > .passage-veil,
+.app-shell[data-reduced-motion="true"] > .passage-veil::before,
+.app-shell[data-reduced-motion="true"] > .passage-veil::after {
   opacity: 0;
+  animation: none;
 }
