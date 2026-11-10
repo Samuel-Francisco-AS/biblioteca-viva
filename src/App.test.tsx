@@ -305,15 +305,15 @@ it("R6 animates before navigating and does not replay a link twice", async () =>
     fireEvent.click(link);
     const shell = view.container.querySelector(".app-shell");
     expect(shell).toHaveAttribute("data-passage", "departing");
-    expect(screen.getByRole("banner")).toHaveTextContent("Biblioteca");
+    expect(shell).toHaveAttribute("data-route", "library");
 
     // First frame can paint the curtain; the router is still on the origin.
     await act(async () => callbacks.shift()?.(0));
-    expect(screen.getByRole("banner")).toHaveTextContent("Biblioteca");
+    expect(shell).toHaveAttribute("data-route", "library");
 
     // The original Link is replayed once, retaining React Router semantics.
     await act(async () => callbacks.shift()?.(16));
-    expect(screen.getByRole("banner")).toHaveTextContent("Coleção");
+    expect(shell).toHaveAttribute("data-route", "colecao");
   } finally {
     view.unmount();
     visible.mockRestore();
