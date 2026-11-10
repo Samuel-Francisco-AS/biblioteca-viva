@@ -1,4 +1,5 @@
 import { BVSelectSheet } from "../../ui/BVPicker";
+import { signalPassageReady } from "../../app/interactionContinuity";
 import {
   VISIBLE_GROUPS,
   groupLabels,
@@ -153,6 +154,10 @@ export function CollectionPage({
       active = false;
     };
   }, [application]);
+
+  useEffect(() => {
+    if (!application || error || entries) signalPassageReady(location.pathname);
+  }, [application, error, entries, location.pathname]);
 
   function updateParam(name: string, value: string) {
     setParams(
