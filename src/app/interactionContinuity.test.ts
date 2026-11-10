@@ -76,7 +76,7 @@ describe("R6.1: seamless, readiness-gated passage", () => {
     expect(shell.dataset.passage).toBe("arriving");
   });
 
-  it("keeps a fully covered veil opaque during two rapid navigation gestures", () => {
+  it("keeps a fully covered veil opaque during two rapid navigation gestures", async () => {
     vi.useFakeTimers();
     const { shell, frames } = setup();
     const oldWork = vi.fn();
@@ -88,6 +88,7 @@ describe("R6.1: seamless, readiness-gated passage", () => {
     beginPassage("/arcanario");
     schedulePassage(newWork);
     expect(shell.dataset.passage).toBe("waiting");
+    await Promise.resolve(); // the new intent is safe behind the sealed cover
     frames.shift()?.(560); // stale callback still present
     frames.shift()?.(576);
     expect(oldWork).not.toHaveBeenCalled();
