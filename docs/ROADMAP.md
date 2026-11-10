@@ -1,3 +1,5 @@
+> **Próximo gate BV-UXC R6.2 (10/11/2026):** reproduzir e medir clique em cada habitante, abertura/fechamento da quest, foco acessível e regressões do diálogo; comparar R5Q antes/depois, sem alegar P95/P99 por antecipação. PR #49 draft. [Relatório](audits/BV_UXC_R62_QUEST_CARD_2026-11-10.md).
+
 > **BV-UXC R6.1 (10/11/2026):** próximo gate Moto G06 deve verificar que não há flashes de telas novas sob a cortina, que o sigilo gira sem saltos e que a navegação continua funcional em Back, toques rápidos e movimento reduzido. PR #49 draft sem merge/CI. [Registro](audits/BV_UXC_R61_CONTINUIDADE_TRANSICAO_2026-11-10.md).
 
 > **BV-UXC R6 — candidata de transição visual (10/11/2026):** validar no Moto G06 resposta visual imediata, montagem assíncrona coberta e esperas prolongadas somente enquanto destinos realmente carregam. Conferir navegação rápida/Voltar e regressões R4/R5. PR #49 draft, sem merge/CI. [Relatório](audits/BV_UXC_R6_TRANSICOES_2026-11-10.md).

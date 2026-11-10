@@ -1,3 +1,9 @@
+## 10/11/2026 — BV-UXC R6.2: abertura das quests dos habitantes
+
+- Após gate informal positivo da R6.1, engasgo residual concentrado no card de quest.
+- Substituídos seletores CSS amplos `:has()` dependentes do diálogo por estado explícito e local; foco acessível adiado um quadro após montagem e somente na abertura/troca de interlocutor.
+- Preservados GLBs, mundo, escolhas narrativas, retorno/Voltar, dados e animações. Testes de regressão escritos/atualizados, **não executados remotamente**; melhoria física pendente. [Relatório](docs/audits/BV_UXC_R62_QUEST_CARD_2026-11-10.md).
+
 ## 10/11/2026 — BV-UXC R6.1: cortina opaca e transição mais suave (PR draft #49)
 
 - Corrigido vazamento visual: a R6 liberava processamento da próxima rota após apenas dois RAFs e mantinha a cortina a 97% de opacidade. R6.1 aguarda a cobertura completa (560 ms) antes de processar a navegação e mantém a tela totalmente coberta até prontidão.
