@@ -94,7 +94,8 @@ function RouteStartupReady({ active }: { readonly active: boolean }) {
       recordUiRouteContentCommit(location.pathname);
       // A lazy module mounting is not the same as its data having loaded.
       // Data-backed folios signal readiness from their own loaded state.
-      const dataBacked = ["/colecao", "/arquivo", "/estatisticas"].includes(location.pathname) ||
+      const dataBacked =
+        ["/colecao", "/arquivo", "/estatisticas"].includes(location.pathname) ||
         /^\/(registros|livros)\/[^/]+(?:\/editar)?$/.test(location.pathname);
       if (!dataBacked) signalPassageReady(location.pathname);
     }
@@ -347,7 +348,8 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
         if (
           control instanceof HTMLAnchorElement &&
           replayingLinksRef.current.has(control)
-        ) return;
+        )
+          return;
         if (control.matches(".book-card__link"))
           control.setAttribute("data-tap-confirmed", "true");
         // Global opt-in diagnostic: measure the next two RAF callbacks for
@@ -376,8 +378,11 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           control instanceof HTMLAnchorElement &&
           !control.closest(".primary-dock") &&
           event.button === 0 &&
-          !event.metaKey && !event.ctrlKey && !event.altKey &&
-          !event.shiftKey && !event.defaultPrevented &&
+          !event.metaKey &&
+          !event.ctrlKey &&
+          !event.altKey &&
+          !event.shiftKey &&
+          !event.defaultPrevented &&
           !control.hasAttribute("download") &&
           (!control.target || control.target === "_self") &&
           control.origin === window.location.origin &&
@@ -457,7 +462,9 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
         <AppErrorBoundary
           embedded
           resetKey={location.pathname}
-          onFailure={() => signalPassageReady(location.pathname)}
+          onFailure={() =>
+            queueMicrotask(() => signalPassageReady(location.pathname))
+          }
         >
           <Profiler id="route" onRender={recordUiReactRender}>
             <Suspense

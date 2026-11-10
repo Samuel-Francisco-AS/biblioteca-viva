@@ -2050,16 +2050,28 @@
   opacity: 1;
 }
 @keyframes bv-passage-fold {
-  from { opacity: 0; }
-  to { opacity: 0.97; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.97;
+  }
 }
 @keyframes bv-passage-unfold {
-  from { opacity: 0.97; }
-  to { opacity: 0; }
+  from {
+    opacity: 0.97;
+  }
+  to {
+    opacity: 0;
+  }
 }
 @keyframes bv-passage-sigil {
-  from { transform: translate3d(-50%, -50%, 0) rotate(0deg); }
-  to { transform: translate3d(-50%, -50%, 0) rotate(360deg); }
+  from {
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+  to {
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
 }
 
 /* The speaker panel itself unfolds; the header and Adiar remain in the DOM. */
