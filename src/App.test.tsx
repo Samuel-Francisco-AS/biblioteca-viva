@@ -1,4 +1,5 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import "fake-indexeddb/auto";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -15,7 +16,8 @@ beforeEach(() => {
 });
 
 vi.mock("@capacitor/core", () => ({
-  Capacitor: { isNativePlatform: () => false },
+  registerPlugin: vi.fn(() => ({})),
+  Capacitor: { isNativePlatform: () => false, getPlatform: () => "web" },
 }));
 vi.mock("@capacitor/app", () => ({
   App: {
@@ -96,6 +98,24 @@ it("R7 releases touch feedback on scroll, cancellation and release without early
   emit("pointerdown");
   emit("pointerup");
   expect(link).not.toHaveAttribute("data-tap-active");
+});
+
+it("shows a non-blocking passage for same-tab navigation, not modified clicks", () => {
+  render(
+    <MemoryRouter>
+      <App />
+    </MemoryRouter>,
+  );
+  const link = screen.getByRole("link", { name: "Coleção" });
+  const shell = document.querySelector(".app-shell");
+  fireEvent.click(link, { ctrlKey: true });
+  expect(shell).not.toHaveAttribute("data-passage");
+  fireEvent.click(link);
+  expect(shell).toHaveAttribute("data-passage", "departing");
+  expect(document.querySelector(".passage-veil")).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
 });
 
 it("R9 only pulses for confirmed clicks, including consecutive keyboard activations", () => {
@@ -216,4 +236,94 @@ it("reserves the measured banner and dock layout without counting the folio's te
   expect(shell.style.getPropertyValue("--canvas-dock-height")).toBe("98px");
   view.unmount();
   expect(disconnect).toHaveBeenCalledOnce();
+});
+
+it("keeps the Arcanarium snapshot mounted between rooms and debounces the real workshop", async () => {
+  const { createApplication } = await import("./app/createApplication");
+  const { default: Dexie } = await import("dexie");
+  const name = `perf-shell-fiction-${crypto.randomUUID()}`;
+  const application = await createApplication({ databaseName: name });
+  const list = vi.spyOn(application.arcanarium, "list");
+  const { waitFor } = await import("@testing-library/react");
+  const view = render(
+    <MemoryRouter initialEntries={["/arcanario/acervo"]}>
+      <App application={application} />
+    </MemoryRouter>,
+  );
+  try {
+    await screen.findByRole("heading", { name: "Acervo global" });
+    for (const [link, title] of [
+      ["Baralhos", "Baralhos & coleções"],
+      ["Ecos", "Ecos do conhecimento"],
+      ["Acervo", "Acervo global"],
+    ]) {
+      fireEvent.click(
+        within(
+          screen.getByRole("navigation", { name: "Salas do Arcanário" }),
+        ).getByRole("link", { name: link }),
+      );
+      await screen.findByRole("heading", { name: title });
+    }
+    expect(list).toHaveBeenCalledOnce();
+    fireEvent.click(screen.getByRole("link", { name: "Oficina" }));
+    const field = await screen.findByLabelText(
+      "Frente da carta — pergunta ou pista",
+    );
+    const write = vi.spyOn(application.workshopDrafts, "write");
+    for (const value of ["P", "Pi", "Pista fictícia"])
+      fireEvent.change(field, { target: { value } });
+    expect(write).not.toHaveBeenCalled();
+    await waitFor(() => expect(write).toHaveBeenCalledOnce());
+    fireEvent.change(field, { target: { value: "Última pista fictícia" } });
+    view.unmount();
+    expect(application.workshopDrafts.read("nova:flashcard")).toContain(
+      "Última pista fictícia",
+    );
+  } finally {
+    view.unmount();
+    application.close();
+    await Dexie.delete(name);
+  }
+});
+
+it("R6 animates before navigating and does not replay a link twice", async () => {
+  const callbacks: FrameRequestCallback[] = [];
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+    callbacks.push(callback);
+    return callbacks.length;
+  });
+  vi.stubGlobal("cancelAnimationFrame", vi.fn());
+  const visible = vi.spyOn(document, "visibilityState", "get");
+  visible.mockReturnValue("visible");
+  const view = render(
+    <MemoryRouter>
+      <App />
+    </MemoryRouter>,
+  );
+  try {
+    const link = screen.getByRole("link", { name: "Coleção" });
+    fireEvent.click(link);
+    const shell = view.container.querySelector(".app-shell");
+    expect(shell).toHaveAttribute("data-passage", "departing");
+    expect(shell).toHaveAttribute("data-route", "library");
+
+    // No route work is even queued while the cover is translucent.
+    expect(callbacks).toHaveLength(0);
+    expect(shell).toHaveAttribute("data-route", "library");
+    const veil = view.container.querySelector(".passage-veil");
+    fireEvent.animationEnd(veil!, { animationName: "bv-passage-fold" });
+    expect(shell).toHaveAttribute("data-passage", "waiting");
+    expect(shell).toHaveAttribute("data-route", "library");
+
+    // The full-opacity cover is now committed. Its queued callbacks may
+    // navigate, but the visible underlay cannot leak during preparation.
+    await act(async () => callbacks.shift()?.(560));
+    expect(shell).toHaveAttribute("data-route", "library");
+    await act(async () => callbacks.shift()?.(576));
+    expect(shell).toHaveAttribute("data-route", "colecao");
+  } finally {
+    view.unmount();
+    visible.mockRestore();
+    vi.unstubAllGlobals();
+  }
 });

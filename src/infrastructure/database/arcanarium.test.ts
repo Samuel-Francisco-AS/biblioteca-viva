@@ -526,3 +526,48 @@ it("rejects a corrupted v7 graph and rolls back a replacement failure after clea
   expect(await snapshots.read()).toEqual(before);
   expect((await api.getCard(card.id))?.revision).toBe(1);
 });
+
+it("batches canonical study projections across entries without losing order, archival or invalid-reference checks", async () => {
+  const name = await legacy(
+    Array.from({ length: 12 }, (_, i) => study(`study-${i}`)),
+  );
+  const { db, entries, repo } = await setup(name);
+  const get = vi.spyOn(db.arcanariumCards, "get");
+  const batch = vi.spyOn(db.arcanariumCards, "bulkGet");
+  const projected = await entries.list();
+  expect(projected).toHaveLength(12);
+  expect(
+    projected.every(
+      (e) =>
+        e.type === "study" && e.flashCards?.[0].front === "  Pista\ninteira  ",
+    ),
+  ).toBe(true);
+  expect(get).not.toHaveBeenCalled();
+  expect(batch).toHaveBeenCalledOnce();
+  const first = projected[0];
+  if (first.type !== "study") throw new Error("Expected synthetic study");
+  const id = first.flashCards![0].globalCardId!;
+  const card = await repo.getCard(id);
+  if (!card) throw new Error("Expected canonical card");
+  await repo.putCard({ ...card, archived: true });
+  expect(await entries.getById(first.id)).toMatchObject({ flashCards: [] });
+  await db.arcanariumCards.delete(id);
+  await expect(entries.getById(first.id)).rejects.toMatchObject({
+    code: "DATABASE_READ_FAILED",
+  });
+});
+
+it("reads the Arcanarium atomically in readonly mode without locking unrelated user tables", async () => {
+  const { db, api } = await setup();
+  const read = vi
+    .spyOn(db.arcanariumCards, "toArray")
+    .mockImplementation(() => {
+      expect(Dexie.currentTransaction?.mode).toBe("readonly");
+      expect(Dexie.currentTransaction?.storeNames).not.toContain(
+        "libraryEntries",
+      );
+      return Dexie.Promise.resolve([]);
+    });
+  expect((await api.list()).cards).toEqual([]);
+  expect(read).toHaveBeenCalledOnce();
+});

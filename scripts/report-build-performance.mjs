@@ -29,6 +29,30 @@ chunks.sort((left, right) => right.bytes - left.bytes);
 const initialBytes = chunks
   .filter(({ initial }) => initial)
   .reduce((total, chunk) => total + chunk.bytes, 0);
+// Count the initial static import graph and CSS exactly once. Dynamic imports
+// are separate payloads, even when the initial route soon requests the world.
+const initialFiles = new Set();
+const visited = new Set();
+function collect(source) {
+  if (visited.has(source)) return;
+  visited.add(source);
+  const chunk = manifest[source];
+  if (!chunk) return;
+  initialFiles.add(chunk.file);
+  for (const css of chunk.css ?? []) initialFiles.add(css);
+  for (const dependency of chunk.imports ?? []) collect(dependency);
+}
+collect(applicationEntry[0]);
+const initialStaticGraph = await Promise.all(
+  [...initialFiles].sort().map(async (file) => ({
+    file,
+    bytes: (await stat(join(outputDirectory, file))).size,
+  })),
+);
+const initialStaticGraphBytes = initialStaticGraph.reduce(
+  (sum, file) => sum + file.bytes,
+  0,
+);
 process.stdout.write(
-  `${JSON.stringify({ measurementScope: "Static bundle bytes; no CPU, GPU, presentation or Android FPS measurement", chunks, initialBytes }, null, 2)}\n`,
+  `${JSON.stringify({ measurementScope: "Static bundle bytes; no CPU, GPU, presentation or Android FPS measurement", chunks, initialBytes, initialStaticGraphBytes, initialStaticGraph }, null, 2)}\n`,
 );

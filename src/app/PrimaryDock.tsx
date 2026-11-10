@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { schedulePassage, beginPassage } from "./interactionContinuity";
 import { preloadRoute } from "./routeModules";
 
 import {
@@ -58,6 +59,17 @@ function DockIcon({ name }: { readonly name: PrimaryNavigationIcon }) {
 }
 
 export function PrimaryDock({ pathname }: { readonly pathname: string }) {
+  const navigate = useNavigate();
+  const flight = useRef<(() => void) | null>(null);
+  const flightOrigin = useRef<string | null>(null);
+  useEffect(() => () => flight.current?.(), []);
+  useEffect(() => {
+    if (flightOrigin.current !== null && flightOrigin.current !== pathname) {
+      flight.current?.();
+      flight.current = null;
+      flightOrigin.current = null;
+    }
+  }, [pathname]);
   const activeRouteId = primaryRouteIdForPath(pathname);
   const [passage, setPassage] = useState<{ from: string; to: string }>();
   if (passage && passage.from !== pathname) setPassage(undefined);
@@ -82,7 +94,6 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                 className="primary-dock__link"
                 data-pending={pending && passage.to === route.path}
                 to={route.path}
-                onPointerDown={() => preloadRoute(route.path)}
                 onClick={(event) => {
                   if (
                     event.button !== 0 ||
@@ -93,11 +104,25 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                     event.defaultPrevented
                   )
                     return;
-                  preloadRoute(route.path);
+                  event.preventDefault();
+                  flight.current?.();
+                  if (active) {
+                    setPassage(undefined);
+                    return;
+                  }
+                  flightOrigin.current = pathname;
                   setPassage({ from: pathname, to: route.path });
+                  beginPassage(route.path);
+                  flight.current = schedulePassage(() => {
+                    flight.current = null;
+                    flightOrigin.current = null;
+                    preloadRoute(route.path);
+                    void navigate(route.path);
+                  });
                 }}
-                onPointerEnter={() => preloadRoute(route.path)}
-                onFocus={() => preloadRoute(route.path)}
+                onPointerEnter={(event) => {
+                  if (event.pointerType === "mouse") preloadRoute(route.path);
+                }}
               >
                 <span className="primary-dock__medallion">
                   <span className="primary-dock__halo" aria-hidden="true" />

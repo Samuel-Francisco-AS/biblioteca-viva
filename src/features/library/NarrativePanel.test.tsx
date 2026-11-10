@@ -1,9 +1,18 @@
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { expect, it, vi } from "vitest";
+import { afterEach, expect, it, vi } from "vitest";
 import type { QuestProbeEvent } from "./three/performanceProbe";
 import { NarrativePanel } from "./NarrativePanel";
 import { NarrativeSession } from "./narrative/session";
+
+afterEach(() => vi.unstubAllGlobals());
 it("supports keyboard choices, focus, interruption, completion and journal with no WebGL", async () => {
   const session = new NarrativeSession(),
     user = userEvent.setup();
@@ -18,7 +27,9 @@ it("supports keyboard choices, focus, interruption, completion and journal with 
   await user.click(
     within(story).getByRole("button", { name: "Descobrir história" }),
   );
-  expect(screen.getByRole("heading", { name: "Samael" })).toHaveFocus();
+  await waitFor(() =>
+    expect(screen.getByRole("heading", { name: "Samael" })).toHaveFocus(),
+  );
   const dialog = screen.getByRole("article", { name: "Conversa RPG" });
   expect(within(dialog).getAllByRole("button")).toHaveLength(4);
   expect(dialog).toHaveTextContent("nenhuma animação é confirmada");
@@ -76,6 +87,12 @@ it("consumes native Back for the journal and active conversation", async () => {
 });
 
 it("R5Q observes DOM commit, accessible focus and card animation without changing narrative", () => {
+  const callbacks: FrameRequestCallback[] = [];
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+    callbacks.push(callback);
+    return callbacks.length;
+  });
+  vi.stubGlobal("cancelAnimationFrame", vi.fn());
   const session = new NarrativeSession();
   const observeQuest = vi.fn<(event: QuestProbeEvent) => void>();
   render(
@@ -86,6 +103,14 @@ it("R5Q observes DOM commit, accessible focus and card animation without changin
     />,
   );
   act(() => session.talk("aryn"));
+  expect(
+    observeQuest.mock.calls.map(([event]) =>
+      event.type === "mark" ? event.stage : event.type,
+    ),
+  ).toEqual(["reactCommit"]);
+  act(() => {
+    callbacks.shift()?.(16);
+  });
   expect(screen.getByRole("heading", { name: "Aryn" })).toHaveFocus();
   expect(
     observeQuest.mock.calls.map(([event]) =>
@@ -119,4 +144,28 @@ it("R5Q observes DOM commit, accessible focus and card animation without changin
     screen.queryByRole("article", { name: "Conversa RPG" }),
   ).not.toBeInTheDocument();
   session.dispose();
+});
+
+it("R6.2 reflects quest-card visibility through explicit state instead of :has()", () => {
+  const host = document.createElement("section");
+  host.className = "library-page";
+  document.body.append(host);
+  const session = new NarrativeSession();
+  const view = render(<NarrativePanel session={session} failed={false} />, {
+    container: host,
+  });
+  try {
+    expect(host).not.toHaveAttribute("data-quest-panel-open");
+    act(() => session.talk("ytha"));
+    expect(host).toHaveAttribute("data-quest-panel-open", "true");
+    act(() => session.close());
+    expect(host).not.toHaveAttribute("data-quest-panel-open");
+    expect(
+      screen.getByRole("button", { name: /Diário de histórias/ }),
+    ).toBeInTheDocument();
+  } finally {
+    view.unmount();
+    host.remove();
+    session.dispose();
+  }
 });

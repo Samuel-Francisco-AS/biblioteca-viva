@@ -1,4 +1,5 @@
 import { WorkDetailPage } from "./WorkDetailPage";
+import { signalPassageReady } from "../../app/interactionContinuity";
 import type { WorkEntry } from "../../domain";
 import {
   EntertainmentDetail,
@@ -11,7 +12,7 @@ import {
 import { StudyDetailPage } from "./StudyDetailPage";
 import type { FlashCardApplication } from "./StudyFlashCards";
 import { useEffect, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useParams, useSearchParams } from "react-router-dom";
 
 import type { LibraryEntry, Note, Quote } from "../../domain";
 import { safeReturnPath } from "../books/navigationOrigin";
@@ -77,6 +78,7 @@ export function EntryDetailPage({
 }: {
   readonly application?: EntryDetailApplication;
 }) {
+  const location = useLocation();
   const { id = "" } = useParams();
   const [searchParams] = useSearchParams();
   const returnPath = safeReturnPath(searchParams.get("from"));
@@ -108,6 +110,11 @@ export function EntryDetailPage({
       active = false;
     };
   }, [application, id]);
+
+  useEffect(() => {
+    if (!application || error || entry)
+      signalPassageReady(location.pathname);
+  }, [application, error, entry, location.pathname]);
 
   if (!application)
     return (

@@ -48,6 +48,20 @@ export function Catalogue({
     setParams(next, { replace: true });
   };
   const available = useMemo(() => availablePackCardIds(data), [data]);
+  const searching = search.length > 0;
+  const searchText = search.toLocaleLowerCase("pt-BR");
+  const searchIndex = useMemo(
+    () =>
+      searching
+        ? new Map(
+            data.cards.map((c) => [
+              c.id,
+              JSON.stringify(c.content).toLocaleLowerCase("pt-BR"),
+            ]),
+          )
+        : undefined,
+    [data.cards, searching],
+  );
   const cards = useMemo(
     () =>
       data.cards.filter(
@@ -72,9 +86,8 @@ export function Catalogue({
             (c.content.type === "question" &&
               c.content.classification.knowledgeTagIds.includes(tag))) &&
           (family === "all" || c.type === family) &&
-          JSON.stringify(c.content)
-            .toLocaleLowerCase("pt-BR")
-            .includes(search.toLocaleLowerCase("pt-BR")),
+          (!searchText ||
+            (searchIndex?.get(c.id)?.includes(searchText) ?? false)),
       ),
     [
       data,
@@ -86,7 +99,8 @@ export function Catalogue({
       exam,
       tag,
       family,
-      search,
+      searchText,
+      searchIndex,
     ],
   );
   return (

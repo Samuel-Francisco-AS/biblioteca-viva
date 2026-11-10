@@ -3,6 +3,7 @@ import {
   type EntertainmentEditorApplication,
 } from "../entertainment/EntertainmentEditor";
 import { scheduleFromForm, workoutFormError } from "./workoutFormModel";
+import { signalPassageReady } from "../../app/interactionContinuity";
 import { exercisesFromForm } from "./exercisesFromForm";
 import { RitualFields } from "./RitualFields";
 import { ritualCopy } from "./ritualCopy";
@@ -10,6 +11,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import {
   Link,
   useNavigate,
+  useLocation,
   useParams,
   useSearchParams,
 } from "react-router-dom";
@@ -129,6 +131,7 @@ export function EditEntryPage({
 }: {
   readonly application?: EditEntryApplication;
 }) {
+  const location = useLocation();
   const { id = "" } = useParams();
   const [params] = useSearchParams();
   const returnPath = safeReturnPath(params.get("from"));
@@ -136,6 +139,10 @@ export function EditEntryPage({
   const [entry, setEntry] = useState<LibraryEntry>();
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    if (!application || error || entry)
+      signalPassageReady(location.pathname);
+  }, [application, error, entry, location.pathname]);
   useEffect(() => {
     if (!application) return;
     let active = true;

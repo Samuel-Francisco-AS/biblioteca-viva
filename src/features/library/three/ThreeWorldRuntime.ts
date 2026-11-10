@@ -141,6 +141,8 @@ export interface FixtureModelLoader {
 }
 
 export interface ThreeWorldRuntimeDependencies {
+  /** Host-mounted production scenes allow touch feedback to paint before picking. */
+  readonly deferPicking?: boolean;
   readonly livingSession?: LivingSession;
   readonly nightLighting?: NightLightingSession;
   readonly inhabitantLoader?: InhabitantLoader;
@@ -495,6 +497,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly fixtureLoader: FixtureModelLoader;
   private readonly frameScheduler: FrameScheduler;
   private readonly now: () => number;
+  private readonly deferPicking: boolean;
 
   private readonly livingSession?: LivingSession;
   private readonly nightLighting?: NightLightingSession;
@@ -514,6 +517,8 @@ export class ThreeWorldRuntime implements WorldRuntime {
     snapshot: InhabitantContinuitySnapshot,
   ) => void;
   private lastContinuityCheckpointAt: number | undefined;
+  private pausedCheckpointIdle?: number;
+  private pausedCheckpointTimer?: number;
   private readonly inhabitantActivations = new Set<
     (key: InhabitantKey) => void
   >();
@@ -529,6 +534,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private sessionBooks?: ReturnType<typeof createSessionBookVisuals>;
   private sessionVisuals?: ReturnType<typeof createSessionWorldVisuals>;
   constructor(dependencies: ThreeWorldRuntimeDependencies = {}) {
+    this.deferPicking = dependencies.deferPicking ?? false;
     this.inhabitantLoader = dependencies.inhabitantLoader;
     this.scrolls = dependencies.libraryWorldSnapshot?.scrolls ?? [];
     this.continuity = dependencies.inhabitantContinuity;
@@ -898,6 +904,9 @@ export class ThreeWorldRuntime implements WorldRuntime {
       this.refreshSelectableObjects();
       const interaction = new ThreeWorldInteraction({
         probe: this.performanceProbe,
+        deferPicking: this.deferPicking,
+        fastPicking: this.deferPicking,
+        inhabitantVolumePicking: this.deferPicking,
         onPickStart: () =>
           this.observeQuest({ type: "begin", source: "canvas" }),
         camera,
@@ -1070,12 +1079,15 @@ export class ThreeWorldRuntime implements WorldRuntime {
 
   pause(): void {
     if (this.isTerminal()) return;
-    this.checkpointInhabitants(true);
     this.pausedByVisibility = false;
     this.pauseLoop();
+    // Let the destination present before serializing an agent snapshot.
+    // Visibility/pagehide and disposal still checkpoint synchronously.
+    this.schedulePausedCheckpoint();
   }
 
   resume(): void {
+    this.cancelPausedCheckpoint();
     if (this.state === "running") return;
     if (this.state !== "paused" && this.state !== "mounted") return;
     if (document.hidden) {
@@ -1350,6 +1362,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private readonly handleVisibilityChange = (): void => {
     if (this.isTerminal()) return;
     if (document.hidden) {
+      this.cancelPausedCheckpoint();
       this.checkpointInhabitants(true);
       if (this.state === "running") {
         this.pausedByVisibility = true;
@@ -1733,6 +1746,44 @@ export class ThreeWorldRuntime implements WorldRuntime {
     return this.state === "failed" || this.state === "disposed";
   }
 
+  private cancelPausedCheckpoint(): void {
+    if (this.pausedCheckpointIdle !== undefined) {
+      window.cancelIdleCallback?.(this.pausedCheckpointIdle);
+      this.pausedCheckpointIdle = undefined;
+    }
+    if (this.pausedCheckpointTimer !== undefined) {
+      window.clearTimeout(this.pausedCheckpointTimer);
+      this.pausedCheckpointTimer = undefined;
+    }
+  }
+
+  private schedulePausedCheckpoint(): void {
+    if (!this.agency || !this.onInhabitantCheckpoint) return;
+    if (document.hidden) {
+      this.cancelPausedCheckpoint();
+      this.checkpointInhabitants(true);
+      return;
+    }
+    if (
+      this.pausedCheckpointIdle !== undefined ||
+      this.pausedCheckpointTimer !== undefined
+    )
+      return;
+    const capture = () => {
+      this.pausedCheckpointIdle = undefined;
+      this.pausedCheckpointTimer = undefined;
+      if (this.state === "paused") this.checkpointInhabitants(true);
+    };
+    if (typeof window.requestIdleCallback === "function") {
+      this.pausedCheckpointIdle = window.requestIdleCallback(capture, {
+        timeout: 1800,
+      });
+    } else {
+      // A fallback on Android WebViews without requestIdleCallback.
+      this.pausedCheckpointTimer = window.setTimeout(capture, 120);
+    }
+  }
+
   /** Periodic lightweight snapshots, plus pause/close; no IndexedDB per frame. */
   private checkpointInhabitants(
     force: boolean,
@@ -1758,6 +1809,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   }
 
   private releaseMount(): void {
+    this.cancelPausedCheckpoint();
     this.checkpointInhabitants(true);
     window.removeEventListener("pagehide", this.handlePageHide);
     const mountedWorld = this.mountedWorld;

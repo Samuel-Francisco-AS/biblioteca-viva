@@ -1,4 +1,5 @@
 import { BVSelectSheet } from "../../ui/BVPicker";
+import { signalPassageReady } from "../../app/interactionContinuity";
 import {
   VISIBLE_GROUPS,
   groupLabels,
@@ -107,6 +108,11 @@ export function ArchivePage({
       active = false;
     };
   }, [application]);
+
+  useEffect(() => {
+    if (!application || error || (entries && notes && quotes))
+      signalPassageReady(location.pathname);
+  }, [application, error, entries, notes, quotes, location.pathname]);
 
   const entryById = useMemo(
     () => new Map((entries ?? []).map((entry) => [entry.id, entry])),

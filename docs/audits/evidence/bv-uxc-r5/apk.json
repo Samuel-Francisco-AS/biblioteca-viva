@@ -1,0 +1,42 @@
+{
+  "sourceRuntimeTreeSha256": "42024ea742643f5ca1a221a2ee7b5ab9285fc8c8b4a8497208271212269d923f",
+  "sourceRuntimeFileCount": 358,
+  "sourceFingerprintAlgorithm": "sha256 of sorted relative path + NUL + file sha256 bytes; src excluding tests, index, packages, vite/capacitor and diagnostics env",
+  "versionChanged": false,
+  "storageVersion": 19,
+  "backupVersion": 11,
+  "artifacts": [
+    {
+      "variant": "normal production web bundle, debug Android",
+      "file": "android/app/build/outputs/apk/debug/Biblioteca-Viva-UXC-R5-debug.apk",
+      "bytes": 13081021,
+      "sha256": "e8036c8a76f0243a2016542e6c7a1aaddfc9755432b581b6fbfa30918d5c7d09",
+      "certificateSha256": "b788958be4c919889fc30813f13f1aceb5b6b69670514c82e16288f4b60b83b3",
+      "webFilesChecked": 192,
+      "excludedBuildMetadata": [
+        ".vite/manifest.json"
+      ],
+      "missing": [],
+      "mismatched": [],
+      "installed": false,
+      "physicalGate": "pending"
+    },
+    {
+      "variant": "diagnostics; real Library by default; F5 only at /?worldScenario=true",
+      "file": "android/app/build/outputs/apk/debug/Biblioteca-Viva-UXC-R5-diagnostics-debug.apk",
+      "bytes": 19096063,
+      "sha256": "6e7cae292af5fed39268141b0ddf75f3c248ecd788cd10cf97e4a93f68936079",
+      "certificateSha256": "b788958be4c919889fc30813f13f1aceb5b6b69670514c82e16288f4b60b83b3",
+      "webFilesChecked": 199,
+      "excludedBuildMetadata": [
+        ".vite/manifest.json"
+      ],
+      "missing": [],
+      "mismatched": [],
+      "installed": false,
+      "physicalGate": "pending"
+    }
+  ],
+  "sourceCommit": "446b571d4791080a894f9d2a344fdebb3663c647",
+  "sourceProvenance": "Runtime sources match the committed tree fingerprint; later metadata-only commit records provenance. Payloads verified against their builds after Gradle completion."
+}

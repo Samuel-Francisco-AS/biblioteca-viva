@@ -1,0 +1,83 @@
+{
+  "scope": "Chromium headless, fresh synthetic empty DB, mobile viewport, no CPU throttling; automation/observer overhead included; content observed after heading and two RAF callbacks, not presentation or exact readiness; not Android",
+  "samples": [
+    {
+      "path": "/arcanario/baralhos",
+      "automationElapsedMs": 411,
+      "clickToObservedContentMs": 113.5,
+      "transactions": 0,
+      "reads": 0
+    },
+    {
+      "path": "/arcanario/ecos",
+      "automationElapsedMs": 203.90000000596046,
+      "clickToObservedContentMs": 125.59999999403954,
+      "transactions": 0,
+      "reads": 0
+    },
+    {
+      "path": "/arcanario/acervo",
+      "automationElapsedMs": 148.09999999403954,
+      "clickToObservedContentMs": 110.59999999403954,
+      "transactions": 0,
+      "reads": 0
+    },
+    {
+      "path": "/arcanario/baralhos",
+      "automationElapsedMs": 120.09999999403954,
+      "clickToObservedContentMs": 78.90000000596046,
+      "transactions": 0,
+      "reads": 0
+    },
+    {
+      "path": "/arcanario/ecos",
+      "automationElapsedMs": 122.90000000596046,
+      "clickToObservedContentMs": 78.7000000178814,
+      "transactions": 0,
+      "reads": 0
+    },
+    {
+      "path": "/arcanario/acervo",
+      "automationElapsedMs": 224.09999999403954,
+      "clickToObservedContentMs": 159.5,
+      "transactions": 0,
+      "reads": 0
+    }
+  ],
+  "draftWrites": 1,
+  "longTasks": [
+    {
+      "start": 191.2000000178814,
+      "duration": 289
+    },
+    {
+      "start": 534.7000000178814,
+      "duration": 116
+    },
+    {
+      "start": 1369.300000011921,
+      "duration": 53
+    },
+    {
+      "start": 1423.300000011921,
+      "duration": 71
+    },
+    {
+      "start": 1683.800000011921,
+      "duration": 157
+    },
+    {
+      "start": 2704.5,
+      "duration": 77
+    },
+    {
+      "start": 2946.300000011921,
+      "duration": 88
+    }
+  ],
+  "rafPercentiles": [
+    16.699999999999818,
+    33.399999999999636,
+    83.30000000000018
+  ]
+}

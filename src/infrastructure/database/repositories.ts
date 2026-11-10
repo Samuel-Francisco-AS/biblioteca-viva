@@ -1,4 +1,4 @@
-import { DexieArcanariumRepository } from "./arcanariumRepository";
+import { cardSchema, studyCardLinkSchema } from "../../domain/arcanarium";
 import type {
   Activity,
   ActivityRepository,
@@ -79,29 +79,64 @@ function chronological<
 export class DexieLibraryEntryRepository implements LibraryEntryRepository {
   constructor(private readonly database: BibliotecaDatabase) {}
 
-  private async project(entry: LibraryEntry): Promise<LibraryEntry> {
-    if (entry.type !== "study") return entry;
-    const repo = new DexieArcanariumRepository(this.database);
-    const allLinks = await repo.linksForStudy(entry.id);
-    if (allLinks.length === 0 && entry.flashCards === undefined) return entry;
-    const links = allLinks
-      .filter((link) => link.active)
-      .sort((a, b) => a.position - b.position);
-    const flashCards = [];
+  private async project(
+    entries: readonly LibraryEntry[],
+  ): Promise<readonly LibraryEntry[]> {
+    const studies = entries.filter((entry) => entry.type === "study");
+    if (!studies.length) return entries;
+    // One indexed link read and one batched card read for the whole result.
+    // The transaction enclosing list/get keeps links and card revisions atomic.
+    const links = (
+      await this.database.studyCardLinks
+        .where("studyId")
+        .anyOf(studies.map((entry) => entry.id))
+        .toArray()
+    ).map((value) => studyCardLinkSchema.parse(value));
+    const ids = [
+      ...new Set(
+        links.filter((link) => link.active).map((link) => link.cardId),
+      ),
+    ];
+    const values = ids.length
+      ? await this.database.arcanariumCards.bulkGet(ids)
+      : [];
+    const cards = new Map(
+      values.map((value, index) => [
+        ids[index],
+        value === undefined ? undefined : cardSchema.parse(value),
+      ]),
+    );
+    const byStudy = new Map<string, typeof links>();
     for (const link of links) {
-      const card = await repo.getCard(link.cardId);
-      if (!card || card.content.type !== "flashcard")
-        throw readFailure("study_card_reference");
-      if (!card.archived)
-        flashCards.push({
-          id: link.legacyCardId,
-          globalCardId: card.id,
-          revision: card.revision,
-          front: card.content.front,
-          back: card.content.back,
-        });
+      const group = byStudy.get(link.studyId) ?? [];
+      group.push(link);
+      byStudy.set(link.studyId, group);
     }
-    return Object.freeze({ ...entry, flashCards: Object.freeze(flashCards) });
+    return entries.map((entry) => {
+      if (entry.type !== "study") return entry;
+      const allLinks = byStudy.get(entry.id) ?? [];
+      if (!allLinks.length && entry.flashCards === undefined) return entry;
+      const flashCards = allLinks
+        .filter((link) => link.active)
+        .sort((a, b) => a.position - b.position)
+        .flatMap((link) => {
+          const card = cards.get(link.cardId);
+          if (!card || card.content.type !== "flashcard")
+            throw readFailure("study_card_reference");
+          return card.archived
+            ? []
+            : [
+                {
+                  id: link.legacyCardId,
+                  globalCardId: card.id,
+                  revision: card.revision,
+                  front: card.content.front,
+                  back: card.content.back,
+                },
+              ];
+        });
+      return Object.freeze({ ...entry, flashCards: Object.freeze(flashCards) });
+    });
   }
 
   async getById(id: string): Promise<LibraryEntry | undefined> {
@@ -117,7 +152,7 @@ export class DexieLibraryEntryRepository implements LibraryEntryRepository {
           const stored: unknown = await this.database.libraryEntries.get(id);
           return stored === undefined
             ? undefined
-            : await this.project(immutableEntry(stored));
+            : (await this.project([immutableEntry(stored)]))[0];
         },
       );
     } catch (error: unknown) {
@@ -145,9 +180,7 @@ export class DexieLibraryEntryRepository implements LibraryEntryRepository {
                 left.createdAt.localeCompare(right.createdAt) ||
                 left.id.localeCompare(right.id),
             );
-          return Object.freeze(
-            await Promise.all(books.map((entry) => this.project(entry))),
-          );
+          return Object.freeze(await this.project(books));
         },
       );
     } catch (error: unknown) {

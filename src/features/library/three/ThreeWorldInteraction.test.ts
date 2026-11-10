@@ -24,6 +24,7 @@ const disposals: (() => void)[] = [];
 afterEach(() => {
   for (const dispose of disposals.splice(0)) dispose();
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 function setup() {
   const canvas = document.createElement("canvas");
@@ -60,10 +61,17 @@ function setup() {
     });
     return { root, mesh };
   };
-  const mount = () => {
+  const mount = (
+    deferPicking = false,
+    fastPicking = false,
+    inhabitantVolumePicking = false,
+  ) => {
     const selection = vi.fn<(selection: WorldSelection) => void>();
     const activation = vi.fn();
     const interaction = new ThreeWorldInteraction({
+      deferPicking,
+      fastPicking,
+      inhabitantVolumePicking,
       camera,
       canvas,
       scene,
@@ -96,6 +104,239 @@ function setup() {
   };
   return { canvas, scene, camera, add, mount, priority };
 }
+
+describe("Touch continuity", () => {
+  it("acknowledges a candidate before raycast and cancels the echo on a drag", () => {
+    const h = setup();
+    const host = document.createElement("div");
+    host.className = "world-host";
+    host.append(h.canvas);
+    h.mount();
+    const emit = (type: string, x: number) => {
+      const e = new MouseEvent(type, {
+        bubbles: true,
+        clientX: x,
+        clientY: 20,
+        cancelable: true,
+      });
+      Object.defineProperty(e, "pointerId", { value: 1 });
+      h.canvas.dispatchEvent(e);
+    };
+    emit("pointerdown", 20);
+    expect(host.dataset.worldTouch).toBe("pressed");
+    emit("pointermove", 50);
+    expect(host.dataset.worldTouch).toBe("cancelled");
+    emit("pointerup", 50);
+    emit("pointerdown", 200);
+    expect(host.dataset.worldTouch).toBe("pressed");
+    emit("pointerup", 200);
+    expect(host.dataset.worldTouch).toBe("released");
+    host.remove();
+  });
+});
+
+describe("R3: candidate rejection for empty-world taps", () => {
+  it("avoids skeletal raycasts on empty taps, but retains precise hits nearby", () => {
+    const h = setup();
+    const character = h.add("character:lua");
+    const skinRay = vi.spyOn(character.mesh, "raycast");
+    const { tap, selection, activation } = h.mount(false, true);
+    tap(390, 390);
+    expect(skinRay).not.toHaveBeenCalled();
+    expect(selection).not.toHaveBeenCalled();
+    tap(200, 200);
+    expect(skinRay).toHaveBeenCalledOnce();
+    expect(selection.mock.lastCall?.[0]?.id).toBe("character:lua");
+    expect(activation).toHaveBeenCalledOnce();
+  });
+
+  it("keeps translated character targets selectable and rejects their old location", () => {
+    const h = setup();
+    const actor = h.add("character:lua");
+    const { tap, selection, activation } = h.mount(false, true);
+    actor.root.position.x += 1;
+    tap(200, 200);
+    expect(selection).not.toHaveBeenCalled();
+    tap(300, 200);
+    expect(selection.mock.lastCall?.[0]?.id).toBe("character:lua");
+    expect(activation).toHaveBeenCalledOnce();
+  });
+
+  it("does not rebuild the living furniture bounds for a far-away empty tap", () => {
+    const h = setup();
+    h.add("living:table");
+    const bboxRead = vi.spyOn(Box3.prototype, "setFromObject");
+    const { tap } = h.mount(false, true);
+    // Zoom out so that the 3-world-unit safety margin is smaller than
+    // the far-away location in CSS pixels.
+    h.camera.left = h.camera.bottom = -20;
+    h.camera.right = h.camera.top = 20;
+    h.camera.updateProjectionMatrix();
+    tap(390, 30);
+    expect(bboxRead).not.toHaveBeenCalled();
+  });
+
+  it("does not discard a nested registered target when the broadphase root is its parent", () => {
+    const h = setup();
+    const actor = h.add("character:lua");
+    h.add("record:book", 0.2, actor.root);
+    const { tap, selection } = h.mount(false, true);
+    tap(200, 200);
+    expect(selection.mock.lastCall?.[0]?.id).toBe("record:book");
+  });
+});
+
+describe("R4: no skinned raycast for avatar selections", () => {
+  it("uses a lightweight animated-root proxy instead of traversing the visual mesh", () => {
+    const h = setup();
+    const actor = h.add("character:lua");
+    const ray = vi.spyOn(actor.mesh, "raycast");
+    const box = vi.spyOn(Box3.prototype, "setFromObject");
+    const { tap, selection, activation } = h.mount(true, true, true);
+    const callbacks: FrameRequestCallback[] = [];
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+      callbacks.push(cb);
+      return callbacks.length;
+    });
+    tap();
+    expect(selection.mock.lastCall?.[0]?.id).toBe("character:lua");
+    expect(activation).toHaveBeenCalledOnce();
+    expect(ray).not.toHaveBeenCalled();
+    expect(box).not.toHaveBeenCalled();
+    expect(callbacks).toHaveLength(0);
+  });
+
+  it("tracks character movement and rotation using only root transforms", () => {
+    const h = setup();
+    const actor = h.add("character:lua");
+    const { tap, selection, interaction } = h.mount(false, true, true);
+    tap();
+    const initial = h.scene.getObjectByName("f1-c-selection-highlight");
+    expect(initial).toBeInstanceOf(Box3Helper);
+    actor.root.position.x = 1.5;
+    actor.root.rotation.y = Math.PI / 2;
+    const rescan = vi.spyOn(Box3.prototype, "setFromObject");
+    interaction.updateHighlightBounds();
+    // The former screen coordinate must now MISS, and the new one HIT.
+    // A stale lastCall would otherwise let this regression pass incorrectly.
+    tap(200, 200);
+    expect(selection).toHaveBeenLastCalledWith(null);
+    tap(350, 200);
+    expect(selection.mock.lastCall?.[0]?.id).toBe("character:lua");
+    expect(rescan).not.toHaveBeenCalled();
+  });
+
+  it("keeps a separately registered object inside an avatar pickable", () => {
+    const h = setup();
+    const actor = h.add("character:lua");
+    h.add("record:book", 0.2, actor.root);
+    const { tap, selection } = h.mount(false, true, true);
+    tap();
+    expect(selection.mock.lastCall?.[0]?.id).toBe("record:book");
+  });
+});
+
+it.each(["samael", "aryn", "ytha", "lua"])(
+  "R4 never reads skinned vertices when tapping the loaded %s rig",
+  async (key) => {
+    const gltf = await new GLTFLoader().parseAsync(
+      new Uint8Array(
+        readFileSync(`src/features/library/three/assets/${key}.glb`),
+      ).buffer,
+      "",
+    );
+    const h = setup();
+    const actor = h.add(`character:${key}`);
+    actor.root.remove(actor.mesh);
+    actor.root.add(gltf.scene);
+    const meshReader = vi.spyOn(Mesh.prototype, "getVertexPosition");
+    const skinReader = vi.spyOn(SkinnedMesh.prototype, "getVertexPosition");
+    const exactBox = vi.spyOn(Box3.prototype, "setFromObject");
+    const { tap, selection, interaction } = h.mount(false, true, true);
+    h.camera.position.set(0, 1, 10);
+    h.camera.lookAt(0, 1, 0);
+    const mixer = new AnimationMixer(gltf.scene);
+    for (const clip of gltf.animations.filter((c) => /magic|walk/.test(c.name)))
+      mixer.clipAction(clip).play();
+    for (const [zoom, yaw] of [
+      [0.7, 0],
+      [2.4, Math.PI / 2],
+    ]) {
+      h.camera.zoom = zoom;
+      h.camera.updateProjectionMatrix();
+      actor.root.rotation.y = yaw;
+      mixer.update(0.3);
+      interaction.selectObject(null);
+      tap();
+      expect(selection.mock.lastCall?.[0]?.id).toBe(`character:${key}`);
+    }
+    mixer.stopAllAction();
+    expect(meshReader).not.toHaveBeenCalled();
+    expect(skinReader).not.toHaveBeenCalled();
+    expect(exactBox).not.toHaveBeenCalled();
+    disposals.push(() => disposeObjectTree(gltf.scene));
+  },
+);
+
+describe("R2: confirmed gesture scheduling", () => {
+  it("presents feedback before picking, then publishes once", () => {
+    const callbacks: FrameRequestCallback[] = [];
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+      callbacks.push(cb);
+      return callbacks.length;
+    });
+    vi.stubGlobal("cancelAnimationFrame", vi.fn());
+    vi.spyOn(document, "hidden", "get").mockReturnValue(false);
+    const h = setup();
+    h.add("character:lua");
+    const { tap, selection, activation } = h.mount(true);
+    tap();
+    expect(selection).not.toHaveBeenCalled();
+    expect(activation).not.toHaveBeenCalled();
+    callbacks.shift()?.(0);
+    expect(selection).not.toHaveBeenCalled();
+    callbacks.shift()?.(16);
+    expect(selection.mock.lastCall?.[0]?.id).toBe("character:lua");
+    expect(activation).toHaveBeenCalledOnce();
+  });
+
+  it("does not select after gesture teardown", () => {
+    const callbacks: FrameRequestCallback[] = [];
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+      callbacks.push(cb);
+      return callbacks.length;
+    });
+    vi.stubGlobal("cancelAnimationFrame", vi.fn());
+    vi.spyOn(document, "hidden", "get").mockReturnValue(false);
+    const h = setup();
+    h.add("character:lua");
+    const { tap, selection, interaction } = h.mount(true);
+    tap();
+    callbacks.shift()?.(0);
+    interaction.cancelActiveGestures();
+    callbacks.shift()?.(16);
+    expect(selection).not.toHaveBeenCalled();
+  });
+});
+
+describe("R2: stable visual highlight", () => {
+  it("follows the character root without rescanning articulated triangles per frame", () => {
+    const h = setup();
+    const character = h.add("character:lua");
+    const { interaction, tap } = h.mount();
+    tap();
+    const helper = h.scene.getObjectByName("f1-c-selection-highlight");
+    expect(helper).toBeInstanceOf(Box3Helper);
+    if (!(helper instanceof Box3Helper)) return;
+    const before = helper.box.getCenter(new Vector3());
+    const expensive = vi.spyOn(Box3.prototype, "setFromObject");
+    character.root.position.x += 1;
+    interaction.updateHighlightBounds();
+    const after = helper.box.getCenter(new Vector3());
+    expect(after.x).toBeGreaterThan(before.x);
+    expect(expensive).not.toHaveBeenCalled();
+  });
+});
 
 describe("R1: picking without scene-wide matrix forcing or duplicate rays", () => {
   it("tests nested books only once, excludes decorations, and keeps instance/entry identity", () => {

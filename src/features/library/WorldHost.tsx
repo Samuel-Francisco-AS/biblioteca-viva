@@ -16,7 +16,7 @@ import type {
   InhabitantContinuityPort,
   InhabitantContinuitySnapshot,
 } from "./inhabitantContinuity";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { completeStartupExperience } from "../../startupExperience";
 
 import type {
@@ -64,6 +64,7 @@ const createRuntime = async (
   return createThreeWorldRuntime(
     libraryWorldSnapshot
       ? {
+          deferPicking: true,
           libraryWorldSnapshot,
           livingSession,
           nightLighting,
@@ -78,7 +79,7 @@ const createRuntime = async (
               }
             : {}),
         }
-      : { readingAreaBooks },
+      : { deferPicking: true, readingAreaBooks },
   );
 };
 
@@ -137,11 +138,14 @@ export function WorldHost({
   runtimeFactory,
   selectedObjectId,
 }: WorldHostProps) {
+  const identity = useMemo(
+    () => worldSceneIdentity(incomingSnapshot),
+    [incomingSnapshot],
+  );
   const [sceneInput, setSceneInput] = useState(() => ({
     snapshot: incomingSnapshot,
-    identity: worldSceneIdentity(incomingSnapshot),
+    identity,
   }));
-  const identity = worldSceneIdentity(incomingSnapshot);
   if (!equalSnapshot(sceneInput.identity, identity))
     setSceneInput({ snapshot: incomingSnapshot, identity });
   const libraryWorldSnapshot = sceneInput.snapshot;

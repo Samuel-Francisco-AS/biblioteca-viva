@@ -1,27 +1,88 @@
-import { DuelHall } from "../duel/DuelHall";
-import { DuelTable } from "../duel/DuelTable";
-import { DuelDeckEditor } from "../duel/DuelDecks";
-import { DuelRules } from "../duel/DuelRules";
-import { ArenaDuel } from "../duel/arena/ArenaDuel";
+import { recordUiRouteContentCommit } from "../../app/uiActionProbe";
+import { signalPassageReady } from "../../app/interactionContinuity";
 import { isArenaRoute } from "../duel/arena/arenaRoute";
 import { emptyArcanarium } from "../../domain/arcanarium";
-import { PackLibrary } from "./PackLibrary";
 import { cardAvailable } from "../../domain/educationalPacks";
-import { Provations, TrialSession } from "./Provations";
-import { Taxonomy } from "./Taxonomy";
-import { Diagnosis } from "./Diagnosis";
-import { useCallback, useEffect, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
 import type { ApplicationRuntime } from "../../app/createApplication";
 import { Arcana, arcanaError, type ArcanaContext } from "./context";
 import { ArcanaSeal } from "./ArcanaArt";
 import { ArcanaCard } from "./ArcanaCard";
-import { Catalogue, CardDetail } from "./Catalogue";
-import { DeckEditor, Decks } from "./Decks";
-import { Workshop } from "./Workshop";
-import { Echoes, Review } from "./Echoes";
-import { DeckImport } from "./DeckImport";
 import "./arcanarium.css";
+
+// A room is fetched only when entered; portal rendering stays independent.
+const DuelHall = lazy(async () => ({
+  default: (await import("../duel/DuelHall")).DuelHall,
+}));
+const DuelTable = lazy(async () => ({
+  default: (await import("../duel/DuelTable")).DuelTable,
+}));
+const DuelDeckEditor = lazy(async () => ({
+  default: (await import("../duel/DuelDecks")).DuelDeckEditor,
+}));
+const DuelRules = lazy(async () => ({
+  default: (await import("../duel/DuelRules")).DuelRules,
+}));
+const ArenaDuel = lazy(async () => ({
+  default: (await import("../duel/arena/ArenaDuel")).ArenaDuel,
+}));
+const PackLibrary = lazy(async () => ({
+  default: (await import("./PackLibrary")).PackLibrary,
+}));
+const Taxonomy = lazy(async () => ({
+  default: (await import("./Taxonomy")).Taxonomy,
+}));
+const Diagnosis = lazy(async () => ({
+  default: (await import("./Diagnosis")).Diagnosis,
+}));
+const Workshop = lazy(async () => ({
+  default: (await import("./Workshop")).Workshop,
+}));
+const DeckImport = lazy(async () => ({
+  default: (await import("./DeckImport")).DeckImport,
+}));
+const Provations = lazy(async () => ({
+  default: (await import("./Provations")).Provations,
+}));
+const TrialSession = lazy(async () => ({
+  default: (await import("./Provations")).TrialSession,
+}));
+const Catalogue = lazy(async () => ({
+  default: (await import("./Catalogue")).Catalogue,
+}));
+const CardDetail = lazy(async () => ({
+  default: (await import("./Catalogue")).CardDetail,
+}));
+const Decks = lazy(async () => ({
+  default: (await import("./Decks")).Decks,
+}));
+const DeckEditor = lazy(async () => ({
+  default: (await import("./Decks")).DeckEditor,
+}));
+const Echoes = lazy(async () => ({
+  default: (await import("./Echoes")).Echoes,
+}));
+const Review = lazy(async () => ({
+  default: (await import("./Echoes")).Review,
+}));
+function RoomCommitted() {
+  const location = useLocation();
+  useEffect(() => {
+    recordUiRouteContentCommit(location.pathname);
+    signalPassageReady(location.pathname);
+  }, [location.pathname]);
+  return null;
+}
 export default function ArcanariumPage({
   application: app,
 }: {
@@ -29,55 +90,82 @@ export default function ArcanariumPage({
 }) {
   const [snapshot, setSnapshot] = useState<
     Omit<ArcanaContext, "reload"> & {
-      scope: boolean;
+      scope: "portal" | "arena" | "full";
       counts?: { cards: number; decks: number; reviews: number };
     }
   >();
   const [error, setError] = useState("");
   const location = useLocation();
   const atPortal = location.pathname.replace(/\/$/, "") === "/arcanario";
-  const lightScope = atPortal || isArenaRoute(location.pathname);
-  const readSnapshot = useCallback(async () => {
+  const scope = atPortal
+    ? "portal"
+    : isArenaRoute(location.pathname)
+      ? "arena"
+      : "full";
+  const readSnapshot = useCallback(async (): Promise<typeof snapshot> => {
     if (!app) return undefined;
-    if (lightScope) {
+    if (scope !== "full") {
       // The 3D arena reads its match through DuelService, not a global
       // materialization of every card, note and personal record.
       const counts = atPortal ? await app.arcanarium.overview() : undefined;
-      return { app, data: emptyArcanarium(), entries: [], scope: true, counts };
+      return { app, data: emptyArcanarium(), entries: [], scope, counts };
     }
     const [data, entries] = await Promise.all([
       app.arcanarium.list(),
       app.queries.listLibraryEntries.execute(),
     ]);
-    return { app, data, entries, scope: false };
-  }, [app, atPortal, lightScope]);
+    return { app, data, entries, scope };
+  }, [app, atPortal, scope]);
+  const request = useRef(0);
+  const mounted = useRef(false);
+  const invalidateReads = useCallback(() => {
+    request.current++;
+  }, []);
+  const read = useRef(readSnapshot);
+  useLayoutEffect(() => {
+    read.current = readSnapshot;
+    // Invalidate old-scope reads before passive effects or lazy rooms run.
+    request.current++;
+  }, [readSnapshot]);
   const reload = useCallback(async () => {
-    if (!app) return;
-    setSnapshot(await readSnapshot());
-    setError("");
-  }, [app, readSnapshot]);
+    if (!mounted.current) return;
+    const token = ++request.current;
+    try {
+      const value = await read.current();
+      if (!mounted.current || token !== request.current) return;
+      setSnapshot(value);
+      setError("");
+    } catch (cause) {
+      if (mounted.current && token === request.current)
+        setError(arcanaError(cause));
+      throw cause;
+    }
+  }, []);
   useEffect(() => {
-    if (!app) return;
-    let active = true;
-    void readSnapshot()
-      .then((value) => {
-        if (active) setSnapshot(value);
-      })
-      .catch((e) => {
-        if (active) setError(arcanaError(e));
-      });
+    mounted.current = true;
+    void reload().catch(() => undefined);
     return () => {
-      active = false;
+      mounted.current = false;
+      invalidateReads();
     };
-  }, [app, readSnapshot]);
+  }, [readSnapshot, reload, invalidateReads]);
+  const context = useMemo(
+    () => (snapshot ? { ...snapshot, reload } : undefined),
+    [snapshot, reload],
+  );
   useEffect(() => {
     const refresh = () => {
       if (document.visibilityState === "visible")
-        void reload().catch((e) => setError(arcanaError(e)));
+        void reload().catch(() => undefined);
     };
     document.addEventListener("visibilitychange", refresh);
     return () => document.removeEventListener("visibilitychange", refresh);
   }, [reload]);
+  useEffect(() => {
+    // Error/no-storage views are usable destinations too. Do not leave the
+    // passage waiting forever when a room cannot load.
+    if (error || !app) signalPassageReady(location.pathname);
+  }, [error, app, location.pathname]);
   if (!app)
     return (
       <p role="alert">O armazenamento do Arcanário não está disponível.</p>
@@ -108,50 +196,60 @@ export default function ArcanariumPage({
       {error && (
         <div role="alert" className="arcana-error">
           <p>{error}</p>
-          <button
-            onClick={() => void reload().catch((e) => setError(arcanaError(e)))}
-          >
+          <button onClick={() => void reload().catch(() => undefined)}>
             Tentar carregar novamente
           </button>
         </div>
       )}
-      {!snapshot || snapshot.scope !== lightScope ? (
+      {!snapshot || snapshot.app !== app || snapshot.scope !== scope ? (
         !error && <p role="status">Abrindo os arquivos do Arcanário…</p>
       ) : (
-        <Arcana.Provider value={{ ...snapshot, reload }}>
-          <Routes>
-            <Route
-              index
-              element={<Portal data={snapshot.data} counts={snapshot.counts} />}
-            />
-            <Route path="duelos" element={<DuelHall />} />
-            <Route path="duelos/arena/:id" element={<ArenaDuel />} />
-            <Route path="duelos/regras" element={<DuelRules />} />
-            <Route path="duelos/baralhos/:id" element={<DuelDeckEditor />} />
-            <Route
-              path="duelos/partida/:id"
-              element={<DuelTable key={location.pathname} />}
-            />
-            <Route path="acervo" element={<Catalogue />} />
-            <Route path="pacotes" element={<PackLibrary />} />
-            <Route path="relicario" element={<Catalogue memories />} />
-            <Route path="cartas/:id" element={<CardDetail />} />
-            <Route path="baralhos" element={<Decks />} />
-            <Route path="baralhos/novo" element={<DeckEditor />} />
-            <Route path="baralhos/:id" element={<DeckEditor />} />
-            <Route path="oficina/:id" element={<Workshop />} />
-            <Route path="ecos" element={<Echoes />} />
-            <Route path="ecos/:id" element={<Review />} />
-            <Route path="provacoes" element={<Provations />} />
-            <Route path="provacoes/:id" element={<TrialSession />} />
-            <Route path="assuntos" element={<Taxonomy />} />
-            <Route path="diagnostico" element={<Diagnosis />} />
-            <Route path="importar" element={<DeckImport />} />
-            <Route
-              path="*"
-              element={<p>Este caminho não existe. Retorne ao portal.</p>}
-            />
-          </Routes>
+        <Arcana.Provider value={context}>
+          <Suspense
+            fallback={
+              <div className="arcana-room-opening" role="status">
+                <span aria-hidden="true">✧</span>
+                <p>Abrindo a próxima sala do Arcanário…</p>
+              </div>
+            }
+          >
+            <Routes>
+              <Route
+                index
+                element={
+                  <Portal data={snapshot.data} counts={snapshot.counts} />
+                }
+              />
+              <Route path="duelos" element={<DuelHall />} />
+              <Route path="duelos/arena/:id" element={<ArenaDuel />} />
+              <Route path="duelos/regras" element={<DuelRules />} />
+              <Route path="duelos/baralhos/:id" element={<DuelDeckEditor />} />
+              <Route
+                path="duelos/partida/:id"
+                element={<DuelTable key={location.pathname} />}
+              />
+              <Route path="acervo" element={<Catalogue />} />
+              <Route path="pacotes" element={<PackLibrary />} />
+              <Route path="relicario" element={<Catalogue memories />} />
+              <Route path="cartas/:id" element={<CardDetail />} />
+              <Route path="baralhos" element={<Decks />} />
+              <Route path="baralhos/novo" element={<DeckEditor />} />
+              <Route path="baralhos/:id" element={<DeckEditor />} />
+              <Route path="oficina/:id" element={<Workshop />} />
+              <Route path="ecos" element={<Echoes />} />
+              <Route path="ecos/:id" element={<Review />} />
+              <Route path="provacoes" element={<Provations />} />
+              <Route path="provacoes/:id" element={<TrialSession />} />
+              <Route path="assuntos" element={<Taxonomy />} />
+              <Route path="diagnostico" element={<Diagnosis />} />
+              <Route path="importar" element={<DeckImport />} />
+              <Route
+                path="*"
+                element={<p>Este caminho não existe. Retorne ao portal.</p>}
+              />
+            </Routes>
+            <RoomCommitted />
+          </Suspense>
         </Arcana.Provider>
       )}
     </section>

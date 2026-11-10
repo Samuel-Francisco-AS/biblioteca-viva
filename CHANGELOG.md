@@ -1,3 +1,62 @@
+## 10/11/2026 — BV-UXC R1–R6.2 encerrada por aceite com ressalvas (PR #49)
+
+- Proprietário testou no Moto G06, confirmou evolução substancial da fluidez e da continuidade de toque desde R1 e **autorizou integração e fechamento da fase**, com microengasgos residuais nas quests.
+- Consolidação: broadphase/proxies de interação, melhorias globais de dados/React/arena, cortina de transição com opacidade integral e prontidão de telas, estilos/foco otimizados no card narrativo.
+- Evidência local R5: 420 PASS dirigidos, builds e E2E UI PASS; E2E lifecycle 3D timeout. R6–R6.2 sem nova suíte/build nesta sessão remota; métricas P95/P99 Moto G06 e CI global não certificadas. BF-5.6G continua futura.
+- [Fechamento canônico](docs/BV_UXC_FECHAMENTO_2026-11-10.md) · [PR #49](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/49).
+
+## 10/11/2026 — BV-UXC R6.2: abertura das quests dos habitantes
+
+- Após gate informal positivo da R6.1, engasgo residual concentrado no card de quest.
+- Substituídos seletores CSS amplos `:has()` dependentes do diálogo por estado explícito e local; foco acessível adiado um quadro após montagem e somente na abertura/troca de interlocutor.
+- Preservados GLBs, mundo, escolhas narrativas, retorno/Voltar, dados e animações. Testes de regressão escritos/atualizados, **não executados remotamente**; melhoria física pendente. [Relatório](docs/audits/BV_UXC_R62_QUEST_CARD_2026-11-10.md).
+
+## 10/11/2026 — BV-UXC R6.1: cortina opaca e transição mais suave (PR draft #49)
+
+- Corrigido vazamento visual: a R6 liberava processamento da próxima rota após apenas dois RAFs e mantinha a cortina a 97% de opacidade. R6.1 aguarda a cobertura completa (560 ms) antes de processar a navegação e mantém a tela totalmente coberta até prontidão.
+- Saída e entrada com easing mais suave; saída 560 ms, espera opaca variável, revelação 660 ms. Rotação do sigilo contínua entre fases; gestos consecutivos não reiniciam a cortina do zero.
+- Testes de fluxo escritos, **não executados remotamente**. Moto G06/CI/build pendentes; main preservada. [Relatório](docs/audits/BV_UXC_R61_CONTINUIDADE_TRANSICAO_2026-11-10.md).
+
+## 10/11/2026 — BV-UXC R6: transições longas prontidão-dependentes (PR draft #49)
+
+- A transição de navegação reage ao clique, aguarda a primeira apresentação antes de iniciar trabalho de rota e mantém o sigilo de carregamento até o componente/snapshot declarar prontidão.
+- Dobra ~400 ms, abertura mínima 560 ms, entrada 440 ms; animação contínua se consulta/lazy load demorar mais. Movimento reduzido sem espera prolongada.
+- Destinos com consulta assíncrona (Coleção, Arquivo, Estatísticas, registros e Arcanário) sinalizam carregamento completo da camada principal; cancelamento e falhas protegidos.
+- **Código/testes escritos, não executados remotamente; gate Moto G06 pendente.** [Relatório](docs/audits/BV_UXC_R6_TRANSICOES_2026-11-10.md).
+
+## 09/11/2026 — BV-UXC R4 (PR draft #49): volumes de toque e diagnóstico entre telas
+
+## BV-UXC R5 — candidata de desempenho global (2026-11-09)
+
+- Salas do Arcanário reutilizam o snapshot da visita; navegação do dock/portal não espera dois RAFs.
+- Drafts agrupam digitação e preservam flush ao sair; seleção da arena não reconcilia novamente um campo inalterado.
+- Consultas de estudos agrupam vínculos/cards; leitura do Arcanário usa transação readonly consistente. Picking R4 e qualidade visual preservados.
+- Diagnóstico local ampliado com intervalos RAF/long tasks/React; sem telemetria ou alteração de dados/schema/backup.
+- [Resultados, APK e gate físico pendente](docs/audits/BV_UXC_R5_DESEMPENHO_GLOBAL_2026-11-09.md). PR #49 draft, sem merge/CI verde.
+
+
+- Os 12 registros físicos da R3 mostraram CPU de 53–117 ms apenas preparando geometria em vários toques, com raycasts de ~23–42 ms e destaque de personagem em ~7–19 ms. R3 resolveu toques no vazio, não ações válidas.
+- R4 separa geometria animada de interação: volumes matemáticos por habitante (seguem posição/rotação), raycast preciso preservado em objetos, destaque sem CPU skinning e seleção imediata em produção, sem dois RAFs de espera.
+- Adicionado diagnóstico volátil opt-in de 20 ações (dock, Arcanário e botões) com próximos RAFs e commit de rota, sem armazenar IDs dinâmicos ou textos.
+- Testes de regressão adicionados, **não executados neste ambiente remoto**; APK e gate físico pendentes; `main` intacta. [Detalhe](docs/BV_UX_CONTINUIDADE_TOQUE_2026-11-09.md).
+
+## 09/11/2026 — BV-UXC R3: broadphase para toques vazios (PR draft #49)
+
+- Teste físico R2: melhora parcial, mas o halo e as animações do mundo ainda travavam ao tocar repetidamente áreas vazias.
+- Evitado o raycast de todas as malhas/skinning em qualquer toque: broadphase com envelopes geométricos conservadores fora do gesto e volumes autorais dos habitantes; somente candidatos usam raycast exato. Halo conclui a reação sem aguardar a seleção.
+- Candidato remoto sem CI/compilação/APK/gate R3; `main` intacta. [Registro](docs/BV_UX_CONTINUIDADE_TOQUE_2026-11-09.md).
+
+## 09/11/2026 — BV-UXC R2: sanar interrupções no gesto (PR #49 draft)
+
+- Feedback físico confirmou que R1 era insuficiente. R2 muda a sequência de execução: picking diferido e cancelável após feedback visual; destaque 3D de personagens/portal acompanha envelope em vez de fazer CPU skinning a cada quadro; checkpoint de pausa fora da transição de rota; carregamento dos componentes do Arcanário sob demanda por sala.
+- Testes de gesto cancelado e latência visual escritos (não executados), sem novas dependências ou mudanças no banco. Nenhum merge/release, CI sem cota, validação Moto G06 pendente. [Relatório](docs/BV_UX_CONTINUIDADE_TOQUE_2026-11-09.md).
+
+## 09/11/2026 — BV-UXC candidata: continuidade do toque (sem merge)
+
+- Início de feedback circular no Canvas antes do picking; cancelamento coerente com pan/pinch; conversa RPG e navegação entre rotas com passagem leve; dock e portal orbital cedem um frame de apresentação ao gesto antes da montagem da próxima área.
+- Sem simplificação da cena 3D, alteração de motor, regras, Dexie ou backup. Contrato de [continuidade e gate](docs/BV_UX_CONTINUIDADE_TOQUE_2026-11-09.md).
+- **Não validado fisicamente nem por CI.** Cota de Actions esgotada; novos testes escritos, mas não executados; PR remota draft e `main` intacta.
+
 ## 09/11/2026 — BF-5.6F integrada: Arena Viva 3D e refinamento da lua arcana
 
 - A [PR #48](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/48), única aberta na consulta, foi **mesclada na `main` após autorização expressa**, merge `690be5b5798d34e6436610bf9d209ede38629fd7`. Etapas **F1, F2 e R1–R4 encerradas por aceite funcional/artístico dirigido Moto G06**; BF-5.6 global permanece aberta para G.

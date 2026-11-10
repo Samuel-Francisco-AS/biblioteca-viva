@@ -3,6 +3,11 @@ import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { projectLivingScrolls } from "./application/livingScrolls";
+import {
+  schedulePassage,
+  beginPassage,
+  signalPassageReady,
+} from "./app/interactionContinuity";
 import { projectWorldSessionActivity } from "./application/projectWorldSessionActivity";
 import type { WorldSessionActivity } from "./contracts/worldSessionActivity";
 import type { LibraryEntry, Note, Quote, Session } from "./domain";
@@ -148,8 +153,13 @@ function LibraryPageContent({
     import.meta.env.DEV,
     import.meta.env.VITE_ENABLE_DIAGNOSTICS,
   );
-  const diagnosticsActive = diagnosticsEnabled && PerformanceScenarioHarness;
   const location = useLocation();
+  // A profiling APK must exercise the user's real world by default. The old
+  // F5 synthetic scenes remain available through an explicit diagnostics URL.
+  const diagnosticsActive =
+    diagnosticsEnabled &&
+    PerformanceScenarioHarness &&
+    new URLSearchParams(location.search).get("worldScenario") === "true";
   const navigate = useNavigate();
   const [snapshot, setSnapshot] = useState<LibraryPageSnapshot>();
   const [selectableObjectsState, setSelectableObjectsState] =
@@ -162,6 +172,14 @@ function LibraryPageContent({
     useState<ApplicationBound<WorldHostStatus>>();
   const [toolsOpen, setToolsOpen] = useState(false);
   const pageRef = useRef<HTMLElement>(null);
+  const portalFlight = useRef<(() => void) | null>(null);
+  useEffect(() => () => portalFlight.current?.(), []);
+  useEffect(() => {
+    if (!active) {
+      portalFlight.current?.();
+      portalFlight.current = null;
+    }
+  }, [active]);
 
   // Do not let a previous application instance lend its data, error, catalog
   // or selected entry to the next one during the render before its effect runs.
@@ -191,6 +209,16 @@ function LibraryPageContent({
       ? worldStatusState.value
       : "initializing";
 
+  // The resident 3D Library is ready only when its runtime has started
+  // (or a visible error/unavailable state can be shown). Navigation back
+  // must not uncover a half-initialized Canvas.
+  useEffect(() => {
+    if (
+      active &&
+      (!application || error || worldStatus === "ready" || worldStatus === "failed")
+    ) signalPassageReady(location.pathname);
+  }, [active, application, error, worldStatus, location.pathname]);
+
   useEffect(() => {
     const page = pageRef.current;
     if (!active || !page || typeof ResizeObserver === "undefined") return;
@@ -211,7 +239,12 @@ function LibraryPageContent({
   function handleWorldSelection(nextSelection: WorldSelection): void {
     if (!application) return;
     if (nextSelection?.id === "portal:duelo-arcano") {
-      void navigate("/arcanario/duelos");
+      if (portalFlight.current) return;
+      beginPassage("/arcanario/duelos");
+      portalFlight.current = schedulePassage(() => {
+        portalFlight.current = null;
+        void navigate("/arcanario/duelos");
+      });
       return;
     }
     setSelectionState({ application, value: nextSelection });
@@ -247,15 +280,14 @@ function LibraryPageContent({
     const loadSnapshot = async (): Promise<void> => {
       const request = ++generation;
       try {
-        const entries = await application.queries.listLibraryEntries.execute();
-        cachedEntries = entries;
-        if (!current || request !== generation) return;
-        const [notes, quotes, openSession] = await Promise.all([
+        const [entries, notes, quotes, openSession] = await Promise.all([
+          application.queries.listLibraryEntries.execute(),
           application.queries.listAllNotes?.execute() ?? [],
           application.queries.listAllQuotes?.execute() ?? [],
           application.queries.getOpenSession?.execute() ?? undefined,
         ]);
         if (!current || request !== generation) return;
+        cachedEntries = entries;
         const world = Object.freeze({
           ...projectLibraryWorldEntries(entries),
           scrolls: projectLivingScrolls(entries, notes, quotes),

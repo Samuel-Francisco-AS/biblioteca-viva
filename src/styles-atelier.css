@@ -1961,11 +1961,7 @@
   margin: 0;
 }
 
-/* R5R: the frame, speaker and close action are fully present at the DOM commit.
-   One short content animation preserves continuity without scheduling a delay. */
-.app-shell .rpg-dialogue {
-  animation: none;
-}
+/* R5R: content remains independently animated as choices change. */
 .app-shell .rpg-dialogue-content {
   animation: quest-content-arrive 120ms cubic-bezier(0.2, 0.75, 0.3, 1) both;
 }
@@ -1985,5 +1981,147 @@
   }
 }
 .app-shell[data-reduced-motion="true"] .rpg-dialogue-content {
+  animation: none;
+}
+
+/* BV-UXC R6.1: silky, fully opaque cover. The previous R6's 97% alpha
+   leaked destination pixels when the underlying route committed, producing
+   a visible flash. Work begins only after the 560ms cover animation ends.
+   All animated properties are compositor-friendly; no blur or layout motion. */
+.app-shell > .passage-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(ellipse at 50% 50%, #42304f 0%, #1b1829 60%, #0c1017 100%);
+  transform: translate3d(0, 0, 0);
+  will-change: opacity;
+}
+.app-shell > .passage-veil::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(30vw, 8rem);
+  aspect-ratio: 1;
+  border: 2px solid #d3ae7188;
+  border-top-color: #f7dca4;
+  border-radius: 50%;
+  box-shadow: inset 0 0 1rem #dba76a35, 0 0 2.4rem #d4ad6940;
+  transform: translate3d(-50%, -50%, 0);
+  opacity: 0;
+}
+.app-shell > .passage-veil::after {
+  content: "✦   DESDOBRANDO AS PÁGINAS   ✦";
+  position: absolute;
+  left: 50%;
+  top: calc(50% + min(20vw, 5.7rem));
+  width: min(90vw, 22rem);
+  color: #f4dcb3;
+  font: 0.75rem/1.5 Georgia, serif;
+  letter-spacing: 0.13em;
+  text-align: center;
+  transform: translate3d(-50%, 0, 0);
+  opacity: 0;
+}
+/* The exit begins gently and ends fully covered, not translucent. */
+.app-shell[data-passage="departing"] > .passage-veil {
+  animation: bv-passage-fold 560ms cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+.app-shell[data-passage="waiting"] > .passage-veil {
+  opacity: 1;
+}
+/* Interrupted reveal: ease back to opaque from its current opacity. */
+.app-shell[data-passage="resealing"] > .passage-veil {
+  animation: bv-passage-reseal 380ms cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+/* The destination is revealed only after it signals readiness. */
+.app-shell[data-passage="arriving"] > .passage-veil {
+  animation: bv-passage-unfold 660ms cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+/* Keep the emblem spinning uninterrupted across departing/waiting/arriving;
+   switching CSS states must not restart or snap the symbol. */
+.app-shell[data-passage="departing"] > .passage-veil::before,
+.app-shell[data-passage="waiting"] > .passage-veil::before,
+.app-shell[data-passage="resealing"] > .passage-veil::before,
+.app-shell[data-passage="arriving"] > .passage-veil::before {
+  opacity: 1;
+  animation: bv-passage-sigil 2.2s linear infinite;
+}
+.app-shell[data-passage="departing"] > .passage-veil::after,
+.app-shell[data-passage="waiting"] > .passage-veil::after,
+.app-shell[data-passage="resealing"] > .passage-veil::after,
+.app-shell[data-passage="arriving"] > .passage-veil::after {
+  opacity: 1;
+}
+@keyframes bv-passage-fold {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes bv-passage-unfold {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes bv-passage-reseal {
+  from {
+    opacity: var(--passage-resume-opacity, 1);
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes bv-passage-sigil {
+  from {
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+  to {
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
+}
+
+/* The speaker panel itself unfolds; the header and Adiar remain in the DOM. */
+.app-shell .rpg-dialogue {
+  animation: bv-dialogue-unfold 205ms cubic-bezier(0.16, 0.78, 0.26, 1) both;
+}
+@keyframes bv-dialogue-unfold {
+  from {
+    opacity: 0.86;
+    transform: translate3d(0, 7px, 0) scale(0.994);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-shell > .passage-veil,
+  .app-shell .rpg-dialogue {
+    animation: none;
+  }
+  .app-shell > .passage-veil,
+  .app-shell > .passage-veil::before,
+  .app-shell > .passage-veil::after {
+    opacity: 0;
+    animation: none;
+  }
+}
+.app-shell[data-reduced-motion="true"] > .passage-veil,
+.app-shell[data-reduced-motion="true"] .rpg-dialogue {
+  animation: none;
+}
+.app-shell[data-reduced-motion="true"] > .passage-veil,
+.app-shell[data-reduced-motion="true"] > .passage-veil::before,
+.app-shell[data-reduced-motion="true"] > .passage-veil::after {
+  opacity: 0;
   animation: none;
 }

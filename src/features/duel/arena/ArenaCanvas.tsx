@@ -32,6 +32,11 @@ export function ArenaCanvas({
     if (!container) return;
     let disposed = false;
     let cleanup = () => {};
+    const release = () => {
+      const dispose = cleanup;
+      cleanup = () => {};
+      dispose();
+    };
     void Promise.all([import("three"), import("./arenaScene")])
       .then(([T, { createArenaScene }]) => {
         if (disposed) return;
@@ -48,6 +53,12 @@ export function ArenaCanvas({
           setFailure("O campo 3D não pôde ser iniciado.");
           return;
         }
+        cleanup = () => {
+          world.dispose();
+          renderer.dispose();
+          renderer.forceContextLoss();
+          renderer.domElement.remove();
+        };
         renderer.outputColorSpace = T.SRGBColorSpace;
         renderer.setClearColor(0x080b19);
         renderer.domElement.setAttribute("aria-hidden", "true");
@@ -95,6 +106,11 @@ export function ArenaCanvas({
           else raf = 0;
         };
         const activity = () => {
+          const running =
+            !contextLost &&
+            state.current.active &&
+            document.visibilityState !== "hidden";
+          if (running && raf) return;
           if (raf) cancelAnimationFrame(raf);
           raf = 0;
           lastFrame = 0;
@@ -105,10 +121,27 @@ export function ArenaCanvas({
           )
             raf = requestAnimationFrame(draw);
         };
-        const update = () => {
-          world.update(state.current.view);
-          world.select(state.current.selected, new Set(state.current.targets));
-          state.current.onAnchors(world.anchors());
+        let appliedView: ArenaView | undefined;
+        let appliedSelection: string | undefined;
+        let appliedTargets: ReadonlySet<string> | undefined;
+        const update = (layoutChanged = false) => {
+          const latest = state.current;
+          const viewChanged = appliedView !== latest.view;
+          if (viewChanged || layoutChanged) {
+            world.update(latest.view);
+            appliedView = latest.view;
+            latest.onAnchors(world.anchors());
+          }
+          if (
+            viewChanged ||
+            layoutChanged ||
+            appliedSelection !== latest.selected ||
+            appliedTargets !== latest.targets
+          ) {
+            world.select(latest.selected, new Set(latest.targets));
+            appliedSelection = latest.selected;
+            appliedTargets = latest.targets;
+          }
           if (
             !contextLost &&
             !state.current.active &&
@@ -124,7 +157,7 @@ export function ArenaCanvas({
           renderer.setPixelRatio(ratio);
           renderer.setSize(width, height);
           world.resize(width, height);
-          update();
+          update(true);
         };
         const loss = (e: Event) => {
           e.preventDefault();
@@ -138,8 +171,6 @@ export function ArenaCanvas({
         observer.observe(container);
         document.addEventListener("visibilitychange", activity);
         runtime.current = { update, activity };
-        resize();
-        activity();
         cleanup = () => {
           runtime.current = undefined;
           cancelAnimationFrame(raf);
@@ -151,13 +182,16 @@ export function ArenaCanvas({
           renderer.forceContextLoss();
           renderer.domElement.remove();
         };
+        resize();
+        activity();
       })
       .catch(() => {
+        release();
         if (!disposed) setFailure("O campo 3D não pôde ser carregado.");
       });
     return () => {
       disposed = true;
-      cleanup();
+      release();
     };
   }, [attempt]);
   return (

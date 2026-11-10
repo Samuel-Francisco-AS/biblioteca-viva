@@ -200,7 +200,16 @@ describe("WorldHost", () => {
     expect(canvas).not.toBeNull();
     expect(canvas).toHaveProperty("tabIndex", -1);
 
-    await user.tab();
+    // Diagnostic opt-ins precede selection in DOM order. Traverse them using
+    // real tab actions; the canvas must never become a keyboard stop.
+    for (
+      let stops = 0;
+      stops < 12 && document.activeElement !== previous;
+      stops++
+    ) {
+      await user.tab();
+      expect(document.activeElement).not.toBe(canvas);
+    }
     expect(previous).toHaveFocus();
     expect(document.activeElement).not.toBe(canvas);
     await user.keyboard(" ");
@@ -551,6 +560,7 @@ describe("WorldHost", () => {
 
     await screen.findByText("Ambiente 3D em execução.");
     expect(createThreeWorldRuntime).toHaveBeenCalledWith({
+      deferPicking: true,
       readingAreaBooks: books,
     });
 
@@ -578,6 +588,7 @@ describe("WorldHost", () => {
       ?.nightLighting;
     expect(nightLighting).toBeInstanceOf(NightLightingSession);
     expect(createThreeWorldRuntime).toHaveBeenCalledWith({
+      deferPicking: true,
       libraryWorldSnapshot: snapshot,
       livingSession: vi.mocked(createThreeWorldRuntime).mock.calls[0]?.[0]
         ?.livingSession,

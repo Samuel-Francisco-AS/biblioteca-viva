@@ -1,5 +1,10 @@
 import type { LightingExperimentMode } from "./three/lightingExperiment";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import {
+  getUiActionProbeSnapshot,
+  setUiActionProbeEnabled,
+  subscribeUiActionProbe,
+} from "../../app/uiActionProbe";
 import type { WorldRuntime, WorldRuntimeDiagnostics } from "./worldRuntime";
 import type { PerformanceScenario } from "./three/performanceScenarios";
 const EMPTY_DIAGNOSTICS: WorldRuntimeDiagnostics = {
@@ -41,6 +46,15 @@ export function WorldDiagnosticPanel({
     () => runtime?.getDiagnostics() ?? EMPTY_DIAGNOSTICS,
   );
   const [open, setOpen] = useState(false);
+  const uiProbe = useSyncExternalStore(
+    subscribeUiActionProbe,
+    getUiActionProbeSnapshot,
+    getUiActionProbeSnapshot,
+  );
+  useEffect(() => () => setUiActionProbeEnabled(false), []);
+  useEffect(() => {
+    if (!open && uiProbe.enabled) setUiActionProbeEnabled(false);
+  }, [open, uiProbe.enabled]);
   useEffect(() => {
     if (!open || !runtime) return;
     const unsubscribe = runtime.onDiagnosticsChange(setDiagnostics);
@@ -63,6 +77,45 @@ export function WorldDiagnosticPanel({
         data-testid="world-diagnostics"
       >
         <h3>Diagnóstico local</h3>
+        <fieldset>
+          <legend>BV-UXC R5 · ações de interface (opt-in)</legend>
+          <label>
+            <input
+              type="checkbox"
+              checked={uiProbe.enabled}
+              onChange={(event) =>
+                setUiActionProbeEnabled(event.target.checked)
+              }
+            />
+            Medir dock, Arcanário e controles do React
+          </label>
+          <p>
+            Ative, navegue pelo dock e pelas salas do Arcanário e retorne a este
+            diagnóstico. Até 20 ações, somente origem/tipo/categoria de rota e
+            tempos relativos ao clique. Não registra textos, conteúdos, dados
+            pessoais nem envia nada. Desative ou feche para zerar.
+          </p>
+          <p>
+            firstRafMs/secondRafMs medem a chegada das callbacks de quadros, não
+            os pixels apresentados. routeCommitMs indica mudança de rota no
+            React; não garante que a sala lazy já terminou de carregar.
+            routeContentCommitMs observa a subárvore após Suspense, sem garantir
+            dados prontos. frameIntervals inclui P50/P95/P99 de intervalos RAF
+            (até 600). Long tasks são globais e não atribuem causa ao último
+            clique. reactRenderMs/commits exigem build diagnostics ou
+            desenvolvimento, medem reconciliação e não duração do commit; zero
+            pode indicar instrumentação indisponível. Correlação de um segundo,
+            não causalidade. Valores nulos não foram observados.
+          </p>
+          <label>
+            Amostras locais de ações (selecione para copiar)
+            <textarea
+              readOnly
+              rows={10}
+              value={JSON.stringify(uiProbe, null, 2)}
+            />
+          </label>
+        </fieldset>
         {runtime?.setQuestProbeEnabled && (
           <fieldset>
             <legend>R5Q · abertura de quests (experimental, opt-in)</legend>

@@ -1,9 +1,10 @@
 import { BVSelectSheet } from "../../ui/BVPicker";
+import { signalPassageReady } from "../../app/interactionContinuity";
 import { VISIBLE_GROUPS, groupLabels } from "../entertainment/catalogFilters";
 import { parseTypeFilter } from "../collection/collectionControls";
 import { RealmIntro } from "../../app/RealmIntro";
 import { useEffect, useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 
 import { type LibraryEntry } from "../../domain";
 import { STATISTICS_WINDOWS, type StatisticsSnapshot } from "../../application";
@@ -320,6 +321,7 @@ export function StatisticsPage({
 }: {
   readonly application?: StatisticsApplication;
 }) {
+  const location = useLocation();
   const [params, setParams] = useSearchParams();
   const [snapshot, setSnapshot] = useState<StatisticsSnapshot>();
   const [entries, setEntries] = useState<readonly LibraryEntry[]>([]);
@@ -359,6 +361,11 @@ export function StatisticsPage({
       active = false;
     };
   }, [application, category, entryType, window]);
+  useEffect(() => {
+    if (!application || error || snapshot)
+      signalPassageReady(location.pathname);
+  }, [application, error, snapshot, location.pathname]);
+
   const entryById = useMemo(
     () => new Map(entries.map((entry) => [entry.id, entry])),
     [entries],

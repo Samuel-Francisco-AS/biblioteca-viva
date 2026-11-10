@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   Link,
   useNavigate,
+  useLocation,
   useParams,
   useSearchParams,
 } from "react-router-dom";
@@ -19,6 +20,12 @@ const draftSchema = z.strictObject({
   revision: z.int().positive().optional(),
 });
 export function DuelDeckEditor() {
+  const location = useLocation();
+  return (
+    <DuelDeckEditorContent key={`${location.pathname}:${location.search}`} />
+  );
+}
+function DuelDeckEditorContent() {
   const { id = "novo" } = useParams(),
     [params] = useSearchParams();
   const { data, app, reload } = useArcana(),

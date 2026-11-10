@@ -2156,7 +2156,7 @@ button:focus-visible,
 .library-page .rpg-tools {
   z-index: 8;
 }
-.library-page .rpg-shell:has(.rpg-journal) .rpg-tools {
+.library-page .rpg-shell[data-journal-open="true"] .rpg-tools {
   display: flex;
   top: max(0.5rem, env(safe-area-inset-top));
   bottom: auto;
