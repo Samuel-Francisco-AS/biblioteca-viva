@@ -76,6 +76,24 @@ describe("R6.1: seamless, readiness-gated passage", () => {
     expect(shell.dataset.passage).toBe("arriving");
   });
 
+  it("keeps a fully covered veil opaque during two rapid navigation gestures", () => {
+    vi.useFakeTimers();
+    const { shell, frames } = setup();
+    const oldWork = vi.fn();
+    const newWork = vi.fn();
+    beginPassage("/colecao");
+    schedulePassage(oldWork);
+    completePassageDeparture();
+    expect(shell.dataset.passage).toBe("waiting");
+    beginPassage("/arcanario");
+    schedulePassage(newWork);
+    expect(shell.dataset.passage).toBe("waiting");
+    frames.shift()?.(560); // stale callback still present
+    frames.shift()?.(576);
+    expect(oldWork).not.toHaveBeenCalled();
+    expect(newWork).toHaveBeenCalledOnce();
+  });
+
   it("ignores an old gesture after a new one starts", () => {
     vi.useFakeTimers();
     const { shell, frames } = setup();

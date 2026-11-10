@@ -557,7 +557,8 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           ) completePassageAnimation();
           if (
             event.target === event.currentTarget &&
-            event.animationName === "bv-passage-fold"
+            (event.animationName === "bv-passage-fold" ||
+              event.animationName === "bv-passage-reseal")
           ) completePassageDeparture();
         }}
       />

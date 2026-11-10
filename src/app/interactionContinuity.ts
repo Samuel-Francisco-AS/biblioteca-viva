@@ -40,7 +40,10 @@ function clearTimers(passage: Passage): void {
 export function cancelPassage(): void {
   if (active) clearTimers(active);
   active = null;
-  shell()?.removeAttribute("data-passage");
+  const node = shell();
+  node?.removeAttribute("data-passage");
+  node?.querySelector<HTMLElement>(".passage-veil")
+    ?.style.removeProperty("--passage-resume-opacity");
 }
 
 /** Do not reveal until both the cover has sealed and the content is ready. */
@@ -67,19 +70,41 @@ function tryReveal(): void {
 
 /** Begin the gentle cover synchronously on the confirmed gesture. */
 export function beginPassage(target?: string): void {
+  const node = shell();
+  const previousPhase = node?.dataset.passage;
   if (active) clearTimers(active);
   const skipAnimation = reducedMotion() || document.visibilityState === "hidden";
+  // A second gesture must not restart the curtain at alpha=0. In particular,
+  // clicking while the previous route is still held opaque must stay opaque.
+  const alreadyCovered = !skipAnimation && previousPhase === "waiting";
   const current: Passage = {
     id: ++sequence,
     target: target ?? null,
     arrivedAt: null,
     ready: false,
-    sealed: skipAnimation,
+    sealed: skipAnimation || alreadyCovered,
     startedAt: performance.now(),
   };
   active = current;
-  shell()?.setAttribute("data-passage", skipAnimation ? "waiting" : "departing");
-  if (!skipAnimation)
+  if (skipAnimation || alreadyCovered) {
+    node?.setAttribute("data-passage", "waiting");
+  } else if (previousPhase === "departing") {
+    // Keep the in-flight fold; the old work is invalidated by passage ID.
+  } else if (previousPhase === "arriving" || previousPhase === "resealing") {
+    // Re-cover from the actual current compositor alpha, not from zero.
+    const veil = node?.querySelector<HTMLElement>(".passage-veil");
+    const sampled = veil
+      ? Number.parseFloat(window.getComputedStyle(veil).opacity)
+      : NaN;
+    const alpha = Number.isFinite(sampled)
+      ? Math.max(0, Math.min(1, sampled))
+      : 0.5;
+    veil?.style.setProperty("--passage-resume-opacity", String(alpha));
+    node?.setAttribute("data-passage", "resealing");
+  } else {
+    node?.setAttribute("data-passage", "departing");
+  }
+  if (!current.sealed)
     current.sealTimer = setTimeout(() => {
       if (active?.id === current.id) completePassageDeparture();
     }, COVER_FALLBACK_MS);
