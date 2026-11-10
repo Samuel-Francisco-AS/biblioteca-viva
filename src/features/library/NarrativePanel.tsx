@@ -29,12 +29,36 @@ export function NarrativePanel({
   const state = useSyncExternalStore(session.subscribe, session.getSnapshot);
   const node = nodeFor(state);
   const heading = useRef<HTMLHeadingElement>(null);
+  const panelRoot = useRef<HTMLElement>(null);
+  const focusFrame = useRef<number | null>(null);
+  const focusedSpeaker = useRef<string | null>(null);
   const opener = useRef<HTMLElement | null>(null);
   const previousActive = useRef(false);
   const [confirmReset, setConfirmReset] = useState(false);
   const [journal, setJournal] = useState(false);
   const choices =
     node?.choices.filter((c) => matches(c.condition, state)) ?? [];
+
+  // Avoid expensive full-subtree :has() style invalidation when a story
+  // materializes on top of the continuously rendered Three.js world.
+  useLayoutEffect(() => {
+    const page = panelRoot.current?.closest<HTMLElement>(".library-page");
+    if (!page) return;
+    if (enabled && (state.active || journal))
+      page.dataset.questPanelOpen = "true";
+    else delete page.dataset.questPanelOpen;
+    return () => {
+      delete page.dataset.questPanelOpen;
+    };
+  }, [enabled, state.active, journal]);
+
+  useEffect(
+    () => () => {
+      if (focusFrame.current !== null)
+        cancelAnimationFrame(focusFrame.current);
+    },
+    [],
+  );
   const speaker = INHABITANTS.find((a) => a.key === node?.speakerId);
   useLayoutEffect(() => {
     if (enabled && state.active && state.talkingTo)
@@ -52,21 +76,42 @@ export function NarrativePanel({
         document.activeElement instanceof HTMLElement
       )
         opener.current = document.activeElement;
-      if (state.talkingTo)
-        questProbe?.observeQuest?.({
-          type: "mark",
-          stage: "focusStart",
-          inhabitant: state.talkingTo,
+      const shouldFocus =
+        !previousActive.current || focusedSpeaker.current !== state.talkingTo;
+      if (shouldFocus) {
+        if (focusFrame.current !== null)
+          cancelAnimationFrame(focusFrame.current);
+        const speaking = state.talkingTo;
+        // Let the card commit and its entrance animation start before focus
+        // requests potentially expensive style/layout calculations.
+        focusFrame.current = requestAnimationFrame(() => {
+          focusFrame.current = null;
+          if (!heading.current?.isConnected) return;
+          if (speaking)
+            questProbe?.observeQuest?.({
+              type: "mark",
+              stage: "focusStart",
+              inhabitant: speaking,
+            });
+          heading.current.focus({ preventScroll: true });
+          if (speaking)
+            questProbe?.observeQuest?.({
+              type: "mark",
+              stage: "focusEnd",
+              inhabitant: speaking,
+            });
         });
-      heading.current?.focus({ preventScroll: true });
-      if (state.talkingTo)
-        questProbe?.observeQuest?.({
-          type: "mark",
-          stage: "focusEnd",
-          inhabitant: state.talkingTo,
-        });
-    } else if (previousActive.current)
-      opener.current?.focus({ preventScroll: true });
+      }
+      focusedSpeaker.current = state.talkingTo;
+    } else {
+      if (focusFrame.current !== null) {
+        cancelAnimationFrame(focusFrame.current);
+        focusFrame.current = null;
+      }
+      if (previousActive.current)
+        opener.current?.focus({ preventScroll: true });
+      focusedSpeaker.current = null;
+    }
     previousActive.current = Boolean(state.active);
   }, [state.revision, state.active, state.talkingTo, enabled, questProbe]);
   useEffect(() => {
@@ -89,7 +134,9 @@ export function NarrativePanel({
   if (!enabled) return null;
   return (
     <section
+      ref={panelRoot}
       className={`rpg-shell${state.active ? " rpg-shell--open" : ""}`}
+      data-journal-open={journal ? "true" : undefined}
       aria-label="Histórias da Biblioteca"
     >
       <div className="rpg-tools">

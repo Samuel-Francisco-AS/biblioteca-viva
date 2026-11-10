@@ -41,7 +41,7 @@
 }
 .library-page .exploration-header[data-phase="fading"],
 .library-page:has(.living-world-feedback) .exploration-header,
-.library-page:has(.rpg-dialogue, .rpg-journal) .exploration-header,
+.library-page[data-quest-panel-open="true"] .exploration-header,
 .library-page[data-tools-open="true"] .exploration-header {
   opacity: 0;
 }
@@ -89,7 +89,7 @@
 .app-shell .library-page .rpg-tools button {
   max-width: 100%;
 }
-.library-page:has(.rpg-dialogue, .rpg-journal) .canvas-access {
+.library-page[data-quest-panel-open="true"] .canvas-access {
   visibility: hidden;
 }
 .app-shell .library-page[data-tools-open="true"] .library-access-panels {

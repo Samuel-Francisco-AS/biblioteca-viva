@@ -722,8 +722,7 @@ button:not(.primary-dock__link),
   background: #233044;
   padding: 0.7rem;
 }
-.library-page[data-tools-open="true"]:has(.rpg-dialogue) .library-access-panels,
-.library-page[data-tools-open="true"]:has(.rpg-journal) .library-access-panels {
+.library-page[data-tools-open="true"][data-quest-panel-open="true"] .library-access-panels {
   position: static;
   border: 0;
   padding: 0;
@@ -732,14 +731,11 @@ button:not(.primary-dock__link),
   box-shadow: none;
   width: auto;
 }
-.library-page:has(.rpg-dialogue)
-  :is(.world-explore, .living-controls, .library-index),
-.library-page:has(.rpg-journal)
+.library-page[data-quest-panel-open="true"]
   :is(.world-explore, .living-controls, .library-index) {
   display: none !important;
 }
-.library-page:has(.rpg-dialogue) .exploration-compass,
-.library-page:has(.rpg-journal) .exploration-compass {
+.library-page[data-quest-panel-open="true"] .exploration-compass {
   opacity: 0.35;
   pointer-events: none;
 }
@@ -1214,7 +1210,7 @@ button:not(.primary-dock__link),
   transform-origin: center;
   transform-box: fill-box;
 }
-.library-page .rpg-shell:has(.rpg-journal) .rpg-tools {
+.library-page .rpg-shell[data-journal-open="true"] .rpg-tools {
   display: none;
 }
 
