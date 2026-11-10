@@ -391,6 +391,9 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           control.pathname !== location.pathname
         ) {
           event.preventDefault();
+          // No child Link onClick runs on the original event. Its semantics,
+          // including custom handlers, run exactly once on the replay.
+          event.stopPropagation();
           pendingNavigationRef.current?.();
           beginPassage(control.pathname);
           pendingNavigationRef.current = schedulePassage(() => {
