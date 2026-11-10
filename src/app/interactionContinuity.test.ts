@@ -84,6 +84,18 @@ describe("R6: ready-gated passage choreography", () => {
     expect(shell.dataset.passage).toBe("arriving");
   });
 
+  it("does not let a delayed click override Android Back before route commit", () => {
+    const { shell, frames } = setup();
+    const routeWork = vi.fn();
+    beginPassage("/colecao");
+    schedulePassage(routeWork);
+    // External Back reaches the old route before our scheduled work starts.
+    notifyPassageLocation("/arquivo");
+    frames.shift()?.(16);
+    expect(routeWork).not.toHaveBeenCalled();
+    expect(shell).not.toHaveAttribute("data-passage");
+  });
+
   it("keeps the minimum opening choreography but not an arbitrary loading deadline", () => {
     vi.useFakeTimers();
     const { shell } = setup();

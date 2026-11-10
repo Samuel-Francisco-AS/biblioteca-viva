@@ -63,6 +63,13 @@ export function beginPassage(target?: string): void {
 /** Called when React Router commits the destination pathname. */
 export function notifyPassageLocation(pathname: string): void {
   if (!active) return;
+  // Android Back or an unrelated navigation may win BEFORE the deferred
+  // Link executes. Abort the stale intent instead of navigating over Back.
+  if (active.arrivedAt === null && active.target !== null &&
+      active.target !== pathname) {
+    cancelPassage();
+    return;
+  }
   active.target = pathname;
   active.arrivedAt = pathname;
   active.ready = false;
