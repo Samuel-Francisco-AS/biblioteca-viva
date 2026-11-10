@@ -112,7 +112,7 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                   }
                   flightOrigin.current = pathname;
                   setPassage({ from: pathname, to: route.path });
-                  beginPassage();
+                  beginPassage(route.path);
                   flight.current = schedulePassage(() => {
                     flight.current = null;
                     flightOrigin.current = null;

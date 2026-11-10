@@ -1,4 +1,5 @@
 import { recordUiRouteContentCommit } from "../../app/uiActionProbe";
+import { signalPassageReady } from "../../app/interactionContinuity";
 import { isArenaRoute } from "../duel/arena/arenaRoute";
 import { emptyArcanarium } from "../../domain/arcanarium";
 import { cardAvailable } from "../../domain/educationalPacks";
@@ -76,10 +77,10 @@ const Review = lazy(async () => ({
 }));
 function RoomCommitted() {
   const location = useLocation();
-  useEffect(
-    () => recordUiRouteContentCommit(location.pathname),
-    [location.pathname],
-  );
+  useEffect(() => {
+    recordUiRouteContentCommit(location.pathname);
+    signalPassageReady(location.pathname);
+  }, [location.pathname]);
   return null;
 }
 export default function ArcanariumPage({
@@ -160,6 +161,11 @@ export default function ArcanariumPage({
     document.addEventListener("visibilitychange", refresh);
     return () => document.removeEventListener("visibilitychange", refresh);
   }, [reload]);
+  useEffect(() => {
+    // Error/no-storage views are usable destinations too. Do not leave the
+    // passage waiting forever when a room cannot load.
+    if (error || !app) signalPassageReady(location.pathname);
+  }, [error, app, location.pathname]);
   if (!app)
     return (
       <p role="alert">O armazenamento do Arcanário não está disponível.</p>

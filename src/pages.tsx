@@ -3,7 +3,11 @@ import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { projectLivingScrolls } from "./application/livingScrolls";
-import { schedulePassage, beginPassage } from "./app/interactionContinuity";
+import {
+  schedulePassage,
+  beginPassage,
+  signalPassageReady,
+} from "./app/interactionContinuity";
 import { projectWorldSessionActivity } from "./application/projectWorldSessionActivity";
 import type { WorldSessionActivity } from "./contracts/worldSessionActivity";
 import type { LibraryEntry, Note, Quote, Session } from "./domain";
@@ -205,6 +209,16 @@ function LibraryPageContent({
       ? worldStatusState.value
       : "initializing";
 
+  // The resident 3D Library is ready only when its runtime has started
+  // (or a visible error/unavailable state can be shown). Navigation back
+  // must not uncover a half-initialized Canvas.
+  useEffect(() => {
+    if (
+      active &&
+      (!application || error || worldStatus === "ready" || worldStatus === "failed")
+    ) signalPassageReady(location.pathname);
+  }, [active, application, error, worldStatus, location.pathname]);
+
   useEffect(() => {
     const page = pageRef.current;
     if (!active || !page || typeof ResizeObserver === "undefined") return;
@@ -226,7 +240,7 @@ function LibraryPageContent({
     if (!application) return;
     if (nextSelection?.id === "portal:duelo-arcano") {
       if (portalFlight.current) return;
-      beginPassage();
+      beginPassage("/arcanario/duelos");
       portalFlight.current = schedulePassage(() => {
         portalFlight.current = null;
         void navigate("/arcanario/duelos");
