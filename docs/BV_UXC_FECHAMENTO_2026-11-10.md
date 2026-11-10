@@ -4,7 +4,7 @@
 **Escopo:** BV-UXC R1–R6.2, PR [#49](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/49)  
 **Decisão:** aprovado pelo proprietário **com ressalvas**, com autorização explícita de integração à `main` e fechamento desta fase.  
 **Identificação do candidato aprovado:** `05714b50321398c25ab615c22baf5eff7d6703d5` (antes do commit documental de fechamento).  
-**Confirmação do merge:** consultar o estado final da PR #49; o SHA confirmado do merge deve constar no registro pós-integração.
+**Integração confirmada:** PR #49 mesclada e automaticamente encerrada em 10/11/2026 às 15:24:21 UTC. Merge commit `420109381aa91b5278fcee9d93b10984e9eef92a` (histórico preservado, método merge). O arquivo de fechamento foi incorporado à `main` nesse merge e atualizado com a prova de integração em commit documental subsequente.
 
 ## 1. Motivo e escopo concluído
 

@@ -1,3 +1,8 @@
+## 10/11/2026 — Integração confirmada BV-UXC na main
+
+- [PR #49](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/49) integrada por merge com histórico preservado: `420109381aa91b5278fcee9d93b10984e9eef92a`. PR encerrada automaticamente.
+- Conclusão formal R1–R6.2: **aceite funcional com ressalvas** no Moto G06, sem alegação de 100% de fluidez, CI verde ou benchmark P95/P99. O E2E lifecycle 3D permanece timeout; BF-5.6G não iniciada. [Documento canônico](docs/BV_UXC_FECHAMENTO_2026-11-10.md).
+
 ## 10/11/2026 — BV-UXC R1–R6.2 encerrada por aceite com ressalvas (PR #49)
 
 - Proprietário testou no Moto G06, confirmou evolução substancial da fluidez e da continuidade de toque desde R1 e **autorizou integração e fechamento da fase**, com microengasgos residuais nas quests.
