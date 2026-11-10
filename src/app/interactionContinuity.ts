@@ -1,40 +1,53 @@
 /**
- * BV-UXC R6: visible departure -> route/data work -> ready-gated reveal.
- * No destination is considered ready merely because its URL changed.
+ * BV-UXC R6.1: gesture -> smooth, opaque cover -> destination work ->
+ * readiness-held cover -> smooth reveal. No background navigation may begin
+ * until the original surface is fully covered.
  */
-const MIN_VISIBLE_MS = 560;
-const REVEAL_FALLBACK_MS = 540;
-let serial = 0;
-let active: {
+const COVER_FALLBACK_MS = 720; // CSS fold = 560ms; fallback only if animationend is absent
+const MIN_VISIBLE_MS = 740;
+const REVEAL_FALLBACK_MS = 820; // CSS unfold = 660ms
+let sequence = 0;
+
+interface Passage {
   readonly id: number;
   target: string | null;
   arrivedAt: string | null;
   ready: boolean;
+  sealed: boolean;
   readonly startedAt: number;
+  pendingWork?: () => void;
+  sealTimer?: ReturnType<typeof setTimeout>;
   holdTimer?: ReturnType<typeof setTimeout>;
   revealTimer?: ReturnType<typeof setTimeout>;
-} | null = null;
+}
+let active: Passage | null = null;
+
 function shell(): HTMLElement | null {
   return document.querySelector<HTMLElement>(".app-shell");
 }
 function reducedMotion(): boolean {
-  return shell()?.dataset.reducedMotion === "true" ||
+  return (
+    shell()?.dataset.reducedMotion === "true" ||
     (typeof window.matchMedia === "function" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+  );
 }
-function clearTimers(): void {
-  if (!active) return;
-  if (active.holdTimer !== undefined) clearTimeout(active.holdTimer);
-  if (active.revealTimer !== undefined) clearTimeout(active.revealTimer);
+function clearTimers(passage: Passage): void {
+  if (passage.sealTimer !== undefined) clearTimeout(passage.sealTimer);
+  if (passage.holdTimer !== undefined) clearTimeout(passage.holdTimer);
+  if (passage.revealTimer !== undefined) clearTimeout(passage.revealTimer);
 }
 export function cancelPassage(): void {
-  clearTimers();
+  if (active) clearTimers(active);
   active = null;
   shell()?.removeAttribute("data-passage");
 }
+
+/** Do not reveal until both the cover has sealed and the content is ready. */
 function tryReveal(): void {
   const current = active;
-  if (!current || !current.ready || current.arrivedAt === null) return;
+  if (!current || !current.ready || !current.sealed || current.arrivedAt === null)
+    return;
   const node = shell();
   if (!node) return;
   if (reducedMotion()) {
@@ -51,74 +64,111 @@ function tryReveal(): void {
     }, REVEAL_FALLBACK_MS);
   }, remaining);
 }
-/** Synchronous gesture acknowledgement: no module loads or navigation here. */
+
+/** Begin the gentle cover synchronously on the confirmed gesture. */
 export function beginPassage(target?: string): void {
-  clearTimers();
-  active = {
-    id: ++serial, target: target ?? null, arrivedAt: null,
-    ready: false, startedAt: performance.now(),
+  if (active) clearTimers(active);
+  const skipAnimation = reducedMotion() || document.visibilityState === "hidden";
+  const current: Passage = {
+    id: ++sequence,
+    target: target ?? null,
+    arrivedAt: null,
+    ready: false,
+    sealed: skipAnimation,
+    startedAt: performance.now(),
   };
-  shell()?.setAttribute("data-passage", reducedMotion() ? "waiting" : "departing");
+  active = current;
+  shell()?.setAttribute("data-passage", skipAnimation ? "waiting" : "departing");
+  if (!skipAnimation)
+    current.sealTimer = setTimeout(() => {
+      if (active?.id === current.id) completePassageDeparture();
+    }, COVER_FALLBACK_MS);
 }
-/** Called when React Router commits the destination pathname. */
+
+/** React Router URL commit is not equivalent to destination readiness. */
 export function notifyPassageLocation(pathname: string): void {
-  if (!active) return;
-  // Android Back or an unrelated navigation may win BEFORE the deferred
-  // Link executes. Abort the stale intent instead of navigating over Back.
-  if (active.arrivedAt === null && active.target !== null &&
-      active.target !== pathname) {
+  const current = active;
+  if (!current) return;
+  if (
+    current.arrivedAt === null &&
+    current.target !== null &&
+    current.target !== pathname
+  ) {
+    // A real Android Back/external navigation won the race.
     cancelPassage();
     return;
   }
-  active.target = pathname;
-  active.arrivedAt = pathname;
-  active.ready = false;
-  // Keep the 400ms fold alive even if this route commits very quickly.
-  // The CSS animationend marks the waiting phase without an opacity jump.
-  if (shell()?.dataset.passage !== "departing")
-    shell()?.setAttribute("data-passage", "waiting");
+  current.target = pathname;
+  current.arrivedAt = pathname;
+  current.ready = false;
+  if (current.sealed) shell()?.setAttribute("data-passage", "waiting");
 }
-/** Called by the destination only after its known data and lazy module are ready. */
+
+/** The destination explicitly confirms mounted content/data or visible failure. */
 export function signalPassageReady(pathname: string): void {
   const current = active;
-  if (!current || current.arrivedAt !== pathname || current.target !== pathname) return;
+  if (
+    !current ||
+    current.arrivedAt !== pathname ||
+    current.target !== pathname
+  ) return;
   current.ready = true;
   tryReveal();
 }
-/** The departure fold finishes before switching to the held-loading loop. */
+
+/**
+ * Cover became fully opaque. Never switch to waiting at partial alpha:
+ * the underlying route is allowed to change only after this boundary.
+ */
 export function completePassageDeparture(): void {
-  if (active && shell()?.dataset.passage === "departing")
-    shell()?.setAttribute("data-passage", "waiting");
+  const current = active;
+  if (!current || current.sealed) return;
+  current.sealed = true;
+  if (current.sealTimer !== undefined) clearTimeout(current.sealTimer);
+  current.sealTimer = undefined;
+  shell()?.setAttribute("data-passage", "waiting");
+  const pendingWork = current.pendingWork;
+  current.pendingWork = undefined;
+  // A fresh frame keeps the fully opaque layer committed before heavy work.
+  if (pendingWork) {
+    if (
+      typeof requestAnimationFrame === "function" &&
+      document.visibilityState !== "hidden"
+    ) requestAnimationFrame(pendingWork);
+    else queueMicrotask(pendingWork);
+  }
+  tryReveal();
 }
-/** CSS animationend cleanup, with background/no-event timer fallback. */
+
+/** CSS animationend cleanup; fallback handles background/no-event cases. */
 export function completePassageAnimation(): void {
   if (shell()?.dataset.passage === "arriving") cancelPassage();
 }
-/** Let the acknowledgement paint BEFORE calling the costly route handler. */
+
+/** The route callback waits until the cover has sealed. No early crossfade. */
 export function schedulePassage(action: () => void): () => void {
   let cancelled = false;
-  let first = 0;
-  let second = 0;
-  const id = active?.id;
+  let frame = 0;
+  const current = active;
   const commit = () => {
-    if (cancelled || (id !== undefined && active?.id !== id)) return;
+    if (cancelled || (current && active?.id !== current.id)) return;
     action();
   };
-  if (
-    reducedMotion() ||
-    document.visibilityState === "hidden" ||
-    typeof requestAnimationFrame !== "function"
-  ) {
-    queueMicrotask(commit);
-  } else {
-    first = requestAnimationFrame(() => {
-      if (cancelled || (id !== undefined && active?.id !== id)) return;
-      second = requestAnimationFrame(commit);
-    });
-  }
+  const dispatch = () => {
+    if (cancelled) return;
+    if (
+      typeof requestAnimationFrame === "function" &&
+      document.visibilityState !== "hidden" &&
+      !reducedMotion()
+    ) frame = requestAnimationFrame(commit);
+    else queueMicrotask(commit);
+  };
+  if (!current || current.sealed) queueMicrotask(commit);
+  else current.pendingWork = dispatch;
+
   return () => {
     cancelled = true;
-    if (first) cancelAnimationFrame(first);
-    if (second) cancelAnimationFrame(second);
+    if (current?.pendingWork === dispatch) current.pendingWork = undefined;
+    if (frame) cancelAnimationFrame(frame);
   };
 }
