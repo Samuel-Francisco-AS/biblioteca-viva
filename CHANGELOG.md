@@ -1,3 +1,10 @@
+## 10/11/2026 — BV-UXC R6: transições longas prontidão-dependentes (PR draft #49)
+
+- A transição de navegação reage ao clique, aguarda a primeira apresentação antes de iniciar trabalho de rota e mantém o sigilo de carregamento até o componente/snapshot declarar prontidão.
+- Dobra ~400 ms, abertura mínima 560 ms, entrada 440 ms; animação contínua se consulta/lazy load demorar mais. Movimento reduzido sem espera prolongada.
+- Destinos com consulta assíncrona (Coleção, Arquivo, Estatísticas, registros e Arcanário) sinalizam carregamento completo da camada principal; cancelamento e falhas protegidos.
+- **Código/testes escritos, não executados remotamente; gate Moto G06 pendente.** [Relatório](docs/audits/BV_UXC_R6_TRANSICOES_2026-11-10.md).
+
 ## 09/11/2026 — BV-UXC R4 (PR draft #49): volumes de toque e diagnóstico entre telas
 
 ## BV-UXC R5 — candidata de desempenho global (2026-11-09)
