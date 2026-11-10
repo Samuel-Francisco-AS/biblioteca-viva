@@ -54,7 +54,10 @@ export function NarrativePanel({
 
   useEffect(
     () => () => {
-      if (focusFrame.current !== null)
+      if (
+        focusFrame.current !== null &&
+        typeof cancelAnimationFrame === "function"
+      )
         cancelAnimationFrame(focusFrame.current);
     },
     [],
@@ -79,12 +82,15 @@ export function NarrativePanel({
       const shouldFocus =
         !previousActive.current || focusedSpeaker.current !== state.talkingTo;
       if (shouldFocus) {
-        if (focusFrame.current !== null)
+        if (
+          focusFrame.current !== null &&
+          typeof cancelAnimationFrame === "function"
+        )
           cancelAnimationFrame(focusFrame.current);
         const speaking = state.talkingTo;
         // Let the card commit and its entrance animation start before focus
         // requests potentially expensive style/layout calculations.
-        focusFrame.current = requestAnimationFrame(() => {
+        const focusAfterCommit = () => {
           focusFrame.current = null;
           if (!heading.current?.isConnected) return;
           if (speaking)
@@ -100,12 +106,16 @@ export function NarrativePanel({
               stage: "focusEnd",
               inhabitant: speaking,
             });
-        });
+        };
+        if (typeof requestAnimationFrame === "function")
+          focusFrame.current = requestAnimationFrame(focusAfterCommit);
+        else focusAfterCommit();
       }
       focusedSpeaker.current = state.talkingTo;
     } else {
       if (focusFrame.current !== null) {
-        cancelAnimationFrame(focusFrame.current);
+        if (typeof cancelAnimationFrame === "function")
+          cancelAnimationFrame(focusFrame.current);
         focusFrame.current = null;
       }
       if (previousActive.current)
