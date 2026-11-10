@@ -42,7 +42,14 @@ import "./styles-atelier.css";
 import "./features/library/canvas-hud.css";
 import "./features/duel/arena/arena.css";
 import { pulseTouch } from "./app/touchFeedback";
-import { beginPassage } from "./app/interactionContinuity";
+import {
+  beginPassage,
+  cancelPassage,
+  completePassageAnimation,
+  notifyPassageLocation,
+  schedulePassage,
+  signalPassageReady,
+} from "./app/interactionContinuity";
 import {
   recordUiActionStart,
   recordUiRouteCommit,
@@ -82,8 +89,10 @@ const EntryDetailPage = lazy(async () => ({
 function RouteStartupReady({ active }: { readonly active: boolean }) {
   const location = useLocation();
   useEffect(() => {
-    if (active && !location.pathname.startsWith("/arcanario"))
+    if (active && !location.pathname.startsWith("/arcanario")) {
       recordUiRouteContentCommit(location.pathname);
+      signalPassageReady(location.pathname);
+    }
   }, [active, location.pathname]);
   useEffect(() => {
     if (active) completeStartupExperience();
@@ -154,6 +163,15 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   const previousPathRef = useRef(location.pathname);
   const previousPassagePathRef = useRef(location.pathname);
   const pressedRef = useRef<HTMLElement | null>(null);
+  const replayingLinksRef = useRef(new WeakSet<HTMLAnchorElement>());
+  const pendingNavigationRef = useRef<(() => void) | null>(null);
+  useEffect(
+    () => () => {
+      pendingNavigationRef.current?.();
+      cancelPassage();
+    },
+    [],
+  );
   const pressedOriginRef = useRef<{ id: number; x: number; y: number } | null>(
     null,
   );
@@ -238,7 +256,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   useLayoutEffect(() => {
     if (previousPassagePathRef.current === location.pathname) return;
     previousPassagePathRef.current = location.pathname;
-    shellRef.current?.setAttribute("data-passage", "arriving");
+    notifyPassageLocation(location.pathname);
     recordUiRouteCommit(location.pathname);
   }, [location.pathname]);
 
@@ -321,6 +339,10 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           )
         )
           return;
+        if (
+          control instanceof HTMLAnchorElement &&
+          replayingLinksRef.current.has(control)
+        ) return;
         if (control.matches(".book-card__link"))
           control.setAttribute("data-tap-confirmed", "true");
         // Global opt-in diagnostic: measure the next two RAF callbacks for
@@ -342,22 +364,41 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           from: location.pathname,
           to: localHref !== location.pathname ? localHref : null,
         });
+        // Delegate the actual React Router Link click to a later frame.
+        // Replaying the SAME Link preserves its state/replace/relative route
+        // semantics instead of reconstructing a location from its href.
         if (
           control instanceof HTMLAnchorElement &&
+          !control.closest(".primary-dock") &&
           event.button === 0 &&
-          !event.metaKey &&
-          !event.ctrlKey &&
-          !event.altKey &&
-          !event.shiftKey &&
-          !event.defaultPrevented &&
+          !event.metaKey && !event.ctrlKey && !event.altKey &&
+          !event.shiftKey && !event.defaultPrevented &&
           !control.hasAttribute("download") &&
           (!control.target || control.target === "_self") &&
+          control.origin === window.location.origin &&
           control.getAttribute("href")?.startsWith("/") &&
           !control.getAttribute("href")?.startsWith("//") &&
           (control.pathname !== location.pathname ||
-            control.search !== location.search)
-        )
-          beginPassage();
+            control.search !== location.search ||
+            control.hash !== location.hash)
+        ) {
+          event.preventDefault();
+          pendingNavigationRef.current?.();
+          beginPassage(control.pathname);
+          pendingNavigationRef.current = schedulePassage(() => {
+            pendingNavigationRef.current = null;
+            if (!control.isConnected) {
+              cancelPassage();
+              return;
+            }
+            replayingLinksRef.current.add(control);
+            try {
+              control.click();
+            } finally {
+              replayingLinksRef.current.delete(control);
+            }
+          });
+        }
         pulseTouch(
           effectiveExperience.reducedMotion,
           control.matches(
@@ -410,7 +451,11 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
             </Profiler>
           </div>
         )}
-        <AppErrorBoundary embedded resetKey={location.pathname}>
+        <AppErrorBoundary
+          embedded
+          resetKey={location.pathname}
+          onFailure={() => signalPassageReady(location.pathname)}
+        >
           <Profiler id="route" onRender={recordUiReactRender}>
             <Suspense
               fallback={
@@ -493,8 +538,10 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
         className="passage-veil"
         aria-hidden="true"
         onAnimationEnd={(event) => {
-          if (event.target === event.currentTarget)
-            shellRef.current?.removeAttribute("data-passage");
+          if (
+            event.target === event.currentTarget &&
+            event.animationName === "bv-passage-unfold"
+          ) completePassageAnimation();
         }}
       />
       <PrimaryDock pathname={location.pathname} />
