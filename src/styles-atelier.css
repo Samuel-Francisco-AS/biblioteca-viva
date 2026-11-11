@@ -1468,6 +1468,16 @@
   }
 }
 
+/* BF-5.7A/G4: the Arcanarium is one potentially very tall scroll surface.
+   Do not retain the global translate3d/opacity entrance animation on its
+   whole document. Android WebView may rasterize that huge composited layer
+   late during a fast fling, showing temporarily empty tiles. Keep fine-grain
+   control transitions and let the room scroll in the native paint pipeline. */
+.app-shell[data-route="arcanario"] .app-content > .arcanarium {
+  animation: none;
+  transform: none;
+}
+
 /* Safe areas, landscape, small screens and keyboard support. */
 @media (max-width: 520px) {
   .app-shell .realm-intro {

@@ -1599,3 +1599,20 @@
     outline-offset: -2px;
   }
 }
+
+/* BF-5.7A/G4: these catalogue thumbnails never flip. Each full 3D pair of
+   faces otherwise increases compositing/tile pressure while the user flings
+   a grid with up to 24 cards. Preserve real 3D flipping in full-size detail,
+   preview and review cards; limit this optimization to catalogue tiles. */
+.arcanarium .arcana-grid .arcana-card--compact {
+  perspective: none;
+  transition: none;
+}
+.arcanarium .arcana-grid .arcana-card--compact .arcana-card__turn {
+  transform: none;
+  transform-style: flat;
+  transition: none;
+}
+.arcanarium .arcana-grid .arcana-card--compact .arcana-face--back {
+  display: none;
+}
