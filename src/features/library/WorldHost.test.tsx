@@ -226,7 +226,7 @@ describe("WorldHost", () => {
     const runtime = createRuntime();
     const portal: WorldSelectableObject = {
       id: "portal:duelo-arcano",
-      label: "Lua do Arcanário · abrir Duelo Arcano",
+      label: "Lua do Arcanário · abrir Portal do Arcanário",
     };
     runtime.getSelectableObjects.mockReturnValue([
       ...runtime.getSelectableObjects(),
@@ -244,7 +244,7 @@ describe("WorldHost", () => {
     );
     await openWorldControls();
     const direct = await screen.findByRole("button", {
-      name: "Abrir Salão de Duelos",
+      name: "Abrir Portal do Arcanário",
     });
     direct.focus();
     await user.keyboard("{Enter}");

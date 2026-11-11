@@ -240,10 +240,11 @@ function LibraryPageContent({
     if (!application) return;
     if (nextSelection?.id === "portal:duelo-arcano") {
       if (portalFlight.current) return;
-      beginPassage("/arcanario/duelos");
+      // The lunar gate enters the Arcanarium Portal; duel is a room within it.
+      beginPassage("/arcanario");
       portalFlight.current = schedulePassage(() => {
         portalFlight.current = null;
-        void navigate("/arcanario/duelos");
+        void navigate("/arcanario");
       });
       return;
     }

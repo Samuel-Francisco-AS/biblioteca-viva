@@ -1012,7 +1012,7 @@ it("R4 session events avoid catalog and annotation queries and retain world iden
   expect(worldHostProps().libraryWorldSnapshot).toBe(initial);
 });
 
-it("F2 opens the duel hall from the canonical orbital selection", async () => {
+it("G3 opens the Arcanarium Portal from the canonical lunar selection", async () => {
   const application: LibraryApplication = {
     queries: {
       listLibraryEntries: { execute: vi.fn(() => Promise.resolve([])) },
@@ -1022,6 +1022,10 @@ it("F2 opens the duel hall from the canonical orbital selection", async () => {
     <MemoryRouter>
       <Routes>
         <Route path="/" element={<LibraryPage application={application} />} />
+        <Route
+          path="/arcanario"
+          element={<h1>Portal do Arcanário fictício</h1>}
+        />
         <Route
           path="/arcanario/duelos"
           element={<h1>Salão orbital fictício</h1>}
@@ -1033,10 +1037,10 @@ it("F2 opens the duel hall from the canonical orbital selection", async () => {
   act(() =>
     worldHostProps().onSelectionChange?.({
       id: "portal:duelo-arcano",
-      label: "Arena orbital · abrir Duelo Arcano",
+      label: "Lua do Arcanário · abrir Portal do Arcanário",
     }),
   );
   expect(
-    await screen.findByRole("heading", { name: "Salão orbital fictício" }),
+    await screen.findByRole("heading", { name: "Portal do Arcanário fictício" }),
   ).toBeInTheDocument();
 });
