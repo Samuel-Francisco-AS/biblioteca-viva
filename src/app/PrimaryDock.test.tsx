@@ -1,6 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { expect, it, vi } from "vitest";
+import { afterEach, expect, it, vi } from "vitest";
+import { cancelPassage } from "./interactionContinuity";
+afterEach(() => cancelPassage());
 import { PrimaryDock } from "./PrimaryDock";
 import { preloadRoute } from "./routeModules";
 vi.mock("./routeModules", () => ({ preloadRoute: vi.fn() }));
@@ -18,4 +20,22 @@ it("acknowledges navigation while pending, warms on contact and clears feedback 
   expect(link).toHaveAttribute("data-pending", "false");
   fireEvent.click(link, { ctrlKey: true });
   expect(link).toHaveAttribute("data-pending", "false");
+});
+
+it("cancels a pending curtain when the active dock tab is selected again", () => {
+  const view = render(
+    <MemoryRouter>
+      <div className="app-shell">
+        <PrimaryDock pathname="/" />
+      </div>
+    </MemoryRouter>,
+  );
+  const shell = view.container.querySelector(".app-shell");
+  fireEvent.click(screen.getByRole("link", { name: "Coleção" }));
+  expect(shell).toHaveAttribute("data-passage", "departing");
+  fireEvent.click(screen.getByRole("link", { name: "Biblioteca" }));
+  expect(shell).not.toHaveAttribute("data-passage");
+  expect(
+    view.container.querySelector('.primary-dock__link[data-pending="true"]'),
+  ).toBeNull();
 });

@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { schedulePressedPassage } from "./crystalPress";
+import { cancelPassage } from "./interactionContinuity";
 import { preloadRoute } from "./routeModules";
 
 import {
@@ -111,11 +112,18 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                   )
                     return;
                   event.preventDefault();
+                  const hadPendingFlight = flight.current !== null;
                   flight.current?.();
                   flight.current = null;
                   pendingLink.current?.removeAttribute("data-pending");
                   pendingLink.current = null;
-                  if (active) return;
+                  if (active) {
+                    // A tap on the current tab cancels an uncommitted passage
+                    // instead of leaving an opaque veil waiting forever.
+                    if (hadPendingFlight) cancelPassage();
+                    flightOrigin.current = null;
+                    return;
+                  }
                   flightOrigin.current = pathname;
                   pendingLink.current = event.currentTarget;
                   pendingLink.current.setAttribute("data-pending", "true");
