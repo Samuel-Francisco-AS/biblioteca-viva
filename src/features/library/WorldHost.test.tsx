@@ -221,6 +221,37 @@ describe("WorldHost", () => {
     expect(runtime.selectObject).toHaveBeenLastCalledWith("bookshelf-01");
   });
 
+  it("oferece acesso direto e por teclado ao portal orbital sem depender da ordem dos objetos", async () => {
+    const user = userEvent.setup();
+    const runtime = createRuntime();
+    const portal: WorldSelectableObject = {
+      id: "portal:duelo-arcano",
+      label: "Lua do Arcanário · abrir Duelo Arcano",
+    };
+    runtime.getSelectableObjects.mockReturnValue([
+      ...runtime.getSelectableObjects(),
+      portal,
+    ]);
+    runtime.selectObject.mockImplementation((id) =>
+      runtime.emitSelection(id === portal.id ? portal : null),
+    );
+    const selectionChanged = vi.fn<(selection: WorldSelection) => void>();
+    render(
+      <WorldHost
+        runtimeFactory={() => Promise.resolve(runtime)}
+        onSelectionChange={selectionChanged}
+      />,
+    );
+    await openWorldControls();
+    const direct = await screen.findByRole("button", {
+      name: "Abrir Salão de Duelos",
+    });
+    direct.focus();
+    await user.keyboard("{Enter}");
+    expect(runtime.selectObject).toHaveBeenCalledWith(portal.id);
+    expect(selectionChanged).toHaveBeenCalledWith(portal);
+  });
+
   it("oferece ações contextuais e feedback semântico, inclusive carga/falha/movimento reduzido", async () => {
     const runtime = createRuntime();
     const play = vi.fn<NonNullable<WorldRuntime["playInhabitantAction"]>>(
