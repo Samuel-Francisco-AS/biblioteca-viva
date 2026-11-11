@@ -1,7 +1,7 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { afterEach, expect, it, vi } from "vitest";
-import { cancelPassage } from "./interactionContinuity";
+import { cancelPassage, completePassageDeparture } from "./interactionContinuity";
 import { PrimaryDock } from "./PrimaryDock";
 import { preloadRoute } from "./routeModules";
 vi.mock("./routeModules", () => ({ preloadRoute: vi.fn() }));
@@ -38,4 +38,49 @@ it("cancels a pending curtain when the active dock tab is selected again", () =>
   expect(
     view.container.querySelector('.primary-dock__link[data-pending="true"]'),
   ).toBeNull();
+});
+
+function RoutedDockFixture() {
+  const location = useLocation();
+  return (
+    <div className="app-shell">
+      <PrimaryDock pathname={location.pathname} />
+      <output data-testid="path">{location.pathname}</output>
+    </div>
+  );
+}
+
+it("commits one dock navigation after the sealed curtain without lazy route loading", async () => {
+  const frames: FrameRequestCallback[] = [];
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+    frames.push(callback);
+    return frames.length;
+  });
+  vi.stubGlobal("cancelAnimationFrame", vi.fn());
+  const visible = vi.spyOn(document, "visibilityState", "get");
+  visible.mockReturnValue("visible");
+  const view = render(
+    <MemoryRouter>
+      <RoutedDockFixture />
+    </MemoryRouter>,
+  );
+  try {
+    const path = screen.getByTestId("path");
+    fireEvent.click(screen.getByRole("link", { name: "Coleção" }));
+    expect(path).toHaveTextContent("/");
+    // This test has no Suspense/dynamic route import: navigation itself
+    // must work, after two scheduled frames, once the cover is opaque.
+    act(() => completePassageDeparture());
+    expect(frames).toHaveLength(1);
+    await act(async () => frames.shift()?.(560));
+    expect(path).toHaveTextContent("/");
+    expect(frames).toHaveLength(1);
+    await act(async () => frames.shift()?.(576));
+    await waitFor(() => expect(path).toHaveTextContent("/colecao"));
+  } finally {
+    cancelPassage();
+    view.unmount();
+    visible.mockRestore();
+    vi.unstubAllGlobals();
+  }
 });
