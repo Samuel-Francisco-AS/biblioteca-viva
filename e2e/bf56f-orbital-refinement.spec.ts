@@ -1,6 +1,6 @@
 import { mkdir } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
-test("F refinement: canonical lunar portal opens the hall and returns to the same paused/resumed world", async ({
+test("BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident world", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 900, height: 700 });
@@ -23,9 +23,10 @@ test("F refinement: canonical lunar portal opens the hall and returns to the sam
     .click();
   await page.getByText("Selecionar elementos", { exact: true }).click();
   // Direct semantic portal access does not rely on mutable catalogue order.
-  await page.getByRole("button", { name: "Abrir Salão de Duelos" }).focus();
+  await page.getByRole("button", { name: "Abrir Portal do Arcanário" }).focus();
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/arcanario\/duelos$/);
+  await expect(page).toHaveURL(/\/arcanario$/);
+  await expect(page.getByRole("link", { name: "Duelo Arcano" })).toBeVisible();
   await expect(canvas).toBeHidden();
   await expect(canvas).toHaveAttribute("data-active-frame-loops", "0");
   await page.getByRole("link", { name: "Biblioteca", exact: true }).click();

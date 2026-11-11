@@ -180,7 +180,7 @@ export function createOrbitalArena() {
     root,
     descriptor: {
       id: ORBITAL_ARENA_ID,
-      label: "Lua do Arcanário · abrir Duelo Arcano",
+      label: "Lua do Arcanário · abrir Portal do Arcanário",
     },
     update(deltaSeconds: number, reduced: boolean) {
       if (reduced) return;
