@@ -501,6 +501,19 @@ export function WorldHost({
                   >
                     Próximo →
                   </button>
+                  {selectableObjects.some(
+                    ({ id }) => id === "portal:duelo-arcano",
+                  ) && (
+                    <button
+                      className="button button--secondary"
+                      type="button"
+                      onClick={() =>
+                        runtimeRef.current?.selectObject("portal:duelo-arcano")
+                      }
+                    >
+                      Abrir Salão de Duelos
+                    </button>
+                  )}
                 </div>
               </fieldset>
             </details>
