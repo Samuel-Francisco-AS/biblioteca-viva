@@ -1,24 +1,20 @@
 /**
- * BF-5.7A — A tactile crystal control acknowledges the click before its
- * navigation curtain starts. Only pointer-driven route changes receive the
- * short prelude. No prelude for keyboard/assistive activation, hidden tabs or
- * reduced motion. The old R6 readiness/opaque-cover contract stays intact.
+ * BF-5.7A/R1: tactile crystal feedback and paint-first navigation.
+ * Repeatable counters do not retain a post-click pressed state.
  */
-import {
-  beginPassage,
-  schedulePassage,
-} from "./interactionContinuity";
+import { beginPassage, schedulePassage } from "./interactionContinuity";
 
-export const CRYSTAL_PRESS_PRELUDE_MS = 120;
-const PRESS_ECHO_MS = 190;
+export const CRYSTAL_PRESS_ECHO_MS = 76;
+export const CRYSTAL_PRESS_FALLBACK_MS = 72;
 const echoes = new WeakMap<HTMLElement, ReturnType<typeof setTimeout>>();
 
 export function echoCrystalPress(control: HTMLElement): void {
   if (
     control.matches(":disabled, [aria-disabled='true']") ||
-    control.matches(".book-card__link, .combat-card, .arcana-card")
-  )
-    return;
+    control.matches(
+      ".book-card__link, .combat-card, .arcana-card, .folio-step, [data-crystal-repeat='true']",
+    )
+  ) return;
   const old = echoes.get(control);
   if (old !== undefined) clearTimeout(old);
   control.setAttribute("data-crystal-pressed", "true");
@@ -27,22 +23,23 @@ export function echoCrystalPress(control: HTMLElement): void {
     setTimeout(() => {
       control.removeAttribute("data-crystal-pressed");
       echoes.delete(control);
-    }, PRESS_ECHO_MS),
+    }, CRYSTAL_PRESS_ECHO_MS),
   );
 }
 
-/**
- * Cancelling before the prelude expires must not open an obsolete curtain.
- * The returned cancellation also cancels the scheduled route action once
- * the normal passage sequence has begun.
- */
+/** Two RAFs permit one painted press before the established opaque curtain.
+ * A bounded fallback handles throttling; keyboard and reduced motion start
+ * immediately. Cancellation applies to both the prelude and scheduled route. */
 export function schedulePressedPassage(
   target: string,
   action: () => void,
   pointerActivation: boolean,
 ): () => void {
   let cancelled = false;
-  let startTimer: ReturnType<typeof setTimeout> | undefined;
+  let started = false;
+  let firstFrame: number | undefined;
+  let secondFrame: number | undefined;
+  let fallback: ReturnType<typeof setTimeout> | undefined;
   let cancelScheduledWork: (() => void) | undefined;
   const shell = document.querySelector<HTMLElement>(".app-shell");
   const reducedMotion =
@@ -51,18 +48,33 @@ export function schedulePressedPassage(
       window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
   const start = () => {
-    startTimer = undefined;
-    if (cancelled) return;
+    if (cancelled || started) return;
+    started = true;
+    if (fallback !== undefined) clearTimeout(fallback);
+    if (firstFrame !== undefined) cancelAnimationFrame(firstFrame);
+    if (secondFrame !== undefined) cancelAnimationFrame(secondFrame);
     beginPassage(target);
     cancelScheduledWork = schedulePassage(action);
   };
-  if (pointerActivation && !reducedMotion && document.visibilityState !== "hidden")
-    startTimer = setTimeout(start, CRYSTAL_PRESS_PRELUDE_MS);
-  else start();
-
+  if (
+    pointerActivation &&
+    !reducedMotion &&
+    document.visibilityState !== "hidden" &&
+    typeof requestAnimationFrame === "function"
+  ) {
+    firstFrame = requestAnimationFrame(() => {
+      if (cancelled || started) return;
+      secondFrame = requestAnimationFrame(start);
+    });
+    fallback = setTimeout(start, CRYSTAL_PRESS_FALLBACK_MS);
+  } else {
+    start();
+  }
   return () => {
     cancelled = true;
-    if (startTimer !== undefined) clearTimeout(startTimer);
+    if (fallback !== undefined) clearTimeout(fallback);
+    if (firstFrame !== undefined) cancelAnimationFrame(firstFrame);
+    if (secondFrame !== undefined) cancelAnimationFrame(secondFrame);
     cancelScheduledWork?.();
   };
 }
