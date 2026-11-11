@@ -909,3 +909,27 @@
 .app-shell[data-reduced-motion="true"] .book-folio .folio-status__chevron {
   transition: none;
 }
+
+
+/* The rating panel needs full folio width for five reachable star targets.
+   It must not be squeezed into the title column beside the progress seal. */
+.app-shell .book-folio .folio-interactions {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.8rem 1rem;
+}
+.app-shell .book-folio .folio-interactions .folio-rating-panel {
+  flex: 0 1 auto;
+  margin-bottom: 0;
+}
+.app-shell .book-folio .folio-interactions .folio-status {
+  flex: 0 1 auto;
+}
+@container (max-width: 31rem) {
+  .app-shell .book-folio .folio-interactions {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+}

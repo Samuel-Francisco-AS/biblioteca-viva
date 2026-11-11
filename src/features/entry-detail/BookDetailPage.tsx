@@ -386,22 +386,39 @@ export function BookDetailPage({
         <div className="folio-identity-text">
           <h2 id="detail-title">{book.title}</h2>
           <p className="folio-author">{book.author ?? "Autor não informado"}</p>
+        </div>
+        <span
+          className="folio-seal"
+          aria-label={
+            progressPercentage(book) === undefined
+              ? "Total de páginas não informado"
+              : `${progressPercentage(book)} por cento concluído`
+          }
+        >
+          <strong>
+            {progressPercentage(book) === undefined
+              ? "—"
+              : `${progressPercentage(book)}%`}
+          </strong>
+          <span>da jornada</span>
+        </span>
+        <div className="folio-interactions">
           <div className="folio-rating-panel">
             <PersistedRating
               value={book.rating}
-            disabled={!application.commands.updateBookEntry}
-            save={async (rating) => {
-              if (!application.commands.updateBookEntry)
-                throw new Error("Avaliação indisponível.");
-              updateBook(
-                await application.commands.updateBookEntry.execute({
-                  id: book.id,
-                  expectedRevision: book.revision,
-                  rating: rating ?? null,
-                }),
-                "Avaliação salva.",
-              );
-            }}
+              disabled={!application.commands.updateBookEntry}
+              save={async (rating) => {
+                if (!application.commands.updateBookEntry)
+                  throw new Error("Avaliação indisponível.");
+                updateBook(
+                  await application.commands.updateBookEntry.execute({
+                    id: book.id,
+                    expectedRevision: book.revision,
+                    rating: rating ?? null,
+                  }),
+                  "Avaliação salva.",
+                );
+              }}
             />
           </div>
           <details className="folio-status" data-reading-state={book.status}>
@@ -421,21 +438,6 @@ export function BookDetailPage({
             />
           </details>
         </div>
-        <span
-          className="folio-seal"
-          aria-label={
-            progressPercentage(book) === undefined
-              ? "Total de páginas não informado"
-              : `${progressPercentage(book)} por cento concluído`
-          }
-        >
-          <strong>
-            {progressPercentage(book) === undefined
-              ? "—"
-              : `${progressPercentage(book)}%`}
-          </strong>
-          <span>da jornada</span>
-        </span>
       </header>
       <section
         className="folio-chapter folio-progress"
