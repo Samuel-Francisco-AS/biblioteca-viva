@@ -87,3 +87,19 @@ Rodada sugerida no Moto G06 (retrato e paisagem): (1) Coleção/Arquivo/Resumo/A
 - Testes dirigidos novos: título único da página, CTA com destino correto, Busca/Novo registro preservados e botão presente no estado vazio.
 
 **Aprovação física anterior:** o proprietário confirmou que os problemas do R2 foram corrigidos em sua avaliação do Moto G06. **C1–C3 ainda não foram compilados, executados em Vitest nem verificados no APK.** PR draft, sem merge; continuar acumulando ajustes.
+
+## L1–L9 — Refinamento do fólio de leitura (11/11/2026)
+
+**Fonte:** quatro capturas do Moto G06 e nove alterações solicitadas pelo proprietário, para serem acumuladas antes do próximo gate.
+
+1. **L1 — Identidade:** removido somente o kicker `Códice pessoal · Livro` do cabeçalho do livro.
+2. **L2 — Título/autor:** ampliados título serifado e corpo/peso/contraste da autoria, preservando wrapping de títulos extensos.
+3. **L3 — Selo de progresso:** a porcentagem ganha fundo de pergaminho quase opaco, anéis/contorno e afastamento sutil da borda para não sumir na filigrana superior direita. O fundo ornamental do fólio não é deslocado globalmente.
+4. **L4 — Avaliação:** a legenda, as cinco estrelas e o resultado ficam juntos em um painel discreto com contorno de manuscrito; os alvos continuam acessíveis. O painel foi movido para a faixa inteira do cabeçalho em vez de disputar a coluna estreita do título e do selo.
+5. **L5 — Estado:** `folio-status` recebe um lacre ornamental arredondado com sigilo, label e chevron. Mantidos `details/summary` nativos, transições e comandos existentes.
+6. **L6 — Marcador:** removida a instrução redundante `Use um número inteiro a partir de zero... até N`; `min=0`, `max=N` e mensagens dinâmicas de erro continuam presentes e acessíveis.
+7. **L7 — Leitura:** dentro do mesmo `form`, o botão `Iniciar sessão` passa para antes de `Páginas e nota (opcionais)`; histórico permanece abaixo. Sem alterar submissão/tempos/persistência.
+8. **L8 — Notas/citações:** removidos `Use texto simples.` dos dois formulários e `O livro tem N páginas.` do formulário de nota. Conservadas regras de validação, erros dinâmicos e campos opcionais; menor gap vertical restrito à composição de anotação.
+9. **L9 — Ações:** `Capa da obra`, `Mais informações` e `Organização e favoritos` ganham tinta escura sobre papel claro; o alto contraste permanece legível no tema escuro.
+
+**Testes escritos:** apresentação do cabeçalho, acessibilidade do selo e das ações, ausência de textos redundantes, página mínima/máxima e ordenação de início de leitura/entradas opcionais/histórico. **Não houve execução de typecheck, Vitest, lint, build ou APK durante esta edição remota.** Próximo gate será conjunto com C1–C3 e outras micro-rodadas que o proprietário solicitar. PR draft #51, sem merge.

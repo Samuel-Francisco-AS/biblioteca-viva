@@ -41,3 +41,20 @@ it("allows quick consecutive +/- touches without losing increments or saving ear
   expect(pages).toHaveValue(351);
   expect(plus).not.toBeDisabled();
 });
+
+it("keeps current page limits accessible without a redundant static hint", () => {
+  render(
+    <ProgressForm
+      book={book}
+      updateProgress={vi.fn(async () => book)}
+      onUpdated={vi.fn()}
+    />,
+  );
+  const page = screen.getByRole("spinbutton", { name: /Página atual/i });
+  expect(page).toHaveAttribute("min", "0");
+  expect(page).toHaveAttribute("max", "352");
+  expect(page).not.toHaveAttribute("aria-describedby");
+  expect(
+    screen.queryByText(/Use um número inteiro a partir de zero/),
+  ).not.toBeInTheDocument();
+});

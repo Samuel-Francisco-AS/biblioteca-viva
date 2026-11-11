@@ -208,6 +208,46 @@ async function openDisclosure(
 }
 
 describe("detalhe do livro", () => {
+
+  it("L1–L9 dá destaque à identidade e agrupa os controles sem texto redundante", async () => {
+    const user = userEvent.setup();
+    const { facade } = application();
+    await loaded(facade);
+    const title = screen.getByRole("heading", { name: book.title });
+    const header = title.closest("header");
+    expect(header).not.toBeNull();
+    expect(header).toHaveTextContent("Autora");
+    expect(header).not.toHaveTextContent("Códice pessoal");
+    expect(header?.querySelector(".folio-seal")).toHaveAttribute(
+      "aria-label",
+      "10 por cento concluído",
+    );
+    expect(
+      header?.querySelector(".folio-interactions .folio-rating-panel .star-rating"),
+    ).not.toBeNull();
+    expect(
+      header?.querySelector(".folio-interactions .folio-status__label"),
+    ).toHaveTextContent("Em andamento");
+    expect(
+      screen.queryByText(/Use um número inteiro a partir de zero/),
+    ).not.toBeInTheDocument();
+
+    await openDisclosure(user, "Adicionar nota");
+    expect(screen.queryByText("Use texto simples.")).not.toBeInTheDocument();
+    expect(screen.queryByText("O livro tem 200 páginas.")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Nota (obrigatório)")).not.toHaveAttribute(
+      "aria-describedby",
+    );
+    expect(screen.getByLabelText("Página da nota (opcional)")).toBeInTheDocument();
+
+    await openDisclosure(user, "Adicionar citação");
+    expect(screen.getByLabelText("Citação (obrigatório)")).toBeInTheDocument();
+    expect(screen.queryByText("Use texto simples.")).not.toBeInTheDocument();
+    expect(
+      screen.getByText("Mais informações", { selector: "summary" }),
+    ).toBeInTheDocument();
+  });
+
   it("carrega pelo ID e apresenta dados, edição e retorno", async () => {
     const user = userEvent.setup();
     const { calls, facade } = application();

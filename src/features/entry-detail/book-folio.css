@@ -933,3 +933,12 @@
     gap: 0.8rem;
   }
 }
+
+/* Dark summaries on cream; respect the user's high-contrast theme when the
+   folio itself switches to dark ink/paper. */
+.app-shell[data-high-contrast="true"] .book-folio .folio-secondary :is(
+  .bv-cover-editor, .folio-metadata, .folio-secondary-flow
+) > summary {
+  color: #fff8e5;
+  -webkit-text-fill-color: #fff8e5;
+}

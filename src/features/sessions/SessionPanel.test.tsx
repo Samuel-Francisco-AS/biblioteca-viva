@@ -77,6 +77,22 @@ it("opens the only reading clock directly in the folio; persists the displayed d
       screen.getByRole("heading", { name: "Notas e citações" }),
     ) & Node.DOCUMENT_POSITION_FOLLOWING,
   ).toBeTruthy();
+  const readingStart = startButton.closest("form");
+  const optionalReadingFields = readingStart?.querySelector(
+    ".reading-session__fields",
+  );
+  const historyDisclosure = region.querySelector(".reading-session__history");
+  expect(readingStart).not.toBeNull();
+  expect(optionalReadingFields).not.toBeNull();
+  expect(historyDisclosure).not.toBeNull();
+  expect(
+    startButton.compareDocumentPosition(optionalReadingFields!) &
+      Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
+  expect(
+    optionalReadingFields!.compareDocumentPosition(historyDisclosure!) &
+      Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
   expect(timer).toHaveTextContent("00:00:00");
   expect(timer).toHaveAttribute("aria-live", "off");
   fireEvent.click(startButton);
