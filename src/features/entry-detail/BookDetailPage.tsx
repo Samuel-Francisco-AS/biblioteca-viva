@@ -384,11 +384,11 @@ export function BookDetailPage({
           </span>
         )}
         <div className="folio-identity-text">
-          <p className="folio-kicker">Códice pessoal · Livro</p>
           <h2 id="detail-title">{book.title}</h2>
           <p className="folio-author">{book.author ?? "Autor não informado"}</p>
-          <PersistedRating
-            value={book.rating}
+          <div className="folio-rating-panel">
+            <PersistedRating
+              value={book.rating}
             disabled={!application.commands.updateBookEntry}
             save={async (rating) => {
               if (!application.commands.updateBookEntry)
@@ -402,11 +402,14 @@ export function BookDetailPage({
                 "Avaliação salva.",
               );
             }}
-          />
-          <details className="folio-status">
+            />
+          </div>
+          <details className="folio-status" data-reading-state={book.status}>
             <summary>
               <span className="visually-hidden">Status da leitura: </span>
-              {statusLabels[book.status]} <span aria-hidden="true">⌄</span>
+              <span className="folio-status__gem" aria-hidden="true">✧</span>
+              <span className="folio-status__label">{statusLabels[book.status]}</span>
+              <span className="folio-status__chevron" aria-hidden="true">⌄</span>
             </summary>
             <p>Status atual: {statusLabels[book.status]}.</p>
             <StatusActions

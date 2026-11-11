@@ -61,10 +61,6 @@ export function ProgressForm({
     >
       <div className="form-field">
         <label htmlFor="detail-current-page">Página atual (obrigatório)</label>
-        <p className="field-help" id="detail-current-page-help">
-          Use um número inteiro a partir de zero
-          {book.totalPages === undefined ? "." : ` até ${book.totalPages}.`}
-        </p>
         <div className="folio-page-stepper">
           <button
             className="folio-step"
@@ -89,7 +85,7 @@ export function ProgressForm({
             max={book.totalPages}
             step="1"
             value={value}
-            aria-describedby={`detail-current-page-help${error ? " detail-current-page-error" : ""}`}
+            aria-describedby={error ? "detail-current-page-error" : undefined}
             aria-invalid={error ? "true" : undefined}
             onChange={(event) => setValue(event.target.value)}
           />
