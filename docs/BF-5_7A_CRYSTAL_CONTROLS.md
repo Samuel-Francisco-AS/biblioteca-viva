@@ -16,7 +16,7 @@
 
 ## Áreas cobertas
 - Ações tradicionais e links com classe de botão, controles de formulários, botões de texto e categoria, seletores e calendário inclusive em dialog nativo portalled, navegação e áreas do Arcanário, arena e controles de exploração/quests, teclas circulares do dock.
-- Cards inteiros (livros, cartas TCG, seletor de tipos) conservam a arte atual; o selo do seletor de tipos ganha depressão própria.
+- Cards inteiros (livros, cartas TCG, mão/campo da arena e seletor de tipos) conservam materiais, cores e posicionamento; cartas jogáveis reagem com escala independente do transform dos slots, e o selo do seletor de tipos deprime em separado.
 
 ## Código e rastreio
 - styles-crystal.css: camada terminal de materiais e pressão.
