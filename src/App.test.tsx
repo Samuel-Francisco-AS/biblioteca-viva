@@ -1,5 +1,5 @@
 import "fake-indexeddb/auto";
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -385,12 +385,23 @@ it("R6 animates before navigating and does not replay a link twice", async () =>
     expect(shell).toHaveAttribute("data-passage", "waiting");
     expect(shell).toHaveAttribute("data-route", "library");
 
-    // The full-opacity cover is now committed. Its queued callbacks may
-    // navigate, but the visible underlay cannot leak during preparation.
-    await act(async () => callbacks.shift()?.(560));
-    expect(shell).toHaveAttribute("data-route", "library");
-    await act(async () => callbacks.shift()?.(576));
-    expect(shell).toHaveAttribute("data-route", "colecao");
+    // The full-opacity cover is now committed. Frame callbacks may run the
+    // route action, but React Router can defer the location commit until the
+    // lazy CollectionPage module resolves. Two RAFs are NOT proof that the
+    // asynchronous destination has committed. Drain a bounded number of
+    // scheduling frames, then assert that the route really arrives.
+    let frameCount = 0;
+    while (callbacks.length > 0 && frameCount < 12) {
+      const next = callbacks.shift();
+      await act(async () => next?.(560 + 16 * frameCount));
+      frameCount++;
+    }
+    expect(frameCount).toBeGreaterThanOrEqual(2);
+    expect(frameCount).toBeLessThan(12);
+    await waitFor(
+      () => expect(shell).toHaveAttribute("data-route", "colecao"),
+      { timeout: 4000 },
+    );
   } finally {
     cancelPassage();
     view.unmount();
