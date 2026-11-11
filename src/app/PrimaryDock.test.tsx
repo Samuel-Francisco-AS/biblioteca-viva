@@ -67,16 +67,16 @@ it("commits one dock navigation after the sealed curtain without lazy route load
   try {
     const path = screen.getByTestId("path");
     fireEvent.click(screen.getByRole("link", { name: "Coleção" }));
-    expect(path).toHaveTextContent("/");
+    expect(path.textContent).toBe("/");
     // This test has no Suspense/dynamic route import: navigation itself
     // must work, after two scheduled frames, once the cover is opaque.
     act(() => completePassageDeparture());
     expect(frames).toHaveLength(1);
     await act(async () => frames.shift()?.(560));
-    expect(path).toHaveTextContent("/");
+    expect(path.textContent).toBe("/");
     expect(frames).toHaveLength(1);
     await act(async () => frames.shift()?.(576));
-    await waitFor(() => expect(path).toHaveTextContent("/colecao"));
+    await waitFor(() => expect(path.textContent).toBe("/colecao"));
   } finally {
     cancelPassage();
     view.unmount();
