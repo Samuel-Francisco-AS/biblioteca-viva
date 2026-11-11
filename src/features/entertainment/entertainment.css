@@ -850,3 +850,62 @@
   display: flex;
   align-items: center;
 }
+
+/* BF-5.7A/E1–E2: editorial hierarchy and a dedicated evaluation panel.
+   A full-width panel protects five 44px star targets beside narrow posters. */
+.cinema-hero { align-items: start; }
+.cinema-identity { min-width: 0; }
+.cinema-identity h2 {
+  font-size: clamp(2.05rem, 5.5vw, 3.5rem);
+  line-height: 1.09;
+  letter-spacing: -0.035em;
+  margin-block: 0.25rem 0.65rem;
+}
+.cinema-identity .cinema-metadata {
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  line-height: 1.45;
+  color: #563b4e;
+  margin-bottom: 0.55rem;
+}
+.cinema-identity .cinema-kicker {
+  margin-bottom: 0.45rem;
+}
+.cinema-rating-panel {
+  grid-column: 1 / -1;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.7rem 0.9rem 0.55rem;
+  margin-top: 0.15rem;
+  border: 1px solid #bba28a9c;
+  border-left: 3px solid #8b5670;
+  border-radius: 0.95rem 0.4rem 0.95rem 0.4rem;
+  background:
+    linear-gradient(135deg, #ffffff75, transparent 65%),
+    #eadbc6b5;
+  box-shadow: inset 0 1px #fff9edbf;
+}
+.cinema-rating-panel .star-rating { margin: 0; }
+.cinema-rating-panel .star-rating legend {
+  color: #4e3246;
+  font-weight: 700;
+}
+.cinema-rating-panel .star-rating__stars label {
+  width: clamp(2.35rem, 7.5vw, 2.75rem);
+  min-height: 44px;
+}
+.cinema-rating-panel .star-rating__value {
+  display: inline-block;
+  color: #594252;
+  margin-top: 0.15rem;
+}
+.cinema-rating-panel .persisted-rating > [role="status"] {
+  display: block;
+  color: #654052;
+}
+@media (max-width: 600px) {
+  .cinema-identity h2 { font-size: clamp(1.95rem, 5.5vw, 2.35rem); }
+  .cinema-rating-panel {
+    padding-inline: 0.6rem;
+    margin-top: 0;
+  }
+}
