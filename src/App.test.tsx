@@ -374,7 +374,19 @@ it("R6 animates before navigating and does not replay a link twice", async () =>
     expect(callbacks).toHaveLength(0);
     expect(shell).toHaveAttribute("data-route", "library");
     const veil = view.container.querySelector(".passage-veil");
-    fireEvent.animationEnd(veil!, { animationName: "bv-passage-fold" });
+    expect(veil).toBeInTheDocument();
+    // jsdom's generic animationEnd helper does not reliably set
+    // AnimationEvent.animationName. Supply it explicitly so this integration
+    // test exercises the real onAnimationEnd name guard in App.
+    const emitAnimationEnd = (name: string) => {
+      const event = new Event("animationend", { bubbles: true });
+      Object.defineProperty(event, "animationName", { value: name });
+      fireEvent(veil!, event);
+    };
+    // Unrelated animations must not seal the passage.
+    emitAnimationEnd("quest-content-arrive");
+    expect(shell).toHaveAttribute("data-passage", "departing");
+    emitAnimationEnd("bv-passage-fold");
     expect(shell).toHaveAttribute("data-passage", "waiting");
     expect(shell).toHaveAttribute("data-route", "library");
 
