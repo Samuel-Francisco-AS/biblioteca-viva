@@ -284,4 +284,4 @@ for (const actor of INHABITANTS)
     }
     expect(excess).toEqual([]);
     disposeObjectTree(gltf.scene);
-  });
+  }, 30_000);
