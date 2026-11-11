@@ -1,3 +1,10 @@
+## 11/11/2026 — BF-5.6G: auditoria integrada, reparos seguros e evidência de fechamento
+
+- Executados diretamente na `main` os checkpoints G1–G4 da auditoria de A–F junto da BV-UXC/PR #49. [Relatório e parecer formal](docs/BF-5_6G_AUDITORIA_CONSOLIDACAO_2026-11-11.md) · [Matriz de evidências](docs/audits/evidence/bf56g/inventory.json).
+- Adicionado comando semântico **“Abrir Salão de Duelos”** nos controles acessíveis da Biblioteca quando o portal lunar existe, sem alterar Canvas/órbita/TCG; teste de teclado e E2E orbital reescrito para usar o acesso estável. **Testes escritos, não executados nesta rodada.**
+- Corrigida colisão de numeração arquitetural: Arena Viva = **ADR-030**; residência de rotas/consultas da PR #49 = **ADR-031**, com cinco referências atualizadas e documento duplicado removido.
+- Sem alteração Dexie v19, backup v11, regras, migrações, dados privados ou assets. Sem APK novo, CI/lint/build/E2E e gate físico da revisão G; cota Actions esgotada, timeouts antigos e TalkBack/termal permanecem ressalvas. **BF-5.6 global aguarda aceite de encerramento explícito.**
+
 ## 10/11/2026 — Integração confirmada BV-UXC na main
 
 - [PR #49](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/49) integrada por merge com histórico preservado: `420109381aa91b5278fcee9d93b10984e9eef92a`. PR encerrada automaticamente.
