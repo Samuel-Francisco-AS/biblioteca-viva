@@ -353,7 +353,8 @@ it("keeps the Arcanarium snapshot mounted between rooms and debounces the real w
     view.unmount();
     application.close();
     await Dexie.delete(name);
-  }, 30000);
+  }
+}, 30000);
 
 it("R6 animates before navigating and does not replay a link twice", async () => {
   const callbacks: FrameRequestCallback[] = [];
