@@ -1,6 +1,7 @@
 /**
  * BF-5.7A/R1: tactile crystal feedback and paint-first navigation.
  * Repeatable counters do not retain a post-click pressed state.
+ * An echo created at pointerup is reused by click rather than replayed.
  */
 import { beginPassage, schedulePassage } from "./interactionContinuity";
 

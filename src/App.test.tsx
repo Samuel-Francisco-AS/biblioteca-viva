@@ -69,7 +69,7 @@ describe("App", () => {
   });
 });
 
-it("R7 releases touch feedback on scroll, cancellation and release without early navigation", () => {
+it("R7 releases touch feedback on scroll/cancellation and hands off a valid release without flicker", () => {
   render(
     <MemoryRouter>
       <App />
@@ -98,6 +98,60 @@ it("R7 releases touch feedback on scroll, cancellation and release without early
   emit("pointerdown");
   emit("pointerup");
   expect(link).not.toHaveAttribute("data-tap-active");
+  // A completed touch already has its short echo before a click can run.
+  expect(link).toHaveAttribute("data-crystal-pressed", "true");
+});
+
+it("R2 keeps one continuous press across pointerup and click even when the action changes the DOM", () => {
+  render(
+    <MemoryRouter>
+      <App />
+    </MemoryRouter>,
+  );
+  const button = document.createElement("button");
+  button.textContent = "Abrir card de teste";
+  document.querySelector(".app-shell")!.append(button);
+  const emit = (type: string) =>
+    button.dispatchEvent(
+      new PointerEvent(type, {
+        bubbles: true,
+        pointerType: "touch",
+        isPrimary: true,
+        pointerId: 12,
+        clientX: 20,
+        clientY: 20,
+      }),
+    );
+  emit("pointerdown");
+  expect(button).toHaveAttribute("data-tap-active", "true");
+  emit("pointerup");
+  expect(button).not.toHaveAttribute("data-tap-active");
+  expect(button).toHaveAttribute("data-crystal-pressed", "true");
+  const before = button.getAttribute("data-crystal-pressed");
+  fireEvent.click(button, { detail: 1 });
+  expect(button.getAttribute("data-crystal-pressed")).toBe(before);
+  // In a real card-opening action this button can unmount in the same click.
+  button.remove();
+});
+
+it("R2 does not add an echo on a cancelled scroll gesture", () => {
+  render(
+    <MemoryRouter>
+      <App />
+    </MemoryRouter>,
+  );
+  const button = document.createElement("button");
+  document.querySelector(".app-shell")!.append(button);
+  const emit = (type: string, x: number) =>
+    button.dispatchEvent(new PointerEvent(type, {
+      bubbles: true, pointerType: "touch", isPrimary: true,
+      pointerId: 13, clientX: x, clientY: 20,
+    }));
+  emit("pointerdown", 10);
+  emit("pointermove", 35);
+  emit("pointerup", 35);
+  expect(button).not.toHaveAttribute("data-tap-active");
+  expect(button).not.toHaveAttribute("data-crystal-pressed");
 });
 
 it("shows a non-blocking passage for same-tab navigation, not modified clicks", () => {

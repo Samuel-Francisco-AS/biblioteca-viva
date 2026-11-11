@@ -333,7 +333,21 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
         )
           clearTap();
       }}
-      onPointerUpCapture={clearTap}
+      onPointerUpCapture={(event) => {
+        // Preserve ONE visual press from pointerdown through the semantic click.
+        // A quick pointerup -> click used to clear then reapply pressure, causing
+        // two compressed animations on slower Android frames.
+        const pressed = pressedRef.current;
+        if (
+          pressed &&
+          pressedOriginRef.current?.id === event.pointerId &&
+          event.target instanceof Element &&
+          event.target.closest("button, a, summary, [role='button'], [role='tab']") === pressed
+        ) {
+          echoCrystalPress(pressed);
+        }
+        clearTap();
+      }}
       onPointerCancelCapture={clearTap}
       onLostPointerCapture={clearTap}
       onClickCapture={(event) => {
@@ -355,7 +369,10 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           return;
         if (control.matches(".book-card__link"))
           control.setAttribute("data-tap-confirmed", "true");
-        echoCrystalPress(control);
+        // Pointerup has already transferred the pressed state to the short
+        // echo. Keyboard/synthetic clicks still receive their own response.
+        if (!control.hasAttribute("data-crystal-pressed"))
+          echoCrystalPress(control);
         // Global opt-in diagnostic: measure the next two RAF callbacks for
         // ordinary buttons and links, even outside the resident Canvas.
         const localHref =

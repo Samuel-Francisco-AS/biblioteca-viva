@@ -28,11 +28,12 @@
   --crystal-glint: #f4d5c98a;
   position: relative;
   border-color: var(--crystal-glint);
-  background:
+  --crystal-surface:
     linear-gradient(115deg, #ffffff2d 0%, #ffffff0a 17%, transparent 29% 48%, #e9cfec14 57%, transparent 68%),
     linear-gradient(165deg, transparent 46%, #120b2340 90%),
     repeating-linear-gradient(127deg, transparent 0 11px, var(--crystal-facet) 12px, transparent 13px 29px),
     linear-gradient(150deg, var(--crystal-top), var(--crystal-mid) 48%, var(--crystal-base) 100%);
+  background: var(--crystal-surface);
   color: #f9eadc;
   --crystal-shadow:
     inset 0 1px 0 #fff5e37a,
@@ -225,8 +226,33 @@
 }
 .app-shell .primary-dock__link:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]) {
   color: #fff0dc;
-  /* The crystal moves in its socket; the dock frame and caption stay put. */
+  /* The crystal moves in its socket; the dock frame and caption stay put.
+     Old velvet/brightness pressed treatments must not run in parallel. */
   transform: none;
+  background: transparent;
+  filter: none;
+  transition: color 64ms ease-out;
+}
+.app-shell .primary-dock__link[aria-current="page"]:is(
+  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
+) {
+  background: linear-gradient(180deg, #99718a3d, #39293a90 70%);
+}
+
+/* Inherited active rules from the old atelier added brightness/background
+   changes on top of the crystal depression. Keep the facets steady while
+   fingers press — especially on actions that re-render a whole card. */
+.app-shell .category-ribbon :is(button, a):is(
+  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
+),
+.app-shell .rpg-choices button:is(
+  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
+),
+.app-shell .library-page .rpg-tools button:is(
+  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
+) {
+  background: var(--crystal-surface);
+  filter: none;
 }
 
 /* Art-bearing game controls are interactive cards, not ordinary keys.
@@ -285,8 +311,10 @@
 .app-shell .arcanarium .arcana-nav a:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]),
 .bv-picker-sheet button:not(:disabled):is(:active, [data-crystal-pressed="true"]) {
   transform: translate3d(0, 2px, 0) scale(0.988);
+  background: var(--crystal-surface);
   border-color: var(--crystal-glint);
   box-shadow: var(--crystal-shadow);
+  filter: none;
 }
 .app-shell :is(
   button:not(.combat-card, .arcana-card, .type-picker__option, .arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card),

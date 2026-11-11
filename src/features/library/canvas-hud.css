@@ -131,22 +131,9 @@
       env(safe-area-inset-bottom)
   );
 }
-.primary-dock__link[data-pending="true"] .primary-dock__medallion {
-  color: #fff0dc;
-  background: #a978bd52;
-  box-shadow:
-    0 0 0 2px #e4c5ed,
-    0 0 18px #b58ed466;
-}
-.primary-dock__link:active .primary-dock__medallion {
-  transform: scale(0.94);
-}
-.primary-dock__medallion {
-  transition:
-    background-color 100ms ease-out,
-    box-shadow 100ms ease-out,
-    transform 100ms ease-out;
-}
+/* BF-5.7A: the dock crystal now owns the single pressed/pending appearance.
+   The previous pending glow and :active scaling restarted the key animation
+   mid-navigation and are intentionally superseded in styles-crystal.css. */
 .library-residence:not([hidden]) .library-scene-vignette {
   animation: canvas-arrive 150ms ease-out;
 }
