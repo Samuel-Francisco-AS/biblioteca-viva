@@ -1,3 +1,9 @@
+## 11/11/2026 — BF-5.6 O Arcanário: encerramento global com ressalvas
+
+- **Aceite explícito do proprietário** após a auditoria BF-5.6G: **A–G formalmente encerradas com ressalvas**. [Fechamento global](docs/BF-5_6_FECHAMENTO_GLOBAL_2026-11-11.md) e [matriz da G](docs/audits/evidence/bf56g/inventory.json).
+- Preservado o histórico de integrações A–F, arena/TCG/estudos/pacotes e auditoria G com reparos de acesso semântico e ADR-031. Sem alteração em motor, Dexie v19, backup v11, CI ou APK nesta operação documental.
+- Ressalvas continuam explícitas: CI sem cota, E2E orbital/lifecycle e timeouts gráficos, TalkBack/desempenho sustentado, balanceamento TCG, reforma transversal do Arcanário, licenciamento de conteúdo de provas e build/gate Android pós-G. O fechamento **não os converte em PASS** e não inicia BF-6/BF-7.
+
 ## 11/11/2026 — BF-5.6G: auditoria integrada, reparos seguros e evidência de fechamento
 
 - Executados diretamente na `main` os checkpoints G1–G4 da auditoria de A–F junto da BV-UXC/PR #49. [Relatório e parecer formal](docs/BF-5_6G_AUDITORIA_CONSOLIDACAO_2026-11-11.md) · [Matriz de evidências](docs/audits/evidence/bf56g/inventory.json).
