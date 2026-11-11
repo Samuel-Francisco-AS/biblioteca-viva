@@ -63,7 +63,7 @@ describe("Coleção", () => {
     ).toBeVisible();
     expect(screen.queryByText("Seus registros")).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("heading", { name: "Coleção", exact: true }),
+      screen.queryByRole("heading", { name: /^Coleção$/ }),
     ).not.toBeInTheDocument();
     const arcanarium = screen.getByRole("link", {
       name: /Cartas, Ecos e Relicário.*Arcanário/,
