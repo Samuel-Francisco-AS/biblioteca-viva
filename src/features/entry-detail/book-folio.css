@@ -942,3 +942,20 @@
   color: #fff8e5;
   -webkit-text-fill-color: #fff8e5;
 }
+
+
+/* Preserve readable ink for titles on the alternate dark-paper high-contrast
+   folio; the decorative seal and controls can keep their opaque surfaces. */
+.app-shell[data-high-contrast="true"] .book-folio .folio-identity h2,
+.app-shell[data-high-contrast="true"] .book-folio .folio-author {
+  color: #fff8e5;
+}
+.app-shell[data-high-contrast="true"] .book-folio .folio-rating-panel {
+  background: #fff2db;
+  color: #211625;
+  border-color: #211625;
+}
+.app-shell .book-folio .folio-interactions .folio-status[open] {
+  flex: 1 1 100%;
+  width: 100%;
+}
