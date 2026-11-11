@@ -22,7 +22,8 @@ test("F refinement: canonical lunar portal opens the hall and returns to the sam
     .getByText("Explorar · habitantes e objetos", { exact: true })
     .click();
   await page.getByText("Selecionar elementos", { exact: true }).click();
-  await page.getByRole("button", { name: "Próximo →", exact: true }).focus();
+  // Direct semantic portal access does not rely on mutable catalogue order.
+  await page.getByRole("button", { name: "Abrir Salão de Duelos" }).focus();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/arcanario\/duelos$/);
   await expect(canvas).toBeHidden();
