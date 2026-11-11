@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { schedulePassage, beginPassage } from "./interactionContinuity";
+import { schedulePressedPassage } from "./crystalPress";
 import { preloadRoute } from "./routeModules";
 
 import {
@@ -112,13 +112,12 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                   }
                   flightOrigin.current = pathname;
                   setPassage({ from: pathname, to: route.path });
-                  beginPassage(route.path);
-                  flight.current = schedulePassage(() => {
+                  flight.current = schedulePressedPassage(route.path, () => {
                     flight.current = null;
                     flightOrigin.current = null;
                     preloadRoute(route.path);
                     void navigate(route.path);
-                  });
+                  }, event.detail > 0);
                 }}
                 onPointerEnter={(event) => {
                   if (event.pointerType === "mouse") preloadRoute(route.path);

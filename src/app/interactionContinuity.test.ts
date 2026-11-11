@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { CRYSTAL_PRESS_PRELUDE_MS, schedulePressedPassage } from "./crystalPress";
 import {
   beginPassage,
   cancelPassage,
@@ -171,5 +172,48 @@ describe("R6.1: seamless, readiness-gated passage", () => {
     expect(frames).toHaveLength(0);
     expect(action).not.toHaveBeenCalled();
     expect(shell).not.toHaveAttribute("data-passage");
+  });
+
+  it("shows the pressed key before beginning any navigation curtain", () => {
+    vi.useFakeTimers();
+    const { shell, frames } = setup();
+    const action = vi.fn();
+    schedulePressedPassage("/colecao", action, true);
+    expect(shell).not.toHaveAttribute("data-passage");
+    expect(frames).toHaveLength(0);
+    vi.advanceTimersByTime(CRYSTAL_PRESS_PRELUDE_MS - 1);
+    expect(shell).not.toHaveAttribute("data-passage");
+    vi.advanceTimersByTime(1);
+    expect(shell.dataset.passage).toBe("departing");
+    expect(action).not.toHaveBeenCalled();
+    completePassageDeparture();
+    frames.shift()?.(560);
+    frames.shift()?.(576);
+    expect(action).toHaveBeenCalledOnce();
+  });
+
+  it("cancels a quick superseded press without opening its old curtain", () => {
+    vi.useFakeTimers();
+    const { shell } = setup();
+    const oldAction = vi.fn();
+    const cancel = schedulePressedPassage("/arquivo", oldAction, true);
+    cancel();
+    vi.advanceTimersByTime(CRYSTAL_PRESS_PRELUDE_MS + 10);
+    expect(shell).not.toHaveAttribute("data-passage");
+    expect(oldAction).not.toHaveBeenCalled();
+  });
+
+  it("does not delay keyboard or reduced-motion route activation", async () => {
+    vi.useFakeTimers();
+    const { shell } = setup();
+    const keyboardAction = vi.fn();
+    schedulePressedPassage("/colecao", keyboardAction, false);
+    expect(shell.dataset.passage).toBe("departing");
+    cancelPassage();
+    shell.dataset.reducedMotion = "true";
+    const reducedAction = vi.fn();
+    schedulePressedPassage("/arquivo", reducedAction, true);
+    await Promise.resolve();
+    expect(reducedAction).toHaveBeenCalledOnce();
   });
 });
