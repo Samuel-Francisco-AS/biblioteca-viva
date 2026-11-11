@@ -148,8 +148,7 @@ export function StudyDetailPage({
         <span className="study-emblem" aria-hidden="true">
           <ArtifactGlyph type="study" />
         </span>
-        <div>
-          <p className="study-kicker">Seu percurso de conhecimento</p>
+        <div className="study-identity__body">
           <h2 id="study-title">{entry.title}</h2>
           {(entry.discipline || entry.area) && (
             <p className="study-subtitle">

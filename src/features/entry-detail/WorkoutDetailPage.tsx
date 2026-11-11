@@ -253,11 +253,11 @@ export function WorkoutDetailPage({
       </nav>
       <header className="workout-identity">
         <div>
-          <p className="workout-eyebrow">
+          <h2 id="workout-title">{entry.title}</h2>
+          <p className="workout-identity__subtitle">
             {workoutTypes[entry.category]} · {statusLabels[entry.status]}
           </p>
-          <h2 id="workout-title">{entry.title}</h2>
-          <p>
+          <p className="workout-identity__schedule">
             {entry.schedule
               ? `${entry.schedule.start.split("-").reverse().join("/")} — ${entry.schedule.end.split("-").reverse().join("/")}`
               : "Período ainda não definido"}

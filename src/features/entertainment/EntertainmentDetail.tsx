@@ -297,6 +297,8 @@ export function EntertainmentDetail({
               {isWishlisted(entry) ? "✓ Nos desejos" : "+ Lista de desejos"}
             </button>
           </div>
+        </div>
+        <div className="cinema-rating-panel">
           <PersistedRating
             value={entry.catalog?.rating}
             disabled={busy || dirty}
