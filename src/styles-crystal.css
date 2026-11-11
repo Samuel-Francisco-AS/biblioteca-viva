@@ -424,3 +424,79 @@
 .app-shell[data-reduced-motion="true"] .book-folio .folio-page-stepper button.folio-step:is(:active, [data-tap-active="true"]) {
   transform: none;
 }
+
+
+/* BF-5.7A/C1-C3 — Collection-only frontispiece and compact arcane access.
+   The WebView may paint beneath Android's status bar; safe inset + a modest
+   visible allowance keeps the first filigree clear without moving the dock. */
+.app-shell[data-route="colecao"]:has(.realm-intro) .app-content {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 1.65rem);
+}
+
+/* The chapter title already names the place. Actions are a slim independent
+   row, without a second visible 'Seus registros / Coleção' heading. */
+.app-shell[data-route="colecao"] .collection-actions {
+  justify-content: flex-start;
+  margin-top: 0.65rem;
+  margin-bottom: 1rem;
+}
+.app-shell[data-route="colecao"] .collection-actions .section-heading__actions {
+  justify-content: flex-start;
+}
+
+/* An enchanted amethyst seal, not a large competing primary CTA. */
+.app-shell[data-route="colecao"] .collection-arcana-link {
+  --crystal-facet: #f1d9eb15;
+  --crystal-top: #5c4565;
+  --crystal-mid: #3d2b49;
+  --crystal-base: #261e35;
+  --crystal-glint: #c9a9a8;
+  --crystal-ledge: #140f21;
+  width: fit-content;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 2.55rem;
+  margin: 0.05rem 0 0.45rem;
+  padding: 0.42rem 0.8rem;
+  gap: 0.38rem;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  border-radius: 0.65rem 1.1rem 0.65rem 1.1rem;
+  font-size: clamp(0.78rem, 2.65vw, 0.9rem);
+  font-weight: 650;
+  line-height: 1.25;
+  text-align: left;
+  text-decoration: none;
+  white-space: normal;
+}
+.app-shell[data-route="colecao"] .collection-arcana-link::before {
+  display: none;
+}
+.app-shell[data-route="colecao"] .collection-arcana-link__sigil {
+  display: inline-grid;
+  flex: 0 0 1.5rem;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid #e3bb9e85;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 24%, #d9b9d344, #35263f 72%);
+  box-shadow: inset 0 1px 0 #ffe7db5c;
+  color: #f3cda8;
+  font: 1.05rem/1 Georgia, serif;
+}
+.app-shell[data-route="colecao"] .collection-arcana-link__label {
+  min-width: 0;
+}
+.app-shell[data-route="colecao"] .collection-arcana-link__destination {
+  color: #e9c4ba;
+  font-size: 0.87em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+@media (max-width: 370px) {
+  .app-shell[data-route="colecao"] .collection-arcana-link {
+    gap: 0.3rem;
+    padding-inline: 0.65rem;
+  }
+}

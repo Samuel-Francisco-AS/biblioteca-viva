@@ -73,6 +73,23 @@ function secondaryText(entry: LibraryEntry): string {
   }
 }
 
+/** One shared entry point for populated and empty collections. */
+function ArcanariumAccess() {
+  return (
+    <Link className="button button--secondary collection-arcana-link" to="/arcanario">
+      <span className="collection-arcana-link__sigil" aria-hidden="true">
+        ✧
+      </span>
+      <span className="collection-arcana-link__label">
+        Cartas, Ecos e Relicário
+      </span>
+      <span className="collection-arcana-link__destination">
+        · Arcanário
+      </span>
+    </Link>
+  );
+}
+
 export function CollectionPage({
   application,
 }: {
@@ -225,9 +242,7 @@ export function CollectionPage({
           title="Acervo encantado"
           description="Tudo o que você lê, descobre e constrói."
         />
-        <Link className="text-link" to="/arcanario">
-          ✧ Cartas, Ecos e Relicário · abrir o Arcanário
-        </Link>
+        <ArcanariumAccess />
         <p className="eyebrow">Coleção vazia</p>
         <h2 id="empty-collection-title">Seu primeiro registro começa aqui</h2>
         <p>Registre algo que você lê, assiste, aprende, pratica ou constrói.</p>
@@ -249,19 +264,13 @@ export function CollectionPage({
   const controlsActive = activeControlCount > 0;
   const returnPath = `${location.pathname}${location.search}`;
   return (
-    <section aria-labelledby="collection-title">
+    <section aria-label="Coleção">
       <RealmIntro
         title="Acervo encantado"
         description="Tudo o que você lê, descobre e constrói."
       />
-      <Link className="text-link" to="/arcanario">
-        ✧ Cartas, Ecos e Relicário · abrir o Arcanário
-      </Link>
-      <div className="section-heading">
-        <div>
-          <p className="eyebrow">Seus registros</p>
-          <h2 id="collection-title">Coleção</h2>
-        </div>
+      <ArcanariumAccess />
+      <div className="section-heading collection-actions">
         <div className="section-heading__actions">
           <button
             aria-controls="collection-search-controls"

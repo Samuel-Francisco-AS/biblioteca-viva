@@ -76,3 +76,14 @@ Rodada sugerida no Moto G06 (retrato e paisagem): (1) Coleção/Arquivo/Resumo/A
 - **Nenhuma alteração na produção**, em transições, componentes React da aplicação ou no motor de navegação, pois o relatório ainda não demonstrou defeito funcional nesses contratos.
 
 **Pendente:** executar os **30 testes dirigidos esperados**, `typecheck`, e, se PASS, build/APK e gate físico. O presente registro documenta uma hipótese técnica com testes discriminantes, não uma certificação. CI continua sem cota; não declarar PASS não executado.
+
+## C1–C3 — Primeira rodada de refinamentos da Coleção (11/11/2026)
+
+**Origem:** screenshot e três pedidos expressos após aprovação física do R2 dos controles. O proprietário deseja acumular pequenas alterações antes do próximo build/gate.
+
+- **C1:** somente a rota `/colecao` recebe `padding-top: calc(env(safe-area-inset-top, 0px) + 1.65rem)` no contêiner que contém o frontispício. Evita o banner excessivamente próximo à status bar Android; não desloca HUD/dock de outras rotas. Ajuste alvo inferior a aproximadamente 0,5 cm na tela física, sujeito a conferência.
+- **C2:** acesso ao Arcanário transformado de texto sublinhado em pequena tecla cristalina de ametista com sigilo circular ornamental, mantendo `href=/arcanario` e área compacta, sem competir com os CTAs Busca e Novo registro. Reutilização do mesmo componente para estado vazio e Coleção povoada.
+- **C3:** removidas as duas linhas redundantes visíveis `Seus registros` e `Coleção` acima das ações. O `RealmIntro` continua como `h1`; o agrupamento de registros permanece com nome acessível `aria-label="Coleção"`, sem segunda heading visual. Demais rotas/áreas não alteradas.
+- Testes dirigidos novos: título único da página, CTA com destino correto, Busca/Novo registro preservados e botão presente no estado vazio.
+
+**Aprovação física anterior:** o proprietário confirmou que os problemas do R2 foram corrigidos em sua avaliação do Moto G06. **C1–C3 ainda não foram compilados, executados em Vitest nem verificados no APK.** PR draft, sem merge; continuar acumulando ajustes.
