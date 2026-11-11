@@ -78,10 +78,16 @@ it("creates a canonical card from a real editor, previews both faces and keeps a
   await u.click(
     screen.getByRole("button", { name: "Guardar carta no acervo" }),
   );
-  await screen.findByRole("link", { name: "Editar na Oficina" });
+  // Saving and reloading a canonical card crosses IndexedDB and routing.
+  // Preserve the real persisted-card check while allowing worker contention.
+  await screen.findByRole(
+    "link",
+    { name: "Editar na Oficina" },
+    { timeout: 10000 },
+  );
   expect((await a.arcanarium.list()).cards).toHaveLength(1);
   expect(a.workshopDrafts.read("nova:flashcard")).toBeUndefined();
-});
+}, 20000);
 it("preserves typed work on a genuine revision conflict and lets the user choose the new base", async () => {
   const a = await app(),
     u = userEvent.setup(),

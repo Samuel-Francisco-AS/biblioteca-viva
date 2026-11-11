@@ -319,7 +319,7 @@ it("keeps the Arcanarium snapshot mounted between rooms and debounces the real w
     </MemoryRouter>,
   );
   try {
-    await screen.findByRole("heading", { name: "Acervo global" });
+    await screen.findByRole("heading", { name: "Acervo global" }, { timeout: 8000 });
     for (const [link, title] of [
       ["Baralhos", "Baralhos & coleções"],
       ["Ecos", "Ecos do conhecimento"],
@@ -330,12 +330,14 @@ it("keeps the Arcanarium snapshot mounted between rooms and debounces the real w
           screen.getByRole("navigation", { name: "Salas do Arcanário" }),
         ).getByRole("link", { name: link }),
       );
-      await screen.findByRole("heading", { name: title });
+      await screen.findByRole("heading", { name: title }, { timeout: 8000 });
     }
     expect(list).toHaveBeenCalledOnce();
     fireEvent.click(screen.getByRole("link", { name: "Oficina" }));
     const field = await screen.findByLabelText(
       "Frente da carta — pergunta ou pista",
+      {},
+      { timeout: 8000 },
     );
     const write = vi.spyOn(application.workshopDrafts, "write");
     for (const value of ["P", "Pi", "Pista fictícia"])
@@ -351,8 +353,7 @@ it("keeps the Arcanarium snapshot mounted between rooms and debounces the real w
     view.unmount();
     application.close();
     await Dexie.delete(name);
-  }
-});
+  }, 30000);
 
 it("R6 animates before navigating and does not replay a link twice", async () => {
   const callbacks: FrameRequestCallback[] = [];

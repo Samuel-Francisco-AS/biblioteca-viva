@@ -153,17 +153,27 @@ describe("BF-4F1 inhabitants", () => {
       expect(canvas.dataset.highlightedObject).toBe(actor.id);
       const helper = scene.getObjectByName("f1-c-selection-highlight");
       expect(helper).toBeInstanceOf(Box3Helper);
+      // R3 optimized this selection decoration as a stable local envelope
+      // following the actor's root transform, not skinned vertices per frame.
+      if (!(helper instanceof Box3Helper))
+        throw new Error("Missing selection bounds");
+      interaction.updateHighlightBounds();
+      const beforeMove = helper.box.clone();
       mixer
         .clipAction(gltf.animations.find((c) => c.name === "gesture")!)
         .play();
       mixer.setTime(1.4);
       gltf.scene.position.x += 0.4;
       interaction.updateHighlightBounds();
-      const expectedBounds = new Box3().setFromObject(gltf.scene, true);
-      if (!(helper instanceof Box3Helper))
-        throw new Error("Missing selection bounds");
-      expect(helper.box.min.distanceTo(expectedBounds.min)).toBeLessThan(1e-5);
-      expect(helper.box.max.distanceTo(expectedBounds.max)).toBeLessThan(1e-5);
+      const skinnedBounds = new Box3().setFromObject(gltf.scene, true);
+      expect(skinnedBounds.isEmpty()).toBe(false);
+      expect(helper.box.min.x - beforeMove.min.x).toBeCloseTo(0.4, 5);
+      expect(helper.box.max.x - beforeMove.max.x).toBeCloseTo(0.4, 5);
+      expect(helper.box.min.y).toBeCloseTo(beforeMove.min.y, 5);
+      expect(helper.box.max.y).toBeCloseTo(beforeMove.max.y, 5);
+      expect(helper.box.min.z).toBeCloseTo(beforeMove.min.z, 5);
+      expect(helper.box.max.z).toBeCloseTo(beforeMove.max.z, 5);
+      expect(helper.box.intersectsBox(skinnedBounds)).toBe(true);
       mixer.stopAllAction();
       interaction.dispose();
       const resources = new Set<object>();

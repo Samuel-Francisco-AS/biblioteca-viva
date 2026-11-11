@@ -117,3 +117,17 @@ Rodada sugerida no Moto G06 (retrato e paisagem): (1) Coleção/Arquivo/Resumo/A
 **Testes acrescentados:** `StudyPomodoro.test.tsx` para ausência do texto e permanência do seletor/start; reforço do E2E de empreitadas para os dois botões agrupados, a ausência de duplicação e o progresso vazio. Validação estática de JSX/CSS e seletor de layout; **não houve execução de TypeScript, Vitest, E2E, build ou APK nesta operação remota**. Gate conjunto pendente por solicitação do proprietário.
 
 **Regressões a verificar no Moto G06:** retrato/paisagem, títulos compridos com pôster, escolha de estrelas e salvamento, status de estudo, foco em andamento, abrir ações de trabalho e tarefas em etapas, toque nos botões de criação, rolagem e fontes com alto contraste. PR em draft; sem merge.
+
+## Auditoria da suíte completa — seis falhas (11/11/2026)
+
+O gate do proprietário alcançou a suíte Vitest e registrou seis falhas. No relatório enviado, os resultados legíveis incluem a navegação entre salas do Arcanário (App), salvar uma carta e abrir a tela de edição (ArcanariumPage) e comparações entre o contorno dos quatro habitantes e seus limites animados exatos. O relatório compartilhado foi truncado, portanto não contém o texto completo de cada uma das seis falhas.
+
+**Comparação com a main:** `ArcanariumPage.test.tsx`, `Workshop.tsx`, `inhabitantVisuals.test.ts`, `ThreeWorldInteraction.ts` e `interactionContinuity.ts` têm SHAs de blob idênticos na main e nesta PR. Não há evidência de mudança direta desses componentes pela reforma visual. Isso não dispensa verificar interação e regressões da PR.
+
+**Hipóteses fundamentadas e mudanças discriminantes:**
+- O teste integrado do Arcanário esperava que links que acionam cortina opaca, programação de rota e renderização de sala resolvam com o timeout padrão de 1 segundo. As esperas das headings e entrada da Oficina passam a tolerar até 8 segundos, com timeout total de 30 segundos. As três headings exatas, reutilização do snapshot e persistência do rascunho continuam obrigatórias.
+- O teste real de criação da carta usava espera padrão de 1 segundo para o link `Editar na Oficina` após `workshop.save → reload → navigate` e IndexedDB. O teste agora aguarda até 10 segundos e limita o caso total a 20 segundos. Continua verificando a carta realmente criada e a remoção do rascunho.
+- O teste antigo do contorno 3D comparava seus mínimos/máximos com o `Box3` exato de uma malha esquelética animada. A implementação desde a otimização de picking usa intencionalmente envelope local estável e expandido, atualizado pela matriz raiz. Novas verificações exigem deslocamento exato do envelope de 0,4 unidade, preservação das outras coordenadas e interseção com o corpo animado, preservando cobertura de seleção sem exigir scan por vértice a cada quadro.
+- Nenhum código de produção, asset GLB, lógica de persistência, banco de dados ou animação foi modificado.
+
+**Gate ainda não certificado:** alterações e baseline revisados por inspeção remota, sem ambiente de dependências da BV ou acesso ao repositório pela rede neste container. Nenhum Vitest, build, APK, E2E ou lint foi executado nesta sessão; os testes podem revelar problemas adicionais, que deverão ser corrigidos com evidência. A PR permanece draft, sem merge.
