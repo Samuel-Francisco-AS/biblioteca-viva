@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { echoCrystalPress } from "./crystalPress";
+import { CRYSTAL_PRESS_ECHO_MS, echoCrystalPress } from "./crystalPress";
 
 afterEach(() => {
   vi.useRealTimers();
@@ -13,9 +13,9 @@ describe("BF-5.7A: tactile echo", () => {
     document.body.append(button);
     echoCrystalPress(button);
     expect(button).toHaveAttribute("data-crystal-pressed", "true");
-    vi.advanceTimersByTime(120);
+    vi.advanceTimersByTime(CRYSTAL_PRESS_ECHO_MS - 1);
     expect(button).toHaveAttribute("data-crystal-pressed", "true");
-    vi.advanceTimersByTime(70);
+    vi.advanceTimersByTime(1);
     expect(button).not.toHaveAttribute("data-crystal-pressed");
   });
 
@@ -23,11 +23,11 @@ describe("BF-5.7A: tactile echo", () => {
     vi.useFakeTimers();
     const button = document.createElement("button");
     echoCrystalPress(button);
-    vi.advanceTimersByTime(150);
+    vi.advanceTimersByTime(CRYSTAL_PRESS_ECHO_MS - 15);
     echoCrystalPress(button);
-    vi.advanceTimersByTime(50);
+    vi.advanceTimersByTime(20);
     expect(button).toHaveAttribute("data-crystal-pressed", "true");
-    vi.advanceTimersByTime(140);
+    vi.advanceTimersByTime(CRYSTAL_PRESS_ECHO_MS - 20);
     expect(button).not.toHaveAttribute("data-crystal-pressed");
   });
 
@@ -40,5 +40,15 @@ describe("BF-5.7A: tactile echo", () => {
     card.className = "book-card__link";
     echoCrystalPress(card);
     expect(card).not.toHaveAttribute("data-crystal-pressed");
+  });
+
+  it("never holds a repeatable page step after click", () => {
+    vi.useFakeTimers();
+    const step = document.createElement("button");
+    step.className = "folio-step";
+    echoCrystalPress(step);
+    expect(step).not.toHaveAttribute("data-crystal-pressed");
+    vi.advanceTimersByTime(CRYSTAL_PRESS_ECHO_MS);
+    expect(step).not.toHaveAttribute("data-crystal-pressed");
   });
 });
