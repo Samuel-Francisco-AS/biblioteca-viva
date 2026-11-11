@@ -34,22 +34,22 @@
     repeating-linear-gradient(127deg, transparent 0 11px, var(--crystal-facet) 12px, transparent 13px 29px),
     linear-gradient(150deg, var(--crystal-top), var(--crystal-mid) 48%, var(--crystal-base) 100%);
   color: #f9eadc;
-  box-shadow:
+  --crystal-shadow:
     inset 0 1px 0 #fff5e37a,
     inset 1px 0 0 #f7dbe12f,
     inset -2px -3px 5px #100b2052,
     inset 0 0 0 1px #e5c4da20,
     0 3px 0 var(--crystal-ledge),
     0 6px 9px #0a07132b;
+  box-shadow: var(--crystal-shadow);
   text-shadow: 0 1px 0 #130b2359;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   transform-origin: 50% 65%;
-  transition:
-    transform 115ms cubic-bezier(0.18, 0.82, 0.24, 1),
-    box-shadow 115ms ease-out,
-    border-color 115ms ease-out;
+  /* Shadow and border keep the same computed value while pressed; only
+     the compositor-friendly transform changes on frequent taps. */
+  transition: transform 64ms cubic-bezier(0.18, 0.82, 0.24, 1);
 }
 
 /* The primary rose crystal retains the warm copper edge of O Códice Iluminado. */
@@ -207,7 +207,7 @@
     inset 0 -3px 5px #08071299,
     0 3px 0 #0e0a19,
     0 6px 8px #08071369;
-  transition: transform 115ms ease-out, box-shadow 115ms ease-out;
+  transition: transform 64ms ease-out;
 }
 .app-shell .primary-dock__link[aria-current="page"] .primary-dock__medallion {
   border-color: #edcda9;
@@ -232,13 +232,12 @@
 /* Art-bearing game controls are interactive cards, not ordinary keys.
    Keep painted materials and hitbox transforms, including absolute field slots. */
 .app-shell :is(.arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card) {
-  transition: scale 115ms ease-out, border-color 115ms ease-out;
+  transition: scale 64ms ease-out;
 }
 .app-shell :is(.arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card):not(:disabled):is(
   :active, [data-tap-active="true"], [data-crystal-pressed="true"]
 ) {
   scale: 0.975;
-  border-color: #efd7aa;
 }
 @media (prefers-reduced-motion: reduce) {
   .app-shell :is(.arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card) {
@@ -259,7 +258,7 @@
     inset 0 -5px 7px #25132b69,
     0 3px 0 #392638,
     0 5px 7px #190f2033;
-  transition: transform 115ms ease-out, box-shadow 115ms ease-out;
+  transition: transform 64ms ease-out;
 }
 .app-shell .type-picker__option:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"])
   .type-picker__sigil {
@@ -267,8 +266,8 @@
   box-shadow: inset 0 3px 7px #1e1228a0, 0 1px 0 #392638;
 }
 
-/* The touch is held through the next painted frame and briefly after click.
-   Route curtains begin only after the 120ms press prelude. */
+/* Ordinary controls get a brief echo; +/- follows the real finger only.
+   Route curtain begins after an actual painted pressed frame, not a 120ms pause. */
 .app-shell :is(
   button:not(.combat-card, .arcana-card, .type-picker__option, .arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card),
   .button,
@@ -285,12 +284,9 @@
 ),
 .app-shell .arcanarium .arcana-nav a:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]),
 .bv-picker-sheet button:not(:disabled):is(:active, [data-crystal-pressed="true"]) {
-  transform: translate3d(0, 3px, 0) scale(0.984);
-  border-color: #f1d2b3;
-  box-shadow:
-    inset 0 4px 9px #120a2588,
-    inset 0 0 0 1px #f7e6df40,
-    0 1px 0 var(--crystal-ledge, #181020);
+  transform: translate3d(0, 2px, 0) scale(0.988);
+  border-color: var(--crystal-glint);
+  box-shadow: var(--crystal-shadow);
 }
 .app-shell :is(
   button:not(.combat-card, .arcana-card, .type-picker__option, .arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card),
@@ -303,6 +299,38 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: inset 0 1px 2px #120a244d;
+}
+
+/* Repeating reading controls: mechanical movement follows each finger contact
+   with a very short return. No post-click echo, interpolation of shadow or
+   delayed update to the page count. */
+.app-shell .book-folio .folio-page-stepper button.folio-step {
+  --crystal-facet: #987d781a;
+  --crystal-top: #f8eadb;
+  --crystal-mid: #e6d4c2;
+  --crystal-base: #bda79c;
+  --crystal-ledge: #2b1b32;
+  --crystal-glint: #bba391;
+  --crystal-step-shadow:
+    inset 0 1px 1px #ffffffb0,
+    inset 0 -3px 4px #60475b38,
+    0 3px 0 var(--crystal-ledge),
+    0 4px 5px #1a10253d;
+  background:
+    radial-gradient(circle at 26% 16%, #fff9eea8, transparent 49%),
+    repeating-linear-gradient(128deg, transparent 0 12px, #9b7a751a 13px, transparent 14px 24px),
+    linear-gradient(155deg, var(--crystal-top), var(--crystal-mid) 53%, var(--crystal-base));
+  color: #663758;
+  border-color: var(--crystal-glint);
+  box-shadow: var(--crystal-step-shadow);
+  transition: transform 48ms ease-out;
+}
+.app-shell .book-folio .folio-page-stepper button.folio-step:not(:disabled):is(
+  :active, [data-tap-active="true"]
+) {
+  transform: translate3d(0, 2px, 0) scale(0.984);
+  box-shadow: var(--crystal-step-shadow);
+  border-color: var(--crystal-glint);
 }
 
 /* Native DOM dialogs are portalled to document.body, outside .app-shell.
@@ -339,6 +367,9 @@
   box-shadow: inset 0 0 0 2px #ffdf74;
 }
 @media (prefers-reduced-motion: reduce) {
+  .app-shell .book-folio .folio-page-stepper button.folio-step {
+    transition: none;
+  }
   .app-shell :is(button, .button, .text-button, .category-ribbon a, .primary-dock__link, .primary-dock__medallion, .type-picker__sigil),
   .bv-picker-sheet button {
 
@@ -347,11 +378,13 @@
   .app-shell :is(button, .button, .text-button, .category-ribbon a, .primary-dock__link):is(
     :active, [data-tap-active="true"], [data-crystal-pressed="true"]
   ),
-  .app-shell .primary-dock__link:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]) .primary-dock__medallion {
+  .app-shell .primary-dock__link:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]) .primary-dock__medallion,
+  .app-shell .book-folio .folio-page-stepper button.folio-step:is(:active, [data-tap-active="true"]) {
     transform: none;
   }
 }
-.app-shell[data-reduced-motion="true"] :is(button, .button, .text-button, .category-ribbon a, .primary-dock__link, .primary-dock__medallion, .type-picker__sigil) {
+.app-shell[data-reduced-motion="true"] :is(button, .button, .text-button, .category-ribbon a, .primary-dock__link, .primary-dock__medallion, .type-picker__sigil),
+.app-shell[data-reduced-motion="true"] .book-folio .folio-page-stepper button.folio-step {
   transition: none;
 }
 .app-shell[data-reduced-motion="true"] :is(button, .button, .text-button, .category-ribbon a, .primary-dock__link):is(
@@ -359,6 +392,7 @@
 ),
 .app-shell[data-reduced-motion="true"] .primary-dock__link:is(
   :active, [data-tap-active="true"], [data-crystal-pressed="true"]
-) .primary-dock__medallion {
+) .primary-dock__medallion,
+.app-shell[data-reduced-motion="true"] .book-folio .folio-page-stepper button.folio-step:is(:active, [data-tap-active="true"]) {
   transform: none;
 }

@@ -30,3 +30,17 @@
 Rodada sugerida no Moto G06 (retrato e paisagem): (1) Coleção/Arquivo/Resumo/Ajustes via dock e botão Buscar/Novo registro; (2) botão primário, secundário, perigo, desabilitado e alternância de filtros; (3) Folio Estudos e Entretenimento, Notas/Citações, temporizador e salvar; (4) seletores/modal/calendário e Back; (5) Arcanário Portal/Acervo/Oficina/Provações e duelo em tela única; (6) quests, navegação rápida, toque duplo, scroll em cards; (7) movimento reduzido e alto contraste. Comparar sensação de pressione → cortina sem piscadas e observar custo de pintura no dispositivo.
 
 **Integração à main bloqueada** até revisão e autorização explícita do proprietário, com reparos de regressões se houver.
+
+## R1 — Pressão rápida e continuidade da navegação (11/11/2026)
+
+**Feedback no Moto G06:** aparência de cristal aprovada preliminarmente para continuar refinando, mas os controles de incremento/decremento de páginas permaneciam pressionados tempo demais; engasgos também foram percebidos em trocas de tela.
+
+**Alterações na mesma PR draft:**
+- Eco pós-clique dos comandos comuns reduzido de 190 ms para **76 ms**. Botões .folio-step e elementos data-crystal-repeat ficam sem esse eco e seguem somente o contato real do dedo.
+- +/− do fólio de leitura usam retorno de **48 ms** e facetas claras estáticas; nenhuma espera foi adicionada ao incremento ou decremento.
+- O acabamento mantém sombras estáticas, mas apenas transform/scale anima no toque; evita interpolação de sombras e bordas, que provocaria trabalho de pintura.
+- A espera fixa de **120 ms** antes da cortina foi substituída por dois requestAnimationFrame (uma oportunidade de pintura do botão antes da cortina), com fallback cancelável de **72 ms** caso o WebView reduza a frequência de quadros. Contrato R6.1 de cobertura opaca e prontidão preservado.
+- O dock mantém estado pending sem setState em cada toque, reduzindo reconciliação React.
+- Testes dirigidos adicionados/atualizados; **não executados** nesta operação remota.
+
+**Limite:** sem perfil físico de CPU/RAF/paint ainda não é possível afirmar a causa integral dos engasgos. Nova instalação APK e gate retrato/paisagem no Moto G06 necessários. Não marcar CI, E2E, build, acessibilidade ou performance como PASS por inspeção estática.
