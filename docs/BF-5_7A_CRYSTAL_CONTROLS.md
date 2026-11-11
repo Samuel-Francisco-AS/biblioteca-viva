@@ -44,3 +44,21 @@ Rodada sugerida no Moto G06 (retrato e paisagem): (1) Coleção/Arquivo/Resumo/A
 - Testes dirigidos adicionados/atualizados; **não executados** nesta operação remota.
 
 **Limite:** sem perfil físico de CPU/RAF/paint ainda não é possível afirmar a causa integral dos engasgos. Nova instalação APK e gate retrato/paisagem no Moto G06 necessários. Não marcar CI, E2E, build, acessibilidade ou performance como PASS por inspeção estática.
+
+## R2 — Um único gesto tátil, sem dois ciclos visuais (11/11/2026)
+
+**Feedback do usuário após R1 no Moto G06:** os engasgos anteriores e os controles de páginas foram resolvidos no teste físico inicial, mas alguns botões pareciam afundar duas vezes ou congelar a meio caminho, sobretudo ao abrir cards ou trocar de rota.
+
+**Diagnóstico estático confirmado no código:**
+- `App.tsx` removia `data-tap-active` em `pointerup` e reaplicava `data-crystal-pressed` somente no `click`. A possível descontinuidade entre os eventos reativava a transição CSS.
+- As folhas de estilo antigas ainda aplicavam `filter: brightness` e fundos distintos enquanto `:active`/estado de toque estavam ativos, ao passo que o cristal implementava outra transformação.
+- `canvas-hud.css` aplicava um brilho e fundo novos ao medalhão quando `data-pending=true`, criando outra mudança de aparência logo depois do toque.
+
+**Correção candidata R2:**
+- Handoff contínuo: ao levantar o dedo sobre o mesmo controle, o eco cristalino é criado **antes** de remover `data-tap-active`. No `click`, se o eco já existe, não é reiniciado. Cliques por teclado permanecem reconhecidos. Scroll (movimento acima do limiar), cancelamento e cards ilustrados mantêm suas regras anteriores.
+- Botões repetitivos `.folio-step` continuam sem eco pós-clique.
+- O tema cristalino reutiliza a mesma superfície, sombra e ausência de filtro durante o estado pressionado, sem executar novas mudanças de brilho/fundo.
+- O dock conserva sua tecla cristalina sem os estilos concorrentes de `pending`/`:active` da folha antiga; `data-pending` continua como informação funcional para os fluxos e testes.
+- Testes atualizados para garantir um único gesto pointerdown→pointerup→click, sem prolongamento indevido do cronômetro; caso de scroll cancelado também coberto.
+
+**Estado:** implementação remota e inspeção estática, **sem compilação nem testes automatizados executados nesta operação**. O desaparecimento das pausas em WebView Android com abertura de cards ou mudanças de rota ainda exige confirmação real. Manter a PR draft, sem merge.

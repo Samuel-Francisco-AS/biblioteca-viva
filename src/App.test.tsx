@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App } from "./App";
+import { CRYSTAL_PRESS_ECHO_MS } from "./app/crystalPress";
 
 beforeEach(() => {
   vi.stubGlobal(
@@ -127,10 +128,19 @@ it("R2 keeps one continuous press across pointerup and click even when the actio
   emit("pointerup");
   expect(button).not.toHaveAttribute("data-tap-active");
   expect(button).toHaveAttribute("data-crystal-pressed", "true");
-  const before = button.getAttribute("data-crystal-pressed");
-  fireEvent.click(button, { detail: 1 });
-  expect(button.getAttribute("data-crystal-pressed")).toBe(before);
-  // In a real card-opening action this button can unmount in the same click.
+  // The click must NOT restart the 76ms release timer. A restart would
+  // cause a second visible dip as React begins opening the card.
+  vi.useFakeTimers();
+  try {
+    act(() => vi.advanceTimersByTime(30));
+    fireEvent.click(button, { detail: 1 });
+    expect(button).toHaveAttribute("data-crystal-pressed", "true");
+    act(() => vi.advanceTimersByTime(CRYSTAL_PRESS_ECHO_MS - 30));
+    expect(button).not.toHaveAttribute("data-crystal-pressed");
+  } finally {
+    vi.useRealTimers();
+  }
+  // In a real card-opening action the button can unmount in the same click.
   button.remove();
 });
 
