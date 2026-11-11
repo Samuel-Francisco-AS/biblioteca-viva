@@ -1,4 +1,4 @@
-[ADR-030 — Arena Viva: apresentação e ciclo de vida](ADR-030-arena-viva-apresentacao-lifecycle.md): candidata F2/PR #48, mesmo motor E e mundo residente pausado.
+[ADR-030 — Arena Viva: apresentação e ciclo de vida](ADR-030-arena-viva-apresentacao-lifecycle.md): implementada e integrada via PR #48 (BF-5.6F), motor E preservado e mundo residente pausado; pendências assistivas/performance em G.
 
 [ADR-029 — Duelo Arcano, regulamento e contratos v1](ADR-029-duelo-arcano-regulamento.md): implementação autorizada BF-5.6E; gate físico/merge pendentes.
 
