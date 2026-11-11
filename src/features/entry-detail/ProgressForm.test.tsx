@@ -18,7 +18,7 @@ const book: BookEntry = {
 };
 
 it("allows quick consecutive +/- touches without losing increments or saving early", () => {
-  const updateProgress = vi.fn(async () => book);
+  const updateProgress = vi.fn(() => Promise.resolve(book));
   render(
     <ProgressForm
       book={book}
@@ -46,7 +46,7 @@ it("keeps current page limits accessible without a redundant static hint", () =>
   render(
     <ProgressForm
       book={book}
-      updateProgress={vi.fn(async () => book)}
+      updateProgress={vi.fn(() => Promise.resolve(book))}
       onUpdated={vi.fn()}
     />,
   );

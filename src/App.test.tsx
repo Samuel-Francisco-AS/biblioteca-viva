@@ -104,7 +104,7 @@ it("R7 releases touch feedback on scroll/cancellation and hands off a valid rele
   expect(link).toHaveAttribute("data-crystal-pressed", "true");
 });
 
-it("R2 keeps one continuous press across pointerup and click, without restarting the echo", () => {
+it("R2 keeps one continuous press across pointerup and click, without restarting the echo", async () => {
   render(
     <MemoryRouter>
       <App />
@@ -132,11 +132,11 @@ it("R2 keeps one continuous press across pointerup and click, without restarting
     emit("pointerup");
     expect(button).not.toHaveAttribute("data-tap-active");
     expect(button).toHaveAttribute("data-crystal-pressed", "true");
-    act(() => vi.advanceTimersByTime(30));
+    await act(() => { vi.advanceTimersByTime(30); });
     fireEvent.click(button, { detail: 1 });
     expect(button).toHaveAttribute("data-crystal-pressed", "true");
     // The semantic click must not restart the existing echo countdown.
-    act(() => vi.advanceTimersByTime(CRYSTAL_PRESS_ECHO_MS - 30));
+    await act(() => { vi.advanceTimersByTime(CRYSTAL_PRESS_ECHO_MS - 30); });
     expect(button).not.toHaveAttribute("data-crystal-pressed");
   } finally {
     vi.useRealTimers();
@@ -393,7 +393,10 @@ it("R6 animates before navigating and does not replay a link twice", async () =>
     let frameCount = 0;
     while (callbacks.length > 0 && frameCount < 12) {
       const next = callbacks.shift();
-      await act(async () => next?.(560 + 16 * frameCount));
+      await act(async () => {
+        next?.(560 + 16 * frameCount);
+        await Promise.resolve();
+      });
       frameCount++;
     }
     expect(frameCount).toBeGreaterThanOrEqual(2);

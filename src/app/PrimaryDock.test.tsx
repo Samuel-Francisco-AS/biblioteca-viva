@@ -72,10 +72,16 @@ it("commits one dock navigation after the sealed curtain without lazy route load
     // must work, after two scheduled frames, once the cover is opaque.
     act(() => completePassageDeparture());
     expect(frames).toHaveLength(1);
-    await act(async () => frames.shift()?.(560));
+    await act(async () => {
+      frames.shift()?.(560);
+      await Promise.resolve();
+    });
     expect(path.textContent).toBe("/");
     expect(frames).toHaveLength(1);
-    await act(async () => frames.shift()?.(576));
+    await act(async () => {
+      frames.shift()?.(576);
+      await Promise.resolve();
+    });
     await waitFor(() => expect(path.textContent).toBe("/colecao"));
   } finally {
     cancelPassage();
