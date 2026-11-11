@@ -1,3 +1,5 @@
+> **DECISÃO POSTERIOR À AUDITORIA — 11/11/2026:** após receber o parecer G, o proprietário declarou expressamente que prefere **encerrar a BF-5.6 com as ressalvas**. A fase global está, portanto, **formalmente encerrada com ressalvas**, conforme [termo canônico](BF-5_6_FECHAMENTO_GLOBAL_2026-11-11.md). O trecho abaixo escrito antes dessa decisão, que menciona “aguardando aceite”, permanece histórico do momento da auditoria e não é o estado vigente. Nenhum E2E/CI/Android foi executado entre a auditoria e o fechamento; as dívidas técnicas não foram marcadas como PASS.
+
 # BF-5.6G — Auditoria integrada e consolidação (11/11/2026)
 
 **Decisão operacional:** execução autorizada pelo proprietário em **uma única rodada, diretamente na `main`**, com checkpoints internos G1 → G2 → G3 → G4. **Auditoria executada e reparos documentais/acessíveis publicados na `main`.** Esta é uma **avaliação técnica com ressalvas**; não representa CI global aprovada, nova instalação Android nem aceite explícito de encerramento da BF-5.6 global. O plano original exige esse aceite. Nenhuma PR adicional foi criada, nenhum merge foi necessário, e não se iniciou BF-6/BF-7.
