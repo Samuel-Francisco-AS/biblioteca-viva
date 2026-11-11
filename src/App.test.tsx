@@ -103,7 +103,7 @@ it("R7 releases touch feedback on scroll/cancellation and hands off a valid rele
   expect(link).toHaveAttribute("data-crystal-pressed", "true");
 });
 
-it("R2 keeps one continuous press across pointerup and click even when the action changes the DOM", () => {
+it("R2 keeps one continuous press across pointerup and click, without restarting the echo", () => {
   render(
     <MemoryRouter>
       <App />
@@ -123,25 +123,24 @@ it("R2 keeps one continuous press across pointerup and click even when the actio
         clientY: 20,
       }),
     );
-  emit("pointerdown");
-  expect(button).toHaveAttribute("data-tap-active", "true");
-  emit("pointerup");
-  expect(button).not.toHaveAttribute("data-tap-active");
-  expect(button).toHaveAttribute("data-crystal-pressed", "true");
-  // The click must NOT restart the 76ms release timer. A restart would
-  // cause a second visible dip as React begins opening the card.
+  // Install fake timers BEFORE pointerup schedules the press echo.
   vi.useFakeTimers();
   try {
+    emit("pointerdown");
+    expect(button).toHaveAttribute("data-tap-active", "true");
+    emit("pointerup");
+    expect(button).not.toHaveAttribute("data-tap-active");
+    expect(button).toHaveAttribute("data-crystal-pressed", "true");
     act(() => vi.advanceTimersByTime(30));
     fireEvent.click(button, { detail: 1 });
     expect(button).toHaveAttribute("data-crystal-pressed", "true");
+    // The semantic click must not restart the existing echo countdown.
     act(() => vi.advanceTimersByTime(CRYSTAL_PRESS_ECHO_MS - 30));
     expect(button).not.toHaveAttribute("data-crystal-pressed");
   } finally {
     vi.useRealTimers();
+    button.remove();
   }
-  // In a real card-opening action the button can unmount in the same click.
-  button.remove();
 });
 
 it("R2 does not add an echo on a cancelled scroll gesture", () => {
