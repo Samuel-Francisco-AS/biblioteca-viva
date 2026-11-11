@@ -1,4 +1,4 @@
-> **BV-UXC R5:** [relatório global e gate Moto G06](audits/BV_UXC_R5_DESEMPENHO_GLOBAL_2026-11-09.md), [ADR-030](decisions/ADR-030-desempenho-rotas-consultas.md), [validação](audits/evidence/bv-uxc-r5/validation.json). Candidata draft #49, sem merge ou aceite físico.
+> **BV-UXC R5:** [relatório global e gate Moto G06](audits/BV_UXC_R5_DESEMPENHO_GLOBAL_2026-11-09.md), [ADR-031](decisions/ADR-031-desempenho-rotas-consultas.md), [validação](audits/evidence/bv-uxc-r5/validation.json). Candidata draft #49, sem merge ou aceite físico.
 
 **CANDIDATA DE UX (09/11/2026):** [BV-UXC — Continuidade entre toque e ação](BV_UX_CONTINUIDADE_TOQUE_2026-11-09.md), branch remota separada, sem merge, CI esgotada e gate Moto G06 pendente. Estado canônico da `main` abaixo preservado.
 
