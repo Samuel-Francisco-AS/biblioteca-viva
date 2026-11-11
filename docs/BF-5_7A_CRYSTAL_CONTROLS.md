@@ -62,3 +62,17 @@ Rodada sugerida no Moto G06 (retrato e paisagem): (1) Coleção/Arquivo/Resumo/A
 - Testes atualizados para garantir um único gesto pointerdown→pointerup→click, sem prolongamento indevido do cronômetro; caso de scroll cancelado também coberto.
 
 **Estado:** implementação remota e inspeção estática, **sem compilação nem testes automatizados executados nesta operação**. O desaparecimento das pausas em WebView Android com abertura de cards ou mudanças de rota ainda exige confirmação real. Manter a PR draft, sem merge.
+
+## R2.1 — Diagnóstico dos testes R6 e separação de contratos (11/11/2026)
+
+**Evidência local trazida pelo proprietário:** TypeScript PASS; 28/29 testes PASS; falha recorrente apenas no teste integrado R6. Após corrigir o disparo do término da cortina, a falha mudou para o teste exigir `data-route=colecao` imediatamente após **dois RAFs**. O estado da cortina já havia chegado a `waiting`.
+
+**Análise de código:** o caminho do dock é `PrimaryDock` → `schedulePressedPassage` → `beginPassage` / `schedulePassage` → `completePassageDeparture` → `navigate()`. O teste anterior contava dois quadros do agendador, mas não aguardava o commit de rota assíncrono do React Router/Suspense/lazy importação de `CollectionPage`. Isso pode deixar `data-route` temporariamente na rota antiga mesmo depois da chamada de navegação. O relatório isolado ainda não prova um erro no produto; também não autoriza afirmar que o produto está isento de problemas.
+
+**Mudanças na PR draft:**
+- `App.test.tsx`: depois do fechamento opaco, drenar até 12 quadros programados, respeitando o agendamento de navegação, e aguardar a rota real com `waitFor` (limite 4 s). Continuar falhando se a rota nunca chegar.
+- `PrimaryDock.test.tsx`: acrescentado teste de navegação real num `MemoryRouter` sem a importação lazy do app. Confirma que o dock só navega após a cortina e chega à rota exata, isolando mecanismo de navegação de carregamento assíncrono de páginas.
+- `interactionContinuity.test.ts` permanece responsável por testar o contrato da cobertura opaca, cancelamento e espera por prontidão.
+- **Nenhuma alteração na produção**, em transições, componentes React da aplicação ou no motor de navegação, pois o relatório ainda não demonstrou defeito funcional nesses contratos.
+
+**Pendente:** executar os **30 testes dirigidos esperados**, `typecheck`, e, se PASS, build/APK e gate físico. O presente registro documenta uma hipótese técnica com testes discriminantes, não uma certificação. CI continua sem cota; não declarar PASS não executado.
