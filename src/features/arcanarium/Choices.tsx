@@ -13,7 +13,7 @@ export function Choices({
 }) {
   const name = useId();
   return (
-    <fieldset className="arcana-choices">
+    <fieldset className="arcana-choices arcana-choices--compact">
       <legend>{label}</legend>
       {options.map((option) => (
         <label

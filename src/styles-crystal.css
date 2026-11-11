@@ -500,3 +500,70 @@
     padding-inline: 0.65rem;
   }
 }
+
+/* BF-5.7A / G1 — two accessible story seals, not stacked cards covering
+   the 3D world. Keep both shortcuts 48px, count on the journal, and normal
+   native-back/dialogue behavior. No new overlay or running animation. */
+.app-shell .library-page .rpg-tools {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.42rem;
+  width: fit-content;
+  max-width: calc(100vw - 1.5rem);
+  right: max(0.8rem, env(safe-area-inset-right));
+  left: auto;
+  bottom: calc(var(--dock-height) + 0.85rem + env(safe-area-inset-bottom));
+  padding: 0;
+}
+.app-shell .library-page .rpg-tools .rpg-tools__beacon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 0 3.25rem;
+  width: 3.25rem;
+  height: 3.25rem;
+  min-width: 3.25rem;
+  min-height: 3.25rem;
+  padding: 0;
+  gap: 0;
+  font-size: 1.25rem;
+  border-radius: 0.9rem 0.45rem 0.9rem 0.45rem;
+  box-shadow: var(--crystal-shadow);
+}
+.app-shell .library-page .rpg-tools .rpg-tools__beacon::before {
+  margin: 0;
+  flex: none;
+  line-height: 1;
+  font-size: 1.6rem;
+}
+.app-shell .library-page .rpg-tools .rpg-tools__beacon--journal::before {
+  font-size: 1.5rem;
+}
+.app-shell .library-page .rpg-tools .rpg-tools__beacon--rift::before {
+  font-size: 1.8rem;
+}
+.app-shell .library-page .rpg-tools .rpg-tools__count {
+  position: absolute;
+  right: 0.16rem;
+  bottom: 0.12rem;
+  font: 700 0.58rem/1.05 system-ui, sans-serif;
+  color: #ffe2af;
+  text-shadow: 0 1px 3px #110d25;
+  letter-spacing: 0;
+  pointer-events: none;
+}
+.app-shell .library-page .rpg-tools .rpg-tools__beacon:focus-visible {
+  outline: 3px solid #f2cc8d;
+  outline-offset: 3px;
+}
+.app-shell .library-page .rpg-shell--open .rpg-tools,
+.app-shell .library-page .rpg-shell[data-journal-open="true"] .rpg-tools {
+  display: none;
+}
+@media (orientation: landscape) and (max-height: 550px) {
+  .app-shell .library-page .rpg-tools {
+    bottom: calc(var(--dock-height) + 0.45rem + env(safe-area-inset-bottom));
+  }
+}

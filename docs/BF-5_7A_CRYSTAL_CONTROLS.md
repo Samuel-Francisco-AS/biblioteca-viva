@@ -131,3 +131,13 @@ O gate do proprietário alcançou a suíte Vitest e registrou seis falhas. No re
 - Nenhum código de produção, asset GLB, lógica de persistência, banco de dados ou animação foi modificado.
 
 **Gate ainda não certificado:** alterações e baseline revisados por inspeção remota, sem ambiente de dependências da BV ou acesso ao repositório pela rede neste container. Nenhum Vitest, build, APK, E2E ou lint foi executado nesta sessão; os testes podem revelar problemas adicionais, que deverão ser corrigidos com evidência. A PR permanece draft, sem merge.
+
+## G1/G2 — Mundo 3D e seletores do Arcanário (11/11/2026)
+
+**Aceite da rodada anterior:** proprietário reportou no Fedora suíte completa e geração do APK bem-sucedidas após timeout local do cenário geométrico de Ytha; conferência física inicial do APK no Moto G06 aprovada visualmente. Esses resultados são relatos do gate local, não CI remota. Versão aceita: HEAD `9a2dbd5`. Alterações abaixo ainda não testadas fisicamente.
+
+**G1 — Atalhos de histórias no Canvas:** reduzidos os dois cartões grandes e empilhados para dois selos cristalinos lado a lado, cada um com 3,25rem de alvo. O selo `✦` do diário mostra contagem `n/5` discreta; o selo `☾` abre diretamente a Noite da Fenda Lilás. Títulos completos permanecem em `aria-label`, `title` e texto somente para leitores de tela; contagem e estado `aria-expanded` preservados. Ocorre no mesmo `NarrativePanel`, sem nova camada popover, sem mudar sessões, persistência, relógios, controle Back/Escape, diálogo, foco ou interação 3D. Ambos somem quando diário/diálogo está aberto.
+
+**G2 — Seletores compactos do Arcanário:** `Choices` passa a emitir classe de variação `arcana-choices--compact` mantendo `fieldset/legend` e rádios nativos, keyboard/TalkBack e filtragem. Em `arcanarium.css`, a variação vira uma grade responsiva, **duas colunas no celular**, controles de pelo menos 44px, estado marcado com contraste estável, espaçamentos menores e título de grupo discreto. Aplica-se à Família do Acervo e outros seletores curtos baseados no mesmo componente (Coleção no Acervo e Nível de classificação). A grade `arcana-kind` da Oficina também fica compacta em duas colunas quando couber. As alternativas longas de Provações, listas de cartas, seleção de decks e navegação superior não foram compactadas.
+
+**Testes escritos:** `NarrativePanel.test.tsx` garante dois botões acessíveis, contagem, abertura do diário e da Fenda; `ArcanariumPage.test.tsx` garante agrupamento nativo compacto dos cinco filtros e preserva seleção funcional por Lembrança. **Nenhum typecheck, lint, Vitest, E2E ou build Android executado nesta operação remota.** PR #51 ainda draft, `main` intacta; gate visual no Moto G06 pendente para estes dois pontos.

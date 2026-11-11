@@ -231,7 +231,10 @@ it("B-R1: family filter is a keyboard-accessible radio group without a select", 
   });
   mount(a, "/arcanario/acervo");
   await screen.findByRole("heading", { name: "Acervo global" });
-  await u.click(screen.getByRole("radio", { name: "Lembrança" }));
+  const family = screen.getByRole("group", { name: "Família" });
+  expect(family).toHaveClass("arcana-choices--compact");
+  expect(within(family).getAllByRole("radio")).toHaveLength(5);
+  await u.click(within(family).getByRole("radio", { name: "Lembrança" }));
   expect(screen.getByRole("radio", { name: "Lembrança" })).toBeChecked();
   expect(screen.getAllByRole("link", { name: /Abrir Lembrança/ })).toHaveLength(
     1,

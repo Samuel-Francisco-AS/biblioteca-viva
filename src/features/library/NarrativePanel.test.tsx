@@ -13,6 +13,42 @@ import { NarrativePanel } from "./NarrativePanel";
 import { NarrativeSession } from "./narrative/session";
 
 afterEach(() => vi.unstubAllGlobals());
+it("offers two compact accessible story beacons without losing journal and Rift actions", async () => {
+  const session = new NarrativeSession();
+  const user = userEvent.setup();
+  const view = render(<NarrativePanel session={session} failed={false} />);
+  try {
+    const rail = view.container.querySelector(".rpg-tools");
+    expect(rail).not.toBeNull();
+    expect(within(rail as HTMLElement).getAllByRole("button")).toHaveLength(2);
+
+    const journal = screen.getByRole("button", {
+      name: "Diário de histórias · 0/5",
+    });
+    const rift = screen.getByRole("button", {
+      name: "A Noite da Fenda Lilás",
+    });
+    expect(journal).toHaveClass("rpg-tools__beacon--journal");
+    expect(rift).toHaveClass("rpg-tools__beacon--rift");
+    expect(journal).toHaveAttribute("aria-expanded", "false");
+    expect(journal.querySelector(".rpg-tools__count")).toHaveTextContent("0/5");
+
+    await user.click(journal);
+    expect(journal).toHaveAttribute("aria-expanded", "true");
+    expect(
+      screen.getByRole("complementary", { name: "Diário de quests" }),
+    ).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Fechar diário" }));
+
+    await user.click(rift);
+    expect(screen.getByRole("article", { name: "Conversa RPG" })).toBeVisible();
+    expect(session.getSnapshot().active).toBe("rift");
+  } finally {
+    view.unmount();
+    session.dispose();
+  }
+});
+
 it("supports keyboard choices, focus, interruption, completion and journal with no WebGL", async () => {
   const session = new NarrativeSession(),
     user = userEvent.setup();
