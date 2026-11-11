@@ -55,4 +55,4 @@ ADR-008 permanece a autoridade do WORLD RESET. [`ADR-009`](ADR-009-three-foundat
 
 Uma nova decisão recebe o próximo número. Substituição preserva a decisão anterior com estado e link para a sucessora.
 
-- [ADR-030 — desempenho de rotas, consultas e drafts](ADR-030-desempenho-rotas-consultas.md): candidata PR #49, gate físico pendente.
+- [ADR-031 — desempenho de rotas, consultas e drafts](ADR-031-desempenho-rotas-consultas.md): implementada/mesclada pela PR #49 com aceite físico dirigido e ressalvas; auditoria G mantém CI/TalkBack/termal pendentes.
