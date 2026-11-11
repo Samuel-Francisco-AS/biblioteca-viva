@@ -22,6 +22,19 @@ test("empreitada nasce só com título, organiza etapas/tarefas, progresso, prio
     page.getByRole("heading", { name: "Observatório de papel" }),
   ).toBeVisible();
   await expect(page.locator(".work-progress__number")).toHaveText("—");
+  // BF-5.7A: the two creation actions are together in the planning rail,
+  // not scattered inside the progress meter and the empty-stage card.
+  const planningActions = page.locator(".work-planning .work-section-actions");
+  await expect(
+    planningActions.getByRole("button", { name: "＋ Nova tarefa", exact: true }),
+  ).toBeVisible();
+  await expect(
+    planningActions.getByRole("button", { name: "＋ Etapa", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "＋ Nova tarefa", exact: true }),
+  ).toHaveCount(1);
+  await expect(page.locator(".work-progress__empty")).toBeVisible();
   await page.getByRole("button", { name: "＋ Etapa", exact: true }).click();
   let dialog = page.locator("dialog[open]").last();
   await dialog.getByLabel("Nome da etapa").fill("Planta e materiais");

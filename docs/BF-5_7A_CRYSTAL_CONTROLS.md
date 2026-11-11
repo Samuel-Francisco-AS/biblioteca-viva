@@ -103,3 +103,17 @@ Rodada sugerida no Moto G06 (retrato e paisagem): (1) Coleção/Arquivo/Resumo/A
 9. **L9 — Ações:** `Capa da obra`, `Mais informações` e `Organização e favoritos` ganham tinta escura sobre papel claro; o alto contraste permanece legível no tema escuro.
 
 **Testes escritos:** apresentação do cabeçalho, acessibilidade do selo e das ações, ausência de textos redundantes, página mínima/máxima e ordenação de início de leitura/entradas opcionais/histórico. **Não houve execução de typecheck, Vitest, lint, build ou APK durante esta edição remota.** Próximo gate será conjunto com C1–C3 e outras micro-rodadas que o proprietário solicitar. PR draft #51, sem merge.
+
+## S1/E1/W1/P1 — Hierarquia de títulos e organização (11/11/2026)
+
+**Origem:** quatro capturas do Moto G06 e quatro demandas do proprietário, acumuladas depois da rodada C1–C3 e L1–L9 da mesma PR draft #51.
+
+1. **Estudos:** removida a frase redundante `Seu percurso de conhecimento` do cabeçalho. Título e subtema (área/disciplina), tipografia, contraste e ritmo vertical são fortalecidos, com redução do vazio que a frase ocupava. Status e link Editar estudo seguem utilizáveis.
+2. **Acenda seu foco:** removidas somente as três linhas explicativas sobre poder sair do aplicativo e o tempo ser recuperado. Mantidos o seletor de duração, o relógio, o foco persistente e os controles de sessão. Espaço vertical da introdução diminuído.
+3. **Entretenimento:** `PersistedRating` movido para um painel de pergaminho distinto, com a mesma linguagem do fólio de livros, cinco alvos de estrela acessíveis e espaço livre do pôster em celular. O título/metadata da obra ganham hierarquia tipográfica maior; classificação de formato e estado continuam disponíveis.
+4. **Trabalho:** `Criar a primeira tarefa` deixa de flutuar na área de progresso, que passa a explicar o estado vazio; `＋ Nova tarefa` e `＋ Etapa` se unem em uma barra de ações próxima ao título Etapas e tarefas. `Próxima ação` e `Diário da empreitada` usam o mesmo alinhamento de ações, com layout vertical no mobile e alinhamento lateral em telas largas. `＋ Tarefa nesta etapa` permanece dentro de sua etapa, sem mudar os comandos/mutações.
+5. **Coerência em todas as categorias:** o fólio de trabalho evita o kicker genérico `Empreitadas · Trabalho` e mostra apenas tipo de trabalho/área quando informados, sob um título maior; o fólio de atividade física também apresenta primeiro o título, depois tipo/estado e período. Não foram removidos dados úteis nem mudou o modelo persistido.
+
+**Testes acrescentados:** `StudyPomodoro.test.tsx` para ausência do texto e permanência do seletor/start; reforço do E2E de empreitadas para os dois botões agrupados, a ausência de duplicação e o progresso vazio. Validação estática de JSX/CSS e seletor de layout; **não houve execução de TypeScript, Vitest, E2E, build ou APK nesta operação remota**. Gate conjunto pendente por solicitação do proprietário.
+
+**Regressões a verificar no Moto G06:** retrato/paisagem, títulos compridos com pôster, escolha de estrelas e salvamento, status de estudo, foco em andamento, abrir ações de trabalho e tarefas em etapas, toque nos botões de criação, rolagem e fontes com alto contraste. PR em draft; sem merge.
