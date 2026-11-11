@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-test("BF-5.7A: Arcanarium uses native scrolling without an oversized transformed layer", async ({ page }) => {
+test("BF-5.7A: Arcanarium uses native scrolling without an oversized transformed layer", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/arcanario/acervo");
 
@@ -22,7 +24,9 @@ test("BF-5.7A: Arcanarium uses native scrolling without an oversized transformed
     );
   }
 
-  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.evaluate(() =>
+    window.scrollTo(0, document.documentElement.scrollHeight),
+  );
   await page.evaluate(() => window.scrollTo(0, 0));
   await expect(heading).toBeVisible();
 });
