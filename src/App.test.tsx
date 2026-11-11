@@ -132,11 +132,15 @@ it("R2 keeps one continuous press across pointerup and click, without restarting
     emit("pointerup");
     expect(button).not.toHaveAttribute("data-tap-active");
     expect(button).toHaveAttribute("data-crystal-pressed", "true");
-    await act(() => { vi.advanceTimersByTime(30); });
+    await act(() => {
+      vi.advanceTimersByTime(30);
+    });
     fireEvent.click(button, { detail: 1 });
     expect(button).toHaveAttribute("data-crystal-pressed", "true");
     // The semantic click must not restart the existing echo countdown.
-    await act(() => { vi.advanceTimersByTime(CRYSTAL_PRESS_ECHO_MS - 30); });
+    await act(() => {
+      vi.advanceTimersByTime(CRYSTAL_PRESS_ECHO_MS - 30);
+    });
     expect(button).not.toHaveAttribute("data-crystal-pressed");
   } finally {
     vi.useRealTimers();
