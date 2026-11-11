@@ -1,3 +1,5 @@
+**BF-5.6G — 11/11/2026:** [Auditoria integrada e consolidação, G1–G4](BF-5_6G_AUDITORIA_CONSOLIDACAO_2026-11-11.md) · [Matriz de evidências](audits/evidence/bf56g/inventory.json). Rodada realizada diretamente na `main`: reparo de alternativa acessível para portal orbital (teste escrito, não executado), ADR-031 única para performance, inventário de versões/risco. **Auditoria G entregue com ressalvas; BF-5.6 global ainda aguarda aceite expresso para fechamento.** Não alegar CI verde, APK pós-G ou TalkBack/FPS/termal certificados; notas anteriores são cronologia.
+
 > **BV-UXC R5:** [relatório global e gate Moto G06](audits/BV_UXC_R5_DESEMPENHO_GLOBAL_2026-11-09.md), [ADR-031](decisions/ADR-031-desempenho-rotas-consultas.md), [validação](audits/evidence/bv-uxc-r5/validation.json). Candidata draft #49, sem merge ou aceite físico.
 
 **CANDIDATA DE UX (09/11/2026):** [BV-UXC — Continuidade entre toque e ação](BV_UX_CONTINUIDADE_TOQUE_2026-11-09.md), branch remota separada, sem merge, CI esgotada e gate Moto G06 pendente. Estado canônico da `main` abaixo preservado.
