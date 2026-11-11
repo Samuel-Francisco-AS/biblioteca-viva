@@ -1,0 +1,115 @@
+{
+  "audit": "BF-5.6G",
+  "date": "2026-11-11",
+  "execution": "single remote round on main",
+  "baselineMain": "639c5cbfb718b84b89bde5c04523837fe1340ab8",
+  "baselineFrom": "parent of first G2 commit",
+  "mainAfterG3": "536000c064cd48cf53c9044cf7130b19f7711a02",
+  "checkpoints": [
+    {
+      "id": "G1",
+      "kind": "inventory",
+      "state": "completed",
+      "observed": {
+        "priorPhases": "BF-5.6A-F integrated; BV-UXC PR #49 also merged",
+        "openPullRequests": 0,
+        "gitTreeEntries": 1910,
+        "testFiles": 228,
+        "e2eSpecFiles": 39,
+        "paintedCards": 48,
+        "dbVersion": 19,
+        "backupVersion": 11,
+        "backupMaxBytes": 10485760,
+        "backupReads": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "officialEnemCnuPackRedistributed": 0
+      }
+    },
+    {
+      "id": "G2",
+      "kind": "source and contracts",
+      "state": "completed-with-limits",
+      "finding": "Generic object-order navigation does not supply a stable accessible action for the moving orbital portal. Original E2E used next-object once.",
+      "changeCommits": [
+        "d3fa6e6f5e956010e76b10441db0b29575afab6c",
+        "309067e8c93af5126d3b5f571cd4352f5a7a878b",
+        "bce79c4fa9e68c523a13bb9e6c854455aa5b21f8"
+      ],
+      "verification": "new test written, not executed; direct onSelection route verified by static code inspection"
+    },
+    {
+      "id": "G3",
+      "kind": "documentation and architecture coherence",
+      "state": "completed",
+      "finding": "ADR-030 identifier duplicated across F and BV-UXC",
+      "resolution": "F retains ADR-030; BV-UXC renamed ADR-031 with five known references repaired; original duplicate deleted",
+      "verification": "live GitHub tree contains one ADR-030 and one ADR-031; five source references checked with fresh file reads"
+    },
+    {
+      "id": "G4",
+      "kind": "consolidation and closeout recommendation",
+      "state": "documented; global BF-5.6 closure awaits explicit owner acceptance"
+    }
+  ],
+  "priorEvidence": {
+    "F2Broad": {
+      "pass": 1174,
+      "fail": 12,
+      "remainingGraphicalTimeouts": 6,
+      "notRerunInG": true
+    },
+    "FRefinementDirected": {
+      "pass": 139,
+      "fail": 0,
+      "source": "Codex historical report",
+      "notRerunInG": true
+    },
+    "FOrbitalE2E": {
+      "status": "failed-timeout",
+      "attempts": 2,
+      "original": "e2e/bf56f-orbital-refinement.spec.ts",
+      "newCaseStatus": "not-run-in-G"
+    },
+    "BVUXC": {
+      "mergedPr": 49,
+      "mergeSha": "420109381aa91b5278fcee9d93b10984e9eef92a",
+      "r5DirectedPass": 420,
+      "lifecycleE2E": "failed-timeout",
+      "r6ToR62Retesting": "not-certified"
+    }
+  },
+  "validation": {
+    "githubLiveRead": "verified",
+    "documentNumberUniqueness": "verified from tree",
+    "links": "five affected documents verified",
+    "typescript": "not-run-in-G",
+    "unitTests": "not-run-in-G",
+    "e2e": "not-run-in-G",
+    "androidBuild": "not-run-in-G",
+    "physicalMotoG06": "not-performed-in-G",
+    "remoteCI": "not-run: owner GitHub Actions quota exhausted",
+    "dependencyAudit": "not-run: no local checkout/network",
+    "personalDataAccess": "not performed"
+  },
+  "nonBlockingDebts": [
+    "GitHub Actions quota and overall CI",
+    "Six graphics timeouts and separate orbital/accessibility E2E baseline",
+    "PR49 3D lifecycle timeout and microstutters on quests",
+    "TalkBack, FPS P95/P99, long-run memory and thermals",
+    "Human validation of new direct orbital accessible action",
+    "TCG balance ruin versus knowledge",
+    "Other Arcanarium UI/UX",
+    "ENEM/CNU rights/editorial pack publication",
+    "Large backup/media/pack volume under real Android conditions"
+  ],
+  "destructiveActions": false,
+  "schemaOrBackupChanges": false,
+  "duelEngineChanges": false,
+  "mergeOrNewPullRequest": false,
+  "note": "This is a provenance matrix of repository inspection and edits, not a claim of executed tests or a green CI."
+}
