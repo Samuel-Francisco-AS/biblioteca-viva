@@ -40,7 +40,7 @@ Severidade abaixo ordena trabalho evitável e frequência; não atribui toda a l
 - **Profiling React:** build `diagnostics` resolve `react-dom/client` para o renderer oficial `react-dom/profiling` já instalado. Produção normal não é alterada para profiling. A build diagnostics antiga desviava a Biblioteca para fixtures F5; agora abre o mundo real por padrão. As fixtures continuam acessíveis explicitamente em `/?worldScenario=true`, sem contaminar o roteiro físico do app. `reactRenderMs` é duração de render/reconciliação; número de callbacks não é duração do commit. Atribuição ao último gesto por até 1 segundo é **correlação**, pode incluir trabalho concorrente. Zero pode indicar build sem profiling ou ausência de commit, não CPU zero.
 - **Bundle:** percentis compartilhados extraídos para módulo puro para não puxar o coletor Three inteiro para o shell. `performance:report` passa a somar imports estáticos e CSS transitivos sem duplicação; `initialBytes` antigo mantido para compatibilidade. Tamanhos não medem avaliação/compilação JS. Imagens/fontes não integram essa soma JS/CSS.
 
-[ADR-030](../decisions/ADR-030-desempenho-rotas-consultas.md) formaliza residência de provedor, cancelamento e ownership de leituras/rascunhos. **Dexie v19, backup v11, seis registros, progresso/sessões, mídia e versões históricas preservados.**
+[ADR-031](../decisions/ADR-031-desempenho-rotas-consultas.md) formaliza residência de provedor, cancelamento e ownership de leituras/rascunhos. **Dexie v19, backup v11, seis registros, progresso/sessões, mídia e versões históricas preservados.**
 
 ## Resultados e limites
 
