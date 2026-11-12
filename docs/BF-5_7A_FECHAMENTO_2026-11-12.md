@@ -4,7 +4,7 @@
 **Branch:** `feat/bf-5-7a-crystal-controls`  
 **Candidato aceito antes do commit de fechamento:** `c59d3f413e47f5936fc86b3b0561ac1d9a62d3b9`  
 **Escopo:** BF-5.7A (não encerra a frente BF-5.7 como um todo, nem inicia BF-6).  
-**Estado de integração na redação:** documentação de fechamento preparada na branch da PR previamente ao merge; confirmar o SHA final no GitHub após a integração.  
+**Integração confirmada:** PR #51 mesclada e encerrada automaticamente em **12/11/2026 às 15:53:07 UTC**, usando método **merge**. Commit de integração na `main`: [`1f22b08e7ac1767eff712d6c8d1b438a46594cd4`](https://github.com/Samuel-Francisco-AS/biblioteca-viva/commit/1f22b08e7ac1767eff712d6c8d1b438a46594cd4). O histórico da PR e o termo de fechamento foram preservados.  
 **Referências:** [relatório incremental BF-5.7A](BF-5_7A_CRYSTAL_CONTROLS.md) · [caderno de 17 propostas de UX](BF-5_7_CADERNO_PROPOSTAS_UX_FLUIDEZ_2026-11-11.md) · [issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50).
 
 ## 1. Decisão e critérios
@@ -55,4 +55,4 @@ O aceite explícito significa que esses pontos **não impedem o encerramento da 
 - Para reproduzir a candidata aceita após merge, sincronizar `main` no Fedora; não descartar arquivos locais para conseguir o fast-forward.
 
 **Autorização:** pedido expresso do proprietário em 12/11/2026 para documentação, merge na `main` e fechamento da PR #51.  
-**Integração:** registrar SHA exato após confirmação do GitHub (seção de conclusão a preencher no registro pós-merge).
+**Integração confirmada:** `main` recebeu o merge `1f22b08e7ac1767eff712d6c8d1b438a46594cd4` e a PR #51 aparece como **merged/closed** no GitHub. Este registro documental pós-merge atualiza somente a referência histórica; não altera funcionalidades nem o escopo aceito.
