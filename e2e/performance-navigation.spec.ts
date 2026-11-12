@@ -28,7 +28,6 @@ test("performance candidate: rooms, drafts, dock and resident world survive repe
     ["assuntos", "Classificações de conhecimento"],
     ["diagnostico", "Diagnóstico e relatórios"],
     ["relicario", "O Relicário"],
-    ["duelos", "O Duelo Arcano"],
   ];
   for (const [path, title] of rooms) {
     await page.locator(`.arcana-nav a[href="/arcanario/${path}"]`).click();
@@ -36,12 +35,10 @@ test("performance candidate: rooms, drafts, dock and resident world survive repe
       page.getByRole("heading", { name: title, exact: true }),
     ).toBeVisible();
   }
-  await page
-    .getByRole("link", { name: "Aprender a duelar · regulamento v1" })
-    .click();
+  // Retired TCG rooms must not appear among the reachable Arcanarium areas.
   await expect(
-    page.getByRole("heading", { name: "Como traçar seu círculo" }),
-  ).toBeVisible();
+    page.locator('.arcana-nav a[href="/arcanario/duelos"]'),
+  ).toHaveCount(0);
   await page.locator('.arcana-nav a[href="/arcanario/acervo"]').click();
   await expect(
     page.getByRole("heading", { name: "Acervo global", exact: true }),
