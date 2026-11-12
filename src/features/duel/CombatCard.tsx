@@ -7,12 +7,15 @@ export function CombatCard({
   name,
   definition: c,
   compact = false,
+  gallery = false,
   official = false,
   liveStats,
 }: {
   readonly name: string;
   readonly definition: CombatDefinition;
   readonly compact?: boolean;
+  /** Flat, low-cost catalogue tile; game/deck cards retain full rules and art. */
+  readonly gallery?: boolean;
   readonly official?: boolean;
   readonly liveStats?: {
     readonly attack?: number;
@@ -25,7 +28,7 @@ export function CombatCard({
   const health = liveStats?.health ?? c.health;
   return (
     <article
-      className={`combat-card ${compact ? "combat-card--compact" : ""}`}
+      className={`combat-card ${compact ? "combat-card--compact" : ""} ${gallery ? "combat-card--gallery" : ""}`}
       data-affinity={c.affinity}
       data-kind={c.kind}
       aria-label={`${name}, ${kindNames[c.kind]}, ${tradition.name}, custo ${c.cost}`}
@@ -43,7 +46,7 @@ export function CombatCard({
         <img
           src={duelArtUrl(c.artId)}
           alt={`Ilustração de ${name}`}
-          loading="lazy"
+          loading={gallery || compact ? "lazy" : "eager"}
           decoding="async"
           width="480"
           height="360"
@@ -52,10 +55,12 @@ export function CombatCard({
           {tradition.symbol} {tradition.name} · {kindNames[c.kind]}
         </span>
       </div>
-      <div className="combat-card__rules">
-        <p>{rulesText(c)}</p>
-        {!compact && <p className="combat-card__flavor">{c.flavor}</p>}
-      </div>
+      {!gallery && (
+        <div className="combat-card__rules">
+          <p>{rulesText(c)}</p>
+          {!compact && <p className="combat-card__flavor">{c.flavor}</p>}
+        </div>
+      )}
       <footer>
         <small>{official ? "ARQUIVO OFICIAL · I" : "CRIAÇÃO AUTORAL"}</small>
         {c.kind === "creature" && (

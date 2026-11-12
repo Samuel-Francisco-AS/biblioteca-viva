@@ -25,6 +25,10 @@ import {
   useArcana,
 } from "./context";
 import type { Card } from "../../domain/arcanarium";
+// Keep each mobile gallery page bounded: the paused resident 3D world still
+// owns WebGL resources while this long catalogue is painted in the WebView.
+const CATALOGUE_PAGE_SIZE = 12;
+
 export function Catalogue({
   memories = false,
 }: {
@@ -218,7 +222,7 @@ export function Catalogue({
         {cards.length}{" "}
         {cards.length === 1 ? "carta encontrada" : "cartas encontradas"}
       </p>
-      {cards.length > 24 && (
+      {cards.length > CATALOGUE_PAGE_SIZE && (
         <nav aria-label="Páginas do Acervo">
           <button
             disabled={page <= 1}
@@ -228,10 +232,10 @@ export function Catalogue({
           </button>
           <span>
             {" "}
-            Página {page} de {Math.ceil(cards.length / 24)}{" "}
+            Página {page} de {Math.ceil(cards.length / CATALOGUE_PAGE_SIZE)}{" "}
           </span>
           <button
-            disabled={page * 24 >= cards.length}
+            disabled={page * CATALOGUE_PAGE_SIZE >= cards.length}
             onClick={() => patch("pagina", String(page + 1))}
           >
             Próxima página
@@ -240,7 +244,10 @@ export function Catalogue({
       )}
       {cards.length ? (
         <div className="arcana-grid">
-          {cards.slice((page - 1) * 24, page * 24).map((c) => (
+          {cards.slice(
+            (page - 1) * CATALOGUE_PAGE_SIZE,
+            page * CATALOGUE_PAGE_SIZE,
+          ).map((c) => (
             <Link
               className="arcana-card-link"
               key={c.id}

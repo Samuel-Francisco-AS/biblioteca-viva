@@ -1616,3 +1616,15 @@
 .arcanarium .arcana-grid .arcana-card--compact .arcana-face--back {
   display: none;
 }
+
+/* BF-5.7A G6 — Catalogue rendering stays flat and bounded. Avoid lingering
+   transitions or offscreen GPU promotion on large card collections. */
+.arcanarium .arcana-grid .arcana-card-link {
+  transform: none;
+  backface-visibility: visible;
+}
+@media (hover: hover) and (pointer: fine) {
+  .arcanarium .arcana-grid .arcana-card-link:hover .arcana-card {
+    transform: translateY(-2px);
+  }
+}
