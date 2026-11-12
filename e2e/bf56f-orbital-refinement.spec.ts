@@ -26,6 +26,7 @@ test("BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident wor
   });
   await expect(tools).toBeVisible();
   await expect(tools).toBeEnabled();
+  await expect(tools).toHaveCSS("position", "fixed");
   // A control may be CSS-visible yet placed outside the viewport. Record its
   // real layout before acting; failure then distinguishes a HUD geometry issue
   // from Playwright pointer stability or the WebGL renderer's frame load.

@@ -501,6 +501,14 @@
   }
 }
 
+/* G5: The crystal skin sets position:relative on generic buttons. The
+   exploration access is a viewport-level HUD control: it must remain fixed.
+   Without this specific restoration, computed position becomes relative and
+   the button slides above the viewport (confirmed in Playwright geometry). */
+.app-shell .library-page .canvas-access {
+  position: fixed;
+}
+
 /* BF-5.7A / G1 — two accessible story seals, not stacked cards covering
    the 3D world. Keep both shortcuts 48px, count on the journal, and normal
    native-back/dialogue behavior. No new overlay or running animation. */
@@ -514,7 +522,8 @@
   max-width: calc(100vw - 1.5rem);
   right: max(0.8rem, env(safe-area-inset-right));
   left: auto;
-  bottom: calc(var(--dock-height) + 0.85rem + env(safe-area-inset-bottom));
+  /* G5: move the two story seals ~0.5 cm (19 CSS px) nearer the dock. */
+  bottom: calc(var(--dock-height) - 0.35rem + env(safe-area-inset-bottom));
   padding: 0;
 }
 .app-shell .library-page .rpg-tools .rpg-tools__beacon {
@@ -564,6 +573,6 @@
 }
 @media (orientation: landscape) and (max-height: 550px) {
   .app-shell .library-page .rpg-tools {
-    bottom: calc(var(--dock-height) + 0.45rem + env(safe-area-inset-bottom));
+    bottom: calc(var(--dock-height) - 0.75rem + env(safe-area-inset-bottom));
   }
 }
