@@ -46,6 +46,7 @@ export function ArcanaCard({
         name={content.name}
         definition={content.combat}
         compact={compact}
+        gallery={compact}
         official={official}
       />
     );

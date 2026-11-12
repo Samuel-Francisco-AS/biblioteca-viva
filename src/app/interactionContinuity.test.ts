@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { CRYSTAL_PRESS_FALLBACK_MS, schedulePressedPassage } from "./crystalPress";
 import {
   beginPassage,
   cancelPassage,
@@ -171,5 +172,63 @@ describe("R6.1: seamless, readiness-gated passage", () => {
     expect(frames).toHaveLength(0);
     expect(action).not.toHaveBeenCalled();
     expect(shell).not.toHaveAttribute("data-passage");
+  });
+
+  it("paints a pressed frame before the curtain without a fixed 120ms wait", () => {
+    vi.useFakeTimers();
+    const { shell, frames } = setup();
+    const action = vi.fn();
+    schedulePressedPassage("/colecao", action, true);
+    expect(shell).not.toHaveAttribute("data-passage");
+    expect(frames).toHaveLength(1);
+    frames.shift()?.(16);
+    expect(shell).not.toHaveAttribute("data-passage");
+    frames.shift()?.(32);
+    expect(shell.dataset.passage).toBe("departing");
+    expect(action).not.toHaveBeenCalled();
+    completePassageDeparture();
+    frames.shift()?.(48);
+    frames.shift()?.(64);
+    expect(action).toHaveBeenCalledOnce();
+    vi.advanceTimersByTime(CRYSTAL_PRESS_FALLBACK_MS + 1);
+    expect(action).toHaveBeenCalledOnce();
+  });
+
+  it("starts the curtain on the fallback if frames are throttled", () => {
+    vi.useFakeTimers();
+    const { shell, frames } = setup();
+    schedulePressedPassage("/arquivo", vi.fn(), true);
+    vi.advanceTimersByTime(CRYSTAL_PRESS_FALLBACK_MS - 1);
+    expect(shell).not.toHaveAttribute("data-passage");
+    vi.advanceTimersByTime(1);
+    expect(shell.dataset.passage).toBe("departing");
+    frames.shift()?.(96);
+    expect(shell.dataset.passage).toBe("departing");
+  });
+
+  it("cancels an obsolete pointer route before any curtain or work", () => {
+    vi.useFakeTimers();
+    const { shell, frames } = setup();
+    const action = vi.fn();
+    const cancel = schedulePressedPassage("/arquivo", action, true);
+    cancel();
+    frames.shift()?.(16);
+    vi.advanceTimersByTime(CRYSTAL_PRESS_FALLBACK_MS + 10);
+    expect(shell).not.toHaveAttribute("data-passage");
+    expect(action).not.toHaveBeenCalled();
+  });
+
+  it("does not delay keyboard or reduced-motion route activation", async () => {
+    vi.useFakeTimers();
+    const { shell } = setup();
+    const keyboardAction = vi.fn();
+    schedulePressedPassage("/colecao", keyboardAction, false);
+    expect(shell.dataset.passage).toBe("departing");
+    cancelPassage();
+    shell.dataset.reducedMotion = "true";
+    const reducedAction = vi.fn();
+    schedulePressedPassage("/arquivo", reducedAction, true);
+    await Promise.resolve();
+    expect(reducedAction).toHaveBeenCalledOnce();
   });
 });

@@ -55,11 +55,33 @@ describe("Coleção", () => {
     expect(screen.getByText("Carregando Coleção…")).toBeVisible();
   });
 
+  it("usa o frontispício como título único e mostra o acesso compacto ao Arcanário", async () => {
+    renderCollection(Promise.resolve([book]));
+    await screen.findByRole("heading", { name: book.title });
+    expect(
+      screen.getByRole("heading", { name: "Acervo encantado" }),
+    ).toBeVisible();
+    expect(screen.queryByText("Seus registros")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: /^Coleção$/ }),
+    ).not.toBeInTheDocument();
+    const arcanarium = screen.getByRole("link", {
+      name: /Cartas, Ecos e Relicário.*Arcanário/,
+    });
+    expect(arcanarium).toHaveAttribute("href", "/arcanario");
+    expect(arcanarium).toHaveClass("collection-arcana-link");
+    expect(screen.getByRole("button", { name: "Busca" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "Novo registro" })).toBeVisible();
+  });
+
   it("mostra estado vazio com ação para cadastrar", async () => {
     renderCollection(Promise.resolve([]));
     expect(
       await screen.findByText("Seu primeiro registro começa aqui"),
     ).toBeVisible();
+    expect(screen.getByRole("link", {
+      name: /Cartas, Ecos e Relicário.*Arcanário/,
+    })).toHaveClass("collection-arcana-link");
     expect(
       screen.getByRole("link", { name: "Criar primeiro registro" }),
     ).toHaveAttribute("href", "/novo-registro");

@@ -204,6 +204,7 @@
   inset: 12px;
   border: 1px solid #b7996233;
   pointer-events: none;
+  transform: translateZ(0);
   z-index: -1;
   border-radius: 2px 18px 2px 18px;
 }
@@ -437,6 +438,8 @@
     0 12px 28px #0006,
     inset 0 0 26px #0005;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  contain: paint;
   border: 1px solid #ad906a;
   overflow: hidden;
 }
@@ -458,7 +461,7 @@
   stroke-width: 1;
 }
 .arcana-face--back {
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) translateZ(0);
   background:
     radial-gradient(ellipse at 50% 85%, var(--card-light), transparent 90%),
     var(--card-dark);
@@ -1470,4 +1473,161 @@
 }
 [data-reduced-motion="true"] .arcana-room-opening {
   animation: none;
+}
+
+/* BF-5.7A / G2 — choice groups behave like the upper Arcanarium nav,
+   not tall single-column cards. Scope to <Choices> so long trial answers,
+   deck pickers and checklists keep their reading-friendly dimensions. */
+.arcanarium .arcana-filters {
+  gap: 0.65rem;
+  align-items: start;
+  padding: 0.8rem;
+}
+.arcanarium .arcana-filters > label:first-child {
+  flex: 1 1 100%;
+  margin: 0;
+}
+.arcanarium .arcana-filters > .arcana-choices--compact {
+  flex: 1 1 100%;
+}
+.arcanarium .arcana-filters > .arcana-check {
+  margin: 0;
+  min-height: 44px;
+  padding: 0.2rem 0.35rem;
+}
+.arcanarium .arcana-choices.arcana-choices--compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
+  align-items: stretch;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.15rem 0;
+  min-width: 0;
+  width: 100%;
+  border: 0;
+}
+.arcanarium .arcana-choices--compact > legend {
+  float: none;
+  width: 100%;
+  padding: 0 0 0.4rem;
+  margin: 0;
+  font: 600 0.94rem/1.4 Georgia, serif;
+  color: #e7cda2;
+}
+.arcanarium .arcana-choices--compact .arcana-choice {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  min-height: 44px;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #977f9f;
+  border-radius: 0.6rem 0.85rem 0.6rem 0.85rem;
+  background:
+    linear-gradient(124deg, #eee0ee16, transparent 42%),
+    linear-gradient(155deg, #453452, #251d37 75%);
+  box-shadow: inset 0 1px #f8e7e71b, 0 2px 0 #120c21;
+  font-size: 0.85rem;
+  line-height: 1.25;
+  color: #f7ebf4;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  touch-action: manipulation;
+}
+.arcanarium .arcana-choices--compact .arcana-choice input[type="radio"] {
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: #e0ba80;
+}
+.arcanarium .arcana-choices--compact .arcana-choice span {
+  min-width: 0;
+}
+.arcanarium .arcana-choices--compact .arcana-choice[data-selected="true"] {
+  border: 1px solid #e7c58d;
+  background:
+    linear-gradient(124deg, #f3d6fc2a, transparent 50%),
+    linear-gradient(150deg, #705187, #443356);
+  box-shadow: inset 0 0 0 1px #f2d5a975, 0 2px 0 #221327;
+  color: #fff1d8;
+}
+/* Another group made of small navigation choices: the Workshop's card types.
+   Long textual alternatives in Provações remain untouched. */
+.arcanarium .arcana-kind {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  gap: 0.45rem;
+  margin-bottom: 0.5rem;
+}
+.arcanarium .arcana-kind a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.65rem;
+  font-size: 0.84rem;
+  line-height: 1.3;
+  text-align: center;
+  overflow-wrap: anywhere;
+  background: linear-gradient(155deg, #493657, #291f3a);
+}
+.arcanarium .arcana-kind a[aria-current="page"] {
+  background: linear-gradient(155deg, #795a91, #4a3660);
+  box-shadow: inset 0 0 0 1px #e1b78077;
+}
+@media (max-width: 600px) {
+  .arcanarium .arcana-choices.arcana-choices--compact {
+    /* Supersedes the legacy flex-direction:column rule on mobile. */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 340px) {
+  .arcanarium .arcana-choices.arcana-choices--compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.3rem;
+  }
+  .arcanarium .arcana-choices--compact .arcana-choice {
+    padding-inline: 0.4rem;
+    font-size: 0.78rem;
+  }
+}
+@media (forced-colors: active) {
+  .arcanarium .arcana-choices--compact .arcana-choice[data-selected="true"] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}
+
+/* BF-5.7A/G4: these catalogue thumbnails never flip. Each full 3D pair of
+   faces otherwise increases compositing/tile pressure while the user flings
+   a grid with up to 24 cards. Preserve real 3D flipping in full-size detail,
+   preview and review cards; limit this optimization to catalogue tiles. */
+.arcanarium .arcana-grid .arcana-card--compact {
+  perspective: none;
+  transition: none;
+}
+.arcanarium .arcana-grid .arcana-card--compact .arcana-card__turn {
+  transform: none;
+  transform-style: flat;
+  transition: none;
+}
+.arcanarium .arcana-grid .arcana-card--compact .arcana-face--back {
+  display: none;
+}
+
+/* BF-5.7A G6 — Catalogue rendering stays flat and bounded. Avoid lingering
+   transitions or offscreen GPU promotion on large card collections. */
+.arcanarium .arcana-grid .arcana-card-link {
+  transform: none;
+  backface-visibility: visible;
+}
+@media (hover: hover) and (pointer: fine) {
+  .arcanarium .arcana-grid .arcana-card-link:hover .arcana-card {
+    transform: translateY(-2px);
+  }
 }

@@ -624,3 +624,29 @@
     grid-column: auto;
   }
 }
+
+/* BF-5.7A/P1: keep the workout name as the leading heading and give
+   its actual type/status and schedule the subtitle hierarchy. */
+.workout-identity {
+  padding-block: 1.2rem 0.95rem;
+  gap: 0.85rem;
+}
+.workout-identity h2 {
+  font-size: clamp(2.1rem, 6.5vw, 3.3rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.45rem;
+  overflow-wrap: anywhere;
+}
+.workout-identity .workout-identity__subtitle {
+  color: #503b4f;
+  font-size: clamp(1.03rem, 3vw, 1.2rem);
+  line-height: 1.35;
+  margin: 0 0 0.35rem;
+}
+.workout-identity .workout-identity__schedule {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--wf-muted);
+  margin: 0;
+}

@@ -91,6 +91,7 @@ function experience(
     highContrast: false,
     motion: "system",
     textSize: "default",
+    showCanvasAccessButton: false,
   },
 ): ExperiencePreferencesPort {
   let preferences = initial;
@@ -108,6 +109,7 @@ function experience(
         preferences.motion === "reduce" ||
         (preferences.motion === "system" && systemReducedMotion),
       textSize: preferences.textSize,
+      showCanvasAccessButton: preferences.showCanvasAccessButton,
     }),
     setHighContrast: vi.fn((highContrast: boolean) =>
       update({ ...preferences, highContrast }),
@@ -117,6 +119,9 @@ function experience(
     ),
     setTextSize: vi.fn((textSize: ExperiencePreferences["textSize"]) =>
       update({ ...preferences, textSize }),
+    ),
+    setShowCanvasAccessButton: vi.fn((showCanvasAccessButton: boolean) =>
+      update({ ...preferences, showCanvasAccessButton }),
     ),
     subscribe: (listener) => {
       listeners.add(listener);
@@ -158,6 +163,13 @@ describe("Configurações e backup", () => {
     expect(
       screen.getByRole("checkbox", { name: "Usar alto contraste" }),
     ).toBeChecked();
+    const canvasAccess = screen.getByRole("checkbox", {
+      name: "Mostrar botão “Acervo e habitantes” no Canvas",
+    });
+    expect(canvasAccess).not.toBeChecked();
+    await user.click(canvasAccess);
+    expect(experiencePort.setShowCanvasAccessButton).toHaveBeenCalledWith(true);
+    expect(canvasAccess).toBeChecked();
   });
 
   it("oferece volume rotulado, teclado nativo e mute com aplicação imediata", async () => {

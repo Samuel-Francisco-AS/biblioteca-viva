@@ -389,14 +389,6 @@ export function SessionPanel({
           <p className="reading-session__hint">
             Sem pressa, sem limite. O tempo acompanha seu encontro com o livro.
           </p>
-          <details className="reading-session__fields">
-            <summary>Páginas e nota (opcionais)</summary>
-            <SessionFields entry={entry} />
-            <label className="form-field">
-              Nota opcional
-              <textarea name="note" />
-            </label>
-          </details>
           <button
             className="button button--primary"
             ref={clockControl}
@@ -405,6 +397,14 @@ export function SessionPanel({
           >
             Iniciar sessão
           </button>
+          <details className="reading-session__fields">
+            <summary>Páginas e nota (opcionais)</summary>
+            <SessionFields entry={entry} />
+            <label className="form-field">
+              Nota opcional
+              <textarea name="note" />
+            </label>
+          </details>
           {open && (
             <p role="status">
               Já existe uma sessão em andamento em outro registro.{" "}

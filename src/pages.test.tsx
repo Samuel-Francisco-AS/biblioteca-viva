@@ -3,7 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ApplicationError } from "./application";
+import {
+  ApplicationError,
+  ExperiencePreferencesService,
+} from "./application";
 import type { BookEntry, LibraryEntry } from "./domain";
 import {
   createMovie,
@@ -52,10 +55,15 @@ const secondBook: BookEntry = {
   title: "Memórias póstumas",
 };
 
-function renderLibrary(result: Promise<readonly LibraryEntry[]>, entry = "/") {
+function renderLibrary(
+  result: Promise<readonly LibraryEntry[]>,
+  entry = "/",
+  experience?: ExperiencePreferencesService,
+) {
   latestWorldHostProps = undefined;
   const execute = vi.fn(() => result);
   const application: LibraryApplication = {
+    experience,
     queries: { listLibraryEntries: { execute } },
   };
   render(
@@ -120,6 +128,106 @@ const sixEntries: LibraryEntry[] = [
 ];
 
 describe("Página Biblioteca", () => {
+  it("mantém o botão do Canvas oculto por padrão e o atualiza sem reiniciar", async () => {
+    const experience = new ExperiencePreferencesService(
+      { load: vi.fn(), save: vi.fn(() => Promise.resolve()) },
+      { warn: vi.fn() },
+    );
+    await experience.loadPreferences();
+    renderLibrary(Promise.resolve([]), "/", experience);
+
+    expect(
+      screen.queryByRole("button", {
+        name: "Abrir ferramentas de exploração acessível",
+      }),
+    ).not.toBeInTheDocument();
+
+    await act(() => experience.setShowCanvasAccessButton(true));
+    expect(
+      screen.getByRole("button", {
+        name: "Abrir ferramentas de exploração acessível",
+      }),
+    ).toBeInTheDocument();
+
+    await act(() => experience.setShowCanvasAccessButton(false));
+    expect(
+      screen.queryByRole("button", {
+        name: "Abrir ferramentas de exploração acessível",
+      }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("fecha o painel residente quando a preferência é desligada e não o reabre sozinha", async () => {
+    const experience = new ExperiencePreferencesService(
+      { load: vi.fn(), save: vi.fn(() => Promise.resolve()) },
+      { warn: vi.fn() },
+    );
+    await experience.loadPreferences();
+    await experience.setShowCanvasAccessButton(true);
+    renderLibrary(Promise.resolve([]), "/", experience);
+
+    const toggle = screen.getByRole("button", {
+      name: "Abrir ferramentas de exploração acessível",
+    });
+    await userEvent.click(toggle);
+    expect(document.querySelector(".library-page")).toHaveAttribute(
+      "data-tools-open",
+      "true",
+    );
+
+    // The resident Library receives this update even while another route is
+    // visible; no orphan panel may be left behind when the toggle disappears.
+    await act(() => experience.setShowCanvasAccessButton(false));
+    expect(document.querySelector(".library-page")).toHaveAttribute(
+      "data-tools-open",
+      "false",
+    );
+    expect(
+      screen.queryByRole("button", {
+        name: "Recolher ferramentas de exploração",
+      }),
+    ).not.toBeInTheDocument();
+
+    await act(() => experience.setShowCanvasAccessButton(true));
+    const returned = screen.getByRole("button", {
+      name: "Abrir ferramentas de exploração acessível",
+    });
+    expect(returned).toHaveAttribute("aria-expanded", "false");
+    expect(document.querySelector(".library-page")).toHaveAttribute(
+      "data-tools-open",
+      "false",
+    );
+  });
+
+  it("exposes the same exploration state to visual UI and assistive technology", async () => {
+    renderLibrary(Promise.resolve([]));
+    const open = screen.getByRole("button", {
+      name: "Abrir ferramentas de exploração acessível",
+    });
+    expect(open).toHaveAttribute("aria-expanded", "false");
+    expect(document.querySelector(".library-page")).toHaveAttribute(
+      "data-tools-open",
+      "false",
+    );
+
+    await userEvent.click(open);
+    const close = screen.getByRole("button", {
+      name: "Recolher ferramentas de exploração",
+    });
+    expect(close).toHaveAttribute("aria-expanded", "true");
+    expect(document.querySelector(".library-page")).toHaveAttribute(
+      "data-tools-open",
+      "true",
+    );
+
+    await userEvent.click(close);
+    expect(open).toHaveAttribute("aria-expanded", "false");
+    expect(document.querySelector(".library-page")).toHaveAttribute(
+      "data-tools-open",
+      "false",
+    );
+  });
+
   it("apresenta fallback seguro quando a aplicação não está disponível", () => {
     render(
       <MemoryRouter>
@@ -1012,7 +1120,7 @@ it("R4 session events avoid catalog and annotation queries and retain world iden
   expect(worldHostProps().libraryWorldSnapshot).toBe(initial);
 });
 
-it("F2 opens the duel hall from the canonical orbital selection", async () => {
+it("G3 opens the Arcanarium Portal from the canonical lunar selection", async () => {
   const application: LibraryApplication = {
     queries: {
       listLibraryEntries: { execute: vi.fn(() => Promise.resolve([])) },
@@ -1022,6 +1130,10 @@ it("F2 opens the duel hall from the canonical orbital selection", async () => {
     <MemoryRouter>
       <Routes>
         <Route path="/" element={<LibraryPage application={application} />} />
+        <Route
+          path="/arcanario"
+          element={<h1>Portal do Arcanário fictício</h1>}
+        />
         <Route
           path="/arcanario/duelos"
           element={<h1>Salão orbital fictício</h1>}
@@ -1033,10 +1145,10 @@ it("F2 opens the duel hall from the canonical orbital selection", async () => {
   act(() =>
     worldHostProps().onSelectionChange?.({
       id: "portal:duelo-arcano",
-      label: "Arena orbital · abrir Duelo Arcano",
+      label: "Lua do Arcanário · abrir Portal do Arcanário",
     }),
   );
   expect(
-    await screen.findByRole("heading", { name: "Salão orbital fictício" }),
+    await screen.findByRole("heading", { name: "Portal do Arcanário fictício" }),
   ).toBeInTheDocument();
 });

@@ -267,10 +267,14 @@ export function WorkDetailPage({
           <ArtifactGlyph type="work" />
         </span>
         <div>
-          <p className="work-kicker">
-            Empreitadas · {entry.kind ? workKindLabels[entry.kind] : "Trabalho"}
-          </p>
           <h2 id="work-title">{entry.title}</h2>
+          {(entry.kind || entry.area) && (
+            <p className="work-identity__subtitle">
+              {[entry.kind ? workKindLabels[entry.kind] : undefined, entry.area]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+          )}
           <div className="work-identity__meta">
             <details>
               <summary>{statusLabels[entry.status]}</summary>
@@ -388,13 +392,9 @@ export function WorkDetailPage({
               </p>
             </>
           ) : (
-            <button
-              className="text-button"
-              disabled={busy || conflict}
-              onClick={() => setEditor({ kind: "task" })}
-            >
-              Criar a primeira tarefa ＋
-            </button>
+            <p className="work-muted work-progress__empty">
+              Seu progresso começa com a primeira tarefa.
+            </p>
           )}
           {deadline && (
             <p>
@@ -407,13 +407,22 @@ export function WorkDetailPage({
       <section className="work-planning" aria-labelledby="work-planning-title">
         <div className="work-section-heading">
           <h3 id="work-planning-title">Etapas e tarefas</h3>
-          <button
-            className="text-button"
-            disabled={busy || conflict}
-            onClick={() => setEditor({ kind: "stage" })}
-          >
-            ＋ Etapa
-          </button>
+          <div className="work-section-actions">
+            <button
+              className="text-button work-section-action"
+              disabled={busy || conflict}
+              onClick={() => setEditor({ kind: "task" })}
+            >
+              ＋ Nova tarefa
+            </button>
+            <button
+              className="text-button work-section-action"
+              disabled={busy || conflict}
+              onClick={() => setEditor({ kind: "stage" })}
+            >
+              ＋ Etapa
+            </button>
+          </div>
         </div>
         {plan.stages.map((stage, index) => {
           const tasks = plan.tasks.filter((task) => task.stageId === stage.id),
@@ -523,20 +532,13 @@ export function WorkDetailPage({
         <section className="work-stage" aria-label="Tarefas sem etapa">
           {plan.stages.length > 0 && <h4>Sem etapa</h4>}
           {taskList()}
-          <button
-            className="text-button work-add-task"
-            disabled={busy || conflict}
-            onClick={() => setEditor({ kind: "task" })}
-          >
-            ＋ Nova tarefa
-          </button>
         </section>
       </section>
       <section className="work-next" aria-labelledby="work-next-title">
         <div className="work-section-heading">
           <h3 id="work-next-title">Próxima ação</h3>
           <button
-            className="text-button"
+            className="text-button work-section-action"
             disabled={busy || conflict}
             onClick={() =>
               setEditor({
@@ -559,7 +561,7 @@ export function WorkDetailPage({
         <div className="work-section-heading">
           <h3 id="work-journal-title">Diário da empreitada</h3>
           <button
-            className="text-button"
+            className="text-button work-section-action"
             disabled={busy || conflict}
             onClick={() => setEditor({ kind: "journal" })}
           >

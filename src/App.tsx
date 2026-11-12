@@ -41,14 +41,14 @@ import "./styles-legacy.css";
 import "./styles-atelier.css";
 import "./features/library/canvas-hud.css";
 import "./features/duel/arena/arena.css";
+import "./styles-crystal.css";
 import { pulseTouch } from "./app/touchFeedback";
+import { echoCrystalPress, schedulePressedPassage } from "./app/crystalPress";
 import {
-  beginPassage,
   cancelPassage,
   completePassageAnimation,
   completePassageDeparture,
   notifyPassageLocation,
-  schedulePassage,
   signalPassageReady,
 } from "./app/interactionContinuity";
 import {
@@ -262,13 +262,24 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   useLayoutEffect(() => {
     if (previousPassagePathRef.current === location.pathname) return;
     previousPassagePathRef.current = location.pathname;
+    // A Back/external route change must cancel any pending crystal prelude.
+    pendingNavigationRef.current?.();
+    pendingNavigationRef.current = null;
     notifyPassageLocation(location.pathname);
     recordUiRouteCommit(location.pathname);
   }, [location.pathname]);
 
   useEffect(() => {
     if (previousPathRef.current !== location.pathname) {
-      mainRef.current?.focus();
+      // The Arcanarium owns its room-to-room scroll position. Native focus()
+      // scrolls the main element just below the global header (about 65px),
+      // undoing RoomCommitted's scroll-to-top after the room is painted.
+      // Keep the accessible main focus without triggering a second scroll.
+      mainRef.current?.focus(
+        location.pathname.startsWith("/arcanario")
+          ? { preventScroll: true }
+          : undefined,
+      );
       previousPathRef.current = location.pathname;
     }
   }, [location.pathname]);
@@ -330,7 +341,21 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
         )
           clearTap();
       }}
-      onPointerUpCapture={clearTap}
+      onPointerUpCapture={(event) => {
+        // Preserve ONE visual press from pointerdown through the semantic click.
+        // A quick pointerup -> click used to clear then reapply pressure, causing
+        // two compressed animations on slower Android frames.
+        const pressed = pressedRef.current;
+        if (
+          pressed &&
+          pressedOriginRef.current?.id === event.pointerId &&
+          event.target instanceof Element &&
+          event.target.closest("button, a, summary, [role='button'], [role='tab']") === pressed
+        ) {
+          echoCrystalPress(pressed);
+        }
+        clearTap();
+      }}
       onPointerCancelCapture={clearTap}
       onLostPointerCapture={clearTap}
       onClickCapture={(event) => {
@@ -352,6 +377,10 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           return;
         if (control.matches(".book-card__link"))
           control.setAttribute("data-tap-confirmed", "true");
+        // Pointerup has already transferred the pressed state to the short
+        // echo. Keyboard/synthetic clicks still receive their own response.
+        if (!control.hasAttribute("data-crystal-pressed"))
+          echoCrystalPress(control);
         // Global opt-in diagnostic: measure the next two RAF callbacks for
         // ordinary buttons and links, even outside the resident Canvas.
         const localHref =
@@ -395,8 +424,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           // including custom handlers, run exactly once on the replay.
           event.stopPropagation();
           pendingNavigationRef.current?.();
-          beginPassage(control.pathname);
-          pendingNavigationRef.current = schedulePassage(() => {
+          pendingNavigationRef.current = schedulePressedPassage(control.pathname, () => {
             pendingNavigationRef.current = null;
             if (!control.isConnected) {
               cancelPassage();
@@ -408,7 +436,7 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
             } finally {
               replayingLinksRef.current.delete(control);
             }
-          });
+          }, event.detail > 0);
         }
         pulseTouch(
           effectiveExperience.reducedMotion,

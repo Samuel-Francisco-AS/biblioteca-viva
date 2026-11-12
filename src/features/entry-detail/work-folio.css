@@ -464,3 +464,91 @@
   outline: 2px solid #634258;
   outline-offset: 3px;
 }
+
+/* BF-5.7A/W1–W2: a stronger project title and a single, predictable
+   action rail. Mobile section names do not compete with floating buttons. */
+.work-identity {
+  align-items: start;
+  gap: 0.8rem;
+}
+.work-identity h2 {
+  margin: 0 0 0.45rem;
+  font-size: clamp(2.15rem, 6.5vw, 3.45rem);
+  line-height: 1.08;
+  letter-spacing: -0.027em;
+  overflow-wrap: anywhere;
+  color: #302037;
+}
+.work-identity .work-identity__subtitle {
+  color: #60455b;
+  font-size: clamp(1.03rem, 3vw, 1.24rem);
+  line-height: 1.35;
+  margin: 0 0 0.65rem;
+}
+.work-identity__meta {
+  gap: 0.5rem 0.9rem;
+}
+.work-progress:has(.work-progress__empty) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.2rem;
+}
+.work-progress__empty {
+  margin: 0;
+  line-height: 1.45;
+}
+.work-section-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  justify-content: initial;
+  gap: 0.6rem;
+  margin-block: 1.4rem 0.95rem;
+}
+.work-section-heading h3 {
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
+  line-height: 1.15;
+  min-width: 0;
+}
+.work-section-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.6rem;
+}
+.work-section-action,
+.work-section-actions .work-section-action {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.88rem;
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal;
+  justify-self: start;
+}
+.work-stage .work-add-task {
+  margin: 0.55rem 0 0.25rem 0.5rem;
+}
+.work-task__tools {
+  justify-content: flex-start;
+  gap: 0.45rem 0.55rem;
+}
+@media (min-width: 680px) {
+  .work-section-heading {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 1.2rem;
+  }
+  .work-section-actions {
+    justify-content: flex-end;
+  }
+}

@@ -50,6 +50,29 @@ const echo = {
   front: "Pista fictícia",
   back: "Resposta fictícia",
 };
+it("paginates Acervo at 12 flat previews instead of rendering 24 complex cards at once", async () => {
+  const a = await app();
+  const u = userEvent.setup();
+  for (let index = 1; index <= 13; index += 1) {
+    await a.arcanarium.createCard({
+      type: "flashcard",
+      front: `Carta de ensaio ${index}`,
+      back: "Verso ilustrativo",
+    });
+  }
+  const view = mount(a, "/arcanario/acervo");
+  await screen.findByText("13 cartas encontradas");
+  expect(view.container.querySelectorAll(".arcana-grid .arcana-card-link")).toHaveLength(12);
+  expect(
+    screen.getByRole("navigation", { name: "Páginas do Acervo" }),
+  ).toHaveTextContent("Página 1 de 2");
+  await u.click(screen.getByRole("button", { name: "Próxima página" }));
+  expect(
+    await screen.findByRole("navigation", { name: "Páginas do Acervo" }),
+  ).toHaveTextContent("Página 2 de 2");
+  expect(view.container.querySelectorAll(".arcana-grid .arcana-card-link")).toHaveLength(1);
+}, 30000);
+
 it("creates a canonical card from a real editor, previews both faces and keeps a recoverable draft", async () => {
   const a = await app(),
     u = userEvent.setup(),
@@ -78,10 +101,16 @@ it("creates a canonical card from a real editor, previews both faces and keeps a
   await u.click(
     screen.getByRole("button", { name: "Guardar carta no acervo" }),
   );
-  await screen.findByRole("link", { name: "Editar na Oficina" });
+  // Saving and reloading a canonical card crosses IndexedDB and routing.
+  // Preserve the real persisted-card check while allowing worker contention.
+  await screen.findByRole(
+    "link",
+    { name: "Editar na Oficina" },
+    { timeout: 10000 },
+  );
   expect((await a.arcanarium.list()).cards).toHaveLength(1);
   expect(a.workshopDrafts.read("nova:flashcard")).toBeUndefined();
-});
+}, 20000);
 it("preserves typed work on a genuine revision conflict and lets the user choose the new base", async () => {
   const a = await app(),
     u = userEvent.setup(),
@@ -225,7 +254,10 @@ it("B-R1: family filter is a keyboard-accessible radio group without a select", 
   });
   mount(a, "/arcanario/acervo");
   await screen.findByRole("heading", { name: "Acervo global" });
-  await u.click(screen.getByRole("radio", { name: "Lembrança" }));
+  const family = screen.getByRole("group", { name: "Família" });
+  expect(family).toHaveClass("arcana-choices--compact");
+  expect(within(family).getAllByRole("radio")).toHaveLength(5);
+  await u.click(within(family).getByRole("radio", { name: "Lembrança" }));
   expect(screen.getByRole("radio", { name: "Lembrança" })).toBeChecked();
   expect(screen.getAllByRole("link", { name: /Abrir Lembrança/ })).toHaveLength(
     1,

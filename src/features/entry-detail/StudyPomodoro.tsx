@@ -59,10 +59,6 @@ export function StudyPomodoro({
             <option value={45}>45 minutos · imersão</option>
           </BVSelectSheet>
         </label>
-        <p className="study-hint">
-          Pode apagar a tela ou sair do app. O tempo é recuperado no retorno e
-          para no limite do foco. Registre ao terminar; depois, faça uma pausa.
-        </p>
       </div>
       <div className="study-clock-area">
         <div

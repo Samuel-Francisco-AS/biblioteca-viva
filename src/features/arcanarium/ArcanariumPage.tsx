@@ -77,6 +77,15 @@ const Review = lazy(async () => ({
 }));
 function RoomCommitted() {
   const location = useLocation();
+  // React Router intentionally retains window scroll while nested Arcanarium
+  // rooms share their mounted shell. A card opened from far down the catalogue
+  // must start at its artwork, not at the previous page's scroll offset.
+  // Layout effect runs when the destination room is actually mounted (after
+  // Suspense), before the first revealed frame. Query-string-only changes
+  // preserve the reader's position.
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
   useEffect(() => {
     recordUiRouteContentCommit(location.pathname);
     signalPassageReady(location.pathname);

@@ -78,15 +78,12 @@ export function NoteForm({
     >
       <div className="form-field">
         <label htmlFor="note-content">Nota (obrigatório)</label>
-        <p className="field-help" id="note-content-help">
-          Use texto simples.
-        </p>
         <textarea
           id="note-content"
           ref={fieldRef}
           rows={4}
           value={content}
-          aria-describedby={`note-content-help${error ? " note-content-error" : ""}`}
+          aria-describedby={error ? "note-content-error" : undefined}
           aria-invalid={error ? "true" : undefined}
           onChange={(event) => setContent(event.target.value)}
         />
@@ -96,9 +93,6 @@ export function NoteForm({
           </p>
         )}
       </div>
-      {totalPages !== undefined && (
-        <p className="field-help">O livro tem {totalPages} páginas.</p>
-      )}
       <div className="form-field">
         <label htmlFor="note-page">Página da nota (opcional)</label>
         <input
@@ -206,15 +200,12 @@ export function QuoteForm({
     >
       <div className="form-field">
         <label htmlFor="quote-content">Citação (obrigatório)</label>
-        <p className="field-help" id="quote-content-help">
-          Use texto simples.
-        </p>
         <textarea
           id="quote-content"
           ref={contentRef}
           rows={4}
           value={content}
-          aria-describedby={`quote-content-help${errors.content ? " quote-content-error" : ""}`}
+          aria-describedby={errors.content ? "quote-content-error" : undefined}
           aria-invalid={errors.content ? "true" : undefined}
           onChange={(event) => setContent(event.target.value)}
         />

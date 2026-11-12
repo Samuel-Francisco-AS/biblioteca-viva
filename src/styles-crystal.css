@@ -1,0 +1,578 @@
+/* BF-5.7A — Cut crystal controls.
+   Static facets and depth, no texture downloads, filters, continuous animation
+   or a second rendering loop. Individual realms retain their own hue/shape. */
+
+/* Buttons, button-like links and native form actions share a material language.
+   Full-size book/TCG cards remain cards, not small pushbuttons. */
+.app-shell :is(
+  button:not(.combat-card, .arcana-card, .type-picker__option, .arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card),
+  .button,
+  .text-button,
+  a.top-bar__back,
+  .category-ribbon a,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"]
+),
+.app-shell .arcanarium button:not(.combat-card, .arcana-card, .arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card),
+.app-shell .arcanarium .arcana-pack-volume button,
+.app-shell .arcanarium .arcana-nav a,
+.app-shell .arena-game button:not(.arena-piece, .arena-hand-card, .arena-duelist),
+.app-shell .arena-dialog button,
+.bv-picker-sheet button {
+  --crystal-facet: #e5cbd126;
+  --crystal-top: #604160;
+  --crystal-mid: #422a4b;
+  --crystal-base: #261c36;
+  --crystal-ledge: #120f1f;
+  --crystal-glint: #f4d5c98a;
+  position: relative;
+  border-color: var(--crystal-glint);
+  --crystal-surface:
+    linear-gradient(115deg, #ffffff2d 0%, #ffffff0a 17%, transparent 29% 48%, #e9cfec14 57%, transparent 68%),
+    linear-gradient(165deg, transparent 46%, #120b2340 90%),
+    repeating-linear-gradient(127deg, transparent 0 11px, var(--crystal-facet) 12px, transparent 13px 29px),
+    linear-gradient(150deg, var(--crystal-top), var(--crystal-mid) 48%, var(--crystal-base) 100%);
+  background: var(--crystal-surface);
+  color: #f9eadc;
+  --crystal-shadow:
+    inset 0 1px 0 #fff5e37a,
+    inset 1px 0 0 #f7dbe12f,
+    inset -2px -3px 5px #100b2052,
+    inset 0 0 0 1px #e5c4da20,
+    0 3px 0 var(--crystal-ledge),
+    0 6px 9px #0a07132b;
+  box-shadow: var(--crystal-shadow);
+  text-shadow: 0 1px 0 #130b2359;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transform-origin: 50% 65%;
+  /* Shadow and border keep the same computed value while pressed; only
+     the compositor-friendly transform changes on frequent taps. */
+  transition: transform 64ms cubic-bezier(0.18, 0.82, 0.24, 1);
+}
+
+/* The primary rose crystal retains the warm copper edge of O Códice Iluminado. */
+.app-shell :is(.button--primary, input[type="submit"]),
+.app-shell .category-ribbon :is(button, a)[aria-pressed="true"] {
+  --crystal-facet: #ffe6e21c;
+  --crystal-top: #a05778;
+  --crystal-mid: #783954;
+  --crystal-base: #4b2948;
+  --crystal-ledge: #291626;
+  --crystal-glint: #e6bb9b;
+  color: #fff0db;
+}
+.app-shell .button--secondary,
+.app-shell .category-ribbon :is(button, a) {
+  --crystal-top: #4b3b59;
+  --crystal-mid: #342940;
+  --crystal-base: #231d32;
+  --crystal-ledge: #14101f;
+  --crystal-glint: #ba9bac;
+}
+.app-shell :is(.button--danger, .button--danger-outline) {
+  --crystal-top: #853e53;
+  --crystal-mid: #60283f;
+  --crystal-base: #3b1b30;
+  --crystal-ledge: #24101c;
+  --crystal-glint: #d6a19b;
+  color: #ffece2;
+}
+
+/* Solid yet legible in illuminated paper chapters, including selected tabs. */
+.app-shell .memory-tabs button:not([aria-pressed="true"]),
+.app-shell .arcanarium .arcana-pack-volume button:not(.button--primary),
+.app-shell .bv-picker-trigger,
+.bv-picker-sheet button:not([aria-pressed="true"]),
+.app-shell .bv-calendar button:not([aria-pressed="true"]) {
+  --crystal-facet: #956e6622;
+  --crystal-top: #fff4e5;
+  --crystal-mid: #ecdac8;
+  --crystal-base: #c8ac9f;
+  --crystal-ledge: #94766a;
+  --crystal-glint: #a88c7b;
+  color: #49334a;
+  text-shadow: 0 1px #fff8eea8;
+}
+.app-shell .memory-tabs button[aria-pressed="true"],
+.app-shell .arcanarium .arcana-pack-volume .button--primary,
+.bv-picker-sheet button[aria-pressed="true"],
+.app-shell .bv-calendar button[aria-pressed="true"] {
+  --crystal-top: #97627d;
+  --crystal-mid: #6f3f63;
+  --crystal-base: #432641;
+  --crystal-ledge: #24162c;
+  --crystal-glint: #cfa88b;
+  color: #fff4df;
+}
+.app-shell .arcanarium .arcana-pack-volume .button--secondary {
+  --crystal-top: #f4e4fa;
+  --crystal-mid: #d7bfdc;
+  --crystal-base: #b598c6;
+  --crystal-ledge: #695278;
+  --crystal-glint: #745484;
+  color: #442052;
+}
+
+/* Educational arcana keeps amethyst tones; active arena commands get a
+   moonlit lapis/gold body without changing the viewport or HUD dimensions. */
+.app-shell .arcanarium :is(button, .button) {
+  --crystal-facet: #e7d9ff20;
+  --crystal-top: #6d5380;
+  --crystal-mid: #443052;
+  --crystal-base: #292137;
+  --crystal-ledge: #171023;
+  --crystal-glint: #c7aacb;
+}
+.app-shell .arcanarium .button--primary {
+  --crystal-top: #946eab;
+  --crystal-mid: #684579;
+  --crystal-base: #3a2854;
+  --crystal-glint: #dfbadd;
+}
+.app-shell .arcanarium .arena-game button,
+.app-shell .arcanarium .arena-dialog button {
+  --crystal-facet: #cbd8fc1c;
+  --crystal-top: #3e4568;
+  --crystal-mid: #252b4c;
+  --crystal-base: #12162b;
+  --crystal-ledge: #080c1b;
+  --crystal-glint: #b6adab;
+}
+.app-shell .arcanarium .arena-game .arena-primary,
+.app-shell .arcanarium .arena-dialog .arena-primary {
+  --crystal-top: #826a71;
+  --crystal-mid: #58435b;
+  --crystal-base: #2d2846;
+  --crystal-glint: #efcf96;
+}
+
+/* Navigation chips are amethyst, slightly brighter when selected. */
+.app-shell .arcanarium .arcana-nav a {
+  --crystal-top: #514063;
+  --crystal-mid: #32273e;
+  --crystal-base: #211b31;
+  --crystal-glint: #ae93ae;
+  border: 1px solid #b89db26b;
+  color: #e9d6e7;
+}
+.app-shell .arcanarium .arcana-nav a.active {
+  --crystal-top: #88649c;
+  --crystal-mid: #604474;
+  --crystal-base: #372c4f;
+  --crystal-glint: #e5c58e;
+  color: #fff2d5;
+}
+.bv-picker-sheet button:not([aria-pressed="true"]) {
+  color: #49334a;
+}
+
+/* Narrative and world tools are carved from darker, teal-flecked stone. */
+.app-shell .rpg-choices button,
+.app-shell .library-page .rpg-tools button,
+.app-shell .exploration-compass {
+  --crystal-top: #684960;
+  --crystal-mid: #3a2b4a;
+  --crystal-base: #211c34;
+  --crystal-ledge: #100e1e;
+  --crystal-glint: #b9a2a3;
+}
+.app-shell .rpg-choices button {
+  border-left-color: #a8dcd2;
+}
+
+/* Text actions remain compact: do not expand the footprint of the folio. */
+.app-shell .text-button,
+.app-shell a.top-bar__back {
+  --crystal-top: #49354f;
+  --crystal-mid: #30253b;
+  --crystal-base: #201b30;
+  --crystal-glint: #ad9295;
+}
+
+/* The five dock icons are circular crystal keys embedded in the navigation
+   frame. Keep the labels and layout unchanged and depress the key, not the
+   complete dock. */
+.app-shell .primary-dock__medallion {
+  background:
+    radial-gradient(circle at 29% 19%, #fff4f433, transparent 43%),
+    repeating-linear-gradient(133deg, #f9eaff00 0 10px, #c9b5e016 11px, transparent 12px 22px),
+    linear-gradient(145deg, #5d415f, #342640 50%, #181728 100%);
+  border-color: #c3a5b4;
+  box-shadow:
+    inset 0 1px 1px #fff2e092,
+    inset 0 0 0 3px #36253c,
+    inset 0 0 0 4px #b99bba74,
+    inset 0 -3px 5px #08071299,
+    0 3px 0 #0e0a19,
+    0 6px 8px #08071369;
+  transition: transform 64ms ease-out;
+}
+.app-shell .primary-dock__link[aria-current="page"] .primary-dock__medallion {
+  border-color: #edcda9;
+  background:
+    radial-gradient(circle at 29% 17%, #fff7dc5a, transparent 48%),
+    linear-gradient(145deg, #795773, #3b293f 65%, #201828);
+}
+.app-shell .primary-dock__link:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"])
+  .primary-dock__medallion {
+  transform: translate3d(0, 3px, 0) scale(0.97);
+  box-shadow:
+    inset 0 3px 7px #090612b8,
+    inset 0 0 0 2px #e0c7c080,
+    0 1px 0 #0d0a1b;
+}
+.app-shell .primary-dock__link:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]) {
+  color: #fff0dc;
+  /* The crystal moves in its socket; the dock frame and caption stay put.
+     Old velvet/brightness pressed treatments must not run in parallel. */
+  transform: none;
+  background: transparent;
+  filter: none;
+  transition: color 64ms ease-out;
+}
+.app-shell .primary-dock__link[aria-current="page"]:is(
+  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
+) {
+  background: linear-gradient(180deg, #99718a3d, #39293a90 70%);
+}
+
+/* Inherited active rules from the old atelier added brightness/background
+   changes on top of the crystal depression. Keep the facets steady while
+   fingers press — especially on actions that re-render a whole card. */
+.app-shell .category-ribbon :is(button, a):is(
+  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
+),
+.app-shell .rpg-choices button:is(
+  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
+),
+.app-shell .library-page .rpg-tools button:is(
+  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
+) {
+  background: var(--crystal-surface);
+  filter: none;
+}
+
+/* Art-bearing game controls are interactive cards, not ordinary keys.
+   Keep painted materials and hitbox transforms, including absolute field slots. */
+.app-shell :is(.arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card) {
+  transition: scale 64ms ease-out;
+}
+.app-shell :is(.arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card):not(:disabled):is(
+  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
+) {
+  scale: 0.975;
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-shell :is(.arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card) {
+    transition: none;
+    scale: 1;
+  }
+}
+.app-shell[data-reduced-motion="true"] :is(.arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card) {
+  transition: none;
+  scale: 1;
+}
+
+/* Large selection tiles remain parchment artworks with crystal-mounted seals,
+   but still acknowledge the same mechanical press. */
+.app-shell .type-picker__sigil {
+  box-shadow:
+    inset 0 1px 1px #fff9e094,
+    inset 0 -5px 7px #25132b69,
+    0 3px 0 #392638,
+    0 5px 7px #190f2033;
+  transition: transform 64ms ease-out;
+}
+.app-shell .type-picker__option:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"])
+  .type-picker__sigil {
+  transform: translateY(2px);
+  box-shadow: inset 0 3px 7px #1e1228a0, 0 1px 0 #392638;
+}
+
+/* Ordinary controls get a brief echo; +/- follows the real finger only.
+   Route curtain begins after an actual painted pressed frame, not a 120ms pause. */
+.app-shell :is(
+  button:not(.combat-card, .arcana-card, .type-picker__option, .arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card),
+  .button,
+  .text-button,
+  a.top-bar__back,
+  .category-ribbon a,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"]
+):not(:disabled):not([aria-disabled="true"]):is(
+  :active,
+  [data-tap-active="true"],
+  [data-crystal-pressed="true"]
+),
+.app-shell .arcanarium .arcana-nav a:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]),
+.bv-picker-sheet button:not(:disabled):is(:active, [data-crystal-pressed="true"]) {
+  transform: translate3d(0, 2px, 0) scale(0.988);
+  background: var(--crystal-surface);
+  border-color: var(--crystal-glint);
+  box-shadow: var(--crystal-shadow);
+  filter: none;
+}
+.app-shell :is(
+  button:not(.combat-card, .arcana-card, .type-picker__option, .arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card),
+  .button,
+  .text-button,
+  .category-ribbon a
+):disabled,
+.app-shell :is(button, .button)[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: inset 0 1px 2px #120a244d;
+}
+
+/* Repeating reading controls: mechanical movement follows each finger contact
+   with a very short return. No post-click echo, interpolation of shadow or
+   delayed update to the page count. */
+.app-shell .book-folio .folio-page-stepper button.folio-step {
+  --crystal-facet: #987d781a;
+  --crystal-top: #f8eadb;
+  --crystal-mid: #e6d4c2;
+  --crystal-base: #bda79c;
+  --crystal-ledge: #2b1b32;
+  --crystal-glint: #bba391;
+  --crystal-step-shadow:
+    inset 0 1px 1px #ffffffb0,
+    inset 0 -3px 4px #60475b38,
+    0 3px 0 var(--crystal-ledge),
+    0 4px 5px #1a10253d;
+  background:
+    radial-gradient(circle at 26% 16%, #fff9eea8, transparent 49%),
+    repeating-linear-gradient(128deg, transparent 0 12px, #9b7a751a 13px, transparent 14px 24px),
+    linear-gradient(155deg, var(--crystal-top), var(--crystal-mid) 53%, var(--crystal-base));
+  color: #663758;
+  border-color: var(--crystal-glint);
+  box-shadow: var(--crystal-step-shadow);
+  transition: transform 48ms ease-out;
+}
+.app-shell .book-folio .folio-page-stepper button.folio-step:not(:disabled):is(
+  :active, [data-tap-active="true"]
+) {
+  transform: translate3d(0, 2px, 0) scale(0.984);
+  box-shadow: var(--crystal-step-shadow);
+  border-color: var(--crystal-glint);
+}
+
+/* Native DOM dialogs are portalled to document.body, outside .app-shell.
+   The selector above keeps their small calendar/choice keys crystalline too. */
+.bv-picker-sheet button:focus-visible {
+  outline: 3px solid #825268;
+  outline-offset: 3px;
+}
+
+/* A selected state is not substituted for focus; retain the strong mint ring. */
+.app-shell :is(button, a.button, .text-button, .category-ribbon a):focus-visible,
+.app-shell .primary-dock__link:focus-visible {
+  outline: 3px solid #a7eee2;
+  outline-offset: 3px;
+}
+
+/* Contrast and reduced motion are preferences, not a reason to lose feedback. */
+.app-shell[data-high-contrast="true"] :is(
+  button:not(.combat-card, .arcana-card, .type-picker__option, .arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card),
+  .button,
+  .text-button,
+  .category-ribbon a
+) {
+  background: #101010;
+  color: #fff;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 0 #fff;
+  text-shadow: none;
+}
+.app-shell[data-high-contrast="true"] :is(button, .button):is(
+  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
+) {
+  border-color: #ffdf74;
+  box-shadow: inset 0 0 0 2px #ffdf74;
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-shell .book-folio .folio-page-stepper button.folio-step {
+    transition: none;
+  }
+  .app-shell :is(button, .button, .text-button, .category-ribbon a, .primary-dock__link, .primary-dock__medallion, .type-picker__sigil),
+  .bv-picker-sheet button {
+
+    transition: none;
+  }
+  .app-shell :is(button, .button, .text-button, .category-ribbon a, .primary-dock__link):is(
+    :active, [data-tap-active="true"], [data-crystal-pressed="true"]
+  ),
+  .app-shell .primary-dock__link:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]) .primary-dock__medallion,
+  .app-shell .book-folio .folio-page-stepper button.folio-step:is(:active, [data-tap-active="true"]) {
+    transform: none;
+  }
+}
+.app-shell[data-reduced-motion="true"] :is(button, .button, .text-button, .category-ribbon a, .primary-dock__link, .primary-dock__medallion, .type-picker__sigil),
+.app-shell[data-reduced-motion="true"] .book-folio .folio-page-stepper button.folio-step {
+  transition: none;
+}
+.app-shell[data-reduced-motion="true"] :is(button, .button, .text-button, .category-ribbon a, .primary-dock__link):is(
+  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
+),
+.app-shell[data-reduced-motion="true"] .primary-dock__link:is(
+  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
+) .primary-dock__medallion,
+.app-shell[data-reduced-motion="true"] .book-folio .folio-page-stepper button.folio-step:is(:active, [data-tap-active="true"]) {
+  transform: none;
+}
+
+
+/* BF-5.7A/C1-C3 — Collection-only frontispiece and compact arcane access.
+   The WebView may paint beneath Android's status bar; safe inset + a modest
+   visible allowance keeps the first filigree clear without moving the dock. */
+.app-shell[data-route="colecao"]:has(.realm-intro) .app-content {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 1.65rem);
+}
+
+/* The chapter title already names the place. Actions are a slim independent
+   row, without a second visible 'Seus registros / Coleção' heading. */
+.app-shell[data-route="colecao"] .collection-actions {
+  justify-content: flex-start;
+  margin-top: 0.65rem;
+  margin-bottom: 1rem;
+}
+.app-shell[data-route="colecao"] .collection-actions .section-heading__actions {
+  justify-content: flex-start;
+}
+
+/* An enchanted amethyst seal, not a large competing primary CTA. */
+.app-shell[data-route="colecao"] .collection-arcana-link {
+  --crystal-facet: #f1d9eb15;
+  --crystal-top: #5c4565;
+  --crystal-mid: #3d2b49;
+  --crystal-base: #261e35;
+  --crystal-glint: #c9a9a8;
+  --crystal-ledge: #140f21;
+  width: fit-content;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 2.55rem;
+  margin: 0.05rem 0 0.45rem;
+  padding: 0.42rem 0.8rem;
+  gap: 0.38rem;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  border-radius: 0.65rem 1.1rem 0.65rem 1.1rem;
+  font-size: clamp(0.78rem, 2.65vw, 0.9rem);
+  font-weight: 650;
+  line-height: 1.25;
+  text-align: left;
+  text-decoration: none;
+  white-space: normal;
+}
+.app-shell[data-route="colecao"] .collection-arcana-link::before {
+  display: none;
+}
+.app-shell[data-route="colecao"] .collection-arcana-link__sigil {
+  display: inline-grid;
+  flex: 0 0 1.5rem;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid #e3bb9e85;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 24%, #d9b9d344, #35263f 72%);
+  box-shadow: inset 0 1px 0 #ffe7db5c;
+  color: #f3cda8;
+  font: 1.05rem/1 Georgia, serif;
+}
+.app-shell[data-route="colecao"] .collection-arcana-link__label {
+  min-width: 0;
+}
+.app-shell[data-route="colecao"] .collection-arcana-link__destination {
+  color: #e9c4ba;
+  font-size: 0.87em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+@media (max-width: 370px) {
+  .app-shell[data-route="colecao"] .collection-arcana-link {
+    gap: 0.3rem;
+    padding-inline: 0.65rem;
+  }
+}
+
+/* G5: The crystal skin sets position:relative on generic buttons. The
+   exploration access is a viewport-level HUD control: it must remain fixed.
+   Without this specific restoration, computed position becomes relative and
+   the button slides above the viewport (confirmed in Playwright geometry). */
+.app-shell .library-page .canvas-access {
+  position: fixed;
+}
+
+/* BF-5.7A / G1 — two accessible story seals, not stacked cards covering
+   the 3D world. Keep both shortcuts 48px, count on the journal, and normal
+   native-back/dialogue behavior. No new overlay or running animation. */
+.app-shell .library-page .rpg-tools {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.42rem;
+  width: fit-content;
+  max-width: calc(100vw - 1.5rem);
+  right: max(0.8rem, env(safe-area-inset-right));
+  left: auto;
+  /* G8: move the two story seals another 12px toward the dock. */
+  bottom: calc(var(--dock-height) - 1.1rem + env(safe-area-inset-bottom));
+  padding: 0;
+}
+.app-shell .library-page .rpg-tools .rpg-tools__beacon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 0 3.25rem;
+  width: 3.25rem;
+  height: 3.25rem;
+  min-width: 3.25rem;
+  min-height: 3.25rem;
+  padding: 0;
+  gap: 0;
+  font-size: 1.25rem;
+  border-radius: 0.9rem 0.45rem 0.9rem 0.45rem;
+  box-shadow: var(--crystal-shadow);
+}
+.app-shell .library-page .rpg-tools .rpg-tools__beacon::before {
+  margin: 0;
+  flex: none;
+  line-height: 1;
+  font-size: 1.6rem;
+}
+.app-shell .library-page .rpg-tools .rpg-tools__beacon--journal::before {
+  font-size: 1.5rem;
+}
+.app-shell .library-page .rpg-tools .rpg-tools__beacon--rift::before {
+  font-size: 1.8rem;
+}
+.app-shell .library-page .rpg-tools .rpg-tools__count {
+  position: absolute;
+  right: 0.16rem;
+  bottom: 0.12rem;
+  font: 700 0.58rem/1.05 system-ui, sans-serif;
+  color: #ffe2af;
+  text-shadow: 0 1px 3px #110d25;
+  letter-spacing: 0;
+  pointer-events: none;
+}
+.app-shell .library-page .rpg-tools .rpg-tools__beacon:focus-visible {
+  outline: 3px solid #f2cc8d;
+  outline-offset: 3px;
+}
+.app-shell .library-page .rpg-shell--open .rpg-tools,
+.app-shell .library-page .rpg-shell[data-journal-open="true"] .rpg-tools {
+  display: none;
+}
+@media (orientation: landscape) and (max-height: 550px) {
+  .app-shell .library-page .rpg-tools {
+    bottom: calc(var(--dock-height) - 1.5rem + env(safe-area-inset-bottom));
+  }
+}

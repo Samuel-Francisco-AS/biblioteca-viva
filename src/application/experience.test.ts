@@ -31,13 +31,23 @@ describe("preferências de experiência", () => {
   it("permite reduzir ou manter movimento normal sobre o valor do sistema", () => {
     expect(
       resolveExperiencePreferences(
-        { highContrast: false, motion: "reduce", textSize: "default" },
+        {
+          highContrast: false,
+          motion: "reduce",
+          textSize: "default",
+          showCanvasAccessButton: false,
+        },
         false,
       ).reducedMotion,
     ).toBe(true);
     expect(
       resolveExperiencePreferences(
-        { highContrast: false, motion: "normal", textSize: "default" },
+        {
+          highContrast: false,
+          motion: "normal",
+          textSize: "default",
+          showCanvasAccessButton: false,
+        },
         true,
       ).reducedMotion,
     ).toBe(false);
@@ -63,6 +73,7 @@ describe("preferências de experiência", () => {
       highContrast: true,
       motion: "reduce",
       textSize: "larger",
+      showCanvasAccessButton: false,
     });
     expect(listener).toHaveBeenCalledTimes(3);
     expect(save).toHaveBeenLastCalledWith(service.preferences());

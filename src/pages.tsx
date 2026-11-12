@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { projectLivingScrolls } from "./application/livingScrolls";
+import type { ExperiencePreferencesPort } from "./application";
 import {
   schedulePassage,
   beginPassage,
@@ -28,6 +29,7 @@ import type {
 import { isDiagnosticsEnabled } from "./app/diagnosticsAvailability";
 import { completeStartupExperience } from "./startupExperience";
 import { CanvasWelcome } from "./features/library/CanvasWelcome";
+import { useExperiencePreferences } from "./useExperiencePreferences";
 
 const diagnosticsBuildEnabled =
   import.meta.env.VITE_ENABLE_DIAGNOSTICS === "true";
@@ -40,6 +42,7 @@ const PerformanceScenarioHarness = diagnosticsBuildEnabled
   : undefined;
 
 export interface LibraryApplication {
+  readonly experience?: ExperiencePreferencesPort;
   readonly inhabitantContinuity?: InhabitantContinuityPort;
   readonly nightLightingContinuity?: NightLightingPort;
   readonly events?: {
@@ -161,6 +164,10 @@ function LibraryPageContent({
     PerformanceScenarioHarness &&
     new URLSearchParams(location.search).get("worldScenario") === "true";
   const navigate = useNavigate();
+  const { showCanvasAccessButton: storedCanvasAccessButton } =
+    useExperiencePreferences(application?.experience);
+  const showCanvasAccessButton =
+    application?.experience ? storedCanvasAccessButton : true;
   const [snapshot, setSnapshot] = useState<LibraryPageSnapshot>();
   const [selectableObjectsState, setSelectableObjectsState] =
     useState<ApplicationBound<readonly WorldSelectableObject[]>>();
@@ -171,6 +178,18 @@ function LibraryPageContent({
   const [worldStatusState, setWorldStatusState] =
     useState<ApplicationBound<WorldHostStatus>>();
   const [toolsOpen, setToolsOpen] = useState(false);
+  // The Library stays mounted behind other routes. Hide the panel in the
+  // same render as the preference change, and clear its internal state so
+  // re-enabling the button cannot reopen an orphaned exploration overlay.
+  const visibleToolsOpen = showCanvasAccessButton && toolsOpen;
+  useEffect(() => {
+    // Preferences are an external application store. Clear the transient
+    // panel state inside its change notification, rather than synchronously
+    // setting state in the body of a React effect.
+    return application?.experience?.subscribe((preferences) => {
+      if (!preferences.showCanvasAccessButton) setToolsOpen(false);
+    });
+  }, [application?.experience]);
   const pageRef = useRef<HTMLElement>(null);
   const portalFlight = useRef<(() => void) | null>(null);
   useEffect(() => () => portalFlight.current?.(), []);
@@ -240,10 +259,11 @@ function LibraryPageContent({
     if (!application) return;
     if (nextSelection?.id === "portal:duelo-arcano") {
       if (portalFlight.current) return;
-      beginPassage("/arcanario/duelos");
+      // The lunar gate enters the Arcanarium Portal; duel is a room within it.
+      beginPassage("/arcanario");
       portalFlight.current = schedulePassage(() => {
         portalFlight.current = null;
-        void navigate("/arcanario/duelos");
+        void navigate("/arcanario");
       });
       return;
     }
@@ -435,19 +455,19 @@ function LibraryPageContent({
       className="library-page"
       ref={pageRef}
       aria-labelledby="library-title"
-      data-tools-open={toolsOpen || worldStatus === "failed"}
+      data-tools-open={visibleToolsOpen || worldStatus === "failed"}
     >
       <div className="library-scene-vignette" aria-hidden="true" />
       <h2 id="library-title" className="visually-hidden">
         Biblioteca Viva
       </h2>
       {active && worldStatus === "ready" && <CanvasWelcome />}
-      {worldStatus !== "failed" && (
+      {worldStatus !== "failed" && showCanvasAccessButton && (
         <button
           aria-controls="library-access-panels"
-          aria-expanded={toolsOpen}
+          aria-expanded={visibleToolsOpen}
           aria-label={
-            toolsOpen
+            visibleToolsOpen
               ? "Recolher ferramentas de exploração"
               : "Abrir ferramentas de exploração acessível"
           }
@@ -456,7 +476,7 @@ function LibraryPageContent({
           type="button"
         >
           <span aria-hidden="true">☷</span>
-          <span>{toolsOpen ? "Fechar painel" : "Acervo e habitantes"}</span>
+          <span>{visibleToolsOpen ? "Fechar painel" : "Acervo e habitantes"}</span>
         </button>
       )}
       <div className="library-access-panels" id="library-access-panels">

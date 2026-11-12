@@ -2,6 +2,7 @@ export const EXPERIENCE_PREFERENCE_DEFAULTS = Object.freeze({
   highContrast: false,
   motion: "system" as const,
   textSize: "default" as const,
+  showCanvasAccessButton: false,
 });
 
 export type MotionPreference = "system" | "reduce" | "normal";
@@ -11,12 +12,14 @@ export interface ExperiencePreferences {
   readonly highContrast: boolean;
   readonly motion: MotionPreference;
   readonly textSize: TextSizePreference;
+  readonly showCanvasAccessButton: boolean;
 }
 
 export interface EffectiveExperiencePreferences {
   readonly highContrast: boolean;
   readonly reducedMotion: boolean;
   readonly textSize: TextSizePreference;
+  readonly showCanvasAccessButton: boolean;
 }
 
 export interface ExperienceSettingsPort {
@@ -41,6 +44,7 @@ export interface ExperiencePreferencesPort {
   setHighContrast(this: void, enabled: boolean): Promise<void>;
   setMotion(this: void, preference: MotionPreference): Promise<void>;
   setTextSize(this: void, preference: TextSizePreference): Promise<void>;
+  setShowCanvasAccessButton(this: void, enabled: boolean): Promise<void>;
   subscribe(this: void, listener: ExperiencePreferenceListener): () => void;
 }
 
@@ -54,6 +58,7 @@ export function resolveExperiencePreferences(
       preferences.motion === "reduce" ||
       (preferences.motion === "system" && systemReducedMotion),
     textSize: preferences.textSize,
+    showCanvasAccessButton: preferences.showCanvasAccessButton,
   });
 }
 
@@ -95,6 +100,10 @@ export class ExperiencePreferencesService implements ExperiencePreferencesPort {
 
   setTextSize(preference: TextSizePreference): Promise<void> {
     return this.update({ ...this.current, textSize: preference });
+  }
+
+  setShowCanvasAccessButton(enabled: boolean): Promise<void> {
+    return this.update({ ...this.current, showCanvasAccessButton: enabled });
   }
 
   subscribe(listener: ExperiencePreferenceListener): () => void {

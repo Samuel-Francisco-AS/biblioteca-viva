@@ -38,6 +38,9 @@ export function NarrativePanel({
   const [journal, setJournal] = useState(false);
   const choices =
     node?.choices.filter((c) => matches(c.condition, state)) ?? [];
+  const completedStories = QUEST_IDS.filter(
+    (quest) => state.quests[quest].status === "resolved",
+  ).length;
 
   // Avoid expensive full-subtree :has() style invalidation when a story
   // materializes on top of the continuously rendered Three.js world.
@@ -157,22 +160,29 @@ export function NarrativePanel({
       data-journal-open={journal ? "true" : undefined}
       aria-label="Histórias da Biblioteca"
     >
-      <div className="rpg-tools">
+      <div className="rpg-tools" aria-label="Atalhos das histórias">
         <button
           type="button"
+          className="rpg-tools__beacon rpg-tools__beacon--journal"
+          aria-label={`Diário de histórias · ${completedStories}/5`}
           aria-expanded={journal}
+          title="Diário de histórias"
           onClick={() => setJournal(!journal)}
         >
-          Diário de histórias ·{" "}
-          {
-            QUEST_IDS.filter((q) => state.quests[q].status === "resolved")
-              .length
-          }
-          /5
+          <span className="visually-hidden">Diário de histórias</span>
+          <span className="rpg-tools__count" aria-hidden="true">
+            {completedStories}/5
+          </span>
         </button>
         {!state.active && (
-          <button type="button" onClick={() => session.open("rift")}>
-            A Noite da Fenda Lilás
+          <button
+            type="button"
+            className="rpg-tools__beacon rpg-tools__beacon--rift"
+            aria-label="A Noite da Fenda Lilás"
+            title="A Noite da Fenda Lilás"
+            onClick={() => session.open("rift")}
+          >
+            <span className="visually-hidden">A Noite da Fenda Lilás</span>
           </button>
         )}
       </div>

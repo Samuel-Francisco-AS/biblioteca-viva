@@ -511,7 +511,7 @@ export function WorldHost({
                         runtimeRef.current?.selectObject("portal:duelo-arcano")
                       }
                     >
-                      Abrir Salão de Duelos
+                      Abrir Portal do Arcanário
                     </button>
                   )}
                 </div>

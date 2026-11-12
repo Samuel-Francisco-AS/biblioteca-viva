@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import { schedulePassage, beginPassage } from "./interactionContinuity";
+import { useEffect, useRef } from "react";
+import { schedulePressedPassage } from "./crystalPress";
+import { cancelPassage } from "./interactionContinuity";
 import { preloadRoute } from "./routeModules";
 
 import {
@@ -62,8 +63,18 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
   const navigate = useNavigate();
   const flight = useRef<(() => void) | null>(null);
   const flightOrigin = useRef<string | null>(null);
-  useEffect(() => () => flight.current?.(), []);
+  const pendingLink = useRef<HTMLAnchorElement | null>(null);
+  useEffect(
+    () => () => {
+      flight.current?.();
+      pendingLink.current?.removeAttribute("data-pending");
+    },
+    [],
+  );
   useEffect(() => {
+    // Avoid reconciling the entire dock in response to a visual press.
+    pendingLink.current?.removeAttribute("data-pending");
+    pendingLink.current = null;
     if (flightOrigin.current !== null && flightOrigin.current !== pathname) {
       flight.current?.();
       flight.current = null;
@@ -71,9 +82,6 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
     }
   }, [pathname]);
   const activeRouteId = primaryRouteIdForPath(pathname);
-  const [passage, setPassage] = useState<{ from: string; to: string }>();
-  if (passage && passage.from !== pathname) setPassage(undefined);
-  const pending = passage?.from === pathname && passage.to !== pathname;
 
   return (
     <nav aria-label="Navegação principal" className="primary-dock">
@@ -92,7 +100,6 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                 aria-current={active ? "page" : undefined}
                 aria-label={route.primaryNavigation.accessibleLabel}
                 className="primary-dock__link"
-                data-pending={pending && passage.to === route.path}
                 to={route.path}
                 onClick={(event) => {
                   if (
@@ -105,20 +112,29 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                   )
                     return;
                   event.preventDefault();
+                  const hadPendingFlight = flight.current !== null;
                   flight.current?.();
+                  flight.current = null;
+                  pendingLink.current?.removeAttribute("data-pending");
+                  pendingLink.current = null;
                   if (active) {
-                    setPassage(undefined);
+                    // A tap on the current tab cancels an uncommitted passage
+                    // instead of leaving an opaque veil waiting forever.
+                    if (hadPendingFlight) cancelPassage();
+                    flightOrigin.current = null;
                     return;
                   }
                   flightOrigin.current = pathname;
-                  setPassage({ from: pathname, to: route.path });
-                  beginPassage(route.path);
-                  flight.current = schedulePassage(() => {
+                  pendingLink.current = event.currentTarget;
+                  pendingLink.current.setAttribute("data-pending", "true");
+                  flight.current = schedulePressedPassage(route.path, () => {
                     flight.current = null;
                     flightOrigin.current = null;
+                    pendingLink.current?.removeAttribute("data-pending");
+                    pendingLink.current = null;
                     preloadRoute(route.path);
                     void navigate(route.path);
-                  });
+                  }, event.detail > 0);
                 }}
                 onPointerEnter={(event) => {
                   if (event.pointerType === "mouse") preloadRoute(route.path);
