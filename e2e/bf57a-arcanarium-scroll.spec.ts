@@ -64,7 +64,10 @@ test("BF-5.7A: opening a catalogue card after scrolling begins at its artwork", 
   await tile.click();
   await expect(page).toHaveURL(/\/arcanario\/cartas\//);
   await expect(
-    page.getByRole("heading", { name: "Carta fictícia para o teste de rolagem" }),
+    page.getByRole("heading", {
+      level: 2,
+      name: "Carta fictícia para o teste de rolagem",
+    }),
   ).toBeVisible();
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
 });
