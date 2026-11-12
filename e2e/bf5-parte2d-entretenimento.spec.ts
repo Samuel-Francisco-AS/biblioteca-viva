@@ -53,7 +53,7 @@ test("seis combinações de formato mantêm as duas estruturas, campos opcionais
     );
     const saved = await page.evaluate(async (entryId) => {
       const db = await new Promise<IDBDatabase>((resolve, reject) => {
-        const r = indexedDB.open("biblioteca-viva");
+        const r = indexedDB.open("biblioteca-viva-bf57");
         r.onsuccess = () => resolve(r.result);
         r.onerror = () => reject(new Error("open"));
       });
