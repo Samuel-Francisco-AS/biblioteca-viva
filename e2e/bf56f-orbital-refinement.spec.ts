@@ -140,10 +140,14 @@ test("BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident wor
   await lunarPortal.focus();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/arcanario$/);
+  const arcanariumNav = page.getByRole("navigation", {
+    name: "Salas do Arcanário",
+  });
   await expect(
-    page
-      .getByRole("navigation", { name: "Salas do Arcanário" })
-      .getByRole("link", { name: "Duelo Arcano", exact: true }),
+    arcanariumNav.getByRole("link", { name: "Duelo Arcano", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    arcanariumNav.getByRole("link", { name: "Acervo", exact: true }),
   ).toBeVisible();
   await expect(canvas).toBeHidden();
   await expect(canvas).toHaveAttribute("data-active-frame-loops", "0");
