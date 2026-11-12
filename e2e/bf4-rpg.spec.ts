@@ -21,7 +21,7 @@ for (const fallback of [false, true]) {
       page.evaluate(
         () =>
           new Promise<string>((resolve, reject) => {
-            const request = indexedDB.open("biblioteca-viva");
+            const request = indexedDB.open("biblioteca-viva-bf57");
             request.onerror = () => reject(new Error("Fixture indisponível"));
             request.onsuccess = () => {
               const db = request.result;
