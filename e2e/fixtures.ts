@@ -98,7 +98,7 @@ async function seedBooks(page: Page, count: number): Promise<void> {
       readonly indexedDB: { open(name: string): IndexedDbOpenRequest };
     };
     await new Promise<void>((resolve, reject) => {
-      const openRequest = browser.indexedDB.open("biblioteca-viva");
+      const openRequest = browser.indexedDB.open("biblioteca-viva-bf57");
       openRequest.onerror = () =>
         reject(new Error("Não foi possível abrir o IndexedDB descartável."));
       openRequest.onsuccess = () => {
