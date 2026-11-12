@@ -1,20 +1,21 @@
-import { mkdir } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 test("BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident world", async ({
   page,
 }) => {
-  await page.setViewportSize({ width: 900, height: 700 });
-  await page.goto("/");
-  const canvas = page.locator("canvas");
+  // Validate the actual Moto G06-sized responsive HUD, rather than spending
+  // software-WebGL time screenshotting the scene at a desktop resolution before
+  // the first interaction. Playwright will retain a trace if this test fails.
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  const canvas = page.locator("canvas[data-three-world-canvas]");
   await expect(canvas).toHaveCount(1);
+  await expect(canvas).toHaveAttribute("data-fixture-status", "ready", {
+    timeout: 20_000,
+  });
   await expect(canvas).toHaveAttribute("data-active-frame-loops", "1");
   await canvas.evaluate((node) =>
     node.setAttribute("data-refinement-resident", "same"),
   );
-  await mkdir("docs/audits/evidence/bf56f-refinement", { recursive: true });
-  await page.screenshot({
-    path: "docs/audits/evidence/bf56f-refinement/lua-no-mundo.png",
-  });
   // The test exercises semantic navigation, not Canvas hit-testing. The
   // continuously animated WebGL surface can interfere with Playwright's
   // pointer-action stability check, although a real keyboard can activate
@@ -24,8 +25,57 @@ test("BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident wor
     name: "Abrir ferramentas de exploração acessível",
   });
   await expect(tools).toBeVisible();
-  await expect(tools).toBeInViewport();
   await expect(tools).toBeEnabled();
+  // A control may be CSS-visible yet placed outside the viewport. Record its
+  // real layout before acting; failure then distinguishes a HUD geometry issue
+  // from Playwright pointer stability or the WebGL renderer's frame load.
+  const hudLayout = await tools.evaluate((element) => {
+    const bounds = element.getBoundingClientRect();
+    const style = getComputedStyle(element);
+    const dock = document.querySelector(".primary-dock");
+    const dockBounds = dock?.getBoundingClientRect();
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const visibleWidth = Math.max(
+      0,
+      Math.min(width, bounds.right) - Math.max(0, bounds.left),
+    );
+    const visibleHeight = Math.max(
+      0,
+      Math.min(height, bounds.bottom) - Math.max(0, bounds.top),
+    );
+    return {
+      viewport: { width, height },
+      bounds: {
+        left: bounds.left,
+        top: bounds.top,
+        right: bounds.right,
+        bottom: bounds.bottom,
+        width: bounds.width,
+        height: bounds.height,
+      },
+      intersection: { width: visibleWidth, height: visibleHeight },
+      position: style.position,
+      cssBottom: style.bottom,
+      canvasDockHeight: getComputedStyle(
+        document.querySelector(".app-shell") ?? document.body,
+      ).getPropertyValue("--canvas-dock-height"),
+      dockBottom: dockBounds?.bottom ?? null,
+      documentScroll: { x: window.scrollX, y: window.scrollY },
+    };
+  });
+  await test.info().attach("lunar-access-layout.json", {
+    body: JSON.stringify(hudLayout, null, 2),
+    contentType: "application/json",
+  });
+  expect(
+    hudLayout.intersection.width,
+    `Acesso lunar fora da largura da viewport: ${JSON.stringify(hudLayout)}`,
+  ).toBeGreaterThan(0);
+  expect(
+    hudLayout.intersection.height,
+    `Acesso lunar fora da altura da viewport: ${JSON.stringify(hudLayout)}`,
+  ).toBeGreaterThan(0);
   await tools.focus();
   await page.keyboard.press("Enter");
   // The accessible name changes when opened, so do not query using the old
