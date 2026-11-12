@@ -11,7 +11,7 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import {
   createApplication,
   type ApplicationRuntime,
@@ -32,9 +32,13 @@ async function app() {
   apps.push(a);
   return a;
 }
+function RoutePathProbe() {
+  return <output data-testid="current-route">{useLocation().pathname}</output>;
+}
 function mount(a: ApplicationRuntime, path = "/arcanario") {
   return render(
     <MemoryRouter initialEntries={[path]}>
+      <RoutePathProbe />
       <Routes>
         <Route
           path="/arcanario/*"
@@ -81,6 +85,11 @@ it("removes the Duelo Arcano from the portal and redirects legacy duel rooms", a
   cleanup();
   mount(a, "/arcanario/duelos/arena/legacy");
   expect(await screen.findByRole("heading", { name: "O Arcanário" })).toBeVisible();
+  await waitFor(() =>
+    expect(screen.getByTestId("current-route")).toHaveTextContent(
+      /^\/arcanario$/,
+    ),
+  );
   expect(screen.queryByText("Salão dos duelos")).toBeNull();
 });
 
@@ -88,6 +97,11 @@ it("redirects legacy combat-card creation to the portal", async () => {
   const a = await app();
   mount(a, "/arcanario/oficina/nova?tipo=combat");
   expect(await screen.findByRole("heading", { name: "O Arcanário" })).toBeVisible();
+  await waitFor(() =>
+    expect(screen.getByTestId("current-route")).toHaveTextContent(
+      /^\/arcanario$/,
+    ),
+  );
   expect(screen.queryByText("Criar carta de combate")).toBeNull();
 });
 
@@ -117,6 +131,11 @@ it("hides legacy combat cards and keeps direct card access out of the active Ace
   cleanup();
   mount(a, `/arcanario/cartas/${encodeURIComponent(card.id)}`);
   expect(await screen.findByText("0 cartas encontradas")).toBeVisible();
+  await waitFor(() =>
+    expect(screen.getByTestId("current-route")).toHaveTextContent(
+      /^\/arcanario\/acervo$/,
+    ),
+  );
   expect(screen.queryByText("Carta TCG sintética")).toBeNull();
 });
 
