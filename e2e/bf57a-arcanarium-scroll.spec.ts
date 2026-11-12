@@ -70,4 +70,5 @@ test("BF-5.7A: opening a catalogue card after scrolling begins at its artwork", 
     }),
   ).toBeVisible();
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  await expect(page.locator("main#main-content")).toBeFocused();
 });

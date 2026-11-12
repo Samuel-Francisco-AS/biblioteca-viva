@@ -79,11 +79,30 @@ test("BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident wor
   ).toBeGreaterThan(0);
   await tools.focus();
   await page.keyboard.press("Enter");
-  // The accessible name changes when opened, so do not query using the old
-  // name after activation.
-  await expect(
-    page.getByRole("button", { name: "Recolher ferramentas de exploração" }),
-  ).toHaveAttribute("aria-expanded", "true");
+
+  // The React state is reflected in both the parent data attribute and the
+  // button. Verify the state transition first, then take one atomic DOM
+  // snapshot instead of polling a continuously rendered WebGL scene for
+  // 10 seconds and losing the actual evidence when Chromium times out.
+  const libraryPage = page.locator(".library-page");
+  await expect(libraryPage).toHaveAttribute("data-tools-open", "true", {
+    timeout: 5_000,
+  });
+  const openState = await libraryPage.evaluate((element) => {
+    const control = element.querySelector<HTMLButtonElement>(".canvas-access");
+    return {
+      parentState: element.getAttribute("data-tools-open"),
+      label: control?.getAttribute("aria-label") ?? null,
+      expanded: control?.getAttribute("aria-expanded") ?? null,
+      visible: control ? getComputedStyle(control).visibility : null,
+    };
+  });
+  await test.info().attach("lunar-access-open-state.json", {
+    body: JSON.stringify(openState, null, 2),
+    contentType: "application/json",
+  });
+  expect(openState.label).toBe("Recolher ferramentas de exploração");
+  expect(openState.expanded).toBe("true");
 
   const worldDetails = page.locator("details.world-explore");
   await expect(worldDetails).toBeVisible();

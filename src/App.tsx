@@ -271,7 +271,15 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
 
   useEffect(() => {
     if (previousPathRef.current !== location.pathname) {
-      mainRef.current?.focus();
+      // The Arcanarium owns its room-to-room scroll position. Native focus()
+      // scrolls the main element just below the global header (about 65px),
+      // undoing RoomCommitted's scroll-to-top after the room is painted.
+      // Keep the accessible main focus without triggering a second scroll.
+      mainRef.current?.focus(
+        location.pathname.startsWith("/arcanario")
+          ? { preventScroll: true }
+          : undefined,
+      );
       previousPathRef.current = location.pathname;
     }
   }, [location.pathname]);
