@@ -93,7 +93,7 @@ it("upgrades v10 verbatim, reopens and round-trips/restores v6 with schedule, da
     data: await store.read(),
   });
   const parsed = await codec.inspect(backup.content);
-  expect(parsed.summary.formatVersion).toBe(11);
+  expect(parsed.summary.formatVersion).toBe(12);
   await store.replace(parsed.data);
   expect(await db.libraryEntries.get(entry.id)).toEqual(updated);
   expect(await profile.load()).toEqual({ weightKg: 70 });

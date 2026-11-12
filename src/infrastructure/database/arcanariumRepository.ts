@@ -28,12 +28,10 @@ export class DexieArcanariumRepository implements ArcanariumRepository {
       this.db.arcanariumCards
         .filter(
           (c) =>
-            !c.archived &&
-            c.type !== "combat" &&
-            (!c.id.startsWith("exam:") || available.has(c.id)),
+            !c.archived && (!c.id.startsWith("exam:") || available.has(c.id)),
         )
         .count(),
-      this.db.arcanariumDecks.filter((d) => !d.combat).count(),
+      this.db.arcanariumDecks.count(),
       this.db.cardSessions.where("kind").equals("flashcard_review").count(),
     ]);
     return { cards, decks, reviews };

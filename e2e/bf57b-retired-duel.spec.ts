@@ -17,9 +17,7 @@ for (const [path, label] of retiredRoutes) {
   }) => {
     await page.goto(path, { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/arcanario$/);
-    await expect(
-      page.getByRole("heading", { name: "O Arcanário", exact: true }),
-    ).toBeVisible();
+    await expect(page.locator("h1", { hasText: "O Arcanário" })).toBeVisible();
     const navigation = page.getByRole("navigation", {
       name: "Salas do Arcanário",
     });
@@ -39,9 +37,7 @@ test("BF-5.7B2.3: retired combat-card creation returns to Portal", async ({
     waitUntil: "domcontentloaded",
   });
   await expect(page).toHaveURL(/\/arcanario$/);
-  await expect(
-    page.getByRole("heading", { name: "O Arcanário", exact: true }),
-  ).toBeVisible();
+  await expect(page.locator("h1", { hasText: "O Arcanário" })).toBeVisible();
   await expect(page.getByText("Criar carta de combate")).toHaveCount(0);
 });
 

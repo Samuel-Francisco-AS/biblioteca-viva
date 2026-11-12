@@ -10,7 +10,6 @@ import { Choices } from "./Choices";
 import { useMemo, useState } from "react";
 import {
   Link,
-  Navigate,
   useNavigate,
   useParams,
   useSearchParams,
@@ -71,7 +70,6 @@ export function Catalogue({
     () =>
       data.cards.filter(
         (c) =>
-          c.type !== "combat" &&
           c.archived === archived &&
           (archived
             ? !packOwned(c) || available.has(c.id)
@@ -234,7 +232,8 @@ export function Catalogue({
           </button>
           <span>
             {" "}
-            Página {page} de {Math.ceil(cards.length / CATALOGUE_PAGE_SIZE)}{" "}
+            Página {page} de{" "}
+            {Math.ceil(cards.length / CATALOGUE_PAGE_SIZE)}{" "}
           </span>
           <button
             disabled={page * CATALOGUE_PAGE_SIZE >= cards.length}
@@ -246,35 +245,29 @@ export function Catalogue({
       )}
       {cards.length ? (
         <div className="arcana-grid">
-          {cards.slice(
-            (page - 1) * CATALOGUE_PAGE_SIZE,
-            page * CATALOGUE_PAGE_SIZE,
-          ).map((c) => (
-            <Link
-              className="arcana-card-link"
-              key={c.id}
-              to={cardPath(c.id)}
-              aria-label={`Abrir ${cardTitle(c.content)}`}
-            >
-              <ArcanaCard
-                compact
-                app={app}
-                content={c.content}
-                official={c.origin.kind === "official"}
-              />
-              <span className="arcana-card-caption">
-                {cardTitle(c.content)}
-              </span>
-              <span className="arcana-muted">
-                {c.origin.kind === "study"
-                  ? "Originária de Estudo"
-                  : c.origin.kind === "local"
-                    ? "Carta autoral"
-                    : "Acervo importado"}{" "}
-                · revisão {c.revision}
-              </span>
-            </Link>
-          ))}
+          {cards
+            .slice((page - 1) * CATALOGUE_PAGE_SIZE, page * CATALOGUE_PAGE_SIZE)
+            .map((c) => (
+              <Link
+                className="arcana-card-link"
+                key={c.id}
+                to={cardPath(c.id)}
+                aria-label={`Abrir ${cardTitle(c.content)}`}
+              >
+                <ArcanaCard compact app={app} content={c.content} />
+                <span className="arcana-card-caption">
+                  {cardTitle(c.content)}
+                </span>
+                <span className="arcana-muted">
+                  {c.origin.kind === "study"
+                    ? "Originária de Estudo"
+                    : c.origin.kind === "local"
+                      ? "Carta autoral"
+                      : "Acervo importado"}{" "}
+                  · revisão {c.revision}
+                </span>
+              </Link>
+            ))}
         </div>
       ) : (
         <div className="arcana-empty">
@@ -300,7 +293,6 @@ export function CardDetail() {
   const { id = "" } = useParams();
   const { data, entries, app, reload } = useArcana();
   const card = data.cards.find((c) => c.id === id);
-  if (card?.type === "combat") return <Navigate to="/arcanario/acervo" replace />;
   return card ? (
     <Detail
       key={card.id}
@@ -399,12 +391,7 @@ function Detail({
               </details>
             </section>
           ) : (
-            <ArcanaCard
-              content={shown.content}
-              app={app}
-              flipped={flipped}
-              official={card.origin.kind === "official"}
-            />
+            <ArcanaCard content={shown.content} app={app} flipped={flipped} />
           )}
           {(shown.content.type === "flashcard" ||
             shown.content.type === "memory") && (

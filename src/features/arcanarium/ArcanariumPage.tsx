@@ -90,21 +90,17 @@ export default function ArcanariumPage({
 }) {
   const [snapshot, setSnapshot] = useState<
     Omit<ArcanaContext, "reload"> & {
-      scope: "portal" | "arena" | "full";
+      scope: "portal" | "full";
       counts?: { cards: number; decks: number; reviews: number };
     }
   >();
   const [error, setError] = useState("");
   const location = useLocation();
   const atPortal = location.pathname.replace(/\/$/, "") === "/arcanario";
-  const scope = atPortal
-    ? "portal"
-    : "full";
+  const scope = atPortal ? "portal" : "full";
   const readSnapshot = useCallback(async (): Promise<typeof snapshot> => {
     if (!app) return undefined;
     if (scope !== "full") {
-      // The 3D arena reads its match through DuelService, not a global
-      // materialization of every card, note and personal record.
       const counts = atPortal ? await app.arcanarium.overview() : undefined;
       return { app, data: emptyArcanarium(), entries: [], scope, counts };
     }

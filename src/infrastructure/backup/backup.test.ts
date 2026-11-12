@@ -161,6 +161,21 @@ describe("backup pós-reset", () => {
     ).rejects.toMatchObject({ code: "MISSING_CHECKSUM" });
   });
 
+  it("rejeita explicitamente backups que ainda carregam dados TCG", async () => {
+    const codec = new JsonBackupCodec();
+    await expect(
+      codec.inspect(
+        JSON.stringify({
+          kind: BACKUP_KIND,
+          formatVersion: 11,
+          data: { arcanarium: { cards: [{ type: "combat" }] } },
+        }),
+      ),
+    ).rejects.toMatchObject({
+      code: "INVALID_BACKUP_DATA",
+    });
+  });
+
   it("restaura backups de experiência pré-G8 sem invalidar seu checksum original", async () => {
     const codec = new JsonBackupCodec();
     const artifact = await codec.encode({

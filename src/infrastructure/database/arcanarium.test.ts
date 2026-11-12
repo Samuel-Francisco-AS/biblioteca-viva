@@ -391,7 +391,7 @@ it("round-trips v7 cards, tags, dynamic/static decks, tombstones, revisions and 
     databaseVersion: 15,
     data,
   });
-  expect(artifact.summary.formatVersion).toBe(11);
+  expect(artifact.summary.formatVersion).toBe(12);
   await expect(
     source.codec.encode({
       appVersion: "test",

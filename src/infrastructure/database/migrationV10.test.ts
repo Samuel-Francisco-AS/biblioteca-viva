@@ -78,7 +78,7 @@ it("upgrades v9 without rewriting entries, restores v6 backups with and without 
     data: await snapshots.read(),
   });
   const restored = await codec.inspect(backup.content);
-  expect(restored.summary.formatVersion).toBe(11);
+  expect(restored.summary.formatVersion).toBe(12);
   expect(restored.data.libraryEntries).toEqual([updated]);
   expect(restored.data.sessions).toEqual([timed]);
   expect(

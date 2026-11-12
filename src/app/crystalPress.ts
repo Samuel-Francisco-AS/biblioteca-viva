@@ -13,9 +13,10 @@ export function echoCrystalPress(control: HTMLElement): void {
   if (
     control.matches(":disabled, [aria-disabled='true']") ||
     control.matches(
-      ".book-card__link, .combat-card, .arcana-card, .folio-step, [data-crystal-repeat='true']",
+      ".book-card__link, .arcana-card, .folio-step, [data-crystal-repeat='true']",
     )
-  ) return;
+  )
+    return;
   const old = echoes.get(control);
   if (old !== undefined) clearTimeout(old);
   control.setAttribute("data-crystal-pressed", "true");

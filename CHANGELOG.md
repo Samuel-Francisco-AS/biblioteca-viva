@@ -1,3 +1,13 @@
+## 12/11/2026 — BF-5.7B2.4: remoção estrutural do TCG
+
+- Removidos motor, IA, serviço, contratos, arena, editores, replays, testes,
+  scripts e assets exclusivos do Duelo Arcano.
+- Preservados Arcanário educativo, funcionamento offline, Dexie v19, a base
+  `biblioteca-viva-bf57` e a lua orbital como portal para `/arcanario`.
+- Backup atual promovido para v12, com rejeição explícita de payloads TCG
+  antigos; validações de checksum, integridade e restauração educativa foram
+  mantidas. [Relatório](docs/BF-5_7B2_4_REMOCAO_ESTRUTURAL_TCG.md)
+
 ## 11/11/2026 — BF-5.6 O Arcanário: encerramento global com ressalvas
 
 - **Aceite explícito do proprietário** após a auditoria BF-5.6G: **A–G formalmente encerradas com ressalvas**. [Fechamento global](docs/BF-5_6_FECHAMENTO_GLOBAL_2026-11-11.md) e [matriz da G](docs/audits/evidence/bf56g/inventory.json).
@@ -1225,3 +1235,12 @@ Mudanças observáveis da Biblioteca Viva seguem a estrutura do Keep a Changelog
 - Tarefas de interação com estados previsíveis e leases exclusivos recuperáveis.
 - Ciclo físico demonstrável com o mesmo livro cenográfico selecionável: pegar, transportar, posicionar e devolver.
 - Sem nova migração Dexie/backup; BF-5.5A preservada. Testes Moto G06 e E2E global permanecem pendentes/vermelhos conforme relatório.
+## 12/11/2026 — BF-5.7B2.4: remoção estrutural do TCG
+
+- Removidos motor, IA, serviço, contratos, arena, editores, replays, testes,
+  scripts e assets exclusivos do Duelo Arcano.
+- Preservados Arcanário educativo, funcionamento offline, Dexie v19, a base
+  `biblioteca-viva-bf57` e a lua orbital como portal para `/arcanario`.
+- Backup atual promovido para v12, com rejeição explícita de payloads TCG
+  antigos; validações de checksum, integridade e restauração educativa foram
+  mantidas. [Relatório](docs/BF-5_7B2_4_REMOCAO_ESTRUTURAL_TCG.md)

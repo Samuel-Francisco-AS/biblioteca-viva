@@ -8,7 +8,7 @@ import {
   cardSchema,
   type KnowledgeTag,
 } from "./arcanarium";
-it("discriminates four semantic families without graphics or executable effects", () => {
+it("discriminates the educational semantic families without executable effects", () => {
   expect(
     cardContentSchema.parse({
       type: "flashcard",
@@ -23,22 +23,6 @@ it("discriminates four semantic families without graphics or executable effects"
       entryIds: [],
     }).type,
   ).toBe("memory");
-  expect(
-    cardContentSchema.parse({
-      type: "combat",
-      name: "Criatura fictícia",
-      attributes: { cost: 2 },
-      effects: [{ definitionId: "draw", parameters: { count: 1 } }],
-    }).type,
-  ).toBe("combat");
-  expect(
-    cardContentSchema.safeParse({
-      type: "combat",
-      name: "X",
-      attributes: {},
-      effects: [{ script: "alert(1)" }],
-    }).success,
-  ).toBe(false);
   const question = {
     type: "question",
     statement: "Enunciado",

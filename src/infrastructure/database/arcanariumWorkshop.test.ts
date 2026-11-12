@@ -404,7 +404,7 @@ it("round-trips v9 with B images and history; restores a checksummed original v7
     databaseVersion: 16,
     createdAt: now,
   });
-  expect(encoded.summary.formatVersion).toBe(11);
+  expect(encoded.summary.formatVersion).toBe(12);
   await target.snapshots.replace(
     (await target.backup.inspect(encoded.content)).data,
   );
