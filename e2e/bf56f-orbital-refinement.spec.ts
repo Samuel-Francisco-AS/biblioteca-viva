@@ -2,6 +2,11 @@ import { expect, test } from "@playwright/test";
 test("BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident world", async ({
   page,
 }) => {
+  // This end-to-end gate boots WebGL, opens nested semantic controls, then
+  // pauses and resumes the same renderer across a route. The software-backed
+  // Chromium runner needs a larger scenario budget; each check keeps its
+  // independent shorter timeout and does not accept an incorrect state.
+  test.setTimeout(60_000);
   // Validate the actual Moto G06-sized responsive HUD, rather than spending
   // software-WebGL time screenshotting the scene at a desktop resolution before
   // the first interaction. Playwright will retain a trace if this test fails.

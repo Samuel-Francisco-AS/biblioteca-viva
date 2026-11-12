@@ -120,6 +120,35 @@ const sixEntries: LibraryEntry[] = [
 ];
 
 describe("Página Biblioteca", () => {
+  it("exposes the same exploration state to visual UI and assistive technology", async () => {
+    renderLibrary(Promise.resolve([]));
+    const open = screen.getByRole("button", {
+      name: "Abrir ferramentas de exploração acessível",
+    });
+    expect(open).toHaveAttribute("aria-expanded", "false");
+    expect(document.querySelector(".library-page")).toHaveAttribute(
+      "data-tools-open",
+      "false",
+    );
+
+    await userEvent.click(open);
+    const close = screen.getByRole("button", {
+      name: "Recolher ferramentas de exploração",
+    });
+    expect(close).toHaveAttribute("aria-expanded", "true");
+    expect(document.querySelector(".library-page")).toHaveAttribute(
+      "data-tools-open",
+      "true",
+    );
+
+    await userEvent.click(close);
+    expect(open).toHaveAttribute("aria-expanded", "false");
+    expect(document.querySelector(".library-page")).toHaveAttribute(
+      "data-tools-open",
+      "false",
+    );
+  });
+
   it("apresenta fallback seguro quando a aplicação não está disponível", () => {
     render(
       <MemoryRouter>
