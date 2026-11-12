@@ -1,5 +1,18 @@
 # BF-5.7B1 — Auditoria técnica do Arcanário e handoff controlado para B2
 
+> **ATUALIZAÇÃO DE AUTORIZAÇÃO — 12/11/2026, após entrega da B2.1:** o proprietário esclareceu que **todos os dados atuais do APK são de teste e podem ser integralmente descartados**. **Revogadas para esta reforma:** obrigatoriedade de preservar `combat`/`combat_match` em backups antigos, manutenção de replay/engine histórico exclusivamente por compatibilidade, fixtures F2/F3 como gate de retirada, migração de partidas/cartas autorais e o bloqueio de B2.2 até aceite da [PR #53](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/53). Este relatório continua servindo como **inventário técnico**; os trechos CP4/CP5 e o prompt antigo são **históricos**, substituídos pela orientação abaixo e pela atualização do [plano BF-5.7B](BF-5_7B_ARCANARIO_REFORMA_PLANO.md). **Nenhum dado foi apagado por esta atualização documental.**
+
+### Handoff revisado — política de corte limpo (substitui CP5 antigo)
+
+1. **B2.2 / análise de reset:** verificar contratos de inicialização (`database.ts`, `createApplication.ts`), esquema, backup e rotas; registrar plano concreto de **inicialização limpa** dos dados atuais e como o usuário saberá que o reset é destrutivo. Evitar abrir schema antigo com parser novo antes do reset; não fazer limpeza parcial que deixe inconsistência.
+2. **B2.3 / remover produto TCG:** retirar navegação/rotas do duelo, semeio `ensureCatalogue`, editor e renderizador de combate, arena e imports; URLs antigas devem retornar de maneira previsível ao Portal. Preservar Portal, Acervo, Oficina, Ecos, Provações, Relicário e pacotes educativos.
+3. **B2.4 / depurar arquitetura:** depois de resolver acesso à lua orbital (mantê-la como portal do Arcanário, preferencialmente, ou decidir sua remoção), eliminar dependências 3D, CSS, assets, scripts e módulos exclusivos do duelo. Pode remover schemas e motor legados **se não forem mais necessários ao produto novo**; não manter TCG por compatibilidade que deixou de ser requisito.
+4. **B2.5 / novas garantias:** testar instalação limpa, funcionamento de flashcards/questões/memórias/treinos, novo backup/restauração, rotas antigas, inatividade de duelos e ausência de importações mortas. Não usar backups pessoais. Testes F2/F3 da PR #53 podem ser descartados/adaptados se verificarem comportamento aposentado.
+5. **B2.6 / aceite:** testes locais lint/typecheck/build/Vitest/E2E executáveis e gate Moto G06 quando houver APK. Relatar PASS/FAIL/não executado. Não executar reset real nesta auditoria, não fazer merge sem aceite.
+
+**Nova regra:** o que deve sobreviver é **a integridade e funcionalidade do aplicativo após um início limpo**, não o conteúdo descartável do APK atual. O objetivo é simplificar a arquitetura, sem deixar passivos de TCG espalhados ou enfraquecer validação de dados *novos*.
+
+
 **Data:** 12/11/2026  
 **Etapa:** B1 — Inventário, dependências, compatibilidade e decisão de implementação.  
 **Estado:** **auditoria estática remota concluída, com ressalvas**; B2 ainda **não implementada nem autorizada por este documento**.  
