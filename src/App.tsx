@@ -509,6 +509,10 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
               <Routes>
                 <Route path={APP_ROUTE_PATHS.library} element={null} />
                 <Route
+                  path="/arcanario/duelos/*"
+                  element={<Navigate to="/arcanario" replace />}
+                />
+                <Route
                   path="/arcanario/*"
                   element={<ArcanariumPage application={application} />}
                 />
