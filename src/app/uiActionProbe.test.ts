@@ -38,9 +38,7 @@ const start = () =>
   });
 it("keeps only route families without private route segments", () => {
   expect(uiRouteCategory("/registros/private/editar")).toBe("/registros/:id");
-  expect(uiRouteCategory("/arcanario/duelos/arena/secret")).toBe(
-    "/arcanario/duelos",
-  );
+  expect(uiRouteCategory("/arcanario/duelos/arena/secret")).toBe("/arcanario");
   expect(uiRouteCategory("/arcanario/private")).toBe("/arcanario");
 });
 it("is idle by default and measures RAFs, route stages, render durations and frame tails when enabled", () => {

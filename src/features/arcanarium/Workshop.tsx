@@ -1,4 +1,3 @@
-import { CombatEditor } from "../duel/CombatEditor";
 import { QuestionEditor } from "./QuestionEditor";
 import {
   useCallback,
@@ -9,6 +8,7 @@ import {
 } from "react";
 import {
   Link,
+  Navigate,
   useNavigate,
   useParams,
   useSearchParams,
@@ -62,11 +62,11 @@ export function Workshop() {
   const [params] = useSearchParams();
   const { data } = useArcana();
   const card = id === "nova" ? undefined : data.cards.find((c) => c.id === id);
+  if (params.get("tipo") === "combat")
+    return <Navigate to="/arcanario" replace />;
   const type =
     card?.type ??
-    (params.get("tipo") === "combat"
-      ? "combat"
-      : params.get("tipo") === "question"
+    (params.get("tipo") === "question"
         ? "question"
         : params.get("tipo") === "memory"
           ? "memory"
@@ -77,7 +77,6 @@ export function Workshop() {
         Carta indisponível. Seu rascunho local permanece preservado.
       </p>
     );
-  if (type === "combat") return <CombatEditor key={id} card={card} />;
   if (
     type === "question" &&
     !card?.archived &&
@@ -354,9 +353,6 @@ function Editor({
             to="/arcanario/oficina/nova?tipo=memory"
           >
             ❧ Lembrança · Relicário
-          </Link>
-          <Link to="/arcanario/oficina/nova?tipo=combat">
-            Criar carta de combate →
           </Link>
           <Link to="/arcanario/oficina/nova?tipo=question">
             ◇ Questão · Provações

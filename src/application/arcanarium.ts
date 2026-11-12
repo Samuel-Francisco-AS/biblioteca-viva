@@ -71,8 +71,8 @@ export class ArcanariumService {
     if (this.deps.arcanarium.overview) return this.deps.arcanarium.overview();
     const data = await this.list();
     return {
-      cards: data.cards.filter((c) => !c.archived).length,
-      decks: data.decks.length,
+      cards: data.cards.filter((c) => !c.archived && c.type !== "combat").length,
+      decks: data.decks.filter((d) => !d.combat).length,
       reviews: data.sessions.filter((s) => s.kind === "flashcard_review")
         .length,
     };

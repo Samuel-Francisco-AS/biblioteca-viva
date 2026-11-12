@@ -35,7 +35,6 @@ const MAX_ACTIONS = 20;
 const listeners = new Set<() => void>();
 const startTimes = new Map<number, number>();
 const arcanariumAreas = new Set([
-  "duelos",
   "acervo",
   "pacotes",
   "relicario",

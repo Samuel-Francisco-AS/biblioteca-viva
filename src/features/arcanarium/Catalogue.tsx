@@ -10,6 +10,7 @@ import { Choices } from "./Choices";
 import { useMemo, useState } from "react";
 import {
   Link,
+  Navigate,
   useNavigate,
   useParams,
   useSearchParams,
@@ -70,6 +71,7 @@ export function Catalogue({
     () =>
       data.cards.filter(
         (c) =>
+          c.type !== "combat" &&
           c.archived === archived &&
           (archived
             ? !packOwned(c) || available.has(c.id)
@@ -298,6 +300,7 @@ export function CardDetail() {
   const { id = "" } = useParams();
   const { data, entries, app, reload } = useArcana();
   const card = data.cards.find((c) => c.id === id);
+  if (card?.type === "combat") return <Navigate to="/arcanario/acervo" replace />;
   return card ? (
     <Detail
       key={card.id}
@@ -451,21 +454,13 @@ function Detail({
                 "Explicação independente: comentário editorial do Arcanário."}
             </p>
           )}
-          {card.type === "combat" && (
-            <Link
-              to={`/arcanario/oficina/nova?tipo=combat&copia=${encodeURIComponent(card.id)}`}
-            >
-              Criar cópia autoral desta carta
-            </Link>
-          )}
           <div className="arcana-actions">
             {!card.archived &&
               card.origin.kind !== "official" &&
               !packOwned(card) &&
               (card.type === "flashcard" ||
                 card.type === "memory" ||
-                card.type === "question" ||
-                card.type === "combat") && (
+                card.type === "question") && (
                 <Link
                   className="button button--primary"
                   to={editorPath(card.id)}

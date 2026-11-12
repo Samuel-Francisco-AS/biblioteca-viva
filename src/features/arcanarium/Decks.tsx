@@ -3,6 +3,7 @@ import { DynamicDeckEditor } from "./Provations";
 import { useState } from "react";
 import {
   Link,
+  Navigate,
   useNavigate,
   useParams,
   useSearchParams,
@@ -68,12 +69,7 @@ export function DeckEditor() {
   const { id } = useParams();
   const { data } = useArcana();
   const deck = id ? data.decks.find((d) => d.id === id) : undefined;
-  if (deck?.combat)
-    return (
-      <Link to={`/arcanario/duelos/baralhos/${encodeURIComponent(deck.id)}`}>
-        Abrir baralho no Duelo Arcano →
-      </Link>
-    );
+  if (deck?.combat) return <Navigate to="/arcanario/baralhos" replace />;
   if (id && !deck) return <p role="alert">Baralho indisponível.</p>;
   if (
     deck?.selection.kind === "dynamic" ||
