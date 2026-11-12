@@ -1,3 +1,4 @@
+import { retireCombatData } from "../infrastructure/database/retireCombatData";
 import type { PackCataloguePort } from "../application/packCatalogue";
 import { LocalPackCatalogue } from "../infrastructure/packs/localCatalogue";
 import { EducationalPacksService } from "../application/educationalPacks";
@@ -283,6 +284,12 @@ export async function createApplication(
     options.databaseName ?? DATABASE_NAME,
   );
   await database.open();
+  try {
+    await retireCombatData(database);
+  } catch (error) {
+    database.close();
+    throw error;
+  }
   await database.metadata.put({
     key: SCHEMA_MARKER_KEY,
     value: String(DATABASE_VERSION),

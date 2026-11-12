@@ -1,6 +1,7 @@
 // @vitest-environment node
 import "fake-indexeddb/auto";
 
+import { z } from "zod";
 import { createHash } from "node:crypto";
 import Dexie from "dexie";
 import { afterEach, describe, expect, it } from "vitest";
@@ -336,5 +337,97 @@ describe("backup pós-reset", () => {
     await expect(
       new JsonBackupCodec().inspect(" ".repeat(MAX_BACKUP_BYTES + 1)),
     ).rejects.toMatchObject({ code: "BACKUP_TOO_LARGE" });
+  });
+});
+
+it("rejects a historically encoded v11 TCG envelope with its original valid digest without touching destination", async () => {
+  const { default: fixture } =
+    await import("../../test/fixtures/backup-v11-tcg.json");
+  const { integrity, ...unsigned } = fixture;
+  expect(fixture.formatVersion).toBe(11);
+  expect(fixture.data.arcanarium.cards.length).toBeGreaterThan(0);
+  expect(
+    createHash("sha256")
+      .update(canonicalize(checksumMaterial(unsigned)))
+      .digest("hex"),
+  ).toBe(integrity.digest);
+  const name = `backup-negative-${crypto.randomUUID()}`;
+  databases.push(name);
+  const db = new BibliotecaDatabase(name);
+  await db.open();
+  try {
+    await db.libraryEntries.add(
+      createBook({
+        id: "preserved",
+        title: "Destino fictício",
+        createdAt: "2026-11-12T00:00:00.000Z",
+      }),
+    );
+    const store = new DexieBackupSnapshotStore(db);
+    const before = await store.read();
+    const codec = new JsonBackupCodec();
+    const exporter = new ExportBackup(
+      store,
+      codec,
+      { now: () => Promise.resolve("2026-11-12T00:00:00.000Z") },
+      "test",
+      19,
+    );
+    const importer = new ImportBackup(store, codec, exporter, {
+      shareBackupFile: () => Promise.resolve("flow-finished" as const),
+    });
+    await expect(
+      importer.execute(JSON.stringify(fixture)),
+    ).rejects.toMatchObject({
+      code: "INVALID_BACKUP_DATA",
+      message:
+        "Backups com dados do Duelo Arcano não são compatíveis com esta versão.",
+    });
+    expect(await store.read()).toEqual(before);
+    db.close();
+    await db.open();
+    expect(await store.read()).toEqual(before);
+  } finally {
+    db.close();
+  }
+});
+
+it("accepts a checksummed educational v11 envelope", async () => {
+  const codec = new JsonBackupCodec();
+  const artifact = await codec.encode({
+    appVersion: "test",
+    createdAt: "2026-11-12T00:00:00.000Z",
+    databaseVersion: 19,
+    data: {
+      ...emptyData(),
+      cardMedia: [],
+      arcanarium: {
+        cards: [],
+        versions: [],
+        decks: [],
+        studyLinks: [],
+        tags: [],
+        sessions: [],
+        packs: [],
+      },
+    },
+  });
+  const raw = z
+    .looseObject({
+      formatVersion: z.number(),
+      integrity: z.strictObject({
+        algorithm: z.literal("SHA-256"),
+        digest: z.string(),
+      }),
+    })
+    .parse(JSON.parse(artifact.content));
+  raw.formatVersion = 11;
+  const { integrity: _integrity, ...unsigned } = raw;
+  void _integrity;
+  raw.integrity.digest = createHash("sha256")
+    .update(canonicalize(checksumMaterial(unsigned)))
+    .digest("hex");
+  await expect(codec.inspect(JSON.stringify(raw))).resolves.toMatchObject({
+    summary: { formatVersion: 11 },
   });
 });

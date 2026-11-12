@@ -384,6 +384,16 @@ it("round-trips v7 cards, tags, dynamic/static decks, tombstones, revisions and 
     entryId: "study",
     cardId: "same",
   });
+  await source.api.createCard({
+    type: "question",
+    statement: "Questão fictícia",
+    alternatives: [
+      { id: "a", text: "A" },
+      { id: "b", text: "B" },
+    ],
+    correctAlternativeId: "a",
+    classification: { knowledgeTagIds: [], personalTagIds: [] },
+  });
   const data = await source.snapshots.read();
   const artifact = await source.codec.encode({
     appVersion: "test",
