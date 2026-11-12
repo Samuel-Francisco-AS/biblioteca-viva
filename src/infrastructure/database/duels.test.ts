@@ -10,6 +10,7 @@ import { DexieTransactionRunner } from "./transactionRunner";
 import { ArcanariumService } from "../../application/arcanarium";
 import { DuelService } from "../../application/duels";
 import { legalActions, replayDuel } from "../../domain/duel/engine";
+import { officialCards } from "../../domain/duel/catalogue";
 import { JsonBackupCodec } from "../backup/backupCodec";
 import { DexieBackupSnapshotStore } from "../backup/dexieBackupStore";
 const now = "2026-11-09T12:00:00.000Z";
@@ -146,6 +147,99 @@ it("commits actions once, reopens exact state, retains snapshots after edits and
     seed: 30,
   });
   expect(await reopen.duels.list()).toHaveLength(2);
+});
+it("preserves an authored combat card revision, deck and match across v11 restore", async () => {
+  const s = await setup(),
+    d = await deck(s);
+  const session = await s.duels.start({
+    deckId: d.id,
+    opponentId: d.id,
+    mode: "creator",
+    seed: 32,
+  });
+  const authored = (await s.api.list()).cards.find(
+    (card) => card.type === "combat",
+  );
+  if (!authored) throw new Error("Missing authored combat card");
+  await s.api.updateCard({
+    cardId: authored.id,
+    expectedRevision: authored.revision,
+    content: { ...authored.content, name: "Sentinela revisada" },
+  });
+
+  const reopened = await setup(s.db.name);
+  expect(await reopened.duels.get(session.id)).toEqual(session);
+  const artifact = await reopened.codec.encode({
+    data: await reopened.store.read(),
+    appVersion: "test",
+    createdAt: now,
+    databaseVersion: 19,
+  });
+  expect(artifact.summary.formatVersion).toBe(11);
+
+  const inspected = await reopened.codec.inspect(artifact.content),
+    target = await setup();
+  await target.store.replace(inspected.data);
+  const restored = await target.duels.get(session.id);
+  expect(restored).toEqual(session);
+  expect(replayDuel(restored.duel!)).toEqual(restored.duel);
+  expect(await target.repo.getVersion(authored.id, 1)).toBeDefined();
+  expect(await target.repo.getVersion(authored.id, 2)).toBeDefined();
+  expect((await target.api.list()).decks).toHaveLength(1);
+});
+it("retains referenced official cards for historical matches without reseeding the catalogue", async () => {
+  const s = await setup();
+  await s.duels.ensureCatalogue();
+  const session = await s.duels.start({
+    deckId: "arcane-deck:chaos",
+    opponentId: "arcane-deck:ruin",
+    mode: "official",
+    seed: 33,
+  });
+  const referenced = new Set(session.cards.map((card) => card.cardId));
+  const unreferenced = officialCards.find((card) => !referenced.has(card.id));
+  if (!unreferenced) throw new Error("Missing unreferenced official card");
+
+  const artifact = await s.codec.encode({
+    data: await s.store.read(),
+    appVersion: "test",
+    createdAt: now,
+    databaseVersion: 19,
+  });
+  const inspected = await s.codec.inspect(artifact.content);
+  const retained = inspected.data.arcanarium;
+  if (!retained) throw new Error("Missing Arcanarium backup");
+  expect(
+    [...referenced].every((id) =>
+      retained.cards.some((card) => card.id === id),
+    ),
+  ).toBe(true);
+  expect(retained.cards.some((card) => card.id === unreferenced.id)).toBe(
+    false,
+  );
+  expect(
+    retained.decks.some(
+      (deck) =>
+        deck.origin.kind === "official" &&
+        deck.origin.packId === "duelo-arcano-v1",
+    ),
+  ).toBe(false);
+
+  const target = await setup();
+  await target.store.replace(inspected.data);
+  expect(await target.duels.get(session.id)).toEqual(session);
+  expect(
+    (
+      await Promise.all(
+        [...referenced].map(
+          async (id) => (await target.repo.getCard(id)) !== undefined,
+        ),
+      )
+    ).every(Boolean),
+  ).toBe(true);
+  expect((await target.duels.list()).map((match) => match.id)).toEqual([
+    session.id,
+  ]);
 });
 it("rolls back a failed save after write and restores v11 into a disposable database", async () => {
   const s = await setup(),
