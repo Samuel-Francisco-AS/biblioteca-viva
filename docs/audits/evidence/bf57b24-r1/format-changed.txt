@@ -1,0 +1,4 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 npx
+npm notice run 'prettier' --check src/app/createApplication.ts src/infrastructure/database/retireCombatData.ts src/infrastructure/database/retireCombatData.test.ts src/infrastructure/database/arcanarium.test.ts src/infrastructure/backup/backup.test.ts src/test/fixtures/backup-v11-tcg.json
+Checking formatting...
+All matched files use Prettier code style!

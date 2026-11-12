@@ -89,7 +89,7 @@ Reprodução inicial sem ajustes: **8/10 PASS**, não 7/10. Os sete casos de
   identificação objetiva dos três casos/stack traces originais; não se
   atribui retrospectivamente uma causa não observada ao terceiro caso.
 
-Evidência inicial: `audits/evidence/bf57b24-r1/e2e-before.log` e eventos dos
+Evidência inicial: `audits/evidence/bf57b24-r1/e2e-before.txt` e eventos dos
 traces. Traces binários completos preservados localmente antes da nova rodada.
 Hipótese investigada: readback gráfico contínuo do trace somado ao SwiftShader
 contribui para custo de automação. Um experimento nos dois specs conservou DOM/actions e screenshot de falha,
@@ -153,7 +153,7 @@ A revisão entrega reparos seguros e preserva os bloqueadores, não os encerra.
 | Prettier dos seis arquivos TS/JSON alterados                             | PASS                                          |
 | format:check global                                                      | FAIL: 25 arquivos preexistentes               |
 
-Falhas globais originais preservadas em `vitest-global.log`:
+Falhas globais originais preservadas em `vitest-global.txt`:
 `ArcanariumPage.test.tsx:271` e `:344` aguardavam o link Editar na Oficina;
 `PackLibrary.test.tsx:78` aguardava o heading Provações;
 `inhabitantPickupContact.test.ts:32` excedeu 5 s no caso Aryn.
