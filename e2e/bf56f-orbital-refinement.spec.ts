@@ -28,11 +28,15 @@ test("BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident wor
   await expect(tools).toBeEnabled();
   await tools.focus();
   await page.keyboard.press("Enter");
-  await expect(tools).toHaveAttribute("aria-expanded", "true");
+  // The accessible name changes when opened, so do not query using the old
+  // name after activation.
+  await expect(
+    page.getByRole("button", { name: "Recolher ferramentas de exploração" }),
+  ).toHaveAttribute("aria-expanded", "true");
 
   const worldDetails = page.locator("details.world-explore");
   await expect(worldDetails).toBeVisible();
-  const worldSummary = worldDetails.locator("summary");
+  const worldSummary = worldDetails.locator(":scope > summary");
   await expect(worldSummary).toBeVisible();
   await worldSummary.focus();
   await page.keyboard.press("Enter");
@@ -54,7 +58,11 @@ test("BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident wor
   await lunarPortal.focus();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/arcanario$/);
-  await expect(page.getByRole("link", { name: "Duelo Arcano" })).toBeVisible();
+  await expect(
+    page
+      .getByRole("navigation", { name: "Salas do Arcanário" })
+      .getByRole("link", { name: "Duelo Arcano", exact: true }),
+  ).toBeVisible();
   await expect(canvas).toBeHidden();
   await expect(canvas).toHaveAttribute("data-active-frame-loops", "0");
   await page.getByRole("link", { name: "Biblioteca", exact: true }).click();
