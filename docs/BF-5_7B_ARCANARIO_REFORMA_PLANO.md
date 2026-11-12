@@ -1,5 +1,7 @@
 # BF-5.7B — Reforma do Arcanário: visão, decomposição e critérios
 
+> **Atualização de auditoria B1 — 12/11/2026:** concluída uma **auditoria estática diretamente no remoto**, dividida em CP1–CP5, com diagnóstico de rotas, domínio, Dexie v19, backup v11, recursos 3D e regressões. [Relatório técnico e handoff para Copilot](BF-5_7B1_AUDITORIA_HANDOFF.md). **Parecer:** iniciar somente B2.1 (testes preventivos com fixtures legadas) mediante autorização específica; não executar retirada em massa do TCG nem apagar dados autorais/históricos. **Nenhum código produtivo, teste local, APK ou CI foi executado nesta PR**. A BF-5.7B e a B2 permanecem abertas; merge exige aceite explícito.
+
 **Data da decisão:** 12/11/2026  
 **Estado:** plano e direção de produto acordados; **somente documentação nesta PR**. Implementação, migrações, exclusões, testes de produção e merge **não iniciados** por este registro.  
 **Base:** main após conclusão da BF-5.7A (PR #51), mantendo as ressalvas já conhecidas.  
