@@ -111,3 +111,16 @@ compiláveis e testáveis para permitir a retirada estrutural posterior.
 O próximo checkpoint pode avaliar a remoção definitiva dessas dependências,
 mas somente após revisão desta desativação, confirmação da persistência
 educativa e decisão explícita sobre assets e formatos históricos.
+
+## Revisão de testes após B2.3 — 12/11/2026
+
+O proprietário autorizou eliminar ou atualizar testes desatualizados no remoto.
+
+- Excluídos `e2e/bf56e-duel.spec.ts` e `e2e/bf56f-arena.spec.ts`, pois verificavam partidas TCG aposentadas. O histórico permanece disponível via Git.
+- Atualizado `e2e/bf56f-orbital-refinement.spec.ts`: a lua orbital permanece como acesso ao Arcanário, preservando suspensão/retomada do mundo 3D e verificando que o link de Duelo Arcano não existe.
+- Atualizado `e2e/performance-navigation.spec.ts`: percorre apenas as salas ativas e não procura o regulamento do duelo.
+- Criado `e2e/bf57b-retired-duel.spec.ts`: verifica o retorno ao Portal para rotas antigas e para `?tipo=combat`; valida a continuidade da Oficina educativa.
+- Reforçado `src/features/arcanarium/ArcanariumPage.test.tsx`: confere a URL final dos redirecionamentos, além do conteúdo visível.
+- Atualizadas referências IndexedDB em oito arquivos E2E (`e2e/fixtures.ts`, `bf4-rpg`, `bf56a-arcanarium`, `bv-recovery-r2`, `bf56d-packs`, `bf56c-provations`, `search-and-backup`, `bf5-parte2d-entretenimento`) para `biblioteca-viva-bf57`. Eventos e nomes de arquivos não relacionados ficaram intocados.
+
+**Validação desta revisão:** inspeção estática remota; sem nova execução de lint, typecheck, build, Vitest, Playwright, CI ou Android. Os PASS anteriores são do checkpoint original, **antes** destes commits, e precisam ser confirmados localmente antes do merge. Os testes unitários do motor TCG permanecem para revisão na retirada estrutural B2.4. A lua orbital não foi alterada em produção.
