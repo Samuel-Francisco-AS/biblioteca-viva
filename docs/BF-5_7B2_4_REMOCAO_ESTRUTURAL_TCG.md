@@ -5,7 +5,7 @@
 - Base solicitada: `feat/bf-5-7b2-retire-duel-ui`
 - SHA inicial confirmado: `02c9251e866c64606023f8d80838776c9093a56c`
 - Branch desta missão: `feat/bf-5-7b2-remove-tcg-engine`
-- PR: a publicar como draft, encadeada à B2.3, referenciando #50 e #55
+- PR: [#56](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/56), draft, encadeada à B2.3
 - Merge, Actions e validação Android: não realizados
 
 ## Matriz de dependências
@@ -95,3 +95,12 @@ exclusivos do duelo; o chunk Three.js grande permanece esperado.
   seletores e raycasts.
 - Fazer gate físico do Arcanário e da lua no Moto G06.
 - Não reintroduzir o TCG, nem iniciar B2.5 automaticamente nesta entrega.
+
+## Revisão R1 — 12/11/2026
+
+A leitura de v19 intermediária com TCG foi reproduzida como incompatível.
+A R1 acrescenta reparo seletivo/transacional e testes de reabertura, além de
+fixture v11 validada pelo codec histórico. A afirmação anterior sobre ausência
+de migração descreve somente a entrega original: agora existe reparo de dados
+com marcador, sem mudança de nome/schema. Ver [relatório R1](BF-5_7B2_4_R1_SANEAMENTO.md)
+para resultados atuais e bloqueadores; os resultados acima são históricos.
