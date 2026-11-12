@@ -183,8 +183,13 @@ function LibraryPageContent({
   // re-enabling the button cannot reopen an orphaned exploration overlay.
   const visibleToolsOpen = showCanvasAccessButton && toolsOpen;
   useEffect(() => {
-    if (!showCanvasAccessButton) setToolsOpen(false);
-  }, [showCanvasAccessButton]);
+    // Preferences are an external application store. Clear the transient
+    // panel state inside its change notification, rather than synchronously
+    // setting state in the body of a React effect.
+    return application?.experience?.subscribe((preferences) => {
+      if (!preferences.showCanvasAccessButton) setToolsOpen(false);
+    });
+  }, [application?.experience]);
   const pageRef = useRef<HTMLElement>(null);
   const portalFlight = useRef<(() => void) | null>(null);
   useEffect(() => () => portalFlight.current?.(), []);

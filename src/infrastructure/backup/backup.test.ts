@@ -196,7 +196,7 @@ describe("backup pós-reset", () => {
       };
       integrity: { algorithm: string; digest: string };
     };
-    delete legacy.data.settings[0]!.value.showCanvasAccessButton;
+    delete legacy.data.settings[0].value.showCanvasAccessButton;
     const { integrity, ...unsigned } = legacy;
     const legacyContent = JSON.stringify({
       ...unsigned,
