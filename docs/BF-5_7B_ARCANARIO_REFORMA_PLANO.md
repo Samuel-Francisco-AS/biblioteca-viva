@@ -1,5 +1,19 @@
 # BF-5.7B — Reforma do Arcanário: visão, decomposição e critérios
 
+> **DECISÃO SUPERVENIENTE — 12/11/2026, após B2.1:** o proprietário confirmou expressamente que **todos os dados locais atualmente existentes no APK são exclusivamente de teste e podem ser descartados**. Portanto, a exigência anterior de preservar as cartas/partidas históricas do TCG, restaurar backups legados e manter leitores de `combat`/`combat_match` **não é requisito da B2**. Essa autorização substitui os gates de retenção definidos antes desta data. O relatório [B1](BF-5_7B1_AUDITORIA_HANDOFF.md) permanece válido como **mapa de dependências**, mas suas instruções de compatibilidade são **históricas e não vinculantes**. A [PR #53](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/53) contém testes do contrato antigo; não exigir sua correção/merge como condição para a B2.2. Ainda não há autorização para executar o reset no aparelho nesta PR documental.
+
+### Política atual de dados e simplificação técnica
+
+- **Dados atuais:** registros de teste do APK podem ser apagados integralmente, inclusive cartas, partidas, sessões, baralhos, flashcards, questões, treinos, configurações e mídias locais. Não é necessário migrá-los nem manter suporte de restauração a backups históricos para sua recuperação.
+- **Produto futuro:** preservar o funcionamento **dos recursos educacionais e físicos no código** e a integridade de dados **novos criados após a reforma**; descarte de dados de teste não autoriza excluir features úteis nem deixar persistência, backup corrente ou testes novos quebrados.
+- **Corte limpo:** o agente deve escolher e documentar um mecanismo explícito e testável para que instalações existentes não tentem interpretar bancos incompatíveis (por exemplo, inicialização com schema/identidade de banco renovada ou reset intencional versionado). **Não** depender de falha de parser, limpeza parcial ou exceção silenciosa. Se houver limpeza automática, ela é destrutiva e deve ser comunicada claramente.
+- **Backup:** simplificar contratos, validadores e versões conforme necessário para o novo formato; backups anteriores à reforma podem ser recusados com erro explícito, sem falsa promessa de compatibilidade. O backup do **novo** estado educacional deve continuar íntegro e testado.
+- **TCG:** pode-se retirar domínio, motor, replay, variantes de schema, mídia e assets exclusivos após verificar dependências e assegurar build/testes. Não manter código obsoleto apenas para reproduzir dados descartáveis.
+- **Controle de escopo:** não implementar ainda cartas físicas, importar ENEM/concursos, redesenhar toda a UX ou iniciar BF-6 nesta retirada. PRs draft, checkpoints verificáveis e merge somente com aceite.
+
+**Esta decisão prevalece** sobre qualquer trecho abaixo que prescreva retenção de `combat`, `combat_match`, deck/partida legados, backup v11 histórico ou bloqueio de B2.2 até aprovação de F2/F3. Os textos anteriores são mantidos como registro cronológico da auditoria.
+
+
 > **Atualização de auditoria B1 — 12/11/2026:** concluída uma **auditoria estática diretamente no remoto**, dividida em CP1–CP5, com diagnóstico de rotas, domínio, Dexie v19, backup v11, recursos 3D e regressões. [Relatório técnico e handoff para Copilot](BF-5_7B1_AUDITORIA_HANDOFF.md). **Parecer:** iniciar somente B2.1 (testes preventivos com fixtures legadas) mediante autorização específica; não executar retirada em massa do TCG nem apagar dados autorais/históricos. **Nenhum código produtivo, teste local, APK ou CI foi executado nesta PR**. A BF-5.7B e a B2 permanecem abertas; merge exige aceite explícito.
 
 **Data da decisão:** 12/11/2026  
