@@ -16,6 +16,9 @@ import {
   type ApplicationRuntime,
 } from "./createApplication";
 import type { AudioBackend, AudioPlayback } from "../infrastructure";
+import { BibliotecaDatabase } from "../infrastructure/database/database";
+import { DATABASE_NAME } from "../infrastructure/database/schema";
+import { createBook } from "../domain";
 
 function fakeAudioBackend(play = vi.fn()): AudioBackend {
   return {
@@ -51,6 +54,45 @@ afterEach(async () => {
 });
 
 describe("createApplication", () => {
+  it("starts a new storage identity without importing the previous database", async () => {
+    const legacyName = "biblioteca-viva";
+    databases.add(legacyName);
+    databases.add(DATABASE_NAME);
+    const legacy = new BibliotecaDatabase(legacyName);
+    await legacy.open();
+    const oldBook = createBook({
+      id: "legacy-book",
+      title: "Registro descartável",
+      createdAt: "2026-11-12T12:00:00.000Z",
+    });
+    await legacy.libraryEntries.add(oldBook);
+    legacy.close();
+
+    const first = await createApplication();
+    expect((await first.diagnostics.inspect()).counts.libraryEntries).toBe(0);
+    const freshBook = await first.commands.createBookEntry.execute({
+      title: "Registro novo",
+    });
+    first.close();
+
+    const second = await createApplication();
+    await expect(
+      second.queries.getBookEntry.execute({ id: freshBook.id }),
+    ).resolves.toEqual(freshBook);
+    second.close();
+
+    const third = await createApplication();
+    runtimes.push(third);
+    expect((await third.diagnostics.inspect()).counts.libraryEntries).toBe(1);
+
+    const legacyReopened = new BibliotecaDatabase(legacyName);
+    await legacyReopened.open();
+    expect(await legacyReopened.libraryEntries.get(oldBook.id)).toEqual(
+      oldBook,
+    );
+    legacyReopened.close();
+  });
+
   it("completa os quatro marcos convencionais uma vez e os recarrega", async () => {
     const name = databaseName("milestone-composition");
     const first = await createApplication({ databaseName: name });
