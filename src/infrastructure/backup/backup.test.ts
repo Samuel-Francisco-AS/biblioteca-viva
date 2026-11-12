@@ -1,6 +1,7 @@
 // @vitest-environment node
 import "fake-indexeddb/auto";
 
+import { createHash } from "node:crypto";
 import Dexie from "dexie";
 import { afterEach, describe, expect, it } from "vitest";
 
@@ -14,7 +15,7 @@ import {
 } from "../../application";
 import { createBook, createManualSession } from "../../domain";
 import { BibliotecaDatabase } from "../database/database";
-import { JsonBackupCodec } from "./backupCodec";
+import { canonicalize, checksumMaterial, JsonBackupCodec } from "./backupCodec";
 import { DexieBackupSnapshotStore } from "./dexieBackupStore";
 
 const databases: string[] = [];
@@ -158,6 +159,76 @@ describe("backup pós-reset", () => {
         }),
       ),
     ).rejects.toMatchObject({ code: "MISSING_CHECKSUM" });
+  });
+
+  it("restaura backups de experiência pré-G8 sem invalidar seu checksum original", async () => {
+    const codec = new JsonBackupCodec();
+    const artifact = await codec.encode({
+      appVersion: "0.2.0-test",
+      createdAt: "2026-09-08T10:00:00.000Z",
+      databaseVersion: 18,
+      data: {
+        ...emptyData(),
+        settings: [
+          {
+            key: "experience.preferences.v1",
+            value: {
+              highContrast: true,
+              motion: "system",
+              textSize: "default",
+              showCanvasAccessButton: false,
+            },
+            updatedAt: "2026-09-08T10:00:00.000Z",
+          },
+        ],
+      },
+    });
+
+    // Simulate a legitimately signed older export, whose preferences did not
+    // yet contain showCanvasAccessButton. Hash the precise legacy document,
+    // NOT the normalized object with the modern default added.
+    const legacy = JSON.parse(artifact.content) as {
+      data: {
+        settings: Array<{
+          key: string;
+          value: { showCanvasAccessButton?: boolean };
+        }>;
+      };
+      integrity: { algorithm: string; digest: string };
+    };
+    delete legacy.data.settings[0]!.value.showCanvasAccessButton;
+    const { integrity, ...unsigned } = legacy;
+    const legacyContent = JSON.stringify({
+      ...unsigned,
+      integrity: {
+        ...integrity,
+        digest: createHash("sha256")
+          .update(canonicalize(checksumMaterial(unsigned)))
+          .digest("hex"),
+      },
+    });
+
+    const verified = await codec.inspect(legacyContent);
+    expect(
+      verified.data.settings.find(
+        (setting) => setting.key === "experience.preferences.v1",
+      )?.value,
+    ).toEqual({
+      highContrast: true,
+      motion: "system",
+      textSize: "default",
+      showCanvasAccessButton: false,
+    });
+
+    // No tolerance for actual changes to the original signed fields.
+    const altered = legacyContent.replace(
+      '"highContrast":true',
+      '"highContrast":false',
+    );
+    expect(altered).not.toBe(legacyContent);
+    await expect(codec.inspect(altered)).rejects.toMatchObject({
+      code: "CHECKSUM_MISMATCH",
+    });
   });
 
   it("detecta checksum alterado", async () => {

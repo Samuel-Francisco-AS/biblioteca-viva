@@ -178,6 +178,13 @@ function LibraryPageContent({
   const [worldStatusState, setWorldStatusState] =
     useState<ApplicationBound<WorldHostStatus>>();
   const [toolsOpen, setToolsOpen] = useState(false);
+  // The Library stays mounted behind other routes. Hide the panel in the
+  // same render as the preference change, and clear its internal state so
+  // re-enabling the button cannot reopen an orphaned exploration overlay.
+  const visibleToolsOpen = showCanvasAccessButton && toolsOpen;
+  useEffect(() => {
+    if (!showCanvasAccessButton) setToolsOpen(false);
+  }, [showCanvasAccessButton]);
   const pageRef = useRef<HTMLElement>(null);
   const portalFlight = useRef<(() => void) | null>(null);
   useEffect(() => () => portalFlight.current?.(), []);
@@ -443,7 +450,7 @@ function LibraryPageContent({
       className="library-page"
       ref={pageRef}
       aria-labelledby="library-title"
-      data-tools-open={toolsOpen || worldStatus === "failed"}
+      data-tools-open={visibleToolsOpen || worldStatus === "failed"}
     >
       <div className="library-scene-vignette" aria-hidden="true" />
       <h2 id="library-title" className="visually-hidden">
@@ -453,9 +460,9 @@ function LibraryPageContent({
       {worldStatus !== "failed" && showCanvasAccessButton && (
         <button
           aria-controls="library-access-panels"
-          aria-expanded={toolsOpen}
+          aria-expanded={visibleToolsOpen}
           aria-label={
-            toolsOpen
+            visibleToolsOpen
               ? "Recolher ferramentas de exploração"
               : "Abrir ferramentas de exploração acessível"
           }
@@ -464,7 +471,7 @@ function LibraryPageContent({
           type="button"
         >
           <span aria-hidden="true">☷</span>
-          <span>{toolsOpen ? "Fechar painel" : "Acervo e habitantes"}</span>
+          <span>{visibleToolsOpen ? "Fechar painel" : "Acervo e habitantes"}</span>
         </button>
       )}
       <div className="library-access-panels" id="library-access-panels">

@@ -449,9 +449,14 @@ export class JsonBackupCodec implements BackupCodecPort {
         "INVALID_BACKUP_DATA",
         "O backup contém dados inválidos.",
       );
-    const { integrity, ...unsigned } = parsed.data;
-    const expected = await sha256(checksumMaterial(unsigned));
-    if (integrity.digest !== expected)
+    // Verify the original signed payload before Zod fills new optional
+    // preference defaults. Otherwise a genuine pre-G8 backup acquires
+    // showCanvasAccessButton=false before hashing and fails integrity checks.
+    // Structural validation above still applies to every imported field.
+    const unsignedOriginal = { ...(raw as Record<string, unknown>) };
+    delete unsignedOriginal.integrity;
+    const expected = await sha256(checksumMaterial(unsignedOriginal));
+    if (parsed.data.integrity.digest !== expected)
       throw new BackupError(
         "CHECKSUM_MISMATCH",
         "A integridade do backup não confere.",

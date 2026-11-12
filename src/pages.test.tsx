@@ -157,6 +157,48 @@ describe("Página Biblioteca", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("fecha o painel residente quando a preferência é desligada e não o reabre sozinha", async () => {
+    const experience = new ExperiencePreferencesService(
+      { load: vi.fn(), save: vi.fn(() => Promise.resolve()) },
+      { warn: vi.fn() },
+    );
+    await experience.loadPreferences();
+    await experience.setShowCanvasAccessButton(true);
+    renderLibrary(Promise.resolve([]), "/", experience);
+
+    const toggle = screen.getByRole("button", {
+      name: "Abrir ferramentas de exploração acessível",
+    });
+    await userEvent.click(toggle);
+    expect(document.querySelector(".library-page")).toHaveAttribute(
+      "data-tools-open",
+      "true",
+    );
+
+    // The resident Library receives this update even while another route is
+    // visible; no orphan panel may be left behind when the toggle disappears.
+    await act(() => experience.setShowCanvasAccessButton(false));
+    expect(document.querySelector(".library-page")).toHaveAttribute(
+      "data-tools-open",
+      "false",
+    );
+    expect(
+      screen.queryByRole("button", {
+        name: "Recolher ferramentas de exploração",
+      }),
+    ).not.toBeInTheDocument();
+
+    await act(() => experience.setShowCanvasAccessButton(true));
+    const returned = screen.getByRole("button", {
+      name: "Abrir ferramentas de exploração acessível",
+    });
+    expect(returned).toHaveAttribute("aria-expanded", "false");
+    expect(document.querySelector(".library-page")).toHaveAttribute(
+      "data-tools-open",
+      "false",
+    );
+  });
+
   it("exposes the same exploration state to visual UI and assistive technology", async () => {
     renderLibrary(Promise.resolve([]));
     const open = screen.getByRole("button", {
