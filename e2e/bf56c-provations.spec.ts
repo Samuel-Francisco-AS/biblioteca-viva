@@ -47,7 +47,7 @@ async function seedTen(page: Page) {
   ];
   await page.evaluate(async (tags) => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const r = indexedDB.open("biblioteca-viva");
+      const r = indexedDB.open("biblioteca-viva-bf57");
       r.onsuccess = () => resolve(r.result);
       r.onerror = () =>
         reject(r.error ?? new Error("Falha ao abrir base fictícia"));
