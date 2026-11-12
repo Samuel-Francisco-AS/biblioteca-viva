@@ -72,6 +72,7 @@ const backupSettingSchema = z.discriminatedUnion("key", [
       highContrast: z.boolean(),
       motion: z.enum(["system", "reduce", "normal"]),
       textSize: z.enum(["default", "large", "larger"]),
+      showCanvasAccessButton: z.boolean().default(false),
     }),
   }),
 ]);

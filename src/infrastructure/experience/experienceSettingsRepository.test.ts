@@ -27,6 +27,7 @@ describe("DexieExperienceSettingsRepository", () => {
       highContrast: true,
       motion: "reduce" as const,
       textSize: "larger" as const,
+      showCanvasAccessButton: true,
     };
     await new DexieExperienceSettingsRepository(first, new SystemClock()).save(
       preferences,
@@ -62,5 +63,31 @@ describe("DexieExperienceSettingsRepository", () => {
     await expect(
       new DexieExperienceSettingsRepository(database, new SystemClock()).load(),
     ).rejects.toBeDefined();
+  });
+
+  it("aplica o padrão desativado a registros antigos sem a nova preferência", async () => {
+    const database = new BibliotecaDatabase(
+      `experience-settings-legacy-${crypto.randomUUID()}`,
+    );
+    databases.push(database);
+    await database.open();
+    await database.settings.put({
+      key: EXPERIENCE_SETTINGS_KEY,
+      value: {
+        highContrast: true,
+        motion: "system",
+        textSize: "default",
+      },
+      updatedAt: "2026-08-10T12:00:00.000Z",
+    });
+
+    await expect(
+      new DexieExperienceSettingsRepository(database, new SystemClock()).load(),
+    ).resolves.toEqual({
+      highContrast: true,
+      motion: "system",
+      textSize: "default",
+      showCanvasAccessButton: false,
+    });
   });
 });

@@ -402,6 +402,17 @@ export function SettingsPage({ application, diagnostics }: Props) {
     }
   }
 
+  async function updateCanvasAccessButton(enabled: boolean) {
+    setExperiencePreferenceError("");
+    try {
+      await application?.experience?.setShowCanvasAccessButton(enabled);
+    } catch {
+      setExperiencePreferenceError(
+        "A preferência foi aplicada nesta sessão, mas não pôde ser persistida.",
+      );
+    }
+  }
+
   return (
     <div className="settings-stack">
       <RealmIntro
@@ -467,6 +478,21 @@ export function SettingsPage({ application, diagnostics }: Props) {
               type="checkbox"
             />
             Usar alto contraste
+          </label>
+          <label
+            className="settings-check-control"
+            htmlFor="show-canvas-access-button"
+          >
+            <input
+              checked={experiencePreferences.showCanvasAccessButton}
+              disabled={!application?.experience}
+              id="show-canvas-access-button"
+              onChange={(event) =>
+                void updateCanvasAccessButton(event.target.checked)
+              }
+              type="checkbox"
+            />
+            Mostrar botão “Acervo e habitantes” no Canvas
           </label>
           <div className="form-field">
             <label htmlFor="text-size">Tamanho do texto</label>

@@ -89,6 +89,7 @@
   border: 1px solid var(--ink);
   border-radius: 0.6rem 0.6rem 0 0;
   overflow: hidden;
+  contain: paint;
   background: var(--tint);
 }
 .combat-card__illustration img {

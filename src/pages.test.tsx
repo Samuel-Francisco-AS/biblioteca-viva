@@ -3,7 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ApplicationError } from "./application";
+import {
+  ApplicationError,
+  ExperiencePreferencesService,
+} from "./application";
 import type { BookEntry, LibraryEntry } from "./domain";
 import {
   createMovie,
@@ -52,10 +55,15 @@ const secondBook: BookEntry = {
   title: "Memórias póstumas",
 };
 
-function renderLibrary(result: Promise<readonly LibraryEntry[]>, entry = "/") {
+function renderLibrary(
+  result: Promise<readonly LibraryEntry[]>,
+  entry = "/",
+  experience?: ExperiencePreferencesService,
+) {
   latestWorldHostProps = undefined;
   const execute = vi.fn(() => result);
   const application: LibraryApplication = {
+    experience,
     queries: { listLibraryEntries: { execute } },
   };
   render(
@@ -120,6 +128,35 @@ const sixEntries: LibraryEntry[] = [
 ];
 
 describe("Página Biblioteca", () => {
+  it("mantém o botão do Canvas oculto por padrão e o atualiza sem reiniciar", async () => {
+    const experience = new ExperiencePreferencesService(
+      { load: vi.fn(), save: vi.fn(() => Promise.resolve()) },
+      { warn: vi.fn() },
+    );
+    await experience.loadPreferences();
+    renderLibrary(Promise.resolve([]), "/", experience);
+
+    expect(
+      screen.queryByRole("button", {
+        name: "Abrir ferramentas de exploração acessível",
+      }),
+    ).not.toBeInTheDocument();
+
+    await act(() => experience.setShowCanvasAccessButton(true));
+    expect(
+      screen.getByRole("button", {
+        name: "Abrir ferramentas de exploração acessível",
+      }),
+    ).toBeInTheDocument();
+
+    await act(() => experience.setShowCanvasAccessButton(false));
+    expect(
+      screen.queryByRole("button", {
+        name: "Abrir ferramentas de exploração acessível",
+      }),
+    ).not.toBeInTheDocument();
+  });
+
   it("exposes the same exploration state to visual UI and assistive technology", async () => {
     renderLibrary(Promise.resolve([]));
     const open = screen.getByRole("button", {

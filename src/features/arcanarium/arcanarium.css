@@ -204,6 +204,7 @@
   inset: 12px;
   border: 1px solid #b7996233;
   pointer-events: none;
+  transform: translateZ(0);
   z-index: -1;
   border-radius: 2px 18px 2px 18px;
 }
@@ -437,6 +438,8 @@
     0 12px 28px #0006,
     inset 0 0 26px #0005;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  contain: paint;
   border: 1px solid #ad906a;
   overflow: hidden;
 }
@@ -458,7 +461,7 @@
   stroke-width: 1;
 }
 .arcana-face--back {
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) translateZ(0);
   background:
     radial-gradient(ellipse at 50% 85%, var(--card-light), transparent 90%),
     var(--card-dark);

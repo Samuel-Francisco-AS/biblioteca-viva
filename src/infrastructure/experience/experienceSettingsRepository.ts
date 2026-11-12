@@ -14,6 +14,7 @@ export const experiencePreferencesSchema = z.strictObject({
   highContrast: z.boolean(),
   motion: z.enum(["system", "reduce", "normal"]),
   textSize: z.enum(["default", "large", "larger"]),
+  showCanvasAccessButton: z.boolean().default(false),
 });
 
 export const consoleExperienceErrorReporter: ExperienceErrorReporter = {

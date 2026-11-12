@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { projectLivingScrolls } from "./application/livingScrolls";
+import type { ExperiencePreferencesPort } from "./application";
 import {
   schedulePassage,
   beginPassage,
@@ -28,6 +29,7 @@ import type {
 import { isDiagnosticsEnabled } from "./app/diagnosticsAvailability";
 import { completeStartupExperience } from "./startupExperience";
 import { CanvasWelcome } from "./features/library/CanvasWelcome";
+import { useExperiencePreferences } from "./useExperiencePreferences";
 
 const diagnosticsBuildEnabled =
   import.meta.env.VITE_ENABLE_DIAGNOSTICS === "true";
@@ -40,6 +42,7 @@ const PerformanceScenarioHarness = diagnosticsBuildEnabled
   : undefined;
 
 export interface LibraryApplication {
+  readonly experience?: ExperiencePreferencesPort;
   readonly inhabitantContinuity?: InhabitantContinuityPort;
   readonly nightLightingContinuity?: NightLightingPort;
   readonly events?: {
@@ -161,6 +164,10 @@ function LibraryPageContent({
     PerformanceScenarioHarness &&
     new URLSearchParams(location.search).get("worldScenario") === "true";
   const navigate = useNavigate();
+  const { showCanvasAccessButton: storedCanvasAccessButton } =
+    useExperiencePreferences(application?.experience);
+  const showCanvasAccessButton =
+    application?.experience ? storedCanvasAccessButton : true;
   const [snapshot, setSnapshot] = useState<LibraryPageSnapshot>();
   const [selectableObjectsState, setSelectableObjectsState] =
     useState<ApplicationBound<readonly WorldSelectableObject[]>>();
@@ -443,7 +450,7 @@ function LibraryPageContent({
         Biblioteca Viva
       </h2>
       {active && worldStatus === "ready" && <CanvasWelcome />}
-      {worldStatus !== "failed" && (
+      {worldStatus !== "failed" && showCanvasAccessButton && (
         <button
           aria-controls="library-access-panels"
           aria-expanded={toolsOpen}

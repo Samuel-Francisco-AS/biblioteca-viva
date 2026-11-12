@@ -522,8 +522,8 @@
   max-width: calc(100vw - 1.5rem);
   right: max(0.8rem, env(safe-area-inset-right));
   left: auto;
-  /* G5: move the two story seals ~0.5 cm (19 CSS px) nearer the dock. */
-  bottom: calc(var(--dock-height) - 0.35rem + env(safe-area-inset-bottom));
+  /* G8: move the two story seals another 12px toward the dock. */
+  bottom: calc(var(--dock-height) - 1.1rem + env(safe-area-inset-bottom));
   padding: 0;
 }
 .app-shell .library-page .rpg-tools .rpg-tools__beacon {
@@ -573,6 +573,6 @@
 }
 @media (orientation: landscape) and (max-height: 550px) {
   .app-shell .library-page .rpg-tools {
-    bottom: calc(var(--dock-height) - 0.75rem + env(safe-area-inset-bottom));
+    bottom: calc(var(--dock-height) - 1.5rem + env(safe-area-inset-bottom));
   }
 }

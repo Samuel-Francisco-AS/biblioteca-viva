@@ -12,6 +12,13 @@ test("BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident wor
   // the first interaction. Playwright will retain a trace if this test fails.
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.goto("/configuracoes", { waitUntil: "domcontentloaded" });
+  const canvasAccessPreference = page.getByRole("checkbox", {
+    name: "Mostrar botão “Acervo e habitantes” no Canvas",
+  });
+  await expect(canvasAccessPreference).toBeVisible();
+  await canvasAccessPreference.check();
+  await page.goto("/", { waitUntil: "domcontentloaded" });
   const canvas = page.locator("canvas[data-three-world-canvas]");
   await expect(canvas).toHaveCount(1);
   await expect(canvas).toHaveAttribute("data-fixture-status", "ready", {
