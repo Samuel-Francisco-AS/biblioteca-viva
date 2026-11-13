@@ -1,0 +1,110 @@
+[
+  {
+    "name": "legacy",
+    "canvasCount": 0,
+    "radios": [
+      {
+        "width": 16,
+        "height": 48,
+        "shadow": "rgba(7, 24, 27, 0.094) 0px 2px 3px 0px inset"
+      },
+      {
+        "width": 16,
+        "height": 48,
+        "shadow": "rgba(7, 24, 27, 0.094) 0px 2px 3px 0px inset"
+      },
+      {
+        "width": 16,
+        "height": 48,
+        "shadow": "rgba(7, 24, 27, 0.094) 0px 2px 3px 0px inset"
+      },
+      {
+        "width": 16,
+        "height": 48,
+        "shadow": "rgba(7, 24, 27, 0.094) 0px 2px 3px 0px inset"
+      },
+      {
+        "width": 16,
+        "height": 48,
+        "shadow": "rgba(7, 24, 27, 0.094) 0px 2px 3px 0px inset"
+      },
+      {
+        "width": 16,
+        "height": 48,
+        "shadow": "rgba(7, 24, 27, 0.094) 0px 2px 3px 0px inset"
+      }
+    ]
+  },
+  {
+    "name": "candidate",
+    "canvasCount": 0,
+    "radios": [
+      {
+        "width": 16,
+        "height": 16,
+        "shadow": "none"
+      },
+      {
+        "width": 16,
+        "height": 16,
+        "shadow": "none"
+      },
+      {
+        "width": 16,
+        "height": 16,
+        "shadow": "none"
+      },
+      {
+        "width": 16,
+        "height": 16,
+        "shadow": "none"
+      },
+      {
+        "width": 16,
+        "height": 16,
+        "shadow": "none"
+      },
+      {
+        "width": 16,
+        "height": 16,
+        "shadow": "none"
+      }
+    ]
+  },
+  {
+    "name": "no-shadows",
+    "canvasCount": 0,
+    "radios": [
+      {
+        "width": 16,
+        "height": 16,
+        "shadow": "none"
+      },
+      {
+        "width": 16,
+        "height": 16,
+        "shadow": "none"
+      },
+      {
+        "width": 16,
+        "height": 16,
+        "shadow": "none"
+      },
+      {
+        "width": 16,
+        "height": 16,
+        "shadow": "none"
+      },
+      {
+        "width": 16,
+        "height": 16,
+        "shadow": "none"
+      },
+      {
+        "width": 16,
+        "height": 16,
+        "shadow": "none"
+      }
+    ]
+  }
+]

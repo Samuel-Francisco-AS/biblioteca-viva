@@ -185,7 +185,10 @@ export function createOrbitalArena() {
     },
     update(deltaSeconds: number, reduced: boolean) {
       if (reduced) return;
-      elapsed += Math.min(0.05, Math.max(0, deltaSeconds));
+      // Caller supplies active time only; pause/resume belongs to the resident
+      // runtime. No per-frame cap: the path is analytical, not a simulation.
+      if (!Number.isFinite(deltaSeconds) || deltaSeconds <= 0) return;
+      elapsed += deltaSeconds;
       place();
     },
   };

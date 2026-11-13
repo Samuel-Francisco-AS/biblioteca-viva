@@ -1,3 +1,8 @@
+## BF-5.7B2.4-R2 — candidata 12/11/2026
+
+- Lua orbital passa a consumir tempo ativo sem desacelerar artificialmente abaixo de 20 FPS; habitantes mantêm o passo limitado e a retomada exclui a ausência do mundo.
+- Radios de Choices deixam de herdar altura mínima e sombra de campo de texto; estilo dos labels, seleção e foco preservados. Confirmação dos artefatos gráficos no Moto G06 pendente.
+
 ## 12/11/2026 — BF-5.7B2.4: remoção estrutural do TCG
 
 - Removidos motor, IA, serviço, contratos, arena, editores, replays, testes,
