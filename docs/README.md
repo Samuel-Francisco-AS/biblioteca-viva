@@ -1,3 +1,5 @@
+[BF-5.7B2.5-R3 — reparos após gate físico](BF-5_7B2_5_R3_GATE_FISICO_REPAROS.md): reentrada lunar, experimentos de texto, frame pacing e limites Android.
+
 [BF-5.7B2.5 — saneamento residual](BF-5_7B2_5_SANEAMENTO_RESIDUAL.md): auditoria de dependências, integridade e retenção; candidata sem aceite físico.
 
 [BF-5.7B2.4-R2 — reparos físicos](BF-5_7B2_4_R2_REPAROS_FISICOS.md): órbita por tempo ativo, Choices e limites da validação Android.

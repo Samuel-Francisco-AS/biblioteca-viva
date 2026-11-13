@@ -1,3 +1,9 @@
+## BF-5.7B2.5-R3 — candidata pós-gate físico
+
+- Seleção lunar transitória é limpa ao pausar o mundo residente, permitindo reentrada pelo portal sem toque vazio; outras seleções permanecem.
+- Intenção lunar continua protegida até a saída efetiva da rota, evitando navegações duplicadas.
+- Regressões cobrem três ciclos Canvas/controle acessível. Glifos Android e fluidez física continuam pendentes de nova avaliação.
+
 ## BF-5.7B2.5 — candidata 12/11/2026
 
 - Corrige referências residuais à sala de duelo em comentário e fixture genérica de transição; proteções de dados/rotas históricas e lua preservadas.
