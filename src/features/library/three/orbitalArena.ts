@@ -179,6 +179,7 @@ export function createOrbitalArena() {
   place();
   return {
     root,
+    book,
     descriptor: {
       id: ORBITAL_ARENA_ID,
       label: "Lua do Arcanário · abrir Portal do Arcanário",
