@@ -1,0 +1,87 @@
+[
+  {
+    "file": "docs/audits/evidence/bf56c/correcao-retrato.png",
+    "newSha256": "3fe49dd4d9664cde9e2d8fced3598e1c146d4ced9e3093e5c53a063344584e9e",
+    "restoredSha256": "a5306ce576d2daf689922a942e7977602a290b8dd75e785df07b5aa805408ec4"
+  },
+  {
+    "file": "docs/audits/evidence/bf56c/diagnostico-paisagem.png",
+    "newSha256": "30f704ecce4d88220a1d6053c3eb2ab7a31971e203a8dca80b3feb6da102e319",
+    "restoredSha256": "88db349abbdda11537b27c1df4928179ce75f5e49e3a40b767f2b87a19e5c5de"
+  },
+  {
+    "file": "docs/audits/evidence/bf56c/diagnostico-retrato.png",
+    "newSha256": "6e5fa6f084d77b43e07c6508ce059a0beea887b686582eb22a5842c9270b9fb8",
+    "restoredSha256": "eb1e50d504e49e82d7789b9e5c01cb4f52f6cb494a6b3704700f5e49e127f02a"
+  },
+  {
+    "file": "docs/audits/evidence/bf56c/editor-retrato.png",
+    "newSha256": "4e7f43d8368a97d17f8a412e31463ebee5a698c893a356b68684797f3c02910e",
+    "restoredSha256": "08d23352820ba1ba9563c1686f70a0ea32a13422ab63dbb4d0be7dacd9cb6bcc"
+  },
+  {
+    "file": "docs/audits/evidence/bf56c/filtros-retrato.png",
+    "newSha256": "2770d0c89032d549e65e93ec72de525913518b9a9abe5024d2c2aaac51bb5f14",
+    "restoredSha256": "d45b216df65d0fd67c10748dcad1c03523a15645107adc9bed0b875e49ff9ca9"
+  },
+  {
+    "file": "docs/audits/evidence/bf56c/molduras-retrato.png",
+    "newSha256": "6c337317c5e76b4d988f6b912cb6a50591c356bc85859abf4439101a7666bd9c",
+    "restoredSha256": "d2564a41229a24ddabbb7fdd9c3966354fad9d249ef7c34d7c11adec310baffb"
+  },
+  {
+    "file": "docs/audits/evidence/bf56c/provacao-paisagem.png",
+    "newSha256": "f69270365fea9c1ca37e4f3139b2e83ed3696c803cc2963874a5443515434d2d",
+    "restoredSha256": "573ef133170b8cd30394f4ccf5776b8cbdea9695581265af4401d0e099956d90"
+  },
+  {
+    "file": "docs/audits/evidence/bf56c/provacao-retrato.png",
+    "newSha256": "55c3d0e8889c0ba5ce168d326b6c5196719ff7908070ec6f43a140e82694c1d9",
+    "restoredSha256": "98d444b1f7cba03861f12963318ae80cb89de5c913c817a0a6060edd4880f45b"
+  },
+  {
+    "file": "docs/audits/evidence/bf56c/resultado-retrato.png",
+    "newSha256": "d8664614eda858f1daa3ee4238395e7b949d1d0c77c32dd13e950222c4b0cfe4",
+    "restoredSha256": "35fd2150aa49776b9b0dc6ed96d0f2677dedbdb999f581a3c1b950c8f720136a"
+  },
+  {
+    "file": "docs/audits/evidence/bf56c/taxonomia-retrato.png",
+    "newSha256": "ee58278225fa9653cc6b81a2775b6b7111d09aa3ccd91b02804ed7140f45ef19",
+    "restoredSha256": "b02268641adfa16884cbf43a2cbc6981170baf46f331a477df86a76d166b7726"
+  },
+  {
+    "file": "docs/audits/evidence/bf56d/catalogo-paisagem.png",
+    "newSha256": "edebc35d6476a68868319b877cf9726c53353f1b10dd3ae3eb499fb166be7255",
+    "restoredSha256": "bb996734fa97f7eb8ecc240948f3b78584f1f91c4655497af637901b34365b9a"
+  },
+  {
+    "file": "docs/audits/evidence/bf56d/catalogo-retrato.png",
+    "newSha256": "af65df415d707c922d5d22bdd0a9cbc82fc941a9a79246528e23630df47848ca",
+    "restoredSha256": "1b832701dba9ab529db514b2fd7fe1d47d375f6ddf07af70fb4a146735e054ef"
+  },
+  {
+    "file": "docs/audits/evidence/bf56d/lotes-instalados.png",
+    "newSha256": "d8ec5b98e1a2eca2266f013191a71c9e29f5f29a50013a7d167df9803005c11c",
+    "restoredSha256": "b4e15fae2c2c0c28ed550883320f39b0af15a615d005a1270799758c906fa050"
+  },
+  {
+    "file": "docs/audits/evidence/bf56d/provacao-com-pacote.png",
+    "newSha256": "d7b8ab93c0e22bd93920db651d1d368e976ef6cccb8a69cad144eea90aa6dd0c",
+    "restoredSha256": "ff7b9208b086240cc3637c238c9a74b55bf07d6b52e1e7ddcb8bd67f992d37a7"
+  },
+  {
+    "file": "docs/audits/evidence/bf56d/removido-historico-preservado.png",
+    "newSha256": "517e3597660c2b4d29d326a491e09aaaae8fcd8f1ac459b07ca42a7fc2d2d225",
+    "restoredSha256": "9b660f21aae604d8c4081ae6205eeab330ff08492a58d96160249491bbcd7f7c"
+  },
+  {
+    "file": "docs/evidence/BF-5_ATLAS_CLASSICO/regressao-treino-paisagem.png",
+    "newSha256": "c7fd0fb313dfe494b89a2ea87d32b45b72eee8ba14944c711be9ba33bd168a86",
+    "restoredSha256": "b265bac50040e87aed59c8b328faf0dcdcf43ec0294a278b6e07de0b42235529"
+  },
+  {
+    "file": "docs/evidence/BF-5_ATLAS_CLASSICO/regressao-treino-retrato.png",
+    "newSha256": "e354635ac4cf2224cc0e69e09387aa7383135ca89da224208ad0ec2822661a6b",
+    "restoredSha256": "4c99bb294760381873148ea535e9454432009921d7c0734e9fa4eb43d6f4adfd"
+  }
+]

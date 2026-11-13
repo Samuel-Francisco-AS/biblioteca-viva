@@ -1,0 +1,373 @@
+e2e/performance-navigation.spec.ts:40:    page.locator('.arcana-nav a[href="/arcanario/duelos"]'),
+src/pages.tsx:260:    if (nextSelection?.id === "portal:duelo-arcano") {
+e2e/bf57b-retired-duel.spec.ts:7:  ["/arcanario/duelos", "hall"],
+e2e/bf57b-retired-duel.spec.ts:8:  ["/arcanario/duelos/regras", "rules"],
+e2e/bf57b-retired-duel.spec.ts:9:  ["/arcanario/duelos/baralhos/legacy", "deck editor"],
+e2e/bf57b-retired-duel.spec.ts:10:  ["/arcanario/duelos/partida/legacy", "match"],
+e2e/bf57b-retired-duel.spec.ts:11:  ["/arcanario/duelos/arena/legacy", "arena"],
+e2e/bf57b-retired-duel.spec.ts:25:      navigation.getByRole("link", { name: "Duelo Arcano", exact: true }),
+e2e/bf57b-retired-duel.spec.ts:28:      page.getByRole("button", { name: "Iniciar duelo PvE" }),
+e2e/bf57b-retired-duel.spec.ts:33:test("BF-5.7B2.3: retired combat-card creation returns to Portal", async ({
+e2e/bf57b-retired-duel.spec.ts:36:  await page.goto("/arcanario/oficina/nova?tipo=combat", {
+e2e/bf57b-retired-duel.spec.ts:41:  await expect(page.getByText("Criar carta de combate")).toHaveCount(0);
+e2e/bf57b-retired-duel.spec.ts:62:  await expect(page.getByText("Criar carta de combate")).toHaveCount(0);
+src/pages.test.tsx:1138:          path="/arcanario/duelos"
+src/pages.test.tsx:1147:      id: "portal:duelo-arcano",
+e2e/bf56f-orbital-refinement.spec.ts:147:    arcanariumNav.getByRole("link", { name: "Duelo Arcano", exact: true }),
+src/App.tsx:512:                  path="/arcanario/duelos/*"
+src/app/uiActionProbe.test.ts:41:  expect(uiRouteCategory("/arcanario/duelos/arena/secret")).toBe("/arcanario");
+src/features/arcanarium/ArcanariumPage.test.tsx:84:it("removes the Duelo Arcano from the portal and redirects legacy duel rooms", async () => {
+src/features/arcanarium/ArcanariumPage.test.tsx:90:  expect(screen.queryByText("O Duelo Arcano")).toBeNull();
+src/features/arcanarium/ArcanariumPage.test.tsx:92:  mount(a, "/arcanario/duelos/arena/legacy");
+src/features/arcanarium/ArcanariumPage.test.tsx:101:  expect(screen.queryByText("Salão dos duelos")).toBeNull();
+src/features/arcanarium/ArcanariumPage.test.tsx:104:it("redirects legacy combat-card creation to the portal", async () => {
+src/features/arcanarium/ArcanariumPage.test.tsx:106:  mount(a, "/arcanario/oficina/nova?tipo=combat");
+src/features/arcanarium/ArcanariumPage.test.tsx:115:  expect(screen.queryByText("Criar carta de combate")).toBeNull();
+src/app/createApplication.ts:1:import { retireCombatData } from "../infrastructure/database/retireCombatData";
+src/app/createApplication.ts:288:    await retireCombatData(database);
+src/features/arcanarium/ArcanariumPage.tsx:217:                path="duelos/*"
+src/features/arcanarium/Workshop.tsx:65:  if (params.get("tipo") === "combat")
+src/test/fixtures/README.md:5:all current revisions and a synthetic combat_match session. The original
+src/features/library/WorldHost.tsx:505:                    ({ id }) => id === "portal:duelo-arcano",
+src/features/library/WorldHost.tsx:511:                        runtimeRef.current?.selectObject("portal:duelo-arcano")
+src/features/library/WorldHost.test.tsx:228:      id: "portal:duelo-arcano",
+src/test/fixtures/backup-v11-tcg.json:15:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:23:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:25:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:44:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:52:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:54:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:73:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:81:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:83:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:102:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:110:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:112:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:145:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:153:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:155:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:188:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:196:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:198:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:229:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:237:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:239:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:276:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:284:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:286:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:317:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:325:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:327:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:358:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:366:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:368:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:399:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:407:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:409:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:442:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:450:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:452:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:485:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:493:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:495:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:528:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:536:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:538:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:571:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:579:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:581:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:614:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:622:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:624:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:655:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:663:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:665:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:702:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:710:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:712:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:743:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:751:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:753:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:784:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:792:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:794:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:825:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:833:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:835:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:854:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:862:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:864:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:897:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:905:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:907:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:940:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:948:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:950:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:969:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:977:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:979:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1012:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1020:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1022:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1053:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1061:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1063:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1094:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1102:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1104:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1135:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1143:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1145:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1176:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1184:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1186:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1217:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1225:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1227:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1246:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1254:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1256:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1289:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1297:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1299:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1332:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1340:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1342:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1361:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1369:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1371:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1404:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1412:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1414:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1445:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1453:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1455:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1486:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1494:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1496:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1533:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1541:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1543:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1574:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1582:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1584:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1615:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1623:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1625:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1644:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1652:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1654:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1673:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1681:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1683:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1702:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1710:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1712:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1731:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1739:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1741:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1778:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1786:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1788:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1819:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1827:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1829:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1860:          "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1868:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1870:            "combat": {
+src/test/fixtures/backup-v11-tcg.json:1906:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1914:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1916:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:1939:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1947:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1949:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:1972:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1980:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:1982:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2005:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2013:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2015:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2052:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2060:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2062:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2099:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2107:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2109:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2144:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2152:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2154:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2195:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2203:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2205:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2240:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2248:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2250:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2285:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2293:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2295:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2330:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2338:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2340:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2377:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2385:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2387:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2424:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2432:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2434:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2471:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2479:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2481:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2518:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2526:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2528:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2565:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2573:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2575:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2610:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2618:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2620:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2661:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2669:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2671:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2706:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2714:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2716:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2751:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2759:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2761:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2796:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2804:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2806:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2829:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2837:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2839:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2876:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2884:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2886:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2923:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2931:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2933:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:2956:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2964:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:2966:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3003:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3011:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3013:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3048:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3056:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3058:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3093:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3101:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3103:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3138:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3146:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3148:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3183:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3191:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3193:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3228:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3236:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3238:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3261:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3269:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3271:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3308:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3316:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3318:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3355:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3363:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3365:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3388:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3396:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3398:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3435:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3443:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3445:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3480:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3488:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3490:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3525:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3533:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3535:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3576:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3584:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3586:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3621:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3629:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3631:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3666:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3674:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3676:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3699:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3707:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3709:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3732:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3740:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3742:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3765:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3773:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3775:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3798:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3806:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3808:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3849:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3857:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3859:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3894:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3902:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3904:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:3939:            "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3947:              "type": "combat",
+src/test/fixtures/backup-v11-tcg.json:3949:              "combat": {
+src/test/fixtures/backup-v11-tcg.json:4042:          "combat": {
+src/test/fixtures/backup-v11-tcg.json:4124:          "combat": {
+src/test/fixtures/backup-v11-tcg.json:4206:          "combat": {
+src/test/fixtures/backup-v11-tcg.json:4288:          "combat": {
+src/test/fixtures/backup-v11-tcg.json:4314:          "kind": "combat_match",
+src/infrastructure/backup/backup.test.ts:172:          data: { arcanarium: { cards: [{ type: "combat" }] } },
+src/infrastructure/backup/backup.test.ts:384:        "Backups com dados do Duelo Arcano não são compatíveis com esta versão.",
+src/infrastructure/backup/backupCodec.ts:173:function containsRetiredDuelData(value: unknown): boolean {
+src/infrastructure/backup/backupCodec.ts:188:          (card as { type?: unknown }).type === "combat",
+src/infrastructure/backup/backupCodec.ts:192:        (deck) => deck && typeof deck === "object" && "combat" in deck,
+src/infrastructure/backup/backupCodec.ts:199:          (session as { kind?: unknown }).kind === "combat_match",
+src/infrastructure/backup/backupCodec.ts:458:      containsRetiredDuelData((raw as { data?: unknown }).data)
+src/infrastructure/backup/backupCodec.ts:462:        "Backups com dados do Duelo Arcano não são compatíveis com esta versão.",
+src/features/library/three/orbitalArena.ts:18:export const ORBITAL_ARENA_ID = "portal:duelo-arcano";
+src/features/library/three/orbitalArena.ts:23:export function createOrbitalArena() {
+src/features/library/three/orbitalArena.ts:25:  root.name = ORBITAL_ARENA_ID;
+src/features/library/three/orbitalArena.ts:183:      id: ORBITAL_ARENA_ID,
+src/features/library/three/ThreeWorldRuntime.d1.test.ts:307:      catalog.find(({ id }) => id === "portal:duelo-arcano"),
+src/features/library/three/ThreeWorldRuntime.d1.test.ts:1105:  const orbital = scene?.getObjectByName("portal:duelo-arcano");
+src/features/library/three/ThreeWorldRuntime.d1.test.ts:1120:  runtime.selectObject("portal:duelo-arcano");
+src/features/library/three/ThreeWorldRuntime.d1.test.ts:1122:    "portal:duelo-arcano",
+src/features/library/three/ThreeWorldRuntime.d1.test.ts:1124:  expect(scene?.getObjectByName("portal:duelo-arcano")).toBe(orbital);
+src/features/library/three/ThreeWorldRuntime.test.ts:3305:  const moon = scene.getObjectByName("portal:duelo-arcano")!;
+src/features/library/three/ThreeWorldRuntime.test.ts:3324:  expect(scene.getObjectByName("portal:duelo-arcano")).toBe(identity);
+src/features/library/three/ThreeWorldRuntime.ts:1:import { createOrbitalArena } from "./orbitalArena";
+src/features/library/three/ThreeWorldRuntime.ts:506:  private orbital?: ReturnType<typeof createOrbitalArena>;
+src/features/library/three/ThreeWorldRuntime.ts:719:          ? [createOrbitalArena()]
+src/features/library/three/ThreeWorldRuntime.ts:1547:      if (this.selection?.id === "portal:duelo-arcano")
+src/features/library/three/ThreeWorldInteraction.ts:300:      this.selectedId === "portal:duelo-arcano"
+src/features/library/three/worldPickBroadphase.ts:41:    if (id.startsWith("living:") || id === "portal:duelo-arcano") return;
+src/infrastructure/database/retireCombatData.test.ts:8:import { retireCombatData } from "./retireCombatData";
+src/infrastructure/database/retireCombatData.test.ts:65:      await retireCombatData(db);
+src/infrastructure/database/retireCombatData.test.ts:72:      await retireCombatData(db);
+src/infrastructure/database/retireCombatData.test.ts:89:    await expect(retireCombatData(db)).rejects.toThrow(
+src/infrastructure/database/retireCombatData.test.ts:98:      await db.metadata.get("arcanarium.retired-combat.v1"),
+src/infrastructure/database/retireCombatData.test.ts:132:    await retireCombatData(db);
+src/infrastructure/database/retireCombatData.ts:5:const marker = "arcanarium.retired-combat.v1";
+src/infrastructure/database/retireCombatData.ts:8:export async function retireCombatData(db: BibliotecaDatabase) {
+src/infrastructure/database/retireCombatData.ts:17:      .filter((c) => c.type === "combat")
+src/infrastructure/database/retireCombatData.ts:21:    await cards.filter((c) => c.type === "combat").delete();
+src/infrastructure/database/retireCombatData.ts:29:            v.card.type === "combat"),
+src/infrastructure/database/retireCombatData.ts:32:    await decks.filter((d) => "combat" in d).delete();
+src/infrastructure/database/retireCombatData.ts:34:    await sessions.filter((s) => s.kind === "combat_match").delete();
+src/infrastructure/database/retireCombatData.ts:43:          (t) => String(t) !== "combat",
+src/features/library/three/orbitalArena.test.ts:5:  createOrbitalArena,
+src/features/library/three/orbitalArena.test.ts:6:  ORBITAL_ARENA_ID,
+src/features/library/three/orbitalArena.test.ts:8:} from "./orbitalArena";
+src/features/library/three/orbitalArena.test.ts:12:  const orbital = createOrbitalArena();
+src/features/library/three/orbitalArena.test.ts:15:  expect(orbital.descriptor.id).toBe(ORBITAL_ARENA_ID);
+src/features/library/three/orbitalArena.test.ts:51:  const orbital = createOrbitalArena(),
+src/features/library/three/orbitalArena.test.ts:69:    const orbital = createOrbitalArena();
+src/features/library/three/orbitalArena.test.ts:83:  const orbital = createOrbitalArena();

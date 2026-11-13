@@ -1,0 +1,2 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 npx
+npm notice run 'eslint' e2e/bf56b-workshop.spec.ts e2e/bf56d-packs.spec.ts e2e/bf57b-educational-offline.spec.ts

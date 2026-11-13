@@ -1,0 +1,5 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 npx
+npm notice run 'prettier' --check e2e/bf57b-educational-offline.spec.ts src/app/interactionContinuity.test.ts
+Checking formatting...
+[warn] src/app/interactionContinuity.test.ts
+[warn] Code style issues found in the above file. Run Prettier with --write to fix.

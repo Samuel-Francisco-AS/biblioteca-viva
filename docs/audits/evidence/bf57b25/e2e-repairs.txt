@@ -1,0 +1,19 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:e2e
+npm notice run playwright test e2e/bf56b-workshop.spec.ts e2e/bf56d-packs.spec.ts --grep Oficina, baralho|partial catalog
+[WebServer] npm notice run biblioteca-viva@0.2.0-alpha.1 preview
+[WebServer] npm notice run vite preview --host 127.0.0.1 --port 4173
+[WebServer] (node:44187) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] npm notice run biblioteca-viva@0.2.0-alpha.1 dev
+[WebServer] npm notice run vite --host 127.0.0.1 --port 4174
+[WebServer] (node:44225) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:44252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/bf56b-workshop.spec.ts:51:1 › B: Oficina, baralho, duas respostas, interrupção, reload e histórico real (10.7s)
+  ✓  2 [chromium] › e2e/bf56d-packs.spec.ts:43:1 › D: partial catalog, lots, idempotence, trial, offline, removal and coherent reinstall (15.4s)
+
+  2 passed (28.3s)

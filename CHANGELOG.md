@@ -2,6 +2,7 @@
 
 - Corrige referências residuais à sala de duelo em comentário e fixture genérica de transição; proteções de dados/rotas históricas e lua preservadas.
 - Reforça regressão de gravação educativa em navegação offline e persistência na reabertura, sem novas funcionalidades ou limpeza do banco antigo.
+- Testes de Ecos aguardam a navegação antes do reload; o cenário web offline de pacotes passa a carregar a gestão no documento atual antes de desconectar.
 
 ## BF-5.7B2.4-R2 — candidata 12/11/2026
 

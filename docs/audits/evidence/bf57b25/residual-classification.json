@@ -1,0 +1,2265 @@
+{
+  "total": 375,
+  "files": 27,
+  "counts": {
+    "redirecionamento histórico/ausência de TCG e regressões": 22,
+    "identificador técnico/órbita/seleção lunar e regressões": 32,
+    "removido: comentário obsoleto": 1,
+    "fixture/documentação histórica necessária para rejeição e saneamento": 294,
+    "detecção/rejeição/saneamento de dados antigos e regressões": 24,
+    "removido: alvo obsoleto em teste genérico": 1,
+    "regressão de privacidade com rota histórica": 1
+  },
+  "occurrences": [
+    {
+      "path": "e2e/performance-navigation.spec.ts",
+      "line": 40,
+      "source": "    page.locator('.arcana-nav a[href=\"/arcanario/duelos\"]'),",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "e2e/bf57b-retired-duel.spec.ts",
+      "line": 7,
+      "source": "  [\"/arcanario/duelos\", \"hall\"],",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "e2e/bf57b-retired-duel.spec.ts",
+      "line": 8,
+      "source": "  [\"/arcanario/duelos/regras\", \"rules\"],",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "e2e/bf57b-retired-duel.spec.ts",
+      "line": 9,
+      "source": "  [\"/arcanario/duelos/baralhos/legacy\", \"deck editor\"],",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "e2e/bf57b-retired-duel.spec.ts",
+      "line": 10,
+      "source": "  [\"/arcanario/duelos/partida/legacy\", \"match\"],",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "e2e/bf57b-retired-duel.spec.ts",
+      "line": 11,
+      "source": "  [\"/arcanario/duelos/arena/legacy\", \"arena\"],",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "e2e/bf57b-retired-duel.spec.ts",
+      "line": 25,
+      "source": "      navigation.getByRole(\"link\", { name: \"Duelo Arcano\", exact: true }),",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "e2e/bf57b-retired-duel.spec.ts",
+      "line": 28,
+      "source": "      page.getByRole(\"button\", { name: \"Iniciar duelo PvE\" }),",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "e2e/bf57b-retired-duel.spec.ts",
+      "line": 33,
+      "source": "test(\"BF-5.7B2.3: retired combat-card creation returns to Portal\", async ({",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "e2e/bf57b-retired-duel.spec.ts",
+      "line": 36,
+      "source": "  await page.goto(\"/arcanario/oficina/nova?tipo=combat\", {",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "e2e/bf57b-retired-duel.spec.ts",
+      "line": 41,
+      "source": "  await expect(page.getByText(\"Criar carta de combate\")).toHaveCount(0);",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "e2e/bf57b-retired-duel.spec.ts",
+      "line": 62,
+      "source": "  await expect(page.getByText(\"Criar carta de combate\")).toHaveCount(0);",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "e2e/bf56f-orbital-refinement.spec.ts",
+      "line": 147,
+      "source": "    arcanariumNav.getByRole(\"link\", { name: \"Duelo Arcano\", exact: true }),",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/pages.tsx",
+      "line": 260,
+      "source": "    if (nextSelection?.id === \"portal:duelo-arcano\") {",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/pages.tsx",
+      "line": 262,
+      "source": "      // The lunar gate enters the Arcanarium Portal; duel is a room within it.",
+      "classification": "removido: comentário obsoleto"
+    },
+    {
+      "path": "src/pages.test.tsx",
+      "line": 1138,
+      "source": "          path=\"/arcanario/duelos\"",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/pages.test.tsx",
+      "line": 1147,
+      "source": "      id: \"portal:duelo-arcano\",",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/App.tsx",
+      "line": 512,
+      "source": "                  path=\"/arcanario/duelos/*\"",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "src/features/arcanarium/ArcanariumPage.test.tsx",
+      "line": 84,
+      "source": "it(\"removes the Duelo Arcano from the portal and redirects legacy duel rooms\", async () => {",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "src/features/arcanarium/ArcanariumPage.test.tsx",
+      "line": 90,
+      "source": "  expect(screen.queryByText(\"O Duelo Arcano\")).toBeNull();",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "src/features/arcanarium/ArcanariumPage.test.tsx",
+      "line": 92,
+      "source": "  mount(a, \"/arcanario/duelos/arena/legacy\");",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "src/features/arcanarium/ArcanariumPage.test.tsx",
+      "line": 101,
+      "source": "  expect(screen.queryByText(\"Salão dos duelos\")).toBeNull();",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "src/features/arcanarium/ArcanariumPage.test.tsx",
+      "line": 104,
+      "source": "it(\"redirects legacy combat-card creation to the portal\", async () => {",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "src/features/arcanarium/ArcanariumPage.test.tsx",
+      "line": 106,
+      "source": "  mount(a, \"/arcanario/oficina/nova?tipo=combat\");",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "src/features/arcanarium/ArcanariumPage.test.tsx",
+      "line": 115,
+      "source": "  expect(screen.queryByText(\"Criar carta de combate\")).toBeNull();",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "src/features/arcanarium/ArcanariumPage.tsx",
+      "line": 217,
+      "source": "                path=\"duelos/*\"",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "src/features/arcanarium/Workshop.tsx",
+      "line": 65,
+      "source": "  if (params.get(\"tipo\") === \"combat\")",
+      "classification": "redirecionamento histórico/ausência de TCG e regressões"
+    },
+    {
+      "path": "src/test/fixtures/README.md",
+      "line": 5,
+      "source": "all current revisions and a synthetic combat_match session. The original",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.test.ts",
+      "line": 8,
+      "source": "import { retireCombatData } from \"./retireCombatData\";",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.test.ts",
+      "line": 65,
+      "source": "      await retireCombatData(db);",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.test.ts",
+      "line": 72,
+      "source": "      await retireCombatData(db);",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.test.ts",
+      "line": 89,
+      "source": "    await expect(retireCombatData(db)).rejects.toThrow(",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.test.ts",
+      "line": 98,
+      "source": "      await db.metadata.get(\"arcanarium.retired-combat.v1\"),",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.test.ts",
+      "line": 132,
+      "source": "    await retireCombatData(db);",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.ts",
+      "line": 5,
+      "source": "const marker = \"arcanarium.retired-combat.v1\";",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.ts",
+      "line": 8,
+      "source": "export async function retireCombatData(db: BibliotecaDatabase) {",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.ts",
+      "line": 17,
+      "source": "      .filter((c) => c.type === \"combat\")",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.ts",
+      "line": 21,
+      "source": "    await cards.filter((c) => c.type === \"combat\").delete();",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.ts",
+      "line": 29,
+      "source": "            v.card.type === \"combat\"),",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.ts",
+      "line": 32,
+      "source": "    await decks.filter((d) => \"combat\" in d).delete();",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.ts",
+      "line": 34,
+      "source": "    await sessions.filter((s) => s.kind === \"combat_match\").delete();",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/database/retireCombatData.ts",
+      "line": 43,
+      "source": "          (t) => String(t) !== \"combat\",",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/backup/backup.test.ts",
+      "line": 172,
+      "source": "          data: { arcanarium: { cards: [{ type: \"combat\" }] } },",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/backup/backup.test.ts",
+      "line": 384,
+      "source": "        \"Backups com dados do Duelo Arcano não são compatíveis com esta versão.\",",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 15,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 23,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 25,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 44,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 52,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 54,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 73,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 81,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 83,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 102,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 110,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 112,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 145,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 153,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 155,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 188,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 196,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 198,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 229,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 237,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 239,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 276,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 284,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 286,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 317,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 325,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 327,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 358,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 366,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 368,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 399,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 407,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 409,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 442,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 450,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 452,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 485,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 493,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 495,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 528,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 536,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 538,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 571,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 579,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 581,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 614,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 622,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 624,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 655,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 663,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 665,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 702,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 710,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 712,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 743,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 751,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 753,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 784,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 792,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 794,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 825,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 833,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 835,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 854,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 862,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 864,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 897,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 905,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 907,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 940,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 948,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 950,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 969,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 977,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 979,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1012,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1020,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1022,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1053,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1061,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1063,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1094,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1102,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1104,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1135,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1143,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1145,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1176,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1184,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1186,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1217,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1225,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1227,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1246,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1254,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1256,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1289,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1297,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1299,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1332,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1340,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1342,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1361,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1369,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1371,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1404,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1412,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1414,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1445,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1453,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1455,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1486,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1494,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1496,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1533,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1541,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1543,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1574,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1582,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1584,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1615,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1623,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1625,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1644,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1652,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1654,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1673,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1681,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1683,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1702,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1710,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1712,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1731,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1739,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1741,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1778,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1786,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1788,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1819,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1827,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1829,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1860,
+      "source": "          \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1868,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1870,
+      "source": "            \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1906,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1914,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1916,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1939,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1947,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1949,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1972,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1980,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 1982,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2005,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2013,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2015,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2052,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2060,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2062,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2099,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2107,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2109,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2144,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2152,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2154,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2195,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2203,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2205,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2240,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2248,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2250,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2285,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2293,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2295,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2330,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2338,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2340,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2377,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2385,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2387,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2424,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2432,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2434,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2471,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2479,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2481,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2518,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2526,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2528,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2565,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2573,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2575,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2610,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2618,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2620,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2661,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2669,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2671,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2706,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2714,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2716,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2751,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2759,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2761,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2796,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2804,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2806,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2829,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2837,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2839,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2876,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2884,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2886,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2923,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2931,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2933,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2956,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2964,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 2966,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3003,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3011,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3013,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3048,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3056,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3058,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3093,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3101,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3103,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3138,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3146,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3148,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3183,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3191,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3193,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3228,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3236,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3238,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3261,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3269,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3271,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3308,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3316,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3318,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3355,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3363,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3365,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3388,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3396,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3398,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3435,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3443,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3445,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3480,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3488,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3490,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3525,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3533,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3535,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3576,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3584,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3586,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3621,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3629,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3631,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3666,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3674,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3676,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3699,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3707,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3709,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3732,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3740,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3742,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3765,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3773,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3775,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3798,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3806,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3808,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3849,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3857,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3859,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3894,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3902,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3904,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3939,
+      "source": "            \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3947,
+      "source": "              \"type\": \"combat\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 3949,
+      "source": "              \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 4042,
+      "source": "          \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 4124,
+      "source": "          \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 4206,
+      "source": "          \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 4288,
+      "source": "          \"combat\": {",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/test/fixtures/backup-v11-tcg.json",
+      "line": 4314,
+      "source": "          \"kind\": \"combat_match\",",
+      "classification": "fixture/documentação histórica necessária para rejeição e saneamento"
+    },
+    {
+      "path": "src/infrastructure/backup/backupCodec.ts",
+      "line": 173,
+      "source": "function containsRetiredDuelData(value: unknown): boolean {",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/backup/backupCodec.ts",
+      "line": 188,
+      "source": "          (card as { type?: unknown }).type === \"combat\",",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/backup/backupCodec.ts",
+      "line": 192,
+      "source": "        (deck) => deck && typeof deck === \"object\" && \"combat\" in deck,",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/backup/backupCodec.ts",
+      "line": 199,
+      "source": "          (session as { kind?: unknown }).kind === \"combat_match\",",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/backup/backupCodec.ts",
+      "line": 458,
+      "source": "      containsRetiredDuelData((raw as { data?: unknown }).data)",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/infrastructure/backup/backupCodec.ts",
+      "line": 462,
+      "source": "        \"Backups com dados do Duelo Arcano não são compatíveis com esta versão.\",",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/features/library/WorldHost.tsx",
+      "line": 505,
+      "source": "                    ({ id }) => id === \"portal:duelo-arcano\",",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/WorldHost.tsx",
+      "line": 511,
+      "source": "                        runtimeRef.current?.selectObject(\"portal:duelo-arcano\")",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/WorldHost.test.tsx",
+      "line": 228,
+      "source": "      id: \"portal:duelo-arcano\",",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/app/interactionContinuity.test.ts",
+      "line": 70,
+      "source": "    signalPassageReady(\"/arcanario/duelos\"); // stale room",
+      "classification": "removido: alvo obsoleto em teste genérico"
+    },
+    {
+      "path": "src/app/uiActionProbe.test.ts",
+      "line": 41,
+      "source": "  expect(uiRouteCategory(\"/arcanario/duelos/arena/secret\")).toBe(\"/arcanario\");",
+      "classification": "regressão de privacidade com rota histórica"
+    },
+    {
+      "path": "src/app/createApplication.ts",
+      "line": 1,
+      "source": "import { retireCombatData } from \"../infrastructure/database/retireCombatData\";",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/app/createApplication.ts",
+      "line": 288,
+      "source": "    await retireCombatData(database);",
+      "classification": "detecção/rejeição/saneamento de dados antigos e regressões"
+    },
+    {
+      "path": "src/features/library/three/orbitalArena.test.ts",
+      "line": 5,
+      "source": "  createOrbitalArena,",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/orbitalArena.test.ts",
+      "line": 6,
+      "source": "  ORBITAL_ARENA_ID,",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/orbitalArena.test.ts",
+      "line": 8,
+      "source": "} from \"./orbitalArena\";",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/orbitalArena.test.ts",
+      "line": 12,
+      "source": "  const orbital = createOrbitalArena();",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/orbitalArena.test.ts",
+      "line": 15,
+      "source": "  expect(orbital.descriptor.id).toBe(ORBITAL_ARENA_ID);",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/orbitalArena.test.ts",
+      "line": 51,
+      "source": "  const orbital = createOrbitalArena(),",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/orbitalArena.test.ts",
+      "line": 69,
+      "source": "    const orbital = createOrbitalArena();",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/orbitalArena.test.ts",
+      "line": 83,
+      "source": "  const orbital = createOrbitalArena();",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/orbitalArena.ts",
+      "line": 18,
+      "source": "export const ORBITAL_ARENA_ID = \"portal:duelo-arcano\";",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/orbitalArena.ts",
+      "line": 23,
+      "source": "export function createOrbitalArena() {",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/orbitalArena.ts",
+      "line": 25,
+      "source": "  root.name = ORBITAL_ARENA_ID;",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/orbitalArena.ts",
+      "line": 183,
+      "source": "      id: ORBITAL_ARENA_ID,",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/ThreeWorldRuntime.d1.test.ts",
+      "line": 307,
+      "source": "      catalog.find(({ id }) => id === \"portal:duelo-arcano\"),",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/ThreeWorldRuntime.d1.test.ts",
+      "line": 1105,
+      "source": "  const orbital = scene?.getObjectByName(\"portal:duelo-arcano\");",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/ThreeWorldRuntime.d1.test.ts",
+      "line": 1120,
+      "source": "  runtime.selectObject(\"portal:duelo-arcano\");",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/ThreeWorldRuntime.d1.test.ts",
+      "line": 1122,
+      "source": "    \"portal:duelo-arcano\",",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/ThreeWorldRuntime.d1.test.ts",
+      "line": 1124,
+      "source": "  expect(scene?.getObjectByName(\"portal:duelo-arcano\")).toBe(orbital);",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/ThreeWorldRuntime.test.ts",
+      "line": 3305,
+      "source": "  const moon = scene.getObjectByName(\"portal:duelo-arcano\")!;",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/ThreeWorldRuntime.test.ts",
+      "line": 3324,
+      "source": "  expect(scene.getObjectByName(\"portal:duelo-arcano\")).toBe(identity);",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/worldPickBroadphase.ts",
+      "line": 41,
+      "source": "    if (id.startsWith(\"living:\") || id === \"portal:duelo-arcano\") return;",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/ThreeWorldRuntime.ts",
+      "line": 1,
+      "source": "import { createOrbitalArena } from \"./orbitalArena\";",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/ThreeWorldRuntime.ts",
+      "line": 506,
+      "source": "  private orbital?: ReturnType<typeof createOrbitalArena>;",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/ThreeWorldRuntime.ts",
+      "line": 719,
+      "source": "          ? [createOrbitalArena()]",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/ThreeWorldRuntime.ts",
+      "line": 1547,
+      "source": "      if (this.selection?.id === \"portal:duelo-arcano\")",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    },
+    {
+      "path": "src/features/library/three/ThreeWorldInteraction.ts",
+      "line": 300,
+      "source": "      this.selectedId === \"portal:duelo-arcano\"",
+      "classification": "identificador técnico/órbita/seleção lunar e regressões"
+    }
+  ]
+}
