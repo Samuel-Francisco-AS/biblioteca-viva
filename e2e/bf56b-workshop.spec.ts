@@ -79,6 +79,9 @@ test("B: Oficina, baralho, duas respostas, interrupção, reload e histórico re
   await page
     .getByRole("link", { name: /Interromper e guardar rodada/ })
     .click();
+  // The passage schedules navigation after its opaque cover. A reload before
+  // that commit cancels the user's exit and reloads the still-active review.
+  await expect(page).toHaveURL(/\/arcanario\/ecos$/);
   await page.reload();
   await page.getByRole("link", { name: /Retomar do próximo Eco/ }).click();
   await expect(page.getByText(/1 de 2 respostas confirmadas/)).toBeVisible();
