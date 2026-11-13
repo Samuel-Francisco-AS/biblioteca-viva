@@ -1,3 +1,8 @@
+## BF-5.7B2.5 — candidata 12/11/2026
+
+- Corrige referências residuais à sala de duelo em comentário e fixture genérica de transição; proteções de dados/rotas históricas e lua preservadas.
+- Reforça regressão de gravação educativa em navegação offline e persistência na reabertura, sem novas funcionalidades ou limpeza do banco antigo.
+
 ## BF-5.7B2.4-R2 — candidata 12/11/2026
 
 - Lua orbital passa a consumir tempo ativo sem desacelerar artificialmente abaixo de 20 FPS; habitantes mantêm o passo limitado e a retomada exclui a ausência do mundo.

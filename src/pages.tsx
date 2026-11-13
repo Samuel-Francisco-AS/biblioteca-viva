@@ -259,7 +259,7 @@ function LibraryPageContent({
     if (!application) return;
     if (nextSelection?.id === "portal:duelo-arcano") {
       if (portalFlight.current) return;
-      // The lunar gate enters the Arcanarium Portal; duel is a room within it.
+      // The lunar gate enters the educational Arcanarium Portal.
       beginPassage("/arcanario");
       portalFlight.current = schedulePassage(() => {
         portalFlight.current = null;

@@ -67,7 +67,7 @@ describe("R6.1: seamless, readiness-gated passage", () => {
     const { shell } = setup();
     beginPassage("/arcanario/acervo");
     notifyPassageLocation("/arcanario/acervo");
-    signalPassageReady("/arcanario/duelos"); // stale room
+    signalPassageReady("/arcanario/assuntos"); // stale room
     vi.advanceTimersByTime(720); // fallback for missing CSS animationend
     expect(shell.dataset.passage).toBe("waiting");
     vi.advanceTimersByTime(10000);

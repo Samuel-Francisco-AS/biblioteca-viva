@@ -1,3 +1,5 @@
+[BF-5.7B2.5 — saneamento residual](BF-5_7B2_5_SANEAMENTO_RESIDUAL.md): auditoria de dependências, integridade e retenção; candidata sem aceite físico.
+
 [BF-5.7B2.4-R2 — reparos físicos](BF-5_7B2_4_R2_REPAROS_FISICOS.md): órbita por tempo ativo, Choices e limites da validação Android.
 
 **FECHAMENTO CANÔNICO — 11/11/2026: BF-5.6 O Arcanário ENCERRADA COM RESSALVAS** após aceite explícito do proprietário. [Termo global A–G](BF-5_6_FECHAMENTO_GLOBAL_2026-11-11.md) · [Auditoria G](BF-5_6G_AUDITORIA_CONSOLIDACAO_2026-11-11.md). E2E, CI, acessibilidade/termal e UI/UX residual continuam pendências registradas. Sem novo APK pós-G nem início automático da BF-6/BF-7. Notas antigas indicando “aguarda aceite” são históricas.

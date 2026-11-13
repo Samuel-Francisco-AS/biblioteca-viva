@@ -1,3 +1,5 @@
+> **BF-5.7B2.5 — candidata em auditoria:** branch filha `feat/bf-5-7b2-final-cleanup`, base R2 `d02a2ac` da PR #56. Sem novas funcionalidades/schema/reset. [Relatório](BF-5_7B2_5_SANEAMENTO_RESIDUAL.md). Gates finais e APK em preparação; Moto G06 e dois E2E gráficos continuam pendentes. Sem merge/CI/B2.6/B3.
+
 > **BF-5.7B2.4-R2 — candidata 12/11/2026:** reparo do relógio orbital ativo e dos estilos nativos de Choices na PR draft #56. Diagnóstico e gates em [R2](BF-5_7B2_4_R2_REPAROS_FISICOS.md). Lint/typecheck/build e 1218 testes globais PASS; E2E 10 PASS/2 timeouts (inclui Choices). Gate visual Moto G06 pendente; checkpoint local permite somente auditoria/limpeza B2.5 autorizada nesta missão. Sem merge/CI/B2.6/B3.
 
 > **BF-5.7B2.4-R1 — 12/11/2026:** saneamento na PR draft #56; reparo seletivo da v19 intermediária e backup histórico assinado testados. Gates e bloqueadores em [R1](BF-5_7B2_4_R1_SANEAMENTO.md). Sem aceite final, merge, CI, gate Moto G06 ou início de B2.5.
