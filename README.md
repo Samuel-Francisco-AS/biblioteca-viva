@@ -10,9 +10,9 @@ React Three Fiber (R3F), WebGPU e renderers alternativos não fazem parte do bas
 
 O baseline atual usa React, Dexie, Vite, Vitest, Playwright, Capacitor e Android. Não existem conta, backend, sincronização, nuvem, social ou analytics.
 
-## Próxima fase planejada
+## Estado atual e próximo trabalho
 
-**BF-5.6 — O Arcanário** foi formalizada em 08/11/2026 **somente no planejamento**, antes da BF-6. A proposta integra cartas globais, flashcards, questões/tags/diagnósticos, pacotes oficiais offline opcionais, coleção decorativa e TCG PvE com arena 3D. [Plano e gates](docs/BF-5_6_ARCANARIO_PLANO.md) · [ADR-020 revisada](docs/decisions/ADR-020-baralhos-e-cartas-globais.md). Ainda não existem schema novo, migração, pacotes, cartas oficiais, motor de duelo ou arena da BF-5.6. BF-5.5 está fechada com ressalvas documentadas.
+**BF-5.6 — O Arcanário** foi encerrada globalmente com ressalvas em 11/11/2026. A fase seguinte é **BF-5.7 — Reforma e consolidação transversal de UI/UX**, ainda em andamento; não iniciar BF-6 automaticamente. A BF-5.7A (Crystal Controls) foi integrada à `main` pela PR #51 e concluída com ressalvas. A BF-5.7B está reformando o Arcanário: retirada do Duelo Arcano/TCG e foco em flashcards, questões e cartas de atividade física. O checkpoint atual é B2.5-R3, PR #57, ainda draft e pendente de gate físico no Moto G06; os dois novos E2E passaram, mas três E2E gráficos antigos continuam FAIL. Consulte o [planejamento mestre BF-5.7 — issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50), o [plano detalhado da reforma do Arcanário — PR #52](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/52) e o [estado operacional](docs/STATUS.md).
 
 ## Desenvolvimento
 
