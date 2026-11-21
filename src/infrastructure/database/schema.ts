@@ -26,7 +26,7 @@ import {
 } from "../../domain";
 import { z } from "zod";
 
-export const DATABASE_NAME = "biblioteca-viva";
+export const DATABASE_NAME = "biblioteca-viva-bf57";
 export const DATABASE_VERSION = 19;
 export const SCHEMA_MARKER_KEY = "schema-version";
 
