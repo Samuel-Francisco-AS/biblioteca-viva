@@ -1,0 +1,4 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 npx
+npm notice run 'prettier' --check src/features/library/three/ThreeWorldRuntime.ts src/features/library/three/ThreeWorldRuntime.d1.test.ts src/features/library/three/orbitalArena.ts e2e/bf57b-lunar-reentry.spec.ts
+Checking formatting...
+All matched files use Prettier code style!

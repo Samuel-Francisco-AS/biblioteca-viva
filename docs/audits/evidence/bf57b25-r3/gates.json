@@ -1,0 +1,49 @@
+{
+  "recordedAtUtc": "2026-11-13T02:29:36.189577+00:00",
+  "base": "6963a2b6b2e1fcc6369c35896df4961198aebb1e",
+  "codeCommit": "0867acea80210bbdd7b32883ee312c6387ed2536",
+  "lint": {
+    "exitCode": 0
+  },
+  "typecheckFinal": {
+    "exitCode": 0
+  },
+  "build": {
+    "exitCode": 0,
+    "largeChunkWarning": true
+  },
+  "vitestGlobal": {
+    "exitCode": 0,
+    "filesPassed": 183,
+    "testsPassed": 1221,
+    "isolatedFromWebGL": true
+  },
+  "vitestDirectedFinal": {
+    "exitCode": 0,
+    "filesPassed": 12,
+    "testsPassed": 234
+  },
+  "e2eInitial": {
+    "exitCode": 1,
+    "passed": 7,
+    "failed": 5
+  },
+  "e2eReentryFinal": {
+    "exitCode": 0,
+    "passed": 2,
+    "cyclesPerInput": 3,
+    "inputs": [
+      "canvas raycast",
+      "accessible Enter"
+    ],
+    "retries": 0,
+    "scenarioTimeoutMs": 120000
+  },
+  "legacyGraphicalE2E": {
+    "status": "FAIL",
+    "count": 3,
+    "deadlinesUnchanged": true
+  },
+  "physicalAndroid": "NOT_EXECUTED; previous gate remains PARTIAL/FAIL",
+  "githubActions": "NOT_EXECUTED"
+}

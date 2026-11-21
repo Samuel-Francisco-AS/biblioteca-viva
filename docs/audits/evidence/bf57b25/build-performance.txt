@@ -1,0 +1,492 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 performance:report
+npm notice run node scripts/report-build-performance.mjs
+{
+  "measurementScope": "Static bundle bytes; no CPU, GPU, presentation or Android FPS measurement",
+  "chunks": [
+    {
+      "bytes": 871848,
+      "dynamic": true,
+      "file": "assets/ThreeWorldRuntime-CgXWK2X4.js",
+      "initial": false,
+      "source": "src/features/library/three/ThreeWorldRuntime.ts"
+    },
+    {
+      "bytes": 576082,
+      "dynamic": false,
+      "file": "assets/index-CXlT7UYu.js",
+      "initial": true,
+      "source": "index.html"
+    },
+    {
+      "bytes": 128088,
+      "dynamic": true,
+      "file": "assets/EntryDetailPage-D5_qr1Ep.js",
+      "initial": false,
+      "source": "src/features/entry-detail/EntryDetailPage.tsx"
+    },
+    {
+      "bytes": 92799,
+      "dynamic": false,
+      "file": "assets/schemas-BYa3KEoe.js",
+      "initial": false,
+      "source": "_schemas-BYa3KEoe.js"
+    },
+    {
+      "bytes": 41090,
+      "dynamic": false,
+      "file": "assets/application-CzNS0fIK.js",
+      "initial": false,
+      "source": "_application-CzNS0fIK.js"
+    },
+    {
+      "bytes": 29792,
+      "dynamic": false,
+      "file": "assets/errors-BoqnWIwC.js",
+      "initial": false,
+      "source": "_errors-BoqnWIwC.js"
+    },
+    {
+      "bytes": 25085,
+      "dynamic": false,
+      "file": "assets/EntryEditorPages-CcQee7CY.js",
+      "initial": false,
+      "source": "_EntryEditorPages-CcQee7CY.js"
+    },
+    {
+      "bytes": 21298,
+      "dynamic": true,
+      "file": "assets/SettingsPage-RO0AS7Ay.js",
+      "initial": false,
+      "source": "src/features/settings/SettingsPage.tsx"
+    },
+    {
+      "bytes": 15528,
+      "dynamic": false,
+      "file": "assets/entertainment-Do7UlU3F.css",
+      "initial": false,
+      "source": "_entertainment-Do7UlU3F.css"
+    },
+    {
+      "bytes": 15431,
+      "dynamic": true,
+      "file": "assets/Provations-CvrmHAxD.js",
+      "initial": false,
+      "source": "src/features/arcanarium/Provations.tsx"
+    },
+    {
+      "bytes": 13814,
+      "dynamic": true,
+      "file": "assets/Workshop-GDHGZf8q.js",
+      "initial": false,
+      "source": "src/features/arcanarium/Workshop.tsx"
+    },
+    {
+      "bytes": 12890,
+      "dynamic": true,
+      "file": "assets/bundledContent-DjwcsPeC.js",
+      "initial": false,
+      "source": "src/infrastructure/packs/bundledContent.ts"
+    },
+    {
+      "bytes": 12019,
+      "dynamic": true,
+      "file": "assets/StatisticsPage-BoSFmW3S.js",
+      "initial": false,
+      "source": "src/features/statistics/StatisticsPage.tsx"
+    },
+    {
+      "bytes": 11804,
+      "dynamic": true,
+      "file": "assets/Catalogue-CTE1RIYt.js",
+      "initial": false,
+      "source": "src/features/arcanarium/Catalogue.tsx"
+    },
+    {
+      "bytes": 11695,
+      "dynamic": false,
+      "file": "assets/arcanarium-DruSk35E.js",
+      "initial": false,
+      "source": "_arcanarium-DruSk35E.js"
+    },
+    {
+      "bytes": 11448,
+      "dynamic": false,
+      "file": "assets/navigationOrigin-CYEGL1cS.css",
+      "initial": false,
+      "source": "_navigationOrigin-CYEGL1cS.css"
+    },
+    {
+      "bytes": 11361,
+      "dynamic": true,
+      "file": "assets/ArcanariumPage-DzFfpVy8.js",
+      "initial": false,
+      "source": "src/features/arcanarium/ArcanariumPage.tsx"
+    },
+    {
+      "bytes": 10826,
+      "dynamic": false,
+      "file": "assets/QuestionEditor-DkxFQRX3.js",
+      "initial": false,
+      "source": "_QuestionEditor-DkxFQRX3.js"
+    },
+    {
+      "bytes": 10458,
+      "dynamic": true,
+      "file": "assets/CollectionPage-COzTMD0w.js",
+      "initial": false,
+      "source": "src/features/collection/CollectionPage.tsx"
+    },
+    {
+      "bytes": 10131,
+      "dynamic": true,
+      "file": "assets/ArchivePage-BBXuubwY.js",
+      "initial": false,
+      "source": "src/features/archive/ArchivePage.tsx"
+    },
+    {
+      "bytes": 9510,
+      "dynamic": true,
+      "file": "assets/PackLibrary-D6A8fKSx.js",
+      "initial": false,
+      "source": "src/features/arcanarium/PackLibrary.tsx"
+    },
+    {
+      "bytes": 8535,
+      "dynamic": false,
+      "file": "assets/jsx-runtime-KJkY8l8U.js",
+      "initial": false,
+      "source": "_jsx-runtime-KJkY8l8U.js"
+    },
+    {
+      "bytes": 8488,
+      "dynamic": true,
+      "file": "assets/web-DYLSnnVb.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/filesystem/dist/esm/web.js"
+    },
+    {
+      "bytes": 8407,
+      "dynamic": false,
+      "file": "assets/provations-DHwvvtCS.js",
+      "initial": false,
+      "source": "_provations-DHwvvtCS.js"
+    },
+    {
+      "bytes": 7783,
+      "dynamic": false,
+      "file": "assets/Taxonomy-alaSerKQ.js",
+      "initial": false,
+      "source": "_Taxonomy-alaSerKQ.js"
+    },
+    {
+      "bytes": 7756,
+      "dynamic": false,
+      "file": "assets/dist-Cnp6P8yH.js",
+      "initial": false,
+      "source": "_dist-Cnp6P8yH.js"
+    },
+    {
+      "bytes": 7655,
+      "dynamic": true,
+      "file": "assets/Decks-aexjdbzT.js",
+      "initial": false,
+      "source": "src/features/arcanarium/Decks.tsx"
+    },
+    {
+      "bytes": 7345,
+      "dynamic": true,
+      "file": "assets/Diagnosis-wETyXb2N.js",
+      "initial": false,
+      "source": "src/features/arcanarium/Diagnosis.tsx"
+    },
+    {
+      "bytes": 7216,
+      "dynamic": false,
+      "file": "assets/BVPicker-Dgdg89du.js",
+      "initial": false,
+      "source": "_BVPicker-Dgdg89du.js"
+    },
+    {
+      "bytes": 7127,
+      "dynamic": false,
+      "file": "assets/arcanarium-9mflDO5x.js",
+      "initial": false,
+      "source": "_arcanarium-9mflDO5x.js"
+    },
+    {
+      "bytes": 6523,
+      "dynamic": true,
+      "file": "assets/Echoes-_MYJtOUm.js",
+      "initial": false,
+      "source": "src/features/arcanarium/Echoes.tsx"
+    },
+    {
+      "bytes": 4901,
+      "dynamic": true,
+      "file": "assets/NewEntryPage-ByH9z5UH.js",
+      "initial": false,
+      "source": "src/features/entry-editor/NewEntryPage.tsx"
+    },
+    {
+      "bytes": 4521,
+      "dynamic": false,
+      "file": "assets/AnnotationActions-j5EUsbq6.js",
+      "initial": false,
+      "source": "_AnnotationActions-j5EUsbq6.js"
+    },
+    {
+      "bytes": 4069,
+      "dynamic": false,
+      "file": "assets/navigationOrigin-Cpyex1wo.js",
+      "initial": false,
+      "source": "_navigationOrigin-Cpyex1wo.js"
+    },
+    {
+      "bytes": 3748,
+      "dynamic": true,
+      "file": "assets/EditEntryPage-DQHfQI73.js",
+      "initial": false,
+      "source": "src/features/entry-editor/EditEntryPage.tsx"
+    },
+    {
+      "bytes": 3009,
+      "dynamic": true,
+      "file": "assets/DeckImport-CgHDA0bx.js",
+      "initial": false,
+      "source": "src/features/arcanarium/DeckImport.tsx"
+    },
+    {
+      "bytes": 2876,
+      "dynamic": false,
+      "file": "assets/internal-C_cADOn8.js",
+      "initial": false,
+      "source": "_internal-C_cADOn8.js"
+    },
+    {
+      "bytes": 2692,
+      "dynamic": false,
+      "file": "assets/BVPicker-mP1gmq5R.css",
+      "initial": false,
+      "source": "_BVPicker-mP1gmq5R.css"
+    },
+    {
+      "bytes": 2576,
+      "dynamic": false,
+      "file": "assets/backup-C3CCqiQW.js",
+      "initial": false,
+      "source": "_backup-C3CCqiQW.js"
+    },
+    {
+      "bytes": 2343,
+      "dynamic": false,
+      "file": "assets/RealmIntro-BrujmjMc.js",
+      "initial": false,
+      "source": "_RealmIntro-BrujmjMc.js"
+    },
+    {
+      "bytes": 2297,
+      "dynamic": false,
+      "file": "assets/ArcanaCard-Cu3dOADB.js",
+      "initial": false,
+      "source": "_ArcanaCard-Cu3dOADB.js"
+    },
+    {
+      "bytes": 2083,
+      "dynamic": false,
+      "file": "assets/ArcanaArt-CLPl1COB.js",
+      "initial": false,
+      "source": "_ArcanaArt-CLPl1COB.js"
+    },
+    {
+      "bytes": 1556,
+      "dynamic": false,
+      "file": "assets/educationalPacks-Imxreq6i.js",
+      "initial": false,
+      "source": "_educationalPacks-Imxreq6i.js"
+    },
+    {
+      "bytes": 1196,
+      "dynamic": false,
+      "file": "assets/preload-helper-Czpn1I53.js",
+      "initial": false,
+      "source": "_preload-helper-Czpn1I53.js"
+    },
+    {
+      "bytes": 1085,
+      "dynamic": true,
+      "file": "assets/esm-Cr55IfNh.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/filesystem/dist/esm/index.js"
+    },
+    {
+      "bytes": 928,
+      "dynamic": false,
+      "file": "assets/presentation-Bz7Tmg9f.js",
+      "initial": false,
+      "source": "_presentation-Bz7Tmg9f.js"
+    },
+    {
+      "bytes": 858,
+      "dynamic": false,
+      "file": "assets/ArtifactGlyph-D3lTTDt8.js",
+      "initial": false,
+      "source": "_ArtifactGlyph-D3lTTDt8.js"
+    },
+    {
+      "bytes": 843,
+      "dynamic": true,
+      "file": "assets/web-DF9anjsZ.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/app/dist/esm/web.js"
+    },
+    {
+      "bytes": 796,
+      "dynamic": false,
+      "file": "assets/bookPresentation-Du5Ruowv.js",
+      "initial": false,
+      "source": "_bookPresentation-Du5Ruowv.js"
+    },
+    {
+      "bytes": 743,
+      "dynamic": false,
+      "file": "assets/context-Da6kIbIP.js",
+      "initial": false,
+      "source": "_context-Da6kIbIP.js"
+    },
+    {
+      "bytes": 667,
+      "dynamic": false,
+      "file": "assets/useCivilToday-5Egjy0VZ.js",
+      "initial": false,
+      "source": "_useCivilToday-5Egjy0VZ.js"
+    },
+    {
+      "bytes": 534,
+      "dynamic": false,
+      "file": "assets/Choices-C-ENxoD6.js",
+      "initial": false,
+      "source": "_Choices-C-ENxoD6.js"
+    },
+    {
+      "bytes": 364,
+      "dynamic": true,
+      "file": "assets/web-DAzmpyAc.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/share/dist/esm/web.js"
+    },
+    {
+      "bytes": 352,
+      "dynamic": false,
+      "file": "assets/definitions-DlpntO5o.js",
+      "initial": false,
+      "source": "_definitions-DlpntO5o.js"
+    },
+    {
+      "bytes": 345,
+      "dynamic": true,
+      "file": "assets/esm-DqX20w7L.js",
+      "initial": false,
+      "source": "node_modules/@capacitor/share/dist/esm/index.js"
+    },
+    {
+      "bytes": 337,
+      "dynamic": false,
+      "file": "assets/esm-CUxGTWVc.js",
+      "initial": false,
+      "source": "_esm-CUxGTWVc.js"
+    },
+    {
+      "bytes": 191,
+      "dynamic": false,
+      "file": "assets/performanceDistribution-ByyDj3S2.js",
+      "initial": false,
+      "source": "_performanceDistribution-ByyDj3S2.js"
+    },
+    {
+      "bytes": 141,
+      "dynamic": false,
+      "file": "assets/iso-dOheckXV.js",
+      "initial": false,
+      "source": "_iso-dOheckXV.js"
+    },
+    {
+      "bytes": 138,
+      "dynamic": true,
+      "file": "assets/androidBackupDocumentPlugin-D1KkIVqf.js",
+      "initial": false,
+      "source": "src/infrastructure/files/androidBackupDocumentPlugin.ts"
+    }
+  ],
+  "initialBytes": 576082,
+  "initialStaticGraphBytes": 950119,
+  "initialStaticGraph": [
+    {
+      "file": "assets/application-CzNS0fIK.js",
+      "bytes": 41090
+    },
+    {
+      "file": "assets/arcanarium-9mflDO5x.js",
+      "bytes": 7127
+    },
+    {
+      "file": "assets/arcanarium-DruSk35E.js",
+      "bytes": 11695
+    },
+    {
+      "file": "assets/backup-C3CCqiQW.js",
+      "bytes": 2576
+    },
+    {
+      "file": "assets/dist-Cnp6P8yH.js",
+      "bytes": 7756
+    },
+    {
+      "file": "assets/educationalPacks-Imxreq6i.js",
+      "bytes": 1556
+    },
+    {
+      "file": "assets/errors-BoqnWIwC.js",
+      "bytes": 29792
+    },
+    {
+      "file": "assets/esm-CUxGTWVc.js",
+      "bytes": 337
+    },
+    {
+      "file": "assets/index-CXlT7UYu.js",
+      "bytes": 576082
+    },
+    {
+      "file": "assets/index-QG8EB4Hk.css",
+      "bytes": 157963
+    },
+    {
+      "file": "assets/internal-C_cADOn8.js",
+      "bytes": 2876
+    },
+    {
+      "file": "assets/iso-dOheckXV.js",
+      "bytes": 141
+    },
+    {
+      "file": "assets/jsx-runtime-KJkY8l8U.js",
+      "bytes": 8535
+    },
+    {
+      "file": "assets/performanceDistribution-ByyDj3S2.js",
+      "bytes": 191
+    },
+    {
+      "file": "assets/preload-helper-Czpn1I53.js",
+      "bytes": 1196
+    },
+    {
+      "file": "assets/provations-DHwvvtCS.js",
+      "bytes": 8407
+    },
+    {
+      "file": "assets/schemas-BYa3KEoe.js",
+      "bytes": 92799
+    }
+  ]
+}

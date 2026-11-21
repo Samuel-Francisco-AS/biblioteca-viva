@@ -1,0 +1,361 @@
+{
+  "baseline": "d02a2acf7e8f55b716f7091cbeaac3c9bc0b6f77",
+  "candidate": "9342762b08f3fb6c5f57c9dd6c2143ee55ea409b",
+  "identicalReport": true,
+  "chunks": [
+    {
+      "source": "src/features/library/three/ThreeWorldRuntime.ts",
+      "before": 871848,
+      "after": 871848,
+      "delta": 0
+    },
+    {
+      "source": "index.html",
+      "before": 576082,
+      "after": 576082,
+      "delta": 0
+    },
+    {
+      "source": "src/features/entry-detail/EntryDetailPage.tsx",
+      "before": 128088,
+      "after": 128088,
+      "delta": 0
+    },
+    {
+      "source": "_schemas-BYa3KEoe.js",
+      "before": 92799,
+      "after": 92799,
+      "delta": 0
+    },
+    {
+      "source": "_application-CzNS0fIK.js",
+      "before": 41090,
+      "after": 41090,
+      "delta": 0
+    },
+    {
+      "source": "_errors-BoqnWIwC.js",
+      "before": 29792,
+      "after": 29792,
+      "delta": 0
+    },
+    {
+      "source": "_EntryEditorPages-CcQee7CY.js",
+      "before": 25085,
+      "after": 25085,
+      "delta": 0
+    },
+    {
+      "source": "src/features/settings/SettingsPage.tsx",
+      "before": 21298,
+      "after": 21298,
+      "delta": 0
+    },
+    {
+      "source": "_entertainment-Do7UlU3F.css",
+      "before": 15528,
+      "after": 15528,
+      "delta": 0
+    },
+    {
+      "source": "src/features/arcanarium/Provations.tsx",
+      "before": 15431,
+      "after": 15431,
+      "delta": 0
+    },
+    {
+      "source": "src/features/arcanarium/Workshop.tsx",
+      "before": 13814,
+      "after": 13814,
+      "delta": 0
+    },
+    {
+      "source": "src/infrastructure/packs/bundledContent.ts",
+      "before": 12890,
+      "after": 12890,
+      "delta": 0
+    },
+    {
+      "source": "src/features/statistics/StatisticsPage.tsx",
+      "before": 12019,
+      "after": 12019,
+      "delta": 0
+    },
+    {
+      "source": "src/features/arcanarium/Catalogue.tsx",
+      "before": 11804,
+      "after": 11804,
+      "delta": 0
+    },
+    {
+      "source": "_arcanarium-DruSk35E.js",
+      "before": 11695,
+      "after": 11695,
+      "delta": 0
+    },
+    {
+      "source": "_navigationOrigin-CYEGL1cS.css",
+      "before": 11448,
+      "after": 11448,
+      "delta": 0
+    },
+    {
+      "source": "src/features/arcanarium/ArcanariumPage.tsx",
+      "before": 11361,
+      "after": 11361,
+      "delta": 0
+    },
+    {
+      "source": "_QuestionEditor-DkxFQRX3.js",
+      "before": 10826,
+      "after": 10826,
+      "delta": 0
+    },
+    {
+      "source": "src/features/collection/CollectionPage.tsx",
+      "before": 10458,
+      "after": 10458,
+      "delta": 0
+    },
+    {
+      "source": "src/features/archive/ArchivePage.tsx",
+      "before": 10131,
+      "after": 10131,
+      "delta": 0
+    },
+    {
+      "source": "src/features/arcanarium/PackLibrary.tsx",
+      "before": 9510,
+      "after": 9510,
+      "delta": 0
+    },
+    {
+      "source": "_jsx-runtime-KJkY8l8U.js",
+      "before": 8535,
+      "after": 8535,
+      "delta": 0
+    },
+    {
+      "source": "node_modules/@capacitor/filesystem/dist/esm/web.js",
+      "before": 8488,
+      "after": 8488,
+      "delta": 0
+    },
+    {
+      "source": "_provations-DHwvvtCS.js",
+      "before": 8407,
+      "after": 8407,
+      "delta": 0
+    },
+    {
+      "source": "_Taxonomy-alaSerKQ.js",
+      "before": 7783,
+      "after": 7783,
+      "delta": 0
+    },
+    {
+      "source": "_dist-Cnp6P8yH.js",
+      "before": 7756,
+      "after": 7756,
+      "delta": 0
+    },
+    {
+      "source": "src/features/arcanarium/Decks.tsx",
+      "before": 7655,
+      "after": 7655,
+      "delta": 0
+    },
+    {
+      "source": "src/features/arcanarium/Diagnosis.tsx",
+      "before": 7345,
+      "after": 7345,
+      "delta": 0
+    },
+    {
+      "source": "_BVPicker-Dgdg89du.js",
+      "before": 7216,
+      "after": 7216,
+      "delta": 0
+    },
+    {
+      "source": "_arcanarium-9mflDO5x.js",
+      "before": 7127,
+      "after": 7127,
+      "delta": 0
+    },
+    {
+      "source": "src/features/arcanarium/Echoes.tsx",
+      "before": 6523,
+      "after": 6523,
+      "delta": 0
+    },
+    {
+      "source": "src/features/entry-editor/NewEntryPage.tsx",
+      "before": 4901,
+      "after": 4901,
+      "delta": 0
+    },
+    {
+      "source": "_AnnotationActions-j5EUsbq6.js",
+      "before": 4521,
+      "after": 4521,
+      "delta": 0
+    },
+    {
+      "source": "_navigationOrigin-Cpyex1wo.js",
+      "before": 4069,
+      "after": 4069,
+      "delta": 0
+    },
+    {
+      "source": "src/features/entry-editor/EditEntryPage.tsx",
+      "before": 3748,
+      "after": 3748,
+      "delta": 0
+    },
+    {
+      "source": "src/features/arcanarium/DeckImport.tsx",
+      "before": 3009,
+      "after": 3009,
+      "delta": 0
+    },
+    {
+      "source": "_internal-C_cADOn8.js",
+      "before": 2876,
+      "after": 2876,
+      "delta": 0
+    },
+    {
+      "source": "_BVPicker-mP1gmq5R.css",
+      "before": 2692,
+      "after": 2692,
+      "delta": 0
+    },
+    {
+      "source": "_backup-C3CCqiQW.js",
+      "before": 2576,
+      "after": 2576,
+      "delta": 0
+    },
+    {
+      "source": "_RealmIntro-BrujmjMc.js",
+      "before": 2343,
+      "after": 2343,
+      "delta": 0
+    },
+    {
+      "source": "_ArcanaCard-Cu3dOADB.js",
+      "before": 2297,
+      "after": 2297,
+      "delta": 0
+    },
+    {
+      "source": "_ArcanaArt-CLPl1COB.js",
+      "before": 2083,
+      "after": 2083,
+      "delta": 0
+    },
+    {
+      "source": "_educationalPacks-Imxreq6i.js",
+      "before": 1556,
+      "after": 1556,
+      "delta": 0
+    },
+    {
+      "source": "_preload-helper-Czpn1I53.js",
+      "before": 1196,
+      "after": 1196,
+      "delta": 0
+    },
+    {
+      "source": "node_modules/@capacitor/filesystem/dist/esm/index.js",
+      "before": 1085,
+      "after": 1085,
+      "delta": 0
+    },
+    {
+      "source": "_presentation-Bz7Tmg9f.js",
+      "before": 928,
+      "after": 928,
+      "delta": 0
+    },
+    {
+      "source": "_ArtifactGlyph-D3lTTDt8.js",
+      "before": 858,
+      "after": 858,
+      "delta": 0
+    },
+    {
+      "source": "node_modules/@capacitor/app/dist/esm/web.js",
+      "before": 843,
+      "after": 843,
+      "delta": 0
+    },
+    {
+      "source": "_bookPresentation-Du5Ruowv.js",
+      "before": 796,
+      "after": 796,
+      "delta": 0
+    },
+    {
+      "source": "_context-Da6kIbIP.js",
+      "before": 743,
+      "after": 743,
+      "delta": 0
+    },
+    {
+      "source": "_useCivilToday-5Egjy0VZ.js",
+      "before": 667,
+      "after": 667,
+      "delta": 0
+    },
+    {
+      "source": "_Choices-C-ENxoD6.js",
+      "before": 534,
+      "after": 534,
+      "delta": 0
+    },
+    {
+      "source": "node_modules/@capacitor/share/dist/esm/web.js",
+      "before": 364,
+      "after": 364,
+      "delta": 0
+    },
+    {
+      "source": "_definitions-DlpntO5o.js",
+      "before": 352,
+      "after": 352,
+      "delta": 0
+    },
+    {
+      "source": "node_modules/@capacitor/share/dist/esm/index.js",
+      "before": 345,
+      "after": 345,
+      "delta": 0
+    },
+    {
+      "source": "_esm-CUxGTWVc.js",
+      "before": 337,
+      "after": 337,
+      "delta": 0
+    },
+    {
+      "source": "_performanceDistribution-ByyDj3S2.js",
+      "before": 191,
+      "after": 191,
+      "delta": 0
+    },
+    {
+      "source": "_iso-dOheckXV.js",
+      "before": 141,
+      "after": 141,
+      "delta": 0
+    },
+    {
+      "source": "src/infrastructure/files/androidBackupDocumentPlugin.ts",
+      "before": 138,
+      "after": 138,
+      "delta": 0
+    }
+  ]
+}

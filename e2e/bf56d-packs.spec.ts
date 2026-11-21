@@ -125,7 +125,20 @@ test("D: partial catalog, lots, idempotence, trial, offline, removal and coheren
   await expect(
     page.getByRole("button", { name: "Retomar Provação", exact: true }),
   ).toBeVisible();
-  // Local content module already loaded; no network required to practice or manage.
+  // The reload above discarded the earlier PackLibrary module. Warm this
+  // document's management route before disconnecting the hosted web runner;
+  // Android instead resolves these chunks from the installed APK.
+  await page
+    .getByRole("link", { name: "Biblioteca de Provas", exact: true })
+    .click();
+  await expect(
+    volume.getByRole("button", { name: "Remover pacote" }),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "Provações", exact: true }).click();
+  await page.getByRole("link", { name: /Pausada .*1\/4 respostas/ }).click();
+  await expect(
+    page.getByRole("button", { name: "Retomar Provação", exact: true }),
+  ).toBeVisible();
   await context.setOffline(true);
   await page
     .getByRole("button", { name: "Retomar Provação", exact: true })

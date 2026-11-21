@@ -1,0 +1,41 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:run
+npm notice run vitest run src/features/library/three/ThreeWorldInteraction.test.ts src/features/library/three/ThreeWorldRuntime.test.ts src/features/library/three/ThreeWorldRuntime.d1.test.ts src/features/library/three/orbitalArena.test.ts src/features/library/WorldHost.test.tsx src/pages.test.tsx src/features/arcanarium/Choices.test.tsx src/features/arcanarium/ArcanariumPage.test.tsx src/infrastructure/database/arcanarium.test.ts src/infrastructure/database/retireCombatData.test.ts src/infrastructure/backup/backup.test.ts src/app/createApplication.test.ts --maxWorkers=1
+
+ RUN  v4.1.12 /home/sam/Projetos/biblioteca-viva
+
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+{"sceneUpdates":0,"projections":0,"milliseconds":14.911342000000332}
+
+ Test Files  12 passed (12)
+      Tests  234 passed (234)
+   Start at  23:24:57
+   Duration  41.95s (transform 3.40s, setup 1.50s, import 5.74s, tests 26.88s, environment 5.89s)
+

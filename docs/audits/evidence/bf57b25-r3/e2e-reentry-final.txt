@@ -1,0 +1,19 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:e2e
+npm notice run playwright test e2e/bf57b-lunar-reentry.spec.ts
+[WebServer] npm notice run biblioteca-viva@0.2.0-alpha.1 preview
+[WebServer] npm notice run vite preview --host 127.0.0.1 --port 4173
+[WebServer] (node:49559) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] npm notice run biblioteca-viva@0.2.0-alpha.1 dev
+[WebServer] npm notice run vite --host 127.0.0.1 --port 4174
+[WebServer] (node:49598) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:49625) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/bf57b-lunar-reentry.spec.ts:4:3 › R3: three lunar reentries by canvas preserve one renderer without empty taps (1.1m)
+  ✓  2 [chromium] › e2e/bf57b-lunar-reentry.spec.ts:4:3 › R3: three lunar reentries by accessible preserve one renderer without empty taps (2.0m)
+
+  2 passed (3.1m)

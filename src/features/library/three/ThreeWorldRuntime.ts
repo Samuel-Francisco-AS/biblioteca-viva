@@ -32,6 +32,7 @@ import { LIBRARY_SHELVES } from "../libraryShelfLayout";
 import { LIBRARY_ROOMS } from "../libraryBuildingGeometry";
 import {
   Color,
+  Vector3,
   DirectionalLight,
   Group,
   HemisphereLight,
@@ -504,6 +505,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private inhabitants?: ReturnType<typeof createInhabitantVisuals>;
   private ambientMagic?: ReturnType<typeof createAmbientMagic>;
   private orbital?: ReturnType<typeof createOrbitalArena>;
+  private readonly orbitalProbePoint = new Vector3();
   private scrollVisuals?: ReturnType<typeof createLivingScrollVisuals>;
   private readonly scrolls: readonly import("../../../contracts/livingScroll").LivingScroll[];
   private lightingInitialized = false;
@@ -1718,6 +1720,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.livingFrameTime = undefined;
     this.resetFrameMetrics();
     this.mountedWorld?.getInteraction()?.cancelActiveGestures();
+    // The moon is a navigation command, not a durable content selection.
+    // Clear only this transient selection on departure/visibility pause so
+    // the resident interaction can publish the next activation on return.
+    if (this.selection?.id === "portal:duelo-arcano") this.selectObject(null);
     this.publishDiagnostics(true);
   }
 
@@ -1927,6 +1933,24 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private updateCanvasDiagnostics(diagnostics: WorldRuntimeDiagnostics): void {
     const canvas = this.mountedWorld?.renderer.domElement;
     if (!canvas) return;
+    // Anonymous geometry at the existing diagnostic cadence (no new RAF).
+    // This separates world trajectory from camera projection and provides a
+    // current target for real raycast regression tests, without moving camera.
+    const orbital = this.orbital;
+    if (orbital && this.mountedWorld) {
+      canvas.dataset.orbitalWorld = this.orbitalProbePoint
+        .setFromMatrixPosition(orbital.root.matrixWorld)
+        .toArray()
+        .join(",");
+      canvas.dataset.orbitalBookNdc = this.orbitalProbePoint
+        .setFromMatrixPosition(orbital.book.matrixWorld)
+        .project(this.mountedWorld.camera)
+        .toArray()
+        .join(",");
+    } else {
+      canvas.dataset.orbitalWorld = "";
+      canvas.dataset.orbitalBookNdc = "";
+    }
     canvas.dataset.activeFrameLoops = String(diagnostics.activeFrameLoops);
     canvas.dataset.drawCalls = String(diagnostics.drawCalls);
     canvas.dataset.fixtureLoadMs = diagnostics.fixtureLoadMs?.toFixed(1) ?? "";

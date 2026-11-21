@@ -1,0 +1,48 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:run
+npm notice run vitest run src/features/library/three/ThreeWorldRuntime.d1.test.ts --maxWorkers=1
+
+ RUN  v4.1.12 /home/sam/Projetos/biblioteca-viva
+
+ ❯ src/features/library/three/ThreeWorldRuntime.d1.test.ts (17 tests | 2 failed) 5658ms
+   × R3 reopens the lunar portal for three canvas cycles without empty taps and preserves the resident world 270ms
+   × R3 reopens the lunar portal for three accessible cycles without empty taps and preserves the resident world 269ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/library/three/ThreeWorldRuntime.d1.test.ts > R3 reopens the lunar portal for three canvas cycles without empty taps and preserves the resident world
+AssertionError: expected 2.050936302955244 to be less than 1
+ ❯ activate src/features/library/three/ThreeWorldRuntime.d1.test.ts:1155:33
+    1153|         camera.updateMatrixWorld(true);
+    1154|         const ndc = book.getWorldPosition(new Vector3()).project(camer…
+    1155|         expect(Math.abs(ndc.x)).toBeLessThan(1);
+       |                                 ^
+    1156|         expect(Math.abs(ndc.y)).toBeLessThan(1);
+    1157|         tap(renderer.domElement, (ndc.x + 1) * 320, (1 - ndc.y) * 180);
+ ❯ src/features/library/three/ThreeWorldRuntime.d1.test.ts:1161:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/features/library/three/ThreeWorldRuntime.d1.test.ts > R3 reopens the lunar portal for three accessible cycles without empty taps and preserves the resident world
+AssertionError: expected 'portal:duelo-arcano' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ portal:duelo-arcano
+
+ ❯ src/features/library/three/ThreeWorldRuntime.d1.test.ts:1166:58
+    1164|       expect(activated).toHaveBeenCalledTimes(cycle);
+    1165|       runtime.pause();
+    1166|       expect(renderer.domElement.dataset.selectedObject).toBe("");
+       |                                                          ^
+    1167|       expect(runtime.getDiagnostics().activeFrameLoops).toBe(0);
+    1168|       runtime.resume();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 15 passed (17)
+   Start at  22:49:01
+   Duration  8.30s (transform 1.19s, setup 150ms, import 1.58s, tests 5.66s, environment 735ms)
+

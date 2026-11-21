@@ -1,0 +1,1339 @@
+[
+  {
+    "test": "performance-navigation-per-66e92-and-loop-across-dock-return-chromium",
+    "operations": [
+      {
+        "title": "Set viewport size",
+        "ms": 4.5,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 71
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/colecao\"",
+        "ms": 231.04,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 72
+          }
+        ]
+      },
+      {
+        "title": "Click locator('.primary-dock a[href=\"/\"]')",
+        "ms": 485.14,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 73
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 3958.07,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 75
+          }
+        ]
+      },
+      {
+        "title": "Wait for selector locator('canvas[data-three-world-canvas]')",
+        "ms": 7111.93,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 78
+          }
+        ]
+      },
+      {
+        "title": "Click locator('.primary-dock a[href=\"/colecao\"]')",
+        "ms": 8080.07,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 79
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 2192.96,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 80
+          }
+        ]
+      },
+      {
+        "title": "Click locator('.primary-dock a[href=\"/\"]')",
+        "ms": 120.22,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 81
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 2740.53,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 82
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas[data-three-world-canvas]')",
+        "ms": 6433.4,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 84
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBe\"",
+        "ms": 0.06,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 85
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 48.54,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 86
+          }
+        ]
+      }
+    ],
+    "consoleErrors": []
+  },
+  {
+    "test": "bf56f-orbital-refinement-B-bb826-reserves-the-resident-world-chromium",
+    "operations": [
+      {
+        "title": "Set viewport size",
+        "ms": 5.69,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 13
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/\"",
+        "ms": 232.57,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 14
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/configuracoes\"",
+        "ms": 135.85,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 15
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 457.12,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 19
+          }
+        ]
+      },
+      {
+        "title": "Check getByRole('checkbox', { name: 'Mostrar bot\u00e3o \u201cAcervo e habitantes\u201d no Canvas' })",
+        "ms": 337.03,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 20
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/\"",
+        "ms": 111.78,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 21
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCount\"",
+        "ms": 3160.9,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 23
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 4959.86,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 24
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1452.13,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas[data-three-world-canvas]')",
+        "ms": 4352.39,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 28
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 1459.16,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 39
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeEnabled\"",
+        "ms": 1468.35,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 40
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCSS\"",
+        "ms": 1452.81,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 41
+          }
+        ]
+      },
+      {
+        "title": "Evaluate getByRole('button', { name: 'Abrir ferramentas de explora\u00e7\u00e3o acess\u00edvel' })",
+        "ms": 3834.55,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 45
+          }
+        ]
+      },
+      {
+        "title": "Attach \"lunar-access-layout.json\"",
+        "ms": 0.84,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 80
+          }
+        ]
+      },
+      {
+        "title": "Acesso lunar fora da largura da viewport: {\"viewport\":{\"width\":390,\"height\":844},\"bounds\":{\"left\":13.59375,\"top\":673.21875,\"right\":161.78125,\"bottom\":721.21875,\"width\":148.1875,\"height\":48},\"intersection\":{\"width\":148.1875,\"height\":48},\"position\":\"fixed\",\"cssBottom\":\"122.781px\",\"canvasDockHeight\":\"95.58125px\",\"dockBottom\":835.203125,\"documentScroll\":{\"x\":0,\"y\":0}}",
+        "ms": 0.32,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 87
+          }
+        ]
+      },
+      {
+        "title": "Acesso lunar fora da altura da viewport: {\"viewport\":{\"width\":390,\"height\":844},\"bounds\":{\"left\":13.59375,\"top\":673.21875,\"right\":161.78125,\"bottom\":721.21875,\"width\":148.1875,\"height\":48},\"intersection\":{\"width\":148.1875,\"height\":48},\"position\":\"fixed\",\"cssBottom\":\"122.781px\",\"canvasDockHeight\":\"95.58125px\",\"dockBottom\":835.203125,\"documentScroll\":{\"x\":0,\"y\":0}}",
+        "ms": 0.06,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 91
+          }
+        ]
+      },
+      {
+        "title": "Focus getByRole('button', { name: 'Abrir ferramentas de explora\u00e7\u00e3o acess\u00edvel' })",
+        "ms": 2914.01,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 92
+          }
+        ]
+      },
+      {
+        "title": "Press \"Enter\"",
+        "ms": 2018.71,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 93
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1514.39,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 100
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('.library-page')",
+        "ms": 4055.04,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 103
+          }
+        ]
+      },
+      {
+        "title": "Attach \"lunar-access-open-state.json\"",
+        "ms": 0.14,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 112
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBe\"",
+        "ms": 0.1,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 116
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBe\"",
+        "ms": 0.06,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 117
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 1602.76,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 120
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 1524.01,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 122
+          }
+        ]
+      },
+      {
+        "title": "Focus locator('details.world-explore').locator(':scope > summary')",
+        "ms": 3312.71,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 123
+          }
+        ]
+      },
+      {
+        "title": "Press \"Enter\"",
+        "ms": 2291.44,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 124
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1527.47,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 125
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 1532.46,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 129
+          }
+        ]
+      },
+      {
+        "title": "Focus locator('details.world-explore').locator('details.world-semantic').locator('summary')",
+        "ms": 3566.74,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 130
+          }
+        ]
+      },
+      {
+        "title": "Press \"Enter\"",
+        "ms": 2473.79,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 131
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1870.55,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 132
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 1857.26,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 138
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeEnabled\"",
+        "ms": 1818.42,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 139
+          }
+        ]
+      },
+      {
+        "title": "Focus getByRole('button', { name: 'Abrir Portal do Arcan\u00e1rio' })",
+        "ms": 3087.16,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 140
+          }
+        ]
+      },
+      {
+        "title": "Press \"Enter\"",
+        "ms": 1366.57,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 141
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveURL\"",
+        "ms": 683.26,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 142
+          }
+        ]
+      }
+    ],
+    "consoleErrors": []
+  },
+  {
+    "test": "bf56d-packs-D-partial-cata-89833-oval-and-coherent-reinstall-chromium",
+    "operations": [
+      {
+        "title": "Set viewport size",
+        "ms": 4.96,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 47
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/arcanario/pacotes\"",
+        "ms": 235.43,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 48
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 942.07,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 51
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 18.41,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 57
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCount\"",
+        "ms": 13.72,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 62
+          }
+        ]
+      },
+      {
+        "title": "Screenshot",
+        "ms": 676.83,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 5
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('article', { name: 'Aritm\u00e9tica dos pequenos arquivos' }).getByRole('button', { name: 'Instalar lote 1', exact: true })",
+        "ms": 76.29,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 66
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 82.55,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 69
+          }
+        ]
+      },
+      {
+        "title": "Evaluate",
+        "ms": 13.37,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 11
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveLength\"",
+        "ms": 0.33,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 71
+          }
+        ]
+      },
+      {
+        "title": "Set input files getByLabel('Arquivo de pacote (.json)')",
+        "ms": 33.29,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 73
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: 'Instalar arquivo conferido' })",
+        "ms": 47.47,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 80
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 70.47,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 83
+          }
+        ]
+      },
+      {
+        "title": "Evaluate",
+        "ms": 13.8,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 11
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toEqual\"",
+        "ms": 1.75,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 84
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('article', { name: 'Aritm\u00e9tica dos pequenos arquivos' }).getByRole('button', { name: 'Atualizar \u00b7 instalar lote adicional' })",
+        "ms": 64.07,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 87
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 69.66,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 88
+          }
+        ]
+      },
+      {
+        "title": "Evaluate",
+        "ms": 18.51,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 11
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveLength\"",
+        "ms": 0.07,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 89
+          }
+        ]
+      },
+      {
+        "title": "Screenshot",
+        "ms": 557.71,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 5
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('article', { name: 'Aritm\u00e9tica dos pequenos arquivos' }).getByRole('link', { name: 'Abrir cole\u00e7\u00e3o no Acervo' })",
+        "ms": 49.67,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 91
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 885.73,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 94
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 11.32,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 95
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('link', { name: 'Biblioteca de Provas', exact: true })",
+        "ms": 44.64,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 98
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('article', { name: 'Aritm\u00e9tica dos pequenos arquivos' }).getByRole('link', { name: 'Preparar Prova\u00e7\u00e3o' })",
+        "ms": 863.73,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 99
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 884.51,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 102
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: 'Iniciar Prova\u00e7\u00e3o', exact: true })",
+        "ms": 75.45,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 105
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 127.27,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 108
+          }
+        ]
+      },
+      {
+        "title": "Check getByRole('radio').nth(2)",
+        "ms": 40.7,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 109
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: 'Confirmar resposta', exact: true })",
+        "ms": 53.85,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 112
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 15.13,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 115
+          }
+        ]
+      },
+      {
+        "title": "Screenshot",
+        "ms": 336.52,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 5
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: 'Pausar e sair', exact: true })",
+        "ms": 61.69,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 119
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 42.68,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 122
+          }
+        ]
+      },
+      {
+        "title": "Reload",
+        "ms": 167.77,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 123
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('link', { name: /Pausada .*1\\/4 respostas/ })",
+        "ms": 876.04,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 124
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 869.05,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 127
+          }
+        ]
+      },
+      {
+        "title": "Set offline mode",
+        "ms": 1.79,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 129
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: 'Retomar Prova\u00e7\u00e3o', exact: true })",
+        "ms": 158.34,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 132
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 23.07,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 135
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('link', { name: 'Biblioteca de Provas', exact: true })",
+        "ms": 73.63,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 138
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('article', { name: 'Aritm\u00e9tica dos pequenos arquivos' }).getByRole('button', { name: 'Remover pacote' })",
+        "ms": 21759.11,
+        "source": [
+          {
+            "file": "bf56d-packs.spec.ts",
+            "line": 139
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [
+      {
+        "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+        "time": 139656.986
+      },
+      {
+        "text": "TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:4173/assets/PackLibrary-D6A8fKSx.js",
+        "time": 139681.285
+      },
+      {
+        "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+        "time": 139706.095
+      },
+      {
+        "text": "TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:4173/assets/PackLibrary-D6A8fKSx.js",
+        "time": 139734.633
+      }
+    ]
+  },
+  {
+    "test": "bf56b-workshop-B-Oficina-b-36ff1-\u00e7\u00e3o-reload-e-hist\u00f3rico-real-chromium",
+    "operations": [
+      {
+        "title": "Navigate to \"/arcanario/baralhos/novo\"",
+        "ms": 253.75,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 54
+          }
+        ]
+      },
+      {
+        "title": "Fill \"Constela\u00e7\u00f5es fict\u00edcias\" getByLabel('Nome do baralho')",
+        "ms": 952.43,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 55
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: 'Salvar baralho' })",
+        "ms": 160.45,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 56
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 89.63,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 59
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/arcanario/oficina/nova\"",
+        "ms": 154.52,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 7
+          }
+        ]
+      },
+      {
+        "title": "Fill \"Eco de Aryn\" getByLabel('Nome da carta no acervo (opcional)')",
+        "ms": 870.92,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 8
+          }
+        ]
+      },
+      {
+        "title": "Fill \"Pergunta de Eco de Aryn?\" getByRole('textbox', { name: /Frente da carta \u2014 pergunta ou pista/ })",
+        "ms": 58.9,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 11
+          }
+        ]
+      },
+      {
+        "title": "Fill \"Resposta de Eco de Aryn.\" getByRole('textbox', { name: /Verso da carta \u2014 resposta ou descoberta/ })",
+        "ms": 33.26,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 14
+          }
+        ]
+      },
+      {
+        "title": "Click getByText('Baralhos & cole\u00e7\u00f5es', { exact: true })",
+        "ms": 64.67,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 16
+          }
+        ]
+      },
+      {
+        "title": "Check getByRole('checkbox', { name: 'Constela\u00e7\u00f5es fict\u00edcias', exact: true })",
+        "ms": 80.59,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 17
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: 'Guardar carta no acervo' })",
+        "ms": 67.25,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 19
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 96.99,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 22
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/arcanario/oficina/nova\"",
+        "ms": 103.72,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 7
+          }
+        ]
+      },
+      {
+        "title": "Fill \"Eco de Lua\" getByLabel('Nome da carta no acervo (opcional)')",
+        "ms": 880.65,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 8
+          }
+        ]
+      },
+      {
+        "title": "Fill \"Pergunta de Eco de Lua?\" getByRole('textbox', { name: /Frente da carta \u2014 pergunta ou pista/ })",
+        "ms": 49.12,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 11
+          }
+        ]
+      },
+      {
+        "title": "Fill \"Resposta de Eco de Lua.\" getByRole('textbox', { name: /Verso da carta \u2014 resposta ou descoberta/ })",
+        "ms": 30.14,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 14
+          }
+        ]
+      },
+      {
+        "title": "Click getByText('Baralhos & cole\u00e7\u00f5es', { exact: true })",
+        "ms": 70.22,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 16
+          }
+        ]
+      },
+      {
+        "title": "Check getByRole('checkbox', { name: 'Constela\u00e7\u00f5es fict\u00edcias', exact: true })",
+        "ms": 72.77,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 17
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: 'Guardar carta no acervo' })",
+        "ms": 66.79,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 19
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 77.46,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 22
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/arcanario/baralhos/local%3A6e518b53-32ec-45dd-8127-fe1e37e00952\"",
+        "ms": 124.45,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 63
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: 'Subir carta 2' })",
+        "ms": 874.6,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 64
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: 'Salvar baralho' })",
+        "ms": 142.04,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 65
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 20.39,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 66
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: 'Revisar Ecos do baralho' })",
+        "ms": 124.26,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 67
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 140.25,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 70
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeDisabled\"",
+        "ms": 9.02,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 73
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: /Virar carta \u00b7 revelar resposta/ })",
+        "ms": 53.22,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 76
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: 'Lembrei \u00b7 pr\u00f3ximo Eco' })",
+        "ms": 61.66,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 77
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 15.2,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 78
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('link', { name: /Interromper e guardar rodada/ })",
+        "ms": 51.49,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 81
+          }
+        ]
+      },
+      {
+        "title": "Reload",
+        "ms": 109.49,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 82
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('link', { name: /Retomar do pr\u00f3ximo Eco/ })",
+        "ms": 24472.38,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 83
+          }
+        ]
+      }
+    ],
+    "consoleErrors": []
+  },
+  {
+    "test": "bf56b-workshop-B-portal-ac-fce7d-am-o-mesmo-Canvas-residente-chromium",
+    "operations": [
+      {
+        "title": "Navigate to \"/\"",
+        "ms": 235.19,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCount\"",
+        "ms": 5136.3,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 28
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas')",
+        "ms": 13232.29,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 31
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('link', { name: 'Cole\u00e7\u00e3o', exact: true })",
+        "ms": 12439.29,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 32
+          }
+        ]
+      }
+    ],
+    "consoleErrors": []
+  }
+]

@@ -1,0 +1,1307 @@
+[
+  {
+    "test": "performance-navigation-per-66e92-and-loop-across-dock-return-chromium",
+    "operations": [
+      {
+        "title": "Set viewport size",
+        "ms": 4.83,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 71
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/colecao\"",
+        "ms": 233.43,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 72
+          }
+        ]
+      },
+      {
+        "title": "Click locator('.primary-dock a[href=\"/\"]')",
+        "ms": 489.67,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 73
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 4062.25,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 75
+          }
+        ]
+      },
+      {
+        "title": "Wait for selector locator('canvas[data-three-world-canvas]')",
+        "ms": 7396.3,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 78
+          }
+        ]
+      },
+      {
+        "title": "Click locator('.primary-dock a[href=\"/colecao\"]')",
+        "ms": 10017.01,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 79
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 2349.51,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 80
+          }
+        ]
+      },
+      {
+        "title": "Click locator('.primary-dock a[href=\"/\"]')",
+        "ms": 171.73,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 81
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 3707.4,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 82
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas[data-three-world-canvas]')",
+        "ms": 3221.79,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 84
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "test": "bf57b-lunar-reentry-R3-thr-685ea-renderer-without-empty-taps-chromium",
+    "operations": [
+      {
+        "title": "Set viewport size",
+        "ms": 7.5,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 10
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/configuracoes\"",
+        "ms": 277.74,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 11
+          }
+        ]
+      },
+      {
+        "title": "Check getByRole('checkbox', { name: 'Mostrar bot\u00e3o \u201cAcervo e habitantes\u201d no Canvas' })",
+        "ms": 827.56,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 16
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/\"",
+        "ms": 110.23,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 17
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCount\"",
+        "ms": 3527.21,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 19
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 5491.83,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 20
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1823.63,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 21
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas[data-three-world-canvas]')",
+        "ms": 7681.71,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 22
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('button', { name: 'Abrir ferramentas de explora\u00e7\u00e3o acess\u00edvel' })",
+        "ms": 12309.4,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 60
+          }
+        ]
+      },
+      {
+        "title": "Click locator('details.world-explore > summary')",
+        "ms": 13163.77,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 61
+          }
+        ]
+      },
+      {
+        "title": "Click locator('details.world-semantic > summary')",
+        "ms": 12864.13,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 62
+          }
+        ]
+      },
+      {
+        "title": "Expect \"not toHaveAttribute\"",
+        "ms": 2913.64,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 65
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 2813.0,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 123
+          }
+        ]
+      },
+      {
+        "title": "Focus getByRole('button', { name: 'Abrir Portal do Arcan\u00e1rio', exact: true })",
+        "ms": 5559.37,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 124
+          }
+        ]
+      },
+      {
+        "title": "Press \"Enter\"",
+        "ms": 2911.91,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 125
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveURL\"",
+        "ms": 4364.33,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 127
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 3683.82,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 130
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeHidden\"",
+        "ms": 198.35,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 131
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 289.38,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 132
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 66.2,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 133
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveLength\"",
+        "ms": 0.72,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 134
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('link', { name: /Voltar \u00e0 Biblioteca/ })",
+        "ms": 245.19,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 135
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveURL\"",
+        "ms": 548.89,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 136
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 3393.13,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 137
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 3244.42,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 138
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 2883.66,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 139
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCount\"",
+        "ms": 2877.86,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 140
+          }
+        ]
+      },
+      {
+        "title": "Expect \"not toHaveAttribute\"",
+        "ms": 2354.7,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 65
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 2492.22,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 123
+          }
+        ]
+      },
+      {
+        "title": "Focus getByRole('button', { name: 'Abrir Portal do Arcan\u00e1rio', exact: true })",
+        "ms": 5852.47,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 124
+          }
+        ]
+      },
+      {
+        "title": "Press \"Enter\"",
+        "ms": 2728.27,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 125
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveURL\"",
+        "ms": 3208.94,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 127
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 326.88,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 130
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeHidden\"",
+        "ms": 57.63,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 131
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 53.76,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 132
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 34.31,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 133
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveLength\"",
+        "ms": 0.21,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 134
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('link', { name: /Voltar \u00e0 Biblioteca/ })",
+        "ms": 143.74,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 135
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveURL\"",
+        "ms": 4015.72,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 136
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 2932.73,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 137
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1897.48,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 138
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1087.57,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 139
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCount\"",
+        "ms": 1149.99,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 140
+          }
+        ]
+      },
+      {
+        "title": "Expect \"not toHaveAttribute\"",
+        "ms": 862.41,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 65
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 46.4,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 123
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "test": "bf57b-lunar-reentry-R3-thr-dce00-renderer-without-empty-taps-chromium",
+    "operations": [
+      {
+        "title": "Set viewport size",
+        "ms": 4.56,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 10
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/configuracoes\"",
+        "ms": 234.84,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 11
+          }
+        ]
+      },
+      {
+        "title": "Check getByRole('checkbox', { name: 'Mostrar bot\u00e3o \u201cAcervo e habitantes\u201d no Canvas' })",
+        "ms": 800.34,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 16
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/\"",
+        "ms": 111.09,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 17
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCount\"",
+        "ms": 3482.98,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 19
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 5350.58,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 20
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1644.63,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 21
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas[data-three-world-canvas]')",
+        "ms": 6439.73,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 22
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas[data-three-world-canvas]')",
+        "ms": 6132.91,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 36
+          }
+        ]
+      },
+      {
+        "title": "Expect \"not toHaveAttribute\"",
+        "ms": 2424.76,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 65
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas[data-three-world-canvas]')",
+        "ms": 5753.05,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 74
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBe\"",
+        "ms": 0.1,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 72
+          }
+        ]
+      },
+      {
+        "title": "Expect \"poll toBe\"",
+        "ms": 5758.58,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 86
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 2136.93,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 87
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas[data-three-world-canvas]')",
+        "ms": 5595.89,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 88
+          }
+        ]
+      },
+      {
+        "title": "{\"valid\":true,\"x\":0.773012997742004,\"y\":0.8580723333050427}",
+        "ms": 0.1,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 117
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveURL\"",
+        "ms": 4241.02,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 127
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 3008.88,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 130
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeHidden\"",
+        "ms": 288.58,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 131
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 297.87,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 132
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 53.29,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 133
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveLength\"",
+        "ms": 1.05,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 134
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('link', { name: /Voltar \u00e0 Biblioteca/ })",
+        "ms": 165.19,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 135
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveURL\"",
+        "ms": 2078.18,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 136
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 2276.56,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 137
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 2202.0,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 138
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 2234.79,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 139
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCount\"",
+        "ms": 2049.77,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 140
+          }
+        ]
+      },
+      {
+        "title": "Expect \"not toHaveAttribute\"",
+        "ms": 2233.31,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 65
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas[data-three-world-canvas]')",
+        "ms": 6306.8,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 74
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBe\"",
+        "ms": 4.42,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 72
+          }
+        ]
+      },
+      {
+        "title": "Expect \"poll toBe\"",
+        "ms": 10004.28,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 86
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas[data-three-world-canvas]')",
+        "ms": 4963.65,
+        "source": [
+          {
+            "file": "bf57b-lunar-reentry.spec.ts",
+            "line": 74
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "test": "bf56f-orbital-refinement-B-bb826-reserves-the-resident-world-chromium",
+    "operations": [
+      {
+        "title": "Set viewport size",
+        "ms": 4.73,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 13
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/\"",
+        "ms": 234.04,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 14
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/configuracoes\"",
+        "ms": 103.79,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 15
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 482.28,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 19
+          }
+        ]
+      },
+      {
+        "title": "Check getByRole('checkbox', { name: 'Mostrar bot\u00e3o \u201cAcervo e habitantes\u201d no Canvas' })",
+        "ms": 316.63,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 20
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/\"",
+        "ms": 108.32,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 21
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCount\"",
+        "ms": 3096.12,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 23
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 4938.04,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 24
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1442.17,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas[data-three-world-canvas]')",
+        "ms": 4290.34,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 28
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 1440.71,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 39
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeEnabled\"",
+        "ms": 1452.88,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 40
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCSS\"",
+        "ms": 1497.01,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 41
+          }
+        ]
+      },
+      {
+        "title": "Evaluate getByRole('button', { name: 'Abrir ferramentas de explora\u00e7\u00e3o acess\u00edvel' })",
+        "ms": 3996.6,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 45
+          }
+        ]
+      },
+      {
+        "title": "Attach \"lunar-access-layout.json\"",
+        "ms": 0.75,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 80
+          }
+        ]
+      },
+      {
+        "title": "Acesso lunar fora da largura da viewport: {\"viewport\":{\"width\":390,\"height\":844},\"bounds\":{\"left\":13.59375,\"top\":673.21875,\"right\":161.78125,\"bottom\":721.21875,\"width\":148.1875,\"height\":48},\"intersection\":{\"width\":148.1875,\"height\":48},\"position\":\"fixed\",\"cssBottom\":\"122.781px\",\"canvasDockHeight\":\"95.58125px\",\"dockBottom\":835.203125,\"documentScroll\":{\"x\":0,\"y\":0}}",
+        "ms": 0.53,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 87
+          }
+        ]
+      },
+      {
+        "title": "Acesso lunar fora da altura da viewport: {\"viewport\":{\"width\":390,\"height\":844},\"bounds\":{\"left\":13.59375,\"top\":673.21875,\"right\":161.78125,\"bottom\":721.21875,\"width\":148.1875,\"height\":48},\"intersection\":{\"width\":148.1875,\"height\":48},\"position\":\"fixed\",\"cssBottom\":\"122.781px\",\"canvasDockHeight\":\"95.58125px\",\"dockBottom\":835.203125,\"documentScroll\":{\"x\":0,\"y\":0}}",
+        "ms": 0.08,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 91
+          }
+        ]
+      },
+      {
+        "title": "Focus getByRole('button', { name: 'Abrir ferramentas de explora\u00e7\u00e3o acess\u00edvel' })",
+        "ms": 3060.16,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 92
+          }
+        ]
+      },
+      {
+        "title": "Press \"Enter\"",
+        "ms": 2514.41,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 93
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1901.79,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 100
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('.library-page')",
+        "ms": 5265.11,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 103
+          }
+        ]
+      },
+      {
+        "title": "Attach \"lunar-access-open-state.json\"",
+        "ms": 0.16,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 112
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBe\"",
+        "ms": 0.18,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 116
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBe\"",
+        "ms": 0.1,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 117
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 1937.26,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 120
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 2044.81,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 122
+          }
+        ]
+      },
+      {
+        "title": "Focus locator('details.world-explore').locator(':scope > summary')",
+        "ms": 3871.84,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 123
+          }
+        ]
+      },
+      {
+        "title": "Press \"Enter\"",
+        "ms": 2671.07,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 124
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 2046.85,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 125
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 2309.7,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 129
+          }
+        ]
+      },
+      {
+        "title": "Focus locator('details.world-explore').locator('details.world-semantic').locator('summary')",
+        "ms": 4285.95,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 130
+          }
+        ]
+      },
+      {
+        "title": "Press \"Enter\"",
+        "ms": 2903.71,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 131
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 2268.1,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 132
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 803.89,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 138
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeEnabled\"",
+        "ms": 37.12,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 139
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "test": "bf56b-workshop-B-portal-ac-fce7d-am-o-mesmo-Canvas-residente-chromium",
+    "operations": [
+      {
+        "title": "Navigate to \"/\"",
+        "ms": 267.34,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCount\"",
+        "ms": 5145.75,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 28
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas')",
+        "ms": 13254.91,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 31
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('link', { name: 'Cole\u00e7\u00e3o', exact: true })",
+        "ms": 12957.04,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 32
+          }
+        ]
+      },
+      {
+        "title": "Click getByRole('link', { name: /Cartas, Ecos e Relic\u00e1rio/ })",
+        "ms": 50.76,
+        "source": [
+          {
+            "file": "bf56b-workshop.spec.ts",
+            "line": 33
+          }
+        ]
+      }
+    ]
+  }
+]

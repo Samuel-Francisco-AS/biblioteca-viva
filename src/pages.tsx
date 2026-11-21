@@ -258,11 +258,12 @@ function LibraryPageContent({
   function handleWorldSelection(nextSelection: WorldSelection): void {
     if (!application) return;
     if (nextSelection?.id === "portal:duelo-arcano") {
-      if (portalFlight.current) return;
-      // The lunar gate enters the Arcanarium Portal; duel is a room within it.
+      if (!active || portalFlight.current) return;
+      // The lunar gate enters the educational Arcanarium Portal.
       beginPassage("/arcanario");
       portalFlight.current = schedulePassage(() => {
-        portalFlight.current = null;
+        // Hold the intent until active=false commits the route departure.
+        // Late duplicate selection callbacks must not schedule a second push.
         void navigate("/arcanario");
       });
       return;
