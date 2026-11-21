@@ -3,9 +3,9 @@
    or a second rendering loop. Individual realms retain their own hue/shape. */
 
 /* Buttons, button-like links and native form actions share a material language.
-   Full-size book/TCG cards remain cards, not small pushbuttons. */
+   Full-size cards remain cards, not small pushbuttons. */
 .app-shell :is(
-  button:not(.combat-card, .arcana-card, .type-picker__option, .arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card),
+  button:not(.arcana-card, .type-picker__option),
   .button,
   .text-button,
   a.top-bar__back,
@@ -14,11 +14,9 @@
   input[type="submit"],
   input[type="reset"]
 ),
-.app-shell .arcanarium button:not(.combat-card, .arcana-card, .arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card),
+.app-shell .arcanarium button:not(.arcana-card, .type-picker__option),
 .app-shell .arcanarium .arcana-pack-volume button,
 .app-shell .arcanarium .arcana-nav a,
-.app-shell .arena-game button:not(.arena-piece, .arena-hand-card, .arena-duelist),
-.app-shell .arena-dialog button,
 .bv-picker-sheet button {
   --crystal-facet: #e5cbd126;
   --crystal-top: #604160;
@@ -116,8 +114,7 @@
   color: #442052;
 }
 
-/* Educational arcana keeps amethyst tones; active arena commands get a
-   moonlit lapis/gold body without changing the viewport or HUD dimensions. */
+/* Educational arcana keeps amethyst tones. */
 .app-shell .arcanarium :is(button, .button) {
   --crystal-facet: #e7d9ff20;
   --crystal-top: #6d5380;
@@ -131,22 +128,6 @@
   --crystal-mid: #684579;
   --crystal-base: #3a2854;
   --crystal-glint: #dfbadd;
-}
-.app-shell .arcanarium .arena-game button,
-.app-shell .arcanarium .arena-dialog button {
-  --crystal-facet: #cbd8fc1c;
-  --crystal-top: #3e4568;
-  --crystal-mid: #252b4c;
-  --crystal-base: #12162b;
-  --crystal-ledge: #080c1b;
-  --crystal-glint: #b6adab;
-}
-.app-shell .arcanarium .arena-game .arena-primary,
-.app-shell .arcanarium .arena-dialog .arena-primary {
-  --crystal-top: #826a71;
-  --crystal-mid: #58435b;
-  --crystal-base: #2d2846;
-  --crystal-glint: #efcf96;
 }
 
 /* Navigation chips are amethyst, slightly brighter when selected. */
@@ -255,27 +236,6 @@
   filter: none;
 }
 
-/* Art-bearing game controls are interactive cards, not ordinary keys.
-   Keep painted materials and hitbox transforms, including absolute field slots. */
-.app-shell :is(.arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card) {
-  transition: scale 64ms ease-out;
-}
-.app-shell :is(.arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card):not(:disabled):is(
-  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
-) {
-  scale: 0.975;
-}
-@media (prefers-reduced-motion: reduce) {
-  .app-shell :is(.arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card) {
-    transition: none;
-    scale: 1;
-  }
-}
-.app-shell[data-reduced-motion="true"] :is(.arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card) {
-  transition: none;
-  scale: 1;
-}
-
 /* Large selection tiles remain parchment artworks with crystal-mounted seals,
    but still acknowledge the same mechanical press. */
 .app-shell .type-picker__sigil {
@@ -295,7 +255,7 @@
 /* Ordinary controls get a brief echo; +/- follows the real finger only.
    Route curtain begins after an actual painted pressed frame, not a 120ms pause. */
 .app-shell :is(
-  button:not(.combat-card, .arcana-card, .type-picker__option, .arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card),
+  button:not(.arcana-card, .type-picker__option),
   .button,
   .text-button,
   a.top-bar__back,
@@ -317,7 +277,7 @@
   filter: none;
 }
 .app-shell :is(
-  button:not(.combat-card, .arcana-card, .type-picker__option, .arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card),
+  button:not(.arcana-card, .type-picker__option),
   .button,
   .text-button,
   .category-ribbon a
@@ -377,7 +337,7 @@
 
 /* Contrast and reduced motion are preferences, not a reason to lose feedback. */
 .app-shell[data-high-contrast="true"] :is(
-  button:not(.combat-card, .arcana-card, .type-picker__option, .arena-piece, .arena-hand-card, .arena-duelist, .duel-hand-card),
+  button:not(.arcana-card, .type-picker__option),
   .button,
   .text-button,
   .category-ribbon a

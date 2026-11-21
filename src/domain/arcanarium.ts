@@ -1,9 +1,3 @@
-import {
-  combatDeckSchema,
-  definitionSchema,
-  matchSchema,
-} from "./duel/contracts";
-import { validateMatch } from "./duel/engine";
 import { packReceiptSchema, packManifestSchema } from "./packManifest";
 import { z } from "zod";
 
@@ -105,27 +99,12 @@ export const cardContentSchema = z.discriminatedUnion("type", [
     category: text.max(80).optional(),
     imageId: id.optional(),
   }),
-  z.strictObject({
-    type: z.literal("combat"),
-    name: text.max(160),
-    combat: definitionSchema.optional(),
-    attributes: z.record(id, z.number().finite()),
-    effects: z.array(
-      z.strictObject({
-        definitionId: id,
-        parameters: z.record(
-          id,
-          z.union([z.string(), z.number().finite(), z.boolean()]),
-        ),
-      }),
-    ),
-  }),
 ]);
 export const cardSchema = z
   .strictObject({
     id,
     revision,
-    type: z.enum(["flashcard", "question", "memory", "combat"]),
+    type: z.enum(["flashcard", "question", "memory"]),
     origin: cardOriginSchema,
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
@@ -151,14 +130,14 @@ export type CardReference = z.infer<typeof cardReferenceSchema>;
 export const dynamicCriteriaSchema = z.discriminatedUnion("version", [
   z.strictObject({
     version: z.literal(1),
-    types: z.array(z.enum(["flashcard", "question", "memory", "combat"])),
+    types: z.array(z.enum(["flashcard", "question", "memory"])),
     knowledgeTagIds: uniqueIds,
     personalTagIds: uniqueIds,
   }),
   z
     .strictObject({
       version: z.literal(2),
-      types: z.array(z.enum(["flashcard", "question", "memory", "combat"])),
+      types: z.array(z.enum(["flashcard", "question", "memory"])),
       knowledgeTagIds: uniqueIds,
       personalTagIds: uniqueIds,
       exam: text.max(160).optional(),
@@ -206,7 +185,6 @@ export const deckSchema = z
     updatedAt: z.iso.datetime(),
     origin: cardOriginSchema,
     selection: deckSelectionSchema,
-    combat: combatDeckSchema.optional(),
   })
   .refine((deck) => deck.updatedAt >= deck.createdAt);
 export type Deck = z.infer<typeof deckSchema>;
@@ -286,15 +264,6 @@ export const cardSessionSchema = z.discriminatedUnion("kind", [
     startedAt: z.iso.datetime(),
     cards: z.array(cardReferenceSchema),
     trial: trialStateSchema.optional(),
-  }),
-  z.strictObject({
-    id,
-    kind: z.literal("combat_match"),
-    startedAt: z.iso.datetime(),
-    cards: z.array(cardReferenceSchema),
-    rulesetVersion: text,
-    duel: matchSchema.optional(),
-    updatedAt: z.iso.datetime().optional(),
   }),
 ]);
 export type CardSession = z.infer<typeof cardSessionSchema>;
@@ -433,17 +402,6 @@ export function validateArcanarium(
     }
   }
   for (const deck of data.decks) {
-    if (deck.combat) {
-      if (
-        deck.selection.kind !== "static" ||
-        deck.selection.cards.some(
-          (r) => cards.get(r.cardId)?.type !== "combat",
-        ) ||
-        JSON.stringify(Object.keys(deck.combat.copies).sort()) !==
-          JSON.stringify(deck.selection.cards.map((r) => r.cardId).sort())
-      )
-        throw new Error("Invalid combat deck references");
-    }
     if (deck.selection.kind === "static")
       deck.selection.cards.forEach(requireRef);
     else if (
@@ -473,28 +431,6 @@ export function validateArcanarium(
   }
   for (const session of data.sessions) {
     session.cards.forEach(requireRef);
-    if (session.kind === "combat_match" && session.duel) {
-      const m = validateMatch(session.duel);
-      if (
-        session.rulesetVersion !== m.ruleset ||
-        !session.updatedAt ||
-        session.updatedAt < session.startedAt
-      )
-        throw new Error("Invalid combat session");
-      const refs = new Set(
-        session.cards.map((r) => JSON.stringify([r.cardId, r.revision])),
-      );
-      for (const c of m.cards.filter((c) => !c.id.startsWith("token:"))) {
-        const v = versions.get(JSON.stringify([c.cardId, c.revision]));
-        if (
-          !refs.has(JSON.stringify([c.cardId, c.revision])) ||
-          v?.content.type !== "combat" ||
-          v.content.name !== c.name ||
-          JSON.stringify(v.content.combat) !== JSON.stringify(c.definition)
-        )
-          throw new Error("Invalid frozen combat reference");
-      }
-    }
     if (session.kind === "question_session" && session.trial) {
       const t = session.trial;
       unique(session.cards.map((r) => r.cardId));

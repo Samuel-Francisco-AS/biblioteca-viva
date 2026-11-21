@@ -1,0 +1,11 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:run
+npm notice run vitest run src/infrastructure/database/retireCombatData.test.ts src/infrastructure/database/arcanarium.test.ts src/infrastructure/backup/backup.test.ts src/app/createApplication.test.ts
+
+ RUN  v4.1.12 <checkout>
+
+
+ Test Files  4 passed (4)
+      Tests  53 passed (53)
+   Start at  20:49:03
+   Duration  3.72s (transform 2.67s, setup 1.12s, import 5.18s, tests 4.31s, environment 1ms)
+

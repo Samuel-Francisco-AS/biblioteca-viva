@@ -293,7 +293,7 @@ it("backup v10 omits unreferenced public content, restores history and receipts,
       data: await x.backup.read(),
     });
   const valid = await codec.inspect(artifact.content);
-  expect(valid.summary.formatVersion).toBe(11);
+  expect(valid.summary.formatVersion).toBe(12);
   expect(valid.data.arcanarium?.cards).toHaveLength(1);
   expect(valid.data.arcanarium?.packs?.[0].items).toHaveLength(4);
   const y = await setup();

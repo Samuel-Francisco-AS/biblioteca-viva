@@ -1,4 +1,3 @@
-import { duelArtUrl } from "../../duel/duelArt";
 import {
   BoxGeometry,
   BufferGeometry,
@@ -114,7 +113,9 @@ export function createOrbitalArena() {
       -Math.PI / 4;
   }
   add(book, box, bronze, -0.6, 0, 0, 0.08, 1.7, 0.38);
-  const coverTexture = new TextureLoader().load(duelArtUrl("unwritten-book"));
+  const coverTexture = new TextureLoader().load(
+    "/assets/arcanarium/unwritten-book.webp",
+  );
   coverTexture.colorSpace = SRGBColorSpace;
   const cover = new MeshBasicMaterial({ map: coverTexture });
   const coverGeometry = new PlaneGeometry(0.94, 1.28);
@@ -184,7 +185,10 @@ export function createOrbitalArena() {
     },
     update(deltaSeconds: number, reduced: boolean) {
       if (reduced) return;
-      elapsed += Math.min(0.05, Math.max(0, deltaSeconds));
+      // Caller supplies active time only; pause/resume belongs to the resident
+      // runtime. No per-frame cap: the path is analytical, not a simulation.
+      if (!Number.isFinite(deltaSeconds) || deltaSeconds <= 0) return;
+      elapsed += deltaSeconds;
       place();
     },
   };

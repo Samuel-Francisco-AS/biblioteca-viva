@@ -1,0 +1,2002 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:run
+npm notice run vitest run --maxWorkers=1
+
+ RUN  v4.1.12 <checkout>
+
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+ ❯ src/features/arcanarium/ArcanariumPage.test.tsx (13 tests | 2 failed) 18062ms
+   × B-R1/B-R2: three native-dialog-free frames update preview, recover draft, persist and cancel without changing saved faces 2177ms
+   × C: recovers question draft, reorders stable alternatives, saves metadata and reopens an author question 2744ms
+ ❯ src/features/library/three/inhabitantPickupContact.test.ts (2 tests | 1 failed) 10086ms
+   × aryn reaches the original volume edge without crossing the real tabletop, furniture or floor during pickup 6518ms
+Not implemented: navigation to another Document
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+{"sceneUpdates":0,"projections":0,"milliseconds":15.324325000000044}
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+ ❯ src/features/arcanarium/PackLibrary.test.tsx (4 tests | 1 failed) 6607ms
+   × catalogue, real install/update/remove/reinstall and collection/provation navigation 3734ms
+Not implemented: navigation to another Document
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/arcanarium/ArcanariumPage.test.tsx > B-R1/B-R2: three native-dialog-free frames update preview, recover draft, persist and cancel without changing saved faces
+TestingLibraryElementError: Unable to find role="link" and name "Editar na Oficina"
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+  <div>
+    <output
+      data-testid="current-route"
+    >
+      /arcanario/oficina/nova
+    </output>
+    <section
+      aria-label="O Arcanário"
+      class="arcanarium"
+    >
+      <div
+        class="arcana-topline"
+      >
+        <a
+          data-discover="true"
+          href="/arcanario"
+        >
+          ← 
+          Portal do Arcanário
+        </a>
+        <span>
+          ARQUIVO DE ENCANTAMENTOS
+        </span>
+      </div>
+      <nav
+        aria-label="Salas do Arcanário"
+        class="arcana-nav"
+      >
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario"
+        >
+          Portal
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/acervo"
+        >
+          Acervo
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/baralhos"
+        >
+          Baralhos
+        </a>
+        <a
+          aria-current="page"
+          class="active"
+          data-discover="true"
+          href="/arcanario/oficina/nova"
+        >
+          Oficina
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/ecos"
+        >
+          Ecos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/provacoes"
+        >
+          Provações
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/pacotes"
+        >
+          Biblioteca de Provas
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/assuntos"
+        >
+          Assuntos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/diagnostico"
+        >
+          Diagnóstico
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/relicario"
+        >
+          Relicário
+        </a>
+      </nav>
+      <div
+        class="arcana-heading"
+      >
+        <div>
+          <p
+            class="arcana-eyebrow"
+          >
+            O ateliê das pequenas eternidades
+          </p>
+          <h2>
+            Oficina de Cartas
+          </h2>
+          <p>
+            Dê forma a uma descoberta ou guarde um fragmento da sua história.
+          </p>
+        </div>
+        <svg
+          aria-hidden="true"
+          class="arcana-seal"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 200 200"
+        >
+          <circle
+            cx="100"
+            cy="100"
+            r="89"
+            stroke-width=".7"
+          />
+          <circle
+            cx="100"
+            cy="100"
+            r="80"
+            stroke-dasharray="1 7"
+          />
+          <path
+            d="M100 4v24m0 144v24M4 100h24m144 0h24M32 32l17 17m102 102 17 17M32 168l17-17M151 49l17-17"
+          />
+          <path
+            d="m100 18 71 123H29zm0 164L29 59h142z"
+            opacity=".4"
+          />
+          <path
+            d="m70 138 9-30 50-57 16 14-50 57zM79 108l16 14m34-71 6-7 16 14-6 7M70 138l17-8M51 150h98M52 59l7-13 7 13-7 13zM140 120l6-11 6 11-6 11z"
+          />
+        </svg>
+      </div>
+      <div
+        class="arcana-kind"
+      >
+        <a
+          aria-current="page"
+          data-discover="true"
+          href="/arcanario/oficina/nova"
+        >
+          ✧ Eco · frente e verso
+        </a>
+        <a
+          data-discover="true"
+          href="/arcanario/oficina/nova?tipo=memory"
+        >
+          ❧ Lembrança · Relicário
+        </a>
+        <a
+          data-discover="true"
+          href="/arcanario/oficina/nova?tipo=question"
+        >
+          ◇ Questão · Provações
+        </a>
+      </div>
+      <p
+        class="arcana-notice"
+        role="status"
+      >
+        Rascunho recuperado deste aparelho. Confira a prévia antes de salvar.
+      </p>
+      <div
+        class="arcana-workshop"
+      >
+        <form
+          class="arcana-panel arcana-editor"
+        >
+          <fieldset
+            disabled=""
+          >
+            <legend>
+              Inscrever um Eco
+            </legend>
+            <label>
+              Nome da carta no acervo (opcional)
+              <input
+                aria-describedby="card-name-help"
+                maxlength="160"
+                valu...
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+  <div>
+    <output
+      data-testid="current-route"
+    >
+      /arcanario/oficina/nova
+    </output>
+    <section
+      aria-label="O Arcanário"
+      class="arcanarium"
+    >
+      <div
+        class="arcana-topline"
+      >
+        <a
+          data-discover="true"
+          href="/arcanario"
+        >
+          ← 
+          Portal do Arcanário
+        </a>
+        <span>
+          ARQUIVO DE ENCANTAMENTOS
+        </span>
+      </div>
+      <nav
+        aria-label="Salas do Arcanário"
+        class="arcana-nav"
+      >
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario"
+        >
+          Portal
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/acervo"
+        >
+          Acervo
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/baralhos"
+        >
+          Baralhos
+        </a>
+        <a
+          aria-current="page"
+          class="active"
+          data-discover="true"
+          href="/arcanario/oficina/nova"
+        >
+          Oficina
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/ecos"
+        >
+          Ecos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/provacoes"
+        >
+          Provações
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/pacotes"
+        >
+          Biblioteca de Provas
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/assuntos"
+        >
+          Assuntos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/diagnostico"
+        >
+          Diagnóstico
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/relicario"
+        >
+          Relicário
+        </a>
+      </nav>
+      <div
+        class="arcana-heading"
+      >
+        <div>
+          <p
+            class="arcana-eyebrow"
+          >
+            O ateliê das pequenas eternidades
+          </p>
+          <h2>
+            Oficina de Cartas
+          </h2>
+          <p>
+            Dê forma a uma descoberta ou guarde um fragmento da sua história.
+          </p>
+        </div>
+        <svg
+          aria-hidden="true"
+          class="arcana-seal"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 200 200"
+        >
+          <circle
+            cx="100"
+            cy="100"
+            r="89"
+            stroke-width=".7"
+          />
+          <circle
+            cx="100"
+            cy="100"
+            r="80"
+            stroke-dasharray="1 7"
+          />
+          <path
+            d="M100 4v24m0 144v24M4 100h24m144 0h24M32 32l17 17m102 102 17 17M32 168l17-17M151 49l17-17"
+          />
+          <path
+            d="m100 18 71 123H29zm0 164L29 59h142z"
+            opacity=".4"
+          />
+          <path
+            d="m70 138 9-30 50-57 16 14-50 57zM79 108l16 14m34-71 6-7 16 14-6 7M70 138l17-8M51 150h98M52 59l7-13 7 13-7 13zM140 120l6-11 6 11-6 11z"
+          />
+        </svg>
+      </div>
+      <div
+        class="arcana-kind"
+      >
+        <a
+          aria-current="page"
+          data-discover="true"
+          href="/arcanario/oficina/nova"
+        >
+          ✧ Eco · frente e verso
+        </a>
+        <a
+          data-discover="true"
+          href="/arcanario/oficina/nova?tipo=memory"
+        >
+          ❧ Lembrança · Relicário
+        </a>
+        <a
+          data-discover="true"
+          href="/arcanario/oficina/nova?tipo=question"
+        >
+          ◇ Questão · Provações
+        </a>
+      </div>
+      <p
+        class="arcana-notice"
+        role="status"
+      >
+        Rascunho recuperado deste aparelho. Confira a prévia antes de salvar.
+      </p>
+      <div
+        class="arcana-workshop"
+      >
+        <form
+          class="arcana-panel arcana-editor"
+        >
+          <fieldset
+            disabled=""
+          >
+            <legend>
+              Inscrever um Eco
+            </legend>
+            <label>
+              Nome da carta no acervo (opcional)
+              <input
+                aria-describedby="card-name-help"
+                maxlength="160"
+                valu...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/features/arcanarium/ArcanariumPage.test.tsx:271:16
+    269|     screen.getByRole("button", { name: "Guardar carta no acervo" }),
+    270|   );
+    271|   await screen.findByRole("link", { name: "Editar na Oficina" });
+       |                ^
+    272|   const c = (await a.arcanarium.list()).cards[0];
+    273|   expect(c.content).toMatchObject({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/features/arcanarium/ArcanariumPage.test.tsx > C: recovers question draft, reorders stable alternatives, saves metadata and reopens an author question
+TestingLibraryElementError: Unable to find role="link" and name "Editar na Oficina"
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+  <div>
+    <output
+      data-testid="current-route"
+    >
+      /arcanario/oficina/nova
+    </output>
+    <section
+      aria-label="O Arcanário"
+      class="arcanarium"
+    >
+      <div
+        class="arcana-topline"
+      >
+        <a
+          data-discover="true"
+          href="/arcanario"
+        >
+          ← 
+          Portal do Arcanário
+        </a>
+        <span>
+          ARQUIVO DE ENCANTAMENTOS
+        </span>
+      </div>
+      <nav
+        aria-label="Salas do Arcanário"
+        class="arcana-nav"
+      >
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario"
+        >
+          Portal
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/acervo"
+        >
+          Acervo
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/baralhos"
+        >
+          Baralhos
+        </a>
+        <a
+          aria-current="page"
+          class="active"
+          data-discover="true"
+          href="/arcanario/oficina/nova"
+        >
+          Oficina
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/ecos"
+        >
+          Ecos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/provacoes"
+        >
+          Provações
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/pacotes"
+        >
+          Biblioteca de Provas
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/assuntos"
+        >
+          Assuntos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/diagnostico"
+        >
+          Diagnóstico
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/relicario"
+        >
+          Relicário
+        </a>
+      </nav>
+      <div
+        class="arcana-heading"
+      >
+        <div>
+          <p
+            class="arcana-eyebrow"
+          >
+            Oficina · Inscrições de conhecimento
+          </p>
+          <h2>
+            Criar questão autoral
+          </h2>
+          <p>
+            O enunciado conduz a Provação. O nome identifica a questão no acervo.
+          </p>
+        </div>
+      </div>
+      <div
+        class="arcana-kind"
+      >
+        <a
+          data-discover="true"
+          href="/arcanario/oficina/nova"
+        >
+          ✧ Eco
+        </a>
+        <a
+          data-discover="true"
+          href="/arcanario/oficina/nova?tipo=memory"
+        >
+          ❧ Lembrança
+        </a>
+        <a
+          aria-current="page"
+          data-discover="true"
+          href="/arcanario/oficina/nova?tipo=question"
+        >
+          ◇ Questão
+        </a>
+      </div>
+      <p
+        role="status"
+      >
+        Rascunho de questão recuperado neste aparelho.
+      </p>
+      <form
+        class="arcana-panel arcana-question-editor"
+      >
+        <fieldset
+          disabled=""
+        >
+          <legend>
+            Questão de múltipla escolha
+          </legend>
+          <label>
+            Nome da questão no acervo (opcional)
+            <input
+              maxlength="160"
+              value="Identificação fictícia"
+            />
+          </label>
+          <p>
+            Usado para identificar e buscar. Não substitui o enunciado.
+          </p>
+          <label>
+            Enunciado da questão
+            <textarea
+              maxlength="16000"
+              required=""
+              rows="8"
+            >
+              Enunciado independente
+            </textarea>
+          </label>
+          <p>
+            Este texto será apresentado durante a Provação.
+          </p>
+          <fieldset>
+            <legend>
+              Alternativas e gabarito
+            </legend>
+            <p>
+              De 2 a 5 alternativas. As letras acompanham a ordem; a identidade da resposta é preservada ao reordenar.
+            </p>
+            <div
+              class="arcana-alternative-editor"
+            >
+              <label>
+                Alternativa 
+                A
+                <textarea
+                  maxlength="4000"
+                  required=""
+                  rows="3"
+                >
+                  Alternativa incorreta fictícia
+                </textarea>
+              </label>
+              <label
+                class="arcana-check"
+              >
+                <input
+                  name="correct"
+                  required=""
+                  type="radio"
+                />
+                Gabarito 
+                A
+              </label>
+              <div
+                class="arcana-actions"
+              >
+                <button
+                  aria-label="Subir alternativa 1"
+                  disabled=""
+                  type="button"
+                >
+                  ↑
+                </button>
+                <button
+                  aria-label="Descer alternativa 1"
+                  type="button"
+                >
+                  ↓
+                </button>
+                <button
+                  disabled=""
+                  type="button"
+                >
+                  Remover alternativa 
+                  A
+                </button>
+              </div>
+            </div>
+            <div
+              class="arcana-alternative-editor"
+            >
+              <label>
+                Alternativa 
+                B
+                <textarea
+                  maxlength="4000"
+                  required=""
+                  rows="3"
+                >
+                  Alternativa correta fictícia
+                </textarea>
+              </label>
+              <label
+                class="arcana-check"
+              >
+                <input
+                  checked=""
+                  name="correct"
+                  required=""
+                  type="radio"
+                />
+                Gabarito 
+                B
+              </label>
+              <div
+                class="arcana-actions"
+              >
+                <button
+                  aria-label="Subir alternativa 2"
+                  type="button"
+                >
+                  ↑
+                </button>
+                <button
+                  aria-label="Descer alternativa 2"
+                  disabled=""
+                  type="button"
+                >
+                  ↓
+                </button>
+                <button
+                  disabled=""
+                  type="button"
+                >
+                  Remover alternativa 
+                  B
+                </button>
+              </div>
+            </div>
+            <button
+              type="button"
+            >
+              Adicionar alternativa
+            </button>
+          </fieldset>
+          <label>
+            Explicação da resolução
+            <textarea
+              maxlength="16000"
+              rows="6"
+            >
+              Explicação após resposta
+            </textarea>
+          </label>
+          <p>
+            Exibida apenas depois de confirmar a resposta na Provação.
+          </p>
+          <fieldset>
+            <legend>
+              Conhecimentos e etiquetas
+            </legend>
+            <p>
+              A pesquisa encontra classificações que você já cadastrou. Digitar um nome não cria uma classificação nem associa a questão: marque a caixa de uma opção existente ou crie uma etiqueta abaixo.
+            </p>
+            <p>
+              Para organizar por Área → Disciplina → Assunto e escolher um assunto principal, use
+               
+              <a
+                data-discover="true"
+                href="/arcanario/assuntos"
+              >
+                Organizar classificações
+              </a>
+              . O rascunho da questão é preservado ao sair.
+            </p>
+            <label>
+              Buscar classificações já cadastradas
+              <input
+                aria-describedby="arcana-tag-search-help"
+                autocomplete="off"
+                maxlength="160"
+                placeholder="Ex.: Potenciação"
+                type="text"
+                value=""
+              />
+            </label>
+            <p
+              class="arcana-muted"
+              id="arcana-tag-search-help"
+            >
+              Escolha uma das classificações listadas. A busca apenas filtra a lista; ela não funciona como seletor nativo.
+            </p>
+            <div
+              class="arcana-choice-list"
+            />
+            <p
+              role="status"
+            >
+              Ainda não existem classificações. Crie uma etiqueta pessoal aqui ou monte a hierarquia em Organizar classificações.
+            </p>
+            <div
+              class="arcana-tag-tools"
+            >
+              <p>
+                <strong>
+                  Etiqueta pessoal rápida
+                </strong>
+              </p>
+              <p
+                class="arcana-muted"
+              >
+                Escreva um nome acima e toque em criar. Ela ficará marcada nesta questão, sem exigir uma hierarquia completa.
+              </p>
+              <button
+                class="button button--secondary"
+                disabled=""
+                type="button"
+              >
+                Criar e marcar etiqueta
+              </button>
+            </div>
+            <fieldset
+              class="arcana-choices arcana-choices--compact"
+            >
+              <legend>
+                Assunto principal
+              </legend>
+              <label
+                class="arcana-choice"
+                data-selected="true"
+              >
+                <input
+                  checked=""
+                  name="_r_h_"
+                  type="radio"
+                  value=""
+                />
+                <span>
+                  Sem assunto principal
+                </span>
+              </label>
+            </fieldset>
+            <p
+              class="arcana-muted"
+            >
+              O assunto principal exige uma hierarquia editorial existente. Etiquetas pessoais já podem ser usadas independentemente.
+            </p>
+          </fieldset>
+          <fieldset
+            class="arcana-choices arcana-choices--compact"
+          >
+            <legend>
+              Dificuldade opcional
+            </legend>
+            <label
+              class="arcana-choice"
+              data-selected="true"
+            >
+              <input
+                checked=""
+                name="_r_i_"
+                type="radio"
+                value=""
+              />
+              <span>
+                Não definida
+              </span>
+            </label>
+            <label
+              class="arcana-choice"
+              data-selected="false"
+            >
+              <input
+                name="_r_i_"
+                type="radio"
+                value="easy"
+              />
+              <span>
+                Fácil
+              </span>
+            </label>
+            <label
+              class="arcana-choice"
+              data-selected="false"
+            >
+              <input
+                name="_r_i_"
+                type="radio"
+                value="medium"
+              />
+              <span>
+                Média
+              </span>
+            </label>
+            <label
+              class="arcana-choice"
+              data-selected="false"
+            >
+              <input
+                name="_r_i_"
+                type="radio"
+                value="hard"
+              />
+              <span>
+                Difícil
+              </span>
+            </label>
+          </fieldset>
+          <label>
+            Fonte ou proveniência (opcional)
+            <input
+              maxlength="1000"
+              value=""
+            />
+          </label>
+          <details>
+            <summary>
+              Metadados de prova (opcionais)
+            </summary>
+            <p>
+              Identificam a prova de origem, sem classificar o conhecimento.
+            </p>
+            <label>
+              Nome da prova
+              <input
+                maxlength="160"
+                type="text"
+                value=""
+              />
+            </label>
+            <label>
+              Ano
+              <input
+                max="9999"
+                maxlength="4"
+                min="1"
+                type="number"
+                value=""
+              />
+            </label>
+            <label>
+              Banca
+              <input
+                maxlength="160"
+                type="text"
+                value=""
+              />
+            </label>
+            <label>
+              Instituição
+              <input
+                maxlength="160"
+                type="text"
+                value=""
+              />
+            </label>
+            <label>
+              Caderno ou variante
+              <input
+                maxlength="160"
+                type="text"
+                value=""
+              />
+            </label>
+          </details>
+          <div
+            class="arcana-actions"
+          >
+            <button
+              aria-expanded="false"
+              type="button"
+            >
+              Conferir prévia da questão
+            </button>
+            <button
+              class="button button--primary"
+              type="submit"
+            >
+              Guardar questão no acervo
+            </button>
+          </div>
+        </fieldset>
+      </form>
+      <div
+        class="arcana-actions"
+      >
+        <a
+          data-discover="true"
+          href="/arcanario"
+        >
+          Voltar e manter rascunho
+        </a>
+        <button
+          disabled=""
+        >
+          Descartar rascunho
+        </button>
+      </div>
+      <p
+        class="arcana-muted"
+      >
+        0
+         
+        questões ativas. Nesta candidata, questões são textuais; imagens continuam disponíveis nas lembranças.
+      </p>
+    </section>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+  <div>
+    <output
+      data-testid="current-route"
+    >
+      /arcanario/oficina/nova
+    </output>
+    <section
+      aria-label="O Arcanário"
+      class="arcanarium"
+    >
+      <div
+        class="arcana-topline"
+      >
+        <a
+          data-discover="true"
+          href="/arcanario"
+        >
+          ← 
+          Portal do Arcanário
+        </a>
+        <span>
+          ARQUIVO DE ENCANTAMENTOS
+        </span>
+      </div>
+      <nav
+        aria-label="Salas do Arcanário"
+        class="arcana-nav"
+      >
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario"
+        >
+          Portal
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/acervo"
+        >
+          Acervo
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/baralhos"
+        >
+          Baralhos
+        </a>
+        <a
+          aria-current="page"
+          class="active"
+          data-discover="true"
+          href="/arcanario/oficina/nova"
+        >
+          Oficina
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/ecos"
+        >
+          Ecos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/provacoes"
+        >
+          Provações
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/pacotes"
+        >
+          Biblioteca de Provas
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/assuntos"
+        >
+          Assuntos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/diagnostico"
+        >
+          Diagnóstico
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/relicario"
+        >
+          Relicário
+        </a>
+      </nav>
+      <div
+        class="arcana-heading"
+      >
+        <div>
+          <p
+            class="arcana-eyebrow"
+          >
+            Oficina · Inscrições de conhecimento
+          </p>
+          <h2>
+            Criar questão autoral
+          </h2>
+          <p>
+            O enunciado conduz a Provação. O nome identifica a questão no acervo.
+          </p>
+        </div>
+      </div>
+      <div
+        class="arcana-kind"
+      >
+        <a
+          data-discover="true"
+          href="/arcanario/oficina/nova"
+        >
+          ✧ Eco
+        </a>
+        <a
+          data-discover="true"
+          href="/arcanario/oficina/nova?tipo=memory"
+        >
+          ❧ Lembrança
+        </a>
+        <a
+          aria-current="page"
+          data-discover="true"
+          href="/arcanario/oficina/nova?tipo=question"
+        >
+          ◇ Questão
+        </a>
+      </div>
+      <p
+        role="status"
+      >
+        Rascunho de questão recuperado neste aparelho.
+      </p>
+      <form
+        class="arcana-panel arcana-question-editor"
+      >
+        <fieldset
+          disabled=""
+        >
+          <legend>
+            Questão de múltipla escolha
+          </legend>
+          <label>
+            Nome da questão no acervo (opcional)
+            <input
+              maxlength="160"
+              value="Identificação fictícia"
+            />
+          </label>
+          <p>
+            Usado para identificar e buscar. Não substitui o enunciado.
+          </p>
+          <label>
+            Enunciado da questão
+            <textarea
+              maxlength="16000"
+              required=""
+              rows="8"
+            >
+              Enunciado independente
+            </textarea>
+          </label>
+          <p>
+            Este texto será apresentado durante a Provação.
+          </p>
+          <fieldset>
+            <legend>
+              Alternativas e gabarito
+            </legend>
+            <p>
+              De 2 a 5 alternativas. As letras acompanham a ordem; a identidade da resposta é preservada ao reordenar.
+            </p>
+            <div
+              class="arcana-alternative-editor"
+            >
+              <label>
+                Alternativa 
+                A
+                <textarea
+                  maxlength="4000"
+                  required=""
+                  rows="3"
+                >
+                  Alternativa incorreta fictícia
+                </textarea>
+              </label>
+              <label
+                class="arcana-check"
+              >
+                <input
+                  name="correct"
+                  required=""
+                  type="radio"
+                />
+                Gabarito 
+                A
+              </label>
+              <div
+                class="arcana-actions"
+              >
+                <button
+                  aria-label="Subir alternativa 1"
+                  disabled=""
+                  type="button"
+                >
+                  ↑
+                </button>
+                <button
+                  aria-label="Descer alternativa 1"
+                  type="button"
+                >
+                  ↓
+                </button>
+                <button
+                  disabled=""
+                  type="button"
+                >
+                  Remover alternativa 
+                  A
+                </button>
+              </div>
+            </div>
+            <div
+              class="arcana-alternative-editor"
+            >
+              <label>
+                Alternativa 
+                B
+                <textarea
+                  maxlength="4000"
+                  required=""
+                  rows="3"
+                >
+                  Alternativa correta fictícia
+                </textarea>
+              </label>
+              <label
+                class="arcana-check"
+              >
+                <input
+                  checked=""
+                  name="correct"
+                  required=""
+                  type="radio"
+                />
+                Gabarito 
+                B
+              </label>
+              <div
+                class="arcana-actions"
+              >
+                <button
+                  aria-label="Subir alternativa 2"
+                  type="button"
+                >
+                  ↑
+                </button>
+                <button
+                  aria-label="Descer alternativa 2"
+                  disabled=""
+                  type="button"
+                >
+                  ↓
+                </button>
+                <button
+                  disabled=""
+                  type="button"
+                >
+                  Remover alternativa 
+                  B
+                </button>
+              </div>
+            </div>
+            <button
+              type="button"
+            >
+              Adicionar alternativa
+            </button>
+          </fieldset>
+          <label>
+            Explicação da resolução
+            <textarea
+              maxlength="16000"
+              rows="6"
+            >
+              Explicação após resposta
+            </textarea>
+          </label>
+          <p>
+            Exibida apenas depois de confirmar a resposta na Provação.
+          </p>
+          <fieldset>
+            <legend>
+              Conhecimentos e etiquetas
+            </legend>
+            <p>
+              A pesquisa encontra classificações que você já cadastrou. Digitar um nome não cria uma classificação nem associa a questão: marque a caixa de uma opção existente ou crie uma etiqueta abaixo.
+            </p>
+            <p>
+              Para organizar por Área → Disciplina → Assunto e escolher um assunto principal, use
+               
+              <a
+                data-discover="true"
+                href="/arcanario/assuntos"
+              >
+                Organizar classificações
+              </a>
+              . O rascunho da questão é preservado ao sair.
+            </p>
+            <label>
+              Buscar classificações já cadastradas
+              <input
+                aria-describedby="arcana-tag-search-help"
+                autocomplete="off"
+                maxlength="160"
+                placeholder="Ex.: Potenciação"
+                type="text"
+                value=""
+              />
+            </label>
+            <p
+              class="arcana-muted"
+              id="arcana-tag-search-help"
+            >
+              Escolha uma das classificações listadas. A busca apenas filtra a lista; ela não funciona como seletor nativo.
+            </p>
+            <div
+              class="arcana-choice-list"
+            />
+            <p
+              role="status"
+            >
+              Ainda não existem classificações. Crie uma etiqueta pessoal aqui ou monte a hierarquia em Organizar classificações.
+            </p>
+            <div
+              class="arcana-tag-tools"
+            >
+              <p>
+                <strong>
+                  Etiqueta pessoal rápida
+                </strong>
+              </p>
+              <p
+                class="arcana-muted"
+              >
+                Escreva um nome acima e toque em criar. Ela ficará marcada nesta questão, sem exigir uma hierarquia completa.
+              </p>
+              <button
+                class="button button--secondary"
+                disabled=""
+                type="button"
+              >
+                Criar e marcar etiqueta
+              </button>
+            </div>
+            <fieldset
+              class="arcana-choices arcana-choices--compact"
+            >
+              <legend>
+                Assunto principal
+              </legend>
+              <label
+                class="arcana-choice"
+                data-selected="true"
+              >
+                <input
+                  checked=""
+                  name="_r_h_"
+                  type="radio"
+                  value=""
+                />
+                <span>
+                  Sem assunto principal
+                </span>
+              </label>
+            </fieldset>
+            <p
+              class="arcana-muted"
+            >
+              O assunto principal exige uma hierarquia editorial existente. Etiquetas pessoais já podem ser usadas independentemente.
+            </p>
+          </fieldset>
+          <fieldset
+            class="arcana-choices arcana-choices--compact"
+          >
+            <legend>
+              Dificuldade opcional
+            </legend>
+            <label
+              class="arcana-choice"
+              data-selected="true"
+            >
+              <input
+                checked=""
+                name="_r_i_"
+                type="radio"
+                value=""
+              />
+              <span>
+                Não definida
+              </span>
+            </label>
+            <label
+              class="arcana-choice"
+              data-selected="false"
+            >
+              <input
+                name="_r_i_"
+                type="radio"
+                value="easy"
+              />
+              <span>
+                Fácil
+              </span>
+            </label>
+            <label
+              class="arcana-choice"
+              data-selected="false"
+            >
+              <input
+                name="_r_i_"
+                type="radio"
+                value="medium"
+              />
+              <span>
+                Média
+              </span>
+            </label>
+            <label
+              class="arcana-choice"
+              data-selected="false"
+            >
+              <input
+                name="_r_i_"
+                type="radio"
+                value="hard"
+              />
+              <span>
+                Difícil
+              </span>
+            </label>
+          </fieldset>
+          <label>
+            Fonte ou proveniência (opcional)
+            <input
+              maxlength="1000"
+              value=""
+            />
+          </label>
+          <details>
+            <summary>
+              Metadados de prova (opcionais)
+            </summary>
+            <p>
+              Identificam a prova de origem, sem classificar o conhecimento.
+            </p>
+            <label>
+              Nome da prova
+              <input
+                maxlength="160"
+                type="text"
+                value=""
+              />
+            </label>
+            <label>
+              Ano
+              <input
+                max="9999"
+                maxlength="4"
+                min="1"
+                type="number"
+                value=""
+              />
+            </label>
+            <label>
+              Banca
+              <input
+                maxlength="160"
+                type="text"
+                value=""
+              />
+            </label>
+            <label>
+              Instituição
+              <input
+                maxlength="160"
+                type="text"
+                value=""
+              />
+            </label>
+            <label>
+              Caderno ou variante
+              <input
+                maxlength="160"
+                type="text"
+                value=""
+              />
+            </label>
+          </details>
+          <div
+            class="arcana-actions"
+          >
+            <button
+              aria-expanded="false"
+              type="button"
+            >
+              Conferir prévia da questão
+            </button>
+            <button
+              class="button button--primary"
+              type="submit"
+            >
+              Guardar questão no acervo
+            </button>
+          </div>
+        </fieldset>
+      </form>
+      <div
+        class="arcana-actions"
+      >
+        <a
+          data-discover="true"
+          href="/arcanario"
+        >
+          Voltar e manter rascunho
+        </a>
+        <button
+          disabled=""
+        >
+          Descartar rascunho
+        </button>
+      </div>
+      <p
+        class="arcana-muted"
+      >
+        0
+         
+        questões ativas. Nesta candidata, questões são textuais; imagens continuam disponíveis nas lembranças.
+      </p>
+    </section>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/features/arcanarium/ArcanariumPage.test.tsx:344:16
+    342|     screen.getByRole("button", { name: "Guardar questão no acervo" }),
+    343|   );
+    344|   await screen.findByRole("link", { name: "Editar na Oficina" });
+       |                ^
+    345|   const c = (await a.arcanarium.list()).cards[0];
+    346|   expect(c.content).toMatchObject({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/features/arcanarium/PackLibrary.test.tsx > catalogue, real install/update/remove/reinstall and collection/provation navigation
+TestingLibraryElementError: Unable to find role="heading" and name "Provações"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <section
+      aria-label="O Arcanário"
+      class="arcanarium"
+    >
+      <div
+        class="arcana-topline"
+      >
+        <a
+          data-discover="true"
+          href="/arcanario"
+        >
+          ← 
+          Portal do Arcanário
+        </a>
+        <span>
+          ARQUIVO DE ENCANTAMENTOS
+        </span>
+      </div>
+      <nav
+        aria-label="Salas do Arcanário"
+        class="arcana-nav"
+      >
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario"
+        >
+          Portal
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/acervo"
+        >
+          Acervo
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/baralhos"
+        >
+          Baralhos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/oficina/nova"
+        >
+          Oficina
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/ecos"
+        >
+          Ecos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/provacoes"
+        >
+          Provações
+        </a>
+        <a
+          aria-current="page"
+          class="active"
+          data-discover="true"
+          href="/arcanario/pacotes"
+        >
+          Biblioteca de Provas
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/assuntos"
+        >
+          Assuntos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/diagnostico"
+        >
+          Diagnóstico
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/relicario"
+        >
+          Relicário
+        </a>
+      </nav>
+      <div
+        class="arcana-heading arcana-pack-heading"
+      >
+        <div>
+          <p
+            class="arcana-eyebrow"
+          >
+            Grimórios de estudo · arquivo expansível
+          </p>
+          <h2>
+            Biblioteca de Provas
+          </h2>
+          <p>
+            Abra um volume. Acrescente conhecimentos. A memória das suas Provações permanece com você.
+          </p>
+        </div>
+        <svg
+          aria-hidden="true"
+          class="arcana-seal"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 200 200"
+        >
+          <circle
+            cx="100"
+            cy="100"
+            r="89"
+            stroke-width=".7"
+          />
+          <circle
+            cx="100"
+            cy="100"
+            r="80"
+            stroke-dasharray="1 7"
+          />
+          <path
+            d="M100 4v24m0 144v24M4 100h24m144 0h24M32 32l17 17m102 102 17 17M32 168l17-17M151 49l17-17"
+          />
+          <path
+            d="m100 18 71 123H29zm0 164L29 59h142z"
+            opacity=".4"
+          />
+          <path
+            d="m70 138 9-30 50-57 16 14-50 57zM79 108l16 14m34-71 6-7 16 14-6 7M70 138l17-8M51 150h98M52 59l7-13 7 13-7 13zM140 120l6-11 6 11-6 11z"
+          />
+        </svg>
+      </div>
+      <p
+        class="arcana-panel"
+      >
+        Catálogo local, sem conta ou servidor. Pacotes instalados funcionam offline no aplicativo. Uma seleção parcial não representa a prova completa. Referências oficiais aguardam permissão editorial; a demonstração contém exercícios originais.
+      </p>
+      <p
+        class="arcana-pack-feedback"
+        role="status"
+        tabindex="-1"
+      >
+        Aritmética dos pequenos arquivos: 4 questões disponíveis. 0 revisões gravadas.
+      </p>
+      <div
+        class="arcana-pack-shelf"
+      >
+        <article
+          aria-label="Aritmética dos pequenos arquivos"
+          class="arcana-pack-volume "
+        >
+          <div
+            aria-hidden="true"
+            class="arcana-pack-seal"
+          >
+            ✦
+          </div>
+          <p
+            class="arcana-eyebrow"
+          >
+            Demonstração autoral · original
+          </p>
+          <h3>
+            Aritmética dos pequenos arquivos
+          </h3>
+          <p>
+            Exercícios originais para experimentar pacotes e lotes. Não são questões do ENEM ou de concursos. Seleção parcial de uma coleção demonstrativa expansível.
+          </p>
+          <p
+            class="arcana-pack-state"
+          >
+            Instalado
+          </p>
+          <dl
+            class="...
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <section
+      aria-label="O Arcanário"
+      class="arcanarium"
+    >
+      <div
+        class="arcana-topline"
+      >
+        <a
+          data-discover="true"
+          href="/arcanario"
+        >
+          ← 
+          Portal do Arcanário
+        </a>
+        <span>
+          ARQUIVO DE ENCANTAMENTOS
+        </span>
+      </div>
+      <nav
+        aria-label="Salas do Arcanário"
+        class="arcana-nav"
+      >
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario"
+        >
+          Portal
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/acervo"
+        >
+          Acervo
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/baralhos"
+        >
+          Baralhos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/oficina/nova"
+        >
+          Oficina
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/ecos"
+        >
+          Ecos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/provacoes"
+        >
+          Provações
+        </a>
+        <a
+          aria-current="page"
+          class="active"
+          data-discover="true"
+          href="/arcanario/pacotes"
+        >
+          Biblioteca de Provas
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/assuntos"
+        >
+          Assuntos
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/diagnostico"
+        >
+          Diagnóstico
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/arcanario/relicario"
+        >
+          Relicário
+        </a>
+      </nav>
+      <div
+        class="arcana-heading arcana-pack-heading"
+      >
+        <div>
+          <p
+            class="arcana-eyebrow"
+          >
+            Grimórios de estudo · arquivo expansível
+          </p>
+          <h2>
+            Biblioteca de Provas
+          </h2>
+          <p>
+            Abra um volume. Acrescente conhecimentos. A memória das suas Provações permanece com você.
+          </p>
+        </div>
+        <svg
+          aria-hidden="true"
+          class="arcana-seal"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 200 200"
+        >
+          <circle
+            cx="100"
+            cy="100"
+            r="89"
+            stroke-width=".7"
+          />
+          <circle
+            cx="100"
+            cy="100"
+            r="80"
+            stroke-dasharray="1 7"
+          />
+          <path
+            d="M100 4v24m0 144v24M4 100h24m144 0h24M32 32l17 17m102 102 17 17M32 168l17-17M151 49l17-17"
+          />
+          <path
+            d="m100 18 71 123H29zm0 164L29 59h142z"
+            opacity=".4"
+          />
+          <path
+            d="m70 138 9-30 50-57 16 14-50 57zM79 108l16 14m34-71 6-7 16 14-6 7M70 138l17-8M51 150h98M52 59l7-13 7 13-7 13zM140 120l6-11 6 11-6 11z"
+          />
+        </svg>
+      </div>
+      <p
+        class="arcana-panel"
+      >
+        Catálogo local, sem conta ou servidor. Pacotes instalados funcionam offline no aplicativo. Uma seleção parcial não representa a prova completa. Referências oficiais aguardam permissão editorial; a demonstração contém exercícios originais.
+      </p>
+      <p
+        class="arcana-pack-feedback"
+        role="status"
+        tabindex="-1"
+      >
+        Aritmética dos pequenos arquivos: 4 questões disponíveis. 0 revisões gravadas.
+      </p>
+      <div
+        class="arcana-pack-shelf"
+      >
+        <article
+          aria-label="Aritmética dos pequenos arquivos"
+          class="arcana-pack-volume "
+        >
+          <div
+            aria-hidden="true"
+            class="arcana-pack-seal"
+          >
+            ✦
+          </div>
+          <p
+            class="arcana-eyebrow"
+          >
+            Demonstração autoral · original
+          </p>
+          <h3>
+            Aritmética dos pequenos arquivos
+          </h3>
+          <p>
+            Exercícios originais para experimentar pacotes e lotes. Não são questões do ENEM ou de concursos. Seleção parcial de uma coleção demonstrativa expansível.
+          </p>
+          <p
+            class="arcana-pack-state"
+          >
+            Instalado
+          </p>
+          <dl
+            class="...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/features/arcanarium/PackLibrary.test.tsx:78:16
+     76|     within(volume).getByRole("link", { name: "Preparar Provação" }),
+     77|   );
+     78|   await screen.findByRole("heading", { name: "Provações" });
+       |                ^
+     79|   expect(
+     80|     screen.getByRole("button", { name: "Iniciar Provação" }),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/features/library/three/inhabitantPickupContact.test.ts > aryn reaches the original volume edge without crossing the real tabletop, furniture or floor during pickup
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/features/library/three/inhabitantPickupContact.test.ts:32:3
+     30|
+     31| for (const key of ["aryn", "samael"] as const)
+     32|   it(`${key} reaches the original volume edge without crossing the rea…
+       |   ^
+     33|     const building = createProceduralLibraryBuilding(true);
+     34|     building.updateMatrixWorld(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  3 failed | 179 passed (182)
+      Tests  4 failed | 1207 passed (1211)
+   Start at  20:42:23
+   Duration  498.13s (transform 10.70s, setup 31.66s, import 37.53s, tests 229.40s, environment 160.45s)
+

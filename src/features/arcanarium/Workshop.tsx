@@ -67,10 +67,10 @@ export function Workshop() {
   const type =
     card?.type ??
     (params.get("tipo") === "question"
-        ? "question"
-        : params.get("tipo") === "memory"
-          ? "memory"
-          : "flashcard");
+      ? "question"
+      : params.get("tipo") === "memory"
+        ? "memory"
+        : "flashcard");
   if (id !== "nova" && !card)
     return (
       <p role="alert">
@@ -126,10 +126,7 @@ function Editor({
       .map((l) => l.studyId),
     decks: data.decks
       .filter(
-        (d) =>
-          d.selection.kind === "static" &&
-          !d.combat &&
-          d.origin.kind !== "official",
+        (d) => d.selection.kind === "static" && d.origin.kind !== "official",
       )
       .map((d) => ({
         id: d.id,
@@ -305,9 +302,7 @@ function Editor({
         decks: all.decks
           .filter(
             (d) =>
-              d.selection.kind === "static" &&
-              !d.combat &&
-              d.origin.kind !== "official",
+              d.selection.kind === "static" && d.origin.kind !== "official",
           )
           .map((d) => ({
             id: d.id,

@@ -401,7 +401,7 @@ it("round-trips v9 trials with snapshots and answers, rejects forged results and
       databaseVersion: 17,
       createdAt: now,
     });
-  expect(file.summary.formatVersion).toBe(11);
+  expect(file.summary.formatVersion).toBe(12);
   await b.snapshots.replace((await b.backup.inspect(file.content)).data);
   expect(await b.snapshots.read()).toEqual(before);
   b.db.close();

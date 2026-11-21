@@ -71,8 +71,8 @@ export class ArcanariumService {
     if (this.deps.arcanarium.overview) return this.deps.arcanarium.overview();
     const data = await this.list();
     return {
-      cards: data.cards.filter((c) => !c.archived && c.type !== "combat").length,
-      decks: data.decks.filter((d) => !d.combat).length,
+      cards: data.cards.filter((c) => !c.archived).length,
+      decks: data.decks.length,
       reviews: data.sessions.filter((s) => s.kind === "flashcard_review")
         .length,
     };
@@ -220,21 +220,6 @@ export class ArcanariumService {
     return runTransaction(this.deps, async () => {
       const previous = await this.deps.arcanarium.getDeck(deckId);
       if (parsed.id && !previous) missing();
-      if (
-        previous?.combat ||
-        (parsed.selection.kind === "static" &&
-          (
-            await Promise.all(
-              parsed.selection.cards.map((r) =>
-                this.deps.arcanarium.getCard(r.cardId),
-              ),
-            )
-          ).some((c) => c?.content.type === "combat" && c.content.combat))
-      )
-        throw new ApplicationError(
-          "VALIDATION_FAILED",
-          "Organize cartas de combate nos baralhos do Duelo Arcano.",
-        );
       if (previous) {
         if (previous.origin.kind === "official" || packOwned(previous))
           throw new ApplicationError(

@@ -1,0 +1,4337 @@
+{
+  "kind": "biblioteca-viva-backup",
+  "formatVersion": 11,
+  "createdAt": "2026-11-12T00:00:00.000Z",
+  "appVersion": "historical-fixture",
+  "databaseVersion": 19,
+  "data": {
+    "cardMedia": [],
+    "arcanarium": {
+      "packs": [],
+      "cards": [
+        {
+          "id": "arcane-v1:cinder-imp",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Diabrete do Último Carvão",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "ruin",
+              "cost": 1,
+              "attack": 2,
+              "health": 2,
+              "keywords": [],
+              "abilities": [],
+              "flavor": "Rói as cinzas de promessas antigas.",
+              "artId": "cinder-imp"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:basalt-warden",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Vigia de Basalto Partido",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "ruin",
+              "cost": 2,
+              "attack": 2,
+              "health": 4,
+              "keywords": ["guard"],
+              "abilities": [],
+              "flavor": "Cada fissura é uma batalha que recusou esquecer.",
+              "artId": "basalt-warden"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:ash-serpent",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Serpe do Sino Quebrado",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "ruin",
+              "cost": 3,
+              "attack": 3,
+              "health": 3,
+              "keywords": [],
+              "abilities": [],
+              "flavor": "Ela segue o som dos juramentos desfeitos.",
+              "artId": "ash-serpent"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:ember-wraith",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Vulto da Pira Vazia",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "ruin",
+              "cost": 4,
+              "attack": 4,
+              "health": 3,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "damage",
+                      "value": 2,
+                      "target": "enemy",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Sua chegada aquece até as sombras.",
+              "artId": "ember-wraith"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:cathedral-devil",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Demônio da Catedral Oca",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "ruin",
+              "cost": 5,
+              "attack": 5,
+              "health": 6,
+              "keywords": ["guard"],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "damage",
+                      "value": 2,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Um altar caminhando sobre a própria ruína.",
+              "artId": "cathedral-devil"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:fissure",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Fissura Escarlate",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "ruin",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "damage",
+                      "value": 3,
+                      "target": "enemy-any",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "O chão se lembra do fogo.",
+              "artId": "fissure"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:blood-pact",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Pacto da Brasa Negra",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "ruin",
+              "cost": 3,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "damage",
+                      "value": 4,
+                      "target": "enemy",
+                      "duration": "permanent"
+                    },
+                    {
+                      "definitionId": "damage",
+                      "value": 2,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "A resposta vem antes da conta.",
+              "artId": "blood-pact"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:last-pyre",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Réquiem de Cinzas",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "ruin",
+              "cost": 4,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "damage",
+                      "value": 3,
+                      "target": "all-enemies",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Não é preciso um corpo para haver despedida.",
+              "artId": "last-pyre"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:funeral-censer",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Turíbulo dos Ausentes",
+            "combat": {
+              "version": 1,
+              "kind": "artifact",
+              "affinity": "ruin",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "canalizar",
+                  "trigger": "activate",
+                  "cost": 2,
+                  "effects": [
+                    {
+                      "definitionId": "drain",
+                      "value": 2,
+                      "target": "enemy-any",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "A fumaça conhece todos pelo nome.",
+              "artId": "funeral-censer"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:ember-hourglass",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Ampulheta de Carvão",
+            "combat": {
+              "version": 1,
+              "kind": "artifact",
+              "affinity": "ruin",
+              "cost": 3,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "aurora",
+                  "trigger": "start",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "damage",
+                      "value": 1,
+                      "target": "enemy",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Quando o último grão cai, outro coração arde.",
+              "artId": "ember-hourglass"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:paper-owl",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Coruja de Mil Margens",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "knowledge",
+              "cost": 1,
+              "attack": 1,
+              "health": 3,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "scout",
+                      "value": 3,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Seu voo é a dobra entre duas ideias.",
+              "artId": "paper-owl"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:scroll-knight",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Cavaleiro de Pergaminho",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "knowledge",
+              "cost": 2,
+              "attack": 2,
+              "health": 3,
+              "keywords": ["guard"],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "shield",
+                      "value": 1,
+                      "target": "self",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Sua armadura contém a história de quem protege.",
+              "artId": "scroll-knight"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:star-whale",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Baleia do Índice Celeste",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "knowledge",
+              "cost": 3,
+              "attack": 2,
+              "health": 4,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "draw",
+                      "value": 1,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Navega em céus que só existem em livros.",
+              "artId": "star-whale"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:brass-scribe",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Escriba de Latão Vivo",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "knowledge",
+              "cost": 4,
+              "attack": 3,
+              "health": 5,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "canalizar",
+                  "trigger": "activate",
+                  "cost": 1,
+                  "effects": [
+                    {
+                      "definitionId": "shield",
+                      "value": 2,
+                      "target": "ally-unit",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Uma página em branco é sua maior aventura.",
+              "artId": "brass-scribe"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:rune-sphinx",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Esfinge da Última Nota",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "knowledge",
+              "cost": 5,
+              "attack": 4,
+              "health": 6,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "exhaust",
+                      "value": 1,
+                      "target": "enemy-unit",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Só faz perguntas cuja resposta ainda não nasceu.",
+              "artId": "rune-sphinx"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:deep-reading",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Leitura das Entrelinhas",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "knowledge",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "draw",
+                      "value": 2,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "As margens guardavam mais duas portas.",
+              "artId": "deep-reading"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:still-sigil",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Sigilo da Hora Imóvel",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "knowledge",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "exhaust",
+                      "value": 1,
+                      "target": "enemy-unit",
+                      "duration": "permanent"
+                    },
+                    {
+                      "definitionId": "damage",
+                      "value": 1,
+                      "target": "enemy-unit",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Um instante pode conter uma eternidade.",
+              "artId": "still-sigil"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:astral-lance",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Lança do Meridiano",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "knowledge",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "damage",
+                      "value": 4,
+                      "target": "enemy-any",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Não erra: segue uma linha já escrita no céu.",
+              "artId": "astral-lance"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:unwritten-book",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Grimório das Páginas Futuras",
+            "combat": {
+              "version": 1,
+              "kind": "artifact",
+              "affinity": "knowledge",
+              "cost": 3,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "canalizar",
+                  "trigger": "activate",
+                  "cost": 1,
+                  "effects": [
+                    {
+                      "definitionId": "draw",
+                      "value": 1,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "O próximo capítulo já está acordado.",
+              "artId": "unwritten-book"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:moon-astrolabe",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Astrolábio de Nove Luas",
+            "combat": {
+              "version": 1,
+              "kind": "artifact",
+              "affinity": "knowledge",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "aurora",
+                  "trigger": "start",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "scout",
+                      "value": 3,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Aponta para o caminho que ainda custa menos.",
+              "artId": "moon-astrolabe"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:budling",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Broto de Olhos Dourados",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "bloom",
+              "cost": 1,
+              "attack": 1,
+              "health": 3,
+              "keywords": [],
+              "abilities": [],
+              "flavor": "Pequeno demais para ter medo da noite.",
+              "artId": "budling"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:orchid-stag",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Cervo das Orquídeas Astrais",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "bloom",
+              "cost": 2,
+              "attack": 2,
+              "health": 3,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "heal",
+                      "value": 2,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "As flores de seus chifres só abrem no escuro.",
+              "artId": "orchid-stag"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:pollen-moth",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Mariposa do Primeiro Jardim",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "bloom",
+              "cost": 3,
+              "attack": 2,
+              "health": 3,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "summon",
+                      "value": 1,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Traz consigo a memória de uma primavera.",
+              "artId": "pollen-moth"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:thorn-treant",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Sentinela do Espinheiro",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "bloom",
+              "cost": 4,
+              "attack": 3,
+              "health": 6,
+              "keywords": ["guard"],
+              "abilities": [],
+              "flavor": "Nenhum machado atravessa o nome que lhe deram.",
+              "artId": "thorn-treant"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:petal-dryad",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Dríade da Flor Infinita",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "bloom",
+              "cost": 5,
+              "attack": 4,
+              "health": 5,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "empower",
+                      "value": 1,
+                      "target": "all-allies",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Cultiva coragem nas feridas do mundo.",
+              "artId": "petal-dryad"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:dew",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Orvalho de Estrelas",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "bloom",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "heal",
+                      "value": 5,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "O céu também sabe cuidar.",
+              "artId": "dew"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:root-oath",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Juramento das Raízes",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "bloom",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "empower",
+                      "value": 2,
+                      "target": "ally-unit",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Crescer é uma forma de permanecer.",
+              "artId": "root-oath"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:petal-storm",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Tempestade de Pétalas",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "bloom",
+              "cost": 3,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "empower",
+                      "value": 2,
+                      "target": "all-allies",
+                      "duration": "turn"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "A delicadeza pode ocupar o campo inteiro.",
+              "artId": "petal-storm"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:seed-crown",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Coroa da Semente Antiga",
+            "combat": {
+              "version": 1,
+              "kind": "artifact",
+              "affinity": "bloom",
+              "cost": 3,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "canalizar",
+                  "trigger": "activate",
+                  "cost": 2,
+                  "effects": [
+                    {
+                      "definitionId": "empower",
+                      "value": 1,
+                      "target": "ally-unit",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Não oferece um trono. Oferece raízes.",
+              "artId": "seed-crown"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:spring-chalice",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Cálice da Nascente Secreta",
+            "combat": {
+              "version": 1,
+              "kind": "artifact",
+              "affinity": "bloom",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "aurora",
+                  "trigger": "start",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "heal",
+                      "value": 1,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Uma gota para cada retorno.",
+              "artId": "spring-chalice"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:prism-jelly",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Medusa dos Céus Invertidos",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "chaos",
+              "cost": 1,
+              "attack": 2,
+              "health": 1,
+              "keywords": ["haste"],
+              "abilities": [],
+              "flavor": "Nunca soube qual lado do céu era o certo.",
+              "artId": "prism-jelly"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:mirror-cat",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Gato de Três Amanhãs",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "chaos",
+              "cost": 2,
+              "attack": 3,
+              "health": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "scout",
+                      "value": 2,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Dois olhos seguem você. O terceiro segue a possibilidade.",
+              "artId": "mirror-cat"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:shard-chimera",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Quimera de Vidro Noturno",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "chaos",
+              "cost": 3,
+              "attack": 3,
+              "health": 3,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "chaos",
+                      "value": 2,
+                      "target": "enemy",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Cada fragmento sonha ser outro animal.",
+              "artId": "shard-chimera"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:mirror-bird",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Ave do Espelho Desfeito",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "chaos",
+              "cost": 4,
+              "attack": 3,
+              "health": 3,
+              "keywords": ["haste"],
+              "abilities": [],
+              "flavor": "Atravessou o reflexo antes de ter asas.",
+              "artId": "mirror-bird"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:rift-leviathan",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Leviatã da Fenda Violeta",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "chaos",
+              "cost": 5,
+              "attack": 4,
+              "health": 5,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "chaos",
+                      "value": 3,
+                      "target": "all-enemies",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "O que falta em sua forma transborda em relâmpagos.",
+              "artId": "rift-leviathan"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:dice-comet",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Cometa das Probabilidades",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "chaos",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "chaos",
+                      "value": 5,
+                      "target": "enemy-any",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Todas as quedas ainda são possíveis.",
+              "artId": "dice-comet"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:borrowed-shape",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Forma Emprestada",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "chaos",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "empower",
+                      "value": 3,
+                      "target": "ally-unit",
+                      "duration": "turn"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Por um turno, foi muito mais que um sonho.",
+              "artId": "borrowed-shape"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:fractured-moment",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Instante Estilhaçado",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "chaos",
+              "cost": 3,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "chaos",
+                      "value": 3,
+                      "target": "enemy-any",
+                      "duration": "permanent"
+                    },
+                    {
+                      "definitionId": "draw",
+                      "value": 1,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Uma chance a mais, comprada com outra pergunta.",
+              "artId": "fractured-moment"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:laughing-mask",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Máscara do Riso Oblíquo",
+            "combat": {
+              "version": 1,
+              "kind": "artifact",
+              "affinity": "chaos",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "canalizar",
+                  "trigger": "activate",
+                  "cost": 2,
+                  "effects": [
+                    {
+                      "definitionId": "chaos",
+                      "value": 3,
+                      "target": "enemy-any",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Nem o eco sabe de quem é a voz.",
+              "artId": "laughing-mask"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:broken-prism",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Prisma de Realidade Solta",
+            "combat": {
+              "version": 1,
+              "kind": "artifact",
+              "affinity": "chaos",
+              "cost": 3,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "aurora",
+                  "trigger": "start",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "chaos",
+                      "value": 2,
+                      "target": "enemy",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "A luz sai por portas que nunca entraram.",
+              "artId": "broken-prism"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:clock-beetle",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Besouro de Cordas Antigas",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "neutral",
+              "cost": 1,
+              "attack": 1,
+              "health": 3,
+              "keywords": [],
+              "abilities": [],
+              "flavor": "Seu tique-taque atravessa bibliotecas vazias.",
+              "artId": "clock-beetle"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:candle-fox",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Raposa de Cera Lunar",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "neutral",
+              "cost": 2,
+              "attack": 2,
+              "health": 3,
+              "keywords": [],
+              "abilities": [],
+              "flavor": "O rastro da cauda ilumina quem ficou para trás.",
+              "artId": "candle-fox"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:stone-sentinel",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Guardião da Porta Sem Chave",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "neutral",
+              "cost": 3,
+              "attack": 2,
+              "health": 5,
+              "keywords": ["guard"],
+              "abilities": [],
+              "flavor": "Espera alguém que ainda não aprendeu a chegar.",
+              "artId": "stone-sentinel"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:comet-ray",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Arraia das Rotas Perdidas",
+            "combat": {
+              "version": 1,
+              "kind": "creature",
+              "affinity": "neutral",
+              "cost": 4,
+              "attack": 4,
+              "health": 4,
+              "keywords": [],
+              "abilities": [],
+              "flavor": "As estrelas a consultam quando esquecem o caminho.",
+              "artId": "comet-ray"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:unbinding",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Desatar Encantamento",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "neutral",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "shatter",
+                      "value": 1,
+                      "target": "enemy",
+                      "duration": "permanent"
+                    },
+                    {
+                      "definitionId": "draw",
+                      "value": 1,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Toda obra possui um primeiro nó.",
+              "artId": "unbinding"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:quiet-pulse",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Pulso do Limiar",
+            "combat": {
+              "version": 1,
+              "kind": "spell",
+              "affinity": "neutral",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "manifestar",
+                  "trigger": "play",
+                  "cost": 0,
+                  "effects": [
+                    {
+                      "definitionId": "damage",
+                      "value": 2,
+                      "target": "enemy-any",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Entre dois mundos, uma batida.",
+              "artId": "quiet-pulse"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:wayfarer-lantern",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Lanterna do Caminhante",
+            "combat": {
+              "version": 1,
+              "kind": "artifact",
+              "affinity": "neutral",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "canalizar",
+                  "trigger": "activate",
+                  "cost": 1,
+                  "effects": [
+                    {
+                      "definitionId": "shield",
+                      "value": 1,
+                      "target": "ally-unit",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Não expulsa a noite. Ensina a atravessá-la.",
+              "artId": "wayfarer-lantern"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        },
+        {
+          "id": "arcane-v1:lost-compass",
+          "revision": 1,
+          "type": "combat",
+          "origin": {
+            "kind": "local"
+          },
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "archived": false,
+          "content": {
+            "type": "combat",
+            "name": "Bússola dos Retornos",
+            "combat": {
+              "version": 1,
+              "kind": "artifact",
+              "affinity": "neutral",
+              "cost": 2,
+              "keywords": [],
+              "abilities": [
+                {
+                  "id": "canalizar",
+                  "trigger": "activate",
+                  "cost": 2,
+                  "effects": [
+                    {
+                      "definitionId": "heal",
+                      "value": 3,
+                      "target": "ally",
+                      "duration": "permanent"
+                    }
+                  ]
+                }
+              ],
+              "flavor": "Seu norte é um lugar que alguém chamou de casa.",
+              "artId": "lost-compass"
+            },
+            "attributes": {},
+            "effects": []
+          }
+        }
+      ],
+      "versions": [
+        {
+          "cardId": "arcane-v1:cinder-imp",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:cinder-imp",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Diabrete do Último Carvão",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "ruin",
+                "cost": 1,
+                "attack": 2,
+                "health": 2,
+                "keywords": [],
+                "abilities": [],
+                "flavor": "Rói as cinzas de promessas antigas.",
+                "artId": "cinder-imp"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:basalt-warden",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:basalt-warden",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Vigia de Basalto Partido",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "ruin",
+                "cost": 2,
+                "attack": 2,
+                "health": 4,
+                "keywords": ["guard"],
+                "abilities": [],
+                "flavor": "Cada fissura é uma batalha que recusou esquecer.",
+                "artId": "basalt-warden"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:ash-serpent",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:ash-serpent",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Serpe do Sino Quebrado",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "ruin",
+                "cost": 3,
+                "attack": 3,
+                "health": 3,
+                "keywords": [],
+                "abilities": [],
+                "flavor": "Ela segue o som dos juramentos desfeitos.",
+                "artId": "ash-serpent"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:ember-wraith",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:ember-wraith",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Vulto da Pira Vazia",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "ruin",
+                "cost": 4,
+                "attack": 4,
+                "health": 3,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "damage",
+                        "value": 2,
+                        "target": "enemy",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Sua chegada aquece até as sombras.",
+                "artId": "ember-wraith"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:cathedral-devil",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:cathedral-devil",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Demônio da Catedral Oca",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "ruin",
+                "cost": 5,
+                "attack": 5,
+                "health": 6,
+                "keywords": ["guard"],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "damage",
+                        "value": 2,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Um altar caminhando sobre a própria ruína.",
+                "artId": "cathedral-devil"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:fissure",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:fissure",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Fissura Escarlate",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "ruin",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "damage",
+                        "value": 3,
+                        "target": "enemy-any",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "O chão se lembra do fogo.",
+                "artId": "fissure"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:blood-pact",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:blood-pact",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Pacto da Brasa Negra",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "ruin",
+                "cost": 3,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "damage",
+                        "value": 4,
+                        "target": "enemy",
+                        "duration": "permanent"
+                      },
+                      {
+                        "definitionId": "damage",
+                        "value": 2,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "A resposta vem antes da conta.",
+                "artId": "blood-pact"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:last-pyre",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:last-pyre",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Réquiem de Cinzas",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "ruin",
+                "cost": 4,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "damage",
+                        "value": 3,
+                        "target": "all-enemies",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Não é preciso um corpo para haver despedida.",
+                "artId": "last-pyre"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:funeral-censer",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:funeral-censer",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Turíbulo dos Ausentes",
+              "combat": {
+                "version": 1,
+                "kind": "artifact",
+                "affinity": "ruin",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "canalizar",
+                    "trigger": "activate",
+                    "cost": 2,
+                    "effects": [
+                      {
+                        "definitionId": "drain",
+                        "value": 2,
+                        "target": "enemy-any",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "A fumaça conhece todos pelo nome.",
+                "artId": "funeral-censer"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:ember-hourglass",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:ember-hourglass",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Ampulheta de Carvão",
+              "combat": {
+                "version": 1,
+                "kind": "artifact",
+                "affinity": "ruin",
+                "cost": 3,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "aurora",
+                    "trigger": "start",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "damage",
+                        "value": 1,
+                        "target": "enemy",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Quando o último grão cai, outro coração arde.",
+                "artId": "ember-hourglass"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:paper-owl",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:paper-owl",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Coruja de Mil Margens",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "knowledge",
+                "cost": 1,
+                "attack": 1,
+                "health": 3,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "scout",
+                        "value": 3,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Seu voo é a dobra entre duas ideias.",
+                "artId": "paper-owl"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:scroll-knight",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:scroll-knight",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Cavaleiro de Pergaminho",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "knowledge",
+                "cost": 2,
+                "attack": 2,
+                "health": 3,
+                "keywords": ["guard"],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "shield",
+                        "value": 1,
+                        "target": "self",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Sua armadura contém a história de quem protege.",
+                "artId": "scroll-knight"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:star-whale",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:star-whale",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Baleia do Índice Celeste",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "knowledge",
+                "cost": 3,
+                "attack": 2,
+                "health": 4,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "draw",
+                        "value": 1,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Navega em céus que só existem em livros.",
+                "artId": "star-whale"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:brass-scribe",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:brass-scribe",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Escriba de Latão Vivo",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "knowledge",
+                "cost": 4,
+                "attack": 3,
+                "health": 5,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "canalizar",
+                    "trigger": "activate",
+                    "cost": 1,
+                    "effects": [
+                      {
+                        "definitionId": "shield",
+                        "value": 2,
+                        "target": "ally-unit",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Uma página em branco é sua maior aventura.",
+                "artId": "brass-scribe"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:rune-sphinx",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:rune-sphinx",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Esfinge da Última Nota",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "knowledge",
+                "cost": 5,
+                "attack": 4,
+                "health": 6,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "exhaust",
+                        "value": 1,
+                        "target": "enemy-unit",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Só faz perguntas cuja resposta ainda não nasceu.",
+                "artId": "rune-sphinx"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:deep-reading",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:deep-reading",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Leitura das Entrelinhas",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "knowledge",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "draw",
+                        "value": 2,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "As margens guardavam mais duas portas.",
+                "artId": "deep-reading"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:still-sigil",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:still-sigil",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Sigilo da Hora Imóvel",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "knowledge",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "exhaust",
+                        "value": 1,
+                        "target": "enemy-unit",
+                        "duration": "permanent"
+                      },
+                      {
+                        "definitionId": "damage",
+                        "value": 1,
+                        "target": "enemy-unit",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Um instante pode conter uma eternidade.",
+                "artId": "still-sigil"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:astral-lance",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:astral-lance",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Lança do Meridiano",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "knowledge",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "damage",
+                        "value": 4,
+                        "target": "enemy-any",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Não erra: segue uma linha já escrita no céu.",
+                "artId": "astral-lance"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:unwritten-book",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:unwritten-book",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Grimório das Páginas Futuras",
+              "combat": {
+                "version": 1,
+                "kind": "artifact",
+                "affinity": "knowledge",
+                "cost": 3,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "canalizar",
+                    "trigger": "activate",
+                    "cost": 1,
+                    "effects": [
+                      {
+                        "definitionId": "draw",
+                        "value": 1,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "O próximo capítulo já está acordado.",
+                "artId": "unwritten-book"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:moon-astrolabe",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:moon-astrolabe",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Astrolábio de Nove Luas",
+              "combat": {
+                "version": 1,
+                "kind": "artifact",
+                "affinity": "knowledge",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "aurora",
+                    "trigger": "start",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "scout",
+                        "value": 3,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Aponta para o caminho que ainda custa menos.",
+                "artId": "moon-astrolabe"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:budling",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:budling",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Broto de Olhos Dourados",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "bloom",
+                "cost": 1,
+                "attack": 1,
+                "health": 3,
+                "keywords": [],
+                "abilities": [],
+                "flavor": "Pequeno demais para ter medo da noite.",
+                "artId": "budling"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:orchid-stag",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:orchid-stag",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Cervo das Orquídeas Astrais",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "bloom",
+                "cost": 2,
+                "attack": 2,
+                "health": 3,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "heal",
+                        "value": 2,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "As flores de seus chifres só abrem no escuro.",
+                "artId": "orchid-stag"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:pollen-moth",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:pollen-moth",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Mariposa do Primeiro Jardim",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "bloom",
+                "cost": 3,
+                "attack": 2,
+                "health": 3,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "summon",
+                        "value": 1,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Traz consigo a memória de uma primavera.",
+                "artId": "pollen-moth"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:thorn-treant",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:thorn-treant",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Sentinela do Espinheiro",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "bloom",
+                "cost": 4,
+                "attack": 3,
+                "health": 6,
+                "keywords": ["guard"],
+                "abilities": [],
+                "flavor": "Nenhum machado atravessa o nome que lhe deram.",
+                "artId": "thorn-treant"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:petal-dryad",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:petal-dryad",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Dríade da Flor Infinita",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "bloom",
+                "cost": 5,
+                "attack": 4,
+                "health": 5,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "empower",
+                        "value": 1,
+                        "target": "all-allies",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Cultiva coragem nas feridas do mundo.",
+                "artId": "petal-dryad"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:dew",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:dew",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Orvalho de Estrelas",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "bloom",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "heal",
+                        "value": 5,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "O céu também sabe cuidar.",
+                "artId": "dew"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:root-oath",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:root-oath",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Juramento das Raízes",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "bloom",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "empower",
+                        "value": 2,
+                        "target": "ally-unit",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Crescer é uma forma de permanecer.",
+                "artId": "root-oath"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:petal-storm",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:petal-storm",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Tempestade de Pétalas",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "bloom",
+                "cost": 3,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "empower",
+                        "value": 2,
+                        "target": "all-allies",
+                        "duration": "turn"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "A delicadeza pode ocupar o campo inteiro.",
+                "artId": "petal-storm"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:seed-crown",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:seed-crown",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Coroa da Semente Antiga",
+              "combat": {
+                "version": 1,
+                "kind": "artifact",
+                "affinity": "bloom",
+                "cost": 3,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "canalizar",
+                    "trigger": "activate",
+                    "cost": 2,
+                    "effects": [
+                      {
+                        "definitionId": "empower",
+                        "value": 1,
+                        "target": "ally-unit",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Não oferece um trono. Oferece raízes.",
+                "artId": "seed-crown"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:spring-chalice",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:spring-chalice",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Cálice da Nascente Secreta",
+              "combat": {
+                "version": 1,
+                "kind": "artifact",
+                "affinity": "bloom",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "aurora",
+                    "trigger": "start",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "heal",
+                        "value": 1,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Uma gota para cada retorno.",
+                "artId": "spring-chalice"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:prism-jelly",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:prism-jelly",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Medusa dos Céus Invertidos",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "chaos",
+                "cost": 1,
+                "attack": 2,
+                "health": 1,
+                "keywords": ["haste"],
+                "abilities": [],
+                "flavor": "Nunca soube qual lado do céu era o certo.",
+                "artId": "prism-jelly"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:mirror-cat",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:mirror-cat",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Gato de Três Amanhãs",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "chaos",
+                "cost": 2,
+                "attack": 3,
+                "health": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "scout",
+                        "value": 2,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Dois olhos seguem você. O terceiro segue a possibilidade.",
+                "artId": "mirror-cat"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:shard-chimera",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:shard-chimera",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Quimera de Vidro Noturno",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "chaos",
+                "cost": 3,
+                "attack": 3,
+                "health": 3,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "chaos",
+                        "value": 2,
+                        "target": "enemy",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Cada fragmento sonha ser outro animal.",
+                "artId": "shard-chimera"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:mirror-bird",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:mirror-bird",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Ave do Espelho Desfeito",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "chaos",
+                "cost": 4,
+                "attack": 3,
+                "health": 3,
+                "keywords": ["haste"],
+                "abilities": [],
+                "flavor": "Atravessou o reflexo antes de ter asas.",
+                "artId": "mirror-bird"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:rift-leviathan",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:rift-leviathan",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Leviatã da Fenda Violeta",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "chaos",
+                "cost": 5,
+                "attack": 4,
+                "health": 5,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "chaos",
+                        "value": 3,
+                        "target": "all-enemies",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "O que falta em sua forma transborda em relâmpagos.",
+                "artId": "rift-leviathan"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:dice-comet",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:dice-comet",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Cometa das Probabilidades",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "chaos",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "chaos",
+                        "value": 5,
+                        "target": "enemy-any",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Todas as quedas ainda são possíveis.",
+                "artId": "dice-comet"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:borrowed-shape",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:borrowed-shape",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Forma Emprestada",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "chaos",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "empower",
+                        "value": 3,
+                        "target": "ally-unit",
+                        "duration": "turn"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Por um turno, foi muito mais que um sonho.",
+                "artId": "borrowed-shape"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:fractured-moment",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:fractured-moment",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Instante Estilhaçado",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "chaos",
+                "cost": 3,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "chaos",
+                        "value": 3,
+                        "target": "enemy-any",
+                        "duration": "permanent"
+                      },
+                      {
+                        "definitionId": "draw",
+                        "value": 1,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Uma chance a mais, comprada com outra pergunta.",
+                "artId": "fractured-moment"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:laughing-mask",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:laughing-mask",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Máscara do Riso Oblíquo",
+              "combat": {
+                "version": 1,
+                "kind": "artifact",
+                "affinity": "chaos",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "canalizar",
+                    "trigger": "activate",
+                    "cost": 2,
+                    "effects": [
+                      {
+                        "definitionId": "chaos",
+                        "value": 3,
+                        "target": "enemy-any",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Nem o eco sabe de quem é a voz.",
+                "artId": "laughing-mask"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:broken-prism",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:broken-prism",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Prisma de Realidade Solta",
+              "combat": {
+                "version": 1,
+                "kind": "artifact",
+                "affinity": "chaos",
+                "cost": 3,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "aurora",
+                    "trigger": "start",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "chaos",
+                        "value": 2,
+                        "target": "enemy",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "A luz sai por portas que nunca entraram.",
+                "artId": "broken-prism"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:clock-beetle",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:clock-beetle",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Besouro de Cordas Antigas",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "neutral",
+                "cost": 1,
+                "attack": 1,
+                "health": 3,
+                "keywords": [],
+                "abilities": [],
+                "flavor": "Seu tique-taque atravessa bibliotecas vazias.",
+                "artId": "clock-beetle"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:candle-fox",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:candle-fox",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Raposa de Cera Lunar",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "neutral",
+                "cost": 2,
+                "attack": 2,
+                "health": 3,
+                "keywords": [],
+                "abilities": [],
+                "flavor": "O rastro da cauda ilumina quem ficou para trás.",
+                "artId": "candle-fox"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:stone-sentinel",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:stone-sentinel",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Guardião da Porta Sem Chave",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "neutral",
+                "cost": 3,
+                "attack": 2,
+                "health": 5,
+                "keywords": ["guard"],
+                "abilities": [],
+                "flavor": "Espera alguém que ainda não aprendeu a chegar.",
+                "artId": "stone-sentinel"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:comet-ray",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:comet-ray",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Arraia das Rotas Perdidas",
+              "combat": {
+                "version": 1,
+                "kind": "creature",
+                "affinity": "neutral",
+                "cost": 4,
+                "attack": 4,
+                "health": 4,
+                "keywords": [],
+                "abilities": [],
+                "flavor": "As estrelas a consultam quando esquecem o caminho.",
+                "artId": "comet-ray"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:unbinding",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:unbinding",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Desatar Encantamento",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "neutral",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "shatter",
+                        "value": 1,
+                        "target": "enemy",
+                        "duration": "permanent"
+                      },
+                      {
+                        "definitionId": "draw",
+                        "value": 1,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Toda obra possui um primeiro nó.",
+                "artId": "unbinding"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:quiet-pulse",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:quiet-pulse",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Pulso do Limiar",
+              "combat": {
+                "version": 1,
+                "kind": "spell",
+                "affinity": "neutral",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "manifestar",
+                    "trigger": "play",
+                    "cost": 0,
+                    "effects": [
+                      {
+                        "definitionId": "damage",
+                        "value": 2,
+                        "target": "enemy-any",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Entre dois mundos, uma batida.",
+                "artId": "quiet-pulse"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:wayfarer-lantern",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:wayfarer-lantern",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Lanterna do Caminhante",
+              "combat": {
+                "version": 1,
+                "kind": "artifact",
+                "affinity": "neutral",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "canalizar",
+                    "trigger": "activate",
+                    "cost": 1,
+                    "effects": [
+                      {
+                        "definitionId": "shield",
+                        "value": 1,
+                        "target": "ally-unit",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Não expulsa a noite. Ensina a atravessá-la.",
+                "artId": "wayfarer-lantern"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        },
+        {
+          "cardId": "arcane-v1:lost-compass",
+          "revision": 1,
+          "card": {
+            "id": "arcane-v1:lost-compass",
+            "revision": 1,
+            "type": "combat",
+            "origin": {
+              "kind": "local"
+            },
+            "createdAt": "2026-11-09T00:00:00.000Z",
+            "updatedAt": "2026-11-09T00:00:00.000Z",
+            "archived": false,
+            "content": {
+              "type": "combat",
+              "name": "Bússola dos Retornos",
+              "combat": {
+                "version": 1,
+                "kind": "artifact",
+                "affinity": "neutral",
+                "cost": 2,
+                "keywords": [],
+                "abilities": [
+                  {
+                    "id": "canalizar",
+                    "trigger": "activate",
+                    "cost": 2,
+                    "effects": [
+                      {
+                        "definitionId": "heal",
+                        "value": 3,
+                        "target": "ally",
+                        "duration": "permanent"
+                      }
+                    ]
+                  }
+                ],
+                "flavor": "Seu norte é um lugar que alguém chamou de casa.",
+                "artId": "lost-compass"
+              },
+              "attributes": {},
+              "effects": []
+            }
+          }
+        }
+      ],
+      "decks": [
+        {
+          "id": "arcane-deck:ruin",
+          "name": "Samael · Ruína",
+          "revision": 1,
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "origin": {
+            "kind": "local"
+          },
+          "selection": {
+            "kind": "static",
+            "cards": [
+              {
+                "cardId": "arcane-v1:cinder-imp",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:basalt-warden",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:ash-serpent",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:ember-wraith",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:cathedral-devil",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:fissure",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:blood-pact",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:last-pyre",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:funeral-censer",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:ember-hourglass",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:clock-beetle",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:unbinding",
+                "revision": 1
+              }
+            ]
+          },
+          "combat": {
+            "version": 1,
+            "affinity": "ruin",
+            "mode": "official",
+            "copies": {
+              "arcane-v1:cinder-imp": 2,
+              "arcane-v1:basalt-warden": 2,
+              "arcane-v1:ash-serpent": 2,
+              "arcane-v1:ember-wraith": 2,
+              "arcane-v1:cathedral-devil": 2,
+              "arcane-v1:fissure": 2,
+              "arcane-v1:blood-pact": 2,
+              "arcane-v1:last-pyre": 2,
+              "arcane-v1:funeral-censer": 2,
+              "arcane-v1:ember-hourglass": 2,
+              "arcane-v1:clock-beetle": 2,
+              "arcane-v1:unbinding": 2
+            }
+          }
+        },
+        {
+          "id": "arcane-deck:knowledge",
+          "name": "Aryn · Conhecimento",
+          "revision": 1,
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "origin": {
+            "kind": "local"
+          },
+          "selection": {
+            "kind": "static",
+            "cards": [
+              {
+                "cardId": "arcane-v1:paper-owl",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:scroll-knight",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:star-whale",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:brass-scribe",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:rune-sphinx",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:deep-reading",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:still-sigil",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:astral-lance",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:unwritten-book",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:moon-astrolabe",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:candle-fox",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:wayfarer-lantern",
+                "revision": 1
+              }
+            ]
+          },
+          "combat": {
+            "version": 1,
+            "affinity": "knowledge",
+            "mode": "official",
+            "copies": {
+              "arcane-v1:paper-owl": 2,
+              "arcane-v1:scroll-knight": 2,
+              "arcane-v1:star-whale": 2,
+              "arcane-v1:brass-scribe": 2,
+              "arcane-v1:rune-sphinx": 2,
+              "arcane-v1:deep-reading": 2,
+              "arcane-v1:still-sigil": 2,
+              "arcane-v1:astral-lance": 2,
+              "arcane-v1:unwritten-book": 2,
+              "arcane-v1:moon-astrolabe": 2,
+              "arcane-v1:candle-fox": 2,
+              "arcane-v1:wayfarer-lantern": 2
+            }
+          }
+        },
+        {
+          "id": "arcane-deck:bloom",
+          "name": "Ytha · Florescimento",
+          "revision": 1,
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "origin": {
+            "kind": "local"
+          },
+          "selection": {
+            "kind": "static",
+            "cards": [
+              {
+                "cardId": "arcane-v1:budling",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:orchid-stag",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:pollen-moth",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:thorn-treant",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:petal-dryad",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:dew",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:root-oath",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:petal-storm",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:seed-crown",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:spring-chalice",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:stone-sentinel",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:lost-compass",
+                "revision": 1
+              }
+            ]
+          },
+          "combat": {
+            "version": 1,
+            "affinity": "bloom",
+            "mode": "official",
+            "copies": {
+              "arcane-v1:budling": 2,
+              "arcane-v1:orchid-stag": 2,
+              "arcane-v1:pollen-moth": 2,
+              "arcane-v1:thorn-treant": 2,
+              "arcane-v1:petal-dryad": 2,
+              "arcane-v1:dew": 2,
+              "arcane-v1:root-oath": 2,
+              "arcane-v1:petal-storm": 2,
+              "arcane-v1:seed-crown": 2,
+              "arcane-v1:spring-chalice": 2,
+              "arcane-v1:stone-sentinel": 2,
+              "arcane-v1:lost-compass": 2
+            }
+          }
+        },
+        {
+          "id": "arcane-deck:chaos",
+          "name": "Lua · Caos",
+          "revision": 1,
+          "createdAt": "2026-11-09T00:00:00.000Z",
+          "updatedAt": "2026-11-09T00:00:00.000Z",
+          "origin": {
+            "kind": "local"
+          },
+          "selection": {
+            "kind": "static",
+            "cards": [
+              {
+                "cardId": "arcane-v1:prism-jelly",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:mirror-cat",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:shard-chimera",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:mirror-bird",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:rift-leviathan",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:dice-comet",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:borrowed-shape",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:fractured-moment",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:laughing-mask",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:broken-prism",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:comet-ray",
+                "revision": 1
+              },
+              {
+                "cardId": "arcane-v1:quiet-pulse",
+                "revision": 1
+              }
+            ]
+          },
+          "combat": {
+            "version": 1,
+            "affinity": "chaos",
+            "mode": "official",
+            "copies": {
+              "arcane-v1:prism-jelly": 2,
+              "arcane-v1:mirror-cat": 2,
+              "arcane-v1:shard-chimera": 2,
+              "arcane-v1:mirror-bird": 2,
+              "arcane-v1:rift-leviathan": 2,
+              "arcane-v1:dice-comet": 2,
+              "arcane-v1:borrowed-shape": 2,
+              "arcane-v1:fractured-moment": 2,
+              "arcane-v1:laughing-mask": 2,
+              "arcane-v1:broken-prism": 2,
+              "arcane-v1:comet-ray": 2,
+              "arcane-v1:quiet-pulse": 2
+            }
+          }
+        }
+      ],
+      "studyLinks": [],
+      "tags": [],
+      "sessions": [
+        {
+          "id": "legacy-match",
+          "kind": "combat_match",
+          "startedAt": "2026-11-12T00:00:00.000Z",
+          "cards": [],
+          "rulesetVersion": "1"
+        }
+      ]
+    },
+    "libraryEntries": [],
+    "notes": [],
+    "quotes": [],
+    "activities": [],
+    "settings": [],
+    "milestones": [],
+    "sessions": [],
+    "tags": []
+  },
+  "metadata": {
+    "policy": "replace"
+  },
+  "integrity": {
+    "algorithm": "SHA-256",
+    "digest": "fac67062cba9aa673c2eea5ddda53ab396ff0bc5d3a9f696a6f3bf74cf9351a0"
+  }
+}

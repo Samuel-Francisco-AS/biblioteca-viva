@@ -1496,13 +1496,14 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const cpuStart = this.performanceProbe.active ? this.now() : 0;
     let bookEnd: number;
     let agencyEnd: number;
-    const delta =
+    const activeDelta =
       this.livingFrameTime === undefined
         ? 0
-        : Math.min(
-            0.05,
-            Math.max(0, (timestamp - this.livingFrameTime) / 1000),
-          );
+        : Math.max(0, (timestamp - this.livingFrameTime) / 1000);
+    // Actors retain their bounded simulation step. The analytical orbit uses
+    // active RAF time, so slow rendering does not slow the architectural orbit.
+    // pauseLoop/visibility clear livingFrameTime: absence is never caught up.
+    const delta = Math.min(0.05, activeDelta);
     this.livingFrameTime = timestamp;
     try {
       const reduced =
@@ -1542,7 +1543,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         (id) => this.inhabitants?.getSocket(id, "socket_carry") ?? null,
       );
       this.ambientMagic?.update(delta, reduced);
-      this.orbital?.update(delta, reduced);
+      this.orbital?.update(activeDelta, reduced);
       if (this.selection?.id === "portal:duelo-arcano")
         mountedWorld.getInteraction()?.updateHighlightBounds();
       this.scrollVisuals?.update(

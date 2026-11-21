@@ -1,0 +1,47 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:run
+npm notice run vitest run src/features/arcanarium/Choices.test.tsx src/features/arcanarium/ArcanariumPage.test.tsx src/features/arcanarium/PackLibrary.test.tsx src/features/library/WorldHost.test.tsx src/features/library/three/ThreeWorldInteraction.test.ts src/infrastructure/database/retireCombatData.test.ts src/infrastructure/database/arcanarium.test.ts src/infrastructure/backup/backup.test.ts src/app/createApplication.test.ts --maxWorkers=1
+
+ RUN  v4.1.12 /home/sam/Projetos/biblioteca-viva
+
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+
+ Test Files  9 passed (9)
+      Tests  126 passed (126)
+   Start at  21:37:11
+   Duration  25.46s (transform 3.08s, setup 1.13s, import 4.94s, tests 14.27s, environment 3.68s)
+
