@@ -662,9 +662,6 @@ function LibraryPageContent({
           </>
         )}
         <div className="placeholder-actions">
-          <Link className="button button--secondary" to="/arcanario/duelos">
-            ◈ Arena orbital · Duelo Arcano
-          </Link>
           <Link className="button button--secondary" to="/arcanario">
             ✧ Abrir o Arcanário
           </Link>

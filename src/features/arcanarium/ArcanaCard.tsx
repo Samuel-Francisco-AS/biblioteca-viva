@@ -1,4 +1,3 @@
-import { CombatCard } from "../duel/CombatCard";
 import { useEffect, useState } from "react";
 import type { CardContent } from "../../domain/arcanarium";
 import type { ApplicationRuntime } from "../../app/createApplication";
@@ -10,7 +9,7 @@ export function ArcanaCard({
   image,
   compact = false,
   flipped = false,
-  official = false,
+  official: _official = false,
 }: {
   readonly content: CardContent;
   readonly app?: ApplicationRuntime;
@@ -40,15 +39,14 @@ export function ArcanaCard({
       active = false;
     };
   }, [app, imageId]);
-  if (content.type === "combat" && content.combat)
+  if (content.type === "combat")
     return (
-      <CombatCard
-        name={content.name}
-        definition={content.combat}
-        compact={compact}
-        gallery={compact}
-        official={official}
-      />
+      <article
+        className={`arcana-card ${compact ? "arcana-card--compact" : ""}`}
+        aria-label={`${_official ? "Carta de combate oficial" : "Carta de combate"} indisponível no Acervo`}
+      >
+        <p className="arcana-muted">Carta de combate indisponível no Acervo.</p>
+      </article>
     );
   const appearance =
     content.type === "flashcard" || content.type === "memory"

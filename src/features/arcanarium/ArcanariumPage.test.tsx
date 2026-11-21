@@ -11,7 +11,7 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import {
   createApplication,
   type ApplicationRuntime,
@@ -32,9 +32,13 @@ async function app() {
   apps.push(a);
   return a;
 }
+function RoutePathProbe() {
+  return <output data-testid="current-route">{useLocation().pathname}</output>;
+}
 function mount(a: ApplicationRuntime, path = "/arcanario") {
   return render(
     <MemoryRouter initialEntries={[path]}>
+      <RoutePathProbe />
       <Routes>
         <Route
           path="/arcanario/*"
@@ -72,6 +76,68 @@ it("paginates Acervo at 12 flat previews instead of rendering 24 complex cards a
   ).toHaveTextContent("Página 2 de 2");
   expect(view.container.querySelectorAll(".arcana-grid .arcana-card-link")).toHaveLength(1);
 }, 30000);
+
+it("removes the Duelo Arcano from the portal and redirects legacy duel rooms", async () => {
+  const a = await app();
+  mount(a);
+  expect(await screen.findByRole("heading", { name: "O Arcanário" })).toBeVisible();
+  expect(screen.queryByText("O Duelo Arcano")).toBeNull();
+  cleanup();
+  mount(a, "/arcanario/duelos/arena/legacy");
+  expect(await screen.findByRole("heading", { name: "O Arcanário" })).toBeVisible();
+  await waitFor(() =>
+    expect(screen.getByTestId("current-route")).toHaveTextContent(
+      /^\/arcanario$/,
+    ),
+  );
+  expect(screen.queryByText("Salão dos duelos")).toBeNull();
+});
+
+it("redirects legacy combat-card creation to the portal", async () => {
+  const a = await app();
+  mount(a, "/arcanario/oficina/nova?tipo=combat");
+  expect(await screen.findByRole("heading", { name: "O Arcanário" })).toBeVisible();
+  await waitFor(() =>
+    expect(screen.getByTestId("current-route")).toHaveTextContent(
+      /^\/arcanario$/,
+    ),
+  );
+  expect(screen.queryByText("Criar carta de combate")).toBeNull();
+});
+
+it("hides legacy combat cards and keeps direct card access out of the active Acervo", async () => {
+  const a = await app();
+  const card = await a.arcanarium.createCard({
+    type: "combat",
+    name: "Carta TCG sintética",
+    attributes: {},
+    effects: [],
+    combat: {
+      version: 1,
+      kind: "creature",
+      affinity: "neutral",
+      cost: 1,
+      attack: 2,
+      health: 3,
+      keywords: [],
+      abilities: [],
+      flavor: "Fixture",
+      artId: "neutral-sentinel",
+    },
+  });
+  mount(a, "/arcanario/acervo");
+  expect(await screen.findByText("0 cartas encontradas")).toBeVisible();
+  expect(screen.queryByText("Carta TCG sintética")).toBeNull();
+  cleanup();
+  mount(a, `/arcanario/cartas/${encodeURIComponent(card.id)}`);
+  expect(await screen.findByText("0 cartas encontradas")).toBeVisible();
+  await waitFor(() =>
+    expect(screen.getByTestId("current-route")).toHaveTextContent(
+      /^\/arcanario\/acervo$/,
+    ),
+  );
+  expect(screen.queryByText("Carta TCG sintética")).toBeNull();
+});
 
 it("creates a canonical card from a real editor, previews both faces and keeps a recoverable draft", async () => {
   const a = await app(),
