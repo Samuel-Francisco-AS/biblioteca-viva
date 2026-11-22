@@ -6,18 +6,13 @@ Este índice distingue decisões vigentes, implementadas e retiradas. O registro
 
 | ID | Decisão | Estado |
 | --- | --- | --- |
-| ADR-031 | Desempenho, residência de rotas e consultas | Implementada na BV-UXC; ressalvas documentadas |
-| ADR-030 | Arena Viva — apresentação e ciclo de vida | **Retirada com o TCG; registro histórico** |
-| ADR-029 | Duelo Arcano — regulamento e contratos v1 | **Retirada com o TCG; registro histórico** |
-| ADR-028 | Pacotes educacionais e retenção histórica | Implementada na BF-5.6D; PR #46 |
-| ADR-027 | Provações, taxonomia histórica e diagnóstico | Implementada na BF-5.6C; PR #45 |
-| ADR-026 | Oficina, mídias e troca autoral | Implementada na BF-5.6B; PR #44 |
-| ADR-025 | Fundação persistente do Arcanário | Implementada na BF-5.6A; PR #43 |
-
-| ID      | Decisão                                    | Estado                  |
-| ------- | ------------------------------------------ | ----------------------- |
-| ADR-026 | [Oficina, mídias e troca autoral](ADR-026-arcanario-oficina-midias-troca.md) | candidata BF-5.6B; gate A+B pendente |
-| ADR-025 | [Fundação persistente do Arcanário](ADR-025-arcanario-fundacao-persistencia.md) | candidata BF-5.6A; aceite pendente |
+| ADR-031 | [Desempenho, residência de rotas e consultas](ADR-031-desempenho-rotas-consultas.md) | Implementada na BV-UXC; ressalvas documentadas |
+| ADR-030 | [Arena Viva — apresentação e ciclo de vida](ADR-030-arena-viva-apresentacao-lifecycle.md) | **Retirada com o TCG; registro histórico** |
+| ADR-029 | [Duelo Arcano — regulamento e contratos v1](ADR-029-duelo-arcano-regulamento.md) | **Retirada com o TCG; registro histórico** |
+| ADR-028 | [Pacotes educacionais e retenção histórica](ADR-028-pacotes-educacionais-retencao.md) | Implementada na BF-5.6D; PR #46 |
+| ADR-027 | [Provações, taxonomia histórica e diagnóstico](ADR-027-provacao-taxonomia-diagnostico.md) | Implementada na BF-5.6C; PR #45 |
+| ADR-026 | [Oficina, mídias e troca autoral](ADR-026-arcanario-oficina-midias-troca.md) | Implementada na BF-5.6B; PR #44 |
+| ADR-025 | [Fundação persistente do Arcanário](ADR-025-arcanario-fundacao-persistencia.md) | Implementada na BF-5.6A; PR #43 |
 | ADR-001 | produto local-first e privado por padrão   | aceita                  |
 | ADR-002 | arquitetura híbrida anterior               | substituída por ADR-008 |
 | ADR-003 | mundo persistente e objetos anteriores     | substituída por ADR-008 |
@@ -42,21 +37,3 @@ Este índice distingue decisões vigentes, implementadas e retiradas. O registro
 | ADR-017 | [Ficha viva e estimativa local](ADR-017-ficha-viva-e-estimativa-local.md) | implementada como candidata Parte 2C |
 | ADR-016 | [Estudo: fólio, foco persistido e cartas locais](ADR-016-estudo-folio-pomodoro-cartas.md) | implementada como candidata Parte 2B |
 | ADR-015 | BF-5R5: residência do mundo e fichas de prática | aceita no escopo R5; candidata |
-
-ADR-008 permanece a autoridade do WORLD RESET. [`ADR-009`](ADR-009-three-foundation.md) a complementa ao aprovar Three.js como renderer da Fundação depois da evidência técnica e física da F1; não substitui o reset.
-
-[`ADR-010`](ADR-010-3d-pipeline-v1.md) complementa ambas ao formalizar o contrato produtivo inicial de assets 3D; não cria o runtime produtivo, um mundo real ou persistência espacial.
-
-[`ADR-011`](ADR-011-biblioteca-funcional-primeiro.md) complementa ADR-010 ao priorizar conteúdo procedural/provisório para a Biblioteca funcional. ADR-010 continua regulando GLBs produtivos; P3D-B2–F ficam adiados, sem cancelamento ou promoção de fixtures.
-
-[`ADR-012`](ADR-012-bf-4-mundo-vivo.md) especifica o escopo integrado dos cinco cômodos, personagens animados com IA local e conversação contextual, **sem** aprovar automaticamente GLB animado nem LLM externa. O contrato operacional está em [`BF-4_PLANO_CONTRATO.md`](../BF-4_PLANO_CONTRATO.md).
-
-[`ADR-013`](ADR-013-bf-4f-quatro-habitantes-rpg.md) atualiza para **quatro** o número inicial de habitantes e fixa o **diálogo local em árvores de 3–4 escolhas de RPG**, sem LLM; não substitui os demais contratos da ADR-012. A autoridade criativa é a [concepção BF-4F](../BF-4F_CONCEPCAO_HABITANTES.md).
-
-[`ADR-014`](ADR-014-replanejamento-pos-bf4.md) atualiza **somente o plano futuro** da ADR-011/ADR-012: a consolidação chamada anteriormente de BF-5 passa a **BF-7**; a nova BF-5 é reforma ampla de UI/UX, seguida de refinamentos; BF-6 aprofunda personagens/RPG/interatividade. Não altera os fatos nem os aceites históricos da BF-4, não implementa nenhuma fase e não retira a obrigação de TalkBack/gates assistivos.
-
-[`ADR-023`](ADR-023-bf-5-5-despertar-da-biblioteca.md) insere a **BF-5.5** após o fechamento da BF-5, antes da BF-6, sem alterar escopo/número da BF-6 ou BF-7. Seu contrato de implementação futura está em [BF-5.5](../BF-5_5_O_DESPERTAR_DA_BIBLIOTECA.md). A BF-5.6 foi inserida posteriormente em 08/11/2026 entre BF-5.5 e BF-6 pelo [plano do Arcanário](../BF-5_6_ARCANARIO_PLANO.md) e a [revisão da ADR-020](ADR-020-baralhos-e-cartas-globais.md); a ADR-014 permanece registro válido da decisão anterior.
-
-Uma nova decisão recebe o próximo número. Substituição preserva a decisão anterior com estado e link para a sucessora.
-
-- [ADR-031 — desempenho de rotas, consultas e drafts](ADR-031-desempenho-rotas-consultas.md): implementada/mesclada pela PR #49 com aceite físico dirigido e ressalvas; auditoria G mantém CI/TalkBack/termal pendentes.
