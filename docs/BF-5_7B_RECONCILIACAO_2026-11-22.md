@@ -81,11 +81,11 @@ Não registrar como entregues nesta etapa:
 
 A existência de funcionalidades de flashcards, questões, pacotes e atividade física anteriores à BF-5.7B, ou sua preservação durante a retirada do TCG, não comprova execução das melhorias planejadas em B3/B4/B5.
 
-## 5. Encaminhamento para a reorganização da BF-5.7
+## 5. Transferência documental para BF-5.7C (PR #60)
 
 As partes não executadas de B3, B4 e B5 — e eventuais verificações residuais que forem confirmadas como trabalho ainda necessário — foram transferidas para a etapa **BF-5.7C** pela reestruturação A–H, integrada na PR #60. C permanece planejada e não iniciada.
 
-A transferência deve preservar a distinção entre:
+A transferência registrada pela PR #60 preserva a distinção entre:
 - trabalho não executado;
 - trabalho existente que foi apenas preservado;
 - dívida técnica de validação/performance;
