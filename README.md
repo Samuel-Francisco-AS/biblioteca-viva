@@ -1,3 +1,7 @@
+> **PLANEJAMENTO BF-5.7 — 22/11/2026:** a BF-5.7A está concluída com ressalvas e a BF-5.7B foi encerrada com ressalvas, conforme [reconciliação](docs/BF-5_7B_RECONCILIACAO_2026-11-22.md). A estrutura A–H foi aprovada e integrada pela [PR #60](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/60); a coordenação mestre está na [Issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50). A BF-5.7 permanece aberta; a nova C e as etapas D–H não foram iniciadas.
+
+---
+
 # Biblioteca Viva
 
 Biblioteca Viva é um aplicativo local-first para registrar livros, filmes, séries, estudos, atividades físicas e trabalho. O produto oferece criação, edição, progresso, notas, citações, etiquetas, favoritos, sessões, histórico, estatísticas, arquivo, preferências e backup local.
@@ -12,7 +16,7 @@ O baseline atual usa React, Dexie, Vite, Vitest, Playwright, Capacitor e Android
 
 ## Estado atual e próximo trabalho
 
-**BF-5.6 — O Arcanário** foi encerrada globalmente com ressalvas em 11/11/2026. A BF-5.7A (Crystal Controls) foi integrada à `main` pela PR #51 e concluída com ressalvas. A BF-5.7B foi concluída funcionalmente no Moto G06 e está consolidada na [PR #58](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/58): retirou o TCG/Duelo Arcano e reorientou o Arcanário para flashcards, questões educativas e recursos futuros de atividade física. O gate aprovou órbita, reentrada, navegação, flashcards, questões e persistência; travamentos de transição e fluidez insuficiente permanecem dívida técnica sem métrica física nova. Não iniciar BF-5.7C, B2.6, B3 ou BF-6 automaticamente. Consulte o [planejamento mestre BF-5.7 — issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50), o [plano detalhado da reforma do Arcanário — PR #52](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/52) e o [estado operacional](docs/STATUS.md).
+**BF-5.6 — O Arcanário** foi encerrada globalmente com ressalvas em 11/11/2026. A BF-5.7A (Crystal Controls) foi integrada à `main` pela PR #51 e concluída com ressalvas. A BF-5.7B foi encerrada com ressalvas por decisão expressa do proprietário; sua reconciliação documental está em [BF-5_7B_RECONCILIACAO_2026-11-22.md](docs/BF-5_7B_RECONCILIACAO_2026-11-22.md). A PR #58 integrou a retirada do TCG/Duelo Arcano e preservou os fluxos educativos do Arcanário. A organização geral A–H foi integrada pela [PR #60](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/60); a BF-5.7 permanece aberta, C está planejada e ainda não iniciada, e D–H não foram iniciadas. Consulte o [planejamento mestre BF-5.7 — issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) e o [estado operacional](docs/STATUS.md).
 
 ## Desenvolvimento
 
