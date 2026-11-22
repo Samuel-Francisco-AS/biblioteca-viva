@@ -1,3 +1,7 @@
+> **AVISO DE ESTADO — 22/11/2026:** este handoff registra a auditoria e as instruções disponíveis no momento da B1. A B1 está concluída. As instruções antigas de CP5/B2.1 e preservação de contratos TCG são históricas e foram superadas pela decisão do proprietário de 12/11 sobre descarte dos dados locais de teste, pelas entregas B2.2–B2.5 e pela integração final na [PR #58](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/58). Para o estado vigente de cada subetapa, consultar [a reconciliação final da BF-5.7B](BF-5_7B_RECONCILIACAO_2026-11-22.md). Não usar os prompts antigos deste handoff como autorização para executar trabalho novo.
+
+---
+
 # BF-5.7B1 — Auditoria técnica do Arcanário e handoff controlado para B2
 
 > **ATUALIZAÇÃO DE AUTORIZAÇÃO — 12/11/2026, após entrega da B2.1:** o proprietário esclareceu que **todos os dados atuais do APK são de teste e podem ser integralmente descartados**. **Revogadas para esta reforma:** obrigatoriedade de preservar `combat`/`combat_match` em backups antigos, manutenção de replay/engine histórico exclusivamente por compatibilidade, fixtures F2/F3 como gate de retirada, migração de partidas/cartas autorais e o bloqueio de B2.2 até aceite da [PR #53](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/53). Este relatório continua servindo como **inventário técnico**; os trechos CP4/CP5 e o prompt antigo são **históricos**, substituídos pela orientação abaixo e pela atualização do [plano BF-5.7B](BF-5_7B_ARCANARIO_REFORMA_PLANO.md). **Nenhum dado foi apagado por esta atualização documental.**
