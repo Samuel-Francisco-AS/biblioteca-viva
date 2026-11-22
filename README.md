@@ -1,3 +1,7 @@
+> **PLANEJAMENTO BF-5.7 — 22/11/2026:** a BF-5.7A está concluída com ressalvas e a BF-5.7B foi encerrada com ressalvas, conforme [reconciliação](docs/BF-5_7B_RECONCILIACAO_2026-11-22.md). O planejamento geral está em revisão documental para a estrutura A–H na [PR #60](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/60). A BF-5.7 permanece aberta; a nova C e as etapas D–H não foram iniciadas.
+
+---
+
 # Biblioteca Viva
 
 Biblioteca Viva é um aplicativo local-first para registrar livros, filmes, séries, estudos, atividades físicas e trabalho. O produto oferece criação, edição, progresso, notas, citações, etiquetas, favoritos, sessões, histórico, estatísticas, arquivo, preferências e backup local.
