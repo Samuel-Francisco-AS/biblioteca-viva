@@ -27,7 +27,7 @@
 | `docs/BF-5_7B_RECONCILIACAO_2026-11-22.md` | Registra que a transferência B3/B4/B5 para C e a reestruturação A–H já foram concluídas documentalmente pela PR #60. |
 | Caderno UX | Mantém as 17 propostas, mas deixa explícito que PR #51 foi integrada e que o caderno não autoriza execução automática. |
 | Roadmap, Status e índice docs | Estabelecem precedência dos blocos canônicos de 22/11 e identificam snapshots antigos como cronologia, não estado operacional. |
-| `CHANGELOG.md` | Registra a cadeia de reconciliação #58–#60 e o escopo estritamente documental. |
+| `CHANGELOG.md` | Registra a cadeia de reconciliação #58–#61 e o escopo estritamente documental. |
 
 ## Issues abertas preservadas
 
