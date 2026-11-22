@@ -4,7 +4,7 @@
 **Escopo:** documentação e classificação de entregas da BF-5.7B.  
 **Estado:** BF-5.7B encerrada por decisão expressa do proprietário, com ressalvas técnicas registradas. A BF-5.7 como um todo permanece aberta.
 
-> Este documento é a referência consolidada para o estado da BF-5.7B. Ele prevalece sobre estados operacionais antigos mantidos nos relatórios de cada checkpoint, que continuam preservados como registros históricos. A issue [#50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) e o roadmap mestre ainda precisam de uma atualização estrutural própria; esta reconciliação não fecha a issue nem reorganiza, por si só, as etapas A–G.
+> Este documento é a referência consolidada para o estado da BF-5.7B. Ele prevalece sobre estados operacionais antigos mantidos nos relatórios de cada checkpoint, que continuam preservados como registros históricos. A reestruturação A–H foi posteriormente integrada pela PR #60 e a Issue #50 foi sincronizada; para o planejamento vigente, consulte [reestruturação A–H](BF-5_7_REESTRUTURACAO_A-H_2026-11-22.md) e [Issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50).
 
 ## 1. Síntese executiva
 
@@ -83,7 +83,7 @@ A existência de funcionalidades de flashcards, questões, pacotes e atividade f
 
 ## 5. Encaminhamento para a reorganização da BF-5.7
 
-As partes não executadas de B3, B4 e B5 — e eventuais verificações residuais que forem confirmadas como trabalho ainda necessário — devem ser avaliadas para transferência à nova etapa **BF-5.7C** na reestruturação do roadmap.
+As partes não executadas de B3, B4 e B5 — e eventuais verificações residuais que forem confirmadas como trabalho ainda necessário — foram transferidas para a etapa **BF-5.7C** pela reestruturação A–H, integrada na PR #60. C permanece planejada e não iniciada.
 
 A transferência deve preservar a distinção entre:
 - trabalho não executado;
@@ -91,7 +91,7 @@ A transferência deve preservar a distinção entre:
 - dívida técnica de validação/performance;
 - decisões de produto ainda abertas.
 
-Esta reconciliação não cria tarefas de implementação, não autoriza começar a nova BF-5.7C, não fecha a issue #50 e não encerra a BF-5.7. A reorganização A–H será registrada em uma atualização documental própria.
+Esta reconciliação não cria tarefas de implementação, não autoriza começar a nova BF-5.7C, não fecha a issue #50 e não encerra a BF-5.7. A reestruturação A–H e a atualização integral da Issue #50 foram concluídas documentalmente pela PR #60; a BF-5.7 permanece aberta.
 
 ## 6. Decisão final
 
