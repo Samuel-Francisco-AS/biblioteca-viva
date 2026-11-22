@@ -1,14 +1,18 @@
-[ADR-030 — Arena Viva: apresentação e ciclo de vida](ADR-030-arena-viva-apresentacao-lifecycle.md): implementada e integrada via PR #48 (BF-5.6F), motor E preservado e mundo residente pausado; pendências assistivas/performance em G.
-
-[ADR-029 — Duelo Arcano, regulamento e contratos v1](ADR-029-duelo-arcano-regulamento.md): implementação autorizada BF-5.6E; gate físico/merge pendentes.
-
-[ADR-028 — Pacotes educacionais e retenção histórica](ADR-028-pacotes-educacionais-retencao.md): candidata BF-5.6D, manifesto v1/Dexie v18/backup v10.
-
-**BF-5.6C candidata (08/11/2026):** [ADR-027 — Provações, taxonomia histórica e diagnóstico](ADR-027-provacao-taxonomia-diagnostico.md) complementa ADR-020/025/026. Dexie v17/backup v9; A+B+C aguardam auditoria/gate/aceite, sem merge ou início de D–G.
+> **Índice reconciliado — 22/11/2026:** ADR-027 e ADR-028 foram implementadas e integradas na BF-5.6C/D (PRs #45/#46). ADR-029 descreve o regulamento do TCG, posteriormente retirado do produto pela PR #58; seu conteúdo é histórico, não autorização para reconstruir o recurso. ADR-030 descreve a antiga arena de duelo, também retirada com o TCG. Preserve esses documentos como memória de decisões, mas não os trate como arquitetura ativa.
 
 # Decisões arquiteturais
 
-Este índice distingue as decisões vigentes das preservadas para contexto. O registro monolítico anterior está em `../history/legacy/DECISIONS_LEGACY.md`.
+Este índice distingue decisões vigentes, implementadas e retiradas. O registro monolítico anterior está em `../history/legacy/DECISIONS_LEGACY.md`.
+
+| ID | Decisão | Estado |
+| --- | --- | --- |
+| ADR-031 | Desempenho, residência de rotas e consultas | Implementada na BV-UXC; ressalvas documentadas |
+| ADR-030 | Arena Viva — apresentação e ciclo de vida | **Retirada com o TCG; registro histórico** |
+| ADR-029 | Duelo Arcano — regulamento e contratos v1 | **Retirada com o TCG; registro histórico** |
+| ADR-028 | Pacotes educacionais e retenção histórica | Implementada na BF-5.6D; PR #46 |
+| ADR-027 | Provações, taxonomia histórica e diagnóstico | Implementada na BF-5.6C; PR #45 |
+| ADR-026 | Oficina, mídias e troca autoral | Implementada na BF-5.6B; PR #44 |
+| ADR-025 | Fundação persistente do Arcanário | Implementada na BF-5.6A; PR #43 |
 
 | ID      | Decisão                                    | Estado                  |
 | ------- | ------------------------------------------ | ----------------------- |
