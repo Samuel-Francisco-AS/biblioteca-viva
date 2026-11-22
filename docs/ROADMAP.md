@@ -1,3 +1,7 @@
+> **ESTADO VIGENTE — 22/11/2026 (proposta documental PR #60):** BF-5.7A concluída com ressalvas; BF-5.7B encerrada com ressalvas após reconciliação e integração da PR #58/#59. O plano está sendo reestruturado de A–G para **A–H**: nova C recebe o escopo não executado B3/B4/B5; antigas C–G deslocam-se para D–H. A BF-5.7 continua aberta. A nova C e as etapas D–H ainda não foram iniciadas. [Reestruturação A–H — PR #60](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/60) · [Reconciliação BF-5.7B](BF-5_7B_RECONCILIACAO_2026-11-22.md).
+
+---
+
 > **PLANEJAMENTO MESTRE ATUALIZADO — 21/11/2026:** BF-5.7A concluída com ressalvas e integrada. BF-5.7B concluída funcionalmente no Moto G06: órbita, reentrada, Arcanário, flashcards, questões e persistência receberam aceite dirigido. Travamentos de transição/fluidez continuam dívida técnica sem métrica física nova. A [PR #58](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/58) integra a limpeza final para revisão e merge. [Plano mestre](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) · [entrega B2.5](BF-5_7B2_5_SANEAMENTO_RESIDUAL.md) · [reparos R3](BF-5_7B2_5_R3_GATE_FISICO_REPAROS.md).
 >
 > O TCG/Duelo Arcano foi retirado do produto ativo. A direção vigente do Arcanário é flashcards, questões, baralhos educativos, Provações e recursos de estudo. A família de cartas de atividade física permanece como direção futura. A Lua permanece como entrada orbital preservada para o Portal. BF-5.7C, B2.6, B3 e BF-6 não foram iniciadas nem autorizadas por esta conclusão.
