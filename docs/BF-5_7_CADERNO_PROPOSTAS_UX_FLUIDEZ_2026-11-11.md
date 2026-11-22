@@ -1,3 +1,7 @@
+> **Nota de estado — 22/11/2026:** a PR #51 foi integrada à `main`; BF-5.7A está concluída com ressalvas. As menções abaixo a PR draft, gates G3/G4 pendentes e “próxima etapa” registram o estado de 11/11 e não são atuais. As 17 propostas AG-01–AG-09 e FP-01–FP-08 permanecem um backlog de hipóteses; este caderno não autoriza execução automática. O planejamento vigente é a estrutura A–H da [Issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50).
+
+---
+
 # Biblioteca Viva — Caderno de propostas de UX, direção artística e fluidez perceptiva
 
 **Data de registro:** 11/11/2026  
@@ -183,7 +187,7 @@ Para um recorte ser autorizado, registrar:
 ## 7. Preservação de decisões e pendências
 
 - **Sem implementação automática:** este caderno não aprova nenhuma das 17 propostas, não cria tarefas de execução, não fecha a BF-5.7 e não inaugura a BF-6.
-- **Estado técnico:** `main` preservada; PR #51 segue em draft, com a última rodada G3/G4 pendente de execução local e gate físico conforme `BF-5_7A_CRYSTAL_CONTROLS.md`. Não alegar CI, desempenho medido ou correção física por este registro documental.
+- **Estado técnico (registro histórico de 11/11):** a PR #51 foi posteriormente integrada à `main`; BF-5.7A está concluída com ressalvas. Os gates e limites de CI/performance descritos neste caderno permanecem apenas como evidência histórica e não certificam métricas que não foram executadas.
 - **Núcleo preservado:** Códice Iluminado, Arena Viva, persistência/offline, capacidades do Android, navegação acessível e mecânicas atuais permanecem contratos obrigatórios.
 - **Decisões futuras:** o proprietário escolherá o recorte, prioridade e momento de execução após revisar este caderno; propostas rejeitadas ou adiadas devem manter histórico em vez de desaparecer sem registro.
 

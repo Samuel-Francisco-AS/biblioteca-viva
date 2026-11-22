@@ -1,5 +1,7 @@
 > **PLANEJAMENTO BF-5.7 — 22/11/2026:** consulte a [reestruturação A–H](BF-5_7_REESTRUTURACAO_A-H_2026-11-22.md), integrada pela [PR #60](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/60), a [Issue #50 — coordenação mestre](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) e a [reconciliação final da BF-5.7B](BF-5_7B_RECONCILIACAO_2026-11-22.md). A BF-5.7 permanece aberta; C está planejada e não iniciada, D–H não iniciadas.
 
+> **Leitura do índice:** o bloco inicial e a estrutura A–H são o estado vigente. Os snapshots e documentos de fase abaixo preservam evidências históricas; estados antigos de PR draft, gates pendentes ou próximas etapas não substituem o planejamento atual nem autorizam implementação. Consulte sempre [Issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) antes de planejar trabalho novo.
+
 ---
 
 > **REGISTRO HISTÓRICO — 21/11/2026 (superado em 22/11/2026):** BF-5.7B concluída funcionalmente e consolidada na [PR #58](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/58). A BF-5.7A permanece integrada pela PR #51 e a BF-5.6 permanece encerrada com ressalvas. O gate Moto G06 aprovou órbita, reentrada, Arcanário, flashcards, questões e persistência. Travamentos de transição e fluidez insuficiente continuam como dívida técnica conhecida, sem métricas físicas ou certificação de desempenho. Use a [issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) como planejamento mestre.

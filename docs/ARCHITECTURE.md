@@ -1,3 +1,13 @@
+# Arquitetura — estado vigente e histórico
+
+> **Estado vigente — 22/11/2026:** o produto ativo não contém o TCG/Duelo Arcano. A remoção do motor, serviços, contratos, rotas, arena e assets exclusivos foi integrada pela PR #58. A arquitetura funcional atual mantém o Arcanário educativo (flashcards, questões, baralhos, Provações e pacotes), a Lua orbital como acesso ao Arcanário e o restante da Biblioteca Viva. A camada de persistência continua em Dexie v19; o formato de backup atual é v12 educativo, que rejeita payloads TCG incompatíveis.
+>
+> **Como ler este arquivo:** as seções BF-5.6 abaixo preservam decisões e implementações históricas. Referências a `domain/duel`, `DuelService`, `combat_match`, arena de duelo ou replay TCG não descrevem arquitetura ativa. Para comportamento efetivo, prevalecem o código integrado na `main`, o modelo vigente em [DATA_MODEL.md](DATA_MODEL.md), o [índice de decisões](decisions/README.md) e o planejamento BF-5.7 em [ROADMAP.md](ROADMAP.md).
+>
+> A BF-5.7 está aberta: A concluída com ressalvas; B encerrada com ressalvas; C planejada e não iniciada; D–H não iniciadas. A organização A–H não autoriza implementação das etapas ainda não iniciadas. [Issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) · [reestruturação A–H](BF-5_7_REESTRUTURACAO_A-H_2026-11-22.md)
+
+---
+
 > **BV-UXC R5 (09/11/2026), contrato candidato:** fronteira de erro não remonta telas saudáveis; provedor do Arcanário reside por visita com escopos e gerações. Snapshot completo tem transação readonly própria, projeção de estudos agrupa vínculos/cards, e drafts separam debounce e flush de saída. Arena distingue view/layout de seleção. Sem mudança de Dexie v19/backup v11 ou motor. [ADR-031](decisions/ADR-031-desempenho-rotas-consultas.md) · [evidências/limites](audits/BV_UXC_R5_DESEMPENHO_GLOBAL_2026-11-09.md).
 
 > **F/R3 — apresentação refinada (09/11/2026):** `duelArtUrl` resolve WebP sem mudar snapshots/identidades. `arenaScenery` e `arenaEffects` são recursos pertencentes à cena efêmera; eventos confirmados dirigem efeitos finitos. `orbitalArena.update(delta,reduced)` usa o RAF residente e atualiza matrizes antes do picking/highlight; root continua pertencente ao building. Sem alteração de domínio/schema/backend. [Relatório](BF-5_6F_ARENA_VIVA_IMPLEMENTACAO.md).

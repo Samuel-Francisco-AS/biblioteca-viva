@@ -1,19 +1,18 @@
-[ADR-030 — Arena Viva: apresentação e ciclo de vida](ADR-030-arena-viva-apresentacao-lifecycle.md): implementada e integrada via PR #48 (BF-5.6F), motor E preservado e mundo residente pausado; pendências assistivas/performance em G.
-
-[ADR-029 — Duelo Arcano, regulamento e contratos v1](ADR-029-duelo-arcano-regulamento.md): implementação autorizada BF-5.6E; gate físico/merge pendentes.
-
-[ADR-028 — Pacotes educacionais e retenção histórica](ADR-028-pacotes-educacionais-retencao.md): candidata BF-5.6D, manifesto v1/Dexie v18/backup v10.
-
-**BF-5.6C candidata (08/11/2026):** [ADR-027 — Provações, taxonomia histórica e diagnóstico](ADR-027-provacao-taxonomia-diagnostico.md) complementa ADR-020/025/026. Dexie v17/backup v9; A+B+C aguardam auditoria/gate/aceite, sem merge ou início de D–G.
+> **Índice reconciliado — 22/11/2026:** ADR-027 e ADR-028 foram implementadas e integradas na BF-5.6C/D (PRs #45/#46). ADR-029 descreve o regulamento do TCG, posteriormente retirado do produto pela PR #58; seu conteúdo é histórico, não autorização para reconstruir o recurso. ADR-030 descreve a antiga arena de duelo, também retirada com o TCG. Preserve esses documentos como memória de decisões, mas não os trate como arquitetura ativa.
 
 # Decisões arquiteturais
 
-Este índice distingue as decisões vigentes das preservadas para contexto. O registro monolítico anterior está em `../history/legacy/DECISIONS_LEGACY.md`.
+Este índice distingue decisões vigentes, implementadas e retiradas. O registro monolítico anterior está em `../history/legacy/DECISIONS_LEGACY.md`.
 
-| ID      | Decisão                                    | Estado                  |
-| ------- | ------------------------------------------ | ----------------------- |
-| ADR-026 | [Oficina, mídias e troca autoral](ADR-026-arcanario-oficina-midias-troca.md) | candidata BF-5.6B; gate A+B pendente |
-| ADR-025 | [Fundação persistente do Arcanário](ADR-025-arcanario-fundacao-persistencia.md) | candidata BF-5.6A; aceite pendente |
+| ID | Decisão | Estado |
+| --- | --- | --- |
+| ADR-031 | [Desempenho, residência de rotas e consultas](ADR-031-desempenho-rotas-consultas.md) | Implementada na BV-UXC; ressalvas documentadas |
+| ADR-030 | [Arena Viva — apresentação e ciclo de vida](ADR-030-arena-viva-apresentacao-lifecycle.md) | **Retirada com o TCG; registro histórico** |
+| ADR-029 | [Duelo Arcano — regulamento e contratos v1](ADR-029-duelo-arcano-regulamento.md) | **Retirada com o TCG; registro histórico** |
+| ADR-028 | [Pacotes educacionais e retenção histórica](ADR-028-pacotes-educacionais-retencao.md) | Implementada na BF-5.6D; PR #46 |
+| ADR-027 | [Provações, taxonomia histórica e diagnóstico](ADR-027-provacao-taxonomia-diagnostico.md) | Implementada na BF-5.6C; PR #45 |
+| ADR-026 | [Oficina, mídias e troca autoral](ADR-026-arcanario-oficina-midias-troca.md) | Implementada na BF-5.6B; PR #44 |
+| ADR-025 | [Fundação persistente do Arcanário](ADR-025-arcanario-fundacao-persistencia.md) | Implementada na BF-5.6A; PR #43 |
 | ADR-001 | produto local-first e privado por padrão   | aceita                  |
 | ADR-002 | arquitetura híbrida anterior               | substituída por ADR-008 |
 | ADR-003 | mundo persistente e objetos anteriores     | substituída por ADR-008 |
@@ -38,6 +37,7 @@ Este índice distingue as decisões vigentes das preservadas para contexto. O re
 | ADR-017 | [Ficha viva e estimativa local](ADR-017-ficha-viva-e-estimativa-local.md) | implementada como candidata Parte 2C |
 | ADR-016 | [Estudo: fólio, foco persistido e cartas locais](ADR-016-estudo-folio-pomodoro-cartas.md) | implementada como candidata Parte 2B |
 | ADR-015 | BF-5R5: residência do mundo e fichas de prática | aceita no escopo R5; candidata |
+
 
 ADR-008 permanece a autoridade do WORLD RESET. [`ADR-009`](ADR-009-three-foundation.md) a complementa ao aprovar Three.js como renderer da Fundação depois da evidência técnica e física da F1; não substitui o reset.
 

@@ -1,3 +1,5 @@
+> **Estado final — 22/11/2026: RETIRADA.** O Duelo Arcano/TCG foi removido do produto ativo pela PR #58. Esta ADR permanece preservada para explicar o regulamento histórico e as decisões tomadas, mas não representa contrato de domínio, persistência, backup ou arquitetura vigente. Não recriar `domain/duel`, `DuelService`, `combat_match`, replay ou regras de combate com base neste documento. A persistência atual é Dexie v19 e backup v12 educativo; payloads TCG antigos são rejeitados. Consulte [reconciliação BF-5.7B](../BF-5_7B_RECONCILIACAO_2026-11-22.md).
+
 > **Estado atualizado — 09/11/2026:** regulamento v1 integrado à `main` via PR #47 (merge `19eb076a`) após aceite funcional inicial no Moto G06, **sem aceite final de UI/UX, arte ou balanceamento**. [Fechamento E](../BF-5_6E_FECHAMENTO_2026-11-09.md). O texto original de “candidata” abaixo é registro histórico e não descreve o estado atual; BF-5.6, F/G e redesenho transversal permanecem pendentes.
 
 # ADR-029 — Duelo Arcano, regulamento e contratos v1

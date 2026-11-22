@@ -1,3 +1,13 @@
+# Modelo de dados — estado vigente e contratos históricos
+
+> **Estado vigente — 22/11/2026:** Dexie v19 permanece como versão do banco ativo. O formato de backup atual é v12 educativo, preservando os dados do Arcanário e rejeitando explicitamente payloads TCG antigos/incompatíveis. O Duelo Arcano/TCG foi removido do produto ativo; não há tabelas/sessões de combate como contrato vigente. Não inferir downgrade, limpeza automática ou migração destrutiva. A identidade isolada `biblioteca-viva-bf57` foi estabelecida na trilha BF-5.7B; a retirada do TCG não autoriza apagar outros bancos/backups do usuário.
+>
+> **Como ler este arquivo:** as descrições das migrações Dexie v15–v18 e dos formatos de backup v7–v11 abaixo registram a evolução histórica das entregas BF-5.6. O detalhamento de `content.combat`, `deck.combat`, `combat_match` e backup v11 descreve o antigo TCG e está retirado, não devendo orientar novas gravações. Os contratos educativos que continuam no produto devem ser conferidos contra os tipos, migrações, codecs e testes presentes na `main`; este resumo não substitui inspeção do código.
+>
+> BF-5.7 permanece aberta. A–B concluídas/encerradas com ressalvas; C planejada, não iniciada; D–H não iniciadas. [Issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) · [reconciliação BF-5.7B](BF-5_7B_RECONCILIACAO_2026-11-22.md)
+
+---
+
 > **F2 — 09/11/2026:** evolução apenas de apresentação; Dexie v19, backup v11 e snapshots/replay E permanecem inalterados, sem dados espaciais ou migração. [ADR-030](decisions/ADR-030-arena-viva-apresentacao-lifecycle.md).
 
 ## BF-5.6E — Dexie v19 / backup v11 (candidata)

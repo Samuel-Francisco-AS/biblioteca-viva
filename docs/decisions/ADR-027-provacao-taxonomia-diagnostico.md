@@ -1,3 +1,5 @@
+> **Estado atualizado — 22/11/2026:** implementação da ADR-027 integrada à `main` pela PR #45 (BF-5.6C). O estado “candidata” no texto original abaixo é histórico; o contrato implementado deve ser verificado contra o código vigente. Não autoriza novas alterações nem etapas posteriores.
+
 # ADR-027 — Provações, retratos da taxonomia e diagnóstico local
 
 - Data: 08/11/2026.
