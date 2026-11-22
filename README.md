@@ -1,4 +1,4 @@
-> **PLANEJAMENTO BF-5.7 — 22/11/2026:** a BF-5.7A está concluída com ressalvas e a BF-5.7B foi encerrada com ressalvas, conforme [reconciliação](docs/BF-5_7B_RECONCILIACAO_2026-11-22.md). O planejamento geral está em revisão documental para a estrutura A–H na [PR #60](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/60). A BF-5.7 permanece aberta; a nova C e as etapas D–H não foram iniciadas.
+> **PLANEJAMENTO BF-5.7 — 22/11/2026:** a BF-5.7A está concluída com ressalvas e a BF-5.7B foi encerrada com ressalvas, conforme [reconciliação](docs/BF-5_7B_RECONCILIACAO_2026-11-22.md). A estrutura A–H foi aprovada e integrada pela [PR #60](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/60); a coordenação mestre está na [Issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50). A BF-5.7 permanece aberta; a nova C e as etapas D–H não foram iniciadas.
 
 ---
 
@@ -16,7 +16,7 @@ O baseline atual usa React, Dexie, Vite, Vitest, Playwright, Capacitor e Android
 
 ## Estado atual e próximo trabalho
 
-**BF-5.6 — O Arcanário** foi encerrada globalmente com ressalvas em 11/11/2026. A BF-5.7A (Crystal Controls) foi integrada à `main` pela PR #51 e concluída com ressalvas. A BF-5.7B foi encerrada com ressalvas por decisão expressa do proprietário; sua reconciliação documental está em [BF-5_7B_RECONCILIACAO_2026-11-22.md](docs/BF-5_7B_RECONCILIACAO_2026-11-22.md). A PR #58 integrou a retirada do TCG/Duelo Arcano e preservou os fluxos educativos do Arcanário. A organização geral A–H está em revisão documental na [PR #60](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/60); a BF-5.7 permanece aberta e C–H não foram iniciadas. Consulte o [planejamento mestre BF-5.7 — issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) e o [estado operacional](docs/STATUS.md).
+**BF-5.6 — O Arcanário** foi encerrada globalmente com ressalvas em 11/11/2026. A BF-5.7A (Crystal Controls) foi integrada à `main` pela PR #51 e concluída com ressalvas. A BF-5.7B foi encerrada com ressalvas por decisão expressa do proprietário; sua reconciliação documental está em [BF-5_7B_RECONCILIACAO_2026-11-22.md](docs/BF-5_7B_RECONCILIACAO_2026-11-22.md). A PR #58 integrou a retirada do TCG/Duelo Arcano e preservou os fluxos educativos do Arcanário. A organização geral A–H foi integrada pela [PR #60](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/60); a BF-5.7 permanece aberta, C está planejada e ainda não iniciada, e D–H não foram iniciadas. Consulte o [planejamento mestre BF-5.7 — issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) e o [estado operacional](docs/STATUS.md).
 
 ## Desenvolvimento
 
