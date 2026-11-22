@@ -1,4 +1,4 @@
-> **PLANEJAMENTO BF-5.7 — 22/11/2026:** consulte a [reestruturação A–H](BF-5_7_REESTRUTURACAO_A-H_2026-11-22.md), sua [PR #60](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/60) e a [reconciliação final da BF-5.7B](BF-5_7B_RECONCILIACAO_2026-11-22.md). A BF-5.7 permanece aberta; C–H não iniciadas. O corpo da issue #50 será sincronizado após o aceite da PR #60.
+> **PLANEJAMENTO BF-5.7 — 22/11/2026:** consulte a [reestruturação A–H](BF-5_7_REESTRUTURACAO_A-H_2026-11-22.md), integrada pela [PR #60](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/60), a [Issue #50 — coordenação mestre](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) e a [reconciliação final da BF-5.7B](BF-5_7B_RECONCILIACAO_2026-11-22.md). A BF-5.7 permanece aberta; C está planejada e não iniciada, D–H não iniciadas.
 
 ---
 
