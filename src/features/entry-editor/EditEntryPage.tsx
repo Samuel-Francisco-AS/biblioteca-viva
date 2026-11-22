@@ -140,8 +140,7 @@ export function EditEntryPage({
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
   useEffect(() => {
-    if (!application || error || entry)
-      signalPassageReady(location.pathname);
+    if (!application || error || entry) signalPassageReady(location.pathname);
   }, [application, error, entry, location.pathname]);
   useEffect(() => {
     if (!application) return;

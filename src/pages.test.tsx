@@ -11,10 +11,7 @@ import {
 } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  ApplicationError,
-  ExperiencePreferencesService,
-} from "./application";
+import { ApplicationError, ExperiencePreferencesService } from "./application";
 import type { BookEntry, LibraryEntry } from "./domain";
 import {
   createMovie,
@@ -1157,10 +1154,11 @@ it("G3 opens the Arcanarium Portal from the canonical lunar selection", async ()
     }),
   );
   expect(
-    await screen.findByRole("heading", { name: "Portal do Arcanário fictício" }),
+    await screen.findByRole("heading", {
+      name: "Portal do Arcanário fictício",
+    }),
   ).toBeInTheDocument();
 });
-
 
 it("R3 keeps one resident host and one portal navigation per activation across three route cycles", async () => {
   const application: LibraryApplication = {

@@ -42,9 +42,7 @@ test("BF-5.7A: opening a catalogue card after scrolling begins at its artwork", 
   await page
     .getByLabel("Verso da carta — resposta ou descoberta")
     .fill("Verso preservado");
-  await page
-    .getByRole("button", { name: "Guardar carta no acervo" })
-    .click();
+  await page.getByRole("button", { name: "Guardar carta no acervo" }).click();
   await expect(
     page.getByRole("link", { name: "Editar na Oficina" }),
   ).toBeVisible();

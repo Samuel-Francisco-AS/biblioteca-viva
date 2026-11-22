@@ -127,14 +127,18 @@ export function PrimaryDock({ pathname }: { readonly pathname: string }) {
                   flightOrigin.current = pathname;
                   pendingLink.current = event.currentTarget;
                   pendingLink.current.setAttribute("data-pending", "true");
-                  flight.current = schedulePressedPassage(route.path, () => {
-                    flight.current = null;
-                    flightOrigin.current = null;
-                    pendingLink.current?.removeAttribute("data-pending");
-                    pendingLink.current = null;
-                    preloadRoute(route.path);
-                    void navigate(route.path);
-                  }, event.detail > 0);
+                  flight.current = schedulePressedPassage(
+                    route.path,
+                    () => {
+                      flight.current = null;
+                      flightOrigin.current = null;
+                      pendingLink.current?.removeAttribute("data-pending");
+                      pendingLink.current = null;
+                      preloadRoute(route.path);
+                      void navigate(route.path);
+                    },
+                    event.detail > 0,
+                  );
                 }}
                 onPointerEnter={(event) => {
                   if (event.pointerType === "mouse") preloadRoute(route.path);

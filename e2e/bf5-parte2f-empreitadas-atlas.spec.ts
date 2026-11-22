@@ -26,7 +26,10 @@ test("empreitada nasce só com título, organiza etapas/tarefas, progresso, prio
   // not scattered inside the progress meter and the empty-stage card.
   const planningActions = page.locator(".work-planning .work-section-actions");
   await expect(
-    planningActions.getByRole("button", { name: "＋ Nova tarefa", exact: true }),
+    planningActions.getByRole("button", {
+      name: "＋ Nova tarefa",
+      exact: true,
+    }),
   ).toBeVisible();
   await expect(
     planningActions.getByRole("button", { name: "＋ Etapa", exact: true }),

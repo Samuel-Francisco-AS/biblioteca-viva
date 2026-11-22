@@ -1,5 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { CRYSTAL_PRESS_FALLBACK_MS, schedulePressedPassage } from "./crystalPress";
+import {
+  CRYSTAL_PRESS_FALLBACK_MS,
+  schedulePressedPassage,
+} from "./crystalPress";
 import {
   beginPassage,
   cancelPassage,

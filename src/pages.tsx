@@ -166,8 +166,9 @@ function LibraryPageContent({
   const navigate = useNavigate();
   const { showCanvasAccessButton: storedCanvasAccessButton } =
     useExperiencePreferences(application?.experience);
-  const showCanvasAccessButton =
-    application?.experience ? storedCanvasAccessButton : true;
+  const showCanvasAccessButton = application?.experience
+    ? storedCanvasAccessButton
+    : true;
   const [snapshot, setSnapshot] = useState<LibraryPageSnapshot>();
   const [selectableObjectsState, setSelectableObjectsState] =
     useState<ApplicationBound<readonly WorldSelectableObject[]>>();
@@ -234,8 +235,12 @@ function LibraryPageContent({
   useEffect(() => {
     if (
       active &&
-      (!application || error || worldStatus === "ready" || worldStatus === "failed")
-    ) signalPassageReady(location.pathname);
+      (!application ||
+        error ||
+        worldStatus === "ready" ||
+        worldStatus === "failed")
+    )
+      signalPassageReady(location.pathname);
   }, [active, application, error, worldStatus, location.pathname]);
 
   useEffect(() => {
@@ -477,7 +482,9 @@ function LibraryPageContent({
           type="button"
         >
           <span aria-hidden="true">☷</span>
-          <span>{visibleToolsOpen ? "Fechar painel" : "Acervo e habitantes"}</span>
+          <span>
+            {visibleToolsOpen ? "Fechar painel" : "Acervo e habitantes"}
+          </span>
         </button>
       )}
       <div className="library-access-panels" id="library-access-panels">

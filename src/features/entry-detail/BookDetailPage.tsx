@@ -424,9 +424,15 @@ export function BookDetailPage({
           <details className="folio-status" data-reading-state={book.status}>
             <summary>
               <span className="visually-hidden">Status da leitura: </span>
-              <span className="folio-status__gem" aria-hidden="true">✧</span>
-              <span className="folio-status__label">{statusLabels[book.status]}</span>
-              <span className="folio-status__chevron" aria-hidden="true">⌄</span>
+              <span className="folio-status__gem" aria-hidden="true">
+                ✧
+              </span>
+              <span className="folio-status__label">
+                {statusLabels[book.status]}
+              </span>
+              <span className="folio-status__chevron" aria-hidden="true">
+                ⌄
+              </span>
             </summary>
             <p>Status atual: {statusLabels[book.status]}.</p>
             <StatusActions

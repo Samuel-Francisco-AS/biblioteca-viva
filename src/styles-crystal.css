@@ -4,16 +4,17 @@
 
 /* Buttons, button-like links and native form actions share a material language.
    Full-size cards remain cards, not small pushbuttons. */
-.app-shell :is(
-  button:not(.arcana-card, .type-picker__option),
-  .button,
-  .text-button,
-  a.top-bar__back,
-  .category-ribbon a,
-  input[type="button"],
-  input[type="submit"],
-  input[type="reset"]
-),
+.app-shell
+  :is(
+    button:not(.arcana-card, .type-picker__option),
+    .button,
+    .text-button,
+    a.top-bar__back,
+    .category-ribbon a,
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"]
+  ),
 .app-shell .arcanarium button:not(.arcana-card, .type-picker__option),
 .app-shell .arcanarium .arcana-pack-volume button,
 .app-shell .arcanarium .arcana-nav a,
@@ -27,19 +28,33 @@
   position: relative;
   border-color: var(--crystal-glint);
   --crystal-surface:
-    linear-gradient(115deg, #ffffff2d 0%, #ffffff0a 17%, transparent 29% 48%, #e9cfec14 57%, transparent 68%),
+    linear-gradient(
+      115deg,
+      #ffffff2d 0%,
+      #ffffff0a 17%,
+      transparent 29% 48%,
+      #e9cfec14 57%,
+      transparent 68%
+    ),
     linear-gradient(165deg, transparent 46%, #120b2340 90%),
-    repeating-linear-gradient(127deg, transparent 0 11px, var(--crystal-facet) 12px, transparent 13px 29px),
-    linear-gradient(150deg, var(--crystal-top), var(--crystal-mid) 48%, var(--crystal-base) 100%);
+    repeating-linear-gradient(
+      127deg,
+      transparent 0 11px,
+      var(--crystal-facet) 12px,
+      transparent 13px 29px
+    ),
+    linear-gradient(
+      150deg,
+      var(--crystal-top),
+      var(--crystal-mid) 48%,
+      var(--crystal-base) 100%
+    );
   background: var(--crystal-surface);
   color: #f9eadc;
   --crystal-shadow:
-    inset 0 1px 0 #fff5e37a,
-    inset 1px 0 0 #f7dbe12f,
-    inset -2px -3px 5px #100b2052,
-    inset 0 0 0 1px #e5c4da20,
-    0 3px 0 var(--crystal-ledge),
-    0 6px 9px #0a07132b;
+    inset 0 1px 0 #fff5e37a, inset 1px 0 0 #f7dbe12f,
+    inset -2px -3px 5px #100b2052, inset 0 0 0 1px #e5c4da20,
+    0 3px 0 var(--crystal-ledge), 0 6px 9px #0a07132b;
   box-shadow: var(--crystal-shadow);
   text-shadow: 0 1px 0 #130b2359;
   cursor: pointer;
@@ -179,7 +194,12 @@
 .app-shell .primary-dock__medallion {
   background:
     radial-gradient(circle at 29% 19%, #fff4f433, transparent 43%),
-    repeating-linear-gradient(133deg, #f9eaff00 0 10px, #c9b5e016 11px, transparent 12px 22px),
+    repeating-linear-gradient(
+      133deg,
+      #f9eaff00 0 10px,
+      #c9b5e016 11px,
+      transparent 12px 22px
+    ),
     linear-gradient(145deg, #5d415f, #342640 50%, #181728 100%);
   border-color: #c3a5b4;
   box-shadow:
@@ -197,7 +217,12 @@
     radial-gradient(circle at 29% 17%, #fff7dc5a, transparent 48%),
     linear-gradient(145deg, #795773, #3b293f 65%, #201828);
 }
-.app-shell .primary-dock__link:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"])
+.app-shell
+  .primary-dock__link:is(
+    :active,
+    [data-tap-active="true"],
+    [data-crystal-pressed="true"]
+  )
   .primary-dock__medallion {
   transform: translate3d(0, 3px, 0) scale(0.97);
   box-shadow:
@@ -205,7 +230,12 @@
     inset 0 0 0 2px #e0c7c080,
     0 1px 0 #0d0a1b;
 }
-.app-shell .primary-dock__link:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]) {
+.app-shell
+  .primary-dock__link:is(
+    :active,
+    [data-tap-active="true"],
+    [data-crystal-pressed="true"]
+  ) {
   color: #fff0dc;
   /* The crystal moves in its socket; the dock frame and caption stay put.
      Old velvet/brightness pressed treatments must not run in parallel. */
@@ -214,24 +244,32 @@
   filter: none;
   transition: color 64ms ease-out;
 }
-.app-shell .primary-dock__link[aria-current="page"]:is(
-  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
-) {
+.app-shell
+  .primary-dock__link[aria-current="page"]:is(
+    :active,
+    [data-tap-active="true"],
+    [data-crystal-pressed="true"]
+  ) {
   background: linear-gradient(180deg, #99718a3d, #39293a90 70%);
 }
 
 /* Inherited active rules from the old atelier added brightness/background
    changes on top of the crystal depression. Keep the facets steady while
    fingers press — especially on actions that re-render a whole card. */
-.app-shell .category-ribbon :is(button, a):is(
-  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
-),
-.app-shell .rpg-choices button:is(
-  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
-),
-.app-shell .library-page .rpg-tools button:is(
-  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
-) {
+.app-shell
+  .category-ribbon
+  :is(button, a):is(
+    :active,
+    [data-tap-active="true"],
+    [data-crystal-pressed="true"]
+  ),
+.app-shell
+  .rpg-choices
+  button:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]),
+.app-shell
+  .library-page
+  .rpg-tools
+  button:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]) {
   background: var(--crystal-surface);
   filter: none;
 }
@@ -246,42 +284,55 @@
     0 5px 7px #190f2033;
   transition: transform 64ms ease-out;
 }
-.app-shell .type-picker__option:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"])
+.app-shell
+  .type-picker__option:is(
+    :active,
+    [data-tap-active="true"],
+    [data-crystal-pressed="true"]
+  )
   .type-picker__sigil {
   transform: translateY(2px);
-  box-shadow: inset 0 3px 7px #1e1228a0, 0 1px 0 #392638;
+  box-shadow:
+    inset 0 3px 7px #1e1228a0,
+    0 1px 0 #392638;
 }
 
 /* Ordinary controls get a brief echo; +/- follows the real finger only.
    Route curtain begins after an actual painted pressed frame, not a 120ms pause. */
-.app-shell :is(
-  button:not(.arcana-card, .type-picker__option),
-  .button,
-  .text-button,
-  a.top-bar__back,
-  .category-ribbon a,
-  input[type="button"],
-  input[type="submit"],
-  input[type="reset"]
-):not(:disabled):not([aria-disabled="true"]):is(
-  :active,
-  [data-tap-active="true"],
-  [data-crystal-pressed="true"]
-),
-.app-shell .arcanarium .arcana-nav a:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]),
-.bv-picker-sheet button:not(:disabled):is(:active, [data-crystal-pressed="true"]) {
+.app-shell
+  :is(
+    button:not(.arcana-card, .type-picker__option),
+    .button,
+    .text-button,
+    a.top-bar__back,
+    .category-ribbon a,
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"]
+  ):not(:disabled):not([aria-disabled="true"]):is(
+    :active,
+    [data-tap-active="true"],
+    [data-crystal-pressed="true"]
+  ),
+.app-shell
+  .arcanarium
+  .arcana-nav
+  a:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]),
+.bv-picker-sheet
+  button:not(:disabled):is(:active, [data-crystal-pressed="true"]) {
   transform: translate3d(0, 2px, 0) scale(0.988);
   background: var(--crystal-surface);
   border-color: var(--crystal-glint);
   box-shadow: var(--crystal-shadow);
   filter: none;
 }
-.app-shell :is(
-  button:not(.arcana-card, .type-picker__option),
-  .button,
-  .text-button,
-  .category-ribbon a
-):disabled,
+.app-shell
+  :is(
+    button:not(.arcana-card, .type-picker__option),
+    .button,
+    .text-button,
+    .category-ribbon a
+  ):disabled,
 .app-shell :is(button, .button)[aria-disabled="true"] {
   opacity: 0.55;
   cursor: not-allowed;
@@ -300,22 +351,31 @@
   --crystal-ledge: #2b1b32;
   --crystal-glint: #bba391;
   --crystal-step-shadow:
-    inset 0 1px 1px #ffffffb0,
-    inset 0 -3px 4px #60475b38,
-    0 3px 0 var(--crystal-ledge),
-    0 4px 5px #1a10253d;
+    inset 0 1px 1px #ffffffb0, inset 0 -3px 4px #60475b38,
+    0 3px 0 var(--crystal-ledge), 0 4px 5px #1a10253d;
   background:
     radial-gradient(circle at 26% 16%, #fff9eea8, transparent 49%),
-    repeating-linear-gradient(128deg, transparent 0 12px, #9b7a751a 13px, transparent 14px 24px),
-    linear-gradient(155deg, var(--crystal-top), var(--crystal-mid) 53%, var(--crystal-base));
+    repeating-linear-gradient(
+      128deg,
+      transparent 0 12px,
+      #9b7a751a 13px,
+      transparent 14px 24px
+    ),
+    linear-gradient(
+      155deg,
+      var(--crystal-top),
+      var(--crystal-mid) 53%,
+      var(--crystal-base)
+    );
   color: #663758;
   border-color: var(--crystal-glint);
   box-shadow: var(--crystal-step-shadow);
   transition: transform 48ms ease-out;
 }
-.app-shell .book-folio .folio-page-stepper button.folio-step:not(:disabled):is(
-  :active, [data-tap-active="true"]
-) {
+.app-shell
+  .book-folio
+  .folio-page-stepper
+  button.folio-step:not(:disabled):is(:active, [data-tap-active="true"]) {
   transform: translate3d(0, 2px, 0) scale(0.984);
   box-shadow: var(--crystal-step-shadow);
   border-color: var(--crystal-glint);
@@ -329,28 +389,33 @@
 }
 
 /* A selected state is not substituted for focus; retain the strong mint ring. */
-.app-shell :is(button, a.button, .text-button, .category-ribbon a):focus-visible,
+.app-shell
+  :is(button, a.button, .text-button, .category-ribbon a):focus-visible,
 .app-shell .primary-dock__link:focus-visible {
   outline: 3px solid #a7eee2;
   outline-offset: 3px;
 }
 
 /* Contrast and reduced motion are preferences, not a reason to lose feedback. */
-.app-shell[data-high-contrast="true"] :is(
-  button:not(.arcana-card, .type-picker__option),
-  .button,
-  .text-button,
-  .category-ribbon a
-) {
+.app-shell[data-high-contrast="true"]
+  :is(
+    button:not(.arcana-card, .type-picker__option),
+    .button,
+    .text-button,
+    .category-ribbon a
+  ) {
   background: #101010;
   color: #fff;
   border: 2px solid #fff;
   box-shadow: 0 2px 0 #fff;
   text-shadow: none;
 }
-.app-shell[data-high-contrast="true"] :is(button, .button):is(
-  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
-) {
+.app-shell[data-high-contrast="true"]
+  :is(button, .button):is(
+    :active,
+    [data-tap-active="true"],
+    [data-crystal-pressed="true"]
+  ) {
   border-color: #ffdf74;
   box-shadow: inset 0 0 0 2px #ffdf74;
 }
@@ -358,33 +423,78 @@
   .app-shell .book-folio .folio-page-stepper button.folio-step {
     transition: none;
   }
-  .app-shell :is(button, .button, .text-button, .category-ribbon a, .primary-dock__link, .primary-dock__medallion, .type-picker__sigil),
+  .app-shell
+    :is(
+      button,
+      .button,
+      .text-button,
+      .category-ribbon a,
+      .primary-dock__link,
+      .primary-dock__medallion,
+      .type-picker__sigil
+    ),
   .bv-picker-sheet button {
-
     transition: none;
   }
-  .app-shell :is(button, .button, .text-button, .category-ribbon a, .primary-dock__link):is(
-    :active, [data-tap-active="true"], [data-crystal-pressed="true"]
-  ),
-  .app-shell .primary-dock__link:is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]) .primary-dock__medallion,
-  .app-shell .book-folio .folio-page-stepper button.folio-step:is(:active, [data-tap-active="true"]) {
+  .app-shell
+    :is(
+      button,
+      .button,
+      .text-button,
+      .category-ribbon a,
+      .primary-dock__link
+    ):is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]),
+  .app-shell
+    .primary-dock__link:is(
+      :active,
+      [data-tap-active="true"],
+      [data-crystal-pressed="true"]
+    )
+    .primary-dock__medallion,
+  .app-shell
+    .book-folio
+    .folio-page-stepper
+    button.folio-step:is(:active, [data-tap-active="true"]) {
     transform: none;
   }
 }
-.app-shell[data-reduced-motion="true"] :is(button, .button, .text-button, .category-ribbon a, .primary-dock__link, .primary-dock__medallion, .type-picker__sigil),
-.app-shell[data-reduced-motion="true"] .book-folio .folio-page-stepper button.folio-step {
+.app-shell[data-reduced-motion="true"]
+  :is(
+    button,
+    .button,
+    .text-button,
+    .category-ribbon a,
+    .primary-dock__link,
+    .primary-dock__medallion,
+    .type-picker__sigil
+  ),
+.app-shell[data-reduced-motion="true"]
+  .book-folio
+  .folio-page-stepper
+  button.folio-step {
   transition: none;
 }
-.app-shell[data-reduced-motion="true"] :is(button, .button, .text-button, .category-ribbon a, .primary-dock__link):is(
-  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
-),
-.app-shell[data-reduced-motion="true"] .primary-dock__link:is(
-  :active, [data-tap-active="true"], [data-crystal-pressed="true"]
-) .primary-dock__medallion,
-.app-shell[data-reduced-motion="true"] .book-folio .folio-page-stepper button.folio-step:is(:active, [data-tap-active="true"]) {
+.app-shell[data-reduced-motion="true"]
+  :is(
+    button,
+    .button,
+    .text-button,
+    .category-ribbon a,
+    .primary-dock__link
+  ):is(:active, [data-tap-active="true"], [data-crystal-pressed="true"]),
+.app-shell[data-reduced-motion="true"]
+  .primary-dock__link:is(
+    :active,
+    [data-tap-active="true"],
+    [data-crystal-pressed="true"]
+  )
+  .primary-dock__medallion,
+.app-shell[data-reduced-motion="true"]
+  .book-folio
+  .folio-page-stepper
+  button.folio-step:is(:active, [data-tap-active="true"]) {
   transform: none;
 }
-
 
 /* BF-5.7A/C1-C3 — Collection-only frontispiece and compact arcane access.
    The WebView may paint beneath Android's status bar; safe inset + a modest
@@ -443,7 +553,9 @@
   background: radial-gradient(circle at 32% 24%, #d9b9d344, #35263f 72%);
   box-shadow: inset 0 1px 0 #ffe7db5c;
   color: #f3cda8;
-  font: 1.05rem/1 Georgia, serif;
+  font:
+    1.05rem/1 Georgia,
+    serif;
 }
 .app-shell[data-route="colecao"] .collection-arcana-link__label {
   min-width: 0;
@@ -517,7 +629,9 @@
   position: absolute;
   right: 0.16rem;
   bottom: 0.12rem;
-  font: 700 0.58rem/1.05 system-ui, sans-serif;
+  font:
+    700 0.58rem/1.05 system-ui,
+    sans-serif;
   color: #ffe2af;
   text-shadow: 0 1px 3px #110d25;
   letter-spacing: 0;

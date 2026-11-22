@@ -704,7 +704,13 @@
   margin-bottom: 0.2rem;
 }
 @media (max-width: 620px) {
-  .study-identity { gap: 0.6rem; }
-  .study-edit { margin-top: 0; }
-  .study-focus { gap: 0.7rem; }
+  .study-identity {
+    gap: 0.6rem;
+  }
+  .study-edit {
+    margin-top: 0;
+  }
+  .study-focus {
+    gap: 0.7rem;
+  }
 }
