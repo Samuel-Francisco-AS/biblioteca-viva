@@ -1,4 +1,4 @@
-> **ESTADO VIGENTE — 22/11/2026 (proposta documental PR #60):** BF-5.7A concluída com ressalvas; BF-5.7B encerrada com ressalvas após reconciliação e integração da PR #58/#59. O plano está sendo reestruturado de A–G para **A–H**: nova C recebe o escopo não executado B3/B4/B5; antigas C–G deslocam-se para D–H. A BF-5.7 continua aberta. A nova C e as etapas D–H ainda não foram iniciadas. [Reestruturação A–H — PR #60](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/60) · [Reconciliação BF-5.7B](BF-5_7B_RECONCILIACAO_2026-11-22.md).
+> **ESTADO VIGENTE — 22/11/2026 (estrutura A–H integrada pela PR #60):** BF-5.7A concluída com ressalvas; BF-5.7B encerrada com ressalvas após reconciliação e integração da PR #58/#59. A estrutura **A–H** foi aprovada e integrada: nova C recebe o escopo não executado B3/B4/B5; antigas C–G deslocam-se para D–H. A BF-5.7 continua aberta. A nova C está planejada, mas ainda não foi iniciada; D–H não foram iniciadas. [Reestruturação A–H — PR #60](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/60) · [Reconciliação BF-5.7B](BF-5_7B_RECONCILIACAO_2026-11-22.md).
 
 ---
 
