@@ -1,3 +1,5 @@
+> **Estado final — 22/11/2026: RETIRADA COM O TCG.** A Arena Viva descrita nesta ADR era a apresentação do antigo Duelo Arcano. A PR #58 removeu arena, rota e assets exclusivos do combate; portanto, este documento é histórico e não descreve uma arena ativa nem autoriza sua reconstrução. A Lua orbital preservada continua sendo o acesso ao Arcanário educativo, não uma arena de duelo.
+
 > **Estado atualizado — 09/11/2026:** decisão ADR-030 implementada/integrada na `main` após aceite físico/artístico dirigido do proprietário e merge da PR #48 (`690be5b5798d34e6436610bf9d209ede38629fd7`). [Fechamento F e ressalvas](../BF-5_6F_FECHAMENTO_2026-11-09.md). O estado original “candidata draft, sem aceite/merge” abaixo é histórico da primeira redação. E2E orbital e testes gráficos/CI/TalkBack/termal ainda têm dívidas; BF-5.6 global aguardando G.
 
 # ADR-030 — Arena Viva: apresentação e ciclo de vida
