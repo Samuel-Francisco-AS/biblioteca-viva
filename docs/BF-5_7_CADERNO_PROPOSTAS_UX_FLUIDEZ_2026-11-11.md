@@ -1,3 +1,7 @@
+> **Nota de estado — 22/11/2026:** a PR #51 foi integrada à `main`; BF-5.7A está concluída com ressalvas. As menções abaixo a PR draft, gates G3/G4 pendentes e “próxima etapa” registram o estado de 11/11 e não são atuais. As 17 propostas AG-01–AG-09 e FP-01–FP-08 permanecem um backlog de hipóteses; este caderno não autoriza execução automática. O planejamento vigente é a estrutura A–H da [Issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50).
+
+---
+
 # Biblioteca Viva — Caderno de propostas de UX, direção artística e fluidez perceptiva
 
 **Data de registro:** 11/11/2026  
