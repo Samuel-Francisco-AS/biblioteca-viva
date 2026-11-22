@@ -169,4 +169,4 @@ Esta PR é documental:
 - não autoriza BF-6;
 - não apaga histórico das etapas anteriores.
 
-A issue #50 permanece a coordenação mestre. A proposta de atualização de seu corpo e dos estados A–H acompanha esta PR para revisão; o corpo da issue deverá ser sincronizado após o aceite/merge da reestruturação.
+A issue #50 permanece a coordenação mestre. Após a integração desta reestruturação, seu corpo foi sincronizado para refletir a decomposição A–H, os estados reconciliados e os limites de autorização. Esta entrega documental não inicia implementação.
