@@ -1511,7 +1511,9 @@
   width: 100%;
   padding: 0 0 0.4rem;
   margin: 0;
-  font: 600 0.94rem/1.4 Georgia, serif;
+  font:
+    600 0.94rem/1.4 Georgia,
+    serif;
   color: #e7cda2;
 }
 .arcanarium .arcana-choices--compact .arcana-choice {
@@ -1528,7 +1530,9 @@
   background:
     linear-gradient(124deg, #eee0ee16, transparent 42%),
     linear-gradient(155deg, #453452, #251d37 75%);
-  box-shadow: inset 0 1px #f8e7e71b, 0 2px 0 #120c21;
+  box-shadow:
+    inset 0 1px #f8e7e71b,
+    0 2px 0 #120c21;
   font-size: 0.85rem;
   line-height: 1.25;
   color: #f7ebf4;
@@ -1540,6 +1544,14 @@
   flex: 0 0 auto;
   width: 1rem;
   height: 1rem;
+  /* Legacy generic inputs impose a 48px minimum and an inset text-field
+     shadow on native radios. Keep their paint box square; the label owns
+     the 44px touch target. Do not promote every control to a GPU layer. */
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
   margin: 0;
   accent-color: #e0ba80;
 }
@@ -1551,7 +1563,9 @@
   background:
     linear-gradient(124deg, #f3d6fc2a, transparent 50%),
     linear-gradient(150deg, #705187, #443356);
-  box-shadow: inset 0 0 0 1px #f2d5a975, 0 2px 0 #221327;
+  box-shadow:
+    inset 0 0 0 1px #f2d5a975,
+    0 2px 0 #221327;
   color: #fff1d8;
 }
 /* Another group made of small navigation choices: the Workshop's card types.

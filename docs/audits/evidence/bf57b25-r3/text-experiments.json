@@ -1,0 +1,209 @@
+[
+  {
+    "name": "original",
+    "canvasCount": 0,
+    "labels": [
+      {
+        "text": "Nome da classificação",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Área",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Disciplina",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Assunto",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Subassunto",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Habilidade",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Etiqueta pessoal",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Sinônimos (separados por ponto e vírgula)",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      }
+    ],
+    "header": {
+      "top": -477,
+      "paddingTop": "8px",
+      "height": 65.140625
+    },
+    "viewport": {
+      "height": 844,
+      "visualHeight": 844,
+      "scrollY": 477
+    }
+  },
+  {
+    "name": "opaque-no-ornaments",
+    "canvasCount": 0,
+    "labels": [
+      {
+        "text": "Nome da classificação",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Área",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Disciplina",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Assunto",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Subassunto",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Habilidade",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Etiqueta pessoal",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Sinônimos (separados por ponto e vírgula)",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      }
+    ],
+    "header": {
+      "top": -477,
+      "paddingTop": "8px",
+      "height": 65.140625
+    },
+    "viewport": {
+      "height": 844,
+      "visualHeight": 844,
+      "scrollY": 477
+    }
+  },
+  {
+    "name": "flat-no-shadows",
+    "canvasCount": 0,
+    "labels": [
+      {
+        "text": "Nome da classificação",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Área",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Disciplina",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Assunto",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Subassunto",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Habilidade",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Etiqueta pessoal",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      },
+      {
+        "text": "Sinônimos (separados por ponto e vírgula)",
+        "transform": "none",
+        "filter": "none",
+        "shadow": "none"
+      }
+    ],
+    "header": {
+      "top": -477,
+      "paddingTop": "8px",
+      "height": 65.140625
+    },
+    "viewport": {
+      "height": 844,
+      "visualHeight": 844,
+      "scrollY": 477
+    }
+  },
+  {
+    "name": "resident-paused-settled",
+    "header": {
+      "top": 0,
+      "paddingTop": "8px",
+      "height": 65.140625
+    },
+    "canvases": [
+      {
+        "state": "paused",
+        "loops": "0",
+        "visible": false
+      }
+    ]
+  }
+]

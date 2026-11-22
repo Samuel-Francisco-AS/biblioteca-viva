@@ -208,7 +208,6 @@ async function openDisclosure(
 }
 
 describe("detalhe do livro", () => {
-
   it("L1–L9 dá destaque à identidade e agrupa os controles sem texto redundante", async () => {
     const user = userEvent.setup();
     const { facade } = application();
@@ -223,7 +222,9 @@ describe("detalhe do livro", () => {
       "10 por cento concluído",
     );
     expect(
-      header?.querySelector(".folio-interactions .folio-rating-panel .star-rating"),
+      header?.querySelector(
+        ".folio-interactions .folio-rating-panel .star-rating",
+      ),
     ).not.toBeNull();
     expect(
       header?.querySelector(".folio-interactions .folio-status__label"),
@@ -234,11 +235,15 @@ describe("detalhe do livro", () => {
 
     await openDisclosure(user, "Adicionar nota");
     expect(screen.queryByText("Use texto simples.")).not.toBeInTheDocument();
-    expect(screen.queryByText("O livro tem 200 páginas.")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("O livro tem 200 páginas."),
+    ).not.toBeInTheDocument();
     expect(screen.getByLabelText("Nota (obrigatório)")).not.toHaveAttribute(
       "aria-describedby",
     );
-    expect(screen.getByLabelText("Página da nota (opcional)")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Página da nota (opcional)"),
+    ).toBeInTheDocument();
 
     await openDisclosure(user, "Adicionar citação");
     expect(screen.getByLabelText("Citação (obrigatório)")).toBeInTheDocument();

@@ -1,0 +1,34 @@
+[
+  {
+    "fps": 60,
+    "wallSeconds": 12,
+    "oldConsumedSeconds": 12.0,
+    "newConsumedSeconds": 12.0,
+    "oldRadians": 0.17951958020513104,
+    "newRadians": 0.17951958020513104
+  },
+  {
+    "fps": 30,
+    "wallSeconds": 12,
+    "oldConsumedSeconds": 12.0,
+    "newConsumedSeconds": 12.0,
+    "oldRadians": 0.17951958020513104,
+    "newRadians": 0.17951958020513104
+  },
+  {
+    "fps": 20,
+    "wallSeconds": 12,
+    "oldConsumedSeconds": 12.0,
+    "newConsumedSeconds": 12.0,
+    "oldRadians": 0.17951958020513104,
+    "newRadians": 0.17951958020513104
+  },
+  {
+    "fps": 10,
+    "wallSeconds": 12,
+    "oldConsumedSeconds": 6.0,
+    "newConsumedSeconds": 12.0,
+    "oldRadians": 0.08975979010256552,
+    "newRadians": 0.17951958020513104
+  }
+]

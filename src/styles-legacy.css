@@ -722,7 +722,8 @@ button:not(.primary-dock__link),
   background: #233044;
   padding: 0.7rem;
 }
-.library-page[data-tools-open="true"][data-quest-panel-open="true"] .library-access-panels {
+.library-page[data-tools-open="true"][data-quest-panel-open="true"]
+  .library-access-panels {
   position: static;
   border: 0;
   padding: 0;

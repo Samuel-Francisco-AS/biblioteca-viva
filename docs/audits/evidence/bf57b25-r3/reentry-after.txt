@@ -1,0 +1,11 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:run
+npm notice run vitest run src/features/library/three/ThreeWorldRuntime.d1.test.ts --maxWorkers=1
+
+ RUN  v4.1.12 /home/sam/Projetos/biblioteca-viva
+
+
+ Test Files  1 passed (1)
+      Tests  17 passed (17)
+   Start at  22:52:34
+   Duration  8.27s (transform 1.05s, setup 172ms, import 1.41s, tests 5.73s, environment 793ms)
+

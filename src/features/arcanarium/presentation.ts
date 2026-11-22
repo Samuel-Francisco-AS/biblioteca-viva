@@ -11,15 +11,12 @@ export function cardTitle(c: CardContent) {
       return c.title;
     case "question":
       return c.title ?? c.statement;
-    case "combat":
-      return c.name;
   }
 }
 export const familyLabels = {
   flashcard: "Eco",
   memory: "Lembrança",
   question: "Questão",
-  combat: "Combate",
 };
 
 export const levelNames = {

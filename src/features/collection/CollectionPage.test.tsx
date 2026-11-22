@@ -79,9 +79,11 @@ describe("Coleção", () => {
     expect(
       await screen.findByText("Seu primeiro registro começa aqui"),
     ).toBeVisible();
-    expect(screen.getByRole("link", {
-      name: /Cartas, Ecos e Relicário.*Arcanário/,
-    })).toHaveClass("collection-arcana-link");
+    expect(
+      screen.getByRole("link", {
+        name: /Cartas, Ecos e Relicário.*Arcanário/,
+      }),
+    ).toHaveClass("collection-arcana-link");
     expect(
       screen.getByRole("link", { name: "Criar primeiro registro" }),
     ).toHaveAttribute("href", "/novo-registro");

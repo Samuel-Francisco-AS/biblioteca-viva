@@ -1,3 +1,30 @@
+## BF-5.7B2.5-R3 — candidata pós-gate físico
+
+- Seleção lunar transitória é limpa ao pausar o mundo residente, permitindo reentrada pelo portal sem toque vazio; outras seleções permanecem.
+- Intenção lunar continua protegida até a saída efetiva da rota, evitando navegações duplicadas.
+- Regressões cobrem três ciclos Canvas/controle acessível. Glifos Android e fluidez física continuam pendentes de nova avaliação.
+
+## BF-5.7B2.5 — candidata 12/11/2026
+
+- Corrige referências residuais à sala de duelo em comentário e fixture genérica de transição; proteções de dados/rotas históricas e lua preservadas.
+- Reforça regressão de gravação educativa em navegação offline e persistência na reabertura, sem novas funcionalidades ou limpeza do banco antigo.
+- Testes de Ecos aguardam a navegação antes do reload; o cenário web offline de pacotes passa a carregar a gestão no documento atual antes de desconectar.
+
+## BF-5.7B2.4-R2 — candidata 12/11/2026
+
+- Lua orbital passa a consumir tempo ativo sem desacelerar artificialmente abaixo de 20 FPS; habitantes mantêm o passo limitado e a retomada exclui a ausência do mundo.
+- Radios de Choices deixam de herdar altura mínima e sombra de campo de texto; estilo dos labels, seleção e foco preservados. Confirmação dos artefatos gráficos no Moto G06 pendente.
+
+## 12/11/2026 — BF-5.7B2.4: remoção estrutural do TCG
+
+- Removidos motor, IA, serviço, contratos, arena, editores, replays, testes,
+  scripts e assets exclusivos do Duelo Arcano.
+- Preservados Arcanário educativo, funcionamento offline, Dexie v19, a base
+  `biblioteca-viva-bf57` e a lua orbital como portal para `/arcanario`.
+- Backup atual promovido para v12, com rejeição explícita de payloads TCG
+  antigos; validações de checksum, integridade e restauração educativa foram
+  mantidas. [Relatório](docs/BF-5_7B2_4_REMOCAO_ESTRUTURAL_TCG.md)
+
 ## 11/11/2026 — BF-5.6 O Arcanário: encerramento global com ressalvas
 
 - **Aceite explícito do proprietário** após a auditoria BF-5.6G: **A–G formalmente encerradas com ressalvas**. [Fechamento global](docs/BF-5_6_FECHAMENTO_GLOBAL_2026-11-11.md) e [matriz da G](docs/audits/evidence/bf56g/inventory.json).

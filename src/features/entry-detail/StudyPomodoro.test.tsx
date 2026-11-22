@@ -30,10 +30,16 @@ it("removes the redundant focus instruction while keeping duration and start wor
       />
     </MemoryRouter>,
   );
-  expect(screen.getByRole("heading", { name: "Acenda seu foco" })).toBeVisible();
+  expect(
+    screen.getByRole("heading", { name: "Acenda seu foco" }),
+  ).toBeVisible();
   expect(screen.getByLabelText("Duração do foco")).toBeInTheDocument();
-  expect(screen.getByRole("timer", { name: "Tempo restante" })).toHaveTextContent("25:00");
-  expect(screen.queryByText(/Pode apagar a tela ou sair do app/)).not.toBeInTheDocument();
+  expect(
+    screen.getByRole("timer", { name: "Tempo restante" }),
+  ).toHaveTextContent("25:00");
+  expect(
+    screen.queryByText(/Pode apagar a tela ou sair do app/),
+  ).not.toBeInTheDocument();
   expect(view.container.querySelector(".study-hint")).toBeNull();
   fireEvent.click(screen.getByRole("button", { name: "Iniciar foco" }));
   expect(act).toHaveBeenCalledOnce();

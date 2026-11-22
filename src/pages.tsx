@@ -166,8 +166,9 @@ function LibraryPageContent({
   const navigate = useNavigate();
   const { showCanvasAccessButton: storedCanvasAccessButton } =
     useExperiencePreferences(application?.experience);
-  const showCanvasAccessButton =
-    application?.experience ? storedCanvasAccessButton : true;
+  const showCanvasAccessButton = application?.experience
+    ? storedCanvasAccessButton
+    : true;
   const [snapshot, setSnapshot] = useState<LibraryPageSnapshot>();
   const [selectableObjectsState, setSelectableObjectsState] =
     useState<ApplicationBound<readonly WorldSelectableObject[]>>();
@@ -234,8 +235,12 @@ function LibraryPageContent({
   useEffect(() => {
     if (
       active &&
-      (!application || error || worldStatus === "ready" || worldStatus === "failed")
-    ) signalPassageReady(location.pathname);
+      (!application ||
+        error ||
+        worldStatus === "ready" ||
+        worldStatus === "failed")
+    )
+      signalPassageReady(location.pathname);
   }, [active, application, error, worldStatus, location.pathname]);
 
   useEffect(() => {
@@ -258,11 +263,12 @@ function LibraryPageContent({
   function handleWorldSelection(nextSelection: WorldSelection): void {
     if (!application) return;
     if (nextSelection?.id === "portal:duelo-arcano") {
-      if (portalFlight.current) return;
-      // The lunar gate enters the Arcanarium Portal; duel is a room within it.
+      if (!active || portalFlight.current) return;
+      // The lunar gate enters the educational Arcanarium Portal.
       beginPassage("/arcanario");
       portalFlight.current = schedulePassage(() => {
-        portalFlight.current = null;
+        // Hold the intent until active=false commits the route departure.
+        // Late duplicate selection callbacks must not schedule a second push.
         void navigate("/arcanario");
       });
       return;
@@ -476,7 +482,9 @@ function LibraryPageContent({
           type="button"
         >
           <span aria-hidden="true">☷</span>
-          <span>{visibleToolsOpen ? "Fechar painel" : "Acervo e habitantes"}</span>
+          <span>
+            {visibleToolsOpen ? "Fechar painel" : "Acervo e habitantes"}
+          </span>
         </button>
       )}
       <div className="library-access-panels" id="library-access-panels">
@@ -662,9 +670,6 @@ function LibraryPageContent({
           </>
         )}
         <div className="placeholder-actions">
-          <Link className="button button--secondary" to="/arcanario/duelos">
-            ◈ Arena orbital · Duelo Arcano
-          </Link>
           <Link className="button button--secondary" to="/arcanario">
             ✧ Abrir o Arcanário
           </Link>

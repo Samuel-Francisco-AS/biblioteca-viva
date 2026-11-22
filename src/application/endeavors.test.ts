@@ -316,7 +316,7 @@ it("upgrades v13 verbatim, preserves old sessions/notes/profile, round-trips new
     data: await store.read(),
   });
   const restored = await codec.inspect(backup.content);
-  expect(restored.summary.formatVersion).toBe(11);
+  expect(restored.summary.formatVersion).toBe(12);
   await store.replace(restored.data);
   db.close();
   await db.open();

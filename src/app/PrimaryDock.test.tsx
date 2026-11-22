@@ -1,7 +1,16 @@
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { afterEach, expect, it, vi } from "vitest";
-import { cancelPassage, completePassageDeparture } from "./interactionContinuity";
+import {
+  cancelPassage,
+  completePassageDeparture,
+} from "./interactionContinuity";
 import { PrimaryDock } from "./PrimaryDock";
 import { preloadRoute } from "./routeModules";
 vi.mock("./routeModules", () => ({ preloadRoute: vi.fn() }));

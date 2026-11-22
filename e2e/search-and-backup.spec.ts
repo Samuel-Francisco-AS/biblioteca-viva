@@ -11,7 +11,7 @@ async function entryTitlesInTestDatabase(page: Page): Promise<string[]> {
   return page.evaluate(
     () =>
       new Promise<string[]>((resolve, reject) => {
-        const request = indexedDB.open("biblioteca-viva");
+        const request = indexedDB.open("biblioteca-viva-bf57");
         request.onerror = () =>
           reject(request.error ?? new Error("Falha ao abrir IndexedDB."));
         request.onsuccess = () => {

@@ -11,7 +11,7 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import {
   createApplication,
   type ApplicationRuntime,
@@ -32,9 +32,13 @@ async function app() {
   apps.push(a);
   return a;
 }
+function RoutePathProbe() {
+  return <output data-testid="current-route">{useLocation().pathname}</output>;
+}
 function mount(a: ApplicationRuntime, path = "/arcanario") {
   return render(
     <MemoryRouter initialEntries={[path]}>
+      <RoutePathProbe />
       <Routes>
         <Route
           path="/arcanario/*"
@@ -62,7 +66,9 @@ it("paginates Acervo at 12 flat previews instead of rendering 24 complex cards a
   }
   const view = mount(a, "/arcanario/acervo");
   await screen.findByText("13 cartas encontradas");
-  expect(view.container.querySelectorAll(".arcana-grid .arcana-card-link")).toHaveLength(12);
+  expect(
+    view.container.querySelectorAll(".arcana-grid .arcana-card-link"),
+  ).toHaveLength(12);
   expect(
     screen.getByRole("navigation", { name: "Páginas do Acervo" }),
   ).toHaveTextContent("Página 1 de 2");
@@ -70,8 +76,44 @@ it("paginates Acervo at 12 flat previews instead of rendering 24 complex cards a
   expect(
     await screen.findByRole("navigation", { name: "Páginas do Acervo" }),
   ).toHaveTextContent("Página 2 de 2");
-  expect(view.container.querySelectorAll(".arcana-grid .arcana-card-link")).toHaveLength(1);
+  expect(
+    view.container.querySelectorAll(".arcana-grid .arcana-card-link"),
+  ).toHaveLength(1);
 }, 30000);
+
+it("removes the Duelo Arcano from the portal and redirects legacy duel rooms", async () => {
+  const a = await app();
+  mount(a);
+  expect(
+    await screen.findByRole("heading", { name: "O Arcanário" }),
+  ).toBeVisible();
+  expect(screen.queryByText("O Duelo Arcano")).toBeNull();
+  cleanup();
+  mount(a, "/arcanario/duelos/arena/legacy");
+  expect(
+    await screen.findByRole("heading", { name: "O Arcanário" }),
+  ).toBeVisible();
+  await waitFor(() =>
+    expect(screen.getByTestId("current-route")).toHaveTextContent(
+      /^\/arcanario$/,
+    ),
+  );
+  expect(screen.queryByText("Salão dos duelos")).toBeNull();
+});
+
+it("redirects legacy combat-card creation to the portal", async () => {
+  const a = await app();
+  mount(a, "/arcanario/oficina/nova?tipo=combat");
+  expect(
+    await screen.findByRole("heading", { name: "O Arcanário" }),
+  ).toBeVisible();
+  await waitFor(() =>
+    expect(screen.getByTestId("current-route")).toHaveTextContent(
+      /^\/arcanario$/,
+    ),
+  );
+  expect(screen.queryByText("Criar carta de combate")).toBeNull();
+});
 
 it("creates a canonical card from a real editor, previews both faces and keeps a recoverable draft", async () => {
   const a = await app(),
@@ -256,7 +298,7 @@ it("B-R1: family filter is a keyboard-accessible radio group without a select", 
   await screen.findByRole("heading", { name: "Acervo global" });
   const family = screen.getByRole("group", { name: "Família" });
   expect(family).toHaveClass("arcana-choices--compact");
-  expect(within(family).getAllByRole("radio")).toHaveLength(5);
+  expect(within(family).getAllByRole("radio")).toHaveLength(4);
   await u.click(within(family).getByRole("radio", { name: "Lembrança" }));
   expect(screen.getByRole("radio", { name: "Lembrança" })).toBeChecked();
   expect(screen.getAllByRole("link", { name: /Abrir Lembrança/ })).toHaveLength(

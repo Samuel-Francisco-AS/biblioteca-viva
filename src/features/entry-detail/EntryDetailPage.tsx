@@ -12,7 +12,12 @@ import {
 import { StudyDetailPage } from "./StudyDetailPage";
 import type { FlashCardApplication } from "./StudyFlashCards";
 import { useEffect, useState } from "react";
-import { Link, useLocation, useParams, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 
 import type { LibraryEntry, Note, Quote } from "../../domain";
 import { safeReturnPath } from "../books/navigationOrigin";
@@ -112,8 +117,7 @@ export function EntryDetailPage({
   }, [application, id]);
 
   useEffect(() => {
-    if (!application || error || entry)
-      signalPassageReady(location.pathname);
+    if (!application || error || entry) signalPassageReady(location.pathname);
   }, [application, error, entry, location.pathname]);
 
   if (!application)

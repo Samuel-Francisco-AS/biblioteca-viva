@@ -13,12 +13,11 @@
 
 **Esta decisão prevalece** sobre qualquer trecho abaixo que prescreva retenção de `combat`, `combat_match`, deck/partida legados, backup v11 histórico ou bloqueio de B2.2 até aprovação de F2/F3. Os textos anteriores são mantidos como registro cronológico da auditoria.
 
-
 > **Atualização de auditoria B1 — 12/11/2026:** concluída uma **auditoria estática diretamente no remoto**, dividida em CP1–CP5, com diagnóstico de rotas, domínio, Dexie v19, backup v11, recursos 3D e regressões. [Relatório técnico e handoff para Copilot](BF-5_7B1_AUDITORIA_HANDOFF.md). **Parecer:** iniciar somente B2.1 (testes preventivos com fixtures legadas) mediante autorização específica; não executar retirada em massa do TCG nem apagar dados autorais/históricos. **Nenhum código produtivo, teste local, APK ou CI foi executado nesta PR**. A BF-5.7B e a B2 permanecem abertas; merge exige aceite explícito.
 
-**Data da decisão:** 12/11/2026  
-**Estado:** plano e direção de produto acordados; **somente documentação nesta PR**. Implementação, migrações, exclusões, testes de produção e merge **não iniciados** por este registro.  
-**Base:** main após conclusão da BF-5.7A (PR #51), mantendo as ressalvas já conhecidas.  
+**Data da decisão:** 12/11/2026
+**Estado:** plano e direção de produto acordados; **somente documentação nesta PR**. Implementação, migrações, exclusões, testes de produção e merge **não iniciados** por este registro.
+**Base:** main após conclusão da BF-5.7A (PR #51), mantendo as ressalvas já conhecidas.
 **Vínculo:** [BF-5.7 / issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50).
 
 > **Decisão do proprietário:** retirar o Duelo Arcano/TCG e as cartas exclusivas de combate, pois a Biblioteca Viva deve priorizar utilidade funcional e educacional. Reorientar o Arcanário para **flashcards**, **questões de múltipla escolha** (incluindo expansão futura para ENEM e concursos) e uma nova família de **cartas de atividade física**. Esta última está em concepção: pode representar uma ficha de treino e/ou um resumo estilizado do desempenho em determinado período.
@@ -74,9 +73,9 @@ O Arcanário passa a ser um **acervo de cartas úteis**, com três frentes princ
 
 **Finalidade:** transformar dados reais da área Atividade Física em representações consultáveis, úteis e visualmente interessantes. A concepção possui **duas candidatas complementares**, não uma obrigação de criar ambas na BF-5.7B.
 
-| Formato candidato | O que representa | Possível interação | Origem dos dados |
-| --- | --- | --- | --- |
-| **Carta de Treinamento** | A ficha/plano reutilizável: exercícios, séries, metas, dias previstos e observações relevantes | Consultar ficha, abrir o registro original, eventualmente acessar a execução do dia | Ficha viva de Atividade Física |
+| Formato candidato             | O que representa                                                                                    | Possível interação                                                                                     | Origem dos dados                      |
+| ----------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------- |
+| **Carta de Treinamento**      | A ficha/plano reutilizável: exercícios, séries, metas, dias previstos e observações relevantes      | Consultar ficha, abrir o registro original, eventualmente acessar a execução do dia                    | Ficha viva de Atividade Física        |
 | **Carta de Desempenho/Feito** | Um período delimitado: semana, mês ou intervalo personalizado, com os registros efetivamente salvos | Consultar resumo, abrir dias registrados, opcionalmente gerar imagem compartilhável por ação explícita | Execuções e histórico real do período |
 
 **Hipótese de projeto:** a carta de treinamento pode ser uma **visão viva** do plano atual; a carta de desempenho pode ser uma **projeção por intervalo**, gerada sob demanda, com eventual snapshot apenas para exportação ou registro histórico intencional. A decisão entre projeção dinâmica, snapshot persistente e mistura dos dois pertence à B5.
@@ -193,18 +192,18 @@ A BF-5.7C prevista anteriormente como reforma do Arcanário passa a precisar de 
 
 ## 7. Decisões estabelecidas x decisões pendentes
 
-| Tema | Estado em 12/11/2026 |
-| --- | --- |
-| Abandonar Duelo Arcano e cartas exclusivas de combate | **Decidido como direção da B; implementação pendente** |
-| Priorizar flashcards e questões | **Decidido** |
-| Buscar expansão futura de questões ENEM/concursos | **Decidido como objetivo; corpus/licenças/importação pendentes** |
-| Cartas de atividade física | **Decidida a exploração conceitual; formato/escopo final pendentes** |
-| Candidatos: ficha estilizada e desempenho por período | **Ambos em avaliação; podem coexistir** |
-| Preservar registros pessoais, histórico e backup | **Restrição obrigatória; estratégia detalhada em B1** |
-| Destino de lembranças, Ecos e Relicário | **Pendente de inventário e decisão específica** |
-| Reutilização do portal orbital | **Candidata; não aprovada tecnicamente** |
-| Layout, nomes definitivos, algoritmo de revisão e exportação PNG | **Pendentes de prototipação/gates** |
-| Autorização de implementação, merges e fechamento da fase | **Não concedida por esta PR documental** |
+| Tema                                                             | Estado em 12/11/2026                                                 |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Abandonar Duelo Arcano e cartas exclusivas de combate            | **Decidido como direção da B; implementação pendente**               |
+| Priorizar flashcards e questões                                  | **Decidido**                                                         |
+| Buscar expansão futura de questões ENEM/concursos                | **Decidido como objetivo; corpus/licenças/importação pendentes**     |
+| Cartas de atividade física                                       | **Decidida a exploração conceitual; formato/escopo final pendentes** |
+| Candidatos: ficha estilizada e desempenho por período            | **Ambos em avaliação; podem coexistir**                              |
+| Preservar registros pessoais, histórico e backup                 | **Restrição obrigatória; estratégia detalhada em B1**                |
+| Destino de lembranças, Ecos e Relicário                          | **Pendente de inventário e decisão específica**                      |
+| Reutilização do portal orbital                                   | **Candidata; não aprovada tecnicamente**                             |
+| Layout, nomes definitivos, algoritmo de revisão e exportação PNG | **Pendentes de prototipação/gates**                                  |
+| Autorização de implementação, merges e fechamento da fase        | **Não concedida por esta PR documental**                             |
 
 ## 8. Referências de continuidade
 

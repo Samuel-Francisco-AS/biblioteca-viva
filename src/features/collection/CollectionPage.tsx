@@ -76,16 +76,17 @@ function secondaryText(entry: LibraryEntry): string {
 /** One shared entry point for populated and empty collections. */
 function ArcanariumAccess() {
   return (
-    <Link className="button button--secondary collection-arcana-link" to="/arcanario">
+    <Link
+      className="button button--secondary collection-arcana-link"
+      to="/arcanario"
+    >
       <span className="collection-arcana-link__sigil" aria-hidden="true">
         ✧
       </span>
       <span className="collection-arcana-link__label">
         Cartas, Ecos e Relicário
       </span>
-      <span className="collection-arcana-link__destination">
-        · Arcanário
-      </span>
+      <span className="collection-arcana-link__destination">· Arcanário</span>
     </Link>
   );
 }

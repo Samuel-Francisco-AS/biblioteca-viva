@@ -1,4 +1,3 @@
-import { CombatEditor } from "../duel/CombatEditor";
 import { QuestionEditor } from "./QuestionEditor";
 import {
   useCallback,
@@ -9,6 +8,7 @@ import {
 } from "react";
 import {
   Link,
+  Navigate,
   useNavigate,
   useParams,
   useSearchParams,
@@ -62,22 +62,21 @@ export function Workshop() {
   const [params] = useSearchParams();
   const { data } = useArcana();
   const card = id === "nova" ? undefined : data.cards.find((c) => c.id === id);
+  if (params.get("tipo") === "combat")
+    return <Navigate to="/arcanario" replace />;
   const type =
     card?.type ??
-    (params.get("tipo") === "combat"
-      ? "combat"
-      : params.get("tipo") === "question"
-        ? "question"
-        : params.get("tipo") === "memory"
-          ? "memory"
-          : "flashcard");
+    (params.get("tipo") === "question"
+      ? "question"
+      : params.get("tipo") === "memory"
+        ? "memory"
+        : "flashcard");
   if (id !== "nova" && !card)
     return (
       <p role="alert">
         Carta indisponível. Seu rascunho local permanece preservado.
       </p>
     );
-  if (type === "combat") return <CombatEditor key={id} card={card} />;
   if (
     type === "question" &&
     !card?.archived &&
@@ -127,10 +126,7 @@ function Editor({
       .map((l) => l.studyId),
     decks: data.decks
       .filter(
-        (d) =>
-          d.selection.kind === "static" &&
-          !d.combat &&
-          d.origin.kind !== "official",
+        (d) => d.selection.kind === "static" && d.origin.kind !== "official",
       )
       .map((d) => ({
         id: d.id,
@@ -306,9 +302,7 @@ function Editor({
         decks: all.decks
           .filter(
             (d) =>
-              d.selection.kind === "static" &&
-              !d.combat &&
-              d.origin.kind !== "official",
+              d.selection.kind === "static" && d.origin.kind !== "official",
           )
           .map((d) => ({
             id: d.id,
@@ -354,9 +348,6 @@ function Editor({
             to="/arcanario/oficina/nova?tipo=memory"
           >
             ❧ Lembrança · Relicário
-          </Link>
-          <Link to="/arcanario/oficina/nova?tipo=combat">
-            Criar carta de combate →
           </Link>
           <Link to="/arcanario/oficina/nova?tipo=question">
             ◇ Questão · Provações

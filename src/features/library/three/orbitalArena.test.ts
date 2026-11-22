@@ -57,8 +57,36 @@ it("freezes reduced motion and resumes without wall-clock jumps or rebuilding a 
   orbital.update(600, true);
   expect(identity.position.equals(p)).toBe(true);
   expect(book.rotation.y).toBe(r);
-  orbital.update(600, false);
+  orbital.update(0.05, false);
   expect(identity.position.distanceTo(p)).toBeLessThan(0.03);
   expect(orbital.root).toBe(identity);
   disposeObjectTree(identity);
+});
+
+it.each([60, 30, 20, 10])(
+  "keeps real angular speed and articulated effects at %i FPS",
+  (fps) => {
+    const orbital = createOrbitalArena();
+    const seconds = 12;
+    for (let i = 0; i < seconds * fps; i++) orbital.update(1 / fps, false);
+    const angle = 1.8 + (seconds * Math.PI * 2) / 420;
+    expect(orbital.root.position.x).toBeCloseTo(Math.sin(angle) * 28, 9);
+    expect(orbital.root.position.z).toBeCloseTo(Math.cos(angle) * 28, 9);
+    expect(orbital.root.position.y).toBeCloseTo(5.4, 9);
+    expect(
+      orbital.root.getObjectByName("orbital-living-grimoire")!.rotation.y,
+    ).toBeCloseTo(0.3 + seconds * 0.4, 9);
+    disposeObjectTree(orbital.root);
+  },
+);
+it("consumes irregular active intervals without losing time and ignores invalid deltas", () => {
+  const orbital = createOrbitalArena();
+  for (const delta of [0.016, 0.034, 0.1, 0.25, 0.6])
+    orbital.update(delta, false);
+  const angle = 1.8 + (Math.PI * 2) / 420;
+  expect(orbital.root.position.x).toBeCloseTo(Math.sin(angle) * 28, 9);
+  const position = orbital.root.position.clone();
+  for (const delta of [NaN, Infinity, -1, 0]) orbital.update(delta, false);
+  expect(orbital.root.position.equals(position)).toBe(true);
+  disposeObjectTree(orbital.root);
 });

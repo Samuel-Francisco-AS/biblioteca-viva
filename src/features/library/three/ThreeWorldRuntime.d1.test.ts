@@ -1125,3 +1125,80 @@ it("F refinement drives the same orbital selectable with the resident scheduler 
   runtime.dispose();
   expect(renderer.dispose).toHaveBeenCalledOnce();
 });
+
+it.each(["canvas", "accessible"] as const)(
+  "R3 reopens the lunar portal for three %s cycles without empty taps and preserves the resident world",
+  (input) => {
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+    const renderer = new TestRenderer();
+    const createRenderer = vi.fn(() => renderer);
+    const runtime = new ThreeWorldRuntime({
+      libraryWorldSnapshot: snapshot(),
+      createRenderer,
+      frameScheduler: { request: () => 1, cancel: vi.fn() },
+    });
+    runtime.mount(host());
+    runtime.start();
+    const [scene, camera] = renderer.render.mock.calls[0];
+    const moon = scene.getObjectByName("portal:duelo-arcano")!;
+    if (input === "canvas") {
+      // Explore toward the moon through the same user pan gesture; production
+      // camera/framing is untouched. Its initial phase is outside this viewport.
+      for (const [type, x] of [
+        ["pointerdown", 500],
+        ["pointermove", 100],
+        ["pointerup", 100],
+      ] as const) {
+        const event = new Event(type, { bubbles: true, cancelable: true });
+        Object.defineProperties(event, {
+          button: { value: 0 },
+          clientX: { value: x },
+          clientY: { value: 180 },
+          pointerId: { value: 2 },
+          pointerType: { value: "mouse" },
+        });
+        renderer.domElement.dispatchEvent(event);
+      }
+    }
+    const activated = vi.fn();
+    const unsubscribe = runtime.onSelectionChange((selection) => {
+      if (selection?.id === "portal:duelo-arcano") activated();
+    });
+    const activate = () => {
+      if (input === "accessible") runtime.selectObject("portal:duelo-arcano");
+      else {
+        const book = moon.getObjectByName("orbital-living-grimoire")!;
+        scene.updateMatrixWorld(true);
+        camera.updateMatrixWorld(true);
+        const ndc = book.getWorldPosition(new Vector3()).project(camera);
+        expect(Math.abs(ndc.x)).toBeLessThan(1);
+        expect(Math.abs(ndc.y)).toBeLessThan(1);
+        tap(renderer.domElement, (ndc.x + 1) * 320, (1 - ndc.y) * 180);
+      }
+    };
+    for (let cycle = 1; cycle <= 3; cycle++) {
+      activate();
+      expect(activated).toHaveBeenCalledTimes(cycle);
+      activate(); // Duplicate input during the same departure is not a new navigation.
+      expect(activated).toHaveBeenCalledTimes(cycle);
+      runtime.pause();
+      expect(renderer.domElement.dataset.selectedObject).toBe("");
+      expect(runtime.getDiagnostics().activeFrameLoops).toBe(0);
+      runtime.resume();
+      expect(runtime.getDiagnostics().activeFrameLoops).toBe(1);
+      expect(scene.getObjectByName("portal:duelo-arcano")).toBe(moon);
+      expect(renderer.dispose).not.toHaveBeenCalled();
+    }
+    // Other objects keep their selection through the same lifecycle.
+    runtime.selectObject("reading-shelf-01");
+    const selected = renderer.domElement.dataset.selectedObject;
+    expect(selected).toBe("reading-shelf-01");
+    runtime.pause();
+    runtime.resume();
+    expect(renderer.domElement.dataset.selectedObject).toBe(selected);
+    expect(createRenderer).toHaveBeenCalledTimes(1);
+    unsubscribe();
+    runtime.dispose();
+    expect(renderer.dispose).toHaveBeenCalledTimes(1);
+  },
+);

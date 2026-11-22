@@ -23,7 +23,6 @@ import { AppErrorBoundary } from "./app/AppErrorBoundary";
 import { AppHeader } from "./app/AppHeader";
 import { DevelopmentDiagnostics } from "./app/DevelopmentDiagnostics";
 import { PrimaryDock } from "./app/PrimaryDock";
-import { isArenaRoute } from "./features/duel/arena/arenaRoute";
 import type {
   ApplicationDiagnostics,
   ApplicationRuntime,
@@ -40,7 +39,6 @@ import "./styles.css";
 import "./styles-legacy.css";
 import "./styles-atelier.css";
 import "./features/library/canvas-hud.css";
-import "./features/duel/arena/arena.css";
 import "./styles-crystal.css";
 import { pulseTouch } from "./app/touchFeedback";
 import { echoCrystalPress, schedulePressedPassage } from "./app/crystalPress";
@@ -160,7 +158,6 @@ const unsafeContextGuidance =
 export function App({ application, diagnostics, shellStartedAt }: AppProps) {
   const location = useLocation();
   const libraryActive = location.pathname === APP_ROUTE_PATHS.library;
-  const arenaActive = isArenaRoute(location.pathname);
   const [libraryVisited, setLibraryVisited] = useState(libraryActive);
   if (libraryActive && !libraryVisited) setLibraryVisited(true);
   const mainRef = useRef<HTMLElement>(null);
@@ -350,7 +347,9 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           pressed &&
           pressedOriginRef.current?.id === event.pointerId &&
           event.target instanceof Element &&
-          event.target.closest("button, a, summary, [role='button'], [role='tab']") === pressed
+          event.target.closest(
+            "button, a, summary, [role='button'], [role='tab']",
+          ) === pressed
         ) {
           echoCrystalPress(pressed);
         }
@@ -424,19 +423,23 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           // including custom handlers, run exactly once on the replay.
           event.stopPropagation();
           pendingNavigationRef.current?.();
-          pendingNavigationRef.current = schedulePressedPassage(control.pathname, () => {
-            pendingNavigationRef.current = null;
-            if (!control.isConnected) {
-              cancelPassage();
-              return;
-            }
-            replayingLinksRef.current.add(control);
-            try {
-              control.click();
-            } finally {
-              replayingLinksRef.current.delete(control);
-            }
-          }, event.detail > 0);
+          pendingNavigationRef.current = schedulePressedPassage(
+            control.pathname,
+            () => {
+              pendingNavigationRef.current = null;
+              if (!control.isConnected) {
+                cancelPassage();
+                return;
+              }
+              replayingLinksRef.current.add(control);
+              try {
+                control.click();
+              } finally {
+                replayingLinksRef.current.delete(control);
+              }
+            },
+            event.detail > 0,
+          );
         }
         pulseTouch(
           effectiveExperience.reducedMotion,
@@ -450,7 +453,6 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
       data-route={
         location.pathname === "/" ? "library" : location.pathname.split("/")[1]
       }
-      data-arena-route={arenaActive ? "true" : undefined}
       data-high-contrast={effectiveExperience.highContrast}
       data-reduced-motion={effectiveExperience.reducedMotion}
       data-text-size={effectiveExperience.textSize}
@@ -512,6 +514,10 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
             >
               <Routes>
                 <Route path={APP_ROUTE_PATHS.library} element={null} />
+                <Route
+                  path="/arcanario/duelos/*"
+                  element={<Navigate to="/arcanario" replace />}
+                />
                 <Route
                   path="/arcanario/*"
                   element={<ArcanariumPage application={application} />}
@@ -582,12 +588,14 @@ export function App({ application, diagnostics, shellStartedAt }: AppProps) {
           if (
             event.target === event.currentTarget &&
             event.animationName === "bv-passage-unfold"
-          ) completePassageAnimation();
+          )
+            completePassageAnimation();
           if (
             event.target === event.currentTarget &&
             (event.animationName === "bv-passage-fold" ||
               event.animationName === "bv-passage-reseal")
-          ) completePassageDeparture();
+          )
+            completePassageDeparture();
         }}
       />
       <PrimaryDock pathname={location.pathname} />

@@ -76,8 +76,10 @@ export function NarrativePanel({
   }, [enabled, state.active, state.revision, state.talkingTo, questProbe]);
   useEffect(() => {
     if (!enabled) {
-      if (focusFrame.current !== null &&
-          typeof cancelAnimationFrame === "function")
+      if (
+        focusFrame.current !== null &&
+        typeof cancelAnimationFrame === "function"
+      )
         cancelAnimationFrame(focusFrame.current);
       focusFrame.current = null;
       previousActive.current = false;

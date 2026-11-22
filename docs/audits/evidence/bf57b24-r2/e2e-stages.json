@@ -1,0 +1,792 @@
+[
+  {
+    "test": "performance-navigation-per-66e92-and-loop-across-dock-return-chromium",
+    "operations": [
+      {
+        "title": "Create context",
+        "ms": 1.92,
+        "source": []
+      },
+      {
+        "title": "Fixture \"context\"",
+        "ms": 3.58,
+        "source": []
+      },
+      {
+        "title": "Create page",
+        "ms": 31.8,
+        "source": []
+      },
+      {
+        "title": "Fixture \"page\"",
+        "ms": 32.65,
+        "source": []
+      },
+      {
+        "title": "Before Hooks",
+        "ms": 41.16,
+        "source": []
+      },
+      {
+        "title": "Set viewport size",
+        "ms": 4.3,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 71
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/colecao\"",
+        "ms": 239.99,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 72
+          }
+        ]
+      },
+      {
+        "title": "Click locator('.primary-dock a[href=\"/\"]')",
+        "ms": 486.96,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 73
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 4126.7,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 75
+          }
+        ]
+      },
+      {
+        "title": "Wait for selector locator('canvas[data-three-world-canvas]')",
+        "ms": 7189.53,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 78
+          }
+        ]
+      },
+      {
+        "title": "Click locator('.primary-dock a[href=\"/colecao\"]')",
+        "ms": 8082.45,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 79
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1487.47,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 80
+          }
+        ]
+      },
+      {
+        "title": "Click locator('.primary-dock a[href=\"/\"]')",
+        "ms": 176.56,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 81
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 2688.77,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 82
+          }
+        ]
+      },
+      {
+        "title": "Fixture \"page\"",
+        "ms": 0.19,
+        "source": []
+      },
+      {
+        "title": "Evaluate locator('canvas[data-three-world-canvas]')",
+        "ms": 6111.83,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 84
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBe\"",
+        "ms": 0.09,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 85
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 818.25,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 86
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toEqual\"",
+        "ms": 1.12,
+        "source": [
+          {
+            "file": "performance-navigation.spec.ts",
+            "line": 87
+          }
+        ]
+      },
+      {
+        "title": "Close context",
+        "ms": 4.99,
+        "source": []
+      },
+      {
+        "title": "Fixture \"context\"",
+        "ms": 1500.39,
+        "source": []
+      },
+      {
+        "title": "Attach \"error-context\"",
+        "ms": 0.01,
+        "source": []
+      },
+      {
+        "title": "Fixture \"baseURL\"",
+        "ms": 0.03,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "Fixture \"userAgent\"",
+        "ms": 0.03,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "Fixture \"viewport\"",
+        "ms": 0.03,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "Fixture \"isMobile\"",
+        "ms": 0.03,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "Fixture \"hasTouch\"",
+        "ms": 0.02,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "Fixture \"deviceScaleFactor\"",
+        "ms": 0.03,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "After Hooks",
+        "ms": 1516.57,
+        "source": []
+      },
+      {
+        "title": "Fixture \"browser\"",
+        "ms": 27.44,
+        "source": []
+      },
+      {
+        "title": "Fixture \"defaultBrowserType\"",
+        "ms": 0.02,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "Worker Cleanup",
+        "ms": 32.11,
+        "source": []
+      }
+    ]
+  },
+  {
+    "test": "bf56f-orbital-refinement-B-bb826-reserves-the-resident-world-chromium",
+    "operations": [
+      {
+        "title": "Launch browser",
+        "ms": 67.54,
+        "source": []
+      },
+      {
+        "title": "Fixture \"browser\"",
+        "ms": 70.41,
+        "source": []
+      },
+      {
+        "title": "Create context",
+        "ms": 8.79,
+        "source": []
+      },
+      {
+        "title": "Fixture \"context\"",
+        "ms": 15.4,
+        "source": []
+      },
+      {
+        "title": "Create page",
+        "ms": 40.88,
+        "source": []
+      },
+      {
+        "title": "Fixture \"page\"",
+        "ms": 42.39,
+        "source": []
+      },
+      {
+        "title": "Before Hooks",
+        "ms": 141.41,
+        "source": []
+      },
+      {
+        "title": "Set viewport size",
+        "ms": 7.17,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 13
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/\"",
+        "ms": 262.45,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 14
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/configuracoes\"",
+        "ms": 149.85,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 15
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 471.25,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 19
+          }
+        ]
+      },
+      {
+        "title": "Check getByRole('checkbox', { name: 'Mostrar bot\u00e3o \u201cAcervo e habitantes\u201d no Canvas' })",
+        "ms": 353.82,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 20
+          }
+        ]
+      },
+      {
+        "title": "Navigate to \"/\"",
+        "ms": 92.62,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 21
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCount\"",
+        "ms": 3133.7,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 23
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 4936.21,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 24
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1468.15,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('canvas[data-three-world-canvas]')",
+        "ms": 4381.92,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 28
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 1466.98,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 39
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeEnabled\"",
+        "ms": 1440.22,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 40
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveCSS\"",
+        "ms": 1436.4,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 41
+          }
+        ]
+      },
+      {
+        "title": "Evaluate getByRole('button', { name: 'Abrir ferramentas de explora\u00e7\u00e3o acess\u00edvel' })",
+        "ms": 3844.99,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 45
+          }
+        ]
+      },
+      {
+        "title": "Attach \"lunar-access-layout.json\"",
+        "ms": 0.99,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 80
+          }
+        ]
+      },
+      {
+        "title": "Acesso lunar fora da largura da viewport: {\"viewport\":{\"width\":390,\"height\":844},\"bounds\":{\"left\":13.59375,\"top\":673.21875,\"right\":161.78125,\"bottom\":721.21875,\"width\":148.1875,\"height\":48},\"intersection\":{\"width\":148.1875,\"height\":48},\"position\":\"fixed\",\"cssBottom\":\"122.781px\",\"canvasDockHeight\":\"95.58125px\",\"dockBottom\":835.203125,\"documentScroll\":{\"x\":0,\"y\":0}}",
+        "ms": 0.38,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 87
+          }
+        ]
+      },
+      {
+        "title": "Acesso lunar fora da altura da viewport: {\"viewport\":{\"width\":390,\"height\":844},\"bounds\":{\"left\":13.59375,\"top\":673.21875,\"right\":161.78125,\"bottom\":721.21875,\"width\":148.1875,\"height\":48},\"intersection\":{\"width\":148.1875,\"height\":48},\"position\":\"fixed\",\"cssBottom\":\"122.781px\",\"canvasDockHeight\":\"95.58125px\",\"dockBottom\":835.203125,\"documentScroll\":{\"x\":0,\"y\":0}}",
+        "ms": 0.19,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 91
+          }
+        ]
+      },
+      {
+        "title": "Focus getByRole('button', { name: 'Abrir ferramentas de explora\u00e7\u00e3o acess\u00edvel' })",
+        "ms": 2906.92,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 92
+          }
+        ]
+      },
+      {
+        "title": "Press \"Enter\"",
+        "ms": 2038.99,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 93
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1488.25,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 100
+          }
+        ]
+      },
+      {
+        "title": "Evaluate locator('.library-page')",
+        "ms": 4060.33,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 103
+          }
+        ]
+      },
+      {
+        "title": "Attach \"lunar-access-open-state.json\"",
+        "ms": 0.17,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 112
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBe\"",
+        "ms": 0.29,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 116
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBe\"",
+        "ms": 0.05,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 117
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 1506.19,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 120
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 1527.38,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 122
+          }
+        ]
+      },
+      {
+        "title": "Focus locator('details.world-explore').locator(':scope > summary')",
+        "ms": 3128.22,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 123
+          }
+        ]
+      },
+      {
+        "title": "Press \"Enter\"",
+        "ms": 2365.35,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 124
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1706.84,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 125
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 1709.76,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 129
+          }
+        ]
+      },
+      {
+        "title": "Focus locator('details.world-explore').locator('details.world-semantic').locator('summary')",
+        "ms": 3350.67,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 130
+          }
+        ]
+      },
+      {
+        "title": "Press \"Enter\"",
+        "ms": 2173.22,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 131
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveAttribute\"",
+        "ms": 1762.06,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 132
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeVisible\"",
+        "ms": 1909.08,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 138
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toBeEnabled\"",
+        "ms": 1942.81,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 139
+          }
+        ]
+      },
+      {
+        "title": "Fixture \"page\"",
+        "ms": 0.3,
+        "source": []
+      },
+      {
+        "title": "Focus getByRole('button', { name: 'Abrir Portal do Arcan\u00e1rio' })",
+        "ms": 3051.51,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 140
+          }
+        ]
+      },
+      {
+        "title": "Press \"Enter\"",
+        "ms": 1297.32,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 141
+          }
+        ]
+      },
+      {
+        "title": "Expect \"toHaveURL\"",
+        "ms": 681.56,
+        "source": [
+          {
+            "file": "bf56f-orbital-refinement.spec.ts",
+            "line": 142
+          }
+        ]
+      },
+      {
+        "title": "Close context",
+        "ms": 12.94,
+        "source": []
+      },
+      {
+        "title": "Fixture \"context\"",
+        "ms": 2178.59,
+        "source": []
+      },
+      {
+        "title": "Attach \"error-context\"",
+        "ms": 0.01,
+        "source": []
+      },
+      {
+        "title": "Fixture \"baseURL\"",
+        "ms": 0.04,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "Fixture \"userAgent\"",
+        "ms": 0.03,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "Fixture \"viewport\"",
+        "ms": 0.04,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "Fixture \"isMobile\"",
+        "ms": 0.03,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "Fixture \"hasTouch\"",
+        "ms": 0.03,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "Fixture \"deviceScaleFactor\"",
+        "ms": 0.03,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "After Hooks",
+        "ms": 2194.92,
+        "source": []
+      },
+      {
+        "title": "Fixture \"browser\"",
+        "ms": 23.88,
+        "source": []
+      },
+      {
+        "title": "Fixture \"defaultBrowserType\"",
+        "ms": 0.03,
+        "source": [
+          {
+            "file": "project#chromium",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "title": "Worker Cleanup",
+        "ms": 29.6,
+        "source": []
+      }
+    ]
+  }
+]

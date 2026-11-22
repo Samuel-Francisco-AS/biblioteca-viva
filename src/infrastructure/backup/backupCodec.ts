@@ -1,4 +1,3 @@
-import { replayDuel, validateMatch } from "../../domain/duel/engine";
 import { privateArcanarium } from "../../domain/packBackup";
 import { cardMediaSchema } from "../database/cardMedia";
 import { validateCardMediaOwnership } from "../../application/cardMedia";
@@ -97,6 +96,7 @@ const unsignedSchema = z.strictObject({
     z.literal(8),
     z.literal(9),
     z.literal(10),
+    z.literal(11),
     z.literal(BACKUP_FORMAT_VERSION),
   ]),
   createdAt: z.iso.datetime({ offset: false }),
@@ -168,6 +168,37 @@ async function sha256(value: JsonValue): Promise<string> {
 
 function byteLength(content: string): number {
   return new TextEncoder().encode(content).byteLength;
+}
+
+function containsRetiredDuelData(value: unknown): boolean {
+  if (!value || typeof value !== "object") return false;
+  const arcanarium = (value as { arcanarium?: unknown }).arcanarium;
+  if (!arcanarium || typeof arcanarium !== "object") return false;
+  const data = arcanarium as {
+    cards?: unknown;
+    decks?: unknown;
+    sessions?: unknown;
+  };
+  return (
+    (Array.isArray(data.cards) &&
+      data.cards.some(
+        (card) =>
+          card &&
+          typeof card === "object" &&
+          (card as { type?: unknown }).type === "combat",
+      )) ||
+    (Array.isArray(data.decks) &&
+      data.decks.some(
+        (deck) => deck && typeof deck === "object" && "combat" in deck,
+      )) ||
+    (Array.isArray(data.sessions) &&
+      data.sessions.some(
+        (session) =>
+          session &&
+          typeof session === "object" &&
+          (session as { kind?: unknown }).kind === "combat_match",
+      ))
+  );
 }
 
 function counts(data: BackupData): BackupCounts {
@@ -249,16 +280,6 @@ export function validateBackupData(data: BackupData): void {
         )
       )
         throw new Error("Missing legacy mapping");
-      for (const session of data.arcanarium?.sessions ?? []) {
-        if (session.kind === "combat_match" && session.duel) {
-          const match = validateMatch(session.duel);
-          if (
-            canonicalize(checksumMaterial(replayDuel(match))) !==
-            canonicalize(checksumMaterial(match))
-          )
-            throw new Error("Duel replay does not match the recorded state");
-        }
-      }
       validateArcanarium(
         data.arcanarium,
         new Set(
@@ -423,11 +444,22 @@ export class JsonBackupCodec implements BackupCodecPort {
       formatVersion !== 8 &&
       formatVersion !== 9 &&
       formatVersion !== 10 &&
+      formatVersion !== 11 &&
       formatVersion !== BACKUP_FORMAT_VERSION
     )
       throw new BackupError(
         "UNSUPPORTED_FORMAT_VERSION",
         "Backups produzidos antes do WORLD RESET não são compatíveis com este aplicativo.",
+      );
+    if (
+      typeof raw === "object" &&
+      raw !== null &&
+      "data" in raw &&
+      containsRetiredDuelData((raw as { data?: unknown }).data)
+    )
+      throw new BackupError(
+        "INVALID_BACKUP_DATA",
+        "Backups com dados do Duelo Arcano não são compatíveis com esta versão.",
       );
     if (!("integrity" in raw))
       throw new BackupError(

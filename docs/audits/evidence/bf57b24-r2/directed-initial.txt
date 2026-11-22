@@ -1,0 +1,12 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:run
+npm notice run vitest run src/features/library/three/orbitalArena.test.ts src/features/library/three/ThreeWorldRuntime.test.ts --maxWorkers=1
+
+ RUN  v4.1.12 /home/sam/Projetos/biblioteca-viva
+
+{"sceneUpdates":0,"projections":0,"milliseconds":15.385243000000173}
+
+ Test Files  2 passed (2)
+      Tests  64 passed (64)
+   Start at  21:24:09
+   Duration  6.90s (transform 1.07s, setup 295ms, import 1.45s, tests 3.38s, environment 1.47s)
+

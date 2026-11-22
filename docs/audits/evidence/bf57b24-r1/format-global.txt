@@ -1,0 +1,29 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 format:check
+npm notice run prettier --check src e2e scripts .github index.html package.json capacitor.config.ts playwright.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json tsconfig.test.json vite.config.ts vitest.config.ts eslint.config.js
+Checking formatting...
+[warn] src/App.test.tsx
+[warn] src/App.tsx
+[warn] src/app/interactionContinuity.test.ts
+[warn] src/app/interactionContinuity.ts
+[warn] src/app/PrimaryDock.test.tsx
+[warn] src/app/PrimaryDock.tsx
+[warn] src/features/arcanarium/arcanarium.css
+[warn] src/features/collection/CollectionPage.test.tsx
+[warn] src/features/collection/CollectionPage.tsx
+[warn] src/features/entertainment/entertainment.css
+[warn] src/features/entry-detail/book-folio.css
+[warn] src/features/entry-detail/BookDetailPage.test.tsx
+[warn] src/features/entry-detail/BookDetailPage.tsx
+[warn] src/features/entry-detail/EntryDetailPage.tsx
+[warn] src/features/entry-detail/study-folio.css
+[warn] src/features/entry-detail/StudyPomodoro.test.tsx
+[warn] src/features/entry-editor/EditEntryPage.tsx
+[warn] src/features/library/NarrativePanel.tsx
+[warn] src/pages.test.tsx
+[warn] src/pages.tsx
+[warn] src/styles-atelier.css
+[warn] src/styles-crystal.css
+[warn] src/styles-legacy.css
+[warn] e2e/bf5-parte2f-empreitadas-atlas.spec.ts
+[warn] e2e/bf57a-arcanarium-scroll.spec.ts
+[warn] Code style issues found in 25 files. Run Prettier with --write to fix.

@@ -1,4 +1,10 @@
-> **ESTADO VIGENTE — 20/11/2026:** BF-5.7 em andamento; BF-5.7A concluída com ressalvas; BF-5.7B no gate B2.5-R3. Use a [issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) como planejamento mestre, a [PR #52](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/52) para o plano detalhado do Arcanário e a [PR #57](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/57) para o checkpoint R3. A BF-5.6 foi encerrada com ressalvas; BF-6 não iniciada.
+> **ESTADO VIGENTE — 21/11/2026:** BF-5.7B concluída funcionalmente e consolidada na [PR #58](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/58). A BF-5.7A permanece integrada pela PR #51 e a BF-5.6 permanece encerrada com ressalvas. O gate Moto G06 aprovou órbita, reentrada, Arcanário, flashcards, questões e persistência. Travamentos de transição e fluidez insuficiente continuam como dívida técnica conhecida, sem métricas físicas ou certificação de desempenho. Use a [issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) como planejamento mestre.
+
+[BF-5.7B2.5-R3 — reparos após gate físico](BF-5_7B2_5_R3_GATE_FISICO_REPAROS.md): resultado funcional aprovado no Moto G06, com dívidas de fluidez registradas sem métrica nova.
+
+[BF-5.7B2.5 — saneamento residual](BF-5_7B2_5_SANEAMENTO_RESIDUAL.md): auditoria de dependências, integridade e retenção.
+
+[BF-5.7B2.4-R2 — reparos físicos](BF-5_7B2_4_R2_REPAROS_FISICOS.md): órbita por tempo ativo, Choices e limites da validação Android.
 
 **FECHAMENTO CANÔNICO — 11/11/2026: BF-5.6 O Arcanário ENCERRADA COM RESSALVAS** após aceite explícito do proprietário. [Termo global A–G](BF-5_6_FECHAMENTO_GLOBAL_2026-11-11.md) · [Auditoria G](BF-5_6G_AUDITORIA_CONSOLIDACAO_2026-11-11.md). E2E, CI, acessibilidade/termal e UI/UX residual continuam pendências registradas. Sem novo APK pós-G nem início automático da BF-6/BF-7. Notas antigas indicando “aguarda aceite” são históricas.
 

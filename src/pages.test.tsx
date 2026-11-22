@@ -1,12 +1,17 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import {
+  MemoryRouter,
+  Route,
+  Routes,
+  createMemoryRouter,
+  RouterProvider,
+  useLocation,
+  Outlet,
+} from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  ApplicationError,
-  ExperiencePreferencesService,
-} from "./application";
+import { ApplicationError, ExperiencePreferencesService } from "./application";
 import type { BookEntry, LibraryEntry } from "./domain";
 import {
   createMovie,
@@ -1149,6 +1154,69 @@ it("G3 opens the Arcanarium Portal from the canonical lunar selection", async ()
     }),
   );
   expect(
-    await screen.findByRole("heading", { name: "Portal do Arcanário fictício" }),
+    await screen.findByRole("heading", {
+      name: "Portal do Arcanário fictício",
+    }),
   ).toBeInTheDocument();
+});
+
+it("R3 keeps one resident host and one portal navigation per activation across three route cycles", async () => {
+  const application: LibraryApplication = {
+    queries: {
+      listLibraryEntries: { execute: vi.fn(() => Promise.resolve([])) },
+    },
+  };
+  function ResidentLayout() {
+    const location = useLocation();
+    return (
+      <>
+        <div hidden={location.pathname !== "/"}>
+          <LibraryPage
+            application={application}
+            active={location.pathname === "/"}
+          />
+        </div>
+        <Outlet />
+      </>
+    );
+  }
+  const router = createMemoryRouter([
+    {
+      element: <ResidentLayout />,
+      children: [
+        { path: "/", element: null },
+        { path: "/arcanario", element: <h1>Portal fictício R3</h1> },
+      ],
+    },
+  ]);
+  const arrivals = new Set<string>();
+  const unsubscribe = router.subscribe((state) => {
+    if (state.location.pathname === "/arcanario")
+      arrivals.add(state.location.key);
+  });
+  render(<RouterProvider router={router} />);
+  const original = await screen.findByTestId("world-host-stub");
+  for (let cycle = 1; cycle <= 3; cycle++) {
+    act(() => {
+      const selected = { id: "portal:duelo-arcano", label: "Lua" };
+      worldHostProps().onSelectionChange?.(selected);
+      worldHostProps().onSelectionChange?.(selected);
+    });
+    await screen.findByRole("heading", { name: "Portal fictício R3" });
+    expect(arrivals.size).toBe(cycle);
+    // Late callbacks while the resident world is inactive cannot navigate.
+    act(() =>
+      worldHostProps().onSelectionChange?.({
+        id: "portal:duelo-arcano",
+        label: "Lua",
+      }),
+    );
+    expect(arrivals.size).toBe(cycle);
+    await act(async () => {
+      await router.navigate("/");
+    });
+    expect(screen.getByTestId("world-host-stub")).toBe(original);
+  }
+  unsubscribe();
+  router.dispose();
 });

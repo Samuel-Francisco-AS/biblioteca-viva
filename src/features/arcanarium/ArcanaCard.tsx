@@ -1,4 +1,3 @@
-import { CombatCard } from "../duel/CombatCard";
 import { useEffect, useState } from "react";
 import type { CardContent } from "../../domain/arcanarium";
 import type { ApplicationRuntime } from "../../app/createApplication";
@@ -10,14 +9,12 @@ export function ArcanaCard({
   image,
   compact = false,
   flipped = false,
-  official = false,
 }: {
   readonly content: CardContent;
   readonly app?: ApplicationRuntime;
   readonly image?: string;
   readonly compact?: boolean;
   readonly flipped?: boolean;
-  readonly official?: boolean;
 }) {
   const imageId = content.type === "memory" ? content.imageId : undefined;
   const [stored, setStored] = useState<{ id: string; url: string }>();
@@ -40,16 +37,6 @@ export function ArcanaCard({
       active = false;
     };
   }, [app, imageId]);
-  if (content.type === "combat" && content.combat)
-    return (
-      <CombatCard
-        name={content.name}
-        definition={content.combat}
-        compact={compact}
-        gallery={compact}
-        official={official}
-      />
-    );
   const appearance =
     content.type === "flashcard" || content.type === "memory"
       ? content.appearance

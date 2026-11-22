@@ -189,7 +189,7 @@ it("round-trips v6 with bounded posters and catalog, restores old v6 without med
   const snapshot = await s.backup.read();
   const artifact = await encode(snapshot);
   const parsed = await s.codec.inspect(artifact.content);
-  expect(parsed.summary.formatVersion).toBe(11);
+  expect(parsed.summary.formatVersion).toBe(12);
   expect(parsed.data.media).toHaveLength(2);
   await s.backup.replace(parsed.data);
   expect(await s.entries.getById("m")).toEqual(movie);

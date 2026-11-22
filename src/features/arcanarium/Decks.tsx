@@ -33,25 +33,23 @@ export function Decks() {
       </Link>
       <Link to="/arcanario/importar">Importar baralho autoral →</Link>
       <div className="arcana-deck-grid">
-        {data.decks
-          .filter((d) => !d.combat)
-          .map((d) => (
-            <Link to={deckPath(d.id)} className="arcana-deck" key={d.id}>
-              <ArcanaSeal />
-              <span className="arcana-eyebrow">
-                {d.selection.kind === "static"
-                  ? "Coleção estática"
-                  : "Baralho dinâmico"}
-              </span>
-              <h3>{d.name}</h3>
-              <p>
-                {d.selection.kind === "static"
-                  ? `${d.selection.cards.length} cartas · revisão ${d.revision}`
-                  : "Filtros executados ao iniciar Provação"}
-              </p>
-              <span>Abrir baralho →</span>
-            </Link>
-          ))}
+        {data.decks.map((d) => (
+          <Link to={deckPath(d.id)} className="arcana-deck" key={d.id}>
+            <ArcanaSeal />
+            <span className="arcana-eyebrow">
+              {d.selection.kind === "static"
+                ? "Coleção estática"
+                : "Baralho dinâmico"}
+            </span>
+            <h3>{d.name}</h3>
+            <p>
+              {d.selection.kind === "static"
+                ? `${d.selection.cards.length} cartas · revisão ${d.revision}`
+                : "Filtros executados ao iniciar Provação"}
+            </p>
+            <span>Abrir baralho →</span>
+          </Link>
+        ))}
       </div>
       {!data.decks.length && (
         <div className="arcana-empty">
@@ -68,12 +66,6 @@ export function DeckEditor() {
   const { id } = useParams();
   const { data } = useArcana();
   const deck = id ? data.decks.find((d) => d.id === id) : undefined;
-  if (deck?.combat)
-    return (
-      <Link to={`/arcanario/duelos/baralhos/${encodeURIComponent(deck.id)}`}>
-        Abrir baralho no Duelo Arcano →
-      </Link>
-    );
   if (id && !deck) return <p role="alert">Baralho indisponível.</p>;
   if (
     deck?.selection.kind === "dynamic" ||
@@ -301,7 +293,6 @@ function StaticDeck({ deck }: { readonly deck?: Deck }) {
                 .filter(
                   (c) =>
                     !c.archived &&
-                    c.type !== "combat" &&
                     !selection.some((r) => r.cardId === c.id) &&
                     cardTitle(c.content)
                       .toLocaleLowerCase()

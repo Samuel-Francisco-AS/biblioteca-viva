@@ -1,4 +1,4 @@
-import { DuelService } from "../application/duels";
+import { retireCombatData } from "../infrastructure/database/retireCombatData";
 import type { PackCataloguePort } from "../application/packCatalogue";
 import { LocalPackCatalogue } from "../infrastructure/packs/localCatalogue";
 import { EducationalPacksService } from "../application/educationalPacks";
@@ -155,7 +155,6 @@ export type ApplicationDiagnosticsSnapshot = DatabaseDiagnostics;
 
 export interface ApplicationRuntime {
   readonly arcanarium: ArcanariumService;
-  readonly duels: DuelService;
   readonly educationalPacks: EducationalPacksService;
   readonly packCatalogue: PackCataloguePort;
   readonly workshop: ArcanariumWorkshop;
@@ -285,6 +284,12 @@ export async function createApplication(
     options.databaseName ?? DATABASE_NAME,
   );
   await database.open();
+  try {
+    await retireCombatData(database);
+  } catch (error) {
+    database.close();
+    throw error;
+  }
   await database.metadata.put({
     key: SCHEMA_MARKER_KEY,
     value: String(DATABASE_VERSION),
@@ -373,7 +378,6 @@ export async function createApplication(
 
   return {
     arcanarium: new ArcanariumService(dependencies),
-    duels: new DuelService(dependencies),
     packCatalogue: new LocalPackCatalogue(),
     educationalPacks: new EducationalPacksService(
       dependencies,

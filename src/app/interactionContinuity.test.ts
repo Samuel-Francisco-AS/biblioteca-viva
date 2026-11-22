@@ -1,5 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { CRYSTAL_PRESS_FALLBACK_MS, schedulePressedPassage } from "./crystalPress";
+import {
+  CRYSTAL_PRESS_FALLBACK_MS,
+  schedulePressedPassage,
+} from "./crystalPress";
 import {
   beginPassage,
   cancelPassage,
@@ -67,7 +70,7 @@ describe("R6.1: seamless, readiness-gated passage", () => {
     const { shell } = setup();
     beginPassage("/arcanario/acervo");
     notifyPassageLocation("/arcanario/acervo");
-    signalPassageReady("/arcanario/duelos"); // stale room
+    signalPassageReady("/arcanario/assuntos"); // stale room
     vi.advanceTimersByTime(720); // fallback for missing CSS animationend
     expect(shell.dataset.passage).toBe("waiting");
     vi.advanceTimersByTime(10000);

@@ -1,0 +1,90 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:e2e
+npm notice run playwright test e2e/bf57b-retired-duel.spec.ts e2e/bf56f-orbital-refinement.spec.ts e2e/performance-navigation.spec.ts
+[WebServer] npm notice run biblioteca-viva@0.2.0-alpha.1 preview
+[WebServer] npm notice run vite preview --host 127.0.0.1 --port 4173
+[WebServer] (node:31382) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] npm notice run biblioteca-viva@0.2.0-alpha.1 dev
+[WebServer] npm notice run vite --host 127.0.0.1 --port 4174
+[WebServer] (node:31420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 1 worker
+
+(node:31454) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   1 [chromium] › e2e/bf56f-orbital-refinement.spec.ts:8:1 › BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident world (1.1m)
+(node:32041) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 [chromium] › e2e/bf57b-retired-duel.spec.ts:15:3 › BF-5.7B2.3: old hall route returns to Arcanarium Portal (1.4s)
+  ✓   3 [chromium] › e2e/bf57b-retired-duel.spec.ts:15:3 › BF-5.7B2.3: old rules route returns to Arcanarium Portal (1.3s)
+  ✓   4 [chromium] › e2e/bf57b-retired-duel.spec.ts:15:3 › BF-5.7B2.3: old deck editor route returns to Arcanarium Portal (1.0s)
+  ✓   5 [chromium] › e2e/bf57b-retired-duel.spec.ts:15:3 › BF-5.7B2.3: old match route returns to Arcanarium Portal (1.2s)
+  ✓   6 [chromium] › e2e/bf57b-retired-duel.spec.ts:15:3 › BF-5.7B2.3: old arena route returns to Arcanarium Portal (1.0s)
+  ✓   7 [chromium] › e2e/bf57b-retired-duel.spec.ts:33:1 › BF-5.7B2.3: retired combat-card creation returns to Portal (1.7s)
+  ✓   8 [chromium] › e2e/bf57b-retired-duel.spec.ts:44:1 › BF-5.7B2.3: educational Arcanarium rooms remain reachable (2.5s)
+(node:32252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [chromium] › e2e/performance-navigation.spec.ts:9:1 › performance candidate: rooms, drafts, dock and resident world survive repeated navigation (13.9s)
+  ✘  10 [chromium] › e2e/performance-navigation.spec.ts:72:1 › performance candidate: world keeps one renderer and loop across dock return (38.0s)
+
+
+  1) [chromium] › e2e/bf56f-orbital-refinement.spec.ts:8:1 › BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident world 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: keyboard.press: Test timeout of 60000ms exceeded.
+
+       97 |   ).toBeGreaterThan(0);
+       98 |   await tools.focus();
+    >  99 |   await page.keyboard.press("Enter");
+          |                       ^
+      100 |
+      101 |   // The React state is reflected in both the parent data attribute and the
+      102 |   // button. Verify the state transition first, then take one atomic DOM
+        at <checkout>/e2e/bf56f-orbital-refinement.spec.ts:99:23
+
+    Error Context: test-results/bf56f-orbital-refinement-B-bb826-reserves-the-resident-world-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/bf56f-orbital-refinement-B-bb826-reserves-the-resident-world-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/bf56f-orbital-refinement-B-bb826-reserves-the-resident-world-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e/performance-navigation.spec.ts:72:1 › performance candidate: world keeps one renderer and loop across dock return 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('canvas[data-three-world-canvas]')
+    Expected: "paused"
+    Received: ""
+
+
+      84 |   const resident = await canvas.elementHandle();
+      85 |   await page.locator('.primary-dock a[href="/colecao"]').click();
+    > 86 |   await expect(canvas).toHaveAttribute("data-runtime-state", "paused");
+         |                        ^
+      87 |   await page.locator('.primary-dock a[href="/"]').click();
+      88 |   await expect(canvas).toHaveAttribute("data-runtime-state", "running");
+      89 |   expect(
+        at <checkout>/e2e/performance-navigation.spec.ts:86:24
+
+    Error Context: test-results/performance-navigation-per-66e92-and-loop-across-dock-return-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/performance-navigation-per-66e92-and-loop-across-dock-return-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/performance-navigation-per-66e92-and-loop-across-dock-return-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › e2e/bf56f-orbital-refinement.spec.ts:8:1 › BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident world 
+    [chromium] › e2e/performance-navigation.spec.ts:72:1 › performance candidate: world keeps one renderer and loop across dock return 
+  8 passed (2.3m)

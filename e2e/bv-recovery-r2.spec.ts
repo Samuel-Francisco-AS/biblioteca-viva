@@ -48,7 +48,7 @@ test("R2: six real records retain React selection, highlights and identity after
   expect(new URL(page.url()).origin).toBe("http://127.0.0.1:4173");
   await page.evaluate(async (entries) => {
     await new Promise<void>((resolve, reject) => {
-      const request = indexedDB.open("biblioteca-viva");
+      const request = indexedDB.open("biblioteca-viva-bf57");
       request.onerror = () =>
         reject(
           new Error(request.error?.message ?? "Falha ao abrir base fictícia."),

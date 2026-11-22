@@ -1,6 +1,5 @@
 import { recordUiRouteContentCommit } from "../../app/uiActionProbe";
 import { signalPassageReady } from "../../app/interactionContinuity";
-import { isArenaRoute } from "../duel/arena/arenaRoute";
 import { emptyArcanarium } from "../../domain/arcanarium";
 import { cardAvailable } from "../../domain/educationalPacks";
 import {
@@ -13,7 +12,14 @@ import {
   useRef,
   useState,
 } from "react";
-import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  NavLink,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import type { ApplicationRuntime } from "../../app/createApplication";
 import { Arcana, arcanaError, type ArcanaContext } from "./context";
 import { ArcanaSeal } from "./ArcanaArt";
@@ -21,21 +27,6 @@ import { ArcanaCard } from "./ArcanaCard";
 import "./arcanarium.css";
 
 // A room is fetched only when entered; portal rendering stays independent.
-const DuelHall = lazy(async () => ({
-  default: (await import("../duel/DuelHall")).DuelHall,
-}));
-const DuelTable = lazy(async () => ({
-  default: (await import("../duel/DuelTable")).DuelTable,
-}));
-const DuelDeckEditor = lazy(async () => ({
-  default: (await import("../duel/DuelDecks")).DuelDeckEditor,
-}));
-const DuelRules = lazy(async () => ({
-  default: (await import("../duel/DuelRules")).DuelRules,
-}));
-const ArenaDuel = lazy(async () => ({
-  default: (await import("../duel/arena/ArenaDuel")).ArenaDuel,
-}));
 const PackLibrary = lazy(async () => ({
   default: (await import("./PackLibrary")).PackLibrary,
 }));
@@ -99,23 +90,17 @@ export default function ArcanariumPage({
 }) {
   const [snapshot, setSnapshot] = useState<
     Omit<ArcanaContext, "reload"> & {
-      scope: "portal" | "arena" | "full";
+      scope: "portal" | "full";
       counts?: { cards: number; decks: number; reviews: number };
     }
   >();
   const [error, setError] = useState("");
   const location = useLocation();
   const atPortal = location.pathname.replace(/\/$/, "") === "/arcanario";
-  const scope = atPortal
-    ? "portal"
-    : isArenaRoute(location.pathname)
-      ? "arena"
-      : "full";
+  const scope = atPortal ? "portal" : "full";
   const readSnapshot = useCallback(async (): Promise<typeof snapshot> => {
     if (!app) return undefined;
     if (scope !== "full") {
-      // The 3D arena reads its match through DuelService, not a global
-      // materialization of every card, note and personal record.
       const counts = atPortal ? await app.arcanarium.overview() : undefined;
       return { app, data: emptyArcanarium(), entries: [], scope, counts };
     }
@@ -195,7 +180,6 @@ export default function ArcanariumPage({
         <NavLink to="/arcanario/baralhos">Baralhos</NavLink>
         <NavLink to="/arcanario/oficina/nova">Oficina</NavLink>
         <NavLink to="/arcanario/ecos">Ecos</NavLink>
-        <NavLink to="/arcanario/duelos">Duelo Arcano</NavLink>
         <NavLink to="/arcanario/provacoes">Provações</NavLink>
         <NavLink to="/arcanario/pacotes">Biblioteca de Provas</NavLink>
         <NavLink to="/arcanario/assuntos">Assuntos</NavLink>
@@ -229,13 +213,9 @@ export default function ArcanariumPage({
                   <Portal data={snapshot.data} counts={snapshot.counts} />
                 }
               />
-              <Route path="duelos" element={<DuelHall />} />
-              <Route path="duelos/arena/:id" element={<ArenaDuel />} />
-              <Route path="duelos/regras" element={<DuelRules />} />
-              <Route path="duelos/baralhos/:id" element={<DuelDeckEditor />} />
               <Route
-                path="duelos/partida/:id"
-                element={<DuelTable key={location.pathname} />}
+                path="duelos/*"
+                element={<Navigate to="/arcanario" replace />}
               />
               <Route path="acervo" element={<Catalogue />} />
               <Route path="pacotes" element={<PackLibrary />} />
@@ -333,13 +313,6 @@ function Portal({
       </div>
       <div className="arcana-portals">
         {[
-          {
-            to: "duelos",
-            title: "O Duelo Arcano",
-            text: "Quatro tradições, criaturas impossíveis e escolhas que mudam o círculo. Duele offline.",
-            kind: "workshop" as const,
-            label: "05 · CONJURAR",
-          },
           {
             to: "pacotes",
             title: "Biblioteca de Provas",

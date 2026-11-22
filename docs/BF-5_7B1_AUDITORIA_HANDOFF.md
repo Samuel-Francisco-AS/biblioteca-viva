@@ -10,15 +10,14 @@
 4. **B2.5 / novas garantias:** testar instalação limpa, funcionamento de flashcards/questões/memórias/treinos, novo backup/restauração, rotas antigas, inatividade de duelos e ausência de importações mortas. Não usar backups pessoais. Testes F2/F3 da PR #53 podem ser descartados/adaptados se verificarem comportamento aposentado.
 5. **B2.6 / aceite:** testes locais lint/typecheck/build/Vitest/E2E executáveis e gate Moto G06 quando houver APK. Relatar PASS/FAIL/não executado. Não executar reset real nesta auditoria, não fazer merge sem aceite.
 
-**Nova regra:** o que deve sobreviver é **a integridade e funcionalidade do aplicativo após um início limpo**, não o conteúdo descartável do APK atual. O objetivo é simplificar a arquitetura, sem deixar passivos de TCG espalhados ou enfraquecer validação de dados *novos*.
+**Nova regra:** o que deve sobreviver é **a integridade e funcionalidade do aplicativo após um início limpo**, não o conteúdo descartável do APK atual. O objetivo é simplificar a arquitetura, sem deixar passivos de TCG espalhados ou enfraquecer validação de dados _novos_.
 
-
-**Data:** 12/11/2026  
-**Etapa:** B1 — Inventário, dependências, compatibilidade e decisão de implementação.  
-**Estado:** **auditoria estática remota concluída, com ressalvas**; B2 ainda **não implementada nem autorizada por este documento**.  
-**PR documental:** [#52](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/52), branch `docs/bf-5-7b-arcanario-reorientacao`, base `main` verificada em `9abf0c0b058686ff6233525213574095d9ee07cf`.  
-**Método:** inspeção dos arquivos reais via conector GitHub e busca cruzada de referências; nenhum checkout de execução, build, teste, APK, dado pessoal, CI ou experimento físico. Todos os PASS abaixo se referem **apenas à conclusão da inspeção**, não à execução dos testes existentes.  
-**Fonte de direção:** [Plano BF-5.7B](BF-5_7B_ARCANARIO_REFORMA_PLANO.md), [issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50).  
+**Data:** 12/11/2026
+**Etapa:** B1 — Inventário, dependências, compatibilidade e decisão de implementação.
+**Estado:** **auditoria estática remota concluída, com ressalvas**; B2 ainda **não implementada nem autorizada por este documento**.
+**PR documental:** [#52](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/52), branch `docs/bf-5-7b-arcanario-reorientacao`, base `main` verificada em `9abf0c0b058686ff6233525213574095d9ee07cf`.
+**Método:** inspeção dos arquivos reais via conector GitHub e busca cruzada de referências; nenhum checkout de execução, build, teste, APK, dado pessoal, CI ou experimento físico. Todos os PASS abaixo se referem **apenas à conclusão da inspeção**, não à execução dos testes existentes.
+**Fonte de direção:** [Plano BF-5.7B](BF-5_7B_ARCANARIO_REFORMA_PLANO.md), [issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50).
 **Destinatário:** Copilot ou outro agente de implementação, com instruções deliberadamente pequenas, explícitas e verificáveis.
 
 > **Conclusão executiva:** a experiência TCG pode ser retirada da navegação e da jogabilidade, **mas não pode ser apagada da modelagem/validação de dados de uma só vez**. Os tipos `combat` e `combat_match`, referências de baralho e validação de replay integram a estrutura global do Arcanário e os backups v11/anteriores. **Separar descontinuação de produto (B2) de descarte físico de dados e do parser legado (decisão futura).** A lua orbital já abre `/arcanario` e pode servir como portal educativo, sujeita a decisão artística.
@@ -29,17 +28,17 @@
 
 **Estado:** inventário estático concluído.
 
-| Superfície | Evidência verificada | Tratamento indicado |
-| --- | --- | --- |
-| Casca global | `src/App.tsx` importa `isArenaRoute` e `arena.css`, cria `arenaActive` e publica `data-arena-route`; rota principal `/arcanario/*` permanece educativa | Em B2, remover modo fullscreen de arena **após** encerrar suas rotas e revisar CSS de casca/dock |
-| Salas | `src/features/arcanarium/ArcanariumPage.tsx` define imports lazy de `DuelHall`, `DuelTable`, `DuelDeckEditor`, `DuelRules`, `ArenaDuel`; 5 rotas sob `duelos`; navegação com **11 destinos**, incluindo `Duelo Arcano` | Retirar entrada e substituir rotas legadas por fallback contextual; **não** apagar Portal, Acervo, Ecos, Oficina, Provações, Pacotes, Assuntos, Diagnóstico ou Relicário |
-| Portal | `ArcanariumPage.tsx` inclui tile `O Duelo Arcano`, links de Provações/Pacotes/Acervo/Ecos/Relicário | Retirar tile de duelo, manter caminhos educacionais; reforma hierárquica profunda fica em B3 |
-| Oficina | `src/features/arcanarium/Workshop.tsx` seleciona `CombatEditor` via `?tipo=combat` e expõe link `Criar carta de combate` | Não oferecer criação nova de combate; proteger URL antiga e rascunhos. Preservar editores de flashcard, memória e questão |
-| Acervo e detalhes | `Catalogue.tsx` filtra por família, incluindo `combat` por `presentation.ts`; `CardDetail` aceita qualquer `Card` por ID | Filtrar combatentes da experiência ativa **e** bloquear acesso direto por `/arcanario/cartas/:id`, sem excluir o registro persistido |
-| Cartas renderizadas | `ArcanaCard.tsx` **importa estaticamente** `../duel/CombatCard` e renderiza `combat` quando há definição; `presentation.ts` define título/rótulo `combat` | Desacoplar componente visual de combate, mantendo fallback honesto para conteúdo legado se necessário |
-| Baralhos | `Decks.tsx` já oculta baralhos `deck.combat` na lista comum, mas `DeckEditor` envia esses IDs ao editor de duelo; `ArcanariumService.saveDeck` recusa mistura com combatentes | Impedir navegação para editor aposentado; manter validação de domínio enquanto existirem registros legados |
-| Inicialização do catálogo TCG | `DuelHall.tsx` chama `app.duels.ensureCatalogue()` ao montar. `DuelService.ensureCatalogue()` semeia cartas e decks oficiais ausentes no mesmo repositório do Arcanário | Remover esse efeito de produto e não reinstalar catálogo oficial do TCG ao iniciar a BV; **não** assumir que o catálogo só existe em memória |
-| Atalho da Biblioteca | `src/pages.tsx` contém link direto `/arcanario/duelos` e outro para `/arcanario` | Remover atalho de duelo e manter acesso normal ao Arcanário |
+| Superfície                    | Evidência verificada                                                                                                                                                                                                   | Tratamento indicado                                                                                                                                                      |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Casca global                  | `src/App.tsx` importa `isArenaRoute` e `arena.css`, cria `arenaActive` e publica `data-arena-route`; rota principal `/arcanario/*` permanece educativa                                                                 | Em B2, remover modo fullscreen de arena **após** encerrar suas rotas e revisar CSS de casca/dock                                                                         |
+| Salas                         | `src/features/arcanarium/ArcanariumPage.tsx` define imports lazy de `DuelHall`, `DuelTable`, `DuelDeckEditor`, `DuelRules`, `ArenaDuel`; 5 rotas sob `duelos`; navegação com **11 destinos**, incluindo `Duelo Arcano` | Retirar entrada e substituir rotas legadas por fallback contextual; **não** apagar Portal, Acervo, Ecos, Oficina, Provações, Pacotes, Assuntos, Diagnóstico ou Relicário |
+| Portal                        | `ArcanariumPage.tsx` inclui tile `O Duelo Arcano`, links de Provações/Pacotes/Acervo/Ecos/Relicário                                                                                                                    | Retirar tile de duelo, manter caminhos educacionais; reforma hierárquica profunda fica em B3                                                                             |
+| Oficina                       | `src/features/arcanarium/Workshop.tsx` seleciona `CombatEditor` via `?tipo=combat` e expõe link `Criar carta de combate`                                                                                               | Não oferecer criação nova de combate; proteger URL antiga e rascunhos. Preservar editores de flashcard, memória e questão                                                |
+| Acervo e detalhes             | `Catalogue.tsx` filtra por família, incluindo `combat` por `presentation.ts`; `CardDetail` aceita qualquer `Card` por ID                                                                                               | Filtrar combatentes da experiência ativa **e** bloquear acesso direto por `/arcanario/cartas/:id`, sem excluir o registro persistido                                     |
+| Cartas renderizadas           | `ArcanaCard.tsx` **importa estaticamente** `../duel/CombatCard` e renderiza `combat` quando há definição; `presentation.ts` define título/rótulo `combat`                                                              | Desacoplar componente visual de combate, mantendo fallback honesto para conteúdo legado se necessário                                                                    |
+| Baralhos                      | `Decks.tsx` já oculta baralhos `deck.combat` na lista comum, mas `DeckEditor` envia esses IDs ao editor de duelo; `ArcanariumService.saveDeck` recusa mistura com combatentes                                          | Impedir navegação para editor aposentado; manter validação de domínio enquanto existirem registros legados                                                               |
+| Inicialização do catálogo TCG | `DuelHall.tsx` chama `app.duels.ensureCatalogue()` ao montar. `DuelService.ensureCatalogue()` semeia cartas e decks oficiais ausentes no mesmo repositório do Arcanário                                                | Remover esse efeito de produto e não reinstalar catálogo oficial do TCG ao iniciar a BV; **não** assumir que o catálogo só existe em memória                             |
+| Atalho da Biblioteca          | `src/pages.tsx` contém link direto `/arcanario/duelos` e outro para `/arcanario`                                                                                                                                       | Remover atalho de duelo e manter acesso normal ao Arcanário                                                                                                              |
 
 **Rotas de legado a resolver:** `/arcanario/duelos`, `/arcanario/duelos/regras`, `/arcanario/duelos/baralhos/:id`, `/arcanario/duelos/partida/:id`, `/arcanario/duelos/arena/:id`. **Recomendação:** redirecionar de modo previsível para `/arcanario` com `replace` ou exibir estado de descontinuação que ofereça voltar ao Portal; não abrir partida, não quebrar Back e não deixar página em branco.
 
@@ -118,14 +117,14 @@
 
 ### Suítes e evidências que precisam ser tratadas
 
-| Grupo | Arquivos de referência | Ação em B2 |
-| --- | --- | --- |
-| Domínio e banco global | `src/domain/arcanarium.test.ts`, `src/infrastructure/database/arcanarium.test.ts`, `src/infrastructure/database/schema.test.ts` | Preservar contratos, revisões e links |
-| Combate legado | `src/infrastructure/database/duels.test.ts`, testes em `src/domain/duel/` | **Não apagar todos**; converter parte em testes de compatibilidade/arquivo histórico |
-| Backups | `src/infrastructure/backup/backup.test.ts`, `r4Integrity.test.ts` | Adicionar fixtures v11 com TCG e restore antigo; manter checksum, replay/validação, rollback |
-| Arcanário educacional | `src/features/arcanarium/ArcanariumPage.test.tsx`, `e2e/bf56a-arcanarium.spec.ts`, `bf56b-workshop.spec.ts`, `bf56c-provations.spec.ts`, `bf56d-packs.spec.ts`, `bf57a-arcanarium-scroll.spec.ts` | Gate de regressão obrigatório |
-| Duelo/arena | `e2e/bf56e-duel.spec.ts`, `bf56f-arena.spec.ts` | Atualizar/retirar **expectativas de jogo ativo** apenas após trocar por testes de ausência de duelo e compatibilidade |
-| Mundo e navegação | `e2e/bf56f-orbital-refinement.spec.ts`, `src/features/library/WorldHost.test.tsx`, `src/features/library/three/orbitalArena.test.ts`, `src/pages.test.tsx`, `src/app/interactionContinuity.test.ts`, `src/app/uiActionProbe.test.ts` | Reescrever expectativas de rota/rótulo, mantendo picking, Back, cortina e estado do mundo |
+| Grupo                  | Arquivos de referência                                                                                                                                                                                                               | Ação em B2                                                                                                            |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| Domínio e banco global | `src/domain/arcanarium.test.ts`, `src/infrastructure/database/arcanarium.test.ts`, `src/infrastructure/database/schema.test.ts`                                                                                                      | Preservar contratos, revisões e links                                                                                 |
+| Combate legado         | `src/infrastructure/database/duels.test.ts`, testes em `src/domain/duel/`                                                                                                                                                            | **Não apagar todos**; converter parte em testes de compatibilidade/arquivo histórico                                  |
+| Backups                | `src/infrastructure/backup/backup.test.ts`, `r4Integrity.test.ts`                                                                                                                                                                    | Adicionar fixtures v11 com TCG e restore antigo; manter checksum, replay/validação, rollback                          |
+| Arcanário educacional  | `src/features/arcanarium/ArcanariumPage.test.tsx`, `e2e/bf56a-arcanarium.spec.ts`, `bf56b-workshop.spec.ts`, `bf56c-provations.spec.ts`, `bf56d-packs.spec.ts`, `bf57a-arcanarium-scroll.spec.ts`                                    | Gate de regressão obrigatório                                                                                         |
+| Duelo/arena            | `e2e/bf56e-duel.spec.ts`, `bf56f-arena.spec.ts`                                                                                                                                                                                      | Atualizar/retirar **expectativas de jogo ativo** apenas após trocar por testes de ausência de duelo e compatibilidade |
+| Mundo e navegação      | `e2e/bf56f-orbital-refinement.spec.ts`, `src/features/library/WorldHost.test.tsx`, `src/features/library/three/orbitalArena.test.ts`, `src/pages.test.tsx`, `src/app/interactionContinuity.test.ts`, `src/app/uiActionProbe.test.ts` | Reescrever expectativas de rota/rótulo, mantendo picking, Back, cortina e estado do mundo                             |
 
 **Atenção:** o E2E `bf56f-orbital-refinement.spec.ts` valida explicitamente o link **Duelo Arcano** depois da ida pelo portal, então ficará legitimamente obsoleto; **substituir a asserção por conteúdo educacional do Portal**, não simplesmente pular todo o teste. A quantidade de arquivos encontrados não é resultado de execução. A BF-5.7A teve ressalvas anteriores de CI/E2E; não marcá-las como sanadas.
 
@@ -190,13 +189,13 @@ npm run packs:check
 
 ### Ordem de edição recomendada ao agente
 
-| Prioridade | Pacote de arquivos | Motivação |
-| --- | --- | --- |
-| 0 — não mexer antes de testes | `domain/arcanarium.ts`, `domain/duel/contracts.ts`, `domain/duel/engine.ts`, `infrastructure/backup/*`, `infrastructure/database/schema.ts` | Contratos para dados antigos |
-| 1 — baixa complexidade | `features/arcanarium/ArcanariumPage.tsx`, `pages.tsx` | Entradas e rotas de duelo |
-| 2 — média | `features/arcanarium/Workshop.tsx`, `Decks.tsx`, `Catalogue.tsx`, `ArcanaCard.tsx`, `presentation.ts` | Criar, filtrar, mostrar e navegar cartas |
-| 3 — média/alta | `App.tsx`, `features/duel/arena/arenaRoute.ts`, `features/library/three/orbitalArena.ts`, `ThreeWorldRuntime.ts`, `WorldHost.tsx`, `ThreeWorldInteraction.ts`, `worldPickBroadphase.ts` | Fullscreen, portal e seleção 3D |
-| 4 — alta e condicional | `app/createApplication.ts`, `application/duels.ts`, `features/duel/**`, assets/arte, testes de duelo | Corte de runtime sem romper validadores históricos |
+| Prioridade                    | Pacote de arquivos                                                                                                                                                                      | Motivação                                          |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| 0 — não mexer antes de testes | `domain/arcanarium.ts`, `domain/duel/contracts.ts`, `domain/duel/engine.ts`, `infrastructure/backup/*`, `infrastructure/database/schema.ts`                                             | Contratos para dados antigos                       |
+| 1 — baixa complexidade        | `features/arcanarium/ArcanariumPage.tsx`, `pages.tsx`                                                                                                                                   | Entradas e rotas de duelo                          |
+| 2 — média                     | `features/arcanarium/Workshop.tsx`, `Decks.tsx`, `Catalogue.tsx`, `ArcanaCard.tsx`, `presentation.ts`                                                                                   | Criar, filtrar, mostrar e navegar cartas           |
+| 3 — média/alta                | `App.tsx`, `features/duel/arena/arenaRoute.ts`, `features/library/three/orbitalArena.ts`, `ThreeWorldRuntime.ts`, `WorldHost.tsx`, `ThreeWorldInteraction.ts`, `worldPickBroadphase.ts` | Fullscreen, portal e seleção 3D                    |
+| 4 — alta e condicional        | `app/createApplication.ts`, `application/duels.ts`, `features/duel/**`, assets/arte, testes de duelo                                                                                    | Corte de runtime sem romper validadores históricos |
 
 ### Instrução pronta para o Copilot executar somente B2.1
 
@@ -239,16 +238,16 @@ Não comece B2.2 nem altere código produtivo nesta missão.
 
 ## Matriz de risco e conclusões
 
-| Risco | Severidade | Evidência / mitigação |
-| --- | --- | --- |
-| Backup antigo rejeitado após remover `matchSchema`/engine | **Crítico** | `backupCodec.ts` valida replay e `domain/arcanarium.ts` valida sessões; fixtures antes da remoção |
-| Exclusão indireta de dados educacionais ao limpar tabelas | **Crítico** | Stores compartilhadas entre modalidades; nenhuma exclusão geral permitida |
-| Perda de cartas autorais TCG por supor exportação existente | **Alto** | `cardExchange.ts` exporta só flashcards/memórias; retenção oculta até política explícita |
-| Recriação involuntária do catálogo TCG | **Médio** | `DuelHall` chama `ensureCatalogue()`; não montar a sala nem deixar outra entrada |
-| Portal lunar quebrado por remoção de arte/ID | **Alto** | `orbitalArena` usa `duelArtUrl` e ID em 3D/picking/WorldHost |
-| Contadores/listas mostram cartas aposentadas | **Médio** | `DexieArcanariumRepository.overview()` conta cartas/decks sem excluir combate |
-| Links profundos `duelos/*` e testes anteriores quebrados | **Médio** | rotas declaradas e testes E2E de duelo/orbital |
-| Suposta melhora de FPS ou APK sem medir | **Médio** | código estático e tamanho de assets não são evidência de FPS/memória ou bundle final |
+| Risco                                                       | Severidade  | Evidência / mitigação                                                                             |
+| ----------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------- |
+| Backup antigo rejeitado após remover `matchSchema`/engine   | **Crítico** | `backupCodec.ts` valida replay e `domain/arcanarium.ts` valida sessões; fixtures antes da remoção |
+| Exclusão indireta de dados educacionais ao limpar tabelas   | **Crítico** | Stores compartilhadas entre modalidades; nenhuma exclusão geral permitida                         |
+| Perda de cartas autorais TCG por supor exportação existente | **Alto**    | `cardExchange.ts` exporta só flashcards/memórias; retenção oculta até política explícita          |
+| Recriação involuntária do catálogo TCG                      | **Médio**   | `DuelHall` chama `ensureCatalogue()`; não montar a sala nem deixar outra entrada                  |
+| Portal lunar quebrado por remoção de arte/ID                | **Alto**    | `orbitalArena` usa `duelArtUrl` e ID em 3D/picking/WorldHost                                      |
+| Contadores/listas mostram cartas aposentadas                | **Médio**   | `DexieArcanariumRepository.overview()` conta cartas/decks sem excluir combate                     |
+| Links profundos `duelos/*` e testes anteriores quebrados    | **Médio**   | rotas declaradas e testes E2E de duelo/orbital                                                    |
+| Suposta melhora de FPS ou APK sem medir                     | **Médio**   | código estático e tamanho de assets não são evidência de FPS/memória ou bundle final              |
 
 **Parecer B1:** o projeto **está apto a iniciar B2.1 (testes preventivos)** mediante autorização específica. **Não está apto a uma exclusão em massa do TCG** nem à remoção imediata dos parsers de dados antigos. A arquitetura permite retirar a experiência ativa por camadas, mantendo funcionalidade educacional e compatibilidade. Não há evidência de execução de teste ou aceite físico desta auditoria.
 

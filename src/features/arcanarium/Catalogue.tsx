@@ -232,7 +232,8 @@ export function Catalogue({
           </button>
           <span>
             {" "}
-            Página {page} de {Math.ceil(cards.length / CATALOGUE_PAGE_SIZE)}{" "}
+            Página {page} de{" "}
+            {Math.ceil(cards.length / CATALOGUE_PAGE_SIZE)}{" "}
           </span>
           <button
             disabled={page * CATALOGUE_PAGE_SIZE >= cards.length}
@@ -244,35 +245,29 @@ export function Catalogue({
       )}
       {cards.length ? (
         <div className="arcana-grid">
-          {cards.slice(
-            (page - 1) * CATALOGUE_PAGE_SIZE,
-            page * CATALOGUE_PAGE_SIZE,
-          ).map((c) => (
-            <Link
-              className="arcana-card-link"
-              key={c.id}
-              to={cardPath(c.id)}
-              aria-label={`Abrir ${cardTitle(c.content)}`}
-            >
-              <ArcanaCard
-                compact
-                app={app}
-                content={c.content}
-                official={c.origin.kind === "official"}
-              />
-              <span className="arcana-card-caption">
-                {cardTitle(c.content)}
-              </span>
-              <span className="arcana-muted">
-                {c.origin.kind === "study"
-                  ? "Originária de Estudo"
-                  : c.origin.kind === "local"
-                    ? "Carta autoral"
-                    : "Acervo importado"}{" "}
-                · revisão {c.revision}
-              </span>
-            </Link>
-          ))}
+          {cards
+            .slice((page - 1) * CATALOGUE_PAGE_SIZE, page * CATALOGUE_PAGE_SIZE)
+            .map((c) => (
+              <Link
+                className="arcana-card-link"
+                key={c.id}
+                to={cardPath(c.id)}
+                aria-label={`Abrir ${cardTitle(c.content)}`}
+              >
+                <ArcanaCard compact app={app} content={c.content} />
+                <span className="arcana-card-caption">
+                  {cardTitle(c.content)}
+                </span>
+                <span className="arcana-muted">
+                  {c.origin.kind === "study"
+                    ? "Originária de Estudo"
+                    : c.origin.kind === "local"
+                      ? "Carta autoral"
+                      : "Acervo importado"}{" "}
+                  · revisão {c.revision}
+                </span>
+              </Link>
+            ))}
         </div>
       ) : (
         <div className="arcana-empty">
@@ -396,12 +391,7 @@ function Detail({
               </details>
             </section>
           ) : (
-            <ArcanaCard
-              content={shown.content}
-              app={app}
-              flipped={flipped}
-              official={card.origin.kind === "official"}
-            />
+            <ArcanaCard content={shown.content} app={app} flipped={flipped} />
           )}
           {(shown.content.type === "flashcard" ||
             shown.content.type === "memory") && (
@@ -451,21 +441,13 @@ function Detail({
                 "Explicação independente: comentário editorial do Arcanário."}
             </p>
           )}
-          {card.type === "combat" && (
-            <Link
-              to={`/arcanario/oficina/nova?tipo=combat&copia=${encodeURIComponent(card.id)}`}
-            >
-              Criar cópia autoral desta carta
-            </Link>
-          )}
           <div className="arcana-actions">
             {!card.archived &&
               card.origin.kind !== "official" &&
               !packOwned(card) &&
               (card.type === "flashcard" ||
                 card.type === "memory" ||
-                card.type === "question" ||
-                card.type === "combat") && (
+                card.type === "question") && (
                 <Link
                   className="button button--primary"
                   to={editorPath(card.id)}

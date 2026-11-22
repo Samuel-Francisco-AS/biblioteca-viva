@@ -52,7 +52,7 @@ test("Estudos grava e revisa na fonte global, reabre e retira sem apagar o acerv
   await expect(page.locator(".study-card-count")).toHaveText("0 cartas");
   const persisted = await page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const request = indexedDB.open("biblioteca-viva");
+      const request = indexedDB.open("biblioteca-viva-bf57");
       request.onsuccess = () => resolve(request.result);
       request.onerror = () => reject(new Error("fixture read failed"));
     });

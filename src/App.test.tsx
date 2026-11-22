@@ -1,10 +1,20 @@
 import "fake-indexeddb/auto";
-import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App } from "./App";
-import { cancelPassage, completePassageDeparture } from "./app/interactionContinuity";
+import {
+  cancelPassage,
+  completePassageDeparture,
+} from "./app/interactionContinuity";
 import { CRYSTAL_PRESS_ECHO_MS } from "./app/crystalPress";
 
 beforeEach(() => {
@@ -157,10 +167,16 @@ it("R2 does not add an echo on a cancelled scroll gesture", () => {
   const button = document.createElement("button");
   document.querySelector(".app-shell")!.append(button);
   const emit = (type: string, x: number) =>
-    button.dispatchEvent(new PointerEvent(type, {
-      bubbles: true, pointerType: "touch", isPrimary: true,
-      pointerId: 13, clientX: x, clientY: 20,
-    }));
+    button.dispatchEvent(
+      new PointerEvent(type, {
+        bubbles: true,
+        pointerType: "touch",
+        isPrimary: true,
+        pointerId: 13,
+        clientX: x,
+        clientY: 20,
+      }),
+    );
   emit("pointerdown", 10);
   emit("pointermove", 35);
   emit("pointerup", 35);
@@ -319,7 +335,11 @@ it("keeps the Arcanarium snapshot mounted between rooms and debounces the real w
     </MemoryRouter>,
   );
   try {
-    await screen.findByRole("heading", { name: "Acervo global" }, { timeout: 8000 });
+    await screen.findByRole(
+      "heading",
+      { name: "Acervo global" },
+      { timeout: 8000 },
+    );
     for (const [link, title] of [
       ["Baralhos", "Baralhos & coleções"],
       ["Ecos", "Ecos do conhecimento"],

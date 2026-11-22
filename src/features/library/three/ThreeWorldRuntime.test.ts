@@ -3280,3 +3280,47 @@ it("R5Q quest diagnostics stop on unsubscribe and never join frames across pause
   });
   runtime.dispose();
 });
+
+it("R2 advances the orbit by active RAF time and excludes route/visibility absence", () => {
+  vi.stubGlobal("ResizeObserver", TestResizeObserver);
+  const renderer = new TestRenderer();
+  let callback: FrameRequestCallback | undefined;
+  const runtime = new ThreeWorldRuntime({
+    createRenderer: () => renderer,
+    fixtureLoader: new TestFixtureLoader(),
+    libraryWorldSnapshot: projectLibraryWorldEntries([]),
+    frameScheduler: {
+      request: (cb) => {
+        callback = cb;
+        return 1;
+      },
+      cancel: () => {
+        callback = undefined;
+      },
+    },
+  });
+  runtime.mount(createHost());
+  runtime.start();
+  const scene = renderer.render.mock.calls.at(-1)![0];
+  const moon = scene.getObjectByName("portal:duelo-arcano")!;
+  expect(moon).toBeDefined();
+  const identity = moon;
+  callback?.(100);
+  callback?.(200);
+  callback?.(400);
+  const expectedAngle = 1.8 + (0.3 * Math.PI * 2) / 420;
+  expect(moon.position.x).toBeCloseTo(Math.sin(expectedAngle) * 28, 9);
+  const position = moon.position.clone();
+  runtime.pause();
+  expect(callback).toBeUndefined();
+  runtime.resume();
+  callback?.(3_600_400);
+  expect(moon.position.equals(position)).toBe(true);
+  callback?.(3_600_500);
+  expect(moon.position.x).toBeCloseTo(
+    Math.sin(1.8 + (0.4 * Math.PI * 2) / 420) * 28,
+    9,
+  );
+  expect(scene.getObjectByName("portal:duelo-arcano")).toBe(identity);
+  runtime.dispose();
+});

@@ -1,0 +1,212 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 test:e2e
+npm notice run playwright test e2e/bf57b-retired-duel.spec.ts e2e/bf56f-orbital-refinement.spec.ts e2e/performance-navigation.spec.ts e2e/bf57b-choices.spec.ts e2e/bf57b-educational-offline.spec.ts e2e/bf56a-arcanarium.spec.ts e2e/bf56b-workshop.spec.ts e2e/bf56c-provations.spec.ts e2e/bf56d-packs.spec.ts e2e/bf5-parte2c-atividade.spec.ts e2e/search-and-backup.spec.ts
+[WebServer] npm notice run biblioteca-viva@0.2.0-alpha.1 preview
+[WebServer] npm notice run vite preview --host 127.0.0.1 --port 4173
+[WebServer] (node:42856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] npm notice run biblioteca-viva@0.2.0-alpha.1 dev
+[WebServer] npm notice run vite --host 127.0.0.1 --port 4174
+[WebServer] (node:42894) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 29 tests using 1 worker
+
+(node:42921) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/bf5-parte2c-atividade.spec.ts:11:1 › ficha viva cria, adapta dias, conserva base, estima com perfil e apresenta calendário e fólio acessíveis (13.5s)
+  ✓   2 [chromium] › e2e/bf5-parte2c-atividade.spec.ts:244:1 › cadastro exige ficha, permite ordenar metas e diário protege rascunho, desmarca e limpa só o dia (6.1s)
+  ✓   3 [chromium] › e2e/bf56a-arcanarium.spec.ts:3:1 › Estudos grava e revisa na fonte global, reabre e retira sem apagar o acervo (5.6s)
+  ✘   4 [chromium] › e2e/bf56b-workshop.spec.ts:24:1 › B: portal acessível, teclado e retorno preservam o mesmo Canvas residente (31.1s)
+(node:43120) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   5 [chromium] › e2e/bf56b-workshop.spec.ts:51:1 › B: Oficina, baralho, duas respostas, interrupção, reload e histórico real (30.6s)
+(node:43239) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   6 [chromium] › e2e/bf56b-workshop.spec.ts:101:1 › B: Relicário com imagem, rascunho, retrato/paisagem, edição e arquivamento (5.2s)
+  ✓   7 [chromium] › e2e/bf56b-workshop.spec.ts:151:1 › B: exportação real, arquivo inválido, importação como cópia e importação repetida (7.9s)
+  ✓   8 [chromium] › e2e/bf56c-provations.spec.ts:112:1 › C: taxonomy, author question, draft, stable answer ordering, preview and re-edit (6.6s)
+  ✓   9 [chromium] › e2e/bf56c-provations.spec.ts:192:1 › C: real dynamic filters, ten questions, correction, pause/reload, history and downloaded JSON/CSV (12.0s)
+  ✓  10 [chromium] › e2e/bf56c-provations.spec.ts:343:1 › B-R1/B-R2: all frame previews, independent catalogue name, recovery and family filter without native picker (4.7s)
+  ✓  11 [chromium] › e2e/bf56c-provations.spec.ts:414:1 › C hotfix: inline personal tag creation, Enter safety and readable question summary (1.9s)
+  ✘  12 [chromium] › e2e/bf56d-packs.spec.ts:43:1 › D: partial catalog, lots, idempotence, trial, offline, removal and coherent reinstall (30.5s)
+(node:43510) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [chromium] › e2e/bf56d-packs.spec.ts:162:1 › D: invalid, incompatible and corrupt files reject before writes; recovers with valid file (1.9s)
+  ✘  14 [chromium] › e2e/bf56f-orbital-refinement.spec.ts:2:1 › BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident world (1.0m)
+(node:43660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  15 [chromium] › e2e/bf57b-choices.spec.ts:7:3 › R2: classification radios keep native square paint boxes at 390 (2.3s)
+  ✓  16 [chromium] › e2e/bf57b-choices.spec.ts:7:3 › R2: classification radios keep native square paint boxes at 844 (2.1s)
+  ✓  17 [chromium] › e2e/bf57b-educational-offline.spec.ts:3:1 › B2.5: educational edits and classifications survive warm offline navigation and reopen (7.3s)
+  ✓  18 [chromium] › e2e/bf57b-retired-duel.spec.ts:15:3 › BF-5.7B2.3: old hall route returns to Arcanarium Portal (480ms)
+  ✓  19 [chromium] › e2e/bf57b-retired-duel.spec.ts:15:3 › BF-5.7B2.3: old rules route returns to Arcanarium Portal (465ms)
+  ✓  20 [chromium] › e2e/bf57b-retired-duel.spec.ts:15:3 › BF-5.7B2.3: old deck editor route returns to Arcanarium Portal (449ms)
+  ✓  21 [chromium] › e2e/bf57b-retired-duel.spec.ts:15:3 › BF-5.7B2.3: old match route returns to Arcanarium Portal (457ms)
+  ✓  22 [chromium] › e2e/bf57b-retired-duel.spec.ts:15:3 › BF-5.7B2.3: old arena route returns to Arcanarium Portal (460ms)
+  ✓  23 [chromium] › e2e/bf57b-retired-duel.spec.ts:33:1 › BF-5.7B2.3: retired combat-card creation returns to Portal (1.2s)
+  ✓  24 [chromium] › e2e/bf57b-retired-duel.spec.ts:44:1 › BF-5.7B2.3: educational Arcanarium rooms remain reachable (1.9s)
+  ✓  25 [chromium] › e2e/performance-navigation.spec.ts:3:1 › performance candidate: rooms, drafts, dock and resident world survive repeated navigation (11.7s)
+  ✘  26 [chromium] › e2e/performance-navigation.spec.ts:66:1 › performance candidate: world keeps one renderer and loop across dock return (31.5s)
+(node:43969) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  27 [chromium] › e2e/search-and-backup.spec.ts:38:1 › busca, filtro, ordenação e Arquivo preservam navegação (11.9s)
+  ✓  28 [chromium] › e2e/search-and-backup.spec.ts:89:1 › backup web real é baixado, validado, restaurado e persiste (8.0s)
+  ✓  29 [chromium] › e2e/search-and-backup.spec.ts:185:1 › restauração em base vazia recupera dados convencionais (5.8s)
+
+
+  1) [chromium] › e2e/bf56b-workshop.spec.ts:24:1 › B: portal acessível, teclado e retorno preservam o mesmo Canvas residente 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Target page, context or browser has been closed
+
+      31 |     .evaluate((node) => node.setAttribute("data-bf56b-resident", "same"));
+      32 |   await page.getByRole("link", { name: "Coleção", exact: true }).click();
+    > 33 |   await page.getByRole("link", { name: /Cartas, Ecos e Relicário/ }).click();
+         |                                                                      ^
+      34 |   await expect(
+      35 |     page.getByRole("heading", { name: "O Arcanário", exact: true, level: 2 }),
+      36 |   ).toBeVisible();
+        at /home/sam/Projetos/biblioteca-viva/e2e/bf56b-workshop.spec.ts:33:70
+
+    Error Context: test-results/bf56b-workshop-B-portal-ac-fce7d-am-o-mesmo-Canvas-residente-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/bf56b-workshop-B-portal-ac-fce7d-am-o-mesmo-Canvas-residente-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/bf56b-workshop-B-portal-ac-fce7d-am-o-mesmo-Canvas-residente-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e/bf56b-workshop.spec.ts:51:1 › B: Oficina, baralho, duas respostas, interrupção, reload e histórico real 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('link', { name: /Retomar do próximo Eco/ })
+
+
+      81 |     .click();
+      82 |   await page.reload();
+    > 83 |   await page.getByRole("link", { name: /Retomar do próximo Eco/ }).click();
+         |                                                                    ^
+      84 |   await expect(page.getByText(/1 de 2 respostas confirmadas/)).toBeVisible();
+      85 |   await page
+      86 |     .getByRole("button", { name: /Virar carta · revelar resposta/ })
+        at /home/sam/Projetos/biblioteca-viva/e2e/bf56b-workshop.spec.ts:83:68
+
+    Error Context: test-results/bf56b-workshop-B-Oficina-b-36ff1-ção-reload-e-histórico-real-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/bf56b-workshop-B-Oficina-b-36ff1-ção-reload-e-histórico-real-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/bf56b-workshop-B-Oficina-b-36ff1-ção-reload-e-histórico-real-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › e2e/bf56d-packs.spec.ts:43:1 › D: partial catalog, lots, idempotence, trial, offline, removal and coherent reinstall 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('article', { name: 'Aritmética dos pequenos arquivos' }).getByRole('button', { name: 'Remover pacote' })
+
+
+      137 |     .getByRole("link", { name: "Biblioteca de Provas", exact: true })
+      138 |     .click();
+    > 139 |   await volume.getByRole("button", { name: "Remover pacote" }).click();
+          |                                                                ^
+      140 |   await expect(volume.getByText("Desinstalado", { exact: true })).toBeVisible();
+      141 |   const removed = await records(page);
+      142 |   expect(removed.sessions).toHaveLength(1);
+        at /home/sam/Projetos/biblioteca-viva/e2e/bf56d-packs.spec.ts:139:64
+
+    Error Context: test-results/bf56d-packs-D-partial-cata-89833-oval-and-coherent-reinstall-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/bf56d-packs-D-partial-cata-89833-oval-and-coherent-reinstall-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/bf56d-packs-D-partial-cata-89833-oval-and-coherent-reinstall-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chromium] › e2e/bf56f-orbital-refinement.spec.ts:2:1 › BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident world 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/arcanario$/
+    Received string:  ""
+
+    Call log:
+      - Expect "toHaveURL" with timeout 10000ms
+      - Protocol error (Runtime.callFunctionOn): Internal server error, session closed.
+
+
+      140 |   await lunarPortal.focus();
+      141 |   await page.keyboard.press("Enter");
+    > 142 |   await expect(page).toHaveURL(/\/arcanario$/);
+          |                      ^
+      143 |   const arcanariumNav = page.getByRole("navigation", {
+      144 |     name: "Salas do Arcanário",
+      145 |   });
+        at /home/sam/Projetos/biblioteca-viva/e2e/bf56f-orbital-refinement.spec.ts:142:22
+
+    Error Context: test-results/bf56f-orbital-refinement-B-bb826-reserves-the-resident-world-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/bf56f-orbital-refinement-B-bb826-reserves-the-resident-world-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/bf56f-orbital-refinement-B-bb826-reserves-the-resident-world-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [chromium] › e2e/performance-navigation.spec.ts:66:1 › performance candidate: world keeps one renderer and loop across dock return 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('canvas[data-three-world-canvas]')
+    Expected: "1"
+    Received: ""
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 10000ms
+      - waiting for locator('canvas[data-three-world-canvas]')
+      - Protocol error (Runtime.callFunctionOn): Internal server error, session closed.
+
+
+      84 |     await canvas.evaluate((node, original) => node === original, resident),
+      85 |   ).toBe(true);
+    > 86 |   await expect(canvas).toHaveAttribute("data-active-frame-loops", "1");
+         |                        ^
+      87 |   expect(errors).toEqual([]);
+      88 | });
+      89 |
+        at /home/sam/Projetos/biblioteca-viva/e2e/performance-navigation.spec.ts:86:24
+
+    Error Context: test-results/performance-navigation-per-66e92-and-loop-across-dock-return-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/performance-navigation-per-66e92-and-loop-across-dock-return-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/performance-navigation-per-66e92-and-loop-across-dock-return-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5 failed
+    [chromium] › e2e/bf56b-workshop.spec.ts:24:1 › B: portal acessível, teclado e retorno preservam o mesmo Canvas residente 
+    [chromium] › e2e/bf56b-workshop.spec.ts:51:1 › B: Oficina, baralho, duas respostas, interrupção, reload e histórico real 
+    [chromium] › e2e/bf56d-packs.spec.ts:43:1 › D: partial catalog, lots, idempotence, trial, offline, removal and coherent reinstall 
+    [chromium] › e2e/bf56f-orbital-refinement.spec.ts:2:1 › BF-5.7A: lunar gate opens Arcanarium Portal and preserves the resident world 
+    [chromium] › e2e/performance-navigation.spec.ts:66:1 › performance candidate: world keeps one renderer and loop across dock return 
+  24 passed (5.3m)

@@ -1,0 +1,4 @@
+npm notice run biblioteca-viva@0.2.0-alpha.1 npx
+npm notice run 'prettier' --check e2e/bf56b-workshop.spec.ts e2e/bf56d-packs.spec.ts e2e/bf57b-educational-offline.spec.ts
+Checking formatting...
+All matched files use Prettier code style!

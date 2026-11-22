@@ -42,14 +42,20 @@ export function cancelPassage(): void {
   active = null;
   const node = shell();
   node?.removeAttribute("data-passage");
-  node?.querySelector<HTMLElement>(".passage-veil")
+  node
+    ?.querySelector<HTMLElement>(".passage-veil")
     ?.style.removeProperty("--passage-resume-opacity");
 }
 
 /** Do not reveal until both the cover has sealed and the content is ready. */
 function tryReveal(): void {
   const current = active;
-  if (!current || !current.ready || !current.sealed || current.arrivedAt === null)
+  if (
+    !current ||
+    !current.ready ||
+    !current.sealed ||
+    current.arrivedAt === null
+  )
     return;
   const node = shell();
   if (!node) return;
@@ -57,7 +63,10 @@ function tryReveal(): void {
     cancelPassage();
     return;
   }
-  const remaining = Math.max(0, MIN_VISIBLE_MS - (performance.now() - current.startedAt));
+  const remaining = Math.max(
+    0,
+    MIN_VISIBLE_MS - (performance.now() - current.startedAt),
+  );
   if (current.holdTimer !== undefined) clearTimeout(current.holdTimer);
   current.holdTimer = setTimeout(() => {
     if (active?.id !== current.id) return;
@@ -73,7 +82,8 @@ export function beginPassage(target?: string): void {
   const node = shell();
   const previousPhase = node?.dataset.passage;
   if (active) clearTimers(active);
-  const skipAnimation = reducedMotion() || document.visibilityState === "hidden";
+  const skipAnimation =
+    reducedMotion() || document.visibilityState === "hidden";
   // A second gesture must not restart the curtain at alpha=0. In particular,
   // clicking while the previous route is still held opaque must stay opaque.
   const alreadyCovered = !skipAnimation && previousPhase === "waiting";
@@ -132,11 +142,8 @@ export function notifyPassageLocation(pathname: string): void {
 /** The destination explicitly confirms mounted content/data or visible failure. */
 export function signalPassageReady(pathname: string): void {
   const current = active;
-  if (
-    !current ||
-    current.arrivedAt !== pathname ||
-    current.target !== pathname
-  ) return;
+  if (!current || current.arrivedAt !== pathname || current.target !== pathname)
+    return;
   current.ready = true;
   tryReveal();
 }
@@ -159,7 +166,8 @@ export function completePassageDeparture(): void {
     if (
       typeof requestAnimationFrame === "function" &&
       document.visibilityState !== "hidden"
-    ) requestAnimationFrame(pendingWork);
+    )
+      requestAnimationFrame(pendingWork);
     else queueMicrotask(pendingWork);
   }
   tryReveal();
@@ -185,7 +193,8 @@ export function schedulePassage(action: () => void): () => void {
       typeof requestAnimationFrame === "function" &&
       document.visibilityState !== "hidden" &&
       !reducedMotion()
-    ) frame = requestAnimationFrame(commit);
+    )
+      frame = requestAnimationFrame(commit);
     else queueMicrotask(commit);
   };
   if (!current || current.sealed) queueMicrotask(commit);

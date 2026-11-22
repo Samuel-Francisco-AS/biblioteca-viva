@@ -32,6 +32,7 @@ import { LIBRARY_SHELVES } from "../libraryShelfLayout";
 import { LIBRARY_ROOMS } from "../libraryBuildingGeometry";
 import {
   Color,
+  Vector3,
   DirectionalLight,
   Group,
   HemisphereLight,
@@ -504,6 +505,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private inhabitants?: ReturnType<typeof createInhabitantVisuals>;
   private ambientMagic?: ReturnType<typeof createAmbientMagic>;
   private orbital?: ReturnType<typeof createOrbitalArena>;
+  private readonly orbitalProbePoint = new Vector3();
   private scrollVisuals?: ReturnType<typeof createLivingScrollVisuals>;
   private readonly scrolls: readonly import("../../../contracts/livingScroll").LivingScroll[];
   private lightingInitialized = false;
@@ -1496,13 +1498,14 @@ export class ThreeWorldRuntime implements WorldRuntime {
     const cpuStart = this.performanceProbe.active ? this.now() : 0;
     let bookEnd: number;
     let agencyEnd: number;
-    const delta =
+    const activeDelta =
       this.livingFrameTime === undefined
         ? 0
-        : Math.min(
-            0.05,
-            Math.max(0, (timestamp - this.livingFrameTime) / 1000),
-          );
+        : Math.max(0, (timestamp - this.livingFrameTime) / 1000);
+    // Actors retain their bounded simulation step. The analytical orbit uses
+    // active RAF time, so slow rendering does not slow the architectural orbit.
+    // pauseLoop/visibility clear livingFrameTime: absence is never caught up.
+    const delta = Math.min(0.05, activeDelta);
     this.livingFrameTime = timestamp;
     try {
       const reduced =
@@ -1542,7 +1545,7 @@ export class ThreeWorldRuntime implements WorldRuntime {
         (id) => this.inhabitants?.getSocket(id, "socket_carry") ?? null,
       );
       this.ambientMagic?.update(delta, reduced);
-      this.orbital?.update(delta, reduced);
+      this.orbital?.update(activeDelta, reduced);
       if (this.selection?.id === "portal:duelo-arcano")
         mountedWorld.getInteraction()?.updateHighlightBounds();
       this.scrollVisuals?.update(
@@ -1717,6 +1720,10 @@ export class ThreeWorldRuntime implements WorldRuntime {
     this.livingFrameTime = undefined;
     this.resetFrameMetrics();
     this.mountedWorld?.getInteraction()?.cancelActiveGestures();
+    // The moon is a navigation command, not a durable content selection.
+    // Clear only this transient selection on departure/visibility pause so
+    // the resident interaction can publish the next activation on return.
+    if (this.selection?.id === "portal:duelo-arcano") this.selectObject(null);
     this.publishDiagnostics(true);
   }
 
@@ -1926,6 +1933,24 @@ export class ThreeWorldRuntime implements WorldRuntime {
   private updateCanvasDiagnostics(diagnostics: WorldRuntimeDiagnostics): void {
     const canvas = this.mountedWorld?.renderer.domElement;
     if (!canvas) return;
+    // Anonymous geometry at the existing diagnostic cadence (no new RAF).
+    // This separates world trajectory from camera projection and provides a
+    // current target for real raycast regression tests, without moving camera.
+    const orbital = this.orbital;
+    if (orbital && this.mountedWorld) {
+      canvas.dataset.orbitalWorld = this.orbitalProbePoint
+        .setFromMatrixPosition(orbital.root.matrixWorld)
+        .toArray()
+        .join(",");
+      canvas.dataset.orbitalBookNdc = this.orbitalProbePoint
+        .setFromMatrixPosition(orbital.book.matrixWorld)
+        .project(this.mountedWorld.camera)
+        .toArray()
+        .join(",");
+    } else {
+      canvas.dataset.orbitalWorld = "";
+      canvas.dataset.orbitalBookNdc = "";
+    }
     canvas.dataset.activeFrameLoops = String(diagnostics.activeFrameLoops);
     canvas.dataset.drawCalls = String(diagnostics.drawCalls);
     canvas.dataset.fixtureLoadMs = diagnostics.fixtureLoadMs?.toFixed(1) ?? "";
