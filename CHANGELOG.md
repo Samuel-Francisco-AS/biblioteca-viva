@@ -3,7 +3,7 @@
 - Atualizado o estado canônico das instruções de contribuição: BF-5.7 A–H vigente, BF-5.6 encerrada com ressalvas, Dexie v19/backup v12 educativo e TCG retirado.
 - Arquitetura, modelo de dados e índice de ADRs agora distinguem contratos ativos de registros históricos; ADR-029/030 permanecem preservadas como decisões retiradas.
 - Roadmap, STATUS, índice de documentação, reconciliação B e caderno UX receberam notas de precedência/supersessão para evitar que snapshots antigos sejam lidos como estado atual.
-- Registrada a cadeia documental PRs #58–#60; nenhuma alteração de código, schema, persistência, assets ou testes.
+- Registrada a cadeia documental PRs #58–#61, incluindo esta revisão dedicada; nenhuma alteração de código, schema, persistência, assets ou testes.
 
 ---
 
