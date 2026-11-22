@@ -16,7 +16,14 @@ import type {
   InhabitantContinuityPort,
   InhabitantContinuitySnapshot,
 } from "./inhabitantContinuity";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { completeStartupExperience } from "../../startupExperience";
 
 import type {
@@ -154,7 +161,7 @@ export function WorldHost({
   const [nightLighting] = useState(() => new NightLightingSession());
   const [livingSelection, setLivingSelection] = useState<string | null>(null);
   const activeRef = useRef(active);
-  useEffect(() => {
+  useLayoutEffect(() => {
     activeRef.current = active;
     if (active) {
       runtimeRef.current?.resize();

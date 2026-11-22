@@ -1,4 +1,6 @@
-[BF-5.7B2.5-R3 — reparos após gate físico](BF-5_7B2_5_R3_GATE_FISICO_REPAROS.md): reentrada lunar, experimentos de texto, frame pacing e limites Android.
+> **ESTADO VIGENTE — 21/11/2026:** BF-5.7 em consolidação final. A BF-5.7A foi concluída com ressalvas e integrada pela PR #51. A BF-5.7B reúne a reorientação educativa do Arcanário e a limpeza final do TCG na [PR #58](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/58). O gate funcional no Moto G06 aprovou órbita, reentrada, Arcanário, flashcards, questões e persistência; travamentos de transição/fluidez permanecem dívida técnica registrada, sem métrica física nova. Use a [issue #50](https://github.com/Samuel-Francisco-AS/biblioteca-viva/issues/50) como planejamento mestre.
+
+[BF-5.7B2.5-R3 — reparos após gate físico](BF-5_7B2_5_R3_GATE_FISICO_REPAROS.md): gate Moto G06 aprovado funcionalmente para órbita, reentrada, Arcanário, flashcards, questões e persistência. Travamentos de transição/fluidez permanecem dívida técnica não quantificada.
 
 [BF-5.7B2.5 — saneamento residual](BF-5_7B2_5_SANEAMENTO_RESIDUAL.md): auditoria de dependências, integridade e retenção; candidata sem aceite físico.
 

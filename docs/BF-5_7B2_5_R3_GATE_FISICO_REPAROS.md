@@ -9,6 +9,33 @@ primeiro acesso lunar e flashcard persistente PASS dirigido; reentrada lunar,
 texto Android e sensação de posição/movimento lunar FAIL. A R2/B2.5 não recebeu
 aceite físico integral. Não fechar B2.5 ou iniciar B2.6/B3.
 
+## Gate físico Moto G06 — consolidação de 21/11/2026
+
+O proprietário realizou nova validação física no Moto G06 com o APK debug
+`Biblioteca-Viva-BF57B2-PR58-debug.apk`, gerado a partir do HEAD
+`2f27ca3e4b363274d14f1d93136b5adc60ac86f5` antes da criação deste commit,
+mais as correções locais da consolidação.
+
+Validação funcional aprovada:
+
+- entrada e saída da órbita lunar;
+- reentrada pela alternativa acessível;
+- reentrada pelo Canvas;
+- navegação do Arcanário e das salas educativas;
+- criação, edição e persistência de flashcards e questões;
+- persistência dos dados no APK validado.
+
+Limitação física registrada, sem métrica nova:
+
+- travamentos durante transições e animações;
+- fluidez geral ainda insatisfatória, com sensação de execução travada.
+
+O desempenho não foi aprovado. Nenhum FPS, P95/P99, latência, uso de memória,
+temperatura, TalkBack ou teste físico sustentado foi registrado nesta validação.
+Os travamentos são mantidos como dívida técnica posterior; não transformam a
+conclusão funcional da BF-5.7B em bloqueio automático. Não foi iniciada uma fase
+BF-5.7C nesta consolidação.
+
 Alteração local preexistente preservada e fora dos commits:
 `docs/audits/evidence/bf56f-refinement/lua-no-mundo.png`, SHA-256
 `16dc95bd6a9fceb84fa872849677bd154575aa9e3f20816181d648121c1f1dba`.
@@ -122,11 +149,11 @@ seguidos de janela de 4,5 s, sem trace/screencast ou outro gate pesado.
 Backend identificado: ANGLE/Vulkan SwiftShader (renderização por software).
 Amostras curtas, descritivas; não constituem P95/P99 físico nem benchmark Moto.
 
-| Condição | Amostras RAF | Mediana intervalo | Mediana update CPU | Mediana submit CPU |
-| --- | --- | --- | --- | --- |
-| Dia 12h, sem seleção | 26 intervalos | 166,7 ms | 0,7 ms | 3,1 ms |
-| Noite 22h, sem seleção | 10 intervalos | 483,3 ms | 0,8 ms | 3,5 ms |
-| Noite 22h, lua selecionada | 10 intervalos | 483,3 ms | 0,8 ms | 3,5 ms |
+| Condição                   | Amostras RAF  | Mediana intervalo | Mediana update CPU | Mediana submit CPU |
+| -------------------------- | ------------- | ----------------- | ------------------ | ------------------ |
+| Dia 12h, sem seleção       | 26 intervalos | 166,7 ms          | 0,7 ms             | 3,1 ms             |
+| Noite 22h, sem seleção     | 10 intervalos | 483,3 ms          | 0,8 ms             | 3,5 ms             |
+| Noite 22h, lua selecionada | 10 intervalos | 483,3 ms          | 0,8 ms             | 3,5 ms             |
 
 Dia: 203 draw calls / 217466 triângulos. Noite: 209 calls / 218474 triângulos.
 Atualização CPU máxima 1,2 ms; submit máximo 7,1 ms nas janelas estáveis.
@@ -208,10 +235,10 @@ Os tempos são próximos do limite no software; não certificam latência Androi
 
 Débitos gráficos reexecutados e ainda **FAIL**:
 
-| Cenário antigo | Resultado R3 e estágio observado |
-| --- | --- |
-| `bf56b-workshop:24`, portal residente | 30 s; evaluate Canvas 13,25 s, clique Coleção 12,96 s; percurso completo não certificado |
-| `bf56f-orbital-refinement:2`, lunar | 60 s; chegou a detalhes semânticos/portal visível, não concluiu foco/ativação antes do deadline |
+| Cenário antigo                         | Resultado R3 e estágio observado                                                                  |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `bf56b-workshop:24`, portal residente  | 30 s; evaluate Canvas 13,25 s, clique Coleção 12,96 s; percurso completo não certificado          |
+| `bf56f-orbital-refinement:2`, lunar    | 60 s; chegou a detalhes semânticos/portal visível, não concluiu foco/ativação antes do deadline   |
 | `performance-navigation:66`, lifecycle | 30 s; retorno running observado, evaluate identidade 3,22 s no fim do prazo; teste permanece FAIL |
 
 Oficina/Ecos, Relicário, troca autoral, Choices retrato/paisagem, gravação
@@ -250,21 +277,21 @@ O commit posterior apenas publica este relatório e evidências. O SHA exato
 desse HEAD utilizado no APK consta na PR #57 e no manifesto local, sem criar
 uma autorreferência ao hash do próprio documento.
 
-| Gate executado | Resultado |
-| --- | --- |
-| lint global | PASS |
-| lint type-aware da fixture E2E final | PASS |
-| typecheck, repetido após a fixture final | PASS |
-| build | PASS; aviso conhecido de chunks >500 kB |
-| Vitest global isolado | PASS, 183 arquivos / 1221 testes |
-| Dirigidos interação/runtime/órbita/host/rotas/Choices/Arcanário/banco/backup/bootstrap | PASS, 12 arquivos / 234 testes |
-| E2E inicial de 12 cenários | FAIL, 7 PASS / 5 FAIL |
-| Novos E2E R3 após ajuste da fixture | PASS, 2/2, três ciclos por cada caminho |
-| Três E2E gráficos antigos | FAIL, deadlines preservados |
-| Prettier runtime/órbita/novo E2E | PASS; arquivos pages têm passivo histórico fora do escopo |
-| git diff --check | PASS |
-| Android/Moto G06, TalkBack, termal/memória físicos | Não executado |
-| GitHub Actions | Não executado |
+| Gate executado                                                                         | Resultado                                                 |
+| -------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| lint global                                                                            | PASS                                                      |
+| lint type-aware da fixture E2E final                                                   | PASS                                                      |
+| typecheck, repetido após a fixture final                                               | PASS                                                      |
+| build                                                                                  | PASS; aviso conhecido de chunks >500 kB                   |
+| Vitest global isolado                                                                  | PASS, 183 arquivos / 1221 testes                          |
+| Dirigidos interação/runtime/órbita/host/rotas/Choices/Arcanário/banco/backup/bootstrap | PASS, 12 arquivos / 234 testes                            |
+| E2E inicial de 12 cenários                                                             | FAIL, 7 PASS / 5 FAIL                                     |
+| Novos E2E R3 após ajuste da fixture                                                    | PASS, 2/2, três ciclos por cada caminho                   |
+| Três E2E gráficos antigos                                                              | FAIL, deadlines preservados                               |
+| Prettier runtime/órbita/novo E2E                                                       | PASS; arquivos pages têm passivo histórico fora do escopo |
+| git diff --check                                                                       | PASS                                                      |
+| Android/Moto G06, TalkBack, termal/memória físicos                                     | Não executado                                             |
+| GitHub Actions                                                                         | Não executado                                             |
 
 Não houve nova ampla de 12 E2E verde. A ampla Vitest foi anterior à compactação
 exclusivamente da fixture Playwright; depois foram executados o novo E2E,
@@ -279,4 +306,19 @@ Cópia estável da R3 e metadados ficam na mesma pasta; manifesto:
 `npm run android:build:debug`, origem, variante debug, applicationId, bytes,
 SHA-256 e comparação por hash entre os assets de dist e do APK.
 A pasta de build é ignorada pelo Git; não há APK ou chave em commits.
-O novo artefato não representa aceite visual/físico automático.
+
+### Artefato validado pelo proprietário
+
+O APK usado no gate Moto G06 foi nomeado
+`Biblioteca-Viva-BF57B2-PR58-debug.apk`. Ele foi gerado a partir do HEAD
+`2f27ca3e4b363274d14f1d93136b5adc60ac86f5` mais alterações locais não commitadas
+da correção documental/E2E; portanto, não corresponde a um commit já existente.
+
+- tamanho: 11.644.813 bytes;
+- SHA-256: `9744344d5bf1c41f0edd892ef9a5266db6d2399ae8044e8a3f379161f763c7f6`;
+- build: `npm run android:build:debug`;
+- original reproduzível em `android/app/build/outputs/apk/debug/app-debug.apk`;
+- cópia nomeada em `android/app/build/outputs/apk/debug/Biblioteca-Viva-BF57B2-PR58-debug.apk`.
+
+O gate físico aprovou os aspectos funcionais registrados acima. O fluxo não
+representa aprovação de desempenho, TalkBack, P95/P99, térmico ou memória.
