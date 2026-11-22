@@ -1,3 +1,7 @@
+> **NOTA DE CONTEXTO HISTÓRICO — 22/11/2026:** este relatório descreve o checkpoint R3 antes da integração final. As afirmações abaixo de que a PR #57 permanecia draft, sem merge ou com B2.5 aberta refletem aquele momento e foram superadas pela integração da cadeia na [PR #58](https://github.com/Samuel-Francisco-AS/biblioteca-viva/pull/58). O gate funcional posterior no Moto G06 aprovou os fluxos registrados no [diagnóstico da PR #58](BF-5_7B_PR58_DIAGNOSTICO_E2E.md); as ressalvas de fluidez, E2E, TalkBack, métricas, memória e térmica continuam válidas. Ver [reconciliação final da BF-5.7B](BF-5_7B_RECONCILIACAO_2026-11-22.md).
+
+---
+
 # BF-5.7B2.5-R3 — reparos após gate físico
 
 ## Base, autoridade e limites
