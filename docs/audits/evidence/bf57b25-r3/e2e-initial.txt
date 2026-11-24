@@ -51,7 +51,7 @@ Running 12 tests using 1 worker
       34 |   await expect(
       35 |     page.getByRole("heading", { name: "O Arcanário", exact: true, level: 2 }),
       36 |   ).toBeVisible();
-        at /home/sam/Projetos/biblioteca-viva/e2e/bf56b-workshop.spec.ts:33:70
+        at <repo-root>/e2e/bf56b-workshop.spec.ts:33:70
 
     Error Context: test-results/bf56b-workshop-B-portal-ac-fce7d-am-o-mesmo-Canvas-residente-chromium/error-context.md
 
@@ -86,7 +86,7 @@ Running 12 tests using 1 worker
       140 |   await lunarPortal.focus();
       141 |   await page.keyboard.press("Enter");
       142 |   await expect(page).toHaveURL(/\/arcanario$/);
-        at /home/sam/Projetos/biblioteca-viva/e2e/bf56f-orbital-refinement.spec.ts:139:29
+        at <repo-root>/e2e/bf56f-orbital-refinement.spec.ts:139:29
 
     Error Context: test-results/bf56f-orbital-refinement-B-bb826-reserves-the-resident-world-chromium/error-context.md
 
@@ -115,7 +115,7 @@ Running 12 tests using 1 worker
       87 |         await expect(canvas).toHaveAttribute("data-orbital-book-ndc", /,/);
       88 |         const hit = await canvas.evaluate((node) => {
       89 |           const [x, y] = (node.getAttribute("data-orbital-book-ndc") ?? "")
-        at /home/sam/Projetos/biblioteca-viva/e2e/bf57b-lunar-reentry.spec.ts:86:12
+        at <repo-root>/e2e/bf57b-lunar-reentry.spec.ts:86:12
 
     Error Context: test-results/bf57b-lunar-reentry-R3-thr-dce00-renderer-without-empty-taps-chromium/error-context.md
 
@@ -150,7 +150,7 @@ Running 12 tests using 1 worker
       124 |         await portal.focus();
       125 |         await page.keyboard.press("Enter");
       126 |       }
-        at /home/sam/Projetos/biblioteca-viva/e2e/bf57b-lunar-reentry.spec.ts:123:30
+        at <repo-root>/e2e/bf57b-lunar-reentry.spec.ts:123:30
 
     Error Context: test-results/bf57b-lunar-reentry-R3-thr-685ea-renderer-without-empty-taps-chromium/error-context.md
 
@@ -179,7 +179,7 @@ Running 12 tests using 1 worker
       85 |   ).toBe(true);
       86 |   await expect(canvas).toHaveAttribute("data-active-frame-loops", "1");
       87 |   expect(errors).toEqual([]);
-        at /home/sam/Projetos/biblioteca-viva/e2e/performance-navigation.spec.ts:84:18
+        at <repo-root>/e2e/performance-navigation.spec.ts:84:18
 
     Error Context: test-results/performance-navigation-per-66e92-and-loop-across-dock-return-chromium/error-context.md
 
