@@ -178,3 +178,9 @@ A [BF-4E](BF-4E_RELATORIO.md) foi concluída no escopo funcional e físico dirig
 **BF-4F1 concluída no escopo dirigido em 2026-11-02:** o usuário aceitou visualmente os quatro primeiros modelos e sua seleção no Moto G06; falta a expressividade da BF-4F2, IA local F3 e quests F4. [Relatório F1](BF-4F1_RELATORIO.md). Notas antigas sobre ausência de implementação são histórico, não estado vigente. E2E finalizou FAIL (20 PASS, 6 FAIL, 1 flaky); TalkBack e desempenho sustentado não foram declarados PASS.
 
 **Estado vigente:** BF-4/BF-4G encerradas somente no escopo funcional/físico dirigido, com ressalvas e CI FAIL; [relatório BF-4G](BF-4G_RELATORIO.md). **Próxima fase planejada: BF-5 — reforma global de UI/UX**, seguida de BF-6 (Mundo Vivo/RPG) e BF-7 (consolidação funcional/assistiva; antiga BF-5). A estratégia BF-5 aprovada é macroreforma integrada e refinamentos posteriores; **sem implementação iniciada**. O histórico anterior continua preservado, mas não tem precedência sobre a [ADR-014](decisions/ADR-014-replanejamento-pos-bf4.md) e o [STATUS](STATUS.md). Agentes seguem [AGENTS](../AGENTS.md), [direção artística](ART_DIRECTION.md), [testes](TESTING.md) e [desempenho](PERFORMANCE.md).
+
+## Privacidade e governança
+
+- [Governança de dados, privacidade e licenças do repositório](REPOSITORY_GOVERNANCE.md) — regras para contribuições públicas, evidências, segredos, incidentes e proveniência de materiais.
+- [Privacidade do aplicativo](PRIVACY.md) — tratamento local-first dos dados no produto.
+- [Segurança](SECURITY.md) — controles técnicos e limites de segurança.
