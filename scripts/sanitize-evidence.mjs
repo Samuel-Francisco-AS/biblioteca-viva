@@ -6,13 +6,7 @@ import path from "node:path";
 const TEXT_EXTENSIONS = new Set([".txt", ".md", ".json", ".log", ".csv", ".xml", ".yaml", ".yml"]);
 const ROOT = "docs/audits/evidence/";
 
-export function sanitizeText(input) {
-  return input
-    .replace(/(?:\/home|\/Users)\/[^/\\\s]+\/(?:[^/\\\s]+\/)*biblioteca-viva(?=[/\\\s"'<>]|$)/gi, "<repo-root>")
-    .replace(/(?:\/home|\/Users)\/[^/\\\s]+\/(?:[^/\\\s]+\/)*bv-f4-lab(?=[/\\\s"'<>]|$)/gi, "<lab-root>")
-    .replace(/[A-Za-z]:\\Users\\[^\\\s]+\\(?:[^\\\s]+\\)*biblioteca-viva(?=[\\\s"'<>]|$)/gi, "<repo-root>")
-    .replace(/[A-Za-z]:\\Users\\[^\\\s]+\\(?:[^\\\s]+\\)*bv-f4-lab(?=[\\\s"'<>]|$)/gi, "<lab-root>");
-}
+import { sanitizeText } from "./evidence-privacy.mjs";
 
 function trackedEvidenceFiles() {
   const output = execFileSync("git", ["ls-files", "-z", "--", ROOT], { encoding: "utf8" });
