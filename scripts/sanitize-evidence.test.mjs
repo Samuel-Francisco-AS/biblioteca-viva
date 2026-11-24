@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { sanitizeText } from "./sanitize-evidence.mjs";
+import { sanitizeText } from "./evidence-privacy.mjs";
 
 test("substitui caminhos Linux do repositório e do laboratório", () => {
   const input = "Repo: /home/sam/Projetos/biblioteca-viva/src/main.tsx\nLab: /home/sam/Projetos/bv-f4-lab/capture.png";
