@@ -1,6 +1,6 @@
 
 === BV F4 ASSET INSPECTION ===
-arquivo=/home/sam/Projetos/bv-f4-lab/candidates/quaternius/Bookshelf.blend
+arquivo=<lab-root>/candidates/quaternius/Bookshelf.blend
 prefixo=(nenhum)
 objetos_selecionados=1
 meshes=1
@@ -25,6 +25,6 @@ Texture.png
 === FIM BV F4 ASSET INSPECTION ===
 
 Blender 3.3.21 (hash e016c21db151 built 2024-07-15 10:26:47)
-Read blend: /home/sam/Projetos/bv-f4-lab/candidates/quaternius/Bookshelf.blend
+Read blend: <lab-root>/candidates/quaternius/Bookshelf.blend
 
 Blender quit
