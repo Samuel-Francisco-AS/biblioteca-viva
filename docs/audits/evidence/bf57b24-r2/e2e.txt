@@ -50,7 +50,7 @@ Running 12 tests using 1 worker
       143 |   const arcanariumNav = page.getByRole("navigation", {
       144 |     name: "Salas do Arcanário",
       145 |   });
-        at /home/sam/Projetos/biblioteca-viva/e2e/bf56f-orbital-refinement.spec.ts:142:22
+        at <repo-root>/e2e/bf56f-orbital-refinement.spec.ts:142:22
 
     Error Context: test-results/bf56f-orbital-refinement-B-bb826-reserves-the-resident-world-chromium/error-context.md
 
