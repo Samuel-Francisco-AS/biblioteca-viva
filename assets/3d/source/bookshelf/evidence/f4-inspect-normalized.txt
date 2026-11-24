@@ -2,7 +2,7 @@ Data are loaded, start creating Blender stuff
 glTF import finished in 0.00s
 
 === BV F4 ASSET INSPECTION ===
-arquivo=/home/sam/Projetos/bv-f4-lab/normalized/quaternius/Bookshelf-normalized.glb
+arquivo=<lab-root>/normalized/quaternius/Bookshelf-normalized.glb
 prefixo=(nenhum)
 objetos_selecionados=1
 meshes=1
