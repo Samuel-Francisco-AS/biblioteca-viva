@@ -2,6 +2,7 @@
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import process from "node:process";
 
 const ROOT = "docs/audits/evidence/";
 const TEXT_EXTENSIONS = new Set([
