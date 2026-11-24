@@ -60,7 +60,7 @@
     "dynamic": true
   },
   {
-    "source": "../../home/sam/Projetos/biblioteca-viva/node_modules/@capacitor/filesystem/dist/esm/web.js",
+    "source": "../..<repo-root>/node_modules/@capacitor/filesystem/dist/esm/web.js",
     "bytes": 8495,
     "initial": false,
     "dynamic": true
@@ -108,7 +108,7 @@
     "dynamic": false
   },
   {
-    "source": "../../home/sam/Projetos/biblioteca-viva/node_modules/@capacitor/filesystem/dist/esm/index.js",
+    "source": "../..<repo-root>/node_modules/@capacitor/filesystem/dist/esm/index.js",
     "bytes": 1324,
     "initial": false,
     "dynamic": true
@@ -120,7 +120,7 @@
     "dynamic": false
   },
   {
-    "source": "../../home/sam/Projetos/biblioteca-viva/node_modules/@capacitor/app/dist/esm/web.js",
+    "source": "../..<repo-root>/node_modules/@capacitor/app/dist/esm/web.js",
     "bytes": 845,
     "initial": false,
     "dynamic": true
@@ -138,13 +138,13 @@
     "dynamic": false
   },
   {
-    "source": "../../home/sam/Projetos/biblioteca-viva/node_modules/@capacitor/share/dist/esm/web.js",
+    "source": "../..<repo-root>/node_modules/@capacitor/share/dist/esm/web.js",
     "bytes": 366,
     "initial": false,
     "dynamic": true
   },
   {
-    "source": "../../home/sam/Projetos/biblioteca-viva/node_modules/@capacitor/share/dist/esm/index.js",
+    "source": "../..<repo-root>/node_modules/@capacitor/share/dist/esm/index.js",
     "bytes": 337,
     "initial": false,
     "dynamic": true
