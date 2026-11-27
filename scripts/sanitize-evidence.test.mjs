@@ -1,15 +1,19 @@
 import assert from "node:assert/strict";
+import { mkdtemp, mkdir, rm, symlink, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import test from "node:test";
 import { sanitizeText } from "./evidence-privacy.mjs";
+import { resolveEvidenceFile } from "./evidence-paths.mjs";
 
 test("substitui caminhos Linux do repositório e do laboratório", () => {
   const input =
-    "Repo: /home/sam/Projetos/biblioteca-viva/src/main.tsx\n" +
+    "Repo: /home/sam/Projetos/biblioteca-viva/src/main.tsx\\n" +
     "Lab: /home/sam/Projetos/bv-f4-lab/capture.png";
 
   assert.equal(
     sanitizeText(input),
-    "Repo: <repo-root>/src/main.tsx\nLab: <lab-root>/capture.png",
+    "Repo: <repo-root>/src/main.tsx\\nLab: <lab-root>/capture.png",
   );
 });
 
@@ -28,4 +32,46 @@ test("substitui caminhos macOS e Windows sem alterar caminhos relativos", () => 
 test("é idempotente e preserva conteúdo sem caminhos pessoais", () => {
   const input = "Vitest: 420 tests passed. Path: <repo-root>/src";
   assert.equal(sanitizeText(sanitizeText(input)), input);
+});
+
+test("rejeita traversal que tenta sair da raiz de evidências", async () => {
+  const temp = await mkdtemp(path.join(os.tmpdir(), "bv-evidence-"));
+  try {
+    const root = path.join(temp, "docs", "audits", "evidence");
+    await mkdir(root, { recursive: true });
+    const outside = path.join(temp, "outside.txt");
+    await writeFile(outside, "não tocar");
+
+    await assert.rejects(
+      resolveEvidenceFile(path.join(root, "..", "..", "..", "outside.txt"), root),
+      /fora do diretório permitido/,
+    );
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+  }
+});
+
+test("rejeita links simbólicos diretos e diretórios que escapam da raiz", async () => {
+  const temp = await mkdtemp(path.join(os.tmpdir(), "bv-evidence-"));
+  try {
+    const root = path.join(temp, "evidence");
+    const outside = path.join(temp, "outside");
+    await mkdir(root, { recursive: true });
+    await mkdir(outside, { recursive: true });
+    const outsideFile = path.join(outside, "secret.txt");
+    await writeFile(outsideFile, "não ler");
+    await symlink(outsideFile, path.join(root, "direct-link.txt"));
+    await symlink(outside, path.join(root, "linked-dir"));
+
+    await assert.rejects(
+      resolveEvidenceFile(path.join(root, "direct-link.txt"), root),
+      /escapa|Links simbólicos/,
+    );
+    await assert.rejects(
+      resolveEvidenceFile(path.join(root, "linked-dir", "secret.txt"), root),
+      /escapa/,
+    );
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+  }
 });
