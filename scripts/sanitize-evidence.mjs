@@ -34,7 +34,9 @@ const files = requested.length ? requested : trackedEvidenceFiles();
 let changed = 0;
 for (const file of files) {
   if (!TEXT_EXTENSIONS.has(path.extname(file).toLowerCase())) {
-    throw new Error("O sanitizador aceita apenas arquivos de texto dentro de docs/audits/evidence/.");
+    throw new Error(
+      "O sanitizador aceita apenas arquivos de texto dentro de docs/audits/evidence/.",
+    );
   }
 
   const safePath = await resolveEvidenceFile(file, ROOT);
@@ -43,10 +45,14 @@ for (const file of files) {
   if (after !== before) {
     await writeFile(safePath, after, "utf8");
     changed += 1;
-    process.stdout.write(`Sanitizado: ${file}\n`);
+    process.stdout.write("Sanitizado: " + file + "\n");
   }
 }
 
 process.stdout.write(
-  `Concluído: ${files.length} arquivo(s) verificado(s), ${changed} alterado(s).\n`,
+  "Concluído: " +
+    files.length +
+    " arquivo(s) verificado(s), " +
+    changed +
+    " alterado(s).\n",
 );
