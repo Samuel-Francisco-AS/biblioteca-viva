@@ -19,6 +19,6 @@ it('audit structural inventory and bounded CPU diagnostic; no GPU',()=>{
  const nav=new InhabitantNavigation(obstacles); const start=performance.now();nav.route({x:0,z:0},{x:-12,z:6},0.45);const coldRouteMs=performance.now()-start;
  const camera=new CameraNavigation(new OrthographicCamera(),1,LIBRARY_ROOMS,10); camera.setViewport(412,840);
  const times=[];for(let i=0;i<300;i++){const t=performance.now();camera.panBetweenScreenPoints({x:200,y:400},{x:201+(i%2),y:401}); times.push(performance.now()-t);}times.sort((a,b)=>a-b);
- writeFileSync('/tmp/bv-audit-worktree-metrics.json',JSON.stringify({scope:'building+shelves only; all instances including culled; no renderer',objects,meshes,instances,triangles,vertices,geometries:geometries.size,materials:materials.size,textures:textures.size,transparent,obstacles:obstacles.length,nodes:nav.nodes.length,collectMs,coldRouteMs,panMedianMs:times[150],panP95Ms:times[285],panMaxMs:times[299]}));
+ writeFileSync('<tmp-root>/bv-audit-worktree-metrics.json',JSON.stringify({scope:'building+shelves only; all instances including culled; no renderer',objects,meshes,instances,triangles,vertices,geometries:geometries.size,materials:materials.size,textures:textures.size,transparent,obstacles:obstacles.length,nodes:nav.nodes.length,collectMs,coldRouteMs,panMedianMs:times[150],panP95Ms:times[285],panMaxMs:times[299]}));
  expect(meshes).toBeGreaterThan(0);expect(times.every(Number.isFinite)).toBe(true);disposeObjectTree(root);
 });
