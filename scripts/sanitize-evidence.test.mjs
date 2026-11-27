@@ -43,7 +43,10 @@ test("rejeita traversal que tenta sair da raiz de evidências", async () => {
     await writeFile(outside, "não tocar");
 
     await assert.rejects(
-      resolveEvidenceFile(path.join(root, "..", "..", "..", "outside.txt"), root),
+      resolveEvidenceFile(
+        path.join(root, "..", "..", "..", "outside.txt"),
+        root,
+      ),
       /fora do diretório permitido/,
     );
   } finally {
@@ -68,7 +71,10 @@ test("rejeita links simbólicos diretos e diretórios que escapam da raiz", asyn
       /escapa|Links simbólicos/,
     );
     await assert.rejects(
-      resolveEvidenceFile(path.join(root, "linked-dir", "secret.txt"), root),
+      resolveEvidenceFile(
+        path.join(root, "linked-dir", "secret.txt"),
+        root,
+      ),
       /escapa/,
     );
   } finally {
