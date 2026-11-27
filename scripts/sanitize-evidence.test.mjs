@@ -17,6 +17,20 @@ test("substitui caminhos Linux do repositório e do laboratório", () => {
   );
 });
 
+test("substitui caminhos temporários Linux sem perder o contexto restante", () => {
+  const input =
+    "RUN  v4.1.10 /tmp/bv-audit-worktree\n" +
+    "writeFileSync('/tmp/bv-audit-worktree-metrics.json')\n" +
+    "outDir /tmp/bv-audit-dist";
+
+  assert.equal(
+    sanitizeText(input),
+    "RUN  v4.1.10 <tmp-root>/bv-audit-worktree\n" +
+      "writeFileSync('<tmp-root>/bv-audit-worktree-metrics.json')\n" +
+      "outDir <tmp-root>/bv-audit-dist",
+  );
+});
+
 test("substitui caminhos macOS e Windows sem alterar caminhos relativos", () => {
   const input =
     "/Users/alguem/work/biblioteca-viva/docs/a.txt " +
@@ -29,8 +43,8 @@ test("substitui caminhos macOS e Windows sem alterar caminhos relativos", () => 
   );
 });
 
-test("é idempotente e preserva conteúdo sem caminhos pessoais", () => {
-  const input = "Vitest: 420 tests passed. Path: <repo-root>/src";
+test("é idempotente e preserva conteúdo sem caminhos locais", () => {
+  const input = "Vitest: 420 tests passed. Path: <repo-root>/src <tmp-root>/build";
   assert.equal(sanitizeText(sanitizeText(input)), input);
 });
 
