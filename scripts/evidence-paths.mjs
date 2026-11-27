@@ -5,14 +5,25 @@ const DEFAULT_EVIDENCE_ROOT = "docs/audits/evidence";
 
 function isInside(parent, candidate) {
   const relative = path.relative(parent, candidate);
-  return relative === "" || (!relative.startsWith(".." + path.sep) && relative !== ".." && !path.isAbsolute(relative));
+  return (
+    relative === "" ||
+    (!relative.startsWith(".." + path.sep) &&
+      relative !== ".." &&
+      !path.isAbsolute(relative))
+  );
 }
 
-export async function resolveEvidenceFile(file, evidenceRoot = DEFAULT_EVIDENCE_ROOT) {
+export async function resolveEvidenceFile(
+  file,
+  evidenceRoot = DEFAULT_EVIDENCE_ROOT,
+) {
   const lexicalRoot = path.resolve(evidenceRoot);
   const lexicalTarget = path.resolve(file);
 
-  if (!isInside(lexicalRoot, lexicalTarget) || lexicalTarget === lexicalRoot) {
+  if (
+    !isInside(lexicalRoot, lexicalTarget) ||
+    lexicalTarget === lexicalRoot
+  ) {
     throw new Error("Arquivo fora do diretório permitido de evidências.");
   }
 
@@ -23,11 +34,15 @@ export async function resolveEvidenceFile(file, evidenceRoot = DEFAULT_EVIDENCE_
   ]);
 
   if (!isInside(realRoot, realTarget) || realTarget === realRoot) {
-    throw new Error("O caminho resolvido escapa do diretório permitido de evidências.");
+    throw new Error(
+      "O caminho resolvido escapa do diretório permitido de evidências.",
+    );
   }
 
   if (targetInfo.isSymbolicLink()) {
-    throw new Error("Links simbólicos não são aceitos como arquivos de evidência.");
+    throw new Error(
+      "Links simbólicos não são aceitos como arquivos de evidência.",
+    );
   }
 
   if (!targetInfo.isFile()) {
