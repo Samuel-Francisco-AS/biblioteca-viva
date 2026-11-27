@@ -8,12 +8,12 @@ import { resolveEvidenceFile } from "./evidence-paths.mjs";
 
 test("substitui caminhos Linux do repositório e do laboratório", () => {
   const input =
-    "Repo: /home/sam/Projetos/biblioteca-viva/src/main.tsx\\n" +
+    "Repo: /home/sam/Projetos/biblioteca-viva/src/main.tsx\n" +
     "Lab: /home/sam/Projetos/bv-f4-lab/capture.png";
 
   assert.equal(
     sanitizeText(input),
-    "Repo: <repo-root>/src/main.tsx\\nLab: <lab-root>/capture.png",
+    "Repo: <repo-root>/src/main.tsx\nLab: <lab-root>/capture.png",
   );
 });
 
