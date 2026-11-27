@@ -78,12 +78,18 @@ for (const file of files) {
 if (findings.length) {
   process.stderr.write("Possíveis dados pessoais/segredos em evidências:\n");
   for (const item of findings) {
-    process.stderr.write("- " + item.file + ":" + item.line + ": " + item.label + "\n");
+    process.stderr.write(
+      "- " + item.file + ":" + item.line + ": " + item.label + "\n",
+    );
   }
-  process.stderr.write("Revise o conteúdo; não copie dados sensíveis para logs ou mensagens.\n");
+  process.stderr.write(
+    "Revise o conteúdo; não copie dados sensíveis para logs ou mensagens.\n",
+  );
   process.exitCode = 1;
 } else {
   process.stdout.write(
-    "Privacidade das evidências: PASS (" + files.length + " arquivo(s) de texto).\n",
+    "Privacidade das evidências: PASS (" +
+      files.length +
+      " arquivo(s) de texto).\n",
   );
 }
