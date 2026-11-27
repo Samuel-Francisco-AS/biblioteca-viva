@@ -4,6 +4,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { sanitizeText } from "./evidence-privacy.mjs";
+import { resolveEvidenceFile } from "./evidence-paths.mjs";
 
 const TEXT_EXTENSIONS = new Set([
   ".txt",
@@ -15,41 +16,32 @@ const TEXT_EXTENSIONS = new Set([
   ".yaml",
   ".yml",
 ]);
-const ROOT = "docs/audits/evidence/";
+const ROOT = "docs/audits/evidence";
 
 function trackedEvidenceFiles() {
-  const output = execFileSync("git", ["ls-files", "-z", "--", ROOT], {
+  const output = execFileSync("git", ["ls-files", "-z", "--", ROOT + "/"], {
     encoding: "utf8",
   });
   return output
     .split("\0")
     .filter(Boolean)
-    .filter((file) =>
-      TEXT_EXTENSIONS.has(path.extname(file).toLowerCase()),
-    );
+    .filter((file) => TEXT_EXTENSIONS.has(path.extname(file).toLowerCase()));
 }
 
 const requested = process.argv.slice(2);
 const files = requested.length ? requested : trackedEvidenceFiles();
 
-if (
-  files.some(
-    (file) =>
-      !file.startsWith(ROOT) ||
-      !TEXT_EXTENSIONS.has(path.extname(file).toLowerCase()),
-  )
-) {
-  throw new Error(
-    "O sanitizador aceita apenas arquivos de texto dentro de docs/audits/evidence/.",
-  );
-}
-
 let changed = 0;
 for (const file of files) {
-  const before = await readFile(file, "utf8");
+  if (!TEXT_EXTENSIONS.has(path.extname(file).toLowerCase())) {
+    throw new Error("O sanitizador aceita apenas arquivos de texto dentro de docs/audits/evidence/.");
+  }
+
+  const safePath = await resolveEvidenceFile(file, ROOT);
+  const before = await readFile(safePath, "utf8");
   const after = sanitizeText(before);
   if (after !== before) {
-    await writeFile(file, after, "utf8");
+    await writeFile(safePath, after, "utf8");
     changed += 1;
     process.stdout.write(`Sanitizado: ${file}\n`);
   }
