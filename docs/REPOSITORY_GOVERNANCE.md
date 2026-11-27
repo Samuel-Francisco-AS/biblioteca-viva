@@ -25,7 +25,7 @@ Use exclusivamente dados fictícios e sintéticos nas fixtures, exemplos, testes
 
 ## 3. Evidências e caminhos locais
 
-Evidências versionadas devem ser reproduzíveis, mínimas e sanitizadas. Remova caminhos absolutos, nomes de usuário, nomes de máquinas, diretórios de laboratório, URIs locais e metadados desnecessários. Prefira referências relativas ou marcadores neutros, como `<repo-root>` e `<lab-root>`.
+Evidências versionadas devem ser reproduzíveis, mínimas e sanitizadas. Remova caminhos absolutos, nomes de usuário, nomes de máquinas, diretórios de laboratório, URIs locais e metadados desnecessários. Prefira referências relativas ou marcadores neutros, como `<repo-root>`, `<lab-root>` e `<tmp-root>` para diretórios temporários.
 
 Para os arquivos textuais em `docs/audits/evidence/`, há ferramentas auxiliares:
 
@@ -35,7 +35,7 @@ npm run privacy:test
 npm run privacy:check
 ```
 
-- `privacy:sanitize` substitui caminhos conhecidos do repositório e do laboratório em arquivos textuais rastreados nessa pasta. Revise o diff depois da execução.
+- `privacy:sanitize` substitui caminhos conhecidos do repositório, do laboratório e diretórios temporários Linux `/tmp` em arquivos textuais rastreados nessa pasta. Revise o diff depois da execução.
 - `privacy:test` executa testes unitários do sanitizador.
 - `privacy:check` procura padrões de caminhos locais, e-mails, CPF/telefone formatados e alguns formatos conhecidos de credenciais.
 
