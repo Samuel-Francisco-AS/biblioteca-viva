@@ -1,4 +1,4 @@
-RUN  v4.1.10 /tmp/bv-audit-worktree
+RUN  v4.1.10 <tmp-root>/bv-audit-worktree
 
 
  Test Files  5 passed (5)

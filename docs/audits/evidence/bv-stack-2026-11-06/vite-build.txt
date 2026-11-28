@@ -2,7 +2,7 @@ vite v8.1.5 building client environment for production...
 
 transforming...✓ 355 modules transformed.
 
-(!) outDir /tmp/bv-audit-dist is not inside project root and will not be emptied.
+(!) outDir <tmp-root>/bv-audit-dist is not inside project root and will not be emptied.
 Use --emptyOutDir to override.
 
 rendering chunks...

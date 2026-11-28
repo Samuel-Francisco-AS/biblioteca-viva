@@ -67,7 +67,7 @@ Running 29 tests using 1 worker
       34 |   await expect(
       35 |     page.getByRole("heading", { name: "O Arcanário", exact: true, level: 2 }),
       36 |   ).toBeVisible();
-        at /home/sam/Projetos/biblioteca-viva/e2e/bf56b-workshop.spec.ts:33:70
+        at <repo-root>/e2e/bf56b-workshop.spec.ts:33:70
 
     Error Context: test-results/bf56b-workshop-B-portal-ac-fce7d-am-o-mesmo-Canvas-residente-chromium/error-context.md
 
@@ -95,7 +95,7 @@ Running 29 tests using 1 worker
       84 |   await expect(page.getByText(/1 de 2 respostas confirmadas/)).toBeVisible();
       85 |   await page
       86 |     .getByRole("button", { name: /Virar carta · revelar resposta/ })
-        at /home/sam/Projetos/biblioteca-viva/e2e/bf56b-workshop.spec.ts:83:68
+        at <repo-root>/e2e/bf56b-workshop.spec.ts:83:68
 
     Error Context: test-results/bf56b-workshop-B-Oficina-b-36ff1-ção-reload-e-histórico-real-chromium/error-context.md
 
@@ -123,7 +123,7 @@ Running 29 tests using 1 worker
       140 |   await expect(volume.getByText("Desinstalado", { exact: true })).toBeVisible();
       141 |   const removed = await records(page);
       142 |   expect(removed.sessions).toHaveLength(1);
-        at /home/sam/Projetos/biblioteca-viva/e2e/bf56d-packs.spec.ts:139:64
+        at <repo-root>/e2e/bf56d-packs.spec.ts:139:64
 
     Error Context: test-results/bf56d-packs-D-partial-cata-89833-oval-and-coherent-reinstall-chromium/error-context.md
 
@@ -156,7 +156,7 @@ Running 29 tests using 1 worker
       143 |   const arcanariumNav = page.getByRole("navigation", {
       144 |     name: "Salas do Arcanário",
       145 |   });
-        at /home/sam/Projetos/biblioteca-viva/e2e/bf56f-orbital-refinement.spec.ts:142:22
+        at <repo-root>/e2e/bf56f-orbital-refinement.spec.ts:142:22
 
     Error Context: test-results/bf56f-orbital-refinement-B-bb826-reserves-the-resident-world-chromium/error-context.md
 
@@ -191,7 +191,7 @@ Running 29 tests using 1 worker
       87 |   expect(errors).toEqual([]);
       88 | });
       89 |
-        at /home/sam/Projetos/biblioteca-viva/e2e/performance-navigation.spec.ts:86:24
+        at <repo-root>/e2e/performance-navigation.spec.ts:86:24
 
     Error Context: test-results/performance-navigation-per-66e92-and-loop-across-dock-return-chromium/error-context.md
 

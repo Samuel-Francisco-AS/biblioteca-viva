@@ -13,3 +13,7 @@ Auditorias npm de produção e completa: zero alertas conhecidos no snapshot val
 - APIs nativas ficam na infraestrutura, atrás das portas da aplicação.
 
 O checksum SHA-256 do backup detecta alterações acidentais; ele não é assinatura, autenticação nem criptografia.
+
+## Governança do repositório e evidências
+
+As regras para dados pessoais, evidências públicas, resposta a exposição de credenciais e proveniência/licenças de materiais estão em [REPOSITORY_GOVERNANCE.md](REPOSITORY_GOVERNANCE.md). Os comandos `privacy:test` e `privacy:check` são controles auxiliares limitados aos arquivos textuais de `docs/audits/evidence/`; não substituem revisão humana, varredura do histórico Git ou inspeção de binários/metadados.

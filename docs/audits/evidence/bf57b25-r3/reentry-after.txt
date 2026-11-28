@@ -1,7 +1,7 @@
 npm notice run biblioteca-viva@0.2.0-alpha.1 test:run
 npm notice run vitest run src/features/library/three/ThreeWorldRuntime.d1.test.ts --maxWorkers=1
 
- RUN  v4.1.12 /home/sam/Projetos/biblioteca-viva
+ RUN  v4.1.12 <repo-root>
 
 
  Test Files  1 passed (1)

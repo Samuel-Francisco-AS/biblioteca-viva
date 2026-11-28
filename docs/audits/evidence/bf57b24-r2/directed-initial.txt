@@ -1,7 +1,7 @@
 npm notice run biblioteca-viva@0.2.0-alpha.1 test:run
 npm notice run vitest run src/features/library/three/orbitalArena.test.ts src/features/library/three/ThreeWorldRuntime.test.ts --maxWorkers=1
 
- RUN  v4.1.12 /home/sam/Projetos/biblioteca-viva
+ RUN  v4.1.12 <repo-root>
 
 {"sceneUpdates":0,"projections":0,"milliseconds":15.385243000000173}
 
