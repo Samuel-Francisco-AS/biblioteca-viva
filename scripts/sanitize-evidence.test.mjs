@@ -17,7 +17,7 @@ test("substitui caminhos Linux do repositório e do laboratório", () => {
   );
 });
 
-test("substitui caminhos temporários Linux sem perder o contexto restante", () => {
+test("remove prefixos relativos antes de caminhos absolutos locais", () => {\n  const input =\n    "../../home/sam/Projetos/biblioteca-viva/node_modules/pkg/index.js " +\n    "../..//home/sam/Projetos/bv-f4-lab/assets/item.glb";\n\n  assert.equal(\n    sanitizeText(input),\n    "<repo-root>/node_modules/pkg/index.js <lab-root>/assets/item.glb",\n  );\n});\n\ntest("substitui caminhos temporários Linux sem perder o contexto restante", () => {
   const input =
     "RUN  v4.1.10 /tmp/bv-audit-worktree\n" +
     "writeFileSync('/tmp/bv-audit-worktree-metrics.json')\n" +
