@@ -1,5 +1,5 @@
 Base Git e PR draft #40 conferidas: 0a50fad83e70dfd39e55889386098f138827c282, árvore inicial limpa.
-Preparação 1: HMR do Vite invalidou execução durante edição. Descartada; extraído git archive imutável da base em /tmp e desativado HMR.
+Preparação 1: HMR do Vite invalidou execução durante edição. Descartada; extraído git archive imutável da base em <tmp-root> e desativado HMR.
 Preparação 2: timeout 30 s de screenshot após submissão de comandos em SwiftShader. Não é falha E2E/Android. Parciais descartadas; buffer normal de apresentação, 8+32 frames e fence assíncrono pós-medição, sem aumentar timeout. Execução final da base completou 12/12 casos e teardown disposed/0 canvases.
 Extensão timer WebGL suportada no software, mas os queries da primeira versão do harness ficaram na cauda da fila e não retornaram amostras válidas antes do fechamento. Baseline: GPU não medida. Harness passa a recolher cauda assincronamente após amostragem e a emitir queries apenas após warmup; resultados novos são software/host, nunca GPU física Android.
 Typecheck de desenvolvimento identificou getContext tipado pelo Three como união WebGL1/WebGL2: corrigida fronteira com narrowing por beginQuery, sem cast cego. Mudança não altera renderer aprovado WebGL2/Three.
